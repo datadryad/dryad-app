@@ -33,18 +33,119 @@ module Stash
       end
 
       describe '#add_to_zenodo' do
-        it 'begins replication for an item that is enqueued correctly' do
-          # it gets past initial checks and starts doing http requests
-          expect { @zsr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
-        end
+        describe 'software prerequisites for submission' do
+          it 'begins replication for an item that is enqueued correctly' do
+            # it gets past initial checks and starts doing http requests
+            expect { @zsr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          end
 
-        it "it doesn't begin replication if not a software item enqueued correctly" do
-          @zc.destroy
-          @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'data')
-          @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
-          @zsr.add_to_zenodo
-          @zc.reload
-          expect(@zc.state).to eq('error')
+          it "it doesn't begin replication if not a software item enqueued correctly" do
+            @zc.destroy
+            @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'data')
+            @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
+            @zsr.add_to_zenodo
+            @zc.reload
+            expect(@zc.state).to eq('error')
+          end
+
+          it 'rejects submission of an errored submission (needs to be enqueued)' do
+            @zc.update(state: 'error')
+            @zsr.add_to_zenodo
+            # if it had attempted any requests, we'd have webmock request errors
+            @zc.reload
+            expect(@zc.state).to eq('error')
+            expect(@zc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
+          end
+
+          it "rejects later submission for one that has previous errored that hasn't been corrected" do
+            @zc.update(state: 'error')
+            @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
+                                        deposition_id: @zc.deposition_id, copy_type: 'software')
+            @zsr2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @zsr2.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('error')
+            expect(@zc2.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
+          end
+
+          it 'rejects submission of something already replicating' do
+            @zc.update(state: 'replicating')
+            @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
+            @zsr.add_to_zenodo
+            # if it had attempted any requests, we'd have webmock request errors
+            @zc.reload
+            expect(@zc.state).to eq('error')
+            expect(@zc.error_info).to include('You should never start replicating unless starting from an enqueued state')
+          end
+
+          it 'rejects an out-of-order replication for the same identifier with one deferred' do
+            @zc.update(state: 'deferred')
+            @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier, copy_type: 'software')
+            @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @zsr.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('error')
+            expect(@zc2.error_info).to include('Items must replicate in order')
+          end
+
+          it 'rejects an out-of-order replication for the same identifier later replicating first' do
+            @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier, copy_type: 'software')
+            @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @zsr.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('error')
+            expect(@zc2.error_info).to include('Items must replicate in order')
+          end
+
+          it 'rejects a data submission that is supposed to be software submission' do
+            # I need to add the following item to get it past a different prerequisite for a different count
+            @resource.zenodo_copies << create(:zenodo_copy, copy_type: 'software')
+
+            @zc.update(copy_type: 'data')
+
+            @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id) # redo the creation of object with changed zenodo_copy
+
+            @zsr.add_to_zenodo
+            # if it had attempted any requests, we'd have webmock request errors
+            @zc.reload
+            expect(@zc.state).to eq('error')
+            expect(@zc.error_info). to include('Needs to be of the correct type (software not data)')
+          end
+
+          it 'rejects multiple replications for the same resource and type (software)' do
+            @zc.update(state: 'finished')
+            @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
+            @zsr2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @zsr2.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('error')
+            expect(@zc2.error_info).to include('Only one replication of the same type')
+          end
+
+          it 'returns early with info if trying to replicate something with no software' do
+            @file.destroy
+            @zsr.add_to_zenodo
+            @zc.reload
+            expect(@zc.state).to eq('finished')
+            expect(@zc.error_info).to start_with('No software to submit')
+          end
+
+          it "rejects a submission if earlier software versions haven't been replicated" do
+            # use the default replication as the earlier version but without any replication info in zenodo_copy table
+            @zc.destroy
+
+            @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
+                          deposition_id: @zc.deposition_id, copy_type: 'software')
+            @zsr2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @zsr2.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('error')
+            expect(@zc2.error_info).to include('Cannot replicate a later version until earlier versions with software have replicated')
+          end
         end
 
         it 'increments the retries counter' do
@@ -52,76 +153,6 @@ module Stash
           zc = @resource.zenodo_copies.software.first
           zc.reload
           expect(zc.retries).to eq(1) # this has been incremented from 0 to 1 when it started attempting adding to zenodo
-        end
-
-        it 'rejects submission of an errored submission (needs to be enqueued)' do
-          @zc.update(state: 'error')
-          @zsr.add_to_zenodo
-          # if it had attempted any requests, we'd have webmock request errors
-          @zc.reload
-          expect(@zc.state).to eq('error')
-          expect(@zc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
-        end
-
-        it "rejects later submission for one that has previous errored that hasn't been corrected" do
-          @zc.update(state: 'error')
-          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
-          @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
-                                      deposition_id: @zc.deposition_id, copy_type: 'software')
-          @zsr2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-          @zsr2.add_to_zenodo
-          @zc2.reload
-          expect(@zc2.state).to eq('error')
-          expect(@zc2.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
-        end
-
-        it 'rejects submission of something already replicating' do
-          @zc.update(state: 'replicating')
-          @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
-          @zsr.add_to_zenodo
-          # if it had attempted any requests, we'd have webmock request errors
-          @zc.reload
-          expect(@zc.state).to eq('error')
-          expect(@zc.error_info).to include('You should never start replicating unless starting from an enqueued state')
-        end
-
-        it 'rejects an out-of-order replication for the same identifier with one deferred' do
-          @zc.update(state: 'deferred')
-          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
-          @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier, copy_type: 'software')
-          @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-          @zsr.add_to_zenodo
-          @zc2.reload
-          expect(@zc2.state).to eq('error')
-          expect(@zc2.error_info).to include('Items must replicate in order')
-        end
-
-        it 'rejects an out-of-order replication for the same identifier later replicating first' do
-          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
-          @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier, copy_type: 'software')
-          @zsr = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-          @zsr.add_to_zenodo
-          @zc2.reload
-          expect(@zc2.state).to eq('error')
-          expect(@zc2.error_info).to include('Items must replicate in order')
-        end
-
-        it 'rejects multiple replications for the same resource and type (software)' do
-          @zc.update(state: 'finished')
-          @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
-          @zsr2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-          @zsr2.add_to_zenodo
-          @zc2.reload
-          expect(@zc2.state).to eq('error')
-          expect(@zc2.error_info).to include('Only one replication of the same type')
-        end
-
-        it 'returns early with info if trying to replicate something with no software' do
-          @file.destroy
-          @zsr.add_to_zenodo
-          @zc.reload
-          expect(@zc.state).to eq('finished')
-          expect(@zc.error_info).to start_with('No software to submit')
         end
       end
     end
