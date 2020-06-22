@@ -7,10 +7,9 @@ FactoryBot.define do
     related_identifier      { Faker::Number.number(digits: 8) }
     related_identifier_type { %w[doi ean13 eissn handle isbn issn istc lissn lsid pmid purl upc url urn].sample }
     relation_type           do
-      %w[iscitedby cites issupplementto issupplementedby iscontinuedby continues isnewversionof
-         ispreviousversionof ispartof haspart isreferencedby references isdocumentedby documents
-         iscompiledby compiles isvariantformof isorginalformof isidenticalto hasmetadata ismetadatafor
-         reviews isreviewedby isderivedfrom issourceof].sample
+      %w[iscitedby cites issupplementto issupplementedby iscontinuedby continues isnewversionof ispreviousversionof ispartof
+         haspart isreferencedby references isdocumentedby documents iscompiledby compiles isvariantformof isoriginalformof
+         isidenticalto hasmetadata ismetadatafor reviews isreviewedby isderivedfrom issourceof].sample
     end
 
     trait :publication_doi do

@@ -140,7 +140,7 @@ module Stash
 
       describe '#issued_date' do
         it 'returns a correct issued date' do
-          expect(@ir.issued_date[0..9]).to eql(Time.now.strftime('%Y-%m-%d'))
+          expect(@ir.issued_date[0..9]).to eql(Time.now.utc.strftime('%Y-%m-%d'))
         end
       end
 
