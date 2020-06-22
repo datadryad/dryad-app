@@ -66,9 +66,16 @@ module Stash
       describe '#assemble' do
         it 'returns non-success status in hash for items not in the 200 http status range' do
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+            .to_return(status: 404, body: 'Not found', headers: {})
+
+          expect(@vp.assemble[:status]).to eq(404)
+        end
+
+        it 'raises errors when Merritt has a problem so we know about it' do
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
             .to_return(status: 500, body: 'Internal server error', headers: {})
 
-          expect(@vp.assemble).to eq(status: 500)
+          expect { @vp.assemble }.to raise_exception(Stash::Download::MerrittException).with_message(/Merritt/)
         end
 
         it 'saves token and predicted availability time to database on good response' do
@@ -112,6 +119,24 @@ module Stash
           expect(s[:token]).to eq(token)
           expect(s[:message]).to eq('Object is not ready')
         end
+
+        it 'handles non-json status and a 404' do
+          # do assembly first so we have status to check
+          token = SecureRandom.uuid
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+            .to_return(status: 200, body:
+                  { status: 200, token: token,
+                    'anticipated-availability-time': (Time.new + 30).to_s }.to_json,
+                       headers: { 'Content-Type' => 'application/json' })
+
+          stub_request(:get, %r{/api/presign-obj-by-token/#{token}.+})
+            .to_return(status: 404, body: '<head></head><body><p>Download not found.</body>',
+                       headers: { 'Content-Type' => 'text/html; charset=utf-8' })
+
+          @vp.assemble
+          s = @vp.status
+          expect(s[:status]).to eq(404)
+        end
       end
 
       describe '#download' do
@@ -143,7 +168,7 @@ module Stash
           @resource.reload
           @vp = VersionPresigned.new(resource: @resource)
           allow(@vp).to receive(:status).and_return({ status: 410 }, status: 200)
-          expect(@vp).to receive(:assemble)
+          expect(@vp).to receive(:assemble).and_return({})
           resp = @vp.download
           expect(resp[:status]).to eq(200)
         end
