@@ -116,6 +116,42 @@ module Stash
         expect(@mg.locations[2]).to eq('lat' => @g[3].geolocation_point.latitude, 'lon' => @g[3].geolocation_point.longitude,
                                        'place' => @g[3].geolocation_place.geo_location_place)
       end
+
+      describe :software_generation do
+        before(:each) do
+          # takes what is done for the general replication case and adds stuff for software
+          @sl = StashEngine::SoftwareLicense.create(name: 'MIT License', identifier: 'MIT', details_url: 'http://spdx.org/licenses/MIT.json')
+          @resource.identifier.update(software_license_id: @sl.id)
+
+          test_doi = "#{rand.to_s[2..6]}/zenodo.#{rand.to_s[2..11]}"
+          @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
+                                                    relation_type: 'issupplementto', resource_id: @resource.id)
+          # r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+
+          @related_id2 = create(:related_identifier, resource_id: @resource.id)
+
+          @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, software_upload: true)
+        end
+
+        it 'changes upload_type to :software' do
+          expect(@mg.upload_type).to eq('software')
+        end
+
+        it 'sets the software license instead of the dataset license' do
+          expect(@mg.license).to eq(@sl.identifier)
+        end
+
+        it "removes our dryad citation link for zenodo because this is that citation object's metadata" do
+          ids = @mg.related_identifiers.map { |i| i[:identifier] }
+          expect(ids).to include(@related_id2.related_identifier) # other relation should still exist
+          expect(ids).not_to include(@related_id.related_identifier) # zenodo id for this shouldn't exist
+        end
+
+        it 'adds isSupplementTo to the Zenodo software to reference the Dryad dataset' do
+          ids = @mg.related_identifiers.map { |i| i[:identifier] }
+          expect(ids).to include(@resource.identifier.identifier)
+        end
+      end
     end
   end
 end
