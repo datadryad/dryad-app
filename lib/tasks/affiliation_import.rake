@@ -10,11 +10,20 @@ namespace :affiliation_import do
 
   ROOT = Rails.root.join('/tmp').freeze
 
-  desc 'Process all of the TSV files'
+  desc 'Clean the long_names for all ROR affiliations'
+  task clean_ror_names: :environment do
+    StashDatacite::Affiliation.where.not(ror_id: nil).each do |affil|
+      target_obj = Stash::Organization::Ror.find_by_ror_id(affil.ror_id)
+      affil.update(long_name: target_obj.name) if target_obj
+    end
+  end
+
+  desc 'Process all of the CSV files'
   task process_ror_csv: :environment do
     start_time = Time.now
     @dois_to_skip = []
     @live_mode = false
+    @last_resource = nil
 
     case ENV['AFFILIATION_MODE']
     when nil
@@ -36,6 +45,60 @@ namespace :affiliation_import do
     end
 
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
+  end
+
+  desc 'Detect duplicate authors'
+  task detect_duplicate_authors: :environment do
+    start_time = Time.now
+    StashEngine::Identifier.all.each do |i|
+      next unless i.latest_resource.present?
+      puts "Processing #{i.identifier} #{i.latest_resource.title}"
+      authors = i.latest_resource.authors
+      (0..authors.size - 1).each do |a|
+        puts "-- Processing #{authors[a].author_first_name} #{authors[a].author_last_name}"
+        (a + 1..authors.size - 1).each do |b|
+          puts "  -- Comparing to #{authors[b].author_first_name} #{authors[b].author_last_name}"
+          # see if the author has any potential duplicates
+          next unless duplicates?(authors[a], authors[b])
+          autha = authors[a].author_standard_name
+          authb = authors[b].author_standard_name
+          puts("POTENTIAL DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
+               "#{levenshtein_distance(autha, authb).to_f / (autha.size > authb.size ? autha.size : authb.size)}")
+        end
+      end
+    end
+    puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
+  end
+
+  def duplicates?(author1, author2)
+    # get array of initials, downcased
+    a1init = "#{author1.author_first_name} #{author1.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+    a2init = "#{author2.author_first_name} #{author2.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+    a1init == a2init
+  end
+
+  # levenshtein_distance from https://stackoverflow.com/questions/16323571/measure-the-distance-between-two-strings-with-ruby
+  def levenshtein_distance(s, t)
+    m = s.length
+    n = t.length
+    return m if n == 0
+    return n if m == 0
+    d = Array.new(m + 1) { Array.new(n + 1) }
+
+    (0..m).each { |i| d[i][0] = i }
+    (0..n).each { |j| d[0][j] = j }
+    (1..n).each do |j|
+      (1..m).each do |i|
+        d[i][j] = if s[i - 1] == t[j - 1] # adjust index into string
+                    d[i - 1][j - 1]       # no operation required
+                  else
+                    [d[i - 1][j] + 1, # deletion
+                     d[i][j - 1] + 1, # insertion
+                     d[i - 1][j - 1] + 1].min
+                  end
+      end
+    end
+    d[m][n]
   end
 
   def process_file(file_name:)
@@ -61,43 +124,32 @@ namespace :affiliation_import do
   def handle_author(resource:, name:, ror:, org_name:)
     return nil unless resource.present? && name.present?
 
-    # start with the assuption that the firstname lastname split is at the first space
+    # start with the assuption that the firstname lastname split is at the first space, but
+    # if that doesn't match an author on this item, try successive spaces
     parts = name.split(' ')
-    first = parts[0]
-    last = parts[1..-1].join(' ')
-    puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
-    author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
-                                       'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
-                                       'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
-
-    if author.nil? && parts.size > 2
-      # try split at second space, see if we find an author that way
-      first = parts[0..1].join(' ')
-      last = parts[2..-1].join(' ')
+    author = nil
+    (1..parts.size).each do |space_to_try|
+      first = parts[0..space_to_try - 1].join(' ')
+      last = parts[space_to_try..-1].join(' ')
       puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
       author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
                                          'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
                                          'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
+      break if author
     end
 
-    if author.nil? && parts.size > 3
-      # try split at third space, see if we find an author that way
-      first = parts[0..2].join(' ')
-      last = parts[3..-1].join(' ')
-      puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
-      author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
-                                         'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
-                                         'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
-    end
-
-    if author.blank?
-      puts "    WARNING! AUTHOR NOT FOUND!! #{last}, #{first}"
-      if @live_mode
-        # author = StashEngine::Author.new(resource_id: resource.id, author_last_name: last, author_first_name: first)
-        # author.save
-      end
-    end
+    puts "    WARNING! AUTHOR NOT FOUND!! #{name}" if author.blank?
+    record_affiliation_update(resource: resource) if @live_mode
     handle_affiliation(author: author, ror: ror, org_name: org_name)
+  end
+
+  def record_affiliation_update(resource:)
+    return if resource.blank? || resource.curation_activities.blank?
+    return if resource.id == @last_resource&.id
+    resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
+                                                                         note: 'Author affiliations updated by affiliation_import:process_ror_csv',
+                                                                         status: resource.curation_activities.last.status)
+    @last_resource = resource
   end
 
   def handle_affiliation(author:, ror:, org_name:)
@@ -120,15 +172,18 @@ namespace :affiliation_import do
     end
 
     if author.affiliations.present? && ror.blank?
-      puts "    Author already has affiliation, and input file has no ROR, but replacing anyway. author_id=#{author.id}"
+      puts "    Author already has affiliation, and input file has no ROR. author_id=#{author.id}"
       return
     end
 
     # If we have gotten through all of the above checks, we can safely replace any
     # existing affiliation with a "better" affiliation from the input file
-    target_affiliation = StashDatacite::Affiliation.find_or_initialize_by(long_name: org_name, ror_id: ror)
+    target_affiliation = if ror.present?
+                           StashDatacite::Affiliation.from_ror_id(ror_id: ror)
+                         else
+                           StashDatacite::Affiliation.from_long_name(long_name: org_name)
+                         end
     puts "    Assigning affiliation: #{target_affiliation.long_name} --> #{target_affiliation.ror_id}"
-
     return unless @live_mode
     author.affiliation = target_affiliation
     author.save
