@@ -6,7 +6,7 @@ require 'stash/download'
 module Stash
   module Download
 
-    class MerrittException < Exception; end
+    class MerrittException < RuntimeError; end
 
     class VersionPresigned
 
