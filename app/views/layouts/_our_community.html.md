@@ -74,6 +74,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  University of Illinois, Urbana-Champagne
 -  University of New Mexico
 -  University of New South Wales, Sydney
+-  The University of Rhode Island
 -  Victoria University, Melbourne
 -  Yale University
 
