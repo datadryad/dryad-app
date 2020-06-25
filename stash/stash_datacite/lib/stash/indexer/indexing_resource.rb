@@ -231,11 +231,13 @@ module Stash
         (pub_doi.present? ? "#{ids} #{pub_doi.related_identifier}" : ids)
       end
 
+      # rubocop:disable Style/MultilineBlockChain
       def author_affiliations
         @resource.authors.map do |author|
           author.affiliations.map(&:long_name)
-        end.flatten.reject(&:blank?).uniq
+        end.flatten.reject(&:blank?).uniq.reject { |elem| elem == ',' }
       end
+      # rubocop:enable Style/MultilineBlockChain
 
       def author_affiliation_ids
         @resource.authors.map do |author|
