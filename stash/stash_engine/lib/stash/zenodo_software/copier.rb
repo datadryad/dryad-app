@@ -132,7 +132,7 @@ module Stash
           @copy.update(state: 'finished',
                        error_info: "Warning: metadata wasn't updated because the last version was published, "\
                           "versioning of metadata-only changes isn't allowed in zenodo and the public should " \
-                          "only see published metadata changes.")
+                          'only see published metadata changes.')
           return
         end
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
