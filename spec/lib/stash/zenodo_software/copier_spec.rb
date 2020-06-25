@@ -224,11 +224,121 @@ module Stash
         end
 
         describe 'metadata-only update' do
+          before(:each) do
+            @zc.update(state: 'finished') # this make it seem the previous software upload for this finished
+            @resource2 = create(:resource)
+            @resource.identifier.resources << @resource2
+            @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
+                          deposition_id: @zc.deposition_id)
+            @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
+                            file_state: 'copied')
+            @resource2.reload
+          end
 
+          it 'does nothing for metadata-only update and no previous submissions' do
+            @resource_lone = create(:resource)
+            @zc_lone = create(:zenodo_copy, resource: @resource_lone, identifier: @resource_lone.identifier, copy_type: 'software')
+            @zsc_lone = Stash::ZenodoSoftware::Copier.new(copy_id: @zc_lone.id)
+            @zsc_lone.add_to_zenodo
+            @zc_lone.reload
+            # should not see any webmock errors because it shouldn't try contacting the internet
+            expect(@zc_lone.state).to eq('finished')
+            expect(@zc_lone.error_info).to include('No software to submit')
+          end
+
+          it "doesn't reopen a done dataset just to write the metadata (when not publishing)" do
+            stub_get_existing_closed_ds(deposition_id: @zc2.deposition_id)
+            @zsc2.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('finished')
+            expect(@zc2.error_info).to include("Warning: metadata wasn't updated")
+          end
+
+          it "updates the metadata for open versions that haven't been published" do
+            stub_get_existing_ds(deposition_id: @zc2.deposition_id)
+            stub_put_metadata(deposition_id: @zc2.deposition_id)
+            @zsc2.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('finished')
+          end
         end
 
         describe '(regular) file updates' do
+          it 'submits a new dataset for file changes' do
+            expect(File).to exist(@file.calc_file_path)
 
+            deposition_id, bucket_link = stub_new_dataset
+            stub_put_metadata(deposition_id: deposition_id)
+
+            file_coll = @zsc.instance_eval('@file_collection', __FILE__, __LINE__)
+            expect(file_coll).to receive(:ensure_local_files)
+            expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link).and_return(nil)
+
+            @zsc.add_to_zenodo
+            @zc.reload
+            expect(@zc.state).to eq('finished')
+            expect(@zc.deposition_id).to eq(deposition_id)
+            expect(@zc.software_doi).to eq("10.5072/zenodo.#{deposition_id}")
+            expect(@zc.conceptrecid).to eq("#{deposition_id - 1}")
+            expect(File).not_to exist(@file.calc_file_path)
+          end
+
+          describe 'has previous version' do
+
+            before(:each) do
+              @zc.update(state: 'finished') # this make it seem the previous software upload for this finished
+              @resource2 = create(:resource)
+              @resource.identifier.resources << @resource2
+              @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
+                            deposition_id: @zc.deposition_id)
+              @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+              @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
+                              file_state: 'created')
+              @resource2.reload
+            end
+
+            it 'updates an open dataset for file changes' do
+              deposition_id = @zc2.deposition_id
+
+              bucket_link = stub_get_existing_ds(deposition_id: @zc2.deposition_id)
+
+              deposit = @zsc2.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
+              expect(deposit).to receive(:update_metadata)
+
+              file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
+              expect(file_coll).to receive(:ensure_local_files)
+              expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link)
+
+              @zsc2.add_to_zenodo
+              @zc2.reload
+              expect(@zc2.state).to eq('finished')
+              expect(@zc2.deposition_id).to eq(deposition_id)
+              expect(@zc2.software_doi).to eq("10.5072/zenodo.#{deposition_id}")
+              expect(@zc2.conceptrecid).to eq("#{deposition_id - 1}")
+            end
+
+            it 'creates a new version after publication for file changes' do
+              deposition_id = @zc2.deposition_id
+
+              stub_get_existing_closed_ds(deposition_id: @zc2.deposition_id)
+              new_deposition_id = stub_new_version_process(deposition_id: @zc2.deposition_id)
+
+              deposit = @zsc2.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
+              expect(deposit).to receive(:update_metadata)
+
+              file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
+              expect(file_coll).to receive(:ensure_local_files)
+              expect(file_coll).to receive(:synchronize_to_zenodo)
+
+              @zsc2.add_to_zenodo
+              @zc2.reload
+              expect(@zc2.state).to eq('finished')
+              expect(@zc2.deposition_id).to eq(new_deposition_id)
+              expect(@zc2.software_doi).to eq("10.5072/zenodo.#{new_deposition_id}")
+              expect(@zc2.conceptrecid).to eq("#{new_deposition_id - 1}")
+            end
+          end
         end
 
       end
