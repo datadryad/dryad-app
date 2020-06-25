@@ -127,10 +127,12 @@ module Stash
       # no files are changing, but a previous version should always exist
       def metadata_only_update
         if @resp[:state] == 'done'
-          # don't reopen for file changes and just update status
+          # don't reopen for metadata changes and just update status
+          # because metadata is only updated to public on publishing or if the version is unpublished and public won't see changes.
           @copy.update(state: 'finished',
-                       error_info: "Warning: metadata wasn't updated because the dataset is closed for editing since "\
-                          'creating new versions for metadata-only changes is not allowed in Zenodo.')
+                       error_info: "Warning: metadata wasn't updated because the last version was published, "\
+                          "versioning of metadata-only changes isn't allowed in zenodo and the public should " \
+                          "only see published metadata changes.")
           return
         end
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
