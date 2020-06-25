@@ -229,10 +229,10 @@ module Stash
             @resource2 = create(:resource)
             @resource.identifier.resources << @resource2
             @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
-                          deposition_id: @zc.deposition_id)
+                                        deposition_id: @zc.deposition_id)
             @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
             @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                            file_state: 'copied')
+                                              file_state: 'copied')
             @resource2.reload
           end
 
@@ -280,7 +280,7 @@ module Stash
             expect(@zc.state).to eq('finished')
             expect(@zc.deposition_id).to eq(deposition_id)
             expect(@zc.software_doi).to eq("10.5072/zenodo.#{deposition_id}")
-            expect(@zc.conceptrecid).to eq("#{deposition_id - 1}")
+            expect(@zc.conceptrecid).to eq((deposition_id - 1).to_s)
             expect(File).not_to exist(@file.calc_file_path)
           end
 
@@ -291,10 +291,10 @@ module Stash
               @resource2 = create(:resource)
               @resource.identifier.resources << @resource2
               @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
-                            deposition_id: @zc.deposition_id)
+                                          deposition_id: @zc.deposition_id)
               @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
               @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                              file_state: 'created')
+                                                file_state: 'created')
               @resource2.reload
             end
 
@@ -315,12 +315,10 @@ module Stash
               expect(@zc2.state).to eq('finished')
               expect(@zc2.deposition_id).to eq(deposition_id)
               expect(@zc2.software_doi).to eq("10.5072/zenodo.#{deposition_id}")
-              expect(@zc2.conceptrecid).to eq("#{deposition_id - 1}")
+              expect(@zc2.conceptrecid).to eq((deposition_id - 1).to_s)
             end
 
             it 'creates a new version after publication for file changes' do
-              deposition_id = @zc2.deposition_id
-
               stub_get_existing_closed_ds(deposition_id: @zc2.deposition_id)
               new_deposition_id = stub_new_version_process(deposition_id: @zc2.deposition_id)
 
@@ -336,7 +334,7 @@ module Stash
               expect(@zc2.state).to eq('finished')
               expect(@zc2.deposition_id).to eq(new_deposition_id)
               expect(@zc2.software_doi).to eq("10.5072/zenodo.#{new_deposition_id}")
-              expect(@zc2.conceptrecid).to eq("#{new_deposition_id - 1}")
+              expect(@zc2.conceptrecid).to eq((new_deposition_id - 1).to_s)
             end
           end
         end

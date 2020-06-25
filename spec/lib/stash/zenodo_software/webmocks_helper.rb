@@ -11,7 +11,7 @@ module Stash
           .to_return(status: 200,
                      body: simple.merge(state: 'unsubmitted').to_json,
                      headers: { 'Content-Type' => 'application/json' })
-        return simple[:links][:bucket]
+        simple[:links][:bucket]
       end
 
       def stub_get_existing_closed_ds(deposition_id:)
@@ -21,27 +21,27 @@ module Stash
           .to_return(status: 200,
                      body: simple.merge(state: 'done').to_json,
                      headers: { 'Content-Type' => 'application/json' })
-        return simple[:links][:bucket]
+        simple[:links][:bucket]
       end
 
       def stub_put_metadata(deposition_id:)
         stub_request(:put, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}?access_token=ThisIsAFakeToken")
-            .with(headers: { 'Content-Type' => 'application/json' })
-            .to_return(status: 200,
-                       body: simple_body(deposition_id: deposition_id).merge(state: 'done').to_json,
-                       headers: { 'Content-Type' => 'application/json' })
+          .with(headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 200,
+                     body: simple_body(deposition_id: deposition_id).merge(state: 'done').to_json,
+                     headers: { 'Content-Type' => 'application/json' })
       end
 
       # returns the deposition_id and bucket link
       def stub_new_dataset
         deposition_id = rand.to_s[2..8].to_i
         simple = simple_body(deposition_id: deposition_id)
-        stub_request(:post, "https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken")
-            .with(headers: { 'Content-Type' => 'application/json' })
-            .to_return(status: 200,
-                       body: simple.merge(state: 'unsubmitted').to_json,
-                       headers: { 'Content-Type' => 'application/json' })
-        return deposition_id, simple[:links][:bucket]
+        stub_request(:post, 'https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken')
+          .with(headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 200,
+                     body: simple.merge(state: 'unsubmitted').to_json,
+                     headers: { 'Content-Type' => 'application/json' })
+        [deposition_id, simple[:links][:bucket]]
       end
 
       def stub_new_version_process(deposition_id:)
@@ -49,10 +49,10 @@ module Stash
         new_link = "https://sandbox.zenodo.org/api/deposit/depositions/#{new_deposition_id}?access_token=ThisIsAFakeToken"
 
         stub_request(:post, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}/actions/newversion?access_token=ThisIsAFakeToken")
-            .with(headers: { 'Content-Type' => 'application/json' })
-            .to_return(status: 200,
-                       body: { links: { latest_draft: new_link } }.to_json,
-                       headers: { 'Content-Type' => 'application/json' })
+          .with(headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 200,
+                     body: { links: { latest_draft: new_link } }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
 
         stub_get_existing_ds(deposition_id: new_deposition_id)
         new_deposition_id
