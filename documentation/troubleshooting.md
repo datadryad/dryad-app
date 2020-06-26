@@ -1,5 +1,5 @@
-Troubleshooting
-==================
+Troubleshooting and Maintenance
+===============================
 
 Some common problems and how to deal with them.
 
@@ -123,7 +123,7 @@ may not be getting quick enough feedback.
 
 
 Updating DataCite Metadata
-===========================
+==========================
 
 Occasionally, there will be a problem sending metadata to DataCite for
 an item. You can force the metadata in DataCite to update by:
@@ -131,6 +131,17 @@ an item. You can force the metadata in DataCite to update by:
 ```
 idg = Stash::Doi::IdGen.make_instance(resource: r)
 idg.update_identifier_metadata!
+```
+
+If you need to update DataCite for *all* items in Dryad, you can use:
+```
+RAILS_ENV=production bundle exec rake datacite_target:update_dryad
+```
+
+There is a similar process for updating all items not in the main
+Dryad tenant:
+```
+RAILS_ENV=production bundle exec rake datacite_target:update_dash
 ```
 
 Fixing incorrect ROR affiliations

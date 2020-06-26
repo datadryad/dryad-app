@@ -3,6 +3,9 @@ require_relative 'datacite_target/dash_updater'
 # rubocop:disable Metrics/BlockLength
 namespace :datacite_target do
 
+  # This will update only items that are in non-Dryad tenants
+  # Historically, it only included "Dash" items, but now more
+  # items have non-Dryad tenants
   desc 'update_dash DOI targets to reflect new environment'
   task update_dash: :environment do
     stash_ids = DashUpdater.dash_items_to_update
@@ -22,7 +25,7 @@ namespace :datacite_target do
     start_from = 0
     start_from = ARGV[1].to_i unless ARGV[1].blank?
 
-    stash_ids = DashUpdater.dryad_items_to_update
+    stash_ids = DashUpdater.all_items_to_update
 
     stash_ids.each_with_index do |stash_id, idx|
       next if idx < start_from
