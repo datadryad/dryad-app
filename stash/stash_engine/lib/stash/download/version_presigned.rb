@@ -5,6 +5,9 @@ require 'stash/download'
 
 module Stash
   module Download
+
+    class MerrittException < RuntimeError; end
+
     class VersionPresigned
 
       def initialize(resource:)
@@ -29,10 +32,11 @@ module Stash
       # 200 for URL being present to download
       # 202 for needing to wait with a progress bar
       # 404 for not found
+      # rubocop:disable Metrics/CyclomaticComplexity
       def download
         assemble_hash = {}
         assemble_hash = assemble if @resource.download_token.token.blank?
-        return { status: 404 } if assemble_hash[:status] == 404
+        return assemble_hash if assemble_hash[:status] == 404
 
         status_hash = status
 
@@ -40,7 +44,11 @@ module Stash
 
         # if token not found or expired, then attempt to assemble it again
         if [404, 410].include?(status_hash[:status])
-          assemble
+          assemble_hash = assemble
+
+          # handle the object not found in Merritt by returning the same status
+          return assemble_hash if assemble_hash[:status] == 404
+
           status_hash = status # refresh status hash after assembling again
         end
 
@@ -49,6 +57,7 @@ module Stash
 
         status_hash
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       # this does a limited poll and download if it becomes available within a reasonable time
       def poll_and_download(delay: 2.5, tries: 2)
@@ -79,7 +88,9 @@ module Stash
           token.save
           json
         else
-          { status: resp.status }
+          raise MerrittException, "status code: #{resp.status.code} from Merritt for #{assemble_version_url}\n#{resp.body}" if resp.status.code >= 500
+
+          { status: resp.status.code, body: resp.body.to_s }
         end
       end
 
@@ -90,6 +101,9 @@ module Stash
       # 410 -- expired
       def status
         resp = @http.get(status_url)
+        # sometimes Merritt returns non-JSON mimetypes so we don't want to parse them, maybe mostly for 404s?
+        return { status: resp.status.code }.with_indifferent_access if resp.mime_type != 'application/json'
+
         resp.parse.with_indifferent_access
       end
 

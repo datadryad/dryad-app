@@ -62,6 +62,12 @@ r=StashEngine::Resource.find(<resource_id>)
 r.submit_to_solr
 ```
 
+If many datasets need to be reindexed, it is often best to reindex the
+entire system:
+```
+RAILS_ENV=production bundle exec rake rsolr:reindex
+```
+
 Forcing a dataset to submit
 ============================
 
