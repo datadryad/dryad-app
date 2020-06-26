@@ -13,6 +13,12 @@ module DashUpdater
       .where("stash_engine_resources.tenant_id = 'dryad'").order('stash_engine_identifiers.id').distinct
   end
 
+  def self.all_items_to_update
+    # always order ID
+    StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
+      .order('stash_engine_identifiers.id').distinct
+  end
+
   def self.submit_id_metadata(stash_identifier:, retry_pause: 10)
     resource = stash_identifier.resources.where(meta_view: true).order('id DESC').first
     return if resource.nil?
