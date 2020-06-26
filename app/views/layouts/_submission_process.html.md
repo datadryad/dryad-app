@@ -54,7 +54,6 @@
 <li>Usage Notes: Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed</li>
 <li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s)</li>
 <li>Related Works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
-<li>Location information: Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research</li>
 </ul>
 
 <h2 id="upload-methods">Upload Methods</h2>
