@@ -31,12 +31,12 @@ module Stash
       it 'makes appropriate http request for upload' do
         request_url = "#{@bucket_url}/#{ERB::Util.url_encode(@software_upload.upload_file_name)}?access_token=ThisIsAFakeToken"
 
-        stub_request(:put, request_url).
-            to_return(status: 200,
-                      body: { checksum: "md5:#{@file_digest}"}.to_json,
-                      headers: { 'Content-Type' => 'application/json' })
+        stub_request(:put, request_url)
+          .to_return(status: 200,
+                     body: { checksum: "md5:#{@file_digest}" }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
 
-        expect{ @zf.upload(file_model: @software_upload) }.not_to raise_error
+        expect { @zf.upload(file_model: @software_upload) }.not_to raise_error
       end
 
       it 'makes correct http request to remove file' do
@@ -44,23 +44,23 @@ module Stash
 
         request_url = "#{@bucket_url}/#{ERB::Util.url_encode(@software_upload.upload_file_name)}?access_token=ThisIsAFakeToken"
 
-        stub_request(:delete, request_url).
-            to_return(status: 200,
-                      body: { checksum: "md5:#{@file_digest}"}.to_json,
-                      headers: { 'Content-Type' => 'application/json' })
+        stub_request(:delete, request_url)
+          .to_return(status: 200,
+                     body: { checksum: "md5:#{@file_digest}" }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
 
-        expect{ @zf.remove(file_model: @software_upload)}.not_to raise_error
+        expect { @zf.remove(file_model: @software_upload) }.not_to raise_error
       end
 
       it 'throws errors on mismatched md5sums' do
         request_url = "#{@bucket_url}/#{ERB::Util.url_encode(@software_upload.upload_file_name)}?access_token=ThisIsAFakeToken"
 
-        stub_request(:put, request_url).
-            to_return(status: 200,
-                      body: { checksum: "md5:#{@file_digest}cat"}.to_json,
-                      headers: { 'Content-Type' => 'application/json' })
+        stub_request(:put, request_url)
+          .to_return(status: 200,
+                     body: { checksum: "md5:#{@file_digest}cat" }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
 
-        expect{ @zf.upload(file_model: @software_upload) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+        expect { @zf.upload(file_model: @software_upload) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
       end
     end
   end
