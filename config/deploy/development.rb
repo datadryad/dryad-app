@@ -77,6 +77,9 @@ role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 namespace :deploy do
 
+  before :starting, :stop_delayed_job
+  after :finished, :start_delayed_job
+
   #desc 'update local engines to get around requiring version number changes in development'
   #task :update_local_engines do
   #  on roles(:app) do

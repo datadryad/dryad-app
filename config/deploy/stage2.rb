@@ -10,6 +10,11 @@
 set :rails_env, 'stage'
 set :passenger_pool, '6'
 
+namespace :deploy do
+  before :starting, :stop_delayed_job
+  after :finished, :start_delayed_job
+end
+
 #set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
 
 # To override the default host, set $SERVER_HOSTS, e.g.

@@ -101,6 +101,20 @@ namespace :deploy do
     end
   end
 
+  desc 'stop delayed_job'
+  task :stop_delayed_job do
+    on roles(:app) do
+      execute "cd #{deploy_to}/current; bundle exec bin/delayed_job -n 3 stop"
+    end
+  end
+
+  desc 'start delayed_job'
+  task :start_delayed_job do
+    on roles(:app) do
+      execute "cd #{deploy_to}/current; bundle exec bin/delayed_job -n 3 start"
+    end
+  end
+
   after :restart, :clear_cache do
     on roles(:app), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
