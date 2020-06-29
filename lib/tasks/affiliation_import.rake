@@ -47,9 +47,21 @@ namespace :affiliation_import do
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
   end
 
-  desc 'Detect duplicate authors'
-  task detect_duplicate_authors: :environment do
+  desc 'Merge duplicate authors'
+  task merge_duplicate_authors: :environment do
     start_time = Time.now
+    @live_mode = false
+
+    case ENV['AUTHOR_MERGE_MODE']
+    when nil
+      puts 'Environment variable AUTHOR_MERGE_MODE is blank, assuming test mode.'
+    when 'live'
+      puts 'Starting live processing due to environment variable AUTHOR_MERGE_MODE.'
+      @live_mode = true
+    else
+      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV['AUTHOR_MERGE_MODE']}, entering test mode."
+    end
+
     StashEngine::Identifier.all.each do |i|
       next unless i.latest_resource.present?
       puts "Processing #{i.identifier} #{i.latest_resource.title}"
@@ -62,19 +74,88 @@ namespace :affiliation_import do
           next unless duplicates?(authors[a], authors[b])
           autha = authors[a].author_standard_name
           authb = authors[b].author_standard_name
-          puts("POTENTIAL DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
+          puts("DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
                "#{levenshtein_distance(autha, authb).to_f / (autha.size > authb.size ? autha.size : authb.size)}")
+          do_author_merge(authors[a], authors[b]) if @live_mode
         end
       end
     end
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
   end
 
+  def do_author_merge(a1, a2)
+    # keep the text of the name that is longest, but
+    # keep the affiliation for the author that was updated most recently
+    target_first = a1.author_first_name
+    target_last = a1.author_last_name
+    if a1.author_standard_name.size < a2.author_standard_name.size
+      target_first = a2.author_first_name
+      target_last = a2.author_last_name
+    end
+    target_affil = (a1.updated_at > a2.updated_at ? a1.affiliation : a2.affiliation)
+    target_email = (a1.author_email.present? ? a1.author_email : a2.author_email)
+    target_orcid = (a1.author_orcid.present? ? a1.author_orcid : a2.author_orcid)
+
+    a1.author_first_name = target_first
+    a1.author_last_name = target_last
+    a1.affiliation = target_affil
+    a1.author_email = target_email
+    a1.author_orcid = target_orcid
+    a1.save
+    a2.destroy
+  end
+
   def duplicates?(author1, author2)
-    # get array of initials, downcased
-    a1init = "#{author1.author_first_name} #{author1.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
-    a2init = "#{author2.author_first_name} #{author2.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
-    a1init == a2init
+    # To prevent names with repeated initials (Molly Mason) from over-matching,
+    # if distance is >= 0.5, must have all of their initials the same before doing the normal tests
+    a1_std = author1.author_standard_name
+    a2_std = author2.author_standard_name
+    string_difference = levenshtein_distance(a1_std, a2_std).to_f / (a1_std.size > a2_std.size ? a1_std.size : a2_std.size)
+    if string_difference >= 0.5
+      a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+      a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+      return false unless a1_initials == a2_initials
+    end
+
+    a1 = "#{author1.author_first_name} #{author1.author_last_name}".downcase.split(' ')
+    a2 = "#{author2.author_first_name} #{author2.author_last_name}".downcase.split(' ')
+
+    # ensure a1 is the author with the most parts in their name (otherwise a single-part name would match almost anything)
+    if a1.size < a2.size
+      temp = a1
+      a1 = a2
+      a2 = temp
+    end
+
+    # iterate through each part of the string
+    a1.each_with_index do |a1part, index|
+      # if this part matches (same or initial), move to the next section
+      next if author_part_matches?(a1part, a2[index])
+      # if the corresponding part doesn't match, see if the next/previous section matches,
+      # because many differences are the addition/deletion of a middle initial.
+      next if author_part_matches?(a1part, a2[index + 1])
+      next if (index > 0) && author_part_matches?(a1part, a2[index - 1])
+      # if none of the above matched, the authors are not matches
+      return false
+    end
+    # if we checked the entire string, the authors are duplicates
+    true
+  end
+
+  def author_part_matches?(s1, s2)
+    return true if s1 == s2
+    return false if s1.blank? || s2.blank?
+
+    # true if s1 is an initial of s2
+    return true if s1.size == 1 && s1 == s2[0]
+    return true if s1.size == 2 && s1[1] == '.' && s1[0] == s2[0]
+
+    # true if s2 is an initial of s1
+    return true if s2.size == 1 && s2 == s1[0]
+    return true if s2.size == 2 && s2[1] == '.' && s2[0] == s1[0]
+
+    # if the two strings are neither the same nor an initial of each other, they don't match
+    false
   end
 
   # levenshtein_distance from https://stackoverflow.com/questions/16323571/measure-the-distance-between-two-strings-with-ruby
