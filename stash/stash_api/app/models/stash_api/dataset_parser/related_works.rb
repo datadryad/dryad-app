@@ -21,9 +21,11 @@ module StashApi
       def parse
         clear
         return if @hash['relatedWorks'].blank?
+
         @hash['relatedWorks'].each do |rw|
           next if rw.blank? || !LowerRelationTypes.include?(rw['relationship']&.downcase) ||
               !LowerIdentifierTypes.include?(rw['identifierType']&.downcase)
+
           @resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
             related_identifier: rw['identifier'],
             related_identifier_type: rw['identifierType']&.downcase,

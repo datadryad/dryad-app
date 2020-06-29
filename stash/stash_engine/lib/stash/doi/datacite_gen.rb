@@ -45,7 +45,7 @@ module Stash
 
       # strip off the icky doi: at the first
       def bare_identifier
-        resource.identifier_str.gsub(/^doi\:/, '')
+        resource.identifier_str.gsub(/^doi:/, '')
       end
 
       def prefix

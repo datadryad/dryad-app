@@ -42,6 +42,7 @@ class CollectionSet
     new_last_retrieved = last_retrieved # default to old value for no records in set
     records.each do |record|
       next if record.deleted?
+
       Config.logger.info("Notifying Dryad status, doi:#{record.doi}, version: #{record.version} ---- #{record.title} (#{record.timestamp.iso8601})")
       new_last_retrieved = record.timestamp
 

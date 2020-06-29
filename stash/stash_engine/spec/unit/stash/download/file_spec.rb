@@ -16,7 +16,7 @@ module Stash
           @identifier = create(:identifier)
           @resource = create(:resource, identifier_id: @identifier.id)
 
-          @file = File.new(controller_context: OpenStruct.new(response_body:  '',
+          @file = File.new(controller_context: OpenStruct.new(response_body: '',
                                                               response: OpenStruct.new(headers: {})))
           @file_upload = create(:file_upload)
           allow(@file_upload).to receive(:merritt_express_url).and_return('http://grah.example.com')
@@ -34,7 +34,7 @@ module Stash
       describe '#disposition_filename' do
         before(:each) do
           @file_upload = create(:file_upload, upload_file_name: 'go/to/Sidlauskas 2007 Data.xls')
-          @file = File.new(controller_context: OpenStruct.new(response_body:  '',
+          @file = File.new(controller_context: OpenStruct.new(response_body: '',
                                                               response: OpenStruct.new(headers: {})))
           @file.file = @file_upload
         end

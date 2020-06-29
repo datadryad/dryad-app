@@ -19,6 +19,7 @@ module Stash
       # @return [String] the filename
       def file_name
         return @file_name if @file_name
+
         raise NoMethodError, "#{self.class} should either provide :file_name in the initializer, or override #file_name; but it doesn't"
       end
 
@@ -47,6 +48,7 @@ module Stash
       def write_file(target_dir)
         file_contents = contents
         return unless file_contents
+
         outfile = File.join(target_dir, file_name)
         FileUtils.mkdir_p(File.dirname(outfile))
         mode = binary? ? 'wb' : 'w'

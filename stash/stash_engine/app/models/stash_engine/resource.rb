@@ -49,6 +49,7 @@ module StashEngine
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+
           if file.file_state == 'created'
             file.file_state = 'copied'
             file.save
@@ -77,6 +78,7 @@ module StashEngine
 
     def update_stash_identifier_last_resource
       return if identifier.nil?
+
       # identifier.update(latest_resource_id: id) # set to my resource_id
       res = Resource.where(identifier_id: identifier_id).order(id: :desc).first
       identifier.update_column(:latest_resource_id, res&.id) # no callbacks, does bad stuff when duplicating with amoeba dup
@@ -86,8 +88,10 @@ module StashEngine
       # if no more resources after a removal for a StashEngine::Identifier then there is no remaining content for that Identifier
       # only in-progress resources are destroyed, but there may be earlier submitted ones
       return if identifier_id.nil?
+
       res_count = Resource.where(identifier_id: identifier_id).count
       return if res_count.positive?
+
       Identifier.destroy(identifier_id)
     end
 
@@ -99,6 +103,7 @@ module StashEngine
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
       return if stash_version && current_resource_state_id
+
       init_version unless stash_version
       init_state unless current_resource_state_id
       init_curation_status if curation_activities.empty?
@@ -276,6 +281,7 @@ module StashEngine
     def upload_type
       return :manifest if file_uploads.newly_created.url_submission.count > 0
       return :files if file_uploads.newly_created.file_submission.count > 0
+
       :unknown
     end
 
@@ -315,6 +321,7 @@ module StashEngine
     def merritt_producer_download_uri
       return nil if download_uri.nil?
       return nil unless download_uri =~ %r{^https*://[^/]+/d/\S+$}
+
       version_number = stash_version.merritt_version
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
@@ -326,6 +333,7 @@ module StashEngine
     def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
       return nil unless download_uri =~ %r{^https*://[^/]+/d/\S+$}
+
       matches = download_uri.match(%r{^(https*://[^/]+)/d/(\S+)$})
       [matches[1], matches[2]]
     end
@@ -347,8 +355,10 @@ module StashEngine
 
     def current_state=(value)
       return if value == current_state
+
       my_state = current_resource_state
       raise "current_resource_state not initialized for resource #{id}" unless my_state
+
       # If the value is :submitted we need to prepare the resource for curation
       prepare_for_curation if value == 'submitted' && !preserve_curation_status?
       my_state.resource_state = value
@@ -393,6 +403,7 @@ module StashEngine
     def identifier_str
       ident = identifier
       return unless ident
+
       ident_type = ident.identifier_type
       ident && "#{ident_type && ident_type.downcase}:#{ident.identifier}"
     end
@@ -400,8 +411,10 @@ module StashEngine
     def identifier_uri
       ident = identifier
       return unless ident
+
       ident_type = ident.identifier_type
       raise TypeError, "Unsupported identifier type #{ident_type}" unless ident_type == 'DOI'
+
       "https://doi.org/#{ident.identifier}"
     end
 
@@ -415,6 +428,7 @@ module StashEngine
       doi_value = doi.start_with?('doi:') ? doi.split(':', 2)[1] : doi
       return if current_id_value == doi_value
       raise ArgumentError, "Resource #{id} already has an identifier #{current_id_value}; can't set new value #{doi_value}" if current_id_value
+
       ensure_identifier_and_version(doi_value)
     end
 
@@ -482,6 +496,7 @@ module StashEngine
 
     def tenant
       return nil unless tenant_id
+
       Tenant.find(tenant_id)
     end
 
@@ -495,6 +510,7 @@ module StashEngine
 
     def admin_for_this_item?(user: nil)
       return false if user.nil?
+
       user.superuser? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
@@ -504,6 +520,7 @@ module StashEngine
     # have the permission to edit
     def permission_to_edit?(user:)
       return false unless user
+
       # superuser, dataset owner or admin for the same tenant
       admin_for_this_item?(user: user)
     end
@@ -517,6 +534,7 @@ module StashEngine
       return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
+
       admin_for_this_item?(user: ui_user)
     end
 
@@ -524,6 +542,7 @@ module StashEngine
     def may_view?(ui_user: nil)
       return true if metadata_published? # anyone can view
       return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
+
       admin_for_this_item?(user: ui_user)
     end
 
@@ -547,6 +566,7 @@ module StashEngine
 
     def fill_blank_author!
       return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
+
       fill_author_from_user!
     end
 
@@ -598,12 +618,14 @@ module StashEngine
       # no identifier, has to be in progress
       return current_editor_id if identifier.nil?
       return identifier.in_progress_resource.current_editor_id if identifier.in_progress? && identifier.in_progress_resource.present?
+
       nil
     end
 
     # calculated current editor name, ignores nil current editor as current logged in user
     def dataset_in_progress_editor
       return user if dataset_in_progress_editor_id.nil?
+
       User.where(id: dataset_in_progress_editor_id).first
     end
 
@@ -625,6 +647,7 @@ module StashEngine
 
     def send_to_zenodo
       return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
+
       ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id) if zenodo_copy.nil?
       ZenodoCopyJob.perform_later(id)
     end
@@ -658,10 +681,8 @@ module StashEngine
       # back to :curation status. Also carry over the curators note so that it appears in the activity log
       return unless %w[action_required curation].include?(prior_version.current_curation_status)
 
-      # rubocop:disable Layout/AlignHash
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
-        note: edit_histories.last&.user_comment || 'ready for curation')
-      # rubocop:enable Layout/AlignHash
+                                                                  note: edit_histories.last&.user_comment || 'ready for curation')
     end
   end
 end

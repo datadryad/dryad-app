@@ -22,6 +22,7 @@ module Stash
 
       def valid_size(bytes)
         return bytes if bytes && bytes.respond_to?(:to_i) && bytes == bytes.to_i
+
         raise ArgumentError, "specified file size does not appear to be an integer byte count: #{bytes || 'nil'}"
       end
     end

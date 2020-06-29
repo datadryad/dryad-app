@@ -28,6 +28,7 @@ module LinkOut
       raise "Unable to connect to connect to - #{@pubmed_api}?#{query}: status: #{resp.code}" if resp.code != 200
       # Return an empty array if the response did not have any results
       return nil if resp.code != 200 || resp.blank?
+
       resp.body
     end
 
@@ -54,6 +55,7 @@ module LinkOut
     def valid_xml?(file_name, schema)
       # Do the appropriate validation based on the file type
       return validate_against_xsd(file_name, schema) if schema.downcase.ends_with?('.xsd')
+
       validate_against_dtd(file_name, schema)
     end
 
@@ -63,6 +65,7 @@ module LinkOut
       xsd = Nokogiri::XML::Schema(File.read(xsd_file))
       doc = Nokogiri::XML(File.read(xml_file))
       return true if xsd.valid?(doc)
+
       p "      ERROR! #{xml_file} does not conform to the XML schema defined in: #{xsd_file}:"
       xsd.validate(doc).each { |err| p err.to_s }
       false

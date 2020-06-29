@@ -13,6 +13,7 @@ module Stash
       def initialize(resource:, packaging:)
         raise ArgumentError, 'No resource provided' unless resource
         raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
+
         @resource = resource
         @packaging = packaging
       end

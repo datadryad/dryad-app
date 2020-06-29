@@ -6,6 +6,7 @@ module StashEngine
     # from the old dryad system to this Stash based system
     def migration_email(user)
       return false unless user.present?
+
       @email = user.old_dryad_email
       @code = user.migration_token
       @url = auth_migrate_code_url

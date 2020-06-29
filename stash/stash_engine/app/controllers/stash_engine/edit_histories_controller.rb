@@ -17,6 +17,7 @@ module StashEngine
 
     def resources_in_dataset
       return @resource.identifier.resources if @resource.identifier
+
       [@resource] # just this resource no other versions
     end
 

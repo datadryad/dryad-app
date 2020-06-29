@@ -67,6 +67,7 @@ module StashDatacite
         .only_geo_bbox(params[:resource_id])
         .where(ne_latitude: n_lat, ne_longitude: e_long, sw_latitude: s_lat, sw_longitude: w_long)
       return nil if boxes.empty?
+
       boxes.first.geolocation
     end
 
@@ -94,6 +95,7 @@ module StashDatacite
     def find_or_create_geolocation(box_params)
       existing = find_geolocation_by_box(box_params)
       return existing if existing
+
       Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
                                         box_params[:sw_latitude], box_params[:sw_longitude]],
                                   resource_id: params[:resource_id])

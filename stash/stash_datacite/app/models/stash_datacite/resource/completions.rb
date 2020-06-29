@@ -44,6 +44,7 @@ module StashDatacite
       def author_name
         num_authors = @resource.authors.count
         return false if num_authors < 1
+
         # the completely filled in authors must equal number of authors
         @resource.authors.names_filled.count == num_authors
       end
@@ -51,6 +52,7 @@ module StashDatacite
       def author_email
         num_authors = @resource.authors.count
         return false if num_authors < 1
+
         author = @resource.authors.order(created_at: :asc).first
         author.author_email.present? ? true : false
       end
@@ -58,6 +60,7 @@ module StashDatacite
       def author_affiliation
         num_authors = @resource.authors.count
         return false if num_authors < 1
+
         # the completely filled in authors must equal number of authors
         @resource.authors.select { |a| a.affiliation.present? }.count == num_authors
       end
@@ -69,6 +72,7 @@ module StashDatacite
       # If the journal is filled in, either the manuscript_number or publication_article_doi must be present
       def article_id
         return true unless @resource.identifier.publication_name
+
         @resource.identifier.manuscript_number || @resource.identifier.publication_article_doi
       end
 

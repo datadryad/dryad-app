@@ -37,18 +37,17 @@ module Stash
           # and doesn't need to assemble files into a zip file like the full version download does.
           # We don't want to hold dead download threads open too long for resource and network reasons.
 
-          begin
-            http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-              .timeout(connect: 30, read: read_timeout).timeout(3.hours.to_i).follow(max_hops: 10)
-              .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
-            # .persistent(URI.join(url, '/').to_s)
-            merritt_response = http.get(url)
+          http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+            .timeout(connect: 30, read: read_timeout).timeout(3.hours.to_i).follow(max_hops: 10)
+            .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
+          # .persistent(URI.join(url, '/').to_s)
+          merritt_response = http.get(url)
 
-            send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
-            send_stream(merritt_stream: merritt_response, user_stream: user_stream)
-          rescue StandardError => ex
-            cc.logger.error("Error opening merritt URL: #{ex}")
-          end
+          send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
+          send_stream(merritt_stream: merritt_response, user_stream: user_stream)
+        rescue StandardError => e
+          cc.logger.error("Error opening merritt URL: #{e}")
+
         end
         cc.response.close
       end
@@ -72,10 +71,10 @@ module Stash
         stream.write(out_headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
-      rescue StandardError => ex
-        Rails.logger.error("Error writing header: #{ex}")
+      rescue StandardError => e
+        Rails.logger.error("Error writing header: #{e}")
         stream.close
-        raise ex
+        raise e
       end
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
@@ -108,9 +107,9 @@ module Stash
 
         write_thread.join
         read_thread.join
-      rescue StandardError => ex
-        cc.logger.error("Error while streaming: #{ex}")
-        cc.logger.error("Error while streaming: #{ex.backtrace}")
+      rescue StandardError => e
+        cc.logger.error("Error while streaming: #{e}")
+        cc.logger.error("Error while streaming: #{e.backtrace}")
       ensure
         user_stream&.close unless user_stream&.closed?
         # merritt_stream&.close unless merritt_stream&.closed?
@@ -128,12 +127,12 @@ module Stash
           write_file.write(chunk)
           break if @download_canceled
         end
-      rescue EOFError => ex
+      rescue EOFError => e
         # I believe Ruby has this error with certain kinds of IO objects such as StringIO in testing, but seems to have written
         # the chunk, anyway.  But if it does happen I guess it's all fine, the stream is done and time to close it anyway
         # with the ensure.  Doesn't seem to happen with the HTTP library.
         # https://github.com/ohler55/ox/issues/7
-        cc.logger.info("EoF reached in Merritt Stream: #{ex}")
+        cc.logger.info("EoF reached in Merritt Stream: #{e}")
       ensure
         write_file.close unless write_file.closed?
       end

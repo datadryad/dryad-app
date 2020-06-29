@@ -189,6 +189,7 @@ module StashEngine
         # Swap a term into the SQL snippet/clause
         def add_term_to_clause(clause, term)
           return nil unless clause.present? && term.present?
+
           format(clause.to_s, term: ActiveRecord::Base.connection.quote(term))
         end
 

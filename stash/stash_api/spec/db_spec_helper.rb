@@ -1,3 +1,4 @@
+# rubocop:disable Lint/SuppressedException
 require 'spec_helper'
 require 'database_cleaner'
 require 'colorize'
@@ -14,6 +15,7 @@ def check_connection_config!
   db_config = ActiveRecord::Base.connection_config
   host = db_config[:host]
   raise("Can't run destructive tests against non-local database #{host || 'nil'}") unless host == 'localhost'
+
   msg = "Using database #{db_config[:database]} on host #{host} with username #{db_config[:username]}"
   puts msg.colorize(:yellow)
 end
@@ -41,16 +43,13 @@ end
 RSpec.configure do |config|
   config.before(:suite) do
     run_migrations!
-
-    # rubocop:disable Lint/HandleExceptions
     # had problems in tests with the columns being out of date, but only in a new database such as on Travis, ick. OUr nasty, janky test setup.
     ActiveRecord::Base.descendants.each do |model|
-      begin
-        model.connection.schema_cache.clear!
-        model.reset_column_information
-      rescue NameError; end
+
+      model.connection.schema_cache.clear!
+      model.reset_column_information
+    rescue NameError
     end
-    # rubocop:enable Lint/HandleExceptions
 
     DatabaseCleaner.strategy = :deletion
     puts 'Clearing test database'.colorize(:yellow)
@@ -67,3 +66,4 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 end
+# rubocop:enable Lint/SuppressedException

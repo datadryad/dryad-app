@@ -45,7 +45,7 @@ module Stash
 
       # make it give a filename based on DOI and version with stuff sanitized out
       def disposition_filename
-        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[\:\\/]+}, '_'))
+        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[:\\/]+}, '_'))
         fn.gsub!(/,|;|'|"|\u007F/, '')
         fn << "__v#{@resource.stash_version.version}"
         "#{fn}.zip"

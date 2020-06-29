@@ -18,6 +18,7 @@ module StashDatacite
     # prefer short_name if it is set over long name and make string
     def smart_name(show_asterisk: false)
       return '' if short_name.blank? && long_name.blank?
+
       chosen_name = (short_name.blank? ? long_name.strip : short_name.strip)
       if chosen_name.end_with?('*') && !show_asterisk
         chosen_name[0..-2]
@@ -28,14 +29,17 @@ module StashDatacite
 
     def country_name
       return nil if ror_id.blank?
+
       ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
       return nil if ror_org.nil? || ror_org.country.nil?
+
       ror_org.country['country_name']
     end
 
     def fee_waivered?
       return false if country_name.nil?
       return false unless country_name.present?
+
       fee_waiver_countries&.include?(country_name)
     end
 
@@ -66,8 +70,10 @@ module StashDatacite
     # from our DB. If one isn't present, just create a new affiliation.
     def self.from_ror_id(ror_id:)
       return nil if ror_id.blank?
+
       db_affils = Affiliation.where('LOWER(ror_id) = LOWER(?)', ror_id)
       return db_affils.first if db_affils.any?
+
       ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
       Affiliation.new(long_name: ror_org&.name, ror_id: ror_id)
     rescue Stash::Organization::RorError
@@ -76,8 +82,10 @@ module StashDatacite
 
     def self.from_isni_id(isni_id:)
       return nil if isni_id.blank?
+
       ror_org = Stash::Organization::Ror.find_by_isni_id(isni_id)
       return nil if ror_org.blank?
+
       from_ror_id(ror_id: ror_org.id)
     end
 

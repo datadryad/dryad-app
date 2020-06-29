@@ -26,6 +26,7 @@ module StashDatacite
     def self.dcs_resource(dcs_resource)
       return dcs_resource if dcs_resource.is_a?(Datacite::Mapping::Resource)
       return dcs_resource if dcs_resource.to_s =~ /InstanceDouble\(Datacite::Mapping::Resource\)/ # For RSpec tests
+
       raise ArgumentError, "dcs_resource does not appear to be a Datacite::Mapping::Resource: #{dcs_resource || 'nil'}"
     end
 
@@ -34,6 +35,7 @@ module StashDatacite
         file.is_a?(Stash::Wrapper::StashFile) ||
         file.to_s =~ /InstanceDouble\(Stash::Wrapper::StashFile\)/ # For RSpec tests
       end
+
       raise ArgumentError, "stash_files does not appear to be an array of Stash::Wrapper::StashFile objects: #{stash_files || 'nil'}"
     end
 
@@ -78,6 +80,7 @@ module StashDatacite
 
     def set_sd_identifier(dcs_identifier)
       return unless dcs_identifier
+
       se_resource.identifier_id = StashEngine::Identifier.create(
         identifier: dcs_identifier.value && dcs_identifier.value.strip,
         identifier_type: dcs_identifier.identifier_type
@@ -112,6 +115,7 @@ module StashDatacite
     def add_se_title(dcs_title)
       # now throwing away datacite info on title and only using one main title in stash_engine.resource
       return if dcs_title.type
+
       se_resource.title = dcs_title && dcs_title.value.strip
     end
 
@@ -121,6 +125,7 @@ module StashDatacite
 
     def set_sd_pubyear(dcs_publication_year)
       return if dcs_publication_year.blank?
+
       PublicationYear.create(publication_year: dcs_publication_year, resource_id: se_resource_id)
     end
 
@@ -152,11 +157,13 @@ module StashDatacite
 
     def set_sd_language(dcs_language)
       return nil if dcs_language.blank?
+
       Language.create(language: dcs_language, resource_id: se_resource_id)
     end
 
     def set_sd_resource_type(dcs_resource_type)
       return nil unless dcs_resource_type
+
       dcs_resource_type_general = dcs_resource_type.resource_type_general
       dcs_resource_type_value = dcs_resource_type.value
       se_resource_type = dcs_resource_type_general.value.downcase
@@ -200,16 +207,19 @@ module StashDatacite
 
     def add_sd_size(dcs_size)
       return if dcs_size.blank?
+
       Size.create(size: dcs_size, resource_id: se_resource_id)
     end
 
     def add_sd_format(dcs_format)
       return if dcs_format.blank?
+
       Format.create(format: dcs_format, resource_id: se_resource_id)
     end
 
     def set_sd_version(dcs_version)
       return if dcs_version.blank?
+
       Version.create(version: dcs_version, resource_id: se_resource_id)
     end
 
@@ -258,6 +268,7 @@ module StashDatacite
 
     def add_sd_geo_location(dcs_geo_location)
       return unless dcs_geo_location.location?
+
       loc = Geolocation.create(resource_id: se_resource_id)
       add_sd_geo_location_place(loc, dcs_geo_location.place)
       add_sd_geo_location_point(loc, dcs_geo_location.point)
@@ -267,12 +278,14 @@ module StashDatacite
 
     def add_sd_geo_location_place(se_geo_location, dcs_geo_location_place)
       return if dcs_geo_location_place.blank?
+
       se_place = GeolocationPlace.create(geo_location_place: dcs_geo_location_place)
       se_geo_location.place_id = se_place.id
     end
 
     def add_sd_geo_location_point(se_geo_location, dcs_geo_location_point)
       return unless dcs_geo_location_point
+
       se_point = GeolocationPoint.create(
         latitude: dcs_geo_location_point.latitude,
         longitude: dcs_geo_location_point.longitude
@@ -282,6 +295,7 @@ module StashDatacite
 
     def add_sd_geo_location_box(se_geo_location, dcs_geo_location_box)
       return unless dcs_geo_location_box
+
       se_box = GeolocationBox.create(
         sw_latitude: dcs_geo_location_box.south_latitude,
         sw_longitude: dcs_geo_location_box.west_longitude,
@@ -309,6 +323,7 @@ module StashDatacite
       sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_obj&.value, affiliation_obj&.value)
       return sd_affiliations.first.id unless sd_affiliations.empty?
       return nil if affiliation_obj.nil? || affiliation_obj.value.blank?
+
       StashDatacite::Affiliation.create(long_name: affiliation_obj&.value,
                                         ror_id: affiliation_obj&.identifier).id
     end
@@ -316,21 +331,26 @@ module StashDatacite
     def email_from(dcs_name_identifier)
       return unless dcs_name_identifier
       return unless dcs_name_identifier.scheme == 'email'
+
       value = dcs_name_identifier.value
       return unless value
+
       value.to_s.strip.sub('mailto:', '')
     end
 
     def orcid_from(dcs_name_identifier)
       return unless dcs_name_identifier
       return unless dcs_name_identifier.scheme == 'ORCID'
+
       value = dcs_name_identifier.value
       return unless value
+
       value.to_s.strip
     end
 
     def sd_name_identifier_id_for(dcs_name_identifier)
       return nil unless dcs_name_identifier
+
       scheme_uri = dcs_name_identifier.scheme_uri
       value = dcs_name_identifier.value
       sd_name_ident = StashDatacite::NameIdentifier.find_or_create_by(
@@ -343,6 +363,7 @@ module StashDatacite
 
     def sd_subject_id_for(dcs_subject)
       return nil unless dcs_subject
+
       scheme_uri = dcs_subject.scheme_uri
       StashDatacite::Subject.find_or_create_by(
         subject: dcs_subject.value.to_s.strip,

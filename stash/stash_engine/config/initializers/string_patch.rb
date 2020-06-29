@@ -2,6 +2,7 @@
 class String
   def ellipsisize(len = 20)
     return self if length <= len
-    "#{self[0..(len / 2)]}...#{self[(-len / 2)..-1]}"
+
+    "#{self[0..(len / 2)]}...#{self[(-len / 2)..]}"
   end
 end
