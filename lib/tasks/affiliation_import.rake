@@ -76,7 +76,10 @@ namespace :affiliation_import do
           authb = authors[b].author_standard_name
           puts("DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
                "#{levenshtein_distance(autha, authb).to_f / (autha.size > authb.size ? autha.size : authb.size)}")
-          do_author_merge(authors[a], authors[b]) if @live_mode
+          if @live_mode
+            do_author_merge(authors[a], authors[b])
+            record_author_merge(resource: a.resource)
+          end
         end
       end
     end
@@ -229,6 +232,16 @@ namespace :affiliation_import do
     return if resource.id == @last_resource&.id
     resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                          note: 'Author affiliations updated by affiliation_import:process_ror_csv',
+                                                                         status: resource.curation_activities.last.status)
+    @last_resource = resource
+  end
+
+  def record_author_merge(resource:)
+    return if resource.blank? || resource.curation_activities.blank?
+    return if resource.id == @last_resource&.id
+    resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
+                                                                         note: 'Duplicate authors combined by ' \
+                                                                         'affiliation_import:merge_duplicate_authors',
                                                                          status: resource.curation_activities.last.status)
     @last_resource = resource
   end
