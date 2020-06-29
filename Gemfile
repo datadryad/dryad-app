@@ -27,13 +27,13 @@ gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.4'
-gem 'rubocop', '~> 0.57.2'
+gem 'rubocop', '~> 0.85.1'
 
 # ############################################################
 # UI
 
 # TODO: why do we have uglifier AND yui-compressor?
-# asset pipeline problems with Joel's pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
+# asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
@@ -107,9 +107,9 @@ group :test do
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
   gem 'simplecov-console', require: false
   # Rails application preloader (https://github.com/rails/spring)
-  gem 'spring'
+  # gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
-  gem 'spring-commands-rspec'
+  # gem 'spring-commands-rspec'
   # Library for stubbing HTTP requests in Ruby. (http://github.com/bblimke/webmock)
   gem 'webmock'
 end

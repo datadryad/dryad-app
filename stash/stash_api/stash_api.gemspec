@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.description = 'API access to the Stash data publication and preservation platform'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '~> 2.4.1'
+  s.required_ruby_version = '~> 2.6.6'
 
   origin = `git config --get remote.origin.url`.chomp
   origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.gsub(%r{git@([^:]+)(.com|.org)[^\/]+}, 'http://\1\2'))
