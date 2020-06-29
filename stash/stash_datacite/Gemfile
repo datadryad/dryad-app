@@ -23,7 +23,7 @@ group :development, :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.57.2'
+  gem 'rubocop', '0.85.1'
   gem 'scss_lint'
   gem 'simplecov'
   gem 'simplecov-console'

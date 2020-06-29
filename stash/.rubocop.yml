@@ -1,6 +1,6 @@
 AllCops:
   # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
 
   Exclude:
     - 'node_modules/**/*'
@@ -26,7 +26,7 @@ Layout/MultilineOperationIndentation:
   Enabled: false
 
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 # AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
@@ -52,7 +52,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: False
 
 # It works in context, trust us
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: False
 
 # Do what's readable in the context you're in
