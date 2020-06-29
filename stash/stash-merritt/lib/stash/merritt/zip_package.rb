@@ -5,6 +5,7 @@ require 'stash_datacite'
 require 'zip'
 require 'datacite/mapping/datacite_xml_factory'
 require 'stash/merritt/submission_package'
+require 'securerandom'
 
 module Stash
   module Merritt
@@ -57,10 +58,16 @@ module Stash
           path = resource.upload_dir
           FileUtils.mkdir_p(path)
           # Creating a tempdir had a disappearance with RubyZip in which it couldn't access it, so not using a real tempdir
-          tmpdir = File.join(path, Dir::Tmpname.make_tmpname('work-', nil))
+          tmpdir = File.join(path, tmpname)
           FileUtils.mkdir_p(tmpdir) # this will need to be removed by the cleanup script
           File.absolute_path(tmpdir)
         end
+      end
+
+      # based on https://github.com/rails/rails/pull/31462/files
+      def tmpname
+        t = Time.now.strftime("%Y%m%d")
+        "work-#{t}-#{$$}-#{rand(0x100000000).to_s(36)}-fd"
       end
 
     end
