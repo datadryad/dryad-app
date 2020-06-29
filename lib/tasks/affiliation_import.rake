@@ -71,7 +71,7 @@ namespace :affiliation_import do
       next unless i.latest_resource.present?
       puts "Processing #{idx + 1}/#{stash_ids.length}: #{i.identifier}"
       authors = i.latest_resource.authors
-      (0..authors.size - 1).each do |a|        
+      (0..authors.size - 1).each do |a|
         (a + 1..authors.size - 1).each do |b|
           # see if the author has any potential duplicates
           next unless duplicates?(authors[a], authors[b])
