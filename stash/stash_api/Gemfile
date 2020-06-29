@@ -13,7 +13,7 @@ gemspec
 # your gem to rubygems.org.
 
 gem 'doorkeeper'
-gem 'mysql2', '< 0.5'
+gem 'mysql2', '~> 0.5.3'
 
 path '..' do
   gem 'stash_datacite'
