@@ -505,7 +505,7 @@ GEM
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    mysql2 (0.4.10)
+    mysql2 (0.5.3)
     namae (1.0.1)
     nenv (0.3.0)
     net-http-persistent (3.1.0)
@@ -835,7 +835,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mocha
-  mysql2 (~> 0.4.10)
+  mysql2 (~> 0.5.3)
   oai
   passenger (~> 6.0.4)
   pry

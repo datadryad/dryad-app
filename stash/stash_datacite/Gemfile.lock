@@ -418,7 +418,7 @@ GEM
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    mysql2 (0.4.10)
+    mysql2 (0.5.3)
     namae (1.0.1)
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
@@ -676,7 +676,7 @@ DEPENDENCIES
   equivalent-xml
   factory_bot_rails
   httparty
-  mysql2 (>= 0.3.13, < 0.5x)
+  mysql2 (~> 0.5.3)
   nokogiri
   parallel_tests
   rspec (~> 3.5)
