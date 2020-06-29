@@ -78,7 +78,7 @@ namespace :affiliation_import do
                "#{levenshtein_distance(autha, authb).to_f / (autha.size > authb.size ? autha.size : authb.size)}")
           if @live_mode
             do_author_merge(authors[a], authors[b])
-            record_author_merge(resource: a.resource)
+            record_author_merge(resource: i.latest_resource)
           end
         end
       end
