@@ -22,6 +22,7 @@ module Datacite
         dcs_resource = build_resource(datacite_3: datacite_3)
 
         return dcs_resource.write_xml(mapping: :datacite_3) if datacite_3
+
         dcs_resource.write_xml
       end
 
@@ -79,6 +80,7 @@ module Datacite
 
       def to_dcs_type(sd_resource_type)
         return DEFAULT_RESOURCE_TYPE unless sd_resource_type
+
         ResourceType.new(resource_type_general: sd_resource_type.resource_type_general_mapping_obj,
                          value: sd_resource_type.resource_type)
       end
@@ -96,6 +98,7 @@ module Datacite
       def add_descriptions(dcs_resource)
         se_resource.descriptions.where.not(description: nil).each do |d|
           next if d.description.blank?
+
           dcs_resource.descriptions << Description.new(
             value: ActionController::Base.helpers.strip_tags(d.description),
             type: d.description_type_mapping_obj
@@ -154,7 +157,7 @@ module Datacite
             name: c.contributor_name,
             identifier: to_dcs_identifier(c.name_identifier),
             type: c.contributor_type_mapping_obj,
-            affiliations:  c.affiliations.map do |a|
+            affiliations: c.affiliations.map do |a|
               if a.ror_id && !datacite_3
                 Affiliation.new(
                   identifier: a.ror_id,
@@ -210,6 +213,7 @@ module Datacite
 
       def dcs_identifier_from(author_orcid)
         return unless author_orcid && !author_orcid.empty?
+
         NameIdentifier.new(
           scheme: 'ORCID',
           scheme_uri: 'http://orcid.org/',
@@ -219,6 +223,7 @@ module Datacite
 
       def to_dcs_identifier(sd_name_ident)
         return unless sd_name_ident
+
         sd_scheme_uri = sd_name_ident.scheme_URI
         NameIdentifier.new(
           scheme: sd_name_ident.name_identifier_scheme,
@@ -229,11 +234,13 @@ module Datacite
 
       def to_dcs_publisher(sd_publisher)
         return 'unknown' unless sd_publisher
+
         sd_publisher.publisher
       end
 
       def to_dcs_pub_year(sd_pub_year)
         return ::Date.today.year unless sd_pub_year
+
         sd_pub_year.publication_year
       end
 

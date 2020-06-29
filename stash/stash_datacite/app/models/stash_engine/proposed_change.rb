@@ -21,6 +21,7 @@ module StashEngine
 
     def approve!(current_user:)
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
+
       cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
       existing_title = identifier.latest_resource&.title
       resource = cr.populate_resource!
@@ -33,6 +34,7 @@ module StashEngine
 
     def reject!(current_user:)
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
+
       update(rejected: true, user_id: current_user.id)
       true
     end

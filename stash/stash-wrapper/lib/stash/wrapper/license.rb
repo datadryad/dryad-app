@@ -17,6 +17,7 @@ module Stash
       def initialize(name:, uri:)
         raise ArgumentError, "License name does not appear to be a non-empty string: #{name.inspect}" if name.to_s.strip.empty?
         raise ArgumentError, 'No uri provided' unless uri
+
         self.name = name
         self.uri = ::XML::MappingExtensions.to_uri(uri)
       end

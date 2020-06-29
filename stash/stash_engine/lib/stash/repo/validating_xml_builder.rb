@@ -25,6 +25,7 @@ module Stash
         doc = Nokogiri::XML(xml)
         errors = schema.validate(doc)
         return xml if errors.empty?
+
         log.error(errors.join("\n"))
         raise errors[0]
       end

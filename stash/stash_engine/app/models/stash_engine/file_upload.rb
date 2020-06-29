@@ -27,6 +27,7 @@ module StashEngine
     # display the correct error message based on the url status code
     def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
       return '' if url.nil? || status_code == 200
+
       case status_code
       when 400
         'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS'
@@ -60,6 +61,7 @@ module StashEngine
     # returns the latest version number in which this filename was created
     def version_file_created_in
       return resource.stash_version if file_state == 'created' || file_state.blank?
+
       sql = <<-SQL
              SELECT versions.*
                FROM stash_engine_file_uploads uploads
@@ -85,6 +87,7 @@ module StashEngine
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
       return '' if domain.nil?
+
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
@@ -122,6 +125,7 @@ module StashEngine
       domain, ark = resource.merritt_protodomain_and_local_id
       # the ark is already encoded in the URLs we are given from sword
       return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
+
       # the slash is being double-encoded and normally shouldn't be present, except in a couple of one-off datasets that we regret.
       "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
@@ -157,6 +161,7 @@ module StashEngine
     def self.cleanup_dir_list(uploads_dir = Resource.uploads_dir)
       my_dirs = older_resource_named_dirs(uploads_dir)
       return [] if my_dirs.empty?
+
       Resource.joins(:current_resource_state).where(id: my_dirs)
         .where("stash_engine_resource_states.resource_state = 'submitted'").pluck(:id)
     end

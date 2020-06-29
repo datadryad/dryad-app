@@ -64,6 +64,7 @@ module Stash
 
       def write_to_public(builder)
         return unless (path = builder.write_file(workdir))
+
         file_name = builder.file_name
         OpenStruct.new(
           file_url: public_url_for(file_name),

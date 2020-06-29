@@ -34,6 +34,7 @@ namespace :identifiers do
     StashEngine::Identifier.all.each do |se_identifier|
       license = se_identifier&.latest_resource&.tenant&.default_license
       next if license.blank? || license == se_identifier.license_id
+
       puts "Updating license to #{license} for #{se_identifier}"
       se_identifier.update(license_id: license)
     end
@@ -62,6 +63,7 @@ namespace :identifiers do
       #                                               then the status should be :peer_review
       #
       next unless resource.current_state == 'submitted'
+
       StashEngine::CurationActivity.create(
         resource_id: resource.id,
         user_id: resource.user_id,
@@ -88,18 +90,18 @@ namespace :identifiers do
 
     query += " '#{now.strftime('%Y-%m-%d %H:%M:%S')}'"
     ActiveRecord::Base.connection.execute(query).each do |r|
-      begin
-        p "Embargoing: Identifier: #{r[1]}, Resource: #{r[0]}"
-        StashEngine::CurationActivity.create(
-          resource_id: r[0],
-          user_id: 0,
-          status: 'embargoed',
-          note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
-        )
-      rescue StandardError => e
-        p "    Exception! #{e.message}"
-        next
-      end
+
+      p "Embargoing: Identifier: #{r[1]}, Resource: #{r[0]}"
+      StashEngine::CurationActivity.create(
+        resource_id: r[0],
+        user_id: 0,
+        status: 'embargoed',
+        note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
+      )
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+      next
+
     end
   end
 
@@ -111,16 +113,16 @@ namespace :identifiers do
     resources = StashEngine::Resource.need_publishing
 
     resources.each do |res|
-      begin
-        res.curation_activities << StashEngine::CurationActivity.create(
-          user_id: 0,
-          status: 'published',
-          note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
-        )
-      rescue StandardError => e
-        # note we get errors with test data updating DOI and some of the other callbacks on publishing
-        p "    Exception! #{e.message}"
-      end
+
+      res.curation_activities << StashEngine::CurationActivity.create(
+        user_id: 0,
+        status: 'published',
+        note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
+      )
+    rescue StandardError => e
+      # note we get errors with test data updating DOI and some of the other callbacks on publishing
+      p "    Exception! #{e.message}"
+
     end
   end
 
@@ -132,23 +134,23 @@ namespace :identifiers do
     p "Setting resources whose peer_review_end_date <= '#{now}' to 'submitted' curation status"
     StashEngine::Resource.where(hold_for_peer_review: true)
       .where('stash_engine_resources.peer_review_end_date <= ?', now).each do |r|
-      begin
-        if r.current_curation_status == 'peer_review'
-          p "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
-          r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-          StashEngine::CurationActivity.create(
-            resource_id: r.id,
-            user_id: 0,
-            status: 'submitted',
-            note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
-          )
-        else
-          p "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer_review curation status"
-          r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-        end
-      rescue StandardError => e
-        p "    Exception! #{e.message}"
+
+      if r.current_curation_status == 'peer_review'
+        p "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
+        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: 0,
+          status: 'submitted',
+          note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
+        )
+      else
+        p "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer_review curation status"
+        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
       end
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+
     end
   end
 
@@ -158,24 +160,24 @@ namespace :identifiers do
     StashEngine::Resource.where(hold_for_peer_review: true)
       .where('stash_engine_resources.peer_review_end_date <= ?', Date.today)
       .each do |r|
-      begin
-        reminder_flag = 'peer_review_reminder CRON'
-        last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
-        if r.current_curation_status == 'peer_review' &&
-           r.identifier.latest_resource_id == r.id &&
-           (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
-          p "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-          StashEngine::UserMailer.peer_review_reminder(r).deliver_now
-          StashEngine::CurationActivity.create(
-            resource_id: r.id,
-            user_id: 0,
-            status: r.current_curation_activity.status,
-            note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
-          )
-        end
-      rescue StandardError => e
-        p "    Exception! #{e.message}"
+
+      reminder_flag = 'peer_review_reminder CRON'
+      last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+      if r.current_curation_status == 'peer_review' &&
+         r.identifier.latest_resource_id == r.id &&
+         (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
+        p "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
+        StashEngine::UserMailer.peer_review_reminder(r).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: 0,
+          status: r.current_curation_activity.status,
+          note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
+        )
       end
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+
     end
   end
 
@@ -186,21 +188,21 @@ namespace :identifiers do
       .where("stash_engine_resource_states.resource_state = 'in_progress'")
       .where('stash_engine_resources.updated_at <= ?', 3.days.ago)
       .each do |r|
-      begin
-        reminder_flag = 'in_progress_reminder CRON'
-        if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
-          p "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-          StashEngine::UserMailer.in_progress_reminder(r).deliver_now
-          StashEngine::CurationActivity.create(
-            resource_id: r.id,
-            user_id: 0,
-            status: r.current_curation_activity.status,
-            note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
-          )
-        end
-      rescue StandardError => e
-        p "    Exception! #{e.message}"
+
+      reminder_flag = 'in_progress_reminder CRON'
+      if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
+        p "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
+        StashEngine::UserMailer.in_progress_reminder(r).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: 0,
+          status: r.current_curation_activity.status,
+          note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
+        )
       end
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+
     end
   end
 
@@ -222,6 +224,7 @@ namespace :identifiers do
       StashEngine::Identifier.publicly_viewable.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
+
         created_date_str = i.created_at&.strftime('%Y-%m-%d')
         submitted_date = i.resources.submitted.each do |r|
           break r.submitted_date if r.submitted_date.present?
@@ -257,6 +260,7 @@ namespace :identifiers do
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         res = i.latest_viewable_resource
         next unless year_month.blank? || approval_date_str&.start_with?(year_month)
+
         csv << [i.identifier, i.publication_article_doi, approval_date_str, res&.title,
                 i.storage_size, i.submitter_affiliation&.long_name, i.publication_name]
       end

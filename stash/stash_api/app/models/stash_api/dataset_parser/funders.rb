@@ -13,6 +13,7 @@ module StashApi
       def parse
         clear
         return if @hash['funders'].nil?
+
         @hash['funders'].each do |funder|
           @resource.contributors << StashDatacite::Contributor.create(contributor_name: funder['organization'],
                                                                       contributor_type: 'funder', award_number: funder['awardNumber'])

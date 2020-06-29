@@ -18,7 +18,7 @@ module Stash
 
       def initialize(doi:)
         @doi = doi
-        @doi = doi[4..-1] if doi.downcase.start_with?('doi:')
+        @doi = doi[4..] if doi.downcase.start_with?('doi:')
         @base_url = BASE_URL
         @email = EMAIL
         @stats = nil
@@ -67,10 +67,10 @@ module Stash
           { 'source-id' => 'datacite-usage', 'doi' => @doi, 'page[size]' => 0, 'rows' => nil,
             'relation-type-id' => (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(',') })
         query_result['meta']['relation-types'] || []
-      rescue RestClient::ExceptionWithResponse => err
+      rescue RestClient::ExceptionWithResponse => e
         logger.error('DataCite event-data error')
         logger.error("#{Time.new.utc} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
-        logger.error("#{Time.new.utc} #{err}")
+        logger.error("#{Time.new.utc} #{e}")
         []
       end
     end

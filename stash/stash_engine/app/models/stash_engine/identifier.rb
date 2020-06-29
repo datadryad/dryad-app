@@ -106,14 +106,17 @@ module StashEngine
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
       return nil if pub_state == 'withdrawn'
+
       resources.with_public_metadata.by_version_desc.first
     end
 
     # these are resources that the user can look at because of permissions, some user roles can see non-published others, not
     def latest_viewable_resource(user: nil)
       return latest_resource_with_public_metadata if user.nil?
+
       lr = latest_resource
       return lr if lr&.admin_for_this_item?(user: user)
+
       latest_resource_with_public_metadata
     end
 
@@ -123,8 +126,10 @@ module StashEngine
 
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
+
       lr = resources.submitted_only.by_version_desc.first
       return lr if lr&.admin_for_this_item?(user: user)
+
       latest_resource_with_public_download
     end
 
@@ -139,6 +144,7 @@ module StashEngine
     # this returns a resource object for the last version in Merritt, caching in instance variable for repeated calls
     def last_submitted_resource
       return @last_submitted_resource unless @last_submitted_resource.blank?
+
       submitted = resources.submitted
       @last_submitted_resource = submitted.by_version_desc.first
     end
@@ -193,6 +199,7 @@ module StashEngine
     # TODO: modify all code that calculates the target to use this method if possible/feasible.
     def target
       return @target unless @target.blank?
+
       r = resources.by_version_desc.first
       tenant = r.tenant
       @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
@@ -224,12 +231,14 @@ module StashEngine
 
     def journal
       return nil if publication_issn.nil?
+
       Journal.where(issn: publication_issn).first
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def record_payment
       return if payment_type.present? && payment_type != 'unknown'
+
       if journal&.will_pay?
         self.payment_type = 'journal-' + journal.payment_plan_type
         self.payment_id = publication_issn
@@ -252,11 +261,13 @@ module StashEngine
 
     def allow_review?
       return true if journal.blank?
+
       journal.allow_review_workflow?
     end
 
     def allow_blackout?
       return false if journal.blank?
+
       journal.allow_blackout?
     end
 
@@ -310,6 +321,7 @@ module StashEngine
 
     def large_files?
       return if latest_resource.nil?
+
       latest_resource.size > APP_CONFIG.payments['large_file_size']
     end
 
@@ -331,6 +343,7 @@ module StashEngine
         res.curation_activities.each do |ca|
           next unless ca.status == 'embargoed' && (ca.note&.match('untilArticleAppears') ||
                                           ca.note&.match('1-year blackout period'))
+
           found_article_appears = true
           break
         end
@@ -347,6 +360,7 @@ module StashEngine
       resources.reverse_each do |res|
         res.curation_activities.each do |ca|
           next unless %w[published embargoed].include?(ca.status)
+
           found_approval_date = ca.created_at
           break
         end
@@ -426,6 +440,7 @@ module StashEngine
 
     def abstracts
       return '' unless latest_resource.respond_to?(:descriptions)
+
       ' ' << latest_resource.descriptions.where(description_type: 'abstract').map do |description|
         ActionView::Base.full_sanitizer.sanitize(description.description)
       end.join(' ')

@@ -24,6 +24,7 @@ module StashEngine
     def self.make_unique(resource:, filename:)
       dups = resource.file_uploads.present_files.where(upload_file_name: filename)
       return filename unless dups.count > 0
+
       ext = File.extname(filename)
       core_name = File.basename(filename, ext)
       counter = 2
@@ -108,6 +109,7 @@ module StashEngine
     def filename_from_content_disposition(disposition)
       disposition = disposition.first if disposition.class == Array
       return nil if disposition.blank?
+
       if (match = disposition.match(/filename=([^;$]+)/)) # simple filenames
         extract_and_unquote(match)
       elsif (match = disposition.match(/filename\*=\S+'\S*'([^;$]+)/)) # rfc5646 shenanigans
@@ -153,8 +155,10 @@ module StashEngine
     def mime_type_from(response)
       content_type = response.header['Content-Type']
       return 'application/octet-stream' if content_type.blank?
+
       mime_type = (content_type.class == Array ? content_type.first : content_type)
       return mime_type unless mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
+
       mime_type[/^\S*;/][0..-2]
     end
 
@@ -163,11 +167,13 @@ module StashEngine
       filename = filename_from_content_disposition(response.header['Content-Disposition']) ||
         filename_from_url(redirected_to) || filename_from_url(url)
       return filename unless ['', '/'].include?(filename)
+
       last_resort_filename
     end
 
     def filename_from_url(url)
       return nil if url.blank?
+
       u = URI.parse(url)
       File.basename(u.path)
     end
@@ -180,12 +186,14 @@ module StashEngine
     def extract_and_unquote(match)
       my_match = match[1].strip
       return my_match unless my_match[0] == my_match[-1] && "\"'".include?(my_match[0])
+
       my_match[1..-2]
     end
 
     def fix_by_get_request(u)
       response = get_without_download(URI.parse(u))
       return unless response.code == '200'
+
       @status_code = 200
       @mime_type = mime_type_from(response)
       @size = size_from(response)

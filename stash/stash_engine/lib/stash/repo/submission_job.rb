@@ -13,6 +13,7 @@ module Stash
 
       def initialize(resource_id:)
         raise ArgumentError, "Invalid resource ID: #{resource_id || 'nil'}" unless resource_id.is_a?(Integer)
+
         @resource_id = resource_id
       end
 

@@ -41,12 +41,14 @@ module Stash
 
       def write_to_zipfile(zipfile, builder)
         return unless (file = builder.write_file(workdir))
+
         zipfile.add(builder.file_name, file)
       end
 
       def add_to_zipfile(zipfile, upload)
         path = File.join(resource.upload_dir, upload.upload_file_name)
         raise ArgumentError, "Upload file '#{upload.upload_file_name}' not found in directory #{resource.upload_dir}" unless File.exist?(path)
+
         zipfile.add(upload.upload_file_name, path)
       end
 

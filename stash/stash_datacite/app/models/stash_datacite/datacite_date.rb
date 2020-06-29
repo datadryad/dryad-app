@@ -28,16 +28,19 @@ module StashDatacite
     def date_type_friendly
       return nil if date_type.blank?
       return 'Valid' if date_type == 'valid_date' # exception for bad method names
+
       DateTypesStrToFull[date_type]
     end
 
     def self.date_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::DateType.find_by_value(str)
     end
 
     def date_type_mapping_obj
       return nil if date_type_friendly.nil?
+
       DataciteDate.date_type_mapping_obj(date_type_friendly)
     end
 

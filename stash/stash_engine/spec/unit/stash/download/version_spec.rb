@@ -10,7 +10,7 @@ module Stash
       describe 'merritt_async_download?' do
 
         before(:each) do
-          @version = Version.new(controller_context: OpenStruct.new(response_body:  '',
+          @version = Version.new(controller_context: OpenStruct.new(response_body: '',
                                                                     response: OpenStruct.new(headers: {})))
           @resource = StashEngine::Resource.create(tenant_id: 'dryad')
           allow(@resource).to receive(:merritt_protodomain_and_local_id).and_return(['www.example.com', 'ark:38u47/3847'])
@@ -56,7 +56,7 @@ module Stash
 
       describe '#download(resource:)' do
         before(:each) do
-          @version = Version.new(controller_context: OpenStruct.new(response_body:  '',
+          @version = Version.new(controller_context: OpenStruct.new(response_body: '',
                                                                     response: OpenStruct.new(headers: {})))
           @resource = StashEngine::Resource.create(tenant_id: 'dryad')
           allow(@resource).to receive(:tenant).and_return(OpenStruct.new(repository: OpenStruct.new(username: 'joe', password: 'blow')))
@@ -76,7 +76,7 @@ module Stash
           @identifier = create(:identifier)
           @resource = create(:resource, identifier_id: @identifier.id)
           @ds_version = create(:version, resource_id: @resource.id)
-          @version = Version.new(controller_context: OpenStruct.new(response_body:  '',
+          @version = Version.new(controller_context: OpenStruct.new(response_body: '',
                                                                     response: OpenStruct.new(headers: {})))
           @version.resource = @resource
         end

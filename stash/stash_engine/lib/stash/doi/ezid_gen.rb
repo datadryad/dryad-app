@@ -23,6 +23,7 @@ module Stash
       def id_exists?
         my_id = @resource.identifier
         return false if my_id.nil? || my_id.identifier.blank?
+
         begin
           ezid_client.get_identifier_metadata(my_id.to_s)
         rescue Ezid::IdentifierNotFoundError

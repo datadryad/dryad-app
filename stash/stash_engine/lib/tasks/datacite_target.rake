@@ -29,12 +29,13 @@ namespace :datacite_target do
 
     stash_ids.each_with_index do |stash_id, idx|
       next if idx < start_from
+
       puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
 
       begin
         DashUpdater.submit_id_metadata(stash_identifier: stash_id)
-      rescue Stash::Doi::IdGenError, ArgumentError => ige
-        outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{ige.message}\n"
+      rescue Stash::Doi::IdGenError, ArgumentError => e
+        outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{e.message}\n"
         IO.write('datacite_update_errors.txt', outstr, mode: 'a')
       end
       sleep 1

@@ -21,6 +21,7 @@ module Stash
       def size
         @size ||= inputs.inject(0) do |sum, input|
           raise "input #{input} does not respond to :size" unless input.respond_to?(:size)
+
           sum + input.size
         end
       end
@@ -28,6 +29,7 @@ module Stash
       def read(length = nil, outbuf = nil)
         # use <= instead of == to get around https://github.com/bbatsov/rubocop/issues/3131
         return nil if size <= 0
+
         outbuf = outbuf ? outbuf.clear : ''
         length ? read_segment(length, outbuf) : read_fully(outbuf)
         outbuf
@@ -35,6 +37,7 @@ module Stash
 
       def binmode
         return self if binmode?
+
         inputs.each do |input|
           input.binmode if input.respond_to?(:binmode)
         end
