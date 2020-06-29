@@ -3,14 +3,14 @@
 
 matrix:
   include:
-    - rvm: 2.4.10
+    - rvm: 2.6.6
       sudo: required
       addons:
         chrome: stable
       env:
       - TO_TEST=MAIN
       - RAILS_ENV=test
-    - rvm: 2.4.10
+    - rvm: 2.6.6
       env:
       - TO_TEST=STASH
       - RAILS_ENV=test
