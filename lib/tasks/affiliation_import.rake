@@ -62,14 +62,17 @@ namespace :affiliation_import do
       puts "Environment variable AUTHOR_MERGE_MODE is #{ENV['AUTHOR_MERGE_MODE']}, entering test mode."
     end
 
-    StashEngine::Identifier.all.each do |i|
+    start_from = 0
+    start_from = ENV['START'].to_i unless ENV['START'].blank?
+
+    stash_ids = StashEngine::Identifier.all.order('stash_engine_identifiers.id').distinct
+    stash_ids.each_with_index do |i, idx|
+      next if idx < start_from
       next unless i.latest_resource.present?
-      puts "Processing #{i.identifier} #{i.latest_resource.title}"
+      puts "Processing #{idx + 1}/#{stash_ids.length}: #{i.identifier}"
       authors = i.latest_resource.authors
       (0..authors.size - 1).each do |a|
-        puts "-- Processing #{authors[a].author_first_name} #{authors[a].author_last_name}"
         (a + 1..authors.size - 1).each do |b|
-          puts "  -- Comparing to #{authors[b].author_first_name} #{authors[b].author_last_name}"
           # see if the author has any potential duplicates
           next unless duplicates?(authors[a], authors[b])
           autha = authors[a].author_standard_name
