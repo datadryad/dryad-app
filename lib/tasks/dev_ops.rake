@@ -135,6 +135,7 @@ namespace :dev_ops do
   task enqueue_zenodo_deferred: :environment do
     puts 'Re-enqueuing Zenodo replication jobs that were deferred'
     StashEngine::ZenodoCopyJob.enqueue_deferred
+    StashEngine::ZenodoSoftwareJob.enqueue_deferred
   end
 end
 # rubocop:enable Metrics/BlockLength

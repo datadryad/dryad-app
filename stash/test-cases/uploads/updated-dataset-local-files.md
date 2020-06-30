@@ -3,7 +3,7 @@
 1. log in
 1. select **My Datasets**
 1. select an existing, **published** dataset
-1. select **Upload Files**
+1. select **Upload Data**
    - ✓ check that files from the existing version(s) are listed under **Upload files**
    - ✓ check that each file has a check mark
    - ✓ check that **New in this version**, below the table, shows **0 bytes**

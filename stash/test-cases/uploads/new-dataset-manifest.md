@@ -4,7 +4,7 @@
 1. select **My Datasets**
 1. select **Start New Dataset**
 1. enter minimal necessary metadata for submission (title, creator, etc.)
-1. select **Upload Files**
+1. select **Upload Data**
 1. select **Enter URLs of file locations**
    - ✓ check that the **Validate files** button is disabled
 1. enter the following (good) URLs:
@@ -36,7 +36,7 @@
 1. click **Proceed to Review** or **Review and Submit**
    - ✓ check that only the good files appear under **Review Data Files**
      - *(Q: Should we show the bad files as errors that need to be corrected? —DM)*
-1. click **Upload Files** to return to the upload page
+1. click **Upload Data** to return to the upload page
    - ✓ check that the **Enter Files** box and **Validation Status** are empty
      - *(Note: Not sure this behavior is good; should we still show old/bad URLs? —DM)*
 1. Reenter the bad URLs above and click **Validate files** again
