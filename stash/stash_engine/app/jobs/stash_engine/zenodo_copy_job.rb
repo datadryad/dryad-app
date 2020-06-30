@@ -20,14 +20,15 @@ module StashEngine
     # the only argument for this is really the resource ID to copy
     def perform(*args)
       resource = StashEngine::Resource.where(id: args[0]).first
-      return if resource.nil? || resource&.zenodo_copy&.state != 'enqueued' || self.class.should_defer?(resource: resource)
+      return if resource.nil? || resource&.zenodo_copies&.data&.first&.state != 'enqueued' || self.class.should_defer?(resource: resource)
 
-      zr = Stash::ZenodoReplicate::Resource.new(resource: resource)
+      data_copy = resource&.zenodo_copies&.data&.first
+      zr = Stash::ZenodoReplicate::Copier.new(copy_id: data_copy.id)
       zr.add_to_zenodo
     end
 
     def self.should_defer?(resource:)
-      zc = resource.zenodo_copy
+      zc = resource.zenodo_copies.data.first
       if File.exist?(DEFERRED_TOUCH_FILE)
         zc.update(state: 'deferred')
         return true
@@ -36,7 +37,7 @@ module StashEngine
     end
 
     def self.enqueue_deferred
-      StashEngine::ZenodoCopy.where(state: 'deferred').each do |zc|
+      StashEngine::ZenodoCopy.data.where(state: 'deferred').each do |zc|
         zc.update(state: 'enqueued')
         perform_later(zc.resource_id)
       end

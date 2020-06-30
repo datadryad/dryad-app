@@ -5,10 +5,13 @@ module Stash
 
     # to generate the metadata for the Zenodo API, see https://developers.zenodo.org/#depositions
     # and the "Deposit metadata" they request, which is kind of similar to ours, but slightly different
+    # rubocop:disable Metrics/ClassLength
     class MetadataGenerator
-      def initialize(resource:, use_zenodo_doi: false)
+      def initialize(resource:, software_upload: false)
+        # Software uploads are a little different because 1) they use Zenodo DOIs, and 2) They use a different license
+        # than the dataset license and they should be 'software' rather than 'dataset'.
         @resource = resource
-        @use_zenodo_doi = use_zenodo_doi
+        @software_upload = software_upload
       end
 
       # returns a hash of the metadata from the list of methods, you can make it into json to send
@@ -16,7 +19,7 @@ module Stash
         out_hash = {}.with_indifferent_access
         %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method locations communities].each do |meth|
-          next if meth == 'doi' && @use_zenodo_doi
+          next if meth == 'doi' && @software_upload
           result = send(meth)
           out_hash[meth] = result unless result.blank?
         end
@@ -28,8 +31,8 @@ module Stash
       end
 
       def upload_type
-        @resource.resource_type.resource_type_general
-        # @resource&.&resource_type&.resource_type_general
+        return @resource.resource_type.resource_type_general unless @software_upload
+        'software'
       end
 
       def publication_date
@@ -63,11 +66,20 @@ module Stash
       end
 
       def license
+        return license_for_data unless @software_upload
+        license_for_software
+      end
+
+      def license_for_data
         if @resource.rights.first&.rights_uri&.include?('/zero')
           'cc-zero'
         else
           'cc-by'
         end
+      end
+
+      def license_for_software
+        @resource&.identifier&.software_license&.identifier || 'MIT'
       end
 
       def keywords
@@ -86,6 +98,10 @@ module Stash
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
+        # this relation is for myself and created in Dryad, so doesn't make sense here
+        related.delete_if { |i| i[:relation] == 'isSupplementTo' && i[:identifier].include?('/zenodo.') && @software_upload }
+
+        related.push(relation: 'isSupplementTo', identifier: @resource.identifier.identifier) if @software_upload
         related ||= []
         related
       end
@@ -124,7 +140,9 @@ module Stash
       def bork_doi_for_zenodo_sandbox(doi:)
         return doi if Rails.env == 'production'
 
-        doi.gsub(/^10\.5072/, '10.55072') # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own
+        # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own, don't bork their own DOIs
+        doi.gsub!(/^10\.5072/, '10.55072') unless @software_upload
+        doi
       end
 
       def funding_text(contributor)
@@ -134,5 +152,6 @@ module Stash
       end
 
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

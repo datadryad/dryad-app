@@ -1,5 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -69,6 +70,8 @@ module StashDatacite
 
       resource.reload
 
+      resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+
       redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
     end
 
@@ -77,6 +80,11 @@ module StashDatacite
     def update_submission_resource_info(resource)
       resource.update(skip_datacite_update: false, skip_emails: false,
                       preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
+
+      # write the software license to the database
+      license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
+      id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
+      resource.identifier.update(software_license_id: id_for_license)
 
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
@@ -138,3 +146,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength

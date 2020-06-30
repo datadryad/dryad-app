@@ -52,13 +52,28 @@
       </div>
     <% end %>
 
-    <h2 class="o-heading__page-span">Review Data Files</h2>
+    <h2 class="o-heading__page-span">Review Files</h2>
+
+    <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
+
+    <h2 class="o-heading__level2">Data Files Hosted by Dryad</h2>
 
     <div class="c-review-files">
-      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
-      <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
+        <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
+
+    <% if @review.software_uploads.count > 0 %>
+      <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
+      <h2 class="o-heading__level2">Software Files Hosted by Zenodo</h2>
+
+      <div class="c-review-files">
+        <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.software_uploads } %>
+        <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_upload_path',
+                    class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+      </div>
+    <% end %>
 
   <% if !@resource.submitted? && @resource.identifier.allow_review? %>
     <!-- This is only available if the version has not yet been submitted to the repository AND
@@ -73,12 +88,13 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Upload Files', stash_url_helpers.upload_resource_path(@resource), id: 'dashboard_path',
+  <%= link_to 'Back to Upload Software', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
             class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
     <%= form_tag stash_datacite.resources_submission_path do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
+      <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
         <% if current_user.id != @resource.user_id # only show to admins %>

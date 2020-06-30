@@ -16,6 +16,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense'
 
     after_create :create_share
 
@@ -421,6 +422,15 @@ module StashEngine
     def create_share
       StashEngine::Share.create(identifier_id: id) if shares.blank?
     end
+
+    # checks if the identifier has a Zenodo software submission or has had any in the past. If we ever have a software
+    # submission then we need to keep it up to date each time things change
+    # rubocop:disable Naming/PredicateName
+    # Nope: I don't think taking the 'has_' off this method is helpful
+    def has_zenodo_software?
+      SoftwareUpload.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+    end
+    # rubocop:enable Naming/PredicateName
 
     private
 

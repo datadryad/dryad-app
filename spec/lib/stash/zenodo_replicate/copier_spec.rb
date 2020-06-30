@@ -14,12 +14,12 @@ module Stash
     # this more or less calls every step in sequence needed to replicate an object and will be a nightmare to test.
     # Skipping testing of the individual steps since they are all tested separately in their own tests, but just
     # testing items unique to this class such writing errors and managing enforcement of queue states.
-    RSpec.describe Resource do
+    RSpec.describe Copier do
 
       before(:each) do
         @resource = create(:resource)
         @ztc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
-        @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource)
+        @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc.id)
       end
 
       describe '#add_to_zenodo' do
@@ -30,7 +30,7 @@ module Stash
 
         it 'increments the retries counter' do
           expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
-          zc = @resource.zenodo_copy
+          zc = @resource.zenodo_copies.data.first
           zc.reload
           expect(zc.retries).to eq(1) # this has been incremented from 0 to 1 when it started attempting adding to zenodo
         end
@@ -41,7 +41,7 @@ module Stash
           # if it had attempted any requests, we'd have webmock request errors
           @ztc.reload
           expect(@ztc.state).to eq('error')
-          expect(@ztc.error_info).to include('You should never start replicating unless starting from an enqueued state')
+          expect(@ztc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
           # note error logging is also tested in here
         end
 
@@ -50,7 +50,7 @@ module Stash
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
           @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
                                        deposition_id: @ztc.deposition_id)
-          @szr2 = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
+          @szr2 = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc2.id)
           @szr2.add_to_zenodo
           @ztc2.reload
           expect(@ztc2.state).to eq('error')
@@ -64,7 +64,7 @@ module Stash
           # if it had attempted any requests, we'd have webmock request errors
           @ztc.reload
           expect(@ztc.state).to eq('error')
-          expect(@ztc.error_info).to include('You should never start replicating unless starting from an enqueued state')
+          expect(@ztc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
           # note error logging is also tested in here
         end
 
@@ -72,7 +72,7 @@ module Stash
           @ztc.update(state: 'deferred')
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
           @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier)
-          @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
+          @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc2.id)
           @szr.add_to_zenodo
           @ztc2.reload
           expect(@ztc2.state).to eq('error')
@@ -82,7 +82,7 @@ module Stash
         it 'rejects an out-of-order replication for the same identifier later replicating first' do
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
           @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier)
-          @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
+          @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc2.id)
           @szr.add_to_zenodo
           @ztc2.reload
           expect(@ztc2.state).to eq('error')

@@ -83,6 +83,17 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
+    def self.add_zenodo_relation(resource_id:, doi:)
+      existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
+        .where(relation_type: 'issupplementto').where('related_identifier LIKE "%zenodo%"').last
+      if existing_item.nil?
+        create(related_identifier: doi, related_identifier_type: 'doi', relation_type: 'issupplementto',
+               resource_id: resource_id)
+      else
+        existing_item.update(related_identifier: doi)
+      end
+    end
+
     private
 
     def strip_whitespace

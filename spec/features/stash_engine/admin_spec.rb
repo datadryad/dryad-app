@@ -46,9 +46,9 @@ RSpec.feature 'Admin', type: :feature do
       visit stash_url_helpers.admin_user_dashboard_path(@user)
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
-      expect(page).to have_text("You are editing #{@user.name}'s dataset.", wait: 15)
+      expect(page).to have_text("You are editing #{@user.name}'s dataset.")
       click_link 'Review and Submit'
-      expect(page).to have_css('input#user_comment', wait: 15)
+      expect(page).to have_css('input#user_comment')
     end
 
     it 'redirects to the dataset editing page when requesting an edit link that the user has access to', js: true do
@@ -75,7 +75,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'has admin link', js: true do
         visit root_path
         find('.o-sites__summary', text: 'Admin').click
-        expect(page).to have_link('Dataset Curation', wait: 5)
+        expect(page).to have_link('Dataset Curation')
         expect(page).to have_link('Publication Updater')
         expect(page).to have_link('Status Dashboard')
         expect(page).to have_link('Submission Queue')
@@ -87,11 +87,11 @@ RSpec.feature 'Admin', type: :feature do
         within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        within(:css, 'div.o-admin-dialog', wait: 5) do
+        within(:css, 'div.o-admin-dialog') do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
-        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin', wait: 5)
+        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
       end
 
     end

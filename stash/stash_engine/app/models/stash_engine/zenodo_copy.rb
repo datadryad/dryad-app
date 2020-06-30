@@ -10,6 +10,9 @@ module StashEngine
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
     string_enum('state', %w[enqueued replicating finished error], 'enqueued', false)
+    string_enum('copy_type', %w[data software software_publish], 'data', false)
 
+    scope :data, -> { where(copy_type: 'data') }
+    scope :software, -> { where(copy_type: %w[software software_publish]) }
   end
 end
