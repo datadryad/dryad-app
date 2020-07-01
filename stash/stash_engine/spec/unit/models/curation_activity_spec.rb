@@ -153,5 +153,22 @@ module StashEngine
       end
     end
 
+    describe '#copy_to_zenodo' do
+      before(:each) do
+        # this this back to the original method
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_call_original
+        @user = create(:user)
+        @identifier = create(:identifier)
+        @resource = create(:resource, identifier_id: @identifier.id)
+        @curation_activity = create(:curation_activity, resource: @resource)
+      end
+
+      it 'calls both zenodo methods to copy software and data (3rd copy)' do
+        expect(@resource).to receive(:send_to_zenodo).and_return('test1')
+        expect(@resource).to receive(:send_software_to_zenodo).with(publish: true).and_return('test2')
+        @curation_activity.copy_to_zenodo
+      end
+    end
+
   end
 end

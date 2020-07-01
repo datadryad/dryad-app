@@ -83,5 +83,22 @@ module StashDatacite
         end
       end
     end
+
+    describe 'self.add_zenodo_relation' do
+      it 'adds a record to the database for a zenodo doi' do
+        test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
+        r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+        expect(r.related_identifier).to eq(test_doi)
+        expect(r.relation_type).to eq('issupplementto')
+      end
+
+      it "doesn't add the zenodo issupplement doi multiple times" do
+        test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
+        StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+        StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+        expect(@resource.related_identifiers.count).to eq(1)
+        expect(@resource.related_identifiers.first.related_identifier).to eq(test_doi)
+      end
+    end
   end
 end

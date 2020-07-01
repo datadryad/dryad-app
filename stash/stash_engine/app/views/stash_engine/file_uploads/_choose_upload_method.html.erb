@@ -1,10 +1,18 @@
 <%# locals: resource, upload_method [:files, :manifest] %>
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
 <% if @datatype == 'Software' %>
-  <p>
-    Software and other supporting files may be uploaded to Zenodo through our partnership and integration. You will have
-    the opportunity to choose a separate license for your code on the review page. For more information about our integration: [XXX]
-  </p>
+  <!-- TODO:  This is hacked in for Daniella to do a demo in a time crunch, put back into the ui library and css -->
+  <div style="display:flex">
+    <div style="margin-right: 5px;">
+      <p>
+        Software and other supporting files may be uploaded to Zenodo through our partnership and integration. You will have
+        the opportunity to choose a separate license for your code on the review page. For more information about our integration: [XXX]
+      </p>
+    </div>
+    <div>
+      <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
+    </div>
+  </div>
 <% end %>
 <%= render 'stash_engine/file_uploads/file_size_text' %>
 <div>

@@ -2,7 +2,7 @@
   <h3>License and Terms of Service for Data</h3>
   <p>
     <span><%= check_box_tag 'agree_to_license', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-    <label for="agree_to_license">By checking this box, I agree to the license
+    <label for="agree_to_license" class="required">By checking this box, I agree to the license
       <% if @resource.rights.blank? %>
         <%= render partial: 'stash_datacite/licenses/license_review', locals:
             {license: StashEngine::License.by_id(@resource.identifier.license_id), right: nil } %>
@@ -16,7 +16,7 @@
   </p>
   <p>
     <span><%= check_box_tag 'agree_to_tos', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-    <label for="agree_to_tos">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
+    <label for="agree_to_tos" class="required">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
   </p>
 
   <% if current_tenant.data_deposit_agreement? %>
@@ -37,7 +37,7 @@
 			your dataset. Please select a license from the below dropdown list for your Zenodo deposit. For guidance,
 			check <a href="https://choosealicense.com/" target="_blank">choosealicense.org</a>.</p>
 		<div>
-			<label for="zenodo_license">Select license for files (type to search within list)</label>
+			<label for="zenodo_license" class="required">Select license for files (type to search within list)</label>
 			<%# select_tag 'zenodo_license', options_for_select([ ["MIT License", 'mit'], ["GNU public dedication", 'gnu'] ]) %>
 			<%= select_tag 'zenodo_license',
 		 		options_from_collection_for_select(StashEngine::SoftwareLicense.all, 'identifier', 'name',

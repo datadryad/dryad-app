@@ -63,7 +63,7 @@ module Stash
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
 
-        it 'makes a request to update the metadata with options not to set doi (use_zenodo_doi)' do
+        it 'makes a request to update the metadata with options for software upload (let zenodo assign doi)' do
           stub_request(:put, "https://sandbox.zenodo.org/api/deposit/depositions/#{@szd.deposition_id}?access_token=ThisIsAFakeToken")
             .with(
               body: /.*/,
@@ -73,8 +73,8 @@ module Stash
               }
             )
             .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
-          expect(MetadataGenerator).to receive(:new).with(resource: @resource, use_zenodo_doi: true).and_call_original
-          resp = @szd.update_metadata(doi: 'http://doi.org/12577/snakk')
+          expect(MetadataGenerator).to receive(:new).with(resource: @resource, software_upload: true).and_call_original
+          resp = @szd.update_metadata(software_upload: true, doi: 'http://doi.org/12577/snakk')
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
       end

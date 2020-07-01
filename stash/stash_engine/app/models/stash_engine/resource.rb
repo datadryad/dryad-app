@@ -26,7 +26,7 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
-    has_one :zenodo_copy, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
@@ -39,6 +39,7 @@ module StashEngine
     amoeba do
       include_association :authors
       include_association :file_uploads
+      include_association :software_uploads
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
@@ -48,18 +49,22 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
-        new_resource.file_uploads.each do |file|
-          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
-          if file.file_state == 'created'
-            file.file_state = 'copied'
-            file.save
+        %i[file_uploads software_uploads].each do |meth|
+          new_resource.public_send(meth).each do |file|
+            raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+            if file.file_state == 'created'
+              file.file_state = 'copied'
+              file.save
+            end
           end
         end
 
         # for some reason a where clause will not work with AR in this instance
         # new_resource.file_uploads.where(file_state: 'deleted').delete_all
-        resources = new_resource.file_uploads.select { |ar_record| ar_record.file_state == 'deleted' }
-        resources.each(&:delete)
+        %i[file_uploads software_uploads].each do |meth|
+          resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
+          resources.each(&:delete)
+        end
       end)
     end
 
@@ -641,6 +646,15 @@ module StashEngine
       return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
       ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data') if zenodo_copies.data.empty?
       ZenodoCopyJob.perform_later(id)
+    end
+
+    # if publish: true then it just publishes, which is a separate operation than updating files
+    def send_software_to_zenodo(publish: false)
+      return unless identifier.has_zenodo_software?
+      rep_type = (publish == true ? 'software_publish' : 'software')
+      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
+      zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
+      ZenodoSoftwareJob.perform_later(zc.id)
     end
 
     private
