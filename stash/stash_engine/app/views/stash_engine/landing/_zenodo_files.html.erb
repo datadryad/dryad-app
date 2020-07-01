@@ -1,0 +1,15 @@
+<%# takes local variable of dataset_identifier and resource %>
+<%# return if no current_file_uploads %>
+<div class="c-sidebox">
+  <h2 class="c-sidebox__heading">Zenodo Files</h2>
+
+  <ul class="c-file-group__list">
+    <% resource.current_file_uploads(my_class: StashEngine::SoftwareUpload).each do |su| %>
+      <li>
+        <%= link_to su.upload_file_name.ellipsisize(20), "#",
+                    title: su.upload_file_name, target: '_blank' %>
+        <div style="float: right;"><%= filesize(su.upload_file_size) %></div>
+      </li>
+    <% end %>
+  </ul>
+</div>
