@@ -70,6 +70,8 @@ module StashDatacite
 
       resource.reload
 
+      resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+
       redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
     end
 

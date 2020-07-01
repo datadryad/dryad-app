@@ -172,7 +172,8 @@ module StashApi
       check_dataset_completions { yield }
       pre_submission_updates
       StashEngine.repository.submit(resource_id: @resource.id)
-      # render something
+      @resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
       render json: ds.metadata, status: 202
       yield
