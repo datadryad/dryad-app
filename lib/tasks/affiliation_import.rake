@@ -70,6 +70,7 @@ namespace :affiliation_import do
     stash_ids.each_with_index do |i, idx|
       next if idx < start_from
       next unless i.latest_resource.present?
+
       puts "Processing #{idx + 1}/#{stash_ids.length}: #{i.identifier}"
       authors = i.latest_resource.authors
       (0..authors.size - 1).each do |a|
