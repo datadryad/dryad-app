@@ -82,7 +82,7 @@ cap development deploy BRANCH="$MY_BRANCH"
 - [ ] Watch out for disk filling up.  You can go delete the temp-cap directory you created earlier here. Maybe clean
 up some things in ~/install or logs
 
-## Fix the Notifier (if it's on this server (the 2a servers)
+## Fix the Notifier if it's on this server (the 2a servers)
 
 - [ ] Get latest version of notifier code
 ```shell script
@@ -104,7 +104,7 @@ STASH_ENV="$RAILS_ENV" NOTIFIER_OUTPUT=stdout /dryad/apps/stash-notifier/main.rb
 
 ## Check the disk isn't full
 - [ ] for good measure check `df` to see free space and clean something up if needed
-- [ ] It doesn't hurt to check the restart scripts in ~/init.d for passenger still work
+- [ ] It doesn't hurt to check the restart scripts in ~/init.d for passenger still working
 ```shell script
 ~/init.d/passenger.dryad restart
 ```
