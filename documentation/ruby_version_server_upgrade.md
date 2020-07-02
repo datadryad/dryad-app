@@ -109,4 +109,6 @@ STASH_ENV="$RAILS_ENV" NOTIFIER_OUTPUT=stdout /dryad/apps/stash-notifier/main.rb
 ~/init.d/passenger.dryad restart
 ```
 
-Things should be working.
+## Wrapping up
+- [ ] Things should be working.  If so, put back into ALB rotation.
+- [ ] After both deploys, unpause the submission queue or any other typical tasks around deploys.
