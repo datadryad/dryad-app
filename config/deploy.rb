@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.14.0'
+lock '~> 3.14'
 
 set :application, 'dryad'
 set :repo_url, 'https://github.com/CDL-Dryad/dryad-app.git'
