@@ -68,6 +68,7 @@ module StashEngine
       qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")
       path = "#{callback_path_begin}google_oauth2#{qs}"
       return path unless Rails.application.default_url_options[:host] =~ /^localhost(:[0-9]+)?$/
+
       path.sub('https', 'http') # HACK: for testing
     end
 
@@ -90,6 +91,7 @@ module StashEngine
 
     def self.find(tenant_id)
       return nil unless StashEngine.tenants[tenant_id]
+
       new(StashEngine.tenants[tenant_id])
     end
 

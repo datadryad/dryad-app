@@ -22,6 +22,7 @@ module StashDatacite
       return nil unless geolocation
       return geolocation.geolocation_box.bounding_box_str if geolocation.geolocation_box
       return geolocation.geolocation_point.bounding_box_str if geolocation.geolocation_point
+
       nil
     end
   end

@@ -53,17 +53,19 @@ module StashDatacite
     # GET /contributors/autocomplete?term={query_term}
     def autocomplete
       return if params.blank?
+
       partial_term = params['term']
       if partial_term.blank?
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors when calling the CrossRef API
-        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         response = HTTParty.get('https://api.crossref.org/funders',
                                 query: { 'query': partial_term },
                                 headers: { 'Content-Type' => 'application/json' })
         return if response.parsed_response.blank?
         return if response.parsed_response['message'].blank?
+
         result_list = response.parsed_response['message']['items']
         render json: bubble_up_exact_matches(result_list: result_list, term: partial_term)
       end
@@ -95,6 +97,7 @@ module StashDatacite
       match_term = term.downcase
       result_list.each do |result_item|
         next if result_item.blank?
+
         name = result_item['name'].downcase
         if name.start_with?(match_term)
           matches_at_beginning << result_item
@@ -114,6 +117,7 @@ module StashDatacite
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
       return if params[:id] == 'new'
+
       @contributor = Contributor.find((params[:contributor] ? contributor_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @contributor.resource_id
     end

@@ -82,8 +82,10 @@ module MigrationImport
 
     def embargo_fields
       return {} if @hash[:embargo].blank? || @hash[:embargo][:end_date].blank?
+
       my_time = Time.iso8601(@hash[:embargo][:end_date])
       return {} if my_time < Time.new
+
       { hold_for_peer_review: true, peer_review_end_date: my_time }
     end
 
@@ -141,11 +143,13 @@ module MigrationImport
 
     def add_queue_states
       return unless @hash[:current_resource_state][:resource_state] == 'submitted'
+
       @ar_resource.repo_queue_states << StashEngine::RepoQueueState.create(state: 'completed', hostname: 'migrated-from-dash')
     end
 
     def add_shares
       return unless @hash[:share].present? && @hash[:share][:secret_id].present?
+
       my_hash = @hash[:share].slice('secret_id', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
       StashEngine::Share.create(my_hash)
       # else
@@ -197,6 +201,7 @@ module MigrationImport
 
     def add_publisher
       return if @hash[:publisher].nil?
+
       my_hash = @hash[:publisher].slice('publisher', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
       StashDatacite::Publisher.create(my_hash)
     end
@@ -211,6 +216,7 @@ module MigrationImport
 
     def add_resource_type
       return if @hash[:resource_type].nil?
+
       my_hash = @hash[:resource_type].slice('resource_type_general', 'resource_type', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
       StashDatacite::ResourceType.create(my_hash)
     end
@@ -251,6 +257,7 @@ module MigrationImport
         geo_point = make_point(json_geo[:geolocation_point])
         geo_box = make_box(json_geo[:geolocaton_box])
         next if geo_place.nil? && geo_point.nil? && geo_box.nil?
+
         StashDatacite::Geolocation.create(resource_id: @ar_resource.id,
                                           place_id: geo_place&.id,
                                           point_id: geo_point&.id,
@@ -260,18 +267,21 @@ module MigrationImport
 
     def make_place(json_place)
       return nil if json_place.nil?
+
       my_hash = json_place.slice('geo_location_place', 'created_at', 'updated_at')
       StashDatacite::GeolocationPlace.create(my_hash)
     end
 
     def make_point(json_point)
       return nil if json_point.nil?
+
       my_hash = json_point.slice('latitude', 'longitude', 'created_at', 'updated_at')
       StashDatacite::GeolocationPoint.create(my_hash)
     end
 
     def make_box(json_box)
       return nil if json_box.nil?
+
       my_hash = json_box.slice('sw_latitude', 'ne_latitude', 'sw_longitude', 'ne_longitude', 'created_at', 'updated_at')
       StashDatacite::GeolocationBox.create(my_hash)
     end
@@ -279,6 +289,7 @@ module MigrationImport
     def add_affiliation(ar_author:, json_affiliation:)
       name = json_affiliation[:long_name] || json_affiliation[:short_name] || json_affiliation[:abbreviation]
       return if name.blank?
+
       name.strip!
       ar_existing_affil = StashDatacite::Affiliation.find_by(long_name: name)
       ar_existing_affil = make_affil_with_ror(name: name) if ar_existing_affil.blank?
@@ -289,6 +300,7 @@ module MigrationImport
     def make_affil_with_ror(name:)
       ror_affil = Stash::Organization::Ror.find_first_by_ror_name(name)
       return nil if ror_affil.nil?
+
       if name.downcase == ror_affil.name.downcase.strip
         # just write the ror name as the name in long name
         StashDatacite::Affiliation.create(long_name: ror_affil.name.strip, ror_id: ror_affil.id)

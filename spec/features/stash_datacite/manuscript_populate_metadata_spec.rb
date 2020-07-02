@@ -51,7 +51,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
             'Content-Type' => 'application/json'
           }
         ).to_return(status: 200,
-                    body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'dryad_manuscript.json')),
+                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'dryad_manuscript.json')),
                     headers: { 'Content-Type' => 'application/json' })
       journal = 'Journal of Systematics and Evolution'
       issn = '1759-6831'
@@ -83,7 +83,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           }
         )
         .to_return(status: 200,
-                   body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
                    headers: {})
       stub_request(:get, 'https://api.datadryad.example.org/api/v1/journals/1742-5689')
         .with(
@@ -127,7 +127,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           }
         )
         .to_return(status: 404,
-                   body:  'not found',
+                   body: 'not found',
                    headers: {})
       journal = 'cats'
       doi = 'scabs'

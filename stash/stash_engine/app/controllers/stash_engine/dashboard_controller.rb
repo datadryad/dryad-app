@@ -19,6 +19,7 @@ module StashEngine
 
     def migrate_data_mail
       return unless validate_form_email
+
       email_code
       flash.now[:info] = 'An email with your code has been sent to your email address.'
       render 'migrate_data'
@@ -63,6 +64,7 @@ module StashEngine
     # some people seem to get to the dashboard without having their tenant set.
     def ensure_tenant
       return unless current_user.tenant_id.blank?
+
       redirect_to choose_sso_path, alert: 'You must choose if you are associated with an institution before continuing'
     end
 
@@ -73,7 +75,7 @@ module StashEngine
     end
 
     def validate_form_email
-      if params[:email].nil? || !params[:email][/^.+\@.+\..+$/]
+      if params[:email].nil? || !params[:email][/^.+@.+\..+$/]
         flash.now[:info] = 'Please fill in a correct email address' if params[:commit]
         render 'migrate_data'
         return false

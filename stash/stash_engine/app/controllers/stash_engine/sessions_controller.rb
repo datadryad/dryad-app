@@ -79,8 +79,8 @@ module StashEngine
     end
 
     def set_session
-      session.merge!(email:    @auth_hash['info']['email'],
-                     name:     @auth_hash['info']['name'],
+      session.merge!(email: @auth_hash['info']['email'],
+                     name: @auth_hash['info']['name'],
                      provider: @auth_hash['provider'])
     end
 
@@ -103,6 +103,7 @@ module StashEngine
     def setup_orcid
       @orcid = @auth_hash.uid
       return true if @orcid
+
       head(:forbidden)
     end
 
@@ -148,6 +149,7 @@ module StashEngine
       return request.env['omniauth.params'][:orcid] if request.env['omniauth.params'][:orcid]
       return params[:orcid] if params[:orcid]
       return Rack::Utils.parse_nested_query(params[:state])['orcid'] if params[:state]
+
       nil
     end
 

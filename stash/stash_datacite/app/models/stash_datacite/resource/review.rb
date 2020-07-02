@@ -113,6 +113,7 @@ module StashDatacite
 
       def pdf_author
         return "#{authors.first.author_last_name}_et_al" if authors.length > 1
+
         authors.try(:first).try(:author_last_name).to_s
       end
     end

@@ -65,9 +65,11 @@ module StashDatacite
 
     def author_citation_format(authors)
       return '' if authors.blank?
+
       str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
       return '' if str_author.blank?
       return "#{str_author.first} et al." if str_author.length > 4
+
       str_author.join('; ')
     end
 
@@ -80,11 +82,13 @@ module StashDatacite
 
     def identifier_string_for(resource, review)
       return 'DOI' unless resource.identifier
+
       review.identifier.identifier.to_s
     end
 
     def version_string_for(resource, review)
       return 'v0' unless resource.stash_version
+
       "v#{review.version.version}"
     end
 

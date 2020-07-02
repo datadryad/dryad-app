@@ -7,7 +7,7 @@ module Stash
   module Merritt
     class Repository < Stash::Repo::Repository
 
-      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
+      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}.freeze
 
       def initialize(url_helpers:, threads: 1)
         super
@@ -48,6 +48,7 @@ module Stash
       def ark_from(record_identifier)
         ark_match_data = record_identifier && record_identifier.match(ARK_PATTERN)
         raise ArgumentError, "No ARK found in record identifier #{record_identifier || 'nil'}" unless ark_match_data
+
         ark_match_data[0].strip
       end
     end

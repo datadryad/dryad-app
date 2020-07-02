@@ -33,23 +33,27 @@ module Stash
 
       def valid_version(version)
         return version if version.is_a?(Version)
+
         raise ArgumentError, "version does not appear to be a Version object: #{version || 'nil'}"
       end
 
       def valid_license(license)
         return license if license.is_a?(License)
+
         raise ArgumentError, "license does not appear to be a License object: #{license || 'nil'}"
       end
 
       def valid_embargo(embargo)
         return Embargo.none unless embargo
         return embargo if embargo.is_a?(Embargo)
+
         raise ArgumentError, "embargo does not appear to be an Embargo object: #{embargo.inspect}"
       end
 
       def valid_inventory_or_nil(inventory)
         return unless inventory
         return inventory if inventory.is_a?(Inventory)
+
         raise ArgumentError, "inventory does not appear to be an Inventory object: #{inventory || 'nil'}"
       end
 

@@ -1,3 +1,4 @@
+# rubocop:disable Lint/SuppressedException
 require 'yaml'
 require 'database_cleaner'
 require 'spec_helper'
@@ -6,6 +7,7 @@ db_config = YAML.load_file('spec/config/database.yml')['test']
 
 host = db_config['host']
 raise("Can't run destructive tests against non-local database #{host}") unless host == 'localhost'
+
 puts "Using database #{db_config['database']} on host #{db_config['host']} with username #{db_config['username']}"
 
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
@@ -16,16 +18,14 @@ ActiveRecord::Base.establish_connection(db_config)
 ActiveRecord::Migration.verbose = false
 puts "Executing migrations from #{migration_paths.join(':')}"
 ActiveRecord::Migrator.up migration_paths
-
-# rubocop:disable Lint/HandleExceptions
 # had problems in tests with the columns being out of date, but only in a new database such as on Travis, ick. OUr nasty, janky test setup.
 ActiveRecord::Base.descendants.each do |model|
-  begin
-    model.connection.schema_cache.clear!
-    model.reset_column_information
-  rescue NameError; end
+
+  model.connection.schema_cache.clear!
+  model.reset_column_information
+rescue NameError
+
 end
-# rubocop:enable Lint/HandleExceptions
 
 RSpec.configure do |config|
   config.before(:suite) do
@@ -46,3 +46,5 @@ end
 # Helpers
 
 require 'util/resource_builder'
+
+# rubocop:enable Lint/SuppressedException

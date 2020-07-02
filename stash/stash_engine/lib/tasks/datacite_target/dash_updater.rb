@@ -28,14 +28,14 @@ module DashUpdater
 
     begin
       idg.update_identifier_metadata!
-    rescue Stash::Doi::IdGenError => ige
+    rescue Stash::Doi::IdGenError => e
       tries += 1
       puts "Try: #{tries} \tStash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
-      puts ige.message
+      puts e.message
       puts ''
       sleep retry_pause # pause for a while to let ezid/datacite stop having problems in case temporary
       retry unless tries > 9
-      raise ige # re-raise the exception
+      raise e # re-raise the exception
     end
   end
 end

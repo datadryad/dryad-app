@@ -31,10 +31,10 @@ class DatasetRecord
       client.list_records(opts)
     rescue OAI::Exception
       Config.logger.info("No new records were found from OAI query: #{url}")
-      return nil
+      nil
     rescue Faraday::ConnectionFailed
       Config.logger.error("Unable to connect to #{url}")
-      return nil
+      nil
     end
   end
 

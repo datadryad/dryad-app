@@ -13,6 +13,7 @@ module Stash
       def initialize(resource:)
         @resource = resource
         return if @resource.blank?
+
         @tenant = resource&.tenant
         @version = @resource&.stash_version&.merritt_version
         # local_id is encoded, so later it gets double-encoded which is required by Merritt for some crazy reason
@@ -124,7 +125,7 @@ module Stash
       end
 
       def filename
-        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[\:\\/]+}, '_'))
+        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[:\\/]+}, '_'))
         fn.gsub!(/,|;|'|"|\u007F/, '')
         fn << "__v#{@version}"
         "#{fn}.zip"

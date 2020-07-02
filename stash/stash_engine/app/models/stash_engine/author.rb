@@ -7,7 +7,7 @@ module StashEngine
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
 
     validates :author_email, format: EMAIL_REGEX, allow_blank: true
 
@@ -28,6 +28,7 @@ module StashEngine
       return false unless other.present?
       return true if author_orcid.present? && other.author_orcid == author_orcid
       return true if author_email.present? && other.author_email == author_email
+
       other.author_last_name&.strip&.downcase == author_last_name&.strip&.downcase &&
         other.author_first_name&.strip&.downcase == author_first_name&.strip&.downcase
     end
@@ -43,6 +44,7 @@ module StashEngine
 
     def author_html_email_string
       return if author_email.blank?
+
       "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">#{CGI.escapeHTML(author_standard_name.strip)}</a>"
     end
 

@@ -8,6 +8,7 @@ module StashApi
       def parse
         clear
         return if @hash['usageNotes'].nil?
+
         @resource.descriptions << StashDatacite::Description.create(description: @hash['usageNotes'],
                                                                     description_type: 'other')
       end

@@ -19,6 +19,7 @@ module Script
       count = 0
       keywords.each do |k|
         next if StashDatacite::Subject.where(subject: k).exists?
+
         count += 1
         StashDatacite::Subject.create(subject: k, subject_scheme: SCHEME, scheme_URI: SCHEME_URI)
       end

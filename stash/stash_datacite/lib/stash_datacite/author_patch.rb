@@ -22,6 +22,7 @@ module StashDatacite
 
         def affiliation=(affil)
           return unless affil.is_a?(StashDatacite::Affiliation)
+
           affiliations.destroy_all
           affiliations << affil
         end

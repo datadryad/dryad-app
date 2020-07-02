@@ -18,6 +18,7 @@ module StashDatacite
         items = { :place_id= => :geolocation_place, :point_id= => :geolocation_point, :box_id= => :geolocation_box }
         items.each_pair do |my_id, my_association|
           next unless new_geo.send(my_association) # if it's associated, duplicate it and reset id to new one
+
           newone = new_geo.send(my_association).dup
           newone.save
           new_geo.send(my_id, newone.id) # set the id for duplicated item in the geolocation record
@@ -33,6 +34,7 @@ module StashDatacite
     # place is string, point is [lat long] and box is [[ lat, long], [lat, long]] (or [lat, long, lat, long] )
     def self.new_geolocation(place: nil, point: nil, box: nil, resource_id:)
       return unless place || point || box
+
       Geolocation.create(
         place_id: place_id_from(place),
         point_id: point_id_from(point),
@@ -44,6 +46,7 @@ module StashDatacite
     def destroy_place
       pl = geolocation_place
       return unless pl
+
       pl.destroy
       self.place_id = nil
       destroy_if_empty
@@ -52,6 +55,7 @@ module StashDatacite
     def destroy_point
       po = geolocation_point
       return unless po
+
       po.destroy
       self.point_id = nil
       destroy_if_empty
@@ -60,6 +64,7 @@ module StashDatacite
     def destroy_box
       bo = geolocation_box
       return unless bo
+
       bo.destroy
       self.box_id = nil
       destroy_if_empty
@@ -74,12 +79,14 @@ module StashDatacite
     def datacite_mapping_point
       return nil unless geolocation_point
       return nil if geolocation_point.latitude.blank? || geolocation_point.longitude.blank?
+
       Datacite::Mapping::GeoLocationPoint.new(geolocation_point.latitude, geolocation_point.longitude)
     end
 
     # handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_box
       return nil unless geolocation_box
+
       coords = [
         geolocation_box.sw_latitude,
         geolocation_box.sw_longitude,
@@ -87,6 +94,7 @@ module StashDatacite
         geolocation_box.ne_longitude
       ]
       return if coords.any?(&:blank?)
+
       Datacite::Mapping::GeoLocationBox.new(*coords)
     end
 
@@ -103,6 +111,7 @@ module StashDatacite
     def set_geolocation_flag
       resource = StashEngine::Resource.where(id: resource_id).first
       return unless resource && resource.has_geolocation == false
+
       resource.has_geolocation = true
       resource.save!
     end
@@ -115,12 +124,14 @@ module StashDatacite
 
     def self.place_id_from(place)
       return if place.blank?
+
       GeolocationPlace.create(geo_location_place: place).id
     end
     private_class_method :place_id_from
 
     def self.point_id_from(point)
       return if point.blank?
+
       latitude = point[0].try(:to_d)
       longitude = point[1].try(:to_d)
       GeolocationPoint.create(latitude: latitude, longitude: longitude).id
@@ -129,6 +140,7 @@ module StashDatacite
 
     def self.box_id_from(box)
       return if box.blank? || box.flatten.length != 4
+
       sides = box.flatten.map { |i| i.try(:to_d) }
       n_lat, e_long, s_lat, w_long = coords_from(sides)
       GeolocationBox.create(

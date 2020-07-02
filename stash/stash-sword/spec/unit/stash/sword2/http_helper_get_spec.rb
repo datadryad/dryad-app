@@ -109,7 +109,7 @@ module Stash
             request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
           ).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
           expect { helper.get(uri: uri) }.to raise_error do |e|
-            expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
+            expect(e.message).to match(/Redirect limit.*exceeded.*#{uri}/)
           end
         end
 
@@ -120,7 +120,7 @@ module Stash
           expect(@http).to receive(:request).and_yield(@error)
           uri = URI('http://example.org/')
           expect { helper.get(uri: uri) }.to raise_error do |e|
-            expect(e.message).to match(/403.*Forbidden.*#{uri.to_s}/)
+            expect(e.message).to match(/403.*Forbidden.*#{uri}/)
           end
         end
 
@@ -131,7 +131,7 @@ module Stash
           expect(@http).to receive(:request).and_yield(@error)
           uri = URI('http://example.org/')
           expect { helper.get(uri: uri) }.to raise_error do |e|
-            expect(e.message).to match(/500.*Internal Server Error.*#{uri.to_s}/)
+            expect(e.message).to match(/500.*Internal Server Error.*#{uri}/)
           end
         end
       end

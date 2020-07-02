@@ -35,6 +35,7 @@ module StashApi
       ct_ok = !content_type.nil? && content_type.start_with?('application/json')
       accept_ok = !accept.nil? && (accept.include?('*/*') || accept.include?('application/json'))
       return if ct_ok && accept_ok
+
       render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
     end
 
@@ -85,21 +86,25 @@ module StashApi
     # based on user and resource set in "require_api_user" and 'require_resource_in_progress'
     def require_permission
       return if @resource.nil? # this not needed for dataset upsert with identifier
+
       render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.permission_to_edit?(user: @user)
     end
 
     def require_superuser
       return if @user.role == 'superuser'
+
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
     def require_curator
       return if @user.role == 'superuser'
+
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
     def require_admin
       return if @user.role == 'superuser' || @user.role == 'admin' || @user.journals_as_admin.present?
+
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
