@@ -1,15 +1,23 @@
 <%# takes local variable of dataset_identifier and resource %>
-<%# return if no current_file_uploads %>
+<%# apparently @user_type == 'privileged' is set in controller if user can see non-public items %>
+
+<% sfw_resources = dataset_identifier.zenodo_software_resources(include_unpublished: @user_type == 'privileged') %>
+<% return if sfw_resources.blank? %>
+
 <div class="c-sidebox">
   <h2 class="c-sidebox__heading">Zenodo Files</h2>
-
-  <ul class="c-file-group__list">
-    <% resource.current_file_uploads(my_class: StashEngine::SoftwareUpload).each do |su| %>
-      <li>
-        <%= link_to su.upload_file_name.ellipsisize(20), "#",
-                    title: su.upload_file_name, target: '_blank' %>
-        <div style="float: right;"><%= filesize(su.upload_file_size) %></div>
-      </li>
-    <% end %>
-  </ul>
+  <% sfw_resources.each do |res| %>
+    <% next if res.software_unchanged? %>
+    <ul class="c-file-group__list">
+      <% current_file_uploads = res.current_file_uploads(my_class: StashEngine::SoftwareUpload) %>
+      <% current_file_uploads.each do |su| %>
+        <li>
+          <%= link_to su.upload_file_name.ellipsisize(20), su.public_zenodo_download_url,
+                      title: su.upload_file_name, target: '_blank' %>
+          <div style="float: right;"><%= filesize(su.upload_file_size) %></div>
+        </li>
+      <% end %>
+    </ul>
+    <br/>
+  <% end %>
 </div>
