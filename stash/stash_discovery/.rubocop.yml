@@ -8,7 +8,7 @@ AllCops:
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
 
-Metrics/LineLength:
+Layout/LineLength:
   Exclude:
     - 'app/controllers/catalog_controller.rb'
 

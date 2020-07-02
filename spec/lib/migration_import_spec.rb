@@ -3,7 +3,7 @@ require 'tasks/migration_import'
 require_relative '../support/helpers/ror_helper'
 require 'time'
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 RSpec.describe MigrationImport do
 
   include RorHelper
@@ -87,4 +87,4 @@ RSpec.describe MigrationImport do
 
   end
 end
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength

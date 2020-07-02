@@ -16,6 +16,7 @@ module Stash
       def index_document(solr_hash:)
         result = @solr.add(solr_hash, add_attributes: ADD_ATTRIBUTES)
         return true if result['responseHeader']['status'] == 0
+
         false
       rescue StandardError => e
         Rails.logger.error("Error adding record with hash #{solr_hash || 'nil'}: #{e}")
@@ -27,6 +28,7 @@ module Stash
         result = @solr.delete_by_id(doi)
         @solr.commit
         return true if result['responseHeader']['status'] == 0
+
         false
       rescue StandardError => e
         Rails.logger.error("Error deleting record with identifier #{doi || 'nil'}: #{e}")

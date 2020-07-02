@@ -105,6 +105,7 @@ module StashApi
 
     def record_published_date(resource)
       return if resource.publication_date.present?
+
       publish_date = params[:curation_activity][:created_at] || Time.now.utc
       resource.update!(publication_date: publish_date)
     end
@@ -124,6 +125,7 @@ module StashApi
       end
 
       return if resource.publication_date.present?
+
       embargo_date = (params[:curation_activity][:created_at]&.to_date || Date.today) + 1.year
       resource.update!(publication_date: embargo_date)
     end

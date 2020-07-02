@@ -48,10 +48,10 @@ module Stash
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
         third_copy_record.update(state: 'finished')
-      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
+      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
         record = StashEngine::ZenodoCopy.where(resource_id: @resource.id).first_or_create
-        record.update(state: 'error', error_info: "#{ex.class}\n#{ex}", identifier_id: @resource.identifier.id)
+        record.update(state: 'error', error_info: "#{e.class}\n#{e}", identifier_id: @resource.identifier.id)
       ensure
         @file_collection.cleanup_files
       end

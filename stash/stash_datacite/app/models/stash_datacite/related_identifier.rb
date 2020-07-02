@@ -40,21 +40,25 @@ module StashDatacite
 
     def relation_type_friendly
       return nil if relation_type.blank?
+
       RelationTypesStrToFull[relation_type]
     end
 
     def relation_name_english
       return '' if relation_type_friendly.nil?
+
       relation_type_friendly.scan(/[A-Z]{1}[a-z]*/).map(&:downcase).join(' ')
     end
 
     def self.relation_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::RelationType.find_by_value(str)
     end
 
     def relation_type_mapping_obj
       return nil if relation_type_friendly.nil?
+
       RelatedIdentifier.relation_type_mapping_obj(relation_type_friendly)
     end
 
@@ -65,16 +69,19 @@ module StashDatacite
 
     def related_identifier_type_friendly
       return nil if related_identifier_type.blank?
+
       RelatedIdentifierTypesStrToFull[related_identifier_type]
     end
 
     def self.related_identifier_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::RelatedIdentifierType.find_by_value(str)
     end
 
     def related_identifier_type_mapping_obj
       return nil if related_identifier_type_friendly.nil?
+
       RelatedIdentifier.related_identifier_type_mapping_obj(related_identifier_type_friendly)
     end
 

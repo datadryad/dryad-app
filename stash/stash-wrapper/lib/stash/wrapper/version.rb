@@ -24,11 +24,13 @@ module Stash
 
       def valid_number(number)
         return number if number && number.respond_to?(:to_i) && number == number.to_i
+
         raise ArgumentError, "specified version number does not appear to be an integer: #{number || 'nil'}"
       end
 
       def valid_date(date)
         return date if date.respond_to?(:iso8601)
+
         raise ArgumentError, "date does not appear to be a Date object: #{date || 'nil'}"
       end
 

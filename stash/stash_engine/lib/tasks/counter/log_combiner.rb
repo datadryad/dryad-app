@@ -5,8 +5,8 @@ module Counter
   class LogCombiner
 
     USERNAME = 'dryad'.freeze
-    PRIMARY_FN_PATTERN = /^counter_\d{4}-\d{2}-\d{2}.log$/
-    ANY_LOG_FN_PATTERN = /^counter_(\d{4})-(\d{2})-(\d{2}).log(|_\d{1}|_combined)$/
+    PRIMARY_FN_PATTERN = /^counter_\d{4}-\d{2}-\d{2}.log$/.freeze
+    ANY_LOG_FN_PATTERN = /^counter_(\d{4})-(\d{2})-(\d{2}).log(|_\d{1}|_combined)$/.freeze
 
     def initialize(log_directory:, scp_hosts:, scp_path:)
       @log_directory = log_directory
@@ -68,6 +68,7 @@ module Counter
       puts "downloaded #{host}:#{filename}"
     rescue Net::SCP::Error => e
       raise e unless e.to_s.include?('No such file or directory')
+
       puts "Skipped downloading #{host}:#{filename} file doesn't exist on secondary server"
     end
 

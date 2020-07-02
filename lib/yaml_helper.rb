@@ -7,6 +7,6 @@ module YamlHelper
     my_yml = YAML.load(ERB.new(File.read(my_file)).result)
     # rubocop:enable Security/YAMLLoad
     new_yml = { 'test' => my_yml['test'] }.to_yaml
-    new_yml.split("\n")[1..-1].join("\n") # this gets rid of the --- in the top line which we don't want when emitting
+    new_yml.split("\n")[1..].join("\n") # this gets rid of the --- in the top line which we don't want when emitting
   end
 end

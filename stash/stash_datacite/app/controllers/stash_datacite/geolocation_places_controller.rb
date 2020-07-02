@@ -50,6 +50,7 @@ module StashDatacite
     def find_or_create_geolocation(params)
       existing = find_geolocation_by_place(params)
       return existing if existing
+
       new_geolocation_from(params)
     end
 
@@ -70,6 +71,7 @@ module StashDatacite
         .from_resource_id(params[:resource_id])
         .where(geo_location_place: params[:geo_location_place])
       return nil if places.empty?
+
       places.first.geolocation
     end
 

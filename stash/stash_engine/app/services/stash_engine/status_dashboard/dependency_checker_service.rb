@@ -5,7 +5,7 @@ module StashEngine
 
     class DependencyCheckerService
 
-      DATE_TIME_MATCHER = /[0-9]{4}\-[0-9]{2}\-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/
+      DATE_TIME_MATCHER = /[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/.freeze
 
       def initialize(**args)
         @dependency = StashEngine::ExternalDependency.find_by(abbreviation: args[:abbreviation])
@@ -20,6 +20,7 @@ module StashEngine
 
       def record_status(message:, online:)
         return false unless @dependency.present?
+
         was_already_offline = @dependency.status != 1
         @dependency.update(status: online, error_message: message)
         report_outage if !online && !was_already_offline

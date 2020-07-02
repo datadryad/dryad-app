@@ -52,17 +52,20 @@ module StashDatacite
       subject = find_or_create_subject(subject_str)
       subjects = @resource.subjects
       return if subjects.exists?(subject)
+
       subjects << subject
     end
 
     def find_or_create_subject(subject)
       existing = Subject.where('subject LIKE ?', subject).first
       return existing if existing
+
       Subject.create(subject: subject)
     end
 
     def set_subject
       return if params[:id] == 'new'
+
       @subject = Subject.find(params[:id])
       return ajax_blocked unless @subject.resources.map(&:id).include?(resource.id)
     end

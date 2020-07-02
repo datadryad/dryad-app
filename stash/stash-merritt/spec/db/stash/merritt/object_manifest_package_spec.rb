@@ -147,6 +147,7 @@ module Stash
             deleted = []
             resource.file_uploads.each_with_index do |upload, index|
               next unless index.even?
+
               upload.file_state = 'deleted'
               upload.save
               deleted << upload.upload_file_name

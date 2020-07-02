@@ -26,11 +26,13 @@ module StashEngine
     def views
       return 0 if check_unique_investigation_count.blank? || check_unique_request_count.blank?
       return 0 if check_unique_request_count > check_unique_investigation_count # if more downloads than views then something is wrong
+
       check_unique_investigation_count - check_unique_request_count
     end
 
     def downloads
       return 0 if check_unique_request_count.blank?
+
       check_unique_request_count
     end
 

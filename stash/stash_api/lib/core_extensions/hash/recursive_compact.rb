@@ -18,6 +18,7 @@ module CoreExtensions
       def helper_hash_compact(hsh)
         hsh.each_with_object({}) do |(k, v), new_hash|
           next if v.nil? || ((v.class == {}.class || v.class == [].class) && v.empty?)
+
           new_hash[k] = (
             if v.class == {}.class
               helper_hash_compact(v)

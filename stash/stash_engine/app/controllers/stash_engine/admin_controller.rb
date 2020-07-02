@@ -89,6 +89,7 @@ module StashEngine
     def setup_ds_status_facets
       @status_facets = @presenters.map(&:embargo_status).uniq.sort
       return unless params[:status]
+
       @presenters.keep_if { |i| i.embargo_status == params[:status] }
     end
 

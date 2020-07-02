@@ -36,7 +36,7 @@ module StashDatacite
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors
-        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&\"\[\]\^\:]}, ' ')
+        partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
         matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40)
 
@@ -49,6 +49,7 @@ module StashDatacite
       target_issn = params['id']
       return if target_issn.blank?
       return unless target_issn =~ /\d+-\w+/
+
       match = StashEngine::Journal.where(issn: target_issn).first
       render json: match
     end
@@ -64,6 +65,7 @@ module StashDatacite
     def save_doi
       form_doi = params[:internal_datum][:doi]
       return if form_doi.blank?
+
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
       related_dois = @resource.related_identifiers&.where(relation_type: 'issupplementto')
 
@@ -71,6 +73,7 @@ module StashDatacite
         bare_related_doi = Stash::Import::Crossref.bare_doi(doi_string: rd.related_identifier)
         return nil if bare_related_doi.include? bare_form_doi # user is entering a DOI that we already have
         next unless bare_form_doi.include? bare_related_doi
+
         # user is expanding on a DOI that we already have; update it in the DB
         rd.update(related_identifier: bare_form_doi)
         return nil
@@ -89,8 +92,10 @@ module StashDatacite
       logger.debug("Parsing msid #{msid} for journal #{issn}")
       regex = @se_id.journal&.manuscript_number_regex
       return msid if regex.blank?
+
       logger.debug("- found regex /#{regex}/")
       return msid if msid.match(regex).blank?
+
       logger.debug("- after regex applied: #{msid.match(regex)[1]}")
       result = msid.match(regex)[1]
       if result.present?
@@ -108,6 +113,7 @@ module StashDatacite
       return if params[:internal_datum][:publication].blank? # keeps the default fill-in message
       return if @pub_issn&.value.blank?
       return if @msid&.value.blank?
+
       my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn&.value)}/manuscripts/#{CGI.escape(@msid&.value)}"
       response = HTTParty.get(my_url,
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
@@ -118,8 +124,8 @@ module StashDatacite
       end
       dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, httparty_response: response)
       dryad_import.populate
-    rescue HTTParty::Error, SocketError => ex
-      logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{ex}")
+    rescue HTTParty::Error, SocketError => e
+      logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{e}")
       @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
@@ -179,8 +185,10 @@ module StashDatacite
 
     def get_related_identifier(identifier:, related_identifier_type:, relation_type:)
       return nil unless identifier.present?
+
       @resource = StashEngine::Identifier.find(identifier.is_a?(String) ? identifier : identifier.id).latest_resource
       return nil unless @resource.present? && related_identifier_type.present? && relation_type.present?
+
       StashDatacite::RelatedIdentifier.where(resource_id: @resource.id, relation_type: relation_type,
                                              related_identifier_type: related_identifier_type).first
     end

@@ -39,6 +39,7 @@ namespace :affiliation_import do
 
     Dir.entries(ROOT).each do |f|
       next unless f.start_with?('dryad_affiliations')
+
       qualified_file_name = "#{ROOT}/#{f}"
       puts "===== Processing file #{qualified_file_name} ====="
       process_file(file_name: qualified_file_name)
@@ -69,12 +70,14 @@ namespace :affiliation_import do
     stash_ids.each_with_index do |i, idx|
       next if idx < start_from
       next unless i.latest_resource.present?
+
       puts "Processing #{idx + 1}/#{stash_ids.length}: #{i.identifier}"
       authors = i.latest_resource.authors
       (0..authors.size - 1).each do |a|
         (a + 1..authors.size - 1).each do |b|
           # see if the author has any potential duplicates
           next unless duplicates?(authors[a], authors[b])
+
           autha = authors[a].author_standard_name
           authb = authors[b].author_standard_name
           puts("DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
@@ -141,6 +144,7 @@ namespace :affiliation_import do
       # because many differences are the addition/deletion of a middle initial.
       next if author_part_matches?(a1part, a2[index + 1])
       next if (index > 0) && author_part_matches?(a1part, a2[index - 1])
+
       # if none of the above matched, the authors are not matches
       return false
     end
@@ -170,6 +174,7 @@ namespace :affiliation_import do
     n = t.length
     return m if n == 0
     return n if m == 0
+
     d = Array.new(m + 1) { Array.new(n + 1) }
 
     (0..m).each { |i| d[i][0] = i }
@@ -198,11 +203,13 @@ namespace :affiliation_import do
 
       next if @dois_to_skip.include?(doi)
       next unless doi.present?
+
       identifier = StashEngine::Identifier.where(identifier: doi).first
       @dois_to_skip << doi unless identifier.present?
       puts "****** NO DATASET FOUND WITH ID: #{doi} -- #{title}" unless identifier.present?
       next unless identifier.present?
       next unless identifier.latest_resource.present?
+
       puts "Processing #{identifier} #{title}"
       handle_author(resource: identifier.latest_resource, name: person, ror: ror, org_name: organization)
     end
@@ -217,7 +224,7 @@ namespace :affiliation_import do
     author = nil
     (1..parts.size).each do |space_to_try|
       first = parts[0..space_to_try - 1].join(' ')
-      last = parts[space_to_try..-1].join(' ')
+      last = parts[space_to_try..].join(' ')
       puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
       author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
                                          'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
@@ -233,6 +240,7 @@ namespace :affiliation_import do
   def record_affiliation_update(resource:)
     return if resource.blank? || resource.curation_activities.blank?
     return if resource.id == @last_resource&.id
+
     resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                          note: 'Author affiliations updated by affiliation_import:process_ror_csv',
                                                                          status: resource.curation_activities.last.status)
@@ -242,6 +250,7 @@ namespace :affiliation_import do
   def record_author_merge(resource:)
     return if resource.blank? || resource.curation_activities.blank?
     return if resource.id == @last_resource&.id
+
     resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                          note: 'Duplicate authors combined by ' \
                                                                          'affiliation_import:merge_duplicate_authors',
@@ -282,6 +291,7 @@ namespace :affiliation_import do
                          end
     puts "    Assigning affiliation: #{target_affiliation.long_name} --> #{target_affiliation.ror_id}"
     return unless @live_mode
+
     author.affiliation = target_affiliation
     author.save
   end

@@ -12,7 +12,7 @@ module StashDatacite
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
-        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
         list = map_affiliation_for_autocomplete(bubble_up_exact_matches(affil_list: @affiliations, term: partial_term))
         render json: list
@@ -25,6 +25,7 @@ module StashDatacite
       # This is a bit tricky since we want to prefer short names if they are set (ie defined manually in database),
       # however new user-entered items go into long name.
       return [] unless affiliations.is_a?(Array)
+
       affiliations.map { |u| { id: u[:id], long_name: u[:name] } }
     end
 

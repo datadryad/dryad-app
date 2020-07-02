@@ -24,6 +24,7 @@ module Stash
           by_uri[ns_enum.uri] = ns_enum
 
           next unless ns_enum.prefix
+
           expect(by_prefix.key?(ns_enum.prefix)).to(
             be(false),
             (-> { "Duplicate prefix: #{by_prefix[ns_enum.prefix].key} and #{ns_enum.key} both declare #{ns_enum.prefix}" })

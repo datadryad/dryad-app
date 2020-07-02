@@ -22,6 +22,7 @@ module Stash
 
       def valid_file_array(files)
         raise ArgumentError, "specified file list does not appear to be an array of StashFiles: #{files.inspect}" unless files.is_a?(Array)
+
         files.each_with_index do |f, i|
           raise ArgumentError, "files[#{i}] does not appear to be a StashFile: #{f.inspect}" unless f.is_a?(StashFile)
         end

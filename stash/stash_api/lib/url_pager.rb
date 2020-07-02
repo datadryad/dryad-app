@@ -39,11 +39,13 @@ class UrlPager
 
   def prev_url
     return nil if @current_page < 2
+
     make_url(page: @current_page - 1)
   end
 
   def next_url
     return nil if @current_page >= last_page
+
     make_url(page: @current_page + 1)
   end
 
@@ -55,6 +57,7 @@ class UrlPager
 
   def make_querystring(hsh)
     return nil if hsh.compact.empty?
+
     hsh.compact.to_query
   end
 

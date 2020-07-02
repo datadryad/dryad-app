@@ -17,6 +17,7 @@ module Stash
         %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method locations communities].each do |meth|
           next if meth == 'doi' && @use_zenodo_doi
+
           result = send(meth)
           out_hash[meth] = result unless result.blank?
         end
@@ -107,6 +108,7 @@ module Stash
       def location(geolocation)
         # no way to represent boxes in zenodo?
         return nil if geolocation.place_id.nil? && geolocation.point_id.nil?
+
         hsh = {}
         unless geolocation.point_id.nil?
           hsh['lat'] = geolocation.geolocation_point.latitude

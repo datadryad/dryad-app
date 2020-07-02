@@ -19,6 +19,7 @@ module Script
     # indicates if it appears as though the text is already HTML or not CGI.escapeHTML makes entities which get introduced when stripping
     def html?
       return false if @text.blank?
+
       ActionController::Base.helpers.strip_tags(@text) != CGI.escapeHTML(@text)
     end
 

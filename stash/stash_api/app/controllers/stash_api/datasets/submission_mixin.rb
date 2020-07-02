@@ -10,12 +10,14 @@ module SubmissionMixin
       return_error(messages: 'You must send a json patch request with a valid JSON operation to publish this dataset', status: 400) { yield }
     end
     return if @json.length.positive? && @json.include?('op' => 'replace', 'path' => '/versionStatus', 'value' => 'submitted')
+
     return_error(messages: "You must issue a json operation of 'replace', path: '/versionStatus', value: 'submitted' to publish.",
                  status: 400) { yield }
   end
 
   def ensure_in_progress
     return if @stash_identifier.in_progress?
+
     return_error(messages: 'You must have an in_progress version to perform this operation', status: 400) { yield }
   end
 
@@ -28,6 +30,7 @@ module SubmissionMixin
       errors.push('Your previous version is still being processed, please wait until it completes before submitting again')
     end
     return unless errors.length.positive?
+
     return_error(messages: errors, status: 403) { yield }
   end
 
