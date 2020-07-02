@@ -326,6 +326,14 @@ module StashEngine
       file_uploads.where(file_state: %w[created deleted]).count.positive?
     end
 
+    def software_unchanged?
+      !software_changed?
+    end
+
+    def software_changed?
+      software_uploads.where(file_state: %w[created deleted]).count.positive?
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
