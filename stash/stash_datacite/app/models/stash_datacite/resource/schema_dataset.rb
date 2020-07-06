@@ -10,10 +10,11 @@ module StashDatacite
     # https://schema.org/Dataset
     class SchemaDataset # rubocop:disable Metrics/ClassLength
       ITEMS_TO_ADD = {
+        '@id' => :doi_url,
         'name' => :names,
         'description' => :descriptions,
-        'url' => :url,
-        'identifier' => :url,
+        'url' => :landing_url,
+        'identifier' => :doi_url,
         'version' => :version,
         'keywords' => :keywords,
         'creator' => :authors,
@@ -58,8 +59,12 @@ module StashDatacite
         @resource.descriptions.map(&:description).compact
       end
 
-      # google says URLs of the Location of a page describing the dataset
-      def url
+      def landing_url
+        target_id = CGI.escape(@resource.identifier&.to_s)
+        StashEngine::Engine.routes.url_helpers.show_url(target_id)
+      end
+
+      def doi_url
         "https://doi.org/#{@resource.try(:identifier).try(:identifier)}"
       end
 
