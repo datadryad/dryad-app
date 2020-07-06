@@ -837,7 +837,7 @@ DEPENDENCIES
   mocha
   mysql2 (~> 0.5.3)
   oai
-  passenger (~> 6.0.4)
+  passenger (~> 6.0.5)
   pry
   pry-rails
   pry-remote
