@@ -23,12 +23,12 @@ module StashEngine
 
         was_already_offline = @dependency.status != 1
         @dependency.update(status: online, error_message: message)
-        report_outage if !online && !was_already_offline
+        report_outage(message) if !online && !was_already_offline
         true
       end
 
-      def report_outage
-        UserMailer.dependency_offline(@dependency).deliver_now
+      def report_outage(message)
+        UserMailer.dependency_offline(@dependency, message).deliver_now
       end
 
       def extract_last_log_date(log)
@@ -39,7 +39,7 @@ module StashEngine
 
       def read_end_of_file(log)
         f = File.new(log)
-        f.seek(-512, IO::SEEK_END) # to 512 bytes before end of file
+        f.seek(-1024, IO::SEEK_END) # to 1024 bytes before end of file
         f.read.strip.split("\n") # this reads just end of file, strips whitespace and converts to array of lines
       end
 
