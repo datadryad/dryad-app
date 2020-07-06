@@ -6,6 +6,7 @@ module StashEngine
     class DependencyCheckerService
 
       DATE_TIME_MATCHER = /[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/.freeze
+      LOG_ERR_MATCHER = /\[.*\] ERROR .*/.freeze
 
       def initialize(**args)
         @dependency = StashEngine::ExternalDependency.find_by(abbreviation: args[:abbreviation])
@@ -31,9 +32,23 @@ module StashEngine
         UserMailer.dependency_offline(@dependency, message).deliver_now
       end
 
+      def extract_log_err(log)
+        contents = read_end_of_file(log)
+        log_err = nil
+        contents.reverse_each do |line|
+          log_err = line.match(LOG_ERR_MATCHER).to_s
+          break if log_err.present?
+        end
+        log_err
+      end
+
       def extract_last_log_date(log)
         contents = read_end_of_file(log)
-        last_run_date = Time.parse(contents.last.match(DATE_TIME_MATCHER).to_s) unless contents.empty?
+        last_run_date = nil
+        contents.reverse_each do |line|
+          last_run_date = Time.parse(line.match(DATE_TIME_MATCHER).to_s)
+          break if last_run_date.present?
+        end
         last_run_date
       end
 
