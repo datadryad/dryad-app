@@ -8,6 +8,7 @@ class DryadNotifier
     @version = version
   end
 
+  # rubocop:disable Metrics/MethodLength
   def notify
     client = HTTPClient.new
     url = "#{Config.update_base_url}/doi:#{@doi}"
@@ -26,10 +27,15 @@ class DryadNotifier
       return false
     end
     if resp.status_code != 204
-      Config.logger.error("PATCH to #{url} (merritt_id: #{@merritt_id}) returned a status code of #{resp.status_code}")
-      return false
+      if Rails.env == 'production'
+        Config.logger.error("PATCH to #{url} (merritt_id: #{@merritt_id}) returned a status code of #{resp.status_code}")
+        return false
+      else
+        Config.logger.warn("PATCH to #{url} (merritt_id: #{@merritt_id}) returned a status code of #{resp.status_code}")
+      end
     end
     true
   end
+  # rubocop:enable Metrics/MethodLength
 
 end
