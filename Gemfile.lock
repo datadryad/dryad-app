@@ -37,6 +37,8 @@ PATH
       stash-wrapper
       stash_discovery
       stash_engine
+      sync
+      tins
     stash_discovery (0.0.2)
       blacklight (>= 6.5.0)
       config
