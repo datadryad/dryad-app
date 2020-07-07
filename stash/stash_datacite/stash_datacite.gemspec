@@ -45,6 +45,8 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'responders', '>= 2.4.1'
   s.add_dependency 'rubyzip', '>= 1.0.0'
   s.add_dependency 'serrano', '>= 0.5.0' # for CrossRef API
+  s.add_dependency 'sync'
+  s.add_dependency 'tins'
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # TODO: do these need versions?

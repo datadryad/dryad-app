@@ -6,7 +6,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '4.2.11'
-gem 'rb-readline'
+gem 'rb-readline', '~> 0.5.5', require: false
 
 # ############################################################
 # Local engines
@@ -26,7 +26,7 @@ end
 gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.4'
+gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.85.1'
 
 # ############################################################

@@ -76,6 +76,8 @@ PATH
       stash-wrapper
       stash_discovery
       stash_engine
+      sync
+      tins
 
 GEM
   remote: https://rubygems.org/
