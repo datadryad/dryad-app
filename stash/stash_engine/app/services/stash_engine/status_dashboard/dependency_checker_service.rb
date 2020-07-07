@@ -6,6 +6,7 @@ module StashEngine
     class DependencyCheckerService
 
       DATE_TIME_MATCHER = /[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/.freeze
+      LOG_ERR_MATCHER = /\[.*\] ERROR .*/.freeze
 
       def initialize(**args)
         @dependency = StashEngine::ExternalDependency.find_by(abbreviation: args[:abbreviation])
@@ -23,23 +24,37 @@ module StashEngine
 
         was_already_offline = @dependency.status != 1
         @dependency.update(status: online, error_message: message)
-        report_outage if !online && !was_already_offline
+        report_outage(message) if !online && !was_already_offline
         true
       end
 
-      def report_outage
-        UserMailer.dependency_offline(@dependency).deliver_now
+      def report_outage(message)
+        UserMailer.dependency_offline(@dependency, message).deliver_now
+      end
+
+      def extract_log_err(log)
+        contents = read_end_of_file(log)
+        log_err = nil
+        contents.reverse_each do |line|
+          log_err = line.match(LOG_ERR_MATCHER).to_s
+          break if log_err.present?
+        end
+        log_err
       end
 
       def extract_last_log_date(log)
         contents = read_end_of_file(log)
-        last_run_date = Time.parse(contents.last.match(DATE_TIME_MATCHER).to_s) unless contents.empty?
+        last_run_date = nil
+        contents.reverse_each do |line|
+          last_run_date = Time.parse(line.match(DATE_TIME_MATCHER).to_s)
+          break if last_run_date.present?
+        end
         last_run_date
       end
 
       def read_end_of_file(log)
         f = File.new(log)
-        f.seek(-512, IO::SEEK_END) # to 512 bytes before end of file
+        f.seek(-1024, IO::SEEK_END) # to 1024 bytes before end of file
         f.read.strip.split("\n") # this reads just end of file, strips whitespace and converts to array of lines
       end
 
