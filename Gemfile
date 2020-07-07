@@ -6,7 +6,6 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '4.2.11'
-gem 'rb-readline'
 
 # ############################################################
 # Local engines
