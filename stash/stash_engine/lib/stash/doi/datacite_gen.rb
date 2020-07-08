@@ -1,4 +1,3 @@
-# require 'cirneco'
 require 'ostruct'
 require 'stash/download'
 
@@ -7,7 +6,6 @@ module Stash
     class DataciteError < IdGenError; end
 
     class DataciteGen < IdGen
-      # include Cirneco::Api
 
       def ping(identifier)
         get_doi(identifier, username: account, password: password, sandbox: sandbox)
@@ -15,7 +13,6 @@ module Stash
 
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
-        # datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)
         base_id = "#{prefix}/dryad.#{StashEngine::NoidState.mint}"
         "doi:#{base_id}"
       end
@@ -60,7 +57,7 @@ module Stash
         raise DataciteError, "DataCite failed to #{operation} for resource #{@resource&.id} -- #{response.inspect}" unless response.status == 201
       end
 
-      # replacement for Cirneco which isn't working with Ruby 2.6.6
+      # replacement for Cirneco which isn't working with Ruby 2.6.6 (because of Maremma?)
       def post_metadata(data, options={})
         return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
         mds_url = options[:sandbox] ? 'https://mds.test.datacite.org' : 'https://mds.datacite.org'
@@ -74,6 +71,7 @@ module Stash
         http.post(url, headers: headers, body: data)
       end
 
+      # replacement for Cirneco which isn't working with Ruby 2.6.6 (because of Maremma?)
       def put_doi(doi, options={})
         return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
         payload = "doi=#{doi}\nurl=#{options[:url]}"
@@ -88,6 +86,7 @@ module Stash
         http.put(url, headers: headers, body: payload)
       end
 
+      # replacement for Cirneco which isn't working with Ruby 2.6.6 (because of Maremma?)
       def get_doi(doi, options={})
         return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
         mds_url = options[:sandbox] ? 'https://mds.test.datacite.org' : 'https://mds.datacite.org'
