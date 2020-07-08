@@ -1,13 +1,13 @@
-require 'cirneco'
+# require 'cirneco'
 require 'ostruct'
+require 'stash/download'
 
 module Stash
   module Doi
     class DataciteError < IdGenError; end
 
     class DataciteGen < IdGen
-
-      include Cirneco::Api
+      # include Cirneco::Api
 
       def ping(identifier)
         get_doi(identifier, username: account, password: password, sandbox: sandbox)
@@ -34,7 +34,7 @@ module Stash
 
         response = put_doi(bare_identifier, username: account, password: password, sandbox: sandbox, url: landing_page_url)
         validate_response(response: response, operation: 'update target')
-      rescue Faraday::ConnectionFailed, Faraday::ResourceNotFound, Faraday::TimeoutError, Faraday::ClientError => e
+      rescue HTTP::Error => e
         err = DataciteError.new("Datacite failed to update metadata for resource #{resource&.identifier_str}" \
                                 " (#{e.message}) with params: #{dc4_xml.inspect}")
         err.set_backtrace(e.backtrace) if e.backtrace.present?
@@ -58,6 +58,46 @@ module Stash
 
       def validate_response(response:, operation:)
         raise DataciteError, "DataCite failed to #{operation} for resource #{@resource&.id} -- #{response.inspect}" unless response.status == 201
+      end
+
+      # replacement for Cirneco which isn't working with Ruby 2.6.6
+      def post_metadata(data, options={})
+        return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
+        mds_url = options[:sandbox] ? 'https://mds.test.datacite.org' : 'https://mds.datacite.org'
+        url = "#{mds_url}/metadata"
+
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+                   .timeout(connect: 30, read: 60).timeout(60).follow(max_hops: 10)
+                   .basic_auth(user: options[:username], pass: options[:password])
+
+        headers = { content_type: 'application/xml;charset=UTF-8' }
+        http.post(url, headers: headers, body: data)
+      end
+
+      def put_doi(doi, options={})
+        return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
+        payload = "doi=#{doi}\nurl=#{options[:url]}"
+        mds_url = options[:sandbox] ? 'https://mds.test.datacite.org' : 'https://mds.datacite.org'
+        url = "#{mds_url}/doi/#{doi}"
+
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+                   .timeout(connect: 30, read: 60).timeout(60).follow(max_hops: 10)
+                   .basic_auth(user: options[:username], pass: options[:password])
+
+        headers = { content_type: 'application/xml;charset=UTF-8' }
+        http.put(url, headers: headers, body: payload)
+      end
+
+      def get_doi(doi, options={})
+        return OpenStruct.new(body: { "errors" => [{ "title" => "Username or password missing" }] }) unless options[:username].present? && options[:password].present?
+        mds_url = options[:sandbox] ? 'https://mds.test.datacite.org' : 'https://mds.datacite.org'
+        url = "#{mds_url}/doi/#{doi}"
+
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+                   .timeout(connect: 30, read: 60).timeout(60).follow(max_hops: 10)
+                   .basic_auth(user: options[:username], pass: options[:password])
+
+        http.get(url)
       end
 
     end
