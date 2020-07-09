@@ -50,17 +50,20 @@ module Stash
         def to_sw_identifier(dcs_identifier)
           return unless dcs_identifier
           raise "Invalid identifier type; expected DOI, was #{dcs_identifier.identifier_type}" unless dcs_identifier.identifier_type == 'DOI'
+
           Identifier.new(type: IdentifierType::DOI, value: dcs_identifier.value)
         end
 
         def to_sw_license(dcs_rights_list)
           return unless dcs_rights_list && !dcs_rights_list.empty?
+
           dcs_rights = dcs_rights_list[0]
           License.new(name: dcs_rights.value, uri: dcs_rights.uri)
         end
 
         def to_sw_inventory(uploads)
           return unless uploads
+
           Inventory.new(files: uploads.map { |upload| to_stash_file(upload) })
         end
 

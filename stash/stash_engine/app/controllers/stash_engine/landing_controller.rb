@@ -28,6 +28,7 @@ module StashEngine
       @user_type = 'public'
       res = id.resources.submitted&.by_version_desc&.first
       return res if res.nil? # no submitted resources
+
       @resource = if admin?(resource: res)
                     @user_type = 'privileged'
                     id.resources.submitted.by_version_desc.first
@@ -181,6 +182,7 @@ module StashEngine
     # updates the total size & call to update zero sizes for individual files
     def update_size!
       return unless resource
+
       ds_info = Stash::Repo::DatasetInfo.new(id)
       id.update(storage_size: ds_info.dataset_size)
       update_zero_sizes!(ds_info)
@@ -188,6 +190,7 @@ module StashEngine
 
     def update_zero_sizes!(ds_info_obj)
       return unless resource
+
       resource.file_uploads.where(upload_file_size: 0).where(file_state: 'created').each do |f|
         f.update(upload_file_size: ds_info_obj.file_size(f.upload_file_name))
       end

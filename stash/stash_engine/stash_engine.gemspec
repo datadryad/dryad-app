@@ -29,7 +29,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description = 'Core Stash application functionality independent of repository, metadata schema, or customization'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '~> 2.4'
+  s.required_ruby_version = '~> 2.6.6'
 
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.bindir        = 'exe'
@@ -40,7 +40,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'amoeba', '>= 3.0.0'
   s.add_dependency 'bolognese', '>= 0.15.9'
   s.add_dependency 'carrierwave', '~> 0.10.0'
-  s.add_dependency 'cirneco', '>= 0.9.27'
   s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '>= 1.0'
   s.add_dependency 'daemons'

@@ -84,6 +84,7 @@ end
 
 def script_command(shell_command, log_file)
   return "script -q #{log_file} #{shell_command} > /dev/null" if /(darwin|bsd)/ =~ RUBY_PLATFORM
+
   "script -q -c'#{shell_command}' -e #{log_file} > /dev/null"
 end
 
@@ -92,8 +93,8 @@ def redirect_to(shell_command, log_file)
   log_file_path = log_file.relative_path_from(STASH_ROOT)
   puts "#{working_path}: #{shell_command.yellow} > #{log_file_path}"
   system(script_command)
-rescue StandardError => ex
-  warn("#{shell_command} failed: #{ex}")
+rescue StandardError => e
+  warn("#{shell_command} failed: #{e}")
   false
 end
 
@@ -123,6 +124,7 @@ def prepare(project)
   in_project(project) do
     travis_prep_sh = "./#{TRAVIS_PREP_SH}"
     return true unless File.exist?(travis_prep_sh)
+
     run_task("prepare-#{project}", travis_prep_sh)
   end
 rescue StandardError => e

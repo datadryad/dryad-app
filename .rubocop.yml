@@ -9,7 +9,7 @@ AllCops:
     - 'stash/stash_engine/node_modules/**/*'
 
   # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
 
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
@@ -36,7 +36,7 @@ Lint/ShadowedException:
   Enabled: false
 
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 # AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
@@ -58,7 +58,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: False
 
 # It works in context, trust us
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: False
 
 # Do what's readable in the context you're in
@@ -108,6 +108,48 @@ Naming/VariableNumber:
 # Allow some special handling for engines
 Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
+
+# ------------------------
+# new stuff in new rubocop
+# ------------------------
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
 
 # ############################################################
 # Special cases for specs

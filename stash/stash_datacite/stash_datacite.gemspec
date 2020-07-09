@@ -31,7 +31,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description = 'An engine for working with the DataCite schema in Stash.'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '~> 2.4'
+  s.required_ruby_version = '~> 2.6.6'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
@@ -45,6 +45,8 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'responders', '>= 2.4.1'
   s.add_dependency 'rubyzip', '>= 1.0.0'
   s.add_dependency 'serrano', '>= 0.5.0' # for CrossRef API
+  s.add_dependency 'sync'
+  s.add_dependency 'tins'
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # TODO: do these need versions?

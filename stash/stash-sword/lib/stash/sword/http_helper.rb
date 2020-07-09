@@ -37,7 +37,9 @@ module Stash
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
+      # rubocop:disable Metrics/ParameterLists
+      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS,
+                     timeout: DEFAULT_TIMEOUT, logger: nil)
         @user_agent = user_agent
         @redirect_limit = redirect_limit
         @timeout = timeout
@@ -45,6 +47,7 @@ module Stash
         @password = password
         @log = logger || default_logger
       end
+      # rubocop:enable Metrics/ParameterLists
 
       # Gets the content of the specified URI as a string.
       # @param uri [URI] the URI to download
@@ -103,6 +106,7 @@ module Stash
       # TODO: Consider rewriting with RestClient
       def do_get(uri, limit, &block)
         raise "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
+
         req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
         req.basic_auth(username, password) if username && password
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|

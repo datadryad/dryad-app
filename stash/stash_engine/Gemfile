@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'mysql2', '< 0.5x', '>= 0.3.13'
+gem 'mysql2', '~> 0.5.3'
 gem 'sortable-table', '~> 0.1'
 gem 'stash-sword', path: '../stash-sword'
 gem 'zaru', '~> 0.3' # Gem for sanitizing file names
@@ -17,7 +17,7 @@ group :development,  :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.57.2'
+  gem 'rubocop', '0.85.1'
   gem 'scss_lint'
   gem 'simplecov'
   gem 'simplecov-console'

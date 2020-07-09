@@ -86,7 +86,7 @@ module Counter
 
     # see https://www.crossref.org/blog/dois-and-matching-regular-expressions/
     def validate_doi(item)
-      error(msg: 'Invalid DOI', item: __method__.to_s) unless item =~ %r{^doi:10.\d{4,9}/[-._\;()/:A-Z0-9]+$}i
+      error(msg: 'Invalid DOI', item: __method__.to_s) unless item =~ %r{^doi:10.\d{4,9}/[-._;()/:A-Z0-9]+$}i
     end
 
     # make stricter later if needed

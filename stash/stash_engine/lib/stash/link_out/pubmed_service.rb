@@ -33,9 +33,11 @@ module LinkOut
     # Retrieve the Pubmed ID for the specified DOI. See below for a sample of the expected XML response
     def lookup_pubmed_id(doi)
       return nil unless doi.present?
+
       query = "#{@pubmed_api_query_prefix}#{doi}#{@pubmed_api_query_suffix}"
       results = get_xml_from_api(@pubmed_api, query)
       return nil if results.blank?
+
       extract_pubmed_id(results)
     end
 
@@ -60,8 +62,8 @@ module LinkOut
       ftp.putbinaryfile("#{TMP_DIR}/#{@provider_file}")
       ftp.putbinaryfile("#{TMP_DIR}/#{@links_file}")
       ftp.close
-    rescue StandardError => se
-      p "    FTP Error: #{se.message}"
+    rescue StandardError => e
+      p "    FTP Error: #{e.message}"
     end
 
     private
@@ -143,7 +145,7 @@ module LinkOut
     # The PubMed Linkout system though wants it to be unencoded `&` which technically makes the
     # XML document invalid so we need to swap the `&` for `&amp;` after doing our Nokogiri `doc.to_xml`
     def unencode_callback_ampersand(text)
-      text.gsub(/query\=&amp;lo\.doi;/, 'query=&lo.doi;')
+      text.gsub(/query=&amp;lo\.doi;/, 'query=&lo.doi;')
     end
 
   end

@@ -13,8 +13,8 @@ module Stash
 
     def initialize(doi:)
       @doi = doi
-      @doi = doi[4..-1] if doi.downcase.start_with?('doi:')
-      match_data = %r{^https?://doi.org/(\S+\/\S+)$}.match(@doi)
+      @doi = doi[4..] if doi.downcase.start_with?('doi:')
+      match_data = %r{^https?://doi.org/(\S+/\S+)$}.match(@doi)
       @doi = match_data[1] if match_data
       @metadata = nil
     end
@@ -23,11 +23,12 @@ module Stash
     def raw_metadata
       return @metadata unless @metadata.nil?
       return nil if @metadata == false
+
       response = RestClient.get "#{DATACITE_BASE}#{CGI.escape(@doi)}", accept: 'application/citeproc+json'
       @metadata = JSON.parse(response.body)
-    rescue RestClient::Exception, Errno::ECONNREFUSED => ex
+    rescue RestClient::Exception, Errno::ECONNREFUSED => e
       logger.error("#{Time.new.utc} Could not get response from DataCite for metadata lookcup #{@doi}")
-      logger.error("#{Time.new.utc} #{ex}")
+      logger.error("#{Time.new.utc} #{e}")
       @metadata = false
       nil
     end
@@ -35,14 +36,17 @@ module Stash
     def author_names
       names = raw_metadata['author']
       return '' if names.blank?
+
       names = names.map { |i| name_finder(i) }
       return "#{names.first} et al." if names.length > 4
+
       names.join('; ')
     end
 
     def year_published
       dp = raw_metadata.dig('issued', 'date-parts')
       return dp.first.first unless dp.blank?
+
       ''
     end
 
@@ -60,6 +64,7 @@ module Stash
 
     def resource_type
       return raw_metadata['type'].capitalize if raw_metadata['type']
+
       ''
     end
 
@@ -71,11 +76,13 @@ module Stash
     # finds the name from the names hash, might be item['literal'] or item['given'] and item['family']
     def name_finder(item)
       return "#{item['family']}, #{item['given']}" if item['family'] || item['given']
+
       item['literal']
     end
 
     def html_citation
       return nil if raw_metadata.nil?
+
       # html_safe when concatenated with other stuff makes non-html-safe escaped
       ''.html_safe + "#{author_names} (#{year_published}), #{title}, #{journal}, #{resource_type}, " +
           "<a href=\"#{doi_link}\" target=\"_blank\">#{doi_link}</a>".html_safe

@@ -13,7 +13,7 @@ gemspec
 # your gem to rubygems.org.
 
 gem 'doorkeeper'
-gem 'mysql2', '< 0.5'
+gem 'mysql2', '~> 0.5.3'
 
 path '..' do
   gem 'stash_datacite'
@@ -30,5 +30,5 @@ group :development, :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.57.2'
+  gem 'rubocop', '0.85.1'
 end

@@ -13,6 +13,7 @@ module StashApi
     # On final submission, updating the DOI may fail if it's wrong, unauthorized or not in the right format.
     def initialize(hash: nil, id: nil, user:, id_string: nil)
       raise 'You may not specify an identifier string with an existing identifier' if id && id_string
+
       @id_string = id_string
       @hash = hash
       @id = id
@@ -74,6 +75,7 @@ module StashApi
           found_author = a if a['orcid']&.match(@hash['userId'])
         end
         raise 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.' unless found_author
+
         owning_user = StashEngine::User.create(orcid: @hash['userId'],
                                                first_name: found_author['firstName'],
                                                last_name: found_author['lastName'],
@@ -152,19 +154,23 @@ module StashApi
 
     def ensure_license
       return unless @resource.rights.blank?
+
       license = StashEngine::License.by_id(@resource.identifier.license_id)
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
     end
 
     def ensure_publisher
       return unless @resource.publisher.blank?
+
       publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
       return if publisher
+
       StashDatacite::Publisher.create(publisher: @resource.tenant.short_name, resource_id: @resource.id) if @resource.tenant
     end
 
     def ensure_resource_type
       return unless @resource.resource_type.blank?
+
       StashDatacite::ResourceType.create(resource_type_general: 'dataset', resource_type: 'dataset', resource_id: @resource.id)
     end
 

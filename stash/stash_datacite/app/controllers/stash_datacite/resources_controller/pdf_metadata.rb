@@ -12,6 +12,7 @@ module StashDatacite
 
       def top_left
         return @citation if @citation.length < 60
+
         "#{@citation[0..@citation.rindex(' ', 60)].strip} ..."
       end
 

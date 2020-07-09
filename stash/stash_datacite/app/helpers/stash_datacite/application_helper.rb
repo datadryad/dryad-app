@@ -9,6 +9,7 @@ module StashDatacite
 
     def unique_form_id(for_object)
       return "edit_#{simple_obj_name(for_object)}_#{for_object.id}" if for_object.id
+
       "new_#{simple_obj_name(for_object)}_#{SecureRandom.uuid}"
     end
 

@@ -24,7 +24,7 @@ module StashEngine
           extra: {
             raw_info: {
               first_name: 'Morta',
-              last_name:  'McWhorter'
+              last_name: 'McWhorter'
             }
           }
         }.to_ostruct

@@ -44,6 +44,7 @@ module Stash
           job.define_singleton_method(:submit!) { result }
           promise = job.submit_async(executor: Concurrent::ImmediateExecutor.new)
           raise promise.reason if promise.reason
+
           expect(promise.value).to be(result)
         end
 

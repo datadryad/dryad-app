@@ -35,6 +35,7 @@ module State
 
   def self.sets
     return @@sets unless @@sets.nil?
+
     @@sets = []
     load_state_as_hash.each do |k, v|
       @@sets.push(CollectionSet.new(name: k, settings: v))

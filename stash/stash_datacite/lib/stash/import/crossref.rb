@@ -21,6 +21,7 @@ module Stash
       class << self
         def query_by_doi(resource:, doi:)
           return nil unless resource.present? && doi.present?
+
           resp = Serrano.works(ids: doi.gsub(/\s+/, ''))
           return nil unless resp.first.present? && resp.first['message'].present?
 
@@ -32,6 +33,7 @@ module Stash
         # rubocop:disable Metrics/CyclomaticComplexity
         def query_by_author_title(resource:)
           return nil if resource.blank? || resource.title&.strip.blank?
+
           issn, title_query, author_query = title_author_query_params(resource)
           resp = Serrano.works(issn: issn, select: CROSSREF_FIELD_LIST, query: title_query,
                                query_author: author_query, limit: 20, sort: 'score', order: 'desc')
@@ -51,6 +53,7 @@ module Stash
 
         def from_proposed_change(proposed_change:)
           return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
+
           identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
           message = {
             'DOI' => proposed_change.publication_doi,
@@ -74,6 +77,7 @@ module Stash
 
       def populate_resource!
         return unless @sm.present? && @resource.present?
+
         populate_abstract
         populate_authors
         populate_supplement_to
@@ -116,6 +120,7 @@ module Stash
       class << self
         def match_resource_with_crossref_record(resource:, response:)
           return nil unless resource.present? && response.present? && resource.title.present?
+
           scores = []
           names = resource.authors.map do |author|
             { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
@@ -124,6 +129,7 @@ module Stash
 
           response['items'].each do |item|
             next unless item['title'].present?
+
             scores << crossref_item_scoring(resource, item, names, orcids)
           end
           # Sort by the score and return the one with the highest score
@@ -133,12 +139,14 @@ module Stash
         # rubocop:disable Metrics/CyclomaticComplexity
         def crossref_item_scoring(resource, item, names, orcids)
           return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
+
           # Compare the titles using the Amatch NLP library
           amatch = resource.title.pair_distance_similar(item['title'].first)
           # If authors are available compare them as well
           if item['author'].present? && (names.present? || orcids.present?)
             item['author'].each do |author|
               next unless author['family'].present?
+
               amatch += crossref_author_scoring(names, orcids, author)
             end
           end
@@ -171,6 +179,7 @@ module Stash
 
         def title_author_query_params(resource)
           return [nil, nil, nil] unless resource.present?
+
           issn = resource.identifier.internal_data.where(data_type: 'publicationISSN').first&.value
           issn = CGI.escape(issn) if issn.present?
           title_query = resource.title&.gsub(/\s+/, ' ')&.strip
@@ -230,6 +239,7 @@ module Stash
 
       def populate_abstract
         return unless @sm['abstract'].present?
+
         abstract = @resource.descriptions.first_or_initialize(description_type: 'abstract')
         abstract.update(description: @sm['abstract'])
       end
@@ -258,6 +268,7 @@ module Stash
 
       def populate_authors
         return unless @sm['author'].present? && @sm['author'].any?
+
         @sm['author'].each do |xr_author|
           populate_author(xr_author)
         end
@@ -275,8 +286,10 @@ module Stash
 
       def populate_funders
         return unless @sm['funder'].present? && @sm['funder'].is_a?(Array) && @sm['funder'].any?
+
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
+
           if xr_funder['award'].blank?
             @resource.contributors.find_or_initialize_by(contributor_name: xr_funder['name'], contributor_type: 'funder')
             next
@@ -289,11 +302,13 @@ module Stash
 
       def populate_publication_date
         return unless publication_date.present?
+
         @resource.publication_date = date_parts_to_date(publication_date)
       end
 
       def populate_publication_issn
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
+
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationISSN')
         datum.update(value: @sm['ISSN'].first)
@@ -301,6 +316,7 @@ module Stash
 
       def populate_publication_name
         return unless publisher.present?
+
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationName')
         datum.update(value: publisher)
@@ -308,12 +324,14 @@ module Stash
 
       def populate_title
         return unless @sm['title'].present? && @sm['title'].any?
+
         @resource.title = @sm['title'].first
       end
 
       def publication_date
         return @sm['published-online']['date-parts'] if @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
         return @sm['published-print']['date-parts'] if @sm['published-print'].present? && @sm['published-print']['date-parts'].present?
+
         nil
       end
 
@@ -324,6 +342,7 @@ module Stash
 
       def date_parts_to_date(parts_array)
         return nil unless parts_array.present? && parts_array.is_a?(Array)
+
         Date.parse(parts_array.join('-'))
       rescue StandardError
         nil

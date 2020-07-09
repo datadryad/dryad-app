@@ -11,6 +11,7 @@ module Stash
 
       def format(id_value)
         return id_value if self == URL || self == HANDLE # TODO: is this close enough?
+
         "#{value.downcase}:#{id_value}"
       end
     end

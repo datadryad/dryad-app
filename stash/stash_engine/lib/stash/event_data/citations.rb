@@ -21,7 +21,7 @@ module Stash
 
       def initialize(doi:)
         @doi = doi&.downcase # had lots of problems from DataCite eventdata with an upcase and DOIs are supposed to be case insensitive
-        @doi = doi[4..-1] if doi.start_with?('doi:')
+        @doi = doi[4..] if doi.start_with?('doi:')
         @base_url = BASE_URL
         @email = APP_CONFIG&.contact_email&.first
       end
@@ -36,9 +36,9 @@ module Stash
         array2 = result2['data'].map { |i| i['attributes']['obj-id'] }
 
         (array1 | array2) # returns the union of two sets, which deduplicates identical items, even if in the same original array
-      rescue RestClient::ExceptionWithResponse => err
+      rescue RestClient::ExceptionWithResponse => e
         logger.error("#{Time.new.utc} Could not get citations from DataCite for event data obj-id: #{DATACITE_URL}#{@doi}")
-        logger.error("#{Time.new.utc} #{err}")
+        logger.error("#{Time.new.utc} #{e}")
         []
       end
     end

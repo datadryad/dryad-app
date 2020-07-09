@@ -49,6 +49,7 @@ module Stash
       def to_mime_type(value)
         return nil unless value
         return value if value.is_a?(MIME::Type)
+
         mt_string = value.to_s
         (mt = MIME::Types[mt_string].first) ? mt : MIME::Type.new(mt_string)
       end

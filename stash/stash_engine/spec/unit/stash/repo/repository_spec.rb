@@ -98,6 +98,7 @@ module Stash
           returned_job = job
           repo.define_singleton_method(:create_submission_job) do |params|
             raise ArgumentError unless params[:resource_id] == expected_id
+
             returned_job
           end
 

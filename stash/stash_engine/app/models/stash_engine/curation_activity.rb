@@ -76,6 +76,7 @@ module StashEngine
     # Translates the enum value to a human readable status
     def self.readable_status(status)
       return '' unless status.present?
+
       case status
       when 'peer_review'
         'Private for Peer Review'
@@ -113,6 +114,7 @@ module StashEngine
     def latest_curation_status_changed?
       last_two_statuses = CurationActivity.where(resource_id: resource_id).order(updated_at: :desc, id: :desc).limit(2)
       return true if last_two_statuses.count < 2 # no second-to-last status for this resource, it should be new to this resource
+
       last_two_statuses.first.status != last_two_statuses.second.status
     end
 
@@ -134,21 +136,23 @@ module StashEngine
 
     def submit_to_stripe
       return unless ready_for_payment?
+
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
       inv.charge_user_via_invoice
     end
 
     def submit_to_datacite
       return unless should_update_doi?
+
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
-    rescue Stash::Doi::IdGenError => ige
+    rescue Stash::Doi::IdGenError => e
       Rails.logger.error "Stash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
-      Rails.logger.error ige.message
-      StashEngine::UserMailer.error_report(resource, ige).deliver_now
-      raise ige
+      Rails.logger.error e.message
+      StashEngine::UserMailer.error_report(resource, e).deliver_now
+      raise e
     end
 
     def update_solr
@@ -202,12 +206,14 @@ module StashEngine
     # Triggered on a status of :published
     def email_orcid_invitations
       return unless published?
+
       # Do not send an invitation to users who have no email address and do not have an
       # existing invitation for the identifier
       existing_invites = StashEngine::OrcidInvitation.where(identifier_id: resource.identifier_id).pluck(:email).uniq
       authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil).reject { |au| au&.author_email.blank? }
 
       return if authors.length <= 1
+
       authors[1..authors.length].each do |author|
         StashEngine::UserMailer.orcid_invitation(
           StashEngine::OrcidInvitation.create(
@@ -243,6 +249,7 @@ module StashEngine
       changed = false # want to see that none are changed
       resource.identifier.resources.reverse_each do |res|
         break if res.id != resource.id && res&.current_curation_activity&.status == 'published' # break once reached previous published
+
         if res.files_changed?
           changed = true
           break
@@ -269,11 +276,13 @@ module StashEngine
 
       # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random
       return false if last_merritt_version > 1 && Rails.env != 'production'
+
       true
     end
 
     def user_name
       return user.name unless user.nil?
+
       'System'
     end
   end

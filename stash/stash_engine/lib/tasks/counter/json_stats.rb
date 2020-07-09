@@ -28,6 +28,7 @@ class JsonStats
           next if instance['access-method'].blank? || !%w[machine regular].include?(instance['access-method'])
           next if instance['metric-type'].blank? || !%w[unique-dataset-investigations unique-dataset-requests].include?(instance['metric-type'])
           next if instance['count'].blank? || !instance['count'].integer?
+
           if instance['metric-type'] == 'unique-dataset-investigations'
             unique_invest += instance['count']
           elsif instance['metric-type'] == 'unique-dataset-requests'

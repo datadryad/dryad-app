@@ -23,6 +23,7 @@ module StashEngine
     # returns the :return_to_path set in the session or else goes back to the path supplied
     def return_to_path_or(default_path)
       return session.delete(:return_to_path) if session[:return_to_path]
+
       default_path
     end
 

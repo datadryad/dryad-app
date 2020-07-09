@@ -10,10 +10,11 @@ module StashDatacite
     # https://schema.org/Dataset
     class SchemaDataset # rubocop:disable Metrics/ClassLength
       ITEMS_TO_ADD = {
+        '@id' => :doi_url,
         'name' => :names,
         'description' => :descriptions,
-        'url' => :url,
-        'identifier' => :url,
+        'url' => :landing_url,
+        'identifier' => :doi_url,
         'version' => :version,
         'keywords' => :keywords,
         'creator' => :authors,
@@ -42,21 +43,28 @@ module StashDatacite
       def to_item(value)
         return unless value
         return value unless value.class == Array
+
         value.length == 1 ? value.first : value
       end
 
       def names
         return [] if @resource.title.blank?
+
         [@resource.title]
       end
 
       def descriptions
         return [] unless @resource.descriptions
+
         @resource.descriptions.map(&:description).compact
       end
 
-      # google says URLs of the Location of a page describing the dataset
-      def url
+      def landing_url
+        target_id = CGI.escape(@resource.identifier&.to_s)
+        StashEngine::Engine.routes.url_helpers.show_url(target_id)
+      end
+
+      def doi_url
         "https://doi.org/#{@resource.try(:identifier).try(:identifier)}"
       end
 
@@ -66,11 +74,13 @@ module StashDatacite
 
       def keywords
         return [] unless @resource.subjects
+
         @resource.subjects.map(&:subject).compact
       end
 
       def authors
         return [] unless @resource.authors
+
         @resource.authors.map do |i|
           orcid = i.author_orcid
           affiliation = i.affiliation
@@ -96,6 +106,7 @@ module StashDatacite
         target_id = CGI.escape(@resource.identifier&.to_s)
         download_url = StashApi::Engine.routes.url_helpers.download_dataset_url(target_id)
         return nil unless download_url
+
         {
           '@type' => 'DataDownload',
           'encodingFormat' => 'application/zip',
@@ -150,12 +161,14 @@ module StashDatacite
 
       def citation
         return unless @resource.identifier&.publication_article_doi
+
         article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
         "http://doi.org/#{article_doi}"
       end
 
       def license
         return [] unless @resource.rights
+
         @resource.rights.map do |right|
           { '@type' => 'CreativeWork',
             'name' => right.rights,

@@ -16,7 +16,7 @@ module Stash
             ' purpose, but rather on presenting an analysis of e-commerce (Newt).'.freeze
 
       FUNDER = [{ 'name' => 'National Heart, Lung, and Blood Institute',
-                  'award' => ['R01-HL30077', 'R01-HL90880', 'R01-HL123526', 'R01-HL085727', 'R01-HL085844', 'P01-HL080101'] },
+                  'award' => %w[R01-HL30077 R01-HL90880 R01-HL123526 R01-HL085727 R01-HL085844 P01-HL080101] },
                 { 'name' => 'U.S. Department of Veterans Affairs', 'award' => ['I01 BX000576', 'I01 CX001490'] },
                 { 'name' => 'Országos Tudományos Kutatási Alapprogramok', 'award' => ['OTKA101196'] },
                 { 'name' => 'California Institute for Regenerative Medicine', 'award' => ['TR3 05626'] },
@@ -29,7 +29,7 @@ module Stash
       FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
       PUBLISHER = 'Ficticious Journal'.freeze
 
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       # Example of a Crossref API journal response: view-source:http://api.crossref.org/journals?query=Journal%20of%20The%20Royal%20Society%20Interface
       CROSSREF_JOURNAL_RESPONSE = {
         'status' => 'ok',
@@ -65,7 +65,7 @@ module Stash
                 'current' => { 'last-status-check-time' => 1_553_443_937_362 }
               },
               'flags' => { 'deposits-abstracts-current' => false },
-              'ISSN' => ['1742-5662', '1742-5689'],
+              'ISSN' => %w[1742-5662 1742-5689],
               'issn-type' => [
                 { 'value' => '1742-5662', 'type' => 'electronic ' },
                 { 'value' => '1742-5689', 'type' => 'print' }
@@ -127,7 +127,7 @@ module Stash
           'subtype' => 'preprint'
         }
       }.freeze
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
 
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
