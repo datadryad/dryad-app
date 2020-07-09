@@ -7,6 +7,7 @@ module BundlerHelp
       until path_arr.empty?
         test = File.join(path_arr, dir_name)
         return test if Dir.exist?(test)
+
         path_arr.pop
       end
     end

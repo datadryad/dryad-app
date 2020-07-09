@@ -10,6 +10,7 @@ module StashApi
         def value
           items = StashDatacite::TemporalCoverage.where(resource_id: @resource.id)
           return items.to_a.map(&:description) unless items.blank?
+
           nil
         end
       end

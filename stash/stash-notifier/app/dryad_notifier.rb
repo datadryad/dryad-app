@@ -20,8 +20,8 @@ class DryadNotifier
     begin
       body = { 'record_identifier' => @merritt_id, 'stash_version' => @version }
       resp = client.patch(url, body, follow_redirect: true)
-    rescue Errno::ECONNREFUSED, HTTPClient::ReceiveTimeoutError => ex
-      Config.logger.error(ex.to_s)
+    rescue Errno::ECONNREFUSED, HTTPClient::ReceiveTimeoutError => e
+      Config.logger.error(e.to_s)
       Config.logger.error("Couldn't PATCH update to #{url}")
       return false
     end

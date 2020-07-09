@@ -13,6 +13,7 @@ module StashDatacite
 
     def doi_link(identifier)
       return 'https://doi.org/placeholderDOI' unless identifeir
+
       target_url = "https://doi.org/#{identifier}"
       doi_link = link_to(target_url, target_url, target: '_blank')
       "#{doi_link} (opens in a new window)"
@@ -20,9 +21,11 @@ module StashDatacite
 
     def author_citation_format(authors)
       return '' if authors.blank?
+
       str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
       return '' if str_author.blank?
       return "#{str_author.first} et al." if str_author.length > 4
+
       str_author.join('; ')
     end
 

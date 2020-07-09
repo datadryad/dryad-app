@@ -112,13 +112,14 @@ module StashEngine
 
       def reference_form
         return @id_value if http_url?
+
         "#{@target_prefix}#{bare_id}"
       end
 
       def bare_id
         if prefix_correct?
           # remove the prefix and give bare id
-          @id_value[@target_prefix.strip.length..-1].strip
+          @id_value[@target_prefix.strip.length..].strip
         else
           # they must've given it as a bare id if it didn't have the prefix (and isn't a URL)
           @id_value&.strip
@@ -128,6 +129,7 @@ module StashEngine
       # returns text and link for creating a URL
       def text_and_link
         return [@id_value, @id_value] if http_url?
+
         [reference_form, "#{@resolver_prefix}#{bare_id}"]
       end
     end

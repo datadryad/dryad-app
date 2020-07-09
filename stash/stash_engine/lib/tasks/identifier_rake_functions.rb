@@ -8,12 +8,11 @@ module IdentifierRakeFunctions
 
     resources.each do |resource|
       next if resource&.identifier&.indentifier # double-check just in case something has changed since query
+
       puts "Generating identifier for stash_engine_resource #{resource.id}: #{resource.title}"
       make_identifier(resource: resource)
     end
   end
-
-  private_class_method
 
   def self.make_identifier(resource:)
     my_id = Stash::Doi::IdGen.mint_id(resource: resource)

@@ -111,7 +111,7 @@ module StashApi
           redirect_to @status_hash[:url]
         elsif @status_hash[:status] == 202
           render status: 202, text: 'The version of the dataset is being assembled. ' \
-          "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+          "Check back in around #{time_ago_in_words(res.download_token.available + 30.seconds)} and it should be ready to download."
         else
           render status: 404, text: 'Not found'
         end
@@ -120,7 +120,7 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum
       if StashEngine::InternalDatum.allows_multiple(params[:data_type])
@@ -143,11 +143,12 @@ module StashApi
       @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value])
       render json: @datum, status: 200
     end
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
 
     def get_stash_identifier(id)
       # check to see if the identifier is actually an id and not a DOI first
       return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
+
       id_type, id_text = id.split(':', 2)
       render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
@@ -168,6 +169,7 @@ module StashApi
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
+
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
@@ -182,8 +184,10 @@ module StashApi
     # checks the status for allowing a dataset PUT request that is an update
     def check_status
       return if @stash_identifier.nil? || @resource.nil?
+
       state = @resource.current_resource_state.try(:resource_state)
       return if state == 'in_progress'
+
       return_error(messages: 'Your dataset cannot be updated now', status: 403) { yield } if state != 'submitted'
       duplicate_resource # because we're starting a new version
     end
@@ -212,16 +216,18 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
+
       unless @user.role == 'superuser' ||
              params['userId'].to_i == @user.id || # or it is your own user
              @user.journals_as_admin&.map(&:issn)&.include?(params['dataset']['publicationISSN']) # or you admin the target journal
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
-        return false
+        false
       end
     end
 
     def check_may_set_payment_id
       return if params['paymentId'].nil?
+
       unless @user.role == 'superuser'
         render json: { error: 'Unauthorized: only superuser roles may set a paymentId' }.to_json, status: 401
         return false
@@ -248,6 +254,7 @@ module StashApi
 
     def paging_hash_results(all_count, results)
       return if results.nil?
+
       {
         '_links' => paging_hash(result_count: all_count),
         count: results.count,

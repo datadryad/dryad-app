@@ -11,8 +11,8 @@ namespace :status_dashboard do
         svc = Object.const_get(class_name).new(abbreviation: dependency.abbreviation)
         online = svc.ping_dependency
         p "#{online ? 'online' : 'OFFLINE'} <== #{dependency.name}"
-      rescue NameError => ne
-        p "Unable to locate a service for #{dependency.name}: #{ne.message}"
+      rescue NameError => e
+        p "Unable to locate a service for #{dependency.name}: #{e.message}"
         dependency.update(status: 2, error_message: "There is no #{class_name} defined! Unable to ping dependency.")
         next
       end
@@ -30,7 +30,7 @@ namespace :status_dashboard do
     end
   end
 
-  # rubocop:disable Metrics/LineLength
+  # rubocop:disable Layout/LineLength
   BASELINE_EXTERNAL_DEPENDENCIES = [
     {
       abbreviation: 'solr',
@@ -122,6 +122,6 @@ namespace :status_dashboard do
       status: 1
     }
   ].freeze
-  # rubocop:enable Metrics/LineLength
+  # rubocop:enable Layout/LineLength
 end
 # rubocop:enable Metrics/BlockLength

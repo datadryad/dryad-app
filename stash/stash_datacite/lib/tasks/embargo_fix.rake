@@ -17,6 +17,7 @@ namespace :embargo_fix do
 
       is = StashEngine::Identifier.where(identifier: line)
       next if is.empty?
+
       p "- found #{is.size} identifiers for #{line}"
       is.each do |i|
         p "  - identifier #{i.id} #{i&.identifier}"
@@ -32,6 +33,7 @@ namespace :embargo_fix do
             notestring = ca&.note
             p "      - ca #{ca&.id} #{ca&.created_at} #{notestring}"
             next unless notestring
+
             if /package-level embargo to reflect previous file-level/.match?(notestring)
               p '      - ######### EMBARGO INDICATOR ##############'
               embargo_indicator = ca
@@ -42,6 +44,7 @@ namespace :embargo_fix do
           # if a fix is needed, find the publish date, set it, and
           # update all subsequent curation activities to be 'published'
           next unless embargo_indicator
+
           embargo_indicator.destroy # remove the indicator CurationActivity
           embargo_indicator = nil
 
@@ -57,6 +60,7 @@ namespace :embargo_fix do
             end
 
             next unless @publishing
+
             p '      - updating to published'
             if ca&.note&.match(/publiction date has not yet been reached/)
               ca.destroy
@@ -82,6 +86,7 @@ namespace :embargo_fix do
 
       is = StashEngine::Identifier.where(identifier: line)
       next if is.empty?
+
       p "- found #{is.size} identifiers for #{line}"
       is.each do |i|
         p "  - identifier #{i.id} #{i&.identifier}"
@@ -98,6 +103,7 @@ namespace :embargo_fix do
             notestring = ca&.note
             p "      - ca #{ca&.id} #{ca&.created_at} #{notestring}"
             next unless notestring
+
             if /Embargo Datasets CRON - publication date has not yet been reached/.match?(notestring)
               p '      - ######### EMBARGO INDICATOR ##############'
               embargo_indicator = ca
@@ -111,6 +117,7 @@ namespace :embargo_fix do
           # If there is both an embargo_indicator and a published_indicator,
           # remove the erroneous embargo_indicator
           next unless embargo_indicator && published_indicator
+
           embargo_indicator.destroy # remove the indicator CurationActivity
           embargo_indicator = nil
 
@@ -129,6 +136,7 @@ namespace :embargo_fix do
             end
 
             next unless publishing
+
             p '      - updating to published'
             if ca&.note&.match(/publiction date has not yet been reached/)
               ca.destroy

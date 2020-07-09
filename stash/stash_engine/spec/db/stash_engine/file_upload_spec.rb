@@ -42,6 +42,7 @@ module StashEngine
         upload.url = 'http://example.org/foo.bar'
         (100..599).each do |status|
           next if status == 200
+
           upload.status_code = status
           message = upload.error_message
           expect(message).not_to be_nil

@@ -33,16 +33,19 @@ module StashDatacite
 
     def contributor_type_friendly
       return nil if contributor_type.blank?
+
       ContributorTypesStrToFull[contributor_type]
     end
 
     def self.contributor_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::ContributorType.find_by_value(str)
     end
 
     def contributor_type_mapping_obj
       return nil if contributor_type_friendly.nil?
+
       Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 

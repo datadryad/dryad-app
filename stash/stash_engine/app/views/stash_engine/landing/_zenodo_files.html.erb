@@ -7,7 +7,7 @@
 <div class="c-sidebox">
   <h2 class="c-sidebox__heading">Zenodo Files</h2>
   <% sfw_resources.each do |res| %>
-    <% next if res.software_unchanged? %>
+    <% next if res.nil? || res.software_unchanged? %>
     <ul class="c-file-group__list">
       <% current_file_uploads = res.current_file_uploads(my_class: StashEngine::SoftwareUpload) %>
       <% current_file_uploads.each do |su| %>

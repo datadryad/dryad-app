@@ -33,7 +33,7 @@ namespace :publication_updater do
     results.each do |result|
       # Skip the record if we've already captured its info from Crossref at any point
       next if StashEngine::CurationActivity.where(resource_id: result.resource_id)
-          .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
+        .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
 
       begin
         resource = StashEngine::Resource.find(result.resource_id)
@@ -41,9 +41,9 @@ namespace :publication_updater do
         # Hit Crossref for info
         cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: result.doi) if result.doi.present?
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
-      rescue URI::InvalidURIError => iue
+      rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
-        p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{iue.message}"
+        p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{e.message}"
         next
       end
 

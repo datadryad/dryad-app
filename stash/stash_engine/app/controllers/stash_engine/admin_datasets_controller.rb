@@ -181,6 +181,7 @@ module StashEngine
       @pub_date = Date.today.to_s
 
       return unless @resource.identifier.allow_blackout?
+
       # BUT, if the associated journal allows Blackout, default to a year from today
       @note << ' Adding 1-year blackout period due to journal settings.'
       @status = 'embargoed'

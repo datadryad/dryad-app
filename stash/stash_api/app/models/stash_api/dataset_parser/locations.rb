@@ -22,6 +22,7 @@ module StashApi
       def parse
         clear
         return if @hash['locations'].blank?
+
         @hash['locations'].each do |location|
           data_maker(location)
         end
@@ -41,15 +42,19 @@ module StashApi
 
       def valid_latitude?(item)
         return false unless number?(item)
+
         numval = Float(item)
         return true if numval <= 90.0 && numval >= -90.0
+
         false
       end
 
       def valid_longitude?(item)
         return false unless number?(item)
+
         numval = Float(item)
         return true if numval <= 180.0 && numval >= -180.0
+
         false
       end
 
@@ -59,17 +64,20 @@ module StashApi
 
       def valid_point?(item)
         return false if item.nil?
+
         valid_latitude?(item['latitude']) && valid_longitude?(item['longitude'])
       end
 
       def valid_box?(item)
         return false if item.nil?
+
         valid_latitude?(item['swLatitude']) && valid_longitude?(item['swLongitude']) &&
             valid_latitude?(item['neLatitude']) && valid_longitude?(item['neLongitude'])
       end
 
       def make_place(location)
         return StashDatacite::GeolocationPlace.create(geo_location_place: location['place']) if valid_place?(location['place'])
+
         nil
       end
 
@@ -100,6 +108,7 @@ module StashApi
         my_point = make_point(location)
         my_box = make_box(location)
         return if my_place.nil? && my_point.nil? && my_box.nil?
+
         StashDatacite::Geolocation.create(
           resource_id: @resource.id,
           place_id: my_place&.id,
