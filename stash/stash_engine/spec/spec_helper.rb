@@ -1,7 +1,20 @@
 # ------------------------------------------------------------
 # Simplecov
 
-require 'simplecov' if ENV['COVERAGE']
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start do
+    # from http://reactingonrails.com/2-easy-ways-to-check-code-coverage/
+    # This adds a group (tab) to Simplecov's report that only shows coverage for
+    # files changes in the current branch. Useful for code reviews.
+    add_group 'Changed' do |source_file|
+      `git log --oneline --pretty="format:" --name-only master.. | awk 'NF' | sort -u`
+        .split("\n").detect do |filename|
+        source_file.filename.ends_with?(filename)
+      end
+    end
+  end
+end
 
 # ------------------------------------------------------------
 # Rspec configuration
