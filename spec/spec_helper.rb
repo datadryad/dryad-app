@@ -1,3 +1,16 @@
+# ------------------------------------------------------------
+# Simplecov
+# Must be loaded before anything else, so it can hook into loaded
+# classes to test their coverage. To enable, set the environment variable
+# COVERAGE=true
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
+
+# ------------------------------------------------------------
+
 $LOAD_PATH.unshift(File.expand_path('..', __dir__))
 
 require 'capybara/rspec'
