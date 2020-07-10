@@ -59,18 +59,18 @@ module DownloadHelpers
 
   def stub_408_assemble
     stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
-        .to_return(status: 408, body:
+      .to_return(status: 408, body:
             {  status: 408,
                message: 'Timed out' }.to_json,
-                   headers: { 'Content-Type' => 'application/json' })
+                 headers: { 'Content-Type' => 'application/json' })
   end
 
   def stub_408_status
     stub_request(:get, %r{/api/presign-obj-by-token/#{@token.token}.+})
-        .to_return(status: 408, body:
+      .to_return(status: 408, body:
             {  status: 408,
                message: 'Timed out' }.to_json,
-                   headers: { 'Content-Type' => 'application/json' })
+                 headers: { 'Content-Type' => 'application/json' })
   end
 
 end
