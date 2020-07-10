@@ -8,7 +8,7 @@ require 'stash/download/version_presigned'
 
 module StashApi
   class DatasetsController < ApplicationController
-
+    include ActionView::Helpers::DateHelper
     include SubmissionMixin
 
     before_action :require_json_headers, only: %i[show create index update]
