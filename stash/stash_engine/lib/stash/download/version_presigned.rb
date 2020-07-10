@@ -109,23 +109,15 @@ module Stash
       end
 
       def assemble_version_url
-        d, p = @domain.split(':')
-        URI::HTTPS.build(
-          host: d,
-          port: p,
-          path: ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s),
-          query: { format: 'zip', content: 'producer' }.to_query
-        ).to_s
+        path = ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s).to_s
+        query = { format: 'zip', content: 'producer' }.to_query
+        "#{@domain}#{path}?#{query}"
       end
 
       def status_url
-        d, p = @domain.split(':')
-        URI::HTTPS.build(
-          host: d,
-          port: p,
-          path: ::File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)),
-          query: { no_redirect: true, filename: filename }.to_query
-        ).to_s
+        path = ::File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)).to_s
+        query = { no_redirect: true, filename: filename }.to_query
+        "#{@domain}#{path}?#{query}"
       end
 
       def filename

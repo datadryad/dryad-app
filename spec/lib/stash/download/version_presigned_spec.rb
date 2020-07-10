@@ -23,7 +23,7 @@ module Stash
         end
 
         it 'handles ports for assemble_version_url' do
-          @vp.instance_variable_set(:@domain, 'truculent.com:2838')
+          @vp.instance_variable_set(:@domain, 'https://truculent.com:2838')
           u = @vp.assemble_version_url
           expect(u).to eq("https://truculent.com:2838/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
         end
@@ -35,7 +35,7 @@ module Stash
         end
 
         it 'handles ports for status_url' do
-          @vp.instance_variable_set(:@domain, 'truculent.com:2838')
+          @vp.instance_variable_set(:@domain, 'https://truculent.com:2838')
           u = @vp.status_url
           expect(u).to eq("https://truculent.com:2838/api/presign-obj-by-token/#{@resource.download_token.token}" \
             "?filename=#{@vp.filename}&no_redirect=true")
