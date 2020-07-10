@@ -91,6 +91,13 @@ module Stash
           expect { @vp.assemble }.to raise_exception(Stash::Download::MerrittException).with_message(/Merritt/)
         end
 
+        it 'returns a 408 status code if Merritt gives us one' do
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+              .to_return(status: 408, body: 'Not found', headers: {})
+
+          expect(@vp.assemble[:status]).to eq(408)
+        end
+
         it 'saves token and predicted availability time to database on good response' do
           token = SecureRandom.uuid
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
@@ -184,6 +191,21 @@ module Stash
           expect(@vp).to receive(:assemble).and_return({})
           resp = @vp.download
           expect(resp[:status]).to eq(200)
+        end
+
+        it 'returns 408 when Merritt is timing out on the status call for a token' do
+          @vp = VersionPresigned.new(resource: @resource)
+          expect(@vp).to receive(:status).and_raise(HTTP::TimeoutError)
+          expect(@vp.download).to eq(status: 408)
+        end
+
+        it 'returns 408 when Merritt is timing out on the assemble call for a token' do
+          stub_request(:get, %r{/api/presign-obj-by-token/.+})
+              .to_return(status: 404, body:
+                  { status: 404 }.to_json, headers: { 'Content-Type' => 'application/json' })
+          @vp = VersionPresigned.new(resource: @resource)
+          expect(@vp).to receive(:assemble).and_raise(HTTP::TimeoutError)
+          expect(@vp.download).to eq(status: 408)
         end
       end
 
