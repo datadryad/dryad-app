@@ -19,7 +19,7 @@ module Stash
       describe 'urls for Merritt service' do
         it 'creates correct assemble_version_url' do
           u = @vp.assemble_version_url
-          expect(u).to eq("http://localhost/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
+          expect(u).to eq("http://localhost.com/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
         end
 
         it 'handles ports for assemble_version_url' do
@@ -30,7 +30,7 @@ module Stash
 
         it 'creates correct status_url' do
           u = @vp.status_url
-          expect(u).to eq("http://localhost/api/presign-obj-by-token/#{@resource.download_token.token}" \
+          expect(u).to eq("http://localhost.com/api/presign-obj-by-token/#{@resource.download_token.token}" \
             "?filename=#{@vp.filename}&no_redirect=true")
         end
 
