@@ -93,7 +93,7 @@ module Stash
 
         it 'returns a 408 status code if Merritt gives us one' do
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
-              .to_return(status: 408, body: 'Not found', headers: {})
+            .to_return(status: 408, body: 'Not found', headers: {})
 
           expect(@vp.assemble[:status]).to eq(408)
         end
@@ -201,7 +201,7 @@ module Stash
 
         it 'returns 408 when Merritt is timing out on the assemble call for a token' do
           stub_request(:get, %r{/api/presign-obj-by-token/.+})
-              .to_return(status: 404, body:
+            .to_return(status: 404, body:
                   { status: 404 }.to_json, headers: { 'Content-Type' => 'application/json' })
           @vp = VersionPresigned.new(resource: @resource)
           expect(@vp).to receive(:assemble).and_raise(HTTP::TimeoutError)

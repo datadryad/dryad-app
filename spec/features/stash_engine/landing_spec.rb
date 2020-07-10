@@ -55,7 +55,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     expect(page).not_to have_text('There was a problem assembling your download request')
   end
 
-  it "shows popup telling people of problems if token status times out" do
+  it 'shows popup telling people of problems if token status times out' do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
