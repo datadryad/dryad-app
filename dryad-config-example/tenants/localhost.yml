@@ -12,7 +12,8 @@
 default: &default
   enabled: true
   repository:
-    domain: http://localhost
+    # making this localhost.com some it WebMock picks up invalid requests outside my local machine
+    domain: http://localhost.com
     endpoint: "http://localhost:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
