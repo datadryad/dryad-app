@@ -12,7 +12,7 @@
 default: &default
   enabled: true
   repository:
-    domain: localhost
+    domain: http://localhost
     endpoint: "http://localhost:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
