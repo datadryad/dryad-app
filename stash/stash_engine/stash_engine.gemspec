@@ -63,7 +63,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'omniauth-rails_csrf_protection'
   s.add_dependency 'omniauth-shibboleth', '>= 1.2.1'
   s.add_dependency 'posix-spawn', '>= 0.3.13'
-  s.add_dependency 'rails', '~> 4.2'
+  s.add_dependency 'rails', '~> 5.0'
   s.add_dependency 'redcarpet', '>= 3.3'
   s.add_dependency 'rest-client'
   s.add_dependency 'rinku'
