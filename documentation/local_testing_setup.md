@@ -59,10 +59,27 @@ cd stash/stash_engine
 # bundle install if the bundle is not up to date
 bundle install
 
-# note, I had some weird errors after setting up my gems initially and had to reload my shell to get things working
-
 # this command runs the default rake task, which will run all tests for the component
-bundle exec rake
+RAILS_ENV=test bundle exec rspec
+```
+
+## Various testing commands
+
+```
+# Default -- run all tests
+RAILS_ENV=test bundle exec rspec
+
+# Run tests in a single directory
+RAILS_ENV=test bundle exec rspec spec/models
+
+# Run just a single test
+RAILS_ENV=test bundle exec rspec ./spec/features/admin_spec.rb:18
+
+# Run tests, with code coverage included
+COVERAGE=true RAILS_ENV=test bundle exec rspec
+
+# Run rubocop
+bundle exec rubocop -a
 ```
 
 ## Notes about Rubocop, .ruby-version, Bundler and Rake
