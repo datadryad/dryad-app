@@ -33,35 +33,39 @@ module Stash
       # 200 for URL being present to download
       # 202 for needing to wait with a progress bar
       # 404 for not found
+      # 408 for timeout failures
       # rubocop:disable Metrics/CyclomaticComplexity
       def download
         assemble_hash = {}
         assemble_hash = assemble if @resource.download_token.token.blank?
-        return assemble_hash if assemble_hash[:status] == 404
+        return assemble_hash if [404, 408].include?(assemble_hash[:status]) # can't find or can't assemble right now
 
         status_hash = status
 
-        return status_hash if status_hash[:status] == 200 # it's available, do a download
+        return status_hash if [200, 408].include?(status_hash[:status]) # it's available or timing out, so return
 
         # if token not found or expired, then attempt to assemble it again
         if [404, 410].include?(status_hash[:status])
           assemble_hash = assemble
 
-          # handle the object not found in Merritt by returning the same status
-          return assemble_hash if assemble_hash[:status] == 404
+          # handle the object not able to assemble (not found or timing out)
+          return assemble_hash if [404, 408].include?(assemble_hash[:status])
 
           status_hash = status # refresh status hash after assembling again
+          return status_hash if status_hash[:status] == 408 # abort with more timeouts
         end
 
         # Merritt pads estimates 20+ seconds for stuff that can be assembled very quickly and started downloads within a few seconds
         return poll_and_download if @resource.download_token.availability_delay_seconds < 25
 
         status_hash
+      rescue HTTP::TimeoutError
+        { status: 408 }
       end
       # rubocop:enable Metrics/CyclomaticComplexity
 
       # this does a limited poll and download if it becomes available within a reasonable time
-      def poll_and_download(delay: 2.5, tries: 2)
+      def poll_and_download(delay: 5, tries: 1)
         status_hash = {}
         # poll a couple of times to see if gets ready quickly and if not, return the last status
         1.upto(tries) do
