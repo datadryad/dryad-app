@@ -34,10 +34,10 @@ module Stash
 
           it 'creates a successful post request to DataCite' do
             stub_request(:post, 'https://mds.datacite.org/metadata')
-                .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
-                                 'Content-Type' => 'application/xml;charset=UTF-8',
-                                 'Host' => 'mds.datacite.org' })
-                .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
+              .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                               'Content-Type' => 'application/xml;charset=UTF-8',
+                               'Host' => 'mds.datacite.org' })
+              .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
             repo = @resource.tenant.repository
             res = @datacite_gen.post_metadata(@dc4_xml, username: repo.username, password: repo.password, sandbox: false)
             expect(res.status).to eq(201)
@@ -48,10 +48,10 @@ module Stash
           it 'creates a successful sandbox put request to DataCite' do
             bare_id = @resource.identifier.identifier
             stub_request(:put, "https://mds.test.datacite.org/doi/#{bare_id}")
-                .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
-                                 'Content-Type' => 'application/xml;charset=UTF-8',
-                                 'Host' => 'mds.test.datacite.org' })
-                .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
+              .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                               'Content-Type' => 'application/xml;charset=UTF-8',
+                               'Host' => 'mds.test.datacite.org' })
+              .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
             repo = @resource.tenant.repository
             res = @datacite_gen.put_doi(bare_id, username: repo.username, password: repo.password, sandbox: true)
             expect(res.status).to eq(201)
@@ -60,10 +60,10 @@ module Stash
           it 'creates a successful put request to DataCite' do
             bare_id = @resource.identifier.identifier
             stub_request(:put, "https://mds.datacite.org/doi/#{bare_id}")
-                .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
-                                 'Content-Type' => 'application/xml;charset=UTF-8',
-                                 'Host' => 'mds.datacite.org' })
-                .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
+              .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                               'Content-Type' => 'application/xml;charset=UTF-8',
+                               'Host' => 'mds.datacite.org' })
+              .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
             repo = @resource.tenant.repository
             res = @datacite_gen.put_doi(bare_id, username: repo.username, password: repo.password, sandbox: false)
             expect(res.status).to eq(201)
@@ -75,9 +75,9 @@ module Stash
           it 'creates a successful sandbox get request to DataCite' do
             bare_id = @resource.identifier.identifier
             stub_request(:get, "https://mds.test.datacite.org/doi/#{bare_id}")
-                .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
-                                 'Host' => 'mds.test.datacite.org' })
-                .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
+              .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                               'Host' => 'mds.test.datacite.org' })
+              .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
             repo = @resource.tenant.repository
             res = @datacite_gen.get_doi(bare_id, username: repo.username, password: repo.password, sandbox: true)
             expect(res.status).to eq(200)
@@ -86,9 +86,9 @@ module Stash
           it 'creates a successful get request to DataCite' do
             bare_id = @resource.identifier.identifier
             stub_request(:get, "https://mds.datacite.org/doi/#{bare_id}")
-                .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
-                                 'Host' => 'mds.datacite.org' })
-                .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
+              .with(headers: { 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                               'Host' => 'mds.datacite.org' })
+              .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
             repo = @resource.tenant.repository
             res = @datacite_gen.get_doi(bare_id, username: repo.username, password: repo.password, sandbox: false)
             expect(res.status).to eq(200)
