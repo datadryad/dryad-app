@@ -36,7 +36,7 @@ module StashEngine
       expect(tenant.stash_logo_after_tenant).to eq(true)
       repo = tenant.repository
       expect(repo.type).to eq('exemplum')
-      expect(repo.domain).to eq('repo-dev.example.edu')
+      expect(repo.domain).to eq('http://repo-dev.example.edu')
       expect(repo.endpoint).to eq('http://repo-dev.example.edu:39001/sword/collection/stash')
       expect(repo.username).to eq('stash_submitter')
       expect(repo.password).to eq('correct​horse​battery​staple')
