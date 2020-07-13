@@ -20,7 +20,7 @@ module Stash
       def download_uri_for(resource:, record_identifier:)
         merritt_host = merritt_host_for(resource)
         ark = ark_from(record_identifier)
-        "http://#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
+        "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
       def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument

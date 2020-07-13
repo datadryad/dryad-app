@@ -46,7 +46,8 @@ module StashEngine
         contents = read_end_of_file(log)
         last_run_date = nil
         contents.reverse_each do |line|
-          last_run_date = Time.parse(line.match(DATE_TIME_MATCHER).to_s)
+          date_match = line.match(DATE_TIME_MATCHER).to_s
+          last_run_date = Time.parse(date_match) if date_match.present?
           break if last_run_date.present?
         end
         last_run_date

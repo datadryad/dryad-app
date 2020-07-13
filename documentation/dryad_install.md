@@ -201,12 +201,12 @@ API for identifier assignment and submission to repositories.
 Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
 The Stash::Repo implementation is provided by the [stash-merritt](https://github.com/CDLUC3/stash-merritt) gem, which is included in the application [Gemfile](../../Gemfile)
 and declared by the `repository:` key in [`app_config.yml`](https://github.com/CDL-Drayd/dryad-config-example/blob/development/config/app_config.yml).
-EZID and Merritt/SWORD must be configured for each tenant in the apporpriate `tenants/*.yml` file, e.g.
+EZID and Merritt/SWORD must be configured for each tenant in the appropriate `tenants/*.yml` file, e.g.
 
 ```yaml
 repository: # change me: you'll probably have to change all the following indented values and only if using Merritt repo
     type: merritt
-    domain: merritt-repo-dev-example.cdlib.org
+    domain: http://merritt-repo-dev-example.cdlib.org
     endpoint: "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/my_collection_id"
     username: "submitter_username"
     password: "submitter_password"
