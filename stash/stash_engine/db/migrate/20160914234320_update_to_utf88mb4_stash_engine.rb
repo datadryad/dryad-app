@@ -1,4 +1,4 @@
-class UpdateToUtf88mb4StashEngine < ActiveRecord::Migration
+class UpdateToUtf88mb4StashEngine < ActiveRecord::Migration[4.2]
 
   TABLES = { 'searches' => %w[query_params],
              'stash_engine_identifiers' => %w[identifier identifier_type],

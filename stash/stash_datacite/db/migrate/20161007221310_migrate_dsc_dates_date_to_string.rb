@@ -1,4 +1,4 @@
-class MigrateDscDatesDateToString < ActiveRecord::Migration
+class MigrateDscDatesDateToString < ActiveRecord::Migration[4.2]
   def self.up
     add_column(:dcs_dates, :new_date, :string, after: :date)
 

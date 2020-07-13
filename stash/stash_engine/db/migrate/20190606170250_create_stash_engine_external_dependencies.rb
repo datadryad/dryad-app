@@ -1,4 +1,4 @@
-class CreateStashEngineExternalDependencies < ActiveRecord::Migration
+class CreateStashEngineExternalDependencies < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_external_dependencies do |t|
       t.string      :abbreviation, index: true

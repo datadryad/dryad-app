@@ -1,4 +1,4 @@
-class AddResourceIdAndChangeStatusOnStashEngineCurationActivity < ActiveRecord::Migration
+class AddResourceIdAndChangeStatusOnStashEngineCurationActivity < ActiveRecord::Migration[4.2]
   def change
     add_column :stash_engine_curation_activities, :resource_id, :integer
     rename_column :stash_engine_curation_activities, :status, :old_status

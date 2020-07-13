@@ -1,4 +1,4 @@
-class CreateDcsTitles < ActiveRecord::Migration
+class CreateDcsTitles < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_titles do |t|
       t.string :title

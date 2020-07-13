@@ -1,4 +1,4 @@
-class PopulatePublicationDate < ActiveRecord::Migration
+class PopulatePublicationDate < ActiveRecord::Migration[4.2]
   # Sets the publication date for each submitted resource (i.e., each resource
   # for which we have an identifier), as:
   #

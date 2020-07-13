@@ -1,4 +1,4 @@
-class CreateDcsContributors < ActiveRecord::Migration
+class CreateDcsContributors < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_contributors do |t|
       t.string :contributor_name

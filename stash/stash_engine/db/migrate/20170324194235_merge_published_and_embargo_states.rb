@@ -1,4 +1,4 @@
-class MergePublishedAndEmbargoStates < ActiveRecord::Migration
+class MergePublishedAndEmbargoStates < ActiveRecord::Migration[4.2]
   # rubocop:disable Metrics/MethodLength
   def up
     change_table :stash_engine_resource_states do |t|
