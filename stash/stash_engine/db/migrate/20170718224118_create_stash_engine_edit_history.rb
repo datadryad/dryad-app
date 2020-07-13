@@ -1,4 +1,4 @@
-class CreateStashEngineEditHistory < ActiveRecord::Migration
+class CreateStashEngineEditHistory < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_edit_histories do |t|
       t.integer :resource_id

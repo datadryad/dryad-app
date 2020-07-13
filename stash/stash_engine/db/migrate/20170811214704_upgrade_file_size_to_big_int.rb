@@ -1,4 +1,4 @@
-class UpgradeFileSizeToBigInt < ActiveRecord::Migration
+class UpgradeFileSizeToBigInt < ActiveRecord::Migration[4.2]
   def up
     change_column :stash_engine_file_uploads, :upload_file_size, :integer, limit: 8 # make bigint
   end

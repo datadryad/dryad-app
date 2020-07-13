@@ -1,4 +1,4 @@
-class CreateDcsCreators < ActiveRecord::Migration
+class CreateDcsCreators < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_creators do |t|
       t.string :creator_first_name

@@ -1,4 +1,4 @@
-class CreateJournalRoles < ActiveRecord::Migration
+class CreateJournalRoles < ActiveRecord::Migration[4.2]
   def up
     create_table :stash_engine_journal_roles do |t|
       t.belongs_to :journal

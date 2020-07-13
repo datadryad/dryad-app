@@ -1,4 +1,4 @@
-class CreateStashEngineProposedChanges < ActiveRecord::Migration
+class CreateStashEngineProposedChanges < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_proposed_changes do |t|
       t.references :identifier, index: true

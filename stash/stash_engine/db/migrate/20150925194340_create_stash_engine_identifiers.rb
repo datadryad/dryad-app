@@ -1,4 +1,4 @@
-class CreateStashEngineIdentifiers < ActiveRecord::Migration
+class CreateStashEngineIdentifiers < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_identifiers do |t|
       t.string :identifier

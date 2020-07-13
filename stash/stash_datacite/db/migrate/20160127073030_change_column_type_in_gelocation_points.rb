@@ -1,4 +1,4 @@
-class ChangeColumnTypeInGelocationPoints < ActiveRecord::Migration
+class ChangeColumnTypeInGelocationPoints < ActiveRecord::Migration[4.2]
   def up
     change_column :dcs_geo_location_points, :latitude, :decimal, precision: 10, scale: 6
     change_column :dcs_geo_location_points, :longitude, :decimal, precision: 10, scale: 6

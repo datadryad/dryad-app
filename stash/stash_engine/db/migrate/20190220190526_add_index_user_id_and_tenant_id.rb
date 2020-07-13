@@ -1,4 +1,4 @@
-class AddIndexUserIdAndTenantId < ActiveRecord::Migration
+class AddIndexUserIdAndTenantId < ActiveRecord::Migration[4.2]
   def change
     # I think it would be good to index these for finding resources by users or tenant quickly, probably
     # most foreign keys could be indexed by default

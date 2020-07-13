@@ -1,4 +1,4 @@
-class CopyTitleToStashEngine < ActiveRecord::Migration
+class CopyTitleToStashEngine < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
       UPDATE stash_engine_resources r

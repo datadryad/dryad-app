@@ -1,4 +1,4 @@
-class AddPubStateToIdentifier < ActiveRecord::Migration
+class AddPubStateToIdentifier < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       ALTER TABLE stash_engine_identifiers ADD pub_state

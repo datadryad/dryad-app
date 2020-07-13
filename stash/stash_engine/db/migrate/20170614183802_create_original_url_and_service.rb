@@ -1,4 +1,4 @@
-class CreateOriginalUrlAndService < ActiveRecord::Migration
+class CreateOriginalUrlAndService < ActiveRecord::Migration[4.2]
   def up
     add_utf8mb4('stash_engine_file_uploads', 'original_url', 'utf8mb4_general_ci')
     add_column :stash_engine_file_uploads, :cloud_service, :string

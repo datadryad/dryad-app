@@ -1,4 +1,4 @@
-class CreateStashEngineVersions < ActiveRecord::Migration
+class CreateStashEngineVersions < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_versions do |t|
       t.integer :version

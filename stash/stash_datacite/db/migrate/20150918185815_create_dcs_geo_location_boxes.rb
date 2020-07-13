@@ -1,4 +1,4 @@
-class CreateDcsGeoLocationBoxes < ActiveRecord::Migration
+class CreateDcsGeoLocationBoxes < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_geo_location_boxes do |t|
       t.float :sw_latitude

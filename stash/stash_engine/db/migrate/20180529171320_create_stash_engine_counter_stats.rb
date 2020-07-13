@@ -1,4 +1,4 @@
-class CreateStashEngineCounterStats < ActiveRecord::Migration
+class CreateStashEngineCounterStats < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_counter_stats do |t|
       t.references :identifier

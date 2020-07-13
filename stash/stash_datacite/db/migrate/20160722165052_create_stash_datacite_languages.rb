@@ -1,4 +1,4 @@
-class CreateStashDataciteLanguages < ActiveRecord::Migration
+class CreateStashDataciteLanguages < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_languages do |t|
       t.string :language

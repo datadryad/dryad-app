@@ -1,4 +1,4 @@
-class UpdateToUtf88mb4StashEngine3 < ActiveRecord::Migration
+class UpdateToUtf88mb4StashEngine3 < ActiveRecord::Migration[4.2]
 
   TABLES = { 'stash_engine_identifiers' => %w[identifier identifier_type],
              'stash_engine_users' => %w[email uid provider oauth_token tenant_id],

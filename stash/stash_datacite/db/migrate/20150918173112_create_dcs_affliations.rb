@@ -1,4 +1,4 @@
-class CreateDcsAffliations < ActiveRecord::Migration
+class CreateDcsAffliations < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_affliations do |t|
       t.string :short_name

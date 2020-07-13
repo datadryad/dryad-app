@@ -1,4 +1,4 @@
-class AddDatapaper < ActiveRecord::Migration
+class AddDatapaper < ActiveRecord::Migration[4.2]
   def up
     change_table :dcs_resource_types do |t|
       t.change :resource_type_general, "ENUM('audiovisual','collection','datapaper','dataset','event','image','interactiveresource','model'," \

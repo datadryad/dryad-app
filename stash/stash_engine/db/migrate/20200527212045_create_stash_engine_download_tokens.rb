@@ -1,4 +1,4 @@
-class CreateStashEngineDownloadTokens < ActiveRecord::Migration
+class CreateStashEngineDownloadTokens < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_download_tokens do |t|
       t.references :resource

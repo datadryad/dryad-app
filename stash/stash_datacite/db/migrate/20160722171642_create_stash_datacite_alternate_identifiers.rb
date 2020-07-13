@@ -1,4 +1,4 @@
-class CreateStashDataciteAlternateIdentifiers < ActiveRecord::Migration
+class CreateStashDataciteAlternateIdentifiers < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_alternate_identifiers do |t|
       t.text :alternate_identifier

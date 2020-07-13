@@ -1,4 +1,4 @@
-class RenameCreatorIdToAuthorId < ActiveRecord::Migration
+class RenameCreatorIdToAuthorId < ActiveRecord::Migration[4.2]
   def change
     # authors preserve old creators' ID values
     rename_column :dcs_affiliations_creators, :creator_id, :author_id
