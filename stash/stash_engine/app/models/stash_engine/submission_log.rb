@@ -1,4 +1,4 @@
 module StashEngine
-  class SubmissionLog < ActiveRecord::Base
+  class SubmissionLog < ApplicationRecord
   end
 end

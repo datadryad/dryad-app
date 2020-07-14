@@ -4,7 +4,7 @@ require 'stash/indexer/solr_indexer'
 require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'
 
 module StashEngine
-  class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
+  class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
     # Relations
 

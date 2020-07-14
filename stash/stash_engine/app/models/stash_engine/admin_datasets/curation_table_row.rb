@@ -124,7 +124,7 @@ module StashEngine
                                  admin_tenant: tenant)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
-          results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
+          results = ApplicationRecord.connection.execute(query).map { |result| new(result) }
           # If the user is trying to sort by author names, then
           (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
         end

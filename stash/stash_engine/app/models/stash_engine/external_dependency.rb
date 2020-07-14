@@ -3,7 +3,7 @@
 # Field list:
 #    abbreviation, name, description, status, documentation
 module StashEngine
-  class ExternalDependency < ActiveRecord::Base
+  class ExternalDependency < ApplicationRecord
 
     validates :abbreviation, uniqueness: true
     validates :abbreviation, :name, :status, presence: true
