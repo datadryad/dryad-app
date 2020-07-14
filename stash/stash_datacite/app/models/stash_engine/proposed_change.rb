@@ -3,7 +3,7 @@ require 'stash/import/crossref'
 module StashEngine
   class ProposedChange < ApplicationRecord
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
+    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
 
     CROSSREF_PUBLISHED_MESSAGE = 'reported that the related journal has been published'.freeze
     CROSSREF_UPDATE_MESSAGE = 'provided additional metadata'.freeze

@@ -6,9 +6,9 @@ module StashDatacite
   class Geolocation < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'dcs_geo_locations'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id'
-    belongs_to :geolocation_point, class_name: 'StashDatacite::GeolocationPoint', foreign_key: 'point_id'
-    belongs_to :geolocation_box, class_name: 'StashDatacite::GeolocationBox', foreign_key: 'box_id'
+    belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id', optional: true
+    belongs_to :geolocation_point, class_name: 'StashDatacite::GeolocationPoint', foreign_key: 'point_id', optional: true
+    belongs_to :geolocation_box, class_name: 'StashDatacite::GeolocationBox', foreign_key: 'box_id', optional: true
     include StashEngine::Concerns::ResourceUpdated
 
     amoeba do
