@@ -15,24 +15,23 @@ class ReportInfo
   end
 end
 
-
 class SubmittedReports
   attr_reader :reports
 
   def initialize
-    @reports
+    @reports = nil
     @http = HTTP.timeout(connect: 120, read: 120).timeout(120).follow(max_hops: 10)
   end
 
   def process_reports
-    get_list_of_reports
+    list_reports
     add_page_counts
   end
 
-  def get_list_of_reports
+  def list_reports
     puts 'Asking for list of reports from DataCite.  This might take a long while.'
 
-    resp = get_with_retries("https://api.datacite.org/reports?client-id=cdl.dash&page[size]=500")
+    resp = get_with_retries('https://api.datacite.org/reports?client-id=cdl.dash&page[size]=500')
 
     json = resp.parse
 
@@ -47,10 +46,10 @@ class SubmittedReports
   end
 
   def add_page_counts
-    @reports.each_with_index do |(year_month, report), index|
+    @reports.each_with_index do |(_year_month, report), index|
       subj_id = "https://api.datacite.org/reports/#{report.id}"
       str = "https://api.datacite.org/events?source-id=datacite-usage&subj-id=#{CGI.escape(subj_id)}"
-      puts "#{index+1}/#{@reports.length} Getting page count for #{report.year_month}\t#{report.id}"
+      puts "#{index + 1}/#{@reports.length} Getting page count for #{report.year_month}\t#{report.id}"
 
       resp = get_with_retries(str)
       json = resp.parse
@@ -68,9 +67,11 @@ class SubmittedReports
     12.times do
       resp = @http.get(url)
       break if resp.status.code.between?(200, 299)
+
       sleep 5
     end
-    raise "Bad response from DataCite" if resp.status.code != 200
+    raise 'Bad response from DataCite' if resp.status.code != 200
+
     resp
   end
 end
