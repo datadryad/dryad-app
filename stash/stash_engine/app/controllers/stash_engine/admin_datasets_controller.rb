@@ -22,7 +22,7 @@ module StashEngine
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: params, tenant: tenant_limit)
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: ctr_params, tenant: tenant_limit)
 
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
@@ -113,6 +113,11 @@ module StashEngine
     end
 
     private
+
+    def ctr_params
+      params.permit(:page_size, :show_all, :title, :status, :author_names, :identifier, :updated_at,
+                    :editor_name, :storage_size, :publication_date, :sort_column)
+    end
 
     def setup_ds_sorting
       sort_table = SortableTable::SortTable.new(
