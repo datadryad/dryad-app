@@ -1,5 +1,3 @@
-require 'stash/import/crossref'
-
 namespace :stash_datacite do
 
   desc 'Convert old publicationDOI records from InternalDatum into RelatedIdentifiers'
