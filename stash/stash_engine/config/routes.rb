@@ -120,8 +120,12 @@ StashEngine::Engine.routes.draw do
   get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
   get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
 
-  # flexible routing for submission queue controller
-  get 'submission_queue/(:action(/:id))', controller: 'submission_queue'
+  # routing for submission queue controller
+  get 'submission_queue', to: 'submission_queue#index'
+  get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
+  get 'submission_queue/graceful_shutdown', to: 'submission_queue#graceful_shutdown'
+  get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start'
+  get 'submission_queue/ungraceful_start', to: 'submission_queue#ungraceful_start'
 
   # Administrative Status Dashboard that displays statuses of external dependencies
   get 'status_dashboard', to: 'status_dashboard#show'
