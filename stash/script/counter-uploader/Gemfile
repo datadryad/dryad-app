@@ -1,6 +1,4 @@
 source 'https://rubygems.org'
 gem 'byebug'
-gem 'httparty'
-gem 'maremma'
+gem 'http'
 gem 'nokogiri'
-gem 'rack'

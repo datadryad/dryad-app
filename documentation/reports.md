@@ -58,6 +58,8 @@ statistics, send them to DataCite, and record copies in our database.
 
 The main control script is `cron/counter.sh`
 
+See the counter_stats.md for more further notes.
+
 
 Administrative screen report
 -----------------------------
