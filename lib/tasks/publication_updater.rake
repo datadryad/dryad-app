@@ -1,5 +1,3 @@
-require 'stash/import/crossref'
-
 # rubocop:disable Metrics/BlockLength
 namespace :publication_updater do
 
