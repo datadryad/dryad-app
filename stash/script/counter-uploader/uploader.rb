@@ -1,22 +1,21 @@
-require 'maremma'
 require 'byebug'
+require 'http'
+require 'json'
 
 # most of the uploading code I got from examples from DataCite at
 # https://support.datacite.org/docs/usage-reports-api-guide
 
 class Uploader
 
-  LARGE_FILE_EXCEPTION =
-    '"exceptions": [{"code": 69, "severity": "warning", "message": "Report is compressed using gzip", ' \
-  '"help-url": "https://github.com/datacite/sashimi", "data": "usage data needs to be uncompressed"}]'.freeze
-
-  NORMAL_EXCEPTION = '"exceptions": [{}]'.freeze
+  LARGE_FILE_EXCEPTION = {'code': 69, 'severity': 'warning', 'message': 'Report is compressed using gzip',
+                          'help-url': 'https://github.com/datacite/sashimi', 'data': 'usage data needs to be uncompressed'}.freeze
 
   URI = 'https://api.datacite.org/reports'.freeze
 
   def initialize(report_id: nil, file_name:)
     @report_id = report_id
     @file_name = file_name
+    @http = HTTP.timeout(connect: 120, read: 120).timeout(120).follow(max_hops: 10)
   end
 
   def process
@@ -28,42 +27,48 @@ class Uploader
 
   def modify_headers
     string = File.open(@file_name, 'r:UTF-8', &:read)
-    string = string.gsub(NORMAL_EXCEPTION, LARGE_FILE_EXCEPTION)
+    hash = JSON.parse(string)
+    if hash['report-header']['exceptions'].length == 1 && hash['report-header']['exceptions'].first == {}
+      hash['report-header']['exceptions'].first.merge!(LARGE_FILE_EXCEPTION)
+    else
+      hash['report-header']['exceptions'].push(LARGE_FILE_EXCEPTION)
+    end
+
+    string = hash.to_json
     File.open('tmp/fixed_large_report.json', 'w:UTF-8') { |f| f.write(string) }
   end
 
   def compress(file)
     report = File.read(file)
     gzip = Zlib::GzipWriter.new(StringIO.new)
-    string = JSON.parse(report).to_json
-    gzip << string
-    body = gzip.close.string
-    body
+    gzip << report
+    gzip.close.string
   end
 
   def send_file(file)
     headers = {
       content_type: 'application/gzip',
       content_encoding: 'gzip',
-      accept: 'gzip'
+      accept: 'gzip',
+      authorization: "Bearer #{ENV['TOKEN']}"
     }
 
     body = compress(file)
 
-    response =
-      if @report_id.blank?
-        Maremma.post(URI, data: body,
-                          bearer: ENV['TOKEN'],
-                          headers: headers,
-                          timeout: 100)
-      else
-        Maremma.put("#{URI}/#{@report_id}", data: body,
-                                            bearer: ENV['TOKEN'],
-                                            headers: headers,
-                                            timeout: 100)
-      end
-    raise "submission failed, got #{response.status} from server\r\n#{response.body}" if response.status < 200 || response.status > 299
+    resp = nil
+    12.times do
+      resp =
+        if @report_id.nil?
+          @http.post(URI, body: body, headers: headers)
+        else
+          @http.put("#{URI}/#{@report_id}", body: body, headers: headers)
+        end
+      break if resp.status.code.between?(200, 299)
+      sleep 5
+    end
 
-    response['body']['data']['report']['id']
+    json = resp.parse
+
+    json['report']['id']
   end
 end
