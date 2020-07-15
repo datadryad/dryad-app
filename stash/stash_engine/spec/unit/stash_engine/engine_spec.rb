@@ -24,8 +24,8 @@ module StashEngine
     end
 
     describe 'static assets' do
-      it 'uses ActionDispatch::Static when serve_static_files is true' do
-        allow(config).to receive(:serve_static_files).and_return(true)
+      it 'uses ActionDispatch::Static when public_file_server.enabled is true' do
+        allow(config).to receive(:public_file_server).and_return({ enabled: true }.to_ostruct)
 
         initializers = Engine.initializers
         initializer = initializers.find { |init| init.name == 'static assets' }
@@ -42,8 +42,8 @@ module StashEngine
         initializer.run(application)
       end
 
-      it 'doesn\'t inject middleware when serve_static_files is false' do
-        allow(config).to receive(:serve_static_files).and_return(false)
+      it 'doesn\'t inject middleware when public_file_server.enabled is false' do
+        allow(config).to receive(:public_file_server).and_return({ enabled: true }.to_ostruct)
 
         initializers = Engine.initializers
         initializer = initializers.find { |init| init.name == 'static assets' }

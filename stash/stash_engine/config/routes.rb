@@ -110,7 +110,15 @@ StashEngine::Engine.routes.draw do
   get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard'
 
   # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
-  get 'ds_admin/(:action(/:id))', controller: 'admin_datasets'
+  get 'ds_admin', to: 'admin_datasets#index'
+  get 'ds_admin/index', to: 'admin_datasets#index'
+  get 'ds_admin/index/:id', to: 'admin_datasets#index'
+  get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
+  get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
+  get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
+  get 'ds_admin/curation_activity_change/:id', to: 'admin_datasets#curation_activity_change'
+  get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
+  get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
 
   # flexible routing for submission queue controller
   get 'submission_queue/(:action(/:id))', controller: 'submission_queue'

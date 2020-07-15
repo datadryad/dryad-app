@@ -40,7 +40,7 @@ module StashApi
             redirect_to stash_url_helpers.landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
           end
         else
-          render text: 'forbidden', status: 403
+          render plain: 'forbidden', status: 403
         end
       else
         render text: 'download for this version is unavailable', status: 404
