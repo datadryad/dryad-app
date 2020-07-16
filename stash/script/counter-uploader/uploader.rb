@@ -20,7 +20,7 @@ class Uploader
 
   def process
     modify_headers
-    send_file('tmp/fixed_large_report.json')
+    send_file(File.join(__dir__, 'tmp/fixed_large_report.json'))
   end
 
   private
@@ -35,7 +35,7 @@ class Uploader
     end
 
     string = hash.to_json
-    File.open('tmp/fixed_large_report.json', 'w:UTF-8') { |f| f.write(string) }
+    File.open(File.join(__dir__, 'tmp/fixed_large_report.json'), 'w:UTF-8') { |f| f.write(string) }
   end
 
   def compress(file)
