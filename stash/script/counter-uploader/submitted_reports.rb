@@ -28,10 +28,10 @@ class SubmittedReports
     add_page_counts
   end
 
-  def list_reports
+  def list_reports(retries: 12)
     puts 'Asking for list of reports from DataCite.  This might take a long while.'
 
-    resp = get_with_retries('https://api.datacite.org/reports?client-id=cdl.dash&page[size]=500')
+    resp = get_with_retries('https://api.datacite.org/reports?client-id=cdl.dash&page[size]=500', retries: retries)
 
     json = resp.parse
 
@@ -62,9 +62,9 @@ class SubmittedReports
   end
 
   # The remote server can be unreliable
-  def get_with_retries(url)
+  def get_with_retries(url, retries: 12)
     resp = nil
-    12.times do
+    retries.times do
       resp = @http.get(url)
       break if resp.status.code.between?(200, 299)
 

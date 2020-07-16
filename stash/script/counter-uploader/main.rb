@@ -5,7 +5,7 @@ require 'byebug'
 require 'pp'
 
 # other classes for this
-require_relative 'submitted_report_info'
+require_relative 'submitted_reports'
 require_relative 'uploader'
 
 # setup variables needed
@@ -26,7 +26,14 @@ end
 @submitted_reports = SubmittedReports.new
 @submitted_reports.process_reports
 
-exit 0 unless ENV['REPORT_IDS'].nil?
+if ENV['REPORT_IDS']
+  puts 'Information about submitted months'
+  puts "year-month\tresults_pages\tid"
+  @submitted_reports.reports.values.sort { |a, b| a.year_month <=> b.year_month }.each do |report|
+    puts "#{report.year_month}\t#{report.pages}\t#{report.id}"
+  end
+  exit 0
+end
 
 @json_files.each do |json_file|
   basename = File.basename(json_file, '.json')
