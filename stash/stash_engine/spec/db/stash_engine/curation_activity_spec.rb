@@ -73,9 +73,6 @@ module StashEngine
 
       before(:each) do
         allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
-        allow_any_instance_of(Stash::Doi::IdGen).to receive(:make_instance).and_return(true)
-        allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
-        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return([])
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
@@ -197,7 +194,6 @@ module StashEngine
         end
 
         it 'does not call email_orcid_invitations to authors who already have an invitation' do
-          allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return(nil)
           allow_any_instance_of(StashEngine::User).to receive(:email).and_return('fool.bar@example.edu')
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:identifier_id).and_return(@identifier.id)
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@author.author_email)
@@ -206,7 +202,6 @@ module StashEngine
         end
 
         it 'does not call email_orcid_invitations to authors who already have an ORCID registered' do
-          allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return('12345')
           allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
           @ca.save

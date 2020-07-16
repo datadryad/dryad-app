@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine

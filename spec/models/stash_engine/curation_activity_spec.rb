@@ -1,17 +1,17 @@
 require 'ostruct'
-require_relative '../../../../spec_helpers/factory_helper'
+require_relative '../../../stash/spec_helpers/factory_helper'
 require 'byebug'
-# require 'test_helper'
-
-# something wacky about our setup requires this here.  It seems to be either a) never requiring them or b) requiring them 1000 times otherwise
-# FactoryBot.find_definitions
 
 module StashEngine
   RSpec.describe CurationActivity do
-    # this is just a basic test to be sure FactoryBot works.  It likes to break a lot.
-
+        
+    include Mocks::RSolr
+    include Mocks::Stripe
+    
     before(:each) do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
+      mock_solr!
+      mock_stripe!
     end
 
     describe :factories do
