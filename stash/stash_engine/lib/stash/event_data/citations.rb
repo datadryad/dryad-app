@@ -4,7 +4,7 @@ require 'cgi'
 
 module Stash
   module EventData
-    class Citations
+    class Citations 
       include Stash::EventData
 
       attr_reader :doi

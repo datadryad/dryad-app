@@ -1,5 +1,8 @@
-require 'db_spec_helper'
 require 'byebug'
+
+###
+### TODO: Merge this code into the very similar class at stash_engine/spec/unit/models
+###
 
 module StashEngine
   describe CurationActivity do
@@ -98,35 +101,6 @@ module StashEngine
           @resource.update(publication_date: Date.today.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
           expect(ca).not_to receive(:update_solr)
-          ca.save
-        end
-
-      end
-
-      context :submit_to_datacite do
-
-        before(:each) do
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:orcid_invitation).and_return(true)
-        end
-
-        it 'calls submit_to_datacite when published' do
-          @resource.update(publication_date: Date.today.to_s)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
-          expect(ca).to receive(:submit_to_datacite)
-          ca.save
-        end
-
-        it 'calls submit_to_datacite when embargoed' do
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
-          expect(ca).to receive(:submit_to_datacite)
-          ca.save
-        end
-
-        it 'does not call submit_to_datacite if not published' do
-          @resource.update(publication_date: Date.today.to_s)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
-          expect(ca).not_to receive(:submit_to_datacite)
           ca.save
         end
 

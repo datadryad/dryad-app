@@ -1,4 +1,3 @@
-# require 'db_spec_helper'
 require 'ostruct'
 require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
@@ -53,9 +52,6 @@ module StashEngine
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
 
         # get rid of callbacks for adding one and testing
-        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
-        CurationActivity.skip_callback(:create, :after, :update_solr)
-        CurationActivity.skip_callback(:save, :after, :process_payment)
         @curation_activity1 = create(:curation_activity, resource: @resource)
         CurationActivity.set_callback(:create, :after, :submit_to_datacite)
       end
@@ -104,7 +100,6 @@ module StashEngine
         @resource = create(:resource, identifier_id: @identifier.id, user: @user)
 
         CurationActivity.skip_callback(:create, :after, :update_solr)
-        CurationActivity.skip_callback(:save, :after, :process_payment)
         allow_any_instance_of(CurationActivity).to receive(:should_update_doi?).and_return(true)
 
         logger = double(ActiveSupport::Logger)
