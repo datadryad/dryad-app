@@ -2,7 +2,6 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'byebug'
-require 'pp'
 
 # other classes for this
 require_relative 'submitted_reports'
@@ -36,11 +35,10 @@ if ENV['REPORT_IDS']
 end
 
 @json_files.each do |json_file|
-  basename = File.basename(json_file, '.json')
-  submitted_report = @submitted_reports.reports[basename]
-  if submitted_report.nil? || (submitted_report.pages < 200 && submitted_report.year_month > '2012-12') ||
-      (submitted_report.pages < 10 && submitted_report.year_month < '2013-01')
-    puts "adding or updating #{basename} with #{submitted_report&.pages || 'unsubmitted'} pages"
+  month_year = File.basename(json_file, '.json')
+  submitted_report = @submitted_reports.reports[month_year]
+  if Helper.needs_submission?(month_year: month_year, report_info: submitted_report)
+    puts "adding or updating #{month_year} with #{submitted_report&.pages || 'unsubmitted'} pages"
 
     report_id = (submitted_report.nil? ? nil : submitted_report.id)
     uploader = Uploader.new(report_id: report_id, file_name: json_file)
