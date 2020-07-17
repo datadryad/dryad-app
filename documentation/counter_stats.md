@@ -23,7 +23,7 @@ Problems:
   - Right now we are just saving reports to disk, calculating stats into our database through
   another script (from our own reports) and maybe submitting to DataCite occasionally.
 
-## Manual Interventions
+## Interventions
 
 - Because of slowness and bugs at the hub we stopped automatically submitting there and have
 lots of workarounds in place.
@@ -34,4 +34,11 @@ lots of workarounds in place.
   the stats for each dataset into the database (month by month).  I happens after we run stats every
   week.
 
+## The Counter Uploader tool
 
+We reworked the [counter-uploader](../stash/script/counter-uploader/readme.md) so that it can independently
+upload counter files outside of the Python tool.  (At least for the time being) the idea
+is that we'll process the counter files, populate numbers into our daatabase manually and
+then once a month we can upload any missing reports to DataCite.  The tool should be
+able to do that without requiring a lot of saved state information besides what it gets from
+querying DataCite and the files in the directory.
