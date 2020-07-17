@@ -138,7 +138,7 @@ RSpec.describe UtilityMethods do
     end
 
     it 'returns true if this report is on the force list' do
-      fl = ['2010-11', '2011-12', '2018-05', '2019-10']
+      fl = %w[2010-11 2011-12 2018-05 2019-10]
       result = UtilityMethods.needs_submission?(month_year: @month_year, report_directory: @report_dir, report_info: @report_info, force_list: fl)
       expect(result).to be(true)
     end
