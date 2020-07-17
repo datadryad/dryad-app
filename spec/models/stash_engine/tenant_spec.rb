@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'tmpdir'
 require 'fileutils'
 
@@ -41,7 +40,7 @@ module StashEngine
       expect(repo.username).to eq('stash_submitter')
       expect(repo.password).to eq('correct​horse​battery​staple')
       ident = tenant.identifier_service
-      expect(ident.prefix).to eq('10.5072')
+      expect(ident.shoulder).to eq('doi:10.5072/5555')
       expect(ident.account).to eq('DRYAD.CDL')
       expect(ident.password).to eq('***REMOVED***')
       expect(ident.sandbox).to eq(true)
