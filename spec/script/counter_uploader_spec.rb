@@ -1,10 +1,12 @@
 require_relative '../../stash/script/counter-uploader/submitted_reports'
 require_relative '../../stash/script/counter-uploader/uploader'
+require_relative '../../stash/script/counter-uploader/utility_methods'
 require 'webmock/rspec'
 require 'byebug'
 require 'digest'
 require 'zlib'
 require 'stringio'
+require 'ostruct'
 
 RSpec.describe SubmittedReports do
   before(:each) do
@@ -112,6 +114,51 @@ RSpec.describe Uploader do
       filepath = File.expand_path(File.join(__dir__, '../../stash/script/counter-uploader/tmp/fixed_large_report.json'))
       resp_id = @up.send_file(filepath)
       expect(resp_id).to eq('7788394xxx')
+    end
+  end
+end
+
+RSpec.describe UtilityMethods do
+  describe 'needs_submission?(month_year:, report_directory:, report_info:, force_list:)' do
+    before(:each) do
+      @month_year = '2010-11'
+      @report_dir =  File.expand_path(File.join(__dir__, '../fixtures'))
+      @report_info = OpenStruct.new(year_month: '2020-11', id: '3875xxe', pages: 1)
+      @force_list = []
+    end
+
+    it 'returns true if report_info is nil' do
+      result = UtilityMethods.needs_submission?(month_year: @month_year, report_directory: @report_dir, report_info: nil, force_list: [])
+      expect(result).to be(true)
+    end
+
+    it 'returns false if report has enough pages for its size' do
+      result = UtilityMethods.needs_submission?(month_year: @month_year, report_directory: @report_dir, report_info: @report_info, force_list: [])
+      expect(result).to be(false)
+    end
+
+    it 'returns true if this report is on the force list' do
+      fl = ['2010-11', '2011-12', '2018-05', '2019-10']
+      result = UtilityMethods.needs_submission?(month_year: @month_year, report_directory: @report_dir, report_info: @report_info, force_list: fl)
+      expect(result).to be(true)
+    end
+  end
+
+  describe 'check_env_variables' do
+    it "gives message and exits if ENV['TOKEN'] and ENV['REPORT_DIR'] are nil" do
+      expect { UtilityMethods.check_env_variables }.to raise_error(SystemExit)
+    end
+  end
+
+  describe 'force_submission_list' do
+    it 'returns [] for empty env variable' do
+      expect(UtilityMethods.force_submission_list).to eq([])
+    end
+
+    it 'returns array for environment variable of REPORT_DIR' do
+      ENV['FORCE_SUBMISSION'] = '2018-07, 2019-12'
+      expect(UtilityMethods.force_submission_list).to eq(%w[2018-07 2019-12])
+      ENV['FORCE_SUBMISSION'] = ''
     end
   end
 end

@@ -15,16 +15,6 @@ class ReportInfo
   end
 end
 
-module Helper
-  def self.needs_submission?(month_year:, report_info: nil)
-    # these seem like low or non-existent numbers for these reporting periods
-    return true if report_info.nil? || (report_info.pages < 200 && report_info.year_month > '2012-12') ||
-        (report_info.pages < 10 && report_info.year_month < '2013-01')
-
-
-  end
-end
-
 class SubmittedReports
   attr_reader :reports
 
