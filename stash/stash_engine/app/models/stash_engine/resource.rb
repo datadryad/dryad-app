@@ -492,7 +492,7 @@ module StashEngine
     private :increment_version!
 
     def previous_resource
-      StashEngine::Resource.where(identifier_id: identifier_id).where("id < ?", id).order(id: :desc).first
+      StashEngine::Resource.where(identifier_id: identifier_id).where('id < ?', id).order(id: :desc).first
     end
 
     # ------------------------------------------------------------
