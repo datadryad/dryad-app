@@ -320,8 +320,42 @@ module StashEngine
         )
         expect(@upload2.s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
       end
-
     end
 
+    describe '#in_previous_version' do
+      before(:each) do
+        @files = [
+            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
+            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+        ]
+
+        @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
+        @resource2.ensure_identifier('10.123/456')
+        FileUtils.mkdir_p('tmp')
+        @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
+        @files2 = [
+            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
+            create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
+            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+        ]
+
+        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
+        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
+      end
+
+      it 'returns false for version 1' do
+        expect(@files[0].in_previous_version?).to eq(false)
+        expect(@files[1].in_previous_version?).to eq(false)
+      end
+
+      it 'returns true for a file that existed previously' do
+        expect(@files2[0].in_previous_version?).to eq(true)
+        expect(@files2[2].in_previous_version?).to eq(true)
+      end
+
+      it "returns false for file that didn't exist previously" do
+        expect(@files2[1].in_previous_version?).to eq(false)
+      end
+    end
   end
 end
