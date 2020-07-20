@@ -51,7 +51,11 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 
 -  California State University, East Bay
 -  Chan Zuckerberg Initiative
+-  Claremont Graduate University
+-  Claremont McKenna College
 -  Columbia University
+-  Harvey Mudd College
+-  Keck Graduate Institute
 -  King Abdullah University of Science and Technology
 -  Lawrence Berkeley National Lab
 -  Montana State University
@@ -59,7 +63,11 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  North Carolina State University
 -  Northern State University
 -  The Ohio State University
+-  Pitzer College
+-  Pomona College
+-  Scripps College
 -  Stanford University
+-  Texas Tech University
 -  University of California, California Digital Library
 -  UC Berkeley
 -  UC Davis
