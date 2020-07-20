@@ -1399,5 +1399,29 @@ module StashEngine
         @resource.send_to_zenodo
       end
     end
+
+    describe '#previous_resource' do
+      before(:each) do
+        @identifier2 = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+
+        @resource1 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        @other_resource1 = Resource.create(user_id: user.id, identifier_id: @identifier2.id)
+        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        @resource3 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+      end
+
+      it 'has no previous resource for version 1' do
+        expect(@resource1.previous_resource).to be_nil
+      end
+
+      it 'shows version 1 is previous resource for version 2' do
+        expect(@resource2.previous_resource).to eq(@resource1)
+      end
+
+      it 'shows version 2 as previous resource for version 3' do
+        expect(@resource3.previous_resource).to eq(@resource2)
+      end
+    end
   end
 end
