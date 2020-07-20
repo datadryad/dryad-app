@@ -116,12 +116,20 @@ module StashEngine
     describe '#smart_destroy!' do
 
       before(:each) do
+        @files = [
+            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
+            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+        ]
+
+
+        @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
+        @resource2.ensure_identifier('10.123/456')
         FileUtils.mkdir_p('tmp')
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
-        @files = [
-          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource.id)
+        @files2 = [
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
         ]
 
         # I tried just modifying one instance but it doesn't work from the internal method if I do that.
@@ -130,34 +138,34 @@ module StashEngine
 
       it 'deletes a file that was just created, from the database and file system' do
         expect(::File.exist?(@testfile)).to eq(true)
-        @files[1].smart_destroy!
+        @files2[1].smart_destroy!
         expect(::File.exist?(::File.expand_path(@testfile))).to eq(false)
-        @resource.reload
-        expect(@resource.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
+        @resource2.reload
+        expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
       it "deletes from database even if the filesystem file doesn't exist" do
         FileUtils.rm_rf('tmp')
-        @files[1].smart_destroy!
-        @resource.reload
-        expect(@resource.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
+        @files2[1].smart_destroy!
+        @resource2.reload
+        expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
       it "doesn't add another Merritt deletion if one already exists" do
-        @files[2].smart_destroy!
-        expect(@resource.file_uploads.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
+        @files2[2].smart_destroy!
+        expect(@resource2.file_uploads.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
       end
 
       it 'gets rid of extra deletions for the same files' do
-        @files << create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource.id)
-        @files[2].smart_destroy!
-        expect(@resource.file_uploads.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
+        @files2 << create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+        @files2[2].smart_destroy!
+        expect(@resource2.file_uploads.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
       end
 
       it 'removes a copied file and only keeps deletion if it is removed' do
-        @files[0].smart_destroy!
-        expect(@resource.file_uploads.where(upload_file_name: @files[0].upload_file_name).count).to eq(1)
-        expect(@resource.file_uploads.where(upload_file_name: @files[0].upload_file_name).first.file_state).to eq('deleted')
+        @files2[0].smart_destroy!
+        expect(@resource2.file_uploads.where(upload_file_name: @files2[0].upload_file_name).count).to eq(1)
+        expect(@resource2.file_uploads.where(upload_file_name: @files2[0].upload_file_name).first.file_state).to eq('deleted')
       end
     end
 
