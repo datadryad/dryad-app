@@ -138,7 +138,7 @@ module StashEngine
 
       if in_previous_version?
         # destroy any others of this filename in this resource
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where("id <> ?", id).destroy_all
+        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
         # and mark to remove from merritt
         update(file_state: 'deleted')
       else

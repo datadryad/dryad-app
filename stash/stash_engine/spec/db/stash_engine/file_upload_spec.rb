@@ -117,10 +117,9 @@ module StashEngine
 
       before(:each) do
         @files = [
-            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
-            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
         ]
-
 
         @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
         @resource2.ensure_identifier('10.123/456')
