@@ -1402,7 +1402,7 @@ module StashEngine
 
     describe '#previous_resource' do
       before(:each) do
-        @identifier2 = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        @identifier2 = Identifier.create(identifier: 'cat/frog', identifier_type: 'DOI')
         @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
 
         @resource1 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
