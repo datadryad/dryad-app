@@ -325,8 +325,8 @@ module StashEngine
     describe '#in_previous_version' do
       before(:each) do
         @files = [
-            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
-            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
         ]
 
         @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
@@ -334,9 +334,9 @@ module StashEngine
         FileUtils.mkdir_p('tmp')
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files2 = [
-            create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
-            create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
-            create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
         ]
 
         # I tried just modifying one instance but it doesn't work from the internal method if I do that.
