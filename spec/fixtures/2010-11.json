@@ -1,0 +1,88 @@
+{
+  "report-header": {
+    "report-name": "dataset report",
+    "report-id": "DSR",
+    "release": "rd1",
+    "created": "2010-11-30",
+    "created-by": "Dryad",
+    "report-attributes": [],
+    "reporting-period": {
+      "begin-date": "2010-11-01",
+      "end-date": "2010-11-30"
+    },
+    "report-filters": [],
+    "exceptions": [
+      {}
+    ]
+  },
+  "report-datasets": [
+    {
+      "dataset-title": "Data from: Retropod trombones",
+      "dataset-id": [
+        {
+          "type": "doi",
+          "value": "10.5061/dryad.6638373"
+        }
+      ],
+      "dataset-contributors": [
+        {
+          "type": "name",
+          "value": "Gurbis, John"
+        },
+        {
+          "type": "name",
+          "value": "Nussbaum, Carolyn"
+        }
+      ],
+      "dataset-dates": [
+        {
+          "type": "pub-date",
+          "value": "2010-08-10"
+        }
+      ],
+      "platform": "Dryad",
+      "publisher": "Dryad Digital Repository",
+      "publisher-id": [
+        {
+          "type": "grid",
+          "value": "466587.e"
+        }
+      ],
+      "data-type": "dataset",
+      "yop": "2010",
+      "uri": "https://datadryad.org/resource/doi:10.5061/dryad.1844",
+      "performance": [
+        {
+          "period": {
+            "begin-date": "2010-11-01",
+            "end-date": "2010-11-30"
+          },
+          "instance": [
+            {
+              "access-method": "regular",
+              "metric-type": "total-dataset-investigations",
+              "count": 14,
+              "country-counts": {
+                "fi": 2,
+                "jp": 2,
+                "kr": 4,
+                "us": 4
+              }
+            },
+            {
+              "access-method": "regular",
+              "metric-type": "unique-dataset-investigations",
+              "count": 6,
+              "country-counts": {
+                "fi": 1,
+                "jp": 1,
+                "kr": 2,
+                "us": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
