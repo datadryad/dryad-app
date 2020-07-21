@@ -83,7 +83,6 @@ PATH
       rest-client
       rinku
       rsolr
-      sortable-table
       stripe (~> 4.16.0)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
@@ -743,9 +742,6 @@ GEM
       retriable
       ruby-progressbar
       rubyzip
-    sortable-table (0.1.1)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)

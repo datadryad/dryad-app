@@ -12,13 +12,7 @@ module StashEngine
 
       included do
 
-        def sort_column_definition(id, table, cols)
-          SortableTable::SortColumnCustomDefinition.new(
-            id,
-            asc: cols.map { |c| "#{table}.#{c} asc" }.join(', '),
-            desc: cols.map { |c| "#{table}.#{c} desc" }.join(', ')
-          )
-        end
+        ### TODO -- remove this class!
 
       end
 

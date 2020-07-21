@@ -22,7 +22,9 @@ module StashEngine
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 
+      @ryantemp = "params: #{ctr_params}"
       @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: ctr_params, tenant: tenant_limit)
+      Rails.logger.debug("RYANTEMP #{@datasets.size}")
 
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
@@ -115,22 +117,11 @@ module StashEngine
     private
 
     def ctr_params
-      params.permit(:page_size, :show_all, :title, :status, :author_names, :identifier, :updated_at,
-                    :editor_name, :storage_size, :publication_date, :sort_column)
+      params.permit(:q, :sort, :direction, :tenant, :curation_status, :publication_name, :all_advanced)
     end
 
     def setup_ds_sorting
-      sort_table = SortableTable::SortTable.new(
-        [sort_column_definition('title', nil, %w[title]),
-         sort_column_definition('status', nil, %w[status]),
-         sort_column_definition('author_names', nil, %w[author_names]),
-         sort_column_definition('identifier', nil, %w[identifier]),
-         sort_column_definition('updated_at', nil, %w[updated_at]),
-         sort_column_definition('editor_name', nil, %w[editor_name]),
-         sort_column_definition('storage_size', nil, %w[storage_size]),
-         sort_column_definition('publication_date', nil, %w[publication_date])]
-      )
-      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
+      @sort_column = { column: 'title', direction: 'asc' }.to_ostruct
     end
 
     def setup_paging

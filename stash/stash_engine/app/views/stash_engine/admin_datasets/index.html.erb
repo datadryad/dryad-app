@@ -4,7 +4,9 @@
 <%= render partial: 'admin_head', locals: { all_stats: @all_stats, seven_day_stats: @seven_day_stats } %>
 
 <div>
-  <h2>Datasets</h2>
+    <h2>Datasets</h2>
+    <p>RYANTEMP: <%= @ryantemp %></p>
+    <p>RYANTEMP dataset size: <%= @datasets.size %></p>
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
 
@@ -15,7 +17,7 @@
   </div>
 
   <div>
-    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.merge(format: :csv) %>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.permit(:page, :page_size).merge(format: :csv) %>
   </div>
 
   <p>

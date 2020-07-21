@@ -105,8 +105,6 @@ module StashEngine
         # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
         # tenant is only set for admins (not superusers).
         def where(params:, tenant: nil)
-          return [] unless params.is_a?(Hash)
-
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
