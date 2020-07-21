@@ -1,6 +1,6 @@
 <h1>Our Governance</h1>
 
-<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong><a href="/docs/DryadBylaws.pdf">Bylaws</a></strong>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
+<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong><a href="/docs/DryadBylaws.pdf">Bylaws</a></strong>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p> Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of Conduct</a> applies for all Dryad community spaces.
 
 <h2>Current Board Members<a name="board"></h2>
 
@@ -19,10 +19,12 @@
   <p><strong>Wolfram Horstmann (Class of 2021)</strong> has been Director of Göttingen State and University Library since 2014. Prior to that, he was Associate Director at the Bodleian Libraries of the University of Oxford, UK and CIO at Bielefeld University, Germany. He is Professor at the Information School of the Humboldt University in Berlin, teaching Electronic Publishing, Open Access and Open Science. He is biologist by training and worked on the epistemology of simulations for his doctoral thesis. <a href="https://www.sub.uni-goettingen.de/en/contact/staff-a-z/staff-details/person/wolfram-horstmann/" target="_blank" title="Read more about Wolfram (opens in a new window)">Read more details.</a></p>
 </div>
 
+<!--
 <div class="bio">
   <img src="/images/lin.jpg" alt="Jennifer Lin" title="Jennifer Lin">
   <p><strong>Jennifer Lin (Class of 2022)</strong> has fifteen years’ experience in product development, project management, community outreach, and change management within scholarly communications, education, and the public sector. She is currently Director of Product Management at Crossref, a scholarly infrastructure provider. She previously worked for PLOS where she oversaw product strategy and development for their data program, article-level metrics initiative, and open assessment activities. She worked to promote data sharing through data repositories and the development of tools to make data discoverable and re-usable. Jennifer earned her PhD at Johns Hopkins University. See Jennifer’s <a href="http://orcid.org/0000-0002-9680-2328" target="_blank" title="Jennifer's ORCiD Profile (opens in a new window)">ORCiD profile.</a></p>
 </div>
+-->
 
 <div class="bio">
   <img src="/images/mangiafico.jpg" alt="Paolo Mangiafico" title="Paolo Mangiafico">
@@ -49,10 +51,12 @@
   <p><strong>Naomi Penfold (Class of 2022)</strong> is Community Manager at eLife, a non-profit organisation with the mission to help scientists accelerate discovery by operating a platform for research communication that encourages and recognises the most responsible behaviours in science. She supports early-career researchers to improve their work environment, and advocates for the use of preprints as PREreview Advisory Committee member and previously with ASAPbio (2018-2019). She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018, 2020-), and a current focus on scientific community engagement as a fellow of the CSCCE Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi: <a href="https://npscience.github.io/about-me.html" target="_blank" title="Naomi's profile">https://npscience.github.io/about-me.html</a>.</p>
 </div>
 
+<!--
 <div class="bio">
   <img src="/images/strasser.jpg" alt="Carly Strasser" title="Carly Strasser">
   <p><strong>Carly Strasser (Class of 2020)</strong> Carly is the Director of Academic Alliances and Data Strategy at the Fred Hutchinson Cancer Research Center, where she develops partnerships with academic and non-profit research organizations in support of Hutch Data Commonwealth initiatives. Carly was previously a program officer at the Gordon and Betty Moore Foundation, focused on funding and promoting academic data science. While at Moore, Carly led the implementation of an open access policy for grantees. Previously, Carly also worked as Director of Strategic Development for the Collaborative Knowledge Foundation and was a Research Data Specialist at the California Digital Library where she helped develop and promote CDL’s researcher-focused services, and worked to encourage data sharing and good data management practices by researchers. Carly received a B.A. in Marine Science and a Ph.D. in Biological Oceanography from the MIT/WHOI Joint Program. More at <a href="https://strasser.github.io/" target="_blank" title="Read more about Carly (opens in a new window)">carlystrasser.net.</a></p>
 </div>
+-->
 
 <div class="bio">
   <img src="/images/sutton.jpg" alt="Caroline Sutton" title="Caroline Sutton">
@@ -74,17 +78,6 @@
   <p><strong>Günter Waibel (Ex Officio)</strong> is Associate Vice Provost and Executive Director of California Digital Library, one of the world's largest digital research libraries. Collaborating with stakeholders across the UC system and beyond, Waibel is advancing efforts to build and support new models of scholarly communication; provide leadership, strategic planning, management and decision making for the CDL; and foster strategic partnerships at the state, national, and international levels. Waibel brings extensive experience in the digital library and broader cultural heritage communities and is well-known for his work in promoting cross-domain collaboration. In his previous position as the Director of the Digitization Program Office at the Smithsonian Institution, Waibel oversaw the strategic plan for creating a digital Smithsonian out of the institution’s 19 museums and 9 research centers. More at <a href="http://www.linkedin.com/in/waibel" target="_blank" title="Günter's linked in profile (opens in a new window)">http://www.linkedin.com/in/waibel.</a></p>
 </div>
 
-<h2>Funding</h2>
-
-<p>Dryad gratefully acknowledges support from the following organizations. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the project staff and do not necessarily reflect the views of the funders.</p>
-
-<ul>
-<li>"<a href="http://wiki.datadryad.org/NSF_grant_2016-2019">Enabling the preservation of research data underlying scientific findings through the Dryad Digital Repository</a>", from the U.S. National Science Foundation, 2016-2019. </li>
-<li>"<a href="http://project-thor.eu/">Technical and Human Infrastructure for Open Research (THOR)</a>", a project funded by the European Commission under the Horizon 2020 programme, 2015-2018.</li>
-<li><a href="https://cos.io/pr/2015-09-24/">Dryad-Open Science Framework integration grant</a>, 2015.</li>
-</ul>
-
-<p>See <a href="http://wiki.datadryad.org/Grants">past awards</a>.</p>
 
 <h2>Annual Reports</h2>
 
@@ -92,24 +85,13 @@
 
 <ul>
 <li>
-<a href="/docs/DryadAnnualReport2018.pdf">Annual report for 2018</a>
+<a href="https://github.com/datadryad/governance/blob/main/annual-reports/DryadAnnualReport2019.pdf">Annual report for 2019</a>
 </li>
 <li>
-<a href="/docs/DryadAnnualReport2017.pdf">Annual report for 2017</a>
-</li>
-<li>
-<a href="/docs/DryadAnnualReport2016.pdf">Annual report for 2016</a>
-</li>
-<li>
-<a href="/docs/DryadAnnualReport2015.pdf">Annual report for 2015</a>
-</li>
-<li>
-<a href="/docs/DryadAnnualReport2014.pdf">Annual report for 2014</a>
-</li>
-<li>
-<a href="/docs/DryadAnnualReport2013.pdf">Annual report for 2013</a>
-</li>
-<li>
-<a href="/docs/DryadAnnualReport2012.pdf">Annual report for 2012</a>
+<a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">Previous years' Annual reports</a>
 </li>
 </ul>
+
+<h2>Board Information</h2>
+
+Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
