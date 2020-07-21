@@ -1,6 +1,5 @@
 require 'kaminari'
 require 'wicked_pdf'
-require 'sortable-table' # this is required here rather than in controller, otherwise helpers don't work :-(
 require 'ckeditor'
 require_relative('counter_log')
 
