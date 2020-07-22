@@ -5,11 +5,10 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
 
     include SharedSecurityController
-    include StashEngine::Concerns::Sortable
+    helper StashEngine::SortableTableHelper
 
     before_action :require_admin
     before_action :setup_paging, only: [:index]
-    before_action :setup_ds_sorting, only: [:index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
@@ -21,11 +20,7 @@ module StashEngine
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
-
-      @ryantemp = "params: #{ctr_params}"
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: ctr_params, tenant: tenant_limit)
-      Rails.logger.debug("RYANTEMP #{@datasets.size}")
-
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params, tenant: tenant_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
@@ -115,14 +110,6 @@ module StashEngine
     end
 
     private
-
-    def ctr_params
-      params.permit(:q, :sort, :direction, :tenant, :curation_status, :publication_name, :all_advanced)
-    end
-
-    def setup_ds_sorting
-      @sort_column = { column: 'title', direction: 'asc' }.to_ostruct
-    end
 
     def setup_paging
       if request.format.csv?

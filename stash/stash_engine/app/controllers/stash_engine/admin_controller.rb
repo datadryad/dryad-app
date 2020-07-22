@@ -5,7 +5,6 @@ module StashEngine
   class AdminController < ApplicationController # rubocop:disable Metrics/ClassLength
 
     include SharedSecurityController
-    include StashEngine::Concerns::Sortable
 
     before_action :load_user, only: %i[popup set_role user_dashboard]
     before_action :require_admin
