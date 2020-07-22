@@ -4,8 +4,6 @@ require 'active_support/inflector'
 require 'byebug'
 require 'ostruct'
 # require_relative '../../main.rb'
-
-# rubocop:disable Metrics/ClassLength
 RSpec.describe 'main' do
   before(:each) do
     ENV['STASH_ENV'] = 'test'
@@ -16,8 +14,8 @@ RSpec.describe 'main' do
     file_contents = File.open(File.join(__dir__, '..', 'data', 'oai-example.xml')).read
 
     # stub the request for the oai-pmh feed
-    stub_request(:get, %r{mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2}).
-        to_return(status: 200, body: file_contents , headers: {})
+    stub_request(:get, %r{mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2})
+      .to_return(status: 200, body: file_contents, headers: {})
 
     @main_path = File.expand_path(File.join(__dir__, '..', '..', 'main.rb'))
     @json_state_path = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.json'))
@@ -30,7 +28,7 @@ RSpec.describe 'main' do
     File.delete(@pid_path) if File.exist?(@pid_path)
 
     # be sure things for these classes start fresh and are not having state carried over
-    reload_classes([:CollectionSet, :Config, :DatasetRecord, :State])
+    reload_classes(%i[CollectionSet Config DatasetRecord State])
     ENV['STASH_ENV'] = nil
     ENV['NOTIFIER_OUTPUT'] = nil
   end
