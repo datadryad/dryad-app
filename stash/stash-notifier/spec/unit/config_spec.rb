@@ -33,7 +33,7 @@ class ConfigSpec
 
       it 'sets logger formatter to UTC' do
         Config.initialize(environment: 'test', logger_std_out: true)
-        time_str = Time.new.utc.iso8601[0..12]  # checks for correct day/hour
+        time_str = Time.new.utc.iso8601[0..12] # checks for correct day/hour
         # standard .to_stdout didn't work here, I guess logger is disconnected somehow
         expect { Config.logger.info('oh, hai') }.to output(/#{time_str}/).to_stdout_from_any_process
       end
