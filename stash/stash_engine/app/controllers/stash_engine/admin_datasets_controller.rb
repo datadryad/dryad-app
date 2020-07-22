@@ -5,7 +5,7 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
 
     include SharedSecurityController
-    helper StashEngine::SortableTableHelper
+    helper SortableTableHelper
 
     before_action :require_admin
     before_action :setup_paging, only: [:index]
@@ -92,12 +92,9 @@ module StashEngine
 
     # show curation activities for this item
     def activity_log
-      params[:sort] = 'created_at' if params[:sort].blank?
-      params[:direction] = 'asc' if params[:direction].blank?
-      sort_order = "#{params[:sort]} #{params[:direction]}"
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(sort_order, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 

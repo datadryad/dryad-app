@@ -7,7 +7,6 @@ module StashEngine
     HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
     include SharedSecurityController
-    # include StashEngine::Concerns::Sortable
 
     before_action :require_superuser
 
