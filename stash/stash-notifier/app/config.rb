@@ -21,6 +21,11 @@ module Config
                else
                  Logger.new(File.join(proj_root, 'log', "#{environment}.log"))
                end
+    @@logger.formatter = proc do |severity, datetime, progname, msg|
+      "#{datetime}: #{msg}\n"
+    end
+
+    SeverityID, [DateTime #pid] SeverityLabel -- ProgName: message
 
     @@update_base_url = @@settings[:update_base_url]
     @@oai_base_url = @@settings[:oai_base_url]
