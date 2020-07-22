@@ -14,7 +14,7 @@ module StashEngine
     end
 
     # Creates the clickable column heading for a sortable column
-    def sortable_column_head(sort_field:, title:, params:)
+    def sortable_column_head(sort_field:, title:)
       link_to(
         title,
         sort_link_url(sort_field),
@@ -22,7 +22,7 @@ module StashEngine
       )
     end
 
-    # Passthrough for HTTP parameters that allowed on pages with sortable tables
+    # Passthrough for query parameters that are allowed on pages with sortable tables
     def sortable_table_params
       params.permit(:q, :sort, :direction, :page, :page_size, :show_all,
                     :tenant, :curation_status, :publication_name, :all_advanced)
@@ -41,8 +41,6 @@ module StashEngine
                                  end
 
       base_url = url_for(query_params)
-      Rails.logger.debug("##### query_params #{query_params}")
-      Rails.logger.debug("##### base_url #{base_url}")
       sort_url = URI(base_url)
       sort_url.to_s
     end

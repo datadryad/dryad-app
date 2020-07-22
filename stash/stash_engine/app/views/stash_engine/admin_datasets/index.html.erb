@@ -16,7 +16,7 @@
   </div>
 
   <div>
-    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.permit(:page, :page_size).merge(format: :csv) %>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', sortable_table_params.merge(format: :csv) %>
   </div>
 
   <p>
