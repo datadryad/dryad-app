@@ -37,53 +37,5 @@ module StashEngine
       obj.class.to_s.split('::').last.downcase
     end
 
-    ##### TODO -- move the below methods into a SortableTableHelper
-
-    # Display an indicator on the column that is currently sorted
-    def sort_display(col)
-      return unless col == params[:sort]
-
-      if params[:direction] == 'asc'
-        'c-admin-table__sort-asc'
-      else
-        'c-admin-table__sort-desc'
-      end
-    end
-
-    # Creates the clickable column heading for a sortable column
-    def sort_by(sort_field, title: nil, current_column: nil)
-      link_to(
-        title,
-        sort_link_url(sort_field),
-        class: params[:sort] == sort_field ? "current #{params[:direction]}" : nil
-      )
-    end
-
-    # Returns the sort url for a given sort_field.
-    def sort_link_url(sort_field)
-      query_params = {}
-      query_params[:sort] = sort_field
-      query_params[:direction] = if params[:sort] == sort_field
-                                   switch_direction(params[:direction])
-                                 else
-                                   params[:direction] || 'asc'
-                                 end
-      url_params = query_params.merge(
-        controller: params[:controller],
-        action: params[:action],
-        page: params[:page]
-      )
-      base_url = url_for(url_params)
-      Rails.logger.debug("##### query_params #{query_params}")
-      Rails.logger.debug("##### url_params #{url_params}")
-      Rails.logger.debug("##### base_url #{base_url}")
-      sort_url = URI(base_url)
-      sort_url.to_s
-    end
-
-    def switch_direction(dir)
-      dir.downcase == 'asc' ? 'desc' : 'asc'
-    end
-
   end
 end

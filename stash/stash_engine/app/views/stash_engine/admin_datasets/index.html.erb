@@ -2,11 +2,10 @@
 <h1 class="o-heading__level1">Admin Dashboard</h1>
 
 <%= render partial: 'admin_head', locals: { all_stats: @all_stats, seven_day_stats: @seven_day_stats } %>
-
+ 
 <div>
     <h2>Datasets</h2>
-    <p>RYANTEMP: <%= @ryantemp %></p>
-    <p>RYANTEMP dataset size: <%= @datasets.size %></p>
+
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
 
