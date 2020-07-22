@@ -25,6 +25,7 @@ begin
   # get records for each set and time range
   State.sets.each do |set|
     begin
+      Config.logger.info("trying #{set.name}")
       set.retry_errored_dryad_notifications
       set.notify_dryad
 

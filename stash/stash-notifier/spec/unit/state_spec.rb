@@ -1,4 +1,5 @@
 Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+# force reload of State because of changes
 require 'byebug'
 require 'ostruct'
 require 'fileutils'
@@ -14,16 +15,20 @@ class StateSpec
       allow(logger).to receive(:error)
       allow(Config).to receive(:logger).and_return(logger)
 
-      allow(Config).to receive(:sets).and_return(['noogie'])
+      allow(Config).to receive(:sets).and_return(['test1'])
     end
 
     describe '#ensure_statefile' do
-      it 'leaves statefile alone if exists' do
-        my_file = File.join(__dir__, '..', '..', 'state', 'test.json')
+      it 'leaves original statefile entries intact and just adds' do
+        original_file = File.expand_path(File.join(__dir__, '..', 'data', 'statefile-example.json'))
+        my_file = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.json'))
         File.delete(my_file) if File.exist?(my_file)
-        FileUtils.cp(File.join(__dir__, '..', 'data', 'statefile-example.json'), my_file)
+        FileUtils.cp(original_file, my_file)
         State.ensure_statefile
-        expect(File.size(my_file)).to eql(103)
+        my_file_json = JSON.parse(File.read(my_file))
+        original_file_json = JSON.parse(File.read(original_file))
+        expect(my_file_json.keys).to include(original_file_json.keys.first)
+        expect(my_file_json['noogie']).to eq(original_file_json['noogie'])
       end
 
       it "creates a statefile if it doesn't exist" do
@@ -72,7 +77,7 @@ class StateSpec
       it 'serializes the set objects to a hash' do
         File.delete(State.statefile_path) if File.exist?(State.statefile_path)
         State.ensure_statefile
-        expect(State.sets_serialized_to_hash).to eql('noogie' => { last_retrieved: '1970-01-01T00:00:00Z', retry_status_update: [] })
+        expect(State.sets_serialized_to_hash).to eql('test1' => { last_retrieved: '1970-01-01T00:00:00Z', retry_status_update: [] })
       end
     end
 
@@ -82,7 +87,7 @@ class StateSpec
         State.ensure_statefile
         State.save_sets_state
         out_from_load = State.load_state_as_hash
-        expect(out_from_load).to eql('noogie' => { 'last_retrieved' => '1970-01-01T00:00:00Z', 'retry_status_update' => [] })
+        expect(out_from_load).to eql('test1' => { 'last_retrieved' => '1970-01-01T00:00:00Z', 'retry_status_update' => [] })
       end
     end
 
