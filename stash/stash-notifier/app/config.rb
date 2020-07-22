@@ -21,11 +21,12 @@ module Config
                else
                  Logger.new(File.join(proj_root, 'log', "#{environment}.log"))
                end
-    @@logger.formatter = proc do |severity, datetime, progname, msg|
-      "#{datetime}: #{msg}\n"
+    # this is an example from the docs for escaping sensitive info, but it's simply changing the time to be UTC
+    @@original_formatter = Logger::Formatter.new
+    @@logger.formatter = proc { |severity, datetime, progname, msg|
+      @@original_formatter.call(severity, datetime.utc, progname, msg.dump)
+    }
     end
-
-    SeverityID, [DateTime #pid] SeverityLabel -- ProgName: message
 
     @@update_base_url = @@settings[:update_base_url]
     @@oai_base_url = @@settings[:oai_base_url]

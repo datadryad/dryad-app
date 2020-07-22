@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+# This keeps the buffer from waiting to output and should synchronize output so it is immediately flushed.
+# I hope this also works with the logger stuff, though I don't see any reason why it wouldn't.
+STDOUT.sync = true
+
 Dir.chdir(__dir__) # gets bundler.require(:default) working from any directory
 
 require 'rubygems'
