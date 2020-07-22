@@ -26,7 +26,6 @@ module Config
     @@logger.formatter = proc { |severity, datetime, progname, msg|
       @@original_formatter.call(severity, datetime.utc, progname, msg.dump)
     }
-    end
 
     @@update_base_url = @@settings[:update_base_url]
     @@oai_base_url = @@settings[:oai_base_url]
