@@ -4,6 +4,8 @@
 module StashEngine
   class StatusDashboardController < ApplicationController
 
+    include SharedController
+    
     def show
       @main_documentation = 'https://confluence.ucop.edu/display/Stash/Dryad+Operations'
       @managed_dependencies = StashEngine::ExternalDependency.where(internally_managed: true).order(:name)
