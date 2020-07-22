@@ -92,12 +92,12 @@ module StashEngine
 
     # show curation activities for this item
     def activity_log
+      params[:sort] = 'created_at' if params[:sort].blank?
+      params[:direction] = 'asc' if params[:direction].blank?
+      sort_order = "#{params[:sort]} #{params[:direction]}"
       @identifier = Identifier.find(params[:id])
-      created_at = SortableTable::SortColumnDefinition.new('created_at')
-      sort_table = SortableTable::SortTable.new([created_at])
-      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
       resource_ids = @identifier.resources.collect(&:id)
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(@sort_column.order, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(sort_order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
