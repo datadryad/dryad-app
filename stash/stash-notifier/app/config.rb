@@ -32,5 +32,8 @@ module Config
     @@sets = @@settings[:sets]
   end
 
+  # why travis thinks this method is private, IDK
+  public_class_method :initialize
+
 end
 # rubocop:enable Style/ClassVars
