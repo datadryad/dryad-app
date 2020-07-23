@@ -110,13 +110,13 @@ module StashApi
           StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
           redirect_to @status_hash[:url]
         elsif @status_hash[:status] == 202
-          render status: 202, text: 'The version of the dataset is being assembled. ' \
+          render status: 202, plain: 'The version of the dataset is being assembled. ' \
           "Check back in around #{time_ago_in_words(res.download_token.available + 30.seconds)} and it should be ready to download."
         else
-          render status: 404, text: 'Not found'
+          render status: 404, plain: 'Not found'
         end
       else
-        render text: 'download for this version of the dataset is unavailable', status: 404
+        render plain: 'download for this version of the dataset is unavailable', status: 404
       end
     end
 

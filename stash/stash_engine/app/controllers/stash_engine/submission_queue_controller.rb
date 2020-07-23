@@ -37,9 +37,7 @@ module StashEngine
 
       # Normally, refresh_table is called by javascript, and only the table is repopulated. However, when the sort order is changed, the
       # SortableTableHelper requests this method as text/html, and the entire page is rebuilt.
-      if request.format == "text/html"
-        render :index
-      end
+      render :index if request.format == 'text/html'
     end
     # rubocop:enable Metrics/AbcSize
 
