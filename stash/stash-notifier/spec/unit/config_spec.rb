@@ -1,5 +1,4 @@
 Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
-require 'byebug'
 require 'ostruct'
 
 class ConfigSpec
