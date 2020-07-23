@@ -73,7 +73,7 @@ module StashApi
         StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
         @file_presigned.download(file: @stash_file)
       else
-        render status: 404, text: 'Not found'
+        render status: 404, plain: 'Not found'
       end
     end
 

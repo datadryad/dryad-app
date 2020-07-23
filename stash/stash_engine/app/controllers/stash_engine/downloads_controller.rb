@@ -48,7 +48,7 @@ module StashEngine
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
       unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render status: 404, text: "404: Not found or invalid download\n"
+        render status: 404, plain: "404: Not found or invalid download\n"
         return
       end
 
@@ -107,7 +107,7 @@ module StashEngine
         CounterLogger.general_hit(request: request, file: file_upload)
         @file_presigned.download(file: file_upload)
       else
-        render status: 403, text: 'You are not authorized to download this file until it has been published.'
+        render status: 403, plain: 'You are not authorized to download this file until it has been published.'
       end
     end
 
@@ -119,13 +119,13 @@ module StashEngine
         log_counter_version
         redirect_to @status_hash[:url]
       elsif @status_hash[:status] == 202
-        render status: 202, text: 'The version of the dataset is being assembled. ' \
+        render status: 202, plain: 'The version of the dataset is being assembled. ' \
               "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
       elsif @status_hash[:status] == 408
         notify_download_timeout
-        render status: 408, text: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'
+        render status: 408, plain: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'
       else
-        render status: 404, text: 'Not found'
+        render status: 404, plain: 'Not found'
       end
     end
 
