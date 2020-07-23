@@ -1,12 +1,12 @@
 require 'webmock/rspec'
 require 'active_support/inflector'
-# Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
 require 'ostruct'
 # require_relative '../../main.rb'
 RSpec.describe 'main' do
   before(:each) do
     # be sure things for these classes start fresh and are not having state carried over and they are 'required'
-    reload_classes(%i[CollectionSet Config DatasetRecord State])
+    reload_classes(%i[Config CollectionSet DatasetRecord State])
     ENV['STASH_ENV'] = 'test'
     ENV['NOTIFIER_OUTPUT'] = 'stdout'
 
