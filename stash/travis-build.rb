@@ -203,3 +203,4 @@ unless failed_builds.empty?
   warn("The following projects failed to build: #{failed_builds.join(', ').red}")
   exit(1)
 end
+exit(0)
