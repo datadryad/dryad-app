@@ -5,7 +5,6 @@ require 'colorize'
 require 'pathname'
 require 'time'
 require 'fileutils'
-require 'byebug'
 
 # ########################################
 # Constants
