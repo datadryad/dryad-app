@@ -4,7 +4,6 @@ require 'bundler'
 require 'colorize'
 require 'pathname'
 require 'time'
-require 'fileutils'
 
 # ########################################
 # Constants
@@ -41,7 +40,7 @@ end
 # Helper methods
 
 def warn(msg)
-  msg.to_s.colorize(:red)
+  puts msg.to_s.colorize(:red)
 end
 
 def tmp_path
