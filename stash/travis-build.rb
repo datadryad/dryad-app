@@ -194,8 +194,6 @@ exit(0) if options[:bundle_only]
 # Build all projects
 build_all
 
-
-
 # ####################
 # Report results
 
