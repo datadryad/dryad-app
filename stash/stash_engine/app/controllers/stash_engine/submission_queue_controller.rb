@@ -7,16 +7,21 @@ module StashEngine
     HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
     include SharedSecurityController
+    helper SortableTableHelper
 
     before_action :require_superuser
 
     def index
-      # nothing just now
+      # When the page first loads, the index view lays out the basic framework, but the
+      # table starts empty, and it is immediatly populated by refresh_table. So there is
+      # no actual work to do in the index method.
     end
 
     # rubocop:disable Metrics/AbcSize
     def refresh_table
-      @queue_rows = RepoQueueState.latest_per_resource.where.not(state: 'completed').order(:hostname, :updated_at)
+      params[:sort] = 'updated_at' if params[:sort].blank?
+      Rails.logger.debug("XXXXXX #{params[:sort]} #{params[:direction]} --> #{helpers.sortable_table_order} XXXXXXX")
+      @queue_rows = RepoQueueState.latest_per_resource.where.not(state: 'completed').order(helpers.sortable_table_order)
       @queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued').count
       @server_held_count = RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down')
         .where(hostname: StashEngine.repository.class.hostname).count
@@ -29,6 +34,12 @@ module StashEngine
       @day_completed_submissions = RepoQueueState.latest_per_resource.where(state: 'completed').where('created_at > ?', Time.new.utc - 1.day).count
       @holding_submissions = File.exist?(HOLD_SUBMISSIONS_PATH)
       @executor = StashEngine.repository.executor
+
+      # Normally, refresh_table is called by javascript, and only the table is repopulated. However, when the sort order is changed, the
+      # SortableTableHelper requests this method as text/html, and the entire page is rebuilt.
+      if request.format == "text/html"
+        render :index
+      end
     end
     # rubocop:enable Metrics/AbcSize
 
