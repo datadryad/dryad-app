@@ -5,7 +5,7 @@ class ConfigSpec
   describe 'config' do
 
     before(:each) do
-      Config.initialize(environment: 'test')
+      Config.initializer(environment: 'test')
     end
 
     # :logger, :environment, :update_base_url, :oai_base_url, :sets
@@ -31,7 +31,7 @@ class ConfigSpec
       end
 
       it 'sets logger formatter to UTC' do
-        Config.initialize(environment: 'test', logger_std_out: true)
+        Config.initializer(environment: 'test', logger_std_out: true)
         time_str = Time.new.utc.iso8601[0..12] # checks for correct day/hour
         # standard .to_stdout didn't work here, I guess logger is disconnected somehow
         expect { Config.logger.info('oh, hai') }.to output(/#{time_str}/).to_stdout_from_any_process

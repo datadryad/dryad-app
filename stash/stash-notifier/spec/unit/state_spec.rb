@@ -7,7 +7,7 @@ class StateSpec
   describe 'state' do
 
     before(:each) do
-      Config.initialize(environment: 'test')
+      Config.initializer(environment: 'test')
 
       logger = double('logger')
       allow(logger).to receive(:info)
@@ -92,7 +92,7 @@ class StateSpec
 
     describe '#create_pid' do
       it 'saves a pid file' do
-        Config.initialize(environment: 'test')
+        Config.initializer(environment: 'test')
         pid_file = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'state', "#{Config.environment}.pid"))
         File.delete(pid_file) if File.exist?(pid_file)
         State.create_pid
@@ -102,7 +102,7 @@ class StateSpec
 
     describe '#remove_pid' do
       it 'removes the pid file' do
-        Config.initialize(environment: 'test')
+        Config.initializer(environment: 'test')
         pid_file = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'state', "#{Config.environment}.pid"))
         File.delete(pid_file) if File.exist?(pid_file)
         State.create_pid
