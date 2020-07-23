@@ -13,7 +13,7 @@ require 'active_support/core_ext/object/to_query'
 
 Bundler.require(:default)
 
-Config.initialize(environment: (ENV['STASH_ENV'] || 'development'), logger_std_out: ENV['NOTIFIER_OUTPUT'] == 'stdout')
+Config.initializer(environment: (ENV['STASH_ENV'] || 'development'), logger_std_out: ENV['NOTIFIER_OUTPUT'] == 'stdout')
 
 State.create_pid
 

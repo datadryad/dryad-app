@@ -10,7 +10,7 @@ require 'logger'
 module Config
 
   cattr_reader :logger, :environment, :update_base_url, :oai_base_url, :sets
-  def self.initialize(environment: 'development', logger_std_out: false)
+  def self.initializer(environment: 'development', logger_std_out: false)
     proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
     path = File.join(proj_root, 'config', 'notifier.yml')
     @@settings = ActiveSupport::HashWithIndifferentAccess.new(YAML.load_file(path)[environment])
@@ -31,9 +31,5 @@ module Config
     @@oai_base_url = @@settings[:oai_base_url]
     @@sets = @@settings[:sets]
   end
-
-  # why travis thinks this method is private, IDK
-  public_class_method :initialize
-
 end
 # rubocop:enable Style/ClassVars
