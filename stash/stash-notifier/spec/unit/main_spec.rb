@@ -5,6 +5,8 @@ require 'ostruct'
 # require_relative '../../main.rb'
 RSpec.describe 'main' do
   before(:each) do
+    # be sure things for these classes start fresh and are not having state carried over and they are 'required'
+    reload_classes(%i[CollectionSet Config DatasetRecord State])
     ENV['STASH_ENV'] = 'test'
     ENV['NOTIFIER_OUTPUT'] = 'stdout'
 
@@ -26,8 +28,6 @@ RSpec.describe 'main' do
     File.delete(@json_state_path) if File.exist?(@json_state_path)
     File.delete(@pid_path) if File.exist?(@pid_path)
 
-    # be sure things for these classes start fresh and are not having state carried over
-    reload_classes(%i[CollectionSet Config DatasetRecord State])
     ENV['STASH_ENV'] = nil
     ENV['NOTIFIER_OUTPUT'] = nil
   end
