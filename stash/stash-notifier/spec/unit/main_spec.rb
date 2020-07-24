@@ -39,6 +39,10 @@ RSpec.describe 'main' do
     end
   end
 
+  it 'is a decoy for travis which fails every time at first' do
+    expect( (load @main_path) && true ).to eq(true)
+  end
+
   it 'checks the OAI feed' do
     # Using the system command runs in separate process and it's
     # outside my control.  Whereas loading it executes it within the same process at the time it
