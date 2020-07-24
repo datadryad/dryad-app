@@ -78,7 +78,7 @@ want to run it.  (cp with the -r option.)
 3. Change to the stash-notifier directory and do "bundle install" to be sure all gems
 are installed.
 
-Really it doesn't need a bunch of other stuff.  It's a simple Ruby (2.4.x)
+Really it doesn't need a bunch of other stuff.  It's a simple Ruby (2.6.x)
 script and as long as Ruby and the Gems it needs are installed, it should be happy.
 
 ## What about saving state?
@@ -89,3 +89,35 @@ can copy them back in to a new deploy if you want.
 Even if you lose them, you can just run the script and it will check all
 items in the OAI-PMH feed.  If Dryad has already been notified that something
 has finished in Merritt then it takes no action.
+
+## Example of swapping out notifier for a new version of code
+
+```shell script
+cd apps
+
+# get the code and copy the code
+git clone git@github.com:CDL-Dryad/dryad-app.git
+mkdir stash-notifier2
+cp -r dryad-app/stash/stash-notifier/* stash-notifier2
+
+# bundle install
+cd stash-notifier2
+bundle install
+
+# copy the state
+cd state
+# wait until you get a copy without the pid file or delete it
+cp -v ~/apps/stash-notifier/state/* .
+
+cd ~/apps
+
+# wait for pid file not to exist and it's not running and swap it out
+ls stash-notifier/state
+mv stash-notifier stash-notifier-old; mv stash-notifier2 stash-notifier
+
+# monitor output of runs if you want to verify
+tail -f /dryad/apps/ui/shared/cron/logs/stash-notifier.log
+
+# remove your temporary repo clone
+rm -rf dryad-app
+```
