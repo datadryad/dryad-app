@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'byebug'
 require 'pry-remote'
 require_relative '../../responses/stash_engine/download_helpers'
