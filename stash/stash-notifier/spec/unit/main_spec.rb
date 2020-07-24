@@ -43,7 +43,7 @@ RSpec.describe 'main' do
     begin
       load @main_path
     rescue NoMethodError => e
-      puts "Travis is the only place this fails"
+      puts 'Travis is the only place this fails'
     end
     expect(true).to eq(true)
   end
