@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'byebug'
 
 describe 'download_tracking:cleanup', type: :task do

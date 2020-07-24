@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe StashEngine do
   it 'has a version' do

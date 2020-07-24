@@ -43,7 +43,7 @@ module StashEngine
       end
 
       it 'doesn\'t inject middleware when public_file_server.enabled is false' do
-        allow(config).to receive(:public_file_server).and_return({ enabled: true }.to_ostruct)
+        allow(config).to receive(:public_file_server).and_return({ enabled: false }.to_ostruct)
 
         initializers = Engine.initializers
         initializer = initializers.find { |init| init.name == 'static assets' }
