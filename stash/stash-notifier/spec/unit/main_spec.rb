@@ -42,7 +42,7 @@ RSpec.describe 'main' do
   it 'is a decoy for travis which fails every time, but fails nowhere else (macOs, Ubuntu)' do
     begin
       load @main_path
-    rescue NoMethodError => e
+    rescue NoMethodError
       puts 'Travis is the only place this fails'
     end
     expect(true).to eq(true)
