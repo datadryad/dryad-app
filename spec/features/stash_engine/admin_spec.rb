@@ -1,6 +1,6 @@
-require 'rails_helper'
 RSpec.feature 'Admin', type: :feature do
 
+  include Mocks::Datacite
   include Mocks::Stripe
   include Mocks::Ror
   include Mocks::RSolr
@@ -17,6 +17,7 @@ RSpec.feature 'Admin', type: :feature do
       mock_solr!
       mock_stripe!
       mock_ror!
+      mock_datacite!
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier)
       sign_in(@admin)
     end
