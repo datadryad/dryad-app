@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Stash
   module Repo
     describe ValidatingXMLBuilder do

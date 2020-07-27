@@ -1,5 +1,3 @@
-require 'spec_helper'
-require 'db_spec_helper'
 require 'ostruct'
 require 'byebug'
 require 'stash/link_out/pubmed_service'

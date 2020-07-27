@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'stash/download/base'
 require 'stash/streamer'
 require 'ostruct'
@@ -19,11 +18,13 @@ module Stash
         # need to hack in Rails.root because our test framework setup sucks
         rails_root = Dir.mktmpdir('rails_root')
         allow(Rails).to receive(:root).and_return(Pathname.new(rails_root))
-        @my_request = 'requesty'
+
+# double(Module)
+        @my_request = double
         allow(@my_request).to receive(:remote_ip).and_return('127.0.0.1')
         allow(@my_request).to receive(:user_agent).and_return('HorseBrowser 1.1')
 
-        @controller_context = 'blah'
+        @controller_context = double
         allow(@controller_context).to receive(:request).and_return(@my_request)
         @logger = ActiveSupport::Logger.new(STDOUT)
         allow(@controller_context).to receive(:logger).and_return(@logger)
@@ -31,7 +32,7 @@ module Stash
 
       it 'initializes with a controller context object' do
         item = Base.new(controller_context: @controller_context)
-        expect(item.cc).to eql('blah')
+        expect(item.cc).to eql(@controller_context)
       end
 
       describe 'send_headers(stream:, header_obj:, filename:)' do

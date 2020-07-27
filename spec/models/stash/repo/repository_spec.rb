@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'fileutils'
 require 'tmpdir'
 require 'concurrent'
@@ -34,10 +33,6 @@ module Stash
 
         immediate_executor = Concurrent::ImmediateExecutor.new
         allow(Concurrent).to receive(:global_io_executor).and_return(immediate_executor)
-
-        pool = double(ActiveRecord::ConnectionAdapters::ConnectionPool)
-        allow(ActiveRecord::Base).to receive(:connection_pool).and_return(pool)
-        allow(pool).to receive(:with_connection).and_yield
 
         allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
 
