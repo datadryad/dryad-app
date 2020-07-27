@@ -1,6 +1,4 @@
-require 'spec_helper'
 require 'ostruct'
-require_relative '../../../../lib/stash/doi/ezid_gen'
 
 module Stash
   module Doi

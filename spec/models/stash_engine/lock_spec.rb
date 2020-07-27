@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 module StashEngine
   describe Lock, '.acquire' do

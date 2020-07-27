@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 module StashEngine
 
@@ -185,7 +184,7 @@ module StashEngine
 
     def assert_email_headers(header, expected_subject)
       expected_headers = {
-        'From' => APP_CONFIG['feedback_email_from'] || APP_CONFIG['helpdesk_email'] || 'help@datadryad.org',
+        'From' => APP_CONFIG[:contact_email].last,
         'To' => @user.email,
         'Subject' => expected_subject
       }
