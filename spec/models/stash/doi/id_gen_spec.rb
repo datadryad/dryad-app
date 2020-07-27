@@ -1,6 +1,4 @@
 require 'ostruct'
-#require_relative '../../../../stash/stash_engine/lib/stash/doi/id_gen'
-#require_relative '../../../../stash/stash_engine/lib/stash/doi/datacite_gen'
 
 module Stash
   module Doi
