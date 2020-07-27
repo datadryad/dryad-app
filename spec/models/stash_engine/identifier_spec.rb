@@ -1,6 +1,4 @@
-require 'db_spec_helper'
 require 'webmock/rspec'
-require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
 
 module StashEngine
@@ -455,9 +453,8 @@ module StashEngine
 
     describe '#institution_will_pay?' do
       it 'does not make user pay when institution pays' do
-        tenant = class_double(Tenant)
+        tenant = double(Tenant)
         allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
-        allow(Tenant).to receive(:covers_dpc).and_return(true)
         allow(tenant).to receive(:covers_dpc).and_return(true)
         ident = Identifier.create
         Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)

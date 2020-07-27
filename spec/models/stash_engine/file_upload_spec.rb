@@ -1,5 +1,4 @@
 require 'fileutils'
-require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
 require 'cgi'
 

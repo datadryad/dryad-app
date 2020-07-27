@@ -64,7 +64,6 @@ PATH
       rest-client
       rinku
       rsolr
-      sortable-table
       stripe (~> 4.16.0)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
@@ -149,7 +148,7 @@ GEM
       rails (>= 4.2, < 6)
       rsolr (>= 1.0.6, < 3)
       twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
-    bolognese (1.8)
+    bolognese (1.8.2)
       activesupport (>= 4.2.5)
       benchmark_methods (~> 0.7)
       bibtex-ruby (>= 5.1.0)
@@ -274,8 +273,9 @@ GEM
       dry-equalizer (~> 0.2)
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5)
-    ebnf (1.2.0)
+    ebnf (2.1.0)
       rdf (~> 3.1)
+      scanf (~> 1.0)
       sxp (~> 1.1)
     edtf (3.0.5)
       activesupport (>= 3.0, < 7.0)
@@ -529,8 +529,8 @@ GEM
       rdf (~> 3.1)
       rdf-rdfa (~> 3.1)
       rdf-xsd (~> 3.1)
-    rdf-turtle (3.1.1)
-      ebnf (~> 1.2)
+    rdf-turtle (3.1.2)
+      ebnf (~> 2.0)
       rdf (~> 3.1, >= 3.1.2)
     rdf-vocab (3.1.7)
       rdf (~> 3.1, >= 3.1.2)
@@ -603,6 +603,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scanf (1.0.0)
     serrano (0.6.0)
       faraday (>= 0.15, < 1.0)
       faraday_middleware (>= 0.12.2, < 0.15.0)
@@ -614,9 +615,6 @@ GEM
       retriable
       ruby-progressbar
       rubyzip
-    sortable-table (0.1.1)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
