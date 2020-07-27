@@ -1,6 +1,5 @@
 require 'ostruct'
-require 'spec_helper'
-require_relative '../../../../lib/stash/payments/invoicer'
+require_relative '../../../../stash/stash_engine/lib/stash/payments/invoicer'
 require 'action_controller'
 
 module Stash
@@ -40,7 +39,7 @@ module Stash
 
         @invoicer = Invoicer.new(resource: @resource, curator: @curator)
         allow(@invoicer).to receive(:set_api_key).and_return(true)
-        allow(@invoicer).to receive(:create_invoice_item_for_dpc).and_return(fake_invoice_item)
+        allow(@invoicer).to receive(:create_invoice_items_for_dpc).and_return([fake_invoice_item])
         allow(@invoicer).to receive(:create_invoice).and_return(fake_invoice)
         allow(@invoicer).to receive(:create_customer).and_return(fake_customer)
         allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return(nil)

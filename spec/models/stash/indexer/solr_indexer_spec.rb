@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'stash/indexer/solr_indexer'
 
 module Stash

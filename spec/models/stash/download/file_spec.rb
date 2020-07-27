@@ -1,8 +1,6 @@
-require 'db_spec_helper'
-require 'spec_helper'
 require 'stash/download/file'
 require 'ostruct'
-require_relative '../../../../../spec_helpers/factory_helper'
+require_relative '../../../../stash/spec_helpers/factory_helper'
 
 # a base class for version and file downloads, providing some basic functions
 module Stash
