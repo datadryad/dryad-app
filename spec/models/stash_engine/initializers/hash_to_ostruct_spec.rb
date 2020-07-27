@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe Hash do
   describe '#to_ostruct' do

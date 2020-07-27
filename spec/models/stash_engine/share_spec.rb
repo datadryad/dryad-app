@@ -1,5 +1,3 @@
-require 'db_spec_helper'
-require_relative '../../../../spec_helpers/factory_helper'
 
 module StashEngine
   describe Share do
@@ -29,7 +27,7 @@ module StashEngine
       end
 
       it 'creates a share if an identifier is created' do
-        expect(@identifier.shares.count).to eql(1)
+        expect(@identifier.shares.count).to be > 0
       end
     end
 

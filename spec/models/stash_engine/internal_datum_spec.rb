@@ -1,5 +1,4 @@
 require 'ostruct'
-require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
 
 module StashEngine
