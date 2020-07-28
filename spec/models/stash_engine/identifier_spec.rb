@@ -21,11 +21,11 @@ module StashEngine
       mock_datacite!
       mock_stripe!
 
-      @user = User.new
-      @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
-      @res2 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
-      @res3 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      @user = create(:user, tenant_id: 'dryad', role: nil)
+      @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
+      @res1 = create(:resource, identifier_id: @identifier.id, user: @user)
+      @res2 = create(:resource, identifier_id: @identifier.id, user: @user)
+      @res3 = create(:resource, identifier_id: @identifier.id, user: @user)
 
       @created_files = Array.new(3) do |i|
         FileUpload.create(
@@ -46,6 +46,13 @@ module StashEngine
       int_datum_manu.save!
       @identifier.reload
 
+      res1.current_state = 'submitted'
+      Version.create(resource_id: res1.id, version: 1)
+      res2.current_state = 'submitted'
+      Version.create(resource_id: res2.id, version: 2)
+      res3.current_state = 'in_progress'
+      Version.create(resource_id: res3.id, version: 3)
+
       WebMock.disable_net_connect!
     end
 
@@ -60,16 +67,6 @@ module StashEngine
     end
 
     describe 'versioning' do
-      before(:each) do
-        res1.current_state = 'submitted'
-        Version.create(resource_id: res1.id, version: 1)
-
-        res2.current_state = 'submitted'
-        Version.create(resource_id: res2.id, version: 2)
-
-        res3.current_state = 'in_progress'
-        Version.create(resource_id: res3.id, version: 3)
-      end
 
       describe '#first_submitted_resource' do
         it 'returns the first submitted version' do
@@ -276,10 +273,11 @@ module StashEngine
           end
 
           it 'returns the latest non-published for an admin from journal' do
-            user2 = User.new(role: 'user', tenant_id: 'localhost')
+            user2 = create(:user, role: 'user', tenant_id: 'localhost')
             journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
             JournalRole.create(journal: journal, user: user2, role: 'admin')
+            user2.reload
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
           end
         end
@@ -849,13 +847,13 @@ module StashEngine
 
     describe :cited_by do
       before(:each) do
-        user = User.new
-        @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/789')
-        @identifier3 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/000')
+        user = create(:user, tenant_id: 'dryad', role: nil)
+        @identifier2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/789')
+        @identifier3 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/000')
 
         # Add a resource and make it 'published'
         [@identifier, @identifier2, @identifier3].each do |identifier|
-          resource = create(:resource, user_id: user.id, tenant_id: user.tenant_id, identifier_id: identifier.id)
+          resource = create(:resource, user: user, tenant_id: user.tenant_id, identifier_id: identifier.id, skip_datacite_update: true)
           create(:curation_activity_no_callbacks, resource: resource, status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: resource, status: 'curation')
           create(:curation_activity_no_callbacks, resource: resource, status: 'published')
