@@ -1,4 +1,4 @@
-require 'rest-client'
+require 'http'
 require 'json'
 require 'cgi'
 
