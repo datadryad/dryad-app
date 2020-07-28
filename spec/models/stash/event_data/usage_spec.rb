@@ -15,7 +15,7 @@ module Stash
               'Host' => 'api.datacite.org'
             }
           )
-          .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'mdc-usage.json')),
+          .to_return(status: 200, body: File.read('spec/data/mdc-usage.json'),
                      headers: { 'Content-Type' => 'application/json' })
       end
 

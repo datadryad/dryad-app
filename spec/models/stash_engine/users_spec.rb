@@ -1,4 +1,3 @@
-
 module StashEngine
   describe User, type: :model do
 
@@ -64,7 +63,6 @@ module StashEngine
         expect(@user.affiliation).to eql(@affiliation)
       end
     end
-
 
     describe '#from_omniauth_orcid' do
 

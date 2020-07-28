@@ -1,4 +1,3 @@
-
 module StashEngine
   describe Author do
     attr_reader :resource

@@ -50,7 +50,7 @@ module StashDatacite
       return unless publication_date
 
       date_available = find_or_create_by(resource_id: resource_id, date_type: 'available')
-      date_available.date = publication_date.iso8601
+      date_available.date = publication_date.utc.iso8601
       date_available.save
       date_available
     end

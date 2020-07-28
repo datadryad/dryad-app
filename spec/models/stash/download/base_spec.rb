@@ -19,7 +19,7 @@ module Stash
         rails_root = Dir.mktmpdir('rails_root')
         allow(Rails).to receive(:root).and_return(Pathname.new(rails_root))
 
-# double(Module)
+        # double(Module)
         @my_request = double
         allow(@my_request).to receive(:remote_ip).and_return('127.0.0.1')
         allow(@my_request).to receive(:user_agent).and_return('HorseBrowser 1.1')

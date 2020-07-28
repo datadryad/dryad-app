@@ -2,8 +2,12 @@ require 'webmock/rspec'
 require 'byebug'
 
 module StashEngine
+  describe Identifier, type: :model do
+    include Mocks::Datacite
+    include Mocks::Ror
+    include Mocks::RSolr
+    include Mocks::Stripe
 
-  describe Identifier do
     attr_reader :identifier
     attr_reader :usage1
     attr_reader :usage2
@@ -12,11 +16,16 @@ module StashEngine
     attr_reader :res3
 
     before(:each) do
+      mock_ror!
+      mock_solr!
+      mock_datacite!
+      mock_stripe!
+
       @user = User.new
       @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = Resource.create(identifier_id: @identifier.id, user: @user)
-      @res2 = Resource.create(identifier_id: @identifier.id, user: @user)
-      @res3 = Resource.create(identifier_id: @identifier.id, user: @user)
+      @res1 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      @res2 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      @res3 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
 
       @created_files = Array.new(3) do |i|
         FileUpload.create(
@@ -168,7 +177,7 @@ module StashEngine
 
         describe '#approval_date' do
           it 'selects the correct approval_date' do
-            target_date = Date.new(2010, 2, 3)
+            target_date = DateTime.new(2010, 2, 3).utc
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: target_date)
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: '2020-01-01')
@@ -531,13 +540,6 @@ module StashEngine
     end
 
     describe '#calculated_pub_state' do
-
-      before(:each) do
-        # a way to neuter all the callback activity
-        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
-      end
 
       it 'detects withdrawn state' do
         res = @identifier.resources.last

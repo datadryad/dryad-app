@@ -16,7 +16,7 @@ module Stash
               'Host' => 'api.datacite.org'
             }
           )
-          .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'event-data-citations1.json')),
+          .to_return(status: 200, body: File.read('spec/data/event-data-citations1.json'),
                      headers: { 'Content-Type' => 'application/json' })
 
         stub_request(:get, %r{https://api\.datacite\.org/events\?mailto=.+&page%5Bsize%5D=10000&relation-type-id=is-cited-by,
@@ -28,7 +28,7 @@ module Stash
               'Host' => 'api.datacite.org'
             }
           )
-          .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'event-data-citations2.json')),
+          .to_return(status: 200, body: File.read('spec/data/event-data-citations2.json'),
                      headers: { 'Content-Type' => 'application/json' })
       end
 

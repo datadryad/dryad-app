@@ -1,11 +1,7 @@
 require 'byebug'
 
-###
-### TODO: Merge this code into the very similar class at stash_engine/spec/unit/models
-###
-
 module StashEngine
-  describe CurationActivity do
+  describe CurationActivity, type: :model do
 
     before(:each) do
       @identifier = StashEngine::Identifier.create(identifier_type: 'DOI', identifier: '10.123/123')
