@@ -1,4 +1,3 @@
-
 describe Hash do
   describe '#to_ostruct' do
     it 'converts a Hash to an OpenStruct' do

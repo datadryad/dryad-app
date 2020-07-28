@@ -1,4 +1,3 @@
-
 module StashEngine
   describe ExternalReference do
 

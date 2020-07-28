@@ -1,4 +1,3 @@
-
 module StashEngine
   describe NoidState do
     before(:each) do

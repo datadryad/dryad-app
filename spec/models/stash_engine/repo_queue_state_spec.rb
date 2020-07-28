@@ -1,4 +1,3 @@
-
 module StashEngine
   describe User do
     attr_reader :user

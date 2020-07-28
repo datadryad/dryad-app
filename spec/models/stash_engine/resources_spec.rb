@@ -1,8 +1,7 @@
-
 module StashEngine
 
   describe Resource, type: :model do
-    
+
     attr_reader :user
     attr_reader :skip_emails
     attr_reader :future_date
@@ -29,7 +28,7 @@ module StashEngine
 
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
     end
-    
+
     context 'peer_review' do
 
       describe :requires_peer_review? do
