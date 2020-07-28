@@ -4,8 +4,8 @@ module StashEngine
   describe CurationActivity, type: :model do
 
     before(:each) do
-      @identifier = StashEngine::Identifier.create(identifier_type: 'DOI', identifier: '10.123/123')
-      @resource = StashEngine::Resource.create(identifier_id: @identifier.id)
+      @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
+      @resource = create(:resource, identifier_id: @identifier.id)
       # reload so that it picks up any associated models that are initialized
       # (e.g. CurationActivity and ResourceState)
       @resource.reload
