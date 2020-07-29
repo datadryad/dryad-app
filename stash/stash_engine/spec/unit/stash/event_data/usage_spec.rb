@@ -12,7 +12,6 @@ module Stash
         stub_request(:get, 'https://api.datacite.org/events?doi=10.6071/m3rp49&mailto=scott.fisher@ucop.edu&page%5Bsize%5D=0&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine&rows&source-id=datacite-usage')
           .with(
             headers: {
-              'Accept' => '*/*',
               'Host' => 'api.datacite.org'
             }
           )
