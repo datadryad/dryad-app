@@ -21,6 +21,9 @@ module Mocks
               } }
           ],
           "links": {
+
+
+
             "self": 'https://api.datacite.org/events?doi=10.5061%2Fdryad.234&page%5Bnumber%5D=1&page%5Bsize%5D=10&source-id=datacite-usage&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine',
             "next": 'https://api.datacite.org/events?doi=10.5061%2Fdryad.234&page%5Bnumber%5D=2&page%5Bsize%5D=10&relation-type-id=unique-dataset-investigations-regular%2Cunique-dataset-investigations-machine%2Cunique-dataset-requests-regular%2Cunique-dataset-requests-machine&source-id=datacite-usage'
           }
