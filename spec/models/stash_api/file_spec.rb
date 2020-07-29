@@ -1,5 +1,3 @@
-require 'db_spec_helper'
-require_relative '../../../../../spec_helpers/factory_helper'
 require 'byebug'
 
 module StashApi
