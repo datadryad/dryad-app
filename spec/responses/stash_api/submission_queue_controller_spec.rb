@@ -13,6 +13,11 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
+    end
+
     # I am not testing queuing working here since this is just read only visibility into what
     # is tested and exposed elsewhere.
 

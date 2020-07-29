@@ -22,6 +22,11 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
+    end
+
     # test creation of a new dataset
     describe '#create' do
       before(:each) do

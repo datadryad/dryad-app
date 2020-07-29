@@ -7,6 +7,7 @@ module StashEngine
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
+    include Mocks::CurationActivity
 
     attr_reader :identifier
     attr_reader :usage1
@@ -274,10 +275,11 @@ module StashEngine
 
           it 'returns the latest non-published for an admin from journal' do
             user2 = create(:user, role: 'user', tenant_id: 'localhost')
-            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
-            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+            journal = Journal.create(title: 'Test Journal', issn: @fake_issn)
             JournalRole.create(journal: journal, user: user2, role: 'admin')
             user2.reload
+            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
+            @identifier.reload
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
           end
         end
@@ -847,6 +849,7 @@ module StashEngine
 
     describe :cited_by do
       before(:each) do
+        neuter_curation_callbacks!
         user = create(:user, tenant_id: 'dryad', role: nil)
         @identifier2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/789')
         @identifier3 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/000')

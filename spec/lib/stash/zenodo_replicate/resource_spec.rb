@@ -3,10 +3,6 @@
 require 'stash/zenodo_replicate'
 require 'byebug'
 
-require 'rails_helper'
-
-RSpec.configure(&:infer_spec_type_from_file_location!)
-
 module Stash
   module ZenodoReplicate
     # the resource loads the resource and does all the steps to replicate it and looks at some states and saves errors

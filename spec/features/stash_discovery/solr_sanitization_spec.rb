@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'rsolr'
 RSpec.feature 'SolrSanitization', type: :feature do
 
@@ -6,30 +5,6 @@ RSpec.feature 'SolrSanitization', type: :feature do
   include Mocks::Repository
   include Mocks::Ror
   include Mocks::Stripe
-
-  # We can revisit this, but for now these test don't do much and just cause us testing problems.
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    # SolrInstance.instance
-    # doc = YAML.load(ERB.new(File.read(File.join(Rails.root, SolrInstance::BLACKLIGHT_YML))).result)
-    # @solr = RSolr.connect(url: doc['test']['url'])
-
-    # @uuid = Faker::Crypto.sha1
-  end
-
-  after(:all) do
-    # SolrInstance.instance.stop if SolrInstance.present?
-  end
-
-  before(:each) do
-    # @solr.add(uuid: @uuid)
-    # @solr.commit
-  end
-
-  after(:each) do
-    # @solr.delete_by_query("uuid:#{@uuid}")
-    # @solr.commit
-  end
 
   xit 'added the record' do
     expect(@solr.get('select', params: { q: '*:*' })['response']['numFound']).to eq(1)

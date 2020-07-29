@@ -3,7 +3,18 @@ require 'byebug'
 module StashEngine
   describe CurationActivity, type: :model do
 
+    include Mocks::Datacite
+    include Mocks::Ror
+    include Mocks::RSolr
+    include Mocks::Stripe
+    include Mocks::CurationActivity
+
     before(:each) do
+      mock_ror!
+      mock_solr!
+      mock_datacite!
+      mock_stripe!
+
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
       @resource = create(:resource, identifier_id: @identifier.id)
       # reload so that it picks up any associated models that are initialized
@@ -66,13 +77,6 @@ module StashEngine
     end
 
     context :callbacks do
-
-      before(:each) do
-        allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
-        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
-        allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return([])
-        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
-      end
 
       context :update_solr do
 

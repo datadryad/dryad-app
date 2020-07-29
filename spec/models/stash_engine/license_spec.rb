@@ -4,7 +4,7 @@ module StashEngine
   describe License do
     attr_reader :uris_by_id
 
-    before(:all) do
+    before(:each) do
       @uris_by_id = {
         cc0: 'https://creativecommons.org/publicdomain/zero/1.0/',
         cc_by: 'https://creativecommons.org/licenses/by/4.0/'
