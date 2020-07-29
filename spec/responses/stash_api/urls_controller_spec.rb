@@ -34,6 +34,11 @@ module StashApi
       }.freeze
     end
 
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
+    end
+
     # set up some versions with different curation statuses (visibility)
     before(:each) do
       neuter_curation_callbacks!

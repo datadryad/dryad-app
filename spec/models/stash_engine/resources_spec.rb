@@ -6,12 +6,9 @@ module StashEngine
     attr_reader :skip_emails
     attr_reader :future_date
 
-    before(:all) do
+    before(:each) do
       tomorrow = Date.today + 1
       @future_date = tomorrow + 366.days
-    end
-
-    before(:each) do
       @user = StashEngine::User.create(
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',

@@ -12,6 +12,11 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
+    end
+
     describe '#test' do
       it 'returns welcome message and authenticated user id for good token' do
         post '/api/v2/test', headers: default_authenticated_headers
