@@ -9,7 +9,7 @@ module Stash
         @usage = Usage.new(doi: 'doi:10.6071/m3rp49')
         WebMock.disable_net_connect!
 
-        stub_request(:get, %r{api\.datacite\.org/events} )
+        stub_request(:get, %r{api\.datacite\.org/events})
           .with(
             headers: {
               'Host' => 'api.datacite.org'
