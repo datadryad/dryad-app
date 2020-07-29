@@ -1,10 +1,4 @@
-require 'db_spec_helper'
-require_relative '../../../../../spec_helpers/factory_helper'
 require 'byebug'
-# require 'test_helper'
-
-# something wacky about our setup requires this here.  It seems to be either a) never requiring them or b) requiring them 1000 times otherwise
-# FactoryBot.find_definitions
 
 module StashApi
   RSpec.describe User do
