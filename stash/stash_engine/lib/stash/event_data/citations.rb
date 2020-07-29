@@ -29,10 +29,12 @@ module Stash
       # response.headers -- includes :content_type=>"application/json;charset=UTF-8"
       def results
         params = { 'page[size]': 10_000 }
-        result1 = generic_query(url: @base_url, params: params.merge('obj-id': "#{DATACITE_URL}#{@doi}", 'relation-type-id': OTHERS_CITING_ME.join(',')))
+        result1 = generic_query(url: @base_url,
+                                params: params.merge('obj-id': "#{DATACITE_URL}#{@doi}", 'relation-type-id': OTHERS_CITING_ME.join(',')))
         array1 = result1['data'].map { |i| i['attributes']['subj-id'] }
 
-        result2 = generic_query(url: @base_url, params: params.merge('subj-id': "#{DATACITE_URL}#{@doi}", 'relation-type-id': ME_CLAIMING_CITATION.join(',')))
+        result2 = generic_query(url: @base_url,
+                                params: params.merge('subj-id': "#{DATACITE_URL}#{@doi}", 'relation-type-id': ME_CLAIMING_CITATION.join(',')))
         array2 = result2['data'].map { |i| i['attributes']['obj-id'] }
 
         (array1 | array2) # returns the union of two sets, which deduplicates identical items, even if in the same original array

@@ -74,7 +74,7 @@ module Stash
         data_results.concat(query_result[:data])
 
         # if this doesn't contain full set of results, then keep going to the next page and adding them
-        while query_result[:links][:next].present? do
+        while query_result[:links][:next].present?
           query_result = generic_query(url: query_result[:links][:next])
           data_results.concat(query_result[:data])
         end
