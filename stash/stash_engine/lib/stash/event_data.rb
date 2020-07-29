@@ -21,12 +21,12 @@ module Stash
 
     def generic_query(url:, params: {})
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-                 .timeout(connect: 60, read: 60).timeout(60).follow(max_hops: 10)
+        .timeout(connect: 60, read: 60).timeout(60).follow(max_hops: 10)
 
       # get any pre-existing hash off query-part of url
       uri_obj = URI.parse(url)
       existing_params = CGI.parse(uri_obj.query || '')
-      existing_params.each{ |key, val| existing_params[key] = val.first } # because CGI makes every value into an array
+      existing_params.each { |key, val| existing_params[key] = val.first } # because CGI makes every value into an array
 
       uri_begin = "#{uri_obj.scheme}://#{uri_obj.host}:#{uri_obj.port}#{uri_obj.path}"
 
@@ -41,13 +41,11 @@ module Stash
     def make_reliable
       resp = nil
       4.downto(0) do |my_retry|
-        begin
-          resp = yield
-          return resp if resp.status.success?
-        rescue HTTP::Error, JSON::ParserError => e
-          raise QueryFailure, "Error from HTTP #{resp&.uri}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}" if my_retry < 1
-          sleep TIME_BETWEEN_RETRIES
-        end
+        resp = yield
+        return resp if resp.status.success?
+      rescue HTTP::Error, JSON::ParserError => e
+        raise QueryFailure, "Error from HTTP #{resp&.uri}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}" if my_retry < 1
+        sleep TIME_BETWEEN_RETRIES
       end
       # if it has tried 5 times without success, then raise error
       raise QueryFailure, "Error from HTTP #{resp&.uri} -- got status code #{resp&.status&.code}"
