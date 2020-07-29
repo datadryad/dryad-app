@@ -45,6 +45,7 @@ module Stash
         return resp if resp.status.success?
       rescue HTTP::Error, JSON::ParserError => e
         raise QueryFailure, "Error from HTTP #{resp&.uri}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}" if my_retry < 1
+
         sleep TIME_BETWEEN_RETRIES
       end
       # if it has tried 5 times without success, then raise error
