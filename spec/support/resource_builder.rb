@@ -1,7 +1,8 @@
-
 require 'datacite/mapping'
 require 'stash/wrapper'
 require 'time'
+
+# rubocop:disable Naming/AccessorMethodName
 
 # Borrowed from stash_migrator
 module StashDatacite
@@ -372,3 +373,5 @@ module StashDatacite
     end
   end
 end
+
+# rubocop:enable Naming/AccessorMethodName

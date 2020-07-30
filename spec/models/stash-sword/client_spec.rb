@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'webmock/rspec'
 
 module Stash
@@ -12,7 +11,7 @@ module Stash
         @collection_uri = 'http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/dash_ucb'
         @on_behalf_of   = 'ucb_dash_author'
         @client         = Client.new(collection_uri: @collection_uri, username: @username, password: @password, on_behalf_of: @on_behalf_of)
-        @zipfile        = 'examples/uploads/example.zip'
+        @zipfile        = 'stash/stash-sword/examples/uploads/example.zip'
         @doi            = "doi:10.5072/FK#{Time.now.getutc.xmlschema.gsub(/[^0-9a-z]/i, '')}"
       end
 
