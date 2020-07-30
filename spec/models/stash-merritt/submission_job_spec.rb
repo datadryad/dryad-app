@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Stash
   module Merritt
     describe SubmissionJob do

@@ -1,4 +1,3 @@
-require 'db_spec_helper'
 require 'byebug'
 
 module Stash
@@ -77,6 +76,19 @@ module Stash
         FileUtils.remove_dir(rails_root)
       end
 
+
+      describe :create_submission_job do
+        it 'creates a submission job' do
+          url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
+          repo = Repository.new(url_helpers: url_helpers, threads: 1)
+          resource_id = 17
+          job = repo.create_submission_job(resource_id: resource_id)
+          expect(job).to be_a(SubmissionJob)
+          expect(job.resource_id).to eq(resource_id)
+          expect(job.url_helpers).to be(url_helpers)
+        end
+      end
+      
       describe :download_uri_for do
         it 'determines the download URI' do
           expected_uri = 'http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b'
