@@ -4,6 +4,7 @@ module Stash
   module Merritt
     describe Repository do
       include Mocks::Datacite
+      include Mocks::CurationActivity
 
       attr_reader :resource
       attr_reader :identifier
@@ -57,12 +58,12 @@ module Stash
           upload_date: stash_wrapper.version_date,
           tenant_id: 'dataone'
         ).build
-        resource.current_state = 'processing'
-        resource.save
+        @resource.current_state = 'processing'
+        @resource.save
         @identifier = resource.identifier
 
         @doi_value = '10.15146/R3RG6G'
-        expect(resource.identifier_value).to eq(doi_value) # just to be sure
+        expect(@resource.identifier_value).to eq(doi_value) # just to be sure
 
         @record_identifier = 'http://n2t.net/ark:/99999/fk43f5119b'
 
@@ -109,13 +110,14 @@ module Stash
       describe :harvested do
         it 'sets the download URI, update URI, and status' do
           # Skip sending emails
-          resource.skip_emails = true
-          resource.save
-          repo.harvested(identifier: identifier, record_identifier: record_identifier)
-          resource.reload
-          expect(resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')
-          expect(resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
-          expect(resource.current_state).to eq('submitted')
+          @resource.skip_emails = true
+          @resource.save
+          neuter_curation_callbacks!
+          repo.harvested(identifier: @identifier, record_identifier: @record_identifier)
+          @resource.reload
+          expect(@resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')
+          expect(@resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
+          expect(@resource.current_state).to eq('submitted')
         end
       end
 
