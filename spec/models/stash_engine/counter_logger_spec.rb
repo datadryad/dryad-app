@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'faker'
 require 'ostruct'
 require 'byebug'
@@ -24,9 +23,9 @@ module StashEngine
         }.to_ostruct
 
         # need resource, user, identifier
-        @user = create(:user, tenant_id: 'ucop', role: nil)
+        @user = create(:user, role: nil)
         @identifier = create(:identifier)
-        @resource = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id, publication_date: Time.new)
+        @resource = create(:resource, user_id: @user.id, identifier_id: @identifier.id, publication_date: Time.new)
         @publisher = create(:publisher, resource_id: @resource.id)
         @version = create(:version, resource_id: @resource.id)
 

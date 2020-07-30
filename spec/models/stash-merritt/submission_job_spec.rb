@@ -7,7 +7,6 @@ module Stash
       attr_reader :resource_id
       attr_reader :resource
       attr_reader :url_helpers
-      attr_reader :ezid_helper
       attr_reader :package
       attr_reader :sword_helper
       attr_reader :job
@@ -103,13 +102,6 @@ module Stash
 
           it 'submits the package' do
             expect(sword_helper).to receive(:submit!)
-            job.submit!
-          end
-
-          it 'does not update datacite if flagged to skip updates' do
-            allow(resource).to receive(:skip_datacite_update).and_return(true)
-            dc4_xml = '<resource/>'
-            expect(ezid_helper).not_to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
             job.submit!
           end
 
