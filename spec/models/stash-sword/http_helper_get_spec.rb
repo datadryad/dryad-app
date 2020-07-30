@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module Stash
   module Sword
     describe HTTPHelper do
@@ -114,9 +112,7 @@ module Stash
         end
 
         it 'fails on a 4xx' do
-          @error = Net::HTTPForbidden
-          allow(@error).to receive(:code).and_return(403)
-          allow(@error).to receive(:message).and_return('Forbidden')
+          @error = Net::HTTPResponse.new(1.0, 403, 'Forbidden')
           expect(@http).to receive(:request).and_yield(@error)
           uri = URI('http://example.org/')
           expect { helper.get(uri: uri) }.to raise_error do |e|
@@ -125,9 +121,7 @@ module Stash
         end
 
         it 'fails on a 5xx' do
-          @error = Net::HTTPServerError
-          allow(@error).to receive(:code).and_return(500)
-          allow(@error).to receive(:message).and_return('Internal Server Error')
+          @error = Net::HTTPResponse.new(1.0, 500, 'Internal Server Error')
           expect(@http).to receive(:request).and_yield(@error)
           uri = URI('http://example.org/')
           expect { helper.get(uri: uri) }.to raise_error do |e|

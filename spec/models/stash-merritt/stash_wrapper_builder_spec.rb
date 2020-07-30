@@ -1,4 +1,3 @@
-
 module Stash
   module Merritt
     module Builders

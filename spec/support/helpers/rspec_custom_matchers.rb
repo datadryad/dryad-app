@@ -92,8 +92,6 @@ RSpec::Matchers.define :be_time do |expected|
     "expected time:\n#{expected_str}\n\nbut was:\n#{actual_str}"
   end
 end
-
-# rubocop:disable Metrics/BlockLength
 RSpec::Matchers.define :request do
   match do |actual|
     failures_for(actual).empty?
@@ -151,7 +149,6 @@ RSpec::Matchers.define :request do
   end
 
 end
-# rubocop:enable Metrics/BlockLength
 
 RSpec::Matchers.define :include_header do |k, v|
   def matching_key(k, actual)

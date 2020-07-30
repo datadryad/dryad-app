@@ -2,11 +2,18 @@ require 'byebug'
 
 module StashApi
   RSpec.describe DatasetParser do
+    include Mocks::Datacite
+    include Mocks::Ror
+
     before(:each) do
+      mock_datacite!
+      mock_ror!
+      allow(Stash::Doi::IdGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
+
       @tenants = StashEngine.tenants
       StashEngine.tenants = begin
         tenants = HashWithIndifferentAccess.new
-        tenant_hash = YAML.load_file(::File.join(ENGINES['stash_engine'], 'spec/data/tenant-example.yml'))['test']
+        tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
         tenants['exemplia'] = HashWithIndifferentAccess.new(tenant_hash)
         tenants
       end
@@ -61,14 +68,6 @@ module StashApi
         'abstract' =>
               'We are a for-profit university.'
       }.with_indifferent_access
-
-      # mock doubles for the repo
-      repo = double('some repo')
-      allow(repo).to receive(:mint_id).and_return('doi:12345/67890')
-      allow(StashEngine).to receive(:repository).and_return(repo)
-
-      allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
-      allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(nil)
 
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
       @stash_identifier = dp.parse
