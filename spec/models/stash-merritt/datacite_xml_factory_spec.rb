@@ -1,5 +1,5 @@
-require 'db_spec_helper'
-require 'datacite/mapping/datacite_xml_factory'
+#require 'datacite/mapping/datacite_xml_factory'
+require 'stash/stash-merritt/lib/datacite/mapping/datacite_xml_factory'
 
 module Datacite
   module Mapping

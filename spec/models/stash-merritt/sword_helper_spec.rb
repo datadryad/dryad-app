@@ -1,4 +1,3 @@
-require 'db_spec_helper'
 
 require 'fileutils'
 require 'pathname'

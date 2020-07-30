@@ -1,5 +1,3 @@
-require 'db_spec_helper'
-
 module Stash
   module Merritt
     describe ZipPackage do
@@ -35,10 +33,10 @@ module Stash
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
-        @stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
+        @stash_wrapper_xml = File.read('spec/data/stash-merritt/stash-wrapper.xml')
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
 
-        @datacite_xml = File.read('spec/data/archive/mrt-datacite.xml')
+        @datacite_xml = File.read('spec/data/stash-merritt/mrt-datacite.xml')
         dcs_resource = Datacite::Mapping::Resource.parse_xml(datacite_xml)
 
         @resource = StashDatacite::ResourceBuilder.new(
@@ -95,7 +93,7 @@ module Stash
 
       describe :zipfile do
         it 'builds a zipfile' do
-          expected_metadata = Dir.glob('spec/data/archive/*').map do |path|
+          expected_metadata = Dir.glob('spec/data/stash-merritt/*').map do |path|
             [File.basename(path), File.read(path)]
           end.to_h
 

@@ -1,4 +1,3 @@
-require 'db_spec_helper'
 
 module Stash
   module Merritt
@@ -13,9 +12,9 @@ module Stash
             tenant_id: 'dataone'
           )
 
-          dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
+          dc4_xml = File.read('spec/data/stash-merritt/mrt-datacite.xml')
           dcs_resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)
-          stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
+          stash_wrapper_xml = File.read('spec/data/stash-merritt/stash-wrapper.xml')
           stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
 
           @tenant = double(StashEngine::Tenant)

@@ -1,4 +1,3 @@
-require 'db_spec_helper'
 
 module Stash
   module Merritt
@@ -7,7 +6,7 @@ module Stash
         attr_reader :dc4_resource
 
         before(:each) do
-          tmp_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
+          tmp_wrapper_xml = File.read('spec/data/stash-merritt/stash-wrapper.xml')
           tmp_wrapper = Stash::Wrapper::StashWrapper.parse_xml(tmp_wrapper_xml)
           dc4_xml = tmp_wrapper.stash_descriptive[0]
           @dc4_resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)

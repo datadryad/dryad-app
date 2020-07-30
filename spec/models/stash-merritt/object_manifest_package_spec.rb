@@ -1,4 +1,3 @@
-require 'db_spec_helper'
 require 'pathname'
 require 'ostruct'
 
@@ -42,10 +41,10 @@ module Stash
 
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
-        stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
+        stash_wrapper_xml = File.read('spec/data/stash-merritt/stash-wrapper.xml')
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
 
-        @datacite_xml = File.read('spec/data/archive/mrt-datacite.xml')
+        @datacite_xml = File.read('spec/data/stash-merritt/mrt-datacite.xml')
         dcs_resource = Datacite::Mapping::Resource.parse_xml(datacite_xml)
 
         @resource = StashDatacite::ResourceBuilder.new(
@@ -117,13 +116,13 @@ module Stash
         describe 'public/system' do
           it 'writes mrt-dataone-manifest.txt' do
             actual = File.read("#{public_system}/#{resource.id}/mrt-dataone-manifest.txt")
-            expected = File.read('spec/data/archive/mrt-dataone-manifest.txt')
+            expected = File.read('spec/data/stash-merritt/mrt-dataone-manifest.txt')
             expect(actual).to eq(expected)
           end
 
           it 'writes stash-wrapper.xml' do
             actual = File.read("#{public_system}/#{resource.id}/stash-wrapper.xml")
-            expected = File.read('spec/data/archive/stash-wrapper.xml')
+            expected = File.read('spec/data/stash-merritt/stash-wrapper.xml')
 
             # ignore changed dates, trust that we've tested their accuracy elsewhere
             [actual, expected].each { |xml| xml.gsub!(/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z/, '') }
@@ -133,13 +132,13 @@ module Stash
 
           it 'writes mrt-datacite.xml' do
             actual = File.read("#{public_system}/#{resource.id}/mrt-datacite.xml")
-            expected = File.read('spec/data/archive/mrt-datacite.xml')
+            expected = File.read('spec/data/stash-merritt/mrt-datacite.xml')
             expect(actual).to be_xml(expected)
           end
 
           it 'writes mrt-oaidc.xml' do
             actual = File.read("#{public_system}/#{resource.id}/mrt-oaidc.xml")
-            expected = File.read('spec/data/archive/mrt-oaidc.xml')
+            expected = File.read('spec/data/stash-merritt/mrt-oaidc.xml')
             expect(actual).to be_xml(expected)
           end
 

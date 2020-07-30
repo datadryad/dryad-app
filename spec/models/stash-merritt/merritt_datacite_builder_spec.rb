@@ -10,7 +10,7 @@ module Stash
         attr_reader :builder
 
         before(:each) do
-          @dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
+          @dc4_xml = File.read('spec/data/stash-merritt/mrt-datacite.xml')
           @resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)
           @factory = instance_double(Datacite::Mapping::DataciteXMLFactory)
           @builder = MerrittDataciteBuilder.new(factory)
