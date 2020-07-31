@@ -134,7 +134,7 @@ end
 
 def build(project)
   in_project(project) do
-    run_task("build-#{project}", 'bundle exec rake')
+    run_task("build-#{project}", 'bundle exec rails')
   end
 rescue StandardError => e
   warn(e)

@@ -29,8 +29,8 @@ Problems:
 lots of workarounds in place.
   - We save reports to `/apps/dryad-prd-shared/json-reports`
   - Weekly processing script at `cron/counter.sh` in our config repo.
-  - `bundle exec rake counter:clear_cache` completely clears our database table that contains counts.
-  - `bundle exec rake counter:cop_manual` reads every month out of the json files and accumulates
+  - `bundle exec rails counter:clear_cache` completely clears our database table that contains counts.
+  - `bundle exec rails counter:cop_manual` reads every month out of the json files and accumulates
   the stats for each dataset into the database (month by month).  I happens after we run stats every
   week.
 
