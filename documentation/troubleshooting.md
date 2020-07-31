@@ -65,7 +65,7 @@ r.submit_to_solr
 If many datasets need to be reindexed, it is often best to reindex the
 entire system:
 ```
-RAILS_ENV=production bundle exec rake rsolr:reindex
+RAILS_ENV=production bundle exec rails rsolr:reindex
 ```
 
 Forcing a dataset to submit
@@ -135,13 +135,13 @@ idg.update_identifier_metadata!
 
 If you need to update DataCite for *all* items in Dryad, you can use:
 ```
-RAILS_ENV=production bundle exec rake datacite_target:update_dryad
+RAILS_ENV=production bundle exec rails datacite_target:update_dryad
 ```
 
 There is a similar process for updating all items not in the main
 Dryad tenant:
 ```
-RAILS_ENV=production bundle exec rake datacite_target:update_dash
+RAILS_ENV=production bundle exec rails datacite_target:update_dash
 ```
 
 Fixing incorrect ROR affiliations
