@@ -1,125 +1,476 @@
 {
-  "data": [],
+  "data": [
+    {
+      "id": "9459a75c-a45f-49f0-8e96-94cce0d7c5fd",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/bd4082c3-f1ac-4202-9cd9-fa951b8fda42",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-requests-regular",
+        "total": 67,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-02-01T00:00:00.000Z",
+        "timestamp": "2019-09-07T23:53:57.716Z"
+      }
+    },
+    {
+      "id": "50823356-0e53-4481-8f22-7521c73e1643",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/bd4082c3-f1ac-4202-9cd9-fa951b8fda42",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-investigations-regular",
+        "total": 79,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-02-01T00:00:00.000Z",
+        "timestamp": "2019-09-07T23:53:58.040Z"
+      }
+    },
+    {
+      "id": "117477c5-ffb7-41f8-b9bd-0b187bd515ad",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/bd4082c3-f1ac-4202-9cd9-fa951b8fda42",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-requests-machine",
+        "total": 13,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-02-01T00:00:00.000Z",
+        "timestamp": "2019-09-07T23:54:00.286Z"
+      }
+    },
+    {
+      "id": "1a3f307b-c7c5-4ff3-a001-2081fa9ebc0f",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/bd4082c3-f1ac-4202-9cd9-fa951b8fda42",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-investigations-machine",
+        "total": 13,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-02-01T00:00:00.000Z",
+        "timestamp": "2019-09-07T23:54:00.317Z"
+      }
+    },
+    {
+      "id": "78cac572-06c6-4205-9f3f-4cecb022c8d2",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/94c5fc89-8574-42b5-8d33-799d31ce7ed1",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-requests-machine",
+        "total": 10,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-05-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:03:44.227Z"
+      }
+    },
+    {
+      "id": "b96924de-1bc4-4840-9ae8-aaa94b436a4a",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/94c5fc89-8574-42b5-8d33-799d31ce7ed1",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-requests-regular",
+        "total": 112,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-05-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:03:44.295Z"
+      }
+    },
+    {
+      "id": "0d302438-df59-4ac1-810a-0642270e34ee",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/94c5fc89-8574-42b5-8d33-799d31ce7ed1",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-investigations-regular",
+        "total": 127,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-05-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:03:44.316Z"
+      }
+    },
+    {
+      "id": "454f21fe-5bae-4fe4-afe4-cb5607f5ee5d",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/94c5fc89-8574-42b5-8d33-799d31ce7ed1",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-investigations-machine",
+        "total": 10,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-05-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:03:46.687Z"
+      }
+    },
+    {
+      "id": "b23e1eeb-f44a-4486-b875-800bb3b05f0f",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/b0fa6cb1-a859-41d0-8722-ebd257761c6b",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-requests-regular",
+        "total": 107,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-08-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:15:23.123Z"
+      }
+    },
+    {
+      "id": "6389b9f7-acca-42b0-8743-87485c488ca3",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://api.datacite.org/reports/b0fa6cb1-a859-41d0-8722-ebd257761c6b",
+        "obj-id": "https://doi.org/10.5061/dryad.234",
+        "source-id": "datacite-usage",
+        "relation-type-id": "unique-dataset-investigations-regular",
+        "total": 119,
+        "message-action": "create",
+        "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2011-08-01T00:00:00.000Z",
+        "timestamp": "2019-09-08T00:15:23.481Z"
+      }
+    }
+  ],
   "meta": {
-    "total": 19,
-    "total-pages": 0,
+    "total": 308,
+    "total-pages": 31,
     "page": 1,
     "sources": [
       {
         "id": "datacite-usage",
         "title": "DataCite Usage Stats",
-        "count": 19
+        "count": 308
       }
     ],
     "prefixes": [
       {
-        "id": "10.6071",
-        "title": "10.6071",
-        "count": 19
+        "id": "10.5061",
+        "title": "10.5061",
+        "count": 308
       }
     ],
     "citation-types": [],
     "relation-types": [
       {
-        "id": "unique-dataset-investigations-regular",
-        "title": "unique-dataset-investigations-regular",
-        "count": 172.0,
+        "id": "unique-dataset-requests-regular",
+        "title": "unique-dataset-requests-regular",
+        "count": 80,
         "year-months": [
           {
-            "id": "2018-04",
-            "title": "April 2018",
-            "sum": 16.0
+            "id": "2020-06",
+            "title": "2020-06",
+            "sum": 1
           },
           {
-            "id": "2018-05",
-            "title": "May 2018",
-            "sum": 4.0
+            "id": "2020-05",
+            "title": "2020-05",
+            "sum": 1
           },
           {
-            "id": "2018-06",
-            "title": "June 2018",
-            "sum": 18.0
+            "id": "2020-04",
+            "title": "2020-04",
+            "sum": 1
           },
           {
-            "id": "2018-07",
-            "title": "July 2018",
-            "sum": 5.0
+            "id": "2020-03",
+            "title": "2020-03",
+            "sum": 1
           },
           {
-            "id": "2018-08",
-            "title": "August 2018",
-            "sum": 16.0
+            "id": "2020-02",
+            "title": "2020-02",
+            "sum": 1
           },
           {
-            "id": "2019-02",
-            "title": "February 2019",
-            "sum": 7.0
+            "id": "2020-01",
+            "title": "2020-01",
+            "sum": 1
           },
           {
-            "id": "2019-03",
-            "title": "March 2019",
-            "sum": 12.0
+            "id": "2019-11",
+            "title": "2019-11",
+            "sum": 1
           },
           {
-            "id": "2019-04",
-            "title": "April 2019",
-            "sum": 10.0
+            "id": "2019-10",
+            "title": "2019-10",
+            "sum": 1
           },
           {
             "id": "2019-05",
-            "title": "May 2019",
-            "sum": 24.0
+            "title": "2019-05",
+            "sum": 1
           },
           {
-            "id": "2019-06",
-            "title": "June 2019",
-            "sum": 52.0
-          },
-          {
-            "id": "2019-07",
-            "title": "July 2019",
-            "sum": 8.0
+            "id": "2019-04",
+            "title": "2019-04",
+            "sum": 1
           }
         ]
       },
       {
-        "id": "unique-dataset-requests-regular",
-        "title": "unique-dataset-requests-regular",
-        "count": 6.0,
+        "id": "unique-dataset-investigations-regular",
+        "title": "unique-dataset-investigations-regular",
+        "count": 79,
         "year-months": [
           {
-            "id": "2018-04",
-            "title": "April 2018",
-            "sum": 4.0
+            "id": "2020-06",
+            "title": "2020-06",
+            "sum": 1
           },
           {
-            "id": "2019-02",
-            "title": "February 2019",
-            "sum": 1.0
+            "id": "2020-05",
+            "title": "2020-05",
+            "sum": 1
           },
           {
-            "id": "2019-07",
-            "title": "July 2019",
-            "sum": 1.0
+            "id": "2020-04",
+            "title": "2020-04",
+            "sum": 1
+          },
+          {
+            "id": "2020-03",
+            "title": "2020-03",
+            "sum": 1
+          },
+          {
+            "id": "2020-02",
+            "title": "2020-02",
+            "sum": 1
+          },
+          {
+            "id": "2020-01",
+            "title": "2020-01",
+            "sum": 1
+          },
+          {
+            "id": "2019-10",
+            "title": "2019-10",
+            "sum": 1
+          },
+          {
+            "id": "2019-09",
+            "title": "2019-09",
+            "sum": 1
+          },
+          {
+            "id": "2019-05",
+            "title": "2019-05",
+            "sum": 1
+          },
+          {
+            "id": "2019-04",
+            "title": "2019-04",
+            "sum": 1
           }
         ]
       },
       {
         "id": "unique-dataset-investigations-machine",
         "title": "unique-dataset-investigations-machine",
-        "count": 2.0,
+        "count": 78,
         "year-months": [
           {
-            "id": "2018-08",
-            "title": "August 2018",
-            "sum": 2.0
+            "id": "2020-06",
+            "title": "2020-06",
+            "sum": 1
+          },
+          {
+            "id": "2020-05",
+            "title": "2020-05",
+            "sum": 1
+          },
+          {
+            "id": "2020-04",
+            "title": "2020-04",
+            "sum": 1
+          },
+          {
+            "id": "2020-03",
+            "title": "2020-03",
+            "sum": 1
+          },
+          {
+            "id": "2020-02",
+            "title": "2020-02",
+            "sum": 1
+          },
+          {
+            "id": "2020-01",
+            "title": "2020-01",
+            "sum": 1
+          },
+          {
+            "id": "2019-12",
+            "title": "2019-12",
+            "sum": 1
+          },
+          {
+            "id": "2019-11",
+            "title": "2019-11",
+            "sum": 1
+          },
+          {
+            "id": "2019-05",
+            "title": "2019-05",
+            "sum": 1
+          },
+          {
+            "id": "2019-04",
+            "title": "2019-04",
+            "sum": 1
+          }
+        ]
+      },
+      {
+        "id": "unique-dataset-requests-machine",
+        "title": "unique-dataset-requests-machine",
+        "count": 71,
+        "year-months": [
+          {
+            "id": "2019-05",
+            "title": "2019-05",
+            "sum": 1
+          },
+          {
+            "id": "2019-04",
+            "title": "2019-04",
+            "sum": 1
+          },
+          {
+            "id": "2019-02",
+            "title": "2019-02",
+            "sum": 1
+          },
+          {
+            "id": "2019-01",
+            "title": "2019-01",
+            "sum": 1
+          },
+          {
+            "id": "2018-12",
+            "title": "2018-12",
+            "sum": 1
+          },
+          {
+            "id": "2018-11",
+            "title": "2018-11",
+            "sum": 1
+          },
+          {
+            "id": "2018-05",
+            "title": "2018-05",
+            "sum": 1
+          },
+          {
+            "id": "2018-03",
+            "title": "2018-03",
+            "sum": 1
+          },
+          {
+            "id": "2018-02",
+            "title": "2018-02",
+            "sum": 1
+          },
+          {
+            "id": "2018-01",
+            "title": "2018-01",
+            "sum": 1
+          }
+        ]
+      }
+    ],
+    "registrants": [
+      {
+        "id": "datacite.dryad.dryad",
+        "title": "datacite.dryad.dryad",
+        "count": 254,
+        "years": [
+          {
+            "id": "2020",
+            "title": "2020",
+            "sum": 18
+          },
+          {
+            "id": "2019",
+            "title": "2019",
+            "sum": 22
+          },
+          {
+            "id": "2018",
+            "title": "2018",
+            "sum": 26
+          },
+          {
+            "id": "2017",
+            "title": "2017",
+            "sum": 46
+          },
+          {
+            "id": "2016",
+            "title": "2016",
+            "sum": 40
+          },
+          {
+            "id": "2015",
+            "title": "2015",
+            "sum": 48
+          },
+          {
+            "id": "2014",
+            "title": "2014",
+            "sum": 22
+          },
+          {
+            "id": "2013",
+            "title": "2013",
+            "sum": 1
+          },
+          {
+            "id": "2012",
+            "title": "2012",
+            "sum": 4
+          },
+          {
+            "id": "2011",
+            "title": "2011",
+            "sum": 20
           }
         ]
       }
     ]
   },
   "links": {
-    "self": "https://api.datacite.org/events?mailto=scott.fisher%40ucop.edu\u0026source-id=datacite-usage\u0026doi=10.6071%2Fm3rp49\u0026page%5Bsize%5D=0\u0026rows\u0026relation-type-id=unique-dataset-investigations-regular%2Cunique-dataset-investigations-machine%2Cunique-dataset-requests-regular%2Cunique-dataset-requests-machine",
-    "next": "https://api.datacite.org/events?doi=10.6071%2Fm3rp49\u0026page%5Bnumber%5D=2\u0026page%5Bsize%5D=0\u0026relation-type-id=unique-dataset-investigations-regular%2Cunique-dataset-investigations-machine%2Cunique-dataset-requests-regular%2Cunique-dataset-requests-machine\u0026source-id=datacite-usage"
+    "self": "https://api.datacite.org/events?doi=10.5061%2Fdryad.234&page%5Bnumber%5D=1&page%5Bsize%5D=10&source-id=datacite-usage&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine"
   }
 }

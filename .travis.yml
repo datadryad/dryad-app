@@ -28,7 +28,7 @@ before_install:
   - sudo rm -rf /var/lib/apt/lists/*
   - sudo apt-get update
   - if [ "$TO_TEST" = "MAIN" ]; then sudo apt-get install mutt; fi
-  - gem update --system 2.7.10
+  - gem update --system
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem install bundler -v 1.17.3
   - gem install colorize

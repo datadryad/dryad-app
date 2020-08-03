@@ -40,7 +40,7 @@ end
 # Helper methods
 
 def warn(msg)
-  warn(msg.to_s.red)
+  puts msg.to_s.colorize(:red)
 end
 
 def tmp_path
@@ -191,7 +191,6 @@ exit(0) if options[:bundle_only]
 
 # ####################
 # Build all projects
-
 build_all
 
 # ####################
@@ -203,3 +202,4 @@ unless failed_builds.empty?
   warn("The following projects failed to build: #{failed_builds.join(', ').red}")
   exit(1)
 end
+exit(0)
