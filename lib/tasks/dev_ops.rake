@@ -140,5 +140,10 @@ namespace :dev_ops do
     puts 'Re-enqueuing Zenodo replication jobs that were deferred'
     StashEngine::ZenodoCopyJob.enqueue_deferred
   end
+
+  desc 'Gets Counter token for submitting a report'
+  task get_counter_token: :environment do
+    puts APP_CONFIG[:counter][:token]
+  end
 end
 # rubocop:enable Metrics/BlockLength

@@ -131,27 +131,21 @@ module StashEngine
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
-    # This will get rid of a file, either immediately, when not submitted yet, or mark it for deletion when it's submitted to Merritt.
-    # We also need to refresh the file list for this resource and check for other files with this same name to be deleted since
-    # users find ways to do multiple deletions in the UI (multiple windows or perhaps uploading two files with the same name).
     def smart_destroy!
-      files_with_name = FileUpload.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
+      # see if it's on the file system and destroy it if it's there
+      cfp = calc_file_path
+      ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
 
-      # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
-      files_with_name.where(file_state: ['created', nil]).each do |fl|
-        ::File.delete(fl.calc_file_path) if !fl.calc_file_path.blank? && ::File.exist?(fl.calc_file_path)
-        fl.destroy
+      if in_previous_version?
+        # destroy any others of this filename in this resource
+        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
+        # and mark to remove from merritt
+        update(file_state: 'deleted')
+      else
+        # remove all of this filename for this resource from the database
+        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
       end
 
-      # leave only one delete directive for this filename for this resource (ie the first listed file), if there is already
-      # a delete directive then it must've been copied at one point from the last resource, so keep one
-      files_with_name.where(file_state: %w[deleted copied]).each_with_index do |f, idx|
-        if idx == 0
-          f.update(file_state: 'deleted')
-        else
-          f.destroy
-        end
-      end
       resource.reload
     end
 
@@ -179,6 +173,18 @@ module StashEngine
       # remove some extra characters that Zaru does not remove by default
       # replace spaces with underscores
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
+    end
+
+    # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
+    # means created last time.
+    def in_previous_version?
+      prev_res = resource.previous_resource
+      return false if prev_res.nil?
+
+      prev_file = FileUpload.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
+      return false if prev_file.nil? || prev_file.file_state == 'deleted'
+
+      true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
     end
   end
 end

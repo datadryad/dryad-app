@@ -1,6 +1,5 @@
 # require the items for the notifier
 Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
-require 'byebug'
 require 'ostruct'
 
 # rubocop:disable Metrics/ClassLength
