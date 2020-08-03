@@ -13,7 +13,6 @@ module Stash
             &relation-type-id=cites,describes,is-supplemented-by,references,compiles,reviews,requires,has-metadata,documents,is-source-of}x)
           .with(
             headers: {
-              'Accept' => '*/*',
               'Host' => 'api.datacite.org'
             }
           )
@@ -25,7 +24,6 @@ module Stash
             is-derived-from,is-required-by&subj-id=https://doi.org/10.6071/m3rp49}x)
           .with(
             headers: {
-              'Accept' => '*/*',
               'Host' => 'api.datacite.org'
             }
           )

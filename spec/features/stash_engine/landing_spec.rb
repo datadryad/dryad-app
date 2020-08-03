@@ -13,6 +13,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Ror
   include Mocks::Stripe
+  include Mocks::Counter
 
   before(:each) do
     # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
@@ -21,6 +22,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     mock_ror!
     mock_datacite!
     mock_stripe!
+    mock_counter!
 
     # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
     create_basic_dataset!
@@ -28,6 +30,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     @resource.current_resource_state.update(resource_state: 'submitted')
     @resource.reload
     @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
+    create(:counter_stat, identifier_id: @resource.identifier.id)
   end
 
   it 'shows popup for download assembly progress and allows it to close' do
