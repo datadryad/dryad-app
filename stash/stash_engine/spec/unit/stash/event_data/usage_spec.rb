@@ -9,9 +9,10 @@ module Stash
         @usage = Usage.new(doi: 'doi:10.6071/m3rp49')
         WebMock.disable_net_connect!
 
-        stub_request(:get, %r{api\.datacite\.org/events})
+        stub_request(:get, 'https://api.datacite.org/events?doi=10.6071/m3rp49&mailto=scott.fisher@ucop.edu&page%5Bsize%5D=0&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine&rows&source-id=datacite-usage')
           .with(
             headers: {
+              'Accept' => '*/*',
               'Host' => 'api.datacite.org'
             }
           )
@@ -27,11 +28,11 @@ module Stash
 
       describe :counts do
         it 'calculates unique investigations count' do
-          expect(@usage.unique_dataset_investigations_count).to eq(348)
+          expect(@usage.unique_dataset_investigations_count).to eq(174)
         end
 
         it 'calculates unique requests count' do
-          expect(@usage.unique_dataset_requests_count).to eq(309)
+          expect(@usage.unique_dataset_requests_count).to eq(6)
         end
       end
     end
