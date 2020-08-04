@@ -5,10 +5,12 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::LinkOut
+  include Mocks::Tenant
 
   before(:each) do
     mock_solr!
     mock_link_out!
+    mock_tenant!
   end
 
   context :journal_metadata_autofill, js: true do

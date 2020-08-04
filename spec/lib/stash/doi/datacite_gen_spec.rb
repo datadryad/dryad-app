@@ -7,6 +7,8 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module Stash
   module Doi
     RSpec.describe DataciteGen do
+      include Mocks::Tenant
+
       # make these private methods public so I can test them
       class DataciteGen
         public :post_metadata, :put_doi, :get_doi
@@ -14,6 +16,7 @@ module Stash
 
       describe 'Cirneco replacement methods' do
         before(:each) do
+          mock_tenant!
           @resource = create(:resource)
           @datacite_gen = DataciteGen.new(resource: @resource)
           sp = Stash::Merritt::SubmissionPackage.new(resource: @resource, packaging: nil)

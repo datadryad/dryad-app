@@ -110,7 +110,7 @@ module StashDatacite
 
       def create_publisher(tenant)
         publisher = Publisher.where(resource_id: @resource.id).first
-        @publisher = publisher.present? ? publisher : Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
+        @publisher = publisher.present? ? publisher : Publisher.create(publisher: tenant&.short_name, resource_id: @resource.id)
       end
     end
   end

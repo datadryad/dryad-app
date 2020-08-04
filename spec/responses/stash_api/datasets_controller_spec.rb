@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
@@ -14,15 +13,21 @@ module StashApi
     include Mocks::Stripe
     include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Datacite
+    include Mocks::Tenant
 
-    before(:all) do
-      @user = create(:user, role: 'superuser')
+    before(:each) do
+      neuter_curation_callbacks!
+      mock_ror!
+      mock_tenant!
+      mock_datacite_and_idgen!
+      @user = create(:user, role: 'superuser', tenant_id: 'dryad')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
-    after(:all) do
+    after(:each) do
       @user.destroy
       @doorkeeper_application.destroy
     end
@@ -30,8 +35,6 @@ module StashApi
     # test creation of a new dataset
     describe '#create' do
       before(:each) do
-        neuter_curation_callbacks!
-        mock_ror!
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
       end
@@ -41,7 +44,7 @@ module StashApi
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
-        expect(%r{doi:10.5072/dryad\..{8}}).to match(output[:identifier])
+        expect(/doi:10./).to match(output[:identifier])
         hsh = @meta.hash
         expect(hsh[:title]).to eq(output[:title])
         expect(hsh[:abstract]).to eq(output[:abstract])

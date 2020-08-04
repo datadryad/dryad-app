@@ -8,11 +8,12 @@ require 'cgi'
 module StashApi
   RSpec.describe FilesController, type: :request do
 
+    include Mocks::CurationActivity
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
-    include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Tenant
     include Mocks::UrlUpload
 
     # set up some versions with different curation statuses (visibility)
@@ -24,6 +25,7 @@ module StashApi
 
       neuter_curation_callbacks!
       mock_ror!
+      mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
 
