@@ -3,30 +3,26 @@ require 'byebug'
 
 module StashEngine
   describe Identifier, type: :model do
+    include Mocks::CurationActivity
     include Mocks::Datacite
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
-    include Mocks::CurationActivity
-
-    attr_reader :identifier
-    attr_reader :usage1
-    attr_reader :usage2
-    attr_reader :res1
-    attr_reader :res2
-    attr_reader :res3
+    include Mocks::Tenant
 
     before(:each) do
       mock_ror!
       mock_solr!
       mock_datacite!
       mock_stripe!
+      mock_tenant!
+      neuter_curation_callbacks!
 
       @user = create(:user, tenant_id: 'dryad', role: nil)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = create(:resource, identifier_id: @identifier.id, user: @user)
-      @res2 = create(:resource, identifier_id: @identifier.id, user: @user)
-      @res3 = create(:resource, identifier_id: @identifier.id, user: @user)
+      @res1 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      @res2 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      @res3 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
 
       @created_files = Array.new(3) do |i|
         FileUpload.create(
@@ -47,12 +43,12 @@ module StashEngine
       int_datum_manu.save!
       @identifier.reload
 
-      res1.current_state = 'submitted'
-      Version.create(resource_id: res1.id, version: 1)
-      res2.current_state = 'submitted'
-      Version.create(resource_id: res2.id, version: 2)
-      res3.current_state = 'in_progress'
-      Version.create(resource_id: res3.id, version: 3)
+      @res1.current_state = 'submitted'
+      Version.create(resource_id: @res1.id, version: 1)
+      @res2.current_state = 'submitted'
+      Version.create(resource_id: @res2.id, version: 2)
+      @res3.current_state = 'in_progress'
+      Version.create(resource_id: @res3.id, version: 3)
 
       WebMock.disable_net_connect!
     end
@@ -63,7 +59,7 @@ module StashEngine
 
     describe '#to_s' do
       it 'returns something useful' do
-        expect(identifier.to_s).to eq('doi:10.123/456')
+        expect(@identifier.to_s).to eq('doi:10.123/456')
       end
     end
 
@@ -71,97 +67,97 @@ module StashEngine
 
       describe '#first_submitted_resource' do
         it 'returns the first submitted version' do
-          lsv = identifier.first_submitted_resource
-          expect(lsv.id).to eq(res1.id)
+          lsv = @identifier.first_submitted_resource
+          expect(lsv.id).to eq(@res1.id)
         end
       end
 
       describe '#last_submitted_resource' do
         it 'returns the last submitted version' do
-          lsv = identifier.last_submitted_resource
-          expect(lsv.id).to eq(res2.id)
+          lsv = @identifier.last_submitted_resource
+          expect(lsv.id).to eq(@res2.id)
         end
       end
 
       describe '#latest_resource' do
         it 'returns the latest resource' do
-          expect(identifier.latest_resource_id).to eq(res3.id)
+          expect(@identifier.latest_resource_id).to eq(@res3.id)
         end
       end
 
       describe '#in_progress_resource' do
         it 'returns the in-progress version' do
-          ipv = identifier.in_progress_resource
-          expect(ipv.id).to eq(res3.id)
+          ipv = @identifier.in_progress_resource
+          expect(ipv.id).to eq(@res3.id)
         end
       end
 
       describe '#in_progress?' do
         it 'returns true if an in-progress version exists' do
-          expect(identifier.in_progress?).to eq(true)
+          expect(@identifier.in_progress?).to eq(true)
         end
         it 'returns false if no in-progress version exists' do
-          res3.current_state = 'submitted'
-          expect(identifier.in_progress?).to eq(false)
+          @res3.current_state = 'submitted'
+          expect(@identifier.in_progress?).to eq(false)
         end
       end
 
       describe '#processing_resource' do
         before(:each) do
-          res2.current_state = 'processing'
+          @res2.current_state = 'processing'
         end
 
         it 'returns the "processing" version' do
-          pv = identifier.processing_resource
-          expect(pv.id).to eq(res2.id)
+          pv = @identifier.processing_resource
+          expect(pv.id).to eq(@res2.id)
         end
       end
 
       describe '#processing?' do
         it 'returns false if no "processing" version exists' do
-          expect(identifier.processing?).to eq(false)
+          expect(@identifier.processing?).to eq(false)
         end
 
         it 'returns true if a "processing" version exists' do
-          res2.current_state = 'processing'
-          expect(identifier.processing?).to eq(true)
+          @res2.current_state = 'processing'
+          expect(@identifier.processing?).to eq(true)
         end
       end
 
       describe '#error?' do
         it 'returns false if no "error" version exists' do
-          expect(identifier.error?).to eq(false)
+          expect(@identifier.error?).to eq(false)
         end
 
         it 'returns true if a "error" version exists' do
-          res2.current_state = 'error'
-          expect(identifier.error?).to eq(true)
+          @res2.current_state = 'error'
+          expect(@identifier.error?).to eq(true)
         end
       end
 
       # TODO: in progress is just the in-progress state itself of the group of in_progress states.  We need to fix our terminology.
       describe '#in_progress_only?' do
         it 'returns false if no "in_progress_only" version exists' do
-          res3.current_state = 'submitted'
-          expect(identifier.in_progress_only?).to eq(false)
+          @res3.current_state = 'submitted'
+          expect(@identifier.in_progress_only?).to eq(false)
         end
 
         it 'returns true if a "in_progress_only" version exists' do
-          res2.current_state = 'error'
-          expect(identifier.in_progress_only?).to eq(true)
+          @res2.current_state = 'error'
+          expect(@identifier.in_progress_only?).to eq(true)
         end
       end
 
       describe '#resources_with_file_changes' do
         before(:each) do
-          FileUpload.create(resource_id: res1.id, upload_file_name: 'cat', file_state: 'created')
-          FileUpload.create(resource_id: res2.id, upload_file_name: 'cat', file_state: 'copied')
-          FileUpload.create(resource_id: res3.id, upload_file_name: 'cat', file_state: 'created')
+          FileUpload.create(resource_id: @res1.id, upload_file_name: 'cat', file_state: 'created')
+          FileUpload.create(resource_id: @res2.id, upload_file_name: 'cat', file_state: 'copied')
+          FileUpload.create(resource_id: @res3.id, upload_file_name: 'cat', file_state: 'created')
         end
 
         it 'returns the version that changed' do
-          resources = identifier.resources_with_file_changes
-          expect(resources.first.id).to eq(res1.id)
+          resources = @identifier.resources_with_file_changes
+          expect(resources.first.id).to eq(@res1.id)
           expect(resources.count).to eq(2)
         end
       end
@@ -433,7 +429,7 @@ module StashEngine
       it 'retrieves the associated journal' do
         @bogus_title = 'Some Bogus Title'
         Journal.create(issn: @fake_issn, title: @bogus_title)
-        expect(identifier.journal.title).to eq(@bogus_title)
+        expect(@identifier.journal.title).to eq(@bogus_title)
       end
 
       it 'allows review when there is no journal' do
@@ -462,9 +458,7 @@ module StashEngine
 
     describe '#institution_will_pay?' do
       it 'does not make user pay when institution pays' do
-        tenant = double(Tenant)
-        allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
-        allow(tenant).to receive(:covers_dpc).and_return(true)
+        mock_tenant!(covers_dpc: true)
         ident = Identifier.create
         Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
         ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource

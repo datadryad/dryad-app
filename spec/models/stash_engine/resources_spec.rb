@@ -1411,7 +1411,7 @@ module StashEngine
         expect(ZenodoCopyJob).to receive(:perform_later).with(@resource.id)
         @resource.send_to_zenodo
       end
-      
+
     end
 
     describe '#previous_resource' do
@@ -1436,7 +1436,7 @@ module StashEngine
       it 'shows version 2 as previous resource for version 3' do
         expect(@resource3.previous_resource).to eq(@resource2)
       end
-    end                
-    
+    end
+
   end
 end

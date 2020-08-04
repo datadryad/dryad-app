@@ -9,11 +9,12 @@ require 'digest'
 module StashApi
   RSpec.describe UrlsController, type: :request do
 
+    include Mocks::CurationActivity
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
-    include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Tenant
     include Mocks::UrlUpload
 
     before(:all) do
@@ -43,6 +44,7 @@ module StashApi
     before(:each) do
       neuter_curation_callbacks!
       mock_ror!
+      mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
 
