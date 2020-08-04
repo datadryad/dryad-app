@@ -31,7 +31,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
     @resource.current_resource_state.update(resource_state: 'submitted')
     @resource.reload
     @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
-    create(:counter_stat, identifier_id: @resource.identifier.id)
   end
 
   it 'shows popup for download assembly progress and allows it to close' do
