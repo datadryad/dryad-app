@@ -5,7 +5,7 @@ class MergePublishedAndEmbargoStates < ActiveRecord::Migration[4.2]
       # Commenting this out 2020-8-4, since it is no longer needed (all data has been converted long ago),
       # and it causes problems with building a new database in TravisCI.
       # add 'submitted' state
-      #t.change :resource_state, <<-SQL
+      # t.change :resource_state, <<-SQL
       #  ENUM (
       #         'in_progress',
       #         'processing',
@@ -14,14 +14,14 @@ class MergePublishedAndEmbargoStates < ActiveRecord::Migration[4.2]
       #         'embargoed',
       #         'submitted'
       #  ) DEFAULT 'in_progress'
-      #SQL
+      # SQL
 
       # migrate existing records to 'submitted' state
       # note 'embargoed' should never have been used, but just in case
-      #StashEngine::ResourceState.connection.execute("UPDATE stash_engine_resource_states
+      # StashEngine::ResourceState.connection.execute("UPDATE stash_engine_resource_states
       #   SET resource_state = 'submitted'
       #   WHERE resource_state IN ('published', 'embargoed')"
-      #)
+      # )
 
       # remove obsolete states
       t.change :resource_state, "ENUM('in_progress', 'processing', 'error', 'submitted' ) DEFAULT 'in_progress'"
