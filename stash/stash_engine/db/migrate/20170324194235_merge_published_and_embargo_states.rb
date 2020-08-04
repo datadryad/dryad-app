@@ -18,23 +18,13 @@ class MergePublishedAndEmbargoStates < ActiveRecord::Migration[4.2]
 
       # migrate existing records to 'submitted' state
       # note 'embargoed' should never have been used, but just in case
-      #StashEngine::ResourceState.connection.execute(
-      #  <<-SQL
-      #  UPDATE stash_engine_resource_states
-      #     SET resource_state = 'submitted'
-      #   WHERE resource_state IN ('published', 'embargoed')
-      #  SQL
+      #StashEngine::ResourceState.connection.execute("UPDATE stash_engine_resource_states
+      #   SET resource_state = 'submitted'
+      #   WHERE resource_state IN ('published', 'embargoed')"
       #)
 
       # remove obsolete states
-      t.change :resource_state, <<-SQL
-        ENUM (
-               'in_progress',
-               'processing',
-               'error',
-               'submitted'
-        ) DEFAULT 'in_progress'
-      SQL
+      t.change :resource_state, "ENUM('in_progress', 'processing', 'error', 'submitted' ) DEFAULT 'in_progress'"
     end
   end
 
