@@ -44,6 +44,7 @@ RSpec.feature 'NewDataset', type: :feature do
   context :form_submission do
 
     before(:each) do
+      mock_ror!
       start_new_dataset
     end
 
