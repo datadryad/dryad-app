@@ -97,7 +97,7 @@ module Stash
           @manifest_path = package.create_manifest
         end
 
-        # TODO Fix this intermittently-failing test. Ticket #806.
+        # TODO: Fix this intermittently-failing test. Ticket #806.
         xit 'builds a manifest' do
           actual = File.read(manifest_path)
 
@@ -115,7 +115,7 @@ module Stash
         end
 
         describe 'public/system' do
-          # TODO Fix this intermittently-failing test. Ticket #806.
+          # TODO: Fix this intermittently-failing test. Ticket #806.
           xit 'writes mrt-dataone-manifest.txt' do
             actual = File.read("#{public_system}/#{resource.id}/mrt-dataone-manifest.txt")
             expected = File.read('spec/data/stash-merritt/mrt-dataone-manifest.txt')
