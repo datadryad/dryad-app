@@ -1,4 +1,4 @@
-class AddUtf8Mb4ToFilePath < ActiveRecord::Migration
+class AddUtf8Mb4ToFilePath < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
     ALTER TABLE stash_engine_file_uploads MODIFY

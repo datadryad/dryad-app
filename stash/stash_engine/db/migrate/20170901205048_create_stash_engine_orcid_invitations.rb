@@ -1,4 +1,4 @@
-class CreateStashEngineOrcidInvitations < ActiveRecord::Migration
+class CreateStashEngineOrcidInvitations < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_orcid_invitations do |t|
       t.string :email

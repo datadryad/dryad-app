@@ -1,4 +1,4 @@
-class CreateStashEngineInternalData < ActiveRecord::Migration
+class CreateStashEngineInternalData < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_internal_data do |t|
       t.references :resource

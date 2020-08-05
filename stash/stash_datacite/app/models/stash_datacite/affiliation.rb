@@ -3,7 +3,7 @@
 require 'stash/organization/ror'
 
 module StashDatacite
-  class Affiliation < ActiveRecord::Base
+  class Affiliation < ApplicationRecord
 
     include Stash::Organization
 

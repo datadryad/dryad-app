@@ -44,7 +44,7 @@ module StashEngine
           my_tenant = current_tenant
           identifiers = find_identifiers(my_tenant)
 
-          render text: gen_xml_from_identifiers(identifiers, my_tenant), layout: false
+          render xml: gen_xml_from_identifiers(identifiers, my_tenant), layout: false
         end
       end
     end

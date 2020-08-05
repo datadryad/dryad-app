@@ -1,4 +1,4 @@
-class CreateStashEngineUsers < ActiveRecord::Migration
+class CreateStashEngineUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_users do |t|
       t.string :first_name

@@ -13,8 +13,8 @@
   <div style="clear: both";>&nbsp;</div>
   <table class="c-lined-table" id="curation_table">
     <tr class="c-lined-table__head">
-      <th class="c-admin-table <%= sort_display('created_at', @sort_column) %>">
-        <%= sort_by 'created_at', title: 'Timestamp', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('created_at') %>">
+        <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
       <th class="c-admin-table">
         Status

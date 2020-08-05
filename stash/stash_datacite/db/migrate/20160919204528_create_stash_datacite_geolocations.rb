@@ -1,4 +1,4 @@
-class CreateStashDataciteGeolocations < ActiveRecord::Migration
+class CreateStashDataciteGeolocations < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_geo_locations do |t|
       t.integer :place_id

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class GeolocationBox < ActiveRecord::Base
+  class GeolocationBox < ApplicationRecord
     self.table_name = 'dcs_geo_location_boxes'
     has_one :geolocation, class_name: 'StashDatacite::Geolocation', foreign_key: 'box_id', dependent: :nullify
 

@@ -12,8 +12,10 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module Stash
   module MerrittDownload
     RSpec.describe File do
+      include Mocks::Tenant
 
       before(:each) do
+        mock_tenant!
         @resource = create(:resource)
         @file_upload = create(:file_upload, resource_id: @resource.id)
         @file_dl_obj = Stash::MerrittDownload::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication'))

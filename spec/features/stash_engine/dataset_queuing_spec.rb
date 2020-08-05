@@ -7,23 +7,25 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   # include MerrittHelper
   include DatasetHelper
   include Mocks::Datacite
-  # include Mocks::Repository
+  include Mocks::CurationActivity
   include Mocks::SubmissionJob
   include Mocks::RSolr
   include Mocks::Ror
   include Mocks::Stripe
+  include Mocks::Tenant
   include AjaxHelper
 
   before(:each) do
     FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
-    # mock_repository!
     # for this we don't want to mock the whole repository, but just the actual submission to Merritt that happens in
     # the queue, Stash::Merritt::SubmissionJob.do_submit!
     mock_submission_job!
     mock_solr!
     mock_ror!
-    mock_datacite!
+    mock_datacite_and_idgen!
     mock_stripe!
+    mock_tenant!
+    neuter_curation_callbacks!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad', role: 'superuser')
     @document_list = []
@@ -68,7 +70,8 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       expect(page).to have_text('Submissions are being held for shutdown on this server')
     end
 
-    it 'should re-enable transfers', js: true do
+    # TODO: Fix this intermittently-failing test. Ticket #806.
+    xit 'should re-enable transfers', js: true do
       FileUtils.touch(HOLD_SUBMISSIONS_PATH)
       visit '/stash/submission_queue'
       click_button 'graceful_start'

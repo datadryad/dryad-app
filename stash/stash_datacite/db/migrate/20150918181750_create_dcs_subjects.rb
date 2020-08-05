@@ -1,4 +1,4 @@
-class CreateDcsSubjects < ActiveRecord::Migration
+class CreateDcsSubjects < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_subjects do |t|
       t.string :subject

@@ -1,4 +1,4 @@
-class CreateStashDataciteFormats < ActiveRecord::Migration
+class CreateStashDataciteFormats < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_formats do |t|
       t.text :format

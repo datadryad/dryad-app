@@ -15,18 +15,18 @@ ActiveRecord::Base.establish_connection(
   database: filename
 )
 
-class LogItem < ActiveRecord::Base
+class LogItem < ApplicationRecord
   self.table_name = 'logitem'
   belongs_to :metadata_item
 end
 
-class MetadataItem < ActiveRecord::Base
+class MetadataItem < ApplicationRecord
   self.table_name = 'metadataitem'
   has_many :log_items
   has_many :authors
 end
 
-class Author < ActiveRecord::Base
+class Author < ApplicationRecord
   self.table_name = 'metadataauthor'
   belongs_to :metadata_item
 end

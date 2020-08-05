@@ -1,4 +1,4 @@
-class CreateDcsEmbargoes < ActiveRecord::Migration
+class CreateDcsEmbargoes < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_embargoes do |t|
       t.column :embargo_type, "ENUM('none', 'download', 'description') DEFAULT 'none'"

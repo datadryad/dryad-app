@@ -1,4 +1,4 @@
-class CreateStashEngineJournals < ActiveRecord::Migration
+class CreateStashEngineJournals < ActiveRecord::Migration[4.2]
   def up
     create_table :stash_engine_journals do |t|
       t.string :title, index: true

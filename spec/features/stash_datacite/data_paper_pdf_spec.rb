@@ -3,10 +3,12 @@ require 'rails_helper'
 RSpec.feature 'DataPaperPdf', type: :feature do
 
   include Mocks::CurationActivity
+  include Mocks::Tenant
 
   context :data_paper do
     before(:each) do
       neuter_curation_callbacks!
+      mock_tenant!
 
       @resource = create(:resource, user: create(:user, tenant_id: 'dryad'), meta_view: true, file_view: true,
                                     identifier: create(:identifier, pub_state: 'published'))

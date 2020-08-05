@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'byebug'
 require 'pry-remote'
 require_relative '../../responses/stash_engine/download_helpers'
@@ -13,6 +12,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Ror
   include Mocks::Stripe
+  include Mocks::Tenant
 
   before(:each) do
     # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
@@ -21,6 +21,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     mock_ror!
     mock_datacite!
     mock_stripe!
+    mock_tenant!
 
     # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
     create_basic_dataset!

@@ -1,5 +1,5 @@
 module StashEngine
-  class CounterCitation < ActiveRecord::Base
+  class CounterCitation < ApplicationRecord
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     # this class caches the counter_citations so it doesn't take so long to get them all

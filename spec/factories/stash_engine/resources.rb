@@ -8,7 +8,7 @@ FactoryBot.define do
     title { Faker::Lorem.sentence }
     download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri { Faker::Internet.url }
-    publication_date { Time.new }
+    publication_date { Time.new.utc }
 
     before(:create) do |resource|
       resource.tenant_id = resource.user.present? ? resource.user.tenant_id : 'dryad'

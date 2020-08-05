@@ -1,5 +1,5 @@
 module StashEngine
-  class ResourceUsage < ActiveRecord::Base
+  class ResourceUsage < ApplicationRecord
     belongs_to :resource
   end
 end

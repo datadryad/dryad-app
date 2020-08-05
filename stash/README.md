@@ -44,7 +44,7 @@ for metadata harvesting.
 
 ## Contributing
 
-For individual projects, `bundle exec rake` will run unit tests, check test
+For individual projects, `bundle exec rspec` will run unit tests, check test
 coverage, and check code style. Use `bundle exec rubocop -a` to identify
 code style problems and auto-fix any that can be auto-fixed. In general,
 all projects follow the top-level [`rubocop.yml`](rubocop.yml) code style

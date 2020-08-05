@@ -1,5 +1,5 @@
 module StashEngine
-  class EditHistory < ActiveRecord::Base
+  class EditHistory < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
 
     amoeba do

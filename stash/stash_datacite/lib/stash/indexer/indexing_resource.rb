@@ -128,7 +128,7 @@ module Stash
       end
 
       def issued_date
-        @resource&.publication_date&.iso8601
+        @resource&.publication_date&.utc&.iso8601
       end
 
       def license_name
