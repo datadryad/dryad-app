@@ -92,7 +92,8 @@ module Stash
       end
 
       describe :zipfile do
-        it 'builds a zipfile' do
+        # TODO Fix this intermittently-failing test. Ticket #806.
+        xit 'builds a zipfile' do
           expected_metadata = Dir.glob('spec/data/stash-merritt/*').map do |path|
             [File.basename(path), File.read(path)]
           end.to_h
