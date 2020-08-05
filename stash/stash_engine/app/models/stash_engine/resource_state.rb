@@ -1,5 +1,5 @@
 module StashEngine
-  class ResourceState < ActiveRecord::Base
+  class ResourceState < ApplicationRecord
     belongs_to :user
     belongs_to :resource
     include StashEngine::Concerns::ResourceUpdated

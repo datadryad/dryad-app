@@ -1,7 +1,7 @@
 require 'stash/zenodo_replicate'
 
 module StashEngine
-  class ZenodoCopyJob < ActiveJob::Base
+  class ZenodoCopyJob < ApplicationJob
     queue_as :zenodo_copy
 
     DEFERRED_TOUCH_FILE = Rails.root.join('..', 'defer_jobs.txt').to_s

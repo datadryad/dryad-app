@@ -132,7 +132,7 @@ module Stash
                        headers: { 'Content-Type': 'application/json' })
 
           @szf.upload_files
-          stub.should have_been_requested
+          expect(stub).to have_been_requested
         end
 
         it 'uploads a file that is new or changed but with wrong md5 digest from Zenodo' do

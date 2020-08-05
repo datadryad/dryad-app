@@ -1,5 +1,5 @@
 module StashEngine
-  class JournalRole < ActiveRecord::Base
+  class JournalRole < ApplicationRecord
     belongs_to :journal
     belongs_to :user
 

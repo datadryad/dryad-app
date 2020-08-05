@@ -151,7 +151,7 @@ For all operating systems, continue:
 bundle install
 
 # run the migrations to set up the database tables
-bundle exec rake db:migrate
+bundle exec rails db:migrate
 
 # start your rails server for local development
 rails s

@@ -31,7 +31,7 @@ module StashApi
       out = paged_users(filtered_users)
       respond_to do |format|
         format.json { render json: out }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
+        format.html { render plain: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 

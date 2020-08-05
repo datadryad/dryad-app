@@ -1,4 +1,4 @@
-class CreateDcsRelatedIdentifiers < ActiveRecord::Migration
+class CreateDcsRelatedIdentifiers < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_related_identifiers do |t|
       t.string :related_identifier

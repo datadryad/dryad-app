@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '4.2.11'
+gem 'rails', '~> 5.0'
 gem 'rb-readline', '~> 0.5.5', require: false
 
 # ############################################################
@@ -106,10 +106,6 @@ group :test do
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
   gem 'simplecov-console', require: false
-  # Rails application preloader (https://github.com/rails/spring)
-  # gem 'spring'
-  # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
-  # gem 'spring-commands-rspec'
   # Library for stubbing HTTP requests in Ruby. (http://github.com/bblimke/webmock)
   gem 'webmock'
 end
@@ -118,6 +114,7 @@ group :development, :test, :local_dev do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
+  gem 'listen'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'

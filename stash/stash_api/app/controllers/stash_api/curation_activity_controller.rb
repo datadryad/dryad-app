@@ -34,7 +34,6 @@ module StashApi
 
     # POST /datasets/{dataset_id}/curation_activity
     def create
-      params.permit!
       resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
@@ -44,7 +43,6 @@ module StashApi
 
     # PUT /curation_activity/{id}
     def update
-      params.permit!
       resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|

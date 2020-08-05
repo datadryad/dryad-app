@@ -1,4 +1,4 @@
-class AddPaymentType < ActiveRecord::Migration
+class AddPaymentType < ActiveRecord::Migration[4.2]
   def up
     rename_column :stash_engine_identifiers, :invoice_id, :payment_id
     add_column :stash_engine_identifiers, :payment_type, :string, after: :search_words

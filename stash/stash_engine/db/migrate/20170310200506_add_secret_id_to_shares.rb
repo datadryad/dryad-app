@@ -1,4 +1,4 @@
-class AddSecretIdToShares < ActiveRecord::Migration
+class AddSecretIdToShares < ActiveRecord::Migration[4.2]
   def up
     add_column :stash_engine_shares, :secret_id, :string, after: :sharing_link
     # transform data from old to new column

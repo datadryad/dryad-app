@@ -1,4 +1,4 @@
-class ModifyTitleTypeEnum < ActiveRecord::Migration
+class ModifyTitleTypeEnum < ActiveRecord::Migration[4.2]
   def change
     execute QUERY1
     execute QUERY2

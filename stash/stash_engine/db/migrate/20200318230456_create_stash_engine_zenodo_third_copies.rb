@@ -1,4 +1,4 @@
-class CreateStashEngineZenodoThirdCopies < ActiveRecord::Migration
+class CreateStashEngineZenodoThirdCopies < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_zenodo_third_copies do |t|
       t.column :state, "ENUM('enqueued', 'replicating', 'finished', 'error') DEFAULT 'enqueued'", index: true

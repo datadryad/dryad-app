@@ -28,7 +28,6 @@ module StashApi
 
     # POST /datasets/{dataset_id}/internal_data
     def create
-      params.permit!
       @datum = StashEngine::InternalDatum.new(params[:internal_datum])
       @datum.update!(identifier_id: @stash_identifier.id)
       render json: @datum
@@ -36,7 +35,6 @@ module StashApi
 
     # PUT /internal_data/{id}
     def update
-      params.permit!
       @internal_data = StashEngine::InternalDatum.find(params[:id])
       @internal_data.update!(params[:internal_datum])
       respond_to do |format|

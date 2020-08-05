@@ -1,4 +1,4 @@
-class AddIndexesWhereNeeded < ActiveRecord::Migration
+class AddIndexesWhereNeeded < ActiveRecord::Migration[4.2]
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def change
     add_index(:dcs_affiliations, :short_name, length: { short_name: 50 })

@@ -5,7 +5,7 @@ require 'stash/download' # for the thing that prevents character mangling in htt
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
-  class FileUpload < ActiveRecord::Base
+  class FileUpload < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 

@@ -1,4 +1,4 @@
-class CreateStashEngineDownloadHistories < ActiveRecord::Migration
+class CreateStashEngineDownloadHistories < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_download_histories do |t|
       t.string :ip_address, index: true

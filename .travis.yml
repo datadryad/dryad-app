@@ -44,6 +44,6 @@ before_script:
   - if [ "$TO_TEST" = "MAIN" ]; then sudo chmod 4755 /opt/google/chrome/chrome-sandbox; fi
 
 script:
-  - if [ "$TO_TEST" = "MAIN" ]; then bundle exec rake; fi
+  - if [ "$TO_TEST" = "MAIN" ]; then RAILS_ENV=test bundle exec rake; fi	
   - if [ "$TO_TEST" = "STASH" ]; then stash/travis-build.rb; fi
 

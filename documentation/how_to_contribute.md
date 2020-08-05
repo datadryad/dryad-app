@@ -29,7 +29,7 @@ need to modify.
 
 ## Testing
 
-- Tests can be executed on a local machine by running `bundle exec rake` inside either the main **dryad** repostiory
+- Tests can be executed on a local machine by running `bundle exec rspec` inside either the main **dryad** repostiory
 or inside an individual engine or gem directory in the **stash** repository.
 - Individual tests in the dryad repository can be executed with `bundle exec rspec <path-to_test>`.
 For example, `rspec spec/features/stash_datacite/manuscript_populate_metadata_spec.rb` .

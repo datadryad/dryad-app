@@ -1,5 +1,5 @@
 module StashEngine
-  class Journal < ActiveRecord::Base
+  class Journal < ApplicationRecord
     validates :issn, uniqueness: true
     has_many :journal_roles
     has_many :users, through: :journal_roles

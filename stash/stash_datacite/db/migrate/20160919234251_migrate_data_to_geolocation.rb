@@ -1,4 +1,4 @@
-class MigrateDataToGeolocation < ActiveRecord::Migration
+class MigrateDataToGeolocation < ActiveRecord::Migration[4.2]
   def self.up
     # move places into new Geolocation table
     StashDatacite::GeolocationPlace.where('resource_id IS NOT NULL').each do |place|

@@ -1,4 +1,4 @@
-class CreateDcsDates < ActiveRecord::Migration
+class CreateDcsDates < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_dates do |t|
       t.date :date

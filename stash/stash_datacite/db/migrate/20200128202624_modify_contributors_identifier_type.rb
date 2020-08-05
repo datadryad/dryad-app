@@ -1,4 +1,4 @@
-class ModifyContributorsIdentifierType < ActiveRecord::Migration
+class ModifyContributorsIdentifierType < ActiveRecord::Migration[4.2]
 
   def change
     change_table :dcs_contributors do |t|

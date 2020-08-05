@@ -1,4 +1,4 @@
-class AddTitleToResourcePart1 < ActiveRecord::Migration
+class AddTitleToResourcePart1 < ActiveRecord::Migration[4.2]
   def up
     add_utf8mb4('stash_engine_resources', 'title')
   end
