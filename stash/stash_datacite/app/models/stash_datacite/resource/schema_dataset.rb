@@ -73,9 +73,9 @@ module StashDatacite
       end
 
       def keywords
-        return [] unless @resource.subjects
+        return [] unless @resource.subjects.non_fos
 
-        @resource.subjects.map(&:subject).compact
+        @resource.subjects.non_fos.map(&:subject).compact
       end
 
       def authors

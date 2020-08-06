@@ -1,5 +1,3 @@
-require 'byebug'
-
 class AddFosToSubjects < ActiveRecord::Migration[5.0]
 
   SUBJECT_LIST = [
@@ -53,9 +51,10 @@ class AddFosToSubjects < ActiveRecord::Migration[5.0]
       'Other humanities'
   ]
 
+  # this up will insert the needed values if needed, but otherwise leave the existing ones alone
   def up
     # it can have unexpected consequences to use ActiveRecord models directly in a migration, so using SQL,
-    # btw, no values have an apostrophe or other weird characters in them
+    # btw, no values have an apostrophe or other weird characters in them and a controlled list
     results = ActiveRecord::Base.connection.instance_variable_get('@connection').
         query("SELECT * FROM dcs_subjects WHERE subject_scheme = 'fos'", as: :hash)
     existing_subjects = results.map { |i| i['subject'] } # can't use a symbol here for more compact notation
