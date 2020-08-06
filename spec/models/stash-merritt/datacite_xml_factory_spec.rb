@@ -69,7 +69,7 @@ module Datacite
         resource.save!
 
         dcs_resource = xml_factory.build_resource
-        subjs = dcs_resource.subjects.map { |item| item.value }
+        subjs = dcs_resource.subjects.map(&:value)
         expect(subjs).to include("FOS: #{subject.subject}")
       end
     end
