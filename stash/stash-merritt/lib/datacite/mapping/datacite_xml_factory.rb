@@ -148,7 +148,7 @@ module Datacite
       end
 
       def add_subjects(dcs_resource)
-        dcs_resource.subjects = se_resource.subjects.map { |s| Subject.new(value: s.subject) }
+        dcs_resource.subjects = se_resource.subjects.non_fos.map { |s| Subject.new(value: s.subject) }
       end
 
       def add_contributors(dcs_resource, datacite_3: false)
