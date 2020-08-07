@@ -1,11 +1,12 @@
 {
   "@id": "https://doi.org/10.15146/R3RG6G",
   "@context": "http://schema.org",
-  "@type": "dataset",
+  "@type": "Dataset",
   "name": "A Zebrafish Model for Studies on Esophageal Epithelial Biology",
   "description": "Mammalian esophagus exhibits a remarkable change in epithelial structure\n      during the transition from embryo to adult. However, the molecular\n      mechanisms of esophageal epithelial development are not well understood.\n      Zebrafish (Danio rerio), a common model organism for vertebrate\n      development and gene function, has not previously been characterized as a\n      model system for esophageal epithelial development. In this study, we\n      characterized a piece of non-keratinized stratified squamous epithelium\n      similar to human esophageal epithelium in the upper digestive tract of\n      developing zebrafish. Under the microscope, this piece was detectable at\n      5dpf and became stratified at 7dpf. Expression of esophageal epithelial\n      marker genes (Krt5, P63, Sox2 and Pax9) was detected by\n      immunohistochemistry and in situ hybridization. Knockdown of P63, a gene\n      known to be critical for esophageal epithelium, disrupted the development\n      of this epithelium. With this model system, we found that Pax9 knockdown\n      resulted in loss or disorganization of the squamous epithelium, as well as\n      down-regulation of the differentiation markers Krt4 and Krt5. In summary,\n      we characterized a region of stratified squamous epithelium in the\n      zebrafish upper digestive tract which can be used for functional studies\n      of candidate genes involved in esophageal epithelial biology.",
   "url": "http://localhost:3000/stash/dataset/doi%253A10.15146%252FR3RG6G",
   "identifier": "https://doi.org/10.15146/R3RG6G",
+  "isAccessibleForFree": true,
   "version": 1,
   "keywords": [
     "Zebrafish",
@@ -28,6 +29,8 @@
     "encodingFormat": "application/zip",
     "contentUrl": "http://localhost:3000/api/v2/datasets/doi%253A10.15146%252FR3RG6G/download"
   },
+  "provider": {"@id": "https://datadryad.org"},
+  "publisher": {"@id": "https://datadryad.org", "@type": "Organization", "legalName": "Dryad Digital Repository", "name": "Dryad", "url": "https://datadryad.org"},
   "temporalCoverage": [
     "2016",
     "2015-12-02",

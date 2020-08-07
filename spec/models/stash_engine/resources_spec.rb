@@ -46,6 +46,17 @@ module StashEngine
 
     end
 
+    describe :title do
+      it 'gets the correct clean_title' do
+        test_title = 'some test title'
+        resource = create(:resource, title: test_title)
+        expect(resource.clean_title).to eq(test_title)
+
+        resource = create(:resource, title: "Data from: #{test_title}")
+        expect(resource.clean_title).to eq(test_title)
+      end
+    end
+
     describe :tenant do
       it 'returns the resource tenant' do
         tenant = instance_double(Tenant)
