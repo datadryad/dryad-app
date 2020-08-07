@@ -11,6 +11,9 @@
   </div>
 
 <h2 class="o-heading__page-span">Dataset: Basic Information</h2>
+
+  <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
+
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
   <fieldset class="c-fieldset">

@@ -7,5 +7,6 @@ module StashDatacite
                                         through: 'StashDatacite::ResourceSubject'
 
     scope :non_fos, -> { where("subject_scheme IS NULL OR subject_scheme <> 'fos'") }
+    scope :fos, -> { where("subject_scheme = 'fos'") }
   end
 end
