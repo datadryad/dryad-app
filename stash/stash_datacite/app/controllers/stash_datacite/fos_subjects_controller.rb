@@ -1,5 +1,4 @@
 require_dependency 'stash_datacite/application_controller'
-require 'byebug'
 
 module StashDatacite
   class FosSubjectsController < ApplicationController
