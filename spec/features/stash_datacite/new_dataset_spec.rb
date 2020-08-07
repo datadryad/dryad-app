@@ -49,6 +49,10 @@ RSpec.feature 'NewDataset', type: :feature do
     end
 
     it 'submits if all requirements are met', js: true do
+
+      # subjects
+      fill_in 'fos_subjects', with: 'Agricultural biotechnology'
+
       # ##############################
       # Title
       fill_in 'title', with: Faker::Lorem.sentence
@@ -152,6 +156,32 @@ RSpec.feature 'NewDataset', type: :feature do
 
       navigate_to_review
       expect(page).to have_text('you will receive an invoice', wait: 5)
+    end
+
+    it 'fills in a Field of Science subject', js: true do
+      only_fill_required_fields
+      fill_in 'fos_subjects', with: 'Agricultural biotechnology'
+      navigate_to_review
+      expect(page).to have_text('Agricultural biotechnology', wait: 5)
+    end
+
+    it 'fills in a Field of Science subject that is not official', js: true do
+      name = Array.new(3) { Faker::Lorem.word }.join(' ')
+      only_fill_required_fields
+      fill_in 'fos_subjects', with: name
+      navigate_to_review
+      expect(page).to have_text(name, wait: 5)
+    end
+
+    it 'fills in a Field of Science subject and changes it and it keeps the latter', js: true do
+      name = Array.new(3) { Faker::Lorem.word }.join(' ')
+      only_fill_required_fields
+      fill_in 'fos_subjects', with: name
+      fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
+      fill_in 'fos_subjects', with: 'Agricultural biotechnology'
+      navigate_to_review
+      expect(page).to have_text('Agricultural biotechnology', wait: 5)
+      expect(page).not_to have_text(name, wait: 5)
     end
 
   end
