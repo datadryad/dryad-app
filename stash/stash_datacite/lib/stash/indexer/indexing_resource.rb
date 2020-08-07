@@ -2,7 +2,7 @@ require 'datacite/mapping'
 require 'cgi'
 
 # This file and classes are based on David's stash-harvester class and mostly the 'datacite_extensions.rb' which is
-# most of the funcationality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
+# most of the functionality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
 # file which we give to Merritt and it gives back to us.
 #
 # The methods are the same names for duck-typing should we ever need it (most likely we won't).  I also added a few
