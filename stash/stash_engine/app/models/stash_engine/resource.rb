@@ -634,6 +634,14 @@ module StashEngine
     end
 
     # -----------------------------------------------------------
+    # Title
+
+    # Title without "Data from:"
+    def clean_title
+      title.delete_prefix('Data from:').strip
+    end
+
+    # -----------------------------------------------------------
     # SOLR actions for this resource
 
     def submit_to_solr
