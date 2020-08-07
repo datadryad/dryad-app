@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 require 'byebug'
 
 module StashDatacite
@@ -9,7 +9,7 @@ module StashDatacite
     # We are using this for both new/update, id is resource_id, fos_subjects is the subject
     def update
       # this removes the current associated fos subjects, but doesn't delete subject entries from subjects table
-      resource.subjects.permissive_fos.each {|subj| resource.subjects.delete(subj)}
+      resource.subjects.permissive_fos.each { |subj| resource.subjects.delete(subj) }
       resource.subjects << make_or_get_subject(params[:fos_subjects]) unless params[:fos_subjects].blank?
     end
 

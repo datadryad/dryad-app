@@ -8,7 +8,7 @@ module StashDatacite
 
     scope :non_fos, -> { where("subject_scheme IS NULL OR subject_scheme NOT IN ('fos', 'bad_fos')") }
     scope :fos, -> { where("subject_scheme = 'fos'") }
-    scope :permissive_fos, -> { where("subject_scheme IN ('fos', 'bad_fos')")}
+    scope :permissive_fos, -> { where("subject_scheme IN ('fos', 'bad_fos')") }
     scope :bad_fos, -> { where("subject_scheme = 'bad_fos'") }
   end
 end
