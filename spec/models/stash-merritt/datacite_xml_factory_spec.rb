@@ -62,6 +62,16 @@ module Datacite
         expect(resource_type).not_to be_nil
         expect(resource_type.resource_type_general).to be(ResourceTypeGeneral::DATASET)
       end
+
+      it 'creates FOS Science subject in the way DataCite requested' do
+        subject = create(:subject, subject_scheme: 'fos')
+        resource.subjects << subject
+        resource.save!
+
+        dcs_resource = xml_factory.build_resource
+        subjs = dcs_resource.subjects.map(&:value)
+        expect(subjs).to include("FOS: #{subject.subject}")
+      end
     end
   end
 end
