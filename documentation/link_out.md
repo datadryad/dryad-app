@@ -4,7 +4,7 @@
 
 [NCBI LinkOut](https://www.ncbi.nlm.nih.gov/projects/linkout/) and [European PMC LabsLink](http://europepmc.org/LabsLink) are mechanisms by which NCBI and PMC pages link to content in Dryad. Dryad data packages are related to articles in PubMed, and to molecular sequences in GenBank's nucleotide and protein databases.
 
-The core service code and Rake tasks live in the [Stash repo](https://github.com/CDL-Dryad/stash/tree/master/stash_engine) in the `stash_engine/lib/stash/link_out/` directory. The XML ERB templates however reside within this repo in the `app/views/link_out/` directory due to an issue with the Rails engine having trouble locating views in an engine when executing within the context of a Rake task.
+The core service code and Rake tasks live in the [Stash repo](https://github.com/CDL-Dryad/stash/tree/main/stash_engine) in the `stash_engine/lib/stash/link_out/` directory. The XML ERB templates however reside within this repo in the `app/views/link_out/` directory due to an issue with the Rails engine having trouble locating views in an engine when executing within the context of a Rake task.
 
 The FTP credentials used by the services is stored in the application's private repository
 

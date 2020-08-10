@@ -45,7 +45,7 @@ gem install bundler -v 1.17.3
 
 - [ ] Set environment variables for your environment, change as necessary
 ```shell script
-export MY_BRANCH=master
+export MY_BRANCH=main
 export RAILS_ENV=development
 # the capistrano environment may be things like stage1 and refers to the server
 export CAP_ENV=development
