@@ -32,7 +32,7 @@ You may login to the Dash server and view the item.
 
 ### Batch migration
 
-The dryad-utils repository contains many [tools to facilitate migrating groups of datasets](https://github.com/datadryad/dryad-utils/tree/master/dash-migration).
+The dryad-utils repository contains many [tools to facilitate migrating groups of datasets](https://github.com/datadryad/dryad-utils/tree/main/dash-migration).
 
 ### Implementation details
 
@@ -42,7 +42,7 @@ The DSpace implementation lives in these Java files:
 - DashService = API communications with Dash
 - TransferToDash = curation task that manages bulk transfer of packages to Dash
 
-The DASH implementation lives primarily in the [DASH submission API](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/apis/submission.md).
+The DASH implementation lives primarily in the [DASH submission API](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md).
 
 ## Statistics Migration
 

@@ -1,6 +1,6 @@
 # stash
 
-[![Build Status](https://travis-ci.org/CDL-Dryad/stash.svg?branch=master)](https://travis-ci.org/CDL-Dryad/stash) 
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash.svg?branch=main)](https://travis-ci.org/CDL-Dryad/stash) 
 
 ## Introduction
 
