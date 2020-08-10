@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# info about endpoints at https://github.com/CDLUC3/mrt-doc/blob/master/endopoints/pre-signed-urls.md#phase-2
+# info about endpoints at https://github.com/CDLUC3/mrt-doc/blob/main/endopoints/pre-signed-urls.md#phase-2
 require 'byebug'
 require 'http'
 require 'active_support/all'

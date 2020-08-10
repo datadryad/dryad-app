@@ -1,6 +1,6 @@
 # stash-wrapper
 
-[![Build Status](https://travis-ci.org/CDL-Dryad/stash-wrapper.svg?branch=master)](https://travis-ci.org/CDL-Dryad/stash-wrapper)
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash-wrapper.svg?branch=main)](https://travis-ci.org/CDL-Dryad/stash-wrapper)
 [![Code Climate](https://codeclimate.com/github/CDL-Dryad/stash-wrapper.svg)](https://codeclimate.com/github/CDL-Dryad/stash-wrapper)
 [![Inline docs](http://inch-ci.org/github/CDL-Dryad/stash-wrapper.svg)](http://inch-ci.org/github/CDL-Dryad/stash-wrapper)
 [![Gem Version](https://img.shields.io/gem/v/stash-wrapper.svg)](https://github.com/CDL-Dryad/stash-wrapper/releases)
