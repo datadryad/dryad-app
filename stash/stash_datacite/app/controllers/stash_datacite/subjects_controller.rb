@@ -50,7 +50,7 @@ module StashDatacite
 
     def ensure_subject(subject_str)
       subject = find_or_create_subject(subject_str)
-      subjects = @resource.subjects.non_fos
+      subjects = @resource.subjects
       return if subjects.exists?(subject)
 
       subjects << subject
