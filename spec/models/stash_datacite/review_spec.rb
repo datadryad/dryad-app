@@ -65,7 +65,13 @@ module StashDatacite
       end
 
       it 'extracts the subjects' do
-        expect(review.subjects).to eq(resource.subjects)
+        # They may be in different order
+        review.subjects.each do |subj|
+          expect(resource.subjects).to include(subj)
+        end
+        resource.subjects.each do |subj|
+          expect(review.subjects).to include(subj)
+        end
       end
 
       it 'extracts the contributors' do

@@ -1,4 +1,12 @@
 Rails.application.configure do
+  # this craziness is to get logging both to console and to log file just like normal development
+  normal_logger = ActiveSupport::Logger.new("log/#{Rails.env}.log")
+  console_logger = ActiveSupport::Logger.new(STDOUT)
+  combined_logger = console_logger.extend(ActiveSupport::Logger.broadcast(normal_logger))
+
+  combined_logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(combined_logger)
+
   # this is so that we can still see output to console, otherwise it gets turned off for some reason with this environment and webrick
   # config.middleware.insert_before(Rails::Rack::Logger, Rails::Rack::LogTailer)
   config.log_level = :debug

@@ -11,6 +11,9 @@
   </div>
 
 <h2 class="o-heading__page-span">Dataset: Basic Information</h2>
+
+  <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
+
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
   <fieldset class="c-fieldset">
@@ -26,6 +29,21 @@
     </div>
     <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
+
+  <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Funding</legend>
+    <div class="js-contributors_form">
+      <% if @metadata_entry.contributors.exists? %>
+        <% @metadata_entry.contributors.each do |contributor| %>
+          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
+        <% end %>
+      <% else %>
+        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
+      <% end %>
+    </div>
+    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add' %>
+  </fieldset>
+
 
     <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract, description_type: :abstract }  %>
@@ -45,20 +63,6 @@
 
     <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
-
-    <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">Funding</legend>
-    <div class="js-contributors_form">
-      <% if @metadata_entry.contributors.exists? %>
-        <% @metadata_entry.contributors.each do |contributor| %>
-          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
-        <% end %>
-      <% else %>
-          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
-      <% end %>
-    </div>
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add' %>
-    </fieldset>
 
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Related Work(s): <span class="c-input__hint">Are there any articles (posted or published), datasets, or code that are related to this Data Publication? Please choose the relation type and identifier type from the drop downs and enter your unique permanent identifier below.</span></legend>

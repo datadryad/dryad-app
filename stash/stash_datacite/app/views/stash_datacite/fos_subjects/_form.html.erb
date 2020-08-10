@@ -1,0 +1,14 @@
+<%# the local variable 'resource' should be passed in to this partial %>
+<% form_id = "dc_fos_subjects_#{resource.id}" %>
+<%= form_tag(fos_subjects_update_path, method: :patch, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input' }) do |f| %>
+  <% my_suffix = field_suffix(resource) %>
+  <strong><%= label_tag "#{my_suffix}", "Research Domain", class: 'required c-input__label' %></strong><br/>
+  <%= text_field_tag :fos_subjects, resource&.subjects&.permissive_fos&.first&.subject, id: "fos_subjects_#{my_suffix}",
+                     list: "fos_subject_#{my_suffix}", class: 'title c-input__text', size: 70 %>
+  <%= hidden_field_tag :id, resource.id %>
+  <%= hidden_field_tag(:form_id, form_id) %>
+
+  <datalist id="<%= "fos_subject_#{my_suffix}" %>">
+    <%= options_for_select(StashDatacite::Subject.fos.pluck(:subject).uniq.sort, resource&.subjects&.fos&.first&.subject) %>
+  </datalist>
+<% end %>
