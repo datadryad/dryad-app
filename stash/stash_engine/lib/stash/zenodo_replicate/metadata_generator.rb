@@ -72,7 +72,7 @@ module Stash
       end
 
       def keywords
-        @resource.subjects&.map(&:subject)
+        @resource.subjects.non_fos&.map(&:subject)
       end
 
       def notes

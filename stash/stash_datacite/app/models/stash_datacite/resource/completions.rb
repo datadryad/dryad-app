@@ -110,7 +110,7 @@ module StashDatacite
       end
 
       def keyword
-        @resource.subjects.where.not(subject: [nil, '']).count > 0
+        @resource.subjects.non_fos.where.not(subject: [nil, '']).count > 0
       end
 
       def method

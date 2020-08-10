@@ -45,7 +45,7 @@ module StashDatacite
       end
 
       def subjects
-        @subjects = @resource.subjects
+        @subjects = @resource.subjects.non_fos
       end
 
       def new_contributor
