@@ -8,9 +8,9 @@ info:
     The API for the [Dryad](https://datadryad.org) data publication and
     preservation platform.
 
-    In addition to this documentation, please see the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/apis/submission.md) which give concrete examples of submission through the Dryad API.
+    In addition to this documentation, please see the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete examples of submission through the Dryad API.
 
-    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/master/documentation) may also be expanded further in the future as more documentation is created (though not all of it may be relevant to API users).
+    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) may also be expanded further in the future as more documentation is created (though not all of it may be relevant to API users).
 
   version: "2.0.0"
 

@@ -195,7 +195,7 @@ We have enabled submission to a SWORD-enabled Merritt repository, but have only 
 
 ### Repository and identifier service configuration
 
-The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/master/lib/stash/repo)
+The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/main/lib/stash/repo)
 API for identifier assignment and submission to repositories.
 
 Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
