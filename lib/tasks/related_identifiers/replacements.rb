@@ -5,50 +5,50 @@ module RelatedIdentifiers
     def self.update_doi_prefix
       # update all starting with DOI and correct format into fixed_id: temp string.
       self.sql_update(
-          sql_regex: '^doi:10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^doi:10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 5
       )
     end
 
     def self.update_bare_doi
       self.sql_update(
-          sql_regex: '^10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 1
       )
     end
 
     def self.move_good_format
       self.sql_update(
-          sql_regex: '^https://doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^https://doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 17
       )
     end
 
     def self.update_http_good
       self.sql_update(
-          sql_regex: '^http://doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^http://doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 16
       )
     end
 
     def self.update_http_dx_doi
       self.sql_update(
-          sql_regex: '^http://dx.doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^http://dx.doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 19
       )
       self.sql_update(
-          sql_regex: '^https://dx.doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^https://dx.doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 20
       )
     end
 
     def self.update_protocol_free
       self.sql_update(
-          sql_regex: '^dx.doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^dx.doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 12
       )
       self.sql_update(
-          sql_regex: '^doi.org/10.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
+          sql_regex: '^doi.org/10\.[[:digit:]]{4,9}/[-._;()/:a-zA-Z0-9]+$',
           doi_starting_char: 9
       )
     end
@@ -63,7 +63,7 @@ module RelatedIdentifiers
           ascii_string << char unless char.ord > 127
         end
 
-        m = ascii_string.match(%r{10.\d{4,9}/[-._\;()/:a-zA-Z0-9]+})
+        m = ascii_string.match(%r{10\.\d{4,9}/[-._\;()/:a-zA-Z0-9]+})
         result.update(fixed_id: "https://doi.org/#{m}") if m
       end
     end
@@ -72,7 +72,7 @@ module RelatedIdentifiers
       results = StashDatacite::RelatedIdentifier.where("related_identifier_type = 'doi' AND fixed_id IS NULL")
 
       results.each do |result|
-        m = result.related_identifier.match(%r{10.\d{4,9}/[-._\;()/:a-zA-Z0-9]+})
+        m = result.related_identifier.match(%r{10\.\d{4,9}/[-._\;()/:a-zA-Z0-9]+})
         result.update(fixed_id: "https://doi.org/#{m}") if m
       end
     end
