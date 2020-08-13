@@ -1429,8 +1429,8 @@ module StashEngine
         allow(ZenodoCopyJob).to receive(:perform_later).and_return(nil)
         @resource.send_to_zenodo
         @resource.reload
-        expect(@resource.zenodo_copy).not_to be_nil
-        expect(@resource.zenodo_copy.state).to eq('enqueued')
+        expect(@resource.zenodo_copies.data.first).not_to be_nil
+        expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
       end
 
       it 'calls perform_later' do
