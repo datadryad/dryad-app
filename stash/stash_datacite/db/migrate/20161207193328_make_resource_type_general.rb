@@ -1,4 +1,4 @@
-class MakeResourceTypeGeneral < ActiveRecord::Migration
+class MakeResourceTypeGeneral < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :dcs_resource_types, :resource_type, :resource_type_general
     add_column :dcs_resource_types, :resource_type, :text, after: :resource_type_general

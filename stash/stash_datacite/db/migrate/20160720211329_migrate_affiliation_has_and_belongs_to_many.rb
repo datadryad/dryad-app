@@ -1,4 +1,4 @@
-class MigrateAffiliationHasAndBelongsToMany < ActiveRecord::Migration
+class MigrateAffiliationHasAndBelongsToMany < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
       INSERT INTO dcs_affiliations_creators (affiliation_id, creator_id, created_at, updated_at)

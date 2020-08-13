@@ -20,6 +20,8 @@ public/assets/
 public/uploads/
 uploads/
 test-reports/
+stash/script/counter-uploader/reports/*.json
+stash/script/counter-uploader/tmp/*.json
 
 # ######################################################
 
@@ -82,7 +84,6 @@ build-iPhoneSimulator/
 
 *.rbc
 capybara-*.html
-.rspec
 /log
 /tmp
 /db/*.sqlite3

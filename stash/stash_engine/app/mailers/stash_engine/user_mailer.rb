@@ -9,8 +9,10 @@ module StashEngine
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
     def status_change(resource, status)
       return unless %w[submitted peer_review published embargoed].include?(status)
+
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
+
       @user_name = user_name(user)
       assign_variables(resource)
       mail(to: user_email(user),
@@ -23,6 +25,7 @@ module StashEngine
     def journal_published_notice(resource, status)
       return unless %w[published embargoed].include?(status)
       return unless APP_CONFIG['send_journal_published_notices']
+
       assign_variables(resource)
       return unless @resource&.identifier&.journal&.notify_contacts&.present?
 
@@ -34,6 +37,7 @@ module StashEngine
     def journal_review_notice(resource, status)
       return unless status == 'peer_review'
       return unless APP_CONFIG['send_journal_published_notices']
+
       assign_variables(resource)
       return unless @resource&.identifier&.journal&.review_contacts&.present?
 
@@ -56,6 +60,7 @@ module StashEngine
     def error_report(resource, error)
       logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
       return unless resource.present?
+
       assign_variables(resource)
       @backtrace = to_backtrace(error)
       mail(to: @submission_error_emails, bcc: @bcc_emails,
@@ -65,8 +70,10 @@ module StashEngine
     def in_progress_reminder(resource)
       logger.warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
       return unless resource.present?
+
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
+
       @user_name = user_name(user)
       assign_variables(resource)
       mail(to: user_email(user),
@@ -76,19 +83,23 @@ module StashEngine
     def peer_review_reminder(resource)
       logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
       return unless resource.present?
+
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
+
       @user_name = user_name(user)
       assign_variables(resource)
       mail(to: user_email(user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
-    def dependency_offline(dependency)
+    def dependency_offline(dependency, message)
       return unless dependency.present?
+
       @dependency = dependency
       @url = status_dashboard_url
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @message = message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} dependency offline: #{dependency.name}")
     end
@@ -96,6 +107,7 @@ module StashEngine
     def helpdesk_notice(resource, message)
       logger.warn('Unable to send helpdesk notice; nil resource') unless resource.present?
       return unless resource.present?
+
       assign_variables(resource)
       @message = message
       mail(to: @helpdesk_email,
@@ -125,6 +137,7 @@ module StashEngine
 
     def rails_env
       return "[#{Rails.env}]" unless Rails.env == 'production'
+
       ''
     end
 

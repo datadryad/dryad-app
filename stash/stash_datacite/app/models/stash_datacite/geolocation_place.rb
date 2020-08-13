@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class GeolocationPlace < ActiveRecord::Base
+  class GeolocationPlace < ApplicationRecord
     self.table_name = 'dcs_geo_location_places'
     has_one :geolocation, class_name: 'StashDatacite::Geolocation', foreign_key: 'place_id', dependent: :nullify
 
@@ -22,6 +22,7 @@ module StashDatacite
       return nil unless geolocation
       return geolocation.geolocation_box.bounding_box_str if geolocation.geolocation_box
       return geolocation.geolocation_point.bounding_box_str if geolocation.geolocation_point
+
       nil
     end
   end

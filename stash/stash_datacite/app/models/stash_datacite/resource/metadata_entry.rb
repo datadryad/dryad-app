@@ -45,7 +45,7 @@ module StashDatacite
       end
 
       def subjects
-        @subjects = @resource.subjects
+        @subjects = @resource.subjects.non_fos
       end
 
       def new_contributor
@@ -103,13 +103,14 @@ module StashDatacite
 
       def ensure_license
         return unless @resource.rights.empty?
+
         license = StashEngine::License.by_id(@resource.identifier.license_id)
         @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
       end
 
       def create_publisher(tenant)
         publisher = Publisher.where(resource_id: @resource.id).first
-        @publisher = publisher.present? ? publisher : Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
+        @publisher = publisher.present? ? publisher : Publisher.create(publisher: tenant&.short_name, resource_id: @resource.id)
       end
     end
   end

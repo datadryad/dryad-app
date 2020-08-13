@@ -16,11 +16,13 @@ module Stash
 
       def populate_title
         return if @response[:title].blank?
+
         @resource.update(title: @response[:title])
       end
 
       def populate_authors
         return if @response[:authors].blank? || @response[:authors][:author].blank?
+
         authors = @response[:authors][:author]
         authors.each do |api_author|
           author = @resource.authors.create(
@@ -34,12 +36,14 @@ module Stash
 
       def populate_abstract
         return if @response[:abstract].blank?
+
         abstract = @resource.descriptions.where(description_type: 'abstract').first_or_create
         abstract.update(description: @response[:abstract])
       end
 
       def populate_keywords
         return if @response[:keywords].blank?
+
         @resource.subjects << @response[:keywords].map do |kw|
           StashDatacite::Subject.find_or_create_by(subject: kw)
         end
@@ -60,6 +64,7 @@ module Stash
         # but it's not really always, so trying to extract an email with a regular expression if one is lying around in the junk somewhere.
         email = email.match(/\S+@\S+\.{1}\S+/).to_s
         return if email.blank?
+
         db_author.update(author_email: email)
       end
       # rubocop:enable Metrics/CyclomaticComplexity

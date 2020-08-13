@@ -1,5 +1,5 @@
 module StashEngine
-  class Version < ActiveRecord::Base
+  class Version < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
   end
 end

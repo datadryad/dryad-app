@@ -45,8 +45,8 @@ module LinkOut
       ftp.putbinaryfile("#{TMP_DIR}/#{@provider_file}")
       ftp.putbinaryfile("#{TMP_DIR}/#{@links_file}")
       ftp.close
-    rescue StandardError => se
-      p "    FTP Error: #{se.message}"
+    rescue StandardError => e
+      p "    FTP Error: #{e.message}"
     end
 
     private

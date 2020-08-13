@@ -105,8 +105,6 @@ module StashEngine
         # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
         # tenant is only set for admins (not superusers).
         def where(params:, tenant: nil)
-          return [] unless params.is_a?(Hash)
-
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
@@ -124,7 +122,7 @@ module StashEngine
                                  admin_tenant: tenant)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
-          results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
+          results = ApplicationRecord.connection.execute(query).map { |result| new(result) }
           # If the user is trying to sort by author names, then
           (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
         end
@@ -189,6 +187,7 @@ module StashEngine
         # Swap a term into the SQL snippet/clause
         def add_term_to_clause(clause, term)
           return nil unless clause.present? && term.present?
+
           format(clause.to_s, term: ActiveRecord::Base.connection.quote(term))
         end
 

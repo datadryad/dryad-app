@@ -86,6 +86,7 @@ module StashDatacite
     def find_or_create_geolocation(pt_params)
       existing = find_geolocation_by_point(pt_params)
       return existing if existing
+
       Geolocation.new_geolocation(
         point: [
           pt_params[:latitude],
@@ -101,6 +102,7 @@ module StashDatacite
         .only_geo_points(params[:resource_id])
         .where(latitude: object_params[:latitude], longitude: object_params[:longitude])
       return nil if points.empty?
+
       points.first.geolocation
     end
 

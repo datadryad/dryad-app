@@ -1,4 +1,4 @@
-class CreateStashEngineEmbargoes < ActiveRecord::Migration
+class CreateStashEngineEmbargoes < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_embargoes do |t|
       t.datetime :end_date

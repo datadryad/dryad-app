@@ -79,6 +79,7 @@ module StashApi
 
     def check_file_size(file_upload:)
       return if @resource.size <= @resource.tenant.max_submission_size
+
       file_upload.destroy # because this item won't fit
       (render json: { error:
                           'This file would make your submission size larger than the maximum of ' \
@@ -89,12 +90,14 @@ module StashApi
     def require_url_current_uploads
       the_type = @resource.upload_type
       return if %i[manifest unknown].include?(the_type)
+
       render json: { error: 'You may not submit a URL in the same version when you have submitted files by direct file upload' }.to_json, status: 409
     end
 
     def validate_digest_type
       digest_types = StashEngine::FileUpload.digest_types.keys
       return if params[:digestType].nil? || digest_types.include?(params[:digestType])
+
       (render json: { error:
           "digestType should be one of the values in this list: #{digest_types.join(', ')}" }.to_json, status: 403) && yield
     end

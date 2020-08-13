@@ -3,7 +3,7 @@ require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
 module StashEngine
-  class FileUpload < ActiveRecord::Base
+  class FileUpload < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 
@@ -22,6 +22,7 @@ module StashEngine
     # returns the latest version number in which this filename was created
     def version_file_created_in
       return resource.stash_version if file_state == 'created' || file_state.blank?
+
       sql = <<-SQL
              SELECT versions.*
                FROM stash_engine_file_uploads uploads
@@ -43,6 +44,7 @@ module StashEngine
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
       return '' if domain.nil?
+
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
@@ -80,9 +82,28 @@ module StashEngine
       domain, ark = resource.merritt_protodomain_and_local_id
       # the ark is already encoded in the URLs we are given from sword
       return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
+
       # the slash is being double-encoded and normally shouldn't be present, except in a couple of one-off datasets that we regret.
       "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
+    end
+
+    def smart_destroy!
+      # see if it's on the file system and destroy it if it's there
+      cfp = calc_file_path
+      ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
+
+      if in_previous_version?
+        # destroy any others of this filename in this resource
+        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
+        # and mark to remove from merritt
+        update(file_state: 'deleted')
+      else
+        # remove all of this filename for this resource from the database
+        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
+      end
+
+      resource.reload
     end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
@@ -91,6 +112,7 @@ module StashEngine
     def self.cleanup_dir_list(uploads_dir = Resource.uploads_dir)
       my_dirs = older_resource_named_dirs(uploads_dir)
       return [] if my_dirs.empty?
+
       Resource.joins(:current_resource_state).where(id: my_dirs)
         .where("stash_engine_resource_states.resource_state = 'submitted'").pluck(:id)
     end
@@ -98,6 +120,18 @@ module StashEngine
     def self.older_resource_named_dirs(uploads_dir)
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
+    end
+
+    # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
+    # means created last time.
+    def in_previous_version?
+      prev_res = resource.previous_resource
+      return false if prev_res.nil?
+
+      prev_file = FileUpload.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
+      return false if prev_file.nil? || prev_file.file_state == 'deleted'
+
+      true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
     end
   end
 end

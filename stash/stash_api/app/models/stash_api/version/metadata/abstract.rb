@@ -10,6 +10,7 @@ module StashApi
         def value
           items = @resource.descriptions.type_abstract.map(&:description)
           return items.first unless items.blank?
+
           nil
         end
       end

@@ -1,6 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file_presigned'
 require 'stash/download/version_presigned'
+require 'http'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -13,6 +14,7 @@ module StashEngine
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
       agent_path = Rails.root.join('uploads', 'blacklist_agents.txt').to_s
       return if request.user_agent.blank?
+
       head(429) if File.exist?(agent_path) && request.user_agent[Regexp.new(File.read(agent_path))]
     end
 
@@ -38,6 +40,7 @@ module StashEngine
     end
 
     # for downloading the full version
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
@@ -45,7 +48,7 @@ module StashEngine
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
       unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render status: 404, text: "404: Not found or invalid download\n"
+        render status: 404, plain: "404: Not found or invalid download\n"
         return
       end
 
@@ -56,10 +59,17 @@ module StashEngine
         format.js do
           @status_hash = @version_presigned.download
           log_counter_version if @status_hash[:status] == 200
+          if @status_hash[:status] == 408
+            notify_download_timeout
+            render 'download_timeout'
+            return
+          end
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
     def assembly_status
       @resource = nil
@@ -74,8 +84,13 @@ module StashEngine
 
       @status_hash = @version_presigned.status
       log_counter_version if @status_hash[:status] == 200 # because this triggers the download when it has this status
+      logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}") if @status_hash[:status] == 408
       render json: @status_hash
+    rescue HTTP::TimeoutError
+      logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}")
+      render json: { status: 408 }
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
@@ -92,7 +107,7 @@ module StashEngine
         CounterLogger.general_hit(request: request, file: file_upload)
         @file_presigned.download(file: file_upload)
       else
-        render status: 403, text: 'You are not authorized to download this file until it has been published.'
+        render status: 403, plain: 'You are not authorized to download this file until it has been published.'
       end
     end
 
@@ -104,10 +119,13 @@ module StashEngine
         log_counter_version
         redirect_to @status_hash[:url]
       elsif @status_hash[:status] == 202
-        render status: 202, text: 'The version of the dataset is being assembled. ' \
+        render status: 202, plain: 'The version of the dataset is being assembled. ' \
               "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+      elsif @status_hash[:status] == 408
+        notify_download_timeout
+        render status: 408, plain: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'
       else
-        render status: 404, text: 'Not found'
+        render status: 404, plain: 'Not found'
       end
     end
 
@@ -157,6 +175,12 @@ module StashEngine
 
     def log_counter_version
       CounterLogger.version_download_hit(request: request, resource: @resource)
+    end
+
+    def notify_download_timeout
+      msg = "Timeout in downloads_controller#download_resource for #{@resource&.id} for IP #{request.remote_ip}"
+      logger.warn(msg)
+      ExceptionNotifier.notify_exception(Stash::Download::MerrittException.new(msg))
     end
 
   end

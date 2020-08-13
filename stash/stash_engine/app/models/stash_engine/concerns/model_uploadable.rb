@@ -23,6 +23,7 @@ module StashEngine
       # display the correct error message based on the url status code
       def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
         return '' if url.nil? || status_code == 200
+
         case status_code
         when 400
           'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS'

@@ -1,4 +1,4 @@
-class AddCurrentCurationActivityIdToStashEngineResources < ActiveRecord::Migration
+class AddCurrentCurationActivityIdToStashEngineResources < ActiveRecord::Migration[4.2]
   def change
     add_column :stash_engine_resources, :current_curation_activity_id, :integer
 

@@ -1,5 +1,5 @@
 module StashEngine
-  class OrcidInvitation < ActiveRecord::Base
+  class OrcidInvitation < ApplicationRecord
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     def resource

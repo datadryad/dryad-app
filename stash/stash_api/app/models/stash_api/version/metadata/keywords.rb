@@ -8,7 +8,7 @@ module StashApi
       class Keywords < MetadataItem
 
         def value
-          @resource.subjects.map(&:subject)
+          @resource.subjects.non_fos.map(&:subject)
         end
       end
     end

@@ -2,7 +2,7 @@ default: &default
   enabled: true
   repository:
     type: exemplum
-    domain: repo-dev.example.edu
+    domain: http://repo-dev.example.edu
     endpoint: "http://repo-dev.example.edu:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
@@ -12,10 +12,11 @@ default: &default
   tenant_id: exemplia
   identifier_service:
     shoulder: "doi:10.5072/5555"
-    account: stash
-    password: stash
+    account: "DRYAD.CDL"
+    password: "***REMOVED***"
     id_scheme: doi
     owner: null
+    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:example.edu
@@ -32,7 +33,7 @@ stage:
   #Add any items that need to override the defaults here
   repository:
     type: exemplum
-    domain: repo-stage.example.edu
+    domain: http://repo-stage.example.edu
     endpoint: "http://repo-stg.example.edu:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
@@ -42,16 +43,17 @@ production:
   #Add any items that need to override the defaults here
   repository:
     type: exemplum
-    domain: repo.example.edu
+    domain: http://repo.example.edu
     endpoint: "http://repo-prd.example.edu:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
   identifier_service:
     shoulder: "doi:10.5072/9999"
-    account: stash
-    password: stash
+    account: "DRYAD.CDL"
+    password: "***REMOVED***"
     id_scheme: doi
     owner: null
+    sandbox: true	
 
 test:
   <<: *default

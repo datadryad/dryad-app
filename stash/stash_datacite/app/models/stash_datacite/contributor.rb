@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class Contributor < ActiveRecord::Base
+  class Contributor < ApplicationRecord
     self.table_name = 'dcs_contributors'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    belongs_to :name_identifier
+    belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
     include StashEngine::Concerns::ResourceUpdated
 
@@ -33,16 +33,19 @@ module StashDatacite
 
     def contributor_type_friendly
       return nil if contributor_type.blank?
+
       ContributorTypesStrToFull[contributor_type]
     end
 
     def self.contributor_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::ContributorType.find_by_value(str)
     end
 
     def contributor_type_mapping_obj
       return nil if contributor_type_friendly.nil?
+
       Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 

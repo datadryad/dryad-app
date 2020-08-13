@@ -1,4 +1,4 @@
-# see https://makandracards.com/makandra/1026-simple-database-lock-for-mysql
+# see https://makandracards.com/makandra/1026-simple-database-lock-for-mysql[4.2]
 # Allows use of locks through database, needed for NOID
 class CreateLocks < ActiveRecord::Migration
   def change

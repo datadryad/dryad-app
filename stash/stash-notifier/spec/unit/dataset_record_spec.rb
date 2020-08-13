@@ -1,5 +1,4 @@
-Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].each { |file| require file }
-require 'byebug'
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
 require 'ostruct'
 require 'nokogiri'
 

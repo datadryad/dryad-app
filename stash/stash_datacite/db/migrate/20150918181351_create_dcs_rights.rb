@@ -1,4 +1,4 @@
-class CreateDcsRights < ActiveRecord::Migration
+class CreateDcsRights < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_rights do |t|
       t.string :rights

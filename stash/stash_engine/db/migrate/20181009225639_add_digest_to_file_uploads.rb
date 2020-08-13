@@ -1,4 +1,4 @@
-class AddDigestToFileUploads < ActiveRecord::Migration
+class AddDigestToFileUploads < ActiveRecord::Migration[4.2]
   def up
     add_column :stash_engine_file_uploads, :digest, :string
     execute <<-SQL

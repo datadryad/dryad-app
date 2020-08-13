@@ -63,3 +63,9 @@ describe 'dev_ops:long_jobs', type: :task do
   end
 
 end
+
+describe 'dev_ops:get_counter_token', type: :task do
+  it 'gets the counter token from our config and outputs it as the last line' do
+    expect { task.execute }.to output(/#{APP_CONFIG[:counter][:token]}/).to_stdout
+  end
+end

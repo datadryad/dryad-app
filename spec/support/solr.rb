@@ -19,8 +19,8 @@ class SolrInstance
   def start
     start_solr
     create_collection
-  rescue StandardError => ex
-    warn(ex)
+  rescue StandardError => e
+    warn(e)
     stop
     raise
   end
@@ -38,8 +38,10 @@ class SolrInstance
     @solr_env ||= begin
       return ENV unless ENV['JAVA_HOME']
       return ENV unless ENV['JAVA_HOME'].include?('jdk-9')
+
       mac_jdk8_home ||= `[[ -f /usr/libexec/java_home && -x /usr/libexec/java_home ]] && /usr/libexec/java_home -v 1.8`.strip!
       return ENV unless mac_jdk8_home
+
       ENV.to_h.merge!('JAVA_HOME' => mac_jdk8_home)
     end
   end
@@ -60,6 +62,7 @@ class SolrInstance
 
   def delete_collection
     return unless @collection.present?
+
     info "Deleting collection #{@collection}"
     @solr_instance.delete(@collection)
     @collection = nil

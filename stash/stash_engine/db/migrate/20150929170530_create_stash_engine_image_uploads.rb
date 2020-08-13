@@ -1,4 +1,4 @@
-class CreateStashEngineImageUploads < ActiveRecord::Migration
+class CreateStashEngineImageUploads < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_image_uploads do |t|
       t.string :image_name

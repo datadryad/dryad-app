@@ -1,4 +1,4 @@
-class AddAwardNumberToContributors < ActiveRecord::Migration
+class AddAwardNumberToContributors < ActiveRecord::Migration[4.2]
   def up
     add_column :dcs_contributors, :award_number, :string
   end

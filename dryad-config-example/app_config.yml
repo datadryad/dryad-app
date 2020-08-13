@@ -24,6 +24,8 @@ defaults: &DEFAULTS
   default_tenant: dryad
   old_dryad_access_token: <REPLACE-ME>
   old_dryad_url: https://api.datadryad.org
+  counter:
+    token: ci1NiJDAwLTAwkb
   zenodo:
     access_token: "ThisIsAFakeToken"
     base_url: https://sandbox.zenodo.org

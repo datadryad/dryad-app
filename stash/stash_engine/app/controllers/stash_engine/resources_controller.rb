@@ -58,8 +58,8 @@ module StashEngine
       resource.fill_blank_author!
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
-    rescue StandardError => error
-      logger.error("Unable to create new resource: #{to_backtrace(error)}")
+    rescue StandardError => e
+      logger.error("Unable to create new resource: #{to_backtrace(e)}")
       redirect_to dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
 

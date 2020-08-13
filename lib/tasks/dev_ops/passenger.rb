@@ -22,7 +22,7 @@ module DevOps
       return @bloated_pids if not_running? || @bloated_pids.length.positive?
 
       process_sections = @stdout.split('* PID: ')
-      process_sections = process_sections[1..-1] # the second to the last of the split sections
+      process_sections = process_sections[1..] # the second to the last of the split sections
 
       process_sections.each do |section|
         matches = section.match(/^(\d+).+Memory *: *(\S+)/m)

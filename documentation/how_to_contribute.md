@@ -10,15 +10,15 @@ We are using the "fork and pull model" for developing Dryad. [https://help.githu
 
 The basic flow of this model would be:
 
-  - Be sure you have up-to-date code from the main repository and the master branch.
+  - Be sure you have up-to-date code from the main repository and the main branch.
   - Create a new feature branch for your changes.
   This might be on a github repository forked from the main repo or it might be a new
   branch on the repo itself (for core developers with with those privileges).
   - Develop your code and tests.
   - Keep your code up to date with accepted pull request changes that have been merged into the main
-  master branch daily (and before creating your final PR).
+    branch daily (and before creating your final PR).
   - When code and tests are complete for your feature, do a pull request to merge
-  the changes into the master branch for the repository and assign another core developer
+  the changes into the main branch for the repository and assign another core developer
   to review your changes.  (More about PR checklist below.)
 
 Note, you may need to follow this methodology across multiple repositories since
@@ -29,7 +29,7 @@ need to modify.
 
 ## Testing
 
-- Tests can be executed on a local machine by running `bundle exec rake` inside either the main **dryad** repostiory
+- Tests can be executed on a local machine by running `bundle exec rspec` inside either the main **dryad** repostiory
 or inside an individual engine or gem directory in the **stash** repository.
 - Individual tests in the dryad repository can be executed with `bundle exec rspec <path-to_test>`.
 For example, `rspec spec/features/stash_datacite/manuscript_populate_metadata_spec.rb` .
@@ -51,13 +51,13 @@ across all repositories where changes are needed.
   since the reviewer and/or the product manager may look at the feature from there.
   - Deploy the merged code to the development server with `cap development deploy` from the dryad repo.
   - Move your github ticket from the **Current Iteration** column to the **Review** column in the dashboard.
-  - Create your pull request for review and merging into the main master branch
+  - Create your pull request for review and merging into the main branch
 
 
 ## End of sprint activities
 
 - After we've had our end-of-sprint activities and review we generally make a tag of
-all the stable code that has been accepted into master and approved by the
+all the stable code that has been accepted into main and approved by the
 team and the product manager.
 - In some cases, there may be very *minor* fixes requested before tagging.  We don't want
 to hold up tagging too long for changes since we want to time-box our sprints.  It is also possible

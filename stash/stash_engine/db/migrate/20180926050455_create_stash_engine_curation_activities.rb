@@ -1,4 +1,4 @@
-class CreateStashEngineCurationActivities < ActiveRecord::Migration
+class CreateStashEngineCurationActivities < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_curation_activities do |t|
       t.integer :identifier_id

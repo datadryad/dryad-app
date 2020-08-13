@@ -1,4 +1,3 @@
-require 'rails_helper'
 require_relative '../../../stash/spec_helpers/factory_helper'
 
 module Datacite
@@ -301,7 +300,7 @@ module Stash
             georss_box_s: nil,
             solr_geom: nil,
             solr_year_i: 2019,
-            dct_issued_dt: @resource.publication_date.strftime('%Y-%m-%dT%TZ'), # TimeWithZone
+            dct_issued_dt: @resource.publication_date.utc.iso8601,
             dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
             dc_publisher_s: @resource.publisher.publisher,
             dct_temporal_sm: ['2018-11-14'],

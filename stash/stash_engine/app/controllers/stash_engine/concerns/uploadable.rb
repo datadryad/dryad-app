@@ -66,8 +66,10 @@ module StashEngine
       def validate_urls
         respond_to do |format|
           return unless resource
+
           url_param = params[:url]
           return if url_param.blank?
+
           urls_from(url_param).each { |url| create_upload(url) }
           format.js do
             render 'stash_engine/file_uploads/validate_urls.js.erb'
@@ -117,6 +119,7 @@ module StashEngine
         resource_id = params[:resource_id]
         upload_params = params[:upload]
         raise ActionController::RoutingError.new('Not Found'), 'Not Found' unless @temp_id && resource_id && upload_params
+
         ensure_upload_dir(resource_id)
         @accum_file = File.join(@upload_dir, @temp_id)
         @file_upload = upload_params[:upload]
@@ -150,6 +153,7 @@ module StashEngine
       def sanitize_filename
         uploaded_file = params[:upload][:upload]
         return unless uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
+
         sanitized = @file_model.sanitize_file_name(uploaded_file.original_filename)
         @original_filename = uploaded_file.original_filename
         uploaded_file.original_filename = sanitized

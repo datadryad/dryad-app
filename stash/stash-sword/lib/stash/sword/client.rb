@@ -30,8 +30,8 @@ module Stash
       def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil) # rubocop:disable Metrics/ParameterLists
         validate(collection_uri, password, username)
         @collection_uri = to_uri(collection_uri)
-        @username     = username
-        @password     = password
+        @username = username
+        @password = password
         @on_behalf_of = on_behalf_of || username
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}", logger: logger)
         @log          = logger || default_logger
@@ -109,7 +109,7 @@ module Stash
         boundary        = "========#{Time.now.utc.to_i}=="
         stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary, packaging: packaging)
         begin
-          return helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
+          helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
         ensure
           stream.close
         end

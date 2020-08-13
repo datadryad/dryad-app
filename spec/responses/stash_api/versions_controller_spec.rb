@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
@@ -21,6 +20,11 @@ module StashApi
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
+    end
+
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
     end
 
     # set up some versions with different curation statuses (visibility)
@@ -53,7 +57,7 @@ module StashApi
     describe '#index' do
 
       it 'shows all versions to a superuser' do
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_authenticated_headers
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", headers: default_authenticated_headers
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(2)
         my_versions = response_body_hash['_embedded']['stash:versions']
@@ -68,9 +72,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-          'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions",
+                            headers: default_json_headers.merge(
+                              'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+                            )
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(2)
@@ -87,9 +92,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-          'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions",
+                            headers: default_json_headers.merge(
+                              'Authorization' => "Bearer #{access_token}"
+                            )
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(1)
@@ -101,7 +107,7 @@ module StashApi
       end
 
       it 'only shows only 1st version to non-logged-in user' do
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", headers: default_json_headers
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(1)
@@ -117,9 +123,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-          'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions",
+                            headers: default_json_headers.merge(
+                              'Authorization' => "Bearer #{access_token}"
+                            )
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(2)
@@ -137,9 +144,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-          'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions",
+                            headers: default_json_headers.merge(
+                              'Authorization' => "Bearer #{access_token}"
+                            )
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(2)
@@ -153,7 +161,7 @@ module StashApi
     describe '#show' do
 
       it 'shows published versions to non-users' do
-        response_code = get "/api/v2/versions/#{@resources[0].id}", {}, default_json_headers
+        response_code = get "/api/v2/versions/#{@resources[0].id}", headers: default_json_headers
         expect(response_code).to eq(200)
         h = response_body_hash
         expect(h['title']).to eq(@resources[0].title)
@@ -162,7 +170,7 @@ module StashApi
       end
 
       it "doesn't show unpublished version to non-user" do
-        response_code = get "/api/v2/versions/#{@resources[1].id}", {}, default_json_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers
         expect(response_code).to eq(404)
       end
 
@@ -171,7 +179,7 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/versions/#{@resources[1].id}", {}, default_json_headers.merge(
+        response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers.merge(
           'Authorization' => "Bearer #{access_token}"
         )
         expect(response_code).to eq(404)
@@ -182,9 +190,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/versions/#{@resources[1].id}", {}, default_json_headers.merge(
-          'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/versions/#{@resources[1].id}",
+                            headers: default_json_headers.merge(
+                              'Authorization' => "Bearer #{access_token}"
+                            )
         expect(response_code).to eq(200)
         h = response_body_hash
         expect(h['title']).to eq(@resources[1].title)
@@ -198,9 +207,10 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/versions/#{@resources[1].id}", {}, default_json_headers.merge(
-          'Authorization' => "Bearer #{access_token}"
-        )
+        response_code = get "/api/v2/versions/#{@resources[1].id}",
+                            headers: default_json_headers.merge(
+                              'Authorization' => "Bearer #{access_token}"
+                            )
         expect(response_code).to eq(200)
         h = response_body_hash
         expect(h['title']).to eq(@resources[1].title)
@@ -209,7 +219,7 @@ module StashApi
       end
 
       it 'returns 404 for non-existant resource, also' do
-        response_code = get "/api/v2/versions/#{@resources[1].id + 100}", {}, default_json_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id + 100}", headers: default_json_headers
         expect(response_code).to eq(404)
       end
 
@@ -248,39 +258,41 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {},
-                            'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}"
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                            headers: { 'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
 
       it 'allows superuser to download private, but submitted to Merritt version' do
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                            headers: default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
 
       it 'disallows random user from downloading non-public, but submitted version' do
         @user.update(role: 'user')
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                            headers: default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(403)
       end
 
       it 'disallows nil user from downloading non-public, but submitted version' do
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {}, default_json_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*')
         expect(response_code).to eq(403)
       end
 
       it 'allows admin to download private, but submitted to Merritt version' do
         @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
 
       it "disallows download if it's not submitted to Merritt" do
         @resources[1].current_state = 'in_progress'
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(403)
       end
     end

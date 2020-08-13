@@ -26,39 +26,39 @@ read_file = File.open(write_file, 'r')
 out_file = Tempfile.create('foo', '/Users/sfisher/workspace/direct-to-cdl-dryad/dryad').binmode
 
 write_thread = Thread.new do
-  begin
-    1.upto(100 + (rand * 100).to_i) do |i|
-      # puts "wrote line #{i}, position #{write_file.pos}" if i % 10 == 0
-      write_file.write("line #{i}\n")
-      sleep(rand / 100) # simulate delays in writing data
-    end
-  ensure
-    write_file.close
+
+  1.upto(100 + (rand * 100).to_i) do |i|
+    # puts "wrote line #{i}, position #{write_file.pos}" if i % 10 == 0
+    write_file.write("line #{i}\n")
+    sleep(rand / 100) # simulate delays in writing data
   end
+ensure
+  write_file.close
+
 end
 
 read_thread = Thread.new do
-  begin
-    until read_file.closed?
-      # puts "read_file.closed? #{read_file.closed?}, write_file.closed? #{write_file.closed?}"
-      while (write_file.closed? && !read_file.closed?) || (read_file.pos + READ_CHUNK_SIZE < write_file.pos)
-        sleep(rand / 30) # simulate delays in reading data
-        data = read_file.read(10)
-        # puts "#{data}, position #{read_file.pos}"
-        $stdout.write data
-        out_file.write data
-        if read_file.eof?
-          read_file.close
-          break
-        end
+
+  until read_file.closed?
+    # puts "read_file.closed? #{read_file.closed?}, write_file.closed? #{write_file.closed?}"
+    while (write_file.closed? && !read_file.closed?) || (read_file.pos + READ_CHUNK_SIZE < write_file.pos)
+      sleep(rand / 30) # simulate delays in reading data
+      data = read_file.read(10)
+      # puts "#{data}, position #{read_file.pos}"
+      $stdout.write data
+      out_file.write data
+      if read_file.eof?
+        read_file.close
+        break
       end
-      sleep 2 # a sleep to wait for more data to be consumed
     end
-  ensure
-    read_file.close unless read_file.closed?
-    write_file.close unless write_file.closed?
-    out_file.close unless out_file.closed?
+    sleep 2 # a sleep to wait for more data to be consumed
   end
+ensure
+  read_file.close unless read_file.closed?
+  write_file.close unless write_file.closed?
+  out_file.close unless out_file.closed?
+
 end
 
 write_thread.join
