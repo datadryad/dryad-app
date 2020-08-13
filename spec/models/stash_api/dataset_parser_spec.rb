@@ -12,9 +12,9 @@ module StashApi
 
       @tenants = StashEngine.tenants
       StashEngine.tenants = begin
-        tenants = HashWithIndifferentAccess.new
+        tenants = ActiveSupport::HashWithIndifferentAccess.new
         tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
-        tenants['exemplia'] = HashWithIndifferentAccess.new(tenant_hash)
+        tenants['exemplia'] = ActiveSupport::HashWithIndifferentAccess.new(tenant_hash)
         tenants
       end
 

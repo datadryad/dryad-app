@@ -31,7 +31,7 @@ module Dash2
     # config.i18n.default_locale = :de
 
     # Initialize configuration defaults for the current Rails version.
-    config.load_defaults 5.0
+    config.load_defaults 5.1
     
     config.generators.javascript_engine = :js
     config.autoload_paths << Rails.root.join("lib")
