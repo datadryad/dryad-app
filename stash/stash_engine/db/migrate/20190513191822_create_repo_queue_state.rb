@@ -1,4 +1,4 @@
-class CreateRepoQueueState < ActiveRecord::Migration
+class CreateRepoQueueState < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_repo_queue_states do |t|
       t.references :resource, index: true

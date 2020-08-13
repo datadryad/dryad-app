@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'httparty'
-gem 'mysql2', '< 0.5x', '>= 0.3.13'
+gem 'mysql2', '~> 0.5.3'
 gem 'parallel_tests', group: %i[development test]
 
 path '..' do
@@ -23,7 +23,7 @@ group :development, :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.57.2'
+  gem 'rubocop', '0.85.1'
   gem 'scss_lint'
   gem 'simplecov'
   gem 'simplecov-console'

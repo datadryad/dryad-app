@@ -30,7 +30,7 @@ module Faker
       def issn
         # Example: 0317-8471 OR 1050-124X
         val = Array.new(2) { rand(4**4).to_s.rjust(4, '0') }.join('-')
-        (%i[0 1].include?(val.last) ? val.sub(/[\d]$/, 'X') : val)
+        (%i[0 1].include?(val.last) ? val.sub(/\d$/, 'X') : val)
       end
 
     end

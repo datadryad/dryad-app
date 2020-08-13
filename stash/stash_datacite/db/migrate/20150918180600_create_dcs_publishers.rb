@@ -1,4 +1,4 @@
-class CreateDcsPublishers < ActiveRecord::Migration
+class CreateDcsPublishers < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_publishers do |t|
       t.string :publisher

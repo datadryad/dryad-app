@@ -1,17 +1,17 @@
 <%# locals: users %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th class="c-admin-table__user-campus <%= sort_display('tenant_id', @sort_column) %>">
-      <%= sort_by 'tenant_id', title: 'Institution', current_column: @sort_column %>
+    <th class="c-admin-table__user-campus <%= sort_display('tenant_id') %>">
+      <%= sortable_column_head sort_field: 'tenant_id', title: 'Institution' %>
     </th>
-    <th class="c-admin-table__user-name <%= sort_display('name', @sort_column) %>">
-      <%= sort_by 'name', title: 'Name', current_column: @sort_column %>
+    <th class="c-admin-table__user-name <%= sort_display('last_name') %>">
+      <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
     </th>
-    <th class="c-admin-table__user-role <%= sort_display('role', @sort_column) %>" colspan="2">
-      <%= sort_by 'role', title: 'Role', current_column: @sort_column %>
+    <th class="c-admin-table__user-role <%= sort_display('role') %>" colspan="2">
+      <%= sortable_column_head sort_field: 'role', title: 'Role' %>
     </th>
-    <th class="c-admin-table__user-last-login <%= sort_display('last_login', @sort_column) %>">
-      <%= sort_by 'last_login', title: 'Last login', current_column: @sort_column %>
+    <th class="c-admin-table__user-last-login <%= sort_display('last_login') %>">
+      <%= sortable_column_head sort_field: 'last_login', title: 'Last login' %>
     </th>
   </tr>
 

@@ -7,10 +7,12 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::Repository
   include Mocks::Ror
   include Mocks::RSolr
+  include Mocks::Tenant
 
   before(:each) do
     mock_solr!
     mock_ror!
+    mock_tenant!
     @user = create(:user)
     sign_in(@user)
   end

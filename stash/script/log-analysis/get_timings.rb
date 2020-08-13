@@ -26,6 +26,7 @@ ms_array = [0, 50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000,
 ms_ranges = []
 ms_array.each_with_index do |val, idx|
   next if idx == 0
+
   ms_ranges.push((ms_array[idx - 1]..val))
 end
 

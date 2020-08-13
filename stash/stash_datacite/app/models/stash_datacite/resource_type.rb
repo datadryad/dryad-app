@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class ResourceType < ActiveRecord::Base
+  class ResourceType < ApplicationRecord
     self.table_name = 'dcs_resource_types'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     include StashEngine::Concerns::ResourceUpdated
@@ -20,21 +20,25 @@ module StashDatacite
 
     def resource_type_general_friendly
       return nil if resource_type_general.blank?
+
       ResourceTypesGeneralStrToFull[resource_type_general]
     end
 
     def resource_type_general_ui
       return nil if resource_type_general.blank?
+
       ResourceTypesGeneralLimited.invert[resource_type_general].to_s
     end
 
     def self.resource_type_general_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::ResourceTypeGeneral.find_by_value(str)
     end
 
     def resource_type_general_mapping_obj
       return nil if resource_type_general_friendly.nil?
+
       ResourceType.resource_type_general_mapping_obj(resource_type_general_friendly)
     end
   end

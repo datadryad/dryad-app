@@ -4,9 +4,9 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # ############################################################
 # Rails
 
-gem 'mysql2', '~> 0.4.10'
-gem 'rails', '4.2.11'
-gem 'rb-readline'
+gem 'mysql2', '~> 0.5.3'
+gem 'rails', '~> 5.0'
+gem 'rb-readline', '~> 0.5.5', require: false
 
 # ############################################################
 # Local engines
@@ -26,14 +26,14 @@ end
 gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.4'
-gem 'rubocop', '~> 0.57.2'
+gem 'passenger', '~> 6.0.5'
+gem 'rubocop', '~> 0.85.1'
 
 # ############################################################
 # UI
 
 # TODO: why do we have uglifier AND yui-compressor?
-# asset pipeline problems with Joel's pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
+# asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
@@ -111,6 +111,7 @@ group :development, :test, :local_dev do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
+  gem 'listen'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'

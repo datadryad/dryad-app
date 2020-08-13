@@ -1,4 +1,4 @@
-class MultipleAffiliationsForCreatorsAndContributors < ActiveRecord::Migration
+class MultipleAffiliationsForCreatorsAndContributors < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_affiliations_dcs_creators do |t|
       t.integer :affiliation_id

@@ -34,6 +34,7 @@ module LinkOut
     # Retrieve the GenBank Database ID(s) for the specified PubMedId. See below for a sample of the expected XML response
     def lookup_genbank_sequences(pmid)
       return nil unless pmid.present?
+
       hash = {}
       StashEngine::ExternalReference.sources.each do |db|
         query = "dbfrom=pubmed&db=#{db}&id=#{pmid}&api_key=#{@ftp.api_key}"
@@ -63,8 +64,8 @@ module LinkOut
         ftp.putbinaryfile(file)
       end
       ftp.close
-    rescue StandardError => se
-      p "    FTP Error: #{se.message}"
+    rescue StandardError => e
+      p "    FTP Error: #{e.message}"
     end
 
     private
@@ -115,6 +116,7 @@ module LinkOut
 
     def reached_max_file_size?(doc)
       return false if doc.xpath('.//*').size < @max_nodes_per_file
+
       true
     end
 
@@ -160,6 +162,7 @@ module LinkOut
     def extract_genbank_ids(xml)
       doc = Nokogiri::XML(xml)
       return [] unless doc.xpath('eLinkResult//LinkSet//LinkSetDb').first.present?
+
       doc.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.reject { |id| id == '0' }
     end
 

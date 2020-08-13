@@ -35,6 +35,7 @@ module Stash
         if resource.identifier && resource.identifier.identifier # if identifier has value
           log_info("ensuring identifier is reserved for resource #{resource.id}, ident: #{resource.identifier_str}")
           return resource.identifier.to_s if resource.skip_datacite_update
+
           return reserve_id(doi: resource.identifier.to_s) # reserve_id is smart and doesn't reserve again if it already exists
         end
         # otherwise create a new one

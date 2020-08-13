@@ -12,7 +12,7 @@ tracking of payments.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2020-01
+RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report YEAR_MONTH=2020-01
 ```
 
 Fields in the shopping cart report
@@ -36,7 +36,7 @@ list of Dryad's contents to external users.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rake identifiers:dataset_info_report
+RAILS_ENV=production bundle exec rails identifiers:dataset_info_report
 ```
 
 Fields in the dataset info report
@@ -57,6 +57,8 @@ server. It uses a mix of python scripts and rake tasks to gather usage
 statistics, send them to DataCite, and record copies in our database.
 
 The main control script is `cron/counter.sh`
+
+See the counter_stats.md for more further notes.
 
 
 Administrative screen report

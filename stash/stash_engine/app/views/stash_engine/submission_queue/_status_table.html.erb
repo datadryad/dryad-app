@@ -24,18 +24,26 @@
 </div>
 
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="c-admin-table">Resource id</th>
-    <th class="c-admin-table">State</th>
-    <th class="c-admin-table">Hostname</th>
-    <th class="c-admin-table">Updated at</th>
-  </tr>
-  <% @queue_rows.each do |qr| %>
+    <tr class="c-lined-table__head">
+	<th class="<%= sort_display('resource_id') %>">
+	    <%= sortable_column_head sort_field: 'resource_id', title: 'Resource' %>	  
+	</th>
+	<th class="<%= sort_display('state') %>">
+	    <%= sortable_column_head sort_field: 'state', title: 'State' %>
+	</th>
+	<th class="<%= sort_display('hostname') %>">
+	    <%= sortable_column_head sort_field: 'hostname', title: 'Hostname' %>
+	</th>
+	<th class="<%= sort_display('updated_at') %>">
+	    <%= sortable_column_head sort_field: 'updated_at', title: 'Updated at' %>
+	</th>
+    </tr>
+    <% @queue_rows.each do |qr| %>
     <tr class="c-lined-table__row">
       <td><%= qr.resource_id %></td>
       <td><%= qr.state %></td>
       <td><%= qr.hostname %></td>
       <td><%= formatted_datetime(qr.updated_at) %></td>
     </tr>
-  <% end %>
+    <% end %>
 </table>

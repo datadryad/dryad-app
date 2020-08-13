@@ -24,6 +24,7 @@ module Stash
         unless resp[:checksum] == "md5:#{md5}"
           raise Stash::ZenodoReplicate::ZenodoError, "Mismatched digests for #{upload_url}\n#{resp[:checksum]} vs #{md5}"
         end
+
         resp
       end
 

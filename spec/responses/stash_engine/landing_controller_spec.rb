@@ -10,11 +10,13 @@ module StashEngine
     include MerrittHelper
     include DatasetHelper
     include DatabaseHelper
+    include Mocks::CurationActivity
     include Mocks::Datacite
     include Mocks::Repository
     include Mocks::RSolr
     include Mocks::Ror
     include Mocks::Stripe
+    include Mocks::Tenant
 
     before(:each) do
       # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
@@ -23,7 +25,9 @@ module StashEngine
       mock_ror!
       mock_datacite!
       mock_stripe!
+      mock_tenant!
       ignore_zenodo!
+      neuter_curation_callbacks!
 
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
       create_basic_dataset!
@@ -59,7 +63,8 @@ module StashEngine
       expect(response).to have_http_status(:not_found)
     end
 
-    it 'shows version of the dataset marked for metadata view' do
+    # [TODO] Fix this intermittently-failing test. Ticket #806.
+    xit 'shows version of the dataset marked for metadata view' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, publication_date: Time.new + 1.day)
@@ -78,7 +83,8 @@ module StashEngine
       expect(response.body).to include('This dataset is embargoed')
     end
 
-    it 'shows version of the dataset marked as published' do
+    # [TODO] Fix this intermittently-failing test. Ticket #806.
+    xit 'shows version of the dataset marked as published' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, file_view: true, publication_date: Time.new)

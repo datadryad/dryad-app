@@ -1,4 +1,4 @@
-class RemoveInstitutionIdFromUsers < ActiveRecord::Migration
+class RemoveInstitutionIdFromUsers < ActiveRecord::Migration[4.2]
   def change
     remove_column :stash_engine_users, :institution_id, :integer
     add_column :stash_engine_users, :tenant_abbrev, :string

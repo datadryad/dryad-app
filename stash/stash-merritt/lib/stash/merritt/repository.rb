@@ -7,7 +7,7 @@ module Stash
   module Merritt
     class Repository < Stash::Repo::Repository
 
-      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
+      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}.freeze
 
       def initialize(url_helpers:, threads: 1)
         super
@@ -20,7 +20,7 @@ module Stash
       def download_uri_for(resource:, record_identifier:)
         merritt_host = merritt_host_for(resource)
         ark = ark_from(record_identifier)
-        "http://#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
+        "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
       def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
@@ -48,6 +48,7 @@ module Stash
       def ark_from(record_identifier)
         ark_match_data = record_identifier && record_identifier.match(ARK_PATTERN)
         raise ArgumentError, "No ARK found in record identifier #{record_identifier || 'nil'}" unless ark_match_data
+
         ark_match_data[0].strip
       end
     end

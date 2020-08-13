@@ -1,4 +1,4 @@
-class AddUrlToFiles < ActiveRecord::Migration
+class AddUrlToFiles < ActiveRecord::Migration[4.2]
   def change
     change_table :stash_engine_file_uploads do |fu|
       fu.column :url, :text

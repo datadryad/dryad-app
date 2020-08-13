@@ -24,6 +24,7 @@ module Stash
         set_api_key
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
+
         create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
         resource.identifier.payment_id = invoice.id
@@ -39,6 +40,7 @@ module Stash
         set_api_key
         customer_id = stripe_journal_customer_id
         return unless customer_id.present?
+
         # the following line was creating invoice_item from return value, but didn't seem used anywhere
         create_invoice_items_for_dpc(customer_id)
         resource.identifier.payment_id = "#{resource.identifier&.publication_issn}-#{invoice_item&.id}"
@@ -50,6 +52,7 @@ module Stash
         set_api_key
         latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
         return false unless latest.present?
+
         Stripe::Charge.retrieve(latest.payment_id).present?
       end
 
@@ -124,7 +127,7 @@ module Stash
           customer: customer_id,
           days_until_due: 30,
           description: 'Dryad deposit ' + resource.identifier.to_s + ', ' + resource.title,
-          metadata: { 'curator' => curator.name }
+          metadata: { 'curator' => curator&.name }
         )
       end
 

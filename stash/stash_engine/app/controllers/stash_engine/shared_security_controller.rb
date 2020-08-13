@@ -27,12 +27,14 @@ module StashEngine
 
     def require_curator
       return if current_user && %w[superuser].include?(current_user.role)
+
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_engine.dashboard_path
     end
 
     def require_superuser
       return if current_user && %w[superuser].include?(current_user.role)
+
       flash[:alert] = 'You must be a superuser to view this information.'
       redirect_to stash_engine.dashboard_path
     end
@@ -43,6 +45,7 @@ module StashEngine
 
     def require_admin
       return if current_user && (%w[admin superuser].include?(current_user.role) || current_user.journals_as_admin.present?)
+
       flash[:alert] = 'You must be an administrator to view this information.'
       redirect_to stash_engine.dashboard_path
     end
@@ -50,12 +53,14 @@ module StashEngine
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
       return if current_user && resource.permission_to_edit?(user: current_user)
+
       display_authorization_failure
     end
 
     # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
     def require_in_progress_editor
       return if resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
+
       display_authorization_failure
     end
 

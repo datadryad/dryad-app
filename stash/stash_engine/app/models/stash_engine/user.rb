@@ -1,6 +1,6 @@
 module StashEngine
   # rubocop:disable Metrics/ClassLength
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
 
     has_many :resources
     has_many :journal_roles
@@ -73,6 +73,7 @@ module StashEngine
 
     def set_migration_token
       return unless migration_token.nil?
+
       i = generate_migration_token
       i = generate_migration_token while User.find_by(migration_token: i)
       self.migration_token = i
@@ -90,6 +91,7 @@ module StashEngine
     def self.split_name(name)
       comma_split = name.split(',')
       return [comma_split[1].strip, comma_split[0].strip] if comma_split.length == 2 # gets a reversed name with comma like "Janee, Greg"
+
       first = (name.split(' ').first || '').strip
       last = ''
       last = name.split(' ').last unless name.split(' ').last == first

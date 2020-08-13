@@ -123,8 +123,6 @@ Verify Solr is set up correctly from the Admin UI:
 
 I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
 
-*Note for OSX:* Ensure the command-line XCode utilities are installed. `xcode-select --install`
-
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
 sudo apt-get install libxml2 libxml2-dev patch curl
@@ -136,13 +134,24 @@ rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-
 gem update --system
 
 # install bundler to handle gem dependencies
-gem install bundler
+gem install bundler:1.17.3
+```
 
+**If you are running on OSX, ensure some gems are compatible with the system:**
+```
+xcode-select --install
+gem install libv8 -v '3.16.14.19' -- --with-system-v8
+gem install therubyracer -v '0.12.3' -- --with-v8-dir=/usr/local/opt/v8@3.15
+gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include
+```
+
+For all operating systems, continue:
+```
 # now install the gem libraries needed for the application
 bundle install
 
 # run the migrations to set up the database tables
-bundle exec rake db:migrate
+bundle exec rails db:migrate
 
 # start your rails server for local development
 rails s
@@ -186,18 +195,18 @@ We have enabled submission to a SWORD-enabled Merritt repository, but have only 
 
 ### Repository and identifier service configuration
 
-The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/master/lib/stash/repo)
+The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/main/lib/stash/repo)
 API for identifier assignment and submission to repositories.
 
 Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
 The Stash::Repo implementation is provided by the [stash-merritt](https://github.com/CDLUC3/stash-merritt) gem, which is included in the application [Gemfile](../../Gemfile)
 and declared by the `repository:` key in [`app_config.yml`](https://github.com/CDL-Drayd/dryad-config-example/blob/development/config/app_config.yml).
-EZID and Merritt/SWORD must be configured for each tenant in the apporpriate `tenants/*.yml` file, e.g.
+EZID and Merritt/SWORD must be configured for each tenant in the appropriate `tenants/*.yml` file, e.g.
 
 ```yaml
 repository: # change me: you'll probably have to change all the following indented values and only if using Merritt repo
     type: merritt
-    domain: merritt-repo-dev-example.cdlib.org
+    domain: http://merritt-repo-dev-example.cdlib.org
     endpoint: "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/my_collection_id"
     username: "submitter_username"
     password: "submitter_password"

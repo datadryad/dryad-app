@@ -24,14 +24,17 @@ module Stash
 
       def check_file_exists
         return if ::File.exist?(@file_obj.calc_file_path)
+
         raise Stash::ZenodoSoftware::FileError, "Uploaded file doesn't exist: resource_id: #{@file_obj.resource_id}, " \
           "file_id: #{@file_obj.id}, name: #{@file_obj.upload_file_name}"
       end
 
       def check_digest
         return unless DIGESTS.key?(@file_obj.digest_type)
+
         my_digest = DIGESTS[@file_obj.digest_type].call(@file_obj.calc_file_path)
         return if my_digest == @file_obj.digest
+
         raise Stash::ZenodoSoftware::FileError, "Digest mismatch for file: resource_id: #{@file_obj.resource_id}, " \
           "file_id: #{@file_obj.id}, name: #{@file_obj.upload_file_name}\n" \
           "Type: #{@file_obj.digest_type}\n" \
@@ -51,10 +54,10 @@ module Stash
             f.write(chunk)
           end
         end
-      rescue HTTP::Error => ex
+      rescue HTTP::Error => e
         raise Stash::ZenodoSoftware::FileError, "Received HTTP error while downloading\n" \
           "resource_id: #{@file_obj.resource_id}, file_id: #{@file_obj.id}, name: #{@file_obj.upload_file_name}, url: #{@file_obj.url}" \
-          "Original Exception:\n#{ex}\n#{ex.backtrace.join("\n")}"
+          "Original Exception:\n#{e}\n#{e.backtrace.join("\n")}"
       end
     end
   end

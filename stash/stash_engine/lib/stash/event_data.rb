@@ -24,8 +24,9 @@ module Stash
       retries = 5
       begin
         yield
-      rescue RestClient::InternalServerError => ex
-        raise ex if retries < 1
+      rescue RestClient::InternalServerError => e
+        raise e if retries < 1
+
         retries -= 1
         sleep TIME_BETWEEN_RETRIES
         retry

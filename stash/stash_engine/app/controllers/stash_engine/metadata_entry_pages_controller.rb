@@ -17,6 +17,7 @@ module StashEngine
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       return unless @resource.submitted? # create a new version if this is a submitted version
+
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
@@ -77,6 +78,7 @@ module StashEngine
 
     def require_can_duplicate
       return false unless (@identifier = resource.identifier)
+
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
 
       if @identifier.in_progress_only?

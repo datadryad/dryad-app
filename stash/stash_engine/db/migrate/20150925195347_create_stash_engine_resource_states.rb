@@ -1,4 +1,4 @@
-class CreateStashEngineResourceStates < ActiveRecord::Migration
+class CreateStashEngineResourceStates < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_resource_states do |t|
       t.integer :user_id

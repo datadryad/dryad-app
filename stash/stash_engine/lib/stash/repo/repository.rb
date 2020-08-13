@@ -14,6 +14,7 @@ module Stash
         @executor = executor
         @url_helpers = url_helpers
         return unless @executor.nil?
+
         @executor = Concurrent::ThreadPoolExecutor.new(
           min_threads: 0,
           max_threads: threads,
@@ -160,6 +161,7 @@ module Stash
 
       def remove_if_exists(file)
         return if file.blank?
+
         FileUtils.remove_entry_secure(file, true) if File.exist?(file)
       end
 

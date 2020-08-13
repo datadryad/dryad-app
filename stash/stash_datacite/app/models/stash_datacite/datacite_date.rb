@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class DataciteDate < ActiveRecord::Base
+  class DataciteDate < ApplicationRecord
     self.table_name = 'dcs_dates'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     include StashEngine::Concerns::ResourceUpdated
@@ -28,16 +28,19 @@ module StashDatacite
     def date_type_friendly
       return nil if date_type.blank?
       return 'Valid' if date_type == 'valid_date' # exception for bad method names
+
       DateTypesStrToFull[date_type]
     end
 
     def self.date_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::DateType.find_by_value(str)
     end
 
     def date_type_mapping_obj
       return nil if date_type_friendly.nil?
+
       DataciteDate.date_type_mapping_obj(date_type_friendly)
     end
 
@@ -47,7 +50,7 @@ module StashDatacite
       return unless publication_date
 
       date_available = find_or_create_by(resource_id: resource_id, date_type: 'available')
-      date_available.date = publication_date.iso8601
+      date_available.date = publication_date.utc.iso8601
       date_available.save
       date_available
     end

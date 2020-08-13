@@ -7,7 +7,7 @@ module StashEngine
   #
   # The primary difference between this model and `InternalDatum` is that a curator
   # is not meant to be able to create/update/delete this data
-  class ExternalReference < ActiveRecord::Base
+  class ExternalReference < ApplicationRecord
     include StashEngine::Concerns::StringEnum
 
     belongs_to :identifier, class_name: 'StashEngine::Identifier'

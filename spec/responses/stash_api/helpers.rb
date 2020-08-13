@@ -9,8 +9,8 @@ module Helpers
 
   def get_access_token(doorkeeper_application:)
     post '/oauth/token',
-         { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
-         default_json_headers.merge('Content-type' => 'application/x-www-form-urlencoded;charset=UTF-8')
+         params: { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
+         as: :json
     response_body_hash[:access_token]
   end
 
@@ -20,6 +20,7 @@ module Helpers
 
   def response_body_hash
     return {} if response.body.blank?
+
     JSON.parse(response.body).with_indifferent_access
   end
 

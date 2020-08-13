@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class Description < ActiveRecord::Base
+  class Description < ApplicationRecord
     self.table_name = 'dcs_descriptions'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     include StashEngine::Concerns::ResourceUpdated
@@ -41,16 +41,19 @@ module StashDatacite
 
     def description_type_friendly
       return nil if description_type.blank?
+
       DescriptionTypesStrToFull[description_type]
     end
 
     def self.description_type_mapping_obj(str)
       return nil if str.nil?
+
       Datacite::Mapping::DescriptionType.find_by_value(str)
     end
 
     def description_type_mapping_obj
       return nil if description_type_friendly.nil?
+
       Description.description_type_mapping_obj(description_type_friendly)
     end
 

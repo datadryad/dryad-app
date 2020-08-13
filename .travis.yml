@@ -3,14 +3,14 @@
 
 matrix:
   include:
-    - rvm: 2.4.10
+    - rvm: 2.6.6
       sudo: required
       addons:
         chrome: stable
       env:
       - TO_TEST=MAIN
       - RAILS_ENV=test
-    - rvm: 2.4.10
+    - rvm: 2.6.6
       env:
       - TO_TEST=STASH
       - RAILS_ENV=test
@@ -28,7 +28,7 @@ before_install:
   - sudo rm -rf /var/lib/apt/lists/*
   - sudo apt-get update
   - if [ "$TO_TEST" = "MAIN" ]; then sudo apt-get install mutt; fi
-  - gem update --system 2.7.10
+  - gem update --system
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem install bundler -v 1.17.3
   - gem install colorize
@@ -44,6 +44,6 @@ before_script:
   - if [ "$TO_TEST" = "MAIN" ]; then sudo chmod 4755 /opt/google/chrome/chrome-sandbox; fi
 
 script:
-  - if [ "$TO_TEST" = "MAIN" ]; then bundle exec rake; fi
+  - if [ "$TO_TEST" = "MAIN" ]; then RAILS_ENV=test bundle exec rake; fi	
   - if [ "$TO_TEST" = "STASH" ]; then stash/travis-build.rb; fi
 

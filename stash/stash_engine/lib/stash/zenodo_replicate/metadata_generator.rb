@@ -20,6 +20,7 @@ module Stash
         %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method locations communities].each do |meth|
           next if meth == 'doi' && @software_upload
+
           result = send(meth)
           out_hash[meth] = result unless result.blank?
         end
@@ -32,6 +33,7 @@ module Stash
 
       def upload_type
         return @resource.resource_type.resource_type_general unless @software_upload
+
         'software'
       end
 
@@ -67,6 +69,7 @@ module Stash
 
       def license
         return license_for_data unless @software_upload
+
         license_for_software
       end
 
@@ -83,7 +86,7 @@ module Stash
       end
 
       def keywords
-        @resource.subjects&.map(&:subject)
+        @resource.subjects.non_fos&.map(&:subject)
       end
 
       def notes
@@ -123,6 +126,7 @@ module Stash
       def location(geolocation)
         # no way to represent boxes in zenodo?
         return nil if geolocation.place_id.nil? && geolocation.point_id.nil?
+
         hsh = {}
         unless geolocation.point_id.nil?
           hsh['lat'] = geolocation.geolocation_point.latitude

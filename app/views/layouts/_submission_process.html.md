@@ -10,7 +10,7 @@
 <li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
 </ul>
 
-<p><b>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://datadryad.org/api/v2/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/apis/submission.md">How-To Guide</a>.</b></p>
+<p><b>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://datadryad.org/api/v2/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md">How-To Guide</a>.</b></p>
 
 <p>If you need further assistance, consult our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
@@ -54,7 +54,6 @@
 <li>Usage Notes: Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed</li>
 <li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s)</li>
 <li>Related Works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
-<li>Location information: Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research</li>
 </ul>
 
 <h2 id="upload-methods">Upload Methods</h2>

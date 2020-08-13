@@ -1,5 +1,5 @@
 module StashEngine
-  class RepoQueueState < ActiveRecord::Base
+  class RepoQueueState < ApplicationRecord
     include StashEngine::Concerns::StringEnum
 
     belongs_to :resource

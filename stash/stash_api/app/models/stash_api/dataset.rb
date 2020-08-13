@@ -19,6 +19,7 @@ module StashApi
     def last_version
       res = last_se_resource
       return nil unless res
+
       Version.new(resource_id: res.id)
     end
 
@@ -26,6 +27,7 @@ module StashApi
       # gets descriptive metadata together
       lv = last_version
       return simple_identifier if lv.nil?
+
       id_size_hsh = id_and_size_hash
       metadata = id_size_hsh.merge(lv.metadata)
       add_edit_link!(metadata, lv)
@@ -43,6 +45,7 @@ module StashApi
     def version_path
       res = last_se_resource
       return nil unless res
+
       api_url_helper.version_path(res.id)
     end
 
@@ -55,6 +58,7 @@ module StashApi
     def download_uri
       # rails will not encode an id with slashes automatically, and encoding it results in double-encoding
       return nil unless @se_identifier.latest_viewable_resource(user: @user)
+
       path = api_url_helper.download_dataset_path('foobar')
       path.gsub('foobar', CGI.escape(@se_identifier.to_s))
     end

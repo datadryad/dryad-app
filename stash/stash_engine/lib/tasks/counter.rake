@@ -27,6 +27,7 @@ namespace :counter do
     end
     ARGV.each do |filename|
       next if filename == 'counter:validate_logs'
+
       puts "Validating #{filename}"
       cv = Counter::ValidateFile.new(filename: filename)
       cv.validate_file

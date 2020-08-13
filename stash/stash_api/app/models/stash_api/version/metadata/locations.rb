@@ -25,6 +25,7 @@ module StashApi
         def placename(geolocation)
           p = geolocation.geolocation_place
           return { place: p.geo_location_place } unless p.blank?
+
           nil
         end
 
@@ -44,6 +45,7 @@ module StashApi
         def point(geolocation)
           p = geolocation.geolocation_point
           return { point: { latitude: p&.latitude&.to_f, longitude: p&.longitude&.to_f } } unless p.blank?
+
           nil
         end
 

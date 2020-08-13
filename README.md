@@ -14,12 +14,12 @@ of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 
 ## Development
 
-More detailed documentation is available in the [documentation folder](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation)
+More detailed documentation is available in the [documentation folder](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation)
 
 ### Installation
 
 See
-[Dryad Installation](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/dryad_install.md)
+[Dryad Installation](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/dryad_install.md)
 for installation notes.
 
 ### Quick Cheat Sheet
@@ -53,7 +53,7 @@ At the same level as the `dashv2` directory:
 In the `dryad` directory:
 
 - run `travis-prep.sh`
-- run `bundle exec rake`
+- run `bundle exec rspec`
 
 #### Capistrano deployment
 
@@ -68,13 +68,13 @@ deploy script will prompt you.
 
 #### Miscellaneous tasks
 
-- The `rake app_data:clear` task will clear most database and SOLR data. It
+- The `rails app_data:clear` task will clear most database and SOLR data. It
   can be useful to run before testing data import and transformation from our
   previous version of the app. It will not erase data in the production
   environment or until it gets confirmation that you really want to erase the
   data. 
 
   ```
-  bundle exec rake app_data:clear RAILS_ENV=<rails-environment>
+  bundle exec rails app_data:clear RAILS_ENV=<rails-environment>
   ```
 

@@ -109,8 +109,8 @@ module Stash
 
         @copy.update(state: 'finished')
         @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
-      rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
-        @copy.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
+      rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
+        @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
 
@@ -160,6 +160,7 @@ module Stash
       def error_if_more_than_one_replication_for_resource
         # this also catches an error if something is trying to publish that hasn't had a software-type submission yet for this resource
         return if @resource.zenodo_copies.where(copy_type: 'software').count == 1 # can have software and software_publish for same resource
+
         raise ZE, "resource_id #{@resource.id}: Exactly one replication of the same type (software or data) is allowed per resource."
       end
 
@@ -170,6 +171,7 @@ module Stash
 
       def error_if_bad_type
         return if %w[software software_publish].include?(@copy.copy_type)
+
         raise ZE, "copy_id #{@copy.id}: Needs to be of the correct type (software not data)"
       end
 

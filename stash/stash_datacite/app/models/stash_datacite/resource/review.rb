@@ -43,7 +43,7 @@ module StashDatacite
       end
 
       def subjects
-        @subjects ||= @resource.subjects
+        @subjects = @resource.subjects.order(subject_scheme: :desc, subject: :asc)
       end
 
       def contributors
@@ -119,6 +119,7 @@ module StashDatacite
 
       def pdf_author
         return "#{authors.first.author_last_name}_et_al" if authors.length > 1
+
         authors.try(:first).try(:author_last_name).to_s
       end
     end

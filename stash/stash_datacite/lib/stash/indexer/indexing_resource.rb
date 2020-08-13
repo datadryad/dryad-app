@@ -2,7 +2,7 @@ require 'datacite/mapping'
 require 'cgi'
 
 # This file and classes are based on David's stash-harvester class and mostly the 'datacite_extensions.rb' which is
-# most of the funcationality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
+# most of the functionality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
 # file which we give to Merritt and it gives back to us.
 #
 # The methods are the same names for duck-typing should we ever need it (most likely we won't).  I also added a few
@@ -115,6 +115,7 @@ module Stash
       def creator_names
         authors = @resource.authors
         return [] if authors.empty?
+
         authors.map(&:author_full_name).reject(&:blank?)
       end
 
@@ -127,7 +128,7 @@ module Stash
       end
 
       def issued_date
-        @resource&.publication_date&.iso8601
+        @resource&.publication_date&.utc&.iso8601
       end
 
       def license_name
@@ -152,6 +153,7 @@ module Stash
       def description_text_for(type)
         the_type = DESCRIPTION_TYPES_TO_DB[type]
         return nil unless the_type
+
         @resource.descriptions.where(description_type: the_type).map(&:description)
           .reject(&:blank?).map { |i| fix_html(i) }.join("\r")
       end
@@ -201,11 +203,11 @@ module Stash
       def dct_temporal_dates
         items = @resource.datacite_dates.map(&:date).reject(&:blank?)
         items.map! do |dt|
-          begin
-            Date.iso8601(dt)&.strftime('%Y-%m-%d')
-          rescue ArgumentError
-            nil
-          end
+
+          Date.iso8601(dt)&.strftime('%Y-%m-%d')
+        rescue ArgumentError
+          nil
+
         end
         items.compact
 
@@ -250,6 +252,7 @@ module Stash
       # helpers to convert to datacite mapping
       def db_box_to_dc_mapping(db_box:)
         return nil unless db_box.sw_latitude && db_box.ne_latitude && db_box.sw_longitude && db_box.ne_longitude
+
         Datacite::Mapping::GeoLocationBox.new(south_latitude: db_box.sw_latitude.to_f,
                                               west_longitude: db_box.sw_longitude.to_f,
                                               north_latitude: db_box.ne_latitude.to_f,
@@ -258,6 +261,7 @@ module Stash
 
       def db_point_to_dc_mapping(db_point:)
         return nil unless db_point.latitude && db_point.longitude
+
         Datacite::Mapping::GeoLocationPoint.new(latitude: db_point.latitude.to_f, longitude: db_point.longitude.to_f)
       end
 

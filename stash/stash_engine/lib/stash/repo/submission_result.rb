@@ -54,8 +54,10 @@ module Stash
 
       def backtrace_str
         return unless error.respond_to?(:backtrace)
+
         backtrace = error.backtrace
         return unless backtrace
+
         backtrace.join("\n")
       end
     end

@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'pry'
 require 'webmock/rspec'
 RSpec.feature 'Populate manuscript metadata from outside source', type: :feature do
@@ -6,10 +5,12 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::LinkOut
+  include Mocks::Tenant
 
   before(:each) do
     mock_solr!
     mock_link_out!
+    mock_tenant!
   end
 
   context :journal_metadata_autofill, js: true do
@@ -51,7 +52,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
             'Content-Type' => 'application/json'
           }
         ).to_return(status: 200,
-                    body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'dryad_manuscript.json')),
+                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'dryad_manuscript.json')),
                     headers: { 'Content-Type' => 'application/json' })
       journal = 'Journal of Systematics and Evolution'
       issn = '1759-6831'
@@ -75,7 +76,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
-    it 'works for successful dataset request to crossref' do
+    it 'works for successful dataset request to crossref', js: true do
       stub_request(:get, 'https://api.crossref.org/works/10.1098/rsif.2017.0030')
         .with(
           headers: {
@@ -83,7 +84,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           }
         )
         .to_return(status: 200,
-                   body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                   body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
                    headers: {})
       stub_request(:get, 'https://api.datadryad.example.org/api/v1/journals/1742-5689')
         .with(
@@ -102,7 +103,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = 'Journal of The Royal Society Interface'
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
-      click_button 'Import Article Metadata'
+      click_import_article_metadata
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement')
     end
@@ -111,7 +112,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = ''
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
-      click_button 'Import Article Metadata'
+      click_import_article_metadata
       expect(page.find('div#population-warnings')).to have_content('Please fill in the form completely', wait: 15)
     end
 
@@ -126,13 +127,23 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           }
         )
         .to_return(status: 404,
-                   body:  'not found',
+                   body: 'not found',
                    headers: {})
       journal = 'cats'
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
-      click_button 'Import Article Metadata'
-      expect(page.find('div#population-warnings')).to have_content("We couldn't obtain information from CrossRef about this DOI")
+      click_import_article_metadata
+      expect(page.find('div#population-warnings')).to have_content("We couldn't obtain information from CrossRef about this DOI", wait: 15)
     end
+
+    def click_import_article_metadata
+      # Tell the form that we're really doing the import and not just an ajax autocomplete.
+      # For normal use, this is set by javascript, but within rspec, it wasn't working properly,
+      # so we force it here.
+      page.execute_script("$('#internal_datum_do_import').val('true')")
+
+      click_button 'Import Article Metadata'
+    end
+
   end
 end

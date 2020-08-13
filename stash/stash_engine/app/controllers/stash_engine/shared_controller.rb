@@ -67,18 +67,21 @@ module StashEngine
 
     def formatted_date(t)
       return 'Not available' if t.blank?
+
       t = t.to_time if t.class == String
       local_time(t)&.strftime('%B %e, %Y')
     end
 
     def formatted_datetime(t)
       return 'Not available' if t.blank?
+
       t = t.to_time if t.class == String
       local_time(t)&.strftime('%m/%d/%Y %H:%M:%S %Z')
     end
 
     def formatted_html5_date(t)
       return 'Not available' if t.blank?
+
       t = t.to_time if t.class == String
       local_time(t)&.strftime('%Y-%m-%d')
     end
@@ -90,6 +93,7 @@ module StashEngine
 
     def default_date(t)
       return '' unless t.is_a? Time
+
       local_time(t)&.strftime('%m/%d/%y')
     end
 
@@ -128,6 +132,7 @@ module StashEngine
     # if we need to set something else as resource, set the @resource first in filters
     def default_resource
       return nil unless @resource || params[:resource_id]
+
       @resource ||= StashEngine::Resource.find(params[:resource_id])
     end
 
@@ -151,6 +156,7 @@ module StashEngine
     # Make URLs short and pretty
     def shorten_linked_url(url:, length: 80)
       return '' if url.blank?
+
       "<a href=\"#{url}\" title=\"#{ERB::Util.html_escape(url)}\">#{ERB::Util.html_escape(url.ellipsisize(length))}</a>".html_safe
     end
 
@@ -159,6 +165,7 @@ module StashEngine
     def english_list(array:, conjunction:)
       return '' if array.empty?
       return array.first if array.length == 1
+
       "#{array[0..-2].join(', ')} #{conjunction} #{array.last}"
     end
 
@@ -212,7 +219,7 @@ module StashEngine
       return nil if str.nil?
 
       # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
-      str_arr = str.split(%r{\< *br *[/]{0,1} *\>}).reject(&:blank?)
+      str_arr = str.split(%r{< *br */{0,1} *>}).reject(&:blank?)
       my_str = str_arr.map { |i| ERB::Util.html_escape(i) }.join(' </p><p> ')
       my_str = link_urls(my_str)
       my_str.html_safe

@@ -1,4 +1,4 @@
-class ModifyRelatedIdentifierTypeAsEnum < ActiveRecord::Migration
+class ModifyRelatedIdentifierTypeAsEnum < ActiveRecord::Migration[4.2]
   def change
     remove_column :dcs_related_identifiers, :related_identifier_type_id
     remove_column :dcs_related_identifiers, :relation_type_id

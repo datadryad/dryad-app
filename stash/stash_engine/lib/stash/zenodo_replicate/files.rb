@@ -51,6 +51,7 @@ module Stash
         unless resp[:checksum] == "md5:#{@file_collection.info_hash[filename][:md5_hex]}"
           raise ZenodoError, "Mismatched digests for #{upload_url}\n#{resp[:checksum]} vs #{@file_collection.info_hash[filename][:md5_hex]}"
         end
+
         resp
       end
 

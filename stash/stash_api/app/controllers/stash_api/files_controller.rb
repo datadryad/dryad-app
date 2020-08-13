@@ -73,7 +73,7 @@ module StashApi
         StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
         @file_presigned.download(file: @stash_file)
       else
-        render status: 404, text: 'Not found'
+        render status: 404, plain: 'Not found'
       end
     end
 
@@ -108,12 +108,14 @@ module StashApi
     def require_file_current_uploads
       the_type = @resource.upload_type
       return if %i[files unknown].include?(the_type)
+
       render json: { error:
           'You may not submit a file by direct upload in the same version when you have submitted files by URL' }.to_json, status: 409
     end
 
     def check_header_file_size
       return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= @resource.tenant.max_total_version_size
+
       (render json: { error:
                          "Your file size is larger than the maximum submission size of #{resource.tenant.max_total_version_size} bytes" }.to_json,
               status: 403) && yield
@@ -121,6 +123,7 @@ module StashApi
 
     def check_file_size
       return if ::File.size(@file_path) <= @resource.tenant.max_total_version_size
+
       (render json: { error:
           "Your file size is larger than the maximum submission size of #{view_context.filesize(resource.tenant.max_total_version_size)}" }.to_json,
               status: 403) && yield
@@ -128,7 +131,7 @@ module StashApi
 
     def save_file_to_db
       md5 = Digest::MD5.file(@file_path).hexdigest
-      just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
+      just_user_fn = @file_path[@resource.upload_dir.length..].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
         upload_file_name: @sanitized,
@@ -156,6 +159,7 @@ module StashApi
 
     def check_total_size_violations
       return if @resource.new_size <= @resource.tenant.max_total_version_size && @resource.size <= @resource.tenant.max_submission_size
+
       (render json: { error:
                           'The files for this dataset are larger than the allowed version or total object size' }.to_json,
               status: 403) && yield

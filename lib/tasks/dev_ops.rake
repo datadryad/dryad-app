@@ -27,6 +27,7 @@ namespace :dev_ops do
     StashEngine::Identifier.where(storage_size: nil).each do |i|
       lsr = i.last_submitted_resource
       next if lsr.nil? || lsr.download_uri.blank? || lsr.update_uri.blank?
+
       puts "Adding size to #{i}"
       ds_info = Stash::Repo::DatasetInfo.new(i)
       i.update(storage_size: ds_info.dataset_size)
@@ -43,6 +44,7 @@ namespace :dev_ops do
     fus.each do |file_upload|
       resource = file_upload.resource
       next unless resource && resource.current_resource_state && resource.current_resource_state.resource_state == 'submitted'
+
       puts "updating resource #{resource.id} & #{resource.identifier}"
       ds_info = Stash::Repo::DatasetInfo.new(resource.identifier)
       file_upload.update(upload_file_size: ds_info.file_size(file_upload.upload_file_name))
@@ -59,6 +61,7 @@ namespace :dev_ops do
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
         next if item.html? || desc.description.blank?
+
         out_html = item.text_as_html
         desc.update(description: out_html)
         puts "Updated description id: #{desc.id}"
@@ -70,6 +73,7 @@ namespace :dev_ops do
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
         next if item.html? || desc.description.blank?
+
         puts desc.resource.id if desc.resource
         puts item.text_as_html
         puts ''
@@ -136,6 +140,11 @@ namespace :dev_ops do
     puts 'Re-enqueuing Zenodo replication jobs that were deferred'
     StashEngine::ZenodoCopyJob.enqueue_deferred
     StashEngine::ZenodoSoftwareJob.enqueue_deferred
+  end
+
+  desc 'Gets Counter token for submitting a report'
+  task get_counter_token: :environment do
+    puts APP_CONFIG[:counter][:token]
   end
 end
 # rubocop:enable Metrics/BlockLength
