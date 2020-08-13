@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 describe 'related_identifiers:fix_common_doi_problems', type: :task do
 
   before(:each) do
@@ -80,9 +78,10 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
   end
 
   it 'finds apparent dois in remaining, non-matched records' do
-    matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: "my cat likes to rrag=10.1016/j.cub.2018.08.012 and so do I")
+    matching_one = create(:related_identifier, related_identifier_type: 'doi',
+                                               related_identifier: 'my cat likes to rrag=10.1016/j.cub.2018.08.012 and so do I')
     matching_two = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.023256510')
-    already_done = create(:related_identifier, related_identifier_type: 'doi', related_identifier: "10.2222/nog", fixed_id: 'https://doi.org/10.2222/nogggin')
+    already_done = create(:related_identifier, related_identifier_type: 'doi', related_identifier: '10.2222/nog', fixed_id: 'https://doi.org/10.2222/nogggin')
     RelatedIdentifiers::Replacements.remaining_strings_containing_dois
     matching_one.reload
     matching_two.reload
