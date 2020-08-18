@@ -66,18 +66,27 @@
 
 <h2>Private for Peer Review<a name="Private for Peer Review"></a></h2>
 <p>On page three of the submission process, we offer the option to make the dataset private during a related article's peer review process. After selecting this option, you will be presented with a private, randomized URL that allows for a double-blind download of the dataset. This link can be used at the journal office during the review office or for sharing with collaborators to access the data files while the dataset is not public. Authors can write in when the related article has been accepted for the dataset to move into the curation and publication processes.</p>
+
 <h2>Curation<a name="curation"></a></h2>
-<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a partner),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
-<p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
+
+<p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assurring that your dataset meets all of our requirements will ensure that the curation process is as efficient and timely as possible.</p>
+
 <ul>
-<li>Can the files be opened?</li>
-<li>Are they free of copyright restrictions?</li>
-<li>Do they appear to be free of sensitive data?</li>
-<li>Are the metadata and documentation complete and correct?</li>
-<li>Is adequate description provided to ensure reusability?</li>
+<li>Title is meaningful and describes the dataset
+<li>Abstract is complete and descriptive
+<li>Methods and Usage Notes describe how to open or understand the data
+<li>Data files can be opened
+<li>Files contain no copyright restrictions
+<li>Data files contain no sensitive or personally identifiable information
+<li>If associated with a manuscript, journal name and manuscript number is included
 </ul>
-<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
-<p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge</a> is invoiced.</p>
+
+<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href=mailto:help@datadryad.org>help@datadryad.org</a></p>
+<p>Upon curator approval, the Dryad DOI is published and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge</a> is invoiced.</p>
+
+
+<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a partner),<i>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</i></p>
+
 
 <h2>Publication and Citation<a name="citation"></a></h2>
 <ul>
