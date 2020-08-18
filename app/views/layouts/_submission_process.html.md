@@ -69,7 +69,7 @@
 
 <h2>Curation<a name="curation"></a></h2>
 
-<p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assurring that your dataset meets all of our requirements will ensure that the curation process is as efficient and timely as possible.</p>
+<p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring that your dataset meets all of our requirements will ensure that the curation process is as efficient and timely as possible.</p>
 
 <ul>
 <li>Title is meaningful and describes the dataset
@@ -85,7 +85,7 @@
 <p>Upon curator approval, the Dryad DOI is published and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge</a> is invoiced.</p>
 
 
-<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a partner),<i>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</i></p>
+<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network</a> (of which Dryad is a partner), <i>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</i></p>
 
 
 <h2>Publication and Citation<a name="citation"></a></h2>
