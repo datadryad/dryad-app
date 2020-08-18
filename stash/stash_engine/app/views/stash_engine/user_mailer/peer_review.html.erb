@@ -1,19 +1,29 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been successfully submitted. Your dataset
-  will now remain private until your related manuscript has been accepted. At that point we will begin the curation process.
+<p>Thank you for submitting your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) to Dryad. Your 
+dataset will now remain private until your related manuscript has been accepted. At that point we will begin 
+the curation process.
 </p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
 <p>For private access during this review period, you may share your unpublished dataset using this temporary link:
-  <a href="<%= shr %>"><%= shr %></a>.</p>
+  <a href="<%= shr %>"><%= shr %></a>.
+<br>
+Your dataset has also been assigned a unique identifier, called a DOI (<%= @resource.identifier_str %>). You may provide 
+this DOI to the journal or include it in your manuscript, although it will not be live until the dataset is published. 
+</p>
 
-<p>Your dataset has been assigned a unique identifier, called a DOI (<%= @resource.identifier_str %>). This DOI may be provided to your journal, but it will not work until your submission has been approved by Dryad curators.</p>
+<p>Next steps:
+<ul>
+<li>We encourage you to check that your files, metadata, contributor information and relevant documentation 
+adhere to our submission guidelines. <a href=https://datadryad.org/stash/submission_process#curation>[Curation checklist]</a>.  Assuring that your dataset meets all of our 
+requirements will ensure that the curation process is as efficient and timely as possible.</li>
+<li>Your submission can be viewed and revised throughout the process through ‘My Datasets’ under ‘Submitted’.</li>
+<li>You will receive an email once your dataset is  out of Private for 
+Peer Review, either because you changed the status or we receive notification that your manuscript was accepted. At that point we will begin curation.</li>
+</ul>
+</p>
 
-<p>To see the status of your dataset, visit your My Datasets page. Under "Submitted" if you click on the dataset you will
-  have a preview of your data publication, including the permanent dataset citation as well as access to your temporary private URL. You may update your dataset at any point
-  prior to the curation process, utilizing the "Update" option. Please avoid creating multiple Dryad submissions associated with the same manuscript.</p>
+<p>If you were asked at submission to agree to payment, you will receive an invoice when your dataset is published.</p>
 
-<p>If you were asked to agree to payment, you will receive an invoice when your submission is approved.</p>
-
-<p>If you have questions or concerns, please visit the help page or get in touch with us <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>Thank you again for submitting your dataset to Dryad. Should you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
