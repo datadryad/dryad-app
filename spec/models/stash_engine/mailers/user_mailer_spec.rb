@@ -100,7 +100,7 @@ module StashEngine
               expect(delivery.body.to_s).to include('will now remain private until your related manuscript has been accepted.')
             when 'submitted'
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
-              expect(delivery.body.to_s).to include('You should receive an update within five business days.')
+              expect(delivery.body.to_s).to include('Thank you for submitting your dataset')
             when 'published'
               expect(delivery.body.to_s).to include('Your dataset is now published and public.')
               expect(delivery.body.to_s).to include("We recommend that you cite it using this DOI: #{@identifier.identifier}")
