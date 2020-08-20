@@ -4,7 +4,6 @@ require 'ostruct'
 module Stash
   module Merritt
     describe ObjectManifestPackage do
-      attr_reader :datacite_xml
       attr_reader :rails_root
       attr_reader :public_system
       attr_reader :resource
@@ -23,12 +22,11 @@ module Stash
         @public_system = public_path.join('system').to_s
         FileUtils.mkdir_p(public_system)
 
-        user = StashEngine::User.create(
-          first_name: 'Lisa',
-          last_name: 'Muckenhaupt',
-          email: 'lmuckenhaupt@example.edu',
-          tenant_id: 'dataone'
-        )
+        user = create(:user,
+                      first_name: 'Lisa',
+                      last_name: 'Muckenhaupt',
+                      email: 'lmuckenhaupt@example.edu',
+                      tenant_id: 'dataone')
 
         tenant = double(StashEngine::Tenant)
         allow(tenant).to receive(:tenant_id).and_return('dataone')
@@ -41,23 +39,20 @@ module Stash
 
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
-        stash_wrapper_xml = File.read('spec/data/stash-merritt/stash-wrapper.xml')
-        stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
-
-        @datacite_xml = File.read('spec/data/stash-merritt/mrt-datacite.xml')
-        dcs_resource = Datacite::Mapping::Resource.parse_xml(datacite_xml)
-
-        @resource = StashDatacite::ResourceBuilder.new(
-          user_id: user.id,
-          dcs_resource: dcs_resource,
-          stash_files: stash_wrapper.inventory.files,
-          upload_date: stash_wrapper.version_date,
-          tenant_id: 'dataone'
-        ).build
-
         @root_url = 'https://stash.example.edu/'
 
-        resource.new_file_uploads.find_each do |upload|
+        @resource = create(:resource, user: user)
+        @resource.save
+        create(:right, resource: @resource)
+        create(:resource_type, resource: @resource)
+        create(:author, resource: @resource)
+        create(:author, resource: @resource)
+        create(:file_upload, resource: @resource)
+        create(:file_upload, resource: @resource)
+        create(:file_upload, resource: @resource)
+        @resource.reload
+
+        @resource.new_file_uploads.find_each do |upload|
           upload_file_name = upload.upload_file_name
           filename_encoded = URI.encode_www_form_component(upload_file_name)
           filename_decoded = URI.decode_www_form_component(filename_encoded)
@@ -77,15 +72,6 @@ module Stash
           package = ObjectManifestPackage.new(resource: resource)
           expect(package.root_url).to eq(URI("https://stash.example.edu/system/#{resource.id}/"))
         end
-
-        it 'fails if the resource doesn\'t have an identifier' do
-          resource.identifier = nil
-          resource.save!
-          expect { ObjectManifestPackage.new(resource: resource) }.to raise_error(ArgumentError)
-        end
-
-        it 'fails if the resource has no URL "uploads"'
-        it 'fails if the resource has non-URL "uploads"'
       end
 
       describe :manifest do
@@ -97,51 +83,53 @@ module Stash
           @manifest_path = package.create_manifest
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'builds a manifest' do
+        it 'builds a manifest' do
           actual = File.read(manifest_path)
 
           # generated stash-wrapper.xml has today's date & so has different hash, file size
           generated_stash_wrapper = "#{public_system}/#{resource.id}/stash-wrapper.xml"
           stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
           stash_wrapper_size = File.size(generated_stash_wrapper)
-          expected = File.read('spec/data/manifest.checkm')
-            .sub(
-              '17c28364d528eed4805d6b87afa88749 | 9838',
-              "#{stash_wrapper_md5} | #{stash_wrapper_size}"
-            ).gsub('{resource_id}', resource.id.to_s)
 
-          expect(actual).to eq(expected)
+          expect(actual).to include("#{stash_wrapper_md5} | #{stash_wrapper_size}")
         end
 
         describe 'public/system' do
-          # TODO: Fix this intermittently-failing test. Ticket #806.
-          xit 'writes mrt-dataone-manifest.txt' do
+          it 'writes mrt-dataone-manifest.txt' do
+            # This file should look like spec/data/stash-merritt/mrt-dataone-manifest.txt
             actual = File.read("#{public_system}/#{resource.id}/mrt-dataone-manifest.txt")
-            expected = File.read('spec/data/stash-merritt/mrt-dataone-manifest.txt')
-            expect(actual).to eq(expected)
+            @resource.new_file_uploads.find_each do |upload|
+              expect(actual).to include("#{upload.upload_file_name} | #{upload.upload_content_type}")
+            end
           end
 
           it 'writes stash-wrapper.xml' do
-            actual = File.read("#{public_system}/#{resource.id}/stash-wrapper.xml")
-            expected = File.read('spec/data/stash-merritt/stash-wrapper.xml')
+            actual_string = File.read("#{public_system}/#{resource.id}/stash-wrapper.xml")
+            actual = Hash.from_xml(actual_string)
+            actual_res = actual['stash_wrapper']['stash_descriptive']['resource']
 
-            # ignore changed dates, trust that we've tested their accuracy elsewhere
-            [actual, expected].each { |xml| xml.gsub!(/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z/, '') }
-
-            expect(actual).to be_xml(expected)
+            expect(actual_res['identifier']).to eq(@resource.identifier.identifier)
+            expect(actual_res['publicationYear']).to eq(@resource.publication_date.year.to_s)
+            expect(actual_res['titles']['title']).to eq(@resource.title)
           end
 
           it 'writes mrt-datacite.xml' do
-            actual = File.read("#{public_system}/#{resource.id}/mrt-datacite.xml")
-            expected = File.read('spec/data/stash-merritt/mrt-datacite.xml')
-            expect(actual).to be_xml(expected)
+            # This file should look like spec/data/stash-merritt/mrt-datacite.xml
+            actual_string = File.read("#{public_system}/#{resource.id}/mrt-datacite.xml")
+            actual = Hash.from_xml(actual_string)
+            actual_res = actual['resource']
+            expect(actual_res['titles']['title']).to eq(@resource.title)
+            expect(actual_res['identifier']).to eq(@resource.identifier.identifier)
+            expect(actual_res['publicationYear']).to eq(@resource.publication_date.year.to_s)
           end
 
           it 'writes mrt-oaidc.xml' do
-            actual = File.read("#{public_system}/#{resource.id}/mrt-oaidc.xml")
-            expected = File.read('spec/data/stash-merritt/mrt-oaidc.xml')
-            expect(actual).to be_xml(expected)
+            # This file should look like spec/data/stash-merritt/mrt-oaidc.xml
+            actual_string = File.read("#{public_system}/#{resource.id}/mrt-oaidc.xml")
+            actual = Hash.from_xml(actual_string)['qualifieddc']
+            expect(actual['creator']).to eq(@resource.authors.map(&:author_full_name))
+            expect(actual['title']).to eq(@resource.title)
+            expect(actual['publisher']).to eq('DataONE')
           end
 
           it 'writes mrt-delete.txt if needed' do
@@ -170,8 +158,13 @@ module Stash
 
       describe :dc4_xml do
         it 'builds Datacite 4 XML' do
+          # Should be like spec/data/stash-merritt/mrt-datacite.xml
           package = ObjectManifestPackage.new(resource: resource)
-          expect(package.dc4_xml).to be_xml(datacite_xml)
+          actual = Hash.from_xml(package.dc4_xml)
+          actual_res = actual['resource']
+          expect(actual_res['titles']['title']).to eq(@resource.title)
+          expect(actual_res['identifier']).to eq(@resource.identifier.identifier)
+          expect(actual_res['publicationYear']).to eq(@resource.publication_date.year.to_s)
         end
       end
 
@@ -198,7 +191,6 @@ module Stash
 
             job = SubmissionJob.new(resource_id: resource.id, url_helpers: double(Module))
             allow(job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'meow'))
-            # allow(job).to receive(:ensure_identifier).and_return(nil)
             package = job.send(:create_package)
             expect(package).to be_an(ObjectManifestPackage)
           end
