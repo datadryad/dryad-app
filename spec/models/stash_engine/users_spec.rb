@@ -126,9 +126,9 @@ module StashEngine
 
       it 'finds the user\'s resources' do
         resources = Array.new(5) do |index|
-          resource = Resource.create(user_id: user.id, skip_emails: true)
+          ident = create(:identifier, identifier: "10.123/#{index}")
+          resource = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
-          resource.ensure_identifier("10.123/#{index}")
           resource
         end
         latest = user.latest_completed_resource_per_identifier
@@ -139,13 +139,11 @@ module StashEngine
         in_progress = []
         other = []
         %w[submitted processing].each_with_index do |state, index|
-          doi_value = "10.123/#{index}"
-          res1 = Resource.create(user_id: user.id, skip_emails: true)
-          res1.ensure_identifier(doi_value)
+          ident = create(:identifier, identifier: "10.123/#{index}")
+          res1 = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
           res1.current_state = 'in_progress'
           in_progress << res1
-          res2 = Resource.create(user_id: user.id, skip_emails: true)
-          res2.ensure_identifier(doi_value)
+          res2 = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
           res2.current_state = state
           other << res2
         end
@@ -157,11 +155,10 @@ module StashEngine
       end
 
       it 'finds only the latest for each identifier' do
+        ident = create(:identifier, identifier: '10.123/1234')
         resources = Array.new(5) do |_|
-          doi_value = '10.123/1234'
-          resource = Resource.create(user_id: user.id, skip_emails: true)
+          resource = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
-          resource.ensure_identifier(doi_value)
           resource
         end
         latest = user.latest_completed_resource_per_identifier
