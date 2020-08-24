@@ -99,6 +99,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
+
       expect(page).to have_content('favicon.ico')
       check('confirm_to_upload')
       click_on('upload_all')
@@ -241,6 +242,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       check('confirm_to_validate')
       click_on('validate_files')
 
+      expect(page).to have_content('Describe Dataset')
       expect(page).to have_content('The URL was not found')
 
       # and it made it into the database
