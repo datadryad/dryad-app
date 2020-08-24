@@ -10,14 +10,6 @@ module StashApi
       mock_ror!
       allow(Stash::Doi::IdGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
-      @tenants = StashEngine.tenants
-      StashEngine.tenants = begin
-        tenants = ActiveSupport::HashWithIndifferentAccess.new
-        tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
-        tenants['exemplia'] = ActiveSupport::HashWithIndifferentAccess.new(tenant_hash)
-        tenants
-      end
-
       @user = StashEngine::User.create(
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',

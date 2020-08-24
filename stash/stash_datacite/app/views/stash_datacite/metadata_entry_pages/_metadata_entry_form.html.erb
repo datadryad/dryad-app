@@ -12,8 +12,6 @@
 
 <h2 class="o-heading__page-span">Dataset: Basic Information</h2>
 
-  <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
-
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
   <fieldset class="c-fieldset">
@@ -29,6 +27,8 @@
     </div>
     <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
+
+  <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
 
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Funding</legend>
