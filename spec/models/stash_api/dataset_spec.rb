@@ -125,7 +125,7 @@ module StashApi
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
-        StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
+        create(:curation_activity, resource: r, status: 'peer_review')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:sharingLink]).to be(bogus_link)
