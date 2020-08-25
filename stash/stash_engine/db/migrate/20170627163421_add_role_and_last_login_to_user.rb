@@ -1,4 +1,4 @@
-class AddRoleAndLastLoginToUser < ActiveRecord::Migration
+class AddRoleAndLastLoginToUser < ActiveRecord::Migration[4.2]
   def up
     add_column :stash_engine_users, :last_login, :datetime
     connection.execute('UPDATE stash_engine_users SET last_login = updated_at')

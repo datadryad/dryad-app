@@ -1,6 +1,6 @@
 # This table is just to find the current curation status for a particular identifier.
 
-class CreateStashEngineIdentifierStates < ActiveRecord::Migration
+class CreateStashEngineIdentifierStates < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_identifier_states do |t|
       t.integer :identifier_id

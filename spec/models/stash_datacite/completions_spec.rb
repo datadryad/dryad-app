@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 module StashDatacite
   module Resource
     describe Completions do
@@ -15,7 +13,8 @@ module StashDatacite
 
       attr_reader :resource
       attr_reader :completions
-      before(:all) do
+
+      before(:each) do
         @user = StashEngine::User.create(
           email: 'lmuckenhaupt@example.edu',
           tenant_id: 'dataone'
@@ -25,9 +24,7 @@ module StashDatacite
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
         @stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
-      end
 
-      before(:each) do
         @resource = ResourceBuilder.new(
           user_id: user.id,
           dcs_resource: dcs_resource,

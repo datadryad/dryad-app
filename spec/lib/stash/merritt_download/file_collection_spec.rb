@@ -5,15 +5,16 @@ require 'byebug'
 require 'http'
 require 'fileutils'
 
-require 'rails_helper'
-
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module MerrittDownload
     RSpec.describe FileCollection do
 
+      include Mocks::Tenant
+
       before(:each) do
+        mock_tenant!
         @resource = create(:resource)
         @fc = FileCollection.new(resource: @resource)
       end

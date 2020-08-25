@@ -1,4 +1,4 @@
-class AddColumnsInGeolocationPlaces < ActiveRecord::Migration
+class AddColumnsInGeolocationPlaces < ActiveRecord::Migration[4.2]
   def up
     add_column :dcs_geo_location_places, :latitude, :decimal, precision: 10, scale: 6
     add_column :dcs_geo_location_places, :longitude, :decimal, precision: 10, scale: 6

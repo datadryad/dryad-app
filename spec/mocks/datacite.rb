@@ -38,6 +38,15 @@ module Mocks
         ).to_return(status: 200, body: File.read(Rails.root.join('spec', 'fixtures', 'http_responses', 'datacite_response.json')), headers: {})
     end
 
+    def mock_datacite_and_idgen!
+      mock_datacite!
+
+      @mock_idgen = double('idgen')
+      allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_return(nil)
+      allow(@mock_idgen).to receive(:mint_id).and_return("doi:#{Faker::Pid.doi}")
+      allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
+    end
+
   end
 
 end

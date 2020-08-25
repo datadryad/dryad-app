@@ -6,11 +6,11 @@
       <li>
         <% if params[:status] == f %>
           <span class="c-facet-li__selected"><%= f.gsub('_', ' ') %></span>
-          <%= link_to params.merge(status: nil, page: 1), class: 'c-facet-remove-link' do %>
+          <%= link_to sortable_table_params.merge(status: nil, page: 1), class: 'c-facet-remove-link' do %>
             <i class="fa fa-times c-facet-remove" title="Remove filter"></i>
           <% end %>
         <% else %>
-         <%= link_to f.gsub('_', ' '), params.merge(status: f, page: 1) %>
+         <%= link_to f.gsub('_', ' '), sortable_table_params.merge(status: f, page: 1) %>
         <% end %>
       </li>
     <% end %>

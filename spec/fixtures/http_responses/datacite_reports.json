@@ -1,0 +1,134 @@
+{
+  "reports": [
+    {
+      "id": "024ba999-9999-4ca6-8875-a2ba33187666",
+      "report-header": {
+        "report-name": "dataset report",
+        "report-id": "DSR",
+        "release": "rd1",
+        "created-by": "Dryad",
+        "created": "2013-10-31",
+        "reporting-period": {
+          "end-date": "2013-10-31",
+          "begin-date": "2013-10-01"
+        },
+        "report-filters": [],
+        "report-attributes": [],
+        "exceptions": [
+          {
+            "code": 69,
+            "data": "usage data needs to be uncompressed",
+            "message": "Report is compressed using gzip",
+            "help-url": "https://github.com/datacite/sashimi",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "id": "02db4999-9999-4e5b-bad8-30c814ac557a",
+      "report-header": {
+        "report-name": "dataset report",
+        "report-id": "DSR",
+        "release": "rd1",
+        "created-by": "Dryad",
+        "created": "2016-12-31",
+        "reporting-period": {
+          "end-date": "2016-12-31",
+          "begin-date": "2016-12-01"
+        },
+        "report-filters": [],
+        "report-attributes": [],
+        "exceptions": [
+          {
+            "code": 69,
+            "data": "usage data needs to be uncompressed",
+            "message": "Report is compressed using gzip",
+            "help-url": "https://github.com/datacite/sashimi",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "id": "03ad0999-9999-4d0a-bb10-78ab40f27b62",
+      "report-header": {
+        "report-name": "dataset report",
+        "report-id": "DSR",
+        "release": "rd1",
+        "created-by": "Dryad",
+        "created": "2017-02-28",
+        "reporting-period": {
+          "end-date": "2017-02-28",
+          "begin-date": "2017-02-01"
+        },
+        "report-filters": [],
+        "report-attributes": [],
+        "exceptions": [
+          {
+            "code": 69,
+            "data": "usage data needs to be uncompressed",
+            "message": "Report is compressed using gzip",
+            "help-url": "https://github.com/datacite/sashimi",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "id": "05965999-9999-4c09-aaa1-e728fa518748",
+      "report-header": {
+        "report-name": "dataset report",
+        "report-id": "DSR",
+        "release": "rd1",
+        "created-by": "Dryad",
+        "created": "2017-11-30",
+        "reporting-period": {
+          "end-date": "2017-11-30",
+          "begin-date": "2017-11-01"
+        },
+        "report-filters": [],
+        "report-attributes": [],
+        "exceptions": [
+          {
+            "code": 69,
+            "data": "usage data needs to be uncompressed",
+            "message": "Report is compressed using gzip",
+            "help-url": "https://github.com/datacite/sashimi",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "id": "073f2999-9999-4301-ab73-3274ba3eb672",
+      "report-header": {
+        "report-name": "dataset report",
+        "report-id": "DSR",
+        "release": "rd1",
+        "created-by": "Dash",
+        "created": "2019-05-31",
+        "reporting-period": {
+          "end-date": "2019-05-31",
+          "begin-date": "2019-05-01"
+        },
+        "report-filters": [],
+        "report-attributes": [],
+        "exceptions": [
+          {
+            "code": 69,
+            "data": "usage data needs to be uncompressed",
+            "message": "Report is compressed using gzip",
+            "help-url": "https://github.com/datacite/sashimi",
+            "severity": "warning"
+          }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "total": 5,
+    "total-pages": 1,
+    "page": 1
+  }
+}

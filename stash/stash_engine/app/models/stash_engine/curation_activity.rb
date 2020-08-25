@@ -2,7 +2,7 @@ require 'stash/doi/id_gen'
 require 'stash/payments/invoicer'
 module StashEngine
 
-  class CurationActivity < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
+  class CurationActivity < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
     include StashEngine::Concerns::StringEnum
 

@@ -1,4 +1,4 @@
-class CreateStashDataciteTemporalCoverages < ActiveRecord::Migration
+class CreateStashDataciteTemporalCoverages < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_datacite_temporal_coverages do |t|
       t.text :description

@@ -1,4 +1,4 @@
-class UpdateToUtf8mb4StashDatacite4 < ActiveRecord::Migration
+class UpdateToUtf8mb4StashDatacite4 < ActiveRecord::Migration[4.2]
 
   TABLES = { 'dcs_affiliations' => %w[short_name long_name abbreviation],
              'dcs_alternate_identifiers' => %w[alternate_identifier alternate_identifier_type],

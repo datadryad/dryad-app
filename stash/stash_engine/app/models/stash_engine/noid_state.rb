@@ -16,7 +16,7 @@ module StashEngine
   class NoidError < StandardError
   end
 
-  class NoidState < ActiveRecord::Base
+  class NoidState < ApplicationRecord
 
     self.table_name = 'noid_states'
 

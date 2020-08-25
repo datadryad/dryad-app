@@ -2,7 +2,7 @@
 
 
 
-<div id="status_table" data-load="<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table') %>">
+<div id="status_table" data-load="<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params) %>">
   <%# render partial: 'status_table' %>
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
@@ -58,7 +58,7 @@
     // calls action refreshing the partial
     function refreshPartial() {
         $.ajax({
-            url: '<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table') %>'
+            url: '<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params) %>'
         })
     }
 </script>

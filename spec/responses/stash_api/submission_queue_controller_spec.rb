@@ -13,13 +13,18 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
+    after(:all) do
+      @user.destroy
+      @doorkeeper_application.destroy
+    end
+
     # I am not testing queuing working here since this is just read only visibility into what
     # is tested and exposed elsewhere.
 
     # test queue length being returned
     describe '#length' do
       it 'returns JSON for queue length and executor queue length' do
-        get '/api/v2/queue_length', {}, default_authenticated_headers
+        get '/api/v2/queue_length', headers: default_authenticated_headers
         output = JSON.parse(response.body).with_indifferent_access
         expect(output[:queue_length]).to be_a(Integer)
         expect(output[:executor_queue_length]).to be_a(Integer)

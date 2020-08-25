@@ -1,5 +1,5 @@
 module StashEngine
-  class CounterStat < ActiveRecord::Base
+  class CounterStat < ApplicationRecord
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     # this class wraps around some database accessors to cache them so we don't query the same stats more than once

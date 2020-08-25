@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module StashDatacite
-  class RelatedIdentifier < ActiveRecord::Base
+  class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     include StashEngine::Concerns::ResourceUpdated

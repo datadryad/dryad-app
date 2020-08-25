@@ -1,0 +1,20 @@
+$('.js-download').prop('disabled', false);
+
+$('#popup_dialog').html("<%= escape_javascript(render partial: 'download_timeout_message') %>");
+
+$(function() {
+    $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: 'This download cannot be assembled right now'
+    });
+
+    $("#cancel_dialog").click(function (e) {
+        e.preventDefault();
+        $('#popup_dialog').dialog('close');
+    });
+});
+
+

@@ -12,7 +12,7 @@
     "curies": [
       {
         "name": "stash",
-        "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+        "href": "https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}",
         "templated": "true"
       }
     ]

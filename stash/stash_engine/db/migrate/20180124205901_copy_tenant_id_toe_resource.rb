@@ -1,4 +1,4 @@
-class CopyTenantIdToeResource < ActiveRecord::Migration
+class CopyTenantIdToeResource < ActiveRecord::Migration[4.2]
   def change
     # set any unmatched to ucop
     update_stmt = <<-SQL

@@ -1,5 +1,16 @@
 <%# locals: resource, upload_method [:files, :manifest] %>
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
+<p>You may upload data via two mechanisms: directly from your computer, or from a URL on an external server (Box, Dropbox,
+  lab server).
+  We do
+not recommend using Google Drive. Please note that for this version of
+your submission you may only use one of these two upload mechanisms.
+</p>
+
+<p>
+We strongly encourage you to include README files to
+provide key information for those wanting to re-use.
+</p>
 <% if @datatype == 'Software' %>
   <!-- TODO:  This is hacked in for Daniella to do a demo in a time crunch, put back into the ui library and css -->
   <div style="display:flex">
@@ -14,6 +25,7 @@
     </div>
   </div>
 <% end %>
+
 <%= render 'stash_engine/file_uploads/file_size_text' %>
 <div>
 

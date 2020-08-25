@@ -1,6 +1,5 @@
 require 'kaminari'
 require 'wicked_pdf'
-require 'sortable-table' # this is required here rather than in controller, otherwise helpers don't work :-(
 require 'ckeditor'
 require_relative('counter_log')
 
@@ -12,7 +11,7 @@ module StashEngine
     initializer 'static assets' do |app|
       # in production these should be served by the web server? we think? (DM 2016-11-09)
       # see http://stackoverflow.com/questions/30563342/rails-cant-start-when-serve-static-assets-disabled-in-production
-      if Rails.application.config.serve_static_files
+      if Rails.application.config.public_file_server.enabled
         app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public")
       end
     end

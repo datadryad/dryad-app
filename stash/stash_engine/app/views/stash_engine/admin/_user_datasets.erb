@@ -1,23 +1,23 @@
 <%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th class="<%= sort_display('title', @sort_column) %>" colspan="2">
-      <%= sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
+    <th class="<%= sort_display('title') %>" colspan="2">
+      <%= sortable_column_head sort_field: 'title', title: 'Dataset Title' %>
     </th>
-    <th class="<%= sort_display('embargo_status', @sort_column) %>">
-      <%= sort_by 'embargo_status', title: 'Status', current_column: @sort_column %>
+    <th class="<%= sort_display('embargo_status') %>">
+      <%= sortable_column_head sort_field: 'embargo_status', title: 'Status' %>
     </th>
-    <th class="<%= sort_display('publication_date', @sort_column) %>">
-      <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
+    <th class="<%= sort_display('publication_date') %>">
+      <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
     </th>
-    <th class="<%= sort_display('updated_at', @sort_column) %>">
-      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
+    <th class="<%= sort_display('updated_at') %>">
+      <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
     </th>
-    <th class="<%= sort_display('size', @sort_column) %>">
-      <%= sort_by 'size', title: 'Size', current_column: @sort_column %>
+    <th class="<%= sort_display('size') %>">
+      <%= sortable_column_head sort_field: 'size', title: 'Size' %>
     </th>
-    <th class="<%= sort_display('edited_by_name', @sort_column) %>" colspan="2">
-      <%= sort_by 'edited_by_name', title: 'Edited By', current_column: @sort_column %>
+    <th class="<%= sort_display('edited_by_name') %>" colspan="2">
+      <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
     </th>
   </tr>
 

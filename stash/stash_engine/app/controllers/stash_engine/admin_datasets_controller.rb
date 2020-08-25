@@ -5,11 +5,10 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
 
     include SharedSecurityController
-    include StashEngine::Concerns::Sortable
+    helper SortableTableHelper
 
     before_action :require_admin
     before_action :setup_paging, only: [:index]
-    before_action :setup_ds_sorting, only: [:index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
@@ -21,9 +20,7 @@ module StashEngine
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
-
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: params, tenant: tenant_limit)
-
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params, tenant: tenant_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
@@ -96,11 +93,8 @@ module StashEngine
     # show curation activities for this item
     def activity_log
       @identifier = Identifier.find(params[:id])
-      created_at = SortableTable::SortColumnDefinition.new('created_at')
-      sort_table = SortableTable::SortTable.new([created_at])
-      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
       resource_ids = @identifier.resources.collect(&:id)
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(@sort_column.order, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
@@ -113,20 +107,6 @@ module StashEngine
     end
 
     private
-
-    def setup_ds_sorting
-      sort_table = SortableTable::SortTable.new(
-        [sort_column_definition('title', nil, %w[title]),
-         sort_column_definition('status', nil, %w[status]),
-         sort_column_definition('author_names', nil, %w[author_names]),
-         sort_column_definition('identifier', nil, %w[identifier]),
-         sort_column_definition('updated_at', nil, %w[updated_at]),
-         sort_column_definition('editor_name', nil, %w[editor_name]),
-         sort_column_definition('storage_size', nil, %w[storage_size]),
-         sort_column_definition('publication_date', nil, %w[publication_date])]
-      )
-      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
-    end
 
     def setup_paging
       if request.format.csv?

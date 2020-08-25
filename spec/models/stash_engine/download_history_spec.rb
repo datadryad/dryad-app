@@ -9,20 +9,23 @@ module StashEngine
 
     describe :mark_event do
       before(:each) do
-        DownloadHistory.mark_start(ip: '168.10.0.1', user_agent: 'HorseStomping Browser', resource_id: 37, file_id: 88)
+        @resource = create(:resource)
+        DownloadHistory.mark_start(ip: '168.10.0.1', user_agent: 'HorseStomping Browser', resource_id: @resource.id, file_id: 88)
       end
 
       it 'adds started downloads to the database' do
-        expect(DownloadHistory.all.count).to eq(1)
-        dlh = DownloadHistory.all.first
+        dl_all = DownloadHistory.where(resource_id: @resource.id)
+        expect(dl_all.count).to eq(1)
+        dlh = dl_all.first
         expect(dlh.ip_address).to eq('168.10.0.1')
         expect(dlh.user_agent).to eq('HorseStomping Browser')
         expect(dlh.state).to eq('downloading')
       end
 
       it 'modifies finished download to change state and updated_at timestamp' do
-        expect(DownloadHistory.all.count).to eq(1)
-        dlh = DownloadHistory.all.first
+        dl_all = DownloadHistory.where(resource_id: @resource.id)
+        expect(dl_all.count).to eq(1)
+        dlh = dl_all.first
         updated_at_before = dlh.updated_at
         sleep 1 # just to be sure timestamps are different seconds
         DownloadHistory.mark_end(download_history: dlh)

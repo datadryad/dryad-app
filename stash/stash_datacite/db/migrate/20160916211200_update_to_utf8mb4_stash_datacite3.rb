@@ -1,4 +1,4 @@
-class UpdateToUtf8mb4StashDatacite3 < ActiveRecord::Migration
+class UpdateToUtf8mb4StashDatacite3 < ActiveRecord::Migration[4.2]
 
   TABLES = { 'dcs_titles' => %w[title] }.freeze
 

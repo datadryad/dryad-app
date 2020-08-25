@@ -1,4 +1,4 @@
-class ChangeFilenameCollaction < ActiveRecord::Migration
+class ChangeFilenameCollaction < ActiveRecord::Migration[4.2]
   def up
     remove_index :stash_engine_file_uploads, name: 'index_stash_engine_file_uploads_on_upload_file_name'
     execute <<-SQL

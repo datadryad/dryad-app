@@ -7,7 +7,7 @@
 default: &default
   enabled: true
   repository:
-    domain: merritt.repository.domain.here
+    domain: http://merritt.repository.domain.here
     endpoint: "http://merritt.repository.domain.here/mrtsword/collection/demo_open_context"
     username: "submitter.username"
     password: "submitter.password"
