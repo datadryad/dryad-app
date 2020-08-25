@@ -9,8 +9,10 @@ module StashEngine
 
     describe :mark_event do
       before(:each) do
-        @resource = create(:resource)
-        DownloadHistory.mark_start(ip: '168.10.0.1', user_agent: 'HorseStomping Browser', resource_id: @resource.id, file_id: 88)
+        @user = create(:user)
+        @resource = create(:resource, user: @user)
+        upload = create(:file_upload, resource: @resource)
+        DownloadHistory.mark_start(ip: '168.10.0.1', user_agent: 'HorseStomping Browser', resource_id: @resource.id, file_id: upload.id)
       end
 
       it 'adds started downloads to the database' do
