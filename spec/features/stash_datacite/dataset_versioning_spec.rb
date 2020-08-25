@@ -266,12 +266,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           find('button[aria-label="View Activity Log"]').click
         end
 
-        expect(page).to have_text(@resource.identifier)
+        expect(page).to have_text(@resource.identifier.identifier)
 
         within(:css, '.c-lined-table__row:last-child') do
           expect(page).to have_text('Submitted')
           expect(page).to have_text(@author.name)
-          expect(page).to have_text(@resource.edit_histories.last.user_comment)
         end
       end
 

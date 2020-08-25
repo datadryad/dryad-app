@@ -1,12 +1,11 @@
 module StashEngine
   describe User, type: :model do
 
-    attr_reader :user
-
     before(:each) do
       # Mock all the mailers fired by callbacks because these tests don't load everything we need
       allow_any_instance_of(CurationActivity).to receive(:email_status_change_notices).and_return(true)
       allow_any_instance_of(CurationActivity).to receive(:email_orcid_invitations).and_return(true)
+      @user = create(:user)
     end
 
     context 'associations' do
@@ -17,26 +16,24 @@ module StashEngine
 
     describe 'name should return "[first_name] [last_name]"' do
 
-      let!(:user) { build(:user) }
-
       it 'returns the right value when first and last name are both available' do
-        expect(user.name).to eql("#{user.first_name} #{user.last_name}")
+        expect(@user.name).to eql("#{@user.first_name} #{@user.last_name}")
       end
 
       it 'returns the first name if no last name is available' do
-        user.last_name = nil
-        expect(user.name).to eql(user.first_name)
+        @user.last_name = nil
+        expect(@user.name).to eql(@user.first_name)
       end
 
       it 'returns the last name if no first name is available' do
-        user.first_name = nil
-        expect(user.name).to eql(user.last_name)
+        @user.first_name = nil
+        expect(@user.name).to eql(@user.last_name)
       end
 
       it 'returns an empty string if no first or last name is available' do
-        user.first_name = nil
-        user.last_name = nil
-        expect(user.name).to eql('')
+        @user.first_name = nil
+        @user.last_name = nil
+        expect(@user.name).to eql('')
       end
 
     end
@@ -44,17 +41,15 @@ module StashEngine
     context :affiliation do
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
-        @user = StashEngine::User.create(
-          first_name: 'Lisa',
-          last_name: 'Muckenhaupt',
-          email: 'lmuckenhaupt@ucop.edu',
-          tenant_id: 'ucop'
-        )
-        @affiliation = StashDatacite::Affiliation.create(
-          short_name: 'Testing',
-          abbreviation: 'TEST',
-          ror_id: '1234'
-        )
+        @user = create(:user,
+                       first_name: 'Lisa',
+                       last_name: 'Muckenhaupt',
+                       email: 'lmuckenhaupt@ucop.edu',
+                       tenant_id: 'ucop')
+        @affiliation = create(:affiliation,
+                              short_name: 'Testing',
+                              abbreviation: 'TEST',
+                              ror_id: '1234')
       end
 
       it 'can be assigned' do
@@ -113,25 +108,23 @@ module StashEngine
     end
 
     describe '#latest_completed_resource_per_identifier' do
-      attr_reader :user
 
       before(:each) do
-        @user = User.create(
-          first_name: 'Lisa',
-          last_name: 'Muckenhaupt',
-          email: 'lmuckenhaupt@ucop.edu',
-          tenant_id: 'ucop'
-        )
+        @user = create(:user,
+                       first_name: 'Lisa',
+                       last_name: 'Muckenhaupt',
+                       email: 'lmuckenhaupt@ucop.edu',
+                       tenant_id: 'ucop')
       end
 
       it 'finds the user\'s resources' do
         resources = Array.new(5) do |index|
           ident = create(:identifier, identifier: "10.123/#{index}")
-          resource = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
+          resource = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
           resource
         end
-        latest = user.latest_completed_resource_per_identifier
+        latest = @user.latest_completed_resource_per_identifier
         expect(latest).to contain_exactly(*resources)
       end
 
@@ -140,14 +133,14 @@ module StashEngine
         other = []
         %w[submitted processing].each_with_index do |state, index|
           ident = create(:identifier, identifier: "10.123/#{index}")
-          res1 = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
+          res1 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           res1.current_state = 'in_progress'
           in_progress << res1
-          res2 = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
+          res2 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           res2.current_state = state
           other << res2
         end
-        latest = user.latest_completed_resource_per_identifier
+        latest = @user.latest_completed_resource_per_identifier
         expect(latest).to contain_exactly(*other)
         in_progress.each do |res|
           expect(latest).not_to include(res)
@@ -157,11 +150,11 @@ module StashEngine
       it 'finds only the latest for each identifier' do
         ident = create(:identifier, identifier: '10.123/1234')
         resources = Array.new(5) do |_|
-          resource = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
+          resource = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
           resource
         end
-        latest = user.latest_completed_resource_per_identifier
+        latest = @user.latest_completed_resource_per_identifier
         expect(latest).to contain_exactly(resources.last)
       end
 
@@ -182,16 +175,13 @@ module StashEngine
 
     describe 'find_by_orcid_or_emails' do
       before(:each) do
-        User.create(
-          email: 'lmuckenhaupt@ucop.edu'
-        )
-        User.create(
-          orcid: '12345678'
-        )
-        User.create(
-          email: 'grover@example.org',
-          orcid: '87654321'
-        )
+        create(:user,
+               email: 'lmuckenhaupt@ucop.edu')
+        create(:user,
+               orcid: '12345678')
+        create(:user,
+               email: 'grover@example.org',
+               orcid: '87654321')
       end
 
       it 'finds by the orcid only' do
@@ -223,29 +213,28 @@ module StashEngine
 
     describe 'migration tokens actions' do
       before(:each) do
-        @user = User.create(
-          migration_token: '123456'
-        )
+        @user = create(:user,
+                       migration_token: '123456')
       end
 
       it 'detects migration is not complete' do
-        expect(user.migration_complete?).to be false
+        expect(@user.migration_complete?).to be false
       end
 
       it 'migration_complete! sets and detects a migration_complete?' do
-        user.migration_complete!
-        expect(user.migration_complete?).to be true
+        @user.migration_complete!
+        expect(@user.migration_complete?).to be true
       end
 
       it "set_migration_token doesn't set a new token if one exists" do
-        user.set_migration_token
-        expect(user.migration_token).to eq('123456')
+        @user.set_migration_token
+        expect(@user.migration_token).to eq('123456')
       end
 
       it "sets a migration token when one doesn't exist" do
-        user.migration_token = nil
-        user.set_migration_token
-        expect(user.migration_token.length).to eq(6)
+        @user.migration_token = nil
+        @user.set_migration_token
+        expect(@user.migration_token.length).to eq(6)
       end
     end
 
