@@ -6,12 +6,14 @@ module StashEngine
   RSpec.describe CurationActivity do
 
     include Mocks::RSolr
+    include Mocks::Ror
     include Mocks::Stripe
 
     before(:each) do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       mock_solr!
       mock_stripe!
+      mock_ror!
     end
 
     describe :factories do
