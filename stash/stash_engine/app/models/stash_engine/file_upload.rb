@@ -93,9 +93,14 @@ module StashEngine
 
     # the Merritt URL to query in order to get the information on the presigned URL
     def merritt_presign_info_url
+      raise "Filename may not be blank when creating presigned URL" if upload_file_name.blank?
+
+      # The gsub below ensures and number signs get double-encoded because otherwise Merritt cuts them off early.
+      # We can remove the workaround if it changes in Merritt at some point in the future.
+
       domain, local_id = resource.merritt_protodomain_and_local_id
       "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-          "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+          "producer%2F#{ERB::Util.url_encode(upload_file_name.gsub('#', '%23'))}?no_redirect=true"
     end
 
     # this will do the http request to Merritt to get the presigned URL, putting here instead of other classes since it gets
