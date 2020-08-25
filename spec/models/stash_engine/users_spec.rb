@@ -151,7 +151,7 @@ module StashEngine
         user = create(:user)
         ident = create(:identifier, identifier: '10.123/1234')
         resources = Array.new(5) do |_|
-          resource = create(:resource, user_id: user.id, skip_emails: true, identifier: ident)
+          resource = create(:resource, user: user, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
           resource
         end
