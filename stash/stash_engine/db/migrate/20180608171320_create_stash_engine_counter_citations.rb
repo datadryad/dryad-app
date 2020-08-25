@@ -1,4 +1,4 @@
-class CreateStashEngineCounterCitations < ActiveRecord::Migration
+class CreateStashEngineCounterCitations < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_counter_citations do |t|
       t.references :identifier

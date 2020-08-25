@@ -1,4 +1,4 @@
-class CopyOrcidToUsers < ActiveRecord::Migration
+class CopyOrcidToUsers < ActiveRecord::Migration[4.2]
   # rubocop:disable Metrics/MethodLength
   def change
     update_stmt = <<-SQL

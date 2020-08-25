@@ -1,4 +1,4 @@
-class CreateStashEngineShares < ActiveRecord::Migration
+class CreateStashEngineShares < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_shares do |t|
       t.string :sharing_link

@@ -20,7 +20,7 @@ module StashEngine
         # A failure to process the notifier's PATCH call is not a failure in the notifier itself
         log_err = nil if log_err.match(/PATCH to http/)
 
-        online = last_run_date.present? && last_run_date >= (Time.now - 15.minutes) && !log_err
+        online = last_run_date.present? && last_run_date >= (Time.now - 15.minutes).utc && !log_err.present?
         msg = ''
         msg += "The Notifier service last updated its log at '#{last_run_date}'. " unless online
         msg += "Notifier log has error: #{log_err}" if log_err.present?

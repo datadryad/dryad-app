@@ -4,7 +4,7 @@ require 'stash/indexer/solr_indexer'
 require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'
 
 module StashEngine
-  class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
+  class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
     # Relations
 
@@ -519,6 +519,10 @@ module StashEngine
     end
     private :increment_version!
 
+    def previous_resource
+      StashEngine::Resource.where(identifier_id: identifier_id).where('id < ?', id).order(id: :desc).first
+    end
+
     # ------------------------------------------------------------
     # Ownership
 
@@ -654,6 +658,14 @@ module StashEngine
       return user if dataset_in_progress_editor_id.nil?
 
       User.where(id: dataset_in_progress_editor_id).first
+    end
+
+    # -----------------------------------------------------------
+    # Title
+
+    # Title without "Data from:"
+    def clean_title
+      title.delete_prefix('Data from:').strip
     end
 
     # -----------------------------------------------------------

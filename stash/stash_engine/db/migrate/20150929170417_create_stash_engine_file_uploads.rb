@@ -1,4 +1,4 @@
-class CreateStashEngineFileUploads < ActiveRecord::Migration
+class CreateStashEngineFileUploads < ActiveRecord::Migration[4.2]
   def change
     create_table :stash_engine_file_uploads do |t|
       t.string :upload_file_name

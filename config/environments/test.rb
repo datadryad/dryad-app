@@ -7,11 +7,13 @@ Rails.application.configure do
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
 
-  # Do not eager load code on boot. This avoids loading your whole application
+  # Rails suggests to not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
-
+  # However, according to 
   # https://bibwild.wordpress.com/2016/02/18/struggling-towards-reliable-capybara-javascript-testing/
+  # it is important to do the eager_load to avoid problems with capybara.
+  # TODO: This *might* be changeable in Rails5, but we need to try it out.
   config.eager_load = true
   config.allow_concurrency = false
 
@@ -19,11 +21,12 @@ Rails.application.configure do
   # In other words, return a useful error about migrations not being current.
   config.active_record.migration_error = true
 
-  # Configure static file server for tests with Cache-Control for performance.
-  config.serve_static_files   = true
-  config.cache_store = :null_store
-  config.static_cache_control = 'public, max-age=3600'
-
+  # Configure public file server for tests with Cache-Control for performance.
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    'Cache-Control' => 'public, max-age=3600'
+  }        
+  
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
@@ -34,6 +37,8 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
@@ -48,6 +53,5 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   Rails.application.default_url_options = { host: 'localhost', port: 3000 }
 end

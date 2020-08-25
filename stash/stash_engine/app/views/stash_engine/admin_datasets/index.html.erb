@@ -2,9 +2,10 @@
 <h1 class="o-heading__level1">Admin Dashboard</h1>
 
 <%= render partial: 'admin_head', locals: { all_stats: @all_stats, seven_day_stats: @seven_day_stats } %>
-
+ 
 <div>
-  <h2>Datasets</h2>
+    <h2>Datasets</h2>
+
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
 
@@ -15,7 +16,7 @@
   </div>
 
   <div>
-    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.merge(format: :csv) %>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', sortable_table_params.merge(format: :csv) %>
   </div>
 
   <p>

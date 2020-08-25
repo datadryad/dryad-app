@@ -43,7 +43,7 @@ module StashDatacite
       end
 
       def subjects
-        @subjects ||= @resource.subjects
+        @subjects = @resource.subjects.order(subject_scheme: :desc, subject: :asc)
       end
 
       def contributors

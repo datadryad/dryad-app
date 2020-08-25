@@ -1,4 +1,4 @@
-class CreateDcsSizes < ActiveRecord::Migration
+class CreateDcsSizes < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_sizes do |t|
       t.string :size

@@ -1,4 +1,4 @@
-class FixPublishers < ActiveRecord::Migration
+class FixPublishers < ActiveRecord::Migration[4.2]
   def change
     bad_to_good = {
       'IFCA' => 'DataONE',

@@ -1,6 +1,6 @@
 module StashEngine
   # rubocop:disable Metrics/ClassLength
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
 
     has_many :resources
     has_many :journal_roles

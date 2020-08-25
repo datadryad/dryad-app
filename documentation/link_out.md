@@ -4,12 +4,12 @@
 
 [NCBI LinkOut](https://www.ncbi.nlm.nih.gov/projects/linkout/) and [European PMC LabsLink](http://europepmc.org/LabsLink) are mechanisms by which NCBI and PMC pages link to content in Dryad. Dryad data packages are related to articles in PubMed, and to molecular sequences in GenBank's nucleotide and protein databases.
 
-The core service code and Rake tasks live in the [Stash repo](https://github.com/CDL-Dryad/stash/tree/master/stash_engine) in the `stash_engine/lib/stash/link_out/` directory. The XML ERB templates however reside within this repo in the `app/views/link_out/` directory due to an issue with the Rails engine having trouble locating views in an engine when executing within the context of a Rake task.
+The core service code and Rake tasks live in the [Stash repo](https://github.com/CDL-Dryad/stash/tree/main/stash_engine) in the `stash_engine/lib/stash/link_out/` directory. The XML ERB templates however reside within this repo in the `app/views/link_out/` directory due to an issue with the Rails engine having trouble locating views in an engine when executing within the context of a Rake task.
 
 The FTP credentials used by the services is stored in the application's private repository
 
 To create and publish the LinkOut files, run the following command:
-  `bundle exec rake link_out:publish RAILS_ENV=[environment]`
+  `bundle exec rails link_out:publish RAILS_ENV=[environment]`
 
 The LinkOut services were derived from the [original Dryad java implementation](https://github.com/datadryad/dryad-linkout-tool).
 
@@ -197,15 +197,15 @@ Sample `sequencelinkout000001.xml` file:
 The following rake tasks are available to seed the database with PubMed IDs and GenBank sequences, create files individually, and push them to the appropriate FTP server(s)
 
 ```shell
-rake link_out:create                                # Generate the LinkOut file(s)
-rake link_out:create_labslink_linkouts              # Generate the LabsLink LinkOut files
-rake link_out:create_pubmed_linkouts                # Generate the PubMed Link Out files
-rake link_out:create_pubmed_sequence_linkouts       # Generate the PubMed GenBank Sequence LinkOut files
-rake link_out:push                                  # Push the LinkOut files to the LinkOut FTP servers
+rails link_out:create                                # Generate the LinkOut file(s)
+rails link_out:create_labslink_linkouts              # Generate the LabsLink LinkOut files
+rails link_out:create_pubmed_linkouts                # Generate the PubMed Link Out files
+rails link_out:create_pubmed_sequence_linkouts       # Generate the PubMed GenBank Sequence LinkOut files
+rails link_out:push                                  # Push the LinkOut files to the LinkOut FTP servers
 
-rake link_out:publish                               # Generate and then push the LinkOut file(s) to the LinkOut FTP servers
+rails link_out:publish                               # Generate and then push the LinkOut file(s) to the LinkOut FTP servers
 
-rake link_out:seed_genbank_ids                      # Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID
-rake link_out:seed_pmids                            # Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI
-rake link_out:seed_solr_keywords                    # Update Solr keywords with publication IDs
+rails link_out:seed_genbank_ids                      # Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID
+rails link_out:seed_pmids                            # Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI
+rails link_out:seed_solr_keywords                    # Update Solr keywords with publication IDs
 ```

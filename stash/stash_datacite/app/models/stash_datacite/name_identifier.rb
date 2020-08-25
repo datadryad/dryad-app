@@ -2,7 +2,7 @@
 
 # TODO: delete
 module StashDatacite
-  class NameIdentifier < ActiveRecord::Base
+  class NameIdentifier < ApplicationRecord
     self.table_name = 'dcs_name_identifiers'
     has_many :contributors, class_name: 'Contributor'
   end

@@ -1,4 +1,4 @@
-class RemoveExpirationDateFromShares < ActiveRecord::Migration
+class RemoveExpirationDateFromShares < ActiveRecord::Migration[4.2]
   def up
     remove_column :stash_engine_shares, :expiration_date
   end

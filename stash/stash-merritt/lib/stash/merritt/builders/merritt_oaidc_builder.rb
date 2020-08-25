@@ -86,7 +86,7 @@ module Stash
         end
 
         def add_subjects(xml)
-          resource.subjects.each { |s| xml.send(:'dc:subject', s.subject.delete("\r").to_s) }
+          resource.subjects.non_fos.each { |s| xml.send(:'dc:subject', s.subject.delete("\r").to_s) }
         end
 
         def add_resource_type(xml)

@@ -22,7 +22,7 @@ begin
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec) do |task|
-    task.rspec_opts = %w[--color --format documentation --order random]
+    task.rspec_opts = %w[--color --format documentation --order random --require rails_helper]
   end
 
   task default: %i[rubocop spec]

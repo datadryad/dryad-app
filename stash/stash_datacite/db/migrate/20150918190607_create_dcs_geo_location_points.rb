@@ -1,4 +1,4 @@
-class CreateDcsGeoLocationPoints < ActiveRecord::Migration
+class CreateDcsGeoLocationPoints < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_geo_location_points do |t|
       t.float :latitude

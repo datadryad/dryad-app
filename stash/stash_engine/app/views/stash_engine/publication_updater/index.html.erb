@@ -11,27 +11,27 @@
 
   <table class="c-lined-table">
     <tr class="c-lined-table__head">
-      <th class="c-admin-table <%= sort_display('title', @sort_column) %> c-proposed-change-table__column-large">
-        <%= sort_by 'title', title: 'Title', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('stash_engine_proposed_changes.title') %> c-proposed-change-table__column-large">
+        <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.title', title: 'Title' %>
       </th>
       <th class="c-proposed-change-table__column-small">&nbsp;</th>
-      <th class="c-admin-table <%= sort_display('publication_name', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publication_name', title: 'Publication', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_name') %> c-proposed-change-table__column-small">
+        <%= sortable_column_head sort_field: 'publication_name', title: 'Publication' %>
       </th>
-      <th class="c-admin-table <%= sort_display('publication_issn', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publication_issn', title: 'ISSN', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_issn') %> c-proposed-change-table__column-small">
+        <%= sortable_column_head sort_field: 'publication_issn', title: 'ISSN' %>
       </th>
-      <th class="c-admin-table <%= sort_display('publication_doi', @sort_column) %> c-proposed-change-table__column">
-        <%= sort_by 'publication_doi', title: 'DOI', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_doi') %> c-proposed-change-table__column">
+        <%= sortable_column_head sort_field: 'publication_doi', title: 'DOI' %>
       </th>
-      <th class="c-admin-table <%= sort_display('publication_date', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publication_date', title: 'Published', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('stash_engine_proposed_changes.publication_date') %> c-proposed-change-table__column-small">
+        <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.publication_date', title: 'Published' %>
       </th>
-      <th class="c-admin-table <%= sort_display('authors', @sort_column) %> c-proposed-change-table__column-medium">
-        <%= sort_by 'authors', title: 'Authors', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('authors') %> c-proposed-change-table__column-medium">
+        <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
       </th>
-      <th class="c-admin-table <%= sort_display('score', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'score', title: 'Scores', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('score') %> c-proposed-change-table__column-small">
+        <%= sortable_column_head sort_field: 'score', title: 'Scores' %>
       </th>
     </tr>
 

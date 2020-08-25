@@ -16,13 +16,16 @@ module StashDatacite
         'url' => :landing_url,
         'identifier' => :doi_url,
         'version' => :version,
+        'isAccessibleForFree' => :true_val,
         'keywords' => :keywords,
         'creator' => :authors,
         'distribution' => :distribution,
         'temporalCoverage' => :temporal_coverages,
         'spatialCoverage' => :spatial_coverages,
         'citation' => :citation,
-        'license' => :license
+        'license' => :license,
+        'publisher' => :publisher,
+        'provider' => :provider
       }.freeze
 
       def initialize(resource:)
@@ -30,7 +33,7 @@ module StashDatacite
       end
 
       def generate
-        structure = { '@context' => 'http://schema.org', '@type' => 'dataset' }
+        structure = { '@context' => 'http://schema.org', '@type' => 'Dataset' }
         ITEMS_TO_ADD.each_pair do |k, v|
           item = to_item(send(v))
           structure[k] = item if item
@@ -39,6 +42,26 @@ module StashDatacite
       end
 
       private
+
+      def true_val
+        true
+      end
+
+      def publisher
+        {
+          '@id': 'https://datadryad.org',
+          '@type': 'Organization',
+          'legalName': 'Dryad Digital Repository',
+          'name': 'Dryad',
+          'url': 'https://datadryad.org'
+        }.compact
+      end
+
+      def provider
+        {
+          '@id': 'https://datadryad.org'
+        }.compact
+      end
 
       def to_item(value)
         return unless value
@@ -50,7 +73,7 @@ module StashDatacite
       def names
         return [] if @resource.title.blank?
 
-        [@resource.title]
+        [@resource.clean_title]
       end
 
       def descriptions
@@ -73,9 +96,9 @@ module StashDatacite
       end
 
       def keywords
-        return [] unless @resource.subjects
+        return [] unless @resource.subjects.non_fos
 
-        @resource.subjects.map(&:subject).compact
+        @resource.subjects.non_fos.map(&:subject).compact
       end
 
       def authors

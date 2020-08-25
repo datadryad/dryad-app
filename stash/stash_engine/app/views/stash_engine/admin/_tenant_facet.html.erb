@@ -6,11 +6,11 @@
       <li>
         <% if params[:institution] == f.tenant_id %>
           <span class="c-facet-li__selected"><%= f.short_name %></span>
-          <%= link_to params.merge(institution: nil, page: 1), class: 'c-facet-remove-link' do %>
+          <%= link_to sortable_table_params.merge(institution: nil, page: 1), class: 'c-facet-remove-link' do %>
             <i class="fa fa-times c-facet-remove" title="Remove filter"></i>
           <% end %>
         <% else %>
-         <%= link_to f.short_name, params.merge(institution: f.tenant_id, page: 1) %>
+         <%= link_to f.short_name, sortable_table_params.merge(institution: f.tenant_id, page: 1) %>
         <% end %>
       </li>
     <% end %>

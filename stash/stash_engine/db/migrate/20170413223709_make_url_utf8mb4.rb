@@ -1,4 +1,4 @@
-class MakeUrlUtf8mb4 < ActiveRecord::Migration
+class MakeUrlUtf8mb4 < ActiveRecord::Migration[4.2]
   def up
     set_utf8mb4('stash_engine_file_uploads', 'url', 'utf8mb4_general_ci')
   end

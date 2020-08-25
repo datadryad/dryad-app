@@ -40,6 +40,9 @@ StashDatacite::Engine.routes.draw do
   delete 'subjects/:id/delete', to: 'subjects#delete', as: 'subjects_delete'
   get 'subjects/landing', to: 'subjects#landing', as: 'subjects_landing'
 
+  # fos subjects are a special subject that is treated differently for the OECD Field of Science
+  patch 'fos_subjects/update', to: 'fos_subjects#update'
+
   get 'related_identifiers/new', to: 'related_identifiers#new'
   post 'related_identifiers/create', to: 'related_identifiers#create'
   patch 'related_identifiers/update', to: 'related_identifiers#update'

@@ -1,4 +1,3 @@
-require 'rails_helper'
 require 'byebug'
 require 'pry-remote'
 require_relative '../../responses/stash_engine/download_helpers'
@@ -13,6 +12,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Ror
   include Mocks::Stripe
+  include Mocks::Tenant
 
   before(:each) do
     # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
@@ -21,6 +21,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     mock_ror!
     mock_datacite!
     mock_stripe!
+    mock_tenant!
 
     # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
     create_basic_dataset!
@@ -40,5 +41,30 @@ RSpec.feature 'Landing', type: :feature, js: true do
     expect(page).to have_text('Preparing Download')
     click_on 'cancel_dialog'
     expect(page).not_to have_text('Preparing Download')
+  end
+
+  it "shows popup telling people of problems if download assembly times out but status doesn't" do
+    res = @identifier.resources.first
+    res.update(meta_view: true, file_view: true, publication_date: Time.new)
+    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
+    stub_404_status # the status of the token (not found)
+    stub_408_assemble # the status for assembly
+    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
+    click_on 'Download dataset'
+    expect(page).to have_text('There was a problem assembling your download request')
+    click_on 'cancel_dialog'
+    expect(page).not_to have_text('There was a problem assembling your download request')
+  end
+
+  it 'shows popup telling people of problems if token status times out' do
+    res = @identifier.resources.first
+    res.update(meta_view: true, file_view: true, publication_date: Time.new)
+    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
+    stub_408_status # the status for assembly
+    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
+    click_on 'Download dataset'
+    expect(page).to have_text('There was a problem assembling your download request')
+    click_on 'cancel_dialog'
+    expect(page).not_to have_text('There was a problem assembling your download request')
   end
 end

@@ -1,4 +1,4 @@
-class CreateDcsResourceTypes < ActiveRecord::Migration
+class CreateDcsResourceTypes < ActiveRecord::Migration[4.2]
   def change
     create_table :dcs_resource_types do |t|
       t.column :resource_type, "ENUM('dataset', 'image', 'sound', 'audiovisual',

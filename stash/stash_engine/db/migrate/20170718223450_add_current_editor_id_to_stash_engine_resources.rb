@@ -1,4 +1,4 @@
-class AddCurrentEditorIdToStashEngineResources < ActiveRecord::Migration
+class AddCurrentEditorIdToStashEngineResources < ActiveRecord::Migration[4.2]
   def change
     change_table :stash_engine_resources do |t|
       t.integer :current_editor_id

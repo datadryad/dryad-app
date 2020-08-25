@@ -1,4 +1,4 @@
-class DateDescriptionType < ActiveRecord::Migration
+class DateDescriptionType < ActiveRecord::Migration[4.2]
   def up
     change_table :dcs_descriptions do |t|
       t.change :description_type, "ENUM('abstract', 'methods', 'seriesinformation', 'tableofcontents', 'technicalinfo',

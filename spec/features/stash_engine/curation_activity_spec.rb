@@ -3,6 +3,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
   include Mocks::Ror
+  include Mocks::Tenant
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -37,8 +38,10 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_ror!
+        mock_tenant!
+
         # Create a user, identifier and 2 resources for each tenant
-        %w[ucop dryad].each do |tenant|
+        %w[ucop dryad mock_tenant].each do |tenant|
           user = create(:user, tenant_id: tenant)
           @identifiers = []
           2.times.each do
@@ -53,7 +56,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'shows admins datasets for their tenant' do
-        sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'admin', tenant_id: 'mock_tenant'))
         visit dashboard_path
         expect(all('.c-lined-table__row').length).to eql(2)
       end
@@ -61,7 +64,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'lets superusers see all datasets' do
         sign_in(create(:user, role: 'superuser'))
         visit dashboard_path
-        expect(all('.c-lined-table__row').length).to eql(4)
+        expect(all('.c-lined-table__row').length).to eql(6)
       end
 
       it 'has ajax showing counter stats and citations', js: true do
@@ -72,9 +75,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         el.click
         my_stats = @identifiers.first.counter_stat
         page.first :css, '.o-metrics__icon'
-        page.should have_content("#{my_stats.citation_count} citations")
-        page.should have_content("#{my_stats.views} views")
-        page.should have_content("#{my_stats.downloads} downloads")
+        expect(page).to have_content("#{my_stats.citation_count} citations")
+        expect(page).to have_content("#{my_stats.views} views")
+        expect(page).to have_content("#{my_stats.downloads} downloads")
       end
 
       it 'generates a csv having dataset information with citations, views and downloads' do
@@ -100,10 +103,10 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_ror!
+
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
         visit "#{dashboard_path}?curation_status=in_progress"
-        # find('#curation_status').select('In Progress')
       end
 
       it 'do not have any "edit" pencil icons' do
