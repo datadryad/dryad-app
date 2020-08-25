@@ -116,7 +116,7 @@ module StashEngine
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
         expect(message).to receive(:deliver_now)
-        expect { CurationActivity.create(resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
+        expect { create(:curation_activity, resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
       end
     end
 

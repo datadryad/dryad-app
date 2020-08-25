@@ -12,8 +12,10 @@ describe 'dev_ops:retry_zenodo_errors', type: :task do
 
   describe 'selects the errored ones' do
     before(:each) do
-      @zc1 = create(:zenodo_copy, state: 'error', retries: 5)
-      @zc2 = create(:zenodo_copy, state: 'error', retries: 0)
+      ident = create(:identifier)
+      ident2 = create(:identifier)
+      @zc1 = create(:zenodo_copy, state: 'error', retries: 5, identifier_id: ident.id)
+      @zc2 = create(:zenodo_copy, state: 'error', retries: 0, identifier_id: ident2.id)
       allow(StashEngine::ZenodoCopyJob).to receive(:perform_later).and_return(nil)
     end
 
@@ -31,7 +33,8 @@ describe 'dev_ops:long_jobs', type: :task do
 
   it 'detects no jobs if none in interesting states' do
     create(:repo_queue_state, state: 'completed')
-    create(:zenodo_copy, state: 'finished')
+    ident = create(:identifier)
+    create(:zenodo_copy, state: 'finished', identifier_id: ident.id)
     expect { task.execute }.to output(/0\sitems\sin\sMerritt.+
       0\sitems\sare\sbeing\ssent\sto\sMerritt.+
       0\sitems\sin\sZenodo.+
@@ -46,8 +49,10 @@ describe 'dev_ops:long_jobs', type: :task do
   end
 
   it 'detects zenodo queued and executing' do
-    create(:zenodo_copy, state: 'enqueued')
-    create(:zenodo_copy, state: 'replicating')
+    ident = create(:identifier)
+    ident2 = create(:identifier)
+    create(:zenodo_copy, state: 'enqueued', identifier_id: ident.id)
+    create(:zenodo_copy, state: 'replicating', identifier_id: ident2.id)
     expect { task.execute }.to output(/1\sitems\sin\sZenodo.+
       1\sitems\sare\sstill\sbeing\sreplicated\sto\sZenodo/xm).to_stdout
   end
