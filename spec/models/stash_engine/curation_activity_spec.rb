@@ -6,12 +6,14 @@ module StashEngine
   RSpec.describe CurationActivity do
 
     include Mocks::RSolr
+    include Mocks::Ror
     include Mocks::Stripe
 
     before(:each) do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       mock_solr!
       mock_stripe!
+      mock_ror!
     end
 
     describe :factories do
@@ -116,7 +118,7 @@ module StashEngine
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
         expect(message).to receive(:deliver_now)
-        expect { CurationActivity.create(resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
+        expect { create(:curation_activity, resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
       end
     end
 

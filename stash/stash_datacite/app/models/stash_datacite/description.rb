@@ -58,7 +58,7 @@ module StashDatacite
     end
 
     def update_search_words
-      resource&.identifier&.update_search_words! if description_type == 'abstract' && description_changed?
+      resource&.identifier&.update_search_words! if description_type == 'abstract' && saved_change_to_description?
     end
 
     after_save :update_search_words

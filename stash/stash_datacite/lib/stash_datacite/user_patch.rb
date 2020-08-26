@@ -5,7 +5,7 @@ module StashDatacite
 
     def self.patch!
       StashEngine::User.instance_eval do
-        belongs_to :affiliation, class_name: 'StashDatacite::Affiliation'
+        belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
       end
     end
 

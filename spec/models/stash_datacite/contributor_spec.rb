@@ -2,30 +2,27 @@ require 'rails_helper'
 
 module StashDatacite
   describe Contributor do
-    attr_reader :contrib
     before(:each) do
-      user = StashEngine::User.create(
-        email: 'lmuckenhaupt@example.edu',
-        tenant_id: 'dataone'
-      )
-      resource = StashEngine::Resource.create(user_id: user.id)
-      @contrib = Contributor.create(
-        resource_id: resource.id,
-        contributor_name: 'Elvis Presley',
-        contributor_type: 'projectleader'
-      )
+      user = create(:user,
+                    email: 'lmuckenhaupt@example.edu',
+                    tenant_id: 'dataone')
+      resource = create(:resource, user_id: user.id)
+      @contrib = create(:contributor,
+                        resource: resource,
+                        contributor_name: 'Elvis Presley',
+                        contributor_type: 'projectleader')
     end
 
     describe 'contributor type' do
       describe :contributor_type_friendly do
         it 'returns the Datacite::Mapping value' do
-          expect(contrib.contributor_type_friendly).to eq('ProjectLeader')
+          expect(@contrib.contributor_type_friendly).to eq('ProjectLeader')
         end
       end
 
       describe :contributor_type_mapping_obj do
         it 'returns the Datacite::Mapping enum instance' do
-          expect(contrib.contributor_type_mapping_obj).to be(Datacite::Mapping::ContributorType::PROJECT_LEADER)
+          expect(@contrib.contributor_type_mapping_obj).to be(Datacite::Mapping::ContributorType::PROJECT_LEADER)
         end
         it 'maps nil to nil' do
           expect(Contributor.contributor_type_mapping_obj(nil)).to be_nil
@@ -64,11 +61,11 @@ module StashDatacite
 
     describe 'contributor_name_friendly' do
       it 'shows the asterisk when asked' do
-        c = Contributor.create(contributor_name: 'Bertelsmann Music Group*')
+        c = create(:contributor, contributor_name: 'Bertelsmann Music Group*')
         expect(c.contributor_name_friendly(show_asterisk: true)).to eq('Bertelsmann Music Group*')
       end
       it 'suppresses the asterisk by default' do
-        c = Contributor.create(contributor_name: 'Bertelsmann Music Group*')
+        c = create(:contributor, contributor_name: 'Bertelsmann Music Group*')
         expect(c.contributor_name_friendly).to eq('Bertelsmann Music Group')
       end
     end
@@ -79,38 +76,38 @@ module StashDatacite
         @affiliations = ['Graceland', 'RCA', 'RCA Camden', 'Pickwick', 'BMG'].map do |affil|
           Affiliation.create(long_name: affil)
         end
-        contrib.affiliation_ids = affiliations.map(&:id)
-        contrib.save
-        expect(contrib.affiliations.count).to eq(affiliations.size)
+        @contrib.affiliation_ids = affiliations.map(&:id)
+        @contrib.save
+        expect(@contrib.affiliations.count).to eq(affiliations.size)
       end
 
       describe '#affiliation_id' do
         it 'returns the ID of the first affiliation' do
-          expect(contrib.affiliation_id).to eq(affiliations.first.id)
+          expect(@contrib.affiliation_id).to eq(affiliations.first.id)
         end
       end
 
       describe '#affiliation' do
         it 'returns the first affiliation' do
-          expect(contrib.affiliation).to eq(affiliations.first)
+          expect(@contrib.affiliation).to eq(affiliations.first)
         end
       end
 
       describe '#affiliation_id=' do
         it 'replaces the entire affiliation list' do
           new_affil = Affiliation.create(long_name: 'Metro-Goldwyn-Mayer')
-          contrib.affiliation_id = new_affil.id
-          expect(contrib.affiliations.count).to eq(1)
-          expect(contrib.affiliation).to eq(new_affil)
+          @contrib.affiliation_id = new_affil.id
+          expect(@contrib.affiliations.count).to eq(1)
+          expect(@contrib.affiliation).to eq(new_affil)
         end
       end
 
       describe '#affiliation=' do
         it 'replaces the entire affiliation list' do
           new_affil = Affiliation.create(long_name: 'United Artists')
-          contrib.affiliation = new_affil
-          expect(contrib.affiliations.count).to eq(1)
-          expect(contrib.affiliation_id).to eq(new_affil.id)
+          @contrib.affiliation = new_affil
+          expect(@contrib.affiliations.count).to eq(1)
+          expect(@contrib.affiliation_id).to eq(new_affil.id)
         end
       end
     end
