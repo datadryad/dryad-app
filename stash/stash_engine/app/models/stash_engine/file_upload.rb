@@ -93,7 +93,7 @@ module StashEngine
 
     # the Merritt URL to query in order to get the information on the presigned URL
     def merritt_presign_info_url
-      raise "Filename may not be blank when creating presigned URL" if upload_file_name.blank?
+      raise 'Filename may not be blank when creating presigned URL' if upload_file_name.blank?
 
       # The gsub below ensures and number signs get double-encoded because otherwise Merritt cuts them off early.
       # We can remove the workaround if it changes in Merritt at some point in the future.
