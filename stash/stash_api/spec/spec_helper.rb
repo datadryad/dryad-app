@@ -94,9 +94,6 @@ StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
 
 APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('../config/app_config.yml', __FILE__))['test'])
 
-# Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
-ActiveRecord::Base.raise_in_transactional_callbacks = true
-
 # ------------------------------------------------------------
 # Mocks
 
