@@ -101,7 +101,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       describe :when_viewed_by_curator do
 
         before(:each, js: true) do
-          sign_out
           sign_in(@curator)
           find('summary', text: 'Admin').click
           click_link 'Dataset Curation', wait: 5
@@ -241,7 +240,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Admin page', js: true do
-        sign_out
         sign_in(@curator)
         find('summary', text: 'Admin').click
         click_link 'Dataset Curation', wait: 5
@@ -257,7 +255,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Activity Log page', js: true do
-        sign_out
         sign_in(@curator)
         find('summary', text: 'Admin').click
         click_link 'Dataset Curation', wait: 5
