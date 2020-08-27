@@ -13,7 +13,7 @@ module WebmockHelper
   # rubocop:enable Style/RegexpLiteral
 
   def disable_net_connect!
-    WebMock.disable_net_connect!(allow: WHITE_LIST)
+    WebMock.disable_net_connect!(allow: WHITE_LIST, allow_localhost: true)
   end
 
   def allow_net_connect!

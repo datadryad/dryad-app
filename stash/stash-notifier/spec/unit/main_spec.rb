@@ -10,7 +10,7 @@ RSpec.describe 'main' do
     ENV['STASH_ENV'] = 'test'
     ENV['NOTIFIER_OUTPUT'] = 'stdout'
 
-    WebMock.disable_net_connect!
+    WebMock.disable_net_connect!(allow_localhost: true)
 
     file_contents = File.open(File.join(__dir__, '..', 'data', 'oai-example.xml')).read
 
