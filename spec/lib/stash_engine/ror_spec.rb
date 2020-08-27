@@ -34,7 +34,7 @@ module Stash
 
         before(:each) do
 
-          WebMock.disable_net_connect!
+          WebMock.disable_net_connect!(allow_localhost: true)
 
           @one_response = <<~HEREDOC
             {"number_of_results":1,"time_taken":4,"items":[{"id":"https://ror.org/01jjrt576","name":"Sun Gro Horticulture (Canada)",

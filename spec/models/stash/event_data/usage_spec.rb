@@ -6,7 +6,7 @@ module Stash
 
       before(:each) do
         @usage = Usage.new(doi: 'doi:10.6071/m3rp49')
-        WebMock.disable_net_connect!
+        WebMock.disable_net_connect!(allow_localhost: true)
 
         stub_request(:get, 'https://api.datacite.org/events?doi=10.6071/m3rp49&mailto=scott.fisher@ucop.edu&page%5Bsize%5D=0&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine&rows&source-id=datacite-usage')
           .with(
