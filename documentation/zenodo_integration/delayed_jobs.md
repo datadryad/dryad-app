@@ -1,18 +1,24 @@
 # Zenodo extra copies
 
+For environments that send datasets to Zenodo, the process of
+transferring the data only lives on one server (e.g., stage-c, but not stage-a).
+On servers where the transfer process lives, detailed documentation
+can be found in `/dryad/init.d/README.delayed_job.md`.
+
 ## It's not processing? Why? Look at this stuff
-- (On 2c) Check `~/init.d/delayed_job.dryad status` for status or start the daemon with `~/init.d/delayed_job.dryad start`
+- (On 2c) Check `sudo systemctl status delayed_job` for status or
+  start the daemon with `sudo systemctl start delayed_job`
 - Delayed jobs has a bare work queue in the table `delayed_jobs`.  Jobs should appear here until processed successfully and then will be deleted on success.
 - The application state of the zenodo jobs is maintained in `stash_engine_zenodo_copies` and also contains important info such as the deposition id (zenodo's internal id)
 - Most errors and stack traces should be saved into the error field in the table above so we don't have to spend hours digging through logs to figure out problems
 
 ## We're about to have a maintenance, shutdow or restart, what do I do?
 - (On 2c) "pause" or "drain" the jobs at least a few hours or more ahead so they don't get cut off in the middle of something that takes many hours to process.
-- Check status with `~/init.d/long_jobs.dryad status`
-- Let jobs drain out with `~/init.d/long_jobs.dryad drain`.  This really just touches two files in the `~/app/ui/releases` directory. The files are: `defer_jobs.txt` (zenodo replication) and `hold-submissions.txt` (Merritt submissions).  When these files are present then the internal state of these is put into a `defered` or `rejected-shutting-down` when it's their turn to run.  These states are in their own tables and not the delayed_job work queue because the delayed_job queue is very simple and dumb.
+- Check status with `~/bin/long_jobs.dryad status`
+- Let jobs drain out with `~/bin/long_jobs.dryad drain`.  This really just touches two files in the `~/app/ui/releases` directory. The files are: `defer_jobs.txt` (zenodo replication) and `hold-submissions.txt` (Merritt submissions).  When these files are present then the internal state of these is put into a `defered` or `rejected-shutting-down` when it's their turn to run.  These states are in their own tables and not the delayed_job work queue because the delayed_job queue is very simple and dumb.
 
 ## We just finished maintenance, what do I do?
-- (On 2c) `~/init.d/long_jobs.dryad restart`  .  This takes the jobs that were rejected/deferred and resets their status to 'enqueued' and re-inserts them into the work queue.
+- (On 2c) `~/bin/long_jobs.dryad restart`  .  This takes the jobs that were rejected/deferred and resets their status to 'enqueued' and re-inserts them into the work queue.
 - The deferred job things (zenodo) only runs on one server (2c), but currently the Merritt submission queue runs on both inside the web server processes so it is more complicated.
 - For Merritt queues:
   - Be sure the `~/app/ui/releases/hold-submissions.txt` files are deleted.
@@ -20,7 +26,7 @@
   - For the 'rejected shutting down' jobs showing as the other server (in `stash_engine_repo_queue_states`, manipulate the database to set the latest state's hostname to the server you're on.
   - Click "Restart submissions which were shut down gracefully".  It should re-enqueue them on your current server.
 
-## Example of manually submitting a 3rd copy from the console
+## Example of manually submitting a Zenodo copy from the console
 
 ```
 RAILS_ENV=local_dev bin/delayed_job start
