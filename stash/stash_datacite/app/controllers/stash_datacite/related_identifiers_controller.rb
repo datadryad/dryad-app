@@ -57,6 +57,14 @@ module StashDatacite
 
     private
 
+    # these params are now being calculated based on less information
+    def calc_related_identifier_params
+      { related_identifier: 'related_identifier',
+        related_identifier_type: 'doi',
+        relation_type: 'calc',
+        work_type: params[:work_type] }
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_related_identifier
       return if params[:id] == 'new'

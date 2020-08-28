@@ -31,6 +31,14 @@ module StashDatacite
                              'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom',
                              'is source of': 'issourceof' }.freeze
 
+    enum work_type: [:undefined, :article, :dataset, :preprint, :software, :supplemental_information]
+
+    WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Pre-print', software: 'Software',
+                         supplemental_information: 'Supplemental Information' }
+
+    WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
+                                    supplemental_information: 'ispartof' } # would software be issourceof this data?
+
     before_save :strip_whitespace
 
     def relation_type_friendly=(type)
