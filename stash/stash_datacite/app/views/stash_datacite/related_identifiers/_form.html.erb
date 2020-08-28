@@ -1,18 +1,14 @@
 <%# the local variable 'related_identifier' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(related_identifier) %>
-<%= form_for(related_identifier, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
+<%= form_with(model: related_identifier, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
   <% my_suffix = field_suffix(related_identifier) %>
   <%#= render "datacite/shared/error_messages", :target => @related_identifier %>
+
   <div class="c-input">
-    <%= f.label "relation_type_#{my_suffix}", "Relationship", class: 'c-input__label' %>
-    <%= f.select(:relation_type, StashDatacite::RelatedIdentifier::RelationTypesLimited.to_a, {}, {id: "relation_type_#{my_suffix}", class: "js-relation_type c-input__select"}) %>
+    <%= f.select(:work_type, StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a, {},
+                 {id: "work_type_#{my_suffix}", class: "js-work_type c-input__select"}) %>
   </div>
   <div class="c-input">
-    <%= f.label "#{my_suffix}", "ID Type", class: 'c-input__label' %>
-    <%= f.select(:related_identifier_type, StashDatacite::RelatedIdentifier::RelatedIdentifierTypesLimited.to_a, {}, {id: "related_identifier_type_#{my_suffix}", class: "js-related_identifier_type c-input__select"}) %>
-  </div>
-  <div class="c-input">
-    <%= f.label "#{my_suffix}", "Identifier", class: 'c-input__label' %>
     <%= f.text_field :related_identifier, size: 40, id: "related_identifier_#{my_suffix}", class: "js-related_identifier c-input__text"  %>
   </div>
   <%= link_to 'remove', stash_datacite.related_identifiers_delete_path(related_identifier.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure you want to remove this related work?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
