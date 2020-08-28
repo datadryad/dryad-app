@@ -61,7 +61,7 @@ module StashDatacite
     def calc_related_identifier_params
       params.require(:related_identifier)
       related = params[:related_identifier]
-      { related_identifier: related[:related_identifier],
+      { related_identifier: RelatedIdentifier.standardize_doi(related[:related_identifier]),
         related_identifier_type: 'doi',
         relation_type: RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]],
         work_type: related[:work_type],

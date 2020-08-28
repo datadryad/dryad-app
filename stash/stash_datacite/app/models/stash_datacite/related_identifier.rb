@@ -98,6 +98,29 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
+    def valid_doi_format?
+      RelatedIdentifier.valid_doi_format?(related_identifier)
+    end
+
+
+    # the format is very strict to use the recommended one CrossRef/DataCite suggest, but could be transformed into this below
+    def self.valid_doi_format?(doi)
+      m = doi.match(%r{^https://doi.org/10\.\d{4,9}\/[-._;()/:a-zA-Z0-9]+$})
+      return false if m.nil?
+
+      true
+    end
+
+    # look for doi in string and make standardized format
+    def self.standardize_doi(doi)
+      return doi if self.valid_doi_format?(doi) # don't mess if it is OK
+
+      m = doi.match(%r{10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+})
+      return doi if m.nil? # can't find a doi in the string and can't fix, so leave it alone
+
+      "https://doi.org/#{m}" # return a standardized version of a doi
+    end
+
     private
 
     def strip_whitespace
