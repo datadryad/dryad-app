@@ -34,10 +34,10 @@ module StashDatacite
     enum work_type: [:undefined, :article, :dataset, :preprint, :software, :supplemental_information]
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Pre-print', software: 'Software',
-                         supplemental_information: 'Supplemental Information' }
+                         supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
-                                    supplemental_information: 'ispartof' } # would software be issourceof this data?
+                                    supplemental_information: 'ispartof' }.with_indifferent_access
 
     before_save :strip_whitespace
 
