@@ -19,15 +19,5 @@
       <%= f.hidden_field :id %>
       <%= hidden_field_tag(:form_id, form_id) %>
   <% end %>
-
-  <% unless related_identifier&.related_identifier.blank? %>
-    <div>
-      <% unless related_identifier.valid_doi_format? %>
-        <div class="o-metadata__autopopulate-message">Please ensure that your DOI identifier above is in a valid format</div>
-      <% end %>
-      <% unless related_identifier.verified? %>
-        <div class="o-metadata__autopopulate-message">Your DOI identifier above couldn't be verified</div>
-      <% end %>
-    </div>
-  <% end %>
+  <%= render partial: "stash_datacite/related_identifiers/errors", locals: { related_identifier: related_identifier } %>
 </div>

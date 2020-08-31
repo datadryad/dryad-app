@@ -6,3 +6,8 @@ var form = $('#<%= "replace_#{params[:form_id]}" %>');
 
 form.replaceWith("<%= escape_javascript(render partial: "stash_datacite/related_identifiers/form", locals: {
   related_identifier: @related_identifier, path: stash_datacite.related_identifiers_update_path }) %>");
+
+// remove and re-add the events for these identifier items so all have only one attached
+$( '.js-related_identifier' ).off();
+loadRelatedIdentifiers();
+hideRemoveLinkRelatedIdentifiers();
