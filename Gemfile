@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '5.1.7' # forcing 5.1.7 explicitly, because bundler keeps wanting to jump to 5.2 when I do '~> 5.1'
+gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
 # ############################################################
