@@ -47,6 +47,7 @@ gem 'yui-compressor'
 # ############################################################
 # Misc
 
+gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
