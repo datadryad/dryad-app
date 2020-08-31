@@ -1,13 +1,18 @@
-// redraw this form
-
 <% form_id = unique_form_id(@related_identifier) %>
+var form = $('#<%= params[:form_id] %>');
+form.attr('id', '<%= form_id %>');
+form.attr('action', '<%= stash_datacite.related_identifiers_update_path %>');
+form.find(".js-related_identifier_id").attr('value', '<%= @related_identifier.id %>');
+form.find("#form_id").attr('value', '<%= form_id %>');
 
-var form = $('#<%= "replace_#{params[:form_id]}" %>');
-
-form.replaceWith("<%= escape_javascript(render partial: "stash_datacite/related_identifiers/form", locals: {
-  related_identifier: @related_identifier, path: stash_datacite.related_identifiers_update_path }) %>");
-
-// remove and re-add the events for these identifier items so all have only one attached
-$( '.js-related_identifier' ).off();
-loadRelatedIdentifiers();
+$('<input>').attr({
+    type: 'hidden',
+    name: '_method',
+    value: 'patch'
+}).appendTo(form);
 hideRemoveLinkRelatedIdentifiers();
+
+var overallDiv = form.closest('div')[0];
+var errorDiv = $(overallDiv).find('div.js-related_id_errors')[0];
+$(errorDiv).replaceWith("<%= escape_javascript(render partial: "stash_datacite/related_identifiers/errors", locals: {
+  related_identifier: @related_identifier }) %>");
