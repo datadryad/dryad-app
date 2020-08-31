@@ -26,8 +26,9 @@ First ensure all tests are passing, and that there is adequate code coverage.
 4. `rails app:update`
    - DO NOT actually commit the results of running this command, because
      it doesn't know about any configuration choices we have made. Save the
-     diff in rails-auto-update-diff.txt, and then manually go through it
-	 to see what needs to be changed in your config files
+     diff into a file, and then revert the changes, and manually go
+     through the diff file to see what needs to be changed in your
+     config files.
    - in application.rb, the config_defaults variable
    - to start, keep it on the "old" rails version
    - then change each default setting in the "new_framework_defaults*"
