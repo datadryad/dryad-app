@@ -35,6 +35,7 @@ before_install:
   - if [ "$TO_TEST" = "MAIN" ]; then ./travis-prep.sh; fi
 
 before_script:
+  - set -e
   - if [ "$TO_TEST" = "MAIN" ]; then bundle exec rake db:migrate RAILS_ENV=test; fi
   # To allow travis to run chrome we need to force chromedriver to use a specific version
   # since Chrome and Chromedriver versions must match :/
@@ -44,6 +45,7 @@ before_script:
   - if [ "$TO_TEST" = "MAIN" ]; then sudo chmod 4755 /opt/google/chrome/chrome-sandbox; fi
 
 script:
+  - set -e
   - if [ "$TO_TEST" = "MAIN" ]; then RAILS_ENV=test bundle exec rake; fi	
   - if [ "$TO_TEST" = "STASH" ]; then stash/travis-build.rb; fi
 

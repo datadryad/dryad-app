@@ -57,6 +57,9 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
 ## Merritt
 
+Dryad uses Merritt to store and manage the individual files associated
+with each dataset.
+
 * [Merritt Architecture](https://github.com/CDLUC3/mrt-doc/wiki/Architecture)
 
 * [Merritt’s low-level storage](https://github.com/CDLUC3/mrt-doc/wiki/Storage)

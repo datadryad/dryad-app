@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'doorkeeper', '>= 4.4.2'
   s.add_dependency 'mysql2'
-  s.add_dependency 'rails', '~> 5.0'
+  s.add_dependency 'rails', '~> 5.1'
 
   s.add_development_dependency 'colorize', '>= 0.8'
   s.add_development_dependency 'database_cleaner', '>= 1.5'
