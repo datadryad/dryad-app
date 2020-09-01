@@ -3,10 +3,6 @@ require 'jwt'
 # implementation of https://gist.github.com/slint/54d197ce12757719817b242fbeff0ea3#generating-the-rat
 # testing against https://sandbox.zenodo.org/deposit/638092
 
-
-
-
-
 module Stash
   module ZenodoSoftware
     class RemoteAccessToken
@@ -19,12 +15,12 @@ module Stash
 
       def make_jwt(deposition_id:, filename:)
         payload = {
-            sub: {
-                deposit_id: deposition_id,
-                file: filename,
-                access: 'read'
-            },
-            iat: Time.now.to_i # this is what the docs at https://github.com/jwt/ruby-jwt shows
+          sub: {
+            deposit_id: deposition_id,
+            file: filename,
+            access: 'read'
+          },
+          iat: Time.now.to_i # this is what the docs at https://github.com/jwt/ruby-jwt shows
         }
         headers = { kid: @pat_token_id }
 
