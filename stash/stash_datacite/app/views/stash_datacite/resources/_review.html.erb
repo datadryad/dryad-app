@@ -66,7 +66,7 @@
 
     <% if @review.software_uploads.count > 0 %>
       <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
-      <h2 class="o-heading__level2">Software Files Hosted by Zenodo</h2>
+      <h2 class="o-heading__level2">Supporting Information Hosted by Zenodo</h2>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.software_uploads } %>
@@ -88,7 +88,7 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Upload Software', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
+  <%= link_to 'Back to Upload Supporting Information', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
             class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
