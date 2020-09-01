@@ -4,45 +4,40 @@ require 'cgi'
 
 module StashEngine
   describe FileUpload do
-    attr_reader :user
-    attr_reader :resource
-    attr_reader :upload
 
     before(:each) do
-      @user = StashEngine::User.create(
-        first_name: 'Lisa',
-        last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
-        tenant_id: 'ucop'
-      )
+      @user = create(:user,
+                     first_name: 'Lisa',
+                     last_name: 'Muckenhaupt',
+                     email: 'lmuckenhaupt@ucop.edu',
+                     tenant_id: 'ucop')
 
-      @resource = Resource.create(user_id: user.id, tenant_id: 'ucop')
-      resource.ensure_identifier('10.123/456')
-      @upload = FileUpload.create(
-        resource_id: resource.id,
-        file_state: 'created',
-        upload_file_name: 'foo.bar'
-      )
+      @identifier = create(:identifier)
+      @resource = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+      @upload = create(:file_upload,
+                       resource: @resource,
+                       file_state: 'created',
+                       upload_file_name: 'foo.bar')
     end
 
     describe :error_message do
       it 'returns the empty string for uploads with no URL' do
-        expect(upload.error_message).to eq('')
+        expect(@upload.error_message).to eq('')
       end
 
       it 'returns the empty string for uploads with status 200' do
-        upload.url = 'http://example.org/foo.bar'
-        upload.status_code = 200
-        expect(upload.error_message).to eq('')
+        @upload.url = 'http://example.org/foo.bar'
+        @upload.status_code = 200
+        expect(@upload.error_message).to eq('')
       end
 
       it 'returns a non-empty message for all other states' do
-        upload.url = 'http://example.org/foo.bar'
+        @upload.url = 'http://example.org/foo.bar'
         (100..599).each do |status|
           next if status == 200
 
-          upload.status_code = status
-          message = upload.error_message
+          @upload.status_code = status
+          message = @upload.error_message
           expect(message).not_to be_nil
           expect(message.strip).to eq(message)
           expect(message).not_to be_empty
@@ -52,12 +47,12 @@ module StashEngine
 
     describe :version_file_created_in do
       it 'returns the resource version for newly created files' do
-        expect(upload.version_file_created_in).to eq(resource.stash_version)
+        expect(@upload.version_file_created_in).to eq(@resource.stash_version)
       end
 
       it 'returns the original version for versions created later' do
-        original_version = resource.stash_version
-        new_resource = resource.amoeba_dup
+        original_version = @resource.stash_version
+        new_resource = @resource.amoeba_dup
         expect(new_resource.stash_version).not_to eq(original_version) # just to be sure
         new_file_record = new_resource.file_uploads.take
         expect(new_file_record.file_state).to eq('copied') # just to be sure
@@ -115,18 +110,17 @@ module StashEngine
 
       before(:each) do
         @files = [
-          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'created', resource: @resource),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource: @resource)
         ]
 
-        @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
-        @resource2.ensure_identifier('10.123/456')
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         FileUtils.mkdir_p('tmp')
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files2 = [
-          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
-          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
-          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+          create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource: @resource2),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource: @resource2),
+          create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         ]
 
         # I tried just modifying one instance but it doesn't work from the internal method if I do that.
@@ -154,7 +148,7 @@ module StashEngine
       end
 
       it 'gets rid of extra deletions for the same files' do
-        @files2 << create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+        @files2 << create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         @files2[2].smart_destroy!
         expect(@resource2.file_uploads.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
       end
@@ -255,6 +249,13 @@ module StashEngine
           'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true'
         )
       end
+
+      it 'doubly-encodes any # signs in filenames because otherwise they prematurely cut off in Merritt' do
+        @upload.upload_file_name = '#1 in the world'
+        expect(@upload.merritt_presign_info_url).to eq(
+          'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2F%25231%20in%20the%20world?no_redirect=true'
+        )
+      end
     end
 
     describe :s3_presigned_url do
@@ -311,11 +312,10 @@ module StashEngine
           )
           .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/34snak"}',
                      headers: { 'Content-Type': 'application/json' })
-        @upload2 = FileUpload.create(
-          resource_id: resource.id,
-          file_state: 'created',
-          upload_file_name: fn
-        )
+        @upload2 = create(:file_upload,
+                          resource: @resource,
+                          file_state: 'created',
+                          upload_file_name: fn)
         expect(@upload2.s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
       end
     end
@@ -327,8 +327,7 @@ module StashEngine
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
         ]
 
-        @resource2 = Resource.create(user_id: user.id, tenant_id: 'ucop')
-        @resource2.ensure_identifier('10.123/456')
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         FileUtils.mkdir_p('tmp')
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files2 = [

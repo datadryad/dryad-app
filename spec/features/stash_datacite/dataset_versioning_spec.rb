@@ -101,7 +101,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       describe :when_viewed_by_curator do
 
         before(:each, js: true) do
-          sign_out
           sign_in(@curator)
           find('summary', text: 'Admin').click
           click_link 'Dataset Curation'
@@ -241,7 +240,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Admin page', js: true do
-        sign_out
         sign_in(@curator)
         find('summary', text: 'Admin').click
         click_link 'Dataset Curation'
@@ -257,7 +255,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Activity Log page', js: true do
-        sign_out
         sign_in(@curator)
         find('summary', text: 'Admin').click
         click_link 'Dataset Curation'
@@ -266,12 +263,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           find('button[aria-label="View Activity Log"]').click
         end
 
-        expect(page).to have_text(@resource.identifier)
+        expect(page).to have_text(@resource.identifier.identifier)
 
         within(:css, '.c-lined-table__row:last-child') do
           expect(page).to have_text('Submitted')
           expect(page).to have_text(@author.name)
-          expect(page).to have_text(@resource.edit_histories.last.user_comment)
         end
       end
 

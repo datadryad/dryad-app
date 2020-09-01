@@ -7,7 +7,7 @@ module Stash
 
       before(:each) do
         @citations = Citations.new(doi: 'doi:10.6071/m3rp49')
-        WebMock.disable_net_connect!
+        WebMock.disable_net_connect!(allow_localhost: true)
         stub_request(:get, %r{https://api\.datacite\.org/events\?mailto=.+&obj-id=https://doi.org/10.6071/m3rp49&page%5Bsize%5D=10000
             &relation-type-id=cites,describes,is-supplemented-by,references,compiles,reviews,requires,has-metadata,documents,is-source-of}x)
           .with(

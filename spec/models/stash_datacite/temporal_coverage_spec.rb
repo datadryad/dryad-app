@@ -2,14 +2,12 @@ require 'rails_helper'
 
 module StashDatacite
   describe TemporalCoverage do
-    attr_reader :resource
 
     before(:each) do
-      user = StashEngine::User.create(
-        email: 'lmuckenhaupt@example.edu',
-        tenant_id: 'dataone'
-      )
-      @resource = StashEngine::Resource.create(user_id: user.id)
+      user = create(:user,
+                    email: 'lmuckenhaupt@example.edu',
+                    tenant_id: 'dataone')
+      @resource = create(:resource, user_id: user.id)
     end
 
     describe '#temporal_coverage' do
@@ -18,7 +16,7 @@ module StashDatacite
         temporal_coverage.description = 'Paleozoic'
         temporal_coverage.save
 
-        expect(resource.temporal_coverages.first.description).to eq('Paleozoic')
+        expect(@resource.temporal_coverages.first.description).to eq('Paleozoic')
       end
     end
   end

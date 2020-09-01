@@ -56,7 +56,7 @@ module StashDatacite
     def populate_se_resource! # rubocop:disable Metrics/AbcSize
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
-      dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
+      dcs_resource.contributors.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
