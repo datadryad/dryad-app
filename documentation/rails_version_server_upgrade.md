@@ -29,21 +29,24 @@ First ensure all tests are passing, and that there is adequate code coverage.
      diff into a file, and then revert the changes, and manually go
      through the diff file to see what needs to be changed in your
      config files.
-   - in application.rb, the config_defaults variable
-   - to start, keep it on the "old" rails version
-   - then change each default setting in the "new_framework_defaults*"
+
+5. In `config/application.rb`, see the `config_defaults` variable.
+   - To start, keep it on the old rails version
+   - Then change each default setting in the "new_framework_defaults*"
      file
-   - once all of the settings are updated, flip the config_defaults
+   - Once all of the settings are updated, flip the config_defaults
      to the new rails version
-   - for any default settings you want to override, move them into
+   - If you are keeping all defaults from the
+     "new_framework_defaults*" file, you can simply delete this file.
+   - For any default settings you want to override, move them into
      the application.rb file, below the config_defaults -- don't
-     leave them in separate files, because rails may load them in the
+     leave them in separate files, because Rails may load them in the
 	 wrong order
    - After updating the config files, the app should at least start
 
 5. Go through the notes for this specific Rails version in the
    [Rails Guides](https://guides.rubyonrails.org/upgrading_ruby_on_rails.html)
-   and update the specific features.
+   and update any specific features that have changed.
 
 6. Run the test suite and keep making fixes until everything passes again.
 
