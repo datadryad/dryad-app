@@ -1,6 +1,10 @@
 # frozen_string_literal: true
+require 'http'
 
 module StashDatacite
+
+  class ExternalServerError < RuntimeError; end
+
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
@@ -119,6 +123,30 @@ module StashDatacite
       return doi if m.nil? # can't find a doi in the string and can't fix, so leave it alone
 
       "https://doi.org/#{m}" # return a standardized version of a doi
+    end
+
+    def live_doi_valid?
+      return false unless related_identifier_type == 'doi' && valid_doi_format?
+
+      # note: this follows up to 10 redirects
+      http = HTTP.timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 10)
+      begin
+        retries ||= 0
+        resp = http.get(related_identifier)
+        return true if resp.status.code > 199 && resp.status.code < 300 # 200 range status code
+
+        raise StashDatacite::ExternalServerError, "Status code: #{resp.status.code}" if resp.status.code > 499
+
+        return false
+      rescue HTTP::Error, HTTP::TimeoutError, StashDatacite::ExternalServerError => e
+        retry if (retries += 1) < 3
+        # IDK what we really do if there are HTTP errors or timeout errors aside from treating it as
+        # a bad attempt at resolving the DOI and logging it.
+
+        Rails.logger.error("Failed to live validate DOI #{related_identifier}\n" \
+                                "#{e.message}\n#{e&.backtrace}")
+      end
+      false
     end
 
     private
