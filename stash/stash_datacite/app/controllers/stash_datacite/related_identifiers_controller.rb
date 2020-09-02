@@ -16,6 +16,7 @@ module StashDatacite
     # POST /related_identifiers
     def create
       @related_identifier = RelatedIdentifier.new(calc_related_identifier_params)
+      @related_identifier.verified = @related_identifier.live_doi_valid?
       respond_to do |format|
         if @related_identifier.save
           format.js
@@ -29,6 +30,7 @@ module StashDatacite
     def update
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
+          @related_identifier.update(verified: @related_identifier.live_doi_valid?)
           format.js
         else
           format.html { render :edit }
