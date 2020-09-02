@@ -68,8 +68,7 @@ module StashDatacite
         relation_type: RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]],
         work_type: related[:work_type],
         resource_id: related[:resource_id],
-        id: related[:id]
-      }
+        id: related[:id] }
     end
 
     # Use callbacks to share common setup or constraints between actions.
