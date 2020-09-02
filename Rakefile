@@ -20,7 +20,9 @@ Rake::Task[:spec].clear if Rake::Task.task_defined?(:spec)
 
 begin
   require 'rspec/core/rake_task'
-
+  puts 'Running main rspec tasks...'
+  puts " -- environment #{ENV['RAILS_ENV']}"
+  puts " -- loading environment file #{File.expand_path('../config/environment', __dir__)}"
   RSpec::Core::RakeTask.new(:spec) do |task|
     task.rspec_opts = %w[--color --format documentation --order random --require rails_helper]
   end
