@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'http'
 
 module StashDatacite
@@ -35,10 +36,10 @@ module StashDatacite
                              'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom',
                              'is source of': 'issourceof' }.freeze
 
-    enum work_type: [:undefined, :article, :dataset, :preprint, :software, :supplemental_information]
+    enum work_type: %i[undefined article dataset preprint software supplemental_information]
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Pre-print', software: 'Software',
-                         supplemental_information: 'Supplemental Information' }.with_indifferent_access
+                          supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof' }.with_indifferent_access
@@ -106,10 +107,9 @@ module StashDatacite
       RelatedIdentifier.valid_doi_format?(related_identifier)
     end
 
-
     # the format is very strict to use the recommended one CrossRef/DataCite suggest, but could be transformed into this below
     def self.valid_doi_format?(doi)
-      m = doi.match(%r{^https://doi.org/10\.\d{4,9}\/[-._;()/:a-zA-Z0-9]+$})
+      m = doi.match(%r{^https://doi.org/10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+$})
       return false if m.nil?
 
       true
@@ -117,7 +117,7 @@ module StashDatacite
 
     # look for doi in string and make standardized format
     def self.standardize_doi(doi)
-      return doi if self.valid_doi_format?(doi) # don't mess if it is OK
+      return doi if valid_doi_format?(doi) # don't mess if it is OK
 
       m = doi.match(%r{10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+})
       return doi if m.nil? # can't find a doi in the string and can't fix, so leave it alone
@@ -125,6 +125,7 @@ module StashDatacite
       "https://doi.org/#{m}" # return a standardized version of a doi
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def live_doi_valid?
       return false unless related_identifier_type == 'doi' && valid_doi_format?
 
@@ -148,6 +149,7 @@ module StashDatacite
       end
       false
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     private
 
