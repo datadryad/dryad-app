@@ -94,28 +94,6 @@ module StashDatacite
                  end
       end
 
-      def pdf_filename
-        # “surname_date_first_five_title_words.pdf” or “surname_et_al_date_first_five_title_words.pdf”,
-        # where “surname” is the surname of the first author, “date” is the publication year, and
-        # “first_five_title_words” are the first five whitespace-separated words of the dataset title.
-        "#{pdf_author}_#{pdf_pub_year}_#{pdf_title}"
-      end
-
-      private
-
-      def pdf_title
-        title_str.split(' ')[0..4].join('_')
-      end
-
-      def pdf_pub_year
-        @resource.try(:publication_years).try(:first).try(:publication_year) || ''
-      end
-
-      def pdf_author
-        return "#{authors.first.author_last_name}_et_al" if authors.length > 1
-
-        authors.try(:first).try(:author_last_name).to_s
-      end
     end
   end
 end

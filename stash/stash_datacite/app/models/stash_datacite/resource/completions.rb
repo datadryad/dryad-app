@@ -16,6 +16,7 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     class Completions
@@ -116,6 +117,8 @@ module StashDatacite
           .not(description: [nil, '']).count > 0
       end
 
+      # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
+      # rubocop:disable Naming/PredicateName
       def has_related_works?
         @resource.related_identifiers.where.not(related_identifier: [nil, '']).count > 0
       end
@@ -127,6 +130,7 @@ module StashDatacite
 
         false
       end
+      # rubocop:enable Naming/PredicateName
 
       def good_related_works_formatting?
         filled_related_dois = @resource.related_identifiers.where(related_identifier_type: 'doi').where.not(related_identifier: [nil, ''])
@@ -142,12 +146,12 @@ module StashDatacite
         filled_related_dois = @resource.related_identifiers.where(related_identifier_type: 'doi').where.not(related_identifier: [nil, ''])
 
         filled_related_dois.each do |related_id|
-          unless related_id.verified?
-            # may need to live-check for older items that didn't go through validation before
-            related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_doi_valid? == true
+          next if related_id.verified?
 
-            return false unless related_id.verified?
-          end
+          # may need to live-check for older items that didn't go through validation before
+          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_doi_valid? == true
+
+          return false unless related_id.verified?
         end
 
         true
@@ -175,7 +179,7 @@ module StashDatacite
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
         messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
-        messages << "At least one of your Related Works DOIs did not validate from https://doi.org" unless good_related_works_validation?
+        messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
         messages
       end
 
@@ -189,3 +193,4 @@ module StashDatacite
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
