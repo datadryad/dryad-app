@@ -10,7 +10,8 @@ In special cases where the API account will not be attached to a
 single person, we must still create a new user. This can be created
 (e.g. in Rails console) without a specific ORCID, but ensure it does
 have a valid email address so it can receive notifications about the
-datasets.
+datasets. Ensure the account users realize that they will still need
+"normal" ORCID-based accounts to access the Dryad web interface.
 
 To create an API account:
 1. Log into Dryad with a user that has the superuser role (set the
