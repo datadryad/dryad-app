@@ -144,7 +144,7 @@ module StashDatacite
         filled_related_dois.each do |related_id|
           unless related_id.verified?
             # may need to live-check for older items that didn't go through validation before
-            related_id.update(verified: true) if related_id.live_doi_valid? == true
+            related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_doi_valid? == true
 
             return false unless related_id.verified?
           end
