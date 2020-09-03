@@ -3,14 +3,21 @@ The Dryad API now enables submission.  For authentication, it uses an OAuth2 cli
 
 This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://datadryad.org/api/v2/docs/index.html).
 
-## Log in to Dryad and request a an application id and secret
+## Obtain a Dryad API account
 
-Before you can submit from the API, you need to log in to Dryad at
-least once to create a user record and (if applicable) associate it
-with your associated campus/organization. 
+Before you can submit from the API, you must have an account for the
+API. It is easiest if you first create an account through the Dryad
+web interface. Dryad staff can then add API capabilities to this
+account. Log in to Dryad at least once to create a user record and (if
+applicable) associate it with your associated campus/organization.
 
-Once you have logged in, please
-[contact us](mailto:help@datadryad.org) to request API access. In your
+In some cases, an API account will be needed that is not attached to a
+single user. In this case, the account will not be associated with an
+ORCID, which means that the API account will not be able to log in to
+the Dryad web interface. We will still need an email address to
+receive notifications associated with the account.
+
+Please [contact us](mailto:help@datadryad.org) to request API access. In your
 request, please specify whether you are associated with an institution
 or journal that is a Dryad member. Dryad developers will then [grant
 you the necessary permissions](adding_api_accounts.md).
