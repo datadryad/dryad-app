@@ -1,5 +1,4 @@
 require 'kaminari'
-require 'wicked_pdf'
 require 'ckeditor'
 require_relative('counter_log')
 

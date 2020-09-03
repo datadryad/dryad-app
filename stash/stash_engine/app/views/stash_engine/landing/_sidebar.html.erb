@@ -2,9 +2,6 @@
 <% if may_download %>
   <%= render partial: 'stash_engine/landing/download', locals: {dataset_identifier: @id} %>
 <% end %>
-<div class="o-download">
-  <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
-</div>
 
 <% if may_download %>
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
