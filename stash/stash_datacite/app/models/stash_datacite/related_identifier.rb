@@ -86,6 +86,10 @@ module StashDatacite
       RelatedIdentifierTypesStrToFull[related_identifier_type]
     end
 
+    def work_type_friendly
+      WORK_TYPE_CHOICES[work_type] || work_type.capitalize
+    end
+
     def self.related_identifier_type_mapping_obj(str)
       return nil if str.nil?
 
