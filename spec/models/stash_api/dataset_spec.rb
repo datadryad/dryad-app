@@ -141,8 +141,7 @@ module StashApi
         expect(@metadata[:sharingLink]).to be(nil)
       end
 
-      # TODO: Fix this intermittently-failing test. Ticket #806.
-      xit 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
+      it 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
