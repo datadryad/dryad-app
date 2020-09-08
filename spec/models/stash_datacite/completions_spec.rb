@@ -402,31 +402,36 @@ module StashDatacite
         end
       end
 
-      describe :citation do
+      describe :related_works do
         before(:each) do
-          create(:related_identifier, resource: @resource)
+          create(:related_identifier, resource: @resource, related_identifier: Faker::Pid.doi,
+                 related_identifier_type: 'doi', relation_type: 'issupplementto',
+                 work_type: 'article', verified: true)
         end
 
-        it 'passes if resource has related identifiers' do
-          expect(completions.citation).to be_truthy
+        it 'returns true if resource has related identifiers' do
+          expect(completions.has_related_works?).to be_truthy
         end
-        it 'fails if resource has no related identifiers' do
+
+        it 'returns false if resource has no related identifiers' do
           resource.related_identifiers.each(&:destroy)
-          expect(completions.citation).to be_falsey
+          expect(completions.has_related_works?).to be_falsey
         end
-        it 'fails if resource has no non-nil related identifiers' do
+
+        it 'returns false if resource has no non-nil related identifiers' do
           resource.related_identifiers.each do |rel_ident|
             rel_ident.related_identifier = nil
             rel_ident.save
           end
-          expect(completions.citation).to be_falsey
+          expect(completions.has_related_works?).to be_falsey
         end
-        it 'fails if resource has no non-empty related identifiers' do
+
+        it 'returns false if related_works has no non-empty related identifiers' do
           resource.related_identifiers.each do |rel_ident|
             rel_ident.related_identifier = ''
             rel_ident.save
           end
-          expect(completions.citation).to be_falsey
+          expect(completions.has_related_works?).to be_falsey
         end
       end
 
