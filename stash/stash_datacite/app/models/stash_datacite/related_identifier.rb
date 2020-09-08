@@ -6,6 +6,7 @@ module StashDatacite
 
   class ExternalServerError < RuntimeError; end
 
+  # rubocop:disable Metrics/ClassLength
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
@@ -161,4 +162,5 @@ module StashDatacite
       self.related_identifier = related_identifier.strip unless related_identifier.nil?
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
