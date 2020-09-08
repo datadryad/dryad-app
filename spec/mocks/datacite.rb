@@ -48,12 +48,13 @@ module Mocks
     end
 
     def mock_good_doi_resolution(doi:)
-      stub_request(:get, doi).
-          with(
-              headers: {
-                  'Host'=>'doi.org'
-              }).
-          to_return(status: 200, body: '', headers: {})
+      stub_request(:get, doi)
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 200, body: '', headers: {})
     end
   end
 end
