@@ -19,14 +19,12 @@ module Stash
       end
 
       describe '#add_to_zenodo' do
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'does something for items in a correct queue state (enqueued)' do
+        it 'does something for items in a correct queue state (enqueued)' do
           # it gets past initial checks and starts doing http requests
           expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'increments the retries counter' do
+        it 'increments the retries counter' do
           expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
           zc = @resource.zenodo_copy
           zc.reload
