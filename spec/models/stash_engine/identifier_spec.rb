@@ -50,7 +50,7 @@ module StashEngine
       @res3.current_state = 'in_progress'
       Version.create(resource_id: @res3.id, version: 3)
 
-      WebMock.disable_net_connect!
+      WebMock.disable_net_connect!(allow_localhost: true)
     end
 
     after(:each) do
