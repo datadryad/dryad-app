@@ -28,6 +28,9 @@
 	<th class="<%= sort_display('resource_id') %>">
 	    <%= sortable_column_head sort_field: 'resource_id', title: 'Resource' %>	  
 	</th>
+	<th>
+	    DOI
+	</th>
 	<th class="<%= sort_display('state') %>">
 	    <%= sortable_column_head sort_field: 'state', title: 'State' %>
 	</th>
@@ -41,6 +44,7 @@
     <% @queue_rows.each do |qr| %>
     <tr class="c-lined-table__row">
       <td><%= qr.resource_id %></td>
+      <td><%= StashEngine::Resource.find(qr.resource_id).identifier.to_s %></td>
       <td><%= qr.state %></td>
       <td><%= qr.hostname %></td>
       <td><%= formatted_datetime(qr.updated_at) %></td>
