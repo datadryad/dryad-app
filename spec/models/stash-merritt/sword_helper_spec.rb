@@ -8,7 +8,7 @@ module Stash
     describe SwordHelper do
 
       before(:all) do
-        WebMock.disable_net_connect!
+        WebMock.disable_net_connect!(allow_localhost: true)
 
         @title = 'A Zebrafish Model for Studies on Esophageal Epithelial Biology'
         @request_host = 'example.org'
