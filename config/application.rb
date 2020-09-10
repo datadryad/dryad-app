@@ -38,6 +38,10 @@ module Dash2
 
     config.active_job.queue_adapter = :delayed_job
 
+    # Temporary workaround to SSL forwarding issues -- we want to reinstate this
+    # if we can get the proper headers in Apache.
+    config.action_controller.forgery_protection_origin_check = false
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
