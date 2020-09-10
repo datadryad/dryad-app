@@ -51,7 +51,7 @@ module StashDatacite
     def ensure_subject(subject_str)
       subject = find_or_create_subject(subject_str)
       subjects = @resource.subjects
-      return if subjects.exists?(subject)
+      return if subjects.exists?(subject.id)
 
       subjects << subject
     end
