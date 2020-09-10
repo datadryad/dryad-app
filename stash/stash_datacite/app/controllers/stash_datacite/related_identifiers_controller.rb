@@ -46,6 +46,15 @@ module StashDatacite
       end
     end
 
+    # the sidebar for ajax showing related works
+    # GET /related_identifiers with param of resource_id
+    def show
+      respond_to do |format|
+        @resource = StashEngine::Resource.where(id: params[:resource_id]).first
+        format.js
+      end
+    end
+
     # TODO: EMBARGO: do we care about published vs. embargoed in this report?
     # this is a report of related identifiers in tsv
     def report
