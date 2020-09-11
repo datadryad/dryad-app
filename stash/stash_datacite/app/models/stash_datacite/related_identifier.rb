@@ -39,7 +39,7 @@ module StashDatacite
 
     enum work_type: %i[undefined article dataset preprint software supplemental_information]
 
-    WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Pre-print', software: 'Software',
+    WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
