@@ -38,6 +38,11 @@ module Dash2
 
     config.active_job.queue_adapter = :delayed_job
 
+    # Do not compare the origin of HTTP requests with the current state of the request.
+    # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
+    # will not be the same.
+    config.action_controller.forgery_protection_origin_check = false
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
