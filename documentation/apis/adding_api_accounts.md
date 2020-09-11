@@ -1,9 +1,18 @@
 Adding a New API Account
 ========================
 
-The user requesting the account must have previously logged in to
+Each API account must be associated with a user account. In most
+cases, the user requesting the account will have previously logged in to
 Dryad so they have a user record and you will want to find their user
 record in the database.
+
+In special cases where the API account will not be attached to a
+single person, we must still create a new user account. This can be
+created (e.g. in Rails console) without a specific ORCID, but ensure
+it does have a valid email address so it can receive notifications
+about the datasets. Ensure the people who will access the API account
+users understand that they will still need "normal" ORCID-based
+accounts to access the Dryad web interface.
 
 To create an API account:
 1. Log into Dryad with a user that has the superuser role (set the
