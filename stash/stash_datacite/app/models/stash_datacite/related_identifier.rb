@@ -42,6 +42,10 @@ module StashDatacite
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
+    # because the plural of Software is Software and not "Softwares" like Rails thinks
+    WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
+                          supplemental_information: 'Supplemental Information' }.with_indifferent_access
+
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof' }.with_indifferent_access
 
@@ -89,6 +93,10 @@ module StashDatacite
 
     def work_type_friendly
       WORK_TYPE_CHOICES[work_type] || work_type.capitalize
+    end
+
+    def work_type_friendly_plural
+      WORK_TYPE_CHOICES_PLURAL[work_type] || work_type.capitalize.pluralize
     end
 
     def self.related_identifier_type_mapping_obj(str)
