@@ -1,6 +1,7 @@
 <% @resource.related_identifiers.select(:work_type).distinct.order(:work_type).each do |wt| %>
-  <h3 class="o-heading__level3"><%= wt.work_type_friendly&.pluralize %></h3>
-    <% @resource.related_identifiers.where(work_type: wt.work_type).each do |r| %>
+  <% my_ids = @resource.related_identifiers.where(work_type: wt.work_type) %>
+  <h3 class="o-heading__level3-related-works"><%= (my_ids.count > 1 ? wt.work_type_friendly_plural : wt.work_type_friendly) %></h3>
+    <% my_ids.each do |r| %>
       <div>
         <% if r.work_type == 'undefined' %>
           This dataset <%= r.relation_name_english %>
