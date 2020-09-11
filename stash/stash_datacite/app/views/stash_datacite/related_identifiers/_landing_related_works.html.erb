@@ -1,15 +1,15 @@
 <% @resource.related_identifiers.select(:work_type).distinct.order(:work_type).each do |wt| %>
-  <h2 class="o-heading__level2"><%= wt.work_type_friendly&.pluralize %></h2>
+  <h3 class="o-heading__level3"><%= wt.work_type_friendly&.pluralize %></h3>
     <% @resource.related_identifiers.where(work_type: wt.work_type).each do |r| %>
-      <% if r.work_type == 'undefined' %>
-      <p>
-        This dataset <%= r.relation_name_english %>
-        <%= display_id(type: r.related_identifier_type,
-                     my_id: r.related_identifier) %>
-      </p>
-      <% else %>
-        <p><%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %></p>
-      <% end %>
+      <div>
+        <% if r.work_type == 'undefined' %>
+          This dataset <%= r.relation_name_english %>
+          <%= display_id(type: r.related_identifier_type,
+                     my_id: r.related_identifier) %><br/>
+        <% else %>
+          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %><br/>
+        <% end %>
+      </div>
     <% end %>
 <% end %>
 
