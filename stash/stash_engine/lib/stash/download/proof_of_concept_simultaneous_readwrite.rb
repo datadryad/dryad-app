@@ -10,7 +10,7 @@
 #
 # Also allowed me to mess with the file settings so I could find the right ones that would allow concurrent access.
 
-STDOUT.sync = true
+$stdout.sync = true
 require 'byebug'
 
 READ_CHUNK_SIZE = 10

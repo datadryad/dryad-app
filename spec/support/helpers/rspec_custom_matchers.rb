@@ -120,7 +120,7 @@ RSpec::Matchers.define :request do
     # value_for(key: 'Authorization', in_hash: actual.to_hash) == @expected_auth ? true : false
   end
 
-  def failures_for(actual) # rubocop:disable Metrics/CyclomaticComplexity
+  def failures_for(actual)
     return ["Expected Net::HTTPRequest, got: #{actual.class}"] unless actual.is_a?(Net::HTTPRequest)
 
     failures = []
@@ -186,8 +186,7 @@ end
 
 def header?(key:, value:, in_hash:)
   actual_values = value_for(key: key, in_hash: in_hash)
-  actual_values = [actual_values] unless actual_values.is_a?(Array)
-  actual_values.find do |actual_value|
+  Array(actual_values).find do |actual_value|
     if value.nil?
       actual_value.nil?
     elsif value.respond_to?(:match)
@@ -206,5 +205,6 @@ def all?(headers:, in_hash:)
 end
 
 def basic_auth(username, password)
-  'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
+  auth_string = ["#{username}:#{password}"].pack('m').delete("\r\n")
+  "Basic #{auth_string}"
 end

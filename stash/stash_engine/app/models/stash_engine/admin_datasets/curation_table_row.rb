@@ -9,15 +9,10 @@ module StashEngine
   module AdminDatasets
     class CurationTableRow
 
-      attr_reader :publication_name
-      attr_reader :identifier_id, :identifier, :qualified_identifier, :storage_size, :search_words
-      attr_reader :resource_id, :title, :publication_date, :tenant_id
-      attr_reader :resource_state_id, :resource_state
-      attr_reader :curation_activity_id, :status, :updated_at
-      attr_reader :editor_id, :editor_name
-      attr_reader :author_names
-      attr_reader :views, :downloads, :citations
-      attr_reader :relevance
+      attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :storage_size,
+                  :search_words, :resource_id, :title, :publication_date, :tenant_id, :resource_state_id,
+                  :resource_state, :curation_activity_id, :status, :updated_at, :editor_id, :editor_name,
+                  :author_names, :views, :downloads, :citations, :relevance
 
       SELECT_CLAUSE = <<-SQL
         SELECT DISTINCT seid.value,
@@ -62,7 +57,7 @@ module StashEngine
 
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
       #
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def initialize(result)
         return unless result.is_a?(Array) && result.length >= 22
 
@@ -90,7 +85,7 @@ module StashEngine
         @citations = result[21] || 0
         @relevance = result.length > 22 ? result[22] : nil
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
       #
 
       # lets you get a resource when you need it and caches it
@@ -167,7 +162,6 @@ module StashEngine
 
         # Create the ORDER BY portion of the query. If the user included a search term order by relevance first!
         # We cannot sort by author_names here, so ignore if that is the :sort_column
-        # rubocop:disable Metrics/CyclomaticComplexity
         def build_order_clause(column, direction, q)
           return 'ORDER BY title' if column == 'relevance' && q.blank?
 
@@ -177,7 +171,6 @@ module StashEngine
             (column.present? && column != 'author_names' ? "ORDER BY #{column} #{direction || 'ASC'}" : '')
           end
         end
-        # rubocop:enable Metrics/CyclomaticComplexity
 
         def sort_by_author_names(results, direction)
           multiply_by = (direction.casecmp('desc').zero? ? -1 : 1)

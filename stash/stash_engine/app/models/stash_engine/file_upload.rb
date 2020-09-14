@@ -25,7 +25,7 @@ module StashEngine
     enum digest_type: %w[adler-32 crc-32 md2 md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
 
     # display the correct error message based on the url status code
-    def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    def error_message # rubocop:disable Metrics/MethodLength
       return '' if url.nil? || status_code == 200
 
       case status_code

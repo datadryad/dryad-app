@@ -12,7 +12,7 @@ class Uploader
 
   URI = 'https://api.datacite.org/reports'.freeze
 
-  def initialize(report_id: nil, file_name:)
+  def initialize(file_name:, report_id: nil)
     @report_id = report_id
     @file_name = file_name
     @http = HTTP.timeout(connect: 120, read: 120).timeout(120).follow(max_hops: 10)

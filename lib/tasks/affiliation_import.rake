@@ -1,11 +1,9 @@
 require 'csv'
 
 # rubocop:disable Metrics/BlockLength
-# rubocop:disable Metrics/CyclomaticComplexity
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Lint/UselessAssignment
 # rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/PerceivedComplexity
 namespace :affiliation_import do
 
   ROOT = Rails.root.join('/tmp').freeze
@@ -297,8 +295,7 @@ namespace :affiliation_import do
   end
 end
 # rubocop:enable Metrics/BlockLength
-# rubocop:enable Metrics/CyclomaticComplexity
+
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Lint/UselessAssignment
 # rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/PerceivedComplexity

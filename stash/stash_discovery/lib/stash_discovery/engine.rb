@@ -21,7 +21,7 @@ module StashDiscovery
 
     # this requires some open class overrides (ie, Monkeypatches to geoblacklight)
     config.to_prepare do
-      Dir.glob(Engine.root + 'app/decorators/**/*_decorator.rb').each do |c|
+      Dir.glob("#{Engine.root}app/decorators/**/*_decorator.rb").each do |c|
         require_dependency(c)
       end
     end

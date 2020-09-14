@@ -11,7 +11,7 @@ module StashApi
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
     # the id is a stash_engine_identifier object and indicates an already existing object.  May not set both.
     # On final submission, updating the DOI may fail if it's wrong, unauthorized or not in the right format.
-    def initialize(hash: nil, id: nil, user:, id_string: nil)
+    def initialize(user:, hash: nil, id: nil, id_string: nil)
       raise 'You may not specify an identifier string with an existing identifier' if id && id_string
 
       @id_string = id_string

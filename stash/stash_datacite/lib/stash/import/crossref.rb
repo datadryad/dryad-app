@@ -30,7 +30,6 @@ module Stash
           nil
         end
 
-        # rubocop:disable Metrics/CyclomaticComplexity
         def query_by_author_title(resource:)
           return nil if resource.blank? || resource.title&.strip.blank?
 
@@ -49,7 +48,6 @@ module Stash
         rescue Serrano::NotFound, Serrano::InternalServerError
           nil
         end
-        # rubocop:enable Metrics/CyclomaticComplexity
 
         def from_proposed_change(proposed_change:)
           return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
@@ -136,7 +134,6 @@ module Stash
           scores.max_by { |a| a[0] }
         end
 
-        # rubocop:disable Metrics/CyclomaticComplexity
         def crossref_item_scoring(resource, item, names, orcids)
           return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
 
@@ -169,7 +166,6 @@ module Stash
           amatch += 0.025 if last_name_match && !both_name_match
           amatch.round(3)
         end
-        # rubocop:enable Metrics/CyclomaticComplexity
 
         def valid_serrano_works_response(resp)
           resp.present? && resp['message'].present? && resp['message']['total-results'].present? &&
@@ -190,8 +186,6 @@ module Stash
           [issn, title_query, author_query]
         end
 
-        # rubocop:disable Metrics/CyclomaticComplexity
-        # rubocop:disable Metrics/PerceivedComplexity
         def get_journal_issn(hash)
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
@@ -203,11 +197,8 @@ module Stash
 
           resp['message']['items'].first['ISSN']
         end
-        # rubocop:enable Metrics/CyclomaticComplexity
-        # rubocop:enable Metrics/PerceivedComplexity
-      end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
+      end
       def resource_will_change?(proposed_change:)
         if proposed_change.authors.present?
           json = JSON.parse(proposed_change.authors)
@@ -224,7 +215,6 @@ module Stash
           related_identifier_will_change?(proposed_change: proposed_change) ||
           (proposed_change.authors.present? && (auths & @resource.authors).any?)
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       def internal_datum_will_change?(proposed_change:)
         internal_data = @resource.identifier.internal_data
@@ -251,6 +241,7 @@ module Stash
         affiliation.save if affiliation.present?
       end
 
+      # rubocop:disable Metrics/AbcSize
       def populate_author(hash)
         new_auth = StashEngine::Author.new(resource_id: @resource.id, author_orcid: hash['ORCID'],
                                            author_first_name: hash['given'], author_last_name: hash['family'])
@@ -265,6 +256,7 @@ module Stash
         populate_affiliation(author, hash)
         author.save
       end
+      # rubocop:enable Metrics/AbcSize
 
       def populate_authors
         return unless @sm['author'].present? && @sm['author'].any?
