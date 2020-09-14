@@ -23,7 +23,6 @@ module StashEngine
       where(resource_id: resource_id).where.not(author_email: nil).order(:id)&.first
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def ==(other)
       return false unless other.present?
       return true if author_orcid.present? && other.author_orcid == author_orcid
@@ -32,7 +31,6 @@ module StashEngine
       other.author_last_name&.strip&.downcase == author_last_name&.strip&.downcase &&
         other.author_first_name&.strip&.downcase == author_first_name&.strip&.downcase
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def author_full_name
       [author_last_name, author_first_name].reject(&:blank?).join(', ')

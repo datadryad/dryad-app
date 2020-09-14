@@ -6,10 +6,10 @@ require 'stash/merritt/sword_helper'
 module Stash
   module Merritt
     class SubmissionJob < Stash::Repo::SubmissionJob
-      attr_reader :resource_id
-      attr_reader :url_helpers
+      attr_reader :resource_id, :url_helpers
 
       def initialize(resource_id:, url_helpers:)
+        super(resource_id: resource_id)
         @resource_id = resource_id
         @url_helpers = url_helpers
       end

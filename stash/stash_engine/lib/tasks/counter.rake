@@ -40,7 +40,7 @@ namespace :counter do
   desc 'manually populate CoP stats from json files'
   task cop_manual: :environment do
     # this keeps the output from buffering forever until a chunk fills so that output is timely
-    STDOUT.sync = true
+    $stdout.sync = true
     puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"
 
     Dir.glob(File.join(ENV['JSON_DIRECTORY'], '*.json')).sort.each do |f|
