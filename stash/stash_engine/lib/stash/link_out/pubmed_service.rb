@@ -14,8 +14,7 @@ module LinkOut
 
     include ::LinkOut::Helper
 
-    attr_reader :provider_file
-    attr_reader :links_file
+    attr_reader :provider_file, :links_file
 
     def initialize
       @ftp = APP_CONFIG.link_out.pubmed

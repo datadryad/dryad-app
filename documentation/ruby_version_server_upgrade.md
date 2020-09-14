@@ -36,9 +36,7 @@ rm -rf ruby-2.6.6
 - [ ] Install some basic gems
 ```shell script
 gem update --system
-gem install bundler -v 1.17.3
-# bundler 2 will refuse to work with Rails 4 sometimes (but not other times).
-# You're better off not trying it since it is a mess.
+gem install bundler -v 2.1.4
 ```
 
 ## Get Capistrano Working

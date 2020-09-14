@@ -56,7 +56,7 @@ namespace :dev_ops do
     require 'script/htmlize_descriptions'
 
     puts "Are you sure you want to update desciption text to html in #{Rails.env}?  (Type 'yes' to proceed, 'no' to preview.)"
-    response = STDIN.gets
+    response = $stdin.gets
     if response.strip.casecmp('YES').zero?
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)

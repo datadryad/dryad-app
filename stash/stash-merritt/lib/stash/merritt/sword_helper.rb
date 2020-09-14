@@ -3,8 +3,7 @@ require 'stash/sword'
 module Stash
   module Merritt
     class SwordHelper
-      attr_reader :logger
-      attr_reader :package
+      attr_reader :logger, :package
 
       def initialize(package:, logger: nil)
         @logger = logger

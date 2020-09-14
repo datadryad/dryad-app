@@ -1,5 +1,5 @@
 module UtilityMethods
-  def self.needs_submission?(month_year:, report_directory:, report_info: nil, force_list:)
+  def self.needs_submission?(month_year:, report_directory:, force_list:, report_info: nil)
     # submit if it is being forced or no report info or no pages of results
     return true if force_list.include?(month_year) || report_info.nil? || report_info.pages.nil? || report_info.pages == 0
 
