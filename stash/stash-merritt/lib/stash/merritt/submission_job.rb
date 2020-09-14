@@ -8,11 +8,12 @@ module Stash
     class SubmissionJob < Stash::Repo::SubmissionJob
       attr_reader :resource_id, :url_helpers
 
+      # rubocop:disable Lint/MissingSuper
       def initialize(resource_id:, url_helpers:)
-        super(resource_id: resource_id)
         @resource_id = resource_id
         @url_helpers = url_helpers
       end
+      # rubocop:enable Lint/MissingSuper
 
       # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!
