@@ -4,10 +4,7 @@ module Stash
   module Repo
     # Encapsulates a submission result
     class SubmissionResult
-      attr_reader :resource_id
-      attr_reader :request_desc
-      attr_reader :message
-      attr_reader :error
+      attr_reader :resource_id, :request_desc, :message, :error
 
       # @param resource_id [Integer] the ID of the submitted resource
       # @param request_desc [String, nil] a description of the request that produced this result

@@ -53,19 +53,19 @@ module StashApi
     # DELETE /curation_activity/{id}
     def destroy
       StashEngine::CurationActivity.destroy(params[:id])
-      render json: { status: 'Curation activity with identifier ' + params[:id] + ' has been successfully deleted.' }.to_json, status: 200
+      render json: { status: "Curation activity with identifier #{params[:id]} has been successfully deleted." }.to_json, status: 200
     end
 
     def initialize_stash_identifier(id)
       ds = DatasetsController.new
       @stash_identifier = ds.get_stash_identifier(id)
-      render json: { error: 'cannot find dataset with identifier ' + id }.to_json, status: 404 if @stash_identifier.nil?
+      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.nil?
     end
 
     private
 
     # Publish, embargo or simply change the status
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def create_curation_activity(resource)
       return unless resource.present?
 
@@ -99,7 +99,7 @@ module StashApi
                                            note: ca_note,
                                            created_at: params[:curation_activity][:created_at] || Time.now.utc)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     def record_published_date(resource)
       return if resource.publication_date.present?

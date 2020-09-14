@@ -8,7 +8,7 @@ require 'time'
 
 filename = ARGV.first
 
-ActiveRecord::Base.logger = Logger.new(STDERR)
+ActiveRecord::Base.logger = Logger.new($stderr)
 ActiveRecord::Base.logger.level = :warn
 ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
