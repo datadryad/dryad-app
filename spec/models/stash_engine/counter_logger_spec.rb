@@ -91,10 +91,6 @@ module StashEngine
         end
 
         it "doesn't send message to log when dataset has no publication date" do
-          puts "XXX line is -- #{@line}"
-          (0..15).each do |i|
-            puts "aXXXX #{i} - #{@line[i]}" if @line
-          end
           @resource.update(publication_date: nil)
           @resource.reload
           @file.reload
