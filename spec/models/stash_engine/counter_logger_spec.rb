@@ -33,6 +33,7 @@ module StashEngine
         @file = create(:file_upload, resource_id: @resource.id, file_state: 'created')
 
         # returns the argument that was passed in (I think) for easier tests
+        @line = nil
         allow(StashEngine).to receive(:counter_log) do |line|
           @line = line
         end
@@ -90,15 +91,24 @@ module StashEngine
         end
 
         it "doesn't send message to log when dataset has no publication date" do
+          puts "XXX line is -- #{@line}"
+          (0..15).each do |i|            
+            puts "aXXXX #{i} - #{@line[i]}" if @line
+          end
           @resource.update(publication_date: nil)
           @resource.reload
+          @file.reload
           StashEngine::CounterLogger.general_hit(request: @request, resource: @resource, file: @file)
+          expect(@resource.publication_date).to eq(nil)
+          expect(@file.resource.publication_date).to eq(nil)
+          expect(@file.resource).to eq(@resource)
           expect(@line).to eq(nil) # because this was missing publication so can't be logged with incomplete data
         end
 
         it "doesn't send message to log when dataset has no title" do
           @resource.update(title: '')
           @resource.reload
+          @file.reload
           StashEngine::CounterLogger.general_hit(request: @request, resource: @resource, file: @file)
           expect(@line).to eq(nil) # because this was missing publication so can't be logged with incomplete data
         end
