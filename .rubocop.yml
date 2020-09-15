@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   Exclude:
     - 'bin/**/*'
     - 'config/**/*'
@@ -6,8 +7,14 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - 'documentation/**/*'
+    - 'stash/stash_engine/app/models/stash_engine/lock.rb'
+    - 'stash/stash_engine/bin/**/*'
+    - 'stash/stash_engine/config/**/*'
+    - 'stash/stash_engine/db/**/*'
     - 'stash/stash_engine/node_modules/**/*'
-
+    - 'stash/stash_engine/script/**/*'
+    - 'stash/stash_engine/vendor/**/*'
+    - 'stash/stash_engine/ui-library/**/*'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.6
 
@@ -51,7 +58,10 @@ Metrics/MethodLength:
 
 # reasonable complexity
 Metrics/PerceivedComplexity:
-  Max: 10
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Max: 15
 
 # We meant to do that
 Naming/MemoizedInstanceVariableName:
@@ -61,6 +71,10 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodParameterName:
   Enabled: False
 
+# Confusing and weird
+Naming/VariableNumber:
+  Enabled: False
+  
 # Do what's readable in the context you're in
 Style/AccessModifierDeclarations:
   Enabled: false
@@ -75,6 +89,10 @@ Style/CommentedKeyword:
 
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
+  Enabled: false
+
+# Doesn't necessarily make anything more readable
+Style/ExplicitBlockArgument:
   Enabled: false
 
 # Adding more line noise to format strings will not improve them
@@ -99,10 +117,6 @@ Style/SafeNavigation:
 
 # Unclear why it's a good idea to give parameters semantically meaningless names
 Style/SingleLineBlockParams:
-  Enabled: false
-
-# Confusing and weird
-Naming/VariableNumber:
   Enabled: false
 
 # Allow some special handling for engines

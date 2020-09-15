@@ -7,10 +7,10 @@ gem 'mysql2', '~> 0.5.3'
 gem 'parallel_tests', group: %i[development test]
 
 path '..' do
-  gem 'stash-sword'
-  gem 'stash-wrapper'
   gem 'stash_discovery'
   gem 'stash_engine'
+  gem 'stash-sword'
+  gem 'stash-wrapper'
 end
 
 group :development, :local_dev, :test do

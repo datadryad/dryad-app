@@ -10,15 +10,13 @@ module Stash
         class << self
           def stash_wrapper_schema
             @stash_wrapper_schema ||= begin
-              schema_file = File.dirname(__FILE__) + '/schemas/stash-wrapper.xsd'
+              schema_file = "#{File.dirname(__FILE__)}/schemas/stash-wrapper.xsd"
               Nokogiri::XML::Schema(File.open(schema_file))
             end
           end
         end
 
-        attr_reader :dcs_resource
-        attr_reader :uploads
-        attr_reader :version_number
+        attr_reader :dcs_resource, :uploads, :version_number
 
         def initialize(dcs_resource:, version_number:, uploads:)
           super(file_name: 'stash-wrapper.xml')

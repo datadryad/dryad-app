@@ -92,7 +92,7 @@ stash_datacite_path = ENGINES['stash_datacite']
 require "#{stash_datacite_path}/config/initializers/patches.rb"
 StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
 
-APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('../config/app_config.yml', __FILE__))['test'])
+APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('config/app_config.yml', __dir__))['test'])
 
 # ------------------------------------------------------------
 # Mocks

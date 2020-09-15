@@ -15,9 +15,10 @@ module Stash
       # this is to take the place of the normal initialize to create a class of the correct type
       def self.make_instance(resource:)
         id_svc = resource.tenant.identifier_service
-        if id_svc.provider == 'ezid'
+        case id_svc.provider
+        when 'ezid'
           EzidGen.new(resource: resource)
-        elsif id_svc.provider == 'datacite'
+        when 'datacite'
           DataciteGen.new(resource: resource)
         end
       end
