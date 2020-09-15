@@ -4,7 +4,7 @@ module StashApi
   RSpec.describe Dataset do
     include Mocks::Tenant
     include Mocks::Datacite
-    
+
     before(:each) do
       mock_tenant!
       # all these doubles are required because I can't get a url helper for creating URLs inside the tests.
@@ -19,7 +19,7 @@ module StashApi
       @user = create(:user)
       @identifier = create(:identifier)
       @resource = create(:resource, identifier: @identifier, user: @user,
-                         current_editor_id: @user.id, title: 'My Cats Have Fleas')
+                                    current_editor_id: @user.id, title: 'My Cats Have Fleas')
 
       create(:version) do |v|
         v.resource = @identifier.resources.first
@@ -144,9 +144,9 @@ module StashApi
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
         StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
-        r.current_resource_state.update(resource_state: 'submitted')        
+        r.current_resource_state.update(resource_state: 'submitted')
         r2 = create(:resource, identifier: @identifier, user: @user,
-                    current_editor_id: @user.id, title: 'The other resource')
+                               current_editor_id: @user.id, title: 'The other resource')
         StashEngine::CurationActivity.create(resource: r2, status: 'in_progress')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
