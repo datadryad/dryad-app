@@ -4,8 +4,6 @@ module Stash
       attr_reader :logger
       attr_reader :landing_page_url
       attr_reader :tenant
-      attr_reader :resource_id
-      attr_reader :resource
       attr_reader :url_helpers
       attr_reader :package
       attr_reader :sword_helper
@@ -44,30 +42,30 @@ module Stash
 
         @resource_id = 37
         @resource = double(StashEngine::Resource)
-        allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
-        allow(resource).to receive(:identifier_str).and_return('doi:10.123/456')
-        allow(resource).to receive(:update_uri).and_return(nil)
-        allow(resource).to receive(:tenant).and_return(tenant)
-        allow(resource).to receive(:tenant_id).and_return('example_u')
-        allow(resource).to receive(:skip_datacite_update).and_return(false)
+        allow(StashEngine::Resource).to receive(:find).with(@resource_id).and_return(@resource)
+        allow(@resource).to receive(:identifier_str).and_return('doi:10.123/456')
+        allow(@resource).to receive(:update_uri).and_return(nil)
+        allow(@resource).to receive(:tenant).and_return(tenant)
+        allow(@resource).to receive(:tenant_id).and_return('example_u')
+        allow(@resource).to receive(:skip_datacite_update).and_return(false)
 
         identifier = double(StashEngine::Identifier)
         allow(identifier).to receive(:identifier_type).and_return('DOI')
         allow(identifier).to receive(:identifier).and_return('10.123/456')
-        allow(resource).to receive(:identifier).and_return(identifier)
+        allow(@resource).to receive(:identifier).and_return(identifier)
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
         @package = instance_double(ZipPackage)
-        allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
+        allow(ZipPackage).to receive(:new).with(resource: @resource).and_return(package)
         allow(package).to receive(:dc4_xml)
 
         @sword_helper = instance_double(SwordHelper)
         allow(SwordHelper).to receive(:new).with(package: package, logger: logger).and_return(sword_helper)
         allow(sword_helper).to receive(:submit!)
 
-        @job = SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
+        @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: url_helpers)
         allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
 
         allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(false)
@@ -80,7 +78,7 @@ module Stash
       describe :submit! do
 
         before(:each) do
-          allow(resource).to receive(:upload_type).and_return(:files)
+          allow(@resource).to receive(:upload_type).and_return(:files)
         end
 
         describe 'create' do
@@ -114,7 +112,7 @@ module Stash
 
         describe 'update' do
           before(:each) do
-            expect(resource).to receive(:update_uri).and_return('http://example.sword.edu/doi:10.123/456')
+            expect(@resource).to receive(:update_uri).and_return('http://example.sword.edu/doi:10.123/456')
           end
 
           it 'submits the package' do
@@ -131,7 +129,7 @@ module Stash
 
         describe 'error handling' do
           it 'fails on a bad resource ID' do
-            bad_id = resource_id * 17
+            bad_id = @resource_id * 17
             job = SubmissionJob.new(resource_id: bad_id, url_helpers: url_helpers)
             allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
             expect(job.submit!.error).to be_a(ActiveRecord::RecordNotFound)
