@@ -6,13 +6,14 @@ require 'stash/merritt/sword_helper'
 module Stash
   module Merritt
     class SubmissionJob < Stash::Repo::SubmissionJob
-      attr_reader :resource_id
-      attr_reader :url_helpers
+      attr_reader :resource_id, :url_helpers
 
+      # rubocop:disable Lint/MissingSuper
       def initialize(resource_id:, url_helpers:)
         @resource_id = resource_id
         @url_helpers = url_helpers
       end
+      # rubocop:enable Lint/MissingSuper
 
       # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!

@@ -6,10 +6,7 @@ module Datacite
     class DataciteXMLFactory # rubocop:disable Metrics/ClassLength
       DEFAULT_RESOURCE_TYPE = ResourceType.new(resource_type_general: ResourceTypeGeneral::DATASET, value: 'dataset')
 
-      attr_reader :doi_value
-      attr_reader :se_resource_id
-      attr_reader :total_size_bytes
-      attr_reader :version
+      attr_reader :doi_value, :se_resource_id, :total_size_bytes, :version
 
       def initialize(doi_value:, se_resource_id:, total_size_bytes:, version:)
         @doi_value = doi_value

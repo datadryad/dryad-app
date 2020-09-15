@@ -55,7 +55,6 @@ module Stash
         http.get(url)
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
       def get_digests(md5_obj:, sha256_obj:, db_file:)
         md5_hex = md5_obj.hexdigest
         sha256_hex = sha256_obj.hexdigest
@@ -69,7 +68,6 @@ module Stash
 
         { md5_hex: md5_hex, sha256_hex: sha256_hex }
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
     end
   end

@@ -9,10 +9,6 @@ module Stash
 
       ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}.freeze
 
-      def initialize(url_helpers:, threads: 1)
-        super
-      end
-
       def create_submission_job(resource_id:)
         SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
       end

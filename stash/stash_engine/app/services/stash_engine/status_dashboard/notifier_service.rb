@@ -8,8 +8,6 @@ module StashEngine
     class NotifierService < DependencyCheckerService
 
       LOG_FILE = '/dryad/apps/ui/shared/cron/logs/stash-notifier.log'
-
-      # rubocop:disable Metrics/CyclomaticComplexity
       def ping_dependency
         super
         record_status(online: false, message: "No log file found at '#{LOG_FILE}'.") unless File.exist?(LOG_FILE)
@@ -30,7 +28,6 @@ module StashEngine
         record_status(online: false, message: e.to_s)
         false
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
     end
 

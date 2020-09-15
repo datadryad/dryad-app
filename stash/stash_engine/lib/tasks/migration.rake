@@ -11,7 +11,7 @@ namespace :dryad_migration do
   task migrate_journal_metadata: :environment do
     File.foreach('journalISSNs.txt') do |issn|
       issn = issn.strip
-      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + issn
+      url = "#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{issn}"
       results = HTTParty.get(url,
                              query: { access_token: APP_CONFIG.old_dryad_access_token },
                              headers: { 'Content-Type' => 'application/json' })
