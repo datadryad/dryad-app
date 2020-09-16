@@ -89,22 +89,22 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     # PATCH /dataset/doi:10.xyz/abc
     def update
-      return render(nothing: true, status: 404) unless id
+      return render(body: nil, status: 404) unless id
 
       record_identifier = params[:record_identifier]
-      return render(nothing: true, status: 400) unless record_identifier
+      return render(body: nil, status: 400) unless record_identifier
 
       # get this exact resource by id and version number
       resources = id.resources.joins(:stash_version).where(['stash_engine_versions.version = ? ', params[:stash_version]])
 
-      return render(nothing: true, status: 404) unless resources.count == 1
+      return render(body: nil, status: 404) unless resources.count == 1
 
       # set the @resource variable which is returned by the caching method "resource" if @resource is set
       @resource = resources.first
 
       my_state = resource.current_resource_state.resource_state
-      return render(nothing: true, status: 204) if my_state == 'submitted'  # already switched state, don't do more than once, but give happy response
-      return render(nothing: true, status: 400) if my_state != 'processing' # only change processing items to submitted
+      return render(body: nil, status: 204) if my_state == 'submitted'  # already switched state, don't do more than once, but give happy response
+      return render(body: nil, status: 400) if my_state != 'processing' # only change processing items to submitted
 
       # lib/stash/repo/repository calls stash-merritt/lib/stash/merritt/repository.rb and this populates download and update URIs into the db
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
@@ -117,10 +117,10 @@ module StashEngine
       update_size!
       # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
       ::StashEngine.repository.cleanup_files(@resource)
-      render(nothing: true, status: 204)
+      render(body: nil, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
-      render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
+      render(body: nil, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
     # rubocop:enable Metrics/AbcSize
 
