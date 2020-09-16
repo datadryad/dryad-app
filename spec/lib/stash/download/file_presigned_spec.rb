@@ -34,8 +34,7 @@ module Stash
                        headers: { 'Content-Type' => 'application/json' })
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'redirects to a url' do
+        it 'redirects to a url' do
           resp = @fp.download(file: @file_upload)
           expect(resp).to eq('redirected')
         end
@@ -45,8 +44,7 @@ module Stash
           @fp.download(file: nil)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'raises an error for bad status response from Merritt' do
+        it 'raises an error for bad status response from Merritt' do
           remove_request_stub(@stubby)
 
           stub_request(:get, @file_upload.merritt_presign_info_url)

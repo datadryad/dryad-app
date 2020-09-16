@@ -234,7 +234,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('submitted')
       end
 
-      # [TODO] Fix this intermittently-failing test. Ticket #806.
+      # TODO: This is no longer tested the same way... may need to install capybara-email
       xit 'sends out a "submitted" email to the author', js: true do
         expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
@@ -295,8 +295,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('curation')
       end
 
-      # [TODO] Fix this intermittently-failing test. Ticket #806.
-      xit "has a curation status of 'submitted' when prior version was :withdrawn", js: true do
+      it "has a curation status of 'submitted' when prior version was :withdrawn", js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn')
         @resource.reload
 
@@ -319,8 +318,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           mock_stripe!
         end
 
-        # [TODO] Fix this intermittently-failing test. Ticket #806.
-        xit "has a curation status of 'submitted' when prior version was :embargoed", js: true do
+        it "has a curation status of 'submitted' when prior version was :embargoed", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'embargoed')
           @resource.reload
 
@@ -333,11 +331,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
         end
 
-        # [TODO] Fix this intermittently-failing test. Ticket #806.
-        xit "has a curation status of 'submitted' when prior version was :published", js: true do
+        it "has a curation status of 'submitted' when prior version was :published", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
           @resource.reload
 
@@ -350,7 +346,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
         end
 
       end
