@@ -45,13 +45,13 @@ module StashApi
     # DELETE /internal_data/{id}
     def destroy
       StashEngine::InternalDatum.destroy(params[:id])
-      render json: { status: 'Internal datum with identifier ' + params[:id] + ' has been successfully deleted.' }.to_json, status: 200
+      render json: { status: "Internal datum with identifier #{params[:id]} has been successfully deleted." }.to_json, status: 200
     end
 
     def initialize_stash_identifier(id)
       ds = DatasetsController.new
       @stash_identifier = ds.get_stash_identifier(id)
-      render json: { error: 'cannot find dataset with identifier ' + id }.to_json, status: 404 if @stash_identifier.nil?
+      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.nil?
     end
   end
 end

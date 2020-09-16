@@ -17,7 +17,7 @@ module StashEngine
 
     def self.find_by_orcid_or_emails(orcid:, emails:)
       emails = Array.wrap(emails)
-      emails = emails.delete_if(&:blank?)
+      emails.delete_if(&:blank?)
       User.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 

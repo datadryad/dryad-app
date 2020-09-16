@@ -41,7 +41,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'leaflet-rails'
   s.add_dependency 'loofah'
   s.add_dependency 'mysql2'
-  s.add_dependency 'rails', '~> 5.0'
+  s.add_dependency 'rails', '~> 5.2'
   s.add_dependency 'responders', '>= 2.4.1'
   s.add_dependency 'rubyzip', '>= 1.0.0'
   s.add_dependency 'serrano', '>= 0.5.0' # for CrossRef API
@@ -50,9 +50,9 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # TODO: do these need versions?
-  s.add_dependency 'stash-wrapper'
   s.add_dependency 'stash_discovery'
   s.add_dependency 'stash_engine'
+  s.add_dependency 'stash-wrapper'
 
   s.add_development_dependency 'colorize', '>= 0.8'
   s.add_development_dependency 'database_cleaner', '>= 1.5'

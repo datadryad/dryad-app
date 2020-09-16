@@ -9,7 +9,6 @@ module StashEngine
     CROSSREF_UPDATE_MESSAGE = 'provided additional metadata'.freeze
 
     # Overriding equality check to make sure we're only comparing the fields we care about
-    # rubocop:disable Metrics/CyclomaticComplexity
     def ==(other)
       return false unless other.present? && other.is_a?(StashEngine::ProposedChange)
 
@@ -17,7 +16,6 @@ module StashEngine
         other.publication_issn == publication_issn && other.publication_doi == publication_doi &&
         other.publication_name == publication_name && other.title == title
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def approve!(current_user:)
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)

@@ -15,10 +15,8 @@ module Stash
       ROR_MAX_RESULTS = 20.0
       MAX_PAGES = 5
 
-      attr_reader :id
-      attr_reader :name
+      attr_reader :id, :name, :acronyms
       attr_accessor :country
-      attr_reader :acronyms
 
       def initialize(params)
         @id = params['id']

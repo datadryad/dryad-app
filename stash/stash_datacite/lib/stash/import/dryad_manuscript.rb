@@ -50,7 +50,6 @@ module Stash
       end
 
       # the 'correspondingAuthor' may be able to give us one of the authors email addresses, but not for most items
-      # rubocop:disable Metrics/CyclomaticComplexity
       def update_email(db_author:)
         return if @response['correspondingAuthor'].blank? || @response['correspondingAuthor']['author'].blank? ||
             @response['correspondingAuthor']['email'].blank?
@@ -67,7 +66,7 @@ module Stash
 
         db_author.update(author_email: email)
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
+
     end
   end
 end

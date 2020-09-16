@@ -9,11 +9,7 @@ module StashDatacite
   class ResourceBuilder # rubocop:disable Metrics/ClassLength
     DESCRIPTION_TYPE = Datacite::Mapping::DescriptionType
 
-    attr_reader :user_id
-    attr_reader :tenant_id
-    attr_reader :dcs_resource
-    attr_reader :stash_files
-    attr_reader :upload_time
+    attr_reader :user_id, :tenant_id, :dcs_resource, :stash_files, :upload_time
 
     def initialize(user_id:, dcs_resource:, stash_files:, upload_date:, tenant_id: 'dataone')
       @user_id = user_id
@@ -53,10 +49,11 @@ module StashDatacite
       se_resource.id
     end
 
-    def populate_se_resource! # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
+    def populate_se_resource!
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
-      dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
+      dcs_resource.contributors.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
@@ -77,6 +74,7 @@ module StashDatacite
       se_resource.save!
       se_resource
     end
+    # rubocop:enable Metrics/AbcSize
 
     def set_sd_identifier(dcs_identifier)
       return unless dcs_identifier

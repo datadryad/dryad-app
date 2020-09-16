@@ -10,7 +10,7 @@ require 'ostruct'
 
 RSpec.describe SubmittedReports do
   before(:each) do
-    WebMock.disable_net_connect!
+    WebMock.disable_net_connect!(allow_localhost: true)
     @sr = SubmittedReports.new
   end
 

@@ -7,7 +7,6 @@ FactoryBot.define do
     author_last_name { Faker::Name.last_name }
     author_email { Faker::Internet.safe_email }
     author_orcid { Faker::Pid.orcid }
-
     affiliations { [create(:affiliation)] }
   end
 

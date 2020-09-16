@@ -228,7 +228,6 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def update_publication_flags
       case status
       when 'withdrawn'
@@ -258,7 +257,6 @@ module StashEngine
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
     end
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # Helper methods
     # ------------------------------------------

@@ -1,5 +1,5 @@
 # the STASH tests were spending a long, long time installing gems but then only using the libraries installed in the main app, anyway
-# so I disabled the bundle installs for the separate apps and rely on the main bundle to do the job for now.
+# so I disabled the bundle installs for the separate apps and rely on the main bundle to do the job for now
 
 matrix:
   include:
@@ -30,11 +30,12 @@ before_install:
   - if [ "$TO_TEST" = "MAIN" ]; then sudo apt-get install mutt; fi
   - gem update --system
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
-  - gem install bundler -v 1.17.3
+  - gem install bundler -v 2.1.4
   - gem install colorize
   - if [ "$TO_TEST" = "MAIN" ]; then ./travis-prep.sh; fi
 
 before_script:
+  - set -e
   - if [ "$TO_TEST" = "MAIN" ]; then bundle exec rake db:migrate RAILS_ENV=test; fi
   # To allow travis to run chrome we need to force chromedriver to use a specific version
   # since Chrome and Chromedriver versions must match :/
@@ -44,6 +45,7 @@ before_script:
   - if [ "$TO_TEST" = "MAIN" ]; then sudo chmod 4755 /opt/google/chrome/chrome-sandbox; fi
 
 script:
+  - set -e
   - if [ "$TO_TEST" = "MAIN" ]; then RAILS_ENV=test bundle exec rake; fi	
   - if [ "$TO_TEST" = "STASH" ]; then stash/travis-build.rb; fi
 

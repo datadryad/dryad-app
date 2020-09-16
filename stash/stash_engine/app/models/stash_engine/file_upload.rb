@@ -50,9 +50,14 @@ module StashEngine
 
     # the Merritt URL to query in order to get the information on the presigned URL
     def merritt_presign_info_url
+      raise 'Filename may not be blank when creating presigned URL' if upload_file_name.blank?
+
+      # The gsub below ensures and number signs get double-encoded because otherwise Merritt cuts them off early.
+      # We can remove the workaround if it changes in Merritt at some point in the future.
+
       domain, local_id = resource.merritt_protodomain_and_local_id
       "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-          "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+          "producer%2F#{ERB::Util.url_encode(upload_file_name.gsub('#', '%23'))}?no_redirect=true"
     end
 
     # this will do the http request to Merritt to get the presigned URL, putting here instead of other classes since it gets
@@ -88,24 +93,6 @@ module StashEngine
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
-    def smart_destroy!
-      # see if it's on the file system and destroy it if it's there
-      cfp = calc_file_path
-      ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
-
-      if in_previous_version?
-        # destroy any others of this filename in this resource
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
-        # and mark to remove from merritt
-        update(file_state: 'deleted')
-      else
-        # remove all of this filename for this resource from the database
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
-      end
-
-      resource.reload
-    end
-
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar
@@ -122,16 +109,6 @@ module StashEngine
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
-    # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
-    # means created last time.
-    def in_previous_version?
-      prev_res = resource.previous_resource
-      return false if prev_res.nil?
 
-      prev_file = FileUpload.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
-      return false if prev_file.nil? || prev_file.file_state == 'deleted'
-
-      true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
-    end
   end
 end

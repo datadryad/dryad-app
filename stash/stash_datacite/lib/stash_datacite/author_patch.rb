@@ -17,7 +17,7 @@ module StashDatacite
       StashEngine::Author.class_eval do
 
         def affiliation
-          affiliations.order(created_at: :asc).first
+          affiliations.first
         end
 
         def affiliation=(affil)

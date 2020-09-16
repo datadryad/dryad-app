@@ -6,7 +6,7 @@ module StashEngine
     attr_reader :uv
 
     before(:each) do
-      WebMock.disable_net_connect!
+      WebMock.disable_net_connect!(allow_localhost: true)
       @uv = UrlValidator.new(url: 'http://www.blahstackfood.com')
     end
 
