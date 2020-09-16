@@ -14,10 +14,7 @@ module Stash
 
       EOL = "\r\n".freeze
 
-      attr_reader :collection_uri
-      attr_reader :username
-      attr_reader :password
-      attr_reader :helper
+      attr_reader :collection_uri, :username, :password, :helper
 
       # Creates a new {Client} for the specified collection URI, with the specified credentials.
       #

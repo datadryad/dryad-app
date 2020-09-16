@@ -14,7 +14,7 @@ module DatasetHelper
   end
 
   def navigate_to_software_upload
-    click_link 'Upload Software'
+    click_link 'Upload Supporting Information'
     click_link 'Upload directly'
     expect(page).to have_content('Choose Files')
   end

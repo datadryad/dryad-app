@@ -8,8 +8,10 @@
 
 <% if may_download %>
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+  <%= render partial: 'stash_engine/landing/zenodo_files', locals: {dataset_identifier: @id, resource: @resource} %>
 <% else %>
   <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
+  <%= render partial: 'stash_engine/landing/zenodo_files_embargoed', locals: {dataset_identifier: @id, resource: @resource} %>
 <% end %>
 
 <div class="c-sidebox">

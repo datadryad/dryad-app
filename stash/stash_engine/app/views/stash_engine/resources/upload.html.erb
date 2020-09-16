@@ -1,4 +1,4 @@
-<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
+<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Supporting Information')
   @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
@@ -17,7 +17,7 @@
 <div class="o-dataset-nav">
   <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+    <%= link_to 'Proceed to Upload Supporting Information', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>
     <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
     <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>

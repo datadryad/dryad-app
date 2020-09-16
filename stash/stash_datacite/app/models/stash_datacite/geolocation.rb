@@ -32,7 +32,7 @@ module StashDatacite
 
     # a simple convenience method for creating datacite geolocation full record
     # place is string, point is [lat long] and box is [[ lat, long], [lat, long]] (or [lat, long, lat, long] )
-    def self.new_geolocation(place: nil, point: nil, box: nil, resource_id:)
+    def self.new_geolocation(resource_id:, place: nil, point: nil, box: nil)
       return unless place || point || box
 
       Geolocation.create(
@@ -116,7 +116,7 @@ module StashDatacite
       resource.save!
     end
 
-    def destroy_place_point_box # rubocop:disable Metrics/CyclomaticComplexity
+    def destroy_place_point_box
       GeolocationPlace.destroy(place_id) unless place_id.nil? || GeolocationPlace.where(id: place_id).count < 1
       GeolocationPoint.destroy(point_id) unless point_id.nil? || GeolocationPoint.where(id: point_id).count < 1
       GeolocationBox.destroy(box_id) unless box_id.nil? || GeolocationBox.where(id: box_id).count < 1
