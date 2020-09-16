@@ -56,6 +56,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-turbolinks'
   s.add_dependency 'jquery-ui-rails'
+  s.add_dependency 'jwt' # for RATs for Zenodo https://github.com/jwt/ruby-jwt
   s.add_dependency 'kaminari'
   s.add_dependency 'noid', '>= 0.9.0'
   s.add_dependency 'omniauth', '>= 1.8.1'
@@ -63,7 +64,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'omniauth-rails_csrf_protection'
   s.add_dependency 'omniauth-shibboleth', '>= 1.2.1'
   s.add_dependency 'posix-spawn', '>= 0.3.13'
-  s.add_dependency 'rails', '~> 5.1'
+  s.add_dependency 'rails', '~> 5.2'
   s.add_dependency 'redcarpet', '>= 3.3'
   s.add_dependency 'rest-client'
   s.add_dependency 'rinku'

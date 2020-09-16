@@ -16,7 +16,11 @@ module StashDatacite
     ResourceTypesGeneralLimited = { Spreadsheet: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
                                     Text: 'text', Software: 'software', "Multiple Types": 'collection', Other: 'other' }.freeze
 
-    enum resource_type_general: ResourceTypeGeneralEnum
+    # WARNING: The enum here is defined with the prefix `rtg`, to ensure the `model` enum value does
+    # not generate a `model` method that would conflict with the method in ActiveRecord. If you want to
+    # use the automatically-generated methods for working with enums, you must include the prefix,
+    # such as `my_resource_type.rtg_dataset?` or `my_resource_type.rtg_software!`
+    enum resource_type_general: ResourceTypeGeneralEnum, _prefix: :rtg
 
     def resource_type_general_friendly
       return nil if resource_type_general.blank?

@@ -70,8 +70,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       expect(page).to have_text('Submissions are being held for shutdown on this server')
     end
 
-    # TODO: Fix this intermittently-failing test. Ticket #806.
-    xit 'should re-enable transfers', js: true do
+    it 'should re-enable transfers', js: true do
       FileUtils.touch(HOLD_SUBMISSIONS_PATH)
       visit '/stash/submission_queue'
       click_button 'graceful_start'

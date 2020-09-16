@@ -16,7 +16,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
-    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense'
+    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
 
     after_create :create_share
 
@@ -236,12 +236,12 @@ module StashEngine
       Journal.where(issn: publication_issn).first
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/AbcSize
     def record_payment
       return if payment_type.present? && payment_type != 'unknown'
 
       if journal&.will_pay?
-        self.payment_type = 'journal-' + journal.payment_plan_type
+        self.payment_type = "journal-#{journal.payment_plan_type}"
         self.payment_id = publication_issn
       elsif institution_will_pay?
         self.payment_type = 'institution'
@@ -258,7 +258,7 @@ module StashEngine
       end
       save
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize
 
     def allow_review?
       return true if journal.blank?
@@ -385,7 +385,7 @@ module StashEngine
     end
 
     # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
-    # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/MethodLength
     def fill_resource_view_flags
       my_pub = false
       resources.each do |res|
@@ -417,7 +417,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/MethodLength
 
     # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
     # In this case we still may call this and want to show some version of the files because there was never a version remaining
@@ -445,6 +445,40 @@ module StashEngine
       SoftwareUpload.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
     end
     # rubocop:enable Naming/PredicateName
+
+    # gets the resources which are in zenodo and have viewable files for the context, used by the landing page.
+    # Only latest version after published is included if include_unpublished is true.
+    # It may return an array instead of activerecord relation because it's complicated and UNION isn't really a thing in Rails 4
+    def zenodo_software_resources(include_unpublished: false)
+      pub = zenodo_published_software_resources
+      last_unpub = last_zenodo_resource(copy_type: 'software')
+
+      # just return published if just public flag or if last unpublished doesn't exist
+      return pub unless include_unpublished == true || last_unpub.nil?
+
+      # just unpub if none are published
+      return [last_unpub] if pub.count < 1
+
+      # just the pub if latest_unpublished is before latest_published, unpub and last pub shouldn't be nil (see above conditions)
+      return pub if last_unpub.id < pub.last.id
+
+      (pub.to_a + [last_unpub]).compact
+    end
+
+    def zenodo_published_software_resources
+      resources.joins(:zenodo_copies).where('stash_engine_zenodo_copies.deposition_id IS NOT NULL')
+        .where("stash_engine_zenodo_copies.state = 'finished'")
+        .where("stash_engine_zenodo_copies.copy_type = 'software_publish'")
+    end
+
+    # this is still an activerecord relation (creating an array of one) so that we can union it with sql
+    # copy type is either 'software' or 'software_publish' or (in theory) 'data' (for 3rd copy)
+    def last_zenodo_resource(copy_type:)
+      resources.joins(:zenodo_copies).where('stash_engine_zenodo_copies.deposition_id IS NOT NULL')
+        .where("stash_engine_zenodo_copies.state = 'finished'")
+        .where('stash_engine_zenodo_copies.copy_type = ?', copy_type)
+        .order(id: :desc).limit(1).first
+    end
 
     private
 

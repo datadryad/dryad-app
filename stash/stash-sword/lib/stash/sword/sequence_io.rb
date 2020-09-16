@@ -59,9 +59,7 @@ module Stash
 
       private
 
-      attr_reader :input
-      attr_reader :index
-      attr_reader :inputs
+      attr_reader :input, :index, :inputs
 
       def read_fully(buffer)
         until input.nil?

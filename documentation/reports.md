@@ -150,3 +150,24 @@ ON se_id3.id = stash_engine_counter_stats.`identifier_id`
 WHERE dcs_affil3.ror_id IN ('https://ror.org/02y3ad647', 'https://ror.org/0419bgt07', 'https://ror.org/04tk2gy88')
 ORDER BY se_res3.publication_date, se_id3.identifier, se_res3.title;
 </pre>
+
+
+Unique Authors from ROR institutions (from SQL)
+-----------------------------------------------
+
+This is an example of a query getting unique author last, first and institution names.  This is an example of UCs and Lawrence Berkeley Lab.
+
+There are lots of duplicate authors who seem to be entering their names in slightly different ways or saying they're from different institutions (or spelling them differently).
+
+In order to get a really unique count, it probably needs to be gone through by hand and eliminate seeming duplicates and it still might not be
+100% accurate, but would be close.
+
+```
+SELECT DISTINCT auths.`author_first_name`, auths.`author_last_name`, affils.`long_name` FROM stash_engine_authors auths
+JOIN dcs_affiliations_authors aa
+ON auths.id = aa.`author_id`
+JOIN `dcs_affiliations` affils
+ON aa.`affiliation_id` = affils.`id`
+WHERE affils.`ror_id` IN ('https://ror.org/01an7q238', 'https://ror.org/03djjyk45', 'https://ror.org/01ewh7m12', 'https://ror.org/03rafms67', 'https://ror.org/05kbg7k66', 'https://ror.org/02mmp8p21', 'https://ror.org/05rrcem69', 'https://ror.org/05q8kyc69', 'https://ror.org/05ehe8t08', 'https://ror.org/00fyrp007', 'https://ror.org/05t6gpm70', 'https://ror.org/04gyf1771', 'https://ror.org/03fgher32', 'https://ror.org/00cm8nm15', 'https://ror.org/03bfp2076', 'https://ror.org/046rm7j60', 'https://ror.org/05h4zj272', 'https://ror.org/04p5baq95', 'https://ror.org/03b66rp04', 'https://ror.org/04k3jt835', 'https://ror.org/01d88se56', 'https://ror.org/04vq5kb54', 'https://ror.org/00mjfew53', 'https://ror.org/00d9ah105', 'https://ror.org/00pjdza24', 'https://ror.org/03nawhv43', 'https://ror.org/02t274463', 'https://ror.org/03s65by71', 'https://ror.org/0168r3w48', 'https://ror.org/01kbfgm16', 'https://ror.org/04mg3nk07', 'https://ror.org/05ffhwq07', 'https://ror.org/04v7hvq31', 'https://ror.org/01vf2g217', 'https://ror.org/043mz5j54', 'https://ror.org/03hwe2705', 'https://ror.org/01t8svj65', 'https://ror.org/04g7y4303', 'https://ror.org/02jbv0t02')
+ORDER BY auths.author_last_name, auths.author_first_name;
+```

@@ -26,7 +26,7 @@ module Stash
 
         @controller_context = double
         allow(@controller_context).to receive(:request).and_return(@my_request)
-        @logger = ActiveSupport::Logger.new(STDOUT)
+        @logger = ActiveSupport::Logger.new($stdout)
         allow(@controller_context).to receive(:logger).and_return(@logger)
       end
 
