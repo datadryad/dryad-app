@@ -121,6 +121,8 @@ module Stash
 
           it 'fails on a SWORD submission error' do
             allow(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
+            @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: @url_helpers)
+            allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
             expect(@job.submit!.error).to be_a(RestClient::RequestFailed)
           end
         end
