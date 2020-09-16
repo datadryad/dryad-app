@@ -91,11 +91,6 @@ module Stash
             @job.submit!
           end
 
-          it 'submits the package' do
-            expect(@sword_helper).to receive(:submit!)
-            @job.submit!
-          end
-
           it 'returns a result' do
             result = @job.submit!
             expect(result).to be_a(Stash::Repo::SubmissionResult)
@@ -106,11 +101,6 @@ module Stash
         describe 'update' do
           before(:each) do
             expect(@resource).to receive(:update_uri).and_return('http://example.sword.edu/doi:10.123/456')
-          end
-
-          it 'submits the package' do
-            expect(@sword_helper).to receive(:submit!)
-            @job.submit!
           end
 
           it 'returns a result' do
@@ -125,11 +115,12 @@ module Stash
             bad_id = @resource_id * 17
             @job = SubmissionJob.new(resource_id: bad_id, url_helpers: @url_helpers)
             allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
-            expect(@job.submit!.error).to be_a(ActiveRecord::RecordNotFound)
+            expect_any_instance_of(Stash::Merritt::SwordHelper).not_to receive(:submit!)
+            @job.submit!
           end
 
           it 'fails on a SWORD submission error' do
-            expect(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
+            allow(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
             expect(@job.submit!.error).to be_a(RestClient::RequestFailed)
           end
         end
