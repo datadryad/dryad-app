@@ -1,13 +1,5 @@
 inherit_from: ../../.rubocop.yml
 
-AllCops:
-  Exclude:
-    - 'bin/**/*'
-    - 'config/**/*'
-    - 'db/**/*'
-    - 'test/dummy/db/**/*'
-    - 'vendor/**/*'
-
 Layout/LineLength:
   Exclude:
     - 'app/controllers/catalog_controller.rb'

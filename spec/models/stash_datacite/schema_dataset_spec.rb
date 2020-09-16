@@ -1,41 +1,56 @@
 module StashDatacite
   module Resource
     describe SchemaDataset do
-      attr_reader :user
-      attr_reader :stash_wrapper
-      attr_reader :dcs_resource
-
-      attr_reader :resource
-      attr_reader :schema_dataset
 
       before(:each) do
-        @user = StashEngine::User.create(
-          email: 'lmuckenhaupt@example.edu',
-          tenant_id: 'dataone'
-        )
+        @user = create(:user,
+                       email: 'lmuckenhaupt@example.edu',
+                       tenant_id: 'dataone')
 
-        dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
-        @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
-        stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
-        @stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
+        @resource = create(:resource, user: @user)
+        @resource.download_uri = "https://repo.example.edu/#{@resource.identifier_str}.zip"
+        create(:right, resource: @resource)
+        @resource.save
 
-        @resource = ResourceBuilder.new(
-          user_id: user.id,
-          dcs_resource: dcs_resource,
-          stash_files: stash_wrapper.inventory.files,
-          upload_date: stash_wrapper.version_date
-        ).build
-        resource.download_uri = "https://repo.example.edu/#{resource.identifier_str}.zip"
-        resource.save
+        schema_dataset = SchemaDataset.new(resource: @resource)
 
-        @schema_dataset = SchemaDataset.new(resource: resource)
+        # Should be like spec/data/example.json
+        json_hash = schema_dataset.generate
+        @actual = JSON.parse(json_hash.to_json)
       end
 
       it 'generates schema.org JSON' do
-        expected = JSON.parse(File.read('spec/data/example.json'))
-        json_hash = schema_dataset.generate
-        actual = JSON.parse(json_hash.to_json)
-        expect(actual).to eq(expected)
+        expect(@actual['@context']).to eq('http://schema.org')
+      end
+
+      it 'has identifiers in the correct fields' do
+        expect(@actual['@id']).to eq("https://doi.org/#{@resource.identifier.identifier}")
+        expect(@actual['identifier']).to eq("https://doi.org/#{@resource.identifier.identifier}")
+      end
+
+      it 'has the correct title' do
+        expect(@actual['name']).to eq(@resource.title)
+      end
+
+      it 'has the correct license' do
+        expect(@actual['license']['license']).to eq(@resource.rights.first.rights_uri)
+      end
+
+      it 'has the correct publisher information' do
+        expect(@actual['publisher']['@id']).to eq('https://datadryad.org')
+      end
+
+      it 'has the correct ROR affiliation' do
+        expect(@actual['creator']['affiliation']['sameAs']).to eq(@resource.authors.first.affiliation.ror_id)
+      end
+
+      it 'has the correct username and ORCID' do
+        expect(@actual['creator']['name']).to eq(@resource.authors.first.author_standard_name)
+        expect(@actual['creator']['sameAs']).to eq("http://orcid.org/#{@resource.authors.first.author_orcid}")
+      end
+
+      it 'has the correct download link' do
+        expect(@actual['distribution']['contentUrl']).to include('api/v2/datasets/doi')
       end
     end
   end

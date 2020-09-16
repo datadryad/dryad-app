@@ -1,8 +1,6 @@
 require 'rails'
 require 'redcarpet'
 require 'omniauth'
-require 'redcarpet'
-require 'omniauth'
 require 'omniauth-shibboleth'
 # require 'omniauth-google-oauth2'
 require 'omniauth-orcid'

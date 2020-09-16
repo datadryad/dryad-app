@@ -5,8 +5,7 @@ module Stash
     class SubmissionPackage
       include Builders
 
-      attr_reader :resource
-      attr_reader :packaging
+      attr_reader :resource, :packaging
 
       # @param resource [StashEngine::Resource]
       # @param packaging [Stash::Sword::Packaging]

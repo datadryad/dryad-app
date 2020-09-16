@@ -20,7 +20,7 @@ namespace :datacite_target do
   # saves errors to a separate errors.txt file so we can handle these separately/manually assuming there are only a few
   desc 'update Dryad DOI targets to reflect new environment'
   task update_dryad: :environment do
-    STDOUT.sync = true
+    $stdout.sync = true
 
     start_from = 0
     start_from = ARGV[1].to_i unless ARGV[1].blank?

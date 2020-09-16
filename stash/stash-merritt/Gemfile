@@ -7,11 +7,11 @@ gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migration
 gem 'mysql2', '~> 0.5.3'
 
 path '..' do
-  gem 'stash-sword'
-  gem 'stash-wrapper'
   gem 'stash_datacite'
   gem 'stash_discovery'
   gem 'stash_engine'
+  gem 'stash-sword'
+  gem 'stash-wrapper'
 end
 
 group :development, :local_dev, :test do

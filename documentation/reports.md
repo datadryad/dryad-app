@@ -26,6 +26,19 @@ Fields in the shopping cart report
 - Journal Name
 - Sponsor Name
 
+To run the report and retrieve the files:
+```
+# On dryad-prd-a
+cd apps/ui/current
+RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2019-11
+
+# On a stage server, copy the files:
+cd shopping_cart_reports
+scp dryad-prd-a:apps/ui/current/shop* .
+
+# On your local machine, copy the files:
+scp dryad-stg-a:shopping_cart_reports/shop* .
+```
 
 Dataset Info Report
 ---------------------
@@ -82,3 +95,79 @@ Fields in the admin screen CSV report
 - views
 - downloads
 - citations
+
+Authors at an Institution Report (from SQL)
+-------------------------------------------
+
+This SQL may be more complicated than it needs to be, but it seems to work.  It gives information about
+published and embargoed items with authors at an institution based on the ROR ids you put into the query
+(look and replace in two separate places).
+It can then be exported from SQL as TSV/CSV or whatever.  There are duplicate rows per dataset if more
+than one author is from the institution that contributed to the same dataset.  The views and downloads may
+be off if we go to a model where we retrieve them in real-time from DataCite because they come from
+multiple sources (like us and Zenodo) and we don't pre-populate them all the time.
+
+It includes published and embargoed (shows the landing page but no downloads) which is why some
+publication dates are in the future.
+
+Sorry, IDK why the markdown seems to do it's own thing when indenting, even if I do it preformatted.
+
+<pre>
+SELECT se_id3.identifier, se_res3.title, se_auth3.author_first_name, se_auth3.author_last_name, dcs_affil3.long_name, se_res3.publication_date,
+(stash_engine_counter_stats.unique_investigation_count - stash_engine_counter_stats.unique_request_count) as unique_views, stash_engine_counter_stats.unique_request_count as unique_downloads
+FROM
+  /* get only the earliest published/embagoed one */
+  (SELECT unique_ids.identifier_id, min(res2.id) first_pub_resource FROM
+    /* only get distinct identifiers from all the ror_ids working back through zillions of joined tables */
+    (SELECT DISTINCT se_id.id as identifier_id
+	    FROM dcs_affiliations affil
+	    JOIN dcs_affiliations_authors affil_auth
+	    ON affil.id = affil_auth.`affiliation_id`
+	    JOIN stash_engine_authors auth
+	    ON affil_auth.`author_id` = auth.`id`
+	    JOIN stash_engine_resources res
+	    ON auth.`resource_id` = res.id
+	    JOIN stash_engine_identifiers se_id
+	    ON se_id.id = res.identifier_id
+	    WHERE affil.ror_id IN ('https://ror.org/02y3ad647', 'https://ror.org/0419bgt07', 'https://ror.org/04tk2gy88')
+	    AND se_id.pub_state IN ('published', 'embargoed')) as unique_ids
+  JOIN stash_engine_resources res2
+  ON unique_ids.identifier_id = res2.identifier_id
+  WHERE res2.publication_date IS NOT NULL
+  GROUP BY unique_ids.identifier_id) as ident_and_res	
+JOIN stash_engine_identifiers se_id3
+ON se_id3.id = ident_and_res.identifier_id
+JOIN stash_engine_resources se_res3
+ON se_res3.id = ident_and_res.first_pub_resource
+JOIN stash_engine_authors se_auth3
+ON se_res3.id = se_auth3.`resource_id`
+JOIN dcs_affiliations_authors dcs_affils_authors3
+ON se_auth3.`id` = dcs_affils_authors3.`author_id`
+JOIN dcs_affiliations dcs_affil3
+ON dcs_affils_authors3.`affiliation_id` = dcs_affil3.`id`
+LEFT JOIN stash_engine_counter_stats
+ON se_id3.id = stash_engine_counter_stats.`identifier_id`
+WHERE dcs_affil3.ror_id IN ('https://ror.org/02y3ad647', 'https://ror.org/0419bgt07', 'https://ror.org/04tk2gy88')
+ORDER BY se_res3.publication_date, se_id3.identifier, se_res3.title;
+</pre>
+
+
+Unique Authors from ROR institutions (from SQL)
+-----------------------------------------------
+
+This is an example of a query getting unique author last, first and institution names.  This is an example of UCs and Lawrence Berkeley Lab.
+
+There are lots of duplicate authors who seem to be entering their names in slightly different ways or saying they're from different institutions (or spelling them differently).
+
+In order to get a really unique count, it probably needs to be gone through by hand and eliminate seeming duplicates and it still might not be
+100% accurate, but would be close.
+
+```
+SELECT DISTINCT auths.`author_first_name`, auths.`author_last_name`, affils.`long_name` FROM stash_engine_authors auths
+JOIN dcs_affiliations_authors aa
+ON auths.id = aa.`author_id`
+JOIN `dcs_affiliations` affils
+ON aa.`affiliation_id` = affils.`id`
+WHERE affils.`ror_id` IN ('https://ror.org/01an7q238', 'https://ror.org/03djjyk45', 'https://ror.org/01ewh7m12', 'https://ror.org/03rafms67', 'https://ror.org/05kbg7k66', 'https://ror.org/02mmp8p21', 'https://ror.org/05rrcem69', 'https://ror.org/05q8kyc69', 'https://ror.org/05ehe8t08', 'https://ror.org/00fyrp007', 'https://ror.org/05t6gpm70', 'https://ror.org/04gyf1771', 'https://ror.org/03fgher32', 'https://ror.org/00cm8nm15', 'https://ror.org/03bfp2076', 'https://ror.org/046rm7j60', 'https://ror.org/05h4zj272', 'https://ror.org/04p5baq95', 'https://ror.org/03b66rp04', 'https://ror.org/04k3jt835', 'https://ror.org/01d88se56', 'https://ror.org/04vq5kb54', 'https://ror.org/00mjfew53', 'https://ror.org/00d9ah105', 'https://ror.org/00pjdza24', 'https://ror.org/03nawhv43', 'https://ror.org/02t274463', 'https://ror.org/03s65by71', 'https://ror.org/0168r3w48', 'https://ror.org/01kbfgm16', 'https://ror.org/04mg3nk07', 'https://ror.org/05ffhwq07', 'https://ror.org/04v7hvq31', 'https://ror.org/01vf2g217', 'https://ror.org/043mz5j54', 'https://ror.org/03hwe2705', 'https://ror.org/01t8svj65', 'https://ror.org/04g7y4303', 'https://ror.org/02jbv0t02')
+ORDER BY auths.author_last_name, auths.author_first_name;
+```

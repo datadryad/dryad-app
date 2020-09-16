@@ -17,7 +17,7 @@ module Config
     @@environment = environment
 
     @@logger = if logger_std_out
-                 Logger.new(STDOUT)
+                 Logger.new($stdout)
                else
                  Logger.new(File.join(proj_root, 'log', "#{environment}.log"))
                end

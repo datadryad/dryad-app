@@ -7,9 +7,9 @@ module Stash
       TITLE = 'High-skilled labour mobility in Europe before and after the 2004 enlargement'.freeze
       AUTHOR = [
         { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
-          'affiliation' => ['name' => 'Hotel California'] },
+          'affiliation' => [{ 'name' => 'Hotel California' }] },
         { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
-          'affiliation' => ['name' => 'Catalonia'] }
+          'affiliation' => [{ 'name' => 'Catalonia' }] }
       ].freeze
       ABSTRACT = 'Flip-flop gates must work. In fact, few biologists would disagree with the emulation of expert systems.' \
             ' Our focus in this work is not on whether the partition table and the UNIVAC computer can collude to accomplish this' \

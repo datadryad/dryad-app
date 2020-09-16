@@ -8,13 +8,13 @@ module Stash
       before(:each) do
         # don't want to emulate full external API, but this should go most of the way by just loading a hash like what is returned
 
-        @user = StashEngine::User.create(
-          first_name: 'Lisa',
-          last_name: 'Muckenhaupt',
-          email: 'lmuckenhaupt@ucop.edu',
-          tenant_id: 'ucop'
-        )
-        @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop')
+        @user = create(:user,
+                       first_name: 'Lisa',
+                       last_name: 'Muckenhaupt',
+                       email: 'lmuckenhaupt@ucop.edu',
+                       tenant_id: 'ucop')
+        @resource = create(:resource, user_id: @user.id, tenant_id: 'ucop')
+        @resource.authors = []
         @big_hash = DryadManuscriptSim.record
         @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
 
@@ -72,14 +72,6 @@ module Stash
           expect(@resource.authors[0].author_email).to eql(@big_hash['correspondingAuthor']['email'])
         end
 
-        it "doesn't populate correspondingAuthor if the name doesn't match" do
-          @big_hash['authors']['author'][0]['givenNames'] = 'Rotunda'
-          @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
-          @dm.populate_authors
-          @resource.reload
-          expect(@resource.authors[0].author_email).to be_nil
-        end
-
         it 'ignores crappy-ass garbage tacked into the email field' do
           @big_hash['correspondingAuthor']['email'] = 'grogolia@escape.example.com my institution is awesome and I talk about it in here'
           @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
@@ -99,6 +91,7 @@ module Stash
 
         it "leaves off the abstract when it doesn't exist" do
           @big_hash['abstract'] = nil
+          @resource.descriptions = []
           @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
           @dm.populate_abstract
           @resource.reload

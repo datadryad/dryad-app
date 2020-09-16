@@ -76,32 +76,28 @@ module Stash
       end
 
       describe '#assemble' do
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'returns non-success status in hash for items not in the 200 http status range' do
+        it 'returns non-success status in hash for items not in the 200 http status range' do
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
             .to_return(status: 404, body: 'Not found', headers: {})
 
           expect(@vp.assemble[:status]).to eq(404)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'raises errors when Merritt has a problem so we know about it' do
+        it 'raises errors when Merritt has a problem so we know about it' do
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
             .to_return(status: 500, body: 'Internal server error', headers: {})
 
           expect { @vp.assemble }.to raise_exception(Stash::Download::MerrittException).with_message(/Merritt/)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'returns a 408 status code if Merritt gives us one' do
+        it 'returns a 408 status code if Merritt gives us one' do
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
             .to_return(status: 408, body: 'Not found', headers: {})
 
           expect(@vp.assemble[:status]).to eq(408)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'saves token and predicted availability time to database on good response' do
+        it 'saves token and predicted availability time to database on good response' do
           token = SecureRandom.uuid
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
             .to_return(status: 200, body:
@@ -119,8 +115,7 @@ module Stash
       end
 
       describe '#status' do
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'parses and returns json status' do
+        it 'parses and returns json status' do
           # do assembly first so we have status to check
           token = SecureRandom.uuid
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
@@ -144,8 +139,7 @@ module Stash
           expect(s[:message]).to eq('Object is not ready')
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'handles non-json status and a 404' do
+        it 'handles non-json status and a 404' do
           # do assembly first so we have status to check
           token = SecureRandom.uuid
           stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
@@ -204,8 +198,7 @@ module Stash
           expect(@vp.download).to eq(status: 408)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'returns 408 when Merritt is timing out on the assemble call for a token' do
+        it 'returns 408 when Merritt is timing out on the assemble call for a token' do
           stub_request(:get, %r{/api/presign-obj-by-token/.+})
             .to_return(status: 404, body:
                   { status: 404 }.to_json, headers: { 'Content-Type' => 'application/json' })

@@ -1,17 +1,1 @@
 inherit_from: ../../.rubocop.yml
-
-AllCops:
-  Exclude:
-    - 'bin/**/*'
-    - 'config/**/*'
-    - 'db/**/*'
-    - 'script/**/*'
-    - 'spec/dummy/db/**/*'
-    - 'test/dummy/db/**/*'
-    - 'vendor/**/*'
-    - 'ui-library/**/*'
-    - 'node_modules/**/*'
-
-# The default MethodLength can flag methods which essentially do nothing, simply because they invoke another method with several parameters
-Metrics/MethodLength:
-  Max: 20
