@@ -16,6 +16,8 @@ FactoryBot.define do
       related_identifier      { Faker::Pid.doi }
       related_identifier_type { 'doi' }
       relation_type           { 'issupplementto' }
+      work_type { 'article' }
+      verified { true }
     end
 
   end
