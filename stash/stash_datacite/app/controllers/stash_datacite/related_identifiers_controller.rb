@@ -15,7 +15,8 @@ module StashDatacite
 
     # POST /related_identifiers
     def create
-      @related_identifier = RelatedIdentifier.new(related_identifier_params)
+      @related_identifier = RelatedIdentifier.new(calc_related_identifier_params)
+      @related_identifier.verified = @related_identifier.live_doi_valid?
       respond_to do |format|
         if @related_identifier.save
           format.js
@@ -28,8 +29,9 @@ module StashDatacite
     # PATCH/PUT /related_identifiers/1
     def update
       respond_to do |format|
-        if @related_identifier.update(related_identifier_params)
-          format.js { render template: 'stash_datacite/shared/update.js.erb' }
+        if @related_identifier.update(calc_related_identifier_params)
+          @related_identifier.update(verified: @related_identifier.live_doi_valid?)
+          format.js
         else
           format.html { render :edit }
         end
@@ -40,6 +42,15 @@ module StashDatacite
     def delete
       @related_identifier.destroy unless params[:id] == 'new'
       respond_to do |format|
+        format.js
+      end
+    end
+
+    # the sidebar for ajax showing related works
+    # GET /related_identifiers with param of resource_id
+    def show
+      respond_to do |format|
+        @resource = StashEngine::Resource.where(id: params[:resource_id]).first
         format.js
       end
     end
@@ -57,6 +68,18 @@ module StashDatacite
 
     private
 
+    # these params are now being calculated based on less information
+    def calc_related_identifier_params
+      params.require(:related_identifier)
+      related = params[:related_identifier]
+      { related_identifier: RelatedIdentifier.standardize_doi(related[:related_identifier]),
+        related_identifier_type: 'doi',
+        relation_type: RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]],
+        work_type: related[:work_type],
+        resource_id: related[:resource_id],
+        id: related[:id] }
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_related_identifier
       return if params[:id] == 'new'
@@ -73,7 +96,7 @@ module StashDatacite
     def related_identifier_params
       params.require(:related_identifier).permit(:id, :related_identifier, :related_identifier_type,
                                                  :relation_type, :related_metadata_scheme, :scheme_URI, :scheme_type,
-                                                 :resource_id)
+                                                 :resource_id, :work_type, :verified)
     end
   end
 end
