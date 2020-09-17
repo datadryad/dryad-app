@@ -162,30 +162,30 @@ module StashDatacite
       end
     end
 
-    describe '#live_doi_valid?' do
+    describe '#live_url_valid?' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi')
       end
 
-      it 'returns true for good doi resolution' do
+      it 'returns true for good url resolution' do
         doi = RelatedIdentifier.standardize_doi(Faker::Pid.doi)
         @related_identifier.update(related_identifier: doi)
         mock_good_doi_resolution(doi: doi)
-        expect(@related_identifier.live_doi_valid?).to be true
+        expect(@related_identifier.live_url_valid?).to be true
       end
 
-      it 'returns false for 404 to doi resolution' do
+      it 'returns false for 404 to url resolution' do
         doi = RelatedIdentifier.standardize_doi(Faker::Pid.doi)
         @related_identifier.update(related_identifier: doi)
         mock_bad_doi_resolution(doi: doi)
-        expect(@related_identifier.live_doi_valid?).to be false
+        expect(@related_identifier.live_url_valid?).to be false
       end
 
-      it 'returns false for server error response to doi resolution' do
+      it 'returns false for server error response to url resolution' do
         doi = RelatedIdentifier.standardize_doi(Faker::Pid.doi)
         @related_identifier.update(related_identifier: doi)
         mock_bad_doi_resolution_server_error(doi: doi)
-        expect(@related_identifier.live_doi_valid?).to be false
+        expect(@related_identifier.live_url_valid?).to be false
       end
     end
   end

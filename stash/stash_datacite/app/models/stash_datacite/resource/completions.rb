@@ -149,7 +149,7 @@ module StashDatacite
           next if related_id.verified?
 
           # may need to live-check for older items that didn't go through validation before
-          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_doi_valid? == true
+          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_url_valid? == true
 
           return false unless related_id.verified?
         end
