@@ -49,6 +49,19 @@ module StashDatacite
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof' }.with_indifferent_access
 
+    # these keys will be case-insensitive matches
+    ACCESSION_TYPES = {
+        'sra'             =>  'https://www.ncbi.nlm.nih.gov/sra/',
+        'dbgap'           =>  'https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=',
+        'geo'             =>  'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=',
+        'genbank'         =>  'https://www.ncbi.nlm.nih.gov/nuccore/',
+        'bioproject'      =>  'https://www.ncbi.nlm.nih.gov/bioproject/',
+        'ebi'             =>  'https://www.ebi.ac.uk/arrayexpress/experiments/',
+        'ega'             =>  'https://www.ebi.ac.uk/ega/datasets/',
+        'treebase'        =>  'https://www.treebase.org/treebase-web/search/study/summary.html?id=',
+        'treebase_uri'    =>  'http://purl.org/phylo/treebase/phylows/study/'
+    }.with_indifferent_access
+
     before_save :strip_whitespace
 
     def relation_type_friendly=(type)
@@ -138,7 +151,7 @@ module StashDatacite
       "https://doi.org/#{m}" # return a standardized version of a doi
     end
 
-    def live_doi_valid?
+    def live_url_valid?
       return false unless related_identifier_type == 'doi' && valid_doi_format?
 
       # note: this follows up to 10 redirects
@@ -154,11 +167,33 @@ module StashDatacite
       rescue HTTP::Error, HTTP::TimeoutError, StashDatacite::ExternalServerError => e
         retry if (retries += 1) < 3
         # IDK what we really do if there are HTTP errors or timeout errors aside from treating it as
-        # a bad attempt at resolving the DOI and logging it.
+        # a bad attempt at resolving the URL and logging it.
 
-        Rails.logger.error("Failed to live validate DOI #{related_identifier}\n" \
+        Rails.logger.error("Failed to live validate URL #{related_identifier}\n" \
                                 "#{e.message}\n#{e&.backtrace}")
       end
+      false
+    end
+
+    def self.standardize_format(identifier)
+      identifier = identifier.strip
+      return identifier if identifier.start_with?('http')
+
+      ACCESSION_TYPES.each do |k, v|
+        if identifier.downcase.start_with?("#{k}:")
+          bare_id = identifier[k.length+1..-1].strip # get rest of the string after that.
+          return "#{v}#{ERB::Util.url_encode(bare_id)}"
+
+        end
+      end
+
+      RelatedIdentifier.standardize_doi(identifier)
+    end
+
+    def self.valid_url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) && !uri.host.nil?
+    rescue URI::InvalidURIError
       false
     end
 
