@@ -44,7 +44,7 @@ module StashDatacite
 
     # because the plural of Software is Software and not "Softwares" like Rails thinks
     WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
-                          supplemental_information: 'Supplemental Information' }.with_indifferent_access
+                                 supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof' }.with_indifferent_access
@@ -138,7 +138,6 @@ module StashDatacite
       "https://doi.org/#{m}" # return a standardized version of a doi
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def live_doi_valid?
       return false unless related_identifier_type == 'doi' && valid_doi_format?
 
@@ -162,7 +161,6 @@ module StashDatacite
       end
       false
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     private
 

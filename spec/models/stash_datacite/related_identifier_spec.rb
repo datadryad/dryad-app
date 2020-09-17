@@ -85,7 +85,7 @@ module StashDatacite
       end
     end
 
-    describe "#work_type_friendly" do
+    describe '#work_type_friendly' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id)
       end
@@ -100,7 +100,7 @@ module StashDatacite
       end
     end
 
-    describe "#work_type_friendly_plural" do
+    describe '#work_type_friendly_plural' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id)
       end
