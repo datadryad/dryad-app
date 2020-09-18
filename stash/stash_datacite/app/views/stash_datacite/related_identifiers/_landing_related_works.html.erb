@@ -3,13 +3,15 @@
   <h3 class="o-heading__level3-related-works"><%= (my_ids.count > 1 ? wt.work_type_friendly_plural : wt.work_type_friendly) %></h3>
   <ul class="o-list-related">
     <% my_ids.each do |r| %>
+      <% bad_asterisk = ( r.verified? ? '' : ' *') %>
       <li>
         <% if r.work_type == 'undefined' %>
           This dataset <%= r.relation_name_english %>
           <%= display_id(type: r.related_identifier_type,
-                     my_id: r.related_identifier) %><br/>
+                     my_id: r.related_identifier) %> <%= bad_asterisk %>
         <% else %>
-          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %><br/>
+          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %>
+          <%= bad_asterisk %>
         <% end %>
       </li>
     <% end %>
