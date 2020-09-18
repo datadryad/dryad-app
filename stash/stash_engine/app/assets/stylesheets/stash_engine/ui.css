@@ -3408,6 +3408,16 @@ datalist {
     list-style: none;
     line-height: 1.5; }
 
+.o-list-related {
+  margin: 8px 0 6px;
+  padding: 0; }
+  .o-list-related li {
+    list-style: none;
+    line-height: 1.25; }
+  .o-list-related li:last-child {
+    list-style: none;
+    padding-bottom: 6px; }
+
 .o-logout {
   position: relative; }
   @media (min-width: 870px) {
