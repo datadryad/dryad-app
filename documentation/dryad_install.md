@@ -134,7 +134,7 @@ rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-
 gem update --system
 
 # install bundler to handle gem dependencies
-gem install bundler:1.17.3
+gem install bundler:2.1.4
 ```
 
 **If you are running on OSX, ensure some gems are compatible with the system:**

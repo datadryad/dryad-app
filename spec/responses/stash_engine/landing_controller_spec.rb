@@ -63,8 +63,7 @@ module StashEngine
       expect(response).to have_http_status(:not_found)
     end
 
-    # [TODO] Fix this intermittently-failing test. Ticket #806.
-    xit 'shows version of the dataset marked for metadata view' do
+    it 'shows version of the dataset marked for metadata view' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, publication_date: Time.new + 1.day)
@@ -83,8 +82,7 @@ module StashEngine
       expect(response.body).to include('This dataset is embargoed')
     end
 
-    # [TODO] Fix this intermittently-failing test. Ticket #806.
-    xit 'shows version of the dataset marked as published' do
+    it 'shows version of the dataset marked as published' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, file_view: true, publication_date: Time.new)

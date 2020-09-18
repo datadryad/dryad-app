@@ -68,7 +68,7 @@ module Stash
            'Cache-Control: no-cache',
            "Last-Modified: #{Time.zone.now.ctime}"]
 
-        stream.write(out_headers.map { |header| header + "\r\n" }.join)
+        stream.write(out_headers.map { |header| "#{header}\r\n" }.join)
         stream.write("\r\n")
         stream.flush
       rescue StandardError => e
@@ -77,7 +77,7 @@ module Stash
         raise e
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def send_stream(user_stream:, merritt_stream:)
         # use this file to write contents of the stream
         FileUtils.mkdir_p(Rails.root.join('uploads')) # ensures this file is created if it doesn't exist, needed mostly for tests
@@ -118,7 +118,7 @@ module Stash
         ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
         StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def save_to_file(merritt_stream:, write_file:)
         chunk_size = 1024 * 512 # 512k
@@ -137,7 +137,6 @@ module Stash
         write_file.close unless write_file.closed?
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
       def stream_from_file(read_file:, write_file:, user_stream:)
         read_chunk_size = 1024 * 16 # 16k
 
@@ -159,7 +158,7 @@ module Stash
         user_stream.close unless user_stream.closed?
         @download_canceled = true # set user download canceled (finished) to true in shared state to notify other thread to terminate its download
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
+
     end
   end
 end

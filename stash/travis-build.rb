@@ -45,7 +45,7 @@ end
 
 def tmp_path
   @tmp_path ||= begin
-    tmp_path = STASH_ROOT + 'builds' + Time.now.utc.iso8601
+    tmp_path = "#{STASH_ROOT}builds#{Time.now.utc.iso8601}"
     tmp_path.mkpath
     tmp_path
   end

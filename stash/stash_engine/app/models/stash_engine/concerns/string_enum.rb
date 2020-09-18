@@ -12,6 +12,7 @@ module StashEngine
 
       class_methods do
 
+        # rubocop:disable Style/OptionalBooleanParameter
         def string_enum(col, vals = [], default_val = nil, allow_nil = true)
           values = vals.map(&:to_s)
 
@@ -33,6 +34,7 @@ module StashEngine
           # Add a nil validation if specified
           validates col, allow_nil: true if allow_nil
         end
+        # rubocop:enable Style/OptionalBooleanParameter
 
         def define_getter_setter(col, val)
           # Add a boolean method for each value

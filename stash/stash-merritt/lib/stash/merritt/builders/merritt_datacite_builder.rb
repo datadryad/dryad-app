@@ -9,7 +9,7 @@ module Stash
         class << self
           def dc4_schema
             @dc4_schema ||= begin
-              schema_file = File.dirname(__FILE__) + '/schemas/datacite/metadata.xsd'
+              schema_file = "#{File.dirname(__FILE__)}/schemas/datacite/metadata.xsd"
               Nokogiri::XML::Schema(File.open(schema_file))
             end
           end

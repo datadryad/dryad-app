@@ -50,9 +50,9 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # TODO: do these need versions?
-  s.add_dependency 'stash-wrapper'
   s.add_dependency 'stash_discovery'
   s.add_dependency 'stash_engine'
+  s.add_dependency 'stash-wrapper'
 
   s.add_development_dependency 'colorize', '>= 0.8'
   s.add_development_dependency 'database_cleaner', '>= 1.5'
