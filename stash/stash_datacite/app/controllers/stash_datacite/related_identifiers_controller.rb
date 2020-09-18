@@ -68,12 +68,13 @@ module StashDatacite
 
     private
 
-    # these params are now being calculated based on less information
+    # these params are now being calculated based indirect information
     def calc_related_identifier_params
       params.require(:related_identifier)
       related = params[:related_identifier]
-      { related_identifier: RelatedIdentifier.standardize_doi(related[:related_identifier]),
-        related_identifier_type: 'doi',
+      std_fmt = RelatedIdentifier.standardize_format(related[:related_identifier])
+      { related_identifier: std_fmt,
+        related_identifier_type: RelatedIdentifier.identifier_type_from_str(std_fmt),
         relation_type: RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]],
         work_type: related[:work_type],
         resource_id: related[:resource_id],

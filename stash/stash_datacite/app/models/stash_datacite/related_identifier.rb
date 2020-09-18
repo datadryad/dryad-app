@@ -133,6 +133,10 @@ module StashDatacite
       RelatedIdentifier.valid_doi_format?(related_identifier)
     end
 
+    def valid_url_format?
+      RelatedIdentifier.valid_url?(related_identifier)
+    end
+
     # the format is very strict to use the recommended one CrossRef/DataCite suggest, but could be transformed into this below
     def self.valid_doi_format?(doi)
       m = doi.match(%r{^https://doi.org/10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+$})
@@ -152,7 +156,7 @@ module StashDatacite
     end
 
     def live_url_valid?
-      return false unless related_identifier_type == 'doi' && valid_doi_format?
+      return false unless valid_url_format?
 
       # note: this follows up to 10 redirects
       http = HTTP.timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 10)
@@ -188,6 +192,14 @@ module StashDatacite
       end
 
       RelatedIdentifier.standardize_doi(identifier)
+    end
+
+    def self.identifier_type_from_str(str)
+      return 'url' if str.blank?
+
+      return 'doi' if %r[^https?://(dx\.)?doi\.org].match(str)
+
+      'url'
     end
 
     def self.valid_url?(string)
