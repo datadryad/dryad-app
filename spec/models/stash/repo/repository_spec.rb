@@ -1,4 +1,3 @@
-require 'fileutils'
 require 'tmpdir'
 require 'concurrent'
 require 'fileutils'

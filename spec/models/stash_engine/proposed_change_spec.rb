@@ -21,9 +21,9 @@ module StashEngine
         approved: false,
         authors: [
           { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
-            'affiliation' => ['name' => 'Hotel California'] },
+            'affiliation' => [{ 'name' => 'Hotel California' }] },
           { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
-            'affiliation' => ['name' => 'Catalonia'] }
+            'affiliation' => [{ 'name' => 'Catalonia' }] }
         ].to_json,
         provenance: 'crossref',
         publication_date: Date.new(2018, 8, 13),

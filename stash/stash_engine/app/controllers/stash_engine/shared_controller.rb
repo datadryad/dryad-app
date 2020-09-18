@@ -1,5 +1,4 @@
 require 'rails_rinku'
-require 'rails_rinku'
 require 'nokogiri'
 
 module StashEngine
