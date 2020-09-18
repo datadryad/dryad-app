@@ -51,15 +51,15 @@ module StashDatacite
 
     # these keys will be case-insensitive matches
     ACCESSION_TYPES = {
-        'sra'             =>  'https://www.ncbi.nlm.nih.gov/sra/',
-        'dbgap'           =>  'https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=',
-        'geo'             =>  'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=',
-        'genbank'         =>  'https://www.ncbi.nlm.nih.gov/nuccore/',
-        'bioproject'      =>  'https://www.ncbi.nlm.nih.gov/bioproject/',
-        'ebi'             =>  'https://www.ebi.ac.uk/arrayexpress/experiments/',
-        'ega'             =>  'https://www.ebi.ac.uk/ega/datasets/',
-        'treebase'        =>  'https://www.treebase.org/treebase-web/search/study/summary.html?id=',
-        'treebase_uri'    =>  'http://purl.org/phylo/treebase/phylows/study/'
+      'sra' => 'https://www.ncbi.nlm.nih.gov/sra/',
+      'dbgap' => 'https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=',
+      'geo' => 'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=',
+      'genbank' => 'https://www.ncbi.nlm.nih.gov/nuccore/',
+      'bioproject' => 'https://www.ncbi.nlm.nih.gov/bioproject/',
+      'ebi' => 'https://www.ebi.ac.uk/arrayexpress/experiments/',
+      'ega' => 'https://www.ebi.ac.uk/ega/datasets/',
+      'treebase' => 'https://www.treebase.org/treebase-web/search/study/summary.html?id=',
+      'treebase_uri' => 'http://purl.org/phylo/treebase/phylows/study/'
     }.with_indifferent_access
 
     before_save :strip_whitespace
@@ -184,11 +184,11 @@ module StashDatacite
       return identifier if identifier.start_with?('http')
 
       ACCESSION_TYPES.each do |k, v|
-        if identifier.downcase.start_with?("#{k}:")
-          bare_id = identifier[k.length+1..-1].strip # get rest of the string after that.
-          return "#{v}#{ERB::Util.url_encode(bare_id)}"
+        next unless identifier.downcase.start_with?("#{k}:")
 
-        end
+        bare_id = identifier[k.length + 1..].strip # get rest of the string after that.
+        return "#{v}#{ERB::Util.url_encode(bare_id)}"
+
       end
 
       RelatedIdentifier.standardize_doi(identifier)
@@ -197,7 +197,7 @@ module StashDatacite
     def self.identifier_type_from_str(str)
       return 'url' if str.blank?
 
-      return 'doi' if %r[^https?://(dx\.)?doi\.org].match(str)
+      return 'doi' if %r{^https?://(dx\.)?doi\.org}.match(str)
 
       'url'
     end
