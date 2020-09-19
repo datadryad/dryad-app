@@ -215,7 +215,20 @@ module StashDatacite
     end
 
     describe 'self.identifier_type_from_str(string)' do
+      it 'detects exact, preferred dois' do
+        expect(RelatedIdentifier.identifier_type_from_str('https://doi.org/10.1030/3875nugget')).to eq('doi')
+        expect(RelatedIdentifier.identifier_type_from_str('http://doi.org/10.1010/37566nnn')).to eq('doi')
+        expect(RelatedIdentifier.identifier_type_from_str('https://dx.doi.org/1020/2874hh')).to eq('doi')
+        expect(RelatedIdentifier.identifier_type_from_str('http://dx.doi.org/1020/2874hh')).to eq('doi')
+      end
 
+      it 'says everything else is a url' do
+        expect(RelatedIdentifier.identifier_type_from_str(nil)).to eq('url')
+        expect(RelatedIdentifier.identifier_type_from_str('10.1010/374foob')).to eq('url')
+        expect(RelatedIdentifier.identifier_type_from_str(nil)).to eq('url')
+        expect(RelatedIdentifier.identifier_type_from_str('I got a rock')).to eq('url')
+        expect(RelatedIdentifier.identifier_type_from_str('http://snowball.de/3755')).to eq('url')
+      end
     end
 
     describe 'self.valid_url?' do
