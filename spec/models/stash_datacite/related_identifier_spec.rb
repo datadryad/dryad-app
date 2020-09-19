@@ -188,5 +188,50 @@ module StashDatacite
         expect(@related_identifier.live_url_valid?).to be false
       end
     end
+
+    describe '#valid_url_format?' do
+      before(:each) do
+        @related_identifier = create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi')
+      end
+
+      it 'calls self.valid_url? from valid_url_format' do
+        expect(RelatedIdentifier).to receive(:'valid_url?')
+        @related_identifier.valid_url_format?
+      end
+    end
+
+    describe 'self.standardize_format(string)' do
+
+      it 'transforms a bunch of examples in an appropriate way (when it is able)' do
+        expect(RelatedIdentifier.standardize_format(nil)).to eq('')
+        expect(RelatedIdentifier.standardize_format('badid')).to eq('badid')
+        expect(RelatedIdentifier.standardize_format('10.1010/12bogus.doi')).to eq('https://doi.org/10.1010/12bogus.doi')
+        expect(RelatedIdentifier.standardize_format('GeNBaNk:PDQ128.338')).to eq('https://www.ncbi.nlm.nih.gov/nuccore/PDQ128.338')
+        expect(RelatedIdentifier.standardize_format('Treebase:33837')).to eq('https://www.treebase.org/treebase-web/search/study/summary.html?id=33837')
+        expect(RelatedIdentifier.standardize_format('http://monkeycalls.org/fun/10.1020/12345.fun.monkey.doi')).to eq('https://doi.org/10.1020/12345.fun.monkey.doi')
+        expect(RelatedIdentifier.standardize_format('http://example.org/just/a/url')).to eq('http://example.org/just/a/url')
+        expect(RelatedIdentifier.standardize_format('https://example.org/sordid.url')).to eq('https://example.org/sordid.url')
+      end
+    end
+
+    describe 'self.identifier_type_from_str(string)' do
+
+    end
+
+    describe 'self.valid_url?' do
+      it 'returns false for bad URLs' do
+        expect(RelatedIdentifier.valid_url?('grover')).to be(false)
+        expect(RelatedIdentifier.valid_url?('tp://grover')).to be(false)
+        expect(RelatedIdentifier.valid_url?('http://grover the cat')).to be(false)
+        expect(RelatedIdentifier.valid_url?(nil)).to be(false)
+        expect(RelatedIdentifier.valid_url?('')).to be(false)
+      end
+
+      it 'returns true for good urls' do
+        expect(RelatedIdentifier.valid_url?('http://example.com/noogie?foo=bar&bag=cat#fun')).to be(true)
+        expect(RelatedIdentifier.valid_url?('https://example.org/testing')).to be(true)
+        expect(RelatedIdentifier.valid_url?('https://example.org:3000/my_port_is_good')).to be(true)
+      end
+    end
   end
 end

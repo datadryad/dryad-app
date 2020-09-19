@@ -180,7 +180,11 @@ module StashDatacite
     end
 
     def self.standardize_format(identifier)
+      return '' if identifier.blank?
+
       identifier = identifier.strip
+      identifier = RelatedIdentifier.standardize_doi(identifier)
+
       return identifier if identifier.start_with?('http')
 
       ACCESSION_TYPES.each do |k, v|
@@ -191,7 +195,7 @@ module StashDatacite
 
       end
 
-      RelatedIdentifier.standardize_doi(identifier)
+      identifier
     end
 
     def self.identifier_type_from_str(str)
