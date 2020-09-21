@@ -1,0 +1,232 @@
+defaults: &DEFAULTS
+  google_analytics_id: null
+  metadata_engine: StashDatacite
+  shared_resource_model: StashEngine::Resource
+  repository: Stash::Merritt::Repository
+  stash_mount: /stash
+  ezid:
+    host: ezid.cdlib.org
+    port: 443
+  google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
+  contact_us_uri: mailto:help@datadryad.org
+  # sandbox orcid credentials
+  orcid:
+    site: https://sandbox.orcid.org/
+    authorize_url: https://sandbox.orcid.org/oauth/authorize
+    token_url: https://api.sandbox.orcid.org/oauth/token
+    key:  <%= Rails.application.credentials[Rails.env.to_sym][:orcid_key] %>
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:orcid_secret] %>
+    member: true
+    sandbox: true
+    api: https://api.sandbox.orcid.org
+  submission_error_email: [dryad.submission.error.emails@mailinator.com]
+  submission_bc_emails: [""]
+  contact_email: ["uc3@ucop.edu", "help@datadryad.org"]
+  helpdesk_email: dryad.helpdesk@mailinator.com
+  send_journal_published_notices: false
+  default_tenant: dryad
+  old_dryad_access_token: <%= Rails.application.credentials[Rails.env.to_sym][:old_dryad_access_token] %>
+  old_dryad_url: https://v1.datadryad.org
+  counter:
+    token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %> 
+  zenodo:
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
+    base_url: https://sandbox.zenodo.org
+    community_id: dryad
+  payments:
+    service: stripe
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    data_processing_charge: 12000 # charge in cents
+    large_file_size: 5.0e+10 # 50 GB
+    additional_storage_chunk_size: 1.0e+10 # 10 GB
+    additional_storage_chunk_cost: 5000 # in cents
+  merritt_express_base_url: http://mrtexpress-stage.cdlib.org
+  merritt_max_submission_threads: 5
+  crossref_base_url: https://api.crossref.org
+  crossref_mailto: scott.fisher@ucop.edu
+  fee_waiver_countries:
+    - 'Afghanistan'
+    - 'Benin'
+    - 'Burkina Faso'
+    - 'Burundi'
+    - 'Central African Republic'
+    - 'Chad'
+    - 'Democratic Republic of the Congo'
+    - 'Eritrea'
+    - 'Ethiopia'
+    - 'Gambia'
+    - 'Guinea-Bissau'
+    - 'Haiti'
+    - 'Liberia'
+    - 'Madagascar'
+    - 'Malawi'
+    - 'Mali'
+    - 'Mozambique'
+    - 'Nepal'
+    - 'Nigeria'
+    - 'North Korea'
+    - 'Republic of the Congo'
+    - 'Rwanda'
+    - 'Sierra Leone'
+    - 'Somalia'
+    - 'South Sudan'
+    - 'Syria'
+    - 'Tajikistan'
+    - 'Tanzania'
+    - 'Togo'
+    - 'Uganda'
+    - 'Yemen'
+    - 'Angola'
+    - 'Bangladesh'
+    - 'Bhutan'
+    - 'Bolivia'
+    - 'Cabo Verde'
+    - 'Cambodia'
+    - 'Cameroon'
+    - 'Comoros'
+    - 'Congo'
+    - 'Guinea'
+    - 'Djibouti'
+    - 'East Timor'
+    - 'Egypt'
+    - 'El Salvador'
+    - 'Ghana'
+    - 'Honduras'
+    - 'India'
+    - 'Indonesia'
+    - 'Ivory Coast'
+    - 'Kenya'
+    - 'Kiribati'
+    - 'Kyrgyzstan'
+    - 'Laos'
+    - 'Lesotho'
+    - 'Mauritania'
+    - 'Micronesia'
+    - 'Moldova'
+    - 'Mongolia'
+    - 'Morocco'
+    - 'Myanmar'
+    - 'Nicaragua'
+    - 'Nigeria'
+    - 'Pakistan'
+    - 'Palestinian Territory'
+    - 'Papua New Guinea'
+    - 'Philippines'
+    - 'Sao Tome and Principe'
+    - 'Senegal'
+    - 'Solomon Islands'
+    - 'State of Palestine'
+    - 'Sudan'
+    - 'Swaziland'
+    - 'Tunisia'
+    - 'Ukraine'
+    - 'Uzbekistan'
+    - 'Vanuatu'
+    - 'Vietnam'
+    - 'Zambia'
+    - 'Zimbabwe'
+  funder_exemptions:
+    - 'Chan Zuckerberg Initiative'
+  link_out:
+    # LinkOut FTP information for Europe PubMed Central
+    labslink:
+      ftp_host: labslink.ebi.ac.uk
+      ftp_dir: f24ml3c8
+      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_username] %> 
+      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_password] %> 
+      ftp_provider_id: 1012
+    # LinkOut FTP information for NCBI
+    pubmed:
+      ftp_host: ftp-private.ncbi.nlm.nih.gov
+      ftp_dir: holdings
+      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %> 
+      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %> 
+      ftp_provider_id: 7893
+      api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %> 
+
+# We need to be sure our local basic config files reflect what is is dryad-config-example since that is what travis uses.
+# I hope this will save us from some of the problems of a local test environment and the travis test environment working
+# differently.
+<%= YamlHelper.output_test_section(example_filename: 'app_config.yml') %>
+
+development: &DEVELOPMENT
+  <<: *DEFAULTS
+  submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
+  shib_sp_host: dryad-dev.cdlib.org
+  page_error_email: ~
+  feedback_email_from: no-reply-dryad-dev@datadryad.org
+  send_journal_published_notices: false
+  collection_uri: http://mrtsword-stg.cdlib.org:39001/mrtsword/
+  google_analytics_id: UA-145629338-2
+  payments:
+    service: stripe
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    # Very small limit for large files to facilitate testing (500KB)
+    large_file_size: 5.0e+5
+    data_processing_charge: 12000 # charge in cents
+    additional_storage_chunk_size: 1.0e+5 # (100KB)
+    additional_storage_chunk_cost: 5000
+
+local:
+  <<: *DEVELOPMENT
+  send_journal_published_notices: false
+
+local_dev:
+  <<: *DEVELOPMENT
+
+stage:
+  <<: *DEFAULTS
+  submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
+  shib_sp_host: dryad-stg.cdlib.org
+  page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
+  feedback_email_from: no-reply-dryad-stg@datadryad.org
+  google_analytics_id: UA-145629338-3
+
+migration:
+  <<: *DEFAULTS
+  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
+  shib_sp_host: dryad-stg.cdlib.org
+  page_error_email: ["scott.fisher@ucop.edu"]
+  feedback_email_from: no-reply-dryad-migration@datadryad.org
+  merritt_express_base_url: http://mrtexpress.cdlib.org
+
+demo:
+  <<: *DEFAULTS
+  shib_sp_host: dryaddemo.cdlib.org
+  page_error_email: [scott.fisher@ucop.edu]
+  submission_error_email: [uc3@ucop.edu, sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, mstrong@ucop.edu, ryan@datadryad.org]
+  feedback_email_from: no-reply-dryaddemo@cdlib.org
+
+production:
+  <<: *DEFAULTS
+  google_analytics_id: UA-145629338-1
+  shib_sp_host: datadryad.org
+  page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
+  submission_error_email: [uc3@ucop.edu, sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, ryan@datadryad.org]
+  helpdesk_email: help@datadryad.org
+  feedback_email_from: no-reply-dryad@datadryad.org
+  # orcid production credentials
+  orcid:
+    site: https://orcid.org/
+    authorize_url: https://orcid.org/oauth/authorize
+    token_url: https://api.orcid.org/oauth/token
+    key:  <%= Rails.application.credentials[Rails.env.to_sym][:orcid_key] %>
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:orcid_secret] %>
+    member: true
+    sandbox: false
+    api: https://api.orcid.org
+  submission_bc_emails: ["daniella.lowenberg@ucop.edu"]
+  send_journal_published_notices: true
+  old_dryad_access_token: <%= Rails.application.credentials[Rails.env.to_sym][:old_dryad_access_token] %>
+  zenodo:
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
+    base_url: https://zenodo.org
+    community_id: dryad
+  merritt_express_base_url: http://mrtexpress.cdlib.org
+  payments:
+    service: stripe
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    large_file_size: 5.0e+10
+    data_processing_charge: 12000 # charge in cents
+    additional_storage_chunk_size: 1.0e+10 # (10GB)
+    additional_storage_chunk_cost: 5000
