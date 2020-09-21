@@ -3,11 +3,12 @@
   <ul class="o-list">
     <% related_identifiers.each do |r| %>
       <% if r.work_type == 'undefined' %>
+        <% bad_asterisk = ( r.verified? ? '' : ' *') %>
         <li>This dataset <%= r.relation_name_english %>
           <%= display_id(type: r.related_identifier_type,
-                         my_id: r.related_identifier) %></li>
+                         my_id: r.related_identifier) %><%= bad_asterisk %></li>
       <% else %>
-        <li><%= r.work_type_friendly %>:  <%= link_to r.related_identifier, r.related_identifier %></li>
+        <li><%= r.work_type_friendly %>:  <%= link_to r.related_identifier, r.related_identifier %><%= bad_asterisk %></li>
       <% end %>
     <% end %>
   </ul>

@@ -10,3 +10,19 @@
 	}
 
 }
+
+.o-list-related {
+	margin: 8px 0 6px;
+	padding: 0;
+
+	li {
+		list-style: none;
+		line-height: 1.25;
+	}
+
+	li:last-child {
+		list-style: none;
+		padding-bottom: 6px;
+	}
+
+}
