@@ -59,22 +59,22 @@ module Mocks
 
     def mock_bad_doi_resolution(doi:)
       stub_request(:get, doi)
-          .with(
-              headers: {
-                  'Host' => 'doi.org'
-              }
-          )
-          .to_return(status: 404, body: '', headers: {})
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 404, body: '', headers: {})
     end
 
     def mock_bad_doi_resolution_server_error(doi:)
       stub_request(:get, doi)
-          .with(
-              headers: {
-                  'Host' => 'doi.org'
-              }
-          )
-          .to_return(status: 500, body: '', headers: {})
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 500, body: '', headers: {})
     end
   end
 end

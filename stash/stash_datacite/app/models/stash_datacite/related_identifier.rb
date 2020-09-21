@@ -44,10 +44,23 @@ module StashDatacite
 
     # because the plural of Software is Software and not "Softwares" like Rails thinks
     WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
-                          supplemental_information: 'Supplemental Information' }.with_indifferent_access
+                                 supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof' }.with_indifferent_access
+
+    # these keys will be case-insensitive matches
+    ACCESSION_TYPES = {
+      'sra' => 'https://www.ncbi.nlm.nih.gov/sra/',
+      'dbgap' => 'https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=',
+      'geo' => 'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=',
+      'genbank' => 'https://www.ncbi.nlm.nih.gov/nuccore/',
+      'bioproject' => 'https://www.ncbi.nlm.nih.gov/bioproject/',
+      'ebi' => 'https://www.ebi.ac.uk/arrayexpress/experiments/',
+      'ega' => 'https://www.ebi.ac.uk/ega/datasets/',
+      'treebase' => 'https://www.treebase.org/treebase-web/search/study/summary.html?id=',
+      'treebase_uri' => 'http://purl.org/phylo/treebase/phylows/study/'
+    }.with_indifferent_access
 
     before_save :strip_whitespace
 
@@ -120,6 +133,10 @@ module StashDatacite
       RelatedIdentifier.valid_doi_format?(related_identifier)
     end
 
+    def valid_url_format?
+      RelatedIdentifier.valid_url?(related_identifier)
+    end
+
     # the format is very strict to use the recommended one CrossRef/DataCite suggest, but could be transformed into this below
     def self.valid_doi_format?(doi)
       m = doi.match(%r{^https://doi.org/10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+$})
@@ -138,9 +155,8 @@ module StashDatacite
       "https://doi.org/#{m}" # return a standardized version of a doi
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    def live_doi_valid?
-      return false unless related_identifier_type == 'doi' && valid_doi_format?
+    def live_url_valid?
+      return false unless valid_url_format?
 
       # note: this follows up to 10 redirects
       http = HTTP.timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 10)
@@ -155,14 +171,47 @@ module StashDatacite
       rescue HTTP::Error, HTTP::TimeoutError, StashDatacite::ExternalServerError => e
         retry if (retries += 1) < 3
         # IDK what we really do if there are HTTP errors or timeout errors aside from treating it as
-        # a bad attempt at resolving the DOI and logging it.
+        # a bad attempt at resolving the URL and logging it.
 
-        Rails.logger.error("Failed to live validate DOI #{related_identifier}\n" \
+        Rails.logger.error("Failed to live validate URL #{related_identifier}\n" \
                                 "#{e.message}\n#{e&.backtrace}")
       end
       false
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+
+    def self.standardize_format(identifier)
+      return '' if identifier.blank?
+
+      identifier = identifier.strip
+      identifier = RelatedIdentifier.standardize_doi(identifier)
+
+      return identifier if identifier.start_with?('http')
+
+      ACCESSION_TYPES.each do |k, v|
+        next unless identifier.downcase.start_with?("#{k}:")
+
+        bare_id = identifier[k.length + 1..].strip # get rest of the string after that.
+        return "#{v}#{ERB::Util.url_encode(bare_id)}"
+
+      end
+
+      identifier
+    end
+
+    def self.identifier_type_from_str(str)
+      return 'url' if str.blank?
+
+      return 'doi' if %r{^https?://(dx\.)?doi\.org}.match(str)
+
+      'url'
+    end
+
+    def self.valid_url?(string)
+      uri = URI.parse(string)
+      uri.is_a?(URI::HTTP) && !uri.host.nil?
+    rescue URI::InvalidURIError
+      false
+    end
 
     private
 
