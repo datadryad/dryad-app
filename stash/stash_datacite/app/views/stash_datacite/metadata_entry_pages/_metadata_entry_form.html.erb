@@ -64,8 +64,13 @@
     <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
 
+
+    <h2 class="o-heading__page-span">Related Works</h2>
+
     <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">Related Work(s): <span class="c-input__hint">Are there any articles (posted or published), datasets, or code that are related to this Data Publication? Please choose the relation type and identifier type from the drop downs and enter your unique permanent identifier below.</span></legend>
+    <legend class="c-fieldset__legend">
+      <span class="c-input__hint">Are there any articles (posted or published), datasets, code or supplemental information
+        that are related to this Data Publication?</span></legend>
     <div class="js-related_identifiers_form">
       <% if @metadata_entry.related_identifiers.exists? %>
         <% @metadata_entry.related_identifiers.each do |related_identifier| %>
