@@ -149,7 +149,7 @@ module StashDatacite
           next if related_id.verified?
 
           # may need to live-check for older items that didn't go through validation before
-          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_doi_valid? == true
+          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_url_valid? == true
 
           return false unless related_id.verified?
         end
@@ -178,8 +178,9 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
-        messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
-        messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
+        # do not require strict related works identifier checking right now
+        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
+        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
         messages
       end
 
