@@ -1,3 +1,9 @@
+# When in the 'test' environment, only use the content from dryad-config-example, not the content
+# in the main part of this file.
+<% if Rails.env == 'test' %>
+<%= YamlHelper.output_test_section(example_filename: 'app_config.yml') %>
+<% else %>
+
 defaults: &DEFAULTS
   google_analytics_id: null
   metadata_engine: StashDatacite
@@ -144,10 +150,6 @@ defaults: &DEFAULTS
       ftp_provider_id: 7893
       api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %> 
 
-# When we're in the "test:" environment, the file is populated with data from the dryad-config-example directory.
-# test:
-<%= YamlHelper.output_test_section(example_filename: 'app_config.yml') %>
-
 development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
@@ -229,3 +231,6 @@ production:
     data_processing_charge: 12000 # charge in cents
     additional_storage_chunk_size: 1.0e+10 # (10GB)
     additional_storage_chunk_cost: 5000
+
+# Terminate the if statement from the beginning of this file.
+<% end %>
