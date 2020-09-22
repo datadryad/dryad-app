@@ -1,0 +1,36 @@
+default: &default
+  pool: 40
+  timeout: 10000
+  adapter: mysql2
+  database: dryad
+  host: <%= Rails.application.credentials[Rails.env.to_sym][:database_host] %>
+  username: <%= Rails.application.credentials[Rails.env.to_sym][:database_username] %>
+  password: <%= Rails.application.credentials[Rails.env.to_sym][:database_password] %>
+  port: <%= Rails.application.credentials[Rails.env.to_sym][:database_port] %>
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  reconnect: true
+
+development: &DEVELOPMENT
+  <<: *default
+
+local:
+  <<: *default
+  host: 127.0.0.1
+  username: travis
+  password: ""
+
+local_dev:
+  <<: *DEVELOPMENT
+
+test:
+  host: localhost
+  adapter: mysql2
+  database: dashv2_test
+  username: travis
+
+stage:
+  <<: *default
+
+production:
+  <<: *default
