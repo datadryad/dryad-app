@@ -3267,13 +3267,16 @@ datalist {
 .o-heading__level2-why-share {
   text-align: center; }
 
-.o-heading__level3, .o-heading__level3-file-title {
+.o-heading__level3, .o-heading__level3-file-title, .o-heading__level3-related-works {
   margin: 0 0 20px;
   color: black;
   font-size: 1.1em;
   font-weight: bold; }
 
 .o-heading__level3-file-title {
+  margin: 0; }
+
+.o-heading__level3-related-works {
   margin: 0; }
 
 .o-heading__page-span {
@@ -3404,6 +3407,16 @@ datalist {
   .o-list li {
     list-style: none;
     line-height: 1.5; }
+
+.o-list-related {
+  margin: 8px 0 6px;
+  padding: 0; }
+  .o-list-related li {
+    list-style: none;
+    line-height: 1.25; }
+  .o-list-related li:last-child {
+    list-style: none;
+    padding-bottom: 6px; }
 
 .o-logout {
   position: relative; }

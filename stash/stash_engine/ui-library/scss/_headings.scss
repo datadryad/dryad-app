@@ -47,6 +47,11 @@
   margin: 0;
 }
 
+.o-heading__level3-related-works {
+  @extend %o-heading__level3;
+  margin: 0;
+}
+
 .o-heading__page-span {
   @extend %pull-background;
   margin-bottom: $spacing-md;

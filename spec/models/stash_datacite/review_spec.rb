@@ -102,30 +102,6 @@ module StashDatacite
         @resource.reload
         expect(@review.embargo).to eq(embargo)
       end
-
-      describe :pdf_filename do
-        it 'includes author name and title' do
-          pdf_filename = @review.pdf_filename
-          expect(pdf_filename).to include(@resource.authors.first.author_last_name)
-          expect(pdf_filename).to include(@resource.title.split(' ').first)
-        end
-
-        it 'includes publication year' do
-          StashDatacite::PublicationYear.create(resource: @resource, publication_year: @resource.publication_date.year.to_s)
-          @resource.reload
-          expect(@review.pdf_filename).to include(@resource.publication_date.year.to_s)
-        end
-
-        it 'does not actually end in PDF' do # TODO: why not?
-          expect(@review.pdf_filename).not_to include('.pdf')
-        end
-
-        it 'adds "et al" for multi-author datasets' do
-          StashEngine::Author.create(resource_id: @resource.id, author_first_name: 'Elvis', author_last_name: 'Presley')
-          @resource.reload
-          expect(@review.pdf_filename).to include("#{@resource.authors.first.author_last_name}_et_al")
-        end
-      end
     end
   end
 end
