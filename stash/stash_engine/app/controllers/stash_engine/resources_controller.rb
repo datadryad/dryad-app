@@ -2,8 +2,8 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :require_login, except: %i[data_paper]
-    before_action :require_modify_permission, except: %i[index new data_paper]
+    before_action :require_login
+    before_action :require_modify_permission, except: %i[index new]
     before_action :require_in_progress, only: %i[upload review upload_manifest]
     before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :update_internal_search, only: %i[upload review upload_manifest]

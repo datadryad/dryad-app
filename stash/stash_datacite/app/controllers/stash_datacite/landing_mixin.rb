@@ -26,10 +26,6 @@ module StashDatacite
       @schema_org_ds ||= schema_org_json_for(resource)
     end
 
-    def pdf_meta
-      @pdf_meta ||= StashDatacite::ResourcesController::PdfMetadata.new(resource, id, plain_citation)
-    end
-
     private
 
     def plain_citation

@@ -2,7 +2,9 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
+# do we really need to limit to this exact tag?  Conflicts with rails 5.2
+# gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
+gem 'standalone_migrations'
 
 gem 'mysql2', '~> 0.5.3'
 

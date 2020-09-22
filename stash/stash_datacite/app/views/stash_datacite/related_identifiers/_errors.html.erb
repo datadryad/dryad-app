@@ -1,0 +1,11 @@
+<%# the local variable 'related_identifier' should be passed in to this partial %>
+<div class="js-related_id_errors">
+  <% unless related_identifier&.related_identifier.blank? %>
+    <% unless related_identifier.valid_url_format? %>
+      <div class="o-metadata__autopopulate-message">Please be sure your ID is formatted correctly. Full URL format is most reliable.</div>
+    <% end %>
+    <% unless related_identifier.verified? %>
+      <div class="o-metadata__autopopulate-message">Your identifier you entered couldn't be verified on the Internet.</div>
+    <% end %>
+  <% end %>
+</div>
