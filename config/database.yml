@@ -1,3 +1,9 @@
+# When in the 'test' environment, only use the content from dryad-config-example, not the content
+# in the main part of this file.
+<% if Rails.env == 'test' %>
+<%= YamlHelper.output_test_section(example_filename: 'database.yml') %>
+<% else %>
+
 default: &default
   pool: 40
   timeout: 10000
@@ -23,14 +29,11 @@ local:
 local_dev:
   <<: *DEVELOPMENT
 
-test:
-  host: localhost
-  adapter: mysql2
-  database: dashv2_test
-  username: travis
-
 stage:
   <<: *default
 
 production:
   <<: *default
+
+# Terminate the if statement from the beginning of this file.
+<% end %>

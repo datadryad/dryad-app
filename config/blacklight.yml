@@ -1,27 +1,33 @@
+# When in the 'test' environment, only use the content from dryad-config-example, not the content
+# in the main part of this file.
+<% if Rails.env == 'test' %>
+<%= YamlHelper.output_test_section(example_filename: 'blacklight.yml') %>
+<% else %>
+
 development: &DEVELOPMENT
   adapter: solr
-  #url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolr-dev.cdlib.org:8983/solr/geoblacklight" %>
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 local:
   <<: *DEVELOPMENT
 local_dev:
   <<: *DEVELOPMENT
 
-# We need to be sure our local basic config files reflect what is is dryad-config-example since that is what travis uses.
-# I hope this will save us from some of the problems of a local test environment and the travis test environment working
-# differently.
-<%= YamlHelper.output_test_section(example_filename: 'blacklight.yml') %>
-
 stage:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-stg.cdlib.org:8983/solr/geoblacklight" %>
+
 # migration solr not used, but we probably need the section here
 migration:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolr-stg.cdlib.org:8983/solr/geoblacklight" %>
+
 demo:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryaddemo-stg.cdlib.org:8983/solr/geoblacklight" %>
+
 production:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-prd.cdlib.org:8983/solr/geoblacklight" %>
+
+# Terminate the if statement from the beginning of this file.
+<% end %>
