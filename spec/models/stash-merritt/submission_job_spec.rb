@@ -55,7 +55,7 @@ module Stash
         allow(@package).to receive(:dc4_xml)
 
         @sword_helper = instance_double(SwordHelper)
-        allow(SwordHelper).to receive(:new).with(package: @package, logger: @logger).and_return(@sword_helper)
+        allow(SwordHelper).to receive(:new).and_return(@sword_helper)
         allow(@sword_helper).to receive(:submit!)
 
         @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: @url_helpers)
@@ -121,6 +121,7 @@ module Stash
 
           it 'fails on a SWORD submission error' do
             allow(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
+            allow_any_instance_of(SwordHelper).to receive(:submit!).and_raise(RestClient::RequestFailed)
             @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: @url_helpers)
             allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
             expect(@job.submit!.error).to be_a(RestClient::RequestFailed)
