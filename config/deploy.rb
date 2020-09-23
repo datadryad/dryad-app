@@ -25,10 +25,6 @@ set :scm, :git
 # Default value for :pty is false
 # set :pty, true
 
-# Default value for :linked_files is []
-#set :linked_files, fetch(:linked_files, []).push(Dir.glob('config/*.yml'), Dir.glob('config/tenants/*.yml')).flatten.uniq
-#set :linked_files, fetch(:linked_files, []).push(invoke 'deploy:my_linked_files').flatten.uniq
-
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle',
                                                'public/system', 'uploads')
@@ -72,32 +68,12 @@ end
 
 namespace :deploy do
 
-  desc 'Get list of linked files for capistrano'
-  task :my_linked_files do
-    on roles(:app) do
-      res1 = capture "ls /apps/dryad/apps/ui/shared/config/*.yml -1"
-      res1 = res1.split("\n").map{|i| i.match(/config\/[^\/]+$/).to_s }
-      res2 = capture "ls /apps/dryad/apps/ui/shared/config/tenants/*.yml -1"
-      res2 = res2.split("\n").map{|i| i.match(/config\/tenants\/[^\/]+$/).to_s }
-      set :linked_files, (res1 + res2)
-    end
-  end
-
   desc 'Restart Phusion'
   task :restart do
     on roles(:app), wait: 5 do
       # Your restart mechanism here, for example:
       invoke 'deploy:stop'
       invoke 'deploy:start'
-    end
-  end
-
-  desc 'update config repo'
-  task :update_config do
-    on roles(:app), in: :sequence, wait: 5 do
-      my_branch = fetch(:branch, 'development')
-      my_branch = "origin/#{my_branch}" unless my_branch.match(TAG_REGEXP) #git acts differently with tags (regex for version #s)
-      execute "cd #{deploy_to}/shared; git fetch --tags; git fetch --all; git reset --hard #{my_branch}"
     end
   end
 
@@ -168,8 +144,5 @@ namespace :deploy do
       execute "chmod 750 #{deploy_to}/shared/cron/*.sh"
     end
   end
-
-  before :starting, :update_config
-  before 'deploy:symlink:shared', 'deploy:my_linked_files'
 
 end

@@ -47,8 +47,8 @@ You should end up with a directory structure that looks like this one.
 ```
 
 Most of the configuration can be left as default. Items to check before first launch:
-1. dryad-config/database.yml
-2. dryad-config/app_config.yml, particularly the ORCID key and secret
+1. config/database.yml
+2. config/app_config.yml, particularly the ORCID key and secret
 
 ## Installing MySQL and Solr
 
