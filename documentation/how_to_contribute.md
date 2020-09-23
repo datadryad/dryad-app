@@ -21,12 +21,6 @@ The basic flow of this model would be:
   the changes into the main branch for the repository and assign another core developer
   to review your changes.  (More about PR checklist below.)
 
-Note, you may need to follow this methodology across multiple repositories since
-the application is currently using **dryad**, **stash** and **dryad-config** repositories
-which all make up parts of the application.  Please name the branches that make
-up the code changes and tests with the same branch name across all repositories you
-need to modify.
-
 ## Testing
 
 - Tests can be executed on a local machine by running `bundle exec rspec` inside either the main **dryad** repostiory
