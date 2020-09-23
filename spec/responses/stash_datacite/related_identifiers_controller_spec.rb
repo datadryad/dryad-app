@@ -1,4 +1,3 @@
-
 # We have no real way to test this directly in the UI since setting a related identifier to hidden can't be done in the
 # UI and testing the UI runs in a different process/database which is difficult to manipulate manually.
 module StashDatacite
@@ -6,8 +5,8 @@ module StashDatacite
 
     before(:each) do
       user = StashEngine::User.create(
-          email: 'lmuckenhaupt@example.edu',
-          tenant_id: 'dataone'
+        email: 'lmuckenhaupt@example.edu',
+        tenant_id: 'dataone'
       )
       @resource = create(:resource, user_id: user.id)
       @related_identifier = create(:related_identifier, resource_id: @resource.id, work_type: 'article')
