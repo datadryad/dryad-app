@@ -26,7 +26,9 @@ set :scm, :git
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push(Dir.glob('config/*.key')).flatten.uniq
+# This syntax doesn't work well for getting multiple files out of a directory, so
+# it is better to add linked_files through the my_linked_files below.
+# set :linked_files, fetch(:linked_files, []).push('fileA.txt', 'config/fileB.txt')
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle',
@@ -71,6 +73,15 @@ end
 
 namespace :deploy do
 
+  desc 'Get list of linked files for capistrano'
+  task :my_linked_files do
+    on roles(:app) do
+      res1 = capture "ls /apps/dryad/apps/ui/shared/config/*.key -1"
+      res1 = res1.split("\n").map{|i| i.match(/config\/[^\/]+$/).to_s }
+      set :linked_files, (res1)
+    end
+  end
+  
   desc 'Restart Phusion'
   task :restart do
     on roles(:app), wait: 5 do
@@ -147,5 +158,6 @@ namespace :deploy do
       execute "chmod 750 #{deploy_to}/shared/cron/*.sh"
     end
   end
-
+  
+  before 'deploy:symlink:shared', 'deploy:my_linked_files'
 end
