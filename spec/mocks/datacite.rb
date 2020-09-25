@@ -47,6 +47,34 @@ module Mocks
       allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
     end
 
-  end
+    def mock_good_doi_resolution(doi:)
+      stub_request(:get, doi)
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 200, body: '', headers: {})
+    end
 
+    def mock_bad_doi_resolution(doi:)
+      stub_request(:get, doi)
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 404, body: '', headers: {})
+    end
+
+    def mock_bad_doi_resolution_server_error(doi:)
+      stub_request(:get, doi)
+        .with(
+          headers: {
+            'Host' => 'doi.org'
+          }
+        )
+        .to_return(status: 500, body: '', headers: {})
+    end
+  end
 end

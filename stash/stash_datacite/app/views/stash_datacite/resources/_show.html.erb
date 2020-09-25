@@ -26,8 +26,6 @@
   <% end %>
 
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors } %>
-  <%= render partial: "stash_datacite/related_identifiers/show",
-             locals: { related_identifiers: review.related_identifiers } %>
 
   <% if review.geolocation_data? %>
     <h2 class="o-heading__level2">Location</h2>

@@ -97,7 +97,7 @@ module Stash
       end
 
       def related_identifiers
-        related = @resource.related_identifiers.map do |ri|
+        related = @resource.related_identifiers.where(verified: true).where(hidden: false).map do |ri|
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 

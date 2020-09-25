@@ -16,10 +16,9 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
-    # TODO: is this class really necessary? as with Review, seems like we could just patch Resource
-    # TODO: and we don't need most of these to return false or 0 when they can just return nil
     class Completions
       def initialize(resource)
         @resource = resource
@@ -118,9 +117,44 @@ module StashDatacite
           .not(description: [nil, '']).count > 0
       end
 
-      # TODO: why is this called 'citation'?
-      def citation
+      # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
+      # rubocop:disable Naming/PredicateName
+      def has_related_works?
         @resource.related_identifiers.where.not(related_identifier: [nil, '']).count > 0
+      end
+
+      def has_related_works_dois?
+        return false unless has_related_works?
+
+        return true if @resource.related_identifiers.where(related_identifier_type: 'doi').count > 0
+
+        false
+      end
+      # rubocop:enable Naming/PredicateName
+
+      def good_related_works_formatting?
+        filled_related_dois = @resource.related_identifiers.where(related_identifier_type: 'doi').where.not(related_identifier: [nil, ''])
+
+        filled_related_dois.each do |related_id|
+          return false unless related_id.valid_doi_format?
+        end
+
+        true
+      end
+
+      def good_related_works_validation?
+        filled_related_dois = @resource.related_identifiers.where(related_identifier_type: 'doi').where.not(related_identifier: [nil, ''])
+
+        filled_related_dois.each do |related_id|
+          next if related_id.verified?
+
+          # may need to live-check for older items that didn't go through validation before
+          related_id.update(verified: true) if related_id.valid_doi_format? && related_id.live_url_valid? == true
+
+          return false unless related_id.verified?
+        end
+
+        true
       end
 
       def temporal_coverage
@@ -128,7 +162,7 @@ module StashDatacite
       end
 
       def optional_completed
-        date.to_i + keyword.to_i + method.to_i + citation.to_i
+        date.to_i + keyword.to_i + method.to_i + has_related_works?.to_i
       end
 
       def optional_total
@@ -144,6 +178,9 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+        # do not require strict related works identifier checking right now
+        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
+        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
         messages
       end
 
@@ -157,3 +194,4 @@ module StashDatacite
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
