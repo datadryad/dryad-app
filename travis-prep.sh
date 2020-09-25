@@ -18,8 +18,3 @@ set -x
 mysql -u root -e 'CREATE DATABASE IF NOT EXISTS dashv2_test'
 mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'
 { set +x; } 2>/dev/null
-
-# ############################################################
-# Configuration
-
-bash symlink_config.sh

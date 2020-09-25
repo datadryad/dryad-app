@@ -28,12 +28,6 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
     * The repository contains some other libraries/gems for things such as sword or harvesting.
 
-* We have a repository at
-  [https://github.com/cdlib/dryad-config](https://github.com/cdlib/dryad-config)
-  which contains private configuration details. For normal development
-  and testing, the sample configuration files in the `dryad-app`
-  repository should be sufficient.
-
 ## Documentation
 
 * We have an [installation guide](dryad_install.md) for installing the user-interface part of Dryad along with some of the basic depedencies.

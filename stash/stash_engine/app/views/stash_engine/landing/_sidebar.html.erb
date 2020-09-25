@@ -1,18 +1,18 @@
-<% may_download = @id.may_download?(user: current_user) %>
-<% if may_download %>
-  <%= render partial: 'stash_engine/landing/download', locals: {dataset_identifier: @id} %>
-<% end %>
-<div class="o-download">
-  <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
-</div>
-
-<% if may_download %>
+<% if @id.may_download?(user: current_user) %>
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
   <%= render partial: 'stash_engine/landing/zenodo_files', locals: {dataset_identifier: @id, resource: @resource} %>
 <% else %>
   <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
   <%= render partial: 'stash_engine/landing/zenodo_files_embargoed', locals: {dataset_identifier: @id, resource: @resource} %>
 <% end %>
+
+<div class="c-sidebox" id="related_works_section">
+  <h2 class="c-sidebox__heading">Related Works</h2>
+  <div id="show_related_works"
+       data-load="<%= metadata_url_helpers.related_identifiers_show_path(resource_id: @resource.id, format: :js) %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+</div>
 
 <div class="c-sidebox">
   <h2 class="c-sidebox__heading">Metrics</h2>

@@ -13,6 +13,17 @@
 <% if resources.count.positive? %>
   <div class="c-sidebox">
     <h2 class="c-sidebox__heading">Data Files</h2>
+    <!-- full download first -->
+
+    <div class="o-download">
+      <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
+
+      <%= button_to "Download dataset", download_resource_path(resource.id), remote: true,
+                    class: 'o-download__files js-download', id: "dl_res_#{resource.id}", data: { disable: true } %>
+    </div>
+
+
+    <!-- list individual files -->
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary class="o-showhide__summary c-file-group__summary">
