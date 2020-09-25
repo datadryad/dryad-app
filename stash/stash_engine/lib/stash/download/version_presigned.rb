@@ -34,7 +34,6 @@ module Stash
       # 202 for needing to wait with a progress bar
       # 404 for not found
       # 408 for timeout failures
-      # rubocop:disable Metrics/CyclomaticComplexity
       def download
         assemble_hash = {}
         assemble_hash = assemble if @resource.download_token.token.blank?
@@ -62,7 +61,6 @@ module Stash
       rescue HTTP::TimeoutError
         { status: 408 }
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       # this does a limited poll and download if it becomes available within a reasonable time
       def poll_and_download(delay: 5, tries: 1)

@@ -3,6 +3,7 @@ module SessionsHelper
   include Mocks::Omniauth
   include Mocks::Ror
 
+  # rubocop:disable Style/OptionalBooleanParameter
   def sign_in(user = create(:user), with_shib = false)
     sign_out if have_text('Logout')
     case user
@@ -14,6 +15,7 @@ module SessionsHelper
       raise ArgumentError, "Invalid argument user: #{user}"
     end
   end
+  # rubocop:enable Style/OptionalBooleanParameter
 
   def sign_out
     safe_visit stash_url_helpers.sessions_destroy_path

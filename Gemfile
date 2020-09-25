@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
 # ############################################################
@@ -27,7 +27,7 @@ gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.5'
-gem 'rubocop', '~> 0.85.1'
+gem 'rubocop', '~> 0.90.0'
 
 # ############################################################
 # UI
@@ -35,7 +35,7 @@ gem 'rubocop', '~> 0.85.1'
 # TODO: why do we have uglifier AND yui-compressor?
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
@@ -47,6 +47,7 @@ gem 'yui-compressor'
 # ############################################################
 # Misc
 
+gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'

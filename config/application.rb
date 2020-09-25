@@ -1,16 +1,17 @@
 require_relative 'boot'
 
+require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
+# require "active_storage/engine" 
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
+# require "action_cable/engine"  
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
-# MAYBE -- instead of the individual requires above:
-#require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -18,10 +19,6 @@ Bundler.require(*Rails.groups)
 
 module Dash2
   class Application < Rails::Application
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
-
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rails -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
@@ -30,6 +27,9 @@ module Dash2
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Initialize configuration defaults for the current Rails version.
+    config.load_defaults 5.2
+    
     config.generators.javascript_engine = :js
     config.autoload_paths << Rails.root.join("lib")
 
@@ -37,5 +37,15 @@ module Dash2
     config.active_record.default_timezone = :utc
 
     config.active_job.queue_adapter = :delayed_job
+
+    # Do not compare the origin of HTTP requests with the current state of the request.
+    # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
+    # will not be the same.
+    config.action_controller.forgery_protection_origin_check = false
+    
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration should go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.               
   end
 end

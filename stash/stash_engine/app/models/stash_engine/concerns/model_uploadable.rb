@@ -21,7 +21,8 @@ module StashEngine
       end
 
       # display the correct error message based on the url status code
-      def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+      def error_message
         return '' if url.nil? || status_code == 200
 
         case status_code
@@ -45,33 +46,41 @@ module StashEngine
           'The given URL is invalid. Please check the URL and resubmit.'
         end
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
 
       def digest?
         !digest.blank? && !digest_type.nil?
       end
 
-      # This will get rid of a file, either immediately, when not submitted yet, or mark it for deletion when it's submitted to Merritt.
-      # We also need to refresh the file list for this resource and check for other files with this same name to be deleted since
-      # users find ways to do multiple deletions in the UI (multiple windows or perhaps uploading two files with the same name).
+      # figures out how to delete file based on previous state
       def smart_destroy!
-        files_with_name = self.class.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
+        # see if it's on the file system and destroy it if it's there
+        cfp = calc_file_path
+        ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
 
-        # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
-        files_with_name.where(file_state: ['created', nil]).each do |fl|
-          ::File.delete(fl.calc_file_path) if !fl.calc_file_path.blank? && ::File.exist?(fl.calc_file_path)
-          fl.destroy
+        if in_previous_version?
+          # destroy any others of this filename in this resource
+          self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
+          # and mark to remove from merritt
+          update(file_state: 'deleted')
+        else
+          # remove all of this filename for this resource from the database
+          self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
         end
 
-        # leave only one delete directive for this filename for this resource (ie the first listed file), if there is already
-        # a delete directive then it must've been copied at one point from the last resource, so keep one
-        files_with_name.where(file_state: %w[deleted copied]).each_with_index do |f, idx|
-          if idx == 0
-            f.update(file_state: 'deleted')
-          else
-            f.destroy
-          end
-        end
         resource.reload
+      end
+
+      # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
+      # means created last time.
+      def in_previous_version?
+        prev_res = resource.previous_resource
+        return false if prev_res.nil?
+
+        prev_file = self.class.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
+        return false if prev_file.nil? || prev_file.file_state == 'deleted'
+
+        true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
       end
 
       class_methods do

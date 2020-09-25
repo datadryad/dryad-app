@@ -40,7 +40,7 @@ module StashEngine
     end
 
     # for downloading the full version
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
@@ -67,9 +67,8 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
-    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/MethodLength
     # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
     def assembly_status
       @resource = nil
@@ -90,7 +89,6 @@ module StashEngine
       logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}")
       render json: { status: 408 }
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
@@ -115,13 +113,14 @@ module StashEngine
 
     def non_ajax_response_for_download
       @status_hash = @version_presigned.download
-      if @status_hash[:status] == 200
+      case @status_hash[:status]
+      when 200
         log_counter_version
         redirect_to @status_hash[:url]
-      elsif @status_hash[:status] == 202
+      when 202
         render status: 202, plain: 'The version of the dataset is being assembled. ' \
               "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
-      elsif @status_hash[:status] == 408
+      when 408
         notify_download_timeout
         render status: 408, plain: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'
       else
