@@ -171,3 +171,34 @@ ON aa.`affiliation_id` = affils.`id`
 WHERE affils.`ror_id` IN ('https://ror.org/01an7q238', 'https://ror.org/03djjyk45', 'https://ror.org/01ewh7m12', 'https://ror.org/03rafms67', 'https://ror.org/05kbg7k66', 'https://ror.org/02mmp8p21', 'https://ror.org/05rrcem69', 'https://ror.org/05q8kyc69', 'https://ror.org/05ehe8t08', 'https://ror.org/00fyrp007', 'https://ror.org/05t6gpm70', 'https://ror.org/04gyf1771', 'https://ror.org/03fgher32', 'https://ror.org/00cm8nm15', 'https://ror.org/03bfp2076', 'https://ror.org/046rm7j60', 'https://ror.org/05h4zj272', 'https://ror.org/04p5baq95', 'https://ror.org/03b66rp04', 'https://ror.org/04k3jt835', 'https://ror.org/01d88se56', 'https://ror.org/04vq5kb54', 'https://ror.org/00mjfew53', 'https://ror.org/00d9ah105', 'https://ror.org/00pjdza24', 'https://ror.org/03nawhv43', 'https://ror.org/02t274463', 'https://ror.org/03s65by71', 'https://ror.org/0168r3w48', 'https://ror.org/01kbfgm16', 'https://ror.org/04mg3nk07', 'https://ror.org/05ffhwq07', 'https://ror.org/04v7hvq31', 'https://ror.org/01vf2g217', 'https://ror.org/043mz5j54', 'https://ror.org/03hwe2705', 'https://ror.org/01t8svj65', 'https://ror.org/04g7y4303', 'https://ror.org/02jbv0t02')
 ORDER BY auths.author_last_name, auths.author_first_name;
 ```
+
+Published Datasets and Published by Year
+----------------------------------------
+List of published
+```
+/* get all datasets and their publication date */
+SELECT ids.identifier, res.publication_date FROM stash_engine_identifiers ids
+JOIN (SELECT max(id) as res2_id, identifier_id FROM stash_engine_resources
+  WHERE meta_view = 1
+  GROUP BY identifier_id
+) as res2
+ON ids.id = res2.identifier_id
+JOIN stash_engine_resources res
+ON res.id = res2.res2_id
+WHERE ids.pub_state IN ('published', 'embargoed');
+```
+
+Counts of published by year (change embargo or not below)
+```
+SELECT DATE_FORMAT(res.publication_date, '%Y') as year, count(*) as year_count FROM stash_engine_identifiers ids
+JOIN (SELECT max(id) as res2_id, identifier_id FROM stash_engine_resources
+  WHERE meta_view = 1
+  GROUP BY identifier_id
+) as res2
+ON ids.id = res2.identifier_id
+JOIN stash_engine_resources res
+ON res.id = res2.res2_id
+WHERE ids.pub_state IN ('published', 'embargoed')
+GROUP BY DATE_FORMAT(res.publication_date, '%Y');
+```
+
