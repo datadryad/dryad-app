@@ -41,14 +41,14 @@ module StashEngine
       end
 
       it 'returns the most recent activity' do
-        ca2 = CurationActivity.create(resource_id: @resource.id, status: 'peer_review')
+        ca2 = create(:curation_activity, resource: @resource, status: 'peer_review', note: 'this is a test')
         expect(CurationActivity.latest(resource: @resource)).to eql(ca2)
       end
     end
 
     context :readable_status do
       before(:each) do
-        @ca = CurationActivity.create(resource_id: @resource.id)
+        @ca = create(:curation_activity, resource: @resource)
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
 
@@ -165,14 +165,14 @@ module StashEngine
 
           if %w[published embargoed peer_review submitted].include?(status)
             it "sends email when '#{status}'" do
-              ca = CurationActivity.new(resource_id: @resource.id, status: status)
               expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
+              ca = create(:curation_activity, resource: @resource, status: status)
               ca.save
             end
           else
             it "does not send email when '#{status}'" do
-              ca = CurationActivity.new(resource_id: @resource.id, status: status)
               expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+              ca = create(:curation_activity, resource_id: @resource.id, status: status)
               ca.save
             end
           end
@@ -185,8 +185,7 @@ module StashEngine
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(false)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
-          @author = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
-          @ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          @author = create(:author, author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
           # in theory stash_engine doesn't depend on datacite_engine, so mocking this out for now instead of bringing that engine in
           allow_any_instance_of(StashEngine::Author).to receive(:affiliation).and_return(
             { long_name: 'Western New Mexico University', ror_id: 'https://ror.org/00r5mr697' }.to_ostruct
@@ -194,8 +193,8 @@ module StashEngine
         end
 
         it 'calls email_orcid_invitations when published' do
-          expect(@ca).to receive(:email_orcid_invitations)
-          @ca.save
+          expect_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations)
+          @ca = create(:curation_activity, resource_id: @resource.id, status: 'published')
         end
 
         it 'does not call email_orcid_invitations to authors who already have an invitation' do
@@ -203,13 +202,13 @@ module StashEngine
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:identifier_id).and_return(@identifier.id)
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
-          @ca.save
+          @ca = create(:curation_activity, resource_id: @resource.id, status: 'published')
         end
 
         it 'does not call email_orcid_invitations to authors who already have an ORCID registered' do
           allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
-          @ca.save
+          @ca = create(:curation_activity, resource_id: @resource.id, status: 'published')
         end
 
       end
@@ -217,7 +216,7 @@ module StashEngine
       context :update_publication_flags do
 
         it 'sets flags for embargo' do
-          @resource.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+          create(:curation_activity, status: 'embargoed', resource: @resource)
           @identifier.reload
           @resource.reload
           expect(@identifier.pub_state).to eq('embargoed')
@@ -228,7 +227,7 @@ module StashEngine
         it 'sets flags for published with file changes' do
           @resource.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
           @resource.reload
-          @resource.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          create(:curation_activity, resource: @resource, status: 'published')
 
           @identifier.reload
           @resource.reload
@@ -239,7 +238,7 @@ module StashEngine
         end
 
         it 'sets flags for withdrawn' do
-          @resource.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+          create(:curation_activity, resource: @resource, status: 'withdrawn')
           @identifier.reload
           @resource.reload
           expect(@identifier.pub_state).to eq('withdrawn')
@@ -252,8 +251,8 @@ module StashEngine
         it 'disables the default peer_review setting after publication' do
           @resource.hold_for_peer_review = true
           @resource.save
-          @resource.curation_activities << CurationActivity.create(status: 'peer_review', user: @user)
-          @resource.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          create(:curation_activity, status: 'peer_review', resource: @resource)
+          create(:curation_activity, status: 'published', resource: @resource)
           @resource.reload
           expect(@resource.hold_for_peer_review?).to eq(false)
         end

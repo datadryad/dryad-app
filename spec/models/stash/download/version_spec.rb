@@ -11,7 +11,7 @@ module Stash
         before(:each) do
           @version = Version.new(controller_context: OpenStruct.new(response_body: '',
                                                                     response: OpenStruct.new(headers: {})))
-          @resource = StashEngine::Resource.create(tenant_id: 'dryad')
+          @resource = create(:resource, tenant_id: 'dryad')
           allow(@resource).to receive(:merritt_protodomain_and_local_id).and_return(['www.example.com', 'ark:38u47/3847'])
           allow(@resource).to receive(:tenant).and_return('hi, not really used')
 
@@ -43,7 +43,7 @@ module Stash
 
       describe 'Version.merritt_friendly_async_url(resource:)' do
         before(:each) do
-          @resource = StashEngine::Resource.create(tenant_id: 'dryad')
+          @resource = create(:resource, tenant_id: 'dryad')
           allow(@resource).to receive(:merritt_protodomain_and_local_id).and_return(['www.example.com', 'ark:38u47/3847'])
           allow(@resource).to receive(:tenant).and_return('hi, not really used')
         end
@@ -57,7 +57,7 @@ module Stash
         before(:each) do
           @version = Version.new(controller_context: OpenStruct.new(response_body: '',
                                                                     response: OpenStruct.new(headers: {})))
-          @resource = StashEngine::Resource.create(tenant_id: 'dryad')
+          @resource = create(:resource, tenant_id: 'dryad')
           allow(@resource).to receive(:tenant).and_return(OpenStruct.new(repository: OpenStruct.new(username: 'joe', password: 'blow')))
           allow(@resource).to receive(:merritt_producer_download_uri).and_return('http://merritt.example.com/a/download/url')
           allow(@version).to receive(:'merritt_async_download?').and_return(true)

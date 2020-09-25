@@ -5,8 +5,7 @@ RSpec.feature 'Tenant', type: :feature do
   context :logos do
 
     StashEngine.tenants.each_value do |hash|
-      # TODO: Fix this intermittently-failing test. Ticket #806.
-      xit "displays the correct logo for #{hash[:short_name]}" do
+      it "displays the correct logo for #{hash[:short_name]}" do
         sign_in(create(:user, tenant_id: hash[:tenant_id]))
         visit root_path
         # Always expect to see the Dryad logo

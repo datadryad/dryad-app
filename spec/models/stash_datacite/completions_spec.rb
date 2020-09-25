@@ -7,32 +7,21 @@ module StashDatacite
       OPTIONAL_FIELDS = ['date', 'keywords', 'methods', 'related identifiers'].freeze
       OPTIONAL_COUNT = OPTIONAL_FIELDS.size
 
-      attr_reader :user
-      attr_reader :stash_wrapper
-      attr_reader :dcs_resource
-
       attr_reader :resource
       attr_reader :completions
 
       before(:each) do
-        @user = StashEngine::User.create(
-          email: 'lmuckenhaupt@example.edu',
-          tenant_id: 'dataone'
-        )
-
-        dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
-        @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
-        stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
-        @stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
-
-        @resource = ResourceBuilder.new(
-          user_id: user.id,
-          dcs_resource: dcs_resource,
-          stash_files: stash_wrapper.inventory.files,
-          upload_date: stash_wrapper.version_date
-        ).build
-
-        @completions = Completions.new(resource)
+        @user = create(:user)
+        @resource = create(:resource, user: @user)
+        @resource.save
+        create(:resource_type, resource: @resource)
+        create(:author, resource: @resource)
+        create(:author, resource: @resource)
+        create(:file_upload, resource: @resource)
+        create(:file_upload, resource: @resource)
+        create(:file_upload, resource: @resource)
+        @resource.reload
+        @completions = Completions.new(@resource)
       end
 
       describe :title do
@@ -61,6 +50,7 @@ module StashDatacite
         it 'passes for resources with a type' do
           expect(completions.data_type).to be_truthy
         end
+
         it 'fails if type is missing' do
           resource.resource_type.destroy
           resource.reload # ActiveRecord is not smart enough to check 'destroyed' flag
@@ -121,7 +111,8 @@ module StashDatacite
         end
 
         it 'fails if author affiliation is missing' do
-          resource.authors.flat_map(&:affiliations).each(&:destroy)
+          @resource.authors.flat_map(&:affiliations).each(&:destroy)
+          @resource.reload
           expect(completions.author_affiliation).to be_falsey
         end
       end
@@ -160,7 +151,7 @@ module StashDatacite
       describe :urls_validated do
         describe ':manifest uploads' do
           before(:each) do
-            resource.file_uploads.find_each do |upload|
+            @resource.file_uploads.find_each do |upload|
               upload.url = "http://example.org/#{upload.upload_file_name}"
               upload.save!
             end
@@ -235,14 +226,11 @@ module StashDatacite
         attr_reader :actual_size
 
         before(:each) do
-          @actual_size = resource
-            .file_uploads
-            .present_files
-            .inject(0) { |sum, f| sum + f.upload_file_size }
+          @actual_size = @resource.file_uploads.present_files.inject(0) { |sum, f| sum + f.upload_file_size }
         end
 
         it 'returns true if file size > limit' do
-          limit = actual_size - 1
+          limit = @actual_size - 1
           expect(completions.over_version_size?(limit)).to eq(true)
         end
 
@@ -296,7 +284,8 @@ module StashDatacite
         end
 
         it 'counts if affiliation is missing' do
-          resource.authors.flat_map(&:affiliations).each(&:destroy)
+          @resource.authors.flat_map(&:affiliations).each(&:destroy)
+          @resource.reload
           expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
         end
 
@@ -340,6 +329,10 @@ module StashDatacite
       end
 
       describe :date do
+        before(:each) do
+          create(:datacite_date, resource: @resource)
+        end
+
         it 'passes if resource has a date' do
           expect(completions.date).to be_truthy
         end
@@ -351,6 +344,7 @@ module StashDatacite
 
       describe :keyword do
         it 'passes if resource has subjects' do
+          @resource.subjects = [create(:subject)]
           expect(completions.keyword).to be_truthy
         end
         it 'fails if resource has no subjects' do
@@ -409,6 +403,10 @@ module StashDatacite
       end
 
       describe :citation do
+        before(:each) do
+          create(:related_identifier, resource: @resource)
+        end
+
         it 'passes if resource has related identifiers' do
           expect(completions.citation).to be_truthy
         end
@@ -440,11 +438,12 @@ module StashDatacite
 
       describe :optional_completed do
         before(:each) do
-          Description.create(
-            description: 'some methods',
-            description_type: 'methods',
-            resource_id: resource.id
-          )
+          create(:description, resource: @resource)
+          create(:description, resource: @resource, description_type: 'methods')
+          create(:datacite_date, resource: @resource)
+          @resource.subjects = [create(:subject)]
+          create(:related_identifier, resource: @resource)
+          ####
         end
 
         it "returns a full count for resources with all of: #{OPTIONAL_FIELDS.join(', ')}" do

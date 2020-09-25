@@ -134,7 +134,7 @@ rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-
 gem update --system
 
 # install bundler to handle gem dependencies
-gem install bundler:1.17.3
+gem install bundler:2.1.4
 ```
 
 **If you are running on OSX, ensure some gems are compatible with the system:**
@@ -171,6 +171,15 @@ source ../dryad-config/sample_data/sample_record.sql;
 ```
 
 To configure where the search enterface draws its data from, modify the dryad app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
+
+## Creating the System user
+
+Go into Rails console, and create the default user.
+
+```
+bundle exec rails console
+u=StashEngine::User.create(first_name: 'Dryad', last_name: 'System', id: 0)
+```
 
 ## Testing basic functionality
 

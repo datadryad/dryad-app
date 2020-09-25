@@ -32,7 +32,7 @@ module Stash
       # @param inventory [Inventory, nil] the (optional) file inventory
       # @param descriptive_elements [Array<REXML::Element>] the encapsulated
       #   XML metadata
-      def initialize(identifier:, version:, license:, inventory: nil, descriptive_elements:)
+      def initialize(identifier:, version:, license:, descriptive_elements:, inventory: nil)
         raise ArgumentError, "identifier does not appear to be an Identifier object: #{identifier || 'nil'}" unless identifier.is_a?(Identifier)
 
         self.identifier = identifier

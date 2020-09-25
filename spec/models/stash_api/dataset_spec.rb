@@ -3,6 +3,7 @@ require 'byebug'
 module StashApi
   RSpec.describe Dataset do
     include Mocks::Tenant
+    include Mocks::Datacite
 
     before(:each) do
       mock_tenant!
@@ -16,13 +17,9 @@ module StashApi
       allow(Dataset).to receive(:api_url_helper).and_return(generic_path)
 
       @user = create(:user)
-      @identifier = create(:identifier) do |identifier|
-        identifier.resources.create do |r|
-          r.user = @user
-          r.current_editor_id = @user.id
-          r.title = 'My Cats Have Fleas'
-        end
-      end
+      @identifier = create(:identifier)
+      @resource = create(:resource, identifier: @identifier, user: @user,
+                                    current_editor_id: @user.id, title: 'My Cats Have Fleas')
 
       create(:version) do |v|
         v.resource = @identifier.resources.first
@@ -125,7 +122,7 @@ module StashApi
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
-        StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
+        create(:curation_activity, resource: r, status: 'peer_review')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:sharingLink]).to be(bogus_link)
@@ -141,14 +138,15 @@ module StashApi
         expect(@metadata[:sharingLink]).to be(nil)
       end
 
-      # TODO: Fix this intermittently-failing test. Ticket #806.
-      xit 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
+      it 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
+        mock_datacite_and_idgen!
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
         StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
         r.current_resource_state.update(resource_state: 'submitted')
-        r2 = create(:resource, identifier: @identifier)
+        r2 = create(:resource, identifier: @identifier, user: @user,
+                               current_editor_id: @user.id, title: 'The other resource')
         StashEngine::CurationActivity.create(resource: r2, status: 'in_progress')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata

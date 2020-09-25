@@ -16,7 +16,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
-    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense'
+    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
 
     after_create :create_share
 
@@ -236,12 +236,12 @@ module StashEngine
       Journal.where(issn: publication_issn).first
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/AbcSize
     def record_payment
       return if payment_type.present? && payment_type != 'unknown'
 
       if journal&.will_pay?
-        self.payment_type = 'journal-' + journal.payment_plan_type
+        self.payment_type = "journal-#{journal.payment_plan_type}"
         self.payment_id = publication_issn
       elsif institution_will_pay?
         self.payment_type = 'institution'
@@ -258,7 +258,7 @@ module StashEngine
       end
       save
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize
 
     def allow_review?
       return true if journal.blank?
@@ -385,7 +385,7 @@ module StashEngine
     end
 
     # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
-    # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/MethodLength
     def fill_resource_view_flags
       my_pub = false
       resources.each do |res|
@@ -417,7 +417,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/MethodLength
 
     # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
     # In this case we still may call this and want to show some version of the files because there was never a version remaining
