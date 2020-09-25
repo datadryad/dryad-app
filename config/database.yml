@@ -1,0 +1,39 @@
+# When in the 'test' environment, only use the content from dryad-config-example, not the content
+# in the main part of this file.
+<% if Rails.env == 'test' %>
+<%= YamlHelper.output_test_section(example_filename: 'database.yml') %>
+<% else %>
+
+default: &default
+  pool: 40
+  timeout: 10000
+  adapter: mysql2
+  database: dryad
+  host: <%= Rails.application.credentials[Rails.env.to_sym][:database_host] %>
+  username: <%= Rails.application.credentials[Rails.env.to_sym][:database_username] %>
+  password: <%= Rails.application.credentials[Rails.env.to_sym][:database_password] %>
+  port: <%= Rails.application.credentials[Rails.env.to_sym][:database_port] %>
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  reconnect: true
+
+development: &DEVELOPMENT
+  <<: *default
+
+local:
+  <<: *default
+  host: 127.0.0.1
+  username: travis
+  password: ""
+
+local_dev:
+  <<: *DEVELOPMENT
+
+stage:
+  <<: *default
+
+production:
+  <<: *default
+
+# Terminate the if statement from the beginning of this file.
+<% end %>

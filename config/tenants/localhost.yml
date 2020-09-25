@@ -4,13 +4,10 @@
 # Similarly, the about and help pages may be customized by adding files to app/views/tenants/<tenant_id>/ .
 # The files are in Markdown format and named such as _about.html.md and _help.html.md
 
-# This example file may also be copied into your config directory for tests from dryad/dryad-config-example/tenants/localhost.yml .
-
 default: &default
   enabled: true
   repository:
-    # making this localhost.com some it WebMock picks up invalid requests outside my local machine
-    domain: http://localhost.com
+    domain: localhost
     endpoint: "http://localhost:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
@@ -18,9 +15,6 @@ default: &default
   short_name: "Localhost"
   long_name: "Localhost"
   publisher_id: grid.1234567890
-  # put primary ror_id first
-  ror_ids:
-    - https://ror.org/just-a-fake-localhost-id
   tenant_id: localhost
   identifier_service:
     provider: datacite

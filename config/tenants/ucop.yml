@@ -1,0 +1,72 @@
+default: &default
+  enabled: true
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "UC"
+  short_name: "UC Office of the President"
+  long_name: "University of California, Office of the President"
+  publisher_id: grid.30389.31
+  # this is "UC System" since there isn't something for UC Office of the President
+  ror_ids:
+    - https://ror.org/00pjdza24
+  tenant_id: ucop
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5072/FK2"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucop.edu
+    entity_domain: .ucop.edu
+  default_license: cc0
+  ## maximum total size (default 100 GB for now)
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %> 
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/ucop_dash"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucop_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucop_password] %> 
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.18737/D7"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  campus_contacts: ["daniella.lowenberg@ucop.edu"]
