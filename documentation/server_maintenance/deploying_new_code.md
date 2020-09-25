@@ -15,11 +15,6 @@ To deploy with capistrano, you must be in the deploy directory, then:
 cap <capistrano deploy environment> deploy BRANCH="<branch or tag>"
 ```
 
-The deploy script uses the same branch or tag for both git
-repositories, the main `dryad-app` and the private
-`dryad-config`. That means if you tag on one repository, you should
-tag both so they have matching tags.
-
 Note that there are both machine-level and environment-level
 capistrano environment settings for convenience. `stage1` will only
 deploy to the first stage server, `stage2` will only deploy to the
@@ -56,12 +51,7 @@ Steps in a production deploy:
 Creating tags for deployment
 ---------------------------------
 
-Capistrano allows deploying from a tag as well as a branch. In either
-case, both `dryad-app` and `dryad-config` repos need to have that same
-branch or tag on the origin server (github) to work properly. So, for
-example, if you tag something as `v0.1.1` in dryad-app then you should
-create the same tag in the other repositories since it will use the
-same tag across the repositories for all parts of the application.
+Capistrano allows deploying from a tag as well as a branch.
 
 [Git-Basics-Tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 gives some information about how to tag. For this project, there are a

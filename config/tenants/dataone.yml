@@ -1,0 +1,65 @@
+# I think we need to keep UC Press and DataONE (but disabled) for the DOI metadata update info in here
+default: &default
+  enabled: false
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/dataone_dash"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_password] %>
+  abbreviation: "DataONE"
+  short_name: "DataONE"
+  long_name: "DataONE"
+  publisher_id: isni:0000000404085195
+  # DataONE doesn't have a ROR that I could find and it is more or less obsolete except legacy datasets
+  ror_ids:
+    - https://ror.org/00xDaTaONE-FIXME
+  tenant_id: dataone
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: none
+  default_license: cc0
+  dash_logo_after_tenant: false
+  ## maximum total size (default 100 GB for now)
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: ["scott.fisher@ucop.edu"]
+  data_deposit_agreement: false
+  partner_display: false
+  covers_dps: true
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  manager_email: ["Daniella.Lowenberg@ucop.edu"]
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/dataone_dash"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_password] %>
+  identifier_service:
+    provider: datacite
+    prefix: "10.15146"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+  campus_contacts: ["Daniella.Lowenberg@ucop.edu"]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
