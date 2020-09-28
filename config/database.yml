@@ -27,7 +27,7 @@ local:
   password: ""
 
 local_dev:
-  <<: *DEVELOPMENT
+  <<: *default
 
 stage:
   <<: *default
