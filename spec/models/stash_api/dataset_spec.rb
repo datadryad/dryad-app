@@ -118,6 +118,10 @@ module StashApi
         expect(@metadata[:editLink]).to eq(nil)
       end
 
+      it 'has a lastModificationDate' do
+        expect(@metadata[:lastModificationDate]).to eq(Date.today.strftime('%Y-%m-%d'))
+      end
+      
       it 'has a sharingLink when it is in peer_review status' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
