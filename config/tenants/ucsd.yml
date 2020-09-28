@@ -20,7 +20,7 @@ default: &default
   identifier_service:
     provider: ezid
     shoulder: "doi:10.6075/J0"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
     id_scheme: doi
     owner: null
@@ -73,7 +73,7 @@ production:
   identifier_service:
     provider: ezid
     shoulder: "doi:10.6076/D1"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
     id_scheme: doi
     owner: null
