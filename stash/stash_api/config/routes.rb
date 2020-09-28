@@ -6,6 +6,8 @@ StashApi::Engine.routes.draw do
 
   match '/test', to: 'general#test', via: %i[get post]
 
+  match '/search', to: 'datasets#index', via: %i[get]
+
   resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/ do
     member do
       get 'download'

@@ -5,6 +5,7 @@
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
 require 'stash/download/version_presigned'
+require 'rsolr'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -45,8 +46,27 @@ module StashApi
 
     # get /datasets
     def index
-      ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
+      if params.key?('q')
+        query_solr
+      else
+        query_database
+      end
+    end
 
+    def query_solr
+      # datasets in SOLR are always public, so there is no need to limit the query beyond the
+      # terms actually provided
+      logger.debug "quering SOLR for #{params['q']}"
+      solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      response = solr.get 'select', :params => {:q => "#{params['q']}"}
+      
+      respond_to do |format|
+        format.json { render json: response }
+      end
+    end
+    
+    def query_database
+      ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
       # These filter conditions were things Daisie put in, because of some queries she needed to make.
       # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
       # and we are ready to support whatever we decide.
