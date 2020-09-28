@@ -24,10 +24,12 @@ module StashApi
     end
 
     def metadata
-      # gets descriptive metadata together
+      # descriptive metadata is initialized from the last version that
+      # the user is allowed to see
       lv = last_version
       return simple_identifier if lv.nil?
 
+      # expand the metadata with some dataset-level fields
       id_size_hsh = id_and_size_hash
       metadata = id_size_hsh.merge(lv.metadata)
       add_edit_link!(metadata, lv)
