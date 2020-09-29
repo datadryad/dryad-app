@@ -62,7 +62,7 @@ namespace :link_out do
     labslink_service.publish_files! # if labslink_service.validate_files!
   end
 
-  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a isSupplementTo DOI!'
+  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a cites DOI!'
   task seed_pmids: :environment do
     sleep(1) # The NCBI API has a threshold for how many times we can hit it
     p 'Retrieving Pubmed IDs for existing datasets'
@@ -70,7 +70,7 @@ namespace :link_out do
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
     resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids).pluck(:id)
     related_identifiers = StashDatacite::RelatedIdentifier.where(resource_id: resource_ids, related_identifier_type: 'doi',
-                                                                 relation_type: 'issupplementto').order(created_at: :desc)
+                                                                 relation_type: 'cites').order(created_at: :desc)
     related_identifiers.each do |data|
       p "  looking for pmid for #{data.related_identifier}"
       pmid = pubmed_service.lookup_pubmed_id(data.related_identifier.gsub('doi:', ''))
@@ -116,8 +116,8 @@ namespace :link_out do
 
   desc 'Update Solr keywords with publication IDs'
   task seed_solr_keywords: :environment do
-    p 'Updating Solr keywords with manuscriptNumber, pubmedID or a isSupplementTo related identifier'
-    types = %w[pubmedID manuscriptNumber]
+    p 'Updating Solr keywords with manuscriptNumber, pubmedID or a cites related identifier'
+    types = %w[pubmedID manuscriptNumber cites]
 
     # rubocop:disable Layout/LineLength
     StashEngine::Identifier.joins(:internal_data).where("stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value IS NOT NULL AND stash_engine_internal_data.value != ''", types).each do |identifier|
