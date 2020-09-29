@@ -16,8 +16,8 @@ default: &default
   identifier_service:
     provider: ezid
     shoulder: "doi:10.5072/FK2"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
     id_scheme: doi
     owner: null
   authentication:
@@ -62,7 +62,7 @@ production:
   identifier_service:
     provider: ezid
     shoulder: "doi:10.17916/P6"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
     owner: null
     id_scheme: doi
