@@ -1,4 +1,5 @@
 require 'amatch'
+require 'byebug'
 
 require_relative '../../../../stash_engine/app/models/stash_engine/proposed_change'
 
@@ -78,7 +79,7 @@ module Stash
 
         populate_abstract
         populate_authors
-        populate_supplement_to
+        populate_related_doi
         populate_funders
         populate_publication_date
         populate_publication_issn
@@ -223,7 +224,7 @@ module Stash
       end
 
       def related_identifier_will_change?(proposed_change:)
-        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'issupplementto').first
+        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'cites').first
         proposed_change.publication_doi != related_identifier&.related_identifier
       end
 
@@ -266,14 +267,24 @@ module Stash
         end
       end
 
-      def populate_supplement_to
+      def populate_related_doi
         my_related = @sm['URL'] || @sm['DOI']
-        return if my_related.blank? || duplicate_reference_doi?(target_doi: my_related)
+        return if my_related.blank?
 
         # Use the URL if available otherwise just use the DOI
-        @resource.related_identifiers.find_or_initialize_by(related_identifier: my_related,
-                                                            related_identifier_type: 'doi',
-                                                            relation_type: 'issupplementto')
+        related = @resource.related_identifiers
+          .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                 related_identifier_type: 'doi').first || @resource.related_identifiers.new
+
+        related.assign_attributes({
+                                    related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                                    related_identifier_type: 'doi',
+                                    relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
+                                    work_type: 'article',
+                                    verified: true,
+                                    hidden: false
+                                  })
+        related.save!
       end
 
       def populate_funders
