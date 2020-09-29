@@ -268,20 +268,21 @@ module Stash
         end
       end
 
-      describe '#populate_supplement_to' do
+      describe '#populate_related_doi' do
         before(:each) do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'URL' => URL })
         end
 
-        it 'takes the DOI URL for the article and turns it into is_supplement_to for this dataset' do
-          @cr.send(:populate_supplement_to)
+        it 'takes the DOI URL for the article and turns it into cites for this dataset' do
+          @cr.send(:populate_related_doi)
           expect(@resource.related_identifiers.any?).to eql(true)
-          expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
+          expect(@resource.related_identifiers.first.related_identifier).to \
+            eql(StashDatacite::RelatedIdentifier.standardize_doi(URL))
         end
 
         it 'ignores blank URLs' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'URL' => '' })
-          resp = @cr.send(:populate_supplement_to)
+          resp = @cr.send(:populate_related_doi)
           expect(resp).to eql(nil)
           expect(@resource.related_identifiers.length).to eql(0)
         end
@@ -377,9 +378,9 @@ module Stash
           expect(@resource.authors.first.author_last_name).to eql(AUTHOR.first['family'])
           expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.first.description).to eql(ABSTRACT)
           expect(@resource.contributors.length).to eql(11)
-          expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
+          expect(@resource.related_identifiers.first.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(URL))
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
-          doi = @resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto' }
+          doi = @resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'cites' }
           expect(doi.first&.related_identifier).to end_with(DOI)
           expect(@resource.publication_date.strftime('%Y-%m-%d')).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE).to_s)
         end
@@ -618,8 +619,8 @@ module Stash
           resource = cr.populate_resource!
           expect(resource.title).to eql(@params[:title])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
-          doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto' }
-          expect(doi.first&.related_identifier).to eql(@params[:publication_doi])
+          doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'cites' }
+          expect(doi.first&.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(@params[:publication_doi]))
         end
       end
 

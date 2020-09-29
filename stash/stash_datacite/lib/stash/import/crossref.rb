@@ -224,7 +224,7 @@ module Stash
       end
 
       def related_identifier_will_change?(proposed_change:)
-        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'issupplementto').first
+        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'cites').first
         proposed_change.publication_doi != related_identifier&.related_identifier
       end
 
