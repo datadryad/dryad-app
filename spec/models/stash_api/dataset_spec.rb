@@ -119,7 +119,7 @@ module StashApi
       end
 
       it 'has a lastModificationDate' do
-        expect(@metadata[:lastModificationDate]).to eq(Date.today.strftime('%Y-%m-%d'))
+        expect(@metadata[:lastModificationDate]).to eq(Time.now.utc.strftime('%Y-%m-%d'))
       end
 
       it 'has relatedWorks' do
