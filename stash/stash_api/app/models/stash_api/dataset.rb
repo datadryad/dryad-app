@@ -30,8 +30,9 @@ module StashApi
       return simple_identifier if lv.nil?
 
       # expand the metadata with some dataset-level fields
-      id_size_hsh = id_and_size_hash
-      metadata = id_size_hsh.merge(lv.metadata)
+      descriptive_hsh = descriptive_metadata_hash
+      metadata = descriptive_hsh.merge(lv.metadata)
+      add_license!(metadata)
       add_edit_link!(metadata, lv)
 
       # gives the links to nearby objects
@@ -86,12 +87,16 @@ module StashApi
       }
     end
 
-    def id_and_size_hash
+    def descriptive_metadata_hash
       {
         identifier: @se_identifier.to_s,
         id: @se_identifier.id,
-        storage_size: @se_identifier.storage_size
+        storageSize: @se_identifier.storage_size
       }
+    end
+
+    def add_license!(hsh)
+      hsh[:license] = StashEngine::License.by_id(@se_identifier.license_id)[:uri] if @se_identifier.license_id
     end
 
     def add_edit_link!(hsh, version)

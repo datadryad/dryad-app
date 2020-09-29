@@ -121,7 +121,41 @@ module StashApi
       it 'has a lastModificationDate' do
         expect(@metadata[:lastModificationDate]).to eq(Date.today.strftime('%Y-%m-%d'))
       end
-      
+
+      it 'has relatedWorks' do
+        ri = create(:related_identifier, :publication_doi, resource: @resource)
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        rw = @metadata[:relatedWorks].first
+        expect(rw[:identifier]).to eq(ri.related_identifier)
+        expect(rw[:identifierType]).to eq('DOI')
+        expect(rw[:relationship]).to eq('Cites')
+      end
+
+      it 'defaults to the correct license' do
+        expect(@metadata[:license]).to eq('https://creativecommons.org/publicdomain/zero/1.0/')
+      end
+
+      it 'has public visibility when metadata is viewable' do
+        @resource.meta_view = true
+        @resource.save
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:visibility]).to eq('public')
+      end
+
+      it 'has public visibility when files are viewable' do
+        @resource.file_view = true
+        @resource.save
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:visibility]).to eq('public')
+      end
+
+      it 'has restricted visibility when nothing is viewable' do
+        expect(@metadata[:visibility]).to eq('restricted')
+      end
+
       it 'has a sharingLink when it is in peer_review status' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
