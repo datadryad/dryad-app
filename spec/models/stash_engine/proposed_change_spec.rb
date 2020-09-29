@@ -95,8 +95,8 @@ module StashEngine
         expect(@resource.title).to eql(old_title)
         expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
         expect(@resource.related_identifiers.select do |id|
-          id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto'
-        end.first&.related_identifier).to eql(@params[:publication_doi])
+          id.related_identifier_type == 'doi' && id.relation_type == 'cites'
+        end.first&.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(@params[:publication_doi]))
 
         @proposed_change.reload
         expect(@proposed_change.approved).to eql(true)

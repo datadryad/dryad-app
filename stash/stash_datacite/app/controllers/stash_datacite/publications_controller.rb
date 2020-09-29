@@ -67,23 +67,26 @@ module StashDatacite
       return if form_doi.blank?
 
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
-      related_dois = @resource.related_identifiers&.where(relation_type: 'issupplementto')
+      related_dois = @resource.related_identifiers
 
       related_dois.each do |rd|
         bare_related_doi = Stash::Import::Crossref.bare_doi(doi_string: rd.related_identifier)
-        return nil if bare_related_doi.include? bare_form_doi # user is entering a DOI that we already have
+        return nil if bare_related_doi.include?(bare_form_doi) # user is entering a DOI that we already have
         next unless bare_form_doi.include? bare_related_doi
 
         # user is expanding on a DOI that we already have; update it in the DB
-        rd.update(related_identifier: bare_form_doi)
+        rd.update(related_identifier: RelatedIdentifier.standardize_doi(bare_form_doi), work_type: 'article',
+                  hidden: false)
         return nil
       end
 
       # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
       RelatedIdentifier.create(resource_id: @resource.id,
-                               related_identifier: bare_form_doi,
+                               related_identifier: RelatedIdentifier.standardize_doi(bare_form_doi),
                                related_identifier_type: 'doi',
-                               relation_type: 'issupplementto')
+                               relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
+                               work_type: 'article',
+                               hidden: false)
       @resource.reload
     end
 
@@ -140,6 +143,7 @@ module StashDatacite
         @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:internal_datum][:doi]}"
         return
       end
+
       @resource = cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
