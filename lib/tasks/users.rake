@@ -1,14 +1,15 @@
 require 'byebug'
 require 'pp'
-namespace :users do
 
+# rubocop:disable Metrics/BlockLength
+namespace :users do
   desc 'Merge old and new users (into old account like it works in the UI)'
   task merge_users: :environment do
     if ENV['RAILS_ENV'].blank? || ARGV.length != 3 || ARGV[1].to_i == 0 || ARGV[2].to_i == 0
       puts "Merges two users together, the old user (old datasets) has new user/datasets merged into it and new ORCID copied to it\n\n"
-      puts "Run this script with the line:"
+      puts 'Run this script with the line:'
       puts "  RAILS_ENV=<environment> bundle exec rake users:merge_users <old-user-id> <new-user-id>\n\n"
-      puts "Example: RAILS_ENV=development bundle exec rake users:merge_users 645 8037"
+      puts 'Example: RAILS_ENV=development bundle exec rake users:merge_users 645 8037'
       puts "\nThe user ids should be obtained by looking at id field in the stash_engine_users"
       exit
     end
@@ -36,5 +37,5 @@ namespace :users do
     exit
   end
 
-
 end
+# rubocop:enable Metrics/BlockLength
