@@ -62,6 +62,7 @@ module StashDatacite
       save_doi
     end
 
+    # rubocop:disable Metrics/MethodLength
     def save_doi
       form_doi = params[:internal_datum][:doi]
       return if form_doi.blank?
@@ -74,21 +75,26 @@ module StashDatacite
         return nil if bare_related_doi.include?(bare_form_doi) # user is entering a DOI that we already have
         next unless bare_form_doi.include? bare_related_doi
 
+        standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
+
         # user is expanding on a DOI that we already have; update it in the DB
-        rd.update(related_identifier: RelatedIdentifier.standardize_doi(bare_form_doi), work_type: 'article',
-                  hidden: false)
+        rd.update(related_identifier: standard_doi, work_type: 'article', hidden: false)
+        rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
         return nil
       end
 
       # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
-      RelatedIdentifier.create(resource_id: @resource.id,
-                               related_identifier: RelatedIdentifier.standardize_doi(bare_form_doi),
-                               related_identifier_type: 'doi',
-                               relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
-                               work_type: 'article',
-                               hidden: false)
+      standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
+      ri = RelatedIdentifier.create(resource_id: @resource.id,
+                                    related_identifier: standard_doi,
+                                    related_identifier_type: 'doi',
+                                    relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
+                                    work_type: 'article',
+                                    hidden: false)
+      ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
       @resource.reload
     end
+    # rubocop:enable Metrics/MethodLength
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
     def parse_msid(issn:, msid:)
