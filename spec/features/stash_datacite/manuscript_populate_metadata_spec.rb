@@ -100,6 +100,10 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           "allowBlackout": false
         }.to_json, headers: {})
 
+      stub_request(:get, 'https://doi.org/10.1098/rsif.2017.0030').with(
+        headers: { 'Host' => 'doi.org' }
+      ).to_return(status: 200, body: '', headers: {})
+
       journal = 'Journal of The Royal Society Interface'
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
