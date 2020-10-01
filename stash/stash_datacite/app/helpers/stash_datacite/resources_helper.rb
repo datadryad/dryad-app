@@ -1,11 +1,10 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_year) # rubocop:disable Metrics/ParameterLists
+    def citation(authors, title, resource_type, identifier, publication_year)
       [
         "#{author_citation_format(authors)} (#{publication_year})",
         escape_title(title),
-        escape_version(version),
-        escape_publisher(publisher),
+        'Dryad',
         escape_resource_type(resource_type),
         doi_link(identifier)
       ].reject(&:blank?).join(', ').html_safe
