@@ -202,3 +202,20 @@ WHERE ids.pub_state IN ('published', 'embargoed')
 GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 ```
 
+Lists of Objects in non-Dryad collections for Merritt Migration
+---------------------------------------------------------------
+```
+SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id
+FROM stash_engine_identifiers ids
+JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash_engine_resources
+  JOIN stash_engine_resource_states sts
+  ON stash_engine_resources.`current_resource_state_id` = sts.id
+  WHERE tenant_id IN ('dataone', 'lbnl', 'ucb', 'ucd', 'uci', 'ucla', 'ucm', 'ucop', 'ucpress', 'ucr', 'ucsb', 'ucsc', 'ucsf')
+  AND sts.resource_state = 'submitted'
+  GROUP BY identifier_id
+) as res2
+ON ids.id = res2.identifier_id
+JOIN stash_engine_resources res
+ON res2.res2_id = res.id
+ORDER BY res.tenant_id, ids.identifier;
+```
