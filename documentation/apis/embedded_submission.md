@@ -29,7 +29,12 @@ an initial call with the API credentials to obtain a token. Note that
 this call does not need to be repeated for each submission; a token
 can be used for as many authors/datasets as needed until it expires.
 
-**** sample
+A sample call and result:
+```bash
+> curl -X POST https://datadryad.org/oauth/token -d "client_id=16b0c3c4f7916e2c9ba54d8&client_secret=493f95b1e5443c0b77d23f6&grant_type=client_credentials" -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"
+
+{"access_token":"Qa84cd6uhxC8U_Z8LOKpb0svA_pR5hse5dqaVQtWc","token_type":"Bearer","expires_in":35999,"created_at":1601647027}
+```
 
 Then, when the user invokes an action in the manuscript system such as
 'Create Dryad Data Submission', use the token to issues a `POST` call
@@ -45,20 +50,60 @@ include:
 When Dryad replies to this API call, the response will include a
 summary of the deposit, including:
 - the DOI for the dataset (`identifier`)
-- a URL for making edits to the dataset (`editURL`)
+- a URL for making edits to the dataset (`editLink`)
 
-*** Sample
+A sample call using the [sample dataset file](sample_dataset.json), with results abbreviated for readability:
+```bash
+> curl --data "@sample_dataset.json" -i -X POST https://datadryad.org/api/v2/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
 
-***See:
-  https://github.com/CDL-Dryad/dryad-app/pull/151
-    http://ryandash.datadryad.org/stash/edit/10.7959/dryad.bzkh18c1
-
+{
+  "_links": {
+    "self": {
+	  "href": "/api/v2/datasets/doi%3A10.7959%2Fdryad.83bk3jc0"
+	},
+	"stash:version": {
+	  "href": "/api/v2/versions/320"
+	},
+  },
+  "identifier": "doi:10.7959/dryad.83bk3jc0",
+  "id": 296,
+  "title": "Data from: Testing for unequal rates of morphological diversification in the absence of a detailed phylogeny: case study from characiform fishes",
+  "authors": [
+    {
+	  "firstName": "Brian",
+	  "lastName": "Sidlauskas",
+	  "email": "brian_sidlauskas@somewhere.com",
+	  "affiliation": "Oregon State University",
+	  "affiliationROR": "https://ror.org/00ysfqy60",
+	  "orcid": "0000-0003-0597-4085"
+	}
+  ],
+  "abstract": "This study develops the random phylogenies rate test (RAPRATE)....",
+  "keywords": [ "Cat","Computer", "Noodlecast", "Intercropping"	],
+  "methods": "My cat will help you to discover why you can't get the data to work.",
+  "relatedWorks": [
+    {
+	  "relationship": "Cites",
+	  "identifierType": "DOI",
+	  "identifier": "10.1111/j.1558-5646.2007.00022.x"
+	}
+  ],
+  "versionNumber": 1,
+  "versionStatus": "in_progress",
+  "curationStatus": "In Progress",
+  "lastModificationDate": "2020-10-02",
+  "visibility": "restricted",
+  "userId": 37182,
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
+  }
+```
 
 Allow users to edit metadata about the dataset, and upload data files
 ---------------------------------------------------------------------
 
 The manuscript system can now redirect the author to Dryad by opening
-the `editURL`. This URL may be opened in a new browser tab, or
+the `editLink`. This URL may be opened in a new browser tab, or
 directly in the tab where the author has been editing their manuscript
 submission.
 
@@ -88,20 +133,63 @@ information about the dataset at any point by making an `GET` call to
 `/datasets`. Information that may be the most useful includes:
 - Title
 - Status of the dataset in Dryad (e.g., `peerreview`, `curation`, `published`)
-- Number and size of data files
-- `sharingURL` -- for editors and reviewers to download the dataset
-- `editURL` -- for authors to the contents of the dataset
+- `storageSize` -- total size of the dataset
+- `sharingLink` -- for editors and reviewers to download the dataset
+- `editLink` -- for authors to the contents of the dataset
 
+Sample call and (abbreviated) response:
+```
+> curl -i -X GET https://datadryad.org/api/v2/datasets/doi%3A10.7959%2Fdryad.83bk3jc0 -H "Authorization: Bearer vdJVyt5Xt-Q7qemo3U" -H "Content-Type: application/json"
 
-***** sample call and response
+{
+  "_links": {
+    "self": {
+	  "href": "/api/v2/datasets/doi%3A10.7959%2Fdryad.83bk3jc0"
+	},
+	"stash:version": {
+	  "href": "/api/v2/versions/320"
+	},
+  },
+  "identifier": "doi:10.7959/dryad.83bk3jc0",
+  "id": 296,
+  "storageSize":17116,
+  "title": "Data from: Testing for unequal rates of morphological diversification in the absence of a detailed phylogeny: case study from characiform fishes",
+  "authors": [
+    {
+	  "firstName": "Brian",
+	  "lastName": "Sidlauskas",
+	  "email": "brian_sidlauskas@somewhere.com",
+	  "affiliation": "Oregon State University",
+	  "affiliationROR": "https://ror.org/00ysfqy60",
+	  "orcid": "0000-0003-0597-4085"
+	}
+  ],
+  "abstract": "This study develops the random phylogenies rate test (RAPRATE)....",
+  "keywords": [ "Cat","Computer", "Noodlecast", "Intercropping"	],
+  "methods": "My cat will help you to discover why you can't get the data to work.",
+  "relatedWorks": [
+    {
+	  "relationship": "Cites",
+	  "identifierType": "DOI",
+	  "identifier": "10.1111/j.1558-5646.2007.00022.x"
+	}
+  ],
+  "versionNumber": 1,
+  "versionStatus": "submitted",
+  "curationStatus": "Submitted",
+  "lastModificationDate": "2020-10-02",
+  "visibility": "restricted",
+  "sharingLink":"https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624",
+  "userId": 37182,
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
+  }
+```
 
 Since datasets in Dryad may be modified at any time by the author or
 Dryad curators, it is best if the API call is made on any screen that
 will display Dryad information, to ensure the latest information is
 being shown.
-
-**** while the dataset is still processing through Merritt, does the
-     sharingLink appear?
 
 **** should we notify manuscript systems when the status changes? We
      would need a way for them to provide us the API to call...
