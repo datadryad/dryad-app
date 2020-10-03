@@ -1,36 +1,106 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title>iFrame Demo</title>
+
+<style>
+.ms-page {
+  padding: 20px;
+  background-color: lightblue;
+}
+.normal {
+  background-color: white;
+}
+.np {
+float: right;
+}
+hr {
+height: 3px;
+background-color: black;
+}
+</style>
 </head>
 
 <body>
-<h1>iFrame -- ryandash</h1>
+<h1>Preferred workflow demo -- opening Dryad in the page</h1>
 
-<iframe width=800 height=800
-src="http://ryandash.datadryad.org"></iframe>
+<p>Imagine this section is in your favorite manuscript processing system. The author is going along, editing their manuscript submission, when they are given the option to...</p>
 
-<h1>iFrame -- ryandash editing</h1>
+<div class="ms-page">
+  <h2>Manuscript-o-matic</h2>
 
-<iframe width=800 height=800 src="http://ryandash.datadryad.org/stash/edit/10.7959/dryad.bzkh18c">abc</iframe>
+  <p>Editing Manuscript: Effect of Manuscript Submisison on Publication Count</p>
+  <hr/>
+  <p>Please submit all data associated with this manuscript.</p>
 
-<h1>iFrame -- example.com</h1>
+  <form method="GET" action="http://ryandash.datadryad.org/stash/edit/10.7959/dryad.6wwpzgp1">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Submit a dataset through Dryad">
+  </form>
+  <br/>
+  <hr/>
+  <button>Prev Page</button>
+  <button class="np">Next Page</button>
+</div>
 
-<iframe src="https://www.example.com/"></iframe>
+<h1>Secondary workflow demo -- iFrame</h1>
 
-<h1>iFrame -- youtube</h1>
+<p>Imagine this section is in your favorite manuscript processing system. The author is going along, editing their manuscript submission, when they are given the option to...</p>
 
-~<iframe width="560" height="315"
-src="https://www.youtube.com/embed/s4BibernJxU" frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-gyroscope; picture-in-picture" allowfullscreen></iframe>~
+<div class="ms-page">
+  <h2>Manuscript-o-matic</h2>
 
-<p>Sample links:</p>
-<ul>
-  <li><a href="http://ryandash.datadryad.org">ryandash server</a></li>
-  <li><a href="http://ryandash.datadryad.org/stash/edit/10.7959/dryad.bzkh18c"></a>editing a file at ryandash</li>
-</ul>
+  <p>Editing Manuscript: Effect of Manuscript Submisison on Publication Count</p>
+  <hr/>
+  <p>Please submit all data associated with this manuscript.</p>
+  <!--    <button onclick="displayYoutubeIframe()">Launch Youtube</button> -->
+  <button onclick="displayDryadIframe()">Create a dataset through Dryad</button>
+  <!--  <button onclick="closeIframe()" id="closer" visible="false">Close Frame</button> -->
+  <p/>
+  <div class="normal" id="iframeDisplay"> </div>
+  <br/>
+  <hr/>
+  <button>Prev Page</button>
+  <button class="np">Next Page</button>
+  <script>
+    function displayYoutubeIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"https://www.youtube.com/embed/s4BibernJxU\" height=\"400\" width=\"600\"></iframe>";
+    }
 
+    function displayDryadIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"http://ryandash.datadryad.org\" height=\"400\" width=\"600\"></iframe>";
+    }
+
+    function closeIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "";
+    }
+  </script>
+
+</div>
+
+<p />
+
+<h1>Finished page in manuscript system</h1>
+
+<div class="ms-page">
+
+  <h2>Manuscript-o-matic</h2>
+
+  <p>Editing Manuscript: Effect of Manuscript Submisison on Publication Count</p>
+  <hr/>
+  <h2>Dataset in Dryad</h2>
+  <table border=1>
+    <tr><td colspan=2>Some Amazing Dataset</td></tr>
+    <tr><td>DOI: https://doi.org/10.7272/Q6QC01Q6</td><td>Size: 10MB</td>
+    <tr><td colspan="2">Reviewer Link: https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624</td></tr>
+    <tr><td colspan="2"><button>Edit this dataset</button></td></tr>
+  </table>
+  <br/>
+  <hr/>
+  <button>Prev Page</button>
+  <button class="np">Next Page</button>
+</div>
+
+<hr />
 <!-- hhmts start -->
-Last modified: Wed Sep 30 15:53:44 EDT 2020
+Last modified: Fri Oct  2 17:19:22 EDT 2020
 <!-- hhmts end -->
 </body> </html>
