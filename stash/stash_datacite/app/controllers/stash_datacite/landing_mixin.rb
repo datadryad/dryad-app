@@ -38,26 +38,21 @@ module StashDatacite
         review.authors,
         review.title_str,
         review.resource_type,
-        version_string_for(resource, review),
         identifier_string_for(resource, review),
-        review.publisher,
         resource.publication_date&.strftime('%Y')
       )
     end
 
-    # rubocop:disable Metrics/ParameterLists
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_year)
+    def citation(authors, title, resource_type, identifier, publication_year)
       citation = []
       citation << h("#{author_citation_format(authors)} (#{publication_year})")
       citation << h(title)
-      citation << h(version == 'v1' ? '' : version)
-      citation << h(publisher.try(:publisher))
+      citation << 'Dryad'
       citation << h(resource_type.try(:resource_type_general_friendly))
       id_str = "https://doi.org/#{identifier}"
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
       citation.reject(&:blank?).join(', ').html_safe
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def author_citation_format(authors)
       return '' if authors.blank?

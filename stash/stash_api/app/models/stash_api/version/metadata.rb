@@ -27,6 +27,8 @@ module StashApi
           versionStatus: @resource.current_state,
           curationStatus: StashEngine::CurationActivity.latest(resource: @resource)&.readable_status,
           publicationDate: @resource.publication_date&.strftime('%Y-%m-%d'),
+          lastModificationDate: @resource.updated_at&.strftime('%Y-%m-%d'),
+          visibility: visibility,
           sharingLink: sharing_link,
           userId: @resource.user_id,
           skipDataciteUpdate: @resource.skip_datacite_update || nil,
@@ -36,6 +38,14 @@ module StashApi
         }
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+      def visibility
+        if @resource.meta_view || @resource.file_view
+          'public'
+        else
+          'restricted'
+        end
+      end
 
       def sharing_link
         curation_activity = StashEngine::CurationActivity.latest(resource: @resource)
