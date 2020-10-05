@@ -41,9 +41,11 @@ Then, when the user invokes an action in the manuscript system such as
 to `/datasets` with the initial dataset metadata. When a manuscript
 system is making this call on behalf of an author, the dataset *must*
 include:
-- an `ownerID` with the ORCID of the author that has been submitting
+- a `userID` with the ORCID of the author that has been submitting
   the manuscript. This allows the author to manage the dataset in Dryad. *** (verify syntax. need to add this into
   regular API docs)
+- an entry in the `authors` list that contains the ORCID of the
+  submitting author
 - ISSN of the journal. This allows journal administrators (including
   the manuscript system) to view private information about the dataset in Dryad.
 
