@@ -165,7 +165,7 @@ module StashApi
       publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
       return if publisher
 
-      StashDatacite::Publisher.create(publisher: @resource.tenant.short_name, resource_id: @resource.id) if @resource.tenant
+      StashDatacite::Publisher.create(publisher: 'Dryad', resource_id: @resource.id) if @resource.tenant
     end
 
     def ensure_resource_type
