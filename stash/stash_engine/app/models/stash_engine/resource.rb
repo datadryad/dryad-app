@@ -27,6 +27,7 @@ module StashEngine
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    # download tokens are for Merritt version downloads with presigned URL caching
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
@@ -260,6 +261,17 @@ module StashEngine
 
     def software_upload_dir
       Resource.software_upload_dir_for(id)
+    end
+
+    # tells whether software uploaded to zenodo for this resource has been published or not
+    def software_published?
+      zc = zenodo_copies.where(copy_type: 'software_publish', state: 'finished')
+      zc.count.positive?
+    end
+
+    def software_submitted?
+      zc = zenodo_copies.where(copy_type: 'software', state: 'finished')
+      zc.count.positive?
     end
 
     # gets the latest files that are not deleted in db, current files for this version
