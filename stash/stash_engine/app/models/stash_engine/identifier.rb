@@ -67,7 +67,7 @@ module StashEngine
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
     def counter_stat
       super || build_counter_stat(citation_count: 0, unique_investigation_count: 0, unique_request_count: 0,
-                                  created_at: Time.new.utc - 1.day, updated_at: Time.new.utc - 1.day)
+                                  created_at: Time.new.utc - 7.days, updated_at: Time.new.utc - 7.days)
     end
 
     # gets citations for this identifier w/ citation class
