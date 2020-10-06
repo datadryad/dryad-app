@@ -17,10 +17,10 @@
 <% if sfw.count.positive? %>
   <hr/>
   <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
-  <p>These additional unpublished files may be downloaded from Zenodo</p>
+  <p>These additional files may be downloaded from Zenodo</p>
 
   <% sfw.each do |s| %>
-    <%= link_to s.upload_file_name, s.zenodo_presigned_url, target: '_blank' %>
+    <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %>
   <% end %>
 <% end %>
 
