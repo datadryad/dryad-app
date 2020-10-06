@@ -135,7 +135,8 @@ Once the dataset has been submitted, the manuscript system can obtain
 information about the dataset at any point by making an `GET` call to
 `/datasets`. Information that may be the most useful includes:
 - `title`
-- `versionStatus` -- Whether this version of the dataset is being edited by an author (`in_progress`), processed internally by Dryad (`processing`), or has completed processing (`submitted`)
+- `versionStatus` -- Whether this version of the dataset is being
+  edited by an author (`in_progress`), is being processed internally by Dryad (`processing`), or has completed processing (`submitted`)
 - `curationStatus` -- Status of the dataset in Dryad's curation workflow (e.g., `Private for Peer Review`, `Curation`, `Published`)
 - `storageSize` -- total size of the dataset
 - `sharingLink` -- for editors and reviewers to download the dataset
@@ -218,8 +219,8 @@ that tells the server to set the /curationStatus value:
 ```
 
 The value may be:
-- "submitted" -- when a manuscript is accepted, and the dataset should be moved from "Private for Peer Review" into a "Submitted" status, ready for curation
-- "withdrawn" -- when a manuscript is rejected or withdrawn, and the dataset should be moved from "Private for Peer Review" into a "Withdrawn" status, so the author may resubmit it in the future
+- `submitted` -- when a manuscript is accepted, and the dataset should be moved from "Private for Peer Review" into a "Submitted" status, ready for curation
+- `withdrawn` -- when a manuscript is rejected or withdrawn, and the dataset should be moved from "Private for Peer Review" into a "Withdrawn" status, so the author may resubmit it in the future
 
 You also need to set the Content-Type header to 'application/json-patch+json'
 
