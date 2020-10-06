@@ -120,6 +120,7 @@ pre-populated by the journal, and upload any files.
 
 *** Are there parts of the Dryad submission screens that should be
     removed? (e.g., navigtion menus)
+	
 *** Are there features that should be added of the Dryad submission
     screens? (e.g., an indicator that their manuscript submission is
     still in progress, or a link back to the manuscript system)
@@ -133,8 +134,9 @@ Obtain Dryad metadata
 Once the dataset has been submitted, the manuscript system can obtain
 information about the dataset at any point by making an `GET` call to
 `/datasets`. Information that may be the most useful includes:
-- Title
-- Status of the dataset in Dryad (e.g., `peerreview`, `curation`, `published`)
+- `title`
+- `versionStatus` -- Whether this version of the dataset is being edited by an author (`in_progress`), processed internally by Dryad (`processing`), or has completed processing (`submitted`)
+- `curationStatus` -- Status of the dataset in Dryad's curation workflow (e.g., `Private for Peer Review`, `Curation`, `Published`)
 - `storageSize` -- total size of the dataset
 - `sharingLink` -- for editors and reviewers to download the dataset
 - `editLink` -- for authors to the contents of the dataset
@@ -204,9 +206,37 @@ change to the manuscript's status, so Dryad may update the status of
 the dataset. This includes:
 - Manuscript Accepted
 - Manuscript Rejected (or Withdrawn)
-- Dataset "unlinked" from the manuscript
 
-**** should manuscript systems use the same `curation_activites` call that
-     we use internally? Or should we provide a separate call?
+Submitting updates is accomplished by sending a PATCH request to
+/api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
+that tells the server to set the /curationStatus value:
 
-	
+```json
+[
+	{ "op": "replace", "path": "/curationStatus", "value": "submitted" }
+]
+```
+
+The value may be:
+- "submitted" -- when a manuscript is accepted, and the dataset should be moved from "Private for Peer Review" into a "Submitted" status, ready for curation
+- "withdrawn" -- when a manuscript is rejected or withdrawn, and the dataset should be moved from "Private for Peer Review" into a "Withdrawn" status, so the author may resubmit it in the future
+
+You also need to set the Content-Type header to 'application/json-patch+json'
+
+For the cURL example, please save a file called my_patch.json with the patch content shown above.
+
+```bash
+curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/v2/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
+```
+
+Linking a dataset to a journal, or unlinking a dataset from a journal
+---------------------------------------------------------------------
+
+To link/unlink a dataset and a journal, use a similar approach to the status updates described above. The only difference is that the path should be `publicationISSN`, and the value is either the journal's ISSN (in the case of linking), or an empty string (to unlink). For example, to link journal ISSN "1234-5678" with a dataset, submit the following as the contents of the PATCH call:
+
+```json
+[
+	{ "op": "replace", "path": "/publicationISSN", "value": "1234-5678" }
+]
+```
+
