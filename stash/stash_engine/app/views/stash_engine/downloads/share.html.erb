@@ -12,6 +12,18 @@
 
 <p>If the download process does not begin automatically within several seconds, click the link above to start the download.</p>
 
+<% sfw = @resource.software_uploads
+%>
+<% if sfw.count.positive? %>
+  <hr/>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
+  <p>These additional unpublished files may be downloaded from Zenodo</p>
+
+  <% sfw.each do |s| %>
+    <%= link_to s.upload_file_name, s.zenodo_presigned_url, target: '_blank' %>
+  <% end %>
+<% end %>
+
 <!-- placeholder empty div that can have contents inserted for popup and then shown -->
 <div id="popup_dialog" style="display:none;"></div>
 

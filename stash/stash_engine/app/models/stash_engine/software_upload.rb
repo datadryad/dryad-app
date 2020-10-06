@@ -1,4 +1,5 @@
 require 'erb'
+require 'stash/zenodo_software' # for pre-release software downloads
 
 module StashEngine
   class SoftwareUpload < ActiveRecord::Base
@@ -19,6 +20,14 @@ module StashEngine
       return '#' if copy.nil? || copy.deposition_id.nil? || copy.state != 'finished' || file_state == 'deleted'
 
       "#{APP_CONFIG[:zenodo][:base_url]}/record/#{copy.deposition_id}/files/#{ERB::Util.url_encode(upload_file_name)}?download=1"
+    end
+
+    def zenodo_presigned_url
+      rat = Stash::ZenodoSoftware::RemoteAccessToken.new(zenodo_config: APP_CONFIG.zenodo)
+      dep_id = resource.zenodo_copies.software&.last&.deposition_id
+      raise "Zenodo presigned downloads must have deposition ids for resource #{resource.id}" if dep_id.blank?
+
+      rat.magic_url(deposition_id: dep_id, filename: upload_file_name)
     end
 
   end

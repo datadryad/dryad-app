@@ -15,7 +15,7 @@ module Stash
 
       def initialize(zenodo_config:) # APP_CONFIG.zenodo
         @pat_token = zenodo_config.access_token
-        @pat_token_id = '3357'
+        @pat_token_id = zenodo_config.application_id.to_s
         @base_url = zenodo_config.base_url
       end
 
@@ -26,7 +26,7 @@ module Stash
             file: filename,
             access: 'read'
           },
-          iat: Time.now.to_i # this is what the docs at https://github.com/jwt/ruby-jwt shows
+          iat: Time.now.to_i # this is what the docs at https://github.com/jwt/ruby-jwt show
         }
         headers = { kid: @pat_token_id }
 
