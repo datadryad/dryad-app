@@ -44,7 +44,6 @@ module StashApi
       end
     end
 
-    
     # get /datasets
     def index
       ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
@@ -71,31 +70,35 @@ module StashApi
         ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
 
-      @datasets = paged_datasets(ds_query)
+      datasets = paged_datasets(datasets: ds_query)
       respond_to do |format|
-        format.json { render json: @datasets }
+        format.json { render json: datasets }
       end
     end
 
-    
     # get /search
     def search
-      # datasets in SOLR are always public, so there is no need to limit the query beyond the
-      # terms actually provided
-      logger.debug "quering SOLR for #{params['q']}, page= #{params['page']}, per_page=#{params['per_page']}"      
-      solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      # datasets in SOLR are always public, so there is no need to limit the query based on the user
       page = params['page'] || 1
-      per_page = params['per_page'] || 10
-      response = solr.paginate(page, per_page, 'select',
-                               params: {q: "#{params['q']}", fl: "dc_identifier_s"}
-                              )
-      
+      per_page = params['per_page']&.to_i || DEFAULT_PAGE_SIZE
+      query = params['q']
+      logger.debug "quering SOLR for #{query}, page=#{page}, per_page=#{per_page}"
+
+      solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      solr_response = solr.paginate(page, per_page, 'select',
+                                    params: { q: query.to_s, fl: 'dc_identifier_s' })['response']
+
+      # once we have the solr_response, use the DOIs to build the 'real' response
+      mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
+      datasets = paging_hash_results(all_count: solr_response['numFound'],
+                                     page_size: per_page,
+                                     results: mapped_results)
+
       respond_to do |format|
-        format.json { render json: response }
+        format.json { render json: datasets }
       end
     end
 
-    
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
@@ -262,21 +265,18 @@ module StashApi
       @resource = nr
     end
 
-    def datasets_with_mapped_metadata(datasets_to_map)
-      datasets_to_map.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
+    def paged_datasets(datasets:, page_size: DEFAULT_PAGE_SIZE)
+      all_count = datasets.count
+      results = datasets.limit(page_size).offset(page_size * (page - 1))
+      mapped_results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
+      paging_hash_results(all_count: all_count, page_size: page_size, results: mapped_results)
     end
 
-    def paged_datasets(datasets_to_page)
-      all_count = datasets_to_page.count
-      results = datasets_to_page.limit(page_size).offset(page_size * (page - 1))
-      paging_hash_results(all_count, datasets_with_mapped_metadata(results))
-    end
-
-    def paging_hash_results(all_count, results)
+    def paging_hash_results(all_count:, page_size:, results:)
       return if results.nil?
 
       {
-        '_links' => paging_hash(result_count: all_count),
+        '_links' => paging_hash(result_count: all_count, page_size: page_size),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }

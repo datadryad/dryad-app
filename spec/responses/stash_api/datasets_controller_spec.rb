@@ -324,6 +324,37 @@ module StashApi
       end
     end
 
+    # search
+    describe '#search' do
+      before(:each) do
+        @ident = create(:identifier)
+        @res = create(:resource, identifier: @ident)
+        create(:curation_activity_no_callbacks, resource: @res, created_at: '2020-01-04', status: 'published')
+        mock_solr!(include_identifier: @ident)
+      end
+
+      it 'returns search results' do
+        get '/api/v2/search?q=data', headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_embedded']['stash:datasets'].size).to eq(5)
+      end
+
+      it 'formats a search result correctly' do
+        get '/api/v2/search?q=data', headers: default_authenticated_headers
+        output = response_body_hash
+        result = output['_embedded']['stash:datasets'].first
+        expect(result['identifier']).to eq("doi:#{@ident.identifier}")
+        expect(result['title']).to eq(@res.title)
+        expect(result['curationStatus']).to eq('Published')
+      end
+
+      xit 'has correct paging links' do
+      end
+
+      xit 'allows searches by institution' do
+      end
+    end
+
     # view single dataset
     describe '#show' do
       before(:each) do

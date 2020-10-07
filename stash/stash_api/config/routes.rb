@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 StashApi::Engine.routes.draw do
 
   # use_doorkeeper
@@ -5,7 +6,6 @@ StashApi::Engine.routes.draw do
   root to: 'general#index'
 
   match '/test', to: 'general#test', via: %i[get post]
-
   match '/search', to: 'datasets#search', via: %i[get]
 
   resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/ do
@@ -37,3 +37,4 @@ StashApi::Engine.routes.draw do
   get '/queue_length', to: 'submission_queue#length'
 
 end
+# rubocop:enable Metrics/BlockLength
