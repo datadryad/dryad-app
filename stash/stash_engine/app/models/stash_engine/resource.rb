@@ -50,6 +50,10 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
+        # this is a new rubocop cop complaint (must not be locked to a version of testing).
+        # I think this may have been done for some reason (two separate loops) because of mutation or errors, IDK.
+        # I'm not going to go back and revise right now.
+        # rubocop:disable Style/CombinableLoops
         %i[file_uploads software_uploads].each do |meth|
           new_resource.public_send(meth).each do |file|
             raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -67,6 +71,7 @@ module StashEngine
           resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
           resources.each(&:delete)
         end
+        # rubocop:enable Style/CombinableLoops
       end)
     end
 
