@@ -1,4 +1,3 @@
-
 class SolrDocument
   include Blacklight::Solr::Document
   include Geoblacklight::SolrDocument
