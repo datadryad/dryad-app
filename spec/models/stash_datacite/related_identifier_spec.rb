@@ -85,7 +85,7 @@ module StashDatacite
       end
     end
 
-	describe 'self.add_zenodo_relation' do
+    describe 'self.add_zenodo_relation' do
       it 'adds a record to the database for a zenodo doi' do
         test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
         r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)

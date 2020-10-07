@@ -118,7 +118,7 @@ module StashEngine
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 
       # can see if they had permission or the Share matches the identifier
-      if res && ( res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id )
+      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id)
         redirect_to sfw_upload.zenodo_presigned_url
       else
         render status: 403, plain: 'You are not authorized to download this file'

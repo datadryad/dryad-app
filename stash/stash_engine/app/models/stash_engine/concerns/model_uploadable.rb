@@ -21,7 +21,7 @@ module StashEngine
       end
 
       # display the correct error message based on the url status code
-      # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength
       def error_message
         return '' if url.nil? || status_code == 200
 
@@ -46,7 +46,7 @@ module StashEngine
           'The given URL is invalid. Please check the URL and resubmit.'
         end
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/MethodLength
 
       def digest?
         !digest.blank? && !digest_type.nil?
@@ -85,12 +85,12 @@ module StashEngine
 
       def last_version_file
         self.class.joins(:resource)
-            .where(upload_file_name: upload_file_name)
-            .where('resource_id < ?', resource_id)
-            .where('stash_engine_resources.identifier_id = (SELECT res2.identifier_id FROM stash_engine_resources res2 WHERE res2.id = ?)', resource_id)
-            .where(file_state: %i[created copied])
-            .order(resource_id: :desc)
-            .limit(1).first
+          .where(upload_file_name: upload_file_name)
+          .where('resource_id < ?', resource_id)
+          .where('stash_engine_resources.identifier_id = (SELECT res2.identifier_id FROM stash_engine_resources res2 WHERE res2.id = ?)', resource_id)
+          .where(file_state: %i[created copied])
+          .order(resource_id: :desc)
+          .limit(1).first
       end
 
       class_methods do
