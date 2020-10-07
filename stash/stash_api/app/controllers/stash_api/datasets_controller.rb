@@ -44,28 +44,9 @@ module StashApi
       end
     end
 
+    
     # get /datasets
     def index
-      if params.key?('q')
-        query_solr
-      else
-        query_database
-      end
-    end
-
-    def query_solr
-      # datasets in SOLR are always public, so there is no need to limit the query beyond the
-      # terms actually provided
-      logger.debug "quering SOLR for #{params['q']}"
-      solr = RSolr.connect(url: Blacklight.connection_config[:url])
-      response = solr.get 'select', :params => {:q => "#{params['q']}"}
-      
-      respond_to do |format|
-        format.json { render json: response }
-      end
-    end
-    
-    def query_database
       ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
       # These filter conditions were things Daisie put in, because of some queries she needed to make.
       # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
@@ -96,6 +77,25 @@ module StashApi
       end
     end
 
+    
+    # get /search
+    def search
+      # datasets in SOLR are always public, so there is no need to limit the query beyond the
+      # terms actually provided
+      logger.debug "quering SOLR for #{params['q']}, page= #{params['page']}, per_page=#{params['per_page']}"      
+      solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      page = params['page'] || 1
+      per_page = params['per_page'] || 10
+      response = solr.paginate(page, per_page, 'select',
+                               params: {q: "#{params['q']}", fl: "dc_identifier_s"}
+                              )
+      
+      respond_to do |format|
+        format.json { render json: response }
+      end
+    end
+
+    
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
