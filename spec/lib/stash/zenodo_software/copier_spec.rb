@@ -104,7 +104,7 @@ module Stash
 
           it 'rejects a data submission that is supposed to be software submission' do
             # I need to add the following item to get it past a different prerequisite for a different count
-            @resource.zenodo_copies << create(:zenodo_copy, copy_type: 'software')
+            @resource.zenodo_copies << create(:zenodo_copy, copy_type: 'software', identifier_id: @resource.identifier.id)
 
             @zc.update(copy_type: 'data')
 
