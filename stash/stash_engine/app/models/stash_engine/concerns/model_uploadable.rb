@@ -83,6 +83,16 @@ module StashEngine
         true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
       end
 
+      def last_version_file
+        self.class.joins(:resource)
+            .where(upload_file_name: upload_file_name)
+            .where('resource_id < ?', resource_id)
+            .where('stash_engine_resources.identifier_id = (SELECT res2.identifier_id FROM stash_engine_resources res2 WHERE res2.id = ?)', resource_id)
+            .where(file_state: %i[created copied])
+            .order(resource_id: :desc)
+            .limit(1).first
+      end
+
       class_methods do
         def sanitize_file_name(name)
           # remove invalid characters from the filename: https://github.com/madrobby/zaru
