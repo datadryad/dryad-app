@@ -34,7 +34,8 @@ module Stash
       end
 
       def magic_url(deposition_id:, filename:)
-        # I believe Alex said to use url like this instead "#{@resp[:links][:bucket]}/#{ERB::Util.url_encode(filename)}"
+        # Alex said to use bucket url like this instead of the other filename API endpoint, requires extra query
+        # to get the bucket from the deposit.
         rat_token = make_jwt(deposition_id: deposition_id.to_s, filename: filename)
         "#{get_bucket_url(deposition_id)}/#{ERB::Util.url_encode(filename)}?token=#{ERB::Util.url_encode(rat_token)}"
       end
