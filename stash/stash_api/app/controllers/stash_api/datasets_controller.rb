@@ -22,6 +22,11 @@ module StashApi
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
+    def initialize
+      super
+      @solr = RSolr.connect(url: Blacklight.connection_config[:url])
+    end
+
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
@@ -78,15 +83,14 @@ module StashApi
 
     # get /search
     def search
-      # datasets in SOLR are always public, so there is no need to limit the query based on the user
+      # datasets in SOLR are always public, so there is no need to limit the query based on the API user
       page = params['page'] || 1
-      per_page = params['per_page']&.to_i || DEFAULT_PAGE_SIZE
+      per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
       query = params['q']
-      logger.debug "quering SOLR for #{query}, page=#{page}, per_page=#{per_page}"
 
-      solr = RSolr.connect(url: Blacklight.connection_config[:url])
-      solr_response = solr.paginate(page, per_page, 'select',
-                                    params: { q: query.to_s, fl: 'dc_identifier_s' })['response']
+      solr_call = @solr.paginate(page, per_page, 'select',
+                                 params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
+      solr_response = solr_call['response']
 
       # once we have the solr_response, use the DOIs to build the 'real' response
       mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
@@ -97,6 +101,38 @@ module StashApi
       respond_to do |format|
         format.json { render json: datasets }
       end
+    end
+
+    # Builds an array of the various filter settings requested
+    def solr_filter_query
+      fq_array = []
+
+      # if user requests both 'affiliation' and 'tenant', prefer the affiliation,
+      # because it is more specific
+      if params['affiliation']
+        # ["dryad_author_affiliation_id_sm:\"https://ror.org/01sf06y89\" "
+        fq_array << "dryad_author_affiliation_id_sm:\"#{params['affiliation']}\" "
+      elsif params['tenant']
+        # multiple affiliations, separated by OR
+        tenant = StashEngine::Tenant.find(params['tenant'])
+        if tenant
+          ror_array = []
+          tenant.ror_ids.each do |r|
+            # map the id into the format
+            ror_array << "dryad_author_affiliation_id_sm:\"#{r}\" "
+          end
+          fq_array << ror_array.join(' OR ')
+        else
+          fq_array << 'dryad_author_affiliation_id_sm:"missing_tenant" '
+        end
+      end
+
+      if params['modifiedSince']
+        # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
+        fq_array << "timestamp:[#{params['modifiedSince']} TO NOW]"
+      end
+
+      fq_array
     end
 
     # we are using PATCH only to update the versionStatus=submitted
