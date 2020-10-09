@@ -126,7 +126,7 @@ module Stash
           test_doi = "#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
                                                     relation_type: 'issupplementto', resource_id: @resource.id,
-                               verified: true, hidden: false)
+                                                    verified: true, hidden: false)
           # r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)

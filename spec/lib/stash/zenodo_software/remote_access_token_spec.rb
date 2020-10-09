@@ -12,7 +12,7 @@ module Stash
 
       before(:each) do
         @rat = Stash::ZenodoSoftware::RemoteAccessToken.new(zenodo_config: APP_CONFIG.zenodo)
-        @deposition_id = 638092
+        @deposition_id = 638_092
         @filename = 'Screen_Shot_2020-06-10_at_8.00.12_PM.png'
 
         stub_get_existing_ds(deposition_id: @deposition_id)
@@ -43,7 +43,7 @@ module Stash
         it 'creates the full URL including both jwt, bucket, etc' do
           sharing_url = @rat.magic_url(deposition_id: @deposition_id, filename: @filename)
           uuid_matcher = '[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}'
-          expect(%r[^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}/.+?token=.+$]).to \
+          expect(%r{^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}/.+?token=.+$}).to \
             match(sharing_url)
         end
       end
@@ -51,7 +51,7 @@ module Stash
       describe '#get_bucket_url(deposition_id)' do
         it 'finds the bucket URL from the deposit info at Zenodo' do
           uuid_matcher = '[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}'
-          expect(%r[^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}$]).to \
+          expect(%r{^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}$}).to \
             match(@rat.get_bucket_url(@deposition_id))
         end
       end
