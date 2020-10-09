@@ -169,7 +169,7 @@ module StashApi
       resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
       visible = resource.file_uploads.present_files
       all_count = visible.count
-      file_uploads = visible.limit(page_size).offset(page_size * (page - 1))
+      file_uploads = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
       results = file_uploads.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end
