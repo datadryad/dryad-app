@@ -11,9 +11,7 @@
   <%= render partial: "stash_datacite/shared/citations",
              locals: { authors: review.authors, title: review.title_str,
                        resource_type: review.resource_type,
-                       version: resource.stash_version.nil? ? 'v0' : "v#{review.version.version }",
                        identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
-                       publisher: review.publisher,
                        publication_year: (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year) } %>
   </section>
   <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: review.abstract,
@@ -26,8 +24,6 @@
   <% end %>
 
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors } %>
-  <%= render partial: "stash_datacite/related_identifiers/show",
-             locals: { related_identifiers: review.related_identifiers } %>
 
   <% if review.geolocation_data? %>
     <h2 class="o-heading__level2">Location</h2>

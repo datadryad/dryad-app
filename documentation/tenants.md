@@ -10,20 +10,11 @@ Adding a New Tenant
 ====================
 
 Tasks:
-- In the `dryad-config` repo, add a config file for the tenant
-- In the `dryad-app` repo, add a logo
+- In the `config/tenants` directory, add a config file for the tenant
+- In the `app/assets/images/tenants` directory, add a logo
 - After the new configuration goes live, in the production database,
   update `tenant_id` for all entries in `stash_engine_users` who have emails with the
   institutional domain name 
-
-Configuration Files
----------------------
-
-Dryad’s tenant-specific configuration files and most other
-configuration files are contained in our private GitHub repository at
-https://github.com/cdlib/dryad-config.git. The configuration files are
-automatically updated and symlinked into the the main Dryad app when
-using the Capistrano deployment script.
 
 Prerequisites and Dependencies for a New Tenant
 ------------------------------------------------

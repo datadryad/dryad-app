@@ -359,7 +359,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     navigate_to_metadata
     description_divider = find('h2', text: 'Data Description')
     description_divider.click
-    fill_in 'related_identifier[related_identifier]', with: 'http://doi.org/10.5061/dryad.888gm50'
+    doi = 'https://doi.org/10.5061/dryad.888gm50'
+    mock_good_doi_resolution(doi: doi)
+    fill_in 'related_identifier[related_identifier]', with: doi
     # Submit the changes
     navigate_to_review
     fill_in('user_comment', with: Faker::Lorem.sentence) if curator

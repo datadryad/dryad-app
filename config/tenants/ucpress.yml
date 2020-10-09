@@ -1,0 +1,70 @@
+# I think we need to keep this config, though disabled in case of DOI updates.
+default: &default
+  enabled: false
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "UC Press"
+  short_name: "UC Press"
+  long_name: "University of California Press"
+  publisher_id: isni:0000000406059898
+  ror_ids:
+    - https://ror.org/bad-rors-uc-press
+  tenant_id: ucpress
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5072/FK2"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: none
+  default_license: cc0
+  ## maximum total size (default 100 MB for now)
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: false
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %> 
+
+production:
+  <<: *default
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/ucpress_dash"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucpress_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucpress_password] %>
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.17916/P6"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
+    owner: null
+    id_scheme: doi
+  campus_contacts: [""]
+

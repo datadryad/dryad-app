@@ -1,0 +1,33 @@
+# When in the 'test' environment, only use the content from dryad-config-example, not the content
+# in the main part of this file.
+<% if Rails.env == 'test' %>
+<%= YamlHelper.output_test_section(example_filename: 'blacklight.yml') %>
+<% else %>
+
+development: &DEVELOPMENT
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
+local:
+  <<: *DEVELOPMENT
+local_dev:
+  <<: *DEVELOPMENT
+
+stage:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-stg.cdlib.org:8983/solr/geoblacklight" %>
+
+# migration solr not used, but we probably need the section here
+migration:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolr-stg.cdlib.org:8983/solr/geoblacklight" %>
+
+demo:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryaddemo-stg.cdlib.org:8983/solr/geoblacklight" %>
+
+production:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-prd.cdlib.org:8983/solr/geoblacklight" %>
+
+# Terminate the if statement from the beginning of this file.
+<% end %>
