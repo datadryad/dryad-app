@@ -61,7 +61,7 @@ module Stash
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
       end
 
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def add_to_zenodo
         # sanity checks
         error_if_not_enqueued
@@ -112,7 +112,7 @@ module Stash
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
       # Publishing should never come with file changes because it's a separate operation than updating files or metadata
       # However, metadata may not have been updated for locked datasets, so update it.
