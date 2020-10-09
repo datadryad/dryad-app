@@ -15,7 +15,9 @@ FactoryBot.define do
     trait :publication_doi do
       related_identifier      { Faker::Pid.doi }
       related_identifier_type { 'doi' }
-      relation_type           { 'issupplementto' }
+      relation_type           { 'cites' }
+      work_type { 'article' }
+      verified { true }
     end
 
   end

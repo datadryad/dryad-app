@@ -76,7 +76,6 @@ RSpec.feature 'NewDataset', type: :feature do
       # ##############################
       # Funding
 
-      # TODO: stop calling this section 'contributor'
       fill_in 'contributor[contributor_name]', with: Faker::Company.name
       fill_in 'contributor[award_number]', with: Faker::Number.number(digits: 5)
 
@@ -96,8 +95,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Related works
-      select 'continues', from: 'related_identifier[relation_type]'
-      select 'DOI', from: 'related_identifier[related_identifier_type]'
+      select 'Dataset', from: 'related_identifier[work_type]'
       fill_in 'related_identifier[related_identifier]', with: Faker::Pid.doi
     end
 

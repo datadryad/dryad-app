@@ -1,0 +1,77 @@
+default: &default
+  enabled: true
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "UCLA"
+  short_name: "UC Los Angeles"
+  long_name: "University of California, Los Angeles"
+  publisher_id: grid.19006.3e
+  ror_ids:
+    - https://ror.org/046rm7j60
+    - https://ror.org/05h4zj272
+    - https://ror.org/04p5baq95
+    - https://ror.org/03b66rp04
+    - https://ror.org/04k3jt835
+    - https://ror.org/01d88se56
+    - https://ror.org/04vq5kb54
+    - https://ror.org/00mjfew53
+  tenant_id: ucla
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5068/D1"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucla.edu
+    entity_domain: .ucla.edu
+  default_license: cc0
+  ## maximum total size (default 100 MB for now)
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %> 
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/ucla_dash"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucla_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucla_password] %> 
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5068/D1"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  campus_contacts: ["tdennis@library.ucla.edu"]

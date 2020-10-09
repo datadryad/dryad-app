@@ -62,8 +62,8 @@ gem 'http'
 # Development and testing
 
 group :development, :local_dev do
-  gem 'colorize', '~> 0.8'
-  gem 'web-console', '~> 2.0'
+  gem 'colorize'
+  gem 'web-console'
   # gem 'httplog', not needed always, but good for troubleshooting HTTP requests to outside http services from the app
 end
 

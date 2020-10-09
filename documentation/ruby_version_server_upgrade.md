@@ -65,11 +65,9 @@ bundle install --deployment
 # gem install --default -v1.0.1  etc
 ```
 
-- [ ] Symlink the files, otherwise capistrano task fails, change the deployment host in commands below.
+- [ ] Symlink the shared files, otherwise capistrano task fails, change the deployment host in commands below.
 ```shell script
-bundle exec cap $CAP_ENV deploy:my_linked_files
 bundle exec cap $CAP_ENV deploy:symlink:shared
-bundle exec cap $CAP_ENV deploy:update_config BRANCH="$MY_BRANCH"
 ```
 
 ## Deploy with Capistrano

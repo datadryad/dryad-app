@@ -1,0 +1,81 @@
+default: &default
+  enabled: true
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "YALE"
+  short_name: "Yale"
+  long_name: "Yale University"
+  publisher_id: grid.47100.32
+  ror_ids:
+    - https://ror.org/03v76x132
+    - https://ror.org/03pnmqc26
+  tenant_id: yale
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: shibboleth
+    entity_id: https://auth.yale.edu/idp/shibboleth
+    entity_domain: auth.yale.edu
+  default_license: cc0
+  ## maximum total size (default 100 MB for now)
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+  campus_contacts: [""]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

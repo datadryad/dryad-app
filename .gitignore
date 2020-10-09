@@ -1,12 +1,6 @@
 # ######################################################
 # Miscellaneous
 
-# symlinked config files
-/config/*.yml
-/config/tenants
-/config/tenants/*.yml
-.config-secret/
-
 # MacOS noise
 .DS_Store
 
@@ -177,3 +171,6 @@ flycheck_*.el
 
 # directory configuration
 .dir-locals.el
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

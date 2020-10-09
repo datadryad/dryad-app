@@ -2,13 +2,12 @@ require_dependency 'stash_engine/application_controller'
 require 'securerandom'
 
 module StashEngine
-  class LandingController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class LandingController < ApplicationController
     # LandingMixin should provide:
     # - has_geolocation?
-    # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
-    before_action :require_identifier_and_resource, only: %i[show data_paper]
+    before_action :require_identifier_and_resource, only: %i[show]
     protect_from_forgery(except: [:update])
 
     # ############################################################
@@ -54,21 +53,6 @@ module StashEngine
       @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
       respond_to do |format|
         format.html
-      end
-    end
-
-    def data_paper
-      CounterLogger.general_hit(request: request, resource: resource)
-      ensure_has_geolocation!
-
-      # lots of problems getting all styles and javascript to load with wicked pdf
-      # https://github.com/mileszs/wicked_pdf/issues/257
-      # https://github.com/mileszs/wicked_pdf
-      show_as_html = params[:debug] ? true : false
-      respond_to do |format|
-        format.any(:html, :pdf) do
-          render_pdf(pdf_meta, show_as_html)
-        end
       end
     end
 
@@ -141,30 +125,6 @@ module StashEngine
 
       resource.has_geolocation = new_value
       resource.save!
-    end
-
-    def render_pdf(pdf_meta, show_as_html)
-      render(
-        pdf: review.pdf_filename,
-        page_size: 'Letter',
-        title: review.title_str,
-        javascript_delay: 3000,
-        # 'use_xserver' => true,
-        margin: { top: 20, bottom: 20, left: 20, right: 20 },
-        header: {
-          left: pdf_meta.top_left,
-          right: pdf_meta.top_right,
-          font_size: 9,
-          spacing: 5
-        },
-        footer: {
-          left: pdf_meta.bottom_left,
-          right: pdf_meta.bottom_right,
-          font_size: 9,
-          spacing: 5
-        },
-        show_as_html: show_as_html
-      )
     end
 
     def identifier_from(params)

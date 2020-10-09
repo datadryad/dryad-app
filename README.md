@@ -1,6 +1,6 @@
 # Dryad
 
-[![Build Status](https://travis-ci.org/CDLUC3/dashv2.svg?branch=development)](https://travis-ci.org/CDLUC3/dashv2)
+[![Build Status](https://travis-ci.com/CDL-Dryad/dryad-app.svg?branch=main)](https://travis-ci.com/CDL-Dryad/dryad-app)
 
 ## Introduction
 
@@ -24,33 +24,9 @@ for installation notes.
 
 ### Quick Cheat Sheet
 
-#### Development environment setup
-
-At the same level as the `dashv2` directory:
-
-- Clone the [Stash](https://github.com/CDL-Dryad/stash) repository (public):
-
-  ```
-  git clone https://github.com/CDL-Dryad/stash.git
-  ```
-
-- Clone the [dryad-config](https://github.com/cdlib/dryad-config/) repository
-  (private to CDL developers):
-
-  ```
-  git clone git@github.com:cdlib/dryad-config.git
-  ```
-
-- Symlink configuration files from `dryad-config` into the `dryad`
-  `config` directory:
-
-  ```
-  ./symlink_config.sh
-  ```
-
 #### Running integration/feature tests locally
 
-In the `dryad` directory:
+In the `dryad-app` directory:
 
 - run `travis-prep.sh`
 - run `bundle exec rspec`

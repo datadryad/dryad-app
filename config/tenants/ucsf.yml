@@ -1,0 +1,87 @@
+default: &default
+  enabled: true
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "UCSF"
+  short_name: "UC San Francisco"
+  long_name: "University of California, San Francisco"
+  publisher_id: grid.266102.1
+  ror_ids:
+    - https://ror.org/043mz5j54
+    - https://ror.org/03hwe2705
+    - https://ror.org/01t8svj65
+    - https://ror.org/04g7y4303
+  tenant_id: ucsf
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5072/FK2"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucsf.edu
+    entity_domain: .ucsf.edu
+  default_license: cc0
+  ## maximum total size 100 MB
+  max_submission_size: 3.0e+11
+  max_total_version_size: 1.0e+10
+  max_files: 1000
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+  enabled: false
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/ucsf_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucsf_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucsf_password] %> 
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+  enabled: false
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/ucsf_lib_datashare"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucsf_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucsf_password] %>
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.7272/Q6"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
+    id_scheme: doi
+    owner: null
+  campus_contacts: ["Ariel.Deardorff@ucsf.edu"]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
