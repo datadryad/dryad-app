@@ -328,7 +328,7 @@ module StashApi
     describe '#search' do
       before(:each) do
         @ident = create(:identifier)
-        @res = create(:resource, identifier: @ident)
+        @res = create(:resource, identifier: @ident, tenant_id: 'dryad')
         create(:curation_activity_no_callbacks, resource: @res, created_at: '2020-01-04', status: 'published')
         mock_solr!(include_identifier: @ident)
       end
@@ -336,6 +336,7 @@ module StashApi
       it 'returns search results' do
         get '/api/v2/search?q=data', headers: default_authenticated_headers
         output = response_body_hash
+        # the mocked solr response has 5 results
         expect(output['_embedded']['stash:datasets'].size).to eq(5)
       end
 
@@ -348,10 +349,46 @@ module StashApi
         expect(result['curationStatus']).to eq('Published')
       end
 
-      xit 'has correct paging links' do
+      it 'correctly pages results' do
+        # the mocked solr response reports that there are 110 total results, but only
+        # includes 5 of those results
+        get '/api/v2/search?q=data&page=2&per_page=6', headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_links']['last']['href']).to include('page=19')
+        expect(output['_links']['next']['href']).to include('page=3')
+
+        get '/api/v2/search?q=data&page=2&per_page=11', headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_links']['last']['href']).to include('page=10')
+
+        get '/api/v2/search?q=data&page=2&per_page=5', headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_links']['last']['href']).to include('page=22')
       end
 
-      xit 'allows searches by institution' do
+      it 'allows searches by affiliation' do
+        target_ror = @res.authors.first.affiliation.ror_id
+        get "/api/v2/search?affiliation=#{target_ror}", headers: default_authenticated_headers
+        output = response_body_hash
+        result = output['_embedded']['stash:datasets'].first
+        expect(result['authors'].first['affiliationROR']).to eq(target_ror)
+      end
+
+      it 'allows searches by tenant' do
+        target_tenant = @res.tenant
+        target_ror = @res.authors.first.affiliation.ror_id
+        allow(target_tenant).to receive(:ror_ids).and_return(['https://ror.org/test', target_ror])
+        get '/api/v2/search?tenant=dryad', headers: default_authenticated_headers
+        output = response_body_hash
+        result = output['_embedded']['stash:datasets'].last
+        expect(result['authors'].first['affiliationROR']).to eq(target_ror)
+      end
+
+      it 'allows searches by modifiedSince' do
+        get '/api/v2/search?modifiedSince=2020-10-08T10:24:53Z', headers: default_authenticated_headers
+        output = response_body_hash
+        result = output['_embedded']['stash:datasets'].last
+        expect(result['identifier']).to eq("doi:#{@ident.identifier}")
       end
     end
 
