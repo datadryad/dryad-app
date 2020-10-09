@@ -49,6 +49,7 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
+        # rubocop:disable Style/CombinableLoops
         %i[file_uploads software_uploads].each do |meth|
           new_resource.public_send(meth).each do |file|
             raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -67,6 +68,7 @@ module StashEngine
           resources.each(&:delete)
         end
       end)
+      # rubocop:enable Style/CombinableLoops
     end
 
     # ------------------------------------------------------------

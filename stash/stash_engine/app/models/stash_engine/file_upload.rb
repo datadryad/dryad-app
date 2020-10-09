@@ -109,6 +109,5 @@ module StashEngine
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
-
   end
 end
