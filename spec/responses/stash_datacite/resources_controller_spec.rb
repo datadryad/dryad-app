@@ -13,15 +13,9 @@ module StashDatacite
     # include Mocks::Tenant
 
     before(:each) do
-      # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
       mock_repository!
-      # mock_solr!
       mock_ror!
-      # mock_datacite!
       mock_stripe!
-      # mock_tenant!
-      # ignore_zenodo!
-      # neuter_curation_callbacks!
 
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
       create_basic_dataset! # makes @user, @identifier, @resource with file uploads
@@ -31,10 +25,28 @@ module StashDatacite
       allow_any_instance_of(StashDatacite::ResourcesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
-    describe 'Review actions' do
+    describe 'Review AJAX' do
       it 'creates basic dataset metadata for review' do
         get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
         expect(response.body).to include(@resource.title)
+      end
+
+      it 'shows files for Merritt' do
+        @upload = create(:file_upload,
+                         resource: @resource,
+                         file_state: 'created')
+
+        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        expect(response.body).to include(@upload.upload_file_name)
+      end
+
+      it 'outputs files for Zenodo' do
+        @upload = create(:software_upload,
+                         resource: @resource,
+                         file_state: 'created')
+
+        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        expect(response.body).to include(@upload.upload_file_name)
       end
 
     end
