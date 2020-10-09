@@ -31,9 +31,12 @@ module StashDatacite
       allow_any_instance_of(StashDatacite::ResourcesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
-    it 'creates basic dataset metadata for review' do
-      get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
-      expect(response.body).to include(@resource.title)
+    describe 'Review actions' do
+      it 'creates basic dataset metadata for review' do
+        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        expect(response.body).to include(@resource.title)
+      end
+
     end
   end
 end
