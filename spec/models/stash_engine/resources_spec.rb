@@ -487,7 +487,7 @@ module StashEngine
       before(:each) do
         @resource = create(:resource, identifier: create(:identifier))
         create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-               state: 'finished', copy_type: 'software')
+                             state: 'finished', copy_type: 'software')
       end
 
       it 'detects if software has not been published, but just submitted' do
@@ -496,7 +496,7 @@ module StashEngine
 
       it 'detects if software has been published' do
         create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-               state: 'finished', copy_type: 'software_publish')
+                             state: 'finished', copy_type: 'software_publish')
         expect(@resource.software_published?).to be(true)
       end
     end
@@ -505,7 +505,7 @@ module StashEngine
       before(:each) do
         @resource = create(:resource, identifier: create(:identifier))
         create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-               state: 'finished', copy_type: 'software')
+                             state: 'finished', copy_type: 'software')
       end
 
       it 'detects if software has been submitted' do

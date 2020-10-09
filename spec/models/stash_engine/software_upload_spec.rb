@@ -23,12 +23,11 @@ module StashEngine
                        upload_file_name: 'foo.bar')
 
       @copy1 = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-             state: 'finished', copy_type: 'software')
+                                    state: 'finished', copy_type: 'software')
 
       @copy2 = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-             state: 'finished', copy_type: 'software_publish')
+                                    state: 'finished', copy_type: 'software_publish')
     end
-
 
     describe '#calc_file_path' do
       it 'returns a path for zenodo files' do
@@ -50,7 +49,7 @@ module StashEngine
         item = @upload.zenodo_presigned_url
         expect(item).to include('/api/files/')
         expect(item).to include("/#{@upload.upload_file_name}")
-        expect(item).to include("token=")
+        expect(item).to include('token=')
       end
     end
   end
