@@ -483,6 +483,41 @@ module StashEngine
       end
     end
 
+    describe '#software_published?' do
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+               state: 'finished', copy_type: 'software')
+      end
+
+      it 'detects if software has not been published, but just submitted' do
+        expect(@resource.software_published?).to be(false)
+      end
+
+      it 'detects if software has been published' do
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+               state: 'finished', copy_type: 'software_publish')
+        expect(@resource.software_published?).to be(true)
+      end
+    end
+
+    describe '#software_submitted?' do
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+               state: 'finished', copy_type: 'software')
+      end
+
+      it 'detects if software has been submitted' do
+        expect(@resource.software_submitted?).to be(true)
+      end
+
+      it "detects if software hasn't been successfully submitted" do
+        @resource.zenodo_copies.first.update(state: 'error')
+        expect(@resource.software_submitted?).to be(false)
+      end
+    end
+
     describe 'self.need_publishing' do
       before(:each) do
         @identifier = create(:identifier)
