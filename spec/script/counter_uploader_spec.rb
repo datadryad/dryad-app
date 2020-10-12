@@ -16,7 +16,7 @@ RSpec.describe SubmittedReports do
 
   describe '#list_reports' do
     it 'returns a list of reports' do
-      stub_request(:get, 'https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500')
+      stub_request(:get, "https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500")
         .with(headers: { 'Host' => 'api.datacite.org' })
         .to_return(status: 200, body: File.read(File.join(__dir__, '../fixtures/http_responses/datacite_reports.json')),
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
@@ -27,7 +27,7 @@ RSpec.describe SubmittedReports do
     end
 
     it 'raises an error' do
-      stub_request(:get, 'https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500')
+      stub_request(:get, "https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500")
         .with(headers: { 'Host' => 'api.datacite.org' })
         .to_return(status: 500, body: 'internal server error')
       expect { @sr.list_reports(retries: 1) }.to raise_error(/Bad response from DataCite/)
@@ -36,7 +36,7 @@ RSpec.describe SubmittedReports do
 
   describe '#add_page_counts' do
     before(:each) do
-      stub_request(:get, 'https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500')
+      stub_request(:get, "https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page%5Bsize%5D=500")
         .with(headers: { 'Host' => 'api.datacite.org' })
         .to_return(status: 200, body: File.read(File.join(__dir__, '../fixtures/http_responses/datacite_reports.json')),
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
