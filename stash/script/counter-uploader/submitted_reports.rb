@@ -31,7 +31,7 @@ class SubmittedReports
   def list_reports(retries: 12)
     puts 'Asking for list of reports from DataCite.  This might take a long while.'
 
-    resp = get_with_retries('https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page[size]=500', retries: retries)
+    resp = get_with_retries("https://api.datacite.org/reports?client-id=#{APP_CONFIG[:counter][:account]}&page[size]=500", retries: retries)
 
     json = resp.parse
 
