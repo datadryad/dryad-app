@@ -1,6 +1,4 @@
 openapi: 3.0.0
-servers:
-  - url: /api/v2/
 
 info:
   title: dryad-api
@@ -8,11 +6,20 @@ info:
     The API for the [Dryad](https://datadryad.org) data publication and
     preservation platform.
 
-    In addition to this documentation, please see the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete examples of submission through the Dryad API.
+    In addition to this documentation, please see the [descriptive API documentation](https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/apis),
+    particularly the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete
+    examples of submission through the Dryad API.
 
-    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) may also be expanded further in the future as more documentation is created (though not all of it may be relevant to API users).
+    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) will also be expanded further in the future as more
+    documentation is created (though not all of it may be relevant to API users).
 
-  version: "2.0.0"
+  version: "2.1.0"
+
+servers:
+  - url: https://datadryad.org/api/v2/
+    description: Main Dryad server
+  - url: https://dryad-stg.cdlib.org/api/v2/
+    description: Staging server, for testing new features.
 
 paths:
   # --- root uri ----
@@ -345,6 +352,23 @@ paths:
             application/json:
               $ref: api/v2/docs/examples/file.json
 
+  # --- search ---
+  /search:
+    get:
+      summary: Search over the publicly-available datasets
+      description: Search the published Dryad datasets by keyword, institutional affiliation, and date.
+      parameters:
+      responses:
+        '200':
+          description: A list of datasets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasets'
+          examples:
+            application/json:
+              $ref: api/v2/docs/examples/datasets.json
+
 # ------------------
 # --- components ---
 # ------------------
@@ -397,15 +421,19 @@ components:
     dataset:
       allOf:
         - $ref: '#/components/schemas/dataset_links'
-        - properties:
+        - $ref: '#/components/schemas/version'
+      properties:
             id:
               type: integer
             identifier:
               type: string
-            storage_size:
-              type: number
-        - $ref: '#/components/schemas/version'
-
+            storageSize:
+              type: string
+            license:
+              type: string
+            relatedPublicationISSN:
+              type: string
+					 
     dataset_links:
       properties:
         _links:
@@ -472,6 +500,10 @@ components:
             userId:
               type: integer
             curationStatus:
+              type: string
+            visibility:
+              type: string
+            lastModificationDate:
               type: string
 
     version_links:
