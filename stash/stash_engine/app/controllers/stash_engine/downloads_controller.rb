@@ -119,7 +119,11 @@ module StashEngine
 
       # can see if they had permission or the Share matches the identifier
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id)
-        redirect_to sfw_upload.zenodo_presigned_url
+        if res.software_published?
+          redirect_to sfw_upload.public_zenodo_download_url
+        else
+          redirect_to sfw_upload.zenodo_presigned_url
+        end
       else
         render status: 403, plain: 'You are not authorized to download this file'
       end
