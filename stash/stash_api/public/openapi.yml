@@ -475,7 +475,7 @@ components:
               type: string
             relatedPublicationISSN:
               type: string
-					 
+
     dataset_links:
       properties:
         _links:

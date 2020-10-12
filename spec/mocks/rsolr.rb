@@ -10,6 +10,7 @@ module Mocks
       # Mock the Solr connection
       # http://someserver.org:8983/solr/geoblacklight/select?fl=dc_identifier_s&q=data&rows=10&start=0&wt=json
       stub_request(:get, %r{solr/geoblacklight}).to_return(status: 200, body: default_results, headers: {})
+      stub_request(:post, %r{solr/geoblacklight}).to_return(status: 200, body: [], headers: {})
       stub_request(:get, %r{solr/geoblacklight.*fq=dryad_author_affiliation}).to_return(status: 200, body: trivial_results, headers: {})
       stub_request(:get, %r{solr/geoblacklight.*fq=timestamp}).to_return(status: 200, body: trivial_results, headers: {})
 
