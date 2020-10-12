@@ -16,10 +16,10 @@ curl "https://datadryad.org/api/v2/search?q=carbon&page=2&per_page=5"
 
 Any combination of the following parameters may be used in a search:
 - *q* -- a list of terms to be searched. If multiple terms are
-  supplied, the default is to combine them with *AND*. Terms can also be
-  combined with an explicitly-stated *OR*. Grouping and more complex
-  operations may be performed according to the
-  [Lucene Search Syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html).
+  supplied, all matches will only be returned for items that contain
+  all terms. Terms may include an `*` at the end to indicate a
+  wildcard. A term may be negated to indicate terms that should *not*
+  be present in the results (e.g., `cat -fish`).
 - *page* -- which page of datasets to view. Defaults to page 1.
 - *per_page* -- number of datasets to return on each page. Defaults
   to 10. Maximum allowed is 100.
@@ -35,5 +35,3 @@ Any combination of the following parameters may be used in a search:
   only be returned if that have been modified since the given
   time. The time must be specified in ISO 8601 format, and the time
   zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
-
-
