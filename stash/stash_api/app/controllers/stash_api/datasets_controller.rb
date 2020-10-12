@@ -76,9 +76,7 @@ module StashApi
       end
 
       datasets = paged_datasets(datasets: ds_query)
-      respond_to do |format|
-        format.json { render json: datasets }
-      end
+      render json: datasets
     end
 
     # get /search
@@ -88,18 +86,19 @@ module StashApi
       per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
       query = params['q']
 
-      solr_call = @solr.paginate(page, per_page, 'select',
-                                 params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
-      solr_response = solr_call['response']
+      begin
+        solr_call = @solr.paginate(page, per_page, 'select',
+                                   params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
+        solr_response = solr_call['response']
 
-      # once we have the solr_response, use the DOIs to build the 'real' response
-      mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
-      datasets = paging_hash_results(all_count: solr_response['numFound'],
-                                     page_size: per_page,
-                                     results: mapped_results)
-
-      respond_to do |format|
-        format.json { render json: datasets }
+        # once we have the solr_response, use the DOIs to build the 'real' response
+        mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
+        datasets = paging_hash_results(all_count: solr_response['numFound'],
+                                       page_size: per_page,
+                                       results: mapped_results)
+        render json: datasets
+      rescue RSolr::Error::Http
+        render status: 400, plain: 'Unable to parse query request.'
       end
     end
 
