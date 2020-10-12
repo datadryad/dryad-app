@@ -26,7 +26,7 @@ Any combination of the following parameters may be used in a search:
 - *affiliation* -- a *ROR* identifier specifying an institutional
   affiliation that must be present in the list of dataset authors. The
   identifier should be in the full "https" format and should be
-  URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`
+  URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
 - *tenant* -- the abbreviation for a "tenant" organization in
   Dryad. This will automatically search all affiliations associated
   with the given tenant. If both a *tenant* and *affiliation* are
