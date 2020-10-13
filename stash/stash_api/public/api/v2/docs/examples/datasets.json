@@ -43,7 +43,7 @@
           ]
         },
         "id": "doi:10.5072/FK2HM58Q3S",
-        "storage_size": 157841,
+        "storageSize": 157841,
         "title": "The Influence of Large-Scale Archetypes on Cryptoanalysis",
         "authors": [
           {
@@ -81,7 +81,7 @@
           ]
         },
         "id": "doi:10.5072/FK2474DX0J",
-        "storage_size": 1209660,
+        "storageSize": 1209660,
         "title": "Analyzing the Lookaside Buffer and E-Commerce with HAIL",
         "authors": [
           {
@@ -147,6 +147,7 @@
         ],
         "methods": "<p>Made many subjects.</p>",
         "usageNotes": "<p>tricks.</p>",
+	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "place": "Frufällan, Sweden",
@@ -207,7 +208,7 @@
           ]
         },
         "id": "doi:10.5072/FK28W3G720",
-        "storage_size": 155899,
+        "storageSize": 155899,
         "title": "Quick Test of New Dataset for UC Davis BAE",
         "authors": [
           {
@@ -219,6 +220,7 @@
           }
         ],
         "abstract": "<p>testing a new dev tenant.</p>",
+	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "place": "UC Davis Bookstore, University of California Davis, CA, USA",
@@ -228,6 +230,7 @@
             }
           }
         ],
+	"relatedPublicationISSN": "1234-5432",
         "versionNumber": 1,
         "versionStatus": "submitted"
       },
@@ -254,7 +257,7 @@
           ]
         },
         "id": "doi:10.5072/FK2MK6CD6D",
-        "storage_size": 423587,
+        "storageSize": 423587,
         "title": "test1",
         "authors": [
           {
@@ -296,7 +299,7 @@
           ]
         },
         "id": "doi:10.5072/FK24T6N929",
-        "storage_size": 192633,
+        "storageSize": 192633,
         "title": "My Chocolate Cat Thurber Jones",
         "authors": [
           {
@@ -312,6 +315,7 @@
           "Affinity chromatography"
         ],
         "usageNotes": "<p>Use this very carefully.</p>",
+	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "place": "Chicago, IL, USA",
@@ -353,7 +357,7 @@
           ]
         },
         "id": "doi:10.5072/FK2QJ7G49H",
-        "storage_size": 10882,
+        "storageSize": 10882,
         "title": "Data McDataface",
         "authors": [
           {
@@ -371,6 +375,7 @@
             "awardNumber": "9 3/4"
           }
         ],
+	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "point": {
@@ -411,7 +416,7 @@
           ]
         },
         "id": "doi:10.5072/FK2J966H3B",
-        "storage_size": 183404,
+        "storageSize": 183404,
         "title": "Kathryn Cats",
         "authors": [
           {
@@ -449,7 +454,7 @@
           ]
         },
         "id": "doi:10.5072/FK2T151W7S",
-        "storage_size": 162465,
+        "storageSize": 162465,
         "title": "Glo-ball the Elephant Measurements",
         "authors": [
           {

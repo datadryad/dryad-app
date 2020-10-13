@@ -8,6 +8,7 @@ module StashApi
 
     def initialize(identifier:, user: nil)
       id_type, iden = identifier.split(':', 2)
+      @identifier_s = identifier
       @se_identifier = StashEngine::Identifier.where(identifier_type: id_type, identifier: iden).first
       @user = user
     end
@@ -26,6 +27,8 @@ module StashApi
     def metadata
       # descriptive metadata is initialized from the last version that
       # the user is allowed to see
+      return simple_identifier if @se_identifier.nil?
+
       lv = last_version
       return simple_identifier if lv.nil?
 
@@ -81,8 +84,8 @@ module StashApi
     # an identifier that cannot be viewed
     def simple_identifier
       {
-        identifier: @se_identifier.to_s,
-        id: @se_identifier.id,
+        identifier: @se_identifier&.to_s || @identifier_s,
+        id: @se_identifier&.id,
         message: 'identifier cannot be viewed, may be missing required elements'
       }
     end
@@ -91,7 +94,8 @@ module StashApi
       {
         identifier: @se_identifier.to_s,
         id: @se_identifier.id,
-        storageSize: @se_identifier.storage_size
+        storageSize: @se_identifier.storage_size,
+        relatedPublicationISSN: @se_identifier.publication_issn
       }
     end
 
