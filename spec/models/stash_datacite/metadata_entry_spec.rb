@@ -52,7 +52,7 @@ module StashDatacite
           @metadata_entry = MetadataEntry.new(resource, tenant)
           publisher = metadata_entry.instance_variable_get(:@publisher)
           expect(publisher).to be_a(Publisher)
-          expect(publisher.publisher).to eq('DataONE')
+          expect(publisher.publisher).to eq('Dryad')
           expect(publisher.resource_id).to eq(resource.id)
         end
       end

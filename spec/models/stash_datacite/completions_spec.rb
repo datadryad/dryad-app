@@ -405,7 +405,7 @@ module StashDatacite
       describe :related_works do
         before(:each) do
           create(:related_identifier, resource: @resource, related_identifier: Faker::Pid.doi,
-                                      related_identifier_type: 'doi', relation_type: 'issupplementto',
+                                      related_identifier_type: 'doi', relation_type: 'cites',
                                       work_type: 'article', verified: true)
         end
 

@@ -82,6 +82,13 @@ COVERAGE=true RAILS_ENV=test bundle exec rspec
 bundle exec rubocop -a
 ```
 
+## Configuration files
+
+When Rails runs in the test environment, the config files from the
+main config directory are loaded. However, most of these files are set
+up to import the equivalent test configs from
+`dryad-config-example`. This behavior occurs for tenant configs as well.
+
 ## Notes about Rubocop, .ruby-version, Bundler and Rake
 
 One component of the test suite runs Rubocop which is a style and convention checker.  It uses a configuration
