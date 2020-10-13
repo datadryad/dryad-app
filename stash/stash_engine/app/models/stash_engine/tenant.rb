@@ -98,7 +98,12 @@ module StashEngine
     end
 
     def full_url(path)
-      URI::HTTPS.build(host: Rails.application.default_url_options[:host], path: path).to_s
+      d = Rails.application.default_url_options
+      if d[:port].blank?
+        URI::HTTPS.build(host: d[:host], path: path).to_s
+      else
+        URI::HTTPS.build(host: d[:host], port: d[:port], path: path).to_s
+      end
     end
 
   end

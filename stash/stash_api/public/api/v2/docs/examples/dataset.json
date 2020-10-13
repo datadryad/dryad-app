@@ -21,7 +21,7 @@
     ]
   },
   "id": "doi:10.5072/FK2708471V",
-  "storage_size": 54151,
+  "storageSize": 54151,
   "title": "A Study of Red-Black Trees with Weight",
   "authors": [
     {
@@ -54,7 +54,8 @@
     "Log"
   ],
   "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
-  "usageNotes": "<p>The rest of this paper is organized as follows. To begin with, we motivate the need for sensor networks. Next, we demonstrate the evaluation of the Ethernet. We argue the understanding of courseware. Ultimately, we conclude.</p>\r\n",
+    "usageNotes": "<p>The rest of this paper is organized as follows. To begin with, we motivate the need for sensor networks. Next, we demonstrate the evaluation of the Ethernet. We argue the understanding of courseware. Ultimately, we conclude.</p>\r\n",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
   "locations": [
     {
       "place": "Grogan's Mill, USA",
@@ -91,6 +92,7 @@
       "identifier": "http://example.org/cats"
     }
   ],
+  "relatedPublicationISSN": "1234-5432",
   "versionNumber": 1,
   "versionStatus": "submitted"
 }

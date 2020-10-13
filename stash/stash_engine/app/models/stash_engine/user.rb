@@ -8,7 +8,7 @@ module StashEngine
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
-      raise 'More than one user matches the ID or email returned by ORCID' if users.count > 1
+      raise "More than one user matches the ID or email returned by ORCID, user_ids: #{users.map(&:id).join(', ')}" if users.count > 1
 
       return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.count == 1
 
