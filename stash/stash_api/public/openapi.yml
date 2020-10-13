@@ -369,7 +369,7 @@ paths:
             type: string
           description:
             A list of terms to be searched. If multiple terms are
-            supplied, all matches will only be returned for items that contain
+            supplied, matches will only be returned for items that contain
             all terms. Terms may include an `*` at the end to indicate a
             wildcard. A term may be negated to indicate terms that should *not*
             be present in the results (e.g., `cat -fish`).
@@ -397,7 +397,7 @@ paths:
             type: string
           description:
             A timestamp for limiting results. Datasets will
-            only be returned if that have been modified since the given
+            only be returned that have been modified since the given
             time. The time must be specified in ISO 8601 format, and the time
             zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
             of the time string are acceptable, e.g., `2020-10`.
