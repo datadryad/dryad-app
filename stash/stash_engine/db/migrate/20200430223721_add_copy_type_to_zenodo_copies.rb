@@ -1,4 +1,4 @@
-class AddCopyTypeToZenodoCopies < ActiveRecord::Migration
+class AddCopyTypeToZenodoCopies < ActiveRecord::Migration[4.2]
   def change
     add_column :stash_engine_zenodo_copies, :copy_type, "ENUM('data', 'software', 'software_publish') DEFAULT 'data'"
     add_index :stash_engine_zenodo_copies, :copy_type

@@ -27,6 +27,7 @@ module StashEngine
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    # download tokens are for Merritt version downloads with presigned URL caching
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
@@ -49,6 +50,9 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
+        # this is a new rubocop cop complaint (must not be locked to a version of testing).
+        # I think this may have been done for some reason (two separate loops) because of mutation or errors, IDK.
+        # I'm not going to go back and revise right now.
         # rubocop:disable Style/CombinableLoops
         %i[file_uploads software_uploads].each do |meth|
           new_resource.public_send(meth).each do |file|
@@ -67,8 +71,8 @@ module StashEngine
           resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
           resources.each(&:delete)
         end
+        # rubocop:enable Style/CombinableLoops
       end)
-      # rubocop:enable Style/CombinableLoops
     end
 
     # ------------------------------------------------------------
@@ -262,6 +266,17 @@ module StashEngine
 
     def software_upload_dir
       Resource.software_upload_dir_for(id)
+    end
+
+    # tells whether software uploaded to zenodo for this resource has been published or not
+    def software_published?
+      zc = zenodo_copies.where(copy_type: 'software_publish', state: 'finished')
+      zc.count.positive?
+    end
+
+    def software_submitted?
+      zc = zenodo_copies.where(copy_type: 'software', state: 'finished')
+      zc.count.positive?
     end
 
     # gets the latest files that are not deleted in db, current files for this version

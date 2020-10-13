@@ -142,10 +142,11 @@ module Stash
       private
 
       def error_if_any_previous_unfinished
-        # items that don't have entries in the zenodo_copies table
+        # items that don't have entries in the zenodo_copies table, need <= resource.id because otherwise it may pick up later
+        # entries being edited that haven't been added yet.  TODO: Do I need to limit to only software-type uploads somehow?
         resources = @resource.identifier.resources
           .joins('LEFT JOIN stash_engine_zenodo_copies ON stash_engine_resources.id = stash_engine_zenodo_copies.resource_id')
-          .where('stash_engine_zenodo_copies.resource_id IS NULL')
+          .where('stash_engine_zenodo_copies.resource_id IS NULL').where('stash_engine_resources.id <= ?', @resource)
 
         return if resources.count < 1
 

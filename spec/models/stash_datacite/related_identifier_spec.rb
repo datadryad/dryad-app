@@ -101,6 +101,7 @@ module StashDatacite
         expect(@resource.related_identifiers.first.related_identifier).to eq(test_doi)
       end
     end
+
     describe '#work_type_friendly' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id)
