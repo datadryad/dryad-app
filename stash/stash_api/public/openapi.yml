@@ -399,7 +399,8 @@ paths:
             A timestamp for limiting results. Datasets will
             only be returned if that have been modified since the given
             time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. 
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
+            of the time string are acceptable, e.g., `2020-10`.
       responses:
         '200':
           description: A list of datasets.
@@ -410,6 +411,11 @@ paths:
           examples:
             application/json:
               $ref: api/v2/docs/examples/datasets.json
+        '400':
+          description:
+            Dryad encountered an error parsing the query options for the search.
+            The most likely cause of this problem is an improperly-formatted timestamp
+            for the `modifiedSince` parameter.
 
 # ------------------
 # --- components ---
