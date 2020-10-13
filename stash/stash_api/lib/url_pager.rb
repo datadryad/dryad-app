@@ -52,7 +52,7 @@ class UrlPager
   private
 
   def last_page
-    @result_count / @page_size + 1
+    ((@result_count - 1) / @page_size) + 1
   end
 
   def make_querystring(hsh)

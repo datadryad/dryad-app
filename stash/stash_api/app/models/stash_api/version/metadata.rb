@@ -27,7 +27,7 @@ module StashApi
           versionStatus: @resource.current_state,
           curationStatus: StashEngine::CurationActivity.latest(resource: @resource)&.readable_status,
           publicationDate: @resource.publication_date&.strftime('%Y-%m-%d'),
-          lastModificationDate: @resource.updated_at&.strftime('%Y-%m-%d'),
+          lastModificationDate: @resource.updated_at&.utc&.strftime('%Y-%m-%d'),
           visibility: visibility,
           sharingLink: sharing_link,
           userId: @resource.user_id,

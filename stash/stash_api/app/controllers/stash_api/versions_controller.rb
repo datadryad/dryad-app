@@ -53,7 +53,7 @@ module StashApi
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       limited_resources = id.resources.visible_to_user(user: @user)
       all_count = limited_resources.count
-      results = limited_resources.limit(page_size).offset(page_size * (page - 1))
+      results = limited_resources.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
       results = results.map { |i| Version.new(resource_id: i.id).metadata_with_links }
       page_output(all_count, results)
     end
