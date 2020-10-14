@@ -101,6 +101,8 @@ namespace :deploy do
       execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 3 start"
     end
 
+    after :finished, :copy_crons_to_shared
+
     desc 'copy crons to the shared directory where the schedule crons expect them'
     task :copy_crons_to_shared do
       # This was going to be a symlink into current, but we don't want to put the shared/cron directory within
@@ -112,8 +114,6 @@ namespace :deploy do
       execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
     end
   end
-
-  after :finished, :copy_crons_to_shared
 
   after :restart, :clear_cache do
     on roles(:app), in: :groups, limit: 3, wait: 10 do
