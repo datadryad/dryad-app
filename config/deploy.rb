@@ -70,8 +70,6 @@ end
 
 namespace :deploy do
 
-  after :finished, :copy_crons_to_shared
-
   desc 'Get list of linked files for capistrano'
   task :my_linked_files do
     on roles(:app) do
@@ -114,6 +112,8 @@ namespace :deploy do
       execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
     end
   end
+
+  after :finished, :copy_crons_to_shared
 
   after :restart, :clear_cache do
     on roles(:app), in: :groups, limit: 3, wait: 10 do
