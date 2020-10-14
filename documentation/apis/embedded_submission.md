@@ -42,8 +42,7 @@ to `/datasets` with the initial dataset metadata. When a manuscript
 system is making this call on behalf of an author, the dataset *must*
 include:
 - a `userID` with the ORCID of the author that has been submitting
-  the manuscript. This allows the author to manage the dataset in Dryad. *** (verify syntax. need to add this into
-  regular API docs)
+  the manuscript. This allows the author to manage the dataset in Dryad.
 - an entry in the `authors` list that contains the ORCID of the
   submitting author
 - ISSN of the journal. This allows journal administrators (including
@@ -195,9 +194,6 @@ Since datasets in Dryad may be modified at any time by the author or
 Dryad curators, it is best if the API call is made on any screen that
 will display Dryad information, to ensure the latest information is
 being shown.
-
-**** should we notify manuscript systems when the status changes? We
-     would need a way for them to provide us the API to call...
 
 Provide status updates to Dryad
 --------------------------------
