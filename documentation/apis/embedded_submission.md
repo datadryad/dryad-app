@@ -108,21 +108,9 @@ the `editLink`. This URL may be opened in a new browser tab, or
 directly in the tab where the author has been editing their manuscript
 submission.
 
-**** may need to include an API option about whether to redirect back;
-     not sure whether we can detect the difference between Dryad being
-     opened in the same tab (when we would want to go back), or opened
-     in a new tab (when we would want to close it)
-
 The author will then proceed through the normal Dryad submission
 process. They will be able to edit metadata that has been
 pre-populated by the journal, and upload any files.
-
-*** Are there parts of the Dryad submission screens that should be
-    removed? (e.g., navigtion menus)
-	
-*** Are there features that should be added of the Dryad submission
-    screens? (e.g., an indicator that their manuscript submission is
-    still in progress, or a link back to the manuscript system)
 
 When the data submission is complete, the author will be redirected
 back to the correct page in the manuscript system.
