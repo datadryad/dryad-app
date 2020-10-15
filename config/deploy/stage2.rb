@@ -13,6 +13,7 @@ set :passenger_pool, '6'
 namespace :deploy do
   before :starting, :stop_delayed_job
   after :finished, :start_delayed_job
+  after :finished, :copy_crons_to_shared
 end
 
 #set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
