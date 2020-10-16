@@ -9,7 +9,13 @@ module StashEngine
     end
 
     def require_login
+      puts 'XXXX ssc require_login'
+      puts "     params #{params}"
+      puts "     current_user #{current_user}"
+      puts "     session #{session.to_hash}"
+
       if current_user
+        puts 'XXXX current user found'
         target_page = session[:target_page]
         if target_page.present?
           # This session had originally been navigating to a specific target_page and was redirected
@@ -20,6 +26,12 @@ module StashEngine
         end
         return
       end
+
+      if valid_edit_code?
+        puts 'XXXX ssc require_login found valid code'
+        return
+      end
+
       flash[:alert] = 'You must be logged in.'
       session[:target_page] = request.fullpath
       redirect_to stash_url_helpers.choose_login_path
@@ -52,6 +64,7 @@ module StashEngine
 
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
+      return if valid_edit_code?
       return if current_user && resource.permission_to_edit?(user: current_user)
 
       display_authorization_failure
@@ -59,7 +72,9 @@ module StashEngine
 
     # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
     def require_in_progress_editor
-      return if resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
+      return if valid_edit_code? ||
+                resource.dataset_in_progress_editor.id == current_user.id ||
+                current_user.superuser?
 
       display_authorization_failure
     end
@@ -89,6 +104,17 @@ module StashEngine
     def ajax_blocked
       render nothing: true, status: 403
       false
+    end
+
+    def valid_edit_code?
+      edit_code = params[:edit_code] || session[:edit_code]
+      puts "XXXX validating code #{edit_code}"
+      # TODO: validate that the code is the same as the code in the target dataset
+      if edit_code == 'pagemagica' # resource.identifier.edit_code
+        session[:edit_code] = edit_code
+      else
+        false
+      end
     end
 
   end

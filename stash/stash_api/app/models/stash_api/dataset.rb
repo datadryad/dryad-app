@@ -104,7 +104,8 @@ module StashApi
     end
 
     def add_edit_link!(hsh, version)
-      hsh[:editLink] = "/stash/edit/#{CGI.escape(@se_identifier.to_s)}" if version.resource.permission_to_edit?(user: @user)
+      edit_code = 'pagemagica'
+      hsh[:editLink] = "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{edit_code}" if version.resource.permission_to_edit?(user: @user)
     end
 
   end
