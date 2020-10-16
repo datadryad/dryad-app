@@ -42,7 +42,11 @@ module StashEngine
       respond_to do |format|
         format.xml do
           sm = SiteMap.new
-          render xml: sm.sitemap_index, layout: false
+          if params[:page].nil?
+            render xml: sm.sitemap_index, layout: false
+          else
+            render xml: sm.sitemap_page(params[:page]), layout: false
+          end
         end
       end
     end
