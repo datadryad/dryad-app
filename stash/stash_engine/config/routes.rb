@@ -55,7 +55,7 @@ StashEngine::Engine.routes.draw do
   get 'share/:id', to: 'downloads#share', as: 'share'
   get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
-  get 'edit/:doi', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
+  get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
   match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
   match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
   match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
