@@ -4,6 +4,8 @@ module StashEngine
     class SiteMap
       include Rails.application.routes.url_helpers
 
+      attr_accessor :page_size
+
       def initialize
         # really all we need to select is identifier_id, identifier, resource_id and resource.updated_at for sitemap
 
@@ -21,7 +23,7 @@ module StashEngine
         # tries to count a series of fields
         @datasets = StashEngine::Identifier \
           .joins("INNER JOIN (#{subquery}) as res2 ON stash_engine_identifiers.id = res2.identifier_id")
-          .joins("INNER JOIN stash_engine_resources res ON res.id = res2.res_id")
+          .joins('INNER JOIN stash_engine_resources res ON res.id = res2.res_id')
           .where("stash_engine_identifiers.pub_state IN ('embargoed', 'published')")
           .order('stash_engine_identifiers.id')
 
@@ -34,6 +36,7 @@ module StashEngine
 
       def pages
         return 0 if count == 0
+
         (count - 1) / @page_size + 1
       end
 
@@ -46,14 +49,14 @@ module StashEngine
 
       def sitemap_index
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-          xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') {
+          xml.sitemapindex('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             1.upto(pages) do |i|
-              xml.sitemap {
+              xml.sitemap do
                 xml.loc sitemap_url(format: 'xml', page: i)
                 xml.lastmod Time.now.utc.iso8601
-              }
+              end
             end
-          }
+          end
         end
         builder.to_xml
       end
@@ -61,16 +64,15 @@ module StashEngine
       def sitemap_page(page_number)
         datasets = page(page_number)
         builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') {
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             datasets.each do |i|
-              resource = i.resources.where(meta_view: true).order('id DESC').first
-              xml.url {
+              xml.url do
                 xml.loc StashEngine::Engine.routes.url_helpers.show_url("doi:#{i.identifier}")
                 xml.lastmod i.updated_at.utc.iso8601
                 # changefreq and crawling priority are not really known
-              }
+              end
             end
-          }
+          end
         end
         builder.to_xml
       end
