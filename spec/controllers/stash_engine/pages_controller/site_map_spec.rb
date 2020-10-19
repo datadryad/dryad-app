@@ -68,6 +68,9 @@ module StashEngine
 
         it 'has correct timestamps in page for each url' do
           @site_map.page_size = 5
+          # I believe there may be some callback that updates the modified time and caused problems before with mismatched
+          # timestamps, so give it a little time to happen before test and query
+          sleep 1
           xml_str = @site_map.sitemap_page(2)
           doc = Nokogiri::XML(xml_str)
           doc.remove_namespaces!
