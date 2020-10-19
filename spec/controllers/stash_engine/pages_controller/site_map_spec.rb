@@ -68,16 +68,13 @@ module StashEngine
 
         it 'has correct timestamps in page for each url' do
           @site_map.page_size = 5
-          # I believe there may be some callback that updates the modified time and caused problems before with mismatched
-          # timestamps, so give it a little time to happen before test and query
-          sleep 1
           xml_str = @site_map.sitemap_page(2)
           doc = Nokogiri::XML(xml_str)
           doc.remove_namespaces!
           urls = doc.xpath('//urlset/url')
           expect(urls.length).to eq(5)
           5.upto(9) do |i|
-            expect(urls[i - 5].to_s).to include(@identifiers[i].updated_at.utc.iso8601)
+            expect(urls[i - 5].to_s).to include(@identifiers[i].resources.first.updated_at.utc.iso8601)
           end
         end
       end
