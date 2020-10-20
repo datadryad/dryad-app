@@ -1,6 +1,4 @@
 openapi: 3.0.0
-servers:
-  - url: /api/v2/
 
 info:
   title: dryad-api
@@ -8,11 +6,20 @@ info:
     The API for the [Dryad](https://datadryad.org) data publication and
     preservation platform.
 
-    In addition to this documentation, please see the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete examples of submission through the Dryad API.
+    In addition to this documentation, please see the [descriptive API documentation](https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/apis),
+    particularly the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete
+    examples of submission through the Dryad API.
 
-    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) may also be expanded further in the future as more documentation is created (though not all of it may be relevant to API users).
+    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) will also be expanded further in the future as more
+    documentation is created (though not all of it may be relevant to API users).
 
-  version: "2.0.0"
+  version: "2.1.0"
+
+servers:
+  - url: https://datadryad.org/api/v2/
+    description: Main Dryad server
+  - url: https://dryad-stg.cdlib.org/api/v2/
+    description: Staging server, for testing new features.
 
 paths:
   # --- root uri ----
@@ -55,7 +62,10 @@ paths:
   /datasets:
     get:
       summary: Get list of all datasets
-      description: Items returned may depend on user or permission and are paged.  Search API to come later.
+      description: Items returned may depend on user or permission and are paged.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
       responses:
         '200':
           description: A list of datasets.
@@ -345,6 +355,68 @@ paths:
             application/json:
               $ref: api/v2/docs/examples/file.json
 
+  # --- search ---
+  /search:
+    get:
+      summary: Search over the publicly-available datasets
+      description: Search the published Dryad datasets by keyword, institutional affiliation, and date.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - in: query
+          name: q
+          schema:
+            type: string
+          description:
+            A list of terms to be searched. If multiple terms are
+            supplied, matches will only be returned for items that contain
+            all terms. Terms may include an `*` at the end to indicate a
+            wildcard. A term may be negated to indicate terms that should *not*
+            be present in the results (e.g., `cat -fish`).
+        - in: query
+          name: affiliation
+          schema:
+            type: string
+          description:
+            A *ROR* identifier specifying an institutional
+            affiliation that must be present in the list of dataset authors. The
+            identifier should be in the full "https" format and should be
+            URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
+        - in: query
+          name: tenant
+          schema:
+            type: string
+          description:
+            The abbreviation for a "tenant" organization in
+            Dryad. This will automatically search all affiliations associated
+            with the given tenant. If both a *tenant* and *affiliation* are
+            specified, the tenant will be ignored.
+        - in: query
+          name: modifiedSince
+          schema:
+            type: string
+          description:
+            A timestamp for limiting results. Datasets will
+            only be returned that have been modified since the given
+            time. The time must be specified in ISO 8601 format, and the time
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
+            of the time string are acceptable, e.g., `2020-10`.
+      responses:
+        '200':
+          description: A list of datasets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasets'
+          examples:
+            application/json:
+              $ref: api/v2/docs/examples/datasets.json
+        '400':
+          description:
+            Dryad encountered an error parsing the query options for the search.
+            The most likely cause of this problem is an improperly-formatted timestamp
+            for the `modifiedSince` parameter.
+
 # ------------------
 # --- components ---
 # ------------------
@@ -397,14 +469,18 @@ components:
     dataset:
       allOf:
         - $ref: '#/components/schemas/dataset_links'
-        - properties:
+        - $ref: '#/components/schemas/version'
+      properties:
             id:
               type: integer
             identifier:
               type: string
-            storage_size:
-              type: number
-        - $ref: '#/components/schemas/version'
+            storageSize:
+              type: string
+            license:
+              type: string
+            relatedPublicationISSN:
+              type: string
 
     dataset_links:
       properties:
@@ -472,6 +548,10 @@ components:
             userId:
               type: integer
             curationStatus:
+              type: string
+            visibility:
+              type: string
+            lastModificationDate:
               type: string
 
     version_links:
@@ -806,6 +886,24 @@ components:
       required: true
       description: "The filename is the filename for the file. It should be escaped in the URL (for example 'cat tundra.jpg' would be 'cat%20tundra.jpg'.  Your programming language will have a library to encode for you."
 
+    page:
+      in: query
+      name: page
+      schema:
+        type: integer
+      description:
+        Which page of datasets to view. Defaults to page 1.
+
+    per_page:
+      in: query
+      name: per_page
+      schema:
+        type: integer
+      description:
+        Number of datasets to return on each page. Defaults
+        to 10. Maximum allowed is 100. 
+
+      
   securitySchemes:
     bearerAuth:
       type: http

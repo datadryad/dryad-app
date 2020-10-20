@@ -5,6 +5,7 @@
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
 require 'stash/download/version_presigned'
+require 'rsolr'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -20,6 +21,11 @@ module StashApi
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
+
+    def initialize
+      super
+      @solr = RSolr.connect(url: Blacklight.connection_config[:url])
+    end
 
     # get /datasets/<id>
     def show
@@ -46,7 +52,6 @@ module StashApi
     # get /datasets
     def index
       ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
-
       # These filter conditions were things Daisie put in, because of some queries she needed to make.
       # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
       # and we are ready to support whatever we decide.
@@ -70,10 +75,63 @@ module StashApi
         ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
 
-      @datasets = paged_datasets(ds_query)
-      respond_to do |format|
-        format.json { render json: @datasets }
+      datasets = paged_datasets(datasets: ds_query)
+      render json: datasets
+    end
+
+    # get /search
+    def search
+      # datasets in SOLR are always public, so there is no need to limit the query based on the API user
+      page = params['page'] || 1
+      per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
+      query = params['q']
+
+      begin
+        solr_call = @solr.paginate(page, per_page, 'select',
+                                   params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
+        solr_response = solr_call['response']
+
+        # once we have the solr_response, use the DOIs to build the 'real' response
+        mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
+        datasets = paging_hash_results(all_count: solr_response['numFound'],
+                                       page_size: per_page,
+                                       results: mapped_results)
+        render json: datasets
+      rescue RSolr::Error::Http
+        render status: 400, plain: 'Unable to parse query request.'
       end
+    end
+
+    # Builds an array of the various filter settings requested
+    def solr_filter_query
+      fq_array = []
+
+      # if user requests both 'affiliation' and 'tenant', prefer the affiliation,
+      # because it is more specific
+      if params['affiliation']
+        # ["dryad_author_affiliation_id_sm:\"https://ror.org/01sf06y89\" "
+        fq_array << "dryad_author_affiliation_id_sm:\"#{params['affiliation']}\" "
+      elsif params['tenant']
+        # multiple affiliations, separated by OR
+        tenant = StashEngine::Tenant.find(params['tenant'])
+        if tenant
+          ror_array = []
+          tenant.ror_ids.each do |r|
+            # map the id into the format
+            ror_array << "dryad_author_affiliation_id_sm:\"#{r}\" "
+          end
+          fq_array << ror_array.join(' OR ')
+        else
+          fq_array << 'dryad_author_affiliation_id_sm:"missing_tenant" '
+        end
+      end
+
+      if params['modifiedSince']
+        # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
+        fq_array << "timestamp:[#{params['modifiedSince']} TO NOW]"
+      end
+
+      fq_array
     end
 
     # we are using PATCH only to update the versionStatus=submitted
@@ -243,21 +301,18 @@ module StashApi
       @resource = nr
     end
 
-    def datasets_with_mapped_metadata(datasets_to_map)
-      datasets_to_map.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
+    def paged_datasets(datasets:, page_size: DEFAULT_PAGE_SIZE)
+      all_count = datasets.count
+      results = datasets.limit(page_size).offset(page_size * (page - 1))
+      mapped_results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
+      paging_hash_results(all_count: all_count, page_size: page_size, results: mapped_results)
     end
 
-    def paged_datasets(datasets_to_page)
-      all_count = datasets_to_page.count
-      results = datasets_to_page.limit(page_size).offset(page_size * (page - 1))
-      paging_hash_results(all_count, datasets_with_mapped_metadata(results))
-    end
-
-    def paging_hash_results(all_count, results)
+    def paging_hash_results(all_count:, page_size:, results:)
       return if results.nil?
 
       {
-        '_links' => paging_hash(result_count: all_count),
+        '_links' => paging_hash(result_count: all_count, page_size: page_size),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }

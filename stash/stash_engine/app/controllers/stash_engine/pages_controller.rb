@@ -41,10 +41,12 @@ module StashEngine
     def sitemap
       respond_to do |format|
         format.xml do
-          my_tenant = current_tenant
-          identifiers = find_identifiers(my_tenant)
-
-          render xml: gen_xml_from_identifiers(identifiers, my_tenant), layout: false
+          sm = SiteMap.new
+          if params[:page].nil?
+            render xml: sm.sitemap_index, layout: false
+          else
+            render xml: sm.sitemap_page(params[:page]), layout: false
+          end
         end
       end
     end

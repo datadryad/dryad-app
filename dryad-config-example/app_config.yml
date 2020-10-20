@@ -25,6 +25,7 @@ defaults: &DEFAULTS
   old_dryad_access_token: <REPLACE-ME>
   old_dryad_url: https://api.datadryad.org
   counter:
+    account: CDL.DASH
     token: ci1NiJDAwLTAwkb
   zenodo:
     access_token: "ThisIsAFakeToken"
