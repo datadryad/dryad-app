@@ -92,11 +92,14 @@ module StashEngine
 
     # Review responds as a get request to review the resource before saving
     def review
+      puts "XXXX rc review #{@resource&.id}"
       # record a payment exemption if there is one, before submission
       @resource&.identifier&.record_payment
+      puts '     recorded payment'
     end
 
     # Submission of the resource to the repository
+    #    def submission; end
     def submission; end
 
     # Upload files view for resource

@@ -85,7 +85,8 @@ module StashEngine
 
     def ajax_require_modifiable
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
-      return ajax_blocked unless (current_user && resource) && resource.can_edit?(user: current_user)
+      return ajax_blocked unless valid_edit_code? ||
+                                 ((current_user && resource) && resource.can_edit?(user: current_user))
     end
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
