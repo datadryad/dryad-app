@@ -78,4 +78,5 @@ role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 namespace :deploy do
   before :start, :setup_cron
+  after :finished, :copy_crons_to_shared
 end

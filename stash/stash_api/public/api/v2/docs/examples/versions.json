@@ -47,8 +47,10 @@
           }
         ],
         "abstract": "<p>test</p>",
+	"lastModificationDate": "2020-02-18",
         "versionNumber": 1,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+	"visibility": "public"
       },
       {
         "_links": {
@@ -83,8 +85,10 @@
           }
         ],
         "abstract": "<p>test</p>",
+	"lastModificationDate": "2020-02-18",
         "versionNumber": 2,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+	"visibility": "public"
       },
       {
         "_links": {
@@ -119,6 +123,7 @@
           }
         ],
         "abstract": "<p>test</p>",
+	"lastModificationDate": "2020-02-18",  
         "locations": [
           {
             "point": {
@@ -128,7 +133,8 @@
           }
         ],
         "versionNumber": 3,
-        "versionStatus": "error"
+          "versionStatus": "error",
+	  "visibility": "restricted"
       }
     ]
   }
