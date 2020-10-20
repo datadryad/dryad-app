@@ -130,9 +130,9 @@ module StashDatacite
     end
 
     def self.add_zenodo_relation(resource_id:, doi:)
-      doi = self.standardize_doi(doi)
+      doi = standardize_doi(doi)
       existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
-                          .where(related_identifier: doi).last
+        .where(related_identifier: doi).last
       if existing_item.nil?
         create(related_identifier: doi,
                related_identifier_type: 'doi',
