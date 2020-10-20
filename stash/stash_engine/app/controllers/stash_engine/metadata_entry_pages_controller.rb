@@ -21,10 +21,10 @@ module StashEngine
       puts "     current_user #{current_user}"
       puts "     session #{session.to_hash}"
       puts "     resource #{resource.id} #{@resource.id} #{@resource.submitted?}"
-      puts " -----------"
+      puts ' -----------'
       return unless @resource.submitted? # create a new version if this is a submitted version
 
-      puts " -----------"
+      puts ' -----------'
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
@@ -36,24 +36,27 @@ module StashEngine
       puts "     session #{session.to_hash}"
       puts "     resource #{resource.id}"
 
+      # if this call was made with a returnURL, save it for the end of the submission process
+      session[:returnURL] = params[:returnURL] if params[:returnURL]
+
       # if edit_code is present, and matches the code for the target DOI, store the edit_code in the session and redirect
       if valid_edit_code?
         # we're following an edit link and the magic code is passed in
         puts 'XXXX magic code found, allowing use'
         puts 'XXXX redirecting to edit page for resource #{resource.id}'
-        puts " -----------"
+        puts ' -----------'
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
       else
         # if the user is logged in and has permissions for the dataset, redirect and continue as normal
         puts 'XXXX redirecting to edit page, assuming logged-in user'
-        puts " -----------"
+        puts ' -----------'
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
       end
     end
 
     # create a new version of this resource before editing with find or create
     def new_version
-      puts "XXXX new_version"
+      puts 'XXXX new_version'
       duplicate_resource
 
       # redirect to find or create path
@@ -94,22 +97,22 @@ module StashEngine
       end
       id = Identifier.where(identifier: doi).first
       @resource = id&.latest_resource
-      params[:resource_id] = @resource.id
-      puts "     setting resource id #{@resource.id}"
+      params[:resource_id] = @resource&.id
+      puts "     setting resource id #{@resource&.id}"
       @resource
     end
 
     def duplicate_resource
-      puts "XXXX duplicate_resource"
+      puts 'XXXX duplicate_resource'
       @new_res = @resource.amoeba_dup
-      @new_res.current_editor_id = current_user.id
+      @new_res.current_editor_id = current_user&.id
       # The default curation activity gets set to the `Resource.user_id` but we want to use the current user here
-      @new_res.curation_activities.update_all(user_id: current_user.id)
+      @new_res.curation_activities.update_all(user_id: current_user&.id)
       @new_res.save!
     end
 
     def require_can_duplicate
-      puts "XXXX r_c_duplicate"
+      puts 'XXXX r_c_duplicate'
       return false unless (@identifier = resource.identifier)
 
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
