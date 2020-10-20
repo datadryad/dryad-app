@@ -20,7 +20,7 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://login.hmc.edu/idp/shibboleth
+    entity_id: https://identity.hmc.edu/idp
     entity_domain: hmc.edu
   default_license: cc0
   ## maximum total size (default 300 GB for now for size, 10 GB for file uploads)
