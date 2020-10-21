@@ -219,7 +219,7 @@ module Stash
             stub_get_existing_ds(deposition_id: @zc2.deposition_id)
             allow(@zsc).to receive(:publish_dataset).and_return(nil)
             @zsc.add_to_zenodo
-            expect(@resource.related_identifiers.map(&:related_identifier).first).to eq("10.5072/zenodo.#{@zc.deposition_id}")
+            expect(@resource.related_identifiers.map(&:related_identifier).first).to eq("https://doi.org/10.5072/zenodo.#{@zc.deposition_id}")
           end
         end
 
