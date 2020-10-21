@@ -36,10 +36,6 @@ experience </a> document.</p>
 more details on the technical setup for an integration such as this,
 see the <a href="embedded_submission.md">embedded submission</a> document.</p>
 
-
-
-<h1>Preferred workflow demo -- opening Dryad in the page</h1>
-
 <p>Imagine this section is in your favorite manuscript processing system. The author is going along, editing their manuscript submission, when they are given the option to...</p>
 
 <div class="ms-page">
@@ -51,9 +47,15 @@ see the <a href="embedded_submission.md">embedded submission</a> document.</p>
 
 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a
+  href="http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.g79cnp80/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_results.html"><button>Submit
+  a dataset through Dryad (in this window)</button></a>
+
+  -- OR --
+
   <a target="_blank" 
-  href="http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.qfttdz40/pagemagica?returnURL=hello"><button>Submit
-  a dataset through Dryad</button></a>
+  href="http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.g79cnp80/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_close.html"><button>Submit
+  a dataset through Dryad (in separate tab that closes when done)</button></a>
 
   <br/>
   <br/>
@@ -62,6 +64,13 @@ see the <a href="embedded_submission.md">embedded submission</a> document.</p>
   <button class="np">Next Page</button>
 
 </div>
+
+<!-- Commented out iFrame demo, because it does not fully work -->
+<!-- yet. The iFrame doesn't save parameters the same way as the full -->
+<!-- page, so we may need to do more tweaking to carry them through -->
+<!-- the submission system. -->
+
+<!--
 
 <h1>Secondary workflow demo -- iFrame</h1>
 
@@ -86,7 +95,7 @@ see the <a href="embedded_submission.md">embedded submission</a> document.</p>
     }
 
     function displayDryadIframe() {
-        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"http://ryandash.datadryad.org\" height=\"400\" width=\"600\"></iframe>";
+        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.80gb5mn1/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_results.html\" height=\"400\" width=\"600\"></iframe>";
     }
 
     function closeIframe() {
@@ -96,11 +105,13 @@ see the <a href="embedded_submission.md">embedded submission</a> document.</p>
 
 </div>
 
+-->
+
 <p />
 
 
 <hr />
 <!-- hhmts start -->
-Last modified: Fri Oct 16 16:24:39 EDT 2020
+Last modified: Wed Oct 21 11:30:44 EDT 2020
 <!-- hhmts end -->
 </body> </html>
