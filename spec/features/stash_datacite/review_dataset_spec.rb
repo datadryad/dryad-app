@@ -62,16 +62,23 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
-  context :software_license do
+  context :software_uploaded do
     before(:each, js: true) do
       # Sign in and create a new dataset
       visit root_path
       click_link 'My Datasets'
       start_new_dataset
       fill_required_fields
+
+      # Sets this up as a page that can see the software/supp info upload page. There is only one identifier created for this test.
+      se_identifier = StashEngine::Identifier.all.first
+      StashEngine::InternalDatum.create(identifier_id: se_identifier.id, data_type: 'publicationISSN', value: '1687-7667')
+      se_identifier.reload
+      navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
     end
 
-    it 'shows the software license if software uploaded', js: true do
+    it 'shows the software/supp info if uploaded', js: true do
+      # binding.remote_pry
       navigate_to_software_upload
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
@@ -86,16 +93,16 @@ RSpec.feature 'ReviewDataset', type: :feature do
       click_on('Proceed to Review')
       expect(page).to have_content('Supporting Information Hosted by Zenodo')
       expect(page).to have_content('favicon.ico')
-      expect(page).to have_content('Select license for files')
+      # expect(page).to have_content('Select license for files')
     end
 
-    it "doesn't show the software license if software not uploaded", js: true do
+    it "doesn't show the software info if software not uploaded", js: true do
       navigate_to_software_upload
 
       click_on('Proceed to Review')
       expect(page).not_to have_content('Supporting Information Hosted by Zenodo')
       expect(page).not_to have_content('favicon.ico')
-      expect(page).not_to have_content('Select license for files')
+      # expect(page).not_to have_content('Select license for files')
     end
 
   end
