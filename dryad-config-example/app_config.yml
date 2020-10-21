@@ -127,6 +127,8 @@ defaults: &DEFAULTS
     - 'Pakistan'
   funder_exemptions:
     - 'Happy Clown School'
+  supplemental_info_issns: [ 1687-7969, 1687-7977, 1687-9309, 1687-9317, 1687-7667, 1687-7675, 1468-8115, 1468-8123,
+    1687-8159, 1687-8167, 1687-9708, 1687-9716 ]
   link_out:
     # LinkOut FTP information for Europe PubMed Central
     labslink:
