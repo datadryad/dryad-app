@@ -104,7 +104,7 @@ module StashEngine
     end
 
     def ajax_blocked
-      puts "  xx ajax_blocked"
+      puts '  xx ajax_blocked'
       render nothing: true, status: 403
       false
     end
