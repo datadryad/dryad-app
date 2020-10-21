@@ -16,9 +16,15 @@
 
 <div class="o-dataset-nav">
   <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
+    <!-- standard upload page -->
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <%= link_to 'Proceed to Upload Supporting Information', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+    <% if @resource.identifier.allow_supplemental_info? %>
+      <%= link_to 'Proceed to Upload Supporting Information', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+    <% else %>
+      <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+    <% end %>
   <% else %>
+    <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
     <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
     <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% end %>
