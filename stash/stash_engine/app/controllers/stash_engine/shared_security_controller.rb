@@ -84,6 +84,7 @@ module StashEngine
     end
 
     def ajax_require_modifiable
+      puts "  xx ajax_require_modifiable u #{current_user} r #{resource&.id} ec #{valid_edit_code?}"
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
       return ajax_blocked unless valid_edit_code? ||
                                  ((current_user && resource) && resource.can_edit?(user: current_user))
@@ -103,6 +104,7 @@ module StashEngine
     end
 
     def ajax_blocked
+      puts "  xx ajax_blocked"
       render nothing: true, status: 403
       false
     end

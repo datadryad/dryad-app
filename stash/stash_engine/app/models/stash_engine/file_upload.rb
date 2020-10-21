@@ -137,6 +137,7 @@ module StashEngine
     end
 
     def smart_destroy!
+      puts "xx smart_destroy!"
       # see if it's on the file system and destroy it if it's there
       cfp = calc_file_path
       ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
@@ -151,6 +152,7 @@ module StashEngine
         self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
       end
 
+      puts "xx smart end"
       resource.reload
     end
 

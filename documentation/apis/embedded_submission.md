@@ -108,12 +108,24 @@ the `editLink`. This URL may be opened in a new browser tab, or
 directly in the tab where the author has been editing their manuscript
 submission.
 
+The `editLink` by itself only contains the information necessary to
+open the item for editing in Dryad. In most cases, it will be
+necessary to direct the user back to the manuscript system after the
+Dryad submission has been completed. To instruct Dryad where to redirect
+after a submission is completed, append the parameter `returnURL` to
+the URL provided in the `editLink`. For example:
+
+`<editLink>?returnURL=https%3A%2F%2Fmanuscriptomatic.org%2Fsubmission%2Fabc123`
+
 The author will then proceed through the normal Dryad submission
 process. They will be able to edit metadata that has been
 pre-populated by the journal, and upload any files.
 
 When the data submission is complete, the author will be redirected
-back to the correct page in the manuscript system.
+back to the correct page in the manuscript system. If you have chosen
+to open the Dryad submission in a new window, and you want the new
+window to simply close, specify the returnURL as a page that closes
+itself immediately upon opening. 
 
 Obtain Dryad metadata
 ---------------------

@@ -86,7 +86,7 @@ module StashEngine
       puts "XXXX resource_exist #{params[:resource_id]}"
       resource = Resource.find(params[:resource_id]) if params[:resource_id]
       resource = resource_from_doi if resource.nil?
-      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if resource.nil?
+      redirect_to root_path, alert: 'The dataset you are looking for does not exist.' if resource.nil?
     end
 
     def resource_from_doi
