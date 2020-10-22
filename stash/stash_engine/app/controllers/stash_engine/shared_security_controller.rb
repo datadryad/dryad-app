@@ -112,8 +112,8 @@ module StashEngine
     def valid_edit_code?
       edit_code = params[:edit_code] || session[:edit_code]
       puts "XXXX validating code #{edit_code}"
-      # TODO: validate that the code is the same as the code in the target dataset
-      if edit_code == 'pagemagica' # resource.identifier.edit_code
+      if edit_code == resource.identifier.edit_code
+        # Code is valid, so save it in the session for later use (and implicitly return true)
         session[:edit_code] = edit_code
       else
         false
