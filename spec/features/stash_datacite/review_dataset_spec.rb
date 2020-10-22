@@ -121,7 +121,5 @@ RSpec.feature 'ReviewDataset', type: :feature do
       v = find("#software_license", :visible => false).value
       expect(v).to eq('CC-BY-4.0')
     end
-
   end
-
 end
