@@ -39,19 +39,10 @@ module StashEngine
       # if this call was made with a returnURL, save it for the end of the submission process
       session[:returnURL] = params[:returnURL] if params[:returnURL]
 
-      # if edit_code is present, and matches the code for the target DOI, store the edit_code in the session and redirect
-      if valid_edit_code?
-        # we're following an edit link and the magic code is passed in
-        puts 'XXXX magic code found, allowing use'
-        puts 'XXXX redirecting to edit page for resource #{resource.id}'
-        puts ' -----------'
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
-      else
-        # if the user is logged in and has permissions for the dataset, redirect and continue as normal
-        puts 'XXXX redirecting to edit page, assuming logged-in user'
-        puts ' -----------'
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
-      end
+      # check if edit_code is present, and if so, store in the session
+      valid_edit_code?
+
+      redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
     end
 
     # create a new version of this resource before editing with find or create

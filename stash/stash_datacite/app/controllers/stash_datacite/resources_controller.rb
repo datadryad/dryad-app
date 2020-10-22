@@ -1,5 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -147,3 +148,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength
