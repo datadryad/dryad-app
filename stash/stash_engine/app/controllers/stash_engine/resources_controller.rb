@@ -85,7 +85,16 @@ module StashEngine
     def destroy
       resource.destroy
       respond_to do |format|
-        format.html { redirect_to return_to_path_or(dashboard_path), notice: 'The in-progress version was successfully deleted.' }
+        format.html do
+          notice = 'The in-progress version was successfully deleted.'
+          if session[:returnURL]
+            redirect_to session[:returnURL]
+          elsif current_user
+            redirect_to return_to_path_or(dashboard_path), notice: notice
+          else
+            redirect_to root_path, notice: notice
+          end
+        end
         format.json { head :no_content }
       end
     end

@@ -36,6 +36,11 @@ module StashEngine
       puts "     session #{session.to_hash}"
       puts "     resource #{resource.id}"
 
+      if resource.processing?
+        redirect_to root_path, alert: 'The target dataset is being processed by Dryad. Please try again later.'
+        return
+      end
+
       # if this call was made with a returnURL, save it for the end of the submission process
       session[:returnURL] = params[:returnURL] if params[:returnURL]
 
