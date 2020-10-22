@@ -117,8 +117,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content('Upload complete')
 
       click_on('Proceed to Review')
-      #type hidden -- software_license 'CC-BY-4.0'
-      v = find("#software_license", :visible => false).value
+      # type hidden -- software_license 'CC-BY-4.0'
+      v = find('#software_license', visible: false).value
       expect(v).to eq('CC-BY-4.0')
     end
   end
