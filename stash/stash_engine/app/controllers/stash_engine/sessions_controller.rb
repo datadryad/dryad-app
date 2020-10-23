@@ -39,6 +39,7 @@ module StashEngine
     def choose_login; end
 
     # this only available in non-production environments and only if special environment variable set when starting server
+    # rubocop:disable Metrics/AbcSize
     def test_login
       return render(body: 'unauthorized', status: 401) if Rails.env.include?('prod') || ENV['TEST_LOGIN'].blank?
 
@@ -48,16 +49,17 @@ module StashEngine
       end
       @tenants.flatten!
 
-      if request.method == 'POST'
-        return render(body: 'ORCID must not be blank', status: 403) if params[:orcid].blank?
-        existing = User.where(orcid: params[:orcid].strip).first || User.create(orcid: params[:orcid].strip)
-        existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
-                        tenant_id: params[:tenant_id], role: params[:role], migration_token: User::NO_MIGRATE_STRING)
-        session[:user_id] = existing.id
-        redirect_to dashboard_path, status: :found
-        return
-      end
+      return if request.method == 'GET'
+
+      return render(body: 'ORCID must not be blank', status: 403) if params[:orcid].blank?
+
+      existing = User.where(orcid: params[:orcid].strip).first || User.create(orcid: params[:orcid].strip)
+      existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
+                      tenant_id: params[:tenant_id], role: params[:role], migration_token: User::NO_MIGRATE_STRING)
+      session[:user_id] = existing.id
+      redirect_to dashboard_path, status: :found
     end
+    # rubocop:enable Metrics/AbcSize
 
     def choose_sso
       tenants = [OpenStruct.new(id: '', name: '')]
