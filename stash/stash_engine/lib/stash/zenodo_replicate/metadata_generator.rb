@@ -101,10 +101,16 @@ module Stash
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
-        # this relation is for myself and created in Dryad, so doesn't make sense here
-        related.delete_if { |i| i[:relation] == 'isSupplementTo' && i[:identifier].include?('/zenodo.') && @software_upload }
+        # this relation is for myself and created in Dryad, so doesn't make sense to send to zenodo
+        related.delete_if { |i| i[:relation] == 'isPartOf' && i[:identifier].include?('/zenodo.') && @software_upload }
 
-        related.push(relation: 'isSupplementTo', identifier: @resource.identifier.identifier) if @software_upload
+        # though this says software, it's hijacked for supplemental information for now because that is what we needed first
+        # This is adding the link back from zenodo to our datasets
+        if @software_upload
+          related.push(relation: 'isSupplementTo',
+                       identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
+                       scheme: 'doi')
+        end
         related ||= []
         related
       end

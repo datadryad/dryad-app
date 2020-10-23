@@ -123,9 +123,9 @@ module Stash
           @sl = StashEngine::SoftwareLicense.create(name: 'MIT License', identifier: 'MIT', details_url: 'http://spdx.org/licenses/MIT.json')
           @resource.identifier.update(software_license_id: @sl.id)
 
-          test_doi = "#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
+          test_doi = "https://doi.org/#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
-                                                    relation_type: 'issupplementto', resource_id: @resource.id,
+                                                    relation_type: 'ispartof', resource_id: @resource.id,
                                                     verified: true, hidden: false)
           # r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
 
@@ -150,7 +150,7 @@ module Stash
 
         it 'adds isSupplementTo to the Zenodo software to reference the Dryad dataset' do
           ids = @mg.related_identifiers.map { |i| i[:identifier] }
-          expect(ids).to include(@resource.identifier.identifier)
+          expect(ids).to include(StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier))
         end
       end
     end
