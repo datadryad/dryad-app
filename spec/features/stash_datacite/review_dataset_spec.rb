@@ -78,7 +78,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'shows the software/supp info if uploaded', js: true do
-      # binding.remote_pry
       navigate_to_software_upload
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
@@ -105,6 +104,22 @@ RSpec.feature 'ReviewDataset', type: :feature do
       # expect(page).not_to have_content('Select license for files')
     end
 
-  end
+    it 'sets CC-BY-4.0 License for not-dataset', js: true do
+      navigate_to_software_upload
+      page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
+        page.find('#choose-the-files').click
+      end
+      expect(page).to have_content('favicon.ico')
+      check('confirm_to_upload')
+      click_on('upload_all')
 
+      # it shows upload complete
+      expect(page).to have_content('Upload complete')
+
+      click_on('Proceed to Review')
+      # type hidden -- software_license 'CC-BY-4.0'
+      v = find('#software_license', visible: false).value
+      expect(v).to eq('CC-BY-4.0')
+    end
+  end
 end
