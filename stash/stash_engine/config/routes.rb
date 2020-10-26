@@ -74,6 +74,7 @@ StashEngine::Engine.routes.draw do
   match 'auth/migrate/mail', to: 'dashboard#migrate_data_mail', via: [:get]
   match 'auth/migrate/code', to: 'dashboard#migrate_data', via: [:get]
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
+  match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
 
   match 'terms/view', to: 'dashboard#view_terms', via: %i[get post]
 
