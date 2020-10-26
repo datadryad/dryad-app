@@ -61,7 +61,7 @@ RSpec.feature 'Admin', type: :feature do
       @resource.save
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
-      expect(page).to have_text('do not have permission to modify')
+      expect(page).to have_text('does not exist')
     end
 
     context :superuser do
