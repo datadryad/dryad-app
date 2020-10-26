@@ -2,8 +2,6 @@
 Embedding Dryad's Submission into a Manuscript System
 =====================================================
 
-** This document is a DRAFT, and should not be used as a final specification. **
-
 Dryad's API allows manuscript processing systems to embed Dryad
 submissions directly into their process. Sample API calls are shown
 below, but for full details on the API options see the
