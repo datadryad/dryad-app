@@ -107,7 +107,6 @@ module StashEngine
     end
 
     # Submission of the resource to the repository
-    #    def submission; end
     def submission; end
 
     # Upload files view for resource
