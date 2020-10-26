@@ -40,7 +40,10 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       @resource = StashEngine::Resource.find(@resource_id)
       FileUtils.rm_rf(@resource.upload_dir) unless @resource_id.blank?
       FileUtils.rm_rf(@resource.software_upload_dir) unless @resource_id.blank?
+    end
 
+    it "doesn't show Zenodo upload tab if not part of special journal" do
+      expect(page).not_to have_content('Upload Supporting Information')
     end
 
     it 'uploads a file' do

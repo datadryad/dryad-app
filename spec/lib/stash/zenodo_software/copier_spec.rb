@@ -27,6 +27,7 @@ module Stash
         my_path = @file.calc_file_path[0..-(File.basename(@file.calc_file_path).length + 1)]
         FileUtils.mkdir_p(my_path)
         FileUtils.touch(@file.calc_file_path)
+        WebMock.disable_net_connect!(allow_localhost: true)
       end
 
       after(:each) do
