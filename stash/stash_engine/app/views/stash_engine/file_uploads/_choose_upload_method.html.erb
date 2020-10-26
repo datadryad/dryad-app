@@ -31,13 +31,15 @@ provide key information for those wanting to re-use.
   <div class="t-upload__method-section">
     <div class="t-uploads__method-choice" id="alternate_up_method">
       <% if params[:action].include?('code') %>
-        <%= link_to 'Upload directly', up_code_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__plain-text5' %>
+        <br/>
+        <%= link_to 'Option 1: Upload directly', up_code_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
         OR
-        <%= link_to 'Upload by URL', up_code_manifest_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__plain-text5' %>
+        <%= link_to 'Option 2: Upload by URL', up_code_manifest_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
       <% else %>
-        <%= link_to 'Upload directly', upload_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__plain-text5' %>
+        <br/>
+        <%= link_to 'Option 1: Upload directly', upload_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
         OR
-        <%= link_to 'Upload by URL', upload_manifest_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__plain-text5' %>
+        <%= link_to 'Option 2: Upload by URL', upload_manifest_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
       <% end %>
     </div>
   </div>
