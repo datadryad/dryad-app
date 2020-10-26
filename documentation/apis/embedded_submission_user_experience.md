@@ -11,21 +11,9 @@ section like this:
 ![Manuscript system with button for Dryad submission](images/ms_system_dryad_button.png)
 
 When the user clicks the button “Submit Data to Dryad”, the Dryad
-submission process will open, and the user will be asked to login to
-Dryad, using their ORCID.
-
-![Dryad login screen](images/dryad_login.png)
-
-If they had already been logged in to the ORCID system, they will go
-directly to the submission page (below). If not, they will be
-redirected to the ORCID website to login, and then to the submission
-page.
-
-![ORCID login screen](images/orcid_login.png)
-
-The user will then see metadata that was pre-populated in their Dryad
-submission, which the journal sent behind the scenes. They will be
-able to modify and expand this metadata.
+submission process will open. The user will then see metadata that was
+pre-populated in their Dryad submission, which the journal sent behind
+the scenes. They will be able to modify and expand this metadata.
 
 ![Dryad submission, description page](images/dryad_submission1a.png)
 ![Dryad submission, description page](images/dryad_submission1b.png)
