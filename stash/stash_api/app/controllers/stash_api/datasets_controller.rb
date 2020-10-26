@@ -245,9 +245,9 @@ module StashApi
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
-        render json: { error: 'curationStatus patch not yet implemented' }.to_json, status: 500
+        render json: { error: 'curationStatus patch not yet implemented' }.to_json, status: 501
       when '/publicationISSN'
-        render json: { error: 'publicationISSN patch not yet implemented' }.to_json, status: 500
+        render json: { error: 'publicationISSN patch not yet implemented' }.to_json, status: 501
       else
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end

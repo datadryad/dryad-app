@@ -46,11 +46,9 @@ module StashDatacite
 
     # Review responds as a get request to review the resource before saving
     def review
-      puts "XXXX sd rc review #{@resource&.id}"
       respond_to do |format|
         format.js do
           @resource = StashEngine::Resource.find(params[:id])
-          puts "     found resource #{@resource&.id}"
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
           @resource.has_geolocation = @review.geolocation_data?
@@ -61,7 +59,6 @@ module StashDatacite
 
     # TODO: move code to StashEngine::Resource?
     def submission
-      puts 'XXXX sd rc submission'
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
       resource.identifier.update_search_words!
@@ -75,7 +72,6 @@ module StashDatacite
       resource.reload
 
       if session[:returnURL]
-        puts '  ----- returnURL detected, redirecting...'
         redirect_to(session[:returnURL])
       else
         redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
