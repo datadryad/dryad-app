@@ -33,7 +33,6 @@ module StashEngine
 
     # This used to be only for manifests, but now destroys both manifest and upload files
     def destroy_manifest
-      puts "XXXX destroy_manifest for file #{@file.id}"
       respond_to do |format|
         format.js do
           @file.smart_destroy!
@@ -123,7 +122,6 @@ module StashEngine
     end
 
     def set_file_info
-      puts "xx set_file_info #{params[:id]}"
       @file = FileUpload.find(params[:id])
     end
 

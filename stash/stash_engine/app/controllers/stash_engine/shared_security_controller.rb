@@ -9,13 +9,7 @@ module StashEngine
     end
 
     def require_login
-      puts 'XXXX ssc require_login'
-      puts "     params #{params}"
-      puts "     current_user #{current_user}"
-      puts "     session #{session.to_hash}"
-
       if current_user
-        puts 'XXXX current user found'
         target_page = session[:target_page]
         if target_page.present?
           # This session had originally been navigating to a specific target_page and was redirected
@@ -27,10 +21,7 @@ module StashEngine
         return
       end
 
-      if valid_edit_code?
-        puts 'XXXX ssc require_login found valid code'
-        return
-      end
+      return if valid_edit_code?
 
       flash[:alert] = 'You must be logged in.'
       session[:target_page] = request.fullpath
@@ -84,7 +75,6 @@ module StashEngine
     end
 
     def ajax_require_modifiable
-      puts "  xx ajax_require_modifiable u #{current_user} r #{resource&.id} ec #{valid_edit_code?}"
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
       return ajax_blocked unless valid_edit_code? ||
                                  ((current_user && resource) && resource.can_edit?(user: current_user))
@@ -104,14 +94,12 @@ module StashEngine
     end
 
     def ajax_blocked
-      puts '  xx ajax_blocked'
       render nothing: true, status: 403
       false
     end
 
     def valid_edit_code?
       edit_code = params[:edit_code] || session[:edit_code]
-      puts "XXXX validating code #{edit_code}"
       if edit_code == resource.identifier.edit_code
         # Code is valid, so save it in the session for later use (and implicitly return true)
         session[:edit_code] = edit_code

@@ -5,7 +5,6 @@ module StashDatacite
     before_action :find_resource
 
     def find_or_create
-      puts 'XXXX datacite find_or_create'
       @metadata_entry = Resource::MetadataEntry.new(@resource, current_tenant)
       @metadata_entry.resource_type
       se_id = StashEngine::Identifier.find(@resource.identifier_id)
@@ -22,7 +21,6 @@ module StashDatacite
     private
 
     def find_resource
-      puts 'XXXX datacite find_resource'
       @resource = StashEngine::Resource.find(params[:resource_id].to_i) unless params[:resource_id].blank?
     end
   end
