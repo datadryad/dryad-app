@@ -134,14 +134,17 @@ module StashApi
       fq_array
     end
 
-    # we are using PATCH only to update the versionStatus=submitted
+    # we are using PATCH only to allow updates for a few status settings:
+    # - versionStatus=submitted
+    # - curationStatus
+    # - publicationISSN
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     # we are also allowing UPSERT with a PUT as in the pattern at
     # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
     # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
     def update
-      do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
+      do_patch { return } # check if patch and do operation, then return early if it is a patch
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
@@ -225,19 +228,32 @@ module StashApi
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
+    # rubocop:disable Metrics/AbcSize
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
 
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
-      pre_submission_updates
-      StashEngine.repository.submit(resource_id: @resource.id)
-      # render something
-      ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
-      render json: ds.metadata, status: 202
+
+      case @json.first['path']
+      when '/versionStatus'
+        ensure_in_progress { yield }
+        pre_submission_updates
+        StashEngine.repository.submit(resource_id: @resource.id)
+        # render something
+        ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
+        render json: ds.metadata, status: 202
+      when '/curationStatus'
+        render json: { error: 'curationStatus patch not yet implemented' }.to_json, status: 500
+      when '/publicationISSN'
+        render json: { error: 'publicationISSN patch not yet implemented' }.to_json, status: 500
+      else
+        return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
+      end
       yield
     end
+    # rubocop:enable Metrics/AbcSize
 
     # checks the status for allowing a dataset PUT request that is an update
     def check_status
