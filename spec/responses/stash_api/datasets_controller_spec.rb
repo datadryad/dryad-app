@@ -425,13 +425,17 @@ module StashApi
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1)
         expect(hsh['title']).to eq(@resources[0].title)
+        expect(hsh['editLink']).to eq(nil)
       end
 
       it 'shows the private record for superuser' do
+        @identifier.edit_code = Faker::Number.number(digits: 6)
+        @identifier.save
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(2)
         expect(hsh['title']).to eq(@resources[1].title)
+        expect(hsh['editLink']).to include(@identifier.edit_code)
       end
 
       it 'shows the private record for the owner' do

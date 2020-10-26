@@ -49,14 +49,21 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_text('1 (Submitted)')
     end
 
-    # Skipping this test that fails intermittently, for a feature we're not actually using
-    xit 'redirects to the dataset editing page when requesting an edit link that the user has access to', js: true do
-      visit stash_url_helpers.dashboard_path
-      visit "/stash/edit/#{@identifier.identifier}"
+    it 'redirects to the dataset editing page when requesting an edit link with a valid edit_code', js: true do
+      @identifier.edit_code = Faker::Number.number(digits: 4)
+      @identifier.save
+      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Describe Your Dataset')
     end
 
-    it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant', js: true do
+    it 'rejects an attempt to edit the dataset with an invalid edit_code', js: true do
+      @identifier.edit_code = Faker::Number.number(digits: 4)
+      @identifier.save
+      visit "/stash/edit/#{@identifier.identifier}/bad-code"
+      expect(page).to have_text('do not have permission to modify')
+    end
+
+    it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
       @resource.tenant_id = 'dryad'
       @resource.save
       visit stash_url_helpers.dashboard_path
