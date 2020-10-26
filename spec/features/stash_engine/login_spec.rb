@@ -38,4 +38,32 @@ RSpec.feature 'Session', type: :feature do
 
   end
 
+  describe :test_login do
+    before(:each) do
+      ENV['TEST_LOGIN'] = 'true'
+    end
+
+    after(:each) do
+      ENV.delete('TEST_LOGIN')
+    end
+
+    it 'has a link in the login page' do
+      visit stash_url_helpers.choose_login_path
+      expect(page).to have_text('Use test login')
+    end
+
+    it 'allows filling the form and logging in' do
+      visit stash_url_helpers.choose_login_path
+      click_link 'Use test login'
+
+      expect(page).to have_text('First name') # just one of the fields
+
+      fill_in 'first_name', with: 'Gloria'
+      fill_in 'last_name', with: 'Clooney'
+      fill_in 'email', with: 'gloria.clooney@example.org'
+      fill_in 'orcid', with: '1234-5678-9012-3456'
+      click_button('Log In')
+      expect(page).to have_text('My Datasets')
+    end
+  end
 end
