@@ -100,18 +100,19 @@ namespace :deploy do
     on roles(:app) do
       execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 3 start"
     end
+  end
 
-    desc 'copy crons to the shared directory where the schedule crons expect them'
-    task :copy_crons_to_shared do
-      # This was going to be a symlink into current, but we don't want to put the shared/cron directory within
-      # current since it contains a backup directory of our database. It would then multiply
-      # the backups across every version when we deploy and make us run out of disk space.
-      #
-      # When the crons are changed in Puppet for the new path, we can remove this copying script.
-      on roles(:app) do
-        execute "mkdir -p /apps/dryad/apps/ui/shared/cron"
-        execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
-      end
+
+  desc 'copy crons to the shared directory where the schedule crons expect them'
+  task :copy_crons_to_shared do
+    # This was going to be a symlink into current, but we don't want to put the shared/cron directory within
+    # current since it contains a backup directory of our database. It would then multiply
+    # the backups across every version when we deploy and make us run out of disk space.
+    #
+    # When the crons are changed in Puppet for the new path, we can remove this copying script.
+    on roles(:app) do
+      execute "mkdir -p /apps/dryad/apps/ui/shared/cron"
+      execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
     end
   end
 
