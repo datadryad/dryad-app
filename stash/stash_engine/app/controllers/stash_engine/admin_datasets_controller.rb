@@ -92,6 +92,7 @@ module StashEngine
                                                                    note: @note)
           @resource.save
           @resource.reload
+          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
         end
       end
     end
