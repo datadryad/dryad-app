@@ -12,24 +12,13 @@ module StashEngine
       end
     end
 
+    # this is crazy and needlessly complex
     def filter_status_select(current_status)
-      statuses = StashEngine::CurationActivity.statuses
+      statuses = StashEngine::CurationActivity.allowed_states(current_status)
 
-      case current_status
-      when 'submitted'
-        statuses = statuses.select { |s| %w[curation withdrawn peer_review].include?(s) }
-      when 'peer_review'
-        statuses = statuses.select { |s| %w[curation withdrawn].include?(s) }
-      when 'withdrawn'
-        statuses = statuses.select { |s| %w[curation].include?(s) }
-      when 'embargoed'
-        statuses = statuses.select { |s| %w[curation withdrawn published].include?(s) }
-      else
-        unavailable = %w[in_progress submitted]
-        unavailable << current_status
-        statuses = statuses.reject { |s| unavailable.include?(s) }
-      end
+      statuses.delete(current_status) # because we don't show the current state as an option, it is implied by leaving state blank
 
+      # makes select list
       status_select(statuses)
     end
 

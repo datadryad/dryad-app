@@ -36,6 +36,22 @@ module StashEngine
     ]
     string_enum('status', enum_vals, 'in_progress', false)
 
+    # I'm making this more explicit because the view helper that did this was confusing and complex.
+    # We also need to enforce states outside of the select list in the view.
+    #
+    # Note that setting the next state to the same as the current state is just to add a note and doesn't actually
+    # change state in practice.  The UI may choose not to display the same state in the list, but it is allowed.
+    CURATOR_ALLOWED_STATES = {
+        in_progress: %w[in_progress],
+        submitted: %w[submitted curation withdrawn peer_review],
+        peer_review: %w[peer_review curation withdrawn],
+        curation: ( enum_vals - %w[in_progress submitted] ),
+        action_required: ( enum_vals - %w[in_progress submitted] ),
+        withdrawn: %w[withdrawn curation],
+        embargoed: %w[embargoed curation withdrawn published],
+        published: ( enum_vals - %w[in_progress submitted] )
+    }.with_indifferent_access.freeze
+
     # Validations
     # ------------------------------------------
     validates :resource, presence: true
@@ -89,6 +105,9 @@ module StashEngine
 
     # Instance methods
     # ------------------------------------------
+    # Not sure why this uses splat? http://andrewberls.com/blog/post/naked-asterisk-parameters-in-ruby
+    # maybe this calls super somehow and is useful for some reason, though I don't see it documented in the
+    # ActiveModel::Serializers::JSON .
     def as_json(*)
       # {"id":11,"identifier_id":1,"status":"Submitted","user_id":1,"note":"hello hello ssdfs2232343","keywords":null}
       {
@@ -109,13 +128,15 @@ module StashEngine
       CurationActivity.readable_status(status)
     end
 
-    # don't think the status_changed? method is right since it only detects a change in the same
-    # activerecord row.  We're adding a new row for each item, so a create, not a change in value.
     def latest_curation_status_changed?
       last_two_statuses = CurationActivity.where(resource_id: resource_id).order(updated_at: :desc, id: :desc).limit(2)
       return true if last_two_statuses.count < 2 # no second-to-last status for this resource, it should be new to this resource
 
       last_two_statuses.first.status != last_two_statuses.second.status
+    end
+
+    def self.allowed_states(current_state)
+      CURATOR_ALLOWED_STATES[current_state]
     end
 
     # Private methods

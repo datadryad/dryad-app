@@ -65,7 +65,9 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def curation_activity_popup
       respond_to do |format|
-        @resource = Resource.includes(:identifier, :curation_activities).find(params[:id])
+        @original_resource = Resource.where(id: params[:id]).first
+        # using the last submitted resource should apply the curation to the correct place, even with windows held open
+        @resource = Resource.includes(:identifier, :curation_activities).find(@original_resource.identifier.last_submitted_resource.id)
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
@@ -74,8 +76,12 @@ module StashEngine
     def curation_activity_change
       respond_to do |format|
         format.js do
+          @resource_display_id = params[:original_resource_id] || params[:id] # this is the resource_id to redraw in the page
+          @input_resource = Resource.where(id: params[:id]).first # the resource they asked to change curation on
+          @last_resource = @input_resource.identifier.resources.order(id: :desc).first # the last resource of all
+          @resource = @input_resource.identifier.last_submitted_resource # last resource that has been submitted
+
           @note = params[:resource][:curation_activity][:note]
-          @resource = Resource.find(params[:id])
           @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
