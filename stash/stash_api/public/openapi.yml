@@ -149,10 +149,10 @@ paths:
         - $ref: '#/components/parameters/doi'
       security:
         - bearerAuth: []
-      summary: Submit the in-progress dataset
-      description: "Submit by sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This tells it to attempt changing the versionStatus to Submitted.) Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
+      summary: Update state or details of an in-progress dataset
+      description: "Sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This is the most common command, attempting to change the versionStatus to Submitted.) Other options are available that are useful for integration with manuscript processing systems. See the [embedded Dryad documentation](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/embedded_submission.md) for details. Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
       requestBody:
-        description: json for patching the versionStatus to a 'submitted' state
+        description: JSON Patch object
         required: true
         content:
           application/json:

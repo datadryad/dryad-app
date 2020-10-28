@@ -12,7 +12,10 @@
   <% end %>
   <div style="clear: both";>&nbsp;</div>
   <table class="c-lined-table" id="curation_table">
-    <tr class="c-lined-table__head">
+      <tr class="c-lined-table__head">
+      <th class="c-admin-table">
+        Resource ID
+      </th>	  
       <th class="c-admin-table <%= sort_display('created_at') %>">
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
@@ -24,9 +27,6 @@
       </th>
       <th class="c-admin-table">
         Notes
-      </th>
-      <th class="c-admin-table">
-        Keywords
       </th>
     </tr>
     <% @curation_activities.each do |ca| %>
