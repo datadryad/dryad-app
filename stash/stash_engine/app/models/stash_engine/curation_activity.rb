@@ -42,14 +42,14 @@ module StashEngine
     # Note that setting the next state to the same as the current state is just to add a note and doesn't actually
     # change state in practice.  The UI may choose not to display the same state in the list, but it is allowed.
     CURATOR_ALLOWED_STATES = {
-        in_progress: %w[in_progress],
-        submitted: %w[submitted curation withdrawn peer_review],
-        peer_review: %w[peer_review curation withdrawn],
-        curation: ( enum_vals - %w[in_progress submitted] ),
-        action_required: ( enum_vals - %w[in_progress submitted] ),
-        withdrawn: %w[withdrawn curation],
-        embargoed: %w[embargoed curation withdrawn published],
-        published: ( enum_vals - %w[in_progress submitted] )
+      in_progress: %w[in_progress],
+      submitted: %w[submitted curation withdrawn peer_review],
+      peer_review: %w[peer_review curation withdrawn],
+      curation: (enum_vals - %w[in_progress submitted]),
+      action_required: (enum_vals - %w[in_progress submitted]),
+      withdrawn: %w[withdrawn curation],
+      embargoed: %w[embargoed curation withdrawn published],
+      published: (enum_vals - %w[in_progress submitted])
     }.with_indifferent_access.freeze
 
     # Validations
