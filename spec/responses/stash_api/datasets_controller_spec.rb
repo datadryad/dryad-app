@@ -474,8 +474,6 @@ module StashApi
       end
 
       describe 'PATCH to submit dataset' do
-
-        # TODO: Fix this with new visibility rules in API
         xit 'submits dataset when the PATCH operation for versionStatus=submitted (superuser & owner)' do
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,
@@ -588,8 +586,49 @@ module StashApi
 
         # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
       end
+
+      describe 'PATCH to update curation status' do
+        before(:each) do
+          # create a dataset in peer-review status
+          @super_user = create(:user, role: 'superuser')
+          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                    owner_id: @super_user.id, owner_type: 'StashEngine::User')
+          @access_token = get_access_token(doorkeeper_application: @doorkeeper_application)
+          @identifier = create(:identifier)
+          @res = create(:resource, identifier: @identifier, user: @super_user)
+          @ca = create(:curation_activity, resource: @res, status: 'peer_review')
+        end
+
+        it 'allows curation status to be updated' do
+          expect(@res.current_curation_status).to eq('peer_review')
+
+          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@res.current_curation_status).to eq('submitted')
+        end
+
+        it 'does not allow curation status to be updated if the item is already published' do
+          @ca = create(:curation_activity, resource: @res, status: 'published')
+          expect(@res.current_curation_status).to eq('published')
+
+          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@res.current_curation_status).to eq('published')
+        end
+
+      end
+
     end
 
   end
 end
-# rubocop:enable

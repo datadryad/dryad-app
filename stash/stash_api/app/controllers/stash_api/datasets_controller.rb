@@ -18,7 +18,6 @@ module StashApi
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
     before_action :optional_api_user, except: %i[create update]
-    # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
@@ -245,7 +244,8 @@ module StashApi
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
-        render json: { error: 'curationStatus patch not yet implemented' }.to_json, status: 501
+        update_curation_status(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
       when '/publicationISSN'
         render json: { error: 'publicationISSN patch not yet implemented' }.to_json, status: 501
       else
@@ -254,6 +254,22 @@ module StashApi
       yield
     end
     # rubocop:enable Metrics/AbcSize
+
+    def update_curation_status(new_status)
+      note = 'status updated via API call'
+
+      # DON'T go backwards in workflow,
+      # that is, don't change a status other than submitted or peer_review
+      unless %w[submitted peer_review].include?(@resource.current_curation_status)
+        note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
+        new_status = @resource.current_curation_status
+      end
+
+      StashEngine::CurationActivity.create(resource_id: @resource.id,
+                                           user_id: @user.id,
+                                           status: new_status,
+                                           note: note)
+    end
 
     # checks the status for allowing a dataset PUT request that is an update
     def check_status
