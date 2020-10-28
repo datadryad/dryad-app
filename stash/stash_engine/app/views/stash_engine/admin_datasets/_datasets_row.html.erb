@@ -1,5 +1,5 @@
 <%# takes dataset as local variable, dataset is a custom object of type StashEngine::AdminDatasets::CurationTableRow %>
-<tr class="c-lined-table__row">
+<tr class="c-lined-table__row" id="js-dataset-row-id-<%= dataset.identifier_id %>">
   <td class="c-admin-hide-border-right">
     <% if dataset&.qualified_identifier %>
       <%= link_to dataset.title, show_path(id: dataset.qualified_identifier), target: :blank %>
