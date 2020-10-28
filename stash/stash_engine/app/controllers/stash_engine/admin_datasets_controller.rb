@@ -73,6 +73,7 @@ module StashEngine
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def curation_activity_change
       respond_to do |format|
         format.js do
@@ -96,6 +97,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
     def activity_log
