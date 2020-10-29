@@ -74,7 +74,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def curation_activity_change
       respond_to do |format|
         format.js do
@@ -82,10 +82,12 @@ module StashEngine
           @resource = @identifier.last_submitted_resource
           @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
 
-          return publishing_error if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:resource][:curation_activity][:status])
+          if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:resource][:curation_activity][:status])
+            return publishing_error
+          end
 
           @last_state = @resource&.curation_activities&.last&.status
-          @this_state = ( params[:resource][:curation_activity][:status].blank? ? @last_state : params[:resource][:curation_activity][:status] )
+          @this_state = (params[:resource][:curation_activity][:status].blank? ? @last_state : params[:resource][:curation_activity][:status])
 
           return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
 
@@ -104,7 +106,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # show curation activities for this item
     def activity_log
