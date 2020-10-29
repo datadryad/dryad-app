@@ -12,7 +12,6 @@ module StashEngine
       end
     end
 
-    # this is crazy and needlessly complex
     def filter_status_select(current_status)
       statuses = StashEngine::CurationActivity.allowed_states(current_status)
 

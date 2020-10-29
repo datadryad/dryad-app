@@ -136,7 +136,7 @@ module StashEngine
     end
 
     def self.allowed_states(current_state)
-      CURATOR_ALLOWED_STATES[current_state]
+      CURATOR_ALLOWED_STATES[current_state].dup
     end
 
     # Private methods
