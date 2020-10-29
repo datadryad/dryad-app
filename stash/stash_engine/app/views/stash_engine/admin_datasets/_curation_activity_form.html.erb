@@ -1,6 +1,4 @@
-<% # local: resource, curation_activity, original_resource_id
-   # original_resource_id is the resource that was passed into the dialog and is identified in the list but may be stale/obsolete
-%>
+<% # locals: resource, curation_activity %>
 <div class="o-admin-dialog">
 
   <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
@@ -32,7 +30,7 @@
       </div>
     <% end %>
 
-    <%= hidden_field_tag :original_resource_id, original_resource_id %>
+    <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
 
     <%= submit_tag 'Submit' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>

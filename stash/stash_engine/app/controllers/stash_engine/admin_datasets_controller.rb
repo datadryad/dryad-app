@@ -53,7 +53,8 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|
-        resource = Resource.includes(:identifier, :curation_activities).find(params[:id])
+        @identifier = Identifier.where(id: params[:id]).first
+        resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
         @curation_activity = CurationActivity.new(
           resource_id: resource.id,
           status: resource.current_curation_activity.status
@@ -65,9 +66,9 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def curation_activity_popup
       respond_to do |format|
-        @original_resource = Resource.where(id: params[:id]).first
+        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
-        @resource = Resource.includes(:identifier, :curation_activities).find(@original_resource.identifier.last_submitted_resource.id)
+        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
@@ -77,10 +78,16 @@ module StashEngine
     def curation_activity_change
       respond_to do |format|
         format.js do
-          @resource_display_id = params[:original_resource_id] || params[:id] # this is the resource_id to redraw in the page
-          @input_resource = Resource.where(id: params[:id]).first # the resource they asked to change curation on
-          @last_resource = @input_resource.identifier.resources.order(id: :desc).first # the last resource of all
-          @resource = @input_resource.identifier.last_submitted_resource # last resource that has been submitted
+          @identifier = Identifier.find(params[:identifier_id])
+          @resource = @identifier.last_submitted_resource
+          @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
+
+          return publishing_error if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:resource][:curation_activity][:status])
+
+          @last_state = @resource&.curation_activities&.last&.status
+          @this_state = ( params[:resource][:curation_activity][:status].blank? ? @last_state : params[:resource][:curation_activity][:status] )
+
+          return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
 
           @note = params[:resource][:curation_activity][:note]
           @resource.current_editor_id = current_user.id
@@ -181,6 +188,35 @@ module StashEngine
       # If the user also provided a publication date and the date is today then
       # revert to published status
       @status = 'published' if @pub_date.present? && @pub_date <= Date.today.to_s
+    end
+
+    def publishing_error
+      @error_message = <<-HTML.chomp.html_safe
+        <p>You're attempting to embargo or publish a dataset that is being edited or hasn't successfully finished submission.</p>
+        <p>The latest version submission status is <strong>#{@last_resource.current_resource_state.resource_state}</strong> for
+        resource id #{@last_resource.id}.</p>
+        <p>You may need to wait a minute for submission to complete if this was recently edited or submitted again.</p>
+      HTML
+      render :curation_activity_error
+    end
+
+    def state_error
+      @error_message = <<-HTML.chomp.html_safe
+        <p>You're attempting to set the curation state to <strong>#{@this_state}</strong>,
+          which isn't an allowed state change from <strong>#{@last_state}</strong>.</p>
+        <p>This error may indicate that you are operating on stale data--such as by holding the <strong>status</strong> dialog
+        open in a separate window while making changes elsewhere (or another user has made recent changes).</p>
+        <p>The most likely ways to fix this error:</p>
+        <ul>
+          <li>Close this dialog and re-open the dialog to set the curation status again.</li>
+          <li>Or refresh the <strong>Dataset Curation</strong> list by reloading the page.</li>
+          <li>In some circumstances, submissions or re-submissions of metadata and files must be completed before states can update correctly,
+           so waiting a minute or two may fix the problem.</li>
+        </ul>
+         <hr/>
+        <p>Reference information -- resource id <strong>#{@resource.id}</strong> and doi <strong>#{@resource.identifier.identifier}</strong></p>
+      HTML
+      render :curation_activity_error
     end
 
   end

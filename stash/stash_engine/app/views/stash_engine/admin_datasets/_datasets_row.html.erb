@@ -28,7 +28,7 @@
   <td class="c-admin-hide-border-left">
     <% if current_user.superuser? && dataset.resource_state == 'submitted' %>
       <%= form_tag({ controller: '/stash_engine/admin_datasets',
-                     action: 'curation_activity_popup', id: dataset.resource_id },
+                     action: 'curation_activity_popup', id: dataset.identifier_id },
                    method: :get, remote: true) do -%>
         <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
           <i class="fa fa-pencil" aria-hidden="true"></i>
