@@ -1,4 +1,6 @@
 require 'rails_helper'
+# require 'pry-remote'
+
 RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
@@ -109,7 +111,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         visit "#{dashboard_path}?curation_status=in_progress"
       end
 
-      it 'do not have any "edit" pencil icons' do
+      it 'does not have any "edit" pencil icons' do
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(all('.fa-pencil').length).to eql(0)
         end
@@ -119,6 +121,41 @@ RSpec.feature 'CurationActivity', type: :feature do
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(all('.fa-clock-o').length).to eql(1)
         end
+      end
+
+    end
+
+    context :curating_dataset, js: true  do
+
+      before(:each) do
+        mock_stripe!
+        mock_ror!
+        @user = create(:user, tenant_id: 'ucop')
+        @resource = create(:resource, user: @user , identifier: create(:identifier))
+        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id )
+        @resource.resource_states.first.update(resource_state: 'submitted')
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        visit "#{dashboard_path}?curation_status=curation"
+      end
+
+      it 'submits a curation status changes and reflects in the page and history afterwards' do
+        within(:css, '.c-lined-table__row', wait: 10) do
+          all(:css, 'button')[2].click
+        end
+
+        # select the author action required
+        find("#resource_curation_activity_status option[value='action_required']").select_option
+
+        # fill in a note
+        fill_in(id: 'resource_curation_activity_note', with: "My cat says hi")
+        click_button('Submit')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text('Author Action Required')
+          all(:css, 'button').last.click
+        end
+
+        expect(page).to have_text('My cat says hi')
       end
 
     end
