@@ -131,7 +131,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_stripe!
         mock_ror!
         @user = create(:user, tenant_id: 'ucop')
-        @resource = create(:resource, user: @user, identifier: create(:identifier))
+        @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
         @resource.resource_states.first.update(resource_state: 'submitted')
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
