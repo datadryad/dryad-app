@@ -228,6 +228,7 @@ module StashApi
     end
 
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
@@ -240,20 +241,21 @@ module StashApi
         ensure_in_progress { yield }
         pre_submission_updates
         StashEngine.repository.submit(resource_id: @resource.id)
-        # render something
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
         update_curation_status(@json.first['value'])
         render json: @resource.reload.current_curation_activity
       when '/publicationISSN'
-        render json: { error: 'publicationISSN patch not yet implemented' }.to_json, status: 501
+        update_publication_issn(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
       else
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
       yield
     end
     # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def update_curation_status(new_status)
       note = 'status updated via API call'
@@ -269,6 +271,23 @@ module StashApi
                                            user_id: @user.id,
                                            status: new_status,
                                            note: note)
+    end
+
+    def update_publication_issn(new_issn)
+      datum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
+      if new_issn.present?
+        # real value, update an existing value or create a new one
+        if datum
+          datum.update(value: new_issn)
+        else
+          StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
+                                            data_type: 'publicationISSN',
+                                            value: new_issn)
+        end
+      else
+        # nil/empty new_issn, remove any existing datum
+        datum&.destroy
+      end
     end
 
     # checks the status for allowing a dataset PUT request that is an update

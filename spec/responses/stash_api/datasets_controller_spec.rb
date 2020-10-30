@@ -587,7 +587,7 @@ module StashApi
         # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
       end
 
-      describe 'PATCH to update curation status' do
+      describe 'PATCH to update curationStatus or publicationISSN' do
         before(:each) do
           # create a dataset in peer-review status
           @super_user = create(:user, role: 'superuser')
@@ -599,7 +599,7 @@ module StashApi
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
         end
 
-        it 'allows curation status to be updated' do
+        it 'allows curationStatus to be updated' do
           expect(@res.current_curation_status).to eq('peer_review')
 
           @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
@@ -612,7 +612,7 @@ module StashApi
           expect(@res.current_curation_status).to eq('submitted')
         end
 
-        it 'does not allow curation status to be updated if the item is already published' do
+        it 'does not allow curationStatus to be updated if the item is already published' do
           @ca = create(:curation_activity, resource: @res, status: 'published')
           expect(@res.current_curation_status).to eq('published')
 
@@ -624,6 +624,36 @@ module StashApi
                                 )
           expect(response_code).to eq(200)
           expect(@res.current_curation_status).to eq('published')
+        end
+
+        it 'allows publicationISSN to be updated, to claim a dataset for a journal' do
+          expect(@identifier.publication_issn).to eq(nil)
+          new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+
+          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": new_issn }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@identifier.publication_issn).to eq(new_issn)
+        end
+
+        it 'allows publicationISSN to be removed with a nil value' do
+          new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          StashEngine::InternalDatum.create(identifier_id: @identifier.id,
+                                            data_type: 'publicationISSN',
+                                            value: new_issn)
+          expect(@identifier.publication_issn).to eq(new_issn)
+          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": '' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@identifier.publication_issn).to eq(nil)
         end
 
       end
