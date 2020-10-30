@@ -125,14 +125,14 @@ RSpec.feature 'CurationActivity', type: :feature do
 
     end
 
-    context :curating_dataset, js: true  do
+    context :curating_dataset, js: true do
 
       before(:each) do
         mock_stripe!
         mock_ror!
         @user = create(:user, tenant_id: 'ucop')
-        @resource = create(:resource, user: @user , identifier: create(:identifier))
-        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id )
+        @resource = create(:resource, user: @user, identifier: create(:identifier))
+        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
         @resource.resource_states.first.update(resource_state: 'submitted')
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit "#{dashboard_path}?curation_status=curation"
@@ -147,7 +147,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         find("#resource_curation_activity_status option[value='action_required']").select_option
 
         # fill in a note
-        fill_in(id: 'resource_curation_activity_note', with: "My cat says hi")
+        fill_in(id: 'resource_curation_activity_note', with: 'My cat says hi')
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
