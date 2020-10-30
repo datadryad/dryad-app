@@ -49,7 +49,7 @@ module StashEngine
 
         it 'returns only one record when id requested specifically' do
           dataset = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil,
-                                                                        identifier_id: @identifiers[1].id).first
+                                                                       identifier_id: @identifiers[1].id).first
           expect(dataset.identifier_id).to eq(@identifiers[1].id)
         end
       end
