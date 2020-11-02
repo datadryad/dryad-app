@@ -177,8 +177,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('curation')
       end
 
-      it 'carried over the curation note to the curation_activity record', js: true do
-        expect(@resource.current_curation_activity.note.include?(@resource.edit_histories.last.user_comment)).to eql(true)
+      it 'added a curation note to the record', js: true do
+        expect(@resource.curation_activities.where(status: 'in_progress').last.note).to include(@resource.edit_histories.last.user_comment)
       end
 
       it 'displays the proper information on the Admin page', js: true do
@@ -204,10 +204,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text(@resource.identifier)
 
+        # it has the user comment when they clicked to submit and end in-progress edit
+        expect(page).to have_text(@resource.edit_histories.last.user_comment)
+
         within(:css, '.c-lined-table__row:last-child') do
           expect(page).to have_text('Curation')
           expect(page).to have_text(@curator.name)
-          expect(page).to have_text(@resource.edit_histories.last.user_comment)
+          expect(page).to have_text('system set back to curation')
         end
       end
 
