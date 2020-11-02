@@ -669,9 +669,13 @@ module StashEngine
     # -----------------------------------------------------------
     # Handle the 'submitted' state (happens after successful Merritt submission)
     def prepare_for_curation
+      # gets last resource
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
-      # Determine if the curator or author is the appropriate attribution
-      attribution = prior_version.present? && prior_version.current_curation_activity.curation? ? current_editor_id : user_id
+
+      # try to assign the same person as immediately previous activity, otherwise prefer editor_id and then user_id from resource
+      cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
+        .order(id: :desc).first
+      attribution = (cur_act.nil? ? (current_editor_id || user_id) : cur_act.user_id)
       curation_to_submitted(prior_version, attribution)
     end
 
@@ -679,8 +683,11 @@ module StashEngine
       # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
       # version and the journal needs it)
       status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
+
       # Update the user in the auto-created :in_progress activity as its set to the author by default
-      current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
+      # I do not believe this needs to be done anymore
+      # current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
+
       # Generate the :submitted status
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
