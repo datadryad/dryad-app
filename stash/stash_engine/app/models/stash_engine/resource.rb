@@ -701,7 +701,7 @@ module StashEngine
       return unless %w[action_required curation].include?(prior_version.current_curation_status)
 
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
-                                                                  note: edit_histories.last&.user_comment || 'ready for curation')
+                                                                  note: 'system set back to curation')
     end
   end
 end
