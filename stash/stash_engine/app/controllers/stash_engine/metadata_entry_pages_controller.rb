@@ -34,6 +34,14 @@ module StashEngine
       # check if edit_code is present, and if so, store in the session
       valid_edit_code?
 
+      # If the user is logged in, they will remain logged in, just with the added benefit
+      # that they have access to edit this dataset. But if they were not logged in,
+      # log them in as the dataset owner, and ensure the tenant_id is set correctly.
+      unless current_user
+        session[:user_id] = resource.user_id
+        redirect_to choose_sso_path and return if current_user.tenant_id.blank?
+      end
+
       redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
     end
 
