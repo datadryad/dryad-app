@@ -39,7 +39,7 @@ Then, when the user invokes an action in the manuscript system such as
 to `/datasets` with the initial dataset metadata. When a manuscript
 system is making this call on behalf of an author, the dataset *must*
 include:
-- a `userID` with the ORCID of the author that has been submitting
+- a `userId` with the ORCID of the author that has been submitting
   the manuscript. This allows the author to manage the dataset in Dryad.
 - an entry in the `authors` list that contains the ORCID of the
   submitting author
