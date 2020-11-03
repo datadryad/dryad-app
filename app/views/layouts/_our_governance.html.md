@@ -87,3 +87,5 @@
 <h2>Board Information</h2>
 
 Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
+
+<a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad Board Conflict of Interest Forms</a>
