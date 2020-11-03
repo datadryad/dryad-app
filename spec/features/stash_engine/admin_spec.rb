@@ -86,7 +86,26 @@ RSpec.feature 'Admin', type: :feature do
     end
 
     it 'allows a user with a valid edit_code to take ownership of a dataset owned by the system user' do
-      expect(1).to eq(2)
+      new_ident = create(:identifier)
+      new_ident.edit_code = Faker::Number.number(digits: 4)
+      new_ident.save
+      system_user = create(:user, id: 0)
+      resource = create(:resource, :submitted, user: system_user, identifier: new_ident)
+      visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
+      expect(page).to have_text('Logout')
+      resource.reload
+      expect(resource.user_id).to eq(@admin.id)
+    end
+
+    it 'forces a non-logged-in user with a valid edit_code to login before take ownership of a dataset owned by the system user' do
+      sign_out
+      new_ident = create(:identifier)
+      new_ident.edit_code = Faker::Number.number(digits: 4)
+      new_ident.save
+      system_user = create(:user, id: 0)
+      create(:resource, :submitted, user: system_user, identifier: new_ident)
+      visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
+      expect(page.current_path).to eq('/stash/sessions/choose_login')
     end
 
     context :superuser do

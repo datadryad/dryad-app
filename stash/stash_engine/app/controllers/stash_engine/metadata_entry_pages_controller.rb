@@ -21,18 +21,30 @@ module StashEngine
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
+    # rubocop:disable Metrics/AbcSize
     # GET /stash/edit/{doi}/{edit_code}
     def edit_by_doi
-      if resource.processing?
-        redirect_to root_path, alert: 'The target dataset is being processed by Dryad. Please try again later.'
-        return
-      end
+      redirect_to root_path, alert: 'The target dataset is being processed. Please try again later.' and return if resource.processing?
 
-      # if this call was made with a returnURL, save it for the end of the submission process
+      # if this call was made with a returnURL, save it that URL in the session for the end of the submission process
       session[:returnURL] = params[:returnURL] if params[:returnURL]
 
       # check if edit_code is present, and if so, store in the session
       valid_edit_code?
+
+      if ownership_transfer_needed?
+        if current_user
+          @resource.user_id = current_user.id
+          @resource.save
+        else
+          # The user will need to login (possibly creating an
+          # account), and then they will be redirected back to this
+          # method to receive ownership of the dataset
+          flash[:alert] = 'You must be logged in.'
+          session[:target_page] = request.fullpath
+          redirect_to stash_url_helpers.choose_login_path and return
+        end
+      end
 
       # If the user is logged in, they will remain logged in, just with the added benefit
       # that they have access to edit this dataset. But if they were not logged in,
@@ -44,6 +56,7 @@ module StashEngine
 
       redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
     end
+    # rubocop:enable Metrics/AbcSize
 
     # create a new version of this resource before editing with find or create
     def new_version
@@ -71,6 +84,10 @@ module StashEngine
     end
 
     private
+
+    def ownership_transfer_needed?
+      valid_edit_code? && (resource.user_id == 0)
+    end
 
     def resource_exist
       resource = Resource.find(params[:resource_id]) if params[:resource_id]
