@@ -75,7 +75,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in 'user_comment', with: Faker::Lorem.sentence
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
-      expect(page).to have_content('General reminders and suggestions for publishing')
+      expect(page.current_path).to eq('/stash/submission_process')
     end
   end
 

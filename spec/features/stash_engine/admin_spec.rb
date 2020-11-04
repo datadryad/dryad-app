@@ -89,7 +89,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident = create(:identifier)
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
-      system_user = create(:user, id: 0)
+      system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
       resource = create(:resource, :submitted, user: system_user, identifier: new_ident)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('Logout')
