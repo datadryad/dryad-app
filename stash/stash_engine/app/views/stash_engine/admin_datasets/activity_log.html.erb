@@ -5,7 +5,7 @@
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <% if current_user.superuser? %>
     <div style="float: right;">
-      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.latest_resource&.id }, method: :get, remote: true) do -%>
+      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id }, method: :get, remote: true) do -%>
         <button class="o-button__submit">Add Note</button>
       <% end %>
     </div>
@@ -15,6 +15,9 @@
     <tr class="c-lined-table__head">
       <th class="c-admin-table <%= sort_display('created_at') %>">
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
+      </th>
+      <th class="c-admin-table">
+        Version
       </th>
       <th class="c-admin-table">
         Status
