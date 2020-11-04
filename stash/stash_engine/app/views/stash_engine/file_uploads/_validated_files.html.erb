@@ -4,7 +4,9 @@
 %>
 
 <div>
-  <% if resource.file_uploads.validated_table.count < 1 %>
+  <% if resource.nil? %>
+    <span id="no_chosen2">Unable to display files. Please refresh the page.</span>
+  <% elsif (resource.file_uploads.validated_table.count < 1) %>
     <span id="no_chosen2">No files have been uploaded.</span>
   <% else %>
     <table class="c-lined-table">

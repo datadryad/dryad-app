@@ -1,5 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login
@@ -85,7 +86,18 @@ module StashEngine
     def destroy
       resource.destroy
       respond_to do |format|
-        format.html { redirect_to return_to_path_or(dashboard_path), notice: 'The in-progress version was successfully deleted.' }
+        format.html do
+          notice = 'The in-progress version was successfully deleted.'
+          if session[:returnURL]
+            return_url = session[:returnURL]
+            session[:returnURL] = nil
+            redirect_to return_url
+          elsif current_user
+            redirect_to return_to_path_or(dashboard_path), notice: notice
+          else
+            redirect_to root_path, notice: notice
+          end
+        end
         format.json { head :no_content }
       end
     end
@@ -138,3 +150,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength
