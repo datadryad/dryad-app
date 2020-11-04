@@ -1,4 +1,4 @@
-<% # local: resource, curation_activity %>
+<% # locals: resource, curation_activity %>
 <div class="o-admin-dialog">
 
   <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
@@ -29,6 +29,8 @@
         <%= ca.text_area :note, class: 'c-input__textarea' %>
       </div>
     <% end %>
+
+    <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
 
     <%= submit_tag 'Submit' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
