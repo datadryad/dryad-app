@@ -93,9 +93,22 @@ RSpec.feature 'CurationActivity', type: :feature do
         csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
         csv_parts = csv_line.split(',')
 
-        expect(csv_parts[-3].to_i).to eql(my_stats.views)
-        expect(csv_parts[-2].to_i).to eql(my_stats.downloads)
-        expect(csv_parts[-1].to_i).to eql(my_stats.citation_count)
+        expect(csv_parts[-4].to_i).to eql(my_stats.views)
+        expect(csv_parts[-3].to_i).to eql(my_stats.downloads)
+        expect(csv_parts[-2].to_i).to eql(my_stats.citation_count)
+      end
+
+      it 'generates a csv that includes submitter institutional name' do
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        visit dashboard_path
+        click_link('Get Comma Separated Values (CSV) for import into Excel')
+
+        title = @identifiers.first.resources.first.title
+
+        csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
+        csv_parts = csv_line.split(',')
+
+        expect(csv_parts[-1]).to eql(@identifiers.first.resources.first.tenant.long_name)
       end
 
     end
