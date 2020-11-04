@@ -1,0 +1,161 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/v2/datasets"
+    },
+    "first": {
+      "href": "/api/v2/datasets"
+    },
+    "last": {
+      "href": "/api/v2/datasets?page=1"
+    }
+  },
+  "count": 3,
+  "total": 3,
+  "_embedded": {
+    "stash:datasets": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.t76hdrd0"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.t76hdrd0/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/90"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.t76hdrd0/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "identifier": "doi:10.7958/dryad.t76hdrd0",
+        "id": 89,
+        "title": "medical fri",
+        "authors": [
+          {
+            "firstName": "Who",
+            "lastName": "OnFirst",
+            "email": "who@somewhere.org",
+            "affiliation": "Dryad Digital Repository",
+            "affiliationROR": "https://ror.org/00x6h5n95",
+            "orcid": "0000-1234-2184-5678"
+          }
+        ],
+        "abstract": "<p>dfsf</p>\r\n",
+        "versionNumber": 1,
+        "versionStatus": "submitted",
+        "curationStatus": "Embargoed",
+        "sharingLink": "https://datadryad.org/stash/share/bMswhgy6qqpZQWHzxT49H1FMFIoFfeXieg",
+        "userId": 1,
+        "embargoEndDate": "2020-08-02"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.k3j9kd80"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.k3j9kd80/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/95"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.7958%2Fdryad.k3j9kd80/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "identifier": "doi:10.7958/dryad.k3j9kd80",
+        "id": 94,
+        "title": "Some Super Great Dataset",
+        "authors": [
+          {
+            "firstName": "Someone",
+            "lastName": "O'other",
+            "email": "someone@somewhere.org",
+            "affiliation": "The Institutue With No ROR",
+            "orcid": "0000-0003-4071-1234"
+          }
+        ],
+        "abstract": "<p>sfsf</p>\r\n",
+        "versionNumber": 1,
+        "versionStatus": "submitted",
+        "curationStatus": "Embargoed",
+        "sharingLink": "https://datadryad.org/stash/share/NG7cSbPHP9cGfaq9MburJIVRaI9vy9GRU",
+        "userId": 1,
+        "embargoEndDate": "2020-08-02"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.7959%2Fdryad.p8cz8wf1"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.7959%2Fdryad.p8cz8wf1/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/147"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.7959%2Fdryad.p8cz8wf1/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "identifier": "doi:10.7959/dryad.p8cz8wf1",
+        "id": 146,
+        "title": "This is the title -- and it's great",
+        "authors": [
+          {
+            "firstName": "Ryan",
+            "lastName": "Scherle",
+            "email": "ryan@somewhere.org",
+            "affiliation": "Dryad Digital Repository",
+            "affiliationROR": "https://ror.org/00pjdza24",
+            "orcid": "0000-0001-6422-9814"
+          },
+          {
+            "firstName": "Joe",
+            "lastName": "Someone",
+            "email": "",
+            "affiliation": "Dryad Digital Repository",
+            "affiliationROR": "https://ror.org/00pjdza24"
+          },
+          {
+            "firstName": "Tina",
+            "lastName": "SomeoneElse",
+            "email": "",
+            "affiliation": "Dryad Digital Repository",
+            "affiliationROR": "https://ror.org/00pjdza24"
+          }
+        ],
+        "abstract": "I'm So Abstract",
+        "versionNumber": 1,
+        "versionStatus": "submitted",
+        "curationStatus": "Published",
+        "sharingLink": "https://datadryad.org/stash/share/Q5ZQX1DC20nBaqQpeUNJV3rHw25rH-QHo",
+        "userId": 1,
+        "embargoEndDate": "2019-12-02"
+      }
+    ]
+  }
+}
