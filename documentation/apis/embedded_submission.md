@@ -130,7 +130,8 @@ When the data submission is complete, the author will be redirected
 back to the correct page in the manuscript system. If you have chosen
 to open the Dryad submission in a new window, and you want the new
 window to simply close, specify the `returnURL` as a page that closes
-itself immediately upon opening. 
+itself immediately upon opening. (See the
+[demo closing page](embedded_submission_demo_close.html).) 
 
 Obtain Dryad metadata
 ---------------------

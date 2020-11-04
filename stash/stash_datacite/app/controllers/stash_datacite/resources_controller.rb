@@ -57,7 +57,6 @@ module StashDatacite
       end
     end
 
-    # TODO: move code to StashEngine::Resource?
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
@@ -72,7 +71,9 @@ module StashDatacite
       resource.reload
 
       if session[:returnURL]
-        redirect_to(session[:returnURL])
+        return_url = session[:returnURL]
+        session[:returnURL] = nil
+        redirect_to(return_url)
       else
         redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
       end
