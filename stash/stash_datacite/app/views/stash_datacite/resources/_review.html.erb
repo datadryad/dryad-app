@@ -80,7 +80,7 @@
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
-        <% if current_user.id != @resource.user_id # only show to admins %>
+        <% if current_user&.id != @resource.user_id # only show to admins %>
           <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
               placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
         <% end %>

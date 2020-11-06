@@ -18,7 +18,6 @@ module StashApi
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
     before_action :optional_api_user, except: %i[create update]
-    # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
@@ -134,14 +133,17 @@ module StashApi
       fq_array
     end
 
-    # we are using PATCH only to update the versionStatus=submitted
+    # we are using PATCH only to allow updates for a few status settings:
+    # - versionStatus=submitted
+    # - curationStatus
+    # - publicationISSN
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     # we are also allowing UPSERT with a PUT as in the pattern at
     # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
     # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
     def update
-      do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
+      do_patch { return } # check if patch and do operation, then return early if it is a patch
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
@@ -225,18 +227,67 @@ module StashApi
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
 
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
-      pre_submission_updates
-      StashEngine.repository.submit(resource_id: @resource.id)
-      # render something
-      ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
-      render json: ds.metadata, status: 202
+
+      case @json.first['path']
+      when '/versionStatus'
+        ensure_in_progress { yield }
+        pre_submission_updates
+        StashEngine.repository.submit(resource_id: @resource.id)
+        ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
+        render json: ds.metadata, status: 202
+      when '/curationStatus'
+        update_curation_status(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
+      when '/publicationISSN'
+        update_publication_issn(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
+      else
+        return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
+      end
       yield
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
+    def update_curation_status(new_status)
+      note = 'status updated via API call'
+
+      # DON'T go backwards in workflow,
+      # that is, don't change a status other than submitted or peer_review
+      unless %w[submitted peer_review].include?(@resource.current_curation_status)
+        note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
+        new_status = @resource.current_curation_status
+      end
+
+      StashEngine::CurationActivity.create(resource_id: @resource.id,
+                                           user_id: @user.id,
+                                           status: new_status,
+                                           note: note)
+    end
+
+    def update_publication_issn(new_issn)
+      datum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
+      if new_issn.present?
+        # real value, update an existing value or create a new one
+        if datum
+          datum.update(value: new_issn)
+        else
+          StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
+                                            data_type: 'publicationISSN',
+                                            value: new_issn)
+        end
+      else
+        # nil/empty new_issn, remove any existing datum
+        datum&.destroy
+      end
     end
 
     # checks the status for allowing a dataset PUT request that is an update
