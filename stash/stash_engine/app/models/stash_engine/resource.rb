@@ -684,23 +684,19 @@ module StashEngine
       # version and the journal needs it)
       status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
 
-      # Update the user in the auto-created :in_progress activity as its set to the author by default
-      # I do not believe this needs to be done anymore
-      # current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
-
       # Generate the :submitted status
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
-      curation_to_curation(prior_version, attribution) unless prior_version.blank?
+      curation_to_curation(prior_version) unless prior_version.blank?
     end
 
-    def curation_to_curation(prior_version, attribution)
+    def curation_to_curation(prior_version)
       return if prior_version.blank? || prior_version.current_curation_status.blank?
       # If the prior version was in author :action_required or :curation status we need to set it
       # back to :curation status. Also carry over the curators note so that it appears in the activity log
       return unless %w[action_required curation].include?(prior_version.current_curation_status)
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'system set back to curation')
     end
   end
