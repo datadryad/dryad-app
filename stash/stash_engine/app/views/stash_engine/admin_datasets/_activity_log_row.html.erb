@@ -1,9 +1,9 @@
 <% # pass in local of curation_activity %>
 <tr class="c-lined-table__row">
+  <td><%= curation_activity.resource_id %></td>
   <td><%= formatted_datetime(curation_activity.created_at) %></td>
   <td><%= curation_activity.resource.stash_version.version %></td>
   <td><%= curation_activity.readable_status %></td>
   <td><%= curation_activity.user&.name || "System" %></td>
   <td><%= curation_activity.note %></td>
-  <td><%= curation_activity.keywords %></td>
 </tr>

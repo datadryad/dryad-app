@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'securerandom'
 require_relative 'presenter'
 
 module StashApi
@@ -104,7 +105,17 @@ module StashApi
     end
 
     def add_edit_link!(hsh, version)
-      hsh[:editLink] = "/stash/edit/#{CGI.escape(@se_identifier.to_s)}" if version.resource.permission_to_edit?(user: @user)
+      ensure_edit_code
+      return unless version.resource.permission_to_edit?(user: @user)
+
+      hsh[:editLink] = "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier.edit_code}"
+    end
+
+    def ensure_edit_code
+      return if @se_identifier.edit_code
+
+      @se_identifier.edit_code = SecureRandom.urlsafe_base64(10)
+      @se_identifier.save
     end
 
   end
