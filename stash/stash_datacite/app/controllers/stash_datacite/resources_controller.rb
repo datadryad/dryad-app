@@ -89,6 +89,13 @@ module StashDatacite
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
       StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
+
+      # this is here because they want it in curation notes, in addition to the edit history table
+      return if params[:user_comment].blank?
+
+      last = resource.curation_activities.last
+      StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
+                                           resource_id: last.resource_id)
     end
 
     def max_submission_size
@@ -142,7 +149,6 @@ module StashDatacite
       end
       false
     end
-
   end
 end
 # rubocop:enable Metrics/ClassLength
