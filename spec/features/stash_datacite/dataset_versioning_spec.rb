@@ -154,6 +154,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     context :by_curator do
 
       before(:each, js: true) do
+        # needed to set the user to system user.  Not migrated as part of tests for some reason
+        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
+
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         @resource.reload
 
@@ -177,8 +180,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('curation')
       end
 
-      it 'carried over the curation note to the curation_activity record', js: true do
-        expect(@resource.current_curation_activity.note.include?(@resource.edit_histories.last.user_comment)).to eql(true)
+      it 'added a curation note to the record', js: true do
+        expect(@resource.curation_activities.where(status: 'in_progress').last.note).to include(@resource.edit_histories.last.user_comment)
       end
 
       it 'displays the proper information on the Admin page', js: true do
@@ -204,10 +207,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text(@resource.identifier)
 
+        # it has the user comment when they clicked to submit and end in-progress edit
+        expect(page).to have_text(@resource.edit_histories.last.user_comment)
+
         within(:css, '.c-lined-table__row:last-child') do
           expect(page).to have_text('Curation')
-          expect(page).to have_text(@curator.name)
-          expect(page).to have_text(@resource.edit_histories.last.user_comment)
+          expect(page).to have_text('Dryad System')
+          expect(page).to have_text('system set back to curation')
         end
       end
 
@@ -276,6 +282,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     context :by_author_after_curation do
 
       before(:each) do
+        # needed to set the user to system user.  Not migrated as part of tests for some reason
+        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
+
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         @resource.reload
       end
