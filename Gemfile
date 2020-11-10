@@ -51,6 +51,7 @@ gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
+gem 'net-sftp'
 gem 'stripe'
 
 # #########################
