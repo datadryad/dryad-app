@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'net/ftp'
+require 'net/sftp'
 
 require_relative 'helper'
 
@@ -55,14 +55,20 @@ module LinkOut
     end
 
     def publish_files!
-      ftp = Net::FTP.new(@ftp.ftp_host)
-      ftp.login(@ftp.ftp_username, @ftp.ftp_password)
-      ftp.chdir(@ftp.ftp_dir)
-      ftp.putbinaryfile("#{TMP_DIR}/#{@provider_file}")
-      ftp.putbinaryfile("#{TMP_DIR}/#{@links_file}")
-      ftp.close
-    rescue StandardError => e
-      p "    FTP Error: #{e.message}"
+      Net::SFTP.start(@ftp.ftp_host, @ftp.ftp_username, password: @ftp.ftp_password) do |sftp|
+        sftp.upload!("#{TMP_DIR}/#{@provider_file}", "#{@ftp.ftp_dir}/#{@provider_file}")
+      rescue Net::SFTP::StatusException => e
+        p "    SFTP Error: #{e.message}"
+      end
+
+      # It's not ideal to re-open the SFTP session, but we were having problems with the session
+      # getting automatically closed after the previous transfer, so it's worth a little extra overhead
+      # to guarantee this will complete.
+      Net::SFTP.start(@ftp.ftp_host, @ftp.ftp_username, password: @ftp.ftp_password) do |sftp|
+        sftp.upload!("#{TMP_DIR}/#{@links_file}", "#{@ftp.ftp_dir}/#{@links_file}")
+      rescue Net::SFTP::StatusException => e
+        p "    SFTP Error: #{e.message}"
+      end
     end
 
     private
