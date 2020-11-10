@@ -35,7 +35,7 @@ YEST_MONTH="`date --date='1 day ago' '+%Y-%m'`"
 WEEK_AGO_MONTH="`date --date='8 days ago' '+%Y-%m'`"
 
 # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-UPLOAD_TO_HUB=False \
+UPLOAD_TO_HUB=True \
 YEAR_MONTH=$WEEK_AGO_MONTH \
 OUTPUT_FILE="$COUNTER_JSON_STORAGE/$WEEK_AGO_MONTH" \
 LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
@@ -44,7 +44,7 @@ python -u main.py
 if [ "$YEST_MONTH" != "$WEEK_AGO_MONTH" ]; then
     # We have another month to partially process
     # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-    UPLOAD_TO_HUB=False \
+    UPLOAD_TO_HUB=True \
     YEAR_MONTH=$YEST_MONTH \
     OUTPUT_FILE="$COUNTER_JSON_STORAGE/$YEST_MONTH" \
     LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
