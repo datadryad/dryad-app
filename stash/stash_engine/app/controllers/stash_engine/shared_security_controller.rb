@@ -100,7 +100,7 @@ module StashEngine
 
     def valid_edit_code?
       edit_code = params[:edit_code] || session[:edit_code]
-      if resource && (edit_code == resource.identifier.edit_code)
+      if defined?(resource) && resource.present? && (edit_code == resource.identifier.edit_code)
         # Code is valid, so save it in the session for later use (and implicitly return true)
         session[:edit_code] = edit_code
       else
