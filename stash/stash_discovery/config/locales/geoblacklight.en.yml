@@ -10,7 +10,7 @@ en:
       headline: 'Explore and discover...'
       search_heading: 'Find the data you need'
       category_heading: 'Find by...'
-      map_heading: 'Find by location'
+      map_heading: 'Find by location in map'
     tools:
       login_to_view: 'Login to view and download'
     formats:
