@@ -11,5 +11,8 @@ if(to_upload_buttons.length && uploadInProgress){
   uploadInProgress = false;
   $('#cancel_all').hide();
   updateButtonLinkStates(); // for file upload method
-  $('#upload_complete').show(0); //.delay(5000).fadeOut(1000)
+  $('#upload_message').removeClass();
+  $('#upload_message').addClass('c-upload__upload-complete-text');
+  $('#upload_message').html('<p>Upload complete.</p>');
+  $('#upload_message').show(0); //.delay(5000).fadeOut(1000)
 }
