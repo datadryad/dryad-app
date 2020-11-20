@@ -25,8 +25,9 @@ bundle exec rails counter:combine_files
 # set up python and run counter-processor (maybe twice)
 # ---------------------------------------
 echo "Running counter-processor"
-export PATH=$HOME/opt/bin:$PATH
-export PYTHONPATH=$HOME/opt/bin/python-3.6.9
+export VIRTUAL_ENV=/apps/dryad/python_venv/python3.7.9
+export PATH=$VIRTUAL_ENV/bin:$PATH
+export PYTHONPATH=$VIRTUAL_ENV
 python --version
 cd /apps/dryad/apps/counter/counter-processor
 # may need to to run the following lines to get dependencies (like bundler) before the first time the processor is run
