@@ -48,6 +48,33 @@ module StashApi
       end
     end
 
+    # post /em_submission_metadata
+    def em_submission_metadata
+      # The Editorial Manager API sends metadata that is largely similar to our normal API, but it needs to be
+      # reformatted before use.
+      puts "XXXXX  em_submission_metadata"
+      respond_to do |format|
+        format.json do
+          dp = DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+          @stash_identifier = dp.parse
+          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
+          render json: ds.metadata, status: 201
+        end
+      end
+    end
+
+    def em_reformat_request
+      puts "XXXX dataset #{params['dataset']}"
+      em_params = {}
+      em_params['journal_full_title'] = 'Can I change it j?'
+      puts "XXXX journal_full_title #{em_params['journal_full_title']}"
+
+      em_params['title'] = params['article']['article_title']
+      em_params['abstract'] = params['article']['abstract']
+      puts "XXXX em_params #{em_params}"
+      em_params
+    end
+    
     # get /datasets
     def index
       ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
