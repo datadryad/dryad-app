@@ -51,7 +51,7 @@ module StashApi
     # post /em_submission_metadata
     def em_submission_metadata
       # The Editorial Manager API sends metadata that is largely similar to our normal API, but it needs to be
-      # reformatted before use.
+      # reformatted before and after the normal processing.
       puts "XXXXX  em_submission_metadata"
       respond_to do |format|
         format.json do
@@ -63,15 +63,48 @@ module StashApi
       end
     end
 
+    # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
     def em_reformat_request
       puts "XXXX dataset #{params['dataset']}"
       em_params = {}
-      em_params['journal_full_title'] = 'Can I change it j?'
-      puts "XXXX journal_full_title #{em_params['journal_full_title']}"
 
-      em_params['title'] = params['article']['article_title']
-      em_params['abstract'] = params['article']['abstract']
-      puts "XXXX em_params #{em_params}"
+      em_params['publicationName'] = params['journal_full_title']
+      art_params = params['article']
+      if art_params
+        if art_params['article_doi']
+          em_params['relatedWorks'] = []
+          em_params['relatedWorks'] << {
+            'relationship' => 'Cites',
+            'identifierType' => 'DOI',
+            'identifier' => art_params['article_doi']
+          }
+        end
+        em_params['manuscriptNumber'] = art_params['manuscript_number']
+        em_params['title'] = art_params['article_title']
+        em_params['abstract'] = art_params['abstract']
+        em_params['keywords'] = art_params['keywords'] + art_params['classifications']
+        em_funders = []
+        art_params['funding_source'].each do |f|
+          em_funders << {
+            "organization" => f['funder'],
+            "awardNumber" => f['award_number']
+          }
+        end
+        em_params['funders'] = em_funders if em_funders.present?
+      end
+      em_authors = []
+      params['authors'].each do |auth|
+        em_authors << {
+          "firstName" => auth['first_name'],
+          "lastName" => auth['last_name'],
+          "email" => auth['email'],
+          "orcid" => auth['orcid'],
+          "affiliation" => auth['institution'],
+          "affiliationROR" => auth['institution_id'] 
+        }
+      end
+      em_params['authors'] = em_authors if em_authors.present?
+      puts "\nXXXX em_params #{em_params.to_json}"
       em_params
     end
     

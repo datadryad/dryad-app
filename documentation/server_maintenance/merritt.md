@@ -43,7 +43,7 @@ the RepoQueueState:
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'errored').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|
- repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last
+ repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last.id
  StashEngine::RepoQueueState.find(repo_queue_id).destroy
  StashEngine.repository.submit(resource_id: res_id)
 end
