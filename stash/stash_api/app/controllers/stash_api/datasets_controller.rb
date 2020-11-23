@@ -66,7 +66,7 @@ module StashApi
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
     def em_reformat_request
       puts "XXXX dataset #{params['dataset']}"
-      em_params = {}
+      em_params = {}.with_indifferent_access
 
       em_params['publicationName'] = params['journal_full_title']
       art_params = params['article']
@@ -79,19 +79,24 @@ module StashApi
             'identifier' => art_params['article_doi']
           }
         end
-        em_params['manuscriptNumber'] = art_params['manuscript_number']
+        em_params['manuscriptNumber'] = art_params['manuscript_number'] if art_params['manuscript_number']
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
-        em_params['keywords'] = art_params['keywords'] + art_params['classifications']
-        em_funders = []
-        art_params['funding_source'].each do |f|
-          em_funders << {
-            "organization" => f['funder'],
-            "awardNumber" => f['award_number']
-          }
+        if art_params['keywords'] || art_params['classifications']
+          em_params['keywords'] = art_params['keywords'] | art_params['classifications'] 
         end
-        em_params['funders'] = em_funders if em_funders.present?
+        if art_params['funding_source']
+          em_funders = []
+          art_params['funding_source'].each do |f|
+            em_funders << {
+              "organization" => f['funder'],
+              "awardNumber" => f['award_number']
+            }
+          end
+          em_params['funders'] = em_funders
+        end
       end
+      
       em_authors = []
       params['authors'].each do |auth|
         em_authors << {
@@ -99,9 +104,8 @@ module StashApi
           "lastName" => auth['last_name'],
           "email" => auth['email'],
           "orcid" => auth['orcid'],
-          "affiliation" => auth['institution'],
-          "affiliationROR" => auth['institution_id'] 
-        }
+          "affiliation" => auth['institution']
+        }.compact
       end
       em_params['authors'] = em_authors if em_authors.present?
       puts "\nXXXX em_params #{em_params.to_json}"
