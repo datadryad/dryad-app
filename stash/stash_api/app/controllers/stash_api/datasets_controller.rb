@@ -113,6 +113,7 @@ module StashApi
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+    # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
       {
         deposit_id: @stash_identifier.identifier,
