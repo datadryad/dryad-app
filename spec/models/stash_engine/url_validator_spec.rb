@@ -159,5 +159,22 @@ module StashEngine
         expect(filename).to eq('🦄.txt')
       end
     end
+
+    describe :upload_attributes_from do
+      before(:each) do
+        stub_request(:head, 'http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
+          .to_return(status: 200, body: '', headers: {})
+      end
+
+      it 'decodes and also makes prettier filenames with urlencoding' do
+        url_validator = UrlValidator.new(url: 'http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
+        resource = create(:resource)
+        translator = Stash::UrlTranslator.new('http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
+        result = url_validator.upload_attributes_from(translator: translator, resource: resource)
+
+        expect(result[:upload_file_name]).to eq('My_cAT_hAS_FlEaS.jpg')
+        expect(result[:original_filename]).to eq('My cAT hAS FlEaS.jpg')
+      end
+    end
   end
 end
