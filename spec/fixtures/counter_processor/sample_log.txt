@@ -1,0 +1,45 @@
+<replace-time> 21067/21067 Calculating stats for doi:10.5061/dryad.ss25rp7
+
+submitted
+
+Remove old logs past their deletion time
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: not a git repository (or any parent up to mount point /apps)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+There was an error and rspec was not available.
+Deleted counter_2020-09-12.log_combined
+Deleted counter_2020-09-14.log
+Deleted counter_2020-09-16.log_0
+Deleted counter_2020-09-12.log_0
+Deleted counter_2020-09-13.log
+Deleted counter_2020-09-14.log_0
+Deleted counter_2020-09-15.log
+Deleted counter_2020-09-15.log_0
+Deleted counter_2020-09-12.log
+Deleted counter_2020-09-11.log_combined
+Deleted counter_2020-09-11.log
+Deleted counter_2020-09-16.log_combined
+Deleted counter_2020-09-16.log
+Deleted counter_2020-09-13.log_0
+Deleted counter_2020-09-13.log_combined
+Deleted counter_2020-09-11.log_0
+Deleted counter_2020-09-14.log_combined
+Deleted counter_2020-09-15.log_combined
+Deleted counter_2020-09-04.log
