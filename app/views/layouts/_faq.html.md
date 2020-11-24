@@ -54,6 +54,9 @@ of the services provided by Merritt, see this document: <a href="https://merritt
 <li><strong>Succession plans</strong>: In case of closure of the repository, reasonable efforts will be made to integrate all content into suitable alternative institutional and/or subject based repositories. </li>
 </ul>
 
+<h2 id="pub_date">Will the date of publication for my data submission match the publication date of my journal article?</h2>
+<p>No. The publication date for Dryad data submissions will be assigned upon final approval by our Curators for public posting. Because it’s essential to maintain accuracy, the publication date of datasets cannot be altered.</p>
+
 <h2 id="delete">Can I delete my data?</h2>
 <p>Data deposited in Dryad is intended to remain permanently archived and available. Removal of a deposited dataset is considered an exceptional action which should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the withdrawal of data from Dryad, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 
