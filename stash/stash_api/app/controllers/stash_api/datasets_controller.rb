@@ -14,7 +14,7 @@ module StashApi
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
-    before_action :setup_identifier_and_resource_for_put, only: %i[update set_internal_datum add_internal_datum]
+    before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
     before_action :optional_api_user, except: %i[create update]
@@ -52,20 +52,23 @@ module StashApi
     def em_submission_metadata
       # The Editorial Manager API sends metadata that is largely similar to our normal API, but it needs to be
       # reformatted before and after the normal processing.
-      puts "XXXXX  em_submission_metadata"
       respond_to do |format|
-        format.json do
-          dp = DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+        format.any do
+          dp = if @resource
+                 DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
+               else
+                 DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+               end
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
-          render json: ds.metadata, status: 201
+          render json: em_reformat_response(ds.metadata), status: 201
         end
       end
     end
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_reformat_request
-      puts "XXXX dataset #{params['dataset']}"
       em_params = {}.with_indifferent_access
 
       em_params['publicationName'] = params['journal_full_title']
@@ -74,44 +77,52 @@ module StashApi
         if art_params['article_doi']
           em_params['relatedWorks'] = []
           em_params['relatedWorks'] << {
-            'relationship' => 'Cites',
-            'identifierType' => 'DOI',
-            'identifier' => art_params['article_doi']
-          }
+            relationship: 'Cites',
+            identifierType: 'DOI',
+            identifier: art_params['article_doi']
+          }.with_indifferent_access
         end
         em_params['manuscriptNumber'] = art_params['manuscript_number'] if art_params['manuscript_number']
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
-        if art_params['keywords'] || art_params['classifications']
-          em_params['keywords'] = art_params['keywords'] | art_params['classifications'] 
-        end
+        em_params['keywords'] = art_params['keywords'] | art_params['classifications'] if art_params['keywords'] || art_params['classifications']
         if art_params['funding_source']
           em_funders = []
           art_params['funding_source'].each do |f|
             em_funders << {
-              "organization" => f['funder'],
-              "awardNumber" => f['award_number']
+              organization: f['funder'],
+              awardNumber: f['award_number']
             }
           end
           em_params['funders'] = em_funders
         end
       end
-      
+
       em_authors = []
       params['authors'].each do |auth|
         em_authors << {
-          "firstName" => auth['first_name'],
-          "lastName" => auth['last_name'],
-          "email" => auth['email'],
-          "orcid" => auth['orcid'],
-          "affiliation" => auth['institution']
-        }.compact
+          firstName: auth['first_name'],
+          lastName: auth['last_name'],
+          email: auth['email'],
+          orcid: auth['orcid'],
+          affiliation: auth['institution']
+        }.with_indifferent_access.compact
       end
       em_params['authors'] = em_authors if em_authors.present?
-      puts "\nXXXX em_params #{em_params.to_json}"
       em_params
     end
-    
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+    def em_reformat_response(metadata)
+      {
+        deposit_id: @stash_identifier.identifier,
+        deposit_doi: @stash_identifier.identifier,
+        deposit_url: metadata[:_links][:self][:href],
+        deposit_edit_url: metadata[:editLink],
+        status: 'Success'
+      }.compact
+    end
+
     # get /datasets
     def index
       ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
@@ -271,6 +282,7 @@ module StashApi
     # rubocop:enable Layout/LineLength
 
     def get_stash_identifier(id)
+      return nil if id.blank?
       # check to see if the identifier is actually an id and not a DOI first
       return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
 
