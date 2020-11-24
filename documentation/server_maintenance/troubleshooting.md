@@ -4,8 +4,7 @@ Troubleshooting and Maintenance
 Some common problems and how to deal with them.
 
 Also see the notes on:
--
-[handling failed submissions](https://confluence.ucop.edu/display/Stash/Dryad+Operations#DryadOperations-FixingaFailedSubmission).
+- [handling failed submissions](https://confluence.ucop.edu/display/Stash/Dryad+Operations#DryadOperations-FixingaFailedSubmission).
 - [Interactions with Merritt](merritt.md)
 
 
