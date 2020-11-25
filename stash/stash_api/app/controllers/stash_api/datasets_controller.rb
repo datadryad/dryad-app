@@ -85,7 +85,8 @@ module StashApi
         em_params['manuscriptNumber'] = art_params['manuscript_number'] if art_params['manuscript_number']
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
-        em_params['keywords'] = art_params['keywords'] | art_params['classifications'] if art_params['keywords'] || art_params['classifications']
+        keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
+        em_params['keywords'] = keywords if keywords
         if art_params['funding_source']
           em_funders = []
           art_params['funding_source'].each do |f|
