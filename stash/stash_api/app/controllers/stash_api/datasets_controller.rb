@@ -54,17 +54,64 @@ module StashApi
       # reformatted before and after the normal processing.
       respond_to do |format|
         format.any do
-          dp = if @resource
-                 DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
-               else
-                 DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
-               end
-          @stash_identifier = dp.parse
-          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
-          render json: em_reformat_response(ds.metadata), status: 201
+          if @stash_identifier&.first_submitted_resource.present?
+            # Once the dataset has been submitted by an author, only update the status,
+            # but don't actually process the metadata from EM
+            em_response = em_update_status
+            status_code = em_response[:status] == 'Success' ? 200 : 403
+            render json: em_response, status: status_code
+          else
+            dp = if @resource
+                   DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
+                 else
+                   DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+                 end
+            @stash_identifier = dp.parse
+            ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
+            render json: em_reformat_response(ds.metadata), status: 201
+          end
         end
       end
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def em_update_status
+      # If final_disposition is available, update the status of this dataset
+      disposition = params['article']['final_disposition']
+      unless disposition && (@resource.current_curation_status == 'peer_review')
+        return {
+          deposit_id: @stash_identifier.identifier,
+          deposit_doi: @stash_identifier.identifier,
+          deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
+          deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+          error_message: 'Once the Dryad dataset has been edited by a user, metadata updates are not allowed ' \
+                         'via the Editorial Manager API. You may, however, submit an update with a change to ' \
+                         'the final_disposition for a dataset that has previously been in peer_review status.',
+          status: 'Error'
+        }
+      end
+
+      if disposition.downcase == 'accept'
+        # article is accepted -> transition peer_review to curation
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
+                                               note: 'updating status based on API notification from Editorial Manager journal')
+      else
+        # any other article disposition -> transition peer_review to action_required
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
+                                               note: 'updating status based on API notification from Editorial Manager journal')
+      end
+
+      {
+        deposit_id: @stash_identifier.identifier,
+        deposit_doi: @stash_identifier.identifier,
+        deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
+        deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+        status: 'Success'
+      }
+    end
+    # rubocop:enable Metrics/MethodLength
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
