@@ -204,6 +204,41 @@ module StashApi
         article = hsh[:article]
         expect(res.title).to eq(article[:article_title])
       end
+
+      it 'does not update core fields after the user has submitted edits' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(403)
+      end
+
+      it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        create(:curation_activity, resource: res, status: 'peer_review')
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(200)
+      end
     end
 
     # list of datasets
