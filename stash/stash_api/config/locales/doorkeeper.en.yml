@@ -47,7 +47,7 @@ en:
         scopes: 'Scopes'
         callback_urls: 'Callback urls'
         actions: 'Actions'
-
+      
     authorizations:
       buttons:
         authorize: 'Authorize'
@@ -120,3 +120,6 @@ en:
           home: 'Home'
       application:
         title: 'OAuth authorization required'
+
+    scopes:
+      all: 'All actions that are available for this user'
