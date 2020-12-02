@@ -129,7 +129,7 @@ module StashApi
         rw = @metadata[:relatedWorks].first
         expect(rw[:identifier]).to eq(ri.related_identifier)
         expect(rw[:identifierType]).to eq('DOI')
-        expect(rw[:relationship]).to eq('Cites')
+        expect(rw[:relationship]).to eq('article')
       end
 
       it 'defaults to the correct license' do

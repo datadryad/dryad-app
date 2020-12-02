@@ -44,6 +44,17 @@ module Fixtures
         )
       end
 
+      def add_related_work(work_type: 'article')
+        create_key_and_array(key: :relatedWorks)
+        @metadata[:relatedWorks].push(
+          {
+            relationship: work_type,
+            identifierType: 'DOI',
+            identifier: "10.#{Faker::Number.number(digits: 4)}/fakedoi.#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          }.with_indifferent_access
+        )
+      end
+
       def add_abstract
         @metadata.merge!(abstract: Faker::Lorem.paragraph)
       end
