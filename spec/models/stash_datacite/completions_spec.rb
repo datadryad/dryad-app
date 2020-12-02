@@ -514,12 +514,9 @@ module StashDatacite
         end
 
         it 'warns on missing author email' do
-          @resource.authors.find_each do |author|
-            author.author_email = nil
-            author.save!
+          @resource.authors.each do |author|
+            author.update(author_email: nil)
           end
-          @resource.save!
-          byebug
           @completions = Completions.new(@resource)
           warnings = completions.all_warnings
           expect(warnings[0]).to include('email')
