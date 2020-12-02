@@ -18,7 +18,7 @@
 	}
     ],
     "relatedWorks" : [ {
-	"relationship" : "Cites",
+	"relationship" : "article",
 	"identifierType" : "DOI",
 	"identifier" : "10.1111/j.1558-5646.2007.00022.x"
     } ],
