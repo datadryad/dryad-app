@@ -518,6 +518,9 @@ module StashDatacite
             author.author_email = nil
             author.save!
           end
+          @resource.save!
+          byebug
+          @completions = Completions.new(@resource)
           warnings = completions.all_warnings
           expect(warnings[0]).to include('email')
         end
