@@ -10,7 +10,7 @@ module StashApi
         def value
           @resource.related_identifiers.map do |r|
             {
-              relationship: r.relation_type_friendly,
+              relationship: r.work_type,
               identifierType: r.related_identifier_type_friendly,
               identifier: r.related_identifier
             }
