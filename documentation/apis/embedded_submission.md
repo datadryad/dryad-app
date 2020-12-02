@@ -89,7 +89,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "methods": "My cat will help you to discover why you can't get the data to work.",
   "relatedWorks": [
     {
-	  "relationship": "Cites",
+	  "relationship": "article",
 	  "identifierType": "DOI",
 	  "identifier": "10.1111/j.1558-5646.2007.00022.x"
 	}
@@ -179,7 +179,7 @@ Sample call and (abbreviated) response:
   "methods": "My cat will help you to discover why you can't get the data to work.",
   "relatedWorks": [
     {
-	  "relationship": "Cites",
+	  "relationship": "article",
 	  "identifierType": "DOI",
 	  "identifier": "10.1111/j.1558-5646.2007.00022.x"
 	}
