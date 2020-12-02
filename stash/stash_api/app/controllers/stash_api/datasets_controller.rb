@@ -124,7 +124,7 @@ module StashApi
         if art_params['article_doi']
           em_params['relatedWorks'] = []
           em_params['relatedWorks'] << {
-            relationship: 'Cites',
+            relationship: 'article',
             identifierType: 'DOI',
             identifier: art_params['article_doi']
           }.with_indifferent_access
