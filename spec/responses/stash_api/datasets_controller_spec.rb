@@ -2,6 +2,7 @@ require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 require 'fixtures/stash_api/curation_metadata'
+require 'fixtures/stash_api/em_metadata'
 require 'cgi'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
@@ -153,6 +154,103 @@ module StashApi
         @resource.reload
         expect(@resource.curation_activities.size).to eq(2)
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
+      end
+    end
+
+    # test creation of a new dataset
+    describe '#create Editorial Manager' do
+      before(:each) do
+        @meta = Fixtures::StashApi::EmMetadata.new
+        @meta.make_deposit_metadata
+      end
+
+      it 'creates a new dataset from EM deposit metadata' do
+        # the following works for post with headers
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        hsh = @meta.hash
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        expect(ident).to be
+        expect(ident.publication_name).to eq(hsh[:journal_full_title])
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+        expect(res.authors.first.author_last_name).to eq(hsh[:authors].first[:last_name])
+        expect(res.authors.first.author_orcid).to eq(hsh[:authors].first[:orcid])
+        expect(res.authors.first.author_email).to eq(hsh[:authors].first[:email])
+      end
+
+      it 'creates a new dataset from EM submission metadata' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        hsh = @meta.hash
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        expect(ident).to be
+        expect(ident.publication_name).to eq(hsh[:journal_full_title])
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+
+        article = hsh[:article]
+        expect(res.title).to eq(article[:article_title])
+      end
+
+      it 'allows update of deposit metadata with new submission metadata' do
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+        expect(response_code).to eq(201)
+        ident.reload
+        res.reload
+        hsh = @meta.hash
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+        article = hsh[:article]
+        expect(res.title).to eq(article[:article_title])
+      end
+
+      it 'does not update core fields after the user has submitted edits' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(403)
+      end
+
+      it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        create(:curation_activity, resource: res, status: 'peer_review')
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(200)
       end
     end
 

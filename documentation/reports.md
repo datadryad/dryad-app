@@ -205,7 +205,7 @@ GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 Lists of Objects in non-Dryad collections for Merritt Migration
 ---------------------------------------------------------------
 ```
-SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id
+SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id, res_count.versions
 FROM stash_engine_identifiers ids
 JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash_engine_resources
   JOIN stash_engine_resource_states sts
@@ -217,5 +217,7 @@ JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash
 ON ids.id = res2.identifier_id
 JOIN stash_engine_resources res
 ON res2.res2_id = res.id
+JOIN (SELECT identifier_id, count(id) as versions FROM stash_engine_resources GROUP BY identifier_id) as res_count
+ON ids.id = res_count.identifier_id
 ORDER BY res.tenant_id, ids.identifier;
 ```
