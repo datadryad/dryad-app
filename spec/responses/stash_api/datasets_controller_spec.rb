@@ -83,6 +83,19 @@ module StashApi
         expect(output[:userId]).to eq(test_user.id)
       end
 
+      it 'creates a new basic dataset with related software' do
+        @meta.add_related_work(work_type: 'software')
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+
+        # check it against the database
+        @stash_id = StashEngine::Identifier.find(output[:id])
+        @resource = @stash_id.resources.first
+        expect(@resource.related_identifiers.first.work_type).to eq('software')
+        expect(@resource.related_identifiers.first.related_identifier).to be
+      end
+
       it 'creates a new basic dataset with a placename' do
         @meta.add_place
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
