@@ -7,15 +7,13 @@ module StashApi
       # Related Works look like this and use a constrainted list of relationships and identifier types
       # "relatedWorks": [
       #   {
-      #     "relationship": "Cites",
+      #     "relationship": "software",
       #     "identifierType": "URL",
       #     "identifier": "http://example.org/cats"
       #   } ]
 
       # lists of allowed values
-      #   StashDatacite::RelatedIdentifier::RelationTypes
-      #   StashDatacite::RelatedIdentifier::RelatedIdentifierTypes
-      LowerRelationTypes = StashDatacite::RelatedIdentifier::RelationTypes.map(&:downcase)
+      LowerWorkTypes = StashDatacite::RelatedIdentifier.work_types.map(&:first)
       LowerIdentifierTypes = StashDatacite::RelatedIdentifier::RelatedIdentifierTypes.map(&:downcase)
 
       def parse
@@ -23,13 +21,14 @@ module StashApi
         return if @hash['relatedWorks'].blank?
 
         @hash['relatedWorks'].each do |rw|
-          next if rw.blank? || !LowerRelationTypes.include?(rw['relationship']&.downcase) ||
+          next if rw.blank? || !LowerWorkTypes.include?(rw['relationship']&.downcase) ||
               !LowerIdentifierTypes.include?(rw['identifierType']&.downcase)
 
           @resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
             related_identifier: rw['identifier'],
             related_identifier_type: rw['identifierType']&.downcase,
-            relation_type: rw['relationship']&.downcase
+            work_type: rw['relationship']&.downcase,
+            relation_type: StashDatacite::RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[rw['relationship']&.downcase]
           )
         end
       end

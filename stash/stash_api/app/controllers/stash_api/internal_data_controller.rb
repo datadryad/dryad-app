@@ -13,7 +13,7 @@ module StashApi
     def show
       @internal_data = StashEngine::InternalDatum.find(params[:id])
       respond_to do |format|
-        format.json { render json: @internal_data }
+        format.any { render json: @internal_data }
       end
     end
 
@@ -22,7 +22,7 @@ module StashApi
       @internal_data = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id)
       @internal_data = @internal_data.data_type(params[:data_type]) if params.key?(:data_type)
       respond_to do |format|
-        format.json { render json: @internal_data }
+        format.any { render json: @internal_data }
       end
     end
 
@@ -38,7 +38,7 @@ module StashApi
       @internal_data = StashEngine::InternalDatum.find(params[:id])
       @internal_data.update!(params[:internal_datum])
       respond_to do |format|
-        format.json { render json: @internal_data }
+        format.any { render json: @internal_data }
       end
     end
 

@@ -20,7 +20,7 @@ module StashApi
       user = StashEngine::User.find(params[:id])
       user = User.new(user_id: user)
       respond_to do |format|
-        format.json { render json: user.metadata }
+        format.any { render json: user.metadata }
       end
     end
 
@@ -30,8 +30,7 @@ module StashApi
       filtered_users = StashEngine::User.where(query_hash.to_hash) # this was ActionController::Parameters
       out = paged_users(filtered_users)
       respond_to do |format|
-        format.json { render json: out }
-        format.html { render plain: UNACCEPTABLE_MSG, status: 406 }
+        format.any { render json: out }
       end
     end
 

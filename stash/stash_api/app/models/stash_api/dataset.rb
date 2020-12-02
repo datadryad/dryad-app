@@ -87,7 +87,7 @@ module StashApi
       {
         identifier: @se_identifier&.to_s || @identifier_s,
         id: @se_identifier&.id,
-        message: 'identifier cannot be viewed, may be missing required elements'
+        message: 'Identifier cannot be viewed. Either you lack permission to view it, or it is missing required elements.'
       }
     end
 
