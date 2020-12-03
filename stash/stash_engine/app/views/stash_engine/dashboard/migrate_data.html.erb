@@ -19,7 +19,7 @@
     <div class="c-input__emailcode-spacer">&nbsp;</div>
   <% end %>
 
-  <%= form_with(auth_migrate_code_path, method: "get", local: true) do %>
+  <%= form_with(url: auth_migrate_code_path, method: "get", local: true) do %>
     <div class="c-input__emailcode-text">
       <%= label_tag("Validation code", nil, {:class=>"c-input__label"})%>
       <%= text_field_tag(:code, nil, {:class=>"c-input__text"}) %>
