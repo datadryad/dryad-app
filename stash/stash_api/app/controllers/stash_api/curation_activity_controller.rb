@@ -17,7 +17,7 @@ module StashApi
     def show
       @curation_activity = StashEngine::CurationActivity.find(params[:id])
       respond_to do |format|
-        format.json { render json: @curation_activity }
+        format.any { render json: @curation_activity }
       end
     end
 
@@ -28,7 +28,7 @@ module StashApi
       @curation_activity = @curation_activity.where(user_id: @user.id) if params.key?(:user_id)
       @curation_activity = @curation_activity.order(updated_at: :desc)
       respond_to do |format|
-        format.json { render json: @curation_activity }
+        format.any { render json: @curation_activity }
       end
     end
 
@@ -37,7 +37,7 @@ module StashApi
       resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
-        format.json { render json: resource&.reload&.current_curation_activity }
+        format.any { render json: resource&.reload&.current_curation_activity }
       end
     end
 
@@ -46,7 +46,7 @@ module StashApi
       resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
-        format.json { render json: resource&.reload&.current_curation_activity }
+        format.any { render json: resource&.reload&.current_curation_activity }
       end
     end
 

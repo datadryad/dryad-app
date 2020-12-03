@@ -13,7 +13,7 @@ module StashApi
     # All this really does is return the basic HATEOAS link to the base level dataset links
     def index
       respond_to do |format|
-        format.json { render json: output }
+        format.any { render json: output }
       end
     end
 
@@ -21,7 +21,7 @@ module StashApi
     # see if you can do a post request and connect with the key you've obtained
     def test
       respond_to do |format|
-        format.json { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
+        format.any { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
       end
     end
 

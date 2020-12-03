@@ -16,7 +16,7 @@ module StashApi
     def show
       v = Version.new(resource_id: params[:id])
       respond_to do |format|
-        format.json { render json: v.metadata_with_links }
+        format.any { render json: v.metadata_with_links }
         res = @stash_resources.first
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
@@ -26,7 +26,7 @@ module StashApi
     def index
       versions = paged_versions_for_dataset
       respond_to do |format|
-        format.json { render json: versions }
+        format.any { render json: versions }
       end
     end
 
