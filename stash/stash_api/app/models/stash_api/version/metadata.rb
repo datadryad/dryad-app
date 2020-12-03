@@ -49,11 +49,15 @@ module StashApi
 
       def sharing_link
         curation_activity = StashEngine::CurationActivity.latest(resource: @resource)
-        if curation_activity.in_progress?
+        case curation_activity.status
+        when 'in_progress'
           # if it's in_progress, return the sharing_link for the previous submitted version
           prev_submitted_res = @resource&.identifier&.last_submitted_resource
-          prev_submitted_res&.identifier&.shares&.first&.sharing_link if prev_submitted_res
-        elsif !curation_activity.withdrawn? && !curation_activity.embargoed?
+          prev_submitted_res&.identifier&.shares&.first&.sharing_link
+        when 'embargoed', 'withdrawn'
+        # suppress the link -- even if the user has the rights to view
+        # the metadata, they should not be downloading it
+        else
           @resource&.identifier&.shares&.first&.sharing_link
         end
       end
