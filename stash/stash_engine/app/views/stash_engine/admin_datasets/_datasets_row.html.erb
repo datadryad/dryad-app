@@ -27,8 +27,8 @@
   </td>
   <td class="c-admin-hide-border-left">
     <% if current_user.superuser? && dataset.resource_state == 'submitted' %>
-      <%= form_tag({ controller: '/stash_engine/admin_datasets',
-                     action: 'curation_activity_popup', id: dataset.identifier_id },
+      <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
+                     action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
                    method: :get, remote: true) do -%>
         <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
           <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -48,7 +48,9 @@
     <%= formatted_datetime(dataset.updated_at) %>
   </td>
   <td class="c-admin-hide-border-left">
-    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'activity_log', id: dataset.identifier_id }, method: :get) do -%>
+    <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
+                               id: dataset.identifier_id, only_path: true),
+                  method: :get, local: true) do -%>
       <button class="c-admin-edit-icon" aria-label="View Activity Log" alt="View Activity Log">
         <i class="fa fa-clock-o" aria-hidden="true"></i>
       </button>

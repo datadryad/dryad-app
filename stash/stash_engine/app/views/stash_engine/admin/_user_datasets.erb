@@ -28,7 +28,7 @@
       </td>
       <td class="c-admin-hide-border-left">
         <% if p.resource.submitted? || p.resource.dataset_in_progress_editor.id == current_user.id %>
-          <%= form_tag(metadata_entry_pages_new_version_path, method: :post) do -%>
+          <%= form_with(url: metadata_entry_pages_new_version_path, method: :post, local: true) do -%>
             <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <%= hidden_field_tag :resource_id, p.resource.id %>
           <% end %>
@@ -52,7 +52,7 @@
         <%= p.edited_by_name_w_role %>
       </td>
       <td class="c-admin-hide-border-left">
-        <%= form_tag(edit_histories_path, method: :get) do -%>
+        <%= form_with(url: edit_histories_path, method: :get) do -%>
           <%= hidden_field_tag :resource_id, p.resource.id %>
           <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
         <% end %>

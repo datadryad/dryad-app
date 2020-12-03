@@ -54,7 +54,11 @@ module StashEngine
     def note_popup
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
-        resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        if @identifier.last_submitted_resource&.id.present?
+          resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        else
+          resource = @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
+        end
         @curation_activity = CurationActivity.new(
           resource_id: resource.id,
           status: resource.current_curation_activity.status

@@ -7,7 +7,7 @@
 </p>
 
 <fieldset class="c-fieldset">
-  <%= form_tag auth_migrate_mail_path, method: "get" do %>
+  <%= form_with(url: auth_migrate_mail_path, method: "get", local: true) do %>
     <div class="c-input__emailcode-text">
       <%= label_tag("Email address", nil, {:class=>"c-input__label"})%>
       <%= text_field_tag(:email, current_user.old_dryad_email || params[:email], { :class=>"c-input__text" }) %>
@@ -19,7 +19,7 @@
     <div class="c-input__emailcode-spacer">&nbsp;</div>
   <% end %>
 
-  <%= form_tag auth_migrate_code_path, method: "get" do %>
+  <%= form_with(auth_migrate_code_path, method: "get", local: true) do %>
     <div class="c-input__emailcode-text">
       <%= label_tag("Validation code", nil, {:class=>"c-input__label"})%>
       <%= text_field_tag(:code, nil, {:class=>"c-input__text"}) %>
