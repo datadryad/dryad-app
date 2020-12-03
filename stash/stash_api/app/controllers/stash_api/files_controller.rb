@@ -28,7 +28,7 @@ module StashApi
     def show
       file = StashApi::File.new(file_id: params[:id])
       respond_to do |format|
-        format.json { render json: file.metadata }
+        format.any { render json: file.metadata }
       end
     end
 
@@ -36,7 +36,7 @@ module StashApi
     def index
       files = paged_files_for_version
       respond_to do |format|
-        format.json { render json: files }
+        format.any { render json: files }
       end
     end
 
@@ -50,7 +50,7 @@ module StashApi
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
-        format.json { render json: file.metadata, status: 201 }
+        format.any { render json: file.metadata, status: 201 }
       end
     end
 
@@ -62,7 +62,7 @@ module StashApi
       end
       file_hash = make_deleted(file_upload: @stash_file)
       respond_to do |format|
-        format.json { render json: file_hash, status: 200 }
+        format.any { render json: file_hash, status: 200 }
       end
     end
 

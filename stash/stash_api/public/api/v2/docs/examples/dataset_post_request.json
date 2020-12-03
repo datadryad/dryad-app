@@ -60,7 +60,7 @@
   ],
   "relatedWorks": [
     {
-      "relationship": "Cites",
+      "relationship": "article",
       "identifierType": "URL",
       "identifier": "http://example.org/cats"
     }

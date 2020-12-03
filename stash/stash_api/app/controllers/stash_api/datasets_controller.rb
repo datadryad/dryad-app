@@ -30,7 +30,7 @@ module StashApi
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
       respond_to do |format|
-        format.json { render json: ds.metadata }
+        format.any { render json: ds.metadata }
         res = @stash_identifier.latest_viewable_resource(user: @user)
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
@@ -39,7 +39,7 @@ module StashApi
     # post /datasets
     def create
       respond_to do |format|
-        format.json do
+        format.any do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
@@ -124,7 +124,7 @@ module StashApi
         if art_params['article_doi']
           em_params['relatedWorks'] = []
           em_params['relatedWorks'] << {
-            relationship: 'Cites',
+            relationship: 'article',
             identifierType: 'DOI',
             identifier: art_params['article_doi']
           }.with_indifferent_access
@@ -271,7 +271,7 @@ module StashApi
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
-        format.json do
+        format.any do
           dp = if @resource
                  DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
                else
