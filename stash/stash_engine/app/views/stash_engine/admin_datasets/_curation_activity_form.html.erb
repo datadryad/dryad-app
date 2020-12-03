@@ -1,7 +1,8 @@
 <% # locals: resource, curation_activity %>
 <div class="o-admin-dialog">
 
-  <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
+  <%= form_with model: StashEngine::Resource.new, url: curation_activity_change_path(resource.id),
+                method: :post, remote: true do |f| %>
 
     <p class="c-alert--error">Unable to save your changes at this time due to an internal error. Please contact a developer.</p>
 
