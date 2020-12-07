@@ -1,3 +1,5 @@
+require 'uc3-ssm'
+
 # config valid only for current version of Capistrano
 lock '~> 3.14'
 
@@ -171,4 +173,18 @@ namespace :deploy do
   end
 
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
+
+  before :compile_assets, :env_setup
+
+  desc 'Setup ENV Variables'
+  task :env_setup do
+    on roles(:app), wait: 1 do
+      ssm = Uc3Ssm::ConfigResolver.new
+      master_key = ssm.parameter_for_key('master_key')
+      # TODO: wouldn't this be ~/apps/ui/shared/config and done before the symlinking of the config from capistrano?
+      f = File.open("#{release_path}/config/master.key", 'w')
+      f.puts master_key
+      f.close
+    end
+  end
 end
