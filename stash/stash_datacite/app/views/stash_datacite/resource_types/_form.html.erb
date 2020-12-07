@@ -1,7 +1,7 @@
 <%# the local variable 'resource_type' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(resource_type) %>
-<%= form_for(resource_type, url: path, remote: true, authenticity_token: true, html: { id: form_id,
-       class: 't-describe__select1 c-input' }) do |f| %>
+<%= form_with(model: resource_type, url: path, remote: true, authenticity_token: true, id: form_id,
+       class: 't-describe__select1 c-input' ) do |f| %>
   <% my_suffix = field_suffix(resource_type) %>
   <%#= render "datacite/shared/error_messages", :target => @resource_type %>
   <%= f.label "#{my_suffix}", "Type of Data", class: 'c-input__label' %>

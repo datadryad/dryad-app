@@ -1,7 +1,7 @@
 <%# the local variable 'author' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(author) %>
-<%= form_for(author, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-author_form'}) do |f| %>
+<%= form_with(model: author, url: path, remote: true, authenticity_token: true, id: form_id, class: 'c-input__inline js-author_form') do |f| %>
   <% my_suffix = field_suffix(author) %>
 
   <div class="c-input">

@@ -5,7 +5,8 @@
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <% if current_user.superuser? %>
     <div style="float: right;">
-      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id }, method: :get, remote: true) do -%>
+      <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
+                    method: :get, remote: true) do -%>
         <button class="o-button__submit">Add Note</button>
       <% end %>
     </div>
@@ -43,7 +44,9 @@
   <% if current_user.superuser? %>
     <div style="float: right">
       <br/>
-      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id, sub_method: 'post' }, method: :get, remote: true) do -%>
+      <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,
+                                 sub_method: 'post', only_path: true),
+                    method: :get, remote: true) do -%>
         <button class="o-button__submit">Add Data</button>
       <% end %>
     </div>
