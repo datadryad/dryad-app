@@ -1,8 +1,8 @@
 <%# locals: resource %>
 <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
 
-<%= form_tag stash_engine.file_uploads_validate_urls_path(resource.id),
-             remote: true, id: 'url_validate' do  %>
+<%= form_with(url: stash_engine.file_uploads_validate_urls_path(resource.id),
+             remote: true, id: 'url_validate') do  %>
   <%= hidden_field_tag :resource_id, resource.id %>
 	<%= text_area_tag :url, '', cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
 
