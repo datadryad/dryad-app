@@ -18,6 +18,7 @@ default: &default
     - https://ror.org/0197n2v40
     - https://ror.org/0074grg94
     - https://ror.org/00p55jd14
+    - https://ror.org/01n260e81
   tenant_id: clare-cs
   identifier_service:
     provider: datacite
