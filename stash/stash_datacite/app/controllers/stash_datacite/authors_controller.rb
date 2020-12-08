@@ -54,9 +54,7 @@ module StashDatacite
 
       # remove any previous invitations for this author
       existing_invites = StashEngine::OrcidInvitation.where(email: @author.author_email, identifier_id: @resource.identifier_id)
-      existing_invites.each do |inv|
-        inv.destroy
-      end
+      existing_invites.each(&:destroy)
 
       # send a new invitation
       StashEngine::UserMailer.orcid_invitation(

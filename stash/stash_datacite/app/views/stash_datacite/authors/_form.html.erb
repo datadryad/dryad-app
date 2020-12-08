@@ -27,8 +27,7 @@
 <% end %>
 
 <!-- Begin Orcid ID Component -->
-<div class="c-orcid">
-    
+<div class="c-orcid">    
     <% if author&.id &&
 	author.author_orcid.blank? &&
 	author.resource.identifier.pub_state == 'published' &&
