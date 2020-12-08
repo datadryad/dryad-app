@@ -25,8 +25,17 @@
   <%= f.hidden_field :id %>
   <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>
+
 <!-- Begin Orcid ID Component -->
-  <div class="c-orcid">
+<div class="c-orcid">
+    
+    <% if author&.id &&
+	author.author_orcid.blank? &&
+	author.resource.identifier.pub_state == 'published' &&
+	current_user&.role == 'superuser'
+    %>           
+	<%= link_to 'Re-send invite to add ORCID', stash_datacite.authors_reinvite_orcid_path(author.id || 'new'), method: :get, remote: true, id: 'reinvite_orcid', class: 'reinvite_orcid' %>
+    <% end %>
     <% unless author.blank? || author.author_orcid.blank? %>
       <span class="c-orcid__icon"></span>
       <% if StashEngine.app.orcid.site == "https://sandbox.orcid.org/" %>
@@ -35,9 +44,9 @@
         <%= link_to "https://orcid.org/#{author.author_orcid}", "https://orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% end %>
     <% end %>
-  </div>
+</div>
 <!-- End Orcid ID Component -->
 
 <div>
-
+      
 </div>
