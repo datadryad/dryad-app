@@ -1,0 +1,9 @@
+$('.reinvite_orcid').bind('ajax:success', function() {
+    console.log("=== this ===",  $(this))
+    console.log("=== this ===",  $(this).href)
+    console.log("=== this ===",  $(this).context.href)
+    $(this).context.href=""
+    $(this).context.innerHTML="Sent new invitation to associate an ORCID";
+});
+
+// 

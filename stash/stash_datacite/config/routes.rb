@@ -15,6 +15,7 @@ StashDatacite::Engine.routes.draw do
   post 'authors/create', to: 'authors#create'
   patch 'authors/update', to: 'authors#update'
   delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
+  get 'authors/:id/reinvite_orcid', to: 'authors#reinvite_orcid', as: 'authors_reinvite_orcid'
 
   get 'contributors/new', to: 'contributors#new'
   get 'contributors/autocomplete', to: 'contributors#autocomplete'
