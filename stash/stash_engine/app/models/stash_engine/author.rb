@@ -60,7 +60,17 @@ module StashEngine
 
     def orcid_invite_path
       orcid_invite = StashEngine::OrcidInvitation.where(email: author_email, identifier_id: resource.identifier_id)&.first
-      return '' unless orcid_invite
+
+      # Ensure an invite exists -- it may not for a legacy dataset that never received invites,
+      # or if the author_email has changed since the original creation.
+      orcid_invite ||= StashEngine::OrcidInvitation.create(
+        email: author_email,
+        identifier_id: resource.identifier_id,
+        first_name: author_first_name,
+        last_name: author_last_name,
+        secret: SecureRandom.urlsafe_base64,
+        invited_at: Time.new.utc
+      )
 
       path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       orcid_invite.landing(path)
