@@ -42,7 +42,7 @@
 
 <div class="bio">
   <img src="/images/naomipenfold.png" alt="Naomi Penfold" title="Naomi Penfold">
-  <p><strong>Naomi Penfold (Class of 2022)</strong> is Funding Programme Designer, Science Practice, where she works with funders to design more inclusive, transparent, and strategic grantmaking and philanthropy. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), supporting the early-career researcher community and promoting open science and transparency in research communication (eLife, 2016-2018, 2020; ASAPbio, 2018-2020; mentor, Open Life Science, 2020; advisor, PREreview, 2018-2020; fellow, CSCCE Community Engagement Fellowship Program (CEFP 2019)). Read more about Naomi: <a href=https://npscience.github.io/about-me.html>https://npscience.github.io/about-me.html</a>).
+  <p><strong>Naomi Penfold (Class of 2022)</strong> is Funding Programme Designer, Science Practice, where she works with funders to design more inclusive, transparent, and strategic grantmaking and philanthropy. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), supporting the early-career researcher community and promoting open science and transparency in research communication (eLife, 2016-2018, 2020; ASAPbio, 2018-2020; mentor, Open Life Science, 2020; advisor, PREreview, 2018-2020; fellow, CSCCE Community Engagement Fellowship Program (CEFP 2019)). Read more about Naomi: <a href="https://npscience.github.io/about-me.html">https://npscience.github.io/about-me.html</a>).</p>
 </div>
 
 <div class="bio">
