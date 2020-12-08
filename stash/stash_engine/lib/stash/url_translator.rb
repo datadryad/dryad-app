@@ -32,6 +32,9 @@ module Stash
         @service = 'google' if m.start_with?('google')
         break
       end
+    rescue URI::InvalidURIError
+      @original_url = original_url
+      @service = nil
     end
 
     private
