@@ -2,7 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
-    before_action :set_author, only: %i[update delete reinvite_orcid]
+    before_action :set_author, only: %i[update delete]
     before_action :ajax_require_modifiable, only: %i[update create delete]
 
     respond_to :json
@@ -41,33 +41,6 @@ module StashDatacite
         @if_orcid = check_for_orcid(@author)
         @author.destroy
       end
-      respond_to do |format|
-        format.js
-      end
-    end
-
-    # GET /authors/1/reinvite_orcid
-    # ORCID invitations are usually sent automatically when a dataset is published. This allows
-    # the invitation to be re-sent when a coauthor has requested it.
-    def reinvite_orcid
-      return if params[:id] == 'new'
-
-      # remove any previous invitations for this author
-      existing_invites = StashEngine::OrcidInvitation.where(email: @author.author_email, identifier_id: @resource.identifier_id)
-      existing_invites.each(&:destroy)
-
-      # send a new invitation
-      StashEngine::UserMailer.orcid_invitation(
-        StashEngine::OrcidInvitation.create(
-          email: @author.author_email,
-          identifier_id: @resource.identifier_id,
-          first_name: @author.author_first_name,
-          last_name: @author.author_last_name,
-          secret: SecureRandom.urlsafe_base64,
-          invited_at: Time.new.utc
-        )
-      ).deliver_now
-
       respond_to do |format|
         format.js
       end

@@ -58,6 +58,14 @@ module StashEngine
     end
     after_save :init_user_orcid
 
+    def orcid_invite_path
+      orcid_invite = StashEngine::OrcidInvitation.where(email: author_email, identifier_id: resource.identifier_id)&.first
+      return '' unless orcid_invite
+
+      path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
+      orcid_invite.landing(path)
+    end
+
     private
 
     def strip_whitespace

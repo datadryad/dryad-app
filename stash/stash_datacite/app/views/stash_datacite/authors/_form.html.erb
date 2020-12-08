@@ -32,8 +32,10 @@
 	author.author_orcid.blank? &&
 	author.resource.identifier.pub_state == 'published' &&
 	current_user&.role == 'superuser'
-    %>           
-	<%= link_to 'Re-send invite to add ORCID', stash_datacite.authors_reinvite_orcid_path(author.id || 'new'), method: :get, remote: true, id: 'reinvite_orcid', class: 'reinvite_orcid' %>
+    %>
+	<span>
+	    Link to associate ORCID: <%= author.orcid_invite_path %>
+	</span>
     <% end %>
     <% unless author.blank? || author.author_orcid.blank? %>
       <span class="c-orcid__icon"></span>
