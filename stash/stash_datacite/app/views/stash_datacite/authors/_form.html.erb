@@ -30,6 +30,7 @@
 <div class="c-orcid">    
     <% if author&.id &&
 	author.author_orcid.blank? &&
+	author.author_email.present? &&
 	author.resource.identifier.pub_state == 'published' &&
 	current_user&.role == 'superuser'
     %>
