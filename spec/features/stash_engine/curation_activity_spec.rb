@@ -7,6 +7,8 @@ RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Ror
   include Mocks::Tenant
   include DatasetHelper
+  include Mocks::Repository
+  include Mocks::RSolr
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -144,6 +146,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_ror!
+        mock_repository!
         @user = create(:user, tenant_id: 'ucop')
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
