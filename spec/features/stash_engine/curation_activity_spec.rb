@@ -9,6 +9,7 @@ RSpec.feature 'CurationActivity', type: :feature do
   include DatasetHelper
   include Mocks::Repository
   include Mocks::RSolr
+  include Mocks::Datacite
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -121,6 +122,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_ror!
+        mock_solr!
+        mock_repository!
+        mock_datacite_and_idgen!
 
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
@@ -147,6 +151,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_stripe!
         mock_ror!
         mock_repository!
+        mock_datacite_and_idgen!
         @user = create(:user, tenant_id: 'ucop')
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
