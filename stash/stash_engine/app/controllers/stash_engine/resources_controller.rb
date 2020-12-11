@@ -88,10 +88,10 @@ module StashEngine
       respond_to do |format|
         format.html do
           notice = 'The in-progress version was successfully deleted.'
-          if session[:returnURL]
-            return_url = session[:returnURL]
-            session[:returnURL] = nil
-            redirect_to return_url
+          if session["return_url_#{@resource.identifier_id}"]
+            return_url = session["return_url_#{@resource.identifier_id}"]
+            session["return_url_#{@resource.identifier_id}"] = nil
+            redirect_to return_url, notice: notice
           elsif current_user
             redirect_to return_to_path_or(dashboard_path), notice: notice
           else
