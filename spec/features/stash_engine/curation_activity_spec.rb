@@ -6,6 +6,7 @@ RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Stripe
   include Mocks::Ror
   include Mocks::Tenant
+  include DatasetHelper
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -171,8 +172,26 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('My cat says hi')
       end
 
+      it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
+        # the button to edit has this class on it
+        find('.js-trap-curator-url').click
+        navigate_to_review
+        agree_to_everything
+        fill_in 'user_comment', with: Faker::Lorem.sentence
+        submit = find_button('submit_dataset', disabled: :all)
+        submit.click
+        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
+      end
+
+      it 'allows curation editing and aborting editing of user dataset and return to list in same state afterward' do
+        # the button to edit has this class on it
+        find('.js-trap-curator-url').click
+        accept_alert do
+          click_on('Cancel and Discard Changes')
+        end
+
+        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
+      end
     end
-
   end
-
 end
