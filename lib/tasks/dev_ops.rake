@@ -1,5 +1,6 @@
 require 'yaml'
 require_relative 'dev_ops/passenger'
+require_relative 'dev_ops/download_uri'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
@@ -144,6 +145,24 @@ namespace :dev_ops do
   desc 'Gets Counter token for submitting a report'
   task get_counter_token: :environment do
     puts APP_CONFIG[:counter][:token]
+  end
+
+  desc 'Updates database for Merritt ark changes'
+  task download_uri: :environment do
+    # example command
+    # RAILS_ENV="development" bundle exec rake dev_ops:download_uri /path/to/file.txt
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 2
+      puts "Please put the path to the file to process"
+      next
+    end
+
+    DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
+    puts "Done"
   end
 end
 # rubocop:enable Metrics/BlockLength
