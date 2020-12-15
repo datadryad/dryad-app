@@ -10,7 +10,7 @@ framework for research data publication and preservation, based on the
 [DataCite Metadata Schema](https://schema.datacite.org/) and the University
 of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 
-- [About Dryad](app/views/layouts/_about.html.md)
+- [About Dryad](https://datadryad.org/)
 
 ## Development
 

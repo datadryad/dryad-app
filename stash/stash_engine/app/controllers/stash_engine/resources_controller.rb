@@ -87,11 +87,15 @@ module StashEngine
       resource.destroy
       respond_to do |format|
         format.html do
+          # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
+          # There is also one for curators and need to return back to different pages/filter setting for each dataset they
+          # edit in one of dozens of different windows at the same time, so needs to be specific to each dataset.
           notice = 'The in-progress version was successfully deleted.'
-          if session[:returnURL]
-            return_url = session[:returnURL]
+          if session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
+            return_url = session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
+            session["return_url_#{@resource.identifier_id}"] = nil
             session[:returnURL] = nil
-            redirect_to return_url
+            redirect_to return_url, notice: notice
           elsif current_user
             redirect_to return_to_path_or(dashboard_path), notice: notice
           else

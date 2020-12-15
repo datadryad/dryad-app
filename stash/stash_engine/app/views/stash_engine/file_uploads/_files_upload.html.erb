@@ -2,7 +2,7 @@
 <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
 
 <div>
-  <%= form_for file, html: {multipart: true, id: 'fileupload'} do |f| %>
+  <%= form_with model: file, multipart: true, id: 'fileupload' do |f| %>
     <div class="c-choose">
       <%= f.hidden_field :resource_id %>
       <div id="upload_bg" class="c-choose__drop o-drop">
