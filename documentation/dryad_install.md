@@ -1,6 +1,6 @@
 # Dryad installation (v0.0.2)
 
-The Dryad application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dash Website](https://dash.ucop.edu/stash/about), but this document focuses on getting Dash up and running for development.
+The Dryad application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dryad Platform](https://datadryad.org/stash/our_platform), but this document focuses on getting Dryad up and running for development.
 
 ## The ingredients
 
@@ -197,12 +197,11 @@ We have enabled submission to a SWORD-enabled Merritt repository, but have only 
 
 ### Repository and identifier service configuration
 
-The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/main/lib/stash/repo)
+The Stash platform requires an implementation of the [Stash::Repo](../stash)
 API for identifier assignment and submission to repositories.
 
 Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
-The Stash::Repo implementation is provided by the [stash-merritt](https://github.com/CDLUC3/stash-merritt) gem, which is included in the application [Gemfile](../../Gemfile)
-and declared by the `repository:` key in [`app_config.yml`](https://github.com/CDL-Drayd/dryad-config-example/blob/development/config/app_config.yml).
+The Stash::Repo implementation is provided by the [stash-merritt](../stash/stash-merritt) gem, which is included in the application [Gemfile](../Gemfile) and declared by the `repository:` key in [`app_config.yml`](../dryad-config-example/app_config.yml).
 EZID and Merritt/SWORD must be configured for each tenant in the appropriate `tenants/*.yml` file, e.g.
 
 ```yaml

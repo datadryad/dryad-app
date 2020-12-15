@@ -64,3 +64,43 @@ describe 'dev_ops:get_counter_token', type: :task do
     expect { task.execute }.to output(/#{APP_CONFIG[:counter][:token]}/).to_stdout
   end
 end
+
+describe 'dev_ops:download_uri', type: :task do
+  it 'runs the rake task' do
+    test_path = File.join(Rails.root, 'spec', 'fixtures', 'merritt_ark_changing_test.txt')
+    argv = ['', test_path]
+    stub_const("ARGV", argv)
+    expect { task.execute }.to output(/Done/).to_stdout
+  end
+
+  describe 'testing updates from file' do
+    before(:each) do
+      @test_path = File.join(Rails.root, 'spec', 'fixtures', 'merritt_ark_changing_test.txt')
+    end
+
+    it 'loads the file and calls updates' do
+      # testing one specific value from the file
+      expect(DevOps::DownloadUri).to receive(:update)\
+        .with(doi: 'doi:10.5072/FK20R9S858', old_ark:'ark:/99999/fk4np2b23p', new_ark: 'ark:/99999/fk4cv5xm2w').once
+      # testing that it is called for the other 11
+      expect(DevOps::DownloadUri).to receive(:update).at_least(11).times
+      DevOps::DownloadUri.update_from_file(file_path: @test_path)
+    end
+
+    it 'updates the database download_uri' do
+      resource = create(:resource)
+      # the throwaway resource is just to obtain another download_uri and ark to test for the new_ark and transformation
+      throwaway_resource = create(:resource)
+      expect(resource.download_uri).not_to eq(throwaway_resource.download_uri)
+
+      old_ark = URI.unescape(resource.download_uri.match(/[^\/]+$/).to_s)
+      new_ark = URI.unescape(throwaway_resource.download_uri.match(/[^\/]+$/).to_s)
+
+      DevOps::DownloadUri.update(doi: resource.identifier.to_s, old_ark: old_ark, new_ark: new_ark)
+
+      resource.identifier.resources.each do |res|
+        expect(res.download_uri).to eq(throwaway_resource.download_uri)
+      end
+    end
+  end
+end

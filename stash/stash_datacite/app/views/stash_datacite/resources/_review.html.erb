@@ -76,7 +76,7 @@
             class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
-    <%= form_tag stash_datacite.resources_submission_path do -%>
+    <%= form_with(url: stash_datacite.resources_submission_path, local: true) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
