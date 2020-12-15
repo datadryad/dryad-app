@@ -1,4 +1,5 @@
 require 'json'
+require 'uc3-ssm'
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
@@ -66,6 +67,20 @@ namespace :debug do
     on roles(:app), in: :sequence, wait: 5 do
       execute :whoami
       execute :printenv
+    end
+  end
+
+  # These are useful for testing the server setup
+  # see https://capistranorb.com/documentation/faq/why-does-something-work-in-my-ssh-session-but-not-in-capistrano/
+  task :query_interactive do
+    on roles(:app) do
+      info capture("[[ $- == *i* ]] && echo 'Interactive' || echo 'Not interactive'")
+    end
+  end
+
+  task :query_login do
+    on roles(:app) do
+      info capture("shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'")
     end
   end
 end
@@ -179,6 +194,7 @@ namespace :deploy do
   desc 'Setup ENV Variables'
   task :env_setup do
     on roles(:app), wait: 1 do
+      # these are for testing and troubleshooting
       # ssm_root_path = capture('echo $SSM_ROOT_PATH')
       # region = capture('echo $AWS_REGION')
       # puts "ssm_root_path: #{ssm_root_path}"
@@ -186,7 +202,9 @@ namespace :deploy do
       # json = capture ('aws ssm get-parameter --name "${SSM_ROOT_PATH}master_key" --region "$AWS_REGION"')
       # json = JSON.parse(json)
       # master_key = json['Parameter']['Value']
-      ssm = Uc3Ssm::ConfigResolver.new(ssm_root_path: fetch(:ssm_root_path), region: fetch(:aws_region))
+      # ssm = Uc3Ssm::ConfigResolver.new(ssm_root_path: fetch(:ssm_root_path), region: fetch(:aws_region))
+
+      ssm = Uc3Ssm::ConfigResolver.new # this uses default settings made in the environment
       master_key = ssm.parameter_for_key('master_key')
       f = File.open("#{release_path}/config/master.key", 'w')
       f.puts master_key

@@ -15,9 +15,6 @@ set :passenger_pool, '6'
 set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || 'uc3-dryaduix2-dev.cdlib.org'
 role %i[app web], fetch(:server_hosts), user: 'dryad'
 
-set :ssm_root_path, '/uc3/dryad/dev/'
-set :aws_region, 'us-west-2'
-
 #on roles(:all) do |host|
 #  puts "setting server host: #{host.hostname}"
 #end
