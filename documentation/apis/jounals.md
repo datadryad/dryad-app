@@ -75,9 +75,10 @@ EndDryadContent
 Processing the email
 ----------------------
 
-The email account automatically tags all new messages with
-`journal-submit`, and this tag is removed when the production journal
-module processes each message.
+The email is forwarded to the `journal-submit-app` account, which
+automatically tags all new messages with `journal-submit`, and this
+tag is removed when the production journal module processes each
+message.
 
 Development servers are normally configured to look for the tag
 `dev-journal-submit`. If you need to have a message processed by a
