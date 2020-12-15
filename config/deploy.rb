@@ -1,4 +1,4 @@
-require 'uc3-ssm'
+require 'json'
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
@@ -179,9 +179,11 @@ namespace :deploy do
   desc 'Setup ENV Variables'
   task :env_setup do
     on roles(:app), wait: 1 do
-      ssm = Uc3Ssm::ConfigResolver.new
-      master_key = ssm.parameter_for_key('master_key')
-      # TODO: wouldn't this be ~/apps/ui/shared/config and done before the symlinking of the config from capistrano?
+      json = capture ('aws ssm get-parameter --name "${SSM_ROOT_PATH}master_key" --region "$AWS_REGION"')
+      json = JSON.parse(json)
+      master_key = json['Parameter']['Value']
+      # ssm = Uc3Ssm::ConfigResolver.new
+      # master_key = ssm.parameter_for_key('master_key')
       f = File.open("#{release_path}/config/master.key", 'w')
       f.puts master_key
       f.close
