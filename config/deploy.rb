@@ -197,7 +197,7 @@ namespace :deploy do
       json = JSON.parse(json)
       master_key = json['Parameter']['Value']
 
-      info release_path
+      info "Uploading master key to #{release_path}/config/master.key"
       upload! StringIO.new(master_key), "#{release_path}/config/master.key"
     end
   end
