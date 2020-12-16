@@ -1,5 +1,4 @@
 require 'json'
-require 'uc3-ssm'
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
@@ -194,21 +193,12 @@ namespace :deploy do
   desc 'Setup ENV Variables'
   task :env_setup do
     on roles(:app), wait: 1 do
-      # these are for testing and troubleshooting
-      # ssm_root_path = capture('echo $SSM_ROOT_PATH')
-      # region = capture('echo $AWS_REGION')
-      # puts "ssm_root_path: #{ssm_root_path}"
-      # puts "region: #{region}"
-      # json = capture ('aws ssm get-parameter --name "${SSM_ROOT_PATH}master_key" --region "$AWS_REGION"')
-      # json = JSON.parse(json)
-      # master_key = json['Parameter']['Value']
-      # ssm = Uc3Ssm::ConfigResolver.new(ssm_root_path: fetch(:ssm_root_path), region: fetch(:aws_region))
+      json = capture ("aws ssm get-parameter --name \"#{fetch(:ssm_root_path)}master_key\" --region \"#{fetch(:aws_region)}\"")
+      json = JSON.parse(json)
+      master_key = json['Parameter']['Value']
 
-      ssm = Uc3Ssm::ConfigResolver.new # this uses default settings made in the environment
-      master_key = ssm.parameter_for_key('master_key')
-      f = File.open("#{release_path}/config/master.key", 'w')
-      f.puts master_key
-      f.close
+      info release_path
+      upload! StringIO.new(master_key), "#{release_path}/config/master.key"
     end
   end
 end
