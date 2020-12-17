@@ -12,6 +12,8 @@ module StashEngine
 
     def jounral_integration; end
 
+    def jdap; end
+
     def our_community; end
 
     def our_governance; end

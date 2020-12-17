@@ -92,9 +92,9 @@ Rails.application.routes.draw do
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
+  get '/Governance', to: redirect('stash/our_governance') # URL was used in the old wiki
   get '/pages/faq', to: redirect('stash/faq')
-  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
+  get '/pages/jdap', to: redirect('stash/jdap')
   get '/pages/membershipOverview', to: redirect('stash/our_community')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')

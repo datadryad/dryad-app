@@ -15,7 +15,7 @@ For our mailer-integration to work we ask that you please follow these instructi
 <ul>
 <li>Remind authors in your communications that entering the journal name and manuscript number at the beginning of their Dryad submission is a requirement for the integration to work successfully
 <li>Emails must be sent in plain text only, without HTML or images
-<li>Structure email communications with the following <strong>six mandatory metadata fields</strong> [<a href="http://wiki.datadryad.org/Journal_Metadata">more information on metadata</a>]
+<li>Structure email communications with the following <strong>six mandatory metadata fields</strong> [<a href="https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/apis/jounal_metadata.md">more information on metadata</a>]
 <ul>
 <li><strong>Journal Name</strong> - full publication name of the journal.
 <li><strong>Journal Code</strong> -  abbreviation Dryad uses internally; specified during the integration process
