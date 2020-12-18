@@ -123,4 +123,10 @@ a=r.authors.first
 a.affiliation=StashDatacite::Affiliation.create(long_name: 'Universidad Politécnica de Madrid*')
 a.save
 ```
-	  
+
+# Fee Waiver by Country
+To add fee waiver by country:
+
+In the *stash_engine_identifiers* table, change *payment_type* to `waiver` and change the *payment_id* to the exempt country.
+
+If it has already been billed in stripe then cancel the bill there.	  
