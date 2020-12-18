@@ -65,3 +65,56 @@ This error typically means that the account being used by the Dryad UI
 to access Merritt does not have permisisons for the object being
 requested. This is often because either the Dryad UI or the object in
 Merritt is using a UC-based account, while the other is using a non-UC account.
+
+
+Stash-Notifier
+--------------
+
+The notifier runs from cron on our servers, typically from the "every_5.sh" cron as something like:
+```
+STASH_ENV=migration NOTIFIER_OUTPUT=stdout
+/dryad/apps/stash-notifier/main.rb
+```
+
+In most cases, the servers have a `notifier_force.sh` script that will force the
+notifier to run immediately, without waiting for the cron.
+
+Note that it can only access Merritt when running from within the CDL
+network (e.g., from the dryad-dev machine), or when proxied through
+a privileged machine using a tool like `sshuttle`.
+
+Sample call to test whether an OAI feed is reachable:
+`curl "http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=ListSets"`
+
+Sample URLs harvesting from Merritt:
+- http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=ListMetadataFormats&set=cdl_dryaddev
+- http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=ListIdentifiers&set=cdl_dryaddev&metadataPrefix=oai_dc
+- http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=GetRecord&identifier=http://n2t.net/ark:/99999/fk40k3mc9f&metadataPrefix=stash_wrapper
+- http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2?verb=GetRecord&identifier=http://n2t.net/ark%3A%2F13030%2Fm5x97998&metadataPrefix=stash_wrapper
+
+When the notifier sees something in the OAI feed, it makes a call to
+Dryad like:
+```
+PATCH to #{MACHINE_NAME}/stash/dataset/doi:#{@doi}
+{ 'record_identifier' => 'abc123', 'stash_version' => #{RESOURCE_ID} }
+```
+
+To bypass the notifier, and mark something submitted for testing
+purposes (when it really hasn't been):
+- wait a few minutes for the submission to time out
+- `update stash_engine_resource_states set resource_state='submitted' where resource_id=<RESOURCE>;`
+- `select max(id) from stash_engine_repo_queue_states where resource_id=<RESOURCE>;`
+- `update stash_engine_repo_queue_states set state='completed' where id=<ID_FROM_ABOVE>;`
+
+OR, to bypass the notifier in the ruby console, get the resource and insert a new curation
+status:
+```
+r = StashEngine::Resource.last
+act = StashEngine::CurationActivity.new(user_id: 1, status:
+'submitted', note: 'bogus')
+r.curation_activities << act
+r.resource_states.first.resource_state='submitted'
+r.resource_states.first.save!
+r.repo_queue_states.last.state='completed'
+r.repo_queue_states.last.save!
+```
