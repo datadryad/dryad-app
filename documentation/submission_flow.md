@@ -23,7 +23,7 @@ Basic Dryad Submission Flow
 5. Notifying of completion
     * When Merritt has successfully ingested the dataset, the dataset
       shows up in Merritt's the OAI-PMH feed.
-    * The stash-notifier runs every 5 minutes and checks for the
+    * The stash-notifier runs every minute and checks for the
       OAI-PMH feed for updates.
     * With new updates it adds metadata into SOLR and notifies the UI that update has finished.
 6. UI finishes actions for successfully submitted dataset when notified
