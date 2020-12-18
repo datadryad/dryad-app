@@ -123,4 +123,32 @@ a=r.authors.first
 a.affiliation=StashDatacite::Affiliation.create(long_name: 'Universidad Politécnica de Madrid*')
 a.save
 ```
-	  
+
+Waiving Payments
+================
+
+If a user was charged (or is about to be charged) for a data deposit,
+and the deposit should be waived or charged to another entity, change
+the payment information recorded in the Identifier object.
+
+```
+update stash_engine_identifiers set payment_type="waiver", payment_id="<COUNTRY>" where id=<SOME_ID>;
+```
+
+Valid payment types and IDs are:
+- payment_type = "waiver", payment_id = country with low-to-middle-income
+- payment_type = "voucher", payment_id = voucher ID (should also set the voucher to "used" in the v1 database)
+- payment_type = "institution", payment_id = tenant_id of 
+- payment_type = "funder", payment_id = funder name
+- payment_type = "journal-SUBSCRIPTION", payment_id = ISSN of sponsoring journal
+- payment_type = "journal-DEFERRED", payment_id = ISSN of sponsoring journal
+
+During normal processing, the payment information is only set at the
+time a dataset is published. Once the payment information has been
+set, the system will not change it.
+
+If the dataset has already been published, and a payment has been
+charged to the user, the payment_type will be `stripe`. In this case,
+you can still change the payment_type to the desired value, but let
+the curation team know that the associated Stripe invoice needs to be
+voided.
