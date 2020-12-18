@@ -20,11 +20,12 @@ Basic Dryad Submission Flow
     * Package sent contains manifest (for URLs) or zip file with metadata files and data files
       * Mrt-datacite.xml, mrt-dataone-manifest.txt, mrt-embargo.txt, mrt-oaidc.xml, stash-wrapper.xml sent to merritt
       * If sending a manifest, these xml files are hosted on the Dash server and picked up by Merritt as part of its ingest.
-5. Harvesting
-    * When Merritt has successfully ingested the dataset, it shows up in the OAI-PMH feed it exposes.
-    * Harvester runs every 5 minutes and checks for updates.
-    * With new updates it adds metadata into SOLR
-    * Notifies UI that update has finished.
+5. Notifying of completion
+    * When Merritt has successfully ingested the dataset, the dataset
+      shows up in Merritt's the OAI-PMH feed.
+    * The stash-notifier runs every 5 minutes and checks for the
+      OAI-PMH feed for updates.
+    * With new updates it adds metadata into SOLR and notifies the UI that update has finished.
 6. UI finishes actions for successfully submitted dataset when notified
     * Sets download_uri and update_uri if needed
     * Changes state to ‘submitted’
