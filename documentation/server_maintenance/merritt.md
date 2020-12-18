@@ -1,3 +1,12 @@
+Dryad–Merritt storage
+=====================
+
+Storage and replication for Dryad are managed by Merritt.  The primary
+storage for Dryad deposits is in an S3 bucket administered and paid
+for by Dryad, while Dash deposits (i.e., deposits from UC tenants),
+are stored in an S3 bucket administered by CDL.
+
+
 Interactions with Merritt
 ===========================
 
