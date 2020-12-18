@@ -13,7 +13,7 @@
 //= require leaflet-iiif
 //= require esri-leaflet
 //= require readmore.min
-// require_tree .
+//= require_tree .
 //= require geoblacklight/geoblacklight
 //= require geoblacklight/basemaps
 //= require geoblacklight/controls
