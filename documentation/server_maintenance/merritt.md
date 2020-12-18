@@ -68,9 +68,9 @@ Merritt is using a UC-based account, while the other is using a non-UC account.
 
 
 Stash-Notifier
---------------
+==============
 
-The notifier runs from cron on our servers, typically from the "every_5.sh" cron as something like:
+The notifier runs from cron on our servers, as something like:
 ```
 STASH_ENV=migration NOTIFIER_OUTPUT=stdout
 /dryad/apps/stash-notifier/main.rb
@@ -118,3 +118,38 @@ r.resource_states.first.save!
 r.repo_queue_states.last.state='completed'
 r.repo_queue_states.last.save!
 ```
+
+Testing the OAI-PMH feed we get from Merritt
+--------------------------------------------
+
+Sometimes it's not clear if Merritt is having a problem or if the
+notifier is. The OAI-PMH feed is harvested and it is what triggers a
+state change that shows a dataset has been successfully ingested. If a
+dataset says on "processing" forever then it is likely that the
+harvester isn't picking it up out of the OAI-PMH feed (Merritt
+problem) or else there is some problem with our harvester or the
+callback to our appliation which gets things updated.
+
+Here are some sample queries to the OAI-PMH feed. They can usually be
+done with a web browser (or CURL). However, the Merritt-production
+feed is behind a firewall only accessible from our harvester server.
+
+Get all the stash-wrapper items
+forever: http://uc3-mrtoai-dev.cdlib.org:37001/mrtoai/oai/v2?verb=ListRecords&metadataPrefix=stash_wrapper
+
+Additional query parameters:
+
+- `from` and `until` can have iso8601 values to limit by date.
+- Change the `metadataPrefix` to `oai_dc` to get Dublin Core or
+  `dcs3.1` for DataCite 3.1.
+- You can limit to a set of records with values such as `dataone_dash`, `lbnl_dash`, `ucb_dash`, `ucd_dash`...
+  (You might need to check the config or with Merritt folks for specific collections).
+  - There is an oai-pmh command to list all sets that may be helpful, for
+    example: http://uc3-mrtoai-dev.cdlib.org:37001/mrtoai/oai/v2?verb=ListSets
+
+An example of listing datasets with a date
+range: http://uc3-mrtoai-dev.cdlib.org:37001/mrtoai/oai/v2?verb=ListRecords&metadataPrefix=dcs3.1&from=2018-01-01T21:33:11Z
+
+An example of viewing a specific
+dataset: http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=GetRecord&identifier=http://n2t.net/ark:/99999/fk40k3mc9f&metadataPrefix=stash_wrapper
+
