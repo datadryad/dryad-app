@@ -28,7 +28,7 @@
 //= require geoblacklight/modules
 //= require geoblacklight/viewers
 //= require geoblacklight/modules/results_override
-//= require_tree geoblacklight/controls
-//= require_tree geoblacklight/downloaders
-//= require_tree geoblacklight/modules
-//= require_tree geoblacklight/viewers
+//= require_tree ./geoblacklight/controls
+//= require_tree ./geoblacklight/downloaders
+//= require_tree ./geoblacklight/modules
+//= require_tree ./geoblacklight/viewers
