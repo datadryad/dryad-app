@@ -13,7 +13,7 @@
 //= require leaflet-iiif
 //= require esri-leaflet
 //= require readmore.min
-//= require_tree .
+// require_tree .
 //= require geoblacklight/geoblacklight
 //= require geoblacklight/basemaps
 //= require geoblacklight/controls
@@ -25,10 +25,6 @@
 //= require geoblacklight/modules/item
 //= require geoblacklight/modules/layer_opacity
 //= require geoblacklight/modules/util
-//= require geoblacklight/modules
+// require geoblacklight/modules
 //= require geoblacklight/viewers
 //= require geoblacklight/modules/results_override
-//= require_tree ./geoblacklight/controls
-//= require_tree ./geoblacklight/downloaders
-//= require_tree ./geoblacklight/modules
-//= require_tree ./geoblacklight/viewers
