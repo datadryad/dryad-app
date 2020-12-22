@@ -13,6 +13,9 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+# something it seems geoblacklight doesn't load correctly
+gem 'handlebars_assets'
+
 group :development, :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
