@@ -6,7 +6,7 @@ module DevOps
     def self.update_from_file(file_path:)
       File.readlines(file_path).each do |line|
         parts = line.strip.split('|')
-        self.update(doi: parts[0], old_ark: parts[1], new_ark: parts[2])
+        update(doi: parts[0], old_ark: parts[1], new_ark: parts[2])
       end
     end
 
