@@ -1,3 +1,5 @@
+require 'json'
+
 # config valid only for current version of Capistrano
 lock '~> 3.14'
 
@@ -64,6 +66,20 @@ namespace :debug do
     on roles(:app), in: :sequence, wait: 5 do
       execute :whoami
       execute :printenv
+    end
+  end
+
+  # These are useful for testing the server setup
+  # see https://capistranorb.com/documentation/faq/why-does-something-work-in-my-ssh-session-but-not-in-capistrano/
+  task :query_interactive do
+    on roles(:app) do
+      info capture("[[ $- == *i* ]] && echo 'Interactive' || echo 'Not interactive'")
+    end
+  end
+
+  task :query_login do
+    on roles(:app) do
+      info capture("shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'")
     end
   end
 end
@@ -171,4 +187,18 @@ namespace :deploy do
   end
 
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
+
+  before :compile_assets, :env_setup
+
+  desc 'Setup ENV Variables'
+  task :env_setup do
+    on roles(:app), wait: 1 do
+      json = capture ("aws ssm get-parameter --name \"#{fetch(:ssm_root_path)}master_key\" --region \"#{fetch(:aws_region)}\"")
+      json = JSON.parse(json)
+      master_key = json['Parameter']['Value']
+
+      info "Uploading master key to #{release_path}/config/master.key"
+      upload! StringIO.new(master_key), "#{release_path}/config/master.key"
+    end
+  end
 end
