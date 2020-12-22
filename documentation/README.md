@@ -22,7 +22,7 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
     * The stash_engine and stash_datacite engines hold most of the code for the user interface.
 
-    * The stash_api engine is where we've implemented our preliminary API.
+    * The stash_api engine is where we've implemented our API.
 
     * The stash_discovery engine is a relatively thin wrapper and customization around Geoblacklight.
 
