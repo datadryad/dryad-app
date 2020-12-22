@@ -157,12 +157,12 @@ namespace :dev_ops do
     end
 
     unless ARGV.length == 2
-      puts "Please put the path to the file to process"
+      puts 'Please put the path to the file to process'
       next
     end
 
     DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
-    puts "Done"
+    puts 'Done'
   end
 end
 # rubocop:enable Metrics/BlockLength
