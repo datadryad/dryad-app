@@ -150,7 +150,8 @@ module StashDatacite
 
     def processing?(resource)
       if resource && resource.identifier && resource.identifier.processing?
-        redirect_to :back, notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again'
+        redirect_back(fallback_location: stash_url_helpers.dashboard_path,
+                      notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again')
         return true
       end
       false
