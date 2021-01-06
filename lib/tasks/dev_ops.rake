@@ -147,6 +147,11 @@ namespace :dev_ops do
     puts APP_CONFIG[:counter][:token]
   end
 
+  # this is for Merritt changes moving the old UC collections into the Dryad collections
+  # After things are moved, two things need to happen 1) the tenant config needs to be
+  # changed to point to dryad, and 2) this script needs to be run against the text file
+  # provided by David Loy in order to update the ARKs in the sword URLs so that downloads
+  # and further version submissions work.
   desc 'Updates database for Merritt ark changes'
   task download_uri: :environment do
     # example command
