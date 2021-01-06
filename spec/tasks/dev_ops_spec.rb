@@ -90,6 +90,8 @@ describe 'dev_ops:download_uri', type: :task do
 
     it 'updates the database download_uri' do
       resource = create(:resource)
+      old_time = Time.parse('2020-10-11').utc
+      resource.update(updated_at: old_time)
       # the throwaway resource is just to obtain another download_uri and ark to test for the new_ark and transformation
       throwaway_resource = create(:resource)
       expect(resource.download_uri).not_to eq(throwaway_resource.download_uri)
@@ -101,6 +103,7 @@ describe 'dev_ops:download_uri', type: :task do
 
       resource.identifier.resources.each do |res|
         expect(res.download_uri).to eq(throwaway_resource.download_uri)
+        expect(res.updated_at).to eq(old_time)
       end
     end
   end

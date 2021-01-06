@@ -17,8 +17,10 @@ module DevOps
       resources = my_id.resources.where('download_uri LIKE ?', "%#{CGI.escape(old_ark)}")
 
       resources.each do |resource|
+        old_dl_uri = resource.download_uri
+        resource.record_timestamps = false # prevents updated_at from being changed automatically
         resource.update!(download_uri: resource.download_uri.gsub(CGI.escape(old_ark), CGI.escape(new_ark)))
-        puts "Resource: #{resource.id} download_uri updated to #{resource.download_uri}"
+        puts "Resource: #{resource.id} download_uri updated from #{old_dl_uri} to #{resource.download_uri}"
       end
     end
   end
