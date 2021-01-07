@@ -96,12 +96,12 @@
   <% end %>
 
   <% if @data.blank? # valid data %>
-    <%= form_tag stash_datacite.resources_submission_path do -%>
+    <%= form_with(url: stash_datacite.resources_submission_path, local: true) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'CC-BY-4.0' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
-        <% if current_user.id != @resource.user_id # only show to admins %>
+        <% if current_user&.id != @resource.user_id # only show to admins %>
           <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
               placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
         <% end %>

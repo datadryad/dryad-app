@@ -1,8 +1,5 @@
-<% if @resource.current_curation_activity.curation? %>
-  $("#js-edit-dataset-button-column-<%= @resource.id %>").html("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: @resource.id }) %>");
-<% end %>
-$("#js-curation-state-<%= @resource.identifier.id %>").html("<%= @resource.current_curation_activity.readable_status %>");
-$("#js-embargo-state-<%= @resource.identifier.id %>").html("<%= formatted_date(@resource.publication_date) %>");
-$("#js-curation-activity-date-<%= @resource.identifier.id %>").html("<%= formatted_datetime(@resource.current_curation_activity&.created_at) %>");
-$("#js-curation-activity-user-<%= @resource.identifier.id %>").html("<%= @resource.current_curation_activity.user&.name %>");
+<% # redrawing full row rather than trying to fix each item.  Will I need to reattach all button events after?  So far doesn't seem like it. %>
+
+$("#js-dataset-row-id-<%= @resource.identifier.id %>").replaceWith("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/datasets_row', locals: { dataset: @curation_row }) %>")
+
 $("#popup_dialog").dialog("close");

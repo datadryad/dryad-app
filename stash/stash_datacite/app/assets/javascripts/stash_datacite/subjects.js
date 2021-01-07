@@ -10,10 +10,13 @@ function loadSubjects() {
 
   $('#keyword').keydown(function(event) {
     if (event.keyCode == 13 || event.keyCode == 9) {
-      var self = $(this);
-      var form = self.parents('form');
-      $(form).trigger('submit.rails');
-      event.preventDefault();
+      // only does the complete/submit with a value, otherwise allow to tab out of form
+      if($('#keyword').val()) {
+        var self = $(this);
+        var form = self.parents('form');
+        $(form).trigger('submit.rails');
+        event.preventDefault();
+      }
     }
   });
 

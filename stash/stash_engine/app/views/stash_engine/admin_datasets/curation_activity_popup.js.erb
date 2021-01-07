@@ -3,7 +3,7 @@
 
 $('#popup_dialog').html("<%= escape_javascript(
           render partial: 'stash_engine/admin_datasets/curation_activity_form', locals: {
-            resource: @resource, curation_activity: @curation_activity }) %>");
+            resource: @resource, curation_activity: @curation_activity}) %>");
 
 // now open a jquery ui modal dialog
 $(function() {

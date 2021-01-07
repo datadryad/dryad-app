@@ -1,0 +1,45 @@
+{
+    "_comment": "This is a sample file to illustrate the format of the data sent by the Editorial Manager API. Although Dryad supports this API, it is not recommended for general use, as our processing may change to suit the needs of Editorial Manager.",
+   "publication_code": "DEMO170",
+   "journal_full_title": "Journal of Demonstration for Version v17.0",
+   "document_id": "12345",
+   "authors": [ {
+      "first_name": "Amy",
+      "last_name": "Author",
+      "email": "amy.author@test.demo",
+      "people_id": "126",
+      "orcid": "1234-1234-1234-1234",
+      "corresponding": true,
+      "custom_user_ids": [
+         {
+            "custom_id": "12065346",
+            "custom_id_type": "Society ID"
+         },
+         {
+            "custom_id": "A314552",
+            "custom_id_type": "Identity Mgmt System ID"
+         }
+      ]
+   } ],
+   "file_data": {
+      "file_description": "Research Datasets",
+      "file_guid": "e88bb0fd-8fa0-4e7f-831a-6aa54c8cb803",
+      "file_custom_metadata": [
+         {
+            "field_name": "Comments",
+            "field_custom_meta_id": "cq_1",
+            "field_value": "Additional comments on the file (this field can be configured per-repository)"
+         },
+         {
+            "field_name": "Research Location",
+            "field_custom_meta_id": "cq_2",
+            "field_value": "Location provided by author (this field can also be configured per-repository)"
+         },
+         {
+            "field_name": "Research Date",
+            "field_custom_meta_id": "cq_3",
+            "field_value": "06/15/2018"
+         }
+      ]
+   }
+}

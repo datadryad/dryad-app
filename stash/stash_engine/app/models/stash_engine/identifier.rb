@@ -262,6 +262,7 @@ module StashEngine
 
     def allow_review?
       return true if journal.blank?
+      return true if last_submitted_resource&.current_curation_status == 'peer_review'
 
       journal.allow_review_workflow?
     end

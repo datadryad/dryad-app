@@ -8,6 +8,9 @@ StashApi::Engine.routes.draw do
   match '/test', to: 'general#test', via: %i[get post]
   match '/search', to: 'datasets#search', via: %i[get]
 
+  # Support for the Editorial Manager API
+  match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
+
   resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/ do
     member do
       get 'download'

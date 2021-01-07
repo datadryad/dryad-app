@@ -4,7 +4,7 @@
   <% my_route = (@file_model == StashEngine::SoftwareUpload ?
                      stash_engine.software_upload_validate_urls_path(resource.id) : stash_engine.file_upload_validate_urls_path(resource.id)) %>
 
-  <%= form_tag my_route, remote: true, html: { id: 'url_validate' } do %>
+  <%= form_with(url: my_route, remote: true, id: 'url_validate') do %>
 
   <%= hidden_field_tag :resource_id, resource.id %>
 	<%= text_area_tag :url, '', cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>

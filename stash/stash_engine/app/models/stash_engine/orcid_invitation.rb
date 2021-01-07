@@ -3,7 +3,7 @@ module StashEngine
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     def resource
-      @resource ||= identifier.last_submitted_resource
+      @resource ||= identifier.last_submitted_resource || identifier.latest_resource
     end
 
     def tenant

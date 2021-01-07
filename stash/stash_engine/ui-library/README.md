@@ -43,14 +43,16 @@ pipeline.
 
 * Run `$ gulp hello` to confirm that the Gulp toolkit is installed
 
-* While developing files in **/ui-library**, run `$ gulp` to watch live changes
+* While developing files in **/ui-library**, run `$ gulp` to watch
+  live changes at http://localhost:3000
 
 * To minify images during development, run `$ gulp minify-images` after adding new, unoptimized images
 
 * To update the custom modernizr file based off of classes found in CSS, run `$ gulp modernizr` after introducing new
 CSS features referenced in the [Modernizr development build](https://modernizr.com)
 
-* To create a build of finished files, run `$ gulp build`
+* To create a build of finished files, and place them in the regular
+  Rails directories, run `$ gulp build`
 
 * To validate HTML of a build using the W3C validation service, run `$ gulp validateHTML`
 
