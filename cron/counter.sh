@@ -60,15 +60,15 @@ cd /apps/dryad/apps/ui/current
 # --------------------------------------
 # clear out cached stats in our database
 # --------------------------------------
-echo "Clearing cached stats from database"
-bundle exec rails counter:clear_cache
+# echo "Clearing cached stats from database"
+# bundle exec rails counter:clear_cache
 
 # This was from when we weren't getting stats back from DataCite because of problems
 # -----------------------------------------
 # repopulate all stats back into our tables
 # -----------------------------------------
-echo "Repopulating stats into database cache"
-JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual
+# echo "Repopulating stats into database cache"
+# JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual
 
 # -----------------------------------------------
 # remove old logs that are past our deletion time
