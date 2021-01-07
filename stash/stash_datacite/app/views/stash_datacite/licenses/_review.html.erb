@@ -30,9 +30,9 @@
   <% end %>
 </div>
 
-<%# if @review.software_uploads.count > 0 %>
-	<%# render partial: 'stash_datacite/licenses/software_license' %>
-<%# end %>
+<% if @review.software_uploads.count > 0 %>
+	<%= render partial: 'stash_datacite/licenses/software_license' %>
+<% end %>
 
 <div>
 	<h3>Payment</h3>
