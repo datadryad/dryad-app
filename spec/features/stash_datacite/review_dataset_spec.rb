@@ -90,7 +90,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content('Upload complete')
 
       click_on('Proceed to Review')
-      expect(page).to have_content('Supporting Information Hosted by Zenodo')
+      expect(page).to have_content('Software Files Hosted by Zenodo')
       expect(page).to have_content('favicon.ico')
       # expect(page).to have_content('Select license for files')
     end
@@ -99,7 +99,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       navigate_to_software_upload
 
       click_on('Proceed to Review')
-      expect(page).not_to have_content('Supporting Information Hosted by Zenodo')
+      expect(page).not_to have_content('Software Files Hosted by Zenodo')
       expect(page).not_to have_content('favicon.ico')
       # expect(page).not_to have_content('Select license for files')
     end

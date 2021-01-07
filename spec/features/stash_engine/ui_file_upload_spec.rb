@@ -43,7 +43,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it "doesn't show Zenodo upload tab if not part of special journal" do
-      expect(page).not_to have_content('Upload Supporting Information')
+      expect(page).not_to have_content('Upload Software')
     end
 
     it 'uploads a file' do
