@@ -88,9 +88,10 @@ describe 'dev_ops:download_uri', type: :task do
       DevOps::DownloadUri.update_from_file(file_path: @test_path)
     end
 
-    it 'updates the database download_uri' do
+    it 'updates the database download_uri and update_uri' do
       resource = create(:resource)
       old_time = Time.parse('2020-10-11').utc
+      old_update_uri = resource.update_uri
       resource.update(updated_at: old_time)
       # the throwaway resource is just to obtain another download_uri and ark to test for the new_ark and transformation
       throwaway_resource = create(:resource)
@@ -103,6 +104,9 @@ describe 'dev_ops:download_uri', type: :task do
 
       resource.identifier.resources.each do |res|
         expect(res.download_uri).to eq(throwaway_resource.download_uri)
+        expect(res.update_uri).not_to eq(old_update_uri)
+        expect(res.update_uri[-28..]).to eq(old_update_uri[-28..]) # last (doi) of string should be the same
+        expect(res.update_uri).to include('/cdl_dryad/') # because we're always moving into that collection
         expect(res.updated_at).to eq(old_time)
       end
     end
