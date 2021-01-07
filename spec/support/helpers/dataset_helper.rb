@@ -20,7 +20,7 @@ module DatasetHelper
     se_identifier.reload
     navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
 
-    click_link 'Upload Supporting Information'
+    click_link 'Upload Software'
     click_link 'Upload directly'
     expect(page).to have_content('Choose Files')
   end

@@ -6,7 +6,7 @@
             class: "c-progress__tab2#{ (params[:controller].end_with?('resources') && params[:action].include?('upload') ? '--active' : '') } js-nav-out" %>
 
   <% if @resource.identifier.allow_supplemental_info? %>
-    <%= link_to 'Upload Supporting Information', stash_engine.up_code_resource_path(@resource.id),
+    <%= link_to 'Upload Software', stash_engine.up_code_resource_path(@resource.id),
               class: "c-progress__tab2#{ (params[:controller].end_with?('resources') && params[:action].include?('up_') ? '--active' : '') } js-nav-out" %>
   <% end %>
 
