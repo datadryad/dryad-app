@@ -5,6 +5,8 @@ are required for Dryad to run, both internal and external.
 To add a new checker:
 - add a checker to `stash/stash_engine/app/services/stash_engine/status_dashboard/`
 - add an entry to `stash/stash_engine/lib/tasks/status_dashboard.rake`
+- on any server where the checker needs to run, re-seed the database
+  with the list of checkers: `rails status_dashboard:seed`
 
 To run a checker manually, in the Rails console, both instantiate it
 and specify its abbreviation:
