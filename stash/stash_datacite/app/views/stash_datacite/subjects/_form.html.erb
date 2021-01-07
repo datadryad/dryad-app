@@ -1,5 +1,5 @@
 <%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
-<%= form_tag(stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true, class: 'c-keywords', id: "subject_new_form") do %>
+<%= form_with(url: stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true, class: 'c-keywords', id: "subject_new_form") do %>
   <%#= render "datacite/shared/error_messages", target: @subject %>
   <%= label_tag :keyword, "Keywords:", class: 'c-input__label', for: 'keyword' %>&nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
   <%= render partial: "stash_datacite/subjects/keywords_list", locals: { subjects: @metadata_entry.subjects, resource_id: resource_id } %>

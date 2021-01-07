@@ -25,8 +25,9 @@ bundle exec rails counter:combine_files
 # set up python and run counter-processor (maybe twice)
 # ---------------------------------------
 echo "Running counter-processor"
-export PATH=$HOME/opt/bin:$PATH
-export PYTHONPATH=$HOME/opt/bin/python-3.6.9
+export VIRTUAL_ENV=/apps/dryad/python_venv/python3.7.9
+export PATH=$VIRTUAL_ENV/bin:$PATH
+export PYTHONPATH=$VIRTUAL_ENV
 python --version
 cd /apps/dryad/apps/counter/counter-processor
 # may need to to run the following lines to get dependencies (like bundler) before the first time the processor is run
@@ -35,7 +36,7 @@ YEST_MONTH="`date --date='1 day ago' '+%Y-%m'`"
 WEEK_AGO_MONTH="`date --date='8 days ago' '+%Y-%m'`"
 
 # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-UPLOAD_TO_HUB=False \
+UPLOAD_TO_HUB=True \
 YEAR_MONTH=$WEEK_AGO_MONTH \
 OUTPUT_FILE="$COUNTER_JSON_STORAGE/$WEEK_AGO_MONTH" \
 LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
@@ -44,7 +45,7 @@ python -u main.py
 if [ "$YEST_MONTH" != "$WEEK_AGO_MONTH" ]; then
     # We have another month to partially process
     # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-    UPLOAD_TO_HUB=False \
+    UPLOAD_TO_HUB=True \
     YEAR_MONTH=$YEST_MONTH \
     OUTPUT_FILE="$COUNTER_JSON_STORAGE/$YEST_MONTH" \
     LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
@@ -59,15 +60,15 @@ cd /apps/dryad/apps/ui/current
 # --------------------------------------
 # clear out cached stats in our database
 # --------------------------------------
-# echo "Clearing cached stats from database"
-# bundle exec rails counter:clear_cache
+echo "Clearing cached stats from database"
+bundle exec rails counter:clear_cache
 
 # This was from when we weren't getting stats back from DataCite because of problems
 # -----------------------------------------
 # repopulate all stats back into our tables
 # -----------------------------------------
-# echo "Repopulating stats into database cache"
-# JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual
+echo "Repopulating stats into database cache"
+JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual
 
 # -----------------------------------------------
 # remove old logs that are past our deletion time

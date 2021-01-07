@@ -173,7 +173,7 @@
         ],
         "relatedWorks": [
           {
-            "relationship": "Cites",
+            "relationship": "article",
             "identifierType": "DOI",
             "identifier": "foosball"
           }

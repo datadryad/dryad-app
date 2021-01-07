@@ -13,6 +13,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     mock_solr!
     mock_ror!
     mock_tenant!
+    mock_repository!
     @user = create(:user)
     sign_in(@user)
   end
@@ -33,7 +34,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     before(:each) do
       start_new_dataset
       navigate_to_review
-      mock_repository!
       fill_required_fields
     end
 
@@ -122,4 +122,23 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(v).to eq('CC-BY-4.0')
     end
   end
+
+  context :edit_link do
+    it 'opens a page with an edit link and redirects when complete', js: true do
+      @identifier = create(:identifier)
+      @identifier.edit_code = Faker::Number.number(digits: 5)
+      @identifier.save
+      @res = create(:resource, identifier: @identifier)
+
+      # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
+      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      navigate_to_review
+      agree_to_everything
+      fill_in 'user_comment', with: Faker::Lorem.sentence
+      submit = find_button('submit_dataset', disabled: :all)
+      submit.click
+      expect(page.current_path).to eq('/stash/submission_process')
+    end
+  end
+
 end

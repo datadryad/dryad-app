@@ -17,6 +17,7 @@ namespace :counter do
   task :remove_old_logs do
     lc = Counter::LogCombiner.new(log_directory: ENV['LOG_DIRECTORY'], scp_hosts: ENV['SCP_HOSTS'].split(' '), scp_path: ENV['LOG_DIRECTORY'])
     lc.remove_old_logs(days_old: 60)
+    lc.remove_old_logs_remote(days_old: 60)
   end
 
   desc 'validate counter logs format (filenames come after rake task)'

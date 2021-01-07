@@ -21,14 +21,14 @@ $(function () {
           data.context = $(tmpl("upload-line", data.files[0]));
           $('#upload_list').append(data.context);
           $('#confirm_text_upload, #upload_all, #upload_tweaker_head').show();
-          $('#upload_complete').hide();
+          $('#upload_message').hide();
 
           // remove -- binding this link action
           $('#not_uploaded_file_' + data.files[0]['id'] + ' .js-remove_link' ).click( function(e){
             e.preventDefault();
             $('#not_uploaded_file_' + data.files[0]['id']).remove();
             updateButtonLinkStates();
-            $('#upload_complete').hide();
+            $('#upload_message').hide();
           });
 
           // upload -- binding this link action for upload

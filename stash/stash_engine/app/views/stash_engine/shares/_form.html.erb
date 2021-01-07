@@ -8,6 +8,7 @@
 
   <p>Click the <em>Select Text</em> button and then copy and paste the URL.</p>
 
+  <label for="sharing_link" id="sharing_link_label">Sharing Link</label><br/>
 
   <input type="text" name="sharing_link" id="sharing_link" value="<%= share.sharing_link %>"
          class="c-input__text--copypaste" readonly="readonly">
@@ -15,7 +16,7 @@
   <button id="select_url" class="o-button__plain-text2">Select Text</button>
 
 <script>
-  $('#select_url').click(function() {
+  $('#select_url, #sharing_link_label').click(function() {
       $('#sharing_link').select();
   });
 </script>

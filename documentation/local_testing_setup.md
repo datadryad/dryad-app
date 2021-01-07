@@ -61,6 +61,12 @@ bundle install
 
 # this command runs the default rake task, which will run all tests for the component
 RAILS_ENV=test bundle exec rspec
+
+# run a single test file
+RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb
+
+# run a single test (or designated section of the test file)
+RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb:36
 ```
 
 ## Various testing commands
@@ -88,6 +94,56 @@ When Rails runs in the test environment, the config files from the
 main config directory are loaded. However, most of these files are set
 up to import the equivalent test configs from
 `dryad-config-example`. This behavior occurs for tenant configs as well.
+
+## Debugging tests
+
+For a breakpoint, add "byebug" on a line by itself, and when running
+the test (with bundle exce rspec), the code will break there. Within the break console, you can
+- list variables: @user
+- n -- next line (don't dive into the details of the current line, just execute it)
+- s -- step into the details of the current line
+- c -- continue running as normal
+- eval x -- show the value of executing x
+
+To enable the Mocks in Rails Console:
+```
+RAILS_ENV=test rails_console.sh
+require 'webmock'
+require 'rspec/mocks/standalone'
+include WebMock::API
+WebMock.enable!
+require './spec/mocks/ror.rb'
+include Mocks::Ror
+mock_ror!
+require './spec/mocks/crossref_funder.rb'
+include Mocks::CrossrefFunder
+mock_funders!
+```
+
+To use the Factories in Rails Console:
+```
+RAILS_ENV=test rails_console.sh
+$LOAD_PATH.unshift("/home/ubuntu/dryad-app/spec"); nil
+require('rails_helper')
+i=FactoryBot.create(:identifier)
+user=FactoryBot.create(:user)
+```
+
+To see the test run in a browser GUI, comment out the
+`--headless` option in `dryad-app/spec/support/capybara.rb`. You can
+also add byebug statements to pause and look at what is happening on
+the page in the browser. Within a the byebug/capbara session, you can
+use commands like:
+- page.click_link('Describe Dataset')
+- instance_variables
+- @myident = StashEngine::Identifier.last
+- page.find_by_id('some-html-id')
+- page.find_by_id('author_affiliation_long_name').value
+- page.document
+- page.current_url
+- page.execute_script("$('#internal_datum_doi').val('true')") #suppresses return value
+- page.evaluate_script("$('#internal_datum_doi')").first.value
+  
 
 ## Notes about Rubocop, .ruby-version, Bundler and Rake
 

@@ -2,6 +2,7 @@ require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 require 'fixtures/stash_api/curation_metadata'
+require 'fixtures/stash_api/em_metadata'
 require 'cgi'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
@@ -83,6 +84,19 @@ module StashApi
         expect(output[:userId]).to eq(test_user.id)
       end
 
+      it 'creates a new basic dataset with related software' do
+        @meta.add_related_work(work_type: 'software')
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+
+        # check it against the database
+        @stash_id = StashEngine::Identifier.find(output[:id])
+        @resource = @stash_id.resources.first
+        expect(@resource.related_identifiers.first.work_type).to eq('software')
+        expect(@resource.related_identifiers.first.related_identifier).to be
+      end
+
       it 'creates a new basic dataset with a placename' do
         @meta.add_place
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
@@ -140,6 +154,103 @@ module StashApi
         @resource.reload
         expect(@resource.curation_activities.size).to eq(2)
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
+      end
+    end
+
+    # test creation of a new dataset
+    describe '#create Editorial Manager' do
+      before(:each) do
+        @meta = Fixtures::StashApi::EmMetadata.new
+        @meta.make_deposit_metadata
+      end
+
+      it 'creates a new dataset from EM deposit metadata' do
+        # the following works for post with headers
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        hsh = @meta.hash
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        expect(ident).to be
+        expect(ident.publication_name).to eq(hsh[:journal_full_title])
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+        expect(res.authors.first.author_last_name).to eq(hsh[:authors].first[:last_name])
+        expect(res.authors.first.author_orcid).to eq(hsh[:authors].first[:orcid])
+        expect(res.authors.first.author_email).to eq(hsh[:authors].first[:email])
+      end
+
+      it 'creates a new dataset from EM submission metadata' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        hsh = @meta.hash
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        expect(ident).to be
+        expect(ident.publication_name).to eq(hsh[:journal_full_title])
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+
+        article = hsh[:article]
+        expect(res.title).to eq(article[:article_title])
+      end
+
+      it 'allows update of deposit metadata with new submission metadata' do
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+        expect(response_code).to eq(201)
+        ident.reload
+        res.reload
+        hsh = @meta.hash
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+        article = hsh[:article]
+        expect(res.title).to eq(article[:article_title])
+      end
+
+      it 'does not update core fields after the user has submitted edits' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(403)
+      end
+
+      it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
+        @meta.make_submission_metadata
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+        res.resource_states.first.update(resource_state: 'submitted')
+        create(:curation_activity, resource: res, status: 'peer_review')
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(200)
       end
     end
 
@@ -425,13 +536,17 @@ module StashApi
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1)
         expect(hsh['title']).to eq(@resources[0].title)
+        expect(hsh['editLink']).to eq(nil)
       end
 
       it 'shows the private record for superuser' do
+        @identifier.edit_code = Faker::Number.number(digits: 6)
+        @identifier.save
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(2)
         expect(hsh['title']).to eq(@resources[1].title)
+        expect(hsh['editLink']).to include(@identifier.edit_code)
       end
 
       it 'shows the private record for the owner' do
@@ -470,8 +585,6 @@ module StashApi
       end
 
       describe 'PATCH to submit dataset' do
-
-        # TODO: Fix this with new visibility rules in API
         xit 'submits dataset when the PATCH operation for versionStatus=submitted (superuser & owner)' do
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,
@@ -584,8 +697,79 @@ module StashApi
 
         # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
       end
+
+      describe 'PATCH to update curationStatus or publicationISSN' do
+        before(:each) do
+          # create a dataset in peer-review status
+          @super_user = create(:user, role: 'superuser')
+          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                    owner_id: @super_user.id, owner_type: 'StashEngine::User')
+          @access_token = get_access_token(doorkeeper_application: @doorkeeper_application)
+          @identifier = create(:identifier)
+          @res = create(:resource, identifier: @identifier, user: @super_user)
+          @ca = create(:curation_activity, resource: @res, status: 'peer_review')
+        end
+
+        it 'allows curationStatus to be updated' do
+          expect(@res.current_curation_status).to eq('peer_review')
+
+          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@res.current_curation_status).to eq('submitted')
+        end
+
+        it 'does not allow curationStatus to be updated if the item is already published' do
+          @ca = create(:curation_activity, resource: @res, status: 'published')
+          expect(@res.current_curation_status).to eq('published')
+
+          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@res.current_curation_status).to eq('published')
+        end
+
+        it 'allows publicationISSN to be updated, to claim a dataset for a journal' do
+          expect(@identifier.publication_issn).to eq(nil)
+          new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+
+          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": new_issn }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@identifier.publication_issn).to eq(new_issn)
+        end
+
+        it 'allows publicationISSN to be removed with a nil value' do
+          new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          StashEngine::InternalDatum.create(identifier_id: @identifier.id,
+                                            data_type: 'publicationISSN',
+                                            value: new_issn)
+          expect(@identifier.publication_issn).to eq(new_issn)
+          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": '' }].to_json
+          response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                )
+          expect(response_code).to eq(200)
+          expect(@identifier.publication_issn).to eq(nil)
+        end
+
+      end
+
     end
 
   end
 end
-# rubocop:enable

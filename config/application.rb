@@ -42,6 +42,13 @@ module Dash2
     # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
     # will not be the same.
     config.action_controller.forgery_protection_origin_check = false
+
+    # Allow this application to be opened in an iframe.
+    # The 'ALLOWALL' is very permissive, so re-evaluate security before
+    # uncommenting this.
+    #config.action_dispatch.default_headers = {
+    #  'X-Frame-Options' => 'ALLOWALL'
+    #}
     
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

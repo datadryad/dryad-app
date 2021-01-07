@@ -205,7 +205,7 @@ GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 Lists of Objects in non-Dryad collections for Merritt Migration
 ---------------------------------------------------------------
 ```
-SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id
+SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id, res_count.versions
 FROM stash_engine_identifiers ids
 JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash_engine_resources
   JOIN stash_engine_resource_states sts
@@ -217,5 +217,33 @@ JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash
 ON ids.id = res2.identifier_id
 JOIN stash_engine_resources res
 ON res2.res2_id = res.id
+JOIN (SELECT identifier_id, count(id) as versions FROM stash_engine_resources GROUP BY identifier_id) as res_count
+ON ids.id = res_count.identifier_id
 ORDER BY res.tenant_id, ids.identifier;
+```
+
+Lists of items sent to zenodo and then embargoed afterward (need hiding in zenodo)
+----------------------------------------------------------
+```
+SELECT cur_published.identifier_id, cur_published.curation_id as last_publication_id, cur_embargoed.curation_id as last_embargo_id,
+ids.*
+FROM
+	(SELECT res1.identifier_id, max(cur1.id) as curation_id FROM stash_engine_curation_activities cur1
+	JOIN stash_engine_resources res1
+	ON cur1.resource_id = res1.id
+	WHERE cur1.status = 'published'
+	GROUP BY res1.identifier_id) as cur_published
+JOIN
+	(SELECT res2.identifier_id, max(cur2.id) as curation_id FROM stash_engine_curation_activities cur2
+	JOIN stash_engine_resources res2
+	ON cur2.resource_id = res2.id
+	WHERE cur2.status = 'embargoed'
+	GROUP BY res2.identifier_id) as cur_embargoed
+ON cur_published.identifier_id = cur_embargoed.identifier_id
+JOIN stash_engine_identifiers ids
+ON cur_published.identifier_id = ids.id
+JOIN stash_engine_zenodo_copies zc
+ON zc.identifier_id = cur_published.identifier_id
+WHERE cur_embargoed.curation_id > cur_published.curation_id
+AND zc.state = 'finished';
 ```

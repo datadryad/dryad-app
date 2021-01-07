@@ -59,6 +59,21 @@ module Counter
       end
     end
 
+    def remove_old_logs_remote(days_old: 60)
+      # ssh dryad@uc3-dryaduix2-prd-2c.cdlib.org "rm -f /apps/dryad/apps/ui/current/log/counter_2020-09-01.log"
+      @scp_hosts.each do |host|
+        log_filenames = `ssh #{USERNAME}@#{host} "cd /apps/dryad/apps/ui/current/log/; ls counter_*.log -1a"`.split("\n")
+        log_filenames.each do |fn|
+          m = ANY_LOG_FN_PATTERN.match(fn)
+          log_date = Time.new(m[1], m[2], m[3])
+          if log_date < Time.new - days_old.days
+            `ssh #{USERNAME}@#{host} "rm -f /apps/dryad/apps/ui/current/log/#{fn}"`
+            puts "Deleted #{fn}"
+          end
+        end
+      end
+    end
+
     # --- Private methods below ---
 
     private
@@ -71,6 +86,5 @@ module Counter
 
       puts "Skipped downloading #{host}:#{filename} file doesn't exist on secondary server"
     end
-
   end
 end

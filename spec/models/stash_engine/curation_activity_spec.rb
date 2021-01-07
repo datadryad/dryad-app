@@ -55,7 +55,7 @@ module StashEngine
 
         # get rid of callbacks for adding one and testing
         @curation_activity1 = create(:curation_activity, resource: @resource)
-        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+        # CurationActivity.set_callback(:create, :after, :submit_to_datacite)
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
@@ -164,6 +164,16 @@ module StashEngine
         expect(@resource).to receive(:send_to_zenodo).and_return('test1')
         expect(@resource).to receive(:send_software_to_zenodo).with(publish: true).and_return('test2')
         @curation_activity.copy_to_zenodo
+      end
+    end
+
+    describe 'self.allowed_states(current_state)' do
+      it 'indicates the states that are allowed from each' do
+        expect(CurationActivity.allowed_states('curation')).to \
+          eq(%w[peer_review curation action_required withdrawn embargoed published])
+
+        expect(CurationActivity.allowed_states('withdrawn')).to \
+          eq(%w[withdrawn curation])
       end
     end
 

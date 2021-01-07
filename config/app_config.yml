@@ -147,7 +147,7 @@ defaults: &DEFAULTS
       ftp_provider_id: 1012
     # LinkOut FTP information for NCBI
     pubmed:
-      ftp_host: ftp-private.ncbi.nlm.nih.gov
+      ftp_host: sftp-private.ncbi.nlm.nih.gov
       ftp_dir: holdings
       ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %> 
       ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %> 

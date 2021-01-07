@@ -1,3 +1,5 @@
+require 'json'
+
 # config valid only for current version of Capistrano
 lock '~> 3.14'
 
@@ -66,6 +68,20 @@ namespace :debug do
       execute :printenv
     end
   end
+
+  # These are useful for testing the server setup
+  # see https://capistranorb.com/documentation/faq/why-does-something-work-in-my-ssh-session-but-not-in-capistrano/
+  task :query_interactive do
+    on roles(:app) do
+      info capture("[[ $- == *i* ]] && echo 'Interactive' || echo 'Not interactive'")
+    end
+  end
+
+  task :query_login do
+    on roles(:app) do
+      info capture("shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'")
+    end
+  end
 end
 
 namespace :deploy do
@@ -100,18 +116,19 @@ namespace :deploy do
     on roles(:app) do
       execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 3 start"
     end
+  end
 
-    desc 'copy crons to the shared directory where the schedule crons expect them'
-    task :copy_crons_to_shared do
-      # This was going to be a symlink into current, but we don't want to put the shared/cron directory within
-      # current since it contains a backup directory of our database. It would then multiply
-      # the backups across every version when we deploy and make us run out of disk space.
-      #
-      # When the crons are changed in Puppet for the new path, we can remove this copying script.
-      on roles(:app) do
-        execute "mkdir -p /apps/dryad/apps/ui/shared/cron"
-        execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
-      end
+
+  desc 'copy crons to the shared directory where the schedule crons expect them'
+  task :copy_crons_to_shared do
+    # This was going to be a symlink into current, but we don't want to put the shared/cron directory within
+    # current since it contains a backup directory of our database. It would then multiply
+    # the backups across every version when we deploy and make us run out of disk space.
+    #
+    # When the crons are changed in Puppet for the new path, we can remove this copying script.
+    on roles(:app) do
+      execute "mkdir -p /apps/dryad/apps/ui/shared/cron"
+      execute "cp /apps/dryad/apps/ui/current/cron/* /apps/dryad/apps/ui/shared/cron"
     end
   end
 
@@ -170,4 +187,18 @@ namespace :deploy do
   end
 
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
+
+  before :compile_assets, :env_setup
+
+  desc 'Setup ENV Variables'
+  task :env_setup do
+    on roles(:app), wait: 1 do
+      json = capture ("aws ssm get-parameter --name \"#{fetch(:ssm_root_path)}master_key\" --region \"#{fetch(:aws_region)}\"")
+      json = JSON.parse(json)
+      master_key = json['Parameter']['Value']
+
+      info "Uploading master key to #{release_path}/config/master.key"
+      upload! StringIO.new(master_key), "#{release_path}/config/master.key"
+    end
+  end
 end

@@ -57,7 +57,7 @@ module StashDatacite
       end
     end
 
-    # TODO: move code to StashEngine::Resource?
+    # rubocop:disable Metrics/AbcSize
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
@@ -73,8 +73,19 @@ module StashDatacite
 
       resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
 
-      redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
+      # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
+      # There is also one for curators and need to return back to different pages/filter setting for each dataset they
+      # edit in one of dozens of different windows at the same time, so needs to be specific to each dataset.
+      if session["return_url_#{resource.identifier_id}"] || session[:returnURL]
+        return_url = session["return_url_#{resource.identifier_id}"] || session[:returnURL]
+        session["return_url_#{resource.identifier_id}"] = nil
+        session[:returnURL] = nil
+        redirect_to return_url, notice: "Submitted updates for #{resource.identifier}, title: #{resource.title}"
+      else
+        redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -91,6 +102,13 @@ module StashDatacite
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
       StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
+
+      # this is here because they want it in curation notes, in addition to the edit history table
+      return if params[:user_comment].blank?
+
+      last = resource.curation_activities.last
+      StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
+                                           resource_id: last.resource_id)
     end
 
     def max_submission_size
@@ -139,12 +157,12 @@ module StashDatacite
 
     def processing?(resource)
       if resource && resource.identifier && resource.identifier.processing?
-        redirect_to :back, notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again'
+        redirect_back(fallback_location: stash_url_helpers.dashboard_path,
+                      notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again')
         return true
       end
       false
     end
-
   end
 end
 # rubocop:enable Metrics/ClassLength
