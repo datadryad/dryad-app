@@ -42,10 +42,6 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       FileUtils.rm_rf(@resource.software_upload_dir) unless @resource_id.blank?
     end
 
-    it "doesn't show Zenodo upload tab if not part of special journal" do
-      expect(page).not_to have_content('Upload Software')
-    end
-
     it 'uploads a file' do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
