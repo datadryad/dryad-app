@@ -136,8 +136,8 @@ module StashDatacite
       if existing_item.nil?
         create(related_identifier: doi,
                related_identifier_type: 'doi',
-               relation_type: 'ispartof',
-               work_type: 'supplemental_information',
+               relation_type: 'isderivedfrom',
+               work_type: 'software',
                verified: true,
                resource_id: resource_id)
       else
