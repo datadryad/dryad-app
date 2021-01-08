@@ -8,7 +8,7 @@
     <label for="zenodo_license" class="required">Select license for files (type to search within list)</label>
     <%= select_tag 'zenodo_license',
                    options_from_collection_for_select(StashEngine::SoftwareLicense.all, 'identifier', 'name',
-                                                      @resource&.identifier&.software_license&.identifier || 'CC-BY-4.0') %>
+                                                      @resource&.identifier&.software_license&.identifier || 'MIT') %>
 
   </div>
 </div>
