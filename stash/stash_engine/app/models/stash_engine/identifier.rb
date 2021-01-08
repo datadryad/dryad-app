@@ -481,15 +481,6 @@ module StashEngine
         .order(id: :desc).limit(1).first
     end
 
-    def allow_supplemental_info?
-      @allow_supplemental_info ||=
-        begin
-          my_internal = StashEngine::InternalDatum.where(identifier_id: id, data_type: 'publicationISSN').first
-          my_issn = my_internal&.value
-          APP_CONFIG.supplemental_info_issns.include?(my_issn)
-        end
-    end
-
     private
 
     def abstracts
