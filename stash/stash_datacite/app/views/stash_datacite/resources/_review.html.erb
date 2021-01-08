@@ -93,7 +93,7 @@
   <% if @data.blank? # valid data %>
     <%= form_with(url: stash_datacite.resources_submission_path, local: true) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
-      <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'CC-BY-4.0' %>
+      <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
         <% if current_user&.id != @resource.user_id # only show to admins %>
