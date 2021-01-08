@@ -752,4 +752,33 @@ function joelsReady(){
     $(this).siblings('label').addClass('c-input__label--required');
   });
 
+  // ***** Publication Dates ***** //
+
+  $('.js-pubdate__release-date-input').attr('value', 'mm/dd/yyyy');
+
+  var week1 = moment().add(1, 'week').format('M/DD/YYYY');
+  var week1datetime = moment().add(1, 'week').format('YYYY-MM-DD');
+  $('.js-pubdate__week1').text(week1);
+  $('.js-pubdate__week1').attr('datetime', week1datetime);
+
+  var month1 = moment().add(1, 'month').format('M/DD/YYYY');
+  var month1datetime = moment().add(1, 'month').format('YYYY-MM-DD');
+  $('.js-pubdate__month1').text(month1);
+  $('.js-pubdate__month1').attr('datetime', month1datetime);
+
+  var month3 = moment().add(3, 'month').format('M/DD/YYYY');
+  var month3datetime = moment().add(3, 'month').format('YYYY-MM-DD');
+  $('.js-pubdate__month3').text(month3);
+  $('.js-pubdate__month3').attr('datetime', month3datetime);
+
+  var month6 = moment().add(6, 'month').format('M/DD/YYYY');
+  var month6datetime = moment().add(6, 'month').format('YYYY-MM-DD');
+  $('.js-pubdate__month6').text(month6);
+  $('.js-pubdate__month6').attr('datetime', month6datetime);
+
+  var year1 = moment().add(1, 'year').format('M/DD/YYYY');
+  var year1datetime = moment().add(1, 'year').format('YYYY-MM-DD');
+  $('.js-pubdate__year1').text(year1);
+  $('.js-pubdate__year1').attr('datetime', year1datetime);
+
 }// close joelsReady()

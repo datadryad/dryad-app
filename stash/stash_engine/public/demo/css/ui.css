@@ -5231,6 +5231,11 @@ html.no-details .o-showhide__summary {
   margin-bottom: 20px;
   clear: both; }
 
+.c-files-zenodo {
+  display: block;
+  width: 10em;
+  float: right; }
+
 .c-sidebox {
   padding: 10px;
   border: 1px solid #005581; }

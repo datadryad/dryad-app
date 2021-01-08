@@ -3,6 +3,10 @@
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
+<% if @datatype == 'Software' %>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
+<% end %>
+
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
 <div id="choose_method" style="margin-bottom: 2em;">
