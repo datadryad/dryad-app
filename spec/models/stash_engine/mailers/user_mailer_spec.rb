@@ -55,6 +55,7 @@ module StashEngine
       allow(@resource).to receive(:files_published?).and_return(true)
       allow(@resource).to receive(:authors).and_return([@author1, @author2])
       allow(@resource).to receive(:identifier_value).and_return('10.1098/rstl.1665.0007')
+      allow(@resource).to receive(:related_identifiers).and_return(nil)
 
       allow(@identifier).to receive(:shares).and_return([@share])
 
@@ -103,7 +104,7 @@ module StashEngine
               expect(delivery.body.to_s).to include('Thank you for submitting your dataset')
             when 'published'
               expect(delivery.body.to_s).to include('Your dataset is now published and public.')
-              expect(delivery.body.to_s).to include("We recommend that you cite it using this DOI: #{@identifier.identifier}")
+              expect(delivery.body.to_s).to include("Please cite it using this DOI: #{@identifier.identifier}")
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
