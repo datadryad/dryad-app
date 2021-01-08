@@ -104,7 +104,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       # expect(page).not_to have_content('Select license for files')
     end
 
-    it 'sets CC-BY-4.0 License for not-dataset', js: true do
+    it 'sets MIT License for software at Zenodo', js: true do
       navigate_to_software_upload
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click

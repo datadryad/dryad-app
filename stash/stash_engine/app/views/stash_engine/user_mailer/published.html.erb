@@ -7,7 +7,7 @@
 
 <p>Please cite it using this DOI: <%= @resource.identifier_str %></p>
 
-<% related = @resource.related_identifiers.where("related_identifier LIKE '%/zenodo.%'").where(work_type: 'software').first %>
+<% related = @resource.related_identifiers&.where("related_identifier LIKE '%/zenodo.%'")&.where(work_type: 'software')&.first %>
 
 <% unless related.nil? %>
   <p>Your related software is being published at Zenodo: <%= link_to related.related_identifier, related.related_identifier %></p>
