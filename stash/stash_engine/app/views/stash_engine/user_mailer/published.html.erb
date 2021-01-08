@@ -1,11 +1,22 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been approved by our curation team. Your dataset is now published and public.</p>
+<p>
+  Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been approved by our curation team.
+  Your dataset is now published and public.
+</p>
 
-<p>We recommend that you cite it using this DOI: <%= @resource.identifier_str %></p>
+<p>Please cite it using this DOI: <%= @resource.identifier_str %></p>
 
-<p>If at any time you would like to version or update your dataset you may do so by clicking "Update" on your "My Datasets" page.</p>
+<% related = @resource.related_identifiers.where("related_identifier LIKE '%/zenodo.%'").where(work_type: 'software').first %>
+
+<% unless related.nil? %>
+  <p>Your related software is being published at Zenodo: <%= link_to related.related_identifier, related.related_identifier %></p>
+<% end %>
+
+<p>If you would like to version or update your dataset you may do so by clicking "Update" on your "My Datasets" page.</p>
 
 <p>Thanks again for making your research openly available.</p>
 
-<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>The Dryad Team</p>
+
+<p><a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a></p>
