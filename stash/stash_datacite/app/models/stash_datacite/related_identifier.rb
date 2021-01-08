@@ -141,7 +141,7 @@ module StashDatacite
                verified: true,
                resource_id: resource_id)
       else
-        existing_item.update(related_identifier: doi, relation_type: 'ispartof', work_type: 'supplemental_information', verified: true)
+        existing_item.update(related_identifier: doi, relation_type: 'isderivedfrom', work_type: 'software', verified: true)
       end
     end
 
