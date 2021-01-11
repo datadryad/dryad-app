@@ -1,6 +1,11 @@
-<% @page_title = 'Upload Your Files - Publish and Preserve your Data' %>
+<%  @datatype = (params[:action].include?('code') ? 'Software' : 'Data') %>
+<% @page_title = "Upload Your Files - Publish and Preserve your #{@datatype}" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<% if @datatype == 'Software' %>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
+<% end %>
 
 <h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
