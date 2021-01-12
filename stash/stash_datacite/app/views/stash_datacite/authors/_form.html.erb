@@ -1,7 +1,7 @@
 <%# the local variable 'author' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(author) %>
-<%= form_for(author, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-author_form'}) do |f| %>
+<%= form_with(model: author, url: path, remote: true, authenticity_token: true, id: form_id, class: 'c-input__inline js-author_form') do |f| %>
   <% my_suffix = field_suffix(author) %>
 
   <div class="c-input">
@@ -25,19 +25,30 @@
   <%= f.hidden_field :id %>
   <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>
+
 <!-- Begin Orcid ID Component -->
-  <div class="c-orcid">
+<div class="c-orcid">    
+    <% if author&.id &&
+	author.author_orcid.blank? &&
+	author.author_email.present? &&
+	author.resource.identifier.pub_state == 'published' &&
+	current_user&.role == 'superuser'
+    %>
+	<span>
+	    Link to associate ORCID: <%= author.orcid_invite_path %>
+	</span>
+    <% end %>
     <% unless author.blank? || author.author_orcid.blank? %>
-      <%= link_to '', "http://orcid.org", class: 'c-orcid__icon', title: 'orcid_website' %>
+      <span class="c-orcid__icon"></span>
       <% if StashEngine.app.orcid.site == "https://sandbox.orcid.org/" %>
         <%= link_to "https://sandbox.orcid.org/#{author.author_orcid}", "https://sandbox.orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% else %>
         <%= link_to "https://orcid.org/#{author.author_orcid}", "https://orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% end %>
     <% end %>
-  </div>
+</div>
 <!-- End Orcid ID Component -->
 
 <div>
-
+      
 </div>

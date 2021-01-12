@@ -45,6 +45,11 @@ module Stash
       expect(translator.direct_download).to eql('https://ucop.box.com/public/static/o39s94g28puss5ttt7vss8b0qrlge184')
     end
 
+    it 'returns the original value with invalid URIs' do
+      translator = Stash::UrlTranslator.new('cat dog')
+      expect(translator.original_url).to eql('cat dog')
+    end
+
   end
 
 end

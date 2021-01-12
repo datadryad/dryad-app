@@ -1,6 +1,6 @@
 <%# the local variable 'description' should be passed in to this partial when there are multiple per page %>
-<%= form_for(description, url: stash_datacite.descriptions_update_path, remote: true, authenticity_token: true,
-             html: {id: "description_form_#{description_type}", class: 'c-input'}) do |f| %>
+<%= form_with(model: description, url: stash_datacite.descriptions_update_path, remote: true, authenticity_token: true,
+             id: "description_form_#{description_type}", class: 'c-input') do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @description %>
   <%# f.text_area :description, class: "c-input__textarea js-description", id: "description_#{description_type}" %>
   <%= f.cktext_area :description, class: "c-input__textarea js-description", id: "description_#{description_type}" %>

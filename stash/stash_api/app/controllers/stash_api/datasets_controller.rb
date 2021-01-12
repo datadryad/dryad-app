@@ -14,11 +14,10 @@ module StashApi
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
-    before_action :setup_identifier_and_resource_for_put, only: %i[update set_internal_datum add_internal_datum]
+    before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
     before_action :optional_api_user, except: %i[create update]
-    # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
@@ -31,7 +30,7 @@ module StashApi
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
       respond_to do |format|
-        format.json { render json: ds.metadata }
+        format.any { render json: ds.metadata }
         res = @stash_identifier.latest_viewable_resource(user: @user)
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
@@ -40,13 +39,137 @@ module StashApi
     # post /datasets
     def create
       respond_to do |format|
-        format.json do
+        format.any do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
           render json: ds.metadata, status: 201
         end
       end
+    end
+
+    # post /em_submission_metadata
+    def em_submission_metadata
+      # The Editorial Manager API sends metadata that is largely similar to our normal API, but it needs to be
+      # reformatted before and after the normal processing.
+      respond_to do |format|
+        format.any do
+          if @stash_identifier&.first_submitted_resource.present?
+            # Once the dataset has been submitted by an author, only update the status,
+            # but don't actually process the metadata from EM
+            em_response = em_update_status
+            status_code = em_response[:status] == 'Success' ? 200 : 403
+            render json: em_response, status: status_code
+          else
+            dp = if @resource
+                   DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
+                 else
+                   DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+                 end
+            @stash_identifier = dp.parse
+            ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
+            render json: em_reformat_response(ds.metadata), status: 201
+          end
+        end
+      end
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def em_update_status
+      # If final_disposition is available, update the status of this dataset
+      disposition = params['article']['final_disposition']
+      unless disposition && (@resource.current_curation_status == 'peer_review')
+        return {
+          deposit_id: @stash_identifier.identifier,
+          deposit_doi: @stash_identifier.identifier,
+          deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
+          deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+          error_message: 'Once the Dryad dataset has been edited by a user, metadata updates are not allowed ' \
+                         'via the Editorial Manager API. You may, however, submit an update with a change to ' \
+                         'the final_disposition for a dataset that has previously been in peer_review status.',
+          status: 'Error'
+        }
+      end
+
+      if disposition.downcase == 'accept'
+        # article is accepted -> transition peer_review to curation
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
+                                               note: 'updating status based on API notification from Editorial Manager journal')
+      else
+        # any other article disposition -> transition peer_review to action_required
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
+                                               note: 'updating status based on API notification from Editorial Manager journal')
+      end
+
+      {
+        deposit_id: @stash_identifier.identifier,
+        deposit_doi: @stash_identifier.identifier,
+        deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
+        deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+        status: 'Success'
+      }
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def em_reformat_request
+      em_params = {}.with_indifferent_access
+
+      em_params['publicationName'] = params['journal_full_title']
+      art_params = params['article']
+      if art_params
+        if art_params['article_doi']
+          em_params['relatedWorks'] = []
+          em_params['relatedWorks'] << {
+            relationship: 'article',
+            identifierType: 'DOI',
+            identifier: art_params['article_doi']
+          }.with_indifferent_access
+        end
+        em_params['manuscriptNumber'] = art_params['manuscript_number'] if art_params['manuscript_number']
+        em_params['title'] = art_params['article_title']
+        em_params['abstract'] = art_params['abstract']
+        keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
+        em_params['keywords'] = keywords if keywords
+        if art_params['funding_source']
+          em_funders = []
+          art_params['funding_source'].each do |f|
+            em_funders << {
+              organization: f['funder'],
+              awardNumber: f['award_number']
+            }
+          end
+          em_params['funders'] = em_funders
+        end
+      end
+
+      em_authors = []
+      params['authors'].each do |auth|
+        em_authors << {
+          firstName: auth['first_name'],
+          lastName: auth['last_name'],
+          email: auth['email'],
+          orcid: auth['orcid'],
+          affiliation: auth['institution']
+        }.with_indifferent_access.compact
+      end
+      em_params['authors'] = em_authors if em_authors.present?
+      em_params
+    end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+    # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
+    def em_reformat_response(metadata)
+      {
+        deposit_id: @stash_identifier.identifier,
+        deposit_doi: @stash_identifier.identifier,
+        deposit_url: metadata[:_links][:self][:href],
+        deposit_edit_url: metadata[:editLink],
+        status: 'Success'
+      }.compact
     end
 
     # get /datasets
@@ -134,18 +257,21 @@ module StashApi
       fq_array
     end
 
-    # we are using PATCH only to update the versionStatus=submitted
+    # we are using PATCH only to allow updates for a few status settings:
+    # - versionStatus=submitted
+    # - curationStatus
+    # - publicationISSN
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     # we are also allowing UPSERT with a PUT as in the pattern at
     # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
     # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
     def update
-      do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
+      do_patch { return } # check if patch and do operation, then return early if it is a patch
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
-        format.json do
+        format.any do
           dp = if @resource
                  DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
                else
@@ -205,6 +331,7 @@ module StashApi
     # rubocop:enable Layout/LineLength
 
     def get_stash_identifier(id)
+      return nil if id.blank?
       # check to see if the identifier is actually an id and not a DOI first
       return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
 
@@ -225,19 +352,68 @@ module StashApi
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
 
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
-      pre_submission_updates
-      StashEngine.repository.submit(resource_id: @resource.id)
       @resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
 
-      ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
-      render json: ds.metadata, status: 202
+      case @json.first['path']
+      when '/versionStatus'
+        ensure_in_progress { yield }
+        pre_submission_updates
+        StashEngine.repository.submit(resource_id: @resource.id)
+        ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
+        render json: ds.metadata, status: 202
+      when '/curationStatus'
+        update_curation_status(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
+      when '/publicationISSN'
+        update_publication_issn(@json.first['value'])
+        render json: @resource.reload.current_curation_activity
+      else
+        return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
+      end
       yield
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
+    def update_curation_status(new_status)
+      note = 'status updated via API call'
+
+      # DON'T go backwards in workflow,
+      # that is, don't change a status other than submitted or peer_review
+      unless %w[submitted peer_review].include?(@resource.current_curation_status)
+        note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
+        new_status = @resource.current_curation_status
+      end
+
+      StashEngine::CurationActivity.create(resource_id: @resource.id,
+                                           user_id: @user.id,
+                                           status: new_status,
+                                           note: note)
+    end
+
+    def update_publication_issn(new_issn)
+      datum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
+      if new_issn.present?
+        # real value, update an existing value or create a new one
+        if datum
+          datum.update(value: new_issn)
+        else
+          StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
+                                            data_type: 'publicationISSN',
+                                            value: new_issn)
+        end
+      else
+        # nil/empty new_issn, remove any existing datum
+        datum&.destroy
+      end
     end
 
     # checks the status for allowing a dataset PUT request that is an update

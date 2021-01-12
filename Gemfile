@@ -28,6 +28,8 @@ gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.90.0'
+# not currently used for our simple case and because of some problems
+# gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
 
 # ############################################################
 # UI
@@ -51,6 +53,7 @@ gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
+gem 'net-sftp'
 gem 'stripe'
 
 # #########################

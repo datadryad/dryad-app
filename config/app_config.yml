@@ -135,8 +135,6 @@ defaults: &DEFAULTS
     - 'Zimbabwe'
   funder_exemptions:
     - 'Chan Zuckerberg Initiative'
-  supplemental_info_issns: [1687-7969, 1687-7977, 1687-9309, 1687-9317, 1687-7667, 1687-7675, 1468-8115, 1468-8123,
-    1687-8159, 1687-8167, 1687-9708, 1687-9716]
   link_out:
     # LinkOut FTP information for Europe PubMed Central
     labslink:
@@ -147,7 +145,7 @@ defaults: &DEFAULTS
       ftp_provider_id: 1012
     # LinkOut FTP information for NCBI
     pubmed:
-      ftp_host: ftp-private.ncbi.nlm.nih.gov
+      ftp_host: sftp-private.ncbi.nlm.nih.gov
       ftp_dir: holdings
       ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %> 
       ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %> 

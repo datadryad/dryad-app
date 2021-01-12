@@ -1,0 +1,92 @@
+{
+    "_comment": "This is a sample file to illustrate the format of the data sent by the Editorial Manager API. Although Dryad supports this API, it is not recommended for general use, as our processing may change to suit the needs of Editorial Manager.",
+    "publication_code": "DEMO170",
+    "journal_full_title": "Journal of Demonstration for Version v17.0",
+    "embargo_type": "Publication",
+    "embargo_days": "30",
+    "article": {
+	"article_doi": "10.11260150004",
+	"document_id": "12345",
+	"manuscript_number": "DEMO170-D-19-00051",
+	"article_title": "Title of the Submission",
+	"article_type": "Original Article",
+	"abstract": "The abstract provided by the author for the entire submission appears here.",
+	"initial_date_submitted": "2019-02-28T13:32:12.000Z",
+	"revision": "2",
+	"date_revision_submitted": "2019-03-31T09:15:51.000Z",
+	"final_disposition": "ACCEPT",
+	"date_final_disposition_set": "2019-04-30T22:25:35.000Z",
+	"publication_status": "TRUE",
+	"publication_date": "2019-05-31T12:39:45.000Z",
+	"keywords": [
+            "key1",
+            "key2",
+            "key3"
+	],
+	"classifications": [
+            "class1",
+            "class2",
+            "class3"
+	],
+	"custom_question": [
+            {
+		"custom_question_name": "Custom Question on the EM site",
+		"custom_question_metadata_id": "cq001",
+		"custom_question_value": "Answer from the author"
+            },
+            {
+		"custom_question_name": "Second Custom Question",
+		"custom_question_metadata_id": "cq002",
+		"custom_question_value": "Author's answer"
+            }
+	],
+	"funding_source": [
+            {
+		"funder": "National Institutes of Health",
+		"funder_id": "http://dx.doi.org/10.13039/100000002",
+		"award_number": "12345",
+		"grant_recipient": "33182"
+            },
+            {
+		"funder": "Pan-Massachusetts Challenge",
+		"funder_id": "http://dx.doi.org/10.13039/100001286",
+		"award_number": "66-09-8877",
+		"grant_recipient": "33183"
+            }
+	]
+    },
+    "authors": [
+	{
+            "first_name": "Amy",
+            "last_name": "Author",
+            "email": "amy.author@test.demo",
+            "people_id": "126",
+	    "custom_user_ids": [
+		{
+		    "custom_id": "12065346",
+		    "custom_id_type": "Society ID"
+		},
+		{
+		    "custom_id": "A314552",
+		    "custom_id_type": "Identity Mgmt System ID"
+		}
+	    ],
+            "orcid": "1234-1234-1234-1234",
+            "institution": "Aries Systems Corporation",
+            "institution_id": "9144",
+            "corresponding": "true",
+            "author_order": "1",
+            "author_guid": "35ea4e8e-3f80-4ef7-b9b1-06d0489484bf"
+	},
+	{
+            "first_name": "Chris",
+            "last_name": "Co-Author",
+            "email": "co.author@testemail.com",
+            "institution": "sample Institution",
+            "institution_id": "10000",
+            "corresponding": "false",
+            "author_order": "2",
+            "author_guid": "3fc9fd95-1db3-4bb1-8584-805390128c21"
+	}
+    ]
+}

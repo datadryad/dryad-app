@@ -25,7 +25,7 @@
         </td>
         <td class="c-admin-hide-border-left">
           <% if current_user.role == 'superuser' %>
-            <%= form_tag(popup_admin_path(u.id), method: :get, remote: true) do -%>
+            <%= form_with(url: popup_admin_path(u.id), method: :get, remote: true) do -%>
               <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>

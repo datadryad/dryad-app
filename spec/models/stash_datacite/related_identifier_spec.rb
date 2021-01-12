@@ -90,7 +90,7 @@ module StashDatacite
         test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
         r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
         expect(r.related_identifier).to eq(test_doi)
-        expect(r.relation_type).to eq('ispartof')
+        expect(r.relation_type).to eq('isderivedfrom')
       end
 
       it "doesn't add the zenodo doi multiple times" do
