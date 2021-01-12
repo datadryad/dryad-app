@@ -17,8 +17,18 @@ module DevOps
       resources = my_id.resources.where('download_uri LIKE ?', "%#{CGI.escape(old_ark)}")
 
       resources.each do |resource|
-        resource.update!(download_uri: resource.download_uri.gsub(CGI.escape(old_ark), CGI.escape(new_ark)))
-        puts "Resource: #{resource.id} download_uri updated to #{resource.download_uri}"
+        old_dl_uri = resource.download_uri
+        # extract the part of the path with the old merrritt collection name and replace it with /cdl_dryad/
+        collection_match = resource.update_uri.match(%r{39001/[^/]+/[^/]+/([^/]+)/doi})
+        new_update = (if collection_match.present?
+                        resource.update_uri.gsub(collection_match[1], '/cdl_dryad/')
+                      else
+                        resource.update_uri
+                      end)
+        new_dl = resource.download_uri.gsub(CGI.escape(old_ark), CGI.escape(new_ark))
+        resource.record_timestamps = false # prevents updated_at from being changed automatically
+        resource.update!(download_uri: new_dl, update_uri: new_update)
+        puts "Resource: #{resource.id} download_uri updated from #{old_dl_uri} to #{resource.download_uri}"
       end
     end
   end

@@ -8,17 +8,17 @@ module StashEngine
     # all these "check" methods may be obsolete if we do scripts for population of everything ahead
     # and then we could just pull from database
     def check_unique_investigation_count
-      # update_if_necessary
+      update_if_necessary
       unique_investigation_count
     end
 
     def check_unique_request_count
-      # update_if_necessary
+      update_if_necessary
       unique_request_count
     end
 
     def check_citation_count
-      # update_if_necessary
+      update_if_necessary
       citation_count
     end
 
@@ -46,9 +46,8 @@ module StashEngine
       # only update stats if it's a later calendar week than this record was updated
       return unless new_record? || updated_at.nil? || calendar_week(Time.new) > calendar_week(updated_at)
 
-      # do not update the usage data until we can successfully get all of our reports in to DataCite in order to pull them back
-      # update_usage!
-      # update_citation_count!
+      update_usage!
+      update_citation_count!
       self.updated_at = Time.new.utc # seem to need this for some reason, since not always updating automatically
       save!
     end
