@@ -30,9 +30,9 @@
   <% end %>
 </div>
 
-<%# if @review.software_uploads.count > 0 %>
-	<%# render partial: 'stash_datacite/licenses/software_license' %>
-<%# end %>
+<% if @review.software_uploads.count > 0 %>
+	<%= render partial: 'stash_datacite/licenses/software_license' %>
+<% end %>
 
 <div>
 	<h3>Payment</h3>
@@ -102,7 +102,7 @@ $(document).ready(function(){
 });
 </script>
 
-<% if current_user&.id != @resource.user_id %>
+<% if current_user && (current_user.id != @resource.user_id) %>
   <script>
     $('#agree_to_license, #agree_to_tos, #agree_to_dda').prop('disabled', true);
   </script>

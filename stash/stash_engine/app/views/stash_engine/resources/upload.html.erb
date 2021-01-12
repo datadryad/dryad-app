@@ -1,7 +1,11 @@
-<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Supporting Information')
+<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
   @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<% if @datatype == 'Software' %>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
+<% end %>
 
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
@@ -18,18 +22,14 @@
   <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
     <!-- standard upload page -->
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <% if @resource.identifier.allow_supplemental_info? %>
-      <%= link_to 'Proceed to Upload Supporting Information', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-    <% else %>
-      <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-    <% end %>
+
+    <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>
     <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
     <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
     <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% end %>
 </div>
-
 
 <script type="text/javascript" charset="utf-8">
   var uploadInProgress = false;
@@ -43,7 +43,7 @@
       limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
     });
     $('#upload_all').click(function(){
-      $('#upload_complete').hide();
+      $('#upload_message').hide();
     });
   });
 

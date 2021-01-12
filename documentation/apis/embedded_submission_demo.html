@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Dryad Embedded Submission Demo</title>
+
+<style>
+.ms-page {
+  padding: 20px;
+  background-color: lightblue;
+}
+.normal {
+  background-color: white;
+}
+.np {
+float: right;
+}
+hr {
+height: 3px;
+background-color: black;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Demonstration of Dryad Embedded Workflow</h1>
+
+<p>This page provides a demonstration of Dryad being embedded in a
+fictional manuscript processing system, the Manuscript-o-matic.</p>
+
+<p>For a description of a typical user experience with embedded
+submission, see the <a
+href="embedded_submission_user_experience.md">embedded submission user
+experience </a> document.</p>
+
+<p>For
+more details on the technical setup for an integration such as this,
+see the <a href="embedded_submission.md">embedded submission</a> document.</p>
+
+<p>Imagine this section is in your favorite manuscript processing system. The author is going along, editing their manuscript submission, when they are given the option to...</p>
+
+<div class="ms-page">
+  <h2>Manuscript-o-matic</h2>
+
+  <p>Editing Manuscript: Effect of Manuscript Submisison on Publication Count</p>
+  <hr/>
+  <p>Please submit all data associated with this manuscript.</p>
+
+
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a
+  href="http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.80gb5mn1/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_results.html"><button>Submit
+  a dataset through Dryad (in this window)</button></a>
+
+  -- OR --
+
+  <a target="_blank" 
+  href="http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.g79cnp80/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_close.html"><button>Submit
+  a dataset through Dryad (in separate tab that closes when done)</button></a>
+
+  <br/>
+  <br/>
+  <hr/>
+  <button>Prev Page</button>
+  <button class="np">Next Page</button>
+
+</div>
+
+<!-- Commented out iFrame demo, because it does not fully work -->
+<!-- yet. The iFrame doesn't save parameters the same way as the full -->
+<!-- page, so we may need to do more tweaking to carry them through -->
+<!-- the submission system. -->
+
+<!--
+
+<h1>Secondary workflow demo -- iFrame</h1>
+
+<p>Imagine this section is in your favorite manuscript processing system. The author is going along, editing their manuscript submission, when they are given the option to...</p>
+
+<div class="ms-page">
+  <h2>Manuscript-o-matic</h2>
+
+  <p>Editing Manuscript: Effect of Manuscript Submisison on Publication Count</p>
+  <hr/>
+  <p>Please submit all data associated with this manuscript.</p>
+  <button onclick="displayDryadIframe()">Create a dataset through Dryad</button>
+  <p/>
+  <div class="normal" id="iframeDisplay"> </div>
+  <br/>
+  <hr/>
+  <button>Prev Page</button>
+  <button class="np">Next Page</button>
+  <script>
+    function displayYoutubeIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"https://www.youtube.com/embed/s4BibernJxU\" height=\"400\" width=\"600\"></iframe>";
+    }
+
+    function displayDryadIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "<iframe src=\"http://ryandash.datadryad.org/stash/edit/doi%3A10.7959%2Fdryad.80gb5mn1/pagemagica?returnURL=https%3A%2F%2Fv1.datadryad.org%2Fthemes%2FMirage%2Fdocs%2Fembedded_submission_demo_results.html\" height=\"400\" width=\"600\"></iframe>";
+    }
+
+    function closeIframe() {
+        document.getElementById("iframeDisplay").innerHTML = "";
+    }
+  </script>
+
+</div>
+
+-->
+
+<p />
+
+
+<hr />
+<!-- hhmts start -->
+Last modified: Mon Oct 26 17:08:21 EDT 2020
+<!-- hhmts end -->
+</body> </html>

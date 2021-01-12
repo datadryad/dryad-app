@@ -262,6 +262,7 @@ module StashEngine
 
     def allow_review?
       return true if journal.blank?
+      return true if last_submitted_resource&.current_curation_status == 'peer_review'
 
       journal.allow_review_workflow?
     end
@@ -478,15 +479,6 @@ module StashEngine
         .where("stash_engine_zenodo_copies.state = 'finished'")
         .where('stash_engine_zenodo_copies.copy_type = ?', copy_type)
         .order(id: :desc).limit(1).first
-    end
-
-    def allow_supplemental_info?
-      @allow_supplemental_info ||=
-        begin
-          my_internal = StashEngine::InternalDatum.where(identifier_id: id, data_type: 'publicationISSN').first
-          my_issn = my_internal&.value
-          APP_CONFIG.supplemental_info_issns.include?(my_issn)
-        end
     end
 
     private

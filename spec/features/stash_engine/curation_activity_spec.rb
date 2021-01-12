@@ -1,9 +1,15 @@
 require 'rails_helper'
+# require 'pry-remote'
+
 RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
   include Mocks::Ror
   include Mocks::Tenant
+  include DatasetHelper
+  include Mocks::Repository
+  include Mocks::RSolr
+  include Mocks::Datacite
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -91,9 +97,22 @@ RSpec.feature 'CurationActivity', type: :feature do
         csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
         csv_parts = csv_line.split(',')
 
-        expect(csv_parts[-3].to_i).to eql(my_stats.views)
-        expect(csv_parts[-2].to_i).to eql(my_stats.downloads)
-        expect(csv_parts[-1].to_i).to eql(my_stats.citation_count)
+        expect(csv_parts[-4].to_i).to eql(my_stats.views)
+        expect(csv_parts[-3].to_i).to eql(my_stats.downloads)
+        expect(csv_parts[-2].to_i).to eql(my_stats.citation_count)
+      end
+
+      it 'generates a csv that includes submitter institutional name' do
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        visit dashboard_path
+        click_link('Get Comma Separated Values (CSV) for import into Excel')
+
+        title = @identifiers.first.resources.first.title
+
+        csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
+        csv_parts = csv_line.split(',')
+
+        expect(csv_parts[-1]).to eql(@identifiers.first.resources.first.tenant.long_name)
       end
 
     end
@@ -103,13 +122,16 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_ror!
+        mock_solr!
+        mock_repository!
+        mock_datacite_and_idgen!
 
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
         visit "#{dashboard_path}?curation_status=in_progress"
       end
 
-      it 'do not have any "edit" pencil icons' do
+      it 'does not have any "edit" pencil icons' do
         within(:css, '.c-lined-table__row') do
           expect(all('.fa-pencil').length).to eql(0)
         end
@@ -123,6 +145,61 @@ RSpec.feature 'CurationActivity', type: :feature do
 
     end
 
-  end
+    context :curating_dataset, js: true do
 
+      before(:each) do
+        mock_stripe!
+        mock_ror!
+        mock_repository!
+        mock_datacite_and_idgen!
+        @user = create(:user, tenant_id: 'ucop')
+        @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
+        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
+        @resource.resource_states.first.update(resource_state: 'submitted')
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        visit "#{dashboard_path}?curation_status=curation"
+      end
+
+      it 'submits a curation status changes and reflects in the page and history afterwards' do
+        within(:css, '.c-lined-table__row', wait: 10) do
+          all(:css, 'button')[2].click
+        end
+
+        # select the author action required
+        find("#resource_curation_activity_status option[value='action_required']").select_option
+
+        # fill in a note
+        fill_in(id: 'resource_curation_activity_note', with: 'My cat says hi')
+        click_button('Submit')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text('Author Action Required')
+          all(:css, 'button').last.click
+        end
+
+        expect(page).to have_text('My cat says hi')
+      end
+
+      it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
+        # the button to edit has this class on it
+        find('.js-trap-curator-url').click
+        navigate_to_review
+        agree_to_everything
+        fill_in 'user_comment', with: Faker::Lorem.sentence
+        submit = find_button('submit_dataset', disabled: :all)
+        submit.click
+        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
+      end
+
+      it 'allows curation editing and aborting editing of user dataset and return to list in same state afterward' do
+        # the button to edit has this class on it
+        find('.js-trap-curator-url').click
+        accept_alert do
+          click_on('Cancel and Discard Changes')
+        end
+
+        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
+      end
+    end
+  end
 end

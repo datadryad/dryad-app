@@ -1,8 +1,13 @@
-<% @page_title = 'Upload Your Files - Publish and Preserve your Data' %>
+<%  @datatype = (params[:action].include?('code') ? 'Software' : 'Data') %>
+<% @page_title = "Upload Your Files - Publish and Preserve your #{@datatype}" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
+<% if @datatype == 'Software' %>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
+<% end %>
+
+<h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
 <div id="choose_method">
   <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
@@ -15,10 +20,17 @@
 </div>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-</div>
+  <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
+    <!-- standard upload page -->
+    <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
 
+    <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+  <% else %>
+    <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
+    <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+    <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+  <% end %>
+</div>
 
 <script type="text/javascript" charset="utf-8">
 

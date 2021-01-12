@@ -8,7 +8,7 @@ module StashEngine
     MAX_VALIDATION_TRIES = 5
 
     def show
-      session[:show_migrate] = !current_user.migration_complete?
+      session[:show_migrate] = current_user && !current_user.migration_complete?
     end
 
     def metadata_basics; end
@@ -63,7 +63,7 @@ module StashEngine
 
     # some people seem to get to the dashboard without having their tenant set.
     def ensure_tenant
-      return unless current_user.tenant_id.blank?
+      return unless current_user && current_user.tenant_id.blank?
 
       redirect_to choose_sso_path, alert: 'You must choose if you are associated with an institution before continuing'
     end

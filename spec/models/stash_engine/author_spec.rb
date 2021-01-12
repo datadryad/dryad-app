@@ -2,7 +2,10 @@ module StashEngine
   describe Author do
 
     before(:each) do
-      @resource = create(:resource)
+      @ident = create(:identifier)
+      @resource = create(:resource,
+                         identifier: @ident,
+                         tenant_id: 'dryad')
     end
 
     describe :new do
@@ -32,6 +35,29 @@ module StashEngine
             author_orcid: '0000-0003-4293-0137'
           )
           expect(author.author_email).to be_nil
+        end
+      end
+
+      describe :orcid_invite_path do
+        it 'generates an orcid_invite_path when needed' do
+          author = create(:author)
+          expect(author.orcid_invite_path).to include('invitation')
+        end
+
+        it 'delivers the correct orcid_invite_path' do
+          author = create(:author,
+                          resource: @resource)
+          orcid_invite = StashEngine::OrcidInvitation.create(
+            email: author.author_email,
+            identifier_id: @resource.identifier_id,
+            first_name: author.author_first_name,
+            last_name: author.author_last_name,
+            secret: SecureRandom.urlsafe_base64,
+            invited_at: Time.new.utc
+          )
+
+          expect(author.orcid_invite_path).to include("invitation=#{orcid_invite.secret}")
+          expect(author.orcid_invite_path).to include(@resource.identifier.identifier)
         end
       end
 

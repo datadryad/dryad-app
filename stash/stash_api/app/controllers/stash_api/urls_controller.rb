@@ -31,7 +31,7 @@ module StashApi
       check_file_size(file_upload: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
-        format.json { render json: file.metadata, status: 201 }
+        format.any { render json: file.metadata, status: 201 }
       end
     end
 

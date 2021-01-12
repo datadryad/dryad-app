@@ -35,3 +35,9 @@ Any combination of the following parameters may be used in a search:
   only be returned that have been modified since the given
   time. The time must be specified in ISO 8601 format, and the time
   zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+
+Searches do not require authenticated access, but they *may* be used
+with authenticated access to view the latest version of each dataset,
+which may be in the process of being edited by an author or
+curator. For details regarding authenticated access, see the
+[submission document](submission.md).

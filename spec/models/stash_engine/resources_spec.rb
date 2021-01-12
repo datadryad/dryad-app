@@ -132,6 +132,15 @@ module StashEngine
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
+      it 'returns true if admin for a journal, and the item has no journal set' do
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        JournalRole.create(journal: journal, user: @user, role: 'admin')
+
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
     end
 
     describe :tenant_id do

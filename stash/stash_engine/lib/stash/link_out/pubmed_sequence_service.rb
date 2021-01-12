@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'net/ftp'
+require 'net/sftp'
 
 require_relative 'helper'
 
@@ -57,15 +57,13 @@ module LinkOut
     end
 
     def publish_files!
-      ftp = Net::FTP.new(@ftp.ftp_host)
-      ftp.login(@ftp.ftp_username, @ftp.ftp_password)
-      ftp.chdir(@ftp.ftp_dir)
-      Dir["#{TMP_DIR}/#{@links_file.gsub('[nbr]', '*')}"].entries.each do |file|
-        ftp.putbinaryfile(file)
+      Net::SFTP.start(@ftp.ftp_host, @ftp.ftp_username, password: @ftp.ftp_password) do |sftp|
+        Dir["#{TMP_DIR}/#{@links_file.gsub('[nbr]', '*')}"].entries.each do |file|
+          sftp.upload!(file.to_s, "#{@ftp.ftp_dir}/#{File.basename(file)}")
+        end
+      rescue Net::SFTP::StatusException => e
+        p "    SFTP Error: #{e.message}"
       end
-      ftp.close
-    rescue StandardError => e
-      p "    FTP Error: #{e.message}"
     end
 
     private

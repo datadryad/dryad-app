@@ -45,8 +45,8 @@ Descriptive fields
 Other fields with descriptive metadata include:
 - `relatedWorks` - Relationships to other objects may be specified by
   giving a `relationship` and identifier information. The allowed
-  values for `relationship` are the same as for DataCite's
-  `relationType` field.
+  values for `relationship` are: `undefined`, `article`, `dataset`, `preprint`,
+  `software`, `supplemental_information`
 - `funders` - Funding organizations and award numbers may be
   specified. 
 - `methods` - Description of methods for collecting and processing the

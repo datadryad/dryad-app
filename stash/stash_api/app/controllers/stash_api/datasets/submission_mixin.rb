@@ -3,15 +3,15 @@ module SubmissionMixin
   private
 
   def check_patch_prerequisites
-    ensure_in_progress { yield }
     begin
       @json = JSON.parse(request.raw_post)
     rescue JSON::ParserError
-      return_error(messages: 'You must send a json patch request with a valid JSON operation to publish this dataset', status: 400) { yield }
+      return_error(messages: 'You must send a JSON Patch request with a valid JSON operation.', status: 400) { yield }
     end
-    return if @json.length.positive? && @json.include?('op' => 'replace', 'path' => '/versionStatus', 'value' => 'submitted')
 
-    return_error(messages: "You must issue a json operation of 'replace', path: '/versionStatus', value: 'submitted' to publish.",
+    return if @json.length == 1
+
+    return_error(messages: 'The Dryad API only accepts a JSON Patch request with a single statement.',
                  status: 400) { yield }
   end
 

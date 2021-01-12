@@ -20,6 +20,9 @@ module StashEngine
         end
         return
       end
+
+      return if valid_edit_code?
+
       flash[:alert] = 'You must be logged in.'
       session[:target_page] = request.fullpath
       redirect_to stash_url_helpers.choose_login_path
@@ -52,6 +55,7 @@ module StashEngine
 
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
+      return if valid_edit_code?
       return if current_user && resource.permission_to_edit?(user: current_user)
 
       display_authorization_failure
@@ -59,7 +63,9 @@ module StashEngine
 
     # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
     def require_in_progress_editor
-      return if resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
+      return if valid_edit_code? ||
+                resource.dataset_in_progress_editor.id == current_user.id ||
+                current_user.superuser?
 
       display_authorization_failure
     end
@@ -70,7 +76,8 @@ module StashEngine
 
     def ajax_require_modifiable
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
-      return ajax_blocked unless (current_user && resource) && resource.can_edit?(user: current_user)
+      return ajax_blocked unless valid_edit_code? ||
+                                 ((current_user && resource) && resource.can_edit?(user: current_user))
     end
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
@@ -89,6 +96,16 @@ module StashEngine
     def ajax_blocked
       render nothing: true, status: 403
       false
+    end
+
+    def valid_edit_code?
+      edit_code = params[:edit_code] || session[:edit_code]
+      if defined?(resource) && resource.present? && (edit_code == resource&.identifier&.edit_code)
+        # Code is valid, so save it in the session for later use (and implicitly return true)
+        session[:edit_code] = edit_code
+      else
+        false
+      end
     end
 
   end

@@ -1,5 +1,6 @@
 require 'yaml'
 require_relative 'dev_ops/passenger'
+require_relative 'dev_ops/download_uri'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
@@ -87,7 +88,7 @@ namespace :dev_ops do
     FileUtils.mkdir directory unless File.exist?(directory)
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad
-    db = YAML.load(File.open(File.join(Rails.root, 'config', 'database.yml')))[Rails.env]
+    db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]
     # rubocop:enable Security/YAMLLoad
     file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H_%M')}.sql")
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db ' \
@@ -145,6 +146,29 @@ namespace :dev_ops do
   desc 'Gets Counter token for submitting a report'
   task get_counter_token: :environment do
     puts APP_CONFIG[:counter][:token]
+  end
+
+  # this is for Merritt changes moving the old UC collections into the Dryad collections
+  # After things are moved, two things need to happen 1) the tenant config needs to be
+  # changed to point to dryad, and 2) this script needs to be run against the text file
+  # provided by David Loy in order to update the ARKs in the sword URLs so that downloads
+  # and further version submissions work.
+  desc 'Updates database for Merritt ark changes'
+  task download_uri: :environment do
+    # example command
+    # RAILS_ENV="development" bundle exec rake dev_ops:download_uri /path/to/file.txt
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 2
+      puts 'Please put the path to the file to process'
+      next
+    end
+
+    DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
+    puts 'Done'
   end
 end
 # rubocop:enable Metrics/BlockLength

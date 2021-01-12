@@ -129,7 +129,7 @@ module StashApi
         rw = @metadata[:relatedWorks].first
         expect(rw[:identifier]).to eq(ri.related_identifier)
         expect(rw[:identifierType]).to eq('DOI')
-        expect(rw[:relationship]).to eq('Cites')
+        expect(rw[:relationship]).to eq('article')
       end
 
       it 'defaults to the correct license' do
@@ -166,10 +166,16 @@ module StashApi
         expect(@metadata[:sharingLink]).to be(bogus_link)
       end
 
-      it 'has no sharingLink when it is in withdrawn status' do
+      it 'has no sharingLink when it is in embargoed or withdrawn status' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
+
+        StashEngine::CurationActivity.create(resource: r, status: 'embargoed')
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:sharingLink]).to be(nil)
+
         StashEngine::CurationActivity.create(resource: r, status: 'withdrawn')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata

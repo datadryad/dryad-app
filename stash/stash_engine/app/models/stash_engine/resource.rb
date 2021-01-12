@@ -563,7 +563,8 @@ module StashEngine
       user.superuser? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
-        user.journals_as_admin.include?(identifier&.journal)
+        user.journals_as_admin.include?(identifier&.journal) ||
+        (user.journals_as_admin.present? && identifier&.journal.blank?)
     end
 
     # have the permission to edit
@@ -724,9 +725,13 @@ module StashEngine
     # -----------------------------------------------------------
     # Handle the 'submitted' state (happens after successful Merritt submission)
     def prepare_for_curation
+      # gets last resource
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
-      # Determine if the curator or author is the appropriate attribution
-      attribution = prior_version.present? && prior_version.current_curation_activity.curation? ? current_editor_id : user_id
+
+      # try to assign the same person as immediately previous activity, otherwise prefer editor_id and then user_id from resource
+      cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
+        .order(id: :desc).first
+      attribution = (cur_act.nil? ? (current_editor_id || user_id) : cur_act.user_id)
       curation_to_submitted(prior_version, attribution)
     end
 
@@ -734,22 +739,21 @@ module StashEngine
       # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
       # version and the journal needs it)
       status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
-      # Update the user in the auto-created :in_progress activity as its set to the author by default
-      current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
+
       # Generate the :submitted status
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
-      curation_to_curation(prior_version, attribution) unless prior_version.blank?
+      curation_to_curation(prior_version) unless prior_version.blank?
     end
 
-    def curation_to_curation(prior_version, attribution)
+    def curation_to_curation(prior_version)
       return if prior_version.blank? || prior_version.current_curation_status.blank?
       # If the prior version was in author :action_required or :curation status we need to set it
       # back to :curation status. Also carry over the curators note so that it appears in the activity log
       return unless %w[action_required curation].include?(prior_version.current_curation_status)
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
-                                                                  note: edit_histories.last&.user_comment || 'ready for curation')
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
+                                                                  note: 'system set back to curation')
     end
   end
 end

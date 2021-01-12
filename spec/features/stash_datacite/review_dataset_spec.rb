@@ -13,6 +13,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     mock_solr!
     mock_ror!
     mock_tenant!
+    mock_repository!
     @user = create(:user)
     sign_in(@user)
   end
@@ -33,7 +34,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     before(:each) do
       start_new_dataset
       navigate_to_review
-      mock_repository!
       fill_required_fields
     end
 
@@ -90,7 +90,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content('Upload complete')
 
       click_on('Proceed to Review')
-      expect(page).to have_content('Supporting Information Hosted by Zenodo')
+      expect(page).to have_content('Software Files Hosted by Zenodo')
       expect(page).to have_content('favicon.ico')
       # expect(page).to have_content('Select license for files')
     end
@@ -99,12 +99,12 @@ RSpec.feature 'ReviewDataset', type: :feature do
       navigate_to_software_upload
 
       click_on('Proceed to Review')
-      expect(page).not_to have_content('Supporting Information Hosted by Zenodo')
+      expect(page).not_to have_content('Software Files Hosted by Zenodo')
       expect(page).not_to have_content('favicon.ico')
       # expect(page).not_to have_content('Select license for files')
     end
 
-    it 'sets CC-BY-4.0 License for not-dataset', js: true do
+    it 'sets MIT License for software at Zenodo', js: true do
       navigate_to_software_upload
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
@@ -117,9 +117,28 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content('Upload complete')
 
       click_on('Proceed to Review')
-      # type hidden -- software_license 'CC-BY-4.0'
+      # type hidden -- software_license 'MIT'
       v = find('#software_license', visible: false).value
-      expect(v).to eq('CC-BY-4.0')
+      expect(v).to eq('MIT')
     end
   end
+
+  context :edit_link do
+    it 'opens a page with an edit link and redirects when complete', js: true do
+      @identifier = create(:identifier)
+      @identifier.edit_code = Faker::Number.number(digits: 5)
+      @identifier.save
+      @res = create(:resource, identifier: @identifier)
+
+      # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
+      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      navigate_to_review
+      agree_to_everything
+      fill_in 'user_comment', with: Faker::Lorem.sentence
+      submit = find_button('submit_dataset', disabled: :all)
+      submit.click
+      expect(page.current_path).to eq('/stash/submission_process')
+    end
+  end
+
 end
