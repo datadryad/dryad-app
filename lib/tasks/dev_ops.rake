@@ -174,7 +174,10 @@ namespace :dev_ops do
   task embargo_zenodo: :environment do
     # apparently I have to do this, at least in some cases because arguments to rake are ugly
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
-    ARGV.each { |a| task a.to_sym do ; end }
+
+    # rubocop:disable Style/BlockDelimiters
+    ARGV.each { |a| task a.to_sym do; end }
+    # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
