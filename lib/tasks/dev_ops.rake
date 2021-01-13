@@ -169,5 +169,45 @@ namespace :dev_ops do
     DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
     puts 'Done'
   end
+
+  desc 'Updates database for Merritt ark changes'
+  task embargo_zenodo: :environment do
+    # apparently I have to do this, at least in some cases because arguments to rake are ugly
+    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
+    ARGV.each { |a| task a.to_sym do ; end }
+
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 4
+      puts 'Add the following arguments after the rake command <resource_id> <deposition_id> <yyyy-mm-dd>'
+      puts 'The deposition id can be found in the stash_engine_zenodo_copies table'
+      next
+    end
+
+    res_id = ARGV[1].to_s
+    dep_id = ARGV[2].to_s
+    emb_date = ARGV[3].to_s
+
+    require 'stash/zenodo_replicate/deposit'
+    res = StashEngine::Resource.find(res_id)
+
+    dep = Stash::ZenodoReplicate::Deposit.new(resource: res)
+
+    resp = dep.get_by_deposition(deposition_id: dep_id)
+
+    meta = resp['metadata']
+
+    meta['access_right'] = 'embargoed'
+    meta['embargo_date'] = emb_date
+
+    dep.reopen_for_editing
+
+    dep.update_metadata(manual_metadata: meta)
+
+    dep.publish
+  end
 end
 # rubocop:enable Metrics/BlockLength
