@@ -23,3 +23,8 @@ The JSON document that is submitted must have the format of either of Editorial 
 submission formats:
 - (emDeposit.json)[emDeposit.json]
 - (emSubmission.json)[emSubmission.json]
+
+If an update is being provided for a previously-created dataset, the
+encoded identifier for the dataset should be provided as a suffix to
+the submission URL, like this:
+`https://<domain-name>/api/v2/em_submission_metadata/<encoded_doi>`
