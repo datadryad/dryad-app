@@ -26,9 +26,12 @@ module Stash
 
       # PUT /api/deposit/depositions/123
       # Need to have gotten or created the deposition for this to work
-      def update_metadata
-        mg = MetadataGenerator.new(resource: @resource)
-        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: mg.metadata })
+      def update_metadata(manual_metadata: nil)
+        if manual_metadata.nil?
+          mg = MetadataGenerator.new(resource: @resource)
+          manual_metadata = mg.metadata
+        end
+        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: manual_metadata })
       end
 
       # GET /api/deposit/depositions/123
