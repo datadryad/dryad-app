@@ -89,7 +89,8 @@ module StashApi
       # that is, don't change a status other than submitted or peer_review
       if ca_note&.match(/based on notification from journal/) &&
          !%w[submitted peer_review].include?(resource.current_curation_status)
-        ca_note = "received #{ca_status} notification from journal module, but retaining current curation status due to workflow rules"
+        ca_note = "received notification from journal module that the associated manuscript is #{ca_status}, " +
+                  "but the dataset is #{resource.current_curation_status}, so it will retain that status"
         ca_status = resource.current_curation_status
       end
 
