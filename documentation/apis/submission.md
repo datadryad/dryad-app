@@ -79,8 +79,6 @@ You should see a 200 response and some information something like:
 
 ## Create metadata for the dataset
 
-## Create metadata for the dataset
-
 Create the appropriate metadata. A sample of the bare minimum metadata
 is shown below, but typical metadata should be more complete:
 

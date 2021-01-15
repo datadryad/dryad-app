@@ -51,7 +51,8 @@ module StashApi
         expect(hsh[:abstract]).to eq(output[:abstract])
         in_author = hsh[:authors].first
         out_author = output[:authors].first
-        expect(in_author[:email]).to eq(out_author[:email])
+        expect(out_author[:email]).to eq(in_author[:email])
+        expect(out_author[:affiliation]).to eq(in_author[:affiliation])
       end
 
       it 'creates a new dataset with a userId explicitly set by superuser)' do
