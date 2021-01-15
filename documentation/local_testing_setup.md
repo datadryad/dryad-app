@@ -1,7 +1,7 @@
 # Setting up local testing
 
 Running tests locally on a development machine means an easier time writing and developing tests, running an individual test and
-also not needing to wait for travis.ci to run all tests in order to get results.
+also not needing to wait for GitHub to run all tests in order to get results.
 
 ## Install MySQL if not installed
 
@@ -23,7 +23,7 @@ mysql> CREATE USER 'travis'@'%';
 # to allow MySQL root access to the test/dev environment without having to use sudo.  Note, MySQL root access should
 # be secured on production servers and not left open.
 
-# the travis_prep.sh script below assumes it can access MySQL root user without a password (or sudo) for setting up a testing environment.
+# the testing_prep.sh script assumes it can access MySQL root user without a password (or sudo) for setting up a testing environment.
 ```
 
 ## Get Oracle JRE installed if needed
@@ -45,7 +45,7 @@ sudo apt install -y chromium-browser
 It's usually convenient to run tests just on the part of the application where you have changed code.  For example
 within an engine or in the main app for overall testing through the UI.
 
-Each component has a *travis-prep.sh* script for setting up the database for testing that component and it only needs to be run once
+Each component has a *testing_prep.sh* script for setting up the database for testing that component and it only needs to be run once
 if you continue to use the same test database.
 
 For example, to set up and run the tests in the stash_engine:
@@ -53,8 +53,8 @@ For example, to set up and run the tests in the stash_engine:
 ```
 cd stash/stash_engine
 
-# travis_prep only needs to be done the first time you use a database and sets it up for testing this component
-./travis_prep.sh
+# testing_prep only needs to be done the first time you use a database and sets it up for testing this component
+./testing_prep.sh
 
 # bundle install if the bundle is not up to date
 bundle install
