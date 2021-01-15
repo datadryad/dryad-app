@@ -99,6 +99,7 @@ group :test do
   gem 'oai'
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
+  gem 'rspec-github', require: false
   gem 'rspec-rails'
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
   gem 'selenium-webdriver', '~> 3.142.0'

@@ -43,9 +43,9 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.require_paths = ['lib']
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
-  s.add_dependency 'merritt-manifest', '>= 0.1.3'
-  s.add_dependency 'rest-client', '>= 2.0'
-  s.add_dependency 'rubyzip', '>= 1.1'
+  s.add_dependency 'merritt-manifest', '~> 0.1.3'
+  s.add_dependency 'rest-client', '~> 2.0'
+  s.add_dependency 'rubyzip', '~> 2.3'
 
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine' # TODO: should stash_datacite export this?
@@ -53,7 +53,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash-wrapper'
 
   s.add_development_dependency 'bundler', '~> 2.1.4'
-  s.add_development_dependency 'nokogiri', '>= 1.8'
+  s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rake', '>= 12.0'
   s.add_development_dependency 'rspec', '>= 3.2'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
