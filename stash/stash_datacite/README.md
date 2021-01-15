@@ -1,6 +1,5 @@
 # Datacite Engine for Dashv2
 
-[![Build Status](https://travis-ci.org/CDL-Dryad/stash_datacite.svg?branch=main)](https://travis-ci.org/CDL-Dryad/stash_datacite)
 [![Code Climate](https://codeclimate.com/github/CDL-Dryad/stash_datacite/badges/gpa.svg)](https://codeclimate.com/github/CDL-Dryad/stash_datacite)
 [![Issue Count](https://codeclimate.com/github/CDL-Dryad/stash_datacite/badges/issue_count.svg)](https://codeclimate.com/github/CDL-Dryad/stash_datacite)
 
