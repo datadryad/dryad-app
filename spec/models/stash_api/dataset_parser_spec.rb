@@ -190,27 +190,6 @@ module StashApi
         expect(author.affiliation.id).to eq(target_affil.id)
       end
 
-      it 'creates the author with an affiliation whose name matches an existing entry in the ROR system' do
-        allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return({ id: 'https://ror.org/abc123',
-                                                                                         name: 'Test Ror Organization' }.to_ostruct)
-
-        @basic_metadata = {
-          'authors' => [
-            {
-              'firstName' => 'Wanda',
-              'lastName' => 'Jackson',
-              'affiliation' => 'Test Ror Organization'
-            }
-          ]
-        }.with_indifferent_access
-        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
-        @stash_identifier = dp.parse
-        resource = @stash_identifier.resources.first
-        author = resource.authors.first
-
-        expect(author.affiliation.ror_id).to eq('https://ror.org/abc123')
-      end
-
       it 'creates the abstract' do
         resource = @stash_identifier.resources.first
         des = resource.descriptions.first
