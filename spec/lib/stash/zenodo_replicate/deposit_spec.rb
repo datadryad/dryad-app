@@ -66,7 +66,9 @@ module Stash
         end
 
         it 'makes a request to update the metadata with arbitrary metadata' do
+          # rubocop:disable Security/JSONLoad
           hash = JSON.load(File.read("#{Rails.root}/spec/fixtures/zenodo/embargo_sample.json"))['metadata']
+          # rubocop:enable Security/JSONLoad
           resp = @szd.update_metadata(manual_metadata: hash)
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
