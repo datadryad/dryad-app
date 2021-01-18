@@ -2,7 +2,7 @@ Journal Module & v1 Server
 ==========================
 
 The journal module runs as part of the v1 server. For details about
-its inner workings, see the [Journal Module Documentation](../apis/jounals.md).
+its inner workings, see the [Journal Module Documentation](../apis/journals.md).
 
 Restarting the v1 Server
 ------------------------
