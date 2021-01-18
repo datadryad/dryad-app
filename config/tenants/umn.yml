@@ -20,7 +20,7 @@ default: &default
     - https://ror.org/03e1ayz78
     - https://ror.org/04jnprq39
     - https://ror.org/05jc5ee02
-  tenant_id: unm
+  tenant_id: umn
   identifier_service:
     provider: datacite
     prefix: "10.7959"
