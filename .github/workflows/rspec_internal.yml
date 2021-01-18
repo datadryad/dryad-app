@@ -1,6 +1,6 @@
 name: RSpec Internal Tests
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   rspec-internal:
