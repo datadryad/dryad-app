@@ -29,8 +29,8 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://c3po.spa.umn.edu/shibboleth
-    entity_domain: c3po.spa.umn.edu
+    entity_id: urn:mace:incommon:umn.edu
+    entity_domain: umn.edu
   default_license: cc0
   ## maximum total size (default 100 MB for now)
   max_submission_size: 3.0e+11
