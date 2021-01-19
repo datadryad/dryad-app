@@ -88,6 +88,11 @@ module StashEngine
     def sso
       tenant = StashEngine::Tenant.find(params[:tenant_id])
       if tenant.present?
+        if tenant&.authentication&.strategy == 'author_match' # requires authors to be from institution later on
+          current_user.update(tenant_id: tenant.tenant_id)
+          redirect_to dashboard_path, status: :found
+          return
+        end
         redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'

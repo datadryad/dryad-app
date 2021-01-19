@@ -66,4 +66,24 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_text('My Datasets')
     end
   end
+
+  # for author match authentication
+  describe :author_match, js: true do
+
+    before(:each) do
+      user = create(:user, tenant_id: nil)
+      mock_orcid!(user)
+      mock_ror!
+      OmniAuth.config.test_mode = true
+      visit root_path
+      click_link 'Login'
+    end
+
+    it 'logs in without shibboleth auth for configured tenant' do
+      click_link 'Login or create your ORCID iD'
+      select 'DataONE', from: 'tenant_id'
+      click_button 'Login to verify'
+      expect(page).to have_text('My Datasets')
+    end
+  end
 end

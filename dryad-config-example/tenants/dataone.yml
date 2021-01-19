@@ -26,7 +26,7 @@ default: &default
     password: "my.password"
     sandbox: true
   authentication:
-    strategy: google
+    strategy: author_match
   default_license: cc0
   max_submission_size: 100000000000
   max_total_version_size: 10000000000
