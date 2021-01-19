@@ -19,6 +19,30 @@ Metadata about journals
 Metadata about the journals and their workflows is stored in Dryad's
 `StashEngine::Journal` model.
 
+Meaning of fields
+-----------------
+
+Some of the fields in `StashEngine::Journal` are being updated as we
+transition journals from older workflows to newer ones.
+
+- *allow_review_workflow* -- Was previously used to determine whether
+  a journal allowed authors to submit data during the manuscript
+  review process. Controls whether the "private for peer review"
+  checkbox is displayed in the submission system. All journals now
+  have this set to `true`. 
+- *allow_embargo* -- Was previously used to determine whether
+  submitters saw a choice for embargoing their data after the article
+  was published. Now has no effect, since we only allow user-requested
+  embargoes in extraordinary circumstances.
+- *allow_blackout* -- Was previously used to determine whether to
+  "hide" a dataset until the associated article was published. Now
+  controls whether an automatic 1-year blackout/embargo is added to
+  the dataset.
+
+
+Legacy data in v1 server
+------------------------
+
 Until we have a proper editing UI in Dryad, journal metadata is still
 edited with the UI in the v1 system, and then updates are imported
 to the production server using a command like:

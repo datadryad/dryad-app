@@ -53,4 +53,3 @@ deploy script will prompt you.
   ```
   bundle exec rails app_data:clear RAILS_ENV=<rails-environment>
   ```
-
