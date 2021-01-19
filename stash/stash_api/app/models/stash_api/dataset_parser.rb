@@ -139,7 +139,7 @@ module StashApi
         afis = StashDatacite::Affiliation.from_isni_id(isni_id: json_author[:affiliationISNI])
         a.affiliation = afis
       elsif json_author[:affiliation].present?
-        a.affiliation = StashDatacite::Affiliation.from_long_name(long_name: json_author[:affiliation], check_ror: true)
+        a.affiliation = StashDatacite::Affiliation.from_long_name(long_name: json_author[:affiliation], check_ror: false)
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
