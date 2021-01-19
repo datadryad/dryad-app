@@ -30,11 +30,13 @@ module Stash
       # PUT /api/deposit/depositions/123
       # Need to have gotten or created the deposition for this to work
       # If passing in a DOI then the metadata generator doesn't use the one from the main dataset, but the one you say instead
-      def update_metadata(software_upload: false, doi: nil)
-        mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, software_upload: software_upload)
-        my_metadata = mg.metadata
-        my_metadata[:doi] = doi unless doi.nil?
-        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: my_metadata })
+      def update_metadata(software_upload: false, doi: nil, manual_metadata: nil)
+        if manual_metadata.nil?
+          mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, software_upload: software_upload)
+          manual_metadata = mg.metadata
+        end
+        manual_metadata[:doi] = doi unless doi.nil?
+        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: manual_metadata })
       end
 
       def self.get_by_deposition(deposition_id:)

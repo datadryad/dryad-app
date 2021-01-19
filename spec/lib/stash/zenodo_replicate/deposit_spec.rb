@@ -2,6 +2,7 @@
 # from the manual setup that doesn't really load rails right in the engines
 require 'stash/zenodo_replicate'
 require 'byebug'
+require 'json'
 
 require 'rails_helper'
 
@@ -47,9 +48,7 @@ module Stash
             .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
           create(:resource_type, resource_id: @resource.id)
           @szd.new_deposition
-        end
 
-        it 'makes a request to update the metadata' do
           stub_request(:put, "https://sandbox.zenodo.org/api/deposit/depositions/#{@szd.deposition_id}?access_token=ThisIsAFakeToken")
             .with(
               body: /.*/,
@@ -59,6 +58,9 @@ module Stash
               }
             )
             .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
+        end
+
+        it 'makes a request to update the metadata' do
           resp = @szd.update_metadata
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
@@ -75,6 +77,14 @@ module Stash
             .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
           expect(MetadataGenerator).to receive(:new).with(resource: @resource, software_upload: true).and_call_original
           resp = @szd.update_metadata(software_upload: true, doi: 'http://doi.org/12577/snakk')
+          expect(resp).to eq('id' => 5738, 'links' => [])
+        end
+
+        it 'makes a request to update the metadata with arbitrary metadata' do
+          # rubocop:disable Security/JSONLoad
+          hash = JSON.load(File.read("#{Rails.root}/spec/fixtures/zenodo/embargo_sample.json"))['metadata']
+          # rubocop:enable Security/JSONLoad
+          resp = @szd.update_metadata(manual_metadata: hash)
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
       end
