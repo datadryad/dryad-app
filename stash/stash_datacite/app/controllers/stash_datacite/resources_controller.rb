@@ -57,6 +57,7 @@ module StashDatacite
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
@@ -70,14 +71,19 @@ module StashDatacite
 
       resource.reload
 
-      if session[:returnURL]
-        return_url = session[:returnURL]
+      # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
+      # There is also one for curators and need to return back to different pages/filter setting for each dataset they
+      # edit in one of dozens of different windows at the same time, so needs to be specific to each dataset.
+      if session["return_url_#{resource.identifier_id}"] || session[:returnURL]
+        return_url = session["return_url_#{resource.identifier_id}"] || session[:returnURL]
+        session["return_url_#{resource.identifier_id}"] = nil
         session[:returnURL] = nil
-        redirect_to(return_url)
+        redirect_to return_url, notice: "Submitted updates for #{resource.identifier}, title: #{resource.title}"
       else
         redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -144,7 +150,8 @@ module StashDatacite
 
     def processing?(resource)
       if resource && resource.identifier && resource.identifier.processing?
-        redirect_to :back, notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again'
+        redirect_back(fallback_location: stash_url_helpers.dashboard_path,
+                      notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again')
         return true
       end
       false

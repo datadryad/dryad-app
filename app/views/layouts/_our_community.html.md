@@ -55,9 +55,12 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  Claremont McKenna College
 -  Columbia University
 -  Harvey Mudd College
+-  Indian Institute of Technology Dhanbad
 -  Keck Graduate Institute
 -  King Abdullah University of Science and Technology
+-  Kyoto University
 -  Lawrence Berkeley National Lab
+-  Macquarie University
 -  Montana State University
 -  Netherlands Institute of Ecology (NIOO-KNAW)
 -  North Carolina State University
@@ -80,6 +83,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  UC Santa Barbara
 -  UC Santa Cruz
 -  University of Illinois, Urbana-Champagne
+-  University of Minnesota
 -  University of New Mexico
 -  University of New South Wales, Sydney
 -  The University of Rhode Island

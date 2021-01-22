@@ -60,6 +60,8 @@ module StashEngine
 
     # create a new version of this resource before editing with find or create
     def new_version
+      # save a URL to go back to if possible, for each individual identifier since may have many windows open
+      session["return_url_#{@identifier.id}"] = params[:return_url] if params[:return_url] && @identifier
       duplicate_resource
 
       # redirect to find or create path

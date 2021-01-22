@@ -91,10 +91,18 @@ Rails.application.routes.draw do
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
 
+
+  # Individual pages that we're redirecting from the old wiki, then a catchall
+  # for any other page from the old wiki. The individual pages must be listed
+  # first, or they will not take effect.
+  get '/Governance', to: redirect('stash/our_governance')
+  get '*path',
+      constraints: {host: 'wiki.datadryad.org'},
+      to: redirect('https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/v1_wiki_content.md')
+
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
   get '/pages/faq', to: redirect('stash/faq')
-  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
+  get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
   get '/pages/membershipOverview', to: redirect('stash/our_community')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')
