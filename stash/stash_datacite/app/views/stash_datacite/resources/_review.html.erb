@@ -65,7 +65,7 @@
 
     <% if @review.software_uploads.count > 0 %>
       <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
-      <h2 class="o-heading__level2">Software Files Hosted by Zenodo</h2>
+    <h2 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/file_uploads/show_zenodo", locals: { resource: @resource } %>
