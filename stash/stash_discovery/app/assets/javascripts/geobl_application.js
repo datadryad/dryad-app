@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require handlebars.runtime
 //
 // Required by Blacklight
 //= require blacklight/blacklight

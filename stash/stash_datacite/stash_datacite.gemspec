@@ -17,7 +17,7 @@ require 'stash_datacite/version'
 
 # But in any case, the takeaway here is that it's probably better for us to put these requirements into test/development groups
 # using the Gemfile for our private gems and engines so the the gem requirements actually get satisfied correctly on
-# travis or on new software installs intended for development or testing because add_development_dependency is weak sauce
+# new software installs intended for development or testing because add_development_dependency is weak sauce
 # for our uses.
 
 # Describe your gem and declare its dependencies:

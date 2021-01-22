@@ -28,6 +28,8 @@ gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.90.0'
+# not currently used for our simple case and because of some problems
+# gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
 
 # ############################################################
 # UI
@@ -99,6 +101,7 @@ group :test do
   gem 'oai'
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
+  gem 'rspec-github', require: false
   gem 'rspec-rails'
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
   gem 'selenium-webdriver', '~> 3.142.0'

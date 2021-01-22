@@ -1,5 +1,6 @@
 require 'yaml'
 require_relative 'dev_ops/passenger'
+require_relative 'dev_ops/download_uri'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
@@ -87,7 +88,7 @@ namespace :dev_ops do
     FileUtils.mkdir directory unless File.exist?(directory)
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad
-    db = YAML.load(File.open(File.join(Rails.root, 'config', 'database.yml')))[Rails.env]
+    db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]
     # rubocop:enable Security/YAMLLoad
     file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H_%M')}.sql")
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db ' \
@@ -144,6 +145,72 @@ namespace :dev_ops do
   desc 'Gets Counter token for submitting a report'
   task get_counter_token: :environment do
     puts APP_CONFIG[:counter][:token]
+  end
+
+  # this is for Merritt changes moving the old UC collections into the Dryad collections
+  # After things are moved, two things need to happen 1) the tenant config needs to be
+  # changed to point to dryad, and 2) this script needs to be run against the text file
+  # provided by David Loy in order to update the ARKs in the sword URLs so that downloads
+  # and further version submissions work.
+  desc 'Updates database for Merritt ark changes'
+  task download_uri: :environment do
+    # example command
+    # RAILS_ENV="development" bundle exec rake dev_ops:download_uri /path/to/file.txt
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 2
+      puts 'Please put the path to the file to process'
+      next
+    end
+
+    DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
+    puts 'Done'
+  end
+
+  desc 'Updates database for Merritt ark changes'
+  task embargo_zenodo: :environment do
+    # apparently I have to do this, at least in some cases because arguments to rake are ugly
+    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
+
+    # rubocop:disable Style/BlockDelimiters
+    ARGV.each { |a| task a.to_sym do; end }
+    # rubocop:enable Style/BlockDelimiters
+
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 4
+      puts 'Add the following arguments after the rake command <resource_id> <deposition_id> <yyyy-mm-dd>'
+      puts 'The deposition id can be found in the stash_engine_zenodo_copies table'
+      next
+    end
+
+    res_id = ARGV[1].to_s
+    dep_id = ARGV[2].to_s
+    emb_date = ARGV[3].to_s
+
+    require 'stash/zenodo_replicate/deposit'
+    res = StashEngine::Resource.find(res_id)
+
+    dep = Stash::ZenodoReplicate::Deposit.new(resource: res)
+
+    resp = dep.get_by_deposition(deposition_id: dep_id)
+
+    meta = resp['metadata']
+
+    meta['access_right'] = 'embargoed'
+    meta['embargo_date'] = emb_date
+
+    dep.reopen_for_editing
+
+    dep.update_metadata(manual_metadata: meta)
+
+    dep.publish
   end
 end
 # rubocop:enable Metrics/BlockLength

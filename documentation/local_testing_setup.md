@@ -1,7 +1,7 @@
 # Setting up local testing
 
 Running tests locally on a development machine means an easier time writing and developing tests, running an individual test and
-also not needing to wait for travis.ci to run all tests in order to get results.
+also not needing to wait for GitHub to run all tests in order to get results.
 
 ## Install MySQL if not installed
 
@@ -23,7 +23,7 @@ mysql> CREATE USER 'travis'@'%';
 # to allow MySQL root access to the test/dev environment without having to use sudo.  Note, MySQL root access should
 # be secured on production servers and not left open.
 
-# the travis_prep.sh script below assumes it can access MySQL root user without a password (or sudo) for setting up a testing environment.
+# the testing_prep.sh script assumes it can access MySQL root user without a password (or sudo) for setting up a testing environment.
 ```
 
 ## Get Oracle JRE installed if needed
@@ -45,7 +45,7 @@ sudo apt install -y chromium-browser
 It's usually convenient to run tests just on the part of the application where you have changed code.  For example
 within an engine or in the main app for overall testing through the UI.
 
-Each component has a *travis-prep.sh* script for setting up the database for testing that component and it only needs to be run once
+Each component has a *testing_prep.sh* script for setting up the database for testing that component and it only needs to be run once
 if you continue to use the same test database.
 
 For example, to set up and run the tests in the stash_engine:
@@ -53,14 +53,20 @@ For example, to set up and run the tests in the stash_engine:
 ```
 cd stash/stash_engine
 
-# travis_prep only needs to be done the first time you use a database and sets it up for testing this component
-./travis_prep.sh
+# testing_prep only needs to be done the first time you use a database and sets it up for testing this component
+./testing_prep.sh
 
 # bundle install if the bundle is not up to date
 bundle install
 
 # this command runs the default rake task, which will run all tests for the component
 RAILS_ENV=test bundle exec rspec
+
+# run a single test file
+RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb
+
+# run a single test (or designated section of the test file)
+RAILS_ENV=test bundle exec rspec spec/features/stash_engine/my_test_spec.rb:36
 ```
 
 ## Various testing commands
@@ -88,6 +94,56 @@ When Rails runs in the test environment, the config files from the
 main config directory are loaded. However, most of these files are set
 up to import the equivalent test configs from
 `dryad-config-example`. This behavior occurs for tenant configs as well.
+
+## Debugging tests
+
+For a breakpoint, add "byebug" on a line by itself, and when running
+the test (with bundle exce rspec), the code will break there. Within the break console, you can
+- list variables: @user
+- n -- next line (don't dive into the details of the current line, just execute it)
+- s -- step into the details of the current line
+- c -- continue running as normal
+- eval x -- show the value of executing x
+
+To enable the Mocks in Rails Console:
+```
+RAILS_ENV=test rails_console.sh
+require 'webmock'
+require 'rspec/mocks/standalone'
+include WebMock::API
+WebMock.enable!
+require './spec/mocks/ror.rb'
+include Mocks::Ror
+mock_ror!
+require './spec/mocks/crossref_funder.rb'
+include Mocks::CrossrefFunder
+mock_funders!
+```
+
+To use the Factories in Rails Console:
+```
+RAILS_ENV=test rails_console.sh
+$LOAD_PATH.unshift("/home/ubuntu/dryad-app/spec"); nil
+require('rails_helper')
+i=FactoryBot.create(:identifier)
+user=FactoryBot.create(:user)
+```
+
+To see the test run in a browser GUI, comment out the
+`--headless` option in `dryad-app/spec/support/capybara.rb`. You can
+also add byebug statements to pause and look at what is happening on
+the page in the browser. Within a the byebug/capbara session, you can
+use commands like:
+- page.click_link('Describe Dataset')
+- instance_variables
+- @myident = StashEngine::Identifier.last
+- page.find_by_id('some-html-id')
+- page.find_by_id('author_affiliation_long_name').value
+- page.document
+- page.current_url
+- page.execute_script("$('#internal_datum_doi').val('true')") #suppresses return value
+- page.evaluate_script("$('#internal_datum_doi')").first.value
+  
 
 ## Notes about Rubocop, .ruby-version, Bundler and Rake
 

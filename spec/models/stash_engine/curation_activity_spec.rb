@@ -55,7 +55,7 @@ module StashEngine
 
         # get rid of callbacks for adding one and testing
         @curation_activity1 = create(:curation_activity, resource: @resource)
-        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+        # CurationActivity.set_callback(:create, :after, :submit_to_datacite)
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
