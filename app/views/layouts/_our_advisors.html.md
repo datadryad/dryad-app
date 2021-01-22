@@ -2,7 +2,6 @@
 
 
 <a name="advisors"></a>
-<h2>Current Advisors</h2>
 
 <div class="bio">
   <img src="/images/Ascandari_AbdulAziz.jpg" alt="AbdulAziz Ascandari" title="AbdulAziz Ascandari" />
