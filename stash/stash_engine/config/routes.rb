@@ -89,6 +89,7 @@ StashEngine::Engine.routes.draw do
   get 'our_mission', to: 'pages#our_mission'
   get 'our_platform', to: 'pages#our_platform'
   get 'our_staff', to: 'pages#our_staff'
+  get 'our_advisors', to: 'pages#our_advisors'
   get 'publishing_charges', to: 'pages#publishing_charges'
   get 'submission_process', to: 'pages#submission_process'
   get 'why_use', to: 'pages#why_use'
