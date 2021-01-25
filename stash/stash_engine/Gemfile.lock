@@ -2,7 +2,7 @@ PATH
   remote: ../stash-sword
   specs:
     stash-sword (0.1.7)
-      rest-client (>= 2.0)
+      rest-client (~> 2.0)
       typesafe_enum (~> 0.1, >= 0.1.8)
       xml-mapping_extensions (>= 0.4.9)
 

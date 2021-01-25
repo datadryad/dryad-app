@@ -15,8 +15,8 @@ module StashEngine
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
     # rubocop:disable Metrics/AbcSize
     def index
-      my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
-      tenant_limit = (current_user.role == 'admin' ? current_user.tenant : nil)
+      my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
+      tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
