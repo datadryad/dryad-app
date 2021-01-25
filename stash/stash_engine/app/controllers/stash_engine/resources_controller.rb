@@ -5,9 +5,10 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login
     before_action :require_modify_permission, except: %i[index new]
-    before_action :require_in_progress, only: %i[upload review upload_manifest]
+    before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
-    before_action :update_internal_search, only: %i[upload review upload_manifest]
+    before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
+    before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
 
     attr_writer :resource
 
@@ -117,13 +118,40 @@ module StashEngine
 
     # Upload files view for resource
     def upload
-      @file = FileUpload.new(resource_id: resource.id) # this is apparantly needed for the upload control
+      @file_model = StashEngine::FileUpload
+      @resource_assoc = :file_uploads
+
+      @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
     end
 
     # upload by manifest view for resource
-    def upload_manifest; end
+    def upload_manifest
+      @file_model = StashEngine::FileUpload
+      @resource_assoc = :file_uploads
+    end
+
+    # Upload files view for resource
+    def up_code
+      @file_model = StashEngine::SoftwareUpload
+      @resource_assoc = :software_uploads
+
+      @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
+      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareUpload')
+      if resource.upload_type(method: 'software_uploads') == :manifest
+        render 'upload_manifest'
+      else
+        render 'upload'
+      end
+    end
+
+    # upload by manifest view for resource
+    def up_code_manifest
+      @file_model = StashEngine::SoftwareUpload
+      @resource_assoc = :software_uploads
+      render 'upload_manifest'
+    end
 
     private
 
@@ -140,10 +168,16 @@ module StashEngine
     def lockout_incompatible_uploads
       if request[:action] == 'upload' && resource.upload_type == :manifest
         redirect_to upload_manifest_resource_path(resource)
-        false
       elsif request[:action] == 'upload_manifest' && resource.upload_type == :files
         redirect_to upload_resource_path(resource)
-        false
+      end
+    end
+
+    def lockout_incompatible_sfw_uploads
+      if request[:action] == 'up_code' && resource.upload_type(method: 'software_uploads') == :manifest
+        redirect_to up_code_manifest_resource_path(resource)
+      elsif request[:action] == 'up_code_manifest' && resource.upload_type(method: 'software_uploads') == :files
+        redirect_to up_code_resource_path(resource)
       end
     end
 

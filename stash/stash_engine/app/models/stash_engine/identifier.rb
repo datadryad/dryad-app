@@ -16,6 +16,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+    belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
 
     after_create :create_share
 
@@ -435,6 +436,49 @@ module StashEngine
     # creates a share for this resource if not present
     def create_share
       StashEngine::Share.create(identifier_id: id) if shares.blank?
+    end
+
+    # checks if the identifier has a Zenodo software submission or has had any in the past. If we ever have a software
+    # submission then we need to keep it up to date each time things change
+    # rubocop:disable Naming/PredicateName
+    # Nope: I don't think taking the 'has_' off this method is helpful
+    def has_zenodo_software?
+      SoftwareUpload.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+    end
+    # rubocop:enable Naming/PredicateName
+
+    # gets the resources which are in zenodo and have viewable files for the context, used by the landing page.
+    # Only latest version after published is included if include_unpublished is true.
+    # It may return an array instead of activerecord relation because it's complicated and UNION isn't really a thing in Rails 4
+    def zenodo_software_resources(include_unpublished: false)
+      pub = zenodo_published_software_resources
+      last_unpub = last_zenodo_resource(copy_type: 'software')
+
+      # just return published if just public flag or if last unpublished doesn't exist
+      return pub unless include_unpublished == true || last_unpub.nil?
+
+      # just unpub if none are published
+      return [last_unpub] if pub.count < 1
+
+      # just the pub if latest_unpublished is before latest_published, unpub and last pub shouldn't be nil (see above conditions)
+      return pub if last_unpub.id < pub.last.id
+
+      (pub.to_a + [last_unpub]).compact
+    end
+
+    def zenodo_published_software_resources
+      resources.joins(:zenodo_copies).where('stash_engine_zenodo_copies.deposition_id IS NOT NULL')
+        .where("stash_engine_zenodo_copies.state = 'finished'")
+        .where("stash_engine_zenodo_copies.copy_type = 'software_publish'")
+    end
+
+    # this is still an activerecord relation (creating an array of one) so that we can union it with sql
+    # copy type is either 'software' or 'software_publish' or (in theory) 'data' (for 3rd copy)
+    def last_zenodo_resource(copy_type:)
+      resources.joins(:zenodo_copies).where('stash_engine_zenodo_copies.deposition_id IS NOT NULL')
+        .where("stash_engine_zenodo_copies.state = 'finished'")
+        .where('stash_engine_zenodo_copies.copy_type = ?', copy_type)
+        .order(id: :desc).limit(1).first
     end
 
     private

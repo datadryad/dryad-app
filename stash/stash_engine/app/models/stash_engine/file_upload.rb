@@ -3,52 +3,14 @@ require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
 
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class FileUpload < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 
     include StashEngine::Concerns::ResourceUpdated
+    include StashEngine::Concerns::ModelUploadable
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
-
-    scope :deleted_from_version, -> { where(file_state: :deleted) }
-    scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
-    scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
-    scope :url_submission, -> { where('url IS NOT NULL') }
-    scope :file_submission, -> { where('url IS NULL') }
-    scope :with_filename, -> { where('upload_file_name IS NOT NULL') }
-    scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
-    scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
-    scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
-    enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
-    enum digest_type: %w[adler-32 crc-32 md2 md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
-
-    # display the correct error message based on the url status code
-    def error_message # rubocop:disable Metrics/MethodLength
-      return '' if url.nil? || status_code == 200
-
-      case status_code
-      when 400
-        'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS'
-      when 401
-        'The URL was not authorized for download.'
-      when 403..404
-        'The URL was not found.'
-      when 410
-        'The requested URL is no longer available.'
-      when 414
-        "The server will not accept the request, because the URL #{url} is too long."
-      when 408, 499
-        'The server timed out waiting for the request to complete.'
-      when 409
-        "You've already added this URL in this version."
-      when 500..511
-        'Encountered a remote server error while retrieving the request.'
-      else
-        'The given URL is invalid. Please check the URL and resubmit.'
-      end
-    end
 
     # this is to replace temp_file_path which tells where a file was saved when staged for upload by a user
     def calc_file_path
@@ -77,10 +39,6 @@ module StashEngine
       SQL
 
       Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
-    end
-
-    def digest?
-      !digest.blank? && !digest_type.nil?
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
@@ -136,24 +94,6 @@ module StashEngine
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
-    def smart_destroy!
-      # see if it's on the file system and destroy it if it's there
-      cfp = calc_file_path
-      ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
-
-      if in_previous_version?
-        # destroy any others of this filename in this resource
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
-        # and mark to remove from merritt
-        update(file_state: 'deleted')
-      else
-        # remove all of this filename for this resource from the database
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
-      end
-
-      resource.reload
-    end
-
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar
@@ -170,27 +110,5 @@ module StashEngine
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
-    def self.sanitize_file_name(name)
-      # remove invalid characters from the filename: https://github.com/madrobby/zaru
-      sanitized = Zaru.sanitize!(name)
-
-      # remove the delete control character
-      # remove some extra characters that Zaru does not remove by default
-      # replace spaces with underscores
-      sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
-    end
-
-    # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
-    # means created last time.
-    def in_previous_version?
-      prev_res = resource.previous_resource
-      return false if prev_res.nil?
-
-      prev_file = FileUpload.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
-      return false if prev_file.nil? || prev_file.file_state == 'deleted'
-
-      true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
-    end
   end
 end
-# rubocop:enable Metrics/ClassLength

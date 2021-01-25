@@ -41,11 +41,26 @@ module StashEngine
         it 'returns false if hold_for_peer_review flag is not set and there is no publication defined' do
           expect(resource.send(:hold_for_peer_review?)).to eql(false)
         end
+      end
 
+      describe :send_software_to_zenodo do
+        before(:each) do
+          @resource = create(:resource, identifier: create(:identifier))
+          @identifier = @resource.identifier
+          @resource.software_uploads << create(:software_upload)
+        end
+
+        it 'sends the software to zenodo' do
+          expect(@identifier).to receive(:'has_zenodo_software?').and_call_original
+          expect(StashEngine::ZenodoSoftwareJob).to receive(:perform_later)
+          @resource.send_software_to_zenodo
+          copy_record = @resource.zenodo_copies.software.first
+          expect(copy_record.resource_id).to eq(@resource.id)
+          expect(copy_record.state).to eq('enqueued')
+        end
       end
 
     end
-
     describe :title do
       it 'gets the correct clean_title' do
         test_title = 'some test title'
@@ -474,6 +489,41 @@ module StashEngine
         @resource.update(meta_view: true)
         @resource.reload
         expect(@resource.metadata_published?).to eq(false)
+      end
+    end
+
+    describe '#software_published?' do
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+                             state: 'finished', copy_type: 'software')
+      end
+
+      it 'detects if software has not been published, but just submitted' do
+        expect(@resource.software_published?).to be(false)
+      end
+
+      it 'detects if software has been published' do
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+                             state: 'finished', copy_type: 'software_publish')
+        expect(@resource.software_published?).to be(true)
+      end
+    end
+
+    describe '#software_submitted?' do
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+                             state: 'finished', copy_type: 'software')
+      end
+
+      it 'detects if software has been submitted' do
+        expect(@resource.software_submitted?).to be(true)
+      end
+
+      it "detects if software hasn't been successfully submitted" do
+        @resource.zenodo_copies.first.update(state: 'error')
+        expect(@resource.software_submitted?).to be(false)
       end
     end
 
@@ -1382,8 +1432,8 @@ module StashEngine
         allow(ZenodoCopyJob).to receive(:perform_later).and_return(nil)
         @resource.send_to_zenodo
         @resource.reload
-        expect(@resource.zenodo_copy).not_to be_nil
-        expect(@resource.zenodo_copy.state).to eq('enqueued')
+        expect(@resource.zenodo_copies.data.first).not_to be_nil
+        expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
       end
 
       it 'calls perform_later' do

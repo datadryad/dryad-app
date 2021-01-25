@@ -80,7 +80,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         el = el.first(:xpath, './following-sibling::td').find(:css, '.js-stats')
         el.click
         my_stats = @identifiers.first.counter_stat
-        page.first :css, '.o-metrics__icon', wait: 10
+        page.first :css, '.o-metrics__icon'
         expect(page).to have_content("#{my_stats.citation_count} citations")
         expect(page).to have_content("#{my_stats.views} views")
         expect(page).to have_content("#{my_stats.downloads} downloads")
@@ -132,13 +132,13 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'does not have any "edit" pencil icons' do
-        within(:css, '.c-lined-table__row', wait: 10) do
+        within(:css, '.c-lined-table__row') do
           expect(all('.fa-pencil').length).to eql(0)
         end
       end
 
       it 'has a "history" clock icon to view the activity log' do
-        within(:css, '.c-lined-table__row', wait: 10) do
+        within(:css, '.c-lined-table__row') do
           expect(all('.fa-clock-o').length).to eql(1)
         end
       end

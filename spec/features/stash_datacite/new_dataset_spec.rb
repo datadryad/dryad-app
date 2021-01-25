@@ -115,10 +115,10 @@ RSpec.feature 'NewDataset', type: :feature do
       # Author w/ affiliation in specific university
       fill_in_author
       fill_in 'author[affiliation][long_name]', with: waiver_university
-      first('.ui-menu-item-wrapper', wait: 5).click
+      first('.ui-menu-item-wrapper').click
 
       navigate_to_review
-      expect(page).to have_text('Payment is not required', wait: 5)
+      expect(page).to have_text('Payment is not required')
     end
 
     it 'waives the fee when funder has agreed to pay', js: true do
@@ -128,7 +128,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_funder(name: 'Happy Clown School', value: '12XU')
 
       navigate_to_review
-      expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School', wait: 5)
+      expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School')
     end
 
     it "doesn't waive the fee when funder isn't paying", js: true do
@@ -137,7 +137,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 
       navigate_to_review
-      expect(page).not_to have_text('Payment for this deposit is sponsored by', wait: 5)
+      expect(page).not_to have_text('Payment for this deposit is sponsored by')
     end
 
     it 'charges user when institution is not in a fee-waiver country', js: true do
@@ -153,7 +153,7 @@ RSpec.feature 'NewDataset', type: :feature do
       first('.ui-menu-item-wrapper', wait: 5).click
 
       navigate_to_review
-      expect(page).to have_text('you will receive an invoice', wait: 5)
+      expect(page).to have_text('you will receive an invoice')
     end
 
     it 'fills in a Field of Science subject', js: true do

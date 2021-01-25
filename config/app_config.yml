@@ -40,6 +40,7 @@ defaults: &DEFAULTS
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
     base_url: https://sandbox.zenodo.org
     community_id: dryad
+    application_id: 3357
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
@@ -224,6 +225,7 @@ production:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
     base_url: https://zenodo.org
     community_id: dryad
+    application_id: 42723
   merritt_express_base_url: http://mrtexpress.cdlib.org
   payments:
     service: stripe
