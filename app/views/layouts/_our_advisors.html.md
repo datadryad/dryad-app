@@ -1,5 +1,8 @@
 <h1>Our Advisors</h1>
 
+<p>Our Scientific Advisory Committee guides our strategic direction
+and provides feedback and insight from the broad research
+community.</p>
 
 <a name="advisors"></a>
 
