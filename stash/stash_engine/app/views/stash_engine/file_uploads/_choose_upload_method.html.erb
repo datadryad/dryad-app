@@ -1,29 +1,43 @@
 <%# locals: resource, upload_method [:files, :manifest] %>
+
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
 
-<p>You may upload data via two mechanisms: directly from your computer,
-or from a URL on an external server (Box, Dropbox, lab server). We do
-not recommend using Google Drive. Please note that for this version of
-your submission you may only use one of these two upload mechanisms.</p>
+<% if @datatype == 'Software' %>
+    <p>
+      Software and code can be uploaded here for publication at <a href="https://zenodo.org/" target="_blank">Zenodo</a>.
+      You will have
+      the opportunity to choose a separate license for your code on the review page. For more information about our
+      Zenodo partnership <%= link_to 'see our FAQ', faq_path %>.
+    </p>
 
-<p>We strongly encourage you to include README files with your dataset to
-provide key information for those wanting to re-use the data.</p>
+<% else %>
+  <p>
+    You may upload data via two mechanisms: directly from your computer, or from a URL on an external server
+    (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive. Please note that for this
+    version of your submission you may only use one of these two upload mechanisms.
+  </p>
 
-<%= render 'stash_engine/file_uploads/file_size_text' %>
+  <p>
+    We require that you include a README file to provide key information for understanding and using your data.
+  </p>
+
+  <%= render 'stash_engine/file_uploads/file_size_text' %>
+<% end %>
+
 <div>
-
   <div class="t-upload__method-section">
-    <div class="t-uploads__method-choice">
-      <input type="radio" name="file_location" value="files" id="files_from_computer" class="t-uploads__method-input"
-             <%= upload_method == :files ? 'checked="checked"': '' %>
-      />
-      <label for="files_from_computer">Drag and drop or choose files from your computer</label>
-    </div>
-    <div class="t-uploads__method-choice">
-      <input type="radio" name="file_location" value="manifest" id="files_from_manifest" class="t-uploads__method-input"
-             <%= upload_method == :manifest ? 'checked="checked"' : '' %>
-      />
-      <label for="files_from_manifest">Enter URLs of file locations</label>
+    <div class="t-uploads__method-choice" id="alternate_up_method">
+      <% if params[:action].include?('code') %>
+        <br/>
+        <%= link_to 'Option 1: Upload directly', up_code_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
+        OR
+        <%= link_to 'Option 2: Upload by URL', up_code_manifest_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
+      <% else %>
+        <br/>
+        <%= link_to 'Option 1: Upload directly', upload_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
+        OR
+        <%= link_to 'Option 2: Upload by URL', upload_manifest_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method o-button__link-dark' %>
+      <% end %>
     </div>
   </div>
 </div>

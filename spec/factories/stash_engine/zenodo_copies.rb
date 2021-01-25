@@ -7,5 +7,6 @@ FactoryBot.define do
     deposition_id { Faker::Number.number(digits: 5) }
     error_info { nil }
     identifier_id { nil }
+    copy_type { 'data' }
   end
 end

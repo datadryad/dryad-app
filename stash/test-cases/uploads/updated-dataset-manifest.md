@@ -3,7 +3,7 @@
 1. log in
 1. select **My Datasets**
 1. select an existing, **published** dataset
-1. select **Upload Files**
+1. select **Upload Data**
    - ✓ check that the old files appear in the **Uploaded Files** table
 1. select **Enter URLs of file locations**
    - ✓ check that the **Validate files** button is disabled

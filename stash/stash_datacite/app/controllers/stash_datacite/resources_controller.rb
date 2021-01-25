@@ -71,6 +71,8 @@ module StashDatacite
 
       resource.reload
 
+      resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+
       # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
       # There is also one for curators and need to return back to different pages/filter setting for each dataset they
       # edit in one of dozens of different windows at the same time, so needs to be specific to each dataset.
@@ -90,6 +92,11 @@ module StashDatacite
     def update_submission_resource_info(resource)
       resource.update(skip_datacite_update: false, skip_emails: false,
                       preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
+
+      # write the software license to the database
+      license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
+      id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
+      resource.identifier.update(software_license_id: id_for_license)
 
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)

@@ -17,9 +17,9 @@
     <%# f.version_file_created_in.version %>
   </td>
   <td>
-    <%= button_to 'Delete', destroy_manifest_file_upload_path(f), method: :patch, remote: true,
+    <%= button_to 'Delete', polymorphic_path(['destroy_manifest', f]), method: :patch, remote: true,
                   class: "c-upload__button", form_class: 'o-button__inline-form', id: "destroy_10_#{f.id}", style: 'display: none' %>
-    <%= button_to 'Delete', destroy_manifest_file_upload_path(f, rows: 99999), method: :patch, remote: true,
+    <%= button_to 'Delete', polymorphic_path(['destroy_manifest', f], rows: 99999), method: :patch, remote: true,
                   class: "c-upload__button", form_class: 'o-button__inline-form', id: "destroy_all_#{f.id}", style: 'display: none' %>
   </td>
   <script>

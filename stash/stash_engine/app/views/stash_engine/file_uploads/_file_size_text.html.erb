@@ -1,4 +1,5 @@
 <p>
-  Size limits: <%= filesize(current_tenant.max_total_version_size) %> of new files may be uploaded from
-  your computer via drag and drop, or <%= filesize(current_tenant.max_submission_size) %> in total via URL.
+  You may upload <%= filesize(current_tenant.max_total_version_size) %> of files directly or up to
+  <%= filesize(current_tenant.max_submission_size) %> of files by a sharing URL for where your data
+  live on a public server.
 </p>

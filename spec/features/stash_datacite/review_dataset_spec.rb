@@ -1,4 +1,6 @@
 require 'rails_helper'
+require 'pry-remote'
+
 RSpec.feature 'ReviewDataset', type: :feature do
 
   include DatasetHelper
@@ -17,8 +19,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
   end
 
   context :requirements_not_met do
-
-    it 'submit button should be disabled', js: true do
+    it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
       submit = find_button('submit_dataset', disabled: :all)
@@ -45,7 +46,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'submits', js: true do
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
-      expect(page).to have_content(StashEngine::Resource.last.title, wait: 10)
+      expect(page).to have_content(StashEngine::Resource.last.title)
       expect(page).to have_content('submitted with DOI')
     end
 
@@ -59,6 +60,67 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content('Enable Private for Peer Review')
     end
 
+  end
+
+  context :software_uploaded do
+    before(:each, js: true) do
+      # Sign in and create a new dataset
+      visit root_path
+      click_link 'My Datasets'
+      start_new_dataset
+      fill_required_fields
+
+      # Sets this up as a page that can see the software/supp info upload page. There is only one identifier created for this test.
+      se_identifier = StashEngine::Identifier.all.first
+      StashEngine::InternalDatum.create(identifier_id: se_identifier.id, data_type: 'publicationISSN', value: '1687-7667')
+      se_identifier.reload
+      navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
+    end
+
+    it 'shows the software/supp info if uploaded', js: true do
+      navigate_to_software_upload
+      page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
+        page.find('#choose-the-files').click
+      end
+      expect(page).to have_content('favicon.ico')
+      check('confirm_to_upload')
+      click_on('upload_all')
+
+      # it shows upload complete
+      expect(page).to have_content('Upload complete')
+
+      click_on('Proceed to Review')
+      expect(page).to have_content('Software Files Hosted by Zenodo')
+      expect(page).to have_content('favicon.ico')
+      # expect(page).to have_content('Select license for files')
+    end
+
+    it "doesn't show the software info if software not uploaded", js: true do
+      navigate_to_software_upload
+
+      click_on('Proceed to Review')
+      expect(page).not_to have_content('Software Files Hosted by Zenodo')
+      expect(page).not_to have_content('favicon.ico')
+      # expect(page).not_to have_content('Select license for files')
+    end
+
+    it 'sets MIT License for software at Zenodo', js: true do
+      navigate_to_software_upload
+      page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
+        page.find('#choose-the-files').click
+      end
+      expect(page).to have_content('favicon.ico')
+      check('confirm_to_upload')
+      click_on('upload_all')
+
+      # it shows upload complete
+      expect(page).to have_content('Upload complete')
+
+      click_on('Proceed to Review')
+      # type hidden -- software_license 'MIT'
+      v = find('#software_license', visible: false).value
+      expect(v).to eq('MIT')
+    end
   end
 
   context :edit_link do

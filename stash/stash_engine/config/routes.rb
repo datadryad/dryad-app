@@ -8,6 +8,8 @@ StashEngine::Engine.routes.draw do
       get 'review'
       get 'upload'
       get 'upload_manifest'
+      get 'up_code'
+      get 'up_code_manifest'
       get 'submission'
       get 'show_files'
     end
@@ -23,7 +25,7 @@ StashEngine::Engine.routes.draw do
   post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
-  resources :file_uploads do
+  resources :file_uploads, :software_uploads do
     member do
       patch 'remove'
       patch 'remove_unuploaded'
@@ -34,7 +36,8 @@ StashEngine::Engine.routes.draw do
   end
 
   resources :edit_histories, only: [:index]
-  match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: %i[get post put]
+  match 'file_upload/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_upload_validate_urls', via: %i[get post put]
+  match 'software_upload/validate_urls/:resource_id', to: 'software_uploads#validate_urls', as: 'software_upload_validate_urls', via: %i[get post put]
 
   resource :file_upload do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
@@ -52,6 +55,7 @@ StashEngine::Engine.routes.draw do
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]
   match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
   get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
+  get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
   get 'share/:id', to: 'downloads#share', as: 'share'
   get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
