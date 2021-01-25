@@ -207,17 +207,17 @@ community.</p>
 <div class="bio">
     <img src="/images/Marwick_Ben.jpg" alt="Ben Marwick" title="Ben Marwick" />
     <p>
-    <strong>Ben Marwick</strong>’s main research activity is using
-    models from evolutionary ecology to analyse past human behaviour
-    in mainland Southeast Asia and Australia. My technical
-    specialisations in stone artefact technology and geoarchaeology
-    provides me with wide scope in time periods and geography. My
-    specific interests include the hominin colonisation of mainland
-    Southeast Asia, forager technologies and ecology in Australia and
-    mainland Southeast Asia, and transitions to agriculture in
-    mainland Southeast Asia. Please see my personal website for
-    interviews, my public and professional writing, and more about my
-    teaching and research: <a href="http://faculty.washington.edu/bmarwick/">http://faculty.washington.edu/bmarwick/</a>
+    <strong>Ben Marwick</strong> is a faculty member in the
+    Anthropology Department at the University of Washington. He is an
+    archaeologist that works on hominin dispersals into mainland
+    Southeast Asia, forager technologies and ecology in Australia,
+    mainland Southeast Asia and elsewhere. He is interested in
+    applications of data science, especially techniques, methods, and
+    tools for reproducible research and open science in archaeology
+    and the sciences broadly. See
+	<a href="http://faculty.washington.edu/bmarwick/">http://faculty.washington.edu/bmarwick/</a>
+	for interviews, his public and professional writing, and more
+    about Ben's teaching and research.
     </p>
 </div>
 
