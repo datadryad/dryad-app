@@ -5,7 +5,7 @@
 	flex-flow: row wrap;
 	align-items: flex-start;
 	justify-content: space-between;
-	margin: 0 0 10px;
+	margin: 0 0 20px;
 }
 
 .c-review-files__list {
@@ -21,4 +21,24 @@
 
 .c-review-files-button {
 	margin: 0 0 10px;
+}
+
+.c-review-dryad {
+	display: block;
+	height: 40px;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.c-review-zenodo {
+	display: block;
+	height: 60px;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.c-files-zenodo {
+	display: block;
+	width: 10em;
+	float: right;
 }

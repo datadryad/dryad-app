@@ -4,7 +4,7 @@
 1. select **My Datasets**
 1. select **Start New Dataset**
 1. enter minimal necessary metadata for submission (title, creator, etc.)
-1. select **Upload Files**
+1. select **Upload Data**
 1. make sure **Drag and drop or choose files from your computer** is selected
 1. click **Choose files**
    - choose one or more files

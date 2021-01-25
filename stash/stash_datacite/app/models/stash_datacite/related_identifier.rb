@@ -129,6 +129,22 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
+    def self.add_zenodo_relation(resource_id:, doi:)
+      doi = standardize_doi(doi)
+      existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
+        .where(related_identifier: doi).last
+      if existing_item.nil?
+        create(related_identifier: doi,
+               related_identifier_type: 'doi',
+               relation_type: 'isderivedfrom',
+               work_type: 'software',
+               verified: true,
+               resource_id: resource_id)
+      else
+        existing_item.update(related_identifier: doi, relation_type: 'isderivedfrom', work_type: 'software', verified: true)
+      end
+    end
+
     def valid_doi_format?
       RelatedIdentifier.valid_doi_format?(related_identifier)
     end

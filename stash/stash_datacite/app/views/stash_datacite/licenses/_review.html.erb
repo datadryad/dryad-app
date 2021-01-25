@@ -1,9 +1,8 @@
-
 <div>
-  <h3>License and Terms of Service</h3>
+  <h3>License and Terms of Service for Data</h3>
   <p>
     <span><%= check_box_tag 'agree_to_license', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-    <label for="agree_to_license">By checking this box, I agree to the license
+    <label for="agree_to_license" class="required">By checking this box, I agree to the license
       <% if @resource.rights.blank? %>
         <%= render partial: 'stash_datacite/licenses/license_review', locals:
             {license: StashEngine::License.by_id(@resource.identifier.license_id), right: nil } %>
@@ -17,7 +16,7 @@
   </p>
   <p>
     <span><%= check_box_tag 'agree_to_tos', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-    <label for="agree_to_tos">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
+    <label for="agree_to_tos" class="required">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
   </p>
 
   <% if current_tenant.data_deposit_agreement? %>
@@ -31,39 +30,43 @@
   <% end %>
 </div>
 
+<% if @review.software_uploads.count > 0 %>
+	<%= render partial: 'stash_datacite/licenses/software_license' %>
+<% end %>
+
 <div>
-    <h3>Payment</h3>
-    <% submitter_affiliation = @resource.identifier.submitter_affiliation %>
-    <% if @resource.identifier.journal&.will_pay? %>
-	<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.journal.title %></b>.</p>
-    <% elsif @resource.identifier.institution_will_pay? %>
-	<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
-    <% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
-	<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
-		<% elsif @resource.identifier.funder_will_pay? %>
+	<h3>Payment</h3>
+	<% submitter_affiliation = @resource.identifier.submitter_affiliation %>
+	<% if @resource.identifier.journal&.will_pay? %>
+		<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.journal.title %></b>.</p>
+	<% elsif @resource.identifier.institution_will_pay? %>
+		<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
+	<% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
+		<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
+	<% elsif @resource.identifier.funder_will_pay? %>
 		<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.funder_payment_info.contributor_name %></b></p>
-    <% elsif @resource.identifier.user_must_pay? %>
-	<p>
-	    Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
-	    publication of your dataset, you will receive an invoice for
-	    &dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %>. If you have any questions,
-	    please <a href="mailto:help@datadryad.org">contact us</a>.
-	</p>
-	
-	<% if @resource.identifier.large_files? %>
-	    <p>
-		This submisison contains large files. 
-		For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size) %>,
-		submitters will be charged $50 for each additional 10GB,
-		or part thereof. (Submissions between 50 and 60GB = $50, between 60 and 70GB = $100, and so on).
-	    </p>
+	<% elsif @resource.identifier.user_must_pay? %>
+		<p>
+			Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
+			publication of your dataset, you will receive an invoice for
+			&dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %>. If you have any questions,
+			please <a href="mailto:help@datadryad.org">contact us</a>.
+		</p>
+
+		<% if @resource.identifier.large_files? %>
+			<p>
+				This submisison contains large files.
+				For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size) %>,
+				submitters will be charged $50 for each additional 10GB,
+				or part thereof. (Submissions between 50 and 60GB = $50, between 60 and 70GB = $100, and so on).
+			</p>
+		<% end %>
+
+		<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
+		<label for="agree_to_payment">I agree to Dryad's payment terms</label>
+	<% else %>
+		<p>This submission does not require a payment.</p>
 	<% end %>
-	
-	<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-	<label for="agree_to_payment">I agree to Dryad's payment terms</label>
-    <% else %>
-	<p>This submisison does not require a payment.</p>
-    <% end %>
 </div>
 
 <br>
@@ -82,11 +85,20 @@ $(document).ready(function(){
 
     if (allChecked) {
         $('.js-submission').attr('disabled', false); //enable input
-
     } else {
         $('.js-submission').attr('disabled', true); //disable input
     }
   });
+
+	$('#zenodo_license').selectize({
+		sortField: 'text'
+	});
+
+	// write this into the form that gets sent on submission of dataset
+	$('#zenodo_license').change(function (){
+		var selected = $(this).children("option:selected").val();
+		$("#software_license").val(selected);
+	});
 });
 </script>
 
@@ -95,4 +107,3 @@ $(document).ready(function(){
     $('#agree_to_license, #agree_to_tos, #agree_to_dda').prop('disabled', true);
   </script>
 <% end %>
-

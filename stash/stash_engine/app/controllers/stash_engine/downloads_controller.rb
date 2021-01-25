@@ -109,6 +109,26 @@ module StashEngine
       end
     end
 
+    # Downloads a zenodo file, by Resource Access Tokens presigned, maybe will need to do both RATs and public download.
+    # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
+    # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
+    def zenodo_file
+      sfw_upload = SoftwareUpload.where(id: params[:file_id]).first
+      res = sfw_upload&.resource
+      share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
+
+      # can see if they had permission or the Share matches the identifier
+      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id)
+        if res.software_published?
+          redirect_to sfw_upload.public_zenodo_download_url
+        else
+          redirect_to sfw_upload.zenodo_presigned_url
+        end
+      else
+        render status: 403, plain: 'You are not authorized to download this file'
+      end
+    end
+
     private
 
     def non_ajax_response_for_download
