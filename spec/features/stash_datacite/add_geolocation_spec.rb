@@ -30,7 +30,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
         click_button 'add_geo_point'
         # wait_for_ajax(15)
 
-        expect(page.find('div .c-locations')).to have_content(/#{@n_lat},\s+#{@e_lng}/, wait: 15)
+        expect(page.find('div .c-locations')).to have_content(/#{@n_lat},\s+#{@e_lng}/)
 
         new_point = StashDatacite::GeolocationPoint.from_resource_id(@resource_id).first
         expect(new_point).not_to be_nil
@@ -52,7 +52,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
         # wait_for_ajax(15)
 
         locations = page.find('div .c-locations')
-        expect(locations).to have_content(/SW\s+#{@s_lat},\s+#{@w_lng}/, wait: 15)
+        expect(locations).to have_content(/SW\s+#{@s_lat},\s+#{@w_lng}/)
         expect(locations).to have_content(/NE\s+#{@n_lat},\s+#{@e_lng}/)
 
         new_box = StashDatacite::GeolocationBox.from_resource_id(@resource_id).first
@@ -78,7 +78,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
         if APP_CONFIG.google_maps_api_key.blank? # hard to test this without exposing API key in public repo
           expect(true).to eq(true)
         else
-          expect(find('div.geolocation_places').has_content?('Oakland, CA, USA', wait: 15)).to eq(true)
+          expect(find('div.geolocation_places').has_content?('Oakland, CA, USA')).to eq(true)
         end
       end
 

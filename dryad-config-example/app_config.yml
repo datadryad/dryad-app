@@ -30,6 +30,8 @@ defaults: &DEFAULTS
   zenodo:
     access_token: "ThisIsAFakeToken"
     base_url: https://sandbox.zenodo.org
+    community_id: dryad-test
+    application_id: 1234
   payments:
     service: stripe
     key: replace-me

@@ -17,6 +17,7 @@ module Stash
     GOOGLE_SHEET = %r{^https://docs\.google\.com/spreadsheets/d/(\S+)/edit(?:\?usp=sharing)?$}.freeze
     DROPBOX = %r{^https://www\.dropbox\.com/s/(\S+)/([^/]+)(?:\?dl=[0-9]+)$}.freeze
     BOX = %r{^https://([^/]+box\.com)/s/(\S+)$}.freeze
+    GITHUB = %r{^https?://github.com/([^/]+/[^/]+)/blob(/[^/]+/[^/]+)$}.freeze
 
     attr_reader :service, :direct_download, :original_url
 
@@ -25,7 +26,7 @@ module Stash
       @original_url = (u.fragment ? original_url[0..-(u.fragment.length + 2)] : original_url)
       @service = nil
 
-      %w[google_drive google_doc google_presentation google_sheet dropbox box].each do |m|
+      %w[google_drive google_doc google_presentation google_sheet dropbox box github].each do |m|
         next unless (@direct_download = send(m))
 
         @service = m
@@ -74,6 +75,12 @@ module Stash
       return nil unless (m = BOX.match(@original_url))
 
       "https://#{m[1]}/public/static/#{m[2]}"
+    end
+
+    def github
+      return nil unless (m = GITHUB.match(@original_url))
+
+      "https://raw.githubusercontent.com/#{m[1]}#{m[2]}"
     end
 
   end

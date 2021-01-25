@@ -11,7 +11,7 @@ module StashEngine
     before(:each) do
       @resource = create(:resource)
       @new_zen = double('newZenodo')
-      allow(Stash::ZenodoReplicate::Resource).to receive(:new).and_return(@new_zen)
+      allow(Stash::ZenodoReplicate::Copier).to receive(:new).and_return(@new_zen)
     end
 
     describe '#perform' do
@@ -44,12 +44,16 @@ module StashEngine
     end
 
     describe 'self.should_defer?(resource:)' do
+      before(:each) do
+        FileUtils.rm(ZenodoCopyJob::DEFERRED_TOUCH_FILE) if File.exist?(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
+      end
+
       it 'returns true and sets deferred if defer file exists' do
         FileUtils.touch(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
         create(:zenodo_copy, state: 'enqueued', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         expect(ZenodoCopyJob.should_defer?(resource: @resource)).to eq(true)
         @resource.reload
-        expect(@resource.zenodo_copy.state).to eq('deferred')
+        expect(@resource.zenodo_copies.data.first.state).to eq('deferred')
         FileUtils.rm(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
       end
 
@@ -57,7 +61,7 @@ module StashEngine
         create(:zenodo_copy, state: 'enqueued', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         expect(ZenodoCopyJob.should_defer?(resource: @resource)).to eq(false)
         @resource.reload
-        expect(@resource.zenodo_copy.state).to eq('enqueued')
+        expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
       end
     end
 
@@ -68,7 +72,7 @@ module StashEngine
         create(:zenodo_copy, state: 'deferred', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         ZenodoCopyJob.enqueue_deferred
         @resource.reload
-        expect(@resource.zenodo_copy.state).to eq('enqueued')
+        expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
         expect(enqueued_jobs).to eq([{ job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy' }])
       end
 
