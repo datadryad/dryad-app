@@ -24,7 +24,7 @@
           </details>
         </div>
       </div>
-    <% elsif current_user && current_user.role == 'admin' %>
+    <% elsif current_user && (current_user.role == 'admin' || current_user.role == 'tenant_curator')%>
       <%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'c-header__nav-item' %>
     <% end %>
     <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
