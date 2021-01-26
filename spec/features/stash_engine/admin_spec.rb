@@ -7,11 +7,7 @@ RSpec.feature 'Admin', type: :feature do
   include Mocks::Stripe
   include Mocks::Tenant
 
-  before(:each) do
-    @admin = create(:user, role: 'admin', tenant_id: 'ucop')
-  end
-
-  context :user_dashboard do
+  context :administrative_user do
 
     before(:each) do
       mock_solr!
@@ -20,9 +16,10 @@ RSpec.feature 'Admin', type: :feature do
       mock_datacite_and_idgen!
       mock_tenant!
       neuter_curation_callbacks!
+      @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier)
+      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
       sign_in(@admin)
     end
 
@@ -49,7 +46,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_text('1 (Submitted)')
     end
 
-    xit 'allows editing a dataset', js: true do
+    it 'allows editing a dataset', js: true do
       visit stash_url_helpers.admin_user_dashboard_path(@user)
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
@@ -148,6 +145,40 @@ RSpec.feature 'Admin', type: :feature do
       end
 
     end
-  end
 
+    context :tenant_curator do
+
+      before(:each) do
+        @tenant_curator = create(:user, role: 'tenant_curator', tenant_id: 'mock_tenant')
+        sign_in(@tenant_curator, false)
+      end
+
+      it 'has admin link' do
+        visit root_path
+        expect(page).to have_link('Admin')
+      end
+    end
+
+    it 'allows editing a dataset', js: true do
+      visit stash_url_helpers.admin_user_dashboard_path(@user)
+      expect(page).to have_css('button[title="Edit Dataset"]')
+      find('button[title="Edit Dataset"]').click
+      expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+      click_link 'Review and Submit'
+      expect(page).to have_css('input#user_comment')
+    end
+
+    it 'allows adding notes to the curation activity log', js: true do
+      visit root_path
+      click_link('Admin')
+      expect(page).to have_text('Admin Dashboard')
+
+      expect(page).to have_css('button[title="View Activity Log"]')
+      find('button[title="View Activity Log"]').click
+
+      expect(page).to have_text('Activity Log for')
+      expect(page).to have_text('Add Note')
+    end
+
+  end
 end
