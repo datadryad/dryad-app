@@ -51,7 +51,7 @@
     <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
                                id: dataset.identifier_id, only_path: true),
                   method: :get, local: true) do -%>
-      <button class="c-admin-edit-icon" aria-label="View Activity Log" alt="View Activity Log">
+      <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log" alt="View Activity Log">
         <i class="fa fa-clock-o" aria-hidden="true"></i>
       </button>
     <% end %>
