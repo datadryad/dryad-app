@@ -62,4 +62,4 @@ jobs:
       run: bin/rails assets:precompile
 
     - name: 'Run RSpec Feature Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --tag ~skip spec/features/
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/

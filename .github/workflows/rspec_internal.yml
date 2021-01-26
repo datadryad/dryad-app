@@ -59,10 +59,10 @@ jobs:
         bin/rails db:setup RAILS_ENV=test
 
     - name: 'RSpec Controller Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --tag ~skip spec/controllers
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/controllers
 
     - name: 'RSpec Job Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --tag ~skip spec/jobs
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/jobs
 
     - name: 'RSpec Model Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/models
@@ -74,4 +74,4 @@ jobs:
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/tasks
 
     - name: 'RSpec Stash-Notifier Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --tag ~skip stash/stash-notifier/spec/
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip stash/stash-notifier/spec/
