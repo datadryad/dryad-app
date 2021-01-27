@@ -40,13 +40,13 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'kaminari', '~> 1.2'
   s.add_dependency 'leaflet-rails', '~> 1.3'
   s.add_dependency 'loofah', '~> 2.7'
-  s.add_dependency 'mysql2'
+  s.add_dependency 'mysql2', '~> 0.4'
   s.add_dependency 'rails', '~> 5.2'
   s.add_dependency 'responders', '~> 3.0', '>= 3.0.1'
   s.add_dependency 'rubyzip', '~> 2.3'
   s.add_dependency 'serrano', '~> 0.6' # for CrossRef API
-  s.add_dependency 'sync'
-  s.add_dependency 'tins'
+  s.add_dependency 'sync', '~> 0.5'
+  s.add_dependency 'tins', '~> 1.25'
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # TODO: do these need versions?
