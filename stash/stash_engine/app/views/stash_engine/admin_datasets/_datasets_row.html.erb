@@ -26,7 +26,7 @@
     <% end %>
   </td>
   <td class="c-admin-hide-border-left">
-    <% if current_user.superuser? && dataset.resource_state == 'submitted' %>
+    <% if (dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted') %>
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
                      action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
                    method: :get, remote: true) do -%>
