@@ -63,7 +63,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_development_dependency 'database_cleaner', '>= 1.5'
   s.add_development_dependency 'diffy', '>= 3.1'
-  s.add_development_dependency 'equivalent-xml', '>= 0.6.0'
+  s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
   s.add_development_dependency 'mysql2', '~> 0.4'
   s.add_development_dependency 'webmock', '>= 3.0'
 
