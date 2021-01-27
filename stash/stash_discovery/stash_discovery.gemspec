@@ -50,7 +50,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   # extra deps from generated GeoBlacklight app
   s.add_dependency 'devise-guests', '>= 0.5'
 
-  s.add_development_dependency 'nokogiri', '>= 1.8'
+  s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rspec', '>= 3.2'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
   s.add_development_dependency 'simplecov', '>= 0.14'
