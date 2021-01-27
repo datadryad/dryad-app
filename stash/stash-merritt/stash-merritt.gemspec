@@ -54,17 +54,17 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_development_dependency 'bundler', '~> 2.1.4'
   s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rake', '>= 12.0'
-  s.add_development_dependency 'rspec', '>= 3.2'
+  s.add_development_dependency 'rake', '~> 12.0'
+  s.add_development_dependency 'rspec', '~> 3.2'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_development_dependency 'simplecov', '>= 0.14'
-  s.add_development_dependency 'simplecov-console', '>= 0.4'
-  s.add_development_dependency 'yard', '>= 0.9'
+  s.add_development_dependency 'simplecov', '~> 0.14'
+  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  s.add_development_dependency 'yard', '~> 0.9'
 
-  s.add_development_dependency 'database_cleaner', '>= 1.5'
+  s.add_development_dependency 'database_cleaner', '~> 1.5'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
   s.add_development_dependency 'mysql2', '~> 0.4'
-  s.add_development_dependency 'webmock', '>= 3.0'
+  s.add_development_dependency 'webmock', '~> 3.0'
 
 end
