@@ -42,7 +42,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'loofah'
   s.add_dependency 'mysql2'
   s.add_dependency 'rails', '~> 5.2'
-  s.add_dependency 'responders', '~> 2.4', '>= 2.4.1'
+  s.add_dependency 'responders', '~> 3.0', '>= 3.0.1'
   s.add_dependency 'rubyzip', '~> 1.0.0'
   s.add_dependency 'serrano', '~> 0.5.0' # for CrossRef API
   s.add_dependency 'sync'
