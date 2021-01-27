@@ -36,15 +36,15 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  s.add_dependency 'amatch', '~> 0.4.0' # Matching Resource titles against Crossref results
+  s.add_dependency 'amatch', '>= 0.4.0' # Matching Resource titles against Crossref results
   s.add_dependency 'kaminari'
   s.add_dependency 'leaflet-rails'
   s.add_dependency 'loofah'
   s.add_dependency 'mysql2'
   s.add_dependency 'rails', '~> 5.2'
-  s.add_dependency 'responders', '~> 2.4.1'
-  s.add_dependency 'rubyzip', '~> 1.0.0'
-  s.add_dependency 'serrano', '~> 0.5.0' # for CrossRef API
+  s.add_dependency 'responders', '>= 2.4.1'
+  s.add_dependency 'rubyzip', '>= 1.0.0'
+  s.add_dependency 'serrano', '>= 0.5.0' # for CrossRef API
   s.add_dependency 'sync'
   s.add_dependency 'tins'
 
@@ -54,16 +54,16 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash_engine'
   s.add_dependency 'stash-wrapper'
 
-  s.add_development_dependency 'colorize', '~> 0.8'
-  s.add_development_dependency 'database_cleaner', '~> 1.5'
+  s.add_development_dependency 'colorize', '>= 0.8'
+  s.add_development_dependency 'database_cleaner', '>= 1.5'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
   s.add_development_dependency 'mysql2', '~> 0.4'
   s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rspec', '~> 3.5'
-  s.add_development_dependency 'rspec-rails', '~> 3.5'
+  s.add_development_dependency 'rspec', '>= 3.5'
+  s.add_development_dependency 'rspec-rails', '>= 3.5'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
-  s.add_development_dependency 'webmock', '~> 3.0'
+  s.add_development_dependency 'simplecov', '>= 0.14'
+  s.add_development_dependency 'simplecov-console', '>= 0.4'
+  s.add_development_dependency 'webmock', '>= 3.0'
 end
