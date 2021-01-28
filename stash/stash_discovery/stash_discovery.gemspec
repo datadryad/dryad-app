@@ -37,12 +37,12 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'blacklight', '~> 6.5'
-  s.add_dependency 'config'
-  s.add_dependency 'ffi'
+  s.add_dependency 'config', '~> 2.2', '>= 2.2.1'
+  s.add_dependency 'ffi', '~> 1.13', '>= 1.13.1'
   s.add_dependency 'geoblacklight', '~> 1.1', '>= 1.1.2'
   s.add_dependency 'jquery-rails', '~> 4.1'
   s.add_dependency 'rails', '~> 5.2'
-  s.add_dependency 'rsolr'
+  s.add_dependency 'rsolr', '~> 2.3'
   s.add_dependency 'sass-rails', '~> 5.0'
   s.add_dependency 'solr_wrapper'
   s.add_dependency 'turbolinks'

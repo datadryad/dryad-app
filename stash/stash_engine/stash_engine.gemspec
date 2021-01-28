@@ -68,7 +68,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'redcarpet', '>= 3.3'
   s.add_dependency 'rest-client'
   s.add_dependency 'rinku'
-  s.add_dependency 'rsolr'
+  s.add_dependency 'rsolr', '~> 2.3'
   s.add_dependency 'stripe', '~> 4.16.0'
   s.add_dependency 'zaru', '~> 0.3'
 
