@@ -42,12 +42,12 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'carrierwave', '~> 0.10.0'
   s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '~> 1.0'
-  s.add_dependency 'daemons'
-  s.add_dependency 'database_cleaner' # for one migration task, but need to keep capistrano from barfing can remove after migration
+  s.add_dependency 'daemons', '~> 1.3', '>= 1.3.1'
+  s.add_dependency 'database_cleaner', '~> 1.8', '>= 1.8.5' # for one migration task, but need to keep capistrano from barfing can remove after migration
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
-  s.add_dependency 'delayed_job_active_record'
+  s.add_dependency 'delayed_job_active_record', '~> 4.1', '>= 4.1.4'
   s.add_dependency 'ezid-client', '~> 1.5'
-  s.add_dependency 'filesize'
+  s.add_dependency 'filesize', '~> 0.2'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'http'
   s.add_dependency 'httparty'
@@ -73,7 +73,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'zaru', '~> 0.3'
 
   s.add_development_dependency 'colorize', '>= 0.8'
-  s.add_development_dependency 'database_cleaner', '>= 1.5'
+  s.add_development_dependency 'database_cleaner', '~> 1.8', '>= 1.8.5'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
   s.add_development_dependency 'mysql2', '~> 0.4'
