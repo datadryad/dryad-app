@@ -562,6 +562,7 @@ module StashEngine
 
       user.superuser? ||
         user_id == user.id ||
+        (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
         user.journals_as_admin.include?(identifier&.journal) ||
         (user.journals_as_admin.present? && identifier&.journal.blank?)
