@@ -45,14 +45,14 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'doorkeeper', '>= 4.4.2'
-  s.add_dependency 'mysql2'
+  s.add_dependency 'doorkeeper', '~> 4.4', '>= 4.4.2'
+  s.add_dependency 'mysql2', '~> 0.4'
   s.add_dependency 'rails', '~> 5.2'
 
-  s.add_development_dependency 'colorize', '>= 0.8'
-  s.add_development_dependency 'database_cleaner', '>= 1.5'
-  s.add_development_dependency 'diffy', '>= 3.1'
+  s.add_development_dependency 'colorize', '~> 0.8'
+  s.add_development_dependency 'database_cleaner', '~> 1.8', '>= 1.8.5'
+  s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_dependency 'stash_datacite'
-  s.add_dependency 'stash_engine'
+  s.add_dependency 'stash_datacite', '~> 0.0'
+  s.add_dependency 'stash_engine', '~> 0.0'
 end
