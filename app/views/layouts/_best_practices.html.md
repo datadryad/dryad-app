@@ -1,4 +1,4 @@
-<h1>FAIR Data</h1>
+<h1>Good Data Practices</h1>
 
 <h2>Best practices for creating reusable data publications</h2>
 
