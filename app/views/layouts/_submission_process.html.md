@@ -82,7 +82,7 @@
 </ul>
 
 <p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href=mailto:help@datadryad.org>help@datadryad.org</a></p>
-<p>Upon curator approval, the Dryad DOI is published and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge</a> is invoiced.</p>
+<p>Upon curator approval, the Dryad DOI is published and, if applicable, the Data Publishing Charge is invoiced.</p>
 
 
 <p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network</a> (of which Dryad is a partner), <i>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</i></p>
