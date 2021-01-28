@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '~> 5.2'
 
   s.add_development_dependency 'colorize', '~> 0.8'
-  s.add_development_dependency 'database_cleaner', '~> 1.5'
+  s.add_development_dependency 'database_cleaner', '~> 1.8', '>= 1.8.5'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
   s.add_dependency 'stash_datacite', '~> 0.0'
