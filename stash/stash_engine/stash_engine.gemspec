@@ -52,11 +52,11 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'http', '~> 4.4', '>= 4.4.1'
   s.add_dependency 'httparty', '~> 0.18', '>= 0.18.1'
   s.add_dependency 'httpclient', '~> 2.8', '>= 2.8.3'
-  s.add_dependency 'jquery-fileupload-rails'
-  s.add_dependency 'jquery-rails'
-  s.add_dependency 'jquery-turbolinks'
-  s.add_dependency 'jquery-ui-rails'
-  s.add_dependency 'jwt' # for RATs for Zenodo https://github.com/jwt/ruby-jwt
+  s.add_dependency 'jquery-fileupload-rails', '~> 1.0'
+  s.add_dependency 'jquery-rails', '~> 4.4'
+  s.add_dependency 'jquery-turbolinks', '~> 2.1'
+  s.add_dependency 'jquery-ui-rails', '~> 6.0', '>= 6.0.1'
+  s.add_dependency 'jwt', '~> 2.2', '>= 2.2.2' # for RATs for Zenodo https://github.com/jwt/ruby-jwt
   s.add_dependency 'kaminari', '~> 1.2'
   s.add_dependency 'noid', '~> 0.9'
   s.add_dependency 'omniauth', '~> 1.8', '>= 1.8.1'
