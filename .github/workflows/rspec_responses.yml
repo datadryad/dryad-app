@@ -59,4 +59,4 @@ jobs:
         bin/rails db:setup RAILS_ENV=test
 
     - name: 'Run RSpec Response Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --tag ~skip spec/responses
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/responses
