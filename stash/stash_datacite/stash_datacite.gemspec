@@ -49,10 +49,9 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'tins', '~> 1.25'
 
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
-  # TODO: do these need versions?
-  s.add_dependency 'stash_discovery'
-  s.add_dependency 'stash_engine'
-  s.add_dependency 'stash-wrapper'
+  s.add_dependency 'stash_discovery', '~> 0.0'
+  s.add_dependency 'stash_engine', '~> 0.0'
+  s.add_dependency 'stash-wrapper', '~> 0.0'
 
   s.add_development_dependency 'colorize', '~> 0.8'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
