@@ -37,16 +37,16 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.require_paths = ['lib']
   s.test_files = Dir['spec/**/*']
 
-  s.add_dependency 'amoeba', '>= 3.0.0'
-  s.add_dependency 'bolognese', '>= 0.15.9'
+  s.add_dependency 'amoeba', '~> 3.0.0'
+  s.add_dependency 'bolognese', '~> 0.15', '>= 0.15.9'
   s.add_dependency 'carrierwave', '~> 0.10.0'
   s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
-  s.add_dependency 'concurrent-ruby', '>= 1.0'
+  s.add_dependency 'concurrent-ruby', '~> 1.0'
   s.add_dependency 'daemons'
   s.add_dependency 'database_cleaner' # for one migration task, but need to keep capistrano from barfing can remove after migration
   s.add_dependency 'datacite-mapping', '~> 0.4.0'
   s.add_dependency 'delayed_job_active_record'
-  s.add_dependency 'ezid-client', '>= 1.5'
+  s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'filesize'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'http'
@@ -58,8 +58,8 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'jwt' # for RATs for Zenodo https://github.com/jwt/ruby-jwt
   s.add_dependency 'kaminari', '~> 1.2'
-  s.add_dependency 'noid', '>= 0.9.0'
-  s.add_dependency 'omniauth', '>= 1.8.1'
+  s.add_dependency 'noid', '~> 0.9'
+  s.add_dependency 'omniauth', '~> 1.8', '>= 1.8.1'
   s.add_dependency 'omniauth-orcid', '>= 2.1.1'
   s.add_dependency 'omniauth-rails_csrf_protection'
   s.add_dependency 'omniauth-shibboleth', '>= 1.2.1'
