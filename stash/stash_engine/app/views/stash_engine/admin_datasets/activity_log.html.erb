@@ -3,7 +3,7 @@
 
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
-  <% if current_user.superuser? %>
+  <% if %w[admin superuser tenant_curator].include?(current_user.role) %>
     <div style="float: right;">
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
                     method: :get, remote: true) do -%>
@@ -41,7 +41,7 @@
 
 <div id="internal_data">
   <div style="float: left"><h2>Internal Data</h2></div>
-  <% if current_user.superuser? %>
+  <% if %w[admin superuser tenant_curator].include?(current_user.role) %>
     <div style="float: right">
       <br/>
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,

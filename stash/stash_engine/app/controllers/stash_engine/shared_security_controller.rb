@@ -28,13 +28,6 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
-    def require_curator
-      return if current_user && %w[superuser].include?(current_user.role)
-
-      flash[:alert] = 'You must be a curator to view this information.'
-      redirect_to stash_engine.dashboard_path
-    end
-
     def require_superuser
       return if current_user && %w[superuser].include?(current_user.role)
 
@@ -42,12 +35,20 @@ module StashEngine
       redirect_to stash_engine.dashboard_path
     end
 
+    def require_curator
+      return if current_user && %w[superuser tenant_curator].include?(current_user.role)
+
+      flash[:alert] = 'You must be a curator to view this information.'
+      redirect_to stash_engine.dashboard_path
+    end
+
     def ajax_require_curator
-      return false unless current_user && %w[superuser].include?(current_user.role)
+      return false unless current_user && %w[superuser tenant_curator].include?(current_user.role)
     end
 
     def require_admin
-      return if current_user && (%w[admin superuser].include?(current_user.role) || current_user.journals_as_admin.present?)
+      return if current_user && (%w[admin superuser tenant_curator].include?(current_user.role) ||
+                                 current_user.journals_as_admin.present?)
 
       flash[:alert] = 'You must be an administrator to view this information.'
       redirect_to stash_engine.dashboard_path

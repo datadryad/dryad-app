@@ -26,7 +26,9 @@
     <% end %>
   </td>
   <td class="c-admin-hide-border-left">
-    <% if current_user.superuser? && dataset.resource_state == 'submitted' %>
+      <% if (%w[superuser tenant_curator].include?(current_user.role) &&
+	     dataset.resource&.permission_to_edit?(user: current_user) &&
+	     dataset.resource_state == 'submitted') %>
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
                      action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
                    method: :get, remote: true) do -%>
@@ -51,7 +53,7 @@
     <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
                                id: dataset.identifier_id, only_path: true),
                   method: :get, local: true) do -%>
-      <button class="c-admin-edit-icon" aria-label="View Activity Log" alt="View Activity Log">
+      <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log" alt="View Activity Log">
         <i class="fa fa-clock-o" aria-hidden="true"></i>
       </button>
     <% end %>
