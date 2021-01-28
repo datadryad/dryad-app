@@ -97,6 +97,8 @@ class StateSpec
         File.delete(pid_file) if File.exist?(pid_file)
         State.create_pid
         expect(File.exist?(pid_file)).to be_truthy
+        State.remove_pid
+        expect(File.exist?(pid_file)).to be_falsey
       end
     end
 
