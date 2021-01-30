@@ -1,3 +1,6 @@
+Below are some answers to Frequently Asked Questions
+
+
 <h2 id="accept">What types of data does Dryad accept?</h2>
 <p>Dryad accepts all research data. However, this service is intended for complete, re-usable, open research datasets.</p>
 <p>Most types of files can be submitted (e.g., text, spreadsheets, video, photographs, code) including compressed archives of multiple files. View additional guidance on preservation-friendly file types.</p>
@@ -7,31 +10,92 @@
 <li>While Dryad can host software scripts and snapshots of software source code, we recommend the use of a public software repository with version control for the ongoing maintenance of software packages.</li>
 </ul>
 
+
 <h2 id="size">What are the size limits?</h2>
 <p>There is a limit of 300GB per data publication uploaded through the web interface. We can accept larger submissions, but the submitter needs to <a href="mailto:help@datadryad.org">contact us</a> for assistance.</p>
-<h2 id="how-much-does-it-cost-">How much does it cost?</h2>
-<p>Dryad supports our <a href="<%= stash_url_helpers.our_mission_path %>">nonprofit mission</a> by collecting a Data Publishing Charge (DPC) of $120US upon data publication, unless there is a sponsor or fee waiver in place. Additional charges may apply to submissions in excess of 50GB. See <a href="<%= stash_url_helpers.publishing_charges_path %>">fee details</a>.</p>
-<p>There is no cost to access Dryad&#39;s contents.</p>
-<h2 id="does-the-data-have-to-be-associated-with-a-publication-">Does the data have to be associated with a publication?</h2>
-<p>No. We encourage and accept quality research data to be published and preserved, regardless of whether they are associated with a journal article, book chapter, or other publication.</p>
-<h2 id="how-should-i-prepare-my-data-before-submitting-">How should I prepare my data before submitting?</h2>
-<p>First, be sure that your data is appropriate for sharing openly in the public domain. Check for any issues related to human subjects privacy, endangered species, or copyright/ownership.</p>
-<p>Providing well-documented data in a community-accepted format encourages others to reuse and cite your work. Please consider factors such as file format, naming scheme and organization, as laid out in our <a href="<%= stash_url_helpers.best_practices_path %>">best practices for creating reusable data publications</a>.</p>
+
+<h2 id="cost">How much does it cost?</h2>
+<p>Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from members and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.</p>
+<p>Waivers are granted for submissions originating from researchers based in countries classified by the World Bank as low-income or lower-middle-income economies.</p>
+<p>The base DPC per data submission is $120 USD. DPCs are invoiced upon curator approval/publication, unless the submitter is based at a <a href="/stash/our_community#institutional">member institution</a> (determined by login credentials), an associated journal or publisher has an agreement with Dryad to sponsor the DPC (see list) or the submitter is based in a fee-waiver country (see above).</p>
+<p><u>Overage fees</u><p>
+<p>For submissions without a sponsor or waiver, Dryad charges excess storage fees for data totaling over 50GB. For data packages in excess of 50GB, submitters will be charged $50 for each additional 10GB, or part thereof. (Submissions between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on).</p>
+
+<h2 id="files">How should I prepare my data files before submitting?</h2>
+<p> Assemble all data files together and create a README as a text file that describes your data files, especially including how to work with files that are not a standard file format. Where possible data should be shared in an open file format, so proprietary software is not required to view or use the files.</p>
+<p>We require:
+<ul>
+<li>All files should be able to be opened without any passcode restrictions.</li>
+<li>All information needs to be in English.</li>
+<li>No Personal Health Information or sensitive data can be included. See tips for <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">Human Subjects data</a></li>
+<li>Files must not contain any copyright restrictions.</li>
+<li>A <a href="https://data.research.cornell.edu/content/readme">README file</a> that describes your data must be included.</li>
+</ul>
+</p>
+<p>We recommend the general use of good data practices, including descriptive names for columns and rows or file names and a logical file organization. See our recommendations for <a href="/stash/best_practices">good data practices</a>.</p>
+
+<h2 id="metadata">What should I include in my metadata?</h2>
+<p>Good metadata helps make a dataset more discoverable and reusable. The metadata should describe the data itself, rather than the study conclusions. For instance information should differ from that of an associated manuscript. A thorough description of the data file, the context in which the data were collected, the measurements that were made and the quality of the data are all important. Also see our FAQ on preparing your data.</p>
+
+<p>We require:
+<ul>
+<li>Journal: If associated with a manuscript, journal name and manuscript number is included.
+<li>Title: Title should be descriptive of the dataset and relatively unique, i.e. not ‘Data files for study 12’.</li>
+<li>Author(s): Name, email address, institutional affiliation of main researcher(s) involved in producing the data.</li>
+<ul>
+<li>Affiliations are drawn from the <a href="http://ror.org">Research Organization Registry (ROR)</a></li>
+<li>If you provide your co-authors' email addresses, when the dataset is published they will receive a message giving them the option to add their <a href="http://orcid.org">ORCID</a> to the Dryad record</li>
+</ul>
+<li>Abstract: Short description of the dataset that would allow others to understand what the data is about.</li>
+<li>Usage notes: Information that helps others understand how to use and interpret the data, e.g. column names, units, explanations of missing data, context for the study. This information can be included in Usage Notes or as a README file uploaded with the data files. See the <a href="https://data.research.cornell.edu/content/readme">Cornell README template</a> as guidance.</li>
+</ul></p>
+
+<p>We recommend:
+<ul>
+<li>Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology classification.
+<li>Keyword(s):  Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable.</li>
+<li>Methods: Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)</li>
+<li>Usage Notes: Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed.</li>
+<li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s).</li>
+<li>Related works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
+</ul></p>
+
+<h2 id="upload-files">How do I upload my files?</h2>
+<p>Files can be uploaded from your local computer or from the cloud or remote servers via a URL. Up to 300GB can be uploaded per DOI. When using a URL, Google Drive links do not work, so please choose another mechanism. If using links from GitHub, link to the individual files rather than the repository as a whole. To confirm that files have uploaded successfully, check that all files have a size greater than 0 B. </p>
+
+<h2 id="ppr">How does Dryad’s Private for Peer Review feature work?</h2>
+<p>On page four of the submission process, we offer the option to make the dataset private during your related manuscript’s peer review process. After selecting this option, you will be presented with a private, randomized URL that allows for a double-blind download of the dataset. This link can be used at the journal office during the review period or for sharing with collaborators to access the data files while the dataset is not yet published. Please write in to <a href="mailto:help@datadryad.org">help@datadryad.org</a> when your manuscript has been accepted so that the Dryad curation team can begin the checks and publication processes.</p>
 
 <h2 id="when-to-submit">When should I submit my data?</h2>
 <p>Data may be submitted and published at any time. However, if your data are associated with a journal article, there may be special considerations:</p>
 <ul>
 <li>Journals that are integrated with Dryad have specific requirements. Look up your journal to determine the proper workflow.</li>
 <li>If you received an invitation from a journal to submit data to Dryad, then that journal has integrated its submission process with Dryad. Please follow the instructions from the journal.</li>
-<li>If a delayed-release data embargo is allowed by your journal, you may request that (<a href=mailto:help@datadryad.org>help@datadryad.org</a>) at the time of submission.</li>
-<li>Regardless of journal, you may choose to make your data temporarily &quot;private for peer review.&quot;</li>
+<li>If a delayed-release data embargo is allowed by your journal, you may request that (<a href="mailto:help@datadryad.org">help@datadryad.org</a>) at the time of submission.</li>
+<li>Regardless of journal, you may choose to make your data temporarily <a href="#ppr">Private for Peer Review</a>.</li>
 </ul>
 
 <h2 id="after-submit">What happens after I submit my data?</h2>
-<p>Dryad is a curated repository. We perform basic checks on each submission (can the files be opened? are they free of copyright restrictions? do they appear to be free of sensitive data?). If our curators have questions or suggestions about your submission, they will contact you directly. Otherwise you will be notified when your dataset is approved.</p>
-<p>If your data submission is &quot;private for peer review,&quot; it will not be processed by our curators until the associated manuscript is accepted.</p>
-<p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge (DPC)</a> and any overage fees are invoiced.</p>
+<p>Dryad is a curated repository. We perform basic checks on each submission through <a href="#curation">curation</a>. If our curators have questions or suggestions about your submission, they will contact you directly. Otherwise you will be notified when your dataset is approved.</p>
+<p>If your data submission is <a href="#ppr">private for peer review</a> it will not be processed by our curators until the associated manuscript is accepted.</p>
+<p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="#cost">Data Publishing Charge (DPC)</a> and any overage fees are invoiced.</p>
 <p>After data publication, if you have edits, additional files, or subsequent related work we recommend versioning your data by using the &quot;update&quot; link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.</p>
+
+<h2 id="curation">What happens during curation?</h2>
+Dryad has a team of curators who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring that your dataset meets all of our requirements for <a href="#metadata">metadata</a> and <a href="#files">data files</a> will ensure that the curation process is as efficient and timely as possible.
+
+<ul>
+<li><a href="#metadata">Metadata requirements</a></li>
+<li><a href="#files">File requirements</a></li>
+</ul>
+
+<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href="mailto:help@datadryad.org">help@datadryad.org</a>
+
+<h2 id="zenodo-integrate">How do Dryad & Zenodo partner and integrate?</h2>
+<p>Dryad formed a partnership with <a href="https://zenodo.org/">Zenodo</a>, a multidisciplinary repository based at CERN, in 2019. <a href="https://blog.datadryad.org/2019/07/17/funded-partnership-brings-dryad-and-zenodo-closer/">This partnership</a> leverages each organization's strengths: data curation at Dryad and software publication at Zenodo.</p>
+<p>Through our integration, researchers may upload software during the data submission process that will be triaged and published at Zenodo. The software will not go through Dryad curation processes but it will be time-released with the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad landing page under “Related Works”.<p>
+<p>Dryad stores a copy of all datasets in Zenodo for enhanced preservation services.</p>
+
 
 <h2 id="discover">How are the datasets discoverable?</h2>
 <p>All datasets will be indexed by the <a href="http://wokinfo.com/products_tools/multidisciplinary/dci/about/">Thomson-Reuters Data Citation Index</a>, <a href="http://www.elsevier.com/online-tools/scopus">Scopus</a>, and <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>. Each dataset is given a unique Digital Object Identifier or DOI. Entering the DOI URL in any browser will take the user to the dataset&#39;s landing page. Dryad also provides a faceted search and browse capability for direct discovery.</p>
@@ -54,32 +118,31 @@ of the services provided by Merritt, see this document: <a href="https://merritt
 <li><strong>Succession plans</strong>: In case of closure of the repository, reasonable efforts will be made to integrate all content into suitable alternative institutional and/or subject based repositories. </li>
 </ul>
 
-<h2 id="pub_date">Will the date of publication for my data submission match the publication date of my journal article?</h2>
-<p>No. The publication date for Dryad data submissions will be assigned upon final approval by our Curators for public posting. Because it’s essential to maintain accuracy, the publication date of datasets cannot be altered.</p>
 
 <h2 id="delete">Can I delete my data?</h2>
 <p>Data deposited in Dryad is intended to remain permanently archived and available. Removal of a deposited dataset is considered an exceptional action which should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the withdrawal of data from Dryad, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 
 
 <h2 id="searching">How can I best construct my search terms when exploring data at Dryad?</h2>
-
 <p>When searching in the Dryad user interface, the normal behavior is to
 treat each search term as being combined by AND. A search for <code>cat
 dog</code> will return only datasets that contain both <code>cat</code> and <code>dog</code>.</p>
-
 <p>Search terms may have a wildcard <code>*</code> appended. A search for <code>cat*</code>
 will return datasets that contain <code>cat</code>, <code>catch</code>, <code>catsup</code>, etc.</p>
-
 <p>Search terms may be negated with a minus sign. A search for <code>cat -dog</code>
 will return datasets that contain <code>cat</code>, but exclude any datasets that
 also contain <code>dog</code>.</p>
-
 <p>Phrases may be searched by using quotes. A search for <code>"dog my cats"</code>
 will only return datasets that contain this specific phrase, and not
 datasets that contain the individual terms.</p>
-
 <p>Proximity searches may be performed. To find datasets containing
 <code>dog</code> within four words of <code>cat</code>, search for <code>"dog cat"~4</code></p>
-
 <p>Searches may also be further constrained by the filters displayed on
 the left side of the search results screen.</p>
+
+
+<h2 id="cc0">Why CC0?</h2>
+<p>All data in Dryad is released into the public domain under the terms of a <a href="http://creativecommons.org/about/cc0">Creative Commons Zero</a> (CC0) waiver. CC0 was crafted specifically to reduce any legal and technical impediments, be they intentional and unintentional, to the reuse of data. Importantly, CC0 does not exempt those who reuse the data from following community norms for scholarly communication.  It does not exempt researchers from reusing the data in a way that is mindful of its limitations.  Nor does it exempt researchers from the obligation of citing the original data authors. CC0 facilitates the discovery, re-use, and citation of that data. For more information see a post on <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Dryad’s blog</a> as well as <a href="https://osc.universityofcalifornia.edu/2016/09/cc-by-and-data-not-always-a-good-fit/">University of California’s Office of Scholarly Communications blog</a>.</p>
+
+<h2 id="cite">How do I cite my data?</h2>
+<p>As soon as you start a data submission a DOI is reserved for that dataset and is in the format https://doi.org/10.5061/dryad.XXXX. This, and the title and author information, is included in the Citation section of a published dataset and the notification emails you receive from Dryad. If you need the DOI before you submit your dataset, for instance to include in a manuscript submission, you can find the DOI on the ‘Review and Submit’ page under ‘Review Description’.</p>
