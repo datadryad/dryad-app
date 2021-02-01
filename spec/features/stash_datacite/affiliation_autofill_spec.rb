@@ -26,16 +26,23 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
       expect(page).to have_text('University of Testing v2')
     end
 
-    # Temporarily disabling this test because for some reason WebMock
-    # doesn't always load properly in this class and the test randomly fails.
-    xit 'sets the ROR id when user selects an option', js: true do
+    it 'sets the ROR id when user selects an option', js: true do
       stub_ror_id_lookup(university: 'University of Testing v2')
       fill_in 'author[affiliation][long_name]', with: 'Testing'
-      first('.ui-menu-item-wrapper', wait: 5).click
+      first('.ui-menu-item-wrapper', wait: 1).click
       expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
     end
 
     it 'allows entries that are not registered with ROR', js: true do
+      fill_in 'author[affiliation][long_name]', with: 'Testing a non-ROR organization'
+      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('')
+    end
+
+    it 'allows changing from a ROR-based value to a non-ROR value', js: true do
+      stub_ror_id_lookup(university: 'University of Testing v2')
+      fill_in 'author[affiliation][long_name]', with: 'Testing'
+      first('.ui-menu-item-wrapper', wait: 1).click
+      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
       fill_in 'author[affiliation][long_name]', with: 'Testing a non-ROR organization'
       expect(find('#author_affiliation_ror_id', visible: false).value).to eql('')
     end
