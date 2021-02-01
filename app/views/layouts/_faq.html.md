@@ -23,7 +23,7 @@ Below are some answers to Frequently Asked Questions
 
 <h2 id="files">How should I prepare my data files before submitting?</h2>
 <p> Assemble all data files together and create a README as a text file that describes your data files, especially including how to work with files that are not a standard file format. Where possible data should be shared in an open file format, so proprietary software is not required to view or use the files.</p>
-<p>We require:
+<p>We require:</p>
 <ul>
 <li>All files should be able to be opened without any passcode restrictions.</li>
 <li>All information needs to be in English.</li>
@@ -37,9 +37,9 @@ Below are some answers to Frequently Asked Questions
 <h2 id="metadata">What should I include in my metadata?</h2>
 <p>Good metadata helps make a dataset more discoverable and reusable. The metadata should describe the data itself, rather than the study conclusions. For instance information should differ from that of an associated manuscript. A thorough description of the data file, the context in which the data were collected, the measurements that were made and the quality of the data are all important. Also see our FAQ on preparing your data.</p>
 
-<p>We require:
+<p>We require:</p>
 <ul>
-<li>Journal: If associated with a manuscript, journal name and manuscript number is included.
+  <li>Journal: If associated with a manuscript, journal name and manuscript number is included.</li>
 <li>Title: Title should be descriptive of the dataset and relatively unique, i.e. not ‘Data files for study 12’.</li>
 <li>Author(s): Name, email address, institutional affiliation of main researcher(s) involved in producing the data.</li>
 <ul>
@@ -48,17 +48,17 @@ Below are some answers to Frequently Asked Questions
 </ul>
 <li>Abstract: Short description of the dataset that would allow others to understand what the data is about.</li>
 <li>Usage notes: Information that helps others understand how to use and interpret the data, e.g. column names, units, explanations of missing data, context for the study. This information can be included in Usage Notes or as a README file uploaded with the data files. See the <a href="https://data.research.cornell.edu/content/readme">Cornell README template</a> as guidance.</li>
-</ul></p>
+</ul>
 
-<p>We recommend:
+<p>We recommend:</p>
 <ul>
-<li>Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology classification.
+<li>Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology classification.</li>
 <li>Keyword(s):  Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable.</li>
 <li>Methods: Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)</li>
 <li>Usage Notes: Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed.</li>
 <li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s).</li>
 <li>Related works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
-</ul></p>
+</ul>
 
 <h2 id="upload-files">How do I upload my files?</h2>
 <p>Files can be uploaded from your local computer or from the cloud or remote servers via a URL. Up to 300GB can be uploaded per DOI. When using a URL, Google Drive links do not work, so please choose another mechanism. If using links from GitHub, link to the individual files rather than the repository as a whole. To confirm that files have uploaded successfully, check that all files have a size greater than 0 B. </p>
@@ -82,14 +82,14 @@ Below are some answers to Frequently Asked Questions
 <p>After data publication, if you have edits, additional files, or subsequent related work we recommend versioning your data by using the &quot;update&quot; link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.</p>
 
 <h2 id="curation">What happens during curation?</h2>
-Dryad has a team of curators who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring that your dataset meets all of our requirements for <a href="#metadata">metadata</a> and <a href="#files">data files</a> will ensure that the curation process is as efficient and timely as possible.
+<p>Dryad has a team of curators who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring that your dataset meets all of our requirements for <a href="#metadata">metadata</a> and <a href="#files">data files</a> will ensure that the curation process is as efficient and timely as possible.</p>
 
 <ul>
 <li><a href="#metadata">Metadata requirements</a></li>
 <li><a href="#files">File requirements</a></li>
 </ul>
 
-<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href="mailto:help@datadryad.org">help@datadryad.org</a>
+<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href="mailto:help@datadryad.org">help@datadryad.org</a></p>
 
 <h2 id="zenodo-integrate">How do Dryad & Zenodo partner and integrate?</h2>
 <p>Dryad formed a partnership with <a href="https://zenodo.org/">Zenodo</a>, a multidisciplinary repository based at CERN, in 2019. <a href="https://blog.datadryad.org/2019/07/17/funded-partnership-brings-dryad-and-zenodo-closer/">This partnership</a> leverages each organization's strengths: data curation at Dryad and software publication at Zenodo.</p>
