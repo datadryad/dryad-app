@@ -4,10 +4,10 @@
 
 <% if @datatype == 'Software' %>
     <p>
-      Software and code can be uploaded here for publication at <a href="https://zenodo.org/" target="_blank">Zenodo</a>.
+      Software and code can be uploaded here for publication at <a href="https://zenodo.org" target="_blank">Zenodo</a>.
       You will have
       the opportunity to choose a separate license for your code on the review page. For more information about our
-      Zenodo partnership <%= link_to 'see our FAQ', faq_path %>.
+      Zenodo partnership <%= link_to 'see our FAQ', faq_path(anchor: 'zenodo-integrate'), target: '_blank' %>.
     </p>
 
 <% else %>
