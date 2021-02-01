@@ -32,7 +32,7 @@
 <p>
     You will first be asked to enter metadata (information about your data). Check out our tips for complete and
     <a href="/stash/faq#metadata">comprehensive metadata</a>.  When you <a href="/stash/faq#upload-files">upload data files</a>,
-    ensure that they meet or <a href="/stash/faq#files">file requirements</a> and are able to be opened, they do not
+    ensure that they meet our <a href="/stash/faq#files">file requirements</a> and are able to be opened, they do not
     contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#cc0">CC0</a>. Please
     upload a <a href="https://data.research.cornell.edu/content/readme">README</a> that describes your data as a .txt file.
 </p>
