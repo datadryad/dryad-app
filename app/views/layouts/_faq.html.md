@@ -1,7 +1,7 @@
 Below are some answers to Frequently Asked Questions
 
 
-<h2 id="accept">What types of data does Dryad accept?</h2>
+<h2 id="#depositing-acceptable-data">What types of data does Dryad accept?</h2>
 <p>Dryad accepts all research data. However, this service is intended for complete, re-usable, open research datasets.</p>
 <p>Most types of files can be submitted (e.g., text, spreadsheets, video, photographs, code) including compressed archives of multiple files. View additional guidance on preservation-friendly file types.</p>
 <ul>
