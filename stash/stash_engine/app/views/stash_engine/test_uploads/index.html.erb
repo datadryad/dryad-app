@@ -2,7 +2,6 @@
 
 <input type="file" id="files" name="files[]" multiple />
 <output id="list"></output>
-<p>Check console for upload status.</p>
 
 <script src=""></script>
 
@@ -68,9 +67,7 @@
                   type: fileObj.type
                 }
             ),
-            success: function(result){
-              $('#progress_' + md5Id).replaceWith("<div>File " + fileObj.name + " uploaded</div>");
-            },
+            success: result => $('#progress_' + md5Id).replaceWith("<div>File " + fileObj.name + " uploaded</div>"),
             dataType: 'json'
           });
         }
