@@ -166,7 +166,18 @@ module StashApi
     end
 
     def paged_files_for_version
-      resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
+      resource = StashEngine::Resource.find(params[:version_id]) # version_id in the API is really resource_id in the database
+
+      # If this resource is published, but its files are not publicly viewable,
+      # the files haven't changed from the previous published version.
+      # Find the most recent previous resource that had viewable files.
+      if resource.current_curation_status == 'published' && !resource.file_view
+        prev_resources = StashEngine::Resource.where(identifier_id: resource.identifier_id,
+                                                     file_view: true,
+                                                     id: 0..(resource.id - 1)).reverse
+        resource = prev_resources.first unless prev_resources.blank?
+      end
+
       visible = resource.file_uploads.present_files
       all_count = visible.count
       file_uploads = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
