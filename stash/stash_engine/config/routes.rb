@@ -137,5 +137,12 @@ StashEngine::Engine.routes.draw do
   get 'publication_updater', to: 'publication_updater#index'
   put 'publication_updater/:id', to: 'publication_updater#update'
   delete 'publication_updater/:id', to: 'publication_updater#destroy'
+
+  # testing uploads
+  get 'test_uploads', to: 'test_uploads#index'
+  # match 'test_uploads', to: 'test_uploads#presignupload', via: %i[get post put]
+  match 'presign_upload', to: 'test_uploads#presign_upload', via: %i[get post put patch]
+  post 'test_up_complete', to: 'test_uploads#complete'
+
 end
 # rubocop:enable Metrics/BlockLength
