@@ -20,7 +20,7 @@ module StashEngine
       resource = Resource.find(params[:resource_id])
       # params[:name], params[:size], params[:type]
 
-      fu = FileUpload.where(upload_file_name: params[:name], resource_id: resource.id).first
+      fu = FileUpload.where(upload_file_name: params[:name], resource_id: resource.id, file_state: %w[copied created]).first
       fu = FileUpload.new if fu.nil?
 
       # if something was copied from previous version and uploaded again then delete previous and create new
