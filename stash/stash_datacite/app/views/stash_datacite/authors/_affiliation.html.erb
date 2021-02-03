@@ -15,6 +15,7 @@
 		  $( this ).autocomplete( "instance" ).menu.active ) {
 		 event.preventDefault();
              }
+	     $('<%= "##{form_id}" %> #author_affiliation_ror_id').val('') // clear any ROR that was saved previously
 	 })
 	 .autocomplete({
              source: function (request, response) {
