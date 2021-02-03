@@ -202,8 +202,8 @@ module StashApi
         expect(response_code).to eq(404)
       end
 
-      it 'only shows files from a version where the files are visible' do
-        # force @resources[1] to published, but mark the file_view as false
+      it 'shows files from a previously-published version when the files of the given version are invisible' do
+        # force @resources[1] to status published, but mark the file_view as false
         @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'curation'),
                                  create(:curation_activity, resource: @resources[1], status: 'published')]
         @resources[1].current_resource_state.update(resource_state: 'submitted')
