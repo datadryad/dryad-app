@@ -55,6 +55,14 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('input#user_comment')
     end
 
+    it 'does not allow editing a dataset from the curation page', js: true do
+      visit root_path
+      click_link('Admin')
+      expect(page).to have_text('Admin Dashboard')
+
+      expect(page).not_to have_css('button[title="Edit Dataset"]')
+    end
+
     it 'redirects to the dataset editing page, and the user is logged in, when requesting an edit link', js: true do
       sign_out
       @identifier.edit_code = Faker::Number.number(digits: 4)
