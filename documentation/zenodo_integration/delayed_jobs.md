@@ -5,6 +5,15 @@ transferring the data only lives on one server (e.g., stage-c, but not stage-a).
 On servers where the transfer process lives, detailed documentation
 can be found in `/dryad/init.d/README.delayed_job.md`.
 
+## Some things errored and I want to send them through again
+- Go to the Database table *stash_engine_zenodo_copies*
+- Look up item(s) by *identifier_id*
+- Reset the *error* status to *deferred* status instead, also reset the *retries* to 0 (it will stop retrying at 3).
+- If there are more rows with error status for that identifier (such as "out of order" errors), then reset each of them to *deferred* as well as the *retries* to 0.
+- on the -2c server, execute `~/bin/long_jobs.dryad restart`.  That will re-enqueue the *deferred* for sending to zenodo again.
+- If items for the same dataset arrive out of order or before an earlier one finishes processing, the later one may still error.   Repeat resetting the error statuses to *deferred* and rerunning `long_jobs.dryad restart` until all versions of the the error have gone through (or identify other causes for the error if they are not fixed by resubmitting).
+
+
 ## It's not processing? Why? Look at this stuff
 - (On 2c) Check `sudo systemctl status delayed_job` for status or
   start the daemon with `sudo systemctl start delayed_job`
