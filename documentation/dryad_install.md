@@ -103,22 +103,13 @@ Verify Solr is set up correctly from the Admin UI:
 
 2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 
-<br>(Optional, but recommended) Add a sample record to match the sample database record (see below).
-
-1. Click the *Documents* tab on the left side.<br>![Documents](images/solr4.png)
-
-2. Find the file *dryad-config/sample\_data/sample\_record.json* in the dryad-config repo.  Open the file in a text editor, select all the text and copy it.
-
-3. Paste the text into the *Document(s)* box on the page.<br>![json pasted](images/solr5.png)
-4. Click *Submit Document* and be sure it shows a status of success.<br>![success status](images/solr6.png)
-
 ## Getting the Rails application running
 
 I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
 
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
-sudo apt-get install libxml2 libxml2-dev patch curl
+sudo apt-get install libxml2 libxml2-dev patch curl build-essential libreadline-dev
 
 cd dryad
 rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-version file
@@ -150,20 +141,25 @@ bundle exec rails db:migrate
 rails s
 ```
 
-If you want to view sample data, then insert a sample record into the database (recommended).
-
+Rails environment: In a system startup script such as `.bash_profile`, add the
+environment variable `RAILS_ENV`. This specifies the Rails "environment" or set
+of configuration values. For most installations, the value will be `local`.
 ```
-# connect to mysql, note the <username> is probably root in a new installation
-mysql -u <username> -p
-
-# Use the following two lines.
-USE dash;
-source ../dryad-config/sample_data/sample_record.sql;
-
-# To exit the MySQL client, type *exit* or press ctrl-d
+export RAILS_ENV=local
 ```
 
-To configure where the search enterface draws its data from, modify the dryad app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
+Encrypted credentials: Many of Dryad's configuration files read
+credentials from the Rails credentials file. Before Rails will run, you must do
+one of two steps:
+- In all files `config/*.yml`, replace the `Rails.application.credentials`
+  statements with your own credentials.
+- Obtain the credentials encryption key from a Dryad developer and place it in `config/master.key`
+
+Final search configuration: To configure where the search interface draws its
+data from, modify the `config/blacklight.yml` to change the endpoint for the
+development server.  When running locally, the default server is the Dryad
+development server, but it can be overridden with the `SOLR_URL` environment
+variable.
 
 ## Creating the System user
 

@@ -221,12 +221,13 @@ a.affiliation=StashDatacite::Affiliation.create(long_name: 'Universidad Politéc
 a.save
 ```
 
-Waiving Payments
-================
+Fee Waivers and other Payments
+==============================
 
 If a user was charged (or is about to be charged) for a data deposit,
 and the deposit should be waived or charged to another entity, change
-the payment information recorded in the Identifier object.
+the payment information recorded in the Identifier object. This allows us
+to apply fee waivers or charge a different organization for the deposit.
 
 ```
 update stash_engine_identifiers set payment_type="waiver", payment_id="<COUNTRY>" where id=<SOME_ID>;

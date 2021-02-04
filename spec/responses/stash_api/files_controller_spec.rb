@@ -201,6 +201,21 @@ module StashApi
         response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
         expect(response_code).to eq(404)
       end
+
+      it 'shows files from a previously-published version when the files of the given version are invisible' do
+        # force @resources[1] to status published, but mark the file_view as false
+        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[1], status: 'published')]
+        @resources[1].current_resource_state.update(resource_state: 'submitted')
+        @resources[0].update(file_view: true)
+        @resources[1].update(file_view: false)
+        # retrieve the files
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
+        hsh = response_body_hash
+        expect(response_code).to eq(200)
+        # check that they are the files from the visible version @resources[0]
+        expect(hsh['total']).to eq(25)
+      end
     end
 
     describe '#destroy' do
