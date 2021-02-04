@@ -194,6 +194,7 @@ paths:
       description: The versions endpoint allows seeing all (visible) versions. This is in contrast to GETting the datasets endpoiunt for a DOI, since it only embeds metadata for the latest visible version.
       parameters:
         - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/page'
       responses:
         '200':
           description: A list of a dataset's versions
@@ -229,6 +230,7 @@ paths:
       description: Returns the list of files and file metadata for a known version of a dataset with the version id you specify.
       parameters:
         - $ref: '#/components/parameters/version_id'
+        - $ref: '#/components/parameters/page'
       responses:
         '200':
           description: A list of the files in the version
@@ -898,7 +900,7 @@ components:
       schema:
         type: integer
       description:
-        Which page of datasets to view. Defaults to page 1.
+        Which page of results to view. Defaults to page 1.
 
     per_page:
       in: query
@@ -906,7 +908,7 @@ components:
       schema:
         type: integer
       description:
-        Number of datasets to return on each page. Defaults
+        Number of results to return on each page. Defaults
         to 10. Maximum allowed is 100.
 
     publicationISSN:
