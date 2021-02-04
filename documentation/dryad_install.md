@@ -103,15 +103,6 @@ Verify Solr is set up correctly from the Admin UI:
 
 2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 
-<br>(Optional, but recommended) Add a sample record to match the sample database record (see below).
-
-1. Click the *Documents* tab on the left side.<br>![Documents](images/solr4.png)
-
-2. Find the file *dryad-config/sample\_data/sample\_record.json* in the dryad-config repo.  Open the file in a text editor, select all the text and copy it.
-
-3. Paste the text into the *Document(s)* box on the page.<br>![json pasted](images/solr5.png)
-4. Click *Submit Document* and be sure it shows a status of success.<br>![success status](images/solr6.png)
-
 ## Getting the Rails application running
 
 I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
