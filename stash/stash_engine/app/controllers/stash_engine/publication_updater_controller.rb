@@ -16,7 +16,7 @@ module StashEngine
       params[:sort] = 'score' if params[:sort].blank?
       params[:direction] = 'desc' if params[:direction].blank?
       @proposed_changes = proposed_changes.order(helpers.sortable_table_order).page(@page).per(@page_size)
-      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes.map(&:identifier_id))
+      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes.map(&:identifier_id)) if @proposed_changes.present?
     end
 
     def update
