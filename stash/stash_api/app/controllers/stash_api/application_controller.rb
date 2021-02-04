@@ -11,7 +11,7 @@ module StashApi
 
     skip_before_action :verify_authenticity_token
 
-    DEFAULT_PAGE_SIZE = 10
+    DEFAULT_PAGE_SIZE = 20
     UNACCEPTABLE_MSG = '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
 
     def page
