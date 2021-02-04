@@ -118,7 +118,7 @@ I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for 
 
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
-sudo apt-get install libxml2 libxml2-dev patch curl
+sudo apt-get install libxml2 libxml2-dev patch curl build-essential libreadline-dev
 
 cd dryad
 rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-version file
@@ -150,20 +150,25 @@ bundle exec rails db:migrate
 rails s
 ```
 
-If you want to view sample data, then insert a sample record into the database (recommended).
-
+Rails environment: In a system startup script such as `.bash_profile`, add the
+environment variable `RAILS_ENV`. This specifies the Rails "environment" or set
+of configuration values. For most installations, the value will be `local`.
 ```
-# connect to mysql, note the <username> is probably root in a new installation
-mysql -u <username> -p
-
-# Use the following two lines.
-USE dash;
-source ../dryad-config/sample_data/sample_record.sql;
-
-# To exit the MySQL client, type *exit* or press ctrl-d
+export RAILS_ENV=local
 ```
 
-To configure where the search enterface draws its data from, modify the dryad app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
+Encrypted credentials: Many of Dryad's configuration files read
+credentials from the Rails credentials file. Before Rails will run, you must do
+one of two steps:
+- In all files `config/*.yml`, replace the `Rails.application.credentials`
+  statements with your own credentials.
+- Obtain the credentials encryption key from a Dryad developer and place it in `config/master.key`
+
+Final search configuration: To configure where the search interface draws its
+data from, modify the `config/blacklight.yml` to change the endpoint for the
+development server.  When running locally, the default server is the Dryad
+development server, but it can be overridden with the `SOLR_URL` environment
+variable.
 
 ## Creating the System user
 
