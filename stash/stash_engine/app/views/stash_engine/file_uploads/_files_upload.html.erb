@@ -2,19 +2,19 @@
 <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
 
 <div>
-  <%= form_with model: file, multipart: true, id: 'fileupload' do |f| %>
+  <%# form_with model: file, multipart: true, id: 'fileupload' do |f| %>
     <div class="c-choose">
-      <%= f.hidden_field :resource_id %>
+      <%# f.hidden_field :resource_id %>
       <div id="upload_bg" class="c-choose__drop o-drop">
         Drag and drop files here<br/><br/>
         or<br/><br/>
-        <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
-        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label', id: 'choose-the-files') %>
+        <input type="file" name="upload[upload]" id="upload_upload" multiple="multiple" class="c-input__file">
+        <label class="c-input__file-label" id="choose-the-files" for="upload_upload">Choose Files</label>
       </div>
       <div class="c-choose__label">
       </div>
     </div>
-  <% end %>
+  <%# end %>
 </div>
 <div class="t-upload__container">
   <h2 class="t-upload__choose-heading--active" id="upload_tweaker_head">Step 3: Upload New Files</h2>
@@ -50,3 +50,75 @@
 
 <%# this gets put in the page as a JS template that jquery file upload uses to show things in process %>
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
+
+<script>
+  // to test the javascript for files and dropping. TODO: Move to more appropriate place later
+
+  // Some other objects may not keep their order, but maps do.  Use methods like set(k, v), has(k), get(k), delete(k)
+  // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+  var fUploading = new Map();
+
+  /* function logMapElements(value, key, map) {
+  console.log(`m[${key}] = ${value}`);
+  }
+
+  new Map([['foo', 3], ['bar', {}], ['baz', undefined]])
+      .forEach(logMapElements);
+  var processFiles = new Map(); */
+
+  function specialFile(fileObj) {
+    return {fileObj: fileObj, sanitized: file_sanitize(fileObj.name) };
+  }
+
+  function outputLine(identifier, specFile){
+    return `
+    <div class="c-upload__item js-unuploaded" id="not_uploaded_file_${identifier}">
+      <div class="c-upload__filename">
+        <span class="js-filename">${specFile["sanitized"]}</span>
+        <span class="c-upload__filesize">${formatSizeUnits(specFile["fileObj"].size)}</span>
+      </div>
+      <div class="c-upload__action">
+        <progress class="js-bar" style="display: none" max="100" value="0"></progress>
+        <button class="js-remove_link c-upload__button">Remove</button>
+        <button class="js-cancel c-upload__button" style="display: none" id="cancel_${identifier}">Cancel</button>
+      </div>
+      <input name="temp_id" value="${identifier}" type="hidden">
+      <span class="spaced_text" style="display: none"><a href="#" id="up_button_${identifier}"
+            data-id="${identifier}" class="js-upload-it">Upload</a></span>
+    </div>`;
+  }
+
+  // This dragover is required for drop to work.  If we want to style it (such as an outline) we can style with this and dragleave
+  $("#upload_bg").on("dragover", function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  $("#upload_bg").on("drop", function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    let files = event.originalEvent.dataTransfer.files;
+
+    for (var i = 0; i < files.length; i++) {
+      console.log(files[i]);
+      let k = generateQuickId();
+      let v = specialFile(files[i]);
+      $("#upload_list").append(outputLine(k, v));
+      // $("#upload_list").append(`${v["sanitized"]}<br/>`);
+      fUploading.set(k, v);
+    }
+  });
+
+  $("#upload_upload").on("change", function(event) {
+    let files = event.target.files; // FileList object
+
+    for (var i = 0; i < files.length; i++) {
+      console.log(files[i]);
+      let k = generateQuickId();
+      let v = specialFile(files[i]);
+      $("#upload_list").append(outputLine(k, v));
+      // $("#upload_list").append(`${v["sanitized"]}<br/>`);
+      fUploading.set(k, v);
+    }
+  });
+</script>

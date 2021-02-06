@@ -52,6 +52,7 @@
     "gulp-shell": "^0.8.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-useref": "^4.0.1",
-    "jshint": "^2.12.0"
+    "jshint": "^2.12.0",
+    "truncate-utf8-bytes": "^1.0.2"
   }
 }
