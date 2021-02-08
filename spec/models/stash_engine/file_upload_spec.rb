@@ -258,7 +258,7 @@ module StashEngine
       end
     end
 
-    describe :s3_presigned_url do
+    describe :merritt_s3_presigned_url do
       before(:each) do
         allow_any_instance_of(Resource).to receive(:merritt_protodomain_and_local_id).and_return(
           ['https://merritt.example.com', 'ark%3A%2F12345%2F38568']
@@ -271,7 +271,7 @@ module StashEngine
       it 'raises Stash::Download::MerrittError for missing resource.tenant' do
         @upload.resource.update(tenant_id: nil)
         @upload.resource.reload
-        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
       end
 
       it 'raises Stash::Download::MerrittError for unsuccessful response from Merritt' do
@@ -283,7 +283,7 @@ module StashEngine
             }
           )
           .to_return(status: 404, body: '[]', headers: { 'Content-Type': 'application/json' })
-        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
       end
 
       it 'returns a URL based on json response and url in the data' do
@@ -297,7 +297,7 @@ module StashEngine
           .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/39768945"}',
                      headers: { 'Content-Type': 'application/json' })
 
-        expect(@upload.s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
+        expect(@upload.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
       end
 
       it "it doesn't create a mangled URL because http.rb has modified the URL with some foreign characters so it no longer matches" do
@@ -316,7 +316,7 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: fn)
-        expect(@upload2.s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
+        expect(@upload2.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
       end
     end
 
