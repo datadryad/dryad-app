@@ -14,10 +14,8 @@ module Stash
 
       def initialize(resource:)
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
-        # raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
         @resource = resource
         @root_url = to_uri("https://#{Rails.application.default_url_options[:host]}/system/#{@resource.id}/")
-        # @root_url = to_uri(root_url)
         @manifest = create_manifest
       end
 
@@ -26,6 +24,7 @@ module Stash
       end
 
       def create_manifest
+        puts "XXXX create_manifest || S #{system_files} || D #{data_files}"
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
@@ -49,7 +48,7 @@ module Stash
 
       def entry_for(upload)
         upload_file_name = upload.upload_file_name
-        upload_url = upload.url
+        upload_url = upload.url || upload.direct_s3_presigned_url
         throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
 
         upload_file_size = upload.upload_file_size
