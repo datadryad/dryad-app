@@ -13,7 +13,7 @@ module Stash
           'Content-Type' => packaging.content_type,
           'Content-Disposition' => "#{CONTENT_DISPOSITION}; filename=#{File.basename(payload)}",
           'Packaging' => packaging.header,
-          'Content-MD5' => Digest::MD5.file(payload).to_s,
+          # XXXXX 'Content-MD5' => Digest::MD5.file(payload).to_s,
           'On-Behalf-Of' => on_behalf_of,
           'Slug' => slug
         }
@@ -33,7 +33,7 @@ module Stash
           'Content-Type' => packaging.content_type,
           'Content-Disposition' => "#{CONTENT_DISPOSITION}; name=\"payload\"; filename=\"#{File.basename(payload)}\"",
           'Packaging' => packaging.header,
-          'Content-MD5' => Digest::MD5.file(payload).to_s,
+          # XXXXX 'Content-MD5' => Digest::MD5.file(payload).to_s,
           'MIME-Version' => '1.0'
         }
       end
