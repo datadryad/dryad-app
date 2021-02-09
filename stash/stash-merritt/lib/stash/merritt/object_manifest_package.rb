@@ -27,9 +27,10 @@ module Stash
         puts "XXXX create_manifest || S #{system_files} || D #{data_files}"
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
-        manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
-        File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
-        manifest_path
+        # XXXX TODO write the manifest to S3 and return its presigned path
+        #manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
+        #File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
+        "should be the manifest_path"
       end
 
       def to_s
@@ -62,14 +63,15 @@ module Stash
       end
 
       def write_to_public(builder)
-        return unless (path = builder.write_file(workdir))
+        return unless (path = builder.write_s3_file("#{@resource.s3_dir_name}_man"))
 
         file_name = builder.file_name
         OpenStruct.new(
           file_url: public_url_for(file_name),
-          hash_algorithm: 'md5',
-          hash_value: Digest::MD5.file(path).to_s,
-          file_size: File.size(path),
+          # XXXXX TODO -- do we really need the MD5 and size here? can we get it from S3 instead of calculating?
+#          hash_algorithm: 'md5',
+#          hash_value: Digest::MD5.file(path).to_s,
+#          file_size: File.size(path),
           file_name: file_name,
           mime_type: builder.mime_type
         )
@@ -80,20 +82,11 @@ module Stash
       end
 
       def public_url_for(pathname)
+        # XXXXX TODO -- put a presigned generator here
+        
         URI.join(root_url.to_s, pathname)
       end
 
-      def workdir_path
-        @workdir_path ||= Rails.public_path.join("system/#{resource_id}")
-      end
-
-      def workdir
-        @workdir ||= begin
-          path = workdir_path.to_s
-          FileUtils.mkdir_p(path)
-          File.absolute_path(path)
-        end
-      end
     end
   end
 end
