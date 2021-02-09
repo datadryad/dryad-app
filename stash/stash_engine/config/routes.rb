@@ -26,10 +26,6 @@ StashEngine::Engine.routes.draw do
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
   resources :file_uploads, :software_uploads do
-    collection do
-      get 'presign_upload'
-      post 'upload_complete'
-    end
     member do
       patch 'remove'
       patch 'remove_unuploaded'
@@ -42,8 +38,18 @@ StashEngine::Engine.routes.draw do
 
 
   resources :edit_histories, only: [:index]
+
+  # these are weird and different and want to get rid of these when we move to only one model for all kinds of uploads
   match 'file_upload/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_upload_validate_urls', via: %i[get post put]
   match 'software_upload/validate_urls/:resource_id', to: 'software_uploads#validate_urls', as: 'software_upload_validate_urls', via: %i[get post put]
+
+  get 'file_upload/presign_upload/:resource_id', to: 'file_uploads#presign_upload', as: 'file_upload_presign_url'
+  get 'software_upload/presign_upload/:resource_id', to: 'software_uploads#presign_upload', as: 'software_upload_presign_url'
+
+  get 'file_upload/upload_complete/:resourcve_id', to: 'file_uploads#upload_complete', as: 'file_upload_complete'
+  get 'software_upload/upload_complete/:resource_id', to: 'software_uploads#upload_complete', as: 'software_upload_complete'
+
+
 
   resource :file_upload do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
@@ -147,8 +153,8 @@ StashEngine::Engine.routes.draw do
   # testing uploads
   get 'test_uploads', to: 'test_uploads#index'
   # match 'test_uploads', to: 'test_uploads#presignupload', via: %i[get post put]
-  match 'presign_upload', to: 'test_uploads#presign_upload', via: %i[get post put patch]
-  post 'test_up_complete', to: 'test_uploads#complete'
+  # match 'presign_upload', to: 'test_uploads#presign_upload', via: %i[get post put patch]
+  # post 'test_up_complete', to: 'test_uploads#complete'
 
 end
 # rubocop:enable Metrics/BlockLength

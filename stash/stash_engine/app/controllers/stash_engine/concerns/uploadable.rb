@@ -85,7 +85,30 @@ module StashEngine
       end
 
       def upload_complete
+        byebug
+        resource = Resource.find(params[:resource_id])
+        # params[:name], params[:size], params[:type]
 
+        fu = FileUpload.where(upload_file_name: params[:name], resource_id: resource.id, file_state: %w[copied created]).first
+        fu = FileUpload.new if fu.nil?
+
+        # if something was copied from previous version and uploaded again then delete previous and create new
+        if fu.file_state == 'copied'
+          fu.update(file_state: 'deleted')
+          fu = FileUpload.new
+        end
+
+        fu.update( upload_file_name: params[:name],
+                   upload_content_type: params[:type],
+                   upload_file_size: params[:size],
+                   resource_id: resource.id,
+                   upload_updated_at: Time.new,
+                   file_state: 'created',
+                   original_filename: params[:name] )
+
+        respond_to do |format|
+          format.json { render :json => {msg: "ok"} }
+        end
       end
 
       private
