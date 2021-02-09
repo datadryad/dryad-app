@@ -10,7 +10,7 @@ module Stash
   module Merritt
     class ObjectManifestPackage < SubmissionPackage
 
-      attr_reader :root_url, :manifest
+      attr_reader :root_url
 
       def initialize(resource:)
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
@@ -20,17 +20,27 @@ module Stash
       end
 
       def payload
-        manifest
+        @manifest
       end
 
       def create_manifest
         puts "XXXX create_manifest || S #{system_files} || D #{data_files}"
         StashDatacite::PublicationYear.ensure_pub_year(resource)
+        # generate the manifest via the merritt-manifest gem
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
-        # XXXX TODO write the manifest to S3 and return its presigned path
-        #manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
-        #File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
-        "should be the manifest_path"
+
+        # Save a copy of the manifest in S3 for debugging if needed, but the actual
+        # merritt submission will use the local file
+        s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
+                                    access_key_id: APP_CONFIG[:s3][:key],
+                                    secret_access_key: APP_CONFIG[:s3][:secret])        
+        bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
+        object = bucket.object("#{resource.s3_dir_name}_man/manifest.checkm")
+        puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX YYYYYYY #{manifest.write_to_string} XXXXXXXXXXXXXXXXXXXXXXXXX"
+        object.put(body: manifest.write_to_string)
+        presigned = object.presigned_url(:get, expires_in: 1.day.to_i)
+        puts "XXXX   - presigned is #{presigned}"
+        presigned
       end
 
       def to_s
@@ -40,14 +50,14 @@ module Stash
       private
 
       def data_files
-        new_uploads.map { |upload| entry_for(upload) }
+        new_uploads.map { |upload| data_file_entry(upload) }
       end
 
       def system_files
-        builders.map { |builder| write_to_public(builder) }.compact
+        builders.map { |builder| system_file_entry(builder) }.compact
       end
 
-      def entry_for(upload)
+      def data_file_entry(upload)
         upload_file_name = upload.upload_file_name
         upload_url = upload.url || upload.direct_s3_presigned_url
         throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
@@ -62,16 +72,12 @@ module Stash
         )
       end
 
-      def write_to_public(builder)
+      def system_file_entry(builder)
         return unless (path = builder.write_s3_file("#{@resource.s3_dir_name}_man"))
 
         file_name = builder.file_name
         OpenStruct.new(
-          file_url: public_url_for(path),
-          # XXXXX TODO -- do we really need the MD5 and size here? can we get it from S3 instead of calculating?
-#          hash_algorithm: 'md5',
-#          hash_value: Digest::MD5.file(path).to_s,
-#          file_size: File.size(path),
+          file_url: presigned_url_for(path),
           file_name: file_name,
           mime_type: builder.mime_type
         )
@@ -81,8 +87,7 @@ module Stash
         ::XML::MappingExtensions.to_uri(uri_or_str)
       end
 
-      def public_url_for(pathname)
-        # XXXXX TODO -- put a presigned generator here
+      def presigned_url_for(pathname)
         puts "XXXX getting presigned for #{pathname}"
         s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
                                     access_key_id: APP_CONFIG[:s3][:key],
