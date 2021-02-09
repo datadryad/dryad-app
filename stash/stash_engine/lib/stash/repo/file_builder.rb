@@ -1,3 +1,4 @@
+require 'aws-sdk-s3'
 require 'fileutils'
 require 'mime-types'
 
@@ -45,7 +46,7 @@ module Stash
       # @param target_dir [String] the directory to write the file into
       # @return [String, nil] the path to the created file, or nil if no file was created
       #   (i.e. if `contents` was nil)
-      def write_file(target_dir)
+      def write_local_file(target_dir)
         file_contents = contents
         return unless file_contents
 
@@ -57,6 +58,24 @@ module Stash
           f.write("\n") unless binary? || file_contents.end_with?("\n")
         end
         outfile
+      end
+
+      # Writes the file to the target_dir in S3, and
+      # returns a presigned_URL for downloading the file
+      def write_s3_file(target_dir)
+        puts "XXXX TODO -- saving #{file_name} to S3 in #{APP_CONFIG[:s3][:bucket]} -- #{target_dir}"
+
+        file_contents = contents
+        return unless file_contents
+    
+        s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region])
+        #s3 = Aws::S3::Client.new(region: APP_CONFIG[:s3][:region],
+        #                         access_key_id: APP_CONFIG[:s3][:key],
+        #                         secret_access_key: APP_CONFIG[:s3][:secret])
+        bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
+        object = bucket.object("#{target_dir}/#{file_name}")
+        object.put(body: file_contents)
+        object.key
       end
     end
   end
