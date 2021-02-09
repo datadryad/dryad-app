@@ -67,7 +67,7 @@ module Stash
 
         file_name = builder.file_name
         OpenStruct.new(
-          file_url: public_url_for(file_name),
+          file_url: public_url_for(path),
           # XXXXX TODO -- do we really need the MD5 and size here? can we get it from S3 instead of calculating?
 #          hash_algorithm: 'md5',
 #          hash_value: Digest::MD5.file(path).to_s,
@@ -83,8 +83,15 @@ module Stash
 
       def public_url_for(pathname)
         # XXXXX TODO -- put a presigned generator here
-        
-        URI.join(root_url.to_s, pathname)
+        puts "XXXX getting presigned for #{pathname}"
+        s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
+                                    access_key_id: APP_CONFIG[:s3][:key],
+                                    secret_access_key: APP_CONFIG[:s3][:secret])        
+        bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
+        object = bucket.object(pathname)
+        presigned = object.presigned_url(:get, expires_in: 1.day.to_i)
+        puts "XXXX   - presigned is #{presigned}"
+        presigned
       end
 
     end
