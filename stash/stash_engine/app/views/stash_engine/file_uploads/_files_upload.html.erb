@@ -1,4 +1,13 @@
 <%# locals: file, resource, uploads %>
+
+<% rails_presign_url = (@file_model == StashEngine::SoftwareUpload ? software_upload_presign_url_path(@resource) :
+                      file_upload_presign_url_path(@resource) )%>
+
+<% complete_path = (@file_model == StashEngine::SoftwareUpload ? software_upload_complete_path(@resource) :
+                       file_upload_complete_path(@resource) ) %>
+
+<% s3_directory = @resource.s3_dir_name(type: (@file_model == StashEngine::SoftwareUpload ? 'software' : 'data')) %>
+
 <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
 
 <div>
@@ -165,7 +174,7 @@
     sanitized_fn = complexFileObj["sanitized"]
     // see example like https://github.com/TTLabs/EvaporateJS/blob/c1f8905d173f07dab1f277b4bd753a2ce2303967/example/evaporate_example_awsv4_signature.html
     const config = {
-      signerUrl: "<%= stash_engine.presign_upload_file_uploads_path %>",
+      signerUrl: "<%= rails_presign_url %>",
       aws_key: "<%= APP_CONFIG[:s3][:key] %>",
       bucket: "<%= APP_CONFIG[:s3][:bucket] %>",
       awsRegion: "<%= APP_CONFIG[:s3][:region] %>",
@@ -180,7 +189,7 @@
     const uploadFile = evaporate => {
 
       const addConfig = {
-        name: "<%= @resource.s3_dir_name(type: 'data') %>" + "/" + sanitized_fn,
+        name: "<%= s3_directory %>" + "/" + sanitized_fn,
         file: fileObj,
         contentType: fileObj.type,
         progress: progressValue => {
@@ -190,7 +199,7 @@
         complete: (_xhr, awsKey) => {
           $.ajax({
             type: "POST",
-            url: "<%= stash_engine.upload_complete_file_uploads_path %>",
+            url: "<%= complete_path %>",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
