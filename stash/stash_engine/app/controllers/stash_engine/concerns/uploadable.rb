@@ -11,8 +11,7 @@ module StashEngine
       included do
         before_action :setup_class_info, :require_login
         before_action :set_file_info, only: %i[destroy destroy_error destroy_manifest]
-        before_action :ajax_require_modifiable, only: %i[destroy_error destroy_manifest create validate_urls]
-        before_action :set_create_prerequisites, only: [:create]
+        before_action :ajax_require_modifiable, only: %i[destroy_error destroy_manifest create validate_urls presign_upload]
       end
 
       # show the list of files for resource
@@ -123,18 +122,6 @@ module StashEngine
 
       def urls_from(url_param)
         url_param.split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
-      end
-
-      def set_create_prerequisites
-        sanitize_filename
-        @temp_id = params[:temp_id]
-        resource_id = params[:resource_id]
-        upload_params = params[:upload]
-        raise ActionController::RoutingError.new('Not Found'), 'Not Found' unless @temp_id && resource_id && upload_params
-
-        ensure_upload_dir(resource_id)
-        @accum_file = File.join(@upload_dir, @temp_id)
-        @file_upload = upload_params[:upload]
       end
 
       def set_file_info
