@@ -26,6 +26,10 @@ StashEngine::Engine.routes.draw do
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
   resources :file_uploads, :software_uploads do
+    collection do
+      get 'presign_upload'
+      post 'upload_complete'
+    end
     member do
       patch 'remove'
       patch 'remove_unuploaded'
@@ -34,6 +38,8 @@ StashEngine::Engine.routes.draw do
       patch 'destroy_manifest' # destroy file from manifest method
     end
   end
+
+
 
   resources :edit_histories, only: [:index]
   match 'file_upload/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_upload_validate_urls', via: %i[get post put]
