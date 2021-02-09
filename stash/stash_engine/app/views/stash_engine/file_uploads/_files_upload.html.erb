@@ -48,10 +48,19 @@
 <div class="c-upload__upload-complete-text" id="upload_message" style="display: none;" role="status" aria-live="polite">
 </div>
 
-<%# this gets put in the page as a JS template that jquery file upload uses to show things in process %>
-<%= render partial: 'stash_engine/file_uploads/dropped_file' %>
-
 <script>
+
+  $(function () {
+    confirmToUpload(); // add event to require checking acceptance before uploading for page load
+  });
+
+  $('#upload_all').click( function(event) {
+    $(".js-bar").show();
+    $(".js-remove_link").hide();
+    $(".js-cancel").show();
+    uploadListToS3();
+  });
+
   // to test the javascript for files and dropping. TODO: Move to more appropriate place later
 
   // Some other objects may not keep their order, but maps do.  Use methods like set(k, v), has(k), get(k), delete(k)
@@ -66,8 +75,32 @@
       .forEach(logMapElements);
   var processFiles = new Map(); */
 
+  // Fileobj, sanitized name bundled together
   function specialFile(fileObj) {
     return {fileObj: fileObj, sanitized: file_sanitize(fileObj.name) };
+  }
+
+  // add files to the processFiles map and also to the pending files display
+  function stageToPage(files) {
+    for (let i = 0; i < files.length; i++) {
+      console.log(files[i]);
+      let k = generateQuickId();
+      let v = specialFile(files[i]);
+      $("#upload_list").append(outputLine(k, v));
+      fUploading.set(k, v);
+      reattachRemoveButtonEvents();
+      $('#confirm_text_upload, #upload_all, #upload_tweaker_head').show();
+    }
+  }
+
+  function reattachRemoveButtonEvents() {
+    $(".js-remove_link").unbind( "click" );
+    $(".js-remove_link").click(function(event) {
+      let row = $(event.target).closest("div.js-unuploaded");
+      let myId = row.attr("id").slice(18);
+      fUploading.delete(myId);
+      row.remove();
+    });
   }
 
   function outputLine(identifier, specFile){
@@ -78,7 +111,7 @@
         <span class="c-upload__filesize">${formatSizeUnits(specFile["fileObj"].size)}</span>
       </div>
       <div class="c-upload__action">
-        <progress class="js-bar" style="display: none" max="100" value="0"></progress>
+        <progress class="js-bar" style="display: none" id="progress_${identifier}" max="100" value="0"></progress>
         <button class="js-remove_link c-upload__button">Remove</button>
         <button class="js-cancel c-upload__button" style="display: none" id="cancel_${identifier}">Cancel</button>
       </div>
@@ -97,28 +130,95 @@
   $("#upload_bg").on("drop", function(event) {
     event.preventDefault();
     event.stopPropagation();
-    let files = event.originalEvent.dataTransfer.files;
-
-    for (var i = 0; i < files.length; i++) {
-      console.log(files[i]);
-      let k = generateQuickId();
-      let v = specialFile(files[i]);
-      $("#upload_list").append(outputLine(k, v));
-      // $("#upload_list").append(`${v["sanitized"]}<br/>`);
-      fUploading.set(k, v);
-    }
+    stageToPage(event.originalEvent.dataTransfer.files);
   });
 
   $("#upload_upload").on("change", function(event) {
-    let files = event.target.files; // FileList object
-
-    for (var i = 0; i < files.length; i++) {
-      console.log(files[i]);
-      let k = generateQuickId();
-      let v = specialFile(files[i]);
-      $("#upload_list").append(outputLine(k, v));
-      // $("#upload_list").append(`${v["sanitized"]}<br/>`);
-      fUploading.set(k, v);
-    }
+    stageToPage(event.target.files);
   });
+
+
+  /* Do the upload using the promises in sequence using a map */
+  function uploadListToS3() {
+    // Start off with a promise that always resolves, basically a blank promise
+    var sequence = Promise.resolve();
+
+    // Loop through each item and add the sequence of events required for each download
+    fUploading.forEach(function(v, k) {
+      // Add these promises to the end of the sequence chain
+      sequence = sequence.then(function() {
+        // return fakeUpload(k, v);
+        return evaporateIt(k, v);
+      }).then(function() {
+        console.log("Finished " + k);
+      });
+    })
+  }
+
+  function fakeUpload(key, fileObj) {
+    console.log("Starting upload of " + key);
+    return new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+
+  function evaporateIt(key, complexFileObj) {
+    fileObj = complexFileObj["fileObj"]
+    sanitized_fn = complexFileObj["sanitized"]
+    // see example like https://github.com/TTLabs/EvaporateJS/blob/c1f8905d173f07dab1f277b4bd753a2ce2303967/example/evaporate_example_awsv4_signature.html
+    const config = {
+      signerUrl: "<%= stash_engine.presign_upload_file_uploads_path %>",
+      aws_key: "<%= APP_CONFIG[:s3][:key] %>",
+      bucket: "<%= APP_CONFIG[:s3][:bucket] %>",
+      awsRegion: "<%= APP_CONFIG[:s3][:region] %>",
+      awsSignatureVersion: '4',
+      computeContentMd5: true,
+      cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
+      cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
+    };
+
+    const md5Id = Crypto.createHash('MD5').update(fileObj.name).digest('hex');
+
+    const uploadFile = evaporate => {
+
+      const addConfig = {
+        name: "<%= @resource.s3_dir_name(type: 'data') %>" + "/" + sanitized_fn,
+        file: fileObj,
+        contentType: fileObj.type,
+        progress: progressValue => {
+          $('#progress_' + key).attr('value', progressValue);
+        },
+        // complete: (_xhr, awsKey) => console.log('Complete!'),
+        complete: (_xhr, awsKey) => {
+          $.ajax({
+            type: "POST",
+            url: "<%= stash_engine.upload_complete_file_uploads_path %>",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                  resource_id: "<%= @resource.id %>",
+                  name: sanitized_fn,
+                  size: fileObj.size,
+                  type: fileObj.type
+                }
+            ),
+            success: result => $('#progress_' + key).replaceWith("<div>File " + sanitized_fn + " uploaded</div>"),
+            dataType: 'json'
+          });
+        }
+      }
+
+      // The bucket and some other properties may want to be be changed per upload
+      const overrides = {
+        bucket: "<%= APP_CONFIG[:s3][:bucket] %>"
+      };
+
+      evaporate.add(addConfig, overrides)
+          .then(
+              awsObjectKey => console.log('File successfully uploaded to:', awsObjectKey),
+              reason => console.log('File did not upload sucessfully:', reason)
+          );
+    }
+
+    return Evaporate.create(config).then(uploadFile);
+  }
+
 </script>
