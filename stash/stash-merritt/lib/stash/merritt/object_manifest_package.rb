@@ -33,14 +33,18 @@ module Stash
         # merritt submission will use the local file
         s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
                                     access_key_id: APP_CONFIG[:s3][:key],
-                                    secret_access_key: APP_CONFIG[:s3][:secret])        
+                                    secret_access_key: APP_CONFIG[:s3][:secret])
         bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
         object = bucket.object("#{resource.s3_dir_name}_man/manifest.checkm")
         puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX YYYYYYY #{manifest.write_to_string} XXXXXXXXXXXXXXXXXXXXXXXXX"
         object.put(body: manifest.write_to_string)
-        presigned = object.presigned_url(:get, expires_in: 1.day.to_i)
-        puts "XXXX   - presigned is #{presigned}"
-        presigned
+        # presigned = object.presigned_url(:get, expires_in: 1.day.to_i)
+        # puts "XXXX   - presigned is #{presigned}"
+        # presigned
+
+        manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
+        File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
+        manifest_path
       end
 
       def to_s
@@ -87,11 +91,15 @@ module Stash
         ::XML::MappingExtensions.to_uri(uri_or_str)
       end
 
+      def workdir_path
+        @workdir_path ||= Rails.public_path.join("system/#{resource_id}")
+      end
+
       def presigned_url_for(pathname)
         puts "XXXX getting presigned for #{pathname}"
         s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
                                     access_key_id: APP_CONFIG[:s3][:key],
-                                    secret_access_key: APP_CONFIG[:s3][:secret])        
+                                    secret_access_key: APP_CONFIG[:s3][:secret])
         bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
         object = bucket.object(pathname)
         presigned = object.presigned_url(:get, expires_in: 1.day.to_i)

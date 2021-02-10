@@ -71,7 +71,7 @@ module Stash
         s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
                                     access_key_id: APP_CONFIG[:s3][:key],
                                     secret_access_key: APP_CONFIG[:s3][:secret])
-        
+
         bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
         object = bucket.object("#{target_dir}/#{file_name}")
         object.put(body: file_contents)

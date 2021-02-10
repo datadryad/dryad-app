@@ -48,13 +48,13 @@ module Stash
       private
 
       def do_submit!
-        puts "XXXX ds a"
+        puts 'XXXX ds a'
         package = create_package
-        puts "XXXX ds b"
+        puts 'XXXX ds b'
         submit(package)
-        puts "XXXX ds c"
+        puts 'XXXX ds c'
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
-        puts "XXXX ds d"
+        puts 'XXXX ds d'
       end
 
       def resource
@@ -74,14 +74,13 @@ module Stash
       def create_package
         id_helper.ensure_identifier
         log_info("creating package for resource #{resource_id} (#{resource.identifier_str})")
-        #if resource.upload_type == :manifest
-          # user-added URLs
-          ObjectManifestPackage.new(resource: resource)
-        #else
-          # user-uploaded files
+        # if resource.upload_type == :manifest
+        # user-added URLs
+        ObjectManifestPackage.new(resource: resource)
+        # else
+        # user-uploaded files
         #  ZipPackage.new(resource: resource)
-        #end
-
+        # end
       end
 
       def submit(package)
