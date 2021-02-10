@@ -164,8 +164,9 @@
     manuscript’s peer review process. After selecting this option, you will be presented with a private, randomized URL
     that allows for a double-blind download of the dataset. This link can be used at the journal office during the
     review period or for sharing with collaborators to access the data files while the dataset is not yet published.
-    Please write in to <a href="mailto:help@datadryad.org">help@datadryad.org</a> when your manuscript has been
-    accepted so that the Dryad curation team can begin the checks and publication processes.
+    When your manuscript has been accepted, you can take your dataset out of private for peer review,
+    so that the Dryad curation team can begin the checks and publication processes. To do this, log in to Dryad and
+    navigate to "My Datasets". Find the submission listed under 'In Progress' and click 'Resume'. Deselect the Private for Peer Review box (on page 4). At the bottom of the "Review and Submit" page, click ‘Submit'.
 </p>
 
 <h2 id="when-to-submit">When should I submit my data?</h2>
