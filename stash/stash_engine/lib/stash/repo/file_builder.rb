@@ -65,16 +65,20 @@ module Stash
       def write_s3_file(target_dir)
         puts "XXXX -- saving #{file_name} to S3 in #{APP_CONFIG[:s3][:bucket]} -- #{target_dir}"
 
+        puts "XXX fb wsf a"
         file_contents = contents
         return unless file_contents
-
+        puts "XXX fb wsf b"
         s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
                                     access_key_id: APP_CONFIG[:s3][:key],
                                     secret_access_key: APP_CONFIG[:s3][:secret])
-
+        puts "XXX fb wsf c"
         bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
+        puts "XXX fb wsf d"
         object = bucket.object("#{target_dir}/#{file_name}")
+        puts "XXX fb wsf e"
         object.put(body: file_contents)
+        puts "XXX fb wsf f"
         object.key
       end
     end
