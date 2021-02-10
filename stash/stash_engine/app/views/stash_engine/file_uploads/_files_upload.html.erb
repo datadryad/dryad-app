@@ -61,6 +61,7 @@
 
   $(function () {
     confirmToUpload(); // add event to require checking acceptance before uploading for page load
+    $('#confirm_text_upload, #upload_all, #upload_tweaker_head').hide();  // don't show the upload files until they are set
   });
 
   $('#upload_all').click( function(event) {
@@ -148,6 +149,8 @@
 
   /* Do the upload using the promises in sequence using a map */
   function uploadListToS3() {
+    let failArr = [];
+
     // Start off with a promise that always resolves, basically a blank promise
     var sequence = Promise.resolve();
 
@@ -156,24 +159,44 @@
       // Add these promises to the end of the sequence chain
       sequence = sequence.then(function() {
         return evaporateIt(k, v);
-      }).then(function() {
-        console.log("Finished " + k);
+      }).catch(function() {
+        failArr.push(k["sanitized"]);
       });
     })
+
+    // after all are uploaded
     sequence = sequence.then(function() {
       // after all are done
       $('#upload_all').prop("disabled",false);
       var fUploading = new Map();
       $("div.js-unuploaded").fadeOut("normal", function() {
         $(this).remove();
+        $('#confirm_text_upload, #upload_all, #upload_tweaker_head').hide();
       });
-      alert('all done -- refresh file list below');
-    });
-  }
 
-  function fakeUpload(key, fileObj) {
-    console.log("Starting upload of " + key);
-    return new Promise((resolve) => setTimeout(resolve, 10000));
+      if (failArr.length === 0) {
+        $('#upload_message').removeClass();
+        $('#upload_message').addClass('c-upload__upload-complete-text');
+        $('#upload_message').html('<p>Upload complete.</p>');
+        $('#upload_message').show();
+      }else{
+        $('#upload_message').removeClass();
+        $('#upload_message').addClass('c-upload__upload-error-text');
+        $('#upload_message').html(`<p>The following files had problems uploading, please upload them again:<br/>${failArr.join(", ")}</p>`);
+        $('#upload_message').show();
+      }
+      failArr = [];
+
+      // redraw the uploaded files table from Rails AJAX
+      $.ajax({
+        url: "<%= polymorphic_path(file, resource_id: @resource.id, format: :js) %>",
+        //data,
+        // success: success,
+        dataType: 'script'
+      });
+    }).catch(function() {
+      console.log("Failed");
+    });
   }
 
 
