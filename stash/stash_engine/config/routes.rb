@@ -46,8 +46,8 @@ StashEngine::Engine.routes.draw do
   get 'file_upload/presign_upload/:resource_id', to: 'file_uploads#presign_upload', as: 'file_upload_presign_url'
   get 'software_upload/presign_upload/:resource_id', to: 'software_uploads#presign_upload', as: 'software_upload_presign_url'
 
-  get 'file_upload/upload_complete/:resourcve_id', to: 'file_uploads#upload_complete', as: 'file_upload_complete'
-  get 'software_upload/upload_complete/:resource_id', to: 'software_uploads#upload_complete', as: 'software_upload_complete'
+  post 'file_upload/upload_complete/:resourcve_id', to: 'file_uploads#upload_complete', as: 'file_upload_complete'
+  post 'software_upload/upload_complete/:resource_id', to: 'software_uploads#upload_complete', as: 'software_upload_complete'
 
 
 
