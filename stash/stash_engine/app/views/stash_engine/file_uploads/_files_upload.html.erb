@@ -270,7 +270,8 @@
                   resource_id: "<%= @resource.id %>",
                   name: sanitized_fn,
                   size: fileObj.size,
-                  type: fileObj.type
+                  type: fileObj.type,
+                  original: fileObj.name
                 }
             ),
             success: result => {

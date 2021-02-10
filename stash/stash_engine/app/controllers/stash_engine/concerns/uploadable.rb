@@ -85,25 +85,23 @@ module StashEngine
       end
 
       def upload_complete
-        fu = @file_model.where(upload_file_name: params[:name], resource_id: @resource.id, file_state: %w[copied created]).first
-        fu = @file_model.new if fu.nil?
-
-        # if something was copied from previous version and uploaded again then delete previous and create new
-        if fu.file_state == 'copied'
-          fu.update(file_state: 'deleted')
-          fu = @file_model.new
-        end
-
-        fu.update( upload_file_name: params[:name],
-                   upload_content_type: params[:type],
-                   upload_file_size: params[:size],
-                   resource_id: @resource.id,
-                   upload_updated_at: Time.new,
-                   file_state: 'created',
-                   original_filename: params[:name] )
-
         respond_to do |format|
-          format.json { render :json => {msg: "ok"} }
+          format.json {
+            # destroy any previous with this name and overwrite with this one
+            @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
+
+            @file_model.create(
+              upload_file_name: params[:name],
+              upload_content_type: params[:type],
+              upload_file_size: params[:size],
+              resource_id: @resource.id,
+              upload_updated_at: Time.new,
+              file_state: 'created',
+              original_filename: params[:original]
+            )
+
+            render :json => {msg: "ok"}
+          }
         end
       end
 
@@ -128,12 +126,6 @@ module StashEngine
         File.size(@accum_file) < params[:hidden_bytes].to_i
       end
 
-      def save_final_file
-        upload_path = unique_upload_path(@file_upload.original_filename)
-        FileUtils.mv(@accum_file, upload_path)
-        create_db_file(upload_path)
-      end
-
       def unique_upload_path(original_filename)
         filename = UrlValidator.make_unique(resource: resource, filename: original_filename)
         File.join(@upload_dir, filename)
@@ -150,21 +142,6 @@ module StashEngine
       # write a chunk to the file.
       def add_to_file(fn, fileupload)
         File.open(fn, 'ab') { |f| f.write(fileupload.read) }
-      end
-
-      # for standard uploads, create standard file in DB, this only happens once a file upload is finished
-      def create_db_file(path)
-        # destroy any previous with this name and overwrite with this one
-        @resource.send(@resource_assoc).where(upload_file_name: File.basename(path)).destroy_all
-        @file_model.create(
-          upload_file_name: File.basename(path),
-          upload_content_type: @file_upload.content_type,
-          upload_file_size: File.size(path),
-          resource_id: params[:resource_id],
-          upload_updated_at: Time.new.utc,
-          file_state: 'created',
-          original_filename: @original_filename || File.basename(path)
-        )
       end
 
       # Remove any unwanted characters from the uploaded file's name
