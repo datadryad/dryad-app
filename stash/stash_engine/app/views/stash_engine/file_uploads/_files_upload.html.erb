@@ -66,7 +66,6 @@
   $('#upload_all').click( function(event) {
     $(".js-bar").show();
     $(".js-remove_link").hide();
-    $(".js-cancel").show();
     uploadListToS3();
     $('#upload_all').prop("disabled",true);
   });
@@ -123,7 +122,6 @@
       <div class="c-upload__action">
         <progress class="js-bar" style="display: none" id="progress_${identifier}" value="0"></progress>
         <button class="js-remove_link c-upload__button">Remove</button>
-        <button class="js-cancel c-upload__button" style="display: none" id="cancel_${identifier}">Cancel</button>
       </div>
       <input name="temp_id" value="${identifier}" type="hidden">
       <span class="spaced_text" style="display: none"><a href="#" id="up_button_${identifier}"
@@ -157,12 +155,20 @@
     fUploading.forEach(function(v, k) {
       // Add these promises to the end of the sequence chain
       sequence = sequence.then(function() {
-        // return fakeUpload(k, v);
         return evaporateIt(k, v);
       }).then(function() {
         console.log("Finished " + k);
       });
     })
+    sequence = sequence.then(function() {
+      // after all are done
+      $('#upload_all').prop("disabled",false);
+      var fUploading = new Map();
+      $("div.js-unuploaded").fadeOut("normal", function() {
+        $(this).remove();
+      });
+      alert('all done -- refresh file list below');
+    });
   }
 
   function fakeUpload(key, fileObj) {
@@ -170,7 +176,36 @@
     return new Promise((resolve) => setTimeout(resolve, 10000));
   }
 
+
+  /* Based on https://lea.verou.me/2016/12/resolve-promises-externally-with-this-one-weird-trick/
+     It keeps files uploading one at a time in evaporateIt function by not fulfilling promise until the
+     the file is complete.  Keeps most of the configuration intact without a lot of rewriting.
+
+     May revisit later as we move to reworking the uploads more in another framework.  This example is
+     more promise-like.
+
+     https://github.com/TTLabs/EvaporateJS/blob/master/example/evaporate_example.html
+   */
+
+  function deferPromise() {
+    var res, rej;
+
+    var promise = new Promise((resolve, reject) => {
+      res = resolve;
+      rej = reject;
+    });
+
+    promise.resolve = res;
+    promise.reject = rej;
+
+    return promise;
+  }
+
+
   function evaporateIt(key, complexFileObj) {
+
+    let allDone = deferPromise();
+
     fileObj = complexFileObj["fileObj"]
     sanitized_fn = complexFileObj["sanitized"]
     // see example like https://github.com/TTLabs/EvaporateJS/blob/c1f8905d173f07dab1f277b4bd753a2ce2303967/example/evaporate_example_awsv4_signature.html
@@ -196,7 +231,12 @@
         progress: progressValue => {
           $('#progress_' + key).attr('value', progressValue);
         },
-        // complete: (_xhr, awsKey) => console.log('Complete!'),
+        cancelled: function () {
+          allDone.reject();
+        },
+        error: function (msg) {
+          allDone.reject();
+        },
         complete: (_xhr, awsKey) => {
           $.ajax({
             type: "POST",
@@ -214,6 +254,7 @@
                 $("#progress_" + key).replaceWith("<span>Complete</span>");
                 $("#cancel_" + key).hide();
                 fUploading.delete(key);
+                allDone.resolve();
             },
             dataType: 'json'
           });
@@ -232,7 +273,8 @@
           );
     }
 
-    return Evaporate.create(config).then(uploadFile);
+    Evaporate.create(config).then(uploadFile);
+    return allDone;  // a promise that it has uploaded or failed
   }
 
 </script>
