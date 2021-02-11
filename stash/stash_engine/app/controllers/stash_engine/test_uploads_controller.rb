@@ -29,16 +29,18 @@ module StashEngine
         fu = FileUpload.new
       end
 
-      fu.update( upload_file_name: params[:name],
-                 upload_content_type: params[:type],
-                 upload_file_size: params[:size],
-                 resource_id: resource.id,
-                 upload_updated_at: Time.new,
-                 file_state: 'created',
-                 original_filename: params[:name] )
+      fu.update(upload_file_name: params[:name],
+                upload_content_type: params[:type],
+                upload_file_size: params[:size],
+                resource_id: resource.id,
+                upload_updated_at: Time.new,
+                file_state: 'created',
+                original_filename: params[:name])
 
       respond_to do |format|
-        format.json { render :json => {msg: "ok"} }
+        format.json do
+          render json: { msg: 'ok' }
+        end
       end
     end
 

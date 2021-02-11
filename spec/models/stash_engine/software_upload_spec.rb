@@ -29,10 +29,10 @@ module StashEngine
                                     state: 'finished', copy_type: 'software_publish')
     end
 
-    describe '#calc_file_path' do
+    describe '#calc_s3_path' do
       it 'returns a path for zenodo files' do
-        expect(@upload.calc_file_path).to \
-          end_with("uploads/#{@resource.id}_sfw/#{@upload.upload_file_name}")
+        expect(@upload.calc_s3_path).to \
+          end_with("#{@resource.id}/sfw/#{@upload.upload_file_name}")
       end
     end
 
