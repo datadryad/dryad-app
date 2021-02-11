@@ -1,8 +1,11 @@
 require 'active_support/concern'
+require 'stash/s3'
 
 module StashEngine
   module Concerns
     module ModelUploadable
+
+      @@s3 = Stash::S3.new
 
       extend ActiveSupport::Concern
 
@@ -55,8 +58,8 @@ module StashEngine
       # figures out how to delete file based on previous state
       def smart_destroy!
         # see if it's on the file system and destroy it if it's there
-        cfp = calc_file_path
-        ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
+        s3_key = calc_s3_path
+        @@s3.destroy(s3_key: s3_key) if !s3_key.blank? && @@s3.exists?(s3_key: s3_key)
 
         if in_previous_version?
           # destroy any others of this filename in this resource
