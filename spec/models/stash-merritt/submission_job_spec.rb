@@ -3,11 +3,11 @@ module Stash
     describe SubmissionJob do
       include Mocks::Aws
       include Mocks::Tenant
-      
+
       before(:each) do
         mock_aws!
         mock_tenant!
-        
+
         @logger = instance_double(Logger)
         allow(@logger).to receive(:debug)
         allow(@logger).to receive(:info)
@@ -19,7 +19,7 @@ module Stash
 
         @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/stash/doi:10.123/456').to_s
 
-        @user = create(:user, tenant_id: 'dryad' , role: nil)
+        @user = create(:user, tenant_id: 'dryad', role: nil)
         @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
         @resource = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
         allow(StashEngine::Resource).to receive(:find).with(@resource.id).and_return(@resource)

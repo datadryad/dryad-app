@@ -98,12 +98,7 @@ module StashEngine
     # rather than a file that was indicated by a URL reference
     def direct_s3_presigned_url
       puts 'XXXX dspu '
-      s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
-                                  access_key_id: APP_CONFIG[:s3][:key],
-                                  secret_access_key: APP_CONFIG[:s3][:secret])
-      bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
-      object = bucket.object("#{resource.s3_dir_name}/#{upload_file_name}")
-      presigned = object.presigned_url(:get, expires_in: 1.day.to_i)
+      presigned = Stash::Aws::S3.presigned_download_url("#{resource.s3_dir_name}/#{upload_file_name}")
       puts "XXXX   - presigned is #{presigned}"
       presigned
     end

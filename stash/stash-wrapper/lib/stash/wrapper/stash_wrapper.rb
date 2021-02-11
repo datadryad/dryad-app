@@ -34,16 +34,17 @@ module Stash
       #   XML metadata
       def initialize(identifier:, version:, license:, descriptive_elements:, inventory: nil)
         raise ArgumentError, "identifier does not appear to be an Identifier object: #{identifier || 'nil'}" unless identifier.is_a?(Identifier)
-        puts "XXXXX sw i a"
+
+        puts 'XXXXX sw i a'
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
           license: license,
           inventory: inventory
         )
-        puts "XXXXX sw i b"
+        puts 'XXXXX sw i b'
         self.stash_descriptive = descriptive_elements
-        puts "XXXXX sw i c"
+        puts 'XXXXX sw i c'
       end
 
       def id_type

@@ -1,6 +1,6 @@
-require 'aws-sdk-s3'
 require 'fileutils'
 require 'mime-types'
+require 'stash/aws/s3'
 
 module Stash
   module Repo
@@ -65,21 +65,16 @@ module Stash
       def write_s3_file(target_dir)
         puts "XXXX -- saving #{file_name} to S3 in #{APP_CONFIG[:s3][:bucket]} -- #{target_dir}"
 
-        puts "XXX fb wsf a"
+        puts 'XXX fb wsf a'
         file_contents = contents
         return unless file_contents
-        puts "XXX fb wsf b"
-        s3r = Aws::S3::Resource.new(region: APP_CONFIG[:s3][:region],
-                                    access_key_id: APP_CONFIG[:s3][:key],
-                                    secret_access_key: APP_CONFIG[:s3][:secret])
-        puts "XXX fb wsf c"
-        bucket = s3r.bucket(APP_CONFIG[:s3][:bucket])
-        puts "XXX fb wsf d"
-        object = bucket.object("#{target_dir}/#{file_name}")
-        puts "XXX fb wsf e"
-        object.put(body: file_contents)
-        puts "XXX fb wsf f"
-        object.key
+
+        puts 'XXX fb wsf b'
+        file_path = "#{target_dir}/#{file_name}"
+        path_out = Stash::Aws::S3.write_to_s3(file_path: file_path,
+                                              contents: file_contents)
+        puts "XXXXXXXXXX wrote #{file_path} XXXXXXXXXXXXXXXXXXXXX"
+        file_path
       end
     end
   end
