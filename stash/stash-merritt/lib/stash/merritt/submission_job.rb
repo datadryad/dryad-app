@@ -75,17 +75,9 @@ module Stash
       end
 
       def create_package
-        puts 'XXXX cp a'
         id_helper.ensure_identifier
         log_info("creating package for resource #{resource_id} (#{resource.identifier_str})")
-        # if resource.upload_type == :manifest
-        # user-added URLs
-        puts 'XXXX cp b'
         ObjectManifestPackage.new(resource: resource)
-        # else
-        # user-uploaded files
-        #  ZipPackage.new(resource: resource)
-        # end
       end
 
       def submit(package)
