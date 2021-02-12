@@ -5,6 +5,8 @@ module Stash
     class S3
 
       def self.write_to_s3(file_path:, contents:)
+        puts "XXXX ZZZZZZZ #{file_path}"
+        puts "XXXX ZZZZZZZ #{contents}"
         object = s3_bucket.object(file_path)
         object.put(body: contents)
       end
