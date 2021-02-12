@@ -37,7 +37,7 @@ module Stash
 
         # Save a copy of the manifest in S3 for debugging if needed, but the actual
         # merritt submission will use the local file
-        Stash::Aws::S3.write_to_s3(file_path: "#{resource.s3_dir_name}_man/manifest.checkm",
+        Stash::Aws::S3.write_to_s3(file_path: "#{resource.s3_dir_name}/manifest/manifest.checkm",
                                    contents: manifest.write_to_string)
         puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX YYYYYYY #{manifest.write_to_string} XXXXXXXXXXXXXXXXXXXXXXXXX"
         puts 'XXXX cm after a'
@@ -79,7 +79,7 @@ module Stash
 
       def system_file_entry(builder)
         puts 'XXXX omp sfe a'
-        return unless (path = builder.write_s3_file("#{@resource.s3_dir_name}_man"))
+        return unless (path = builder.write_s3_file("#{@resource.s3_dir_name}/manifest"))
 
         puts "XXXX omp sfe b XXXXXXXXXXXXXXXXXXXXXXXXXX #{path}"
         file_name = builder.file_name

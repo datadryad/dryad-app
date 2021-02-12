@@ -6,6 +6,7 @@ require 'ostruct'
 module Stash
   module Merritt
     describe SwordHelper do
+      include Mocks::Aws
 
       before(:all) do
         WebMock.disable_net_connect!(allow_localhost: true)
@@ -21,6 +22,8 @@ module Stash
       end
 
       before(:each) do
+        mock_aws!
+
         @rails_root = Dir.mktmpdir('rails_root')
         FileUtils.mkdir_p("#{@rails_root}/tmp")
         allow(Rails).to receive(:root).and_return(@rails_root)
@@ -108,7 +111,7 @@ module Stash
               expect(@sword_client).to receive(:create)
                 .with(
                   doi: "doi:#{@doi}",
-                  payload: @package.manifest,
+                  payload: @package.payload,
                   packaging: Stash::Sword::Packaging::BINARY
                 ).and_return(@receipt)
               @helper.submit!
@@ -119,7 +122,7 @@ module Stash
             it 'sets the version "zipfile"' do
               @helper.submit!
               version = @resource.stash_version
-              manifest = File.basename(@package.manifest)
+              manifest = File.basename(@package.payload)
               expect(version.zip_filename).to eq(manifest)
             end
 
@@ -143,7 +146,7 @@ module Stash
               expect(@sword_client).to receive(:update)
                 .with(
                   edit_iri: @update_uri,
-                  payload: @package.manifest,
+                  payload: @package.payload,
                   packaging: Stash::Sword::Packaging::BINARY
                 ).and_return(200)
               @helper.submit!
@@ -152,7 +155,7 @@ module Stash
             it 'sets the version "zipfile"' do
               @helper.submit!
               version = @resource.stash_version
-              manifest = File.basename(@package.manifest)
+              manifest = File.basename(@package.payload)
               expect(version.zip_filename).to eq(manifest)
             end
 

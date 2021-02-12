@@ -63,17 +63,12 @@ module Stash
       # Writes the file to the target_dir in S3, and
       # returns the key for the file
       def write_s3_file(target_dir)
-        puts "XXXX -- saving #{file_name} to S3 in #{APP_CONFIG[:s3][:bucket]} -- #{target_dir}"
-
-        puts 'XXX fb wsf a'
         file_contents = contents
-        return unless file_contents
+        return unless file_contents.present?
 
-        puts 'XXX fb wsf b'
         file_path = "#{target_dir}/#{file_name}"
-        path_out = Stash::Aws::S3.write_to_s3(file_path: file_path,
-                                              contents: file_contents)
-        puts "XXXXXXXXXX wrote #{file_path} XXXXXXXXXXXXXXXXXXXXX"
+        Stash::Aws::S3.write_to_s3(file_path: file_path,
+                                   contents: file_contents)
         file_path
       end
     end
