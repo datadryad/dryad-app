@@ -37,8 +37,8 @@ module Stash
 
         # Save a copy of the manifest in S3 for debugging if needed, but the actual
         # merritt submission will use the local file
-        Stash::Aws::S3.write_to_s3(file_path: "#{resource.s3_dir_name}/manifest/manifest.checkm",
-                                   contents: manifest.write_to_string)
+        Stash::Aws::S3.put(file_path: "#{resource.s3_dir_name}/manifest/manifest.checkm",
+                           contents: manifest.write_to_string)
         puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX YYYYYYY #{manifest.write_to_string} XXXXXXXXXXXXXXXXXXXXXXXXX"
         puts 'XXXX cm after a'
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s

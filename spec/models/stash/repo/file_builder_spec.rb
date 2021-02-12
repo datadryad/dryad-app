@@ -53,27 +53,27 @@ module Stash
 
       describe :write_file do
         it 'writes the file' do
-          allow(Stash::Aws::S3).to receive(:write_to_s3)
+          allow(Stash::Aws::S3).to receive(:put)
           contents = "<contents/>\n"
           file_name = 'contents.xml'
           target_dir = 'some/bogus/target_dir'
           builder = FileBuilder.new(file_name: file_name)
           builder.define_singleton_method(:contents) { contents }
           builder.write_s3_file(target_dir)
-          expect(Stash::Aws::S3).to have_received(:write_to_s3)
+          expect(Stash::Aws::S3).to have_received(:put)
             .with(file_path: "#{target_dir}/#{file_name}",
                   contents: contents)
             .at_least(:once)
         end
 
         it 'writes nothing if #contents returns nil' do
-          allow(Stash::Aws::S3).to receive(:write_to_s3)
+          allow(Stash::Aws::S3).to receive(:put)
           file_name = 'contents.xml'
           target_dir = 'some/bogus/target_dir'
           builder = FileBuilder.new(file_name: file_name)
           builder.define_singleton_method(:contents) { nil }
           builder.write_s3_file(target_dir)
-          expect(Stash::Aws::S3).not_to have_received(:write_to_s3)
+          expect(Stash::Aws::S3).not_to have_received(:put)
         end
       end
     end

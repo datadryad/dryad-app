@@ -4,7 +4,7 @@ module Stash
   module Aws
     class S3
 
-      def self.write_to_s3(file_path:, contents:)
+      def self.put(file_path:, contents:)
         object = s3_bucket.object(file_path)
         object.put(body: contents)
       end
