@@ -60,6 +60,6 @@
     Once your dataset has been approved by our curators it will be published and publicly available. We will notify you
     by email and this email will contain a permanent DOI that can be used to <a href="/stash/faq#cite">cite your dataset</a>.
     If the cost of your dataset is not covered by a journal, your institution, or a country waiver you will
-    <a href="/stash/faq#cost">receive an invoice</a>. Datasets can be versioned at any time by clicking <a href="/stash/faq/update">&quot;update&quot;</a> on
+    <a href="/stash/faq#cost">receive an invoice</a>. Datasets can be versioned at any time by clicking <a href="/stash/faq#update">&quot;update&quot;</a> on
     your dataset.
 </p>
