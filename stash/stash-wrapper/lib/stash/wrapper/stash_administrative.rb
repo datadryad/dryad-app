@@ -23,14 +23,10 @@ module Stash
       #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
       def initialize(version:, license:, embargo: nil, inventory: nil)
-        puts 'XXXX sa i a'
         self.version = valid_version(version)
-        puts 'XXXX sa i a2'
         self.license = valid_license(license)
-        puts 'XXXX sa i b'
         self.embargo = valid_embargo(embargo)
         self.inventory = valid_inventory_or_nil(inventory)
-        puts 'XXXX sa i c'
       end
 
       private
@@ -44,7 +40,6 @@ module Stash
       def valid_license(license)
         return license if license.is_a?(License)
 
-        puts "XXXXX no license #{license}"
         raise ArgumentError, "license does not appear to be a License object: #{license || 'nil'}"
       end
 
