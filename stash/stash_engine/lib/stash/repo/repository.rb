@@ -189,8 +189,8 @@ module Stash
         msg = error.to_s
         if (backtrace = (error.respond_to?(:backtrace) && error.backtrace))
           backtrace.each do |line|
-            msg << "\n"
-            msg << line
+            msg += "\n"
+            msg += line
           end
         end
         msg
