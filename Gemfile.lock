@@ -858,7 +858,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk-s3
+  aws-sdk-s3 (~> 1.87)
   binding_of_caller
   bootsnap
   byebug
