@@ -15,7 +15,6 @@ module Stash
         public_path = Pathname.new("#{@rails_root}/public")
         allow(Rails).to receive(:public_path).and_return(public_path)
         allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
-        allow(Rails).to receive(:configuration).and_return(OpenStruct.new(database_configuration: { 'test' => { 'host' => 'localhost' } }))
 
         @public_system = public_path.join('system').to_s
         FileUtils.mkdir_p(@public_system)
