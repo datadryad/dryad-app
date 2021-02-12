@@ -30,7 +30,6 @@ module Stash
         end
 
         def build_xml
-          puts 'XXXX bx'
           StashWrapper.new(
             identifier: to_sw_identifier(dcs_resource.identifier),
             version: Version.new(number: version_number, date: Date.today),

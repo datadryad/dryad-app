@@ -35,22 +35,16 @@ module Stash
         def contents
           Nokogiri::XML::Builder.new do |xml|
             xml.qualifieddc(ROOT_ATTRIBUTES) do
-              puts 'XXXX oai contents a'
               add_creators(xml)
               add_contributors(xml)
-              puts 'XXXX oai contents c'
               add_title(xml)
-              puts 'XXXX oai contents d'
               add_publisher(xml)
-              puts 'XXXX oai contents f'
               add_pub_year(xml)
               add_subjects(xml)
               add_resource_type(xml)
-              puts 'XXXX oai contents j'
               add_rights(xml)
               add_descriptions(xml)
               add_related_identifiers(xml)
-              puts 'XXXX oai contents z'
             end
           end.to_xml.to_s
         end
