@@ -1,13 +1,5 @@
 <%# locals: file, resource, uploads %>
 
-<% rails_presign_url = (@file_model == StashEngine::SoftwareUpload ? software_upload_presign_url_path(@resource) :
-                      file_upload_presign_url_path(@resource) )%>
-
-<% complete_path = (@file_model == StashEngine::SoftwareUpload ? software_upload_complete_path(@resource) :
-                       file_upload_complete_path(@resource) ) %>
-
-<% s3_directory = @resource.s3_dir_name(type: (@file_model == StashEngine::SoftwareUpload ? 'software' : 'data')) %>
-
 <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
 
 <div>
@@ -58,247 +50,25 @@
 </div>
 
 <script>
+  /* The encapsulation below isn't perfect, but divides methods into three main sections.  They are only needed in the upload
+     page, so isn't loaded with all the general javascript in the asset pipeline.  Some areas need to pull in Rails settings
+     so use js.erb templating to do set up.
 
-  $(function () {
-    confirmToUpload(); // add event to require checking acceptance before uploading for page load
-    $('#confirm_text_upload, #upload_all, #upload_tweaker_head').hide();  // don't show the upload files until they are set
-  });
-
-  $('#upload_all').click( function(event) {
-    $(".js-bar").show();
-    $(".js-remove_link").hide();
-    uploadListToS3();
-    $('#upload_all').prop("disabled",true);
-  });
-
-  // to test the javascript for files and dropping. TODO: Move to more appropriate place later
-
-  // Some other objects may not keep their order, but maps do.  Use methods like set(k, v), has(k), get(k), delete(k)
-  // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-  var fUploading = new Map();
-
-  /* function logMapElements(value, key, map) {
-  console.log(`m[${key}] = ${value}`);
-  }
-
-  new Map([['foo', 3], ['bar', {}], ['baz', undefined]])
-      .forEach(logMapElements);
-  var processFiles = new Map(); */
-
-  // Fileobj, sanitized name bundled together
-  function specialFile(fileObj) {
-    return {fileObj: fileObj, sanitized: file_sanitize(fileObj.name) };
-  }
-
-  // add files to the processFiles map and also to the pending files display
-  function stageToPage(files) {
-    for (let i = 0; i < files.length; i++) {
-      console.log(files[i]);
-      let k = generateQuickId();
-      let v = specialFile(files[i]);
-      $("#upload_list").append(outputLine(k, v));
-      fUploading.set(k, v);
-      reattachRemoveButtonEvents();
-      $('#confirm_text_upload, #upload_all, #upload_tweaker_head').show();
-    }
-  }
-
-  function reattachRemoveButtonEvents() {
-    $(".js-remove_link").unbind( "click" );
-    $(".js-remove_link").click(function(event) {
-      let row = $(event.target).closest("div.js-unuploaded");
-      let myId = row.attr("id").slice(18);
-      fUploading.delete(myId);
-      row.remove();
-    });
-  }
-
-  function outputLine(identifier, specFile){
-    return `
-    <div class="c-upload__item js-unuploaded" id="not_uploaded_file_${identifier}">
-      <div class="c-upload__filename">
-        <span class="js-filename">${specFile["sanitized"]}</span>
-        <span class="c-upload__filesize">${formatSizeUnits(specFile["fileObj"].size)}</span>
-      </div>
-      <div class="c-upload__action">
-        <progress class="js-bar" style="display: none" id="progress_${identifier}" value="0"></progress>
-        <button class="js-remove_link c-upload__button">Remove</button>
-      </div>
-      <input name="temp_id" value="${identifier}" type="hidden">
-      <span class="spaced_text" style="display: none"><a href="#" id="up_button_${identifier}"
-            data-id="${identifier}" class="js-upload-it">Upload</a></span>
-    </div>`;
-  }
-
-  // This dragover is required for drop to work.  If we want to style it (such as an outline) we can style with this and dragleave
-  $("#upload_bg").on("dragover", function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  });
-
-  $("#upload_bg").on("drop", function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    stageToPage(event.originalEvent.dataTransfer.files);
-  });
-
-  $("#upload_upload").on("change", function(event) {
-    stageToPage(event.target.files);
-  });
-
-
-  /* Do the upload using the promises in sequence using a map */
-  function uploadListToS3() {
-    let failArr = [];
-
-    // Start off with a promise that always resolves, basically a blank promise
-    var sequence = Promise.resolve();
-
-    // Loop through each item and add the sequence of events required for each download
-    fUploading.forEach(function(v, k) {
-      // Add these promises to the end of the sequence chain
-      sequence = sequence.then(function() {
-        return evaporateIt(k, v);
-      }).catch(function() {
-        failArr.push(k["sanitized"]);
-      });
-    })
-
-    // after all are uploaded
-    sequence = sequence.then(function() {
-      // after all are done
-      $('#upload_all').prop("disabled",false);
-      var fUploading = new Map();
-      $("div.js-unuploaded").fadeOut("normal", function() {
-        $(this).remove();
-        $('#confirm_text_upload, #upload_all, #upload_tweaker_head').hide();
-      });
-
-      if (failArr.length === 0) {
-        $('#upload_message').removeClass();
-        $('#upload_message').addClass('c-upload__upload-complete-text');
-        $('#upload_message').html('<p>Upload complete.</p>');
-        $('#upload_message').show();
-      }else{
-        $('#upload_message').removeClass();
-        $('#upload_message').addClass('c-upload__upload-error-text');
-        $('#upload_message').html(`<p>The following files had problems uploading, please upload them again:<br/>${failArr.join(", ")}</p>`);
-        $('#upload_message').show();
-      }
-      failArr = [];
-
-      // redraw the uploaded files table from Rails AJAX
-      $.ajax({
-        url: "<%= polymorphic_path(file, resource_id: @resource.id, format: :js) %>",
-        //data,
-        // success: success,
-        dataType: 'script'
-      });
-    }).catch(function() {
-      console.log("Failed");
-    });
-  }
-
-
-  /* Based on https://lea.verou.me/2016/12/resolve-promises-externally-with-this-one-weird-trick/
-     It keeps files uploading one at a time in evaporateIt function by not fulfilling promise until the
-     the file is complete.  Keeps most of the configuration intact without a lot of rewriting.
-
-     May revisit later as we move to reworking the uploads more in another framework.  This example is
-     more promise-like.
-
-     https://github.com/TTLabs/EvaporateJS/blob/master/example/evaporate_example.html
+     We will likely need to rework this extensively with files redesign and if we use a framework to better separate concerns.
    */
 
-  function deferPromise() {
-    var res, rej;
+  // *****
+  // *preview_to_page* does the annoying work of tracking files from dropping or selecting and displaying on page before uploading
+  // *****
+  <%= render partial: 'stash_engine/file_uploads/preview_to_page.js' %>
 
-    var promise = new Promise((resolve, reject) => {
-      res = resolve;
-      rej = reject;
-    });
+  // *****
+  // *s3_upload* mostly focuses on uploading files in sequence by calling the evaporate library and displaying some changes
+  // *****
+  <%= render partial: 'stash_engine/file_uploads/s3_upload.js', locals: {resource: resource, file: file} %>
 
-    promise.resolve = res;
-    promise.reject = rej;
-
-    return promise;
-  }
-
-
-  function evaporateIt(key, complexFileObj) {
-
-    let allDone = deferPromise();
-
-    fileObj = complexFileObj["fileObj"]
-    sanitized_fn = complexFileObj["sanitized"]
-    // see example like https://github.com/TTLabs/EvaporateJS/blob/c1f8905d173f07dab1f277b4bd753a2ce2303967/example/evaporate_example_awsv4_signature.html
-    const config = {
-      signerUrl: "<%= rails_presign_url %>",
-      aws_key: "<%= APP_CONFIG[:s3][:key] %>",
-      bucket: "<%= APP_CONFIG[:s3][:bucket] %>",
-      awsRegion: "<%= APP_CONFIG[:s3][:region] %>",
-      awsSignatureVersion: '4',
-      computeContentMd5: true,
-      cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
-      cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
-    };
-
-    const md5Id = Crypto.createHash('MD5').update(fileObj.name).digest('hex');
-
-    const uploadFile = evaporate => {
-
-      const addConfig = {
-        name: "<%= s3_directory %>" + "/" + sanitized_fn,
-        file: fileObj,
-        contentType: fileObj.type,
-        progress: progressValue => {
-          $('#progress_' + key).attr('value', progressValue);
-        },
-        cancelled: function () {
-          allDone.reject();
-        },
-        error: function (msg) {
-          allDone.reject();
-        },
-        complete: (_xhr, awsKey) => {
-          $.ajax({
-            type: "POST",
-            url: "<%= complete_path %>",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                  resource_id: "<%= @resource.id %>",
-                  name: sanitized_fn,
-                  size: fileObj.size,
-                  type: fileObj.type,
-                  original: fileObj.name
-                }
-            ),
-            success: result => {
-                $("#progress_" + key).replaceWith("<span>Complete</span>");
-                $("#cancel_" + key).hide();
-                fUploading.delete(key);
-                allDone.resolve();
-            },
-            dataType: 'json'
-          });
-        }
-      }
-
-      // The bucket and some other properties may want to be be changed per upload
-      const overrides = {
-        bucket: "<%= APP_CONFIG[:s3][:bucket] %>"
-      };
-
-      evaporate.add(addConfig, overrides)
-          .then(
-              awsObjectKey => console.log('File successfully uploaded to:', awsObjectKey),
-              reason => console.log('File did not upload sucessfully:', reason)
-          );
-    }
-
-    Evaporate.create(config).then(uploadFile);
-    return allDone;  // a promise that it has uploaded or failed
-  }
-
+  // *****
+  // *evaporate* configures and uses the library for uploading to S3 and returning a promise that it will upload or fail
+  // *****
+  <%= render partial: 'stash_engine/file_uploads/evaporate.js', locals: {resource: resource} %>
 </script>
