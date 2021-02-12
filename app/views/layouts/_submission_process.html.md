@@ -2,7 +2,7 @@
 
 <p>
     Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to
-    researchers. For an overview see our <a href="/docs/QuickstartGuideToDataSharing.pdf">Quick Start to Data Sharing</a>. 
+    researchers. For an overview see our <a href="/docs/QuickstartGuideToDataSharing.pdf">Quick Start to Data Sharing</a>.
     Dryad’s process is outlined here, including links to our <a href="/stash/faq">Frequently Asked Questions</a> with
     information on particular topics and <a href="/stash/best_practices">recommendations for good data practices</a>. If
     you need further assistance, please contact us at <a href="mailto:help@datadryad.org">help@datadryad.org</a>.
@@ -60,6 +60,6 @@
     Once your dataset has been approved by our curators it will be published and publicly available. We will notify you
     by email and this email will contain a permanent DOI that can be used to <a href="/stash/faq#cite">cite your dataset</a>.
     If the cost of your dataset is not covered by a journal, your institution, or a country waiver you will
-    <a href="/stash/faq#cost">receive an invoice</a>. Datasets can be versioned at any time by clicking &quot;update&quot; on
+    <a href="/stash/faq#cost">receive an invoice</a>. Datasets can be versioned at any time by clicking <a href="/stash/faq/update">&quot;update&quot;</a> on
     your dataset.
 </p>

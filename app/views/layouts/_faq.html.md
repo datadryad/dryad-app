@@ -166,7 +166,7 @@
     review period or for sharing with collaborators to access the data files while the dataset is not yet published.
     When your manuscript has been accepted, you can take your dataset out of private for peer review,
     so that the Dryad curation team can begin the checks and publication processes. To do this, log in to Dryad and
-    navigate to "My Datasets". Find the submission listed under 'In Progress' and click 'Resume'. Deselect the Private for Peer Review box (on page 4). At the bottom of the "Review and Submit" page, click ‘Submit'.
+    navigate to "My Datasets". Find the submission with the status "Private for Peer Review" and  click 'Update'. Deselect the Private for Peer Review box on the 'Review and Submit' page (page 4). At the bottom of this page, click ‘Submit'.
 </p>
 
 <h2 id="when-to-submit">When should I submit my data?</h2>
@@ -210,7 +210,7 @@
 
 <p>
     After data publication, if you have edits, additional files, or subsequent related work we recommend versioning your
-    data by using the &quot;update&quot; link. All versions of a dataset will be accessible, but the dataset DOI will always resolve
+    data by using the <a href="#update">&quot;update&quot;</a> link. All versions of a dataset will be accessible, but the dataset DOI will always resolve
     to the newest version.
 </p>
 
@@ -322,6 +322,10 @@
     </li>
 </ul>
 
+
+<h2 id="update">How can I update my data?</h2>
+You can update your data at any time by clicking on the 'Update' link for your dataset.
+Any edits made will create a new version of your submission, however the DOI will remain the same. Once the latest version has been approved by our curation team and published, only the most recent version of your dataset will be packaged and available for download via the ‘Download Dataset’ button. Prior versions can be accessed via the ‘Data Files’ section which is organized by the date of publication.
 
 <h2 id="delete">Can I delete my data?</h2>
 
