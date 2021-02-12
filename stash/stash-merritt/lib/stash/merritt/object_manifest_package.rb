@@ -14,13 +14,9 @@ module Stash
 
       def initialize(resource:)
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
-        puts 'XXXX omp i a'
         @resource = resource
-        puts 'XXXX omp i b'
         @root_url = to_uri("https://#{Rails.application.default_url_options[:host]}/system/#{@resource.id}/")
-        puts 'XXXX omp i c'
         @manifest = create_manifest
-        puts 'XXXX omp i d'
       end
 
       def payload
@@ -28,9 +24,6 @@ module Stash
       end
 
       def create_manifest
-        puts 'XXXX omp cm a'
-        puts "XXXX create_manifest || S #{system_files} || D #{data_files}"
-        puts 'XXXX omp cm b'
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         # generate the manifest via the merritt-manifest gem
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
@@ -39,12 +32,8 @@ module Stash
         # merritt submission will use the local file
         Stash::Aws::S3.put(file_path: "#{resource.s3_dir_name}/manifest/manifest.checkm",
                            contents: manifest.write_to_string)
-        puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX YYYYYYY #{manifest.write_to_string} XXXXXXXXXXXXXXXXXXXXXXXXX"
-        puts 'XXXX cm after a'
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
-        puts "XXXX cm after b2 #{manifest_path}"
         File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
-        puts "XXXX cm after c #{manifest_path}"
         manifest_path
       end
 
@@ -78,10 +67,8 @@ module Stash
       end
 
       def system_file_entry(builder)
-        puts 'XXXX omp sfe a'
         return unless (path = builder.write_s3_file("#{@resource.s3_dir_name}/manifest"))
 
-        puts "XXXX omp sfe b XXXXXXXXXXXXXXXXXXXXXXXXXX #{path}"
         file_name = builder.file_name
         OpenStruct.new(
           file_url: Stash::Aws::S3.presigned_download_url(path),
