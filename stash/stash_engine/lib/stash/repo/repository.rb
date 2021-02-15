@@ -181,8 +181,8 @@ module Stash
       end
 
       def remove_s3_data_files(resource)
-        Stash::Aws::S3.delete_dir("#{resource.s3_dir_name}/manifest")
-        Stash::Aws::S3.delete_dir("#{resource.s3_dir_name}/data")
+        Stash::Aws::S3.delete_dir(s3_key: "#{resource.s3_dir_name}/manifest")
+        Stash::Aws::S3.delete_dir(s3_key: "#{resource.s3_dir_name}/data")
       end
 
       def to_msg(error)

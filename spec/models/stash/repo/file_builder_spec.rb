@@ -61,7 +61,7 @@ module Stash
           builder.define_singleton_method(:contents) { contents }
           builder.write_s3_file(target_dir)
           expect(Stash::Aws::S3).to have_received(:put)
-            .with(file_path: "#{target_dir}/#{file_name}",
+            .with(s3_key: "#{target_dir}/#{file_name}",
                   contents: contents)
             .at_least(:once)
         end
