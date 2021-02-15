@@ -729,16 +729,15 @@ module StashEngine
     # development environments on either different servers or against different databases (local or not local)
     def s3_dir_name(type: 'data')
       raise 'Error, incorrect upload type' if ALLOWED_UPLOAD_TYPES[type].nil?
-      return @s3_dir_name unless @s3_dir_name.nil?
-      return @s3_dir_name = "#{id}#{ALLOWED_UPLOAD_TYPES[type]}" if %w[production stage].include?(Rails.env)
+      return "#{id}#{ALLOWED_UPLOAD_TYPES[type]}" if %w[production stage].include?(Rails.env)
 
       db_host = Rails.configuration.database_configuration[Rails.env]['host']
       if db_host.include?('localhost') || db_host.include?('127.0.0.1')
         d = Digest::MD5.hexdigest("host-#{`hostname`.strip}")[0..7] # shorten to make less verbose for small number of servers
-        return @s3_dir_name = "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
+        return "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
       end
       d = Digest::MD5.hexdigest("db-#{db_host.strip}")[0..7]
-      @s3_dir_name = "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
+      "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
     end
 
     private

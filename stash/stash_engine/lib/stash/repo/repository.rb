@@ -100,9 +100,7 @@ module Stash
       # this will be called after Merritt confirms successful ingest by OAI-PMH feed to prevent deleting files
       # before we know they're really good in Merritt for a good safety net.
       def cleanup_files(resource)
-        remove_file_uploads(resource)
-        remove_upload_dir(resource)
-        remove_public_dir(resource)
+        remove_public_dir(resource) # where the local manifest file is stored
         remove_s3_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
@@ -164,15 +162,6 @@ module Stash
         return if file.blank?
 
         FileUtils.remove_entry_secure(file, true) if File.exist?(file)
-      end
-
-      def remove_file_uploads(resource)
-        resource.file_uploads.map(&:calc_file_path).compact.each { |file| remove_if_exists(file) }
-      end
-
-      def remove_upload_dir(resource)
-        res_upload_dir = StashEngine::Resource.upload_dir_for(resource.id)
-        remove_if_exists(res_upload_dir)
       end
 
       def remove_public_dir(resource)
