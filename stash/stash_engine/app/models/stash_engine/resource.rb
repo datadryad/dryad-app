@@ -722,7 +722,7 @@ module StashEngine
     end
 
     # type can currently be data, software or supplemental
-    ALLOWED_UPLOAD_TYPES = { data: '', software: '_sfw', supplemental: '_supp' }.with_indifferent_access.freeze
+    ALLOWED_UPLOAD_TYPES = { data: '/data', software: '/sfw', supplemental: '/supp' }.with_indifferent_access.freeze
 
     # this is long and wonky because it creates unique bucket "directories" even if running multiple different
     # development environments on either different servers or against different databases (local or not local)

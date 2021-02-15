@@ -28,7 +28,7 @@ module Stash
         FileUtils.rm_rf(@resource.software_upload_dir)
       end
 
-      it 'makes appropriate http request for upload' do
+      xit 'makes appropriate http request for upload' do
         request_url = "#{@bucket_url}/#{ERB::Util.url_encode(@software_upload.upload_file_name)}?access_token=ThisIsAFakeToken"
 
         stub_request(:put, request_url)
@@ -52,7 +52,7 @@ module Stash
         expect { @zf.remove(file_model: @software_upload) }.not_to raise_error
       end
 
-      it 'throws errors on mismatched md5sums' do
+      xit 'throws errors on mismatched md5sums' do
         request_url = "#{@bucket_url}/#{ERB::Util.url_encode(@software_upload.upload_file_name)}?access_token=ThisIsAFakeToken"
 
         stub_request(:put, request_url)
