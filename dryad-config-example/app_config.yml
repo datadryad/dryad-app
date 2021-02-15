@@ -144,9 +144,9 @@ defaults: &DEFAULTS
       ftp_provider_id: 9876
   s3:
     region: us-west-2
-    bucket: dryad-s3-test
-    key: ABCDEFG
-    secret: hijklmnop
+    bucket: a-test-bucket
+    key: abcdefg
+    secret: HIJKLMNOP
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
