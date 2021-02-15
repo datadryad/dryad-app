@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'byebug'
 require 'cgi'
-require Rails.root.join('stash/stash_engine/lib/stash/s3')
+require Rails.root.join('stash/stash_engine/lib/stash/aws/s3')
 
 module StashEngine
   describe FileUpload do
@@ -121,21 +121,19 @@ module StashEngine
           create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource: @resource2),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         ]
-        @s3_double = instance_double(Stash::S3)
-        allow(Stash::S3).to receive(:new).and_return(@s3_double)
       end
 
       it 'deletes a file that was just created, from the database and s3' do
-        expect(@s3_double).to receive(:exists?).and_return(true)
-        expect(@s3_double).to receive(:destroy)
+        expect(Stash::Aws::S3).to receive(:exists?).and_return(true)
+        expect(Stash::Aws::S3).to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
       it "deletes from database even if the s3 file doesn't exist" do
-        expect(@s3_double).to receive(:exists?).and_return(false)
-        expect(@s3_double).not_to receive(:destroy)
+        expect(Stash::Aws::S3).to receive(:exists?).and_return(false)
+        expect(Stash::Aws::S3).not_to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
