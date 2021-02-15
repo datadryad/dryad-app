@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'byebug'
 require 'cgi'
+require Rails.root.join('stash/stash_engine/lib/stash/s3')
 
 module StashEngine
   describe FileUpload do
@@ -115,28 +116,26 @@ module StashEngine
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        FileUtils.mkdir_p('tmp')
-        @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files2 = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource: @resource2),
           create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource: @resource2),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         ]
-
-        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
-        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
+        @s3_double = instance_double(Stash::S3)
+        allow(Stash::S3).to receive(:new).and_return(@s3_double)
       end
 
-      it 'deletes a file that was just created, from the database and file system' do
-        expect(::File.exist?(@testfile)).to eq(true)
+      it 'deletes a file that was just created, from the database and s3' do
+        expect(@s3_double).to receive(:exists?).and_return(true)
+        expect(@s3_double).to receive(:destroy)
         @files2[1].smart_destroy!
-        expect(::File.exist?(::File.expand_path(@testfile))).to eq(false)
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
-      it "deletes from database even if the filesystem file doesn't exist" do
-        FileUtils.rm_rf('tmp')
+      it "deletes from database even if the s3 file doesn't exist" do
+        expect(@s3_double).to receive(:exists?).and_return(false)
+        expect(@s3_double).not_to receive(:destroy)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
@@ -210,30 +209,23 @@ module StashEngine
 
     end
 
-    describe :calc_file_path do
-      before(:each) do
-        # need to hack in Rails.root because our test framework setup sucks and doesn't use rails testapp setup
-        @rails_root = Dir.mktmpdir('rails_root')
-        allow(Rails).to receive(:root).and_return(Pathname.new(@rails_root))
-      end
-
+    describe :calc_s3_path do
       it 'returns path in uploads containing resource_id and filename' do
-        cfp = @upload.calc_file_path
-        expect(cfp.match(%r{/uploads/})).to be_truthy
-        expect(cfp).to start_with(@rails_root.to_s)
-        expect(cfp).to end_with(@upload.upload_file_name)
+        cs3p = @upload.calc_s3_path
+        expect(cs3p).to end_with('/data/foo.bar')
+        expect(cs3p).to include(@resource.id.to_s)
       end
 
       it 'returns nil if it is copied' do
         @upload.update(file_state: 'copied')
         @upload.reload
-        expect(@upload.calc_file_path).to eq(nil)
+        expect(@upload.calc_s3_path).to eq(nil)
       end
 
       it 'returns nil if it is deleted' do
         @upload.update(file_state: 'deleted')
         @upload.reload
-        expect(@upload.calc_file_path).to eq(nil)
+        expect(@upload.calc_s3_path).to eq(nil)
       end
     end
 
@@ -328,16 +320,12 @@ module StashEngine
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        FileUtils.mkdir_p('tmp')
-        @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
+
         @files2 = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
           create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
         ]
-
-        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
-        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
       it 'returns false for version 1' do
