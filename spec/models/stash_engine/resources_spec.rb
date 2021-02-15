@@ -59,8 +59,43 @@ module StashEngine
           expect(copy_record.state).to eq('enqueued')
         end
       end
-
     end
+
+    describe :s3_dir_name do
+
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        @identifier = @resource.identifier
+      end
+
+      it 'sets a correct directory name for non-stage/prod s3' do
+        dir_name = @resource.s3_dir_name
+        expect(/[0-9a-fA-F]{8}-#{@resource.id}/).to match(dir_name)
+      end
+
+      it 'appends sfw for software' do
+        dir_name = @resource.s3_dir_name(type: 'software')
+        expect(/[0-9a-fA-F]{8}-#{@resource.id}_sfw/).to match(dir_name)
+      end
+
+      it 'appends supp for supplemental information' do
+        dir_name = @resource.s3_dir_name(type: 'supplemental')
+        expect(/[0-9a-fA-F]{8}-#{@resource.id}_supp/).to match(dir_name)
+      end
+
+      it "doesn't have a machine name hash for production environment" do
+        allow(Rails).to receive('env').and_return('production')
+        dir_name = @resource.s3_dir_name
+        expect(dir_name).to eql(@resource.id.to_s)
+      end
+
+      it 'also has suffixes such as _sfw on production' do
+        allow(Rails).to receive('env').and_return('production')
+        dir_name = @resource.s3_dir_name(type: 'software')
+        expect("#{@resource.id}_sfw").to eql(dir_name)
+      end
+    end
+
     describe :title do
       it 'gets the correct clean_title' do
         test_title = 'some test title'
