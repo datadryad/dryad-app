@@ -95,7 +95,7 @@ module StashEngine
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def direct_s3_presigned_url
-      Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name}/#{upload_file_name}")
+      Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
     end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
