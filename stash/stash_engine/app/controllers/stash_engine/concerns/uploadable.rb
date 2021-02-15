@@ -11,8 +11,7 @@ module StashEngine
       included do
         before_action :setup_class_info, :require_login
         before_action :set_file_info, only: %i[destroy destroy_error destroy_manifest]
-        before_action :ajax_require_modifiable, only: %i[destroy_error destroy_manifest create validate_urls]
-        before_action :set_create_prerequisites, only: [:create]
+        before_action :ajax_require_modifiable, only: %i[destroy_error destroy_manifest create validate_urls presign_upload upload_complete]
       end
 
       # show the list of files for resource
@@ -77,6 +76,35 @@ module StashEngine
         end
       end
 
+      # quick start guide for setup because the bucket needs to be set a certain way for CORS, also
+      # https://github.com/TTLabs/EvaporateJS/wiki/Quick-Start-Guide
+      #
+      # This example based on https://github.com/TTLabs/EvaporateJS/blob/master/example/signing_example_awsv4_controller.rb
+      def presign_upload
+        render plain: hmac_data, status: :ok
+      end
+
+      def upload_complete
+        respond_to do |format|
+          format.json do
+            # destroy any previous with this name and overwrite with this one
+            @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
+
+            @file_model.create(
+              upload_file_name: params[:name],
+              upload_content_type: params[:type],
+              upload_file_size: params[:size],
+              resource_id: @resource.id,
+              upload_updated_at: Time.new,
+              file_state: 'created',
+              original_filename: params[:original]
+            )
+
+            render json: { msg: 'ok' }
+          end
+        end
+      end
+
       private
 
       # set the resource correctly per action
@@ -98,12 +126,6 @@ module StashEngine
         File.size(@accum_file) < params[:hidden_bytes].to_i
       end
 
-      def save_final_file
-        upload_path = unique_upload_path(@file_upload.original_filename)
-        FileUtils.mv(@accum_file, upload_path)
-        create_db_file(upload_path)
-      end
-
       def unique_upload_path(original_filename)
         filename = UrlValidator.make_unique(resource: resource, filename: original_filename)
         File.join(@upload_dir, filename)
@@ -111,18 +133,6 @@ module StashEngine
 
       def urls_from(url_param)
         url_param.split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
-      end
-
-      def set_create_prerequisites
-        sanitize_filename
-        @temp_id = params[:temp_id]
-        resource_id = params[:resource_id]
-        upload_params = params[:upload]
-        raise ActionController::RoutingError.new('Not Found'), 'Not Found' unless @temp_id && resource_id && upload_params
-
-        ensure_upload_dir(resource_id)
-        @accum_file = File.join(@upload_dir, @temp_id)
-        @file_upload = upload_params[:upload]
       end
 
       def set_file_info
@@ -134,21 +144,6 @@ module StashEngine
         File.open(fn, 'ab') { |f| f.write(fileupload.read) }
       end
 
-      # for standard uploads, create standard file in DB, this only happens once a file upload is finished
-      def create_db_file(path)
-        # destroy any previous with this name and overwrite with this one
-        @resource.send(@resource_assoc).where(upload_file_name: File.basename(path)).destroy_all
-        @file_model.create(
-          upload_file_name: File.basename(path),
-          upload_content_type: @file_upload.content_type,
-          upload_file_size: File.size(path),
-          resource_id: params[:resource_id],
-          upload_updated_at: Time.new.utc,
-          file_state: 'created',
-          original_filename: @original_filename || File.basename(path)
-        )
-      end
-
       # Remove any unwanted characters from the uploaded file's name
       def sanitize_filename
         uploaded_file = params[:upload][:upload]
@@ -157,6 +152,26 @@ module StashEngine
         sanitized = @file_model.sanitize_file_name(uploaded_file.original_filename)
         @original_filename = uploaded_file.original_filename
         uploaded_file.original_filename = sanitized
+      end
+
+      def hmac_data
+        aws_secret = APP_CONFIG[:s3][:secret]
+        timestamp = params[:datetime]
+
+        date = hmac("AWS4#{aws_secret}", timestamp[0..7])
+        region = hmac(date, APP_CONFIG[:s3][:region])
+        service = hmac(region, 's3')
+        signing = hmac(service, 'aws4_request')
+
+        hexhmac(signing, params[:to_sign])
+      end
+
+      def hmac(key, value)
+        OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), key, value)
+      end
+
+      def hexhmac(key, value)
+        OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), key, value)
       end
     end
   end
