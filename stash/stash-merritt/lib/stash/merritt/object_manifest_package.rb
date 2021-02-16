@@ -10,24 +10,28 @@ module Stash
   module Merritt
     class ObjectManifestPackage < SubmissionPackage
 
-      attr_reader :root_url, :manifest
+      attr_reader :root_url
 
       def initialize(resource:)
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
-        # raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
         @resource = resource
         @root_url = to_uri("https://#{Rails.application.default_url_options[:host]}/system/#{@resource.id}/")
-        # @root_url = to_uri(root_url)
         @manifest = create_manifest
       end
 
       def payload
-        manifest
+        @manifest
       end
 
       def create_manifest
         StashDatacite::PublicationYear.ensure_pub_year(resource)
+        # generate the manifest via the merritt-manifest gem
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
+
+        # Save a copy of the manifest in S3 for debugging if needed, but the actual
+        # merritt submission will use the local file
+        Stash::Aws::S3.put(s3_key: "#{resource.s3_dir_name(type: 'manifest')}/manifest.checkm",
+                           contents: manifest.write_to_string)
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
         File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
         manifest_path
@@ -40,16 +44,16 @@ module Stash
       private
 
       def data_files
-        new_uploads.map { |upload| entry_for(upload) }
+        new_uploads.map { |upload| data_file_entry(upload) }
       end
 
       def system_files
-        builders.map { |builder| write_to_public(builder) }.compact
+        builders.map { |builder| system_file_entry(builder) }.compact
       end
 
-      def entry_for(upload)
+      def data_file_entry(upload)
         upload_file_name = upload.upload_file_name
-        upload_url = upload.url
+        upload_url = upload.url || upload.direct_s3_presigned_url
         throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
 
         upload_file_size = upload.upload_file_size
@@ -62,15 +66,12 @@ module Stash
         )
       end
 
-      def write_to_public(builder)
-        return unless (path = builder.write_file(workdir))
+      def system_file_entry(builder)
+        return unless (path = builder.write_s3_file(@resource.s3_dir_name(type: 'manifest').to_s))
 
         file_name = builder.file_name
         OpenStruct.new(
-          file_url: public_url_for(file_name),
-          hash_algorithm: 'md5',
-          hash_value: Digest::MD5.file(path).to_s,
-          file_size: File.size(path),
+          file_url: Stash::Aws::S3.presigned_download_url(s3_key: path),
           file_name: file_name,
           mime_type: builder.mime_type
         )
@@ -80,21 +81,12 @@ module Stash
         ::XML::MappingExtensions.to_uri(uri_or_str)
       end
 
-      def public_url_for(pathname)
-        URI.join(root_url.to_s, pathname)
-      end
-
       def workdir_path
         @workdir_path ||= Rails.public_path.join("system/#{resource_id}")
+        FileUtils.mkdir_p(@workdir_path)
+        @workdir_path
       end
 
-      def workdir
-        @workdir ||= begin
-          path = workdir_path.to_s
-          FileUtils.mkdir_p(path)
-          File.absolute_path(path)
-        end
-      end
     end
   end
 end

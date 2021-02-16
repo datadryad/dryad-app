@@ -3,6 +3,7 @@ require 'byebug'
 module Stash
   module Merritt
     describe Repository do
+      include Mocks::Aws
       include Mocks::Datacite
       include Mocks::CurationActivity
 
@@ -17,6 +18,8 @@ module Stash
 
       before(:each) do
         mock_datacite!
+        mock_aws!
+
         @rails_root = Dir.mktmpdir('rails_root')
         root_path = Pathname.new(rails_root)
         allow(Rails).to receive(:root).and_return(root_path)
