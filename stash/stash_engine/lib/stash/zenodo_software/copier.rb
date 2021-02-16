@@ -111,6 +111,8 @@ module Stash
         @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
+        @copy.reload
+        StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 

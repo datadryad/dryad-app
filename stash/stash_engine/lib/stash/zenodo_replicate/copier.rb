@@ -58,6 +58,8 @@ module Stash
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
+        @copy.reload
+        StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       ensure
         @file_collection.cleanup_files
       end
