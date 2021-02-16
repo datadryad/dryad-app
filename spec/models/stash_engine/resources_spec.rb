@@ -94,6 +94,12 @@ module StashEngine
         dir_name = @resource.s3_dir_name(type: 'software')
         expect("#{@resource.id}/sfw").to eql(dir_name)
       end
+
+      it 'gets the correct name when called multiple times' do
+        @resource.s3_dir_name(type: 'software')
+        dir_name = @resource.s3_dir_name(type: 'data')
+        expect(%r{[0-9a-fA-F]{8}-#{@resource.id}/data}).to match(dir_name)
+      end
     end
 
     describe :title do

@@ -6,6 +6,7 @@ require 'ostruct'
 module Stash
   module Merritt
     describe SwordHelper do
+      include Mocks::Aws
 
       before(:all) do
         WebMock.disable_net_connect!(allow_localhost: true)
@@ -21,6 +22,8 @@ module Stash
       end
 
       before(:each) do
+        mock_aws!
+
         @rails_root = Dir.mktmpdir('rails_root')
         FileUtils.mkdir_p("#{@rails_root}/tmp")
         allow(Rails).to receive(:root).and_return(@rails_root)
@@ -83,77 +86,6 @@ module Stash
       end
 
       describe :submit! do
-        describe "with #{Stash::Merritt::ZipPackage}" do
-          before(:each) do
-            allow(@resource).to receive(:upload_type).and_return(:files)
-          end
-
-          describe 'create' do
-
-            before(:each) do
-              @package = Stash::Merritt::ZipPackage.new(resource: @resource)
-              @helper = SwordHelper.new(package: @package)
-            end
-
-            it 'submits the zipfile' do
-              expect(@sword_client).to receive(:create)
-                .with(doi: "doi:#{@doi}", payload: @package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
-              @helper.submit!
-            end
-
-            it 'sets the update and download URIs' do
-              expect(@sword_client).to receive(:create)
-                .with(doi: "doi:#{@doi}", payload: @package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
-                .and_return(@receipt)
-              @helper.submit!
-              expect(@resource.download_uri).to eq(@download_uri)
-              expect(@resource.update_uri).to eq(@update_uri)
-            end
-
-            it 'sets the version zipfile' do
-              @helper.submit!
-              version = @resource.stash_version
-              zipfile = File.basename(@package.zipfile)
-              expect(version.zip_filename).to eq(zipfile)
-            end
-
-            it 'forwards errors' do
-              expect(@sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
-              expect { @helper.submit! }.to raise_error(RestClient::RequestFailed)
-            end
-          end
-
-          describe 'update' do
-
-            before(:each) do
-              @resource.update_uri = @update_uri
-              @resource.download_uri = @download_uri
-              @resource.save
-              @package = Stash::Merritt::ZipPackage.new(resource: @resource)
-              @helper = SwordHelper.new(package: @package)
-            end
-
-            it 'submits the zipfile' do
-              expect(@sword_client).to receive(:update)
-                .with(edit_iri: @update_uri, payload: @package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
-                .and_return(200)
-              @helper.submit!
-            end
-
-            it 'sets the version zipfile' do
-              @helper.submit!
-              version = @resource.stash_version
-              zipfile = File.basename(@package.zipfile)
-              expect(version.zip_filename).to eq(zipfile)
-            end
-
-            it 'forwards errors' do
-              expect(@sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
-              expect { @helper.submit! }.to raise_error(RestClient::RequestFailed)
-            end
-          end
-        end
-
         describe "with #{Stash::Merritt::ObjectManifestPackage}" do
 
           before(:each) do
@@ -179,7 +111,7 @@ module Stash
               expect(@sword_client).to receive(:create)
                 .with(
                   doi: "doi:#{@doi}",
-                  payload: @package.manifest,
+                  payload: @package.payload,
                   packaging: Stash::Sword::Packaging::BINARY
                 ).and_return(@receipt)
               @helper.submit!
@@ -190,7 +122,7 @@ module Stash
             it 'sets the version "zipfile"' do
               @helper.submit!
               version = @resource.stash_version
-              manifest = File.basename(@package.manifest)
+              manifest = File.basename(@package.payload)
               expect(version.zip_filename).to eq(manifest)
             end
 
@@ -214,7 +146,7 @@ module Stash
               expect(@sword_client).to receive(:update)
                 .with(
                   edit_iri: @update_uri,
-                  payload: @package.manifest,
+                  payload: @package.payload,
                   packaging: Stash::Sword::Packaging::BINARY
                 ).and_return(200)
               @helper.submit!
@@ -223,7 +155,7 @@ module Stash
             it 'sets the version "zipfile"' do
               @helper.submit!
               version = @resource.stash_version
-              manifest = File.basename(@package.manifest)
+              manifest = File.basename(@package.payload)
               expect(version.zip_filename).to eq(manifest)
             end
 
