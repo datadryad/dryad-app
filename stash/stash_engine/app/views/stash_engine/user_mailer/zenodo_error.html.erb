@@ -1,0 +1,51 @@
+<% # @zen is the zenodo_copy_object (stash_engine_zenodo_copies)
+   # It should have the information about the error written to the database at @zen.error_info before calling this email.
+   # It also may contain the deposition id (id that zenodo assigns), the state of the submission and relations to resource,
+   # identifier, and teh type of replication event taking place (data replication, software or software_publish)
+%>
+
+<p>Replication of files from Dryad to Zenodo failed. The error and further information follows.</p>
+
+<pre>
+<%= @zen.error_info %>
+</pre>
+
+<p>Further information for troubleshooting:</p>
+<dl>
+  <dt>Zenodo database copy id</dt>
+  <dd><%= @zen.id %></dd>
+
+  <dt>Replication type</dt>
+  <dd><%= @zen.copy_type %></dd>
+
+  <dt>Zenodo deposition id</dt>
+  <dd><%= @zen.deposition_id %></dd>
+
+  <dt>Identitifier id</dt>
+  <dd><%= @zen.identifier_id %></dd>
+
+  <dt>Identifier DOI</dt>
+  <dd><%= @zen.identifier&.to_s %></dd>
+
+  <dt>Resource id</dt>
+  <dd><%= @zen.resource_id %></dd>
+
+  <dt>Title</dt>
+  <dd><%= @zen.resource&.title %></dd>
+
+  <dt>Zenodo's DOI</dt>
+  <dd><%= @zen.software_doi %></dd>
+
+  <dt>Zenodo's concept id</dt>
+  <dd><%= @zen.conceptrecid %></dd>
+</dl>
+
+<p>The code is at <i>/stash/stash_engine/lib/stash/zenodo_replicate</i> or <i>/stash/stash_engine/lib/stash/zenodo_software</i>
+  (depending on the type of replication which may be an additional copy of data or a unique software submission on behalf of zenodo).</p>
+
+<p>
+  For temporary problems with the zenodo service such as network or service outages, they may automatically correct
+  themselves since failed items may be retried up to three times over the course of a few days.
+</p>
+
+<p>Other types of errors will probably need to be examined and corrected manually.</p>
