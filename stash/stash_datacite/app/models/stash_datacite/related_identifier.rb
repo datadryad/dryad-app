@@ -145,6 +145,13 @@ module StashDatacite
       end
     end
 
+    def self.remove_zenodo_relation(resource_id:, doi:)
+      doi = standardize_doi(doi)
+      existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
+                                                     .where(related_identifier: doi).last
+      existing_item.destroy! if existing_item
+    end
+
     def valid_doi_format?
       RelatedIdentifier.valid_doi_format?(related_identifier)
     end
