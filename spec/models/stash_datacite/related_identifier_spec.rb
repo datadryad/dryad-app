@@ -106,11 +106,11 @@ module StashDatacite
       it 'removes a record from the database for a zenodo doi' do
         test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
         StashDatacite::RelatedIdentifier.create(related_identifier: test_doi,
-               related_identifier_type: 'doi',
-               relation_type: 'isderivedfrom',
-               work_type: 'software',
-               verified: true,
-               resource_id: @resource.id)
+                                                related_identifier_type: 'doi',
+                                                relation_type: 'isderivedfrom',
+                                                work_type: 'software',
+                                                verified: true,
+                                                resource_id: @resource.id)
         @resource.reload
         expect(@resource.related_identifiers.count).to eq(1)
 
@@ -119,7 +119,7 @@ module StashDatacite
         expect(@resource.related_identifiers.count).to eq(0)
       end
 
-      it "only removes the appropriate related identifier" do
+      it 'only removes the appropriate related identifier' do
         test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
         test_doi2 = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
         StashDatacite::RelatedIdentifier.create(related_identifier: test_doi,
@@ -129,7 +129,7 @@ module StashDatacite
                                                 verified: true,
                                                 resource_id: @resource.id)
 
-        StashDatacite::RelatedIdentifier.create(related_identifier: test_doi,
+        StashDatacite::RelatedIdentifier.create(related_identifier: test_doi2,
                                                 related_identifier_type: 'doi',
                                                 relation_type: 'isderivedfrom',
                                                 work_type: 'software',
@@ -141,6 +141,7 @@ module StashDatacite
         StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: test_doi)
         @resource.reload
         expect(@resource.related_identifiers.count).to eq(1)
+        expect(@resource.related_identifiers.first.related_identifier).to eq(test_doi2)
       end
     end
 
