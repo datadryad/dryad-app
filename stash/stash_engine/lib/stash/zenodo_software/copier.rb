@@ -9,7 +9,7 @@ require 'byebug'
 # Stash::ZenodoSoftware::Copier.test_submit(resource_id: xxxx, publication: false)
 #
 #
-# The zenodo states are these
+# The zenodo states are these (returned from their API for a dataset)
 # unpublished submission -- state: unsubmitted,   submitted: false
 # published              -- state: done,          submitted: true
 # published-reopened     -- state: inprogress,    submitted: true
@@ -104,11 +104,12 @@ module Stash
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
 
         # update files
-        @file_collection.ensure_local_files
+        # @file_collection.ensure_local_files
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         @copy.update(state: 'finished')
-        @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
+        # @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
+        # instead, cleanup files would cleanup files from our S3 as required
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end
