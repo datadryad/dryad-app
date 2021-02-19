@@ -101,7 +101,7 @@ module StashEngine
         expect(%r{[0-9a-fA-F]{8}-#{@resource.id}/data}).to match(dir_name)
       end
 
-      it 'removes the S3 resources when the resource is destroyed' do
+      it 'removes the S3 temporary files when the resource is destroyed' do
         allow(Stash::Aws::S3).to receive(:delete_dir)
         s3_dir = @resource.s3_dir_name(type: 'base')
         @resource.destroy
