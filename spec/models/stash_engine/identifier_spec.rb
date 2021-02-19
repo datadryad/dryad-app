@@ -3,6 +3,7 @@ require 'byebug'
 
 module StashEngine
   describe Identifier, type: :model do
+    include Mocks::Aws
     include Mocks::CurationActivity
     include Mocks::Datacite
     include Mocks::Ror
@@ -11,6 +12,7 @@ module StashEngine
     include Mocks::Tenant
 
     before(:each) do
+      mock_aws!
       mock_ror!
       mock_solr!
       mock_datacite!
