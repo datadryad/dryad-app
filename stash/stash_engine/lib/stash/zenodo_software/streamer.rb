@@ -29,6 +29,7 @@ module Stash
       # web servers may use chunked and not supply a size (0) which means those streaming uploads will fail when going to Zenodo.
       def stream
 
+        # TODO: choose either signed URL from our S3 or else an open http file by GET request
         signed_url = Stash::Aws::S3.presigned_download_url(s3_key: @file_model.calc_s3_path)
 
         read_pipe, write_pipe = IO.pipe
