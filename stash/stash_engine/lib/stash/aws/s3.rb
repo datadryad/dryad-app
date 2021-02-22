@@ -18,6 +18,13 @@ module Stash
         object.put(body: contents)
       end
 
+      def self.put_file(s3_key:, filename:)
+        return unless s3_key && filename
+
+        object = s3_bucket.object(s3_key)
+        object.upload_file(filename)
+      end
+
       def self.exists?(s3_key:)
         obj = s3_bucket.object(s3_key)
         obj.exists?
