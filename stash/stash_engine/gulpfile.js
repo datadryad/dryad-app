@@ -4,7 +4,7 @@ const { series, parallel, src, dest, watch } = require('gulp');
 
 const assets = require('postcss-assets');
 const autoprefixer = require('gulp-autoprefixer');
-const browserSync = require('browser-sync');
+const browserSync = require('browser-sync').create();
 const del = require('del');
 const gulpIf = require('gulp-if');
 const imagemin = require('gulp-imagemin');
@@ -73,25 +73,22 @@ function sassTask(cb) {
     })]))
     .pipe(sourcemaps.write('sourcemaps'))
     .pipe(dest('ui-library/css'))
-    .pipe(browserSync.reload({
-      stream: true
-    }));
+    .pipe(browserSync.stream());
 };
 
 // Watch sass, html, and js and reload browser if any changes:
 function watchTask(cb) {
-  series(browserSyncTask, sassTask, scssLintTask, jsLintTask);
   watch('ui-library/scss/**/*.scss', sassTask);
   watch('ui-library/scss/**/*.scss', scssLintTask);
   watch('ui-library/js/**/*.js', jsLintTask);
-  watch('ui-library/**/*.html', browserSync.reload);
-  watch('ui-library/js/**/*.js', browserSync.reload);
+  watch('ui-library/**/*.html').on('change', browserSync.reload);
+  watch('ui-library/js/**/*.js').on('change', browserSync.reload);
 };
 
 
 // Spin up a local browser with the index.html page at http://localhost:3000/
 function browserSyncTask(cb) {
-  return browserSync({
+  return browserSync.init({
     server: {
       baseDir: 'ui-library',
       middleware: ssi({
@@ -168,4 +165,4 @@ exports.build = series(cleanTask, scssLintTask, jsLintTask, sassTask, userefTask
                        copyImagesTask, copyFontsTask, copyToAssetsTask);
 
 // Setup the default to run gulp in dev mode so that its watching our files
-exports.default = series(sassTask, browserSyncTask, watchTask);
+exports.default = parallel(sassTask, browserSyncTask, watchTask);
