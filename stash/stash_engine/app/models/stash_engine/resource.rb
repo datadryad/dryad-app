@@ -107,9 +107,14 @@ module StashEngine
       Identifier.destroy(identifier_id)
     end
 
+    def remove_s3_temp_files
+      Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
+    end
+
     after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
+    before_destroy :remove_s3_temp_files
     after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
 
     # shouldn't be necessary but we have some stale data floating around
@@ -722,7 +727,7 @@ module StashEngine
     end
 
     # type can currently be data, software or supplemental
-    ALLOWED_UPLOAD_TYPES = { data: '/data', software: '/sfw',
+    ALLOWED_UPLOAD_TYPES = { base: '', data: '/data', software: '/sfw',
                              supplemental: '/supp', manifest: '/manifest' }.with_indifferent_access.freeze
 
     # this is long and wonky because it creates unique bucket "directories" even if running multiple different
