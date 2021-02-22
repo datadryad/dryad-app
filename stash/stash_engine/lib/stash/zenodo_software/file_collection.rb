@@ -32,7 +32,24 @@ module Stash
       def upload_files(zenodo_bucket_url:)
         @resource.software_uploads.newly_created.each do |upload|
           streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
-          streamer.stream
+          digests = [ 'md5' ]
+          digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
+          digests.uniq!
+          
+          out = streamer.stream(digest_types: digests)
+          
+          if out[:response].nil? || out[:response][:checksum].nil?
+            raise FileError, "Error streaming file to Zenodo. No md5 digest returned:\n#{out[:response]}\nFile:#{upload.inspect}"
+          end
+
+          if out[:response][:checksum] != "md5:#{out[:digests]['md5']}"
+            raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
+          end
+
+          if upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
+            raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
+              "Database: #{upload.digest}"
+          end
         end
       end
     end
