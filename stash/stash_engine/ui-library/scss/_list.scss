@@ -5,8 +5,8 @@
 	padding: 0;
 
 	li {
-      list-style: none;
-	  line-height: 1.5;
+    line-height: 1.5;
+    list-style: none;
 	}
 
 }
@@ -16,13 +16,13 @@
 	padding: 0;
 
 	li {
-		list-style: none;
 		line-height: 1.25;
+		list-style: none;
 	}
 
 	li:last-child {
-		list-style: none;
 		padding-bottom: 6px;
+		list-style: none;
 	}
 
 }
