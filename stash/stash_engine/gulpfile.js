@@ -13,10 +13,10 @@ const lbInclude = require('gulp-lb-include');
 const modernizr = require('gulp-modernizr');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
-const scsslint = require('gulp-scss-lint');
 const shell = require('gulp-shell');
 const ssi = require('browsersync-ssi');
 const sourcemaps = require('gulp-sourcemaps');
+const stylelint = require('gulp-stylelint');
 const useref = require('gulp-useref');
 const validateHTML = require('gulp-w3cjs');
 
@@ -142,9 +142,11 @@ function copyToAssetsTask(cb) {
 // Lint Sass:
 function scssLintTask(cb) {
   return src(['ui-library/scss/**/*.scss', '!ui-library/scss/vendor/**/*.scss'])
-    .pipe(scsslint({
-      'config': 'scss-lint-config.yml' // Settings for the linter. See: https://github.com/brigade/scss-lint/tree/master/lib/scss_lint/linter
-    }));
+    .pipe(stylelint({
+    reporters: [
+      {formatter: 'string', console: true}
+    ]
+  }));
 };
 
 // Lint JavaScript:
