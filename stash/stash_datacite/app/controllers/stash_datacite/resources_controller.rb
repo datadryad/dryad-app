@@ -85,13 +85,17 @@ module StashDatacite
         redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 
     def update_submission_resource_info(resource)
-      resource.update(skip_datacite_update: false, skip_emails: false,
-                      preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
+      # Update default behaviors that may have been changed by API superusers.
+      # In a production environment, updates through the UI reset these values
+      # to their default (UI) settings.
+      if Rails.env == 'production'
+        resource.update(skip_datacite_update: false, skip_emails: false,
+                        preserve_curation_status: false, loosen_validation: false)
+      end
 
       # write the software license to the database
       license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
@@ -110,6 +114,7 @@ module StashDatacite
       StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
                                            resource_id: last.resource_id)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def max_submission_size
       current_tenant.max_submission_size.to_i
