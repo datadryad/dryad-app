@@ -8,6 +8,7 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
+gem 'webpacker'
 gem 'react-rails', '~> 2.6.1'
 
 # ############################################################
