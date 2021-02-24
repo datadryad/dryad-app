@@ -39,7 +39,7 @@ module Stash
         @deposit = Deposit.new(resource: @resource)
 
         # download files from Merritt
-        @file_collection.download_files
+        # @file_collection.download_files
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition

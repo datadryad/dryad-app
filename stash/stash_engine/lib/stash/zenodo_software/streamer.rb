@@ -55,7 +55,10 @@ module Stash
         write_pipe.close
         request_thread.join
 
-        raise "Size is wrong" if size != response.headers['Content-Length'].to_i
+        if size != response.headers['Content-Length'].to_i
+          raise Stash::ZenodoReplicate::ZenodoError, "Size of http body doesn't match Content-Length for file:\n #{@file_model.class}," \
+            "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
+        end
 
         { response: put_response, digests: digests_obj.hex_digests }
       rescue HTTP::Error => e
