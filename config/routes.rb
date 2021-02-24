@@ -91,6 +91,8 @@ Rails.application.routes.draw do
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
 
+  # react test
+  get 'react' => 'react_test#index'
 
   # Individual pages that we're redirecting from the old wiki, then a catchall
   # for any other page from the old wiki. The individual pages must be listed
