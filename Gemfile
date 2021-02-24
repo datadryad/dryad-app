@@ -8,6 +8,8 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
+gem 'react-rails', '~> 2.6.1'
+
 # ############################################################
 # Local engines
 
@@ -40,7 +42,8 @@ gem 'rubocop', '~> 0.90.0'
 gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'turbolinks'
 
 gem 'uglifier', '~> 3.0.4'
