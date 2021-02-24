@@ -1,5 +1,7 @@
 <%# locals: resource, upload_method [:files, :manifest] %>
 
+<%= react_component("HelloWorld", { greeting: "Hello from react-rails." }) %>
+
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
 
 <% if @datatype == 'Software' %>

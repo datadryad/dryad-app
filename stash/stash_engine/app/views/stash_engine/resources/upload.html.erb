@@ -9,6 +9,8 @@
 
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
+<%= javascript_pack_tag 'application' %>
+
 <div id="choose_method" style="margin-bottom: 2em;">
   <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
 </div>
