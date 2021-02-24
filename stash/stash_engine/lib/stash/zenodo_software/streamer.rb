@@ -1,20 +1,9 @@
 require 'stash/aws/s3'
 require 'http'
-require 'digest'
 
 module Stash
   module ZenodoSoftware
     class Streamer
-
-      ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
-
-      DIGEST_INITIALIZERS = {
-        'md5' => -> { Digest::MD5.new },
-        'sha-1' => -> { Digest::SHA1.new },
-        'sha-256' => -> { Digest::SHA256.new },
-        'sha-384' => -> { Digest::SHA384.new },
-        'sha-512' => -> { Digest::SHA512.new }
-      }.with_indifferent_access.freeze
 
       def initialize(file_model:, zenodo_bucket_url:)
         # on one end we'll have S3 or an HTTP URL and on the other end of the pipe the zenodo put request that looks like
@@ -41,7 +30,7 @@ module Stash
       # This takes an argument of the digests types you want returned as an array, see DIGEST_INITIALIZERS for types.  It returns
       # the zenodo response and the hexdigests for the types you specify
       def stream(digest_types: [])
-        set_up_empty_digests(digest_types: digest_types)
+        digests_obj = Digests.new(digest_types: digest_types)
 
         read_pipe, write_pipe = IO.pipe
         read_pipe.define_singleton_method(:rewind) { nil }
@@ -51,7 +40,7 @@ module Stash
 
         put_response = nil
         request_thread = Thread.new do
-          put_response = ZC.standard_request(:put, @upload_url,
+          put_response = Stash::ZenodoReplicate::ZenodoConnection.standard_request(:put, @upload_url,
                               body: read_pipe,
                               headers: { 'Content-Type': nil, 'Content-Length': response.headers['Content-Length'] })
         end
@@ -59,7 +48,7 @@ module Stash
         size = 0
         response.body.each do |chunk|
           size += chunk.length
-          accumulate_digests(chunk: chunk)
+          digests_obj.accumulate_digests(chunk: chunk)
           write_pipe.write(chunk)
         end
 
@@ -68,35 +57,10 @@ module Stash
 
         raise "Size is wrong" if size != response.headers['Content-Length'].to_i
 
-        { response: put_response, digests: hex_digests }
+        { response: put_response, digests: digests_obj.hex_digests }
       rescue HTTP::Error => e
         raise ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
             "Original error: #{e}\n#{e.backtrace.join("\n")}"
-      end
-
-      private
-
-      def set_up_empty_digests(digest_types:)
-        @digest_accumulator = {}
-        digest_types.each do |a_type|
-          raise "Digest Type #{a_type} is unknown" unless DIGEST_INITIALIZERS.keys.include?(a_type)
-          @digest_accumulator[a_type] = DIGEST_INITIALIZERS[a_type].call
-        end
-      end
-
-      def accumulate_digests(chunk:)
-        @digest_accumulator.each_pair do |_k, v|
-          v.update(chunk)
-        end
-      end
-
-      def hex_digests
-        # output hexdigests
-        digests = {}
-        @digest_accumulator.each_pair do |k, v|
-          digests[k] = v.hexdigest
-        end
-        digests
       end
     end
   end
