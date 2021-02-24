@@ -50,6 +50,7 @@ StashEngine::Engine.routes.draw do
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
+  get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
 
   # download related
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]

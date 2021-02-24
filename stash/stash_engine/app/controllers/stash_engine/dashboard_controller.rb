@@ -17,6 +17,8 @@ module StashEngine
 
     def upload_basics; end
 
+    def react_basics; end
+
     def migrate_data_mail
       return unless validate_form_email
 
