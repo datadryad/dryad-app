@@ -1,9 +1,10 @@
 require 'fileutils'
+require 'stash/zenodo_replicate/zenodo_connection'
 
 module Stash
   module ZenodoSoftware
 
-    class FileError < StandardError; end
+    class FileError < Stash::ZenodoReplicate::ZenodoError; end
 
     # A class to ensure that the collection files represented in the database is available on the file system.
     # Most major problems raise exceptions since if something goes wrong it should error and not proceed with bad data
@@ -37,19 +38,26 @@ module Stash
           digests.uniq!
           
           out = streamer.stream(digest_types: digests)
-          
-          if out[:response].nil? || out[:response][:checksum].nil?
-            raise FileError, "Error streaming file to Zenodo. No md5 digest returned:\n#{out[:response]}\nFile:#{upload.inspect}"
-          end
 
-          if out[:response][:checksum] != "md5:#{out[:digests]['md5']}"
-            raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
-          end
+          check_digests(streamer_response: out, file_model: upload)
+        end
+      end
 
-          if upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
-            raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
+      # contains response: and digest: keys
+      def check_digests(streamer_response:, file_model:)
+        out = streamer_response
+        upload = file_model
+        if out[:response].nil? || out[:response][:checksum].nil?
+          raise FileError, "Error streaming file to Zenodo. No md5 digest returned:\n#{out[:response]}\nFile:#{upload.inspect}"
+        end
+
+        if out[:response][:checksum] != "md5:#{out[:digests]['md5']}"
+          raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
+        end
+
+        if upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
+          raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
               "Database: #{upload.digest}"
-          end
         end
       end
     end
