@@ -4,19 +4,17 @@ module Stash
   module ZenodoReplicate
     class FileCollection
 
-      # TODO: probably should refactor these file_collection classes into one and just have a file_change_list class that
-      # gets passed in and used
-
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      def initialize(resource:)
+      def initialize(resource:, file_change_list_obj:)
         @resource = resource
+        @file_change_list = file_change_list_obj
 
         @resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{@resource.zenodo_copies.data.first.deposition_id}")
 
-        existing_zenodo = @resp[:files].map { |f| f[:filename] }
+        # existing_zenodo = @resp[:files].map { |f| f[:filename] }
 
-        @file_change_list = FileChangeList(resource: @resource, existing_zenodo_filenames: existing_zenodo)
+        # @file_change_list = FileChangeList(resource: @resource, existing_zenodo_filenames: existing_zenodo)
       end
 
       # from the response o loaded dataset's json response[:links][:bucket]
