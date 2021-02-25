@@ -1,0 +1,36 @@
+.UploadType {
+    width: 290px;
+    height: 230px;
+    margin: 20px 15px;
+    border: 1px solid black;
+    padding: 16px;
+    text-align: center;
+    border-radius: 7px;
+    display: inline-block;
+}
+
+h1.UploadTypeTitle {
+    margin-top: 25px;
+    font-size: large;
+    color: #005581;
+}
+
+p.UploadTypeDescription {
+    margin-bottom: 30px;
+    font-size: small;
+}
+
+button {
+    display: block;
+    border: 0 solid;
+    border-radius: inherit;
+    background-color: rgba(159, 199, 216, 1);
+    width: 150px;
+    height: 30px;
+    margin: 15px auto;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgba(133, 199, 216, 1);
+}
