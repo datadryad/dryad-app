@@ -1,4 +1,5 @@
 require 'stash/zenodo_replicate/zenodo_connection'
+require 'stash/zenodo_software/file_collection'
 
 module Stash
   module ZenodoReplicate
@@ -23,9 +24,10 @@ module Stash
       # slower and use more upload time and bandwidth.  Ideally, we should just update any files that have changed
       # since our last publication, add any files that don't exist at Zenodo and remove any files that no longer exist
       # in our data and leave the rest of the files that stayed the same alone.
-      def initialize(resource:, existing_zenodo_filenames:)
+      def initialize(resource:)
         # gets filenames for items already in Zenodo
-        @existing_zenodo_filenames = existing_zenodo_filenames
+        resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{resource.zenodo_copies.data.first.deposition_id}")
+        @existing_zenodo_filenames = resp[:files].map { |f| f[:filename] }
 
         @resource = resource
       end
@@ -64,7 +66,7 @@ module Stash
       end
 
       def published_previously?
-        previous_published_resource.empty?
+        previous_published_resource.present?
       end
 
       def previous_published_resource
