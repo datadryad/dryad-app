@@ -21,25 +21,35 @@ namespace :local_to_s3 do
       end
 
       resource = StashEngine::Resource.find(res_id)
-      #    - if resrouce is submitted, OR if the last activity is more than 6 months ago, skip
-      if resource.submitted? || (resource.curation_activities.last.updated_at < 6.months.ago)
-        puts " -- #{res_dir} --> not copied due to resource state"
+      if resource.submitted?
+        puts " -- #{res_dir} --> not copied; it has already been submitted to Merritt"
+        next
+      elsif resource.curation_activities.last.updated_at < 6.months.ago
+        # If the last activity is more than 6 months ago, skip copying and
+        # remove any file uploads that were marked as "created" for this
+        # resource, because they won't be available to the user
+        resource.file_uploads.where(file_state: 'created').map(&:destroy)
+        puts " -- #{res_dir} --> not copied due to age"
         next
       end
+
       s3_dir = resource.s3_dir_name(type: type)
       puts " -- #{res_dir} --> #{s3_dir}"
 
-      #    - for each file in the directory
       Dir.each_child("#{upload_dir}/#{res_dir}") do |file_name|
+        file_path = "#{upload_dir}/#{res_dir}/#{file_name}"
         s3_file = "#{s3_dir}/#{file_name}"
-        #        - if it exists in s3, skip
+        # if it exists in s3, skip
         if Stash::Aws::S3.exists?(s3_key: s3_file)
           puts "    -- #{file_name} --> already in S3"
           next
+        elsif File.directory?(file_path)
+          puts "    -- #{file_name} --> skipping temp directory"
+          next
         end
-        #        - otherwise, send it
+        # otherwise, send it to s3
         puts "    -- #{file_name} --> #{s3_file}"
-        Stash::Aws::S3.put_file(s3_key: s3_file, filename: "#{upload_dir}/#{res_dir}/#{file_name}")
+        Stash::Aws::S3.put_file(s3_key: s3_file, filename: file_path)
       end
     end
   end
