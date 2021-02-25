@@ -2,6 +2,8 @@
 # Moves files from local storage to Amazon S3
 # See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/1079
 
+require 'stash/aws/s3'
+
 # rubocop:disable Metrics/BlockLength
 namespace :local_to_s3 do
 
