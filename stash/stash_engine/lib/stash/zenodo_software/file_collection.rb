@@ -1,19 +1,18 @@
 require 'stash/zenodo_replicate/zenodo_connection'
+require 'stash/zenodo_software/streamer' # may be needed if loaded from zenodo_replicate
 
 module Stash
   module ZenodoSoftware
-
     class FileError < Stash::ZenodoReplicate::ZenodoError; end
 
-    # A class to ensure that the collection files represented in the database is available on the file system.
-    # Most major problems raise exceptions since if something goes wrong it should error and not proceed with bad data
+    # update collection of files to zenodo
     class FileCollection
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      # takes the resource for the files we want to manage
-      def initialize(resource:)
+      def initialize(resource:, file_change_list_obj:)
         @resource = resource
+        @file_change_list = file_change_list_obj
       end
 
       # from the response o loaded dataset's json response[:links][:bucket]
@@ -23,14 +22,14 @@ module Stash
       end
 
       def remove_files(zenodo_bucket_url:)
-        @resource.software_uploads.deleted_from_version.each do |del_file|
+        @file_change_list.delete_list.each do |del_file|
           url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(del_file.upload_file_name)}"
           ZC.standard_request(:delete, url)
         end
       end
 
       def upload_files(zenodo_bucket_url:)
-        @resource.software_uploads.newly_created.each do |upload|
+        @file_change_list.upload_list.each do |upload|
           streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
           digests = [ 'md5' ]
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?

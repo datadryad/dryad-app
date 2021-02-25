@@ -1,5 +1,6 @@
 require 'stash/aws/s3'
 require 'http'
+require 'stash/zenodo_software/digests' # may be required if called from zenodo_replicate
 
 module Stash
   module ZenodoSoftware

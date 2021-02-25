@@ -15,7 +15,6 @@ module Stash
 
       # this creates a new deposit and returns the json response if successful
       # POST /api/deposit/depositions
-      # TODO: do I need this pre-reserve?  Seems to do it whether I tell it to or not.
       def new_deposition(pre_reserve_doi: false)
         # mg = MetadataGenerator.new(resource: @resource)
         json = (pre_reserve_doi ? { metadata: { prereserve_doi: true } } : {})

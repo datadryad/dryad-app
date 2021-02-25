@@ -2,7 +2,6 @@ require 'http'
 require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
-require 'byebug'
 
 # manual testing
 # require 'stash/zenodo_software'
@@ -56,8 +55,9 @@ module Stash
           .software.order(id: :desc).first
         @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
-        @file_collection = FileCollection.new(resource: @resource)
-        # I was creating this later, but it can be created earlier and eases testing if so
+        file_change_list = FileChangeList.new(resource: @resource)
+        @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: file_change_list)
+        # I was creating this later, but it can be created earlier and eases testing to do it earlier
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
       end
 
