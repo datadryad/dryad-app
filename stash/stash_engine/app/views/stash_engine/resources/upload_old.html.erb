@@ -1,5 +1,5 @@
 <%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
-    @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
+  @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -7,13 +7,15 @@
   <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
 <% end %>
 
-<!--<h1 class="o-heading__level1">Upload Your <%#= @datatype %></h1>-->
-<!--<h1 class="o-heading__level1">Upload Your Files</h1>-->
+<h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
-<%= javascript_pack_tag 'application' %>
+<div id="choose_method" style="margin-bottom: 2em;">
+  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
+</div>
 
-<div>
-  <%= react_component("UploadFiles", { resource_id: @resource.id }) %>
+<!-- file upload workflow -->
+<div class="files_upload">
+  <%= render partial: 'stash_engine/file_uploads/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
 </div>
 
 <div class="o-dataset-nav">
