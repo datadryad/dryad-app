@@ -142,6 +142,11 @@ defaults: &DEFAULTS
       ftp_username: username
       ftp_password: password
       ftp_provider_id: 9876
+  s3:
+    region: us-west-2
+    bucket: a-test-bucket
+    key: abcdefg
+    secret: HIJKLMNOP
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
