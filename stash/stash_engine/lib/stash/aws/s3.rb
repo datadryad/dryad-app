@@ -18,13 +18,6 @@ module Stash
         object.put(body: contents)
       end
 
-      def self.get_block(s3_key:)
-        object = s3_bucket.object(s3_key)
-        # with the GET request then we either need to save to file or it takes a block that responds to each or IO requests
-        # with a file would look like object.get(response_target: '<save-filename').  The following would be used with a block
-        object.get
-      end
-
       def self.exists?(s3_key:)
         obj = s3_bucket.object(s3_key)
         obj.exists?
