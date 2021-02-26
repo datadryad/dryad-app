@@ -3,6 +3,7 @@ require 'rails_helper'
 
 RSpec.feature 'CurationActivity', type: :feature do
 
+  include Mocks::Aws
   include Mocks::Stripe
   include Mocks::Ror
   include Mocks::Tenant
@@ -148,6 +149,7 @@ RSpec.feature 'CurationActivity', type: :feature do
     context :curating_dataset, js: true do
 
       before(:each) do
+        mock_aws!
         mock_stripe!
         mock_ror!
         mock_repository!
