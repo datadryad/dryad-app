@@ -110,7 +110,7 @@ module Stash
         @copy.update(state: 'finished')
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
-        Stash::AWS::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
+        Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end
