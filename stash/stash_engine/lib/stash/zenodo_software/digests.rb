@@ -17,6 +17,7 @@ module Stash
         @digest_accumulator = {}
         digest_types.each do |a_type|
           raise "Digest Type #{a_type} is unknown" unless DIGEST_INITIALIZERS.keys.include?(a_type)
+
           @digest_accumulator[a_type] = DIGEST_INITIALIZERS[a_type].call
         end
       end
