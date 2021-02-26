@@ -35,7 +35,7 @@ module Stash
 
       # list of filenames for deletion from zenodo
       def delete_list
-        @resource.software_uploads.deleted_from_version
+        @resource.software_uploads.deleted_from_version.pluck(:upload_file_name)
       end
     end
   end

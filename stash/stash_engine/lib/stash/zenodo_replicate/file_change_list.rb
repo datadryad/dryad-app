@@ -46,13 +46,14 @@ module Stash
                     .where("stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?", ppr.id, @resource.id)
                     .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
 
-        # this may not be strictly necessary, but should pick up any missing files in the current version if an earlier version is a problem
+        # this will pick up any missing files that we have locally, but not on zenodo, may be required for old datasets that
+        # have been published before, but never had files sent to zenodo because we weren't sending old datasets
         not_in_zenodo = StashEngine::FileUpload
           .where(resource_id: @resource.id)
           .present_files
           .where.not(upload_file_name: @existing_zenodo_filenames).distinct.pluck(:upload_file_name)
 
-        # and limit to only items that still exist in the current version
+        # and limit to only items that still exist in the current version: eliminates duplicates and recently deleted files
         @resource.file_uploads.where(upload_file_name: (changed + not_in_zenodo)).present_files
       end
 
