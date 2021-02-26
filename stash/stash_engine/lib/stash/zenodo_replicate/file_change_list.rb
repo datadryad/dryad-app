@@ -41,10 +41,10 @@ module Stash
 
         # anything that was submitted since the last publish
         changed = StashEngine::FileUpload
-                    .joins(:resource)
-                    .where("stash_engine_resources.identifier_id = ?", @resource.identifier_id)
-                    .where("stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?", ppr.id, @resource.id)
-                    .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
+          .joins(:resource)
+          .where('stash_engine_resources.identifier_id = ?', @resource.identifier_id)
+          .where('stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?', ppr.id, @resource.id)
+          .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
 
         # this will pick up any missing files that we have locally, but not on zenodo, may be required for old datasets that
         # have been published before, but never had files sent to zenodo because we weren't sending old datasets

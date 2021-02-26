@@ -96,7 +96,7 @@ module StashEngine
 
       # the URL we use for replication from other source (Presigned or URL) up to Zenodo
       def zenodo_replication_url
-        raise "Override zenodo_replication_url in the model"
+        raise 'Override zenodo_replication_url in the model'
       end
 
       class_methods do

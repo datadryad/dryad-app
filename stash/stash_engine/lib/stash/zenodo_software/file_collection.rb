@@ -31,10 +31,10 @@ module Stash
       def upload_files(zenodo_bucket_url:)
         @file_change_list.upload_list.each do |upload|
           streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
-          digests = [ 'md5' ]
+          digests = ['md5']
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
           digests.uniq!
-          
+
           out = streamer.stream(digest_types: digests)
 
           check_digests(streamer_response: out, file_model: upload)
@@ -42,6 +42,7 @@ module Stash
       end
 
       # contains response: and digest: keys
+      # rubocop:disable Metrics/AbcSize
       def check_digests(streamer_response:, file_model:)
         out = streamer_response
         upload = file_model
@@ -53,11 +54,12 @@ module Stash
           raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
         end
 
-        if upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
-          raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
+        return unless upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
+
+        raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
               "Database: #{upload.digest}"
-        end
       end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end
