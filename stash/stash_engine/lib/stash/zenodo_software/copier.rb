@@ -2,6 +2,7 @@ require 'http'
 require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
+require 'stash/aws/s3'
 
 # manual testing
 # require 'stash/zenodo_software'
@@ -107,8 +108,9 @@ module Stash
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         @copy.update(state: 'finished')
-        # @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
-        # TODO: instead, cleanup files would cleanup files from our S3 as required
+
+        # clean up the S3 storage of zenodo files that have been successfully replicated
+        Stash::AWS::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end
