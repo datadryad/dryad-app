@@ -1,5 +1,5 @@
 .UploadType {
-    width: 290px;
+    width: 295px;
     height: 230px;
     margin: 20px 15px;
     border: 1px solid black;
@@ -11,7 +11,7 @@
 
 h1.UploadTypeTitle {
     margin-top: 25px;
-    font-size: large;
+    font-size: x-large;
     color: #005581;
 }
 
@@ -34,3 +34,16 @@ button {
 button:hover {
     background-color: rgba(133, 199, 216, 1);
 }
+
+/*input[type="file"] {*/
+/*    display: block;*/
+/*    border: 0 solid;*/
+/*    !*padding: 30px 0 0 0;*!*/
+
+/*    border-radius: inherit;*/
+/*    background-color: rgba(159, 199, 216, 1);*/
+/*    width: 150px;*/
+/*    height: 30px;*/
+/*    margin: 15px auto;*/
+/*    cursor: pointer;*/
+/*}*/
