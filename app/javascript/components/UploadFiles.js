@@ -18,12 +18,10 @@ class UploadFiles extends React.Component {
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
-        areThereFiles: false,
         chosenFiles: null
     };
 
     uploadFilesHandler = (event, typeId) => {
-        this.setState({areThereFiles: true});
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
             file.typeId = typeId;
@@ -38,13 +36,9 @@ class UploadFiles extends React.Component {
         }
     }
 
-    toggleTableHandler() {
-        console.log('Table displayed!')
-    }
-
     render () {
-        let chosenFiles = null;
-        if (this.state.areThereFiles) {
+        let chosenFiles;
+        if (this.state.chosenFiles) {
             chosenFiles = (
                 <FilesList files={this.state.chosenFiles} />
             )
@@ -59,7 +53,6 @@ class UploadFiles extends React.Component {
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
                 {this.state.upload_type.map((upload_type, index) => {
                     return <UploadType
-                        // click={() => this.uploadFilesHandler(upload_type.id)}
                         changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
                         id={upload_type.id}
                         name={upload_type.name}
