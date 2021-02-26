@@ -1,8 +1,8 @@
 import React from "react"
 // import PropTypes from "prop-types"
 import UploadType from './UploadType/UploadType'
+import FilesList from "./FilesList/FilesList";
 import classes from './UploadFiles.module.css';
-import upload_type from "./UploadType/UploadType";
 
 class UploadFiles extends React.Component {
     state = {
@@ -18,12 +18,24 @@ class UploadFiles extends React.Component {
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
-        areFiles: false
+        areThereFiles: false,
+        chosenFiles: null
     };
 
     uploadFilesHandler = (event, typeId) => {
-        console.log(event.target.files);
-        this.setState({areFiles: true});
+        this.setState({areThereFiles: true});
+        const newFiles = [...event.target.files];
+        newFiles.map((file) => {
+            file.typeId = typeId;
+            file.sizeKb = (file.size / 1024).toFixed(1).toString() + ' kb';
+        });
+        if (!this.state.chosenFiles) {
+            this.setState({chosenFiles: newFiles});
+        } else {
+            let chosenFiles = [...this.state.chosenFiles];
+            chosenFiles = chosenFiles.concat(newFiles);
+            this.setState({chosenFiles: chosenFiles});
+        }
     }
 
     toggleTableHandler() {
@@ -32,26 +44,12 @@ class UploadFiles extends React.Component {
 
     render () {
         let chosenFiles = null;
-        if (this.state.areFiles) {
+        if (this.state.areThereFiles) {
             chosenFiles = (
-                <div>
-                    <h1>Files</h1>
-                    <table>
-                        <th>
-                            <td>Filename</td>
-                            <td>Status</td>
-                            <td>URL</td>
-                            <td>Type</td>
-                            <td>Actions</td>
-                        </th>
-                        <tr>
-                            Here goes the table content
-                        </tr>
-                    </table>
-                </div>
+                <FilesList files={this.state.chosenFiles} />
             )
         } else {
-            chosenFiles = <p>Any files chosen yet.</p>
+            chosenFiles = <p>No files chosen yet.</p>
         }
 
         return (
@@ -69,7 +67,6 @@ class UploadFiles extends React.Component {
                         buttonFiles={upload_type.buttonFiles}
                         buttonURLs={upload_type.buttonURLs} />
                 })}
-                <h1>Files to upload</h1>
                 {chosenFiles}
             </div>
         );
