@@ -22,7 +22,7 @@ const files_list = (props) => {
                             <tr>
                                 <td>{file.name}</td>
                                 <td>Pending</td>
-                                <td></td>
+                                <td/>
                                 <td>{file.typeId}</td>
                                 <td>{file.sizeKb}</td>
                                 <td>Remove</td>
