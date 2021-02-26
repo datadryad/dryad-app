@@ -23,7 +23,7 @@ module Stash
 
       def remove_files(zenodo_bucket_url:)
         @file_change_list.delete_list.each do |del_file|
-          url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(del_file.upload_file_name)}"
+          url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(del_file)}"
           ZC.standard_request(:delete, url)
         end
       end
