@@ -39,30 +39,29 @@ module Stash
         # upload anything that has changed since last publish or anything that doesn't exist in Zenodo's files
         ppr = previous_published_resource
 
-        # anything that has had any changes since last publication
+        # anything that was submitted since the last publish
         changed = StashEngine::FileUpload
-          .joins(:resource)
-          .where("stash_engine_resources.identifier_id = ?", @resource.identifier_id)
-          .where("stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?", ppr.id, @resource.id)
-          .where("file_state = 'created' OR file_state IS NULL OR file_state = 'deleted'")
+                    .joins(:resource)
+                    .where("stash_engine_resources.identifier_id = ?", @resource.identifier_id)
+                    .where("stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?", ppr.id, @resource.id)
+                    .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
 
+        # this may not be strictly necessary, but should pick up any missing files in the current version if an earlier version is a problem
         not_in_zenodo = StashEngine::FileUpload
           .where(resource_id: @resource.id)
-          .where.not(upload_file_name: @existing_zenodo_filenames)
+          .present_files
+          .where.not(upload_file_name: @existing_zenodo_filenames).distinct.pluck(:upload_file_name)
 
-        # changed and not in zenodo
-        to_upload = (changed + not_in_zenodo).map(&:upload_file_name).uniq
-
-        # and in the current file list
-        @resource.file_uploads.where(upload_file_name: to_upload).present_files
+        # and limit to only items that still exist in the current version
+        @resource.file_uploads.where(upload_file_name: (changed + not_in_zenodo)).present_files
       end
 
       # list of filenames for deletion from zenodo
       def delete_list
         return [] unless published_previously?
 
-        # existing zenodo filenames minus current existing database filenames leaves the ones to delete
-        @existing_zenodo_filenames - @resource.file_uploads.present_files.map(&:upload_file_name)
+        # existing zenodo filenames on Zenodo server minus current existing database filenames leaves the ones to delete
+        @existing_zenodo_filenames - @resource.file_uploads.present_files.distinct.pluck(:upload_file_name)
       end
 
       def published_previously?
@@ -70,8 +69,22 @@ module Stash
       end
 
       def previous_published_resource
-        StashEngine::Resource.where("id < ?", @resource.id).
-          where("publication_date != ? AND publication_date IS NOT NULL", @resource.publication_date)
+        # sometimes it's just easier to drop to SQL with a complex query, subquery limits to the last curation status
+        # for each resource and then limits to the published last statuses by joining another copy of table with only published items
+        query = <<~SQL.chomp
+          SELECT res.* FROM stash_engine_resources res
+          JOIN stash_engine_curation_activities cur1
+            ON cur1.resource_id = res.id
+          JOIN 
+            (SELECT max(id) as id from stash_engine_curation_activities
+              GROUP BY resource_id) cur_sub
+            ON cur1.id = cur_sub.id
+          WHERE cur1.status = 'published'
+            AND res.identifier_id = ?
+            AND res.id < ?
+          ORDER BY res.id DESC;
+        SQL
+        StashEngine::Resource.find_by_sql([query, @resource.identifier_id, @resource.id]).first
       end
 
     end
