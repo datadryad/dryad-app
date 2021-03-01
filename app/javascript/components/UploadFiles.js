@@ -26,7 +26,7 @@ class UploadFiles extends React.Component {
         newFiles.map((file) => {
             file.typeId = typeId;
             // TODO: create method
-            file.sizeKb = (file.size / 1024).toFixed(1).toString() + ' kb';
+            file.sizeKb = this.formatFileSize(file.size);
         });
         if (!this.state.chosenFiles) {
             this.setState({chosenFiles: newFiles});
@@ -35,6 +35,10 @@ class UploadFiles extends React.Component {
             chosenFiles = chosenFiles.concat(newFiles);
             this.setState({chosenFiles: chosenFiles});
         }
+    }
+
+    formatFileSize = (fileSize) => {
+        return (fileSize / 1024).toFixed(1).toString() + ' kb';
     }
 
     deleteFileHandler = (fileIndex) => {
