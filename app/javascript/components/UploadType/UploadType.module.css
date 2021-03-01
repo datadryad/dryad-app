@@ -21,8 +21,8 @@ p.UploadTypeDescription {
 }
 
 /*
-TODO: UploadTypeButton included to workaround button tag styles messed up between this stylesheet and the
-  already defined stylesheet for application.
+UploadTypeButton included to workaround button tag styles messed up between this stylesheet and the
+already defined stylesheet for application.
 */
 button.UploadTypeButton {
     display: block;
@@ -39,15 +39,17 @@ button.UploadTypeButton:hover {
     background-color: rgba(133, 199, 216, 1);
 }
 
-/*input[type="file"] {*/
-/*    display: block;*/
-/*    border: 0 solid;*/
-/*    !*padding: 30px 0 0 0;*!*/
+input[type="file"] {
+    position: absolute;
+    left: -9999px;
+}
 
-/*    border-radius: inherit;*/
-/*    background-color: rgba(159, 199, 216, 1);*/
-/*    width: 150px;*/
-/*    height: 30px;*/
-/*    margin: 15px auto;*/
-/*    cursor: pointer;*/
-/*}*/
+label {
+    display: inline-block;
+    width: 150px;
+    height: 30px;
+    border-radius: inherit;
+    padding: 10px 20px;
+    background-color: rgba(159, 199, 216, 1);
+    cursor: pointer;
+}
