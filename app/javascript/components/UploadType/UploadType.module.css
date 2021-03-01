@@ -20,7 +20,11 @@ p.UploadTypeDescription {
     font-size: small;
 }
 
-button {
+/*
+TODO: UploadTypeButton included to workaround button tag styles messed up between this stylesheet and the
+  already defined stylesheet for application.
+*/
+button.UploadTypeButton {
     display: block;
     border: 0 solid;
     border-radius: inherit;
@@ -31,7 +35,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button.UploadTypeButton:hover {
     background-color: rgba(133, 199, 216, 1);
 }
 
