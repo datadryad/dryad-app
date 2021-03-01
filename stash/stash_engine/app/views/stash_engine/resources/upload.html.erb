@@ -11,10 +11,7 @@
 <!--<h1 class="o-heading__level1">Upload Your Files</h1>-->
 
 <%= javascript_pack_tag 'application' %>
-
-<div>
-  <%= react_component("UploadFiles", { resource_id: @resource.id }) %>
-</div>
+<%= react_component("UploadFiles", { resource_id: @resource.id }) %>
 
 <div class="o-dataset-nav">
   <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
