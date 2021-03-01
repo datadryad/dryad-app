@@ -1,7 +1,7 @@
 import React from "react"
 // import PropTypes from "prop-types"
 import UploadType from './UploadType/UploadType'
-import FilesList from "./FilesList/FilesList";
+import File from "./File/File";
 import classes from './UploadFiles.module.css';
 
 class UploadFiles extends React.Component {
@@ -25,6 +25,7 @@ class UploadFiles extends React.Component {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
             file.typeId = typeId;
+            // TODO: create method
             file.sizeKb = (file.size / 1024).toFixed(1).toString() + ' kb';
         });
         if (!this.state.chosenFiles) {
@@ -36,11 +37,43 @@ class UploadFiles extends React.Component {
         }
     }
 
+    deleteFileHandler = (fileIndex) => {
+        let chosenFiles = [...this.state.chosenFiles];
+        chosenFiles.splice(fileIndex, 1);
+        if (chosenFiles.length === 0) {
+            this.setState({chosenFiles: null});
+        } else {
+            this.setState({chosenFiles: chosenFiles});
+        }
+    }
+
     render () {
         let chosenFiles;
         if (this.state.chosenFiles) {
             chosenFiles = (
-                <FilesList files={this.state.chosenFiles} />
+                <div>
+                    <h1 className={classes.FileTitle}>Files</h1>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Status</th>
+                            <th>URL</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.state.chosenFiles.map((file, index) => {
+                            return <File
+                                click={() => this.deleteFileHandler(index)}
+                                file={file}
+                            />
+                        })}
+                        </tbody>
+                    </table>
+                </div>
             )
         } else {
             chosenFiles = <p>No files chosen yet.</p>
