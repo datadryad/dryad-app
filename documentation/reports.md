@@ -31,13 +31,9 @@ To run the report and retrieve the files:
 # On dryad-prd-a
 cd apps/ui/current
 RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2019-11
-
-# On a stage server, copy the files:
-cd shopping_cart_reports
-scp dryad-prd-a:apps/ui/current/shop* .
-
-# On your local machine, copy the files:
-scp dryad-stg-a:shopping_cart_reports/shop* .
+cp shopping* ~/tools/journal-payments/shoppingcart/
+cd ~/tools/journal-payments/shoppingcart
+git commit -a -m "add reports for 2019-11"
 ```
 
 Dataset Info Report
