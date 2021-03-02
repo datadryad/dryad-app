@@ -22,6 +22,8 @@ namespace :local_to_s3 do
         type = 'data'
       end
 
+      next unless res_id && (res_id.to_i > 0)
+
       resource = StashEngine::Resource.find(res_id)
       if resource.submitted?
         puts " -- #{res_dir} --> not copied; it has already been submitted to Merritt"
