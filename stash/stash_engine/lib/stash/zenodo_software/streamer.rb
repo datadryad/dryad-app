@@ -39,14 +39,18 @@ module Stash
         read_pipe.define_singleton_method(:rewind) { nil }
         write_pipe.binmode
 
-        response = HTTP.timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10).get(@file_model.zenodo_replication_url)
+        http = HTTP.timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
+        response = http.get(@file_model.zenodo_replication_url)
 
         put_response = nil
+
         request_thread = Thread.new do
           put_response = Stash::ZenodoReplicate::ZenodoConnection
             .standard_request(:put, @upload_url,
                               body: read_pipe,
                               headers: { 'Content-Type': nil, 'Content-Length': response.headers['Content-Length'] })
+          # rescue HTTP::Error, Stash::ZenodoReplicate::ZenodoError  => e
+          # puts 'caught error in thread'
         end
 
         size = 0
@@ -66,7 +70,7 @@ module Stash
 
         { response: put_response, digests: digests_obj.hex_digests }
       rescue HTTP::Error => e
-        raise ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
+        raise Stash::ZenodoReplicate::ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
             "Original error: #{e}\n#{e.backtrace.join("\n")}"
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
