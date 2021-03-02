@@ -30,6 +30,11 @@ module Stash
         obj.exists?
       end
 
+      def self.size(s3_key:)
+        obj = s3_bucket.object(s3_key)
+        obj.size
+      end
+
       def self.presigned_download_url(s3_key:)
         return unless s3_key
 
