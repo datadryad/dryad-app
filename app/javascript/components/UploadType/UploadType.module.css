@@ -35,7 +35,7 @@ button.UploadTypeButton {
     cursor: pointer;
 }
 
-button.UploadTypeButton:hover {
+button.UploadTypeButton:hover, label:hover {
     background-color: rgba(133, 199, 216, 1);
 }
 
@@ -44,12 +44,12 @@ input[type="file"] {
     left: -9999px;
 }
 
-label {
+label.UploadTypeChooseButton {
     display: inline-block;
     width: 150px;
     height: 30px;
     border-radius: inherit;
-    padding: 10px 20px;
+    padding: 8px 20px;
     background-color: rgba(159, 199, 216, 1);
     cursor: pointer;
 }

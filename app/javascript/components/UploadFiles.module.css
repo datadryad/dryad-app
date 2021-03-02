@@ -13,6 +13,7 @@ h1.FileTitle {
 
 table {
     width: 100%;
+    margin-bottom: 35px;
 }
 
 th {
@@ -25,4 +26,30 @@ th, td {
 
 table, th, td {
     border: 1px solid;
+}
+
+input.ConfirmPersonalHealth {
+    margin-bottom: 25px;
+}
+
+.UploadFilesSubmit {
+    display: block;
+    color: white;
+    border: 0 solid;
+    border-radius: 5px;
+    background-color: #89cce9;
+    width: 152px;
+    height: 40px;
+}
+
+.UploadFilesSubmit:hover {
+    background-color: #89ccf2;
+}
+
+.UploadFilesSubmit:disabled {
+    background-color: #d7d7d7;
+}
+
+span.MandatoryField {
+    color: red;
 }

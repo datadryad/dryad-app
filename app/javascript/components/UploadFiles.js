@@ -18,14 +18,14 @@ class UploadFiles extends React.Component {
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
-        chosenFiles: null
+        chosenFiles: null,
+        submitButtonDisabled: true
     };
 
     uploadFilesHandler = (event, typeId) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
             file.typeId = typeId;
-            // TODO: create method
             file.sizeKb = this.formatFileSize(file.size);
         });
         if (!this.state.chosenFiles) {
@@ -51,11 +51,16 @@ class UploadFiles extends React.Component {
         }
     }
 
+    toggleCheckedConfirm = (event) => {
+        this.setState({submitButtonDisabled: !event.target.checked});
+    }
+
     render () {
         let chosenFiles;
         if (this.state.chosenFiles) {
             chosenFiles = (
                 <div>
+                    <div>
                     <h1 className={classes.FileTitle}>Files</h1>
                     <table>
                         <thead>
@@ -77,10 +82,31 @@ class UploadFiles extends React.Component {
                         })}
                         </tbody>
                     </table>
+                    </div>
+                    <div>
+                        <input
+                            type="checkbox" id="confirm_not_personal_health" className={classes.ConfirmPersonalHealth}
+                            onChange={(event) => this.toggleCheckedConfirm(event)}
+                        />
+                        <label htmlFor="confirm_not_personal_health">
+                            <span className={classes.MandatoryField}>{'\u00A0\u00A0\u00A0\u00A0'}* </span>
+                            I confirm that no Personal Health Information or
+                            Sensitive Data are being uploaded with this submission.
+                        </label>
+                        <input
+                            className={classes.UploadFilesSubmit} type="submit" value="Upload pending files"
+                            disabled={this.state.submitButtonDisabled}
+                        />
+                    </div>
                 </div>
             )
         } else {
-            chosenFiles = <p>No files chosen yet.</p>
+            chosenFiles = (
+                <div>
+                    <h1 className={classes.FileTitle}>Files</h1>
+                    <p>No files have been selected.</p>
+                </div>
+            )
         }
 
         return (
