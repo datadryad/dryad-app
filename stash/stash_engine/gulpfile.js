@@ -19,6 +19,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const stylelint = require('gulp-stylelint');
 const useref = require('gulp-useref');
 const validateHTML = require('gulp-w3cjs');
+const { spawn } = require('child_process');
 
 // ***** Plugins That Run a Single Process ***** //
 
@@ -54,7 +55,7 @@ function modernizrTask(cb) {
 
 // Validate build HTML:
 function validateHtmlTask(cb) {
-  return src('public/demo/**/*.html')
+  return src('dist/**/*.html')
     .pipe(validateHTML());
 };
 
@@ -105,32 +106,32 @@ function userefTask(cb) {
   return src(['ui-library/**/*.html', '!ui-library/includes/*'])
     .pipe(useref())
     .pipe(lbInclude()) // Process <!--#include file="" --> statements
-    .pipe(dest('public/demo'))
+    .pipe(dest('dist'))
 };
 
-// Delete 'demo' directory at start of build process:
+// Delete dist directory at start of build process:
 function cleanTask(cb) {
-  return del('public/demo');
+  return del('dist');
 };
 
-// Copy images to demo directory during the build process:
+// Copy images to dist directory during the build process:
 function copyImagesTask(cb) {
   return src('ui-library/images/**')
-    .pipe(dest('public/demo/images'));
+    .pipe(dest('dist/images'));
 };
 
-// Copy fonts to demo directory during the build process:
+// Copy fonts to dist directory during the build process:
 function copyFontsTask(cb) {
   return src('ui-library/fonts/**')
-    .pipe(dest('public/demo/fonts'));
+    .pipe(dest('dist/fonts'));
 };
 
 // Copy the single CSS and JS files from UI library build to Rails asset pipeline:
 function copyToAssetsTask(cb) {
-  return src('public/demo/', { read: false })
+  return src('dist/', { read: false })
     .pipe(shell([
-      'cp public/demo/css/ui.css app/assets/stylesheets/stash_engine',
-      'cp public/demo/js/ui.js app/assets/javascripts/stash_engine']));
+      'cp dist/css/ui.css app/assets/stylesheets/stash_engine',
+      'cp dist/js/ui.js app/assets/javascripts/stash_engine']));
 /*
   shell.task([
     'cp public/demo/css/ui.css app/assets/stylesheets/stash_engine',
@@ -156,6 +157,13 @@ function jsLintTask(cb) {
     .pipe(jshint.reporter('default'));
 };
 
+function publishTask() {
+  return spawn('NODE_DEBUG=gh-pages npm run publish', {
+    stdio: 'inherit',
+    shell: true,
+  });
+};
+
 // Commands available via the command line. For example: `gulp hello`
 exports.hello = helloTask;
 exports.minifyImages = minifyImagesTask;
@@ -165,6 +173,9 @@ exports.validateHTML = validateHtmlTask;
 // Standard build that should be run before deploying the application
 exports.build = series(cleanTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask,
                        copyImagesTask, copyFontsTask, copyToAssetsTask);
+
+// Publish a build to GitHub Pages
+exports.publish = series(cleanTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask, publishTask);
 
 // Setup the default to run gulp in dev mode so that its watching our files
 exports.default = parallel(sassTask, browserSyncTask, watchTask);
