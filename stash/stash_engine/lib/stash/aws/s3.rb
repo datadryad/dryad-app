@@ -18,6 +18,15 @@ module Stash
         object.put(body: contents)
       end
 
+      def self.put_stream(s3_key:, stream:)
+        return unless s3_key && stream
+
+        object = s3_bucket.object(s3_key)
+        object.upload_stream do |write_stream|
+          IO.copy_stream(stream, write_stream)
+        end
+      end
+
       def self.put_file(s3_key:, filename:)
         return unless s3_key && filename
 
@@ -28,6 +37,11 @@ module Stash
       def self.exists?(s3_key:)
         obj = s3_bucket.object(s3_key)
         obj.exists?
+      end
+
+      def self.size(s3_key:)
+        obj = s3_bucket.object(s3_key)
+        obj.size
       end
 
       def self.presigned_download_url(s3_key:)
