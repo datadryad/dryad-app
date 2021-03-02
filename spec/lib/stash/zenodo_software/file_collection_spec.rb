@@ -1,5 +1,4 @@
 require 'stash/zenodo_software'
-require 'fileutils'
 
 require 'rails_helper'
 
@@ -12,17 +11,9 @@ module Stash
       before(:each) do
         @resource = create(:resource)
 
-        # make some random file contents for testing
-        @file_contents = []
-        0.upto(2) do
-          @file_contents.push(Random.new.bytes(rand(1000)).b)
-        end
-
-        @software_http_upload = create(:software_upload, upload_file_size: @file_contents.second.length,
+        @software_http_upload = create(:software_upload, upload_file_size: 1000,
                                                          url: 'http://example.org/example', resource: @resource)
 
-        stub_request(:get, 'http://example.org/example')
-          .to_return(status: 200, body: @file_contents.second, headers: {})
         @change_list = FileChangeList.new(resource: @resource)
 
         @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: @change_list)
