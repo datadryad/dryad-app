@@ -51,7 +51,7 @@ module Stash
         end
 
         if out[:response][:checksum] != "md5:#{out[:digests]['md5']}"
-          raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
+          raise FileError, "Error MD5 digest doesn't match zenodo:\nResponse: #{out[:response][:checksum]}\nCalculated: md5:#{out[:digests]['md5']}"
         end
 
         return unless upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
