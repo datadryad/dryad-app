@@ -8,6 +8,7 @@ require 'cgi'
 module StashApi
   RSpec.describe FilesController, type: :request do
 
+    include Mocks::Aws
     include Mocks::CurationActivity
     include Mocks::Ror
     include Mocks::RSolr
@@ -24,6 +25,7 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
+      mock_aws!
       mock_ror!
       mock_tenant!
 
@@ -60,11 +62,8 @@ module StashApi
         hsh = response_body_hash
         expect(hsh['_links']['self']['href']).not_to be_nil
         expect(hsh['path']).to eq(::File.basename(@file_path))
-        expect(hsh['size']).to eq(::File.size(@file_path))
         expect(hsh['mimeType']).to eq(@mime_type)
         expect(hsh['status']).to eq('created')
-        expect(hsh['digest']).to eq(Digest::MD5.hexdigest(::File.read(@file_path)))
-        expect(hsh['digestType']).to eq('md5')
       end
 
       it 'will not allow non-logged in to add a file' do
@@ -90,11 +89,8 @@ module StashApi
         expect(response_code).to eq(200)
         hsh = response_body_hash
         expect(hsh['path']).to eq(::File.basename(@file_path))
-        expect(hsh['size']).to eq(::File.size(@file_path))
         expect(hsh['mimeType']).to eq(@mime_type)
         expect(hsh['status']).to eq('created')
-        expect(hsh['digest']).to eq(Digest::MD5.hexdigest(::File.read(@file_path)))
-        expect(hsh['digestType']).to eq('md5')
       end
 
       it "doesn't allow listing a file that should be hidden from the public" do
