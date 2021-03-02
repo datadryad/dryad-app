@@ -112,7 +112,6 @@ class UploadFiles extends React.Component {
         return (
             <div className={classes.UploadFiles}>
                 <h1>Upload Files</h1>
-                This is the resource: {this.props.resource_id}
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
                 {this.state.upload_type.map((upload_type, index) => {
                     return <UploadType

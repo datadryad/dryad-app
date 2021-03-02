@@ -16,15 +16,14 @@ h1.UploadTypeTitle {
 }
 
 p.UploadTypeDescription {
-    margin-bottom: 30px;
-    font-size: small;
+    margin-bottom: 25px;
 }
 
 /*
 UploadTypeButton included to workaround button tag styles messed up between this stylesheet and the
 already defined stylesheet for application.
 */
-button.UploadTypeButton {
+button.EnterURLsButton {
     display: block;
     border: 0 solid;
     border-radius: inherit;
@@ -35,7 +34,7 @@ button.UploadTypeButton {
     cursor: pointer;
 }
 
-button.UploadTypeButton:hover, label:hover {
+button.EnterURLsButton:hover, label.ChooseFilesButton:hover {
     background-color: rgba(133, 199, 216, 1);
 }
 
@@ -44,7 +43,7 @@ input[type="file"] {
     left: -9999px;
 }
 
-label.UploadTypeChooseButton {
+label.ChooseFilesButton {
     display: inline-block;
     width: 150px;
     height: 30px;
