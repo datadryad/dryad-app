@@ -8,7 +8,7 @@ module Stash
 
       describe 'initialize' do
         it 'raises an error if a bad digest type is given' do
-          expect { Digests.new(digest_types: ['catfood', 'md5']) }.to raise_error(RuntimeError)
+          expect { Digests.new(digest_types: %w[catfood md5]) }.to raise_error(RuntimeError)
         end
       end
 

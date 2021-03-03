@@ -24,15 +24,15 @@ module Stash
         @streamer = Streamer.new(file_model: @resource.software_uploads.first, zenodo_bucket_url: @bucket_url)
       end
 
-      describe "#stream" do
+      describe '#stream' do
         it 'streams all the way through the pipe and calculates digests on the same content' do
-          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/).
-            to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length })
+          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/)
+            .to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length })
 
-          stub_request(:put, %r{example.org/my/great/test/bucket}).
-                       to_return(status: 200,
-                                 body: {}.to_json, # the body is just passed through to other classes
-                                 headers: {'Content-Type': 'application/json'} )
+          stub_request(:put, %r{example.org/my/great/test/bucket})
+            .to_return(status: 200,
+                       body: {}.to_json, # the body is just passed through to other classes
+                       headers: { 'Content-Type': 'application/json' })
 
           resp = @streamer.stream(digest_types: ['md5'])
 
@@ -41,45 +41,49 @@ module Stash
         end
 
         it 'raises an exception if the size is off' do
-          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/).
-            to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length + 1 })
+          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/)
+            .to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length + 1 })
 
-          stub_request(:put, %r{example.org/my/great/test/bucket}).
-            to_return(status: 200,
-                      body: {}.to_json, # the body is just passed through to other classes
-                      headers: {'Content-Type': 'application/json'} )
+          stub_request(:put, %r{example.org/my/great/test/bucket})
+            .to_return(status: 200,
+                       body: {}.to_json, # the body is just passed through to other classes
+                       headers: { 'Content-Type': 'application/json' })
 
-          expect {
+          expect do
             @streamer.stream(digest_types: ['md5'])
-          }.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
+          end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
 
         end
 
         it 'raises an exception on zenodo PUT error' do
-          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/).
-            to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length })
+          stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/)
+            .to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length })
 
-          stub_request(:put, %r{example.org/my/great/test/bucket}).
-            to_return(status: 504,
-                      body: {bad: 'times'}.to_json, # the body is just passed through to other classes
-                      headers: {'Content-Type': 'application/json'} )
+          stub_request(:put, %r{example.org/my/great/test/bucket})
+            .to_return(
+              status: 504,
+              body: { bad: 'times' }.to_json, # the body is just passed through to other classes
+              headers: { 'Content-Type': 'application/json' }
+            )
 
-          expect {
+          expect do
             @streamer.stream(digest_types: ['md5'])
-          }.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
+          end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
         end
 
         it 'raises an exception on AWS GET error' do
           stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/).to_timeout
 
-          stub_request(:put, %r{example.org/my/great/test/bucket}).
-            to_return(status: 200,
-                      body: {}.to_json, # the body is just passed through to other classes
-                      headers: {'Content-Type': 'application/json'} )
+          stub_request(:put, %r{example.org/my/great/test/bucket})
+            .to_return(
+              status: 200,
+              body: {}.to_json, # the body is just passed through to other classes
+              headers: { 'Content-Type': 'application/json' }
+            )
 
-          expect {
+          expect do
             @streamer.stream(digest_types: ['md5'])
-          }.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
+          end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
         end
       end
 

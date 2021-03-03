@@ -66,13 +66,13 @@ module Stash
       end
 
       def stub_existing_files(deposition_id:, filenames: [])
-        resp_data = { files: filenames.map {|fn| { filename: fn } }}.with_indifferent_access
-        stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}?access_token=ThisIsAFakeToken").
-          with(
+        resp_data = { files: filenames.map { |fn| { filename: fn } } }.with_indifferent_access
+        stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}?access_token=ThisIsAFakeToken")
+          .with(
             headers: {
-              'Content-Type'=>'application/json',
-            }).
-          to_return(status: 200, body: resp_data.to_json, headers: { 'Content-Type' => 'application/json'})
+              'Content-Type' => 'application/json'
+            }
+          ).to_return(status: 200, body: resp_data.to_json, headers: { 'Content-Type' => 'application/json' })
       end
 
       def links(deposition_id:)
