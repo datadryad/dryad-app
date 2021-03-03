@@ -218,7 +218,7 @@ namespace :identifiers do
     end
     p "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
-      csv << %w[DOI CreatedDate SubmittedDate ApprovalDate
+      csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID InstitutionName
                 JournalName SponsorName]
       StashEngine::Identifier.publicly_viewable.each do |i|
@@ -226,11 +226,11 @@ namespace :identifiers do
         next unless approval_date_str&.start_with?(year_month)
 
         created_date_str = i.created_at&.strftime('%Y-%m-%d')
-        submitted_date = i.resources.submitted.each do |r|
-          break r.submitted_date if r.submitted_date.present?
+        curation_start_date = i.resources.submitted.each do |r|
+          break r.curation_start_date if r.curation_start_date.present?
         end
-        submitted_date_str = submitted_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, created_date_str, submitted_date_str, approval_date_str,
+        curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
+        csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
                 i.publication_name, i.journal&.sponsor_name]
       end
