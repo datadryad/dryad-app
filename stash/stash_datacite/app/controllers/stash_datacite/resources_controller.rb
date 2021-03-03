@@ -161,11 +161,13 @@ module StashDatacite
     end
 
     def processing?(resource)
-      if resource && resource.identifier && resource.identifier.processing?
+      if (resource && resource.identifier && resource.identifier.processing?) || resource&.current_resource_state&.resource_state != 'in_progress'
         redirect_back(fallback_location: stash_url_helpers.dashboard_path,
-                      notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again')
+                      notice: 'You may not submit this version of the dataset because a previous version has not finished ' \
+                              'processing or you are trying to re-submit an old version')
         return true
       end
+      resource.current_resource_state.update(resource_state: 'processing') # should lock them out of multiple rapid submissions of same resource
       false
     end
   end
