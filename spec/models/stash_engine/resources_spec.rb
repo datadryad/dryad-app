@@ -1251,30 +1251,33 @@ module StashEngine
         end
       end
 
-      describe :submitted_date do
+      describe :submitted_date_curation_date do
 
-        it 'returns the correct submitted_date' do
+        it 'returns the correct dates for a regular submission' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'submitted')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
+          expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-02'))
         end
 
-        it 'returns the correct submitted_date when an item went straight from peer_review to curation' do
+        it 'returns the correct dates when an item went straight from peer_review to curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'peer_review')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
-          expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-03'))
+          expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
+          expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-03'))
         end
 
         it 'returns nil if there is no submitted_date' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           expect(res.submitted_date).to be_nil
+          expect(res.curation_start_date).to be_nil
         end
       end
 
