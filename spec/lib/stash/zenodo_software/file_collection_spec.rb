@@ -50,40 +50,40 @@ module Stash
       describe '#check_digests' do
         it 'raises an error if no md5 digest from Zenodo (should be one)' do
           resp = {}
-          expect {
+          expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_uploads.first)
-          }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          end.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it "raises an exception if md5 digest doesn't match Zenodo" do
           # sets the http "response" body and the calculated digests
-          resp = { response: { checksum: 'md5:12xu' }, digests: {md5: '12xx'} }.with_indifferent_access
-          expect {
+          resp = { response: { checksum: 'md5:12xu' }, digests: { md5: '12xx' } }.with_indifferent_access
+          expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_uploads.first)
-          }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          end.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it "raises an exception if digest doesn't match something we have in our database" do
           @resource.software_uploads.first.update(digest_type: 'md5', digest: '12xx')
-          resp = { response: { checksum: 'md5:12xu' }, digests: {md5: '12xu'} }.with_indifferent_access
-          expect {
+          resp = { response: { checksum: 'md5:12xu' }, digests: { md5: '12xu' } }.with_indifferent_access
+          expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_uploads.first)
-          }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          end.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it "doesn't raise any exceptions for digests if everything matches" do
           @resource.software_uploads.first.update(digest_type: 'md5', digest: '12xu')
-          resp = { response: { checksum: 'md5:12xu' }, digests: {md5: '12xu'} }.with_indifferent_access
-          expect {
+          resp = { response: { checksum: 'md5:12xu' }, digests: { md5: '12xu' } }.with_indifferent_access
+          expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_uploads.first)
-          }.not_to raise_exception
+          end.not_to raise_exception
         end
 
         it "doesn't raise any exceptions for digests if everything matches and no digest in database" do
-          resp = { response: { checksum: 'md5:12xu' }, digests: {md5: '12xu'} }.with_indifferent_access
-          expect {
+          resp = { response: { checksum: 'md5:12xu' }, digests: { md5: '12xu' } }.with_indifferent_access
+          expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_uploads.first)
-          }.not_to raise_exception
+          end.not_to raise_exception
         end
       end
     end
