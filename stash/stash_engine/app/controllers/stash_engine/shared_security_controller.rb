@@ -1,5 +1,3 @@
-require 'byebug'
-
 module StashEngine
   module SharedSecurityController
 
