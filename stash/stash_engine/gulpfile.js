@@ -101,11 +101,11 @@ function browserSyncTask(cb) {
   });
 };
 
-// Concatenate and minify CSS and JavaScript from paths within useref tags during build process; include files:
+// Copy HTML files to /dist folder, add 'include' files, concatenate CSS and JavaScript from paths within useref tags:
 function userefTask(cb) {
   return src(['ui-library/**/*.html', '!ui-library/includes/*'])
-    .pipe(useref())
     .pipe(lbInclude()) // Process <!--#include file="" --> statements
+    .pipe(useref())
     .pipe(dest('dist'))
 };
 
