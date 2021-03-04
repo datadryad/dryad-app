@@ -28,6 +28,20 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
+    def bust_cache
+      response.headers['Cache-Control'] = 'no-cache, no-store'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Expires'] = 'Mon, 01 Jan 1990 00:00:00 GMT'
+    end
+
+    # requires @resource to be set and not editing a version that is obsolete
+    def require_not_obsolete
+      return if @resource&.current_resource_state&.resource_state == 'in_progress'
+
+      flash[:alert] = 'You may not edit a submitted version of your dataset by using the back button. Please open your dataset from the editing link'
+      redirect_to stash_engine.dashboard_path
+    end
+
     def require_superuser
       return if current_user && %w[superuser].include?(current_user.role)
 
