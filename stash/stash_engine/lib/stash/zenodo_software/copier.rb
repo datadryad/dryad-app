@@ -2,14 +2,14 @@ require 'http'
 require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
-require 'byebug'
+require 'stash/aws/s3'
 
 # manual testing
 # require 'stash/zenodo_software'
 # Stash::ZenodoSoftware::Copier.test_submit(resource_id: xxxx, publication: false)
 #
 #
-# The zenodo states are these
+# The zenodo states are these (returned from their API for a dataset)
 # unpublished submission -- state: unsubmitted,   submitted: false
 # published              -- state: done,          submitted: true
 # published-reopened     -- state: inprogress,    submitted: true
@@ -56,8 +56,9 @@ module Stash
           .software.order(id: :desc).first
         @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
-        @file_collection = FileCollection.new(resource: @resource)
-        # I was creating this later, but it can be created earlier and eases testing if so
+        file_change_list = FileChangeList.new(resource: @resource)
+        @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: file_change_list)
+        # I was creating this later, but it can be created earlier and eases testing to do it earlier
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
       end
 
@@ -104,11 +105,12 @@ module Stash
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
 
         # update files
-        @file_collection.ensure_local_files
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         @copy.update(state: 'finished')
-        @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
+
+        # clean up the S3 storage of zenodo files that have been successfully replicated
+        Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
       end

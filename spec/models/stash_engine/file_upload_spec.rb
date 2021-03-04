@@ -340,5 +340,13 @@ module StashEngine
         expect(@files2[1].in_previous_version?).to eq(false)
       end
     end
+
+    describe '#zenodo_replication_url' do
+      it 'always replicates urls from merritt for Zenodo data copies' do
+        fu = @resource.file_uploads.first
+        expect(fu).to receive(:merritt_s3_presigned_url).and_return(nil)
+        fu.zenodo_replication_url
+      end
+    end
   end
 end
