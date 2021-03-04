@@ -31,6 +31,13 @@ function helloTask(cb) {
   cb();
 }
 
+function copyPackageFilesTask() {
+  return spawn('npm run copy-pkg-files --silent', {
+    stdio: 'inherit',
+    shell: true,
+  });
+};
+
 // copy font-awesome into fonts
 function iconsTask(cb) {
   return src('./ui-library/bower_components/font-awesome/fonts/**.*')
@@ -152,7 +159,7 @@ function scssLintTask(cb) {
 
 // Lint JavaScript:
 function jsLintTask(cb) {
-  return src(['ui-library/js/**/*.js', '!ui-library/js/modernizr-custombuild.js'])
+  return src(['ui-library/js/**/*.js', '!ui-library/js/modernizr-custombuild.js', '!ui-library/js/vendor/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 };
@@ -166,16 +173,17 @@ function publishTask() {
 
 // Commands available via the command line. For example: `gulp hello`
 exports.hello = helloTask;
+exports.copyPackageFiles = copyPackageFilesTask;
 exports.minifyImages = minifyImagesTask;
 exports.modernizr = modernizrTask;
 exports.validateHTML = validateHtmlTask;
 
 // Standard build that should be run before deploying the application
-exports.build = series(cleanTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask,
+exports.build = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask,
                        copyImagesTask, copyFontsTask, copyToAssetsTask);
 
 // Publish a build to GitHub Pages
-exports.publish = series(cleanTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask, publishTask);
+exports.publish = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask, publishTask);
 
 // Setup the default to run gulp in dev mode so that its watching our files
-exports.default = parallel(sassTask, browserSyncTask, watchTask);
+exports.default = parallel(copyPackageFilesTask, sassTask, browserSyncTask, watchTask);

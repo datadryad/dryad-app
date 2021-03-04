@@ -2,31 +2,17 @@
 
 function joelsReady(){
 
-  // ***** Keywords Input Focus ***** //
+  // ***** Upload Modal Component ***** //
 
-  // Copied this to keywords component JS in Rails for compatibility with autocomplete JS and removed from here:
+  var uploadModal = document.querySelector('#js-uploadmodal');
+  var buttonShowModal = document.querySelector('#js-uploadmodal__button-show');
 
-  /*
+  // register dialog polyfill for upload modal:
+  dialogPolyfill.registerDialog(uploadModal);
 
-  $('#js-keywords__container').click(function(){
-    $('.js-keywords__input').focus();
+  buttonShowModal.addEventListener('click', function() {
+    uploadModal.showModal();
   });
-
-  $('.js-keywords__input').focus(function(){
-    $('#js-keywords__container').attr('class', 'c-keywords__container--has-focus');
-  });
-
-  $('.js-keywords__input').blur(function(){
-    $('#js-keywords__container').attr('class', 'c-keywords__container--has-blur');
-  });
-
-  */
-
-  // ***** Initialize jQuery UI Tooltip ***** //
-
-  // Comment out tooltip method until jQuery UI is included on every page:
-  
-  // $('.o-button__help').tooltip();
 
   // ***** Toggle Table Cell Details ***** //
 
