@@ -98,6 +98,12 @@ module StashEngine
       Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
     end
 
+    # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
+    # method but switches between S3 and external URL depending on source
+    def zenodo_replication_url
+      merritt_s3_presigned_url
+    end
+
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar
