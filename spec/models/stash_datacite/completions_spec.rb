@@ -189,7 +189,7 @@ module StashDatacite
               upload.save!
             end
 
-            #bad upload for zenodo
+            # bad upload for zenodo
             resource.software_uploads << create(:software_upload, status_code: 411, url: 'https://happy.clown.example.com')
 
             @completions = Completions.new(resource) # refresh the completions object since I changed it

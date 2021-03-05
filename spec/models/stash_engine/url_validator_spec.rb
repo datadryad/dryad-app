@@ -124,7 +124,7 @@ module StashEngine
 
       it 'records redirects' do
         headers = instance_double(HTTP::Message::Headers)
-        allow(headers).to receive(:[]) { |arg| {'Content-Length' => 3}[arg] }
+        allow(headers).to receive(:[]) { |arg| { 'Content-Length' => 3}[arg] }
 
         response = instance_double(HTTP::Message)
         allow(response).to receive(:header).and_return(headers)
