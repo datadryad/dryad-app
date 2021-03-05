@@ -20,6 +20,10 @@ stash/script/counter-uploader/tmp/*.json
 # JS library files from node/react
 node_modules
 public/packs
+public/packs-test
+
+stash/stash_engine/ui-library/css/vendor
+stash/stash_engine/ui-library/js/vendor
 
 # ######################################################
 
