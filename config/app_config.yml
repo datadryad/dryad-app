@@ -150,7 +150,12 @@ defaults: &DEFAULTS
       ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %> 
       ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %> 
       ftp_provider_id: 7893
-      api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %> 
+      api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %>
+  s3:
+    region: us-west-2
+    bucket: dryad-s3-dev
+    key: AKIA2KERHV5EVVGMUL2M
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
@@ -184,6 +189,11 @@ stage:
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
   google_analytics_id: UA-145629338-3
+  s3:
+    region: us-west-2
+    bucket: dryad-s3-stg
+    key: AKIA2KERHV5EVVGMUL2M
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
 
 migration:
   <<: *DEFAULTS
@@ -229,11 +239,16 @@ production:
   merritt_express_base_url: http://mrtexpress.cdlib.org
   payments:
     service: stripe
-    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>
     large_file_size: 5.0e+10
     data_processing_charge: 12000 # charge in cents
     additional_storage_chunk_size: 1.0e+10 # (10GB)
     additional_storage_chunk_cost: 5000
+  s3:
+    region: us-west-2
+    bucket: dryad-s3-prd
+    key: AKIA2KERHV5EVVGMUL2M
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
