@@ -34,6 +34,8 @@ module StashEngine
           'The URL was not found.'
         when 410
           'The requested URL is no longer available.'
+        when 411
+          'The Content-Length header is required from the remote server'
         when 414
           "The server will not accept the request, because the URL #{url} is too long."
         when 408, 499

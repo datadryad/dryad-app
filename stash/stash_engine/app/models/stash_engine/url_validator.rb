@@ -135,7 +135,11 @@ module StashEngine
     end
 
     def init_from(response)
-      @status_code = response.status_code
+      @status_code = if @size == 0
+                       411 # length required, which we'll require from now on
+                     else
+                       response.status_code
+                     end
       @mime_type = mime_type_from(response)
       @size = size_from(response)
       @redirected = !response.previous.nil?
@@ -194,8 +198,12 @@ module StashEngine
     def fix_by_get_request(u)
       response = get_without_download(URI.parse(u))
       return unless response.code == '200'
-
-      @status_code = 200
+      size = size_from(response)
+      @status_code = if @size == 0
+                       411 # length required
+                     else
+                       200
+                     end
       @mime_type = mime_type_from(response)
       @size = size_from(response)
       @filename = filename_from(response, u, u)
