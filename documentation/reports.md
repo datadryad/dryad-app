@@ -2,6 +2,8 @@
 Reporting
 ==============
 
+Dryad's reports contain a number of dates. For details on the meaning of the
+dates, see the [dates technical note](technical_notes/dates.md).
 
 Shopping Cart Report
 -----------------------
@@ -18,7 +20,7 @@ RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report YEAR_MON
 Fields in the shopping cart report
 - DOI
 - Created Date
-- Submitted Date
+- Curation Start Date
 - Size
 - Payment Type
 - Payment ID
