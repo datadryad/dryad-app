@@ -135,7 +135,7 @@ For all operating systems, continue:
 bundle install
 
 # run the migrations to set up the database tables
-bundle exec rails db:migrate
+rails db:migrate
 
 # start your rails server for local development
 rails s
@@ -214,3 +214,10 @@ repository: # change me: you'll probably have to change all the following indent
     id_scheme: doi
     owner: null
 ```
+
+### Connection to Dryad machines in the UC infrastructure
+
+If you are connecting your Dryad installation to any services in the UC
+computing system, you will need to create proxied connections using a service
+such as sshuttle. Instructions and a useful script can be found in the
+[config/script](../config/script) directory.
