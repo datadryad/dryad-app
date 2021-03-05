@@ -59,8 +59,56 @@ module StashEngine
           expect(copy_record.state).to eq('enqueued')
         end
       end
-
     end
+
+    describe :s3_dir_name do
+
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        @identifier = @resource.identifier
+      end
+
+      it 'sets a correct directory name for non-stage/prod s3' do
+        dir_name = @resource.s3_dir_name
+        expect(/[0-9a-fA-F]{8}-#{@resource.id}/).to match(dir_name)
+      end
+
+      it 'appends sfw for software' do
+        dir_name = @resource.s3_dir_name(type: 'software')
+        expect(%r{[0-9a-fA-F]{8}-#{@resource.id}/sfw}).to match(dir_name)
+      end
+
+      it 'appends supp for supplemental information' do
+        dir_name = @resource.s3_dir_name(type: 'supplemental')
+        expect(%r{[0-9a-fA-F]{8}-#{@resource.id}/supp}).to match(dir_name)
+      end
+
+      it "doesn't have a machine name hash for production environment" do
+        allow(Rails).to receive('env').and_return('production')
+        dir_name = @resource.s3_dir_name
+        expect(dir_name).to eql("#{@resource.id}/data")
+      end
+
+      it 'also has suffixes such as _sfw on production' do
+        allow(Rails).to receive('env').and_return('production')
+        dir_name = @resource.s3_dir_name(type: 'software')
+        expect("#{@resource.id}/sfw").to eql(dir_name)
+      end
+
+      it 'gets the correct name when called multiple times' do
+        @resource.s3_dir_name(type: 'software')
+        dir_name = @resource.s3_dir_name(type: 'data')
+        expect(%r{[0-9a-fA-F]{8}-#{@resource.id}/data}).to match(dir_name)
+      end
+
+      it 'removes the S3 temporary files when the resource is destroyed' do
+        allow(Stash::Aws::S3).to receive(:delete_dir)
+        s3_dir = @resource.s3_dir_name(type: 'base')
+        @resource.destroy
+        expect(Stash::Aws::S3).to have_received(:delete_dir).with(s3_key: s3_dir)
+      end
+    end
+
     describe :title do
       it 'gets the correct clean_title' do
         test_title = 'some test title'

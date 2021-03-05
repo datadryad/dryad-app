@@ -1,8 +1,13 @@
 module Stash
   module Merritt
     describe SubmissionJob do
+      include Mocks::Aws
+      include Mocks::Tenant
 
       before(:each) do
+        mock_aws!
+        mock_tenant!
+
         @logger = instance_double(Logger)
         allow(@logger).to receive(:debug)
         allow(@logger).to receive(:info)
@@ -14,51 +19,23 @@ module Stash
 
         @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/stash/doi:10.123/456').to_s
 
-        @tenant = double(StashEngine::Tenant)
-        sword_params = {
-          collection_uri: 'http://example.edu/sword/example',
-          username: 'elvis',
-          password: 'presley'
-        }.freeze
-        id_params = {
-          provider: 'ezid',
-          shoulder: 'doi:10.15146/R3',
-          account: 'stash',
-          password: '3cc9d3fbd9788148c6a32a1415fa673a',
-          id_scheme: 'doi',
-          owner: 'stash_admin'
-        }
-        allow(@tenant).to receive(:identifier_service).and_return(id_params.to_ostruct)
-        allow(@tenant).to receive(:sword_params).and_return(sword_params)
-        allow(@tenant).to receive(:id).and_return('example_u')
-        allow(@tenant).to receive(:full_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
-
-        @resource_id = 37
-        @resource = double(StashEngine::Resource)
-        allow(StashEngine::Resource).to receive(:find).with(@resource_id).and_return(@resource)
-        allow(@resource).to receive(:identifier_str).and_return('doi:10.123/456')
-        allow(@resource).to receive(:update_uri).and_return(nil)
-        allow(@resource).to receive(:tenant).and_return(@tenant)
-        allow(@resource).to receive(:tenant_id).and_return('example_u')
-        allow(@resource).to receive(:skip_datacite_update).and_return(false)
-
-        identifier = double(StashEngine::Identifier)
-        allow(identifier).to receive(:identifier_type).and_return('DOI')
-        allow(identifier).to receive(:identifier).and_return('10.123/456')
-        allow(@resource).to receive(:identifier).and_return(identifier)
+        @user = create(:user, tenant_id: 'dryad', role: nil)
+        @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
+        @resource = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+        allow(StashEngine::Resource).to receive(:find).with(@resource.id).and_return(@resource)
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(@url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
-        @package = instance_double(ZipPackage)
-        allow(ZipPackage).to receive(:new).with(resource: @resource).and_return(@package)
+        @package = instance_double(ObjectManifestPackage)
+        allow(ObjectManifestPackage).to receive(:new).with(resource: @resource).and_return(@package)
         allow(@package).to receive(:dc4_xml)
 
         @sword_helper = instance_double(SwordHelper)
         allow(SwordHelper).to receive(:new).with(package: @package, logger: @logger).and_return(@sword_helper)
         allow(@sword_helper).to receive(:submit!)
 
-        @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: @url_helpers)
+        @job = SubmissionJob.new(resource_id: @resource.id, url_helpers: @url_helpers)
         allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
 
         allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(false)
@@ -112,7 +89,7 @@ module Stash
 
         describe 'error handling' do
           it 'fails on a bad resource ID' do
-            bad_id = @resource_id * 17
+            bad_id = @resource.id * 17
             @job = SubmissionJob.new(resource_id: bad_id, url_helpers: @url_helpers)
             allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
             expect_any_instance_of(Stash::Merritt::SwordHelper).not_to receive(:submit!)
@@ -121,7 +98,7 @@ module Stash
 
           it 'fails on a SWORD submission error' do
             allow(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
-            @job = SubmissionJob.new(resource_id: @resource_id, url_helpers: @url_helpers)
+            @job = SubmissionJob.new(resource_id: @resource.id, url_helpers: @url_helpers)
             allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
             expect(@job.submit!.error).to be_a(RestClient::RequestFailed)
           end

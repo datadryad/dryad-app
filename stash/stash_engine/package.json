@@ -12,6 +12,7 @@
   "devDependencies": {
     "bower": "^1.8.8",
     "browser-sync": "^2.26.7",
+    "browserify": "^17.0.0",
     "browsersync-ssi": "^0.2.4",
     "copyfiles": "^2.4.1",
     "del": "^4.1.1",
@@ -45,6 +46,12 @@
     "stylelint-scss": "^3.19.0"
   },
   "dependencies": {},
+  "aws-sdk": "^2.834.0",
+  "browser-sync": "^2.26.14",
+  "del": "^4.1.1",
+  "evaporate": "^2.1.4",
+  "fsevents": "^2.3.1",
+  "jshint": "^2.12.0",
   "stylelint": {
     "defaultSeverity": "warning",
     "extends": [
@@ -63,5 +70,6 @@
       ],
       "no-descending-specificity": null
     }
-  }
+  },
+  "truncate-utf8-bytes": "^1.0.2"
 }
