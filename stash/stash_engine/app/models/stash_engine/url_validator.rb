@@ -199,6 +199,7 @@ module StashEngine
     def fix_by_get_request(u)
       response = get_without_download(URI.parse(u))
       return unless response.code == '200'
+
       size = size_from(response)
       @status_code = if size == 0 && response.status_code < 400
                        411 # length required
