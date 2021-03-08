@@ -105,6 +105,9 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-github', require: false
   gem 'rspec-rails'
+
+  gem 'rspec-html'
+
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
   gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
