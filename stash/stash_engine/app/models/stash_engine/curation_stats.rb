@@ -32,7 +32,8 @@ module StashEngine
     def populate_datasets_curated
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1), status: %w[action_required embargoed published]).each do |ca|
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[action_required embargoed published])
+      cas.each do |ca|
         # if the previous ca was `curation`, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
         datasets_found.add(ca.resource.identifier) if prev_ca.curation?
