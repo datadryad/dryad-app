@@ -60,7 +60,7 @@ Notice the bottom where it renders some dynamic javascript files into the page a
 - Using a Javascript library called *Browserify* to put the needed Javascript libraries into our environment.  See `stash/stash_engine/evaporate_init.js`
   - Also includes some code to sanitize bad filenames that we don't want to send to S3 in that file
   - package.json includes the following script line.  `"build": "browserify evaporate_init.js -o app/assets/javascripts/stash_engine/evaporate_bundle.js"`
-  - That allows `npm build` to install the browserify componants.
+  - That allows `npm run build` to install the browserify componants.
 
 
 ## The javascript files from above (and a little info about controllers they call)
