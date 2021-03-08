@@ -697,6 +697,9 @@ GEM
       rspec-support (~> 3.9.0)
     rspec-github (2.3.1)
       rspec-core (~> 3.0)
+    rspec-html (0.2.6)
+      nokogiri (~> 1.10)
+      rspec (~> 3.0)
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
@@ -897,6 +900,7 @@ DEPENDENCIES
   react-rails (~> 2.6.1)
   rspec-collection_matchers
   rspec-github
+  rspec-html
   rspec-rails
   rubocop (~> 0.90.0)
   sass-rails (~> 5.0)
