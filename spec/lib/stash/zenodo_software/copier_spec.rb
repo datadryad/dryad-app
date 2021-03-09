@@ -215,6 +215,17 @@ module Stash
             @zsc.add_to_zenodo
             expect(@resource.related_identifiers.map(&:related_identifier).first).to eq("https://doi.org/10.5072/zenodo.#{@zc.deposition_id}")
           end
+
+          it "doesn't call @deposit.publish if the user has removed all current files" do
+            @resource.software_uploads.each {|sup| sup.update(file_state: 'deleted')}
+            @zsc.instance_variable_set(:@resp, {state: 'open'}) # so as not to try re-opening it for modification
+            deposit = @zsc.instance_variable_get(:@deposit)
+            allow(deposit).to receive(:update_metadata)
+            allow(Stash::Aws::S3).to receive(:delete_dir)
+            expect(deposit).not_to receive(:publish)
+            @zsc.publish_dataset
+            expect(@zc.reload.state).to eq('finished')
+          end
         end
 
         describe 'metadata-only update' do
