@@ -2,6 +2,7 @@ require 'httpclient'
 require 'net/http'
 require 'fileutils'
 require 'cgi'
+require 'byebug'
 
 # getting cert errors, maybe https://www.engineyard.com/blog/ruby-ssl-error-certificate-verify-failed fixes it ?
 
@@ -49,7 +50,7 @@ module StashEngine
         init_from(response)
         # the follow is for google drive which doesn't respond to head requests correctly
         fix_by_get_request(redirected_to || url) if google_drive_redirect?(status_code, redirected_to)
-        return true
+        return true unless @status_code > 399
       rescue HTTPClient::TimeoutError
         @timed_out = true
         @status_code = 408
@@ -135,9 +136,13 @@ module StashEngine
     end
 
     def init_from(response)
-      @status_code = response.status_code
-      @mime_type = mime_type_from(response)
       @size = size_from(response)
+      @status_code = if @size == 0 && response.status_code < 400
+                       411 # length required, which we'll require from now on
+                     else
+                       response.status_code
+                     end
+      @mime_type = mime_type_from(response)
       @redirected = !response.previous.nil?
       @redirected_to = response.previous.header['Location'].first if @redirected
       @filename = filename_from(response, @redirected_to, @url)
@@ -195,7 +200,12 @@ module StashEngine
       response = get_without_download(URI.parse(u))
       return unless response.code == '200'
 
-      @status_code = 200
+      size = size_from(response)
+      @status_code = if size == 0 && response.status_code < 400
+                       411 # length required
+                     else
+                       200
+                     end
       @mime_type = mime_type_from(response)
       @size = size_from(response)
       @filename = filename_from(response, u, u)

@@ -80,7 +80,7 @@ module StashDatacite
       end
 
       def urls_validated?
-        if @resource.upload_type == :manifest && @resource.file_uploads.newly_created.errors.count > 0
+        if @resource.file_uploads.newly_created.errors.count > 0 || @resource.software_uploads.newly_created.errors.count > 0
           false
         else
           true

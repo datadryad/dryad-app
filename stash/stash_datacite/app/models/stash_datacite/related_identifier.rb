@@ -10,7 +10,6 @@ module StashDatacite
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    include StashEngine::Concerns::ResourceUpdated
 
     scope :completed, -> { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
 

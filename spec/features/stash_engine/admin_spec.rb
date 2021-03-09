@@ -67,6 +67,7 @@ RSpec.feature 'Admin', type: :feature do
       sign_out
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
+      @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Describe Your Dataset')
       expect(page).to have_text('Logout')
@@ -75,6 +76,7 @@ RSpec.feature 'Admin', type: :feature do
     it 'rejects an attempt to edit the dataset with an invalid edit_code', js: true do
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
+      @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/stash/edit/#{@identifier.identifier}/bad-code"
       expect(page).to have_text('do not have permission to modify')
     end
