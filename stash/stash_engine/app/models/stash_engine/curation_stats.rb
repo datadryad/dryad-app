@@ -6,8 +6,8 @@ module StashEngine
 
     def complete?
       datasets_curated.present? &&
-        datasets_to_submitted.present? &&
-        datasets_to_peer_review.present? &&
+        new_datasets_to_submitted.present? &&
+        new_datasets_to_peer_review.present? &&
         datasets_to_aar.present? &&
         datasets_to_published.present? &&
         datasets_to_embargoed.present? &&
@@ -23,8 +23,8 @@ module StashEngine
 
     def populate_values
       populate_datasets_curated
-      populate_datasets_to_submitted
-      populate_datasets_to_peer_review
+      populate_new_datasets_to_submitted
+      populate_new_datasets_to_peer_review
       populate_datasets_to_aar
       populate_datasets_to_published
       populate_datasets_to_embargoed
@@ -46,7 +46,7 @@ module StashEngine
     end
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
-    def populate_datasets_to_submitted
+    def populate_new_datasets_to_submitted
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
@@ -61,20 +61,57 @@ module StashEngine
 
         datasets_found.add(found_dataset) if found_dataset
       end
-      update(datasets_to_submitted: datasets_found.size)
+      update(new_datasets_to_submitted: datasets_found.size)
     end
 
     # The number of new PPR that day (so the first time we see them as 'peer_review' in the system)
-    def populate_datasets_to_peer_review; end
+    def populate_new_datasets_to_peer_review
+      datasets_found = Set.new
+      # for each dataset that received the target status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review])
+      cas.each do |ca|
+        # include this this dataset unless it has a previous resource that had been submitted
+        this_resource = ca.resource
+        found_dataset = this_resource.identifier
+        prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
+        prev_resources.each do |pr|
+          found_dataset = nil if pr.submitted_date
+        end
+
+        datasets_found.add(found_dataset) if found_dataset
+      end
+      update(new_datasets_to_peer_review: datasets_found.size)
+    end
+
+    # Number that were sent from curation to a given status on the target day
+    def datasets_curation_to_status(status: nil)
+      return 0 unless status
+
+      datasets_found = Set.new
+      # for each dataset that received the target status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: status)
+      cas.each do |ca|
+        # if the previous ca was `curation`, add the identifier to datasets_found
+        prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
+        datasets_found.add(ca.resource.identifier) if prev_ca.curation?
+      end
+      datasets_found.size
+    end
 
     # The number AAR'd that day (status change from 'curation' to 'action_required')
-    def populate_datasets_to_aar; end
+    def populate_datasets_to_aar
+      update(datasets_to_aar: datasets_curation_to_status(status: 'action_required'))
+    end
 
     # The number published by a curator that day (status change from 'curation' to 'published' by a curator and not the system)
-    def populate_datasets_to_published; end
+    def populate_datasets_to_published
+      update(datasets_to_published: datasets_curation_to_status(status: 'published'))
+    end
 
     # The number embargoed that day (status change from 'curation' to 'embargoed' per day)
-    def populate_datasets_to_embargoed; end
+    def populate_datasets_to_embargoed
+      update(datasets_to_embargoed: datasets_curation_to_status(status: 'embargoed'))
+    end
 
     # The number that come back to us after an Author Action Required
     # (so they change status from 'action_required' to 'curation')
