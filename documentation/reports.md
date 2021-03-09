@@ -94,6 +94,21 @@ Fields in the admin screen CSV report
 - downloads
 - citations
 
+Curation Stats Reports
+----------------------
+
+Curation stats depend on the history of each dataset. Calculating them from
+scratch would require touching every dataset in Dryad, so we cache the results
+in a database table `stash_engine_curation_stats`, with one row for each
+day. These rows can be recalculated if needed (e.g., if we add new stats).
+
+Some of the curation stats start with the word 'new'. This indicates that they
+only apply to newly-created datasets, the first time the dataset is
+processed. For stats without the word 'new', the stat applies to each version of
+the dataset, typically for the purpose of monitoring throughput of the curation
+workflow.
+
+
 Authors at an Institution Report (from SQL)
 -------------------------------------------
 
