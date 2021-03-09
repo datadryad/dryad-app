@@ -217,8 +217,8 @@ module Stash
           end
 
           it "doesn't call @deposit.publish if the user has removed all current files" do
-            @resource.software_uploads.each {|sup| sup.update(file_state: 'deleted')}
-            @zsc.instance_variable_set(:@resp, {state: 'open'}) # so as not to try re-opening it for modification
+            @resource.software_uploads.each { |sup| sup.update(file_state: 'deleted') }
+            @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
             deposit = @zsc.instance_variable_get(:@deposit)
             allow(deposit).to receive(:update_metadata)
             allow(Stash::Aws::S3).to receive(:delete_dir)
