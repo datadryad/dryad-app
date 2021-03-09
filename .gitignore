@@ -22,6 +22,10 @@ node_modules
 public/packs
 public/packs-test
 
+stash/stash_engine/ui-library/css/vendor
+stash/stash_engine/ui-library/js/vendor
+
+
 # ######################################################
 
 #### joe made this: http://goel.io/joe
