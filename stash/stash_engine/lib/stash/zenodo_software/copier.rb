@@ -3,7 +3,6 @@ require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
 require 'stash/aws/s3'
-require 'byebug'
 
 # manual testing
 # require 'stash/zenodo_software'
