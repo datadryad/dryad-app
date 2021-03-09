@@ -443,7 +443,7 @@ module StashEngine
     private :init_curation_status
 
     # ------------------------------------------------------------
-    # All the dates
+    # Calculated dates
 
     # Date on which the user first submitted this dataset
     def submitted_date
