@@ -237,5 +237,34 @@ module StashEngine
       end
     end
 
+    describe :author_revised do
+      it 'knows when there are none' do
+        # NO -- move into curation, but not anywere else (not typical, but could happen)
+        @res[1].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+
+        stats = CurationStats.create(date: @day)
+        expect(stats.author_revised).to eq(0)
+      end
+
+      it 'counts correctly when there are some' do
+        stats = CurationStats.create(date: @day)
+
+        # YES -- within the same version
+        @res[0].curation_activities << CurationActivity.create(status: 'action_required', user: @curator, created_at: @day)
+        @res[0].curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        @res[0].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.author_revised).to eq(1)
+
+        # YES -- with different versions
+        @res[1].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+        @res[1].curation_activities << CurationActivity.create(status: 'action_required', user: @curator, created_at: @day)
+        res_new = create(:resource, identifier_id: @res[1].identifier.id, user: @curator, tenant_id: 'dryad')
+        res_new.curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.author_revised).to eq(2)
+      end
+    end
+
   end
 end
