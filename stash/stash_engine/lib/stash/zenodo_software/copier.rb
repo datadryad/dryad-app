@@ -82,7 +82,7 @@ module Stash
                   @deposit.new_deposition
                 end
 
-        # update the database with current information on this dataset from Zenodo, does prereserve_doi work for all states?
+        # update the database with current information on this dataset from Zenodo
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
@@ -122,7 +122,9 @@ module Stash
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
-        @deposit.publish
+        # TODO: what about things published at zenodo but then had files removed?  Do I need to reopen?
+        @deposit.publish if @resource.software_uploads.present_files.count > 0 # fix publishing things with no files
+        # TODO: does this work subsequently and not create new zenodo versions if not published?
         @copy.update(state: 'finished')
       end
 
