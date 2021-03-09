@@ -71,7 +71,7 @@ module Stash
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
-        @copy.update(state: 'finished')
+        @copy.update(state: 'finished', error_info: nil)
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
