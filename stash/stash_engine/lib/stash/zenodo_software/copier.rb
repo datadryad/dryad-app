@@ -122,9 +122,7 @@ module Stash
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
-        # TODO: what about things published at zenodo but then had files removed?  Do I need to reopen?
-        @deposit.publish if @resource.software_uploads.present_files.count > 0 # fix publishing things with no files
-        # TODO: does this work subsequently and not create new zenodo versions if not published?
+        @deposit.publish if @resource.software_uploads.present_files.count > 0 # do not actually publish unless there are files
         @copy.update(state: 'finished')
       end
 
