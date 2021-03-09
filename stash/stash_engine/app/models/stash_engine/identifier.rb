@@ -466,7 +466,7 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
-    # All the dates
+    # Calculated dates
 
     # returns the date on which this identifier was approved for publication
     # (i.e., the date on which it entered the status 'published' or 'embargoed'
