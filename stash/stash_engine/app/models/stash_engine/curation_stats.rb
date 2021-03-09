@@ -15,6 +15,10 @@ module StashEngine
         author_versioned.present?
     end
 
+    def recalculate
+      populate_values
+    end
+
     private
 
     def populate_values
@@ -42,7 +46,23 @@ module StashEngine
     end
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
-    def populate_datasets_to_submitted; end
+    def populate_datasets_to_submitted
+      datasets_found = Set.new
+      # for each dataset that received the target status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
+      cas.each do |ca|
+        # include this this dataset unless it has a previous resource that had been submitted
+        this_resource = ca.resource
+        found_dataset = this_resource.identifier
+        prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
+        prev_resources.each do |pr|
+          found_dataset = nil if pr.submitted_date
+        end
+
+        datasets_found.add(found_dataset) if found_dataset
+      end
+      update(datasets_to_submitted: datasets_found.size)
+    end
 
     # The number of new PPR that day (so the first time we see them as 'peer_review' in the system)
     def populate_datasets_to_peer_review; end
