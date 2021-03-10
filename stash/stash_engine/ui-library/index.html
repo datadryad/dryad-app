@@ -5,6 +5,7 @@
 	<title>Dash UI Library</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 	<!-- build:css css/ui.css -->
+  <link rel="stylesheet" href="css/vendor/dialog-polyfill.css">
 	<link rel="stylesheet" href="css/main.css">
 	<!-- endbuild -->
   <script
@@ -67,6 +68,8 @@
     <li>Tables: <a href="component_table-progress.html">In Progress</a> | <a href="component_table-submitted.html">Submitted</a> | <a href="component_table-latest.html">Latest activity</a></li>
     <li><a href="component_table-heading.html">Table Heading</a></li>
     <li><a href="component_upload.html">Upload Files</a></li>
+    <li><a href="component_upload-modal.html">Upload Modal</a></li>
+    <li><a href="component_upload-widgets.html">Upload Files Widgets</a></li>
     <li><a href="component_why-share.html">Why Share?</a></li>
     <li><a href="component_getting-started.html">Getting Started</a></li>
     <li><a href="component_why-use.html">Why Use?</a></li>
@@ -107,8 +110,9 @@
     <li><a href="geoblacklight_results.html">Geoblacklight Results</a></li>
   </ul>
 
-  <!-- build:js js/ui.js -->
+	<!-- build:js js/ui.js -->
   <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/vendor/dialog-polyfill.js"></script>
   <script src="bower_components/moment/min/moment.min.js"></script>
   <script src="js/details-polyfill.js"></script>
   <script src="js/main.js"></script>

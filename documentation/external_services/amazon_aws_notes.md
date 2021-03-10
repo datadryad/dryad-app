@@ -24,6 +24,93 @@ using the Amazon Linux.
    * enter your ID and secret
    * set the default region to `us-east-1`
    * leave the output format blank
+    
+# S3 for staged file uploads from the UI
+
+We are moving to a model where staged uploads will be stored on S3 rather than
+on EFS (which appears like a local disk to the server).
+
+In order to set this up, each environment that we want to keep separate
+will have its own bucket.
+
+For access to these buckets within the UI, we need to configure a few things as shown
+below for *each environment* that we need to have separate uploads (probably development, stage and production).
+
+```yaml
+  s3:
+    region: us-west-2
+    bucket: <bucketname>
+    key: <key_id>
+    secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+```
+
+We also need to configure some Cross-origin request sharing (CORS) policies
+within Amazon S3 in order to allow uploads across domains
+with javascript with the EvaporateJS library. We need to expose the eTag for Evaporate to work.
+
+Each domain that needs to communicate with the S3 bucket for uploads
+needs to be added to the CORS policy for the bucket under
+S3 > *bucketname* > Permissions > Cross-origin resource sharing (toward the
+bottom of that page).
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "PUT",
+            "POST",
+            "DELETE",
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "http://localhost:3000"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ],
+        "MaxAgeSeconds": 3600
+    }
+]
+```
+
+EvaporateJS works by making signing requests against an AJAX URL inside the Rails
+application, and so the
+[:s3][:secret] is never exposed in any client side code, but only the results
+of the signing requests. It is then able
+to upload directly to S3 from the user's browser rather than going through
+an intermediary server.  It also splits uploads into multiple parts so it
+can handle large (> 5GB) uploads which are not supported by single s3 requests.
+
+The library is set up using npm modules and a library called *browserify* since
+node 'require' statements do not work in plain Javascript outside of a framework
+like React or Angular.
+
+## Updating node and Evaporate js libraries
+
+The evaporate JS library isn't automatically updated and to do updates for it,
+do the following.
+
+```bash
+cd dryad-app/stash/stash_engine
+npm update # if you want to update node package manager
+npm run build
+```
+
+The `build` task is in `package.json` and runs `browserify` which resolves the
+contents and require statements in the `evaporate_init.js` file and compiles all
+the javascript into into one file that it outputs to
+`app/assets/javascripts/stash_engine/evaporate_bundle.js` where it can be used
+in a web page without having to resolve npm dependencies. This gets the Javascript
+working inside the Rails asset pipeline without resorting installing WebPack which
+I was advised to wait for Rails 6 to configure and install.
+
+Anytime you make changes to `evaporate_init.js` or you update the EvaporateJS
+npm libraries you should run `npm run build` again so it recompiles those changes
+into one file for inclusion.
+
 
 Working With S3
 =================

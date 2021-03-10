@@ -97,12 +97,11 @@ module Stash
         # cleanup_files(resource)
       end
 
-      # this will now be called after Merritt confirms successful ingest by OAI-PMH feed to prevent deleting files
+      # this will be called after Merritt confirms successful ingest by OAI-PMH feed to prevent deleting files
       # before we know they're really good in Merritt for a good safety net.
       def cleanup_files(resource)
-        remove_file_uploads(resource)
-        remove_upload_dir(resource)
-        remove_public_dir(resource)
+        remove_public_dir(resource) # where the local manifest file is stored
+        remove_s3_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << to_msg(e)
@@ -165,26 +164,22 @@ module Stash
         FileUtils.remove_entry_secure(file, true) if File.exist?(file)
       end
 
-      def remove_file_uploads(resource)
-        resource.file_uploads.map(&:calc_file_path).compact.each { |file| remove_if_exists(file) }
-      end
-
-      def remove_upload_dir(resource)
-        res_upload_dir = StashEngine::Resource.upload_dir_for(resource.id)
-        remove_if_exists(res_upload_dir)
-      end
-
       def remove_public_dir(resource)
         res_public_dir = Rails.public_path.join('system').join(resource.id.to_s)
         remove_if_exists(res_public_dir)
+      end
+
+      def remove_s3_data_files(resource)
+        Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
+        Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
       end
 
       def to_msg(error)
         msg = error.to_s
         if (backtrace = (error.respond_to?(:backtrace) && error.backtrace))
           backtrace.each do |line|
-            msg << "\n"
-            msg << line
+            msg += "\n"
+            msg += line
           end
         end
         msg

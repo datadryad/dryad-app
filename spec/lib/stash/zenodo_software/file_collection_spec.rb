@@ -33,14 +33,14 @@ module Stash
         FileUtils.rm_rf(@resource.software_upload_dir)
       end
 
-      it 'uses all the methods to ensure files are available locally' do
+      xit 'uses all the methods to ensure files are available locally' do
         # individual methods of the ZenodoSoftware::File class are tested there
         fc = Stash::ZenodoSoftware::FileCollection.new(resource: @resource)
         expect { fc.ensure_local_files }.not_to raise_exception
         expect(Dir["#{@resource.software_upload_dir}/*"].length).to eq(2)
       end
 
-      it 'removes files and directory for cleanup_files' do
+      xit 'removes files and directory for cleanup_files' do
         fc = Stash::ZenodoSoftware::FileCollection.new(resource: @resource)
         fc.cleanup_files
         expect(Dir.exist?(@resource.software_upload_dir)).to eq(false)

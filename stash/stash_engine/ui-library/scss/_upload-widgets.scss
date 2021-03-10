@@ -1,0 +1,60 @@
+// ##### Upload Widgets Components ##### //
+
+.c-uploadwidgets {
+  display: grid;
+  gap: $spacing-md;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  margin-bottom: $spacing-lg;
+}
+
+.c-uploadwidget--data,
+.c-uploadwidget--software,
+.c-uploadwidget--supplemental {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border: 1px solid $design-light-gray-color;
+
+  header {
+    grid-column: 1 / -1;
+
+    img {
+      display: block;
+      height: 17px;
+      margin-bottom: $spacing-md;
+    }
+
+    h2 {
+      @extend %o-heading__level2;
+      margin: 0;
+      text-align: center;
+    }
+  }
+
+  b {
+    grid-column: 1 / -1;
+    font-weight: normal;
+  }
+
+  button {
+    grid-column: 2;
+    padding: $spacing-sm;
+    border: none;
+  }
+}
+
+.c-uploadwidget--data {
+
+  button {
+    background-color: $design-lighter-blue-color;
+  }
+}
+
+.c-uploadwidget--software,
+.c-uploadwidget--supplemental {
+
+  button {
+    background-color: $design-extra-light-gray-color;
+  }
+}

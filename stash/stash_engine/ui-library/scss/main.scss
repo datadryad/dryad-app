@@ -76,6 +76,8 @@
 @import 'table-submitted';
 @import 'upload-file';
 @import 'upload-manifest';
+@import 'upload-modal';
+@import 'upload-widgets';
 @import 'why-share';
 @import 'why-use';
 @import 'sharing-steps';
@@ -104,7 +106,7 @@ body {
 	max-width: $screen-max - ($spacing-lg * 2);
 	margin: 0 auto;
 	padding: 10px;
-	font-family: 'KievitWeb';
+	font-family: 'KievitWeb', sans-serif;
 
 	/* Blacklight/geoblacklight resets */
 	font-size: initial;

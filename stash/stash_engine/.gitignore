@@ -20,6 +20,8 @@ coverage
 # Ignore UI library files.
 node_modules
 ui-library/css/main.css
+ui-library/css/vendor/
+ui-library/js/vendor/
 ui-library/bower_components
 *.css.map
 
