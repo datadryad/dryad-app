@@ -327,4 +327,26 @@ namespace :identifiers do
   end
 
 end
+
+namespace :curation_stats do
+  desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
+  task recalculate_all: :environment do
+    launch_day = Date.new(2019, 9, 17)
+    (launch_day..Date.today - 1.day).each do |date|
+      print '.'
+      stats = StashEngine::CurationStats.find_or_create_by(date: date)
+      stats.recalculate
+    end
+  end
+
+  desc 'Recalculate any curation stats from the past three days, not counting today'
+  task update_recent: :environment do
+    (Date.today - 4.days..Date.today - 1.day).each do |date|
+      print '.'
+      stats = StashEngine::CurationStats.find_or_create_by(date: date)
+      stats.recalculate
+    end
+  end
+
+end
 # rubocop:enable Metrics/BlockLength
