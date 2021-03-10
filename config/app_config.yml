@@ -26,6 +26,7 @@ defaults: &DEFAULTS
     sandbox: true
     api: https://api.sandbox.orcid.org
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
+  zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
   submission_bc_emails: [""]
   contact_email: ["uc3@ucop.edu", "help@datadryad.org"]
   helpdesk_email: dryad.helpdesk@mailinator.com
@@ -160,6 +161,7 @@ defaults: &DEFAULTS
 development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
+  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
   shib_sp_host: dryad-dev.cdlib.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
@@ -185,6 +187,7 @@ local_dev:
 stage:
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
+  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org]
   shib_sp_host: dryad-stg.cdlib.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
@@ -198,6 +201,7 @@ stage:
 migration:
   <<: *DEFAULTS
   submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
+  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   shib_sp_host: dryad-stg.cdlib.org
   page_error_email: ["scott.fisher@ucop.edu"]
   feedback_email_from: no-reply-dryad-migration@datadryad.org
@@ -207,7 +211,8 @@ demo:
   <<: *DEFAULTS
   shib_sp_host: dryaddemo.cdlib.org
   page_error_email: [scott.fisher@ucop.edu]
-  submission_error_email: [uc3@ucop.edu, sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, mstrong@ucop.edu, ryan@datadryad.org]
+  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
+  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   feedback_email_from: no-reply-dryaddemo@cdlib.org
 
 production:
@@ -215,7 +220,8 @@ production:
   google_analytics_id: UA-145629338-1
   shib_sp_host: datadryad.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
-  submission_error_email: [uc3@ucop.edu, sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, ryan@datadryad.org]
+  submission_error_email: [sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, ryan@datadryad.org]
+  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
   # orcid production credentials

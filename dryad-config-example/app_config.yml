@@ -20,6 +20,7 @@ defaults: &DEFAULTS
     api: https://api.sandbox.orcid.org
   submission_error_email: [my.fun.submission.error.emails@example.com]
   submission_bc_emails: [""]
+  zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
   contact_email: ["changeme@example.org"]
   default_tenant: dryad
   old_dryad_access_token: <REPLACE-ME>
