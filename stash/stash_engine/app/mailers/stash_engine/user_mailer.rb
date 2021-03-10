@@ -120,9 +120,9 @@ module StashEngine
       logger.warn('Unable to report zenodo error, no zenodo copy object') unless @zen.present?
       return unless @zen.present?
 
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @zenodo_error_emails = APP_CONFIG['zenodo_error_email'] || [@helpdesk_email]
 
-      mail(to: @submission_error_emails,
+      mail(to: @zenodo_error_emails,
            subject: "#{rails_env} Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
     end
 
