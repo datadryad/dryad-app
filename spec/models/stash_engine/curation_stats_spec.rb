@@ -266,5 +266,43 @@ module StashEngine
       end
     end
 
+    describe :author_versioned do
+      it 'knows when there are none' do
+        # NO -- just a normal submission
+        @res[1].curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+
+        stats = CurationStats.create(date: @day)
+        expect(stats.author_versioned).to eq(0)
+      end
+
+      it 'counts correctly when there are some' do
+        stats = CurationStats.create(date: @day)
+
+        # YES -- within the same version (unlikely)
+        @res[0].curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        @res[0].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day)
+        @res[0].curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.author_versioned).to eq(1)
+
+        # YES -- with different versions submitted on the same day
+        @res[1].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+        @res[1].curation_activities << CurationActivity.create(status: 'embargoed', user: @curator, created_at: @day)
+        res_new = create(:resource, identifier_id: @res[1].identifier.id, user: @curator, tenant_id: 'dryad')
+        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.author_versioned).to eq(2)
+
+        # YES -- with different versions submitted on different days
+        @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day - 2.days)
+        @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day - 2.days)
+        res_new = create(:resource, identifier_id: @res[2].identifier.id, user: @curator, tenant_id: 'dryad')
+        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.author_versioned).to eq(3)
+
+      end
+    end
+
   end
 end

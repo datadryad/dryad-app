@@ -1,8 +1,9 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class CurationStats < ApplicationRecord
     validates :date, presence: true, uniqueness: true
 
-    after_create :populate_values
+    #    after_create :populate_values
 
     def complete?
       datasets_curated.present? &&
@@ -22,6 +23,8 @@ module StashEngine
     private
 
     def populate_values
+      return unless date
+
       populate_datasets_curated
       populate_new_datasets_to_submitted
       populate_new_datasets_to_peer_review
@@ -54,6 +57,8 @@ module StashEngine
         # include this this dataset unless it has a previous resource that had been submitted
         this_resource = ca.resource
         found_dataset = this_resource.identifier
+        next unless found_dataset
+
         prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
         prev_resources.each do |pr|
           found_dataset = nil if pr.submitted_date
@@ -122,18 +127,34 @@ module StashEngine
       cas.each do |ca|
         # action_required is either a previous status in this version, or the last status of the previous version
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
-        prev_resource = ca.resource.identifier.resources.where(id: 0..ca.resource_id - 1).last
+        ident = ca.resource.identifier
+        next unless ident
+
+        prev_resource = ident.resources.where(id: 0..ca.resource_id - 1).last
         prev_ver_aar = prev_resource&.current_curation_status == 'action_required'
 
         datasets_found.add(ca.resource.identifier) if this_ver_aar || prev_ver_aar
       end
-      datasets_found.size
 
       update(author_revised: datasets_found.size)
     end
 
     # The number resubmitted that day (were 'published' or 'embargoed' before, and changed status to 'submitted')
-    def populate_author_versioned; end
+    def populate_author_versioned
+      datasets_found = Set.new
+      # for each dataset that received the target status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
+      cas.each do |ca|
+        # if this dataset has been published or embargoed, count it
+        ident = ca.resource.identifier
+        next unless ident
+
+        datasets_found.add(ident) if %w[published embargoed].include?(ident.pub_state)
+      end
+
+      update(author_versioned: datasets_found.size)
+    end
 
   end
 end
+# rubocop:enable Metrics/ClassLength
