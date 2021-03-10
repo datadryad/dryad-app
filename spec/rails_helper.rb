@@ -84,4 +84,6 @@ RSpec.configure do |config|
     output = `rake db:migrate`
     puts output
   end
+
+  config.include React::Rails::TestHelper
 end
