@@ -4,14 +4,16 @@ require 'ostruct'
 module Stash
   module Merritt
     describe ObjectManifestPackage do
+      include Mocks::Aws
+
       before(:each) do
+        mock_aws!
+
         @rails_root = Dir.mktmpdir('rails_root')
         root_path = Pathname.new(@rails_root)
         allow(Rails).to receive(:root).and_return(root_path)
-
         public_path = Pathname.new("#{@rails_root}/public")
         allow(Rails).to receive(:public_path).and_return(public_path)
-
         allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
 
         @public_system = public_path.join('system').to_s
@@ -56,6 +58,8 @@ module Stash
           upload.status_code = 200
           upload.save
         end
+        FileUtils.mkdir_p("#{@public_system}/#{@resource.id}")
+
       end
 
       after(:each) do
@@ -70,61 +74,88 @@ module Stash
       end
 
       describe :manifest do
-        attr_reader :package
-        attr_reader :manifest_path
 
         before(:each) do
-          @package = ObjectManifestPackage.new(resource: @resource)
-          @manifest_path = package.create_manifest
+          # make Stash::Aws::S3 an rspec "spy", so we can test how it was called
+          allow(Stash::Aws::S3).to receive(:put)
+          package = ObjectManifestPackage.new(resource: @resource)
+          package.create_manifest
         end
 
         it 'builds a manifest' do
-          actual = File.read(manifest_path)
-
-          # generated stash-wrapper.xml has today's date & so has different hash, file size
-          generated_stash_wrapper = "#{@public_system}/#{@resource.id}/stash-wrapper.xml"
-          stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
-          stash_wrapper_size = File.size(generated_stash_wrapper)
-
-          expect(actual).to include("#{stash_wrapper_md5} | #{stash_wrapper_size}")
+          expect(Stash::Aws::S3).to have_received(:put).with(s3_key: /manifest\.checkm/,
+                                                             contents: /%checkm_/).at_least(:once)
+          expect(Stash::Aws::S3).to have_received(:put).with(s3_key: /manifest\.checkm/,
+                                                             contents: %r{stash-wrapper\.xml \| text/xml}).at_least(:once)
         end
 
         describe 'public/system' do
           it 'writes mrt-dataone-manifest.txt' do
             # This file should look like spec/data/stash-merritt/mrt-dataone-manifest.txt
-            actual = File.read("#{@public_system}/#{@resource.id}/mrt-dataone-manifest.txt")
             @resource.new_file_uploads.find_each do |upload|
-              expect(actual).to include("#{upload.upload_file_name} | #{upload.upload_content_type}")
+              target_string = "#{upload.upload_file_name} | #{upload.upload_content_type}"
+              expect(Stash::Aws::S3).to have_received(:put)
+                .with(s3_key: /mrt-dataone-manifest\.txt/,
+                      contents: /#{Regexp.quote(target_string)}/)
+                .at_least(:once)
             end
           end
 
           it 'writes stash-wrapper.xml' do
-            actual_string = File.read("#{@public_system}/#{@resource.id}/stash-wrapper.xml")
-            actual = Hash.from_xml(actual_string)
-            actual_res = actual['stash_wrapper']['stash_descriptive']['resource']
-
-            expect(actual_res['identifier']).to eq(@resource.identifier.identifier)
-            expect(actual_res['publicationYear']).to eq(@resource.publication_date.year.to_s)
-            expect(actual_res['titles']['title']).to eq(@resource.title)
+            # This file should look like spec/data/stash-merritt/stash-wrapper.xml
+            target_string = "<st:identifier type='DOI'>#{@resource.identifier.identifier}</st:identifier>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /stash-wrapper\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = "<publicationYear>#{@resource.publication_date.year}</publicationYear>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /stash-wrapper\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = "<title>#{@resource.title}</title>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /stash-wrapper\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
           end
 
           it 'writes mrt-datacite.xml' do
             # This file should look like spec/data/stash-merritt/mrt-datacite.xml
-            actual_string = File.read("#{@public_system}/#{@resource.id}/mrt-datacite.xml")
-            actual = Hash.from_xml(actual_string)
-            actual_res = actual['resource']
-            expect(actual_res['titles']['title']).to eq(@resource.title)
-            expect(actual_res['identifier']).to eq(@resource.identifier.identifier)
-            expect(actual_res['publicationYear']).to eq(@resource.publication_date.year.to_s)
+            target_string = "<title>#{@resource.title}</title>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-datacite\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = "<publicationYear>#{@resource.publication_date.year}</publicationYear>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-datacite\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = "<identifier identifierType='DOI'>#{@resource.identifier.identifier}</identifier>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-datacite\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
           end
 
           it 'writes mrt-oaidc.xml' do
             # This file should look like spec/data/stash-merritt/mrt-oaidc.xml
-            actual_string = File.read("#{@public_system}/#{@resource.id}/mrt-oaidc.xml")
-            actual = Hash.from_xml(actual_string)['qualifieddc']
-            expect(actual['creator']).to eq(@resource.authors.map(&:author_full_name))
-            expect(actual['title']).to eq(@resource.title)
-            expect(actual['publisher']).to eq('DataONE')
+            target_string = "<dc:creator>#{@resource.authors.first.author_full_name}</dc:creator>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-oaidc\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = "<dc:title>#{@resource.title}</dc:title>"
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-oaidc\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
+            target_string = '<dc:publisher>DataONE</dc:publisher>'
+            expect(Stash::Aws::S3).to have_received(:put)
+              .with(s3_key: /mrt-oaidc\.xml/,
+                    contents: /#{Regexp.quote(target_string)}/)
+              .at_least(:once)
           end
 
           it 'writes mrt-delete.txt if needed' do
@@ -137,15 +168,17 @@ module Stash
               deleted << upload.upload_file_name
             end
 
-            @package = ObjectManifestPackage.new(resource: @resource)
-            @manifest_path = package.create_manifest
+            allow(Stash::Aws::S3).to receive(:put)
+            package = ObjectManifestPackage.new(resource: @resource)
+            package.create_manifest
 
-            manifest = File.read(manifest_path)
-            expect(manifest).to include("https://stash.example.edu/system/#{@resource.id}/mrt-delete.txt")
-            mrt_delete = File.read("#{@public_system}/#{@resource.id}/mrt-delete.txt")
+            expect(Stash::Aws::S3).to have_received(:put).with(s3_key: /manifest\.checkm/,
+                                                               contents: /mrt-delete\.txt/).at_least(:once)
             deleted.each do |filename|
-              expect(mrt_delete).to include(filename)
-              expect(manifest).not_to include(filename)
+              expect(Stash::Aws::S3).to have_received(:put)
+                .with(s3_key: /mrt-delete\.txt/,
+                      contents: /#{Regexp.quote(filename)}/)
+                .at_least(:once)
             end
           end
         end

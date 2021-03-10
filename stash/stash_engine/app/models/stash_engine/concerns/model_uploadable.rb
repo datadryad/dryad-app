@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'stash/aws/s3'
 
 module StashEngine
   module Concerns
@@ -55,8 +56,8 @@ module StashEngine
       # figures out how to delete file based on previous state
       def smart_destroy!
         # see if it's on the file system and destroy it if it's there
-        cfp = calc_file_path
-        ::File.delete(cfp) if !cfp.blank? && ::File.exist?(cfp)
+        s3_key = calc_s3_path
+        Stash::Aws::S3.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.exists?(s3_key: s3_key)
 
         if in_previous_version?
           # destroy any others of this filename in this resource

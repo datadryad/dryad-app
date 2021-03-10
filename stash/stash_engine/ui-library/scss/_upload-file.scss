@@ -63,6 +63,8 @@
     appearance: none;
   }
 
+  /* stylelint-disable selector-pseudo-element-no-unknown */
+
   /* bar color, firefox */
   progress::-moz-progress-bar { background: $design-dark-blue-color; }
 
@@ -77,6 +79,8 @@
   progress::progress-bar {
     background-color: $design-dark-blue-color;
   }
+
+  /* stylelint-enable selector-pseudo-element-no-unknown */
 
   progress[value] {
       width: 20vw;
@@ -118,5 +122,11 @@
 .c-upload__upload-complete-text {
 	margin: 10px 0 0;
 	color: $design-green-color;
+	font-weight: bold;
+}
+
+.c-upload__upload-error-text {
+	margin: 10px 0 0;
+	color: $design-red-color;
 	font-weight: bold;
 }
