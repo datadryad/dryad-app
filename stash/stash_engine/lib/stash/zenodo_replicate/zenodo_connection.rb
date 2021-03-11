@@ -12,8 +12,7 @@ module Stash
 
       SLEEP_TIME = 15
       RETRY_LIMIT = 20
-
-
+      ZENODO_PADDING_TIME = 2
 
       # checks that can access API with token and return boolean
       def self.validate_access
@@ -43,23 +42,16 @@ module Stash
           resp = resp.with_indifferent_access if resp.class == Hash
 
           if r.status.code >= 500
-            # zenodo's servers are not working correctly, so maybe they will again soon
+            # zenodo's servers seem to give 504s sometimes
             raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}"
           elsif !r.status.success?
+            # for things like 400 errors that aren't likely to change with a Retry
             raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
           end
 
-          sleep 2 # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
+          sleep ZENODO_PADDING_TIME # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
           resp
         rescue HTTP::Error, JSON::ParserError, RetryError => e
-          # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json)
-          # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion")
-          # ZC.standard_request(:post, @links[:edit])
-          # ZC.standard_request(:post, @links[:publish])
-          #
-          # in zenodo software
-          # Streamer does a PUT to zenodo for file, and shouldn't hurt to do it again
-          #
           if (retries += 1) <= RETRY_LIMIT
             sleep SLEEP_TIME
             retry
@@ -69,7 +61,6 @@ module Stash
         end
       end
       # rubocop:enable Metrics/AbcSize
-
 
       # NOTE: Alex suggested we use a URL like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
       # to do lookups by DOIs to see they exist before proceeding with a retry on a POST request.
