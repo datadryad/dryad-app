@@ -175,6 +175,10 @@ development: &DEVELOPMENT
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
 
+aws_db:
+  <<: *DEVELOPMENT
+  send_journal_published_notices: false
+
 local:
   <<: *DEVELOPMENT
   send_journal_published_notices: false
