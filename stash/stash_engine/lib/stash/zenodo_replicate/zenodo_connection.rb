@@ -49,6 +49,7 @@ module Stash
             raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
           end
 
+          sleep 2 # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
           resp
         rescue HTTP::Error, JSON::ParserError, RetryError => e
           # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json)
@@ -69,12 +70,22 @@ module Stash
       end
       # rubocop:enable Metrics/AbcSize
 
-      def self.special_error_case
-        # test this url and see if it exists after a failed POST to resp = ZC.standard_request(:post, "/api/deposit/depositions", json: json)
-        # if it exists then just return this from the GET rather than the post because it exists and is time for fun
-        # Example returned like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
-        "https://sandbox.zenodo.org/api/deposit/depositions?q=doi:\"10.7959/dryad.bzkh1894f\""
-      end
+
+      # NOTE: Alex suggested we use a URL like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
+      # to do lookups by DOIs to see they exist before proceeding with a retry on a POST request.
+
+      # However, our POST requests are generally for creation of a blank dataset and have never seen problems.
+      # We're already tracking DOIs that are submitted (our own DOIs or Zenodo dois for non-data) and have never seen
+      # any real problems with duplicate datasets being retried at that request.
+
+      # The only problem we've ever seen is for metadata updates with a PUT request for a dataset like
+      # http.put https://sandbox.zenodo.org/api/deposit/depositions/745192 and we got a 400 response code if the DOI
+      # already exists in another dataset and problem surfaced only a couple of times out of about 8,000 submissions.
+      # I think it is better to understand why these couple may happen and fix manually rather than blindly try to upate
+      # some other random dataset that has the same DOI in it and may not be in a good state in other ways besides this
+      # one request.
+
+      # So I'm not going to automate this kind of action until we have a better understanding of the real problem in these rare cases.
 
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]

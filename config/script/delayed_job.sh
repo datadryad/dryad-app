@@ -74,16 +74,16 @@ if [ "$EUID" != "0" ]; then
 
     case "$1" in
 	start)
-	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 3 start )
+	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 2 start )
 	    ;;
 	stop)
-	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 3 stop )
+	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 2 stop )
             ;;
 	restart)
-	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 3 restart )
+	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 2 restart )
             ;;
 	status)
-	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 3 status )
+	    ( cd $RAILS_ROOT && $bundle exec bin/delayed_job -n 2 status )
             ;;
 	*)
             echo "Usage: $0 {start|stop|restart|status}"

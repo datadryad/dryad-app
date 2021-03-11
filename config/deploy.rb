@@ -107,14 +107,14 @@ namespace :deploy do
   desc 'stop delayed_job'
   task :stop_delayed_job do
     on roles(:app) do
-      execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 3 stop"
+      execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 2 stop"
     end
   end
 
   desc 'start delayed_job'
   task :start_delayed_job do
     on roles(:app) do
-      execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 3 start"
+      execute "cd #{deploy_to}/current; RAILS_ENV=#{fetch(:rails_env)} bundle exec bin/delayed_job -n 2 start"
     end
   end
 
