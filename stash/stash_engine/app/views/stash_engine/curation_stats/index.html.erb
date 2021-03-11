@@ -1,0 +1,38 @@
+<% @page_title = "Curation Stats" %>
+<h1 class="o-heading__level1">Curation Stats</h1>
+
+<p>Recent curation stats:</p>
+
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+      <th class="c-admin-table">Date</th>
+      <th class="c-admin-table">Datasets Curated</th>
+      <th class="c-admin-table">New Datasets to Submitted</th>
+      <th class="c-admin-table">New Datasets to Peer Review</th>
+      <th class="c-admin-table">Datasets to AAR</th>
+      <th class="c-admin-table">Datasets to Published</th>
+      <th class="c-admin-table">Datasets to Embargoed</th>
+      <th class="c-admin-table">Author Revised</th>
+      <th class="c-admin-table">Author Versioned</th>
+  </tr>
+  <% @stats.each do |stat| %>
+  <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
+      <td><%= formatted_date(stat.date) %></td>
+      <td><%= stat.datasets_curated %></td>
+      <td><%= stat.new_datasets_to_submitted %></td>
+      <td><%= stat.new_datasets_to_peer_review %></td>
+      <td><%= stat.datasets_to_aar %></td>
+      <td><%= stat.datasets_to_published %></td>
+      <td><%= stat.datasets_to_embargoed %></td>
+      <td><%= stat.author_revised %></td>
+      <td><%= stat.author_versioned %></td>
+  </tr>
+
+<% end -%>
+
+  
+</table>
+
+  <div>
+    <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %>
+  </div>

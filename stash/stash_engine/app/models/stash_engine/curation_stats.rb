@@ -1,9 +1,15 @@
 # rubocop:disable Metrics/ClassLength
+
+# CurationStats stores some statistics about the submission/curation process
+# that rarely change and take a little time to calculate. This class may only be
+# instantiated once for each date. Rather than instantiating with `new` or `create`,
+# it is preferred to use `find_or_create_by(date: <somedate>)`.
+
 module StashEngine
   class CurationStats < ApplicationRecord
     validates :date, presence: true, uniqueness: true
 
-    #    after_create :populate_values
+    after_create :recalculate
 
     def complete?
       datasets_curated.present? &&
@@ -17,12 +23,7 @@ module StashEngine
     end
 
     def recalculate
-      populate_values
-    end
-
-    private
-
-    def populate_values
+      puts "XXXXX racacl #{date}"
       return unless date
 
       populate_datasets_curated
@@ -34,6 +35,8 @@ module StashEngine
       populate_author_revised
       populate_author_versioned
     end
+
+    private
 
     # The number processed (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')
     def populate_datasets_curated

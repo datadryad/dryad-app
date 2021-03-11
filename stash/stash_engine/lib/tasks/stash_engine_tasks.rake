@@ -335,7 +335,7 @@ namespace :curation_stats do
     (launch_day..Date.today - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
-      stats.recalculate
+      stats.recalculate unless stats.created_at > 2.seconds.ago
     end
   end
 
@@ -344,7 +344,7 @@ namespace :curation_stats do
     (Date.today - 4.days..Date.today - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
-      stats.recalculate
+      stats.recalculate unless stats.created_at > 2.seconds.ago
     end
   end
 
