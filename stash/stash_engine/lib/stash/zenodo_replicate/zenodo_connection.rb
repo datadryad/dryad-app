@@ -71,7 +71,8 @@ module Stash
 
       def self.special_error_case
         # test this url and see if it exists after a failed POST to resp = ZC.standard_request(:post, "/api/deposit/depositions", json: json)
-        # if it exists then just return this from the GET rather than the post
+        # if it exists then just return this from the GET rather than the post because it exists and is time for fun
+        # Example returned like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
         "https://sandbox.zenodo.org/api/deposit/depositions?q=doi:\"10.7959/dryad.bzkh1894f\""
       end
 
