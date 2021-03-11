@@ -10,6 +10,11 @@ module Stash
 
     module ZenodoConnection
 
+      SLEEP_TIME = 15
+      RETRY_LIMIT = 20
+
+
+
       # checks that can access API with token and return boolean
       def self.validate_access
         standard_request(:get, "#{base_url}/api/deposit/depositions")
@@ -21,7 +26,6 @@ module Stash
       # rubocop:disable Metrics/AbcSize
       def self.standard_request(method, url, **args)
         retries = 0
-        sleeptime = 15
 
         begin
           resp = nil
@@ -47,10 +51,6 @@ module Stash
 
           resp
         rescue HTTP::Error, JSON::ParserError, RetryError => e
-          # TODO: alex wants us to look for problems with duplicates that might be created because their service is unresponsive
-          # GET requests shouldn't matter.
-          # PUT request for "update metadata"" shouldn't matter and it just overwrites the same metadata
-          # in zenodo replicate POST:
           # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json)
           # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion")
           # ZC.standard_request(:post, @links[:edit])
@@ -59,8 +59,8 @@ module Stash
           # in zenodo software
           # Streamer does a PUT to zenodo for file, and shouldn't hurt to do it again
           #
-          if (retries += 1) <= 20 # yeah, really lots of problems and you have to retry a lot sometimes
-            sleep sleeptime
+          if (retries += 1) <= RETRY_LIMIT
+            sleep SLEEP_TIME
             retry
           else
             raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
@@ -68,6 +68,12 @@ module Stash
         end
       end
       # rubocop:enable Metrics/AbcSize
+
+      def self.special_error_case
+        # test this url and see if it exists after a failed POST to resp = ZC.standard_request(:post, "/api/deposit/depositions", json: json)
+        # if it exists then just return this from the GET rather than the post
+        "https://sandbox.zenodo.org/api/deposit/depositions?q=doi:\"10.7959/dryad.bzkh1894f\""
+      end
 
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]
