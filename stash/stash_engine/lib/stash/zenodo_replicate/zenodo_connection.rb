@@ -22,7 +22,7 @@ module Stash
         false
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def self.standard_request(method, url, **args)
         retries = 0
 
@@ -41,26 +41,27 @@ module Stash
           resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
           resp = resp.with_indifferent_access if resp.class == Hash
 
-          if r.status.code >= 500
-            # zenodo's servers seem to give 504s sometimes
-            raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}"
-          elsif !r.status.success?
-            # for things like 400 errors that aren't likely to change with a Retry
-            raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
-          end
+          # zenodo's servers seem to give 504s sometimes
+          raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" if r.status.code >= 500
+
+          # for things like 400 errors that aren't likely to change with a Retry
+          raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
 
           sleep ZENODO_PADDING_TIME # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
           resp
         rescue HTTP::Error, JSON::ParserError, RetryError => e
+          # stupid rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
+          # rubocop:disable Style/GuardClause
           if (retries += 1) <= RETRY_LIMIT
             sleep SLEEP_TIME
             retry
           else
             raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
           end
+          # rubocop:enable Style/GuardClause
         end
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       # NOTE: Alex suggested we use a URL like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
       # to do lookups by DOIs to see they exist before proceeding with a retry on a POST request.

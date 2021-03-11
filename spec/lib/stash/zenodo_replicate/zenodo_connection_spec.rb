@@ -12,9 +12,9 @@ module Stash
     RSpec.describe ZenodoConnection do
 
       before(:each) do
-        stub_const("Stash::ZenodoReplicate::ZenodoConnection::SLEEP_TIME", 0)
-        stub_const("Stash::ZenodoReplicate::ZenodoConnection::RETRY_LIMIT", 10)
-        stub_const("Stash::ZenodoReplicate::ZenodoConnection::ZENODO_PADDING_TIME", 0)
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::SLEEP_TIME', 0)
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::RETRY_LIMIT', 10)
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::ZENODO_PADDING_TIME', 0)
       end
 
       describe 'self.validate_access' do
@@ -125,8 +125,10 @@ module Stash
             )
             .to_timeout.times(11)
 
-          expect { ZenodoConnection.standard_request(:get,
-                                                     'https://example.test.com', params: { sugarplum: 'catnip' }) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+          expect do
+            ZenodoConnection.standard_request(:get,
+                                              'https://example.test.com', params: { sugarplum: 'catnip' })
+          end .to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
         it 'raises error if there is a parsing error' do
