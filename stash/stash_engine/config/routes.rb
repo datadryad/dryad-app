@@ -137,5 +137,8 @@ StashEngine::Engine.routes.draw do
   get 'publication_updater', to: 'publication_updater#index'
   put 'publication_updater/:id', to: 'publication_updater#update'
   delete 'publication_updater/:id', to: 'publication_updater#destroy'
+
+  # Curation stats
+  get 'curation_stats', to: 'curation_stats#index'
 end
 # rubocop:enable Metrics/BlockLength

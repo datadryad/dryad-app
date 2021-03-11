@@ -1,0 +1,15 @@
+<%= "Date, Datasets Curated, New Datasets to Submitted, New Datasets to Peer Review, Datasets to AAR, Datasets to Published, Datasets to Embargoed, Author Revised, Author Versioned" %>
+<% @all_stats.each do |stat|
+    row = [
+	formatted_date(stat.date),
+	stat.datasets_curated,
+	stat.new_datasets_to_submitted,
+	stat.new_datasets_to_peer_review,
+	stat.datasets_to_aar,
+	stat.datasets_to_published,
+	stat.datasets_to_embargoed,
+	stat.author_revised,
+	stat.author_versioned 
+    ]
+-%><%= row.to_csv(row_sep: nil).html_safe %>
+<% end -%>
