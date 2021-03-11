@@ -6,6 +6,7 @@ module Stash
   module ZenodoReplicate
 
     class ZenodoError < StandardError; end
+    class RetryError < StandardError; end
 
     module ZenodoConnection
 
@@ -19,25 +20,52 @@ module Stash
 
       # rubocop:disable Metrics/AbcSize
       def self.standard_request(method, url, **args)
-        resp = nil
-        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-          .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
+        retries = 0
+        sleeptime = 15
 
-        my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
-        my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
-        my_args = args.merge(params: my_params, headers: my_headers)
+        begin
+          resp = nil
+          http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+            .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
 
-        r = http.send(method, url, my_args)
+          my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
+          my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
+          my_args = args.merge(params: my_params, headers: my_headers)
 
-        # zenodo returns application/json even with a 204 and no content to parse as application/json
-        resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
-        resp = resp.with_indifferent_access if resp.class == Hash
+          r = http.send(method, url, my_args)
 
-        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
+          # zenodo returns application/json even with a 204 and no content to parse as application/json
+          resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
+          resp = resp.with_indifferent_access if resp.class == Hash
 
-        resp
-      rescue HTTP::Error, JSON::ParserError => e
-        raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
+          if r.status.code >= 500
+            # zenodo's servers are not working correctly, so maybe they will again soon
+            raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}"
+          elsif !r.status.success?
+            raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
+          end
+
+          resp
+        rescue HTTP::Error, JSON::ParserError, RetryError => e
+          # TODO: alex wants us to look for problems with duplicates that might be created because their service is unresponsive
+          # GET requests shouldn't matter.
+          # PUT request for "update metadata"" shouldn't matter and it just overwrites the same metadata
+          # in zenodo replicate POST:
+          # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json)
+          # resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion")
+          # ZC.standard_request(:post, @links[:edit])
+          # ZC.standard_request(:post, @links[:publish])
+          #
+          # in zenodo software
+          # Streamer does a PUT to zenodo for file, and shouldn't hurt to do it again
+          #
+          if (retries += 1) <= 20 # yeah, really lots of problems and you have to retry a lot sometimes
+            sleep sleeptime
+            retry
+          else
+            raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
+          end
+        end
       end
       # rubocop:enable Metrics/AbcSize
 
