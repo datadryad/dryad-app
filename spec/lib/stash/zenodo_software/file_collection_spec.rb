@@ -50,7 +50,7 @@ module Stash
           stub_const('Stash::ZenodoSoftware::FileCollection::FILE_RETRY_WAIT', 0)
           allow(@change_list).to receive(:upload_list).and_return(@resource.software_uploads)
           allow_any_instance_of(Streamer).to receive(:stream).and_raise(Stash::ZenodoReplicate::ZenodoError)
-          expect{ @file_collection.upload_files(zenodo_bucket_url: @bucket_url) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+          expect { @file_collection.upload_files(zenodo_bucket_url: @bucket_url) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
       end
 
