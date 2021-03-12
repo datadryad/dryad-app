@@ -41,12 +41,14 @@ module Stash
           begin
             out = streamer.stream(digest_types: digests)
           rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error
+            # rubocop:disable Style/GuardClause
             if (retries += 1) <= 3
               sleep FILE_RETRY_WAIT
               retry
             else
               raise
             end
+            # rubocop:enable Style/GuardClause
           end
 
           check_digests(streamer_response: out, file_model: upload)
