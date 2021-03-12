@@ -64,7 +64,6 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  Montana State University
 -  Netherlands Institute of Ecology (NIOO-KNAW)
 -  North Carolina State University
--  Northern State University
 -  The Ohio State University
 -  Pitzer College
 -  Pomona College

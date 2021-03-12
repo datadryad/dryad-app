@@ -1,8 +1,19 @@
+
+Sshuttle is a method for connecting to firewalled servers, by proxying a
+connection through a privileged server.
+
+The `sshuttle.sh` script sets up the sshuttle service to intercept all requests
+for Dryad's firewalled servers, and route them through `ftp.datadryad.org` as a
+privileged machine. 
+
 # How to set up sshuttle.sh script
 
-## There may be change to an SSH config that may be incompatible
+## sshuttle.sh and SSH config
 
-If you changed your ssh config, please start from a vanila copy to be sure there aren't incompatible changes.
+Proxy connections may be managed through an SSH config file (`.ssh/config`)
+instead of through sshuttle. If you have changed your ssh config, and you run
+into any difficulty with the instructions below, please start from a vanila copy
+of the SSH config to be sure there aren't incompatible changes.
 
 ## Add environment variable for your FTP server connection info and test it manually
 
@@ -25,20 +36,20 @@ passwordless login working by ssh keys from your machine to the ftp server by ss
 
 ## Passwordless login for the individual Dryad servers
 
-I don't believe that you need to add authorized keys to every Dryad server for your username@ftp.datadryad.org
-account.  
+You do not need to add authorized keys to every Dryad server for your `username@ftp.datadryad.org`
+account.
 
-*However*, I believe the way sshuttle works is that it will forward your local ssh public key (\<username\>@\<local_machine\>) to
-to the Dryad servers. So you probably need to go add the public key for your local machine account to
+*However*, the way sshuttle works is that it will forward your local ssh public key (\<username\>@\<local_machine\>) to
+to the Dryad servers. So you may need to go add the public key for your local machine account to
 all Dryad server authorized key files for those you want to connect to.
 
-If it doesn't forward your local public key then you'll need to add your `username@ftp.datadryad.org` to the servers instead.
+If it doesn't forward your local public key then you'll need to add the key for `username@ftp.datadryad.org` to the servers instead.
 
-## Set up sshuttle on your machine
+## Install sshuttle on your machine
 
 This will vary based on your OS type.  Use something like apt, yum or homebrew to install sshuttle.
 
-## Run the sshuttle script
+## Run the sshuttle.sh script
 
 Example of starting it.
 ```bash
@@ -70,5 +81,5 @@ $
 ```
 
 Note: production servers will not work with this currently since IAS refused to allow access to
-them through the ftp.datadryad.org server and only from other UC servers.  Those would require
-double-tunneling (first to ftp.datadryad.org and then to some other server inside our IAS accounts).
+them through the `ftp.datadryad.org` server and only from other UC servers.  Those would require
+double-tunneling (first to `ftp.datadryad.org` and then to some other server inside our IAS accounts).

@@ -22,6 +22,8 @@ namespace :local_to_s3 do
         type = 'data'
       end
 
+      next unless res_id && (res_id.to_i > 0)
+
       resource = StashEngine::Resource.find(res_id)
       if resource.submitted?
         puts " -- #{res_dir} --> not copied; it has already been submitted to Merritt"
@@ -41,12 +43,11 @@ namespace :local_to_s3 do
       Dir.each_child("#{upload_dir}/#{res_dir}") do |file_name|
         file_path = "#{upload_dir}/#{res_dir}/#{file_name}"
         s3_file = "#{s3_dir}/#{file_name}"
-        # if it exists in s3, skip
-        if Stash::Aws::S3.exists?(s3_key: s3_file)
-          puts "    -- #{file_name} --> already in S3"
-          next
-        elsif File.directory?(file_path)
+        if File.directory?(file_path)
           puts "    -- #{file_name} --> skipping temp directory"
+          next
+        elsif Stash::Aws::S3.exists?(s3_key: s3_file) && (Stash::Aws::S3.size(s3_key: s3_file) == File.size(file_path))
+          puts "    -- #{file_name} --> already in S3"
           next
         end
         # otherwise, send it to s3

@@ -6,7 +6,6 @@ module StashDatacite
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
-    include StashEngine::Concerns::ResourceUpdated
 
     scope :completed, -> { where("TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
     # scope :completed, ->  { where("TRIM(IFNULL(award_number, '')) > '' AND TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
