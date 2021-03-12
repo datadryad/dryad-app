@@ -11,11 +11,18 @@ module StashEngine
     end
 
     it 'retrieves a url' do
-      stub_request(:any, 'http://www.blahstackfood.com')
+      stub_request(:head, 'http://www.blahstackfood.com').to_return(headers: { 'Content-Length' => 3 })
       success = uv.validate
       # [ uv.mime_type, uv.size, uv.url, uv.status_code, uv.redirected_to, uv.timed_out?, uv.redirected?, uv.correctly_formatted_url? ]
       expect(success).to eq(true)
       expect(uv.status_code).to eq(200)
+    end
+
+    it 'sets a 411 for a url with no content-length' do
+      stub_request(:head, 'http://www.blahstackfood.com')
+      success = uv.validate
+      expect(success).to eq(false)
+      expect(uv.status_code).to eq(411)
     end
 
     describe :mime_type_from do
@@ -117,7 +124,7 @@ module StashEngine
 
       it 'records redirects' do
         headers = instance_double(HTTP::Message::Headers)
-        allow(headers).to receive(:[]).and_return([])
+        allow(headers).to receive(:[]) { |arg| { 'Content-Length' => 3 }[arg] }
 
         response = instance_double(HTTP::Message)
         allow(response).to receive(:header).and_return(headers)
@@ -163,7 +170,7 @@ module StashEngine
     describe :upload_attributes_from do
       before(:each) do
         stub_request(:head, 'http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
-          .to_return(status: 200, body: '', headers: {})
+          .to_return(status: 200, body: 'abc', headers: { 'Content-Length' => 3 })
       end
 
       it 'decodes and also makes prettier filenames with urlencoding' do

@@ -122,7 +122,7 @@ community.</p>
     mainly focused on dissecting genetic basis of traits important for
     avian evolution. <a
     href="http://www.ibens.ens.fr/spip.php?article402&lang=fr&fbclid=IwAR1NcNkWCewtXbIAr-7T_bFQ3DfJD1b6glAd4-Y-XOAGaP0jyyZ2ZrmgD-A">Read
-    more details</a>. She is a co-chair of Community 
+    more details</a>. She is a co-chair of Community
     and Membership Engagement Committee and a part of steering
     committee at GSA’s (Genetics Society of America) Early Career
     Leadership Program. She was a part of Early Career Ambassadors
@@ -224,15 +224,19 @@ community.</p>
 <div class="bio">
     <img src="/images/Wolkovich_Elizabeth.jpg" alt="Elizabeth Wolkovich" title="Elizabeth Wolkovich" />
     <p>
-    <strong>Elizabeth Wolkovich</strong> is interested in how
-    communities assemble and dis-assemble with global change. She
-    draws on theory from temporal community ecology with perspectives
-    from population and ecosystem ecology, evolutionary biology, and
-    climatology. Though she tends to address fundamental questions
-    with hypotheses informed by theory and models her research
-    generally has strong applied angles. In particular much of her
-    work examines the causes and consequences of plant invasions and
-    the effects of climate change on the temporal assembly of plant
-    communities. <a href="https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich">https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich</a>
+    <strong>Elizabeth Wolkovich</strong> is an Associate Professor in Forest and Conservation
+    Sciences and Canada Research Chair at the University of British
+    Columbia. She runs the Temporal Ecology Lab, which focuses on
+    understanding how climate change shapes plants and plant communities,
+    with a focus on shifts in the timing of seasonal development (e.g.,
+      budburst, flowering and fruit maturity)---known as phenology. Her lab
+      both collects new data on forest trees and winegrapes and collates
+      existing data to provide global estimates of shifts in phenology with
+      warming from plants to birds and other animals, and to understand how
+      human choices will impact future winegrowing regions. Her research
+      benefits from an interdisciplinary team of collaborators from
+      agriculture, biodiversity science, climatology, evolution and
+      viticulture, as well as from shared long-term datasets from across North
+      America and Europe. <a href="https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich">https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich</a>
     </p>
 </div>
