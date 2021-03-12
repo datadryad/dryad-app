@@ -10,7 +10,6 @@ module StashDatacite
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    include StashEngine::Concerns::ResourceUpdated
 
     scope :completed, -> { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
 
@@ -143,6 +142,13 @@ module StashDatacite
       else
         existing_item.update(related_identifier: doi, relation_type: 'isderivedfrom', work_type: 'software', verified: true)
       end
+    end
+
+    def self.remove_zenodo_relation(resource_id:, doi:)
+      doi = standardize_doi(doi)
+      existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
+        .where(related_identifier: doi).last
+      existing_item.destroy! if existing_item
     end
 
     def valid_doi_format?
