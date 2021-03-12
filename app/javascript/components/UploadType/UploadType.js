@@ -8,7 +8,7 @@ const upload_type = (props) => {
             <p className={classes.UploadTypeDescription}>{props.description}</p>
             <input id={props.id} type='file' onChange={props.changed} multiple={true} />
             <label htmlFor={props.id} className={classes.ChooseFilesButton}>{props.buttonFiles}</label>
-            <button className={classes.EnterURLsButton}>{props.buttonURLs}</button>
+            <button className={classes.EnterURLsButton} onClick={props.clicked}>{props.buttonURLs}</button>
         </div>
     );
 }
