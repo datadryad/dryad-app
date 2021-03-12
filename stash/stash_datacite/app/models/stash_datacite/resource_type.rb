@@ -4,7 +4,6 @@ module StashDatacite
   class ResourceType < ApplicationRecord
     self.table_name = 'dcs_resource_types'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    include StashEngine::Concerns::ResourceUpdated
 
     ResourceTypesGeneral = Datacite::Mapping::ResourceTypeGeneral.map(&:value)
 

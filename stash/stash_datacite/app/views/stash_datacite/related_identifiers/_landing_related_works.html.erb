@@ -3,7 +3,7 @@
   <h3 class="o-heading__level3-related-works"><%= (my_ids.count > 1 ? wt.work_type_friendly_plural : wt.work_type_friendly) %></h3>
   <ul class="o-list-related">
     <% my_ids.each do |r| %>
-      <% bad_asterisk = ( r.verified? ? '' : ' *') %>
+      <% bad_asterisk = ( (current_user&.role == 'superuser' && !r.verified?) ? ' *' : '') %>
       <li>
         <% if r.work_type == 'undefined' %>
           This dataset <%= r.relation_name_english %>

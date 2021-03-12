@@ -285,19 +285,25 @@ module StashEngine
         describe '#latest_resource_with_public_download' do
 
           it 'finds the last download resource' do
+            @res1.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res2)
           end
 
           it 'finds published resource' do
+            @res1.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+            @res3.file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
@@ -704,6 +710,27 @@ module StashEngine
         expect(@identifier.resources[1].file_view).to be(false) # no new files added or deleted, and not published
         expect(@identifier.resources[2].meta_view).to be(true)  # yes, published
         expect(@identifier.resources[2].file_view).to be(true) # files added this version
+      end
+
+      it 'sets the file_view when published, but files are mistaknely removed by user' do
+        resources = @identifier.resources
+        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        resources[0].file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[1].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].file_uploads.destroy_all
+        resources[2].file_uploads << FileUpload.create(file_state: 'deleted', upload_file_name: 'fun.cat', upload_file_size: 666)
+
+        @identifier.fill_resource_view_flags
+        @identifier.reload
+
+        expect(@identifier.resources[0].meta_view).to be(true) # yes published
+        expect(@identifier.resources[0].file_view).to be(true) # yes, new file added
+        expect(@identifier.resources[1].meta_view).to be(false) # no, not published
+        expect(@identifier.resources[1].file_view).to be(false) # no new files added or deleted, and not published
+        expect(@identifier.resources[2].meta_view).to be(true)  # yes, published
+        expect(@identifier.resources[2].file_view).to be(false) # all files deleted from this version, so don't show it as a version
       end
     end
 

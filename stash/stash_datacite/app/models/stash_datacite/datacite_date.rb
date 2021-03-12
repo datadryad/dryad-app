@@ -4,7 +4,6 @@ module StashDatacite
   class DataciteDate < ApplicationRecord
     self.table_name = 'dcs_dates'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
-    include StashEngine::Concerns::ResourceUpdated
 
     # the valid method causes errors because it tries to add methods for enum and there is already valid method
     # so need to make it valid_date for symbol for rails not to error!

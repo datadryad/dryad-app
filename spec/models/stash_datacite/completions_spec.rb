@@ -181,6 +181,20 @@ module StashDatacite
             upload.save!
             expect(completions.urls_validated?).to eq(false)
           end
+
+          it 'returns false when at least one Zenodo files has an error' do
+            # good uploads for dataset
+            resource.file_uploads.newly_created.find_each do |upload|
+              upload.status_code = 200
+              upload.save!
+            end
+
+            # bad upload for zenodo
+            resource.software_uploads << create(:software_upload, status_code: 411, url: 'https://happy.clown.example.com')
+
+            @completions = Completions.new(resource) # refresh the completions object since I changed it
+            expect(completions.urls_validated?).to eq(false)
+          end
         end
 
         describe 'file uploads' do
