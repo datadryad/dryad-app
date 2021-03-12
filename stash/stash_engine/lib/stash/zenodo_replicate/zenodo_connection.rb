@@ -26,6 +26,10 @@ module Stash
       def self.standard_request(method, url, **args)
         retries = 0
 
+        # if the caller wants to give a retry_limit, they can.  Useful for file uploads where there is streaming
+        retry_limit = args[:retries] || RETRY_LIMIT
+        args.delete(:retries)
+
         begin
           resp = nil
           http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
@@ -52,7 +56,7 @@ module Stash
         rescue HTTP::Error, JSON::ParserError, RetryError => e
           # stupid rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
           # rubocop:disable Style/GuardClause
-          if (retries += 1) <= RETRY_LIMIT
+          if (retries += 1) <= retry_limit
             sleep SLEEP_TIME
             retry
           else

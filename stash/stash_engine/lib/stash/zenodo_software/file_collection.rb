@@ -8,6 +8,8 @@ module Stash
     # update collection of files to zenodo
     class FileCollection
 
+      FILE_RETRY_WAIT = 5
+
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
       def initialize(resource:, file_change_list_obj:)
@@ -35,7 +37,17 @@ module Stash
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
           digests.uniq!
 
-          out = streamer.stream(digest_types: digests)
+          retries = 0
+          begin
+            out = streamer.stream(digest_types: digests)
+          rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error
+            if (retries += 1) <= 3
+              sleep FILE_RETRY_WAIT
+              retry
+            else
+              raise
+            end
+          end
 
           check_digests(streamer_response: out, file_model: upload)
         end

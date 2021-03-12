@@ -56,6 +56,9 @@ module Stash
         end
 
         it 'raises an exception on zenodo PUT error' do
+          stub_const('Stash::ZenodoReplicate::ZenodoConnection::SLEEP_TIME', 0)
+          stub_const('Stash::ZenodoReplicate::ZenodoConnection::ZENODO_PADDING_TIME', 0)
+
           stub_request(:get, /a-test-bucket.s3.us-west-2.amazonaws.com/)
             .to_return(status: 200, body: @random_body, headers: { 'Content-Length': @random_body.length })
 
