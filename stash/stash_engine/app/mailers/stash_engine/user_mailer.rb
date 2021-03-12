@@ -115,6 +115,17 @@ module StashEngine
            subject: "#{rails_env} Need assistance: \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
     end
 
+    def zenodo_error(zenodo_copy_obj)
+      @zen = zenodo_copy_obj
+      logger.warn('Unable to report zenodo error, no zenodo copy object') unless @zen.present?
+      return unless @zen.present?
+
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+
+      mail(to: @submission_error_emails,
+           subject: "#{rails_env} Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator

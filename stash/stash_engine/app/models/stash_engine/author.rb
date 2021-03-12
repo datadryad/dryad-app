@@ -3,8 +3,6 @@ require_relative '../../../../stash_datacite/app/models/stash_datacite/affiliati
 module StashEngine
   class Author < ApplicationRecord
 
-    include StashEngine::Concerns::ResourceUpdated
-
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
     EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
