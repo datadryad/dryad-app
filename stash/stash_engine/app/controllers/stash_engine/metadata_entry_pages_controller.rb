@@ -8,6 +8,8 @@ module StashEngine
     before_action :require_in_progress_editor, only: %i[find_or_create]
     before_action :require_can_duplicate, only: :new_version
     before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
+    before_action :bust_cache, only: %i[find_or_create]
+    before_action :require_not_obsolete, only: %i[find_or_create]
 
     def resource
       @resource ||= Resource.find(params[:resource_id])

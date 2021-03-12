@@ -86,7 +86,7 @@ module Stash
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
-        StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
+        update_zenodo_relation
 
         return publish_dataset if @copy.copy_type == 'software_publish'
 
@@ -113,6 +113,8 @@ module Stash
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
+        @copy.reload
+        StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
@@ -187,6 +189,15 @@ module Stash
 
       def submitted_before?
         !@previous_copy.nil?
+      end
+
+      def update_zenodo_relation
+        # only add link to zenodo software if they have any files left that they haven't deleted
+        if @resource.software_uploads.where(file_state: %w[created copied]).count.positive?
+          StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
+        else
+          StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
+        end
       end
     end
   end
