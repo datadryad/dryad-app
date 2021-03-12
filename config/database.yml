@@ -20,6 +20,12 @@ default: &default
 development: &DEVELOPMENT
   <<: *default
 
+aws_db:
+  <<: *default
+  host: aws-dev-db.co33oyzjqasf.us-east-1.rds.amazonaws.com
+  username: <%= Rails.application.credentials[:development][:database_username] %>
+  password: <%= Rails.application.credentials[:development][:database_password] %>
+
 local:
   <<: *default
   host: 127.0.0.1

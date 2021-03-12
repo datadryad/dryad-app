@@ -7,8 +7,13 @@
 development: &DEVELOPMENT
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
+
+aws_db:
+  <<: *DEVELOPMENT
+
 local:
   <<: *DEVELOPMENT
+
 local_dev:
   <<: *DEVELOPMENT
 
