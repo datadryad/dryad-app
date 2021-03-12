@@ -416,6 +416,7 @@ module StashEngine
           res.update_column(:file_view, false) if unchanged
           unchanged = true
         end
+        res.update_column(:file_view, false) unless res.current_file_uploads.present?
       end
     end
     # rubocop:enable Metrics/MethodLength
