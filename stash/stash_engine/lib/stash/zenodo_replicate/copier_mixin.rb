@@ -11,7 +11,8 @@ module Stash
 
       # return an error if replicating already, shouldn't start another replication
       def error_if_replicating
-        repli_count = @resource.identifier.zenodo_copies.send(@assoc_method).where(state: %w[replicating error]).count
+        repli_count = @resource.identifier.zenodo_copies.send(@assoc_method).where(state: %w[replicating error])
+          .where('stash_engine_zenodo_copies.resource_id <= ?', @resource.id).count
         # rubocop goes bonkers on this and suggests guardclause but when you do it suggests an if statement
         # rubocop:disable Style/GuardClause
         if repli_count.positive?
@@ -22,7 +23,7 @@ module Stash
       end
 
       def error_if_out_of_order
-        # this is a little similar to error_if_replicating, but catches defered or other odd states
+        # this is a little similar to error_if_replicating, but catches deferred or other odd states
         prev_unfinished_count = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id)
           .where('id < ?', @copy.id).send(@assoc_method).where.not(state: 'finished').count
         return if prev_unfinished_count == 0
