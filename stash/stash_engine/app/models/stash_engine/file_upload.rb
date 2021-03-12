@@ -8,7 +8,6 @@ module StashEngine
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 
-    include StashEngine::Concerns::ResourceUpdated
     include StashEngine::Concerns::ModelUploadable
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
 

@@ -22,6 +22,7 @@ module Mocks
       allow(Rails).to receive(:configuration).and_return(OpenStruct.new(database_configuration: { 'test' => { 'host' => 'localhost' } }))
     end
     # rubocop:enable Metrics/AbcSize
+
   end
 
 end
