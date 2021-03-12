@@ -168,6 +168,22 @@ module StashEngine
 
     end
 
+    describe 'zenodo_error' do
+
+      before(:each) do
+        @res = create(:resource)
+        @zen = create(:zenodo_copy, identifier: @res.identifier, resource: @res, state: 'error', error_info: 'Something bad just happened',
+                                    software_doi: '10.2837/zenodo.bad_test', conceptrecid: '123345')
+      end
+
+      it 'send a zenodo error report' do
+        UserMailer.zenodo_error(@zen).deliver_now
+        deliveries = ActionMailer::Base.deliveries
+        expect(deliveries.size).to eq(1)
+        expect(deliveries[0].body.to_s).to include('Something bad just happened')
+      end
+    end
+
     private
 
     def assert_email(expected_subject)
