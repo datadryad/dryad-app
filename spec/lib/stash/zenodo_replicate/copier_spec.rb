@@ -35,11 +35,11 @@ module Stash
 
         it 'rejects submission of an errored submission (needs to be enqueued)' do
           @ztc.update(state: 'error')
+          @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc.id)
           @szr.add_to_zenodo
-          # if it had attempted any requests, we'd have webmock request errors
           @ztc.reload
           expect(@ztc.state).to eq('error')
-          expect(@ztc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
+          expect(@ztc.error_info).to include('unless starting from an enqueued state')
           # note error logging is also tested in here
         end
 
@@ -54,6 +54,19 @@ module Stash
           expect(@ztc2.state).to eq('error')
           expect(@ztc2.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
           # note error logging is also tested in here
+        end
+
+        it "doesn't reject earlier submission if later one has errored (but earlier is done)" do
+          @ztc.update(state: 'finished')
+          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+          @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
+                                       deposition_id: @ztc.deposition_id)
+          @resource3 = create(:resource, identifier_id: @resource.identifier_id)
+          @ztc3 = create(:zenodo_copy, resource: @resource3, identifier: @resource3.identifier,
+                                       deposition_id: @ztc.deposition_id, state: 'error')
+          @szr2 = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc2.id)
+          # it gets through the checks and raises an error trying to do a HTTP request
+          expect { @szr2.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
         end
 
         it 'rejects submission of something already replicating' do
