@@ -2,6 +2,7 @@ import React from "react"
 // import PropTypes from "prop-types"
 import UploadType from './UploadType/UploadType'
 import File from "./File/File";
+import ModalUrl from "./Modal/ModalUrl";
 import classes from './UploadFiles.module.css';
 
 class UploadFiles extends React.Component {
@@ -19,7 +20,8 @@ class UploadFiles extends React.Component {
             }
         ],
         chosenFiles: null,
-        submitButtonDisabled: true
+        submitButtonDisabled: true,
+        showModal: false
     };
 
     uploadFilesHandler = (event, typeId) => {
@@ -54,6 +56,14 @@ class UploadFiles extends React.Component {
     toggleCheckedConfirm = (event) => {
         this.setState({submitButtonDisabled: !event.target.checked});
     }
+
+    showModal = () => {
+        this.setState({showModal: true});
+    };
+
+    validateUrls = () => {
+        this.setState({showModal: false});
+    };
 
     render () {
         let chosenFiles;
@@ -109,6 +119,13 @@ class UploadFiles extends React.Component {
             )
         }
 
+        let modalURL;
+        if (this.state.showModal) {
+            modalURL = <ModalUrl validateUrls={this.validateUrls} />
+        } else {
+            modalURL = null;
+        }
+
         return (
             <div className={classes.UploadFiles}>
                 <h1>Upload Files</h1>
@@ -116,6 +133,7 @@ class UploadFiles extends React.Component {
                 {this.state.upload_type.map((upload_type, index) => {
                     return <UploadType
                         changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
+                        clicked={() => this.showModal()}
                         id={upload_type.id}
                         name={upload_type.name}
                         description={upload_type.description}
@@ -123,6 +141,7 @@ class UploadFiles extends React.Component {
                         buttonURLs={upload_type.buttonURLs} />
                 })}
                 {chosenFiles}
+                {modalURL}
             </div>
         );
     }
