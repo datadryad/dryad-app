@@ -21,6 +21,8 @@ coverage
 node_modules
 ui-library/css/main.css
 ui-library/bower_components
+ui-library/css/vendor/
+ui-library/js/vendor/
 *.css.map
 
 # Misc
