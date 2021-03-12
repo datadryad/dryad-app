@@ -19,7 +19,9 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: author_match
+    strategy: shibboleth
+    entity_id: https://idp.iitism.ac.in/idp/shibboleth               
+    entity_domain: idp.iitism.ac.in
   default_license: cc0
   ## maximum total size (default 100 MB for now)
   max_submission_size: 3.0e+11
