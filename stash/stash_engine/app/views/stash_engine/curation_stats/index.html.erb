@@ -5,15 +5,23 @@
 
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-      <th class="c-admin-table">Date</th>
-      <th class="c-admin-table">Datasets Curated</th>
-      <th class="c-admin-table">New Datasets to Submitted</th>
-      <th class="c-admin-table">New Datasets to Peer Review</th>
-      <th class="c-admin-table">Datasets to AAR</th>
-      <th class="c-admin-table">Datasets to Published</th>
-      <th class="c-admin-table">Datasets to Embargoed</th>
-      <th class="c-admin-table">Author Revised</th>
-      <th class="c-admin-table">Author Versioned</th>
+      <th title="Date for the activity, bounded by UTC." class="c-admin-table">Date</th>
+      <th title="The number processed that day (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')"
+	  class="c-admin-table">Datasets Curated</th>
+      <th title="The number of new submissions that day (so the first time we see them as 'submitted' in the system)"
+	  class="c-admin-table">New Datasets to Submitted</th>
+      <th title="The number of new PPR that day (so the first time we see them as 'peer_review' in the system)"
+	  class="c-admin-table">New Datasets to Peer Review</th>
+      <th title="The number AAR'd that day (status change from 'curation' to 'action_required')"
+	  class="c-admin-table">Datasets to AAR</th>
+      <th title="The number published by a curator that day (status change from 'curation' to 'published' by a curator and not the system)"
+	  class="c-admin-table">Datasets to Published</th>
+      <th title="The number embargoed that day (status change from 'curation' to 'embargoed' per day)"
+	  class="c-admin-table">Datasets to Embargoed</th>
+      <th title="The number that come back to us after an Author Action Required that day (so they change status from 'action_required' to 'curation')"
+	  class="c-admin-table">Author Revised</th>
+      <th title="The number resubmitted that day (were 'published' or 'embargoed' before, and change status to 'submitted')"
+	  class="c-admin-table">Author Versioned</th>
   </tr>
   <% @stats.each do |stat| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">

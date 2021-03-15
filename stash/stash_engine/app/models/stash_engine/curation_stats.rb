@@ -13,6 +13,7 @@ module StashEngine
 
     def complete?
       datasets_curated.present? &&
+        datasets_to_be_curated.present? &&
         new_datasets_to_submitted.present? &&
         new_datasets_to_peer_review.present? &&
         datasets_to_aar.present? &&
@@ -23,10 +24,10 @@ module StashEngine
     end
 
     def recalculate
-      puts "XXXXX racacl #{date}"
       return unless date
 
       populate_datasets_curated
+      populate_datasets_to_be_curated
       populate_new_datasets_to_submitted
       populate_new_datasets_to_peer_review
       populate_datasets_to_aar
@@ -50,6 +51,43 @@ module StashEngine
       end
       update(datasets_curated: datasets_found.size)
     end
+
+    # The number of datasets available for curation on that day
+    # (either entered 'curation' or 'submitted', and the author made the last change)
+    # - author made the ca to 'curation' or 'submitted', or if it was system, author made the last non-system one
+    # rubocop:disable Metrics/AbcSize
+    def populate_datasets_to_be_curated
+      datasets_found = Set.new
+      # for each dataset that received the target status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted curation])
+      cas.each do |ca|
+        found_dataset = ca.resource.identifier
+        orig_submitter_id = found_dataset.resources.first.user_id
+        if ca.user_id == orig_submitter_id
+          # Case: the originala author submitted it or took it out of peer review
+          # if this ca was caused by the author of the current version, include the dataset
+          datasets_found.add(found_dataset)
+        elsif ca.user_id == 0
+          # Case: we received a journal notification, so the system pulled it out of PPR
+          # if this ca was caused by system, include the dataset if the previous ca (in same resource) was peer review
+          prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
+          datasets_found.add(found_dataset) if prev_ca.status == 'peer_review'
+
+          # Case: the system sent a reminder, the author acted on the reminder, but the submission was credited to System.
+          # walk back through System ca's. Count the dataset if the previous "real" ca was from the original submitting user
+          prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..prev_ca.id - 1).last while prev_ca&.user_id == 0
+          datasets_found.add(found_dataset) if prev_ca&.user_id == orig_submitter_id
+        else
+          # Case: a curator took it out of peer review
+          # if the prev_ca is 'in progress', AND prior version ended in PPR status without being submitted
+          prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
+          prev_resource = ca.resource.identifier.resources.where(id: 0..ca.resource.id - 1)&.last
+          datasets_found.add(found_dataset) if prev_ca.status == 'in_progress' && prev_resource&.current_curation_status == 'peer_review'
+        end
+      end
+      update(datasets_to_be_curated: datasets_found.size)
+    end
+    # rubocop:enable Metrics/AbcSize
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
     def populate_new_datasets_to_submitted
