@@ -1,7 +1,11 @@
 <% @page_title = "Curation Stats" %>
 <h1 class="o-heading__level1">Curation Stats</h1>
 
-<p>Recent curation stats:</p>
+<p>Curation statistics are available in the table below (mouseover any table heading for a more complete description), or the complete stats history can be downloaded as a CSV.</p>
+
+  <div>
+    <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %>
+  </div>
 
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
@@ -44,6 +48,3 @@
   
 </table>
 
-  <div>
-    <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %>
-  </div>
