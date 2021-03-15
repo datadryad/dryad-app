@@ -8,6 +8,8 @@
       <th title="Date for the activity, bounded by UTC." class="c-admin-table">Date</th>
       <th title="The number processed that day (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')"
 	  class="c-admin-table">Datasets Curated</th>
+      <th title="The number of datasets available for curation on that day (either entered 'curation' or 'submitted', and the author made the last change)"
+	  class="c-admin-table">Datasets to be Curated</th>
       <th title="The number of new submissions that day (so the first time we see them as 'submitted' in the system)"
 	  class="c-admin-table">New Datasets to Submitted</th>
       <th title="The number of new PPR that day (so the first time we see them as 'peer_review' in the system)"
@@ -27,6 +29,7 @@
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
       <td><%= formatted_date(stat.date) %></td>
       <td><%= stat.datasets_curated %></td>
+      <td><%= stat.datasets_to_be_curated %></td>
       <td><%= stat.new_datasets_to_submitted %></td>
       <td><%= stat.new_datasets_to_peer_review %></td>
       <td><%= stat.datasets_to_aar %></td>

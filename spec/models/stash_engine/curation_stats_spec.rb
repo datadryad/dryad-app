@@ -20,6 +20,7 @@ module StashEngine
 
       @curator = create(:user, tenant_id: 'dryad', role: 'superuser')
       @user = create(:user, tenant_id: 'dryad', role: 'user')
+      @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
 
       # setup some identifiers, each with one resource
       @res = []
@@ -28,7 +29,8 @@ module StashEngine
         create(:identifier, identifier_type: 'DOI', identifier: '10.123/456'),
         create(:identifier, identifier_type: 'DOI', identifier: '10.123/789'),
         create(:identifier, identifier_type: 'DOI', identifier: '10.123/abc'),
-        create(:identifier, identifier_type: 'DOI', identifier: '10.123/def')
+        create(:identifier, identifier_type: 'DOI', identifier: '10.123/def'),
+        create(:identifier, identifier_type: 'DOI', identifier: '10.123/ghi')
       ]
       @idents.each do |i|
         @res << create(:resource, identifier_id: i.id, user: @user, tenant_id: 'dryad')
@@ -75,7 +77,6 @@ module StashEngine
 
       it 'counts correctly when there are some' do
         stats = CurationStats.create(date: @day)
-        system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
 
         # YES -- user submitted
         @res[0].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day)
@@ -84,15 +85,15 @@ module StashEngine
 
         # YES -- journal notification out of PPR
         @res[1].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
-        @res[1].curation_activities << CurationActivity.create(status: 'submitted', user: system_user, created_at: @day)
+        @res[1].curation_activities << CurationActivity.create(status: 'submitted', user: @system_user, created_at: @day)
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(2)
 
         # YES -- System did several CA's, but the actual last edit was the user
         @res[2].curation_activities << CurationActivity.create(status: 'in_progress', user: @user, created_at: @day)
-        @res[2].curation_activities << CurationActivity.create(status: 'in_progress', user: system_user, created_at: @day)
-        @res[2].curation_activities << CurationActivity.create(status: 'in_progress', user: system_user, created_at: @day)
-        @res[2].curation_activities << CurationActivity.create(status: 'submitted', user: system_user, created_at: @day)
+        @res[2].curation_activities << CurationActivity.create(status: 'in_progress', user: @system_user, created_at: @day)
+        @res[2].curation_activities << CurationActivity.create(status: 'in_progress', user: @system_user, created_at: @day)
+        @res[2].curation_activities << CurationActivity.create(status: 'submitted', user: @system_user, created_at: @day)
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(3)
 
@@ -283,6 +284,13 @@ module StashEngine
         stats.recalculate
         expect(stats.datasets_to_aar).to eq(2)
 
+        # NO -- was published by system
+        @res[5].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day - 2.days)
+        @res[5].curation_activities << CurationActivity.create(status: 'embargoed', user: @curator, created_at: @day - 2.days)
+        @res[5].curation_activities << CurationActivity.create(status: 'embargoed', user: @curator, created_at: @day - 1.day)
+        @res[5].curation_activities << CurationActivity.create(status: 'published', user: @system_user, created_at: @day)
+        stats.recalculate
+        expect(stats.datasets_to_aar).to eq(2)
         expect(stats.datasets_to_published).to eq(1)
       end
     end
