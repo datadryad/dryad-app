@@ -107,12 +107,13 @@ module Stash
         # update files
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
-        @copy.update(state: 'finished')
+        @copy.update(state: 'finished', error_info: nil)
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: 'software'))
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
-        @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
+        error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
+        @copy.update(state: 'error', error_info: error_info)
         @copy.reload
         StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
@@ -125,7 +126,7 @@ module Stash
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
         @deposit.publish if @resource.software_uploads.present_files.count > 0 # do not actually publish unless there are files
-        @copy.update(state: 'finished')
+        @copy.update(state: 'finished', error_info: nil)
       end
 
       # no files are changing, but a previous version should always exist
@@ -140,7 +141,7 @@ module Stash
           return
         end
         @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
-        @copy.update(state: 'finished')
+        @copy.update(state: 'finished', error_info: nil)
       end
 
       private
