@@ -45,10 +45,14 @@ module Stash
         put_response = nil
 
         request_thread = Thread.new do
+          # this disables the retries (retries: 0) in our ZenodoConnection class since partial data and streaming through
+          # seem sketchy with only one side of the stream retrying. If we find it is needed in here, we may need to retry
+          # this whole method with both streams, and thread and all.
           put_response = Stash::ZenodoReplicate::ZenodoConnection
             .standard_request(:put, @upload_url,
                               body: read_pipe,
-                              headers: { 'Content-Type': nil, 'Content-Length': response.headers['Content-Length'] })
+                              headers: { 'Content-Type': nil, 'Content-Length': response.headers['Content-Length'] },
+                              retries: 0)
           # rescue HTTP::Error, Stash::ZenodoReplicate::ZenodoError  => e
           # puts 'caught error in thread'
         end

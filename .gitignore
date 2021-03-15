@@ -73,6 +73,8 @@ build-iPhoneSimulator/
 /.bundle/
 /vendor/bundle
 /lib/bundler/man/
+/stash/stash_engine/ui-library/css/vendor/
+/stash/stash_engine/ui-library/js/vendor/
 
 # for a library or gem, you might want to ignore these files since the code is
 # intended to run in multiple environments; otherwise, check them in:
