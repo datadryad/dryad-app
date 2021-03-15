@@ -11,7 +11,7 @@ module StashEngine
       params.permit(:format)
 
       @all_stats = CurationStats.all
-      @stats = CurationStats.where(date: 1.month.ago..Date.today)
+      @stats = CurationStats.where(date: 1.month.ago..Date.today).order('date DESC')
 
       respond_to do |format|
         format.html
