@@ -37,6 +37,10 @@
     font-weight: normal;
   }
 
+  .c-choose {
+    grid-column: 2;
+  }
+
   button {
     grid-column: 2;
     padding: $spacing-sm;
