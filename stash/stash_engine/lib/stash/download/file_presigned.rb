@@ -25,7 +25,7 @@ module Stash
           return
         end
 
-        url = file.s3_presigned_url
+        url = file.merritt_s3_presigned_url
 
         cc.redirect_to url
       rescue HTTP::Error => e

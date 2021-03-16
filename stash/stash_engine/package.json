@@ -4,12 +4,14 @@
   "description": "A library of static themes, components, and objects for the Dash application.",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify evaporate_init.js -o app/assets/javascripts/stash_engine/evaporate_bundle.js"
   },
   "author": "Joel Hagedorn",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "",
+    "browserify": "^17.0.0",
     "browsersync-ssi": "",
     "del": "",
     "gulp-autoprefixer": "",
@@ -20,7 +22,7 @@
     "gulp-lb-include": "",
     "gulp-modernizr": "",
     "gulp-postcss": "",
-    "gulp-sass": "^4.0.2",
+    "gulp-sass": "^4.1.0",
     "gulp-scss-lint": "",
     "gulp-shell": "",
     "gulp-sourcemaps": "",
@@ -28,22 +30,29 @@
     "gulp-useref": "",
     "gulp-w3cjs": "",
     "jshint": "",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "path": "",
     "postcss-assets": "",
     "run-sequence": ""
   },
   "dependencies": {
-    "bower": "^1.8.8",
-    "browser-sync": "^2.26.7",
+    "aws-sdk": "^2.834.0",
+    "bower": "^1.8.12",
+    "browser-sync": "^2.26.14",
     "del": "^4.1.1",
-    "fsevents": "^2.0.7",
+    "evaporate": "^2.1.4",
+    "fsevents": "^2.3.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-if": "^3.0.0",
-    "gulp-imagemin": "^6.0.0",
-    "gulp-modernizr": "^3.4.0",
-    "gulp-useref": "^4.0.0",
-    "jshint": "^2.10.3"
+    "gulp-imagemin": "^6.2.0",
+    "gulp-modernizr": "^3.4.1",
+    "gulp-postcss": "^9.0.0",
+    "gulp-shell": "^0.8.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-useref": "^4.0.1",
+    "jshint": "^2.12.0",
+    "truncate-utf8-bytes": "^1.0.2"
   }
 }

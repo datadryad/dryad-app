@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'mime-types'
+require 'stash/aws/s3'
 
 module Stash
   module Repo
@@ -45,7 +46,7 @@ module Stash
       # @param target_dir [String] the directory to write the file into
       # @return [String, nil] the path to the created file, or nil if no file was created
       #   (i.e. if `contents` was nil)
-      def write_file(target_dir)
+      def write_local_file(target_dir)
         file_contents = contents
         return unless file_contents
 
@@ -57,6 +58,17 @@ module Stash
           f.write("\n") unless binary? || file_contents.end_with?("\n")
         end
         outfile
+      end
+
+      # Writes the file to the target_dir in S3, and
+      # returns the key for the file
+      def write_s3_file(target_dir)
+        file_contents = contents
+        return unless file_contents.present?
+
+        file_path = "#{target_dir}/#{file_name}"
+        Stash::Aws::S3.put(s3_key: file_path, contents: file_contents)
+        file_path
       end
     end
   end

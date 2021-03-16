@@ -11,12 +11,10 @@ module StashEngine
     include StashEngine::Concerns::ModelUploadable
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
 
-    # this is to replace temp_file_path which tells where a file was saved when staged for upload by a user
-    def calc_file_path
+    def calc_s3_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
-      # the uploads directory is well defined so we can calculate it and don't need to store it
-      Rails.root.join('uploads', resource_id.to_s, upload_file_name).to_s
+      "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
     # returns the latest version number in which this filename was created
@@ -65,7 +63,7 @@ module StashEngine
     #
     # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
     # rubocop:disable Metrics/AbcSize
-    def s3_presigned_url
+    def merritt_s3_presigned_url
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
@@ -93,6 +91,18 @@ module StashEngine
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
+    # the presigned URL for a file that was "directly" uploaded to Dryad,
+    # rather than a file that was indicated by a URL reference
+    def direct_s3_presigned_url
+      Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
+    end
+
+    # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
+    # method but switches between S3 and external URL depending on source
+    def zenodo_replication_url
+      merritt_s3_presigned_url
+    end
+
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar
@@ -108,6 +118,5 @@ module StashEngine
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
-
   end
 end

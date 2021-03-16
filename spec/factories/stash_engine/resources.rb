@@ -20,6 +20,7 @@ FactoryBot.define do
     after(:create) do |resource|
       create(:author, resource: resource)
       create(:description, resource_id: resource.id)
+      create(:right, resource: resource)
     end
 
     trait :submitted do

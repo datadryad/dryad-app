@@ -35,9 +35,21 @@ StashEngine::Engine.routes.draw do
     end
   end
 
+
+
   resources :edit_histories, only: [:index]
+
+  # these are weird and different and want to get rid of these when we move to only one model for all kinds of uploads
   match 'file_upload/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_upload_validate_urls', via: %i[get post put]
   match 'software_upload/validate_urls/:resource_id', to: 'software_uploads#validate_urls', as: 'software_upload_validate_urls', via: %i[get post put]
+
+  get 'file_upload/presign_upload/:resource_id', to: 'file_uploads#presign_upload', as: 'file_upload_presign_url'
+  get 'software_upload/presign_upload/:resource_id', to: 'software_uploads#presign_upload', as: 'software_upload_presign_url'
+
+  post 'file_upload/upload_complete/:resource_id', to: 'file_uploads#upload_complete', as: 'file_upload_complete'
+  post 'software_upload/upload_complete/:resource_id', to: 'software_uploads#upload_complete', as: 'software_upload_complete'
+
+
 
   resource :file_upload do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do

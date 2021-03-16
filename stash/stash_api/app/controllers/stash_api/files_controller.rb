@@ -3,6 +3,7 @@
 # ATTENTION, we have both StashApi::File class (model) and the ruby File class, so be careful to namespace to avoid insanity
 
 require 'fileutils'
+require 'stash/aws/s3'
 
 require_dependency 'stash_api/application_controller'
 require 'stash/download/file_presigned'
@@ -44,9 +45,7 @@ module StashApi
     def update
       # lots of checks and setup before creating the file (also see the before_actions above)
       pre_upload_checks { return }
-      ::File.open(@file_path, 'wb') do |output_stream|
-        IO.copy_stream(request.body, output_stream)
-      end
+      Stash::Aws::S3.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
@@ -92,10 +91,8 @@ module StashApi
 
     # prevent people doing badness like filenames like ../../../foobar
     def setup_file_path
-      @sanitized = sanitize_filename(params[:filename])
-      @file_path = ::File.expand_path(@sanitized, @resource.upload_dir)
-      (render json: { error: 'No file shenanigans' }.to_json, status: 403) && yield unless @file_path.start_with?(@resource.upload_dir)
-      FileUtils.mkdir_p(::File.dirname(@file_path))
+      @sanitized_name = sanitize_filename(params[:filename])
+      @file_path = "#{@resource.s3_dir_name(type: 'data')}/#{@sanitized_name}"
     end
 
     # prevent people from sending bad filenames
@@ -122,7 +119,7 @@ module StashApi
     end
 
     def check_file_size
-      return if ::File.size(@file_path) <= @resource.tenant.max_total_version_size
+      return if Stash::Aws::S3.size(s3_key: @file_path) <= @resource.tenant.max_total_version_size
 
       (render json: { error:
           "Your file size is larger than the maximum submission size of #{view_context.filesize(resource.tenant.max_total_version_size)}" }.to_json,
@@ -130,20 +127,16 @@ module StashApi
     end
 
     def save_file_to_db
-      md5 = Digest::MD5.file(@file_path).hexdigest
-      just_user_fn = @file_path[@resource.upload_dir.length..].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
-      handle_previous_duplicates(upload_filename: just_user_fn)
+      handle_previous_duplicates(upload_filename: @sanitized_name)
       StashEngine::FileUpload.create(
-        upload_file_name: @sanitized,
+        upload_file_name: @sanitized_name,
         upload_content_type: request.headers['CONTENT-TYPE'],
-        upload_file_size: ::File.size(@file_path),
+        upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
         resource_id: @resource.id,
         upload_updated_at: Time.new.utc,
         file_state: 'created',
-        digest: md5,
-        digest_type: 'md5',
         description: request.env['HTTP_CONTENT_DESCRIPTION'],
-        original_filename: @original_filename || just_user_fn
+        original_filename: @original_filename || @sanitized_name
       )
     end
 

@@ -70,11 +70,7 @@ module Stash
       def create_package
         id_helper.ensure_identifier
         log_info("creating package for resource #{resource_id} (#{resource.identifier_str})")
-        if resource.upload_type == :manifest
-          ObjectManifestPackage.new(resource: resource)
-        else
-          ZipPackage.new(resource: resource)
-        end
+        ObjectManifestPackage.new(resource: resource)
       end
 
       def submit(package)

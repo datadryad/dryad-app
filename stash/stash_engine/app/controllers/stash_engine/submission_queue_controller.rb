@@ -20,7 +20,6 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def refresh_table
       params[:sort] = 'updated_at' if params[:sort].blank?
-      Rails.logger.debug("XXXXXX #{params[:sort]} #{params[:direction]} --> #{helpers.sortable_table_order} XXXXXXX")
       @queue_rows = RepoQueueState.latest_per_resource.where.not(state: 'completed').order(helpers.sortable_table_order)
       @queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued').count
       @server_held_count = RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down')

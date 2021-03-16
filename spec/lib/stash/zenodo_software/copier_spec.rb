@@ -4,6 +4,7 @@ require 'stash/zenodo_software'
 require 'byebug'
 require 'fileutils'
 require_relative 'webmocks_helper'
+require 'stash/aws/s3'
 
 require 'rails_helper'
 
@@ -24,15 +25,7 @@ module Stash
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
         @file = create(:software_upload, resource_id: @resource.id)
-        my_path = @file.calc_file_path[0..-(File.basename(@file.calc_file_path).length + 1)]
-        FileUtils.mkdir_p(my_path)
-        FileUtils.touch(@file.calc_file_path)
         WebMock.disable_net_connect!(allow_localhost: true)
-      end
-
-      after(:each) do
-        my_path = @file.calc_file_path[0..-(File.basename(@file.calc_file_path).length + 1)]
-        FileUtils.rm_rf(my_path)
       end
 
       describe '#add_to_zenodo' do
@@ -222,6 +215,17 @@ module Stash
             @zsc.add_to_zenodo
             expect(@resource.related_identifiers.map(&:related_identifier).first).to eq("https://doi.org/10.5072/zenodo.#{@zc.deposition_id}")
           end
+
+          it "doesn't call @deposit.publish if the user has removed all current files" do
+            @resource.software_uploads.each { |sup| sup.update(file_state: 'deleted') }
+            @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
+            deposit = @zsc.instance_variable_get(:@deposit)
+            allow(deposit).to receive(:update_metadata)
+            allow(Stash::Aws::S3).to receive(:delete_dir)
+            expect(deposit).not_to receive(:publish)
+            @zsc.publish_dataset
+            expect(@zc.reload.state).to eq('finished')
+          end
         end
 
         describe 'metadata-only update' do
@@ -267,14 +271,13 @@ module Stash
 
         describe '(regular) file updates' do
           it 'submits a new dataset for file changes' do
-            expect(File).to exist(@file.calc_file_path)
 
             deposition_id, bucket_link = stub_new_dataset
             stub_put_metadata(deposition_id: deposition_id)
 
             file_coll = @zsc.instance_eval('@file_collection', __FILE__, __LINE__)
-            expect(file_coll).to receive(:ensure_local_files)
             expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link).and_return(nil)
+            expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
             @zsc.add_to_zenodo
             @zc.reload
@@ -282,7 +285,6 @@ module Stash
             expect(@zc.deposition_id).to eq(deposition_id)
             expect(@zc.software_doi).to eq("10.5072/zenodo.#{deposition_id}")
             expect(@zc.conceptrecid).to eq((deposition_id - 1).to_s)
-            expect(File).not_to exist(@file.calc_file_path)
           end
 
           describe 'has previous version' do
@@ -308,8 +310,8 @@ module Stash
               expect(deposit).to receive(:update_metadata)
 
               file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
-              expect(file_coll).to receive(:ensure_local_files)
               expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link)
+              expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
               @zsc2.add_to_zenodo
               @zc2.reload
@@ -327,8 +329,8 @@ module Stash
               expect(deposit).to receive(:update_metadata)
 
               file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
-              expect(file_coll).to receive(:ensure_local_files)
               expect(file_coll).to receive(:synchronize_to_zenodo)
+              expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
               @zsc2.add_to_zenodo
               @zc2.reload
@@ -339,7 +341,6 @@ module Stash
             end
           end
         end
-
       end
     end
   end

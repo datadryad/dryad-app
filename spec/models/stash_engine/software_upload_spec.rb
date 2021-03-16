@@ -29,10 +29,10 @@ module StashEngine
                                     state: 'finished', copy_type: 'software_publish')
     end
 
-    describe '#calc_file_path' do
+    describe '#calc_s3_path' do
       it 'returns a path for zenodo files' do
-        expect(@upload.calc_file_path).to \
-          end_with("uploads/#{@resource.id}_sfw/#{@upload.upload_file_name}")
+        expect(@upload.calc_s3_path).to \
+          end_with("#{@resource.id}/sfw/#{@upload.upload_file_name}")
       end
     end
 
@@ -50,6 +50,21 @@ module StashEngine
         expect(item).to include('/api/files/')
         expect(item).to include("/#{@upload.upload_file_name}")
         expect(item).to include('token=')
+      end
+    end
+
+    describe '#zenodo_replication_url' do
+      it 'replicates from s3 if direct upload' do
+        fu = @resource.software_uploads.first
+        expect(fu).to receive(:direct_s3_presigned_url).and_return(nil)
+        fu.zenodo_replication_url
+      end
+
+      it 'replicates from url if server url upload' do
+        fu = @resource.software_uploads.first
+        fu.update(url: "http://example.org/#{fu.upload_file_name}")
+        value = fu.zenodo_replication_url
+        expect(value).to eq("http://example.org/#{fu.upload_file_name}")
       end
     end
   end

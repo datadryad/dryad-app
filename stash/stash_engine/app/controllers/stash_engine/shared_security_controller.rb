@@ -109,7 +109,7 @@ module StashEngine
     end
 
     def ajax_blocked
-      render nothing: true, status: 403
+      render body: '', status: 403, content_type: request.content_type.to_s
       false
     end
 
