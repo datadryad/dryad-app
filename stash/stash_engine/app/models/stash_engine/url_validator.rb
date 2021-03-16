@@ -15,7 +15,7 @@ module StashEngine
 
     def initialize(url:)
       @url = url
-      @mime_type = ''
+      @mime_type = 'application/octet-stream'
       @size = 0
       @status_code = nil
       @timed_out = nil
