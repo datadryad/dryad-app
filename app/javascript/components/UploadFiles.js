@@ -1,6 +1,7 @@
-import React from "react"
+import React from "react";
+import axios from 'axios';
 // import PropTypes from "prop-types"
-import UploadType from './UploadType/UploadType'
+import UploadType from './UploadType/UploadType';
 import File from "./File/File";
 import ModalUrl from "./Modal/ModalUrl";
 import classes from './UploadFiles.module.css';
@@ -21,12 +22,16 @@ class UploadFiles extends React.Component {
         ],
         chosenFiles: null,
         submitButtonDisabled: true,
-        showModal: false
+        showModal: false,
+        urls: null
     };
 
     uploadFilesHandler = (event, typeId) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
+            file.id = null;
+            file.status = 'Pending';
+            file.url = null;
             file.typeId = typeId;
             file.sizeKb = this.formatFileSize(file.size);
         });
@@ -37,6 +42,7 @@ class UploadFiles extends React.Component {
             chosenFiles = chosenFiles.concat(newFiles);
             this.setState({chosenFiles: chosenFiles});
         }
+        console.log(this.state.chosenFiles); //DB
     }
 
     formatFileSize = (fileSize) => {
@@ -57,13 +63,73 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonDisabled: !event.target.checked});
     }
 
-    showModal = () => {
+    showModal = (upload_type_id) => {
         this.setState({showModal: true});
     };
 
-    validateUrls = () => {
+    hideModal = () => {
         this.setState({showModal: false});
+    }
+
+    submitUrlsHandler = (event) => {
+        event.preventDefault();
+        this.hideModal();
+
+        const urlsObject = {url: this.state.urls}
+        const token = document.querySelector('[name=csrf-token]').content
+
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = token
+
+        axios.post('/stash/file_upload/validate_urls/' + this.props.resource_id, urlsObject)
+            .then(resp => {
+                this.updateManifestFiles(resp.data);
+            })
+            .catch(error => console.log(error));
     };
+
+    updateManifestFiles = (data) => {
+        console.log(data);  //DB
+        const newChosenFiles = this.discardAlreadyChosen(data);
+        const newFiles = this.transformData(newChosenFiles);
+        if (!this.state.chosenFiles){
+            this.setState({chosenFiles: newFiles});
+        } else {
+            let chosenFiles = [...this.state.chosenFiles];
+            chosenFiles = chosenFiles.concat(newFiles);
+            this.setState({chosenFiles: chosenFiles});
+        }
+    }
+
+    transformData = (data) => {
+        const transformed = []
+        data.map(file => {
+            transformed.push({
+                id: file.id, name: file.original_filename,
+                status: 'New', url: file.url,
+                typeId: 'D/S/Su', sizeKb: this.formatFileSize(file.upload_file_size)
+            })
+        })
+
+        return transformed;
+    }
+
+    discardAlreadyChosen = (data) => {
+        if (this.state.chosenFiles) {
+            const chosenFiles = [...this.state.chosenFiles];
+            const idsAlready = chosenFiles.map(item => item.id);
+            console.log(idsAlready);  //DB
+            data = data.filter(file => {
+                return !idsAlready.includes(file.id);
+            })
+            console.log(data);  //DB
+        }
+
+        return data;
+    }
+
+    onChangeUrls = (event) => {
+        this.setState({urls: event.target.value})
+    }
 
     render () {
         let chosenFiles;
@@ -121,7 +187,10 @@ class UploadFiles extends React.Component {
 
         let modalURL;
         if (this.state.showModal) {
-            modalURL = <ModalUrl validateUrls={this.validateUrls} />
+            modalURL = <ModalUrl
+                submitted={this.submitUrlsHandler}
+                changedUrls={this.onChangeUrls}
+                clicked={this.hideModal} />
         } else {
             modalURL = null;
         }
@@ -129,11 +198,12 @@ class UploadFiles extends React.Component {
         return (
             <div className={classes.UploadFiles}>
                 <h1>Upload Files</h1>
+                {/*<p>Resource: {this.props.resource_id}</p>*/}
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
                 {this.state.upload_type.map((upload_type, index) => {
                     return <UploadType
                         changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
-                        clicked={() => this.showModal()}
+                        clicked={() => this.showModal(upload_type.id)}
                         id={upload_type.id}
                         name={upload_type.name}
                         description={upload_type.description}
