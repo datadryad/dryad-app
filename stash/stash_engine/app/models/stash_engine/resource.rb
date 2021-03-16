@@ -1,5 +1,5 @@
-# require 'stash/indexer/indexing_resource'
 require 'stash/aws/s3'
+# require 'stash/indexer/indexing_resource'
 require 'stash/indexer/solr_indexer'
 # the following is required to make our wonky tests work and may break if we move stuff around
 require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'

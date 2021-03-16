@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'byebug'
 require 'cgi'
+require Rails.root.join('stash/stash_engine/lib/stash/aws/s3')
 
 module StashEngine
   describe FileUpload do
@@ -115,28 +116,24 @@ module StashEngine
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        FileUtils.mkdir_p('tmp')
-        @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files2 = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource: @resource2),
           create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource: @resource2),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         ]
-
-        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
-        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
-      it 'deletes a file that was just created, from the database and file system' do
-        expect(::File.exist?(@testfile)).to eq(true)
+      it 'deletes a file that was just created, from the database and s3' do
+        expect(Stash::Aws::S3).to receive(:exists?).and_return(true)
+        expect(Stash::Aws::S3).to receive(:delete_file)
         @files2[1].smart_destroy!
-        expect(::File.exist?(::File.expand_path(@testfile))).to eq(false)
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
-      it "deletes from database even if the filesystem file doesn't exist" do
-        FileUtils.rm_rf('tmp')
+      it "deletes from database even if the s3 file doesn't exist" do
+        expect(Stash::Aws::S3).to receive(:exists?).and_return(false)
+        expect(Stash::Aws::S3).not_to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.file_uploads.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
@@ -210,30 +207,23 @@ module StashEngine
 
     end
 
-    describe :calc_file_path do
-      before(:each) do
-        # need to hack in Rails.root because our test framework setup sucks and doesn't use rails testapp setup
-        @rails_root = Dir.mktmpdir('rails_root')
-        allow(Rails).to receive(:root).and_return(Pathname.new(@rails_root))
-      end
-
+    describe :calc_s3_path do
       it 'returns path in uploads containing resource_id and filename' do
-        cfp = @upload.calc_file_path
-        expect(cfp.match(%r{/uploads/})).to be_truthy
-        expect(cfp).to start_with(@rails_root.to_s)
-        expect(cfp).to end_with(@upload.upload_file_name)
+        cs3p = @upload.calc_s3_path
+        expect(cs3p).to end_with('/data/foo.bar')
+        expect(cs3p).to include(@resource.id.to_s)
       end
 
       it 'returns nil if it is copied' do
         @upload.update(file_state: 'copied')
         @upload.reload
-        expect(@upload.calc_file_path).to eq(nil)
+        expect(@upload.calc_s3_path).to eq(nil)
       end
 
       it 'returns nil if it is deleted' do
         @upload.update(file_state: 'deleted')
         @upload.reload
-        expect(@upload.calc_file_path).to eq(nil)
+        expect(@upload.calc_s3_path).to eq(nil)
       end
     end
 
@@ -258,7 +248,7 @@ module StashEngine
       end
     end
 
-    describe :s3_presigned_url do
+    describe :merritt_s3_presigned_url do
       before(:each) do
         allow_any_instance_of(Resource).to receive(:merritt_protodomain_and_local_id).and_return(
           ['https://merritt.example.com', 'ark%3A%2F12345%2F38568']
@@ -271,7 +261,7 @@ module StashEngine
       it 'raises Stash::Download::MerrittError for missing resource.tenant' do
         @upload.resource.update(tenant_id: nil)
         @upload.resource.reload
-        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
       end
 
       it 'raises Stash::Download::MerrittError for unsuccessful response from Merritt' do
@@ -283,7 +273,7 @@ module StashEngine
             }
           )
           .to_return(status: 404, body: '[]', headers: { 'Content-Type': 'application/json' })
-        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
       end
 
       it 'returns a URL based on json response and url in the data' do
@@ -297,7 +287,7 @@ module StashEngine
           .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/39768945"}',
                      headers: { 'Content-Type': 'application/json' })
 
-        expect(@upload.s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
+        expect(@upload.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
       end
 
       it "it doesn't create a mangled URL because http.rb has modified the URL with some foreign characters so it no longer matches" do
@@ -316,7 +306,7 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: fn)
-        expect(@upload2.s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
+        expect(@upload2.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
       end
     end
 
@@ -328,16 +318,12 @@ module StashEngine
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        FileUtils.mkdir_p('tmp')
-        @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
+
         @files2 = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
           create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
         ]
-
-        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
-        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
       it 'returns false for version 1' do
@@ -352,6 +338,14 @@ module StashEngine
 
       it "returns false for file that didn't exist previously" do
         expect(@files2[1].in_previous_version?).to eq(false)
+      end
+    end
+
+    describe '#zenodo_replication_url' do
+      it 'always replicates urls from merritt for Zenodo data copies' do
+        fu = @resource.file_uploads.first
+        expect(fu).to receive(:merritt_s3_presigned_url).and_return(nil)
+        fu.zenodo_replication_url
       end
     end
   end
