@@ -35,18 +35,29 @@ class UploadFiles extends React.Component {
             file.typeId = typeId;
             file.sizeKb = this.formatFileSize(file.size);
         });
-        if (!this.state.chosenFiles) {
-            this.setState({chosenFiles: newFiles});
-        } else {
-            let chosenFiles = [...this.state.chosenFiles];
-            chosenFiles = chosenFiles.concat(newFiles);
-            this.setState({chosenFiles: chosenFiles});
+        this.updateFileList(newFiles);
+    }
+
+    updateManifestFiles = (data) => {
+        if (this.state.chosenFiles) {
+            data = this.discardAlreadyChosen(data);
         }
-        console.log(this.state.chosenFiles); //DB
+        const newFiles = this.transformData(data);
+        this.updateFileList(newFiles);
     }
 
     formatFileSize = (fileSize) => {
         return (fileSize / 1024).toFixed(1).toString() + ' kb';
+    }
+
+    updateFileList = (files) => {
+        if (!this.state.chosenFiles){
+            this.setState({chosenFiles: files});
+        } else {
+            let chosenFiles = [...this.state.chosenFiles];
+            chosenFiles = chosenFiles.concat(files);
+            this.setState({chosenFiles: chosenFiles});
+        }
     }
 
     deleteFileHandler = (fileIndex) => {
@@ -77,7 +88,6 @@ class UploadFiles extends React.Component {
 
         const urlsObject = {url: this.state.urls}
         const token = document.querySelector('[name=csrf-token]').content
-
         axios.defaults.headers.common['X-CSRF-TOKEN'] = token
 
         axios.post('/stash/file_upload/validate_urls/' + this.props.resource_id, urlsObject)
@@ -87,19 +97,13 @@ class UploadFiles extends React.Component {
             .catch(error => console.log(error));
     };
 
-    updateManifestFiles = (data) => {
-        console.log(data);  //DB
-        const newChosenFiles = this.discardAlreadyChosen(data);
-        const newFiles = this.transformData(newChosenFiles);
-        if (!this.state.chosenFiles){
-            this.setState({chosenFiles: newFiles});
-        } else {
-            let chosenFiles = [...this.state.chosenFiles];
-            chosenFiles = chosenFiles.concat(newFiles);
-            this.setState({chosenFiles: chosenFiles});
-        }
-    }
-
+    /**
+     * The controller returned data consists of an array of UrlValidator
+     * upload_attributes objects. Select only the attributes consistent with
+     * this.state.chosenFiles attributes.
+     * @param data
+     * @returns {[]}
+     */
     transformData = (data) => {
         const transformed = []
         data.map(file => {
@@ -113,16 +117,18 @@ class UploadFiles extends React.Component {
         return transformed;
     }
 
+    /**
+     * The controller returns data with the successfully saved manifest
+     * files. Check for the files already added to this.state.chosenFiles.
+     * @param data
+     * @returns {*}
+     */
     discardAlreadyChosen = (data) => {
-        if (this.state.chosenFiles) {
-            const chosenFiles = [...this.state.chosenFiles];
-            const idsAlready = chosenFiles.map(item => item.id);
-            console.log(idsAlready);  //DB
-            data = data.filter(file => {
-                return !idsAlready.includes(file.id);
-            })
-            console.log(data);  //DB
-        }
+        const chosenFiles = [...this.state.chosenFiles];
+        const idsAlready = chosenFiles.map(item => item.id);
+        data = data.filter(file => {
+            return !idsAlready.includes(file.id);
+        })
 
         return data;
     }
