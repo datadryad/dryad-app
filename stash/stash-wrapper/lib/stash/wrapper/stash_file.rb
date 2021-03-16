@@ -47,7 +47,7 @@ module Stash
       private
 
       def to_mime_type(value)
-        return nil unless value.present?
+        return MIME::Type.new('application/octet-stream') unless value.present?
         return value if value.is_a?(MIME::Type)
 
         mt_string = value.to_s
