@@ -12,7 +12,7 @@ module StashEngine
         @resource.current_resource_state.update(resource_state: 'in_progress')
         get "/stash/resources/#{@resource.id}/upload"
 
-        assert_react_component "UploadFiles" do |props|
+        assert_react_component 'UploadFiles' do |props|
           assert_equal @resource.id, props[:resource_id]
         end
       end
