@@ -49,16 +49,18 @@
 }
 
 .c-uploadwidget--data {
+  --c-uploadwidget-color: #{$design-lighter-blue-color};
 
   button {
-    background-color: $design-lighter-blue-color;
+    background-color: var(--c-uploadwidget-color);
   }
 }
 
 .c-uploadwidget--software,
 .c-uploadwidget--supplemental {
+  --c-uploadwidget-color: #{$design-extra-light-gray-color};
 
   button {
-    background-color: $design-extra-light-gray-color;
+    background-color: var(--c-uploadwidget-color);
   }
 }
