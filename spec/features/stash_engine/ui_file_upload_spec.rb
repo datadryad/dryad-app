@@ -58,7 +58,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
         .to_return(status: 404)
     end
 
-    it 'validates a URL that works' do
+    xit 'validates a URL that works' do
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -73,7 +73,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(fu.upload_file_size).to eq(37_221)
     end
 
-    it 'shows problem with bad URL' do
+    xit 'shows problem with bad URL' do
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -116,7 +116,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
         .to_return(status: 404)
     end
 
-    it 'validates a URL that works' do
+    xit 'validates a URL that works' do
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -131,7 +131,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(su.upload_file_size).to eq(37_221)
     end
 
-    it 'shows problem with bad URL' do
+    xit 'shows problem with bad URL' do
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
