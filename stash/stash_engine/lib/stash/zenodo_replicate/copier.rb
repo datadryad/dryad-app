@@ -1,6 +1,7 @@
 require 'stash/merritt_download'
 require 'http'
 require 'stash/zenodo_replicate/copier_mixin'
+require 'stash/zenodo_software/file_collection'
 
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
@@ -16,6 +17,24 @@ module Stash
 
       # these are methods to help out for this class
       include Stash::ZenodoReplicate::CopierMixin
+
+      # This is just a convenience method for manually testing without going through delayed_job, but is useful
+      # as a utility manually submit and debug errors.
+      # It adds all entries for submitting in the zenodo_copies table as needed, and resets if needed to test again.
+      # Though the resource you're using should be submitted to Merritt already
+      def self.test_submit(resource_id:)
+        rep_type = 'data'
+        resource = StashEngine::Resource.find(resource_id)
+        zc = StashEngine::ZenodoCopy.where(resource_id: resource.id).where(copy_type: rep_type).first
+        if zc.nil?
+          zc = StashEngine::ZenodoCopy.create(state: 'enqueued', identifier_id: resource.identifier_id,
+                                              resource_id: resource.id, copy_type: rep_type)
+        elsif zc.state != 'enqueued'
+          zc.update(state: 'enqueued')
+        end
+        zen_soft_res = Stash::ZenodoReplicate::Copier.new(copy_id: zc.id)
+        zen_soft_res.add_to_zenodo
+      end
 
       def initialize(copy_id:)
         @assoc_method = :data
@@ -35,33 +54,28 @@ module Stash
         @copy.update(state: 'replicating')
         @copy.increment!(:retries)
 
-        # a zenodo deposit class
+        # a zenodo deposit class for working with deposits
         @deposit = Deposit.new(resource: @resource)
-
-        # download files from Merritt
-        @file_collection.download_files
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition
         @copy.update(deposition_id: @deposit.deposition_id)
 
-        # update metadata
-        @deposit.update_metadata
+        # update metadata and get response which has info links in it
+        @resp = @deposit.update_metadata
 
         # update files
-        file_replicator = Files.new(resource: @resource, file_collection: @file_collection)
-        file_replicator.replicate
+        file_change_list = FileChangeList.new(resource: @resource)
+        @file_collection = Stash::ZenodoSoftware::FileCollection.new(resource: @resource, file_change_list_obj: file_change_list)
+        @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
-        @copy.update(state: 'finished')
+        @copy.update(state: 'finished', error_info: nil)
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
-        @copy.update(state: 'error', error_info: "#{e.class}\n#{e}")
-        @copy.reload
-        StashEngine::UserMailer.zenodo_error(@copy).deliver_now
-      ensure
-        @file_collection.cleanup_files
+        error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
+        @copy.update(state: 'error', error_info: error_info)
       end
 
       private
