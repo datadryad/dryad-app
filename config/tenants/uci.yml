@@ -62,9 +62,9 @@ production:
   #Add any items that need to override the defaults here
   repository:
     domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/uci_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_uci_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_uci_password] %> 
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: ezid
     shoulder: "doi:10.7280/D1"
