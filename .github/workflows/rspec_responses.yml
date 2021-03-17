@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   rspec-resonse:
     name: RSpec Response Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     env:
       DB_ADAPTER: mysql2
@@ -37,9 +37,9 @@ jobs:
       uses: actions/cache@v1
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
-          ${{ runner.os }}-gem-
+          ${{ runner.os }}-gems-
 
     - name: 'Bundle Install'
       run: |
