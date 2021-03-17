@@ -20,7 +20,7 @@ p.UploadTypeDescription {
 }
 
 /*
-UploadTypeButton included to workaround button tag styles messed up between this stylesheet and the
+EnterURLsButton included to workaround button tag styles messed up between this stylesheet and the
 already defined stylesheet for application.
 */
 button.EnterURLsButton {

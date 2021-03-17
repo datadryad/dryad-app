@@ -1,9 +1,9 @@
 import React from "react";
 import axios from 'axios';
-// import PropTypes from "prop-types"
-import UploadType from './UploadType/UploadType';
-import File from "./File/File";
-import ModalUrl from "./Modal/ModalUrl";
+
+import UploadType from '../components/UploadType/UploadType';
+import ModalUrl from "../components/Modal/ModalUrl";
+import FileList from "../components/FileList/FileList";
 import classes from './UploadFiles.module.css';
 
 class UploadFiles extends React.Component {
@@ -74,7 +74,7 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonDisabled: !event.target.checked});
     }
 
-    showModal = (upload_type_id) => {
+    showModal = () => {
         this.setState({showModal: true});
     };
 
@@ -118,10 +118,10 @@ class UploadFiles extends React.Component {
     }
 
     /**
-     * The controller returns data with the successfully saved manifest
-     * files. Check for the files already added to this.state.chosenFiles.
+     * The controller returns data with the successfully inserted manifest
+     * files into the table. Check for the files already added to this.state.chosenFiles.
      * @param data
-     * @returns {*}
+     * @returns {[]}
      */
     discardAlreadyChosen = (data) => {
         const chosenFiles = [...this.state.chosenFiles];
@@ -137,34 +137,11 @@ class UploadFiles extends React.Component {
         this.setState({urls: event.target.value})
     }
 
-    render () {
-        let chosenFiles;
+    buildFileList = () => {
         if (this.state.chosenFiles) {
-            chosenFiles = (
+            return (
                 <div>
-                    <div>
-                    <h1 className={classes.FileTitle}>Files</h1>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Filename</th>
-                            <th>Status</th>
-                            <th>URL</th>
-                            <th>Type</th>
-                            <th>Size</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.chosenFiles.map((file, index) => {
-                            return <File
-                                click={() => this.deleteFileHandler(index)}
-                                file={file}
-                            />
-                        })}
-                        </tbody>
-                    </table>
-                    </div>
+                    <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
                     <div>
                         <input
                             type="checkbox" id="confirm_not_personal_health" className={classes.ConfirmPersonalHealth}
@@ -183,30 +160,36 @@ class UploadFiles extends React.Component {
                 </div>
             )
         } else {
-            chosenFiles = (
+            return (
                 <div>
                     <h1 className={classes.FileTitle}>Files</h1>
                     <p>No files have been selected.</p>
                 </div>
             )
         }
+    }
 
-        let modalURL;
+    buildModal = () => {
         if (this.state.showModal) {
-            modalURL = <ModalUrl
+            return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
                 clicked={this.hideModal} />
         } else {
-            modalURL = null;
+            return null;
         }
+    }
+
+    render () {
+        let chosenFiles = this.buildFileList();
+        let modalURL = this.buildModal();
 
         return (
             <div className={classes.UploadFiles}>
                 <h1>Upload Files</h1>
                 {/*<p>Resource: {this.props.resource_id}</p>*/}
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
-                {this.state.upload_type.map((upload_type, index) => {
+                {this.state.upload_type.map((upload_type) => {
                     return <UploadType
                         changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
                         clicked={() => this.showModal(upload_type.id)}
@@ -224,7 +207,4 @@ class UploadFiles extends React.Component {
 
 }
 
-// UploadFiles.propTypes = {
-//   greeting: PropTypes.string
-// };
-export default UploadFiles
+export default UploadFiles;
