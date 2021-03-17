@@ -819,7 +819,7 @@ GEM
     typesafe_enum (0.1.9)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
-    uglifier (3.0.4)
+    uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -914,7 +914,7 @@ DEPENDENCIES
   stripe
   therubyracer
   turbolinks
-  uglifier (~> 3.0.4)
+  uglifier (~> 4.2.0)
   web-console
   webdrivers
   webmock

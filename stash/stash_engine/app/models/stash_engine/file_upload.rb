@@ -8,7 +8,6 @@ module StashEngine
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 
-    include StashEngine::Concerns::ResourceUpdated
     include StashEngine::Concerns::ModelUploadable
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
 
@@ -96,6 +95,12 @@ module StashEngine
     # rather than a file that was indicated by a URL reference
     def direct_s3_presigned_url
       Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
+    end
+
+    # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
+    # method but switches between S3 and external URL depending on source
+    def zenodo_replication_url
+      merritt_s3_presigned_url
     end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted

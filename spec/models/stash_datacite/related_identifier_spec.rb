@@ -102,6 +102,49 @@ module StashDatacite
       end
     end
 
+    describe 'self.remove_zenodo_relation' do
+      it 'removes a record from the database for a zenodo doi' do
+        test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
+        StashDatacite::RelatedIdentifier.create(related_identifier: test_doi,
+                                                related_identifier_type: 'doi',
+                                                relation_type: 'isderivedfrom',
+                                                work_type: 'software',
+                                                verified: true,
+                                                resource_id: @resource.id)
+        @resource.reload
+        expect(@resource.related_identifiers.count).to eq(1)
+
+        StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+        @resource.reload
+        expect(@resource.related_identifiers.count).to eq(0)
+      end
+
+      it 'only removes the appropriate related identifier' do
+        test_doi = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
+        test_doi2 = "#{rand.to_s[2..6]}/zenodo#{rand.to_s[2.11]}"
+        StashDatacite::RelatedIdentifier.create(related_identifier: test_doi,
+                                                related_identifier_type: 'doi',
+                                                relation_type: 'isderivedfrom',
+                                                work_type: 'software',
+                                                verified: true,
+                                                resource_id: @resource.id)
+
+        StashDatacite::RelatedIdentifier.create(related_identifier: test_doi2,
+                                                related_identifier_type: 'doi',
+                                                relation_type: 'isderivedfrom',
+                                                work_type: 'software',
+                                                verified: true,
+                                                resource_id: @resource.id)
+        @resource.reload
+        expect(@resource.related_identifiers.count).to eq(2)
+
+        StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: test_doi)
+        @resource.reload
+        expect(@resource.related_identifiers.count).to eq(1)
+        expect(@resource.related_identifiers.first.related_identifier).to eq(test_doi2)
+      end
+    end
+
     describe '#work_type_friendly' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id)

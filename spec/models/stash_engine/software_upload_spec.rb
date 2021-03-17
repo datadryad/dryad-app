@@ -52,5 +52,20 @@ module StashEngine
         expect(item).to include('token=')
       end
     end
+
+    describe '#zenodo_replication_url' do
+      it 'replicates from s3 if direct upload' do
+        fu = @resource.software_uploads.first
+        expect(fu).to receive(:direct_s3_presigned_url).and_return(nil)
+        fu.zenodo_replication_url
+      end
+
+      it 'replicates from url if server url upload' do
+        fu = @resource.software_uploads.first
+        fu.update(url: "http://example.org/#{fu.upload_file_name}")
+        value = fu.zenodo_replication_url
+        expect(value).to eq("http://example.org/#{fu.upload_file_name}")
+      end
+    end
   end
 end
