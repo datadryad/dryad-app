@@ -47,7 +47,7 @@ module StashEngine
       cas.each do |ca|
         # if the previous ca was `curation`, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
-        datasets_found.add(ca.resource.identifier) if prev_ca.curation?
+        datasets_found.add(ca.resource.identifier) if prev_ca&.curation?
       end
       update(datasets_curated: datasets_found.size)
     end
@@ -55,13 +55,15 @@ module StashEngine
     # The number of datasets available for curation on that day
     # (either entered 'curation' or 'submitted', and the author made the last change)
     # - author made the ca to 'curation' or 'submitted', or if it was system, author made the last non-system one
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def populate_datasets_to_be_curated
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted curation])
       cas.each do |ca|
         found_dataset = ca.resource.identifier
+        next unless found_dataset
+
         orig_submitter_id = found_dataset.resources.first.user_id
         if ca.user_id == orig_submitter_id
           # Case: the originala author submitted it or took it out of peer review
@@ -82,12 +84,12 @@ module StashEngine
           # if the prev_ca is 'in progress', AND prior version ended in PPR status without being submitted
           prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
           prev_resource = ca.resource.identifier.resources.where(id: 0..ca.resource.id - 1)&.last
-          datasets_found.add(found_dataset) if prev_ca.status == 'in_progress' && prev_resource&.current_curation_status == 'peer_review'
+          datasets_found.add(found_dataset) if prev_ca&.status == 'in_progress' && prev_resource&.current_curation_status == 'peer_review'
         end
       end
       update(datasets_to_be_curated: datasets_found.size)
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
     def populate_new_datasets_to_submitted
@@ -139,7 +141,7 @@ module StashEngine
       cas.each do |ca|
         # if the previous ca was from_status, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
-        datasets_found.add(ca.resource.identifier) if prev_ca.status == from_status
+        datasets_found.add(ca.resource.identifier) if prev_ca&.status == from_status
       end
       datasets_found.size
     end
