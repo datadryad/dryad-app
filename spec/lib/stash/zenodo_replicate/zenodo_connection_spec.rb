@@ -10,6 +10,13 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module Stash
   module ZenodoReplicate
     RSpec.describe ZenodoConnection do
+
+      before(:each) do
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::SLEEP_TIME', 0)
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::RETRY_LIMIT', 10)
+        stub_const('Stash::ZenodoReplicate::ZenodoConnection::ZENODO_PADDING_TIME', 0)
+      end
+
       describe 'self.validate_access' do
         it "fails if it can't return valid response records" do
           stub_request(:get, 'https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken')
@@ -54,7 +61,7 @@ module Stash
           expect(resp).to eq([]) # otherwise it will raise a webmock error earlier if that url is different
         end
 
-        it 'raises error if not a success status' do
+        it 'raises error if not a success status (403)' do
           stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
             .with(
               headers: {
@@ -64,6 +71,64 @@ module Stash
             )
             .to_return(status: 403, body: '[]', headers: { 'Content-Type' => 'application/json' })
           expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+        end
+
+        it 'raises error if not a success status (504)' do
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 504, body: '[]', headers: { 'Content-Type' => 'text/plain' })
+          expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+        end
+
+        it 'works if not a success status (504) for the first 5 times and then a 200' do
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken&sugarplum=catnip')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 504, body: '[]', headers: { 'Content-Type' => 'text/plain' }).times(5).then
+            .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+
+          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', params: { sugarplum: 'catnip' })
+          expect(resp).to eq([])
+        end
+
+        it 'works if not a success status (timeout) for the first 5 times and then a 200' do
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken&sugarplum=catnip')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_timeout.times(5).then
+            .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+
+          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', params: { sugarplum: 'catnip' })
+          expect(resp).to eq([])
+        end
+
+        it 'raises an error on repeated timeouts' do
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken&sugarplum=catnip')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_timeout.times(11)
+
+          expect do
+            ZenodoConnection.standard_request(:get,
+                                              'https://example.test.com', params: { sugarplum: 'catnip' })
+          end .to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
         it 'raises error if there is a parsing error' do

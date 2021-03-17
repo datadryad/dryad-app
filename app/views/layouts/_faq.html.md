@@ -273,7 +273,7 @@
 <p>Ways you can ensure your data publication has the broadest reach:</p>
 <ul>
     <li>
-        <strong>Comprehensive documentation</strong> (i.e. metadata) is the key for dicoverability as well as ensuring
+        <strong>Comprehensive documentation</strong> (i.e. metadata) is the key for discoverability as well as ensuring
         future researchers understand the data. Without thorough metadata (description of the context of the data file,
         the context in which the data were collected, the measurements that were made, and the quality of the data),
         the data cannot be found through internet searches or data indexing services, understood by fellow researchers,

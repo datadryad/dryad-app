@@ -48,7 +48,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'mini_racer'
 gem 'turbolinks'
 
-gem 'uglifier', '~> 3.0.4'
+gem 'uglifier', '~> 4.2.0'
 gem 'yui-compressor'
 
 # ############################################################
