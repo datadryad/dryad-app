@@ -2,6 +2,8 @@
 Reporting
 ==============
 
+Dryad's reports contain a number of dates. For details on the meaning of the
+dates, see the [dates technical note](technical_notes/dates.md).
 
 Shopping Cart Report
 -----------------------
@@ -18,7 +20,7 @@ RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report YEAR_MON
 Fields in the shopping cart report
 - DOI
 - Created Date
-- Submitted Date
+- Curation Start Date
 - Size
 - Payment Type
 - Payment ID
@@ -31,13 +33,9 @@ To run the report and retrieve the files:
 # On dryad-prd-a
 cd apps/ui/current
 RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2019-11
-
-# On a stage server, copy the files:
-cd shopping_cart_reports
-scp dryad-prd-a:apps/ui/current/shop* .
-
-# On your local machine, copy the files:
-scp dryad-stg-a:shopping_cart_reports/shop* .
+cp shopping* ~/tools/journal-payments/shoppingcart/
+cd ~/tools/journal-payments/shoppingcart
+git commit -a -m "add reports for 2019-11"
 ```
 
 Dataset Info Report
@@ -95,6 +93,21 @@ Fields in the admin screen CSV report
 - views
 - downloads
 - citations
+
+Curation Stats Reports
+----------------------
+
+Curation stats depend on the history of each dataset. Calculating them from
+scratch would require touching every dataset in Dryad, so we cache the results
+in a database table `stash_engine_curation_stats`, with one row for each
+day. These rows can be recalculated if needed (e.g., if we add new stats).
+
+Some of the curation stats start with the word 'new'. This indicates that they
+only apply to newly-created datasets, the first time the dataset is
+processed. For stats without the word 'new', the stat applies to each version of
+the dataset, typically for the purpose of monitoring throughput of the curation
+workflow.
+
 
 Authors at an Institution Report (from SQL)
 -------------------------------------------
