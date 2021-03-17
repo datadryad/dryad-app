@@ -33,13 +33,13 @@ jobs:
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
 
-    - name: 'Retrieve Cached Gems'
-      uses: actions/cache@v1
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-gem-
+#    - name: 'Retrieve Cached Gems'
+#      uses: actions/cache@v1
+#      with:
+#        path: vendor/bundle
+#        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+#        restore-keys: |
+#          ${{ runner.os }}-gem-
 
     - name: 'Bundle Install'
       run: |
