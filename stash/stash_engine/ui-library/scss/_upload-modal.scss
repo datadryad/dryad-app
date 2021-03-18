@@ -2,6 +2,14 @@
 
 .c-uploadmodal {
   border: none;
+
+  &::backdrop { // native
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  + .backdrop { // polyfill
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .c-uploadmodal__header {
