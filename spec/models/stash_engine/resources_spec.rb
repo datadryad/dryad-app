@@ -911,6 +911,7 @@ module StashEngine
             expect(actual_names).to contain_exactly(*expected_names)
           end
 
+          # TODO: update after moving to new files
           it 'copies all current records' do
             old_current_names = @res1.current_file_uploads.map(&:upload_file_name)
             new_current_names = @res2.current_file_uploads.map(&:upload_file_name)

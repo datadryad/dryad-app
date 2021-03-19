@@ -14,7 +14,7 @@ class CreateStashEngineGenericFiles < ActiveRecord::Migration[5.2]
       t.text "original_url", collation: "utf8mb4_general_ci"
       t.string "cloud_service"
       t.string "digest"
-      t.string "digest_type", limit: 8
+      t.string "digest_type", limit: 8, type: "ENUM('md5', 'sha-1', 'sha-256', 'sha-384', 'sha-512')"
       t.text "description"
       t.text "original_filename"
       t.string :type
@@ -22,11 +22,6 @@ class CreateStashEngineGenericFiles < ActiveRecord::Migration[5.2]
       t.index ["resource_id"], name: "index_stash_engine_generic_files_on_resource_id"
       t.index ["upload_file_name"], name: "index_stash_engine_generic_files_on_upload_file_name", length: 50
       t.index ["url"], name: "index_stash_engine_generic_files_on_url", length: 50
-
-      execute <<-SQL
-        ALTER TABLE stash_engine_generic_files ADD digest_type
-        enum('md5', 'sha-1', 'sha-256', 'sha-384', 'sha-512');
-      SQL
     end
   end
 end

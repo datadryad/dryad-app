@@ -57,8 +57,8 @@ module StashEngine
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-                 .timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
-                 .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
+        .timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
+        .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
 
       r = http.get(merritt_presign_info_url)
 
@@ -101,12 +101,12 @@ module StashEngine
       return [] if my_dirs.empty?
 
       Resource.joins(:current_resource_state).where(id: my_dirs)
-              .where("stash_engine_resource_states.resource_state = 'submitted'").pluck(:id)
+        .where("stash_engine_resource_states.resource_state = 'submitted'").pluck(:id)
     end
 
     def self.older_resource_named_dirs(uploads_dir)
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
-         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
+        .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
   end
