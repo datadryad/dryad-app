@@ -1,0 +1,21 @@
+h1.FileTitle {
+    font-size: x-large;
+    color: #005581;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+th {
+    text-align: left;
+}
+
+th, td {
+    padding: 5px;
+}
+
+table, th, td {
+    border: 1px solid;
+}
