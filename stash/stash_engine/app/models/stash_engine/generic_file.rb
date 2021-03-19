@@ -19,7 +19,6 @@ module StashEngine
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
 
-
     # display the correct error message based on the url status code
     # rubocop:disable Metrics/MethodLength
     def error_message
@@ -87,12 +86,12 @@ module StashEngine
 
     def last_version_file
       self.class.joins(:resource)
-          .where(upload_file_name: upload_file_name)
-          .where('resource_id < ?', resource_id)
-          .where('stash_engine_resources.identifier_id = (SELECT res2.identifier_id FROM stash_engine_resources res2 WHERE res2.id = ?)', resource_id)
-          .where(file_state: %i[created copied])
-          .order(resource_id: :desc)
-          .limit(1).first
+        .where(upload_file_name: upload_file_name)
+        .where('resource_id < ?', resource_id)
+        .where('stash_engine_resources.identifier_id = (SELECT res2.identifier_id FROM stash_engine_resources res2 WHERE res2.id = ?)', resource_id)
+        .where(file_state: %i[created copied])
+        .order(resource_id: :desc)
+        .limit(1).first
     end
 
     # the URL we use for replication from other source (Presigned or URL) up to Zenodo

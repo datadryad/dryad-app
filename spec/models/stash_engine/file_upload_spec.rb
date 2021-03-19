@@ -51,6 +51,7 @@ module StashEngine
         expect(@upload.version_file_created_in).to eq(@resource.stash_version)
       end
 
+      # TODO: update after moving to new files
       it 'returns the original version for versions created later' do
         original_version = @resource.stash_version
         new_resource = @resource.amoeba_dup
