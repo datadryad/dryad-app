@@ -103,7 +103,7 @@ Rails.application.routes.draw do
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('stash/faq')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
-  get '/pages/membershipOverview', to: redirect('stash/our_community')
+  get '/pages/membershipOverview', to: redirect('stash/our_membership')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
