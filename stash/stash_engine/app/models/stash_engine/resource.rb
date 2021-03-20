@@ -45,8 +45,7 @@ module StashEngine
 
     amoeba do
       include_association :authors
-      include_association :file_uploads
-      include_association :software_uploads
+      include_association :generic_files
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and

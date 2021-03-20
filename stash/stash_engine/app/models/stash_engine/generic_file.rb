@@ -53,6 +53,28 @@ module StashEngine
       !digest.blank? && !digest_type.nil?
     end
 
+    # returns the latest version number in which this filename was created
+    def version_file_created_in
+      return resource.stash_version if file_state == 'created' || file_state.blank?
+
+      sql = <<-SQL
+             SELECT versions.*
+               FROM stash_engine_generic_files uploads
+                    JOIN stash_engine_resources resource
+                      ON uploads.resource_id = resource.id
+                    JOIN stash_engine_versions versions
+                      ON resource.id = versions.resource_id
+              WHERE uploads.type = '#{self.class.to_s}'
+                AND resource.identifier_id = ?
+                AND uploads.upload_file_name = ?
+                AND uploads.file_state = 'created'
+           ORDER BY versions.version DESC
+              LIMIT 1;
+      SQL
+
+      Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
+    end
+
     # figures out how to delete file based on previous state
     def smart_destroy!
       # see if it's on the file system and destroy it if it's there
