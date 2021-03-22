@@ -1,6 +1,12 @@
 Dryad User Interface Technology
 ===============================
 
+This document has some quick notes about the User Interface, but more complete
+documentation is in the [User Interface README](../../stash/stash_engine/ui-library/README.md)
+
+*Before editing any UI pieces*, please install the required dependencies as
+ described in the README referenced above.
+
 Viewing the demo:
 - To see the demo pages on production, go to <https://datadryad.org/demo/>, or a
   similar page on other Dryad servers.

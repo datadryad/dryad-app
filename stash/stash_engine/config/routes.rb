@@ -99,9 +99,11 @@ StashEngine::Engine.routes.draw do
 
   get 'faq', to: 'pages#faq'
   get 'best_practices', to: 'pages#best_practices'
-  get 'our_community', to: 'pages#our_community'
+  get 'our_community', to: 'pages#our_membership'
   get 'our_governance', to: 'pages#our_governance'
   get 'our_mission', to: 'pages#our_mission'
+  get 'our_membership', to: 'pages#our_membership'
+  get 'join_us', to: 'pages#join_us'
   get 'our_platform', to: 'pages#our_platform'
   get 'our_staff', to: 'pages#our_staff'
   get 'our_advisors', to: 'pages#our_advisors'
