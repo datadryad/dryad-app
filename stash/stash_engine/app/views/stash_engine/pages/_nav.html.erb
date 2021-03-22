@@ -37,7 +37,8 @@
           <summary class="o-showhide__summary o-sites__summary">About</summary>
           <div class="o-sites__group">
             <%= link_to 'Our Mission', "#{stash_url_helpers.our_mission_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Community', "#{stash_url_helpers.our_community_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Membership', "#{stash_url_helpers.our_membership_path}", class: 'o-sites__subgroup-head' %>
+              <%= link_to 'Join Us', "#{stash_url_helpers.join_us_path}", class: 'o-sites__subgroup-lastitem' %>
             <%= link_to 'Our Governance', "#{stash_url_helpers.our_governance_path}", class: 'o-sites__group-item' %>
             <%= link_to 'Our Team', "#{stash_url_helpers.our_staff_path}", class: 'o-sites__group-item' %>
             <%= link_to 'Our Advisors', "#{stash_url_helpers.our_advisors_path}", class: 'o-sites__group-item' %>

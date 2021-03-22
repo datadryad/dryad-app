@@ -2,31 +2,32 @@
 
 function joelsReady(){
 
-  // ***** Keywords Input Focus ***** //
+  // ***** Upload Modal Component ***** //
 
-  // Copied this to keywords component JS in Rails for compatibility with autocomplete JS and removed from here:
+  if (document.querySelector('#js-uploadmodal')) {
+    var uploadModal = document.querySelector('#js-uploadmodal');
+    var checkboxValidateFiles = document.querySelector('#js-uploadmodal__checkbox-confirm');
+    var buttonValidateFiles = document.querySelector('#js-uploadmodal__button-validate');
 
-  /*
+    // register dialog polyfill for upload modal:
+    dialogPolyfill.registerDialog(uploadModal);
 
-  $('#js-keywords__container').click(function(){
-    $('.js-keywords__input').focus();
-  });
+    checkboxValidateFiles.addEventListener('change', function() {
+      if (checkboxValidateFiles.checked) {
+        buttonValidateFiles.disabled = false;
+      } else {
+        buttonValidateFiles.disabled = true;
+      }
+    });
+  }
 
-  $('.js-keywords__input').focus(function(){
-    $('#js-keywords__container').attr('class', 'c-keywords__container--has-focus');
-  });
+  if (document.querySelector('#js-uploadmodal__button-show-modal')) {
+    var buttonShowModal = document.querySelector('#js-uploadmodal__button-show-modal');
 
-  $('.js-keywords__input').blur(function(){
-    $('#js-keywords__container').attr('class', 'c-keywords__container--has-blur');
-  });
-
-  */
-
-  // ***** Initialize jQuery UI Tooltip ***** //
-
-  // Comment out tooltip method until jQuery UI is included on every page:
-  
-  // $('.o-button__help').tooltip();
+    buttonShowModal.addEventListener('click', function() {
+      uploadModal.showModal();
+    });
+  }
 
   // ***** Toggle Table Cell Details ***** //
 

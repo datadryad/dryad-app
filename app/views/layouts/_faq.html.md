@@ -47,7 +47,7 @@
 
 <p>
     The base DPC per data submission is $120 USD. DPCs are invoiced upon curator approval/publication, unless the submitter
-    is based at a <a href="/stash/our_community#institutional">member institution</a> (determined by login credentials),
+    is based at a <a href="/stash/our_membership#institutional">member institution</a> (determined by login credentials),
     an associated journal or publisher has an agreement with Dryad to sponsor the DPC (
     <a href="https://datadryad.org/docs/JournalLookup.pdf">see list</a>) or the submitter is based
     in a fee-waiver country (see above).

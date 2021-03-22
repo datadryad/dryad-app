@@ -25,17 +25,13 @@ pipeline.
 
 * [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md): `$ sudo npm install -g gulp-cli`
 
-* [Ruby](https://www.ruby-lang.org/en/downloads) for the Sass lint plugin
-
 ### Toolkit Installation
 
 1. Clone this repo and cd to its root directory on your machine
 
 2. Run `$ npm install` to install Gulp plugins. Ignore the various "depreciated" warnings that appear.
 
-3. Run `$ gem install scss_lint` for the Sass lint plugin.
-
-4. Run `$ bower install` to install Bower libraries
+3. Run `$ bower install` to install Bower libraries
 
 ### Running the Toolkit
 
@@ -51,40 +47,41 @@ pipeline.
 * To update the custom modernizr file based off of classes found in CSS, run `$ gulp modernizr` after introducing new
 CSS features referenced in the [Modernizr development build](https://modernizr.com)
 
-* To create a build of finished files, and place them in the regular
-  Rails directories, run `$ gulp build`
+* To create a build of finished files and copy the compiled CSS and JavaScript files into the 
+  Rails asset pipeline, run `$ gulp build`
 
 * To validate HTML of a build using the W3C validation service, run `$ gulp validateHTML`
 
+* To publish the UI Library online for peer review, run `$ gulp publish` (GitHub Pages must be enabled within GitHub). The public URL is: https://cdl-dryad.github.io/dryad-app
+
 ## Project Structure
 
-**/ui-library and /demo**: The **ui-library** directory is where development takes place. Builds of finished files are
-placed within **public/demo** by the Gulp toolkit. A build in **/demo** is a completeley self-contained set of static
-files. They are not linked to **/ui-library** or any other aspect of the Stash application.
+**/ui-library**: The **ui-library** directory is where development takes place. Builds of finished files are
+placed within **ui-library/dist** by the Gulp toolkit.
 
 **/bower\_components**: [Bower](https://bower.io) libraries are not located at the project root, as tyically done, but
 in **ui-library/bower_components** so that the Gulp toolkit can serve and optimize them.
 
-**/fonts**: Font files are located in **ui-library/fonts** and are inlined into the **ui-library** and **demo** CSS
+**/fonts**: Font files are located in **ui-library/fonts** and are inlined into the **ui-library** and **dist** CSS
 files by the Gulp toolkit. See the *Styles* section below for how to run this task in the toolkit.
 
-**/images**: Image files are located at **ui-library/images** and **demo/images**. Files prepended with **icon_** are
+**/images**: Image files are located at **ui-library/images** and **dist/images**. Files prepended with **icon_** are
 typically inlined into the CSS files using the same Gulp toolkit process as the font files mentioned above.
 
 **/includes**: Includes contain the actual UI elements. They are located at **ui-library/includes** and are compiled
-into the object, component, and theme files within the **demo** directory during the build process. Their organization
+into the object, component, and theme files within the **dist** directory during the build process. Their organization
 is described in the *UI Elements* section below.
 
 **/scss**: Styles are written in multiple [Sass](http://sass-lang.com) files within **ui-library/scss**. They are
-compiled to **ui-library/css/main.css** during development runtime and a minified **demo/css/ui.css** for during the
+compiled to **ui-library/css/main.css** during development runtime and a minified **dist/css/ui.css** for during the
 build process. Both the **main.css** and **ui.css** files should not be modified, as they will be overwritten with new
 versions as the Gulp toolkit is run. For style authoring patterns and best practices, please see the *Styles* section below.
 
-**/js**: JavaScript files exist in **ui-library/js** and get compiled to **demo/js/ui.js** during the build process.
+**/js**: JavaScript files exist in **ui-library/js** and get compiled to **dist/js/ui.js** during the build process.
 The main JavaScript file at **ui-library/js/main.js** is mostly for basic DOM manipulation of HTML attributes,
 typically using jQuery. Two other custom JS files, **details-polyfill.js** and **modernizr-custombuild.js**
 exist within **ui-library/js** and get concatenated into **ui.js** for builds. Like the CSS files mentioned above,
-you should not modify **ui.js** in the **demo** directory, as it will be overwritten during each build.
+you should not modify **ui.js** in the **dist** directory, as it will be overwritten during each build.
 
 ## UI Elements
 
@@ -105,7 +102,7 @@ The Sass in this UI library follows [this style guide](https://css-tricks.com/sa
 Sass linter honors most of these rules and will throw warnings if there are exceptions.
 
 Each Object, Component, and Theme has its own Sass partial, which are all imported into **ui-library/scss/main.scss**
-and then compiled into the **ui-library** and **demo** CSS files.
+and then compiled into the **ui-library** and **dist** CSS files.
 
 The **main.scss** file also imports global Sass variables, mixins, fonts, resets, and a Bower library. Opening these
 files and glancing at the code can help you see how the styles are organized across the UI library.
@@ -172,7 +169,7 @@ to the Rails asset pipeline in **app/assets**.
 
 3. Optionally, validate your build HTML via the Gulp toolkit.
 
-4. Review your build from the local Rails server on your machine at **/demo/**. 
+4. Review your build from the local Rails server on your machine at **dist**. 
 **Note:** the trailing slash is required; otherwise you'll just get the unstyled static pages.
 
 5. Integrate the HTML of the elements you created or modified within the UI library into the same elements in Rails.

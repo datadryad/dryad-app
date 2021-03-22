@@ -1,3 +1,40 @@
+dialog {
+  position: absolute;
+  left: 0; right: 0;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+  margin: auto;
+  border: solid;
+  padding: 1em;
+  background: white;
+  color: black;
+  display: block;
+}
+
+dialog:not([open]) {
+  display: none;
+}
+
+dialog + .backdrop {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0,0,0,0.1);
+}
+
+._dialog_overlay {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+}
+
+dialog.fixed {
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
+}
 @charset "UTF-8";
 /*
 
@@ -2886,8 +2923,8 @@ html.no-multiplebgs .o-banner {
   color: white; }
 
 .o-button__link-dark {
-  padding: 12px 16px;
   margin: 8px 12px;
+  padding: 12px 16px;
   border: none;
   background-color: #005581;
   color: white;
@@ -3130,8 +3167,8 @@ datalist {
   margin-top: 5px;
   margin-right: 10px;
   padding: 25px;
-  list-style: none;
-  border: 1px solid black; }
+  border: 1px solid black;
+  list-style: none; }
 
 .o-dependency-group__list__item {
   display: -webkit-box;
@@ -3266,7 +3303,9 @@ datalist {
 .o-heading__level1-home {
   text-align: center; }
 
-.o-heading__level2, .o-heading__level2-login-with, .o-heading__level2-why-share, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
+.o-heading__level2, .o-heading__level2-login-with, .c-uploadmodal__textarea-url-label, .c-uploadwidget--data header h2,
+.c-uploadwidget--software header h2,
+.c-uploadwidget--supplemental header h2, .o-heading__level2-why-share, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
   margin: 12px 0 20px;
   color: #005581;
   font-size: 1.3em;
@@ -3413,18 +3452,18 @@ datalist {
   margin: 0 0 10px;
   padding: 0; }
   .o-list li {
-    list-style: none;
-    line-height: 1.5; }
+    line-height: 1.5;
+    list-style: none; }
 
 .o-list-related {
   margin: 8px 0 6px;
   padding: 0; }
   .o-list-related li {
-    list-style: none;
-    line-height: 1.25; }
+    line-height: 1.25;
+    list-style: none; }
   .o-list-related li:last-child {
-    list-style: none;
-    padding-bottom: 6px; }
+    padding-bottom: 6px;
+    list-style: none; }
 
 .o-logout {
   position: relative; }
@@ -3624,7 +3663,7 @@ html.no-details .o-showhide__summary {
         -webkit-transform: rotate(-180deg);
                 transform: rotate(-180deg); } }
 
-.o-sites__summary, .o-sites__group-heading, .o-sites__group-item, .o-sites__login {
+.o-sites__summary, .o-sites__group-heading, .o-sites__group-item, .o-sites__subgroup-head, .o-sites__subgroup-item, .o-sites__subgroup-lastitem, .o-sites__login {
   display: block;
   margin: 0 0 2px;
   padding: 10px;
@@ -3632,11 +3671,11 @@ html.no-details .o-showhide__summary {
   color: white;
   text-decoration: none; }
   @media (min-width: 870px) {
-    .o-sites__summary, .o-sites__group-heading, .o-sites__group-item, .o-sites__login {
+    .o-sites__summary, .o-sites__group-heading, .o-sites__group-item, .o-sites__subgroup-head, .o-sites__subgroup-item, .o-sites__subgroup-lastitem, .o-sites__login {
       margin: 0;
       background-color: white;
       color: black; }
-      .o-sites__summary:hover, .o-sites__group-heading:hover, .o-sites__group-item:hover, .o-sites__login:hover, .o-sites__summary:focus, .o-sites__group-heading:focus, .o-sites__group-item:focus, .o-sites__login:focus {
+      .o-sites__summary:hover, .o-sites__group-heading:hover, .o-sites__group-item:hover, .o-sites__subgroup-head:hover, .o-sites__subgroup-item:hover, .o-sites__subgroup-lastitem:hover, .o-sites__login:hover, .o-sites__summary:focus, .o-sites__group-heading:focus, .o-sites__group-item:focus, .o-sites__subgroup-head:focus, .o-sites__subgroup-item:focus, .o-sites__subgroup-lastitem:focus, .o-sites__login:focus {
         color: #cf4817; } }
 
 .o-sites__summary {
@@ -3678,6 +3717,33 @@ html.no-details .o-showhide__summary {
     border-bottom: 1px solid #9d9fa2;
     border-left: 1px solid #9d9fa2; }
     .o-sites__group-item:hover, .o-sites__group-item:focus {
+      color: #cf4817;
+      text-decoration: underline; } }
+
+@media (min-width: 870px) {
+  .o-sites__subgroup-head {
+    border-right: 1px solid #9d9fa2;
+    border-left: 1px solid #9d9fa2; }
+    .o-sites__subgroup-head:hover, .o-sites__subgroup-head:focus {
+      color: #cf4817;
+      text-decoration: underline; } }
+
+@media (min-width: 870px) {
+  .o-sites__subgroup-item {
+    border-right: 1px solid #9d9fa2;
+    border-left: 1px solid #9d9fa2;
+    padding: 10px 10px 10px 30px; }
+    .o-sites__subgroup-item:hover, .o-sites__subgroup-item:focus {
+      color: #cf4817;
+      text-decoration: underline; } }
+
+@media (min-width: 870px) {
+  .o-sites__subgroup-lastitem {
+    border-right: 1px solid #9d9fa2;
+    border-left: 1px solid #9d9fa2;
+    border-bottom: 1px solid #9d9fa2;
+    padding: 10px 10px 10px 30px; }
+    .o-sites__subgroup-lastitem:hover, .o-sites__subgroup-lastitem:focus {
       color: #cf4817;
       text-decoration: underline; } }
 
@@ -4056,7 +4122,7 @@ html.no-details .o-showhide__summary {
   content: '\f105';
   float: right;
   color: #4e5050;
-  font-family: 'FontAwesome';
+  font-family: 'FontAwesome', sans-serif;
   font-size: 1em;
   line-height: normal; }
 
@@ -4065,7 +4131,7 @@ html.no-details .o-showhide__summary {
   content: '\f107';
   float: right;
   color: #4e5050;
-  font-family: 'FontAwesome';
+  font-family: 'FontAwesome', sans-serif;
   font-size: 1em;
   line-height: normal; }
 
@@ -5280,7 +5346,7 @@ html.no-details .o-showhide__summary {
   content: '\f15d';
   float: right;
   color: #4e5050;
-  font-family: 'FontAwesome';
+  font-family: 'FontAwesome', sans-serif;
   font-size: 1em;
   line-height: normal; }
 
@@ -5288,7 +5354,7 @@ html.no-details .o-showhide__summary {
   content: '\f15e';
   float: right;
   color: #4e5050;
-  font-family: 'FontAwesome';
+  font-family: 'FontAwesome', sans-serif;
   font-size: 1em;
   line-height: normal; }
 
@@ -5452,9 +5518,11 @@ html.no-details .o-showhide__summary {
      http://thenewcode.com/866/Using-The-HTML5-progress-Element
      http://html5doctor.com/the-progress-element/
   */
+  /* stylelint-disable selector-pseudo-element-no-unknown */
   /* bar color, firefox */
   /* foreground bar -- chrome and safari */
-  /* background of unfilled bar -- chrome and safari */ }
+  /* background of unfilled bar -- chrome and safari */
+  /* stylelint-enable selector-pseudo-element-no-unknown */ }
   .c-upload__action progress {
     border: none;
     background-color: #f2f2f2;
@@ -5572,6 +5640,74 @@ html.no-details .o-showhide__summary {
 
 .c-manifest-table__actions-col {
   width: 17%; }
+
+.c-uploadmodal {
+  border: none; }
+
+.c-uploadmodal__textarea-url-label {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 20px; }
+
+.c-uploadmodal__textarea-url {
+  width: 100%;
+  height: 200px; }
+
+.c-uploadmodal__text-content {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+
+.c-uploadmodal__button-validate {
+  display: block;
+  margin-top: 20px; }
+
+.c-uploadwidgets {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  margin-bottom: 30px; }
+
+.c-uploadwidget--data,
+.c-uploadwidget--software,
+.c-uploadwidget--supplemental {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #9d9fa2; }
+  .c-uploadwidget--data header,
+  .c-uploadwidget--software header,
+  .c-uploadwidget--supplemental header {
+    grid-column: 1 / -1; }
+    .c-uploadwidget--data header img,
+    .c-uploadwidget--software header img,
+    .c-uploadwidget--supplemental header img {
+      display: block;
+      height: 17px;
+      margin-bottom: 20px; }
+    .c-uploadwidget--data header h2,
+    .c-uploadwidget--software header h2,
+    .c-uploadwidget--supplemental header h2 {
+      margin: 0;
+      text-align: center; }
+  .c-uploadwidget--data b,
+  .c-uploadwidget--software b,
+  .c-uploadwidget--supplemental b {
+    grid-column: 1 / -1;
+    font-weight: normal; }
+  .c-uploadwidget--data button,
+  .c-uploadwidget--software button,
+  .c-uploadwidget--supplemental button {
+    grid-column: 2;
+    padding: 10px;
+    border: none; }
+
+.c-uploadwidget--data button {
+  background-color: #9fc7d8; }
+
+.c-uploadwidget--software button,
+.c-uploadwidget--supplemental button {
+  background-color: lightgray; }
 
 .o-heading__level2-why-share {
   font-size: 1.6em; }
@@ -6154,7 +6290,7 @@ body {
   max-width: 1220px;
   margin: 0 auto;
   padding: 10px;
-  font-family: 'KievitWeb';
+  font-family: 'KievitWeb', sans-serif;
   /* Blacklight/geoblacklight resets */
   font-size: initial; }
   @media (min-width: 480px) {
