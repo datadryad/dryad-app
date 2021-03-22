@@ -35,6 +35,8 @@ module StashEngine
           'The URL was not found.'
         when 410
           'The requested URL is no longer available.'
+        when 411
+          'URL cannot be downloaded, please link directly to data file'
         when 414
           "The server will not accept the request, because the URL #{url} is too long."
         when 408, 499
@@ -92,6 +94,11 @@ module StashEngine
           .where(file_state: %i[created copied])
           .order(resource_id: :desc)
           .limit(1).first
+      end
+
+      # the URL we use for replication from other source (Presigned or URL) up to Zenodo
+      def zenodo_replication_url
+        raise 'Override zenodo_replication_url in the model'
       end
 
       class_methods do
