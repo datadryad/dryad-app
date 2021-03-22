@@ -10,8 +10,13 @@ module StashEngine
     # Relations
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
+    # TODO: remove the following two lines once STI files are working
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
     has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
+    has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
+    has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
+    has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
+    has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
@@ -51,28 +56,18 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
-        # this is a new rubocop cop complaint (must not be locked to a version of testing).
-        # I think this may have been done for some reason (two separate loops) because of mutation or errors, IDK.
-        # I'm not going to go back and revise right now.
-        # rubocop:disable Style/CombinableLoops
-        %i[file_uploads software_uploads].each do |meth|
-          new_resource.public_send(meth).each do |file|
-            raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+        new_resource.generic_files.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-            if file.file_state == 'created'
-              file.file_state = 'copied'
-              file.save
-            end
+          if file.file_state == 'created'
+            file.file_state = 'copied'
+            file.save
           end
         end
 
-        # for some reason a where clause will not work with AR in this instance
-        # new_resource.file_uploads.where(file_state: 'deleted').delete_all
-        %i[file_uploads software_uploads].each do |meth|
-          resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
-          resources.each(&:delete)
-        end
-        # rubocop:enable Style/CombinableLoops
+        # I think there was something weird about Amoeba that required this approach
+        resources = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        resources.each(&:delete)
       end)
     end
 
