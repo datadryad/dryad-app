@@ -75,14 +75,14 @@ module StashEngine
       end
       it 'returns json when request with format html' do
         @resource.current_resource_state.update(resource_state: 'in_progress')
-        @url = StashEngine::Engine::routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
-        params = {'url' => 'http://example.org/funbar.txt'}
+        @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
+        params = { 'url' => 'http://example.org/funbar.txt' }
         post @url, params: params
 
         expect(response).to be_successful
         body = JSON.parse(response.body)
         expect(body[0]['upload_file_name']).to eql('funbar.txt')
-        expect(body[0]['upload_file_size']).to eql(37221)
+        expect(body[0]['upload_file_size']).to eql(37_221)
         expect(body[0]['file_state']).to eql('created')
         expect(body[0]['url']).to eql('http://example.org/funbar.txt')
       end
