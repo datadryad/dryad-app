@@ -54,6 +54,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  Claremont Graduate University
 -  Claremont McKenna College
 -  Columbia University
+-  Desert Research Institute
 -  Harvey Mudd College
 -  Indian Institute of Technology Dhanbad
 -  Keck Graduate Institute

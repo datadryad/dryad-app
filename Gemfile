@@ -9,8 +9,8 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
-gem 'webpacker'
 gem 'react-rails', '~> 2.6.1'
+gem 'webpacker'
 
 # ############################################################
 # Local engines
@@ -48,7 +48,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'mini_racer'
 gem 'turbolinks'
 
-gem 'uglifier', '~> 3.0.4'
+gem 'uglifier', '~> 4.2.0'
 gem 'yui-compressor'
 
 # ############################################################

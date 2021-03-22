@@ -130,7 +130,7 @@ module StashApi
       handle_previous_duplicates(upload_filename: @sanitized_name)
       StashEngine::FileUpload.create(
         upload_file_name: @sanitized_name,
-        upload_content_type: request.headers['CONTENT-TYPE'],
+        upload_content_type: file_content_type,
         upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
         resource_id: @resource.id,
         upload_updated_at: Time.new.utc,
@@ -138,6 +138,12 @@ module StashApi
         description: request.env['HTTP_CONTENT_DESCRIPTION'],
         original_filename: @original_filename || @sanitized_name
       )
+    end
+
+    def file_content_type
+      type = request.headers['CONTENT-TYPE']
+      type = 'application/octet-stream' unless type.present?
+      type
     end
 
     def handle_previous_duplicates(upload_filename:)

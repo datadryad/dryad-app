@@ -4,15 +4,30 @@ function joelsReady(){
 
   // ***** Upload Modal Component ***** //
 
-  var uploadModal = document.querySelector('#js-uploadmodal');
-  var buttonShowModal = document.querySelector('#js-uploadmodal__button-show');
+  if (document.querySelector('#js-uploadmodal')) {
+    var uploadModal = document.querySelector('#js-uploadmodal');
+    var checkboxValidateFiles = document.querySelector('#js-uploadmodal__checkbox-confirm');
+    var buttonValidateFiles = document.querySelector('#js-uploadmodal__button-validate');
 
-  // register dialog polyfill for upload modal:
-  dialogPolyfill.registerDialog(uploadModal);
+    // register dialog polyfill for upload modal:
+    dialogPolyfill.registerDialog(uploadModal);
 
-  buttonShowModal.addEventListener('click', function() {
-    uploadModal.showModal();
-  });
+    checkboxValidateFiles.addEventListener('change', function() {
+      if (checkboxValidateFiles.checked) {
+        buttonValidateFiles.disabled = false;
+      } else {
+        buttonValidateFiles.disabled = true;
+      }
+    });
+  }
+
+  if (document.querySelector('#js-uploadmodal__button-show-modal')) {
+    var buttonShowModal = document.querySelector('#js-uploadmodal__button-show-modal');
+
+    buttonShowModal.addEventListener('click', function() {
+      uploadModal.showModal();
+    });
+  }
 
   // ***** Toggle Table Cell Details ***** //
 

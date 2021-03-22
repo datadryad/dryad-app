@@ -74,7 +74,7 @@ module StashEngine
             render 'stash_engine/file_uploads/validate_urls.js.erb'
           end
           format.html do
-            render :json => @resource.send(@resource_assoc).validated_table
+            render json: @resource.send(@resource_assoc).validated_table
           end
         end
       end
