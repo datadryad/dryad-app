@@ -64,7 +64,7 @@ module StashEngine
                       ON uploads.resource_id = resource.id
                     JOIN stash_engine_versions versions
                       ON resource.id = versions.resource_id
-              WHERE uploads.type = '#{self.class.to_s}'
+              WHERE uploads.type = '#{self.class}'
                 AND resource.identifier_id = ?
                 AND uploads.upload_file_name = ?
                 AND uploads.file_state = 'created'
