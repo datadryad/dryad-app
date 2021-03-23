@@ -12,10 +12,14 @@ require 'webdrivers'
 Webdrivers::Chromedriver.update
 
 Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :selenium_chrome_headless
 
-# uncomment following line to see actions in browser
+# uncomment following lines to see actions in browser
 # Capybara.default_driver = :selenium_chrome
-Capybara.javascript_driver = :chrome
+# Capybara.javascript_driver = :selenium_chrome
+
+# TODO: is it necessary :chrome if we already run with :selenium_chrome
+# Capybara.javascript_driver = :chrome
 
 # change all :selenium_chrome_headless to just :selenium_chrome in this file in order to see your tests and troubleshoot in browser.
 # also, comment out --headless option.  Also change default_driver from :rack_test to :selenium_chrome
@@ -49,21 +53,10 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
-# Capybara.javascript_driver = :selenium_chrome
-Capybara.javascript_driver = :selenium_chrome_headless
-
 RSpec.configure do |config|
-
   config.before(:each, type: :feature, js: false) do
     Capybara.use_default_driver
   end
-
-  config.before(:each, type: :feature, js: true) do
-
-    # Capybara.current_driver = :selenium_chrome
-    Capybara.current_driver = :selenium_chrome_headless
-  end
-
 end
 
 Capybara.configure do |config|

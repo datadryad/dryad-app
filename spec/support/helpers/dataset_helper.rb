@@ -26,14 +26,14 @@ module DatasetHelper
   end
 
   def navigate_to_upload
-    click_link 'Upload Data'
-    click_link 'Upload directly'
-    expect(page).to have_content('Step 2: Choose Files')
+    click_link 'Upload Files'
+    expect(page).to have_content('Choose Files', count: 3)
+    expect(page).to have_content('Enter URLs', count: 3)
   end
 
   def navigate_to_upload_urls
-    click_link 'Upload by URL'
-    expect(page).to have_content('Step 2: Enter Files')
+    click_button('Enter URLs', match: :first)
+    expect(page).to have_content('Enter data file URLs')
   end
 
   def navigate_to_software_upload_urls
