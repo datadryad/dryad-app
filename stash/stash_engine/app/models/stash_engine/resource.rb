@@ -10,7 +10,7 @@ module StashEngine
     # Relations
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
-    # TODO: remove the following two lines once STI files are working
+    # TODO: STI remove the following two lines once STI files are working
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
     has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
@@ -280,7 +280,7 @@ module StashEngine
     end
 
     # gets the latest files that are not deleted in db, current files for this version
-    def current_file_uploads(my_class: StashEngine::FileUpload)
+    def current_file_uploads(my_class: StashEngine::DataUpload)
       subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
                                          '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)

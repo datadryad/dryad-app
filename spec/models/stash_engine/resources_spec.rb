@@ -855,7 +855,7 @@ module StashEngine
         end
       end
 
-      describe :current_file_uploads do
+      describe :current_data_files do
         attr_reader :created_files
         attr_reader :copied_files
         attr_reader :deleted_files
@@ -863,7 +863,7 @@ module StashEngine
           @res1 = create(:resource, user_id: user.id)
 
           @created_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'created',
               upload_file_name: "created#{i}.bin",
@@ -871,7 +871,7 @@ module StashEngine
             )
           end
           @copied_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'copied',
               upload_file_name: "copied#{i}.bin",
@@ -879,7 +879,7 @@ module StashEngine
             )
           end
           @deleted_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'deleted',
               upload_file_name: "deleted#{i}.bin",

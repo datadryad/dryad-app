@@ -23,10 +23,10 @@ module StashEngine
                        upload_file_name: 'foo.bar')
 
       @copy1 = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-                      state: 'finished', copy_type: 'supp')
+                                    state: 'finished', copy_type: 'supp')
 
       @copy2 = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-                      state: 'finished', copy_type: 'supp_publish')
+                                    state: 'finished', copy_type: 'supp_publish')
     end
 
     describe '#calc_s3_path' do
