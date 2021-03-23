@@ -139,15 +139,15 @@ module StashEngine
 
       it 'returns the url to get the merritt presigned url to s3' do
         expect(@upload.merritt_presign_info_url).to eq(
-                                                      'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true'
-                                                    )
+          'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true'
+        )
       end
 
       it 'doubly-encodes any # signs in filenames because otherwise they prematurely cut off in Merritt' do
         @upload.upload_file_name = '#1 in the world'
         expect(@upload.merritt_presign_info_url).to eq(
-                                                      'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2F%25231%20in%20the%20world?no_redirect=true'
-                                                    )
+          'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2F%25231%20in%20the%20world?no_redirect=true'
+        )
       end
     end
 
