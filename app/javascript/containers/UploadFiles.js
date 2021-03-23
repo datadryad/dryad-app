@@ -47,7 +47,7 @@ class UploadFiles extends React.Component {
     }
 
     formatFileSize = (fileSize) => {
-        return (fileSize / 1024).toFixed(1).toString() + ' kb';
+        return (fileSize / 1000).toFixed(2).toString() + ' kB';
     }
 
     updateFileList = (files) => {
@@ -86,10 +86,11 @@ class UploadFiles extends React.Component {
         event.preventDefault();
         this.hideModal();
 
-        const urlsObject = {url: this.state.urls}
-        const token = document.querySelector('[name=csrf-token]').content
-        axios.defaults.headers.common['X-CSRF-TOKEN'] = token
+        const csrf_token = document.querySelector('[name=csrf-token]');
+        if (csrf_token)  // there isn't csrf token when running capybara tests
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
+        const urlsObject = {url: this.state.urls};
         axios.post('/stash/file_upload/validate_urls/' + this.props.resource_id, urlsObject)
             .then(resp => {
                 this.updateManifestFiles(resp.data);
