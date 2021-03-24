@@ -9,7 +9,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
 
-    has_many :authors, class_name: 'StashEngine::Author', dependent: :destroyb
+    has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -35,8 +35,8 @@ module StashEngine
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
-    ASSOC_TO_FILE_CLASS = self.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.
-      map{ |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
+    ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
+      .map { |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
 
     accepts_nested_attributes_for :curation_activities
 
@@ -310,7 +310,7 @@ module StashEngine
     # returns the list of files with duplicate names in created state where we shouldn't have any
     def duplicate_filenames(association: 'data_files')
       target_class_name = ASSOC_TO_FILE_CLASS[association]
-      raise "Invalid table name" if target_class_name.blank?
+      raise 'Invalid table name' if target_class_name.blank?
 
       sql = <<-SQL
         SELECT *
@@ -326,7 +326,7 @@ module StashEngine
       target_class_name.constantize.find_by_sql([sql, id, target_class_name, id, target_class_name])
     end
 
-    def url_in_version?(association: 'data_files', url:)
+    def url_in_version?(url:, association: 'data_files')
       send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
     end
 

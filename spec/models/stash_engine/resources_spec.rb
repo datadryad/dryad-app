@@ -885,9 +885,9 @@ module StashEngine
           end
 
           it 'copies the non-deleted records' do
-            created_and_copied = (@created_files + copied_files).map(&:upload_file_name)
+            created_and_copied = (created_files + copied_files).map(&:upload_file_name)
             new_names = @res2.data_files.map(&:upload_file_name)
-            expect(new_names).to match_array(new_names)
+            expect(new_names).to match_array(created_and_copied)
           end
 
           it 'copies all current records' do
@@ -952,7 +952,7 @@ module StashEngine
       describe :data_files do
         before(:each) do
           @resource = create(:resource)
-          @uploads = Array.new(3) do |i|
+          @uploads = Array.new(3) do |_i|
             create(:data_file,
                    resource: @resource,
                    file_state: :created)
