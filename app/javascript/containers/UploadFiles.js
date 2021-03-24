@@ -5,6 +5,7 @@ import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
 import FileList from "../components/FileList/FileList";
 import classes from './UploadFiles.module.css';
+import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
 
 class UploadFiles extends React.Component {
     state = {
@@ -23,7 +24,8 @@ class UploadFiles extends React.Component {
         chosenFiles: null,
         submitButtonDisabled: true,
         showModal: false,
-        urls: null
+        urls: null,
+        failedUrls: []  //TODO: unify initialization of array states. Maybe better start with empty array instead of null
     };
 
     uploadFilesHandler = (event, typeId) => {
@@ -39,11 +41,63 @@ class UploadFiles extends React.Component {
     }
 
     updateManifestFiles = (data) => {
+        const failedUrls = this.pullFailedUrls(data);
+        this.updateFailedUrls(failedUrls);
+        let successfulUrls = this.pullSuccessfulUrls(data);
         if (this.state.chosenFiles) {
-            data = this.discardAlreadyChosen(data);
+            successfulUrls = this.discardAlreadyChosen(successfulUrls);
         }
-        const newFiles = this.transformData(data);
-        this.updateFileList(newFiles);
+        const newManifestFiles = this.transformData(successfulUrls);
+        this.updateFileList(newManifestFiles);
+    }
+
+    pullFailedUrls = (urls) => {
+        return urls.filter(url => {
+            return url.status_code !== 200;
+        })
+    }
+
+    updateFailedUrls = (urls) => {
+        this.includeErrorMessages(urls);
+        this.setState({failedUrls: urls});
+    }
+
+    includeErrorMessages = (urls) => {
+        urls.map((url, index) => {
+            urls[index].error_message = this.getErrorMessage(url);
+        })
+    }
+
+    getErrorMessage = (url) => {
+        switch (url.status_code) {
+            case 200:
+                return '';
+            case 400:
+                return 'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS';
+            case 401:
+                return 'The URL was not authorized for download.';
+            case 403: case 404:
+                return 'The URL was not found.';
+            case 410:
+                return 'The requested URL is no longer available.';
+            case 411:
+                return 'URL cannot be downloaded, please link directly to data file';
+            case 414:
+                return `The server will not accept the request, because the URL ${url} is too long.`;
+            case 408: case 499:
+                return 'The server timed out waiting for the request to complete.';
+            case 409:
+                return "You've already added this URL in this version.";
+            case 500: case 501: case 502: case 503: case 504: case 505: case 506:
+            case 507: case 508: case 509: case 510: case 511:
+                return 'Encountered a remote server error while retrieving the request.';
+        }
+    }
+
+    pullSuccessfulUrls = (data) => {
+        return data.filter(file => {
+            return file.status_code === 200;
+        })
     }
 
     formatFileSize = (fileSize) => {
@@ -63,7 +117,8 @@ class UploadFiles extends React.Component {
     deleteFileHandler = (fileIndex) => {
         let chosenFiles = [...this.state.chosenFiles];
         chosenFiles.splice(fileIndex, 1);
-        if (chosenFiles.length === 0) {
+
+        if (chosenFiles.length === 0) {  //TODO
             this.setState({chosenFiles: null});
         } else {
             this.setState({chosenFiles: chosenFiles});
@@ -87,11 +142,11 @@ class UploadFiles extends React.Component {
         this.hideModal();
 
         const csrf_token = document.querySelector('[name=csrf-token]');
-        if (csrf_token)  // there isn't csrf token when running capybara tests
+        if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         const urlsObject = {url: this.state.urls};
-        axios.post('/stash/file_upload/validate_urls/' + this.props.resource_id, urlsObject)
+        axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
             .then(resp => {
                 this.updateManifestFiles(resp.data);
             })
@@ -138,6 +193,35 @@ class UploadFiles extends React.Component {
         this.setState({urls: event.target.value})
     }
 
+    buildFailedUrlList = () => {
+        if (this.state.failedUrls.length) {
+            return (
+                <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeFailedUrlsHandler} />
+            )
+        } else {
+            return null;
+        }
+    }
+
+    removeFailedUrlsHandler = (urlId) => {
+        const csrf_token = document.querySelector('[name=csrf-token]');
+        if (csrf_token)  // there isn't csrf token when running Capybara tests
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+
+        axios.patch(`/stash/file_uploads/${urlId}/destroy_error`, {remote: true})
+            .then(resp => {
+                this.removeFailedUrl(urlId);
+            })
+            .catch(error => console.log(error));
+    }
+
+    removeFailedUrl = (id) => {
+        const failedUrls = this.state.failedUrls.filter(url => {
+            return url.id !== id;
+        })
+        this.setState({failedUrls: failedUrls});
+    }
+
     buildFileList = () => {
         if (this.state.chosenFiles) {
             return (
@@ -182,6 +266,7 @@ class UploadFiles extends React.Component {
     }
 
     render () {
+        let failedUrls = this.buildFailedUrlList();
         let chosenFiles = this.buildFileList();
         let modalURL = this.buildModal();
 
@@ -200,6 +285,7 @@ class UploadFiles extends React.Component {
                         buttonFiles={upload_type.buttonFiles}
                         buttonURLs={upload_type.buttonURLs} />
                 })}
+                {failedUrls}
                 {chosenFiles}
                 {modalURL}
             </div>

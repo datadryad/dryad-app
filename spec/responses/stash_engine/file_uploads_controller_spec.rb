@@ -71,8 +71,8 @@ module StashEngine
             }
           )
           .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/html' })
-
       end
+
       it 'returns json when request with format html' do
         @resource.current_resource_state.update(resource_state: 'in_progress')
         @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
