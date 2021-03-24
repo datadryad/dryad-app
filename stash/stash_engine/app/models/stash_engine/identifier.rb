@@ -100,8 +100,9 @@ module StashEngine
 
     def resources_with_file_changes
       Resource.distinct.where(identifier_id: id)
-        .joins(:file_uploads)
-        .where(stash_engine_file_uploads: { file_state: %w[created deleted] })
+        .joins(:data_files)
+        .where(stash_engine_generic_files: { file_state: %w[created deleted] })
+        .where(stash_engine_generic_files: { type: 'StashEngine::DataFile' })
     end
 
     # these are items that are embargoed or published and can show metadata
