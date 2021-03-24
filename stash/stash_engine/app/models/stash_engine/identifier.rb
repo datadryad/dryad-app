@@ -394,7 +394,7 @@ module StashEngine
       # because there is nothing of interest to see in this version of no-file changes between published versions
       unchanged = true
       resources.each do |res|
-        unchanged &&= res.files_unchanged?
+        unchanged &&= res.files_unchanged?(association: 'data_files')
         if res.file_view == true
           res.update_column(:file_view, false) if unchanged
           unchanged = true
