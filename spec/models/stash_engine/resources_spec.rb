@@ -992,7 +992,7 @@ module StashEngine
 
         describe :url_in_version? do
           it 'returns false if not present' do
-            expect(@resource.url_in_version?('http://example.org/')).to eq(false)
+            expect(@resource.url_in_version?(url: 'http://example.org/')).to eq(false)
           end
 
           it 'returns true if present' do
@@ -1001,7 +1001,7 @@ module StashEngine
             upload.status_code = 200
             upload.save
 
-            expect(@resource.url_in_version?('http://example.org/')).to eq(true)
+            expect(@resource.url_in_version?(url: 'http://example.org/')).to eq(true)
           end
         end
       end

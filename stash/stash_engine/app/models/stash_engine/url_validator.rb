@@ -79,7 +79,7 @@ module StashEngine
 
       # don't allow duplicate URLs that have already been put into this version this time
       # (duplicate indicated with 409 Conflict)
-      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(url)
+      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(association: 'generic_files', url: url)
 
       sanitized_filename = StashEngine::GenericFile.sanitize_file_name(UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename)))
 

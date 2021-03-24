@@ -302,16 +302,16 @@ module StashEngine
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
-    def upload_type(method: 'data_files')
-      return :manifest if send(method).newly_created.url_submission.count > 0
-      return :files if send(method).newly_created.file_submission.count > 0
+    def upload_type(association: 'data_files')
+      return :manifest if send(association).newly_created.url_submission.count > 0
+      return :files if send(association).newly_created.file_submission.count > 0
 
       :unknown
     end
 
     # returns the list of files with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames(method: 'data_files')
-      target_class_name = ASSOC_TO_FILE_CLASS[method]
+    def duplicate_filenames(association: 'data_files')
+      target_class_name = ASSOC_TO_FILE_CLASS[association]
       raise "Invalid table name" if target_class_name.blank?
 
       sql = <<-SQL
@@ -328,8 +328,8 @@ module StashEngine
       target_class_name.constantize.find_by_sql([sql, id, target_class_name, id, target_class_name])
     end
 
-    def url_in_version?(url)
-      file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+    def url_in_version?(association: 'data_files', url:)
+      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
     end
 
     def files_unchanged?
