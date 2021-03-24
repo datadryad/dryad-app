@@ -147,11 +147,11 @@ module StashApi
     end
 
     def handle_previous_duplicates(upload_filename:)
-      StashEngine::FileUpload.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |file_upload|
-        if file_upload.file_state == 'copied'
-          file_upload.update(file_state: 'deleted')
+      StashEngine::DataFile.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |data_file|
+        if data_file.file_state == 'copied'
+          data_file.update(file_state: 'deleted')
         else
-          file_upload.destroy!
+          data_file.destroy!
         end
       end
     end
@@ -177,10 +177,10 @@ module StashApi
         resource = prev_resources.first unless prev_resources.blank?
       end
 
-      visible = resource.file_uploads.present_files
+      visible = resource.data_files.present_files
       all_count = visible.count
-      file_uploads = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
-      results = file_uploads.map { |i| StashApi::File.new(file_id: i.id).metadata }
+      data_files = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
+      results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end
 

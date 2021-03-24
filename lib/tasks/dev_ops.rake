@@ -41,7 +41,7 @@ namespace :dev_ops do
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
     end
-    fus = StashEngine::FileUpload.where(upload_file_size: [0, nil])
+    fus = StashEngine::DataFile.where(upload_file_size: [0, nil])
     fus.each do |file_upload|
       resource = file_upload.resource
       next unless resource && resource.current_resource_state && resource.current_resource_state.resource_state == 'submitted'

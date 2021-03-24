@@ -30,7 +30,7 @@ module StashEngine
       ext = File.extname(filename)
       core_name = File.basename(filename, ext)
       counter = 2
-      counter += 1 while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+      counter += 1 while resource.send(association).present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
       "#{core_name}-#{counter}#{ext}"
     end
 
