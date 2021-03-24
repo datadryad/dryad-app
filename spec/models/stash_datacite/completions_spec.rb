@@ -190,7 +190,7 @@ module StashDatacite
             end
 
             # bad upload for zenodo
-            resource.software_uploads << create(:software_upload, status_code: 411, url: 'https://happy.clown.example.com')
+            resource.software_files << create(:software_file, status_code: 411, url: 'https://happy.clown.example.com')
 
             @completions = Completions.new(resource) # refresh the completions object since I changed it
             expect(completions.urls_validated?).to eq(false)
