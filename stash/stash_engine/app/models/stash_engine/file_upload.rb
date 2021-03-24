@@ -6,7 +6,6 @@ require 'stash/download' # for the thing that prevents character mangling in htt
 module StashEngine
   class FileUpload < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
 
     include StashEngine::Concerns::ModelUploadable
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
