@@ -16,25 +16,25 @@ module Stash
 
           @file = File.new(controller_context: OpenStruct.new(response_body: '',
                                                               response: OpenStruct.new(headers: {})))
-          @file_upload = create(:file_upload)
-          allow(@file_upload).to receive(:merritt_express_url).and_return('http://grah.example.com')
-          allow(@file_upload).to receive_message_chain('resource.tenant') { 'hi, not really used' }
-          allow(@file_upload).to receive_message_chain('resource.id') { 22 }
+          @data_file = create(:data_file)
+          allow(@data_file).to receive(:merritt_express_url).and_return('http://grah.example.com')
+          allow(@data_file).to receive_message_chain('resource.tenant') { 'hi, not really used' }
+          allow(@data_file).to receive_message_chain('resource.id') { 22 }
         end
 
         it 'sets the @file automatically before downloading' do
           allow(@file).to receive(:stream_response).and_return(nil)
-          @file.download(file: @file_upload)
-          expect(@file_upload).to eql(@file.file)
+          @file.download(file: @data_file)
+          expect(@data_file).to eql(@file.file)
         end
       end
 
       describe '#disposition_filename' do
         before(:each) do
-          @file_upload = create(:file_upload, upload_file_name: 'go/to/Sidlauskas 2007 Data.xls')
+          @data_file = create(:data_file, upload_file_name: 'go/to/Sidlauskas 2007 Data.xls')
           @file = File.new(controller_context: OpenStruct.new(response_body: '',
                                                               response: OpenStruct.new(headers: {})))
-          @file.file = @file_upload
+          @file.file = @data_file
         end
 
         it 'removes any path in the filename and places it in the filename' do

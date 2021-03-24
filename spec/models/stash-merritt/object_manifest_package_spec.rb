@@ -44,9 +44,9 @@ module Stash
         create(:resource_type, resource: @resource)
         create(:author, resource: @resource)
         create(:author, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
         @resource.reload
 
         @resource.new_file_uploads.find_each do |upload|

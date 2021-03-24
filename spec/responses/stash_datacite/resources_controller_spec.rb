@@ -32,7 +32,7 @@ module StashDatacite
       end
 
       it 'shows files for Merritt' do
-        @upload = create(:file_upload,
+        @upload = create(:data_file,
                          resource: @resource,
                          file_state: 'created')
 

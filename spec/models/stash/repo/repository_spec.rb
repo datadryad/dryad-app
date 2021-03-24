@@ -46,7 +46,7 @@ module Stash
         allow(StashEngine::Resource).to receive(:upload_dir_for).with(resource_id).and_return(res_upload_dir)
 
         @uploads = Array.new(3) do |index|
-          upload = double(StashEngine::FileUpload)
+          upload = double(StashEngine::DataFile)
           calc_file_path = File.join(res_upload_dir, "file-#{index}.bin")
           FileUtils.touch(calc_file_path)
           allow(upload).to receive(:calc_file_path).and_return(calc_file_path)

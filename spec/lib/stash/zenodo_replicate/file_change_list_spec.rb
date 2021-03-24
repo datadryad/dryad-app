@@ -93,8 +93,8 @@ module Stash
       describe '#delete_list' do
         it 'gives empty list of files to delete if never published previously' do
           files = [
-            create(:file_upload, file_state: 'deleted'),
-            create(:file_upload, file_state: 'deleted')
+            create(:data_file, file_state: 'deleted'),
+            create(:data_file, file_state: 'deleted')
           ]
           @resources.last.data_files << files
           stub_existing_files(deposition_id: @resources.first.zenodo_copies.first.deposition_id, filenames: [])
@@ -109,8 +109,8 @@ module Stash
           create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
-          @resources.first.data_files << [create(:file_upload), create(:file_upload)]
-          @resources.last.data_files << [create(:file_upload), create(:file_upload)]
+          @resources.first.data_files << [create(:data_file), create(:data_file)]
+          @resources.last.data_files << [create(:data_file), create(:data_file)]
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: @resources.first.data_files.map(&:upload_file_name) +
@@ -129,12 +129,12 @@ module Stash
           create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
-          first_files = [create(:file_upload), create(:file_upload)]
+          first_files = [create(:data_file), create(:data_file)]
           @resources.first.data_files << first_files
-          new_files = [create(:file_upload), create(:file_upload)]
+          new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
-            create(:file_upload, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
-            create(:file_upload, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
+            create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
+            create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
           ] + new_files)
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
@@ -151,12 +151,12 @@ module Stash
           create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
-          first_files = [create(:file_upload), create(:file_upload)]
+          first_files = [create(:data_file), create(:data_file)]
           @resources.first.data_files << first_files
-          new_files = [create(:file_upload), create(:file_upload)]
+          new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
-            create(:file_upload, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
-            create(:file_upload, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
+            create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
+            create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
           ] + new_files)
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
