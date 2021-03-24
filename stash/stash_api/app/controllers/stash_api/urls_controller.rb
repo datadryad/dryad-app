@@ -56,7 +56,9 @@ module StashApi
       unless params[:size] && params[:mimeType] && params[:url]
         (render json: { error: 'You must supply a size, mimetype and url.' }.to_json, status: 403) && yield
       end
-      (render json: { error: 'You have already supplied this url' }.to_json, status: 403) && yield if @resource.url_in_version?(params[:url])
+      if @resource.url_in_version?(association: 'generic_files', url: params[:url])
+        (render json: { error: 'You have already supplied this url' }.to_json, status: 403) && yield
+      end
       my_path = params[:path] || ::File.basename(URI.parse(params[:url]).path)
       (render json: { error: 'You must supply a path (filename) for this url' }.to_json, status: 403) && yield if my_path.blank?
       { resource_id: @resource.id, url: params[:url], status_code: 200, file_state: 'created',

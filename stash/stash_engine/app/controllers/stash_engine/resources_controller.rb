@@ -141,7 +141,7 @@ module StashEngine
 
       @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
-      if resource.upload_type(method: 'software_uploads') == :manifest
+      if resource.upload_type(association: 'software_uploads') == :manifest
         render 'upload_manifest'
       else
         render 'upload'
@@ -176,9 +176,9 @@ module StashEngine
     end
 
     def lockout_incompatible_sfw_uploads
-      if request[:action] == 'up_code' && resource.upload_type(method: 'software_uploads') == :manifest
+      if request[:action] == 'up_code' && resource.upload_type(association: 'software_uploads') == :manifest
         redirect_to up_code_manifest_resource_path(resource)
-      elsif request[:action] == 'up_code_manifest' && resource.upload_type(method: 'software_uploads') == :files
+      elsif request[:action] == 'up_code_manifest' && resource.upload_type(association: 'software_uploads') == :files
         redirect_to up_code_resource_path(resource)
       end
     end
