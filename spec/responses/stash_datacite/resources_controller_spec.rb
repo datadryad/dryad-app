@@ -41,7 +41,7 @@ module StashDatacite
       end
 
       it 'outputs files for Zenodo' do
-        @upload = create(:software_upload,
+        @upload = create(:software_file,
                          resource: @resource,
                          file_state: 'created')
 
