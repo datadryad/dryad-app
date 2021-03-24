@@ -30,7 +30,7 @@ module StashEngine
         @version = create(:version, resource_id: @resource.id)
 
         # sometimes need file
-        @file = create(:file_upload, resource_id: @resource.id, file_state: 'created')
+        @file = create(:data_file, resource_id: @resource.id, file_state: 'created')
 
         # returns the argument that was passed in (I think) for easier tests
         @line = nil

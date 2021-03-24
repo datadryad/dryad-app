@@ -205,7 +205,7 @@ module StashEngine
           )
           .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/34snak"}',
                      headers: { 'Content-Type': 'application/json' })
-        @upload2 = create(:file_upload,
+        @upload2 = create(:data_file,
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: fn)
