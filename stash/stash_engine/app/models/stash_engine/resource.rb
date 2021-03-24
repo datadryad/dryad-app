@@ -245,14 +245,6 @@ module StashEngine
     # ---------
     # software file utility methods
 
-    def self.software_upload_dir_for(resource_id)
-      File.join(uploads_dir, "#{resource_id}_sfw")
-    end
-
-    def software_upload_dir
-      Resource.software_upload_dir_for(id)
-    end
-
     # tells whether software uploaded to zenodo for this resource has been published or not
     def software_published?
       zc = zenodo_copies.where(copy_type: 'software_publish', state: 'finished')
