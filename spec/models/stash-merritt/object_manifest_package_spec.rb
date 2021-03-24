@@ -160,7 +160,7 @@ module Stash
 
           it 'writes mrt-delete.txt if needed' do
             deleted = []
-            @resource.file_uploads.each_with_index do |upload, index|
+            @resource.data_files.each_with_index do |upload, index|
               next unless index.even?
 
               upload.file_state = 'deleted'

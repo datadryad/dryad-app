@@ -54,7 +54,7 @@ module StashEngine
       it 'creates a database entry after file upload to s3 is complete' do
         response_code = post @url, params: @json_hash,  as: :json
         expect(response_code).to eql(200)
-        i = @resource.file_uploads.first
+        i = @resource.data_files.first
         expect(i.upload_file_name).to eql(@json_hash[:name])
         expect(i.upload_file_size).to eql(@json_hash[:size])
         expect(i.upload_content_type).to eql(@json_hash[:type])

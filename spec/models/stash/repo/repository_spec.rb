@@ -52,7 +52,7 @@ module Stash
           allow(upload).to receive(:calc_file_path).and_return(calc_file_path)
           upload
         end
-        allow(resource).to receive(:file_uploads).and_return(uploads)
+        allow(resource).to receive(:data_files).and_return(uploads)
       end
 
       after(:each) do
@@ -296,7 +296,7 @@ module Stash
           allow(resource).to receive(:update_uri=)
           allow(resource).to receive(:download_uri=)
           allow(resource).to receive(:save)
-          allow(resource).to receive(:file_uploads).and_return([])
+          allow(resource).to receive(:data_files).and_return([])
         end
 
         it 'sets the download and update URIs' do
