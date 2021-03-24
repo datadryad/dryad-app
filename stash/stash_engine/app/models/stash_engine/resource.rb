@@ -36,6 +36,10 @@ module StashEngine
     # download tokens are for Merritt version downloads with presigned URL caching
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
+    # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
+    ASSOC_TO_FILE_CLASS = self.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.
+      map{ |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
+
     accepts_nested_attributes_for :curation_activities
 
     # ensures there is always an associated download_token record
@@ -242,21 +246,6 @@ module StashEngine
       joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
     end)
 
-    # ------------------------------------------------------------
-    # File upload utility methods
-
-    def self.uploads_dir
-      File.join(Rails.root, 'uploads')
-    end
-
-    def self.upload_dir_for(resource_id)
-      File.join(uploads_dir, resource_id.to_s)
-    end
-
-    def upload_dir
-      Resource.upload_dir_for(id)
-    end
-
     # ---------
     # software file utility methods
 
@@ -280,7 +269,7 @@ module StashEngine
     end
 
     # gets the latest files that are not deleted in db, current files for this version
-    def current_file_uploads(my_class: StashEngine::DataUpload)
+    def current_file_uploads(my_class: StashEngine::DataFile)
       subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
                                          '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
@@ -289,13 +278,13 @@ module StashEngine
 
     # gets new files in this version
     def new_file_uploads
-      subquery = FileUpload.where(resource_id: id).where("file_state = 'created'")
+      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
-    def latest_file_states(model: 'StashEngine::FileUpload')
+    def latest_file_states(model: 'StashEngine::DataFile')
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
@@ -303,38 +292,40 @@ module StashEngine
     end
 
     # the size of this resource (created + copied files)
-    def size
-      file_uploads.where(file_state: %w[copied created]).sum(:upload_file_size)
+    def size(association: 'data_files')
+      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
     end
 
     # just the size of the new files
-    def new_size
-      file_uploads.where(file_state: %w[created]).sum(:upload_file_size)
+    def new_size(association: 'data_files')
+      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
-    def upload_type(method: 'file_uploads')
+    def upload_type(method: 'data_files')
       return :manifest if send(method).newly_created.url_submission.count > 0
       return :files if send(method).newly_created.file_submission.count > 0
 
       :unknown
     end
 
-    # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames(method: 'file_uploads')
-      table_name = (method == 'file_uploads' ? 'stash_engine_file_uploads' : 'stash_engine_software_uploads')
+    # returns the list of files with duplicate names in created state where we shouldn't have any
+    def duplicate_filenames(method: 'data_files')
+      target_class_name = ASSOC_TO_FILE_CLASS[method]
+      raise "Invalid table name" if target_class_name.blank?
+
       sql = <<-SQL
         SELECT *
-        FROM #{table_name} AS a
+        FROM stash_engine_generic_files AS a
         JOIN (SELECT upload_file_name
-          FROM #{table_name}
-          WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created')
+          FROM stash_engine_generic_files
+          WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created') AND type = ?
           GROUP BY upload_file_name HAVING count(*) >= 2) AS b
         ON a.upload_file_name = b.upload_file_name
-        WHERE a.resource_id = ?
+        WHERE a.resource_id = ? AND type = ?
       SQL
       # get the correct ActiveRecord model based on the method name
-      "StashEngine::#{method.to_s.singularize.camelize}".constantize.find_by_sql([sql, id, id])
+      target_class_name.constantize.find_by_sql([sql, id, target_class_name, id, target_class_name])
     end
 
     def url_in_version?(url)

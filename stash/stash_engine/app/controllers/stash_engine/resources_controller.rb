@@ -120,8 +120,8 @@ module StashEngine
 
     # Upload files view for resource
     def upload
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::DataFile
+      @resource_assoc = :data_files
 
       @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
@@ -130,17 +130,17 @@ module StashEngine
 
     # upload by manifest view for resource
     def upload_manifest
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::DataFile
+      @resource_assoc = :data_files
     end
 
     # Upload files view for resource
     def up_code
-      @file_model = StashEngine::SoftwareUpload
-      @resource_assoc = :software_uploads
+      @file_model = StashEngine::SoftwareFile
+      @resource_assoc = :software_files
 
       @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
-      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareUpload')
+      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
       if resource.upload_type(method: 'software_uploads') == :manifest
         render 'upload_manifest'
       else
@@ -150,8 +150,8 @@ module StashEngine
 
     # upload by manifest view for resource
     def up_code_manifest
-      @file_model = StashEngine::SoftwareUpload
-      @resource_assoc = :software_uploads
+      @file_model = StashEngine::SoftwareFile
+      @resource_assoc = :software_files
       render 'upload_manifest'
     end
 

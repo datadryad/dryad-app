@@ -6,8 +6,8 @@ module StashEngine
   class SoftwareUploadsController < ApplicationController
 
     def setup_class_info
-      @file_model = StashEngine::SoftwareUpload
-      @resource_assoc = :software_uploads
+      @file_model = StashEngine::SoftwareFile
+      @resource_assoc = :software_files
     end
 
     include StashEngine::Concerns::Uploadable
