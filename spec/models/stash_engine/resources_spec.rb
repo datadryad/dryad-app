@@ -1443,15 +1443,10 @@ module StashEngine
         # This is all horribly hacky because of the way these tests don't load Rails correctly, we need move tests to
         # a real Rails environment.
 
-        require 'active_job'
-        rails_root = Dir.mktmpdir('rails_root')
-        root_path = Pathname.new(rails_root)
-        allow(Rails).to receive(:root).and_return(root_path)
-
         require_relative '../../../stash/stash_engine/app/jobs/stash_engine/zenodo_copy_job'
 
         @resource = create(:resource)
-        create(:data_file, resource: @resource)
+        create(:data_file, resource_id: @resource.id)
       end
 
       it 'creates a zenodo_copy record in database' do
