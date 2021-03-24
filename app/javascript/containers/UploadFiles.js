@@ -21,7 +21,7 @@ class UploadFiles extends React.Component {
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
-        chosenFiles: null,
+        chosenFiles: [],
         submitButtonDisabled: true,
         showModal: false,
         urls: null,
@@ -44,7 +44,7 @@ class UploadFiles extends React.Component {
         const failedUrls = this.pullFailedUrls(data);
         this.updateFailedUrls(failedUrls);
         let successfulUrls = this.pullSuccessfulUrls(data);
-        if (this.state.chosenFiles) {
+        if (this.state.chosenFiles.length) {
             successfulUrls = this.discardAlreadyChosen(successfulUrls);
         }
         const newManifestFiles = this.transformData(successfulUrls);
@@ -105,7 +105,7 @@ class UploadFiles extends React.Component {
     }
 
     updateFileList = (files) => {
-        if (!this.state.chosenFiles){
+        if (!this.state.chosenFiles.length){
             this.setState({chosenFiles: files});
         } else {
             let chosenFiles = [...this.state.chosenFiles];
@@ -116,10 +116,16 @@ class UploadFiles extends React.Component {
 
     deleteFileHandler = (fileIndex) => {
         let chosenFiles = [...this.state.chosenFiles];
+        // id is null for files from file system by construction.
+        // If it's there, the line corresponds to a manifest file,
+        // and need to call the method to make ajax request and remove
+        // in backend.
+        if (chosenFiles[fileIndex].id) {
+            this.removeManifestFileHandler(chosenFiles[fileIndex].id, false);
+        }
         chosenFiles.splice(fileIndex, 1);
-
-        if (chosenFiles.length === 0) {  //TODO
-            this.setState({chosenFiles: null});
+        if (!chosenFiles.length) {
+            this.setState({chosenFiles: []});
         } else {
             this.setState({chosenFiles: chosenFiles});
         }
@@ -157,12 +163,12 @@ class UploadFiles extends React.Component {
      * The controller returned data consists of an array of UrlValidator
      * upload_attributes objects. Select only the attributes consistent with
      * this.state.chosenFiles attributes.
-     * @param data
+     * @param manifestFiles
      * @returns {[]}
      */
-    transformData = (data) => {
+    transformData = (manifestFiles) => {
         const transformed = []
-        data.map(file => {
+        manifestFiles.map(file => {
             transformed.push({
                 id: file.id, name: file.original_filename,
                 status: 'New', url: file.url,
@@ -196,21 +202,21 @@ class UploadFiles extends React.Component {
     buildFailedUrlList = () => {
         if (this.state.failedUrls.length) {
             return (
-                <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeFailedUrlsHandler} />
+                <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeManifestFileHandler} />
             )
         } else {
             return null;
         }
     }
 
-    removeFailedUrlsHandler = (urlId) => {
+    removeManifestFileHandler = (fileId, fromFailedUrls=true) => {
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        axios.patch(`/stash/file_uploads/${urlId}/destroy_error`, {remote: true})
-            .then(resp => {
-                this.removeFailedUrl(urlId);
+        axios.patch(`/stash/file_uploads/${fileId}/destroy_error`)
+            .then(response => {
+                fromFailedUrls ? this.removeFailedUrl(fileId) : null;
             })
             .catch(error => console.log(error));
     }
@@ -223,7 +229,7 @@ class UploadFiles extends React.Component {
     }
 
     buildFileList = () => {
-        if (this.state.chosenFiles) {
+        if (this.state.chosenFiles.length) {
             return (
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
