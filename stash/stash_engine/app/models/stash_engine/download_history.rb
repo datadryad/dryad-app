@@ -1,7 +1,7 @@
 module StashEngine
   class DownloadHistory < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    belongs_to :file_upload, class_name: 'StashEngine::FileUpload'
+    belongs_to :data_file, class_name: 'StashEngine::DataFile'
     enum state: %w[downloading finished].map { |i| [i.to_sym, i] }.to_h
 
     scope :downloading, -> { where(state: 'downloading') }

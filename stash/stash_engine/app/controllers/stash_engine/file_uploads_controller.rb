@@ -6,8 +6,8 @@ module StashEngine
   class FileUploadsController < ApplicationController
 
     def setup_class_info
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::DataFile
+      @resource_assoc = :data_files
     end
 
     include StashEngine::Concerns::Uploadable
