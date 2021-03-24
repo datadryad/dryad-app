@@ -11,7 +11,7 @@ module Stash
 
       before(:each) do
         @resource = create(:resource, tenant_id: 'dryad')
-        @file_upload = create(:file_upload, resource_id: @resource.id)
+        @data_file = create(:data_file, resource_id: @resource.id)
 
         @controller_context = double
         allow(@controller_context).to receive(:redirect_to).and_return('redirected')
@@ -23,7 +23,7 @@ module Stash
       describe '#download(file:)' do
 
         before(:each) do
-          @stubby = stub_request(:get, @file_upload.merritt_presign_info_url)
+          @stubby = stub_request(:get, @data_file.merritt_presign_info_url)
             .with(
               headers: {
                 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
@@ -35,7 +35,7 @@ module Stash
         end
 
         it 'redirects to a url' do
-          resp = @fp.download(file: @file_upload)
+          resp = @fp.download(file: @data_file)
           expect(resp).to eq('redirected')
         end
 
@@ -47,7 +47,7 @@ module Stash
         it 'raises an error for bad status response from Merritt' do
           remove_request_stub(@stubby)
 
-          stub_request(:get, @file_upload.merritt_presign_info_url)
+          stub_request(:get, @data_file.merritt_presign_info_url)
             .with(
               headers: {
                 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
@@ -57,7 +57,7 @@ module Stash
             .to_return(status: 500, body: '{"url":"https://my.testing.url.example.com"}',
                        headers: { 'Content-Type' => 'application/json' })
 
-          expect { @fp.download(file: @file_upload) }.to raise_error(Stash::Download::MerrittError)
+          expect { @fp.download(file: @data_file) }.to raise_error(Stash::Download::MerrittError)
         end
       end
     end

@@ -4,7 +4,7 @@ describe 'download_tracking:cleanup', type: :task do
 
   before(:each) do
     @resource = create(:resource)
-    @upload = create(:file_upload, resource: @resource)
+    @upload = create(:data_file, resource: @resource)
   end
 
   it 'preloads the Rails environment' do

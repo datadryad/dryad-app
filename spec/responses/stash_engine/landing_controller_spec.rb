@@ -95,7 +95,7 @@ module StashEngine
       duplicate_resource!(resource: @identifier.resources.last)
       res2 = @identifier.resources.last
       res2.update(title: 'Treecats and friends')
-      create(:file_upload, resource_id: res2.id, file_state: 'created')
+      create(:data_file, resource_id: res2.id, file_state: 'created')
       @identifier.reload
 
       get "/stash/dataset/#{@identifier}"
