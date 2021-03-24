@@ -330,20 +330,12 @@ module StashEngine
       send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
     end
 
-    def files_unchanged?
-      !files_changed?
+    def files_unchanged?(association: 'data_files')
+      !files_changed?(association: association)
     end
 
-    def files_changed?
-      file_uploads.where(file_state: %w[created deleted]).count.positive?
-    end
-
-    def software_unchanged?
-      !software_changed?
-    end
-
-    def software_changed?
-      software_uploads.where(file_state: %w[created deleted]).count.positive?
+    def files_changed?(association: 'data_files')
+      send(association).where(file_state: %w[created deleted]).count.positive?
     end
 
     # ------------------------------------------------------------
