@@ -40,7 +40,7 @@ module StashApi
     def validate_url(url)
       url_translator = Stash::UrlTranslator.new(url)
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-      validation_hash = validator.upload_attributes_from(translator: url_translator, resource: @resource)
+      validation_hash = validator.upload_attributes_from(translator: url_translator, resource: @resource, association: 'data_files')
       (render json: { error: 'The URL you are adding already exists.' }.to_json, status: 403) && yield if validation_hash[:status_code] == 409
       (render json: { error: 'Socket, connection or response error.' }.to_json, status: 403) && yield if validation_hash[:status_code] == 499
       unless validation_hash[:status_code].between?(200, 299)
