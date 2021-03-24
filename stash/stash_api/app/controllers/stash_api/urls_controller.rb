@@ -27,7 +27,7 @@ module StashApi
         file_upload_hash[k] = params[v] if params[v]
       end
 
-      fu = StashEngine::FileUpload.create(file_upload_hash)
+      fu = StashEngine::DataFile.create(file_upload_hash)
       check_file_size(file_upload: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
