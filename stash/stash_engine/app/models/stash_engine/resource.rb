@@ -9,9 +9,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
 
-    has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
-    # TODO: STI remove the following two lines once STI files are working
-    has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
+    has_many :authors, class_name: 'StashEngine::Author', dependent: :destroyb
     has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -702,8 +700,9 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
+    # this just sends a **COPY** job to zenodo (ie Merritt duplication), not for replication which could be sfw or supp
     def send_to_zenodo
-      return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
+      return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
       ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data') if zenodo_copies.data.empty?
       ZenodoCopyJob.perform_later(id)
