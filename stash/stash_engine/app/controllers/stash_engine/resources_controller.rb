@@ -123,7 +123,7 @@ module StashEngine
       @file_model = StashEngine::DataFile
       @resource_assoc = :data_files
 
-      @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
+      @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
     end
