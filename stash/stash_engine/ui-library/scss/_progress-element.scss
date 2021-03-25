@@ -1,0 +1,21 @@
+// ##### Progress Element ##### //
+
+// Cross-browser styling adopted from: https://css-tricks.com/html5-progress-element
+
+progress {
+  height: .7em;
+  border: none;
+  background-color: $design-offwhite-color;
+
+  &::-webkit-progress-bar {
+    background-color: $design-offwhite-color;
+  }
+
+  &::-moz-progress-bar {
+    background-color: $design-dark-blue-color;
+  }
+
+  &::-webkit-progress-value {
+    background-color: $design-dark-blue-color;
+  }
+}

@@ -1,11 +1,13 @@
+<!-- For testing this as a standalone component, uncomment the code on line #4 of this file to reveal a button for showing the modal. -->
 
-<p>For testing this as a standalone component, uncomment the code on line #4 of this file to reveal a button for showing the modal.</p>
-
-<!-- <button type="button" id="js-uploadmodal__button-show-modal">Show Modal</button> -->
+<!-- <button type="button" class="js-uploadmodal__button-show-modal">Show Modal</button> -->
 
 <dialog id="js-uploadmodal" class="c-uploadmodal">
   <form method="dialog">
-    <label class="c-uploadmodal__textarea-url-label" for="c-uploadmodal__textarea-url">Enter URLs</label>
+    <div class="c-uploadmodal__header">
+      <label class="c-uploadmodal__textarea-url-label" for="c-uploadmodal__textarea-url">Enter URLs</label>
+      <button class="c-uploadmodal__button-close-modal js-uploadmodal__button-close-modal" aria-label="close" type="button"></button>
+    </div>
     <textarea id="c-uploadmodal__textarea-url" class="c-uploadmodal__textarea-url" name="" placeholder="List file location URLs here"></textarea>
     <div class="c-uploadmodal__text-content">Place each URL on a new line.</div>
     <input type="checkbox" name="" id="js-uploadmodal__checkbox-confirm">
