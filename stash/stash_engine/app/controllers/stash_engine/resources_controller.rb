@@ -139,7 +139,7 @@ module StashEngine
       @file_model = StashEngine::SoftwareFile
       @resource_assoc = :software_files
 
-      @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
+      @file = SoftwareFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
       if resource.upload_type(association: 'software_files') == :manifest
         render 'upload_manifest'

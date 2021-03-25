@@ -113,7 +113,7 @@ module StashEngine
     # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
     # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
     def zenodo_file
-      sfw_upload = SoftwareUpload.where(id: params[:file_id]).first
+      sfw_upload = SoftwareFile.where(id: params[:file_id]).first
       res = sfw_upload&.resource
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 
