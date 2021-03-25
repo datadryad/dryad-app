@@ -6,7 +6,6 @@ PATH=$PATH:/apps/dryad/local/bin
 
 cd /apps/dryad/apps/ui/current/
 
-bundle exec rails download_tracking:cleanup RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/download_tracking.log 2>&1
 bundle exec rails identifiers:publish_datasets RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/publish_datasets.log 2>&1
 bundle exec rails identifiers:peer_review_reminder RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/peer_review_reminder.log 2>&1
 bundle exec rails identifiers:in_progess_reminder RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/in_progess_reminder.log 2>&1
