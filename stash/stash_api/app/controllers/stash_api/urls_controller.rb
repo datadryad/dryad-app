@@ -95,7 +95,7 @@ module StashApi
     end
 
     def validate_digest_type
-      digest_types = StashEngine::FileUpload.digest_types.keys
+      digest_types = StashEngine::DataFile.digest_types.keys
       return if params[:digestType].nil? || digest_types.include?(params[:digestType])
 
       (render json: { error:

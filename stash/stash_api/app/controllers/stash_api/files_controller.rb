@@ -98,7 +98,7 @@ module StashApi
     # prevent people from sending bad filenames
     def sanitize_filename(filename)
       @original_filename = filename
-      StashEngine::FileUpload.sanitize_file_name(filename)
+      StashEngine::DataFile.sanitize_file_name(filename)
     end
 
     # only allow to proceed if no other current uploads or only other url-type uploads
@@ -128,7 +128,7 @@ module StashApi
 
     def save_file_to_db
       handle_previous_duplicates(upload_filename: @sanitized_name)
-      StashEngine::FileUpload.create(
+      StashEngine::DataFile.create(
         upload_file_name: @sanitized_name,
         upload_content_type: file_content_type,
         upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
@@ -208,7 +208,7 @@ module StashApi
     end
 
     def require_viewable_file
-      f = StashEngine::FileUpload.where(id: params[:id]).first
+      f = StashEngine::DataFile.where(id: params[:id]).first
       render json: { error: 'not-found' }.to_json, status: 404 if f.nil? || !f.resource.may_view?(ui_user: @user)
     end
   end
