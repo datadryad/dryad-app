@@ -81,7 +81,9 @@ module StashEngine
       # (duplicate indicated with 409 Conflict)
       return upload_attributes.merge(status_code: 409) if resource.url_in_version?(association: 'generic_files', url: url)
 
-      sanitized_filename = StashEngine::GenericFile.sanitize_file_name(UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename), association: association))
+      sanitized_filename = StashEngine::GenericFile
+        .sanitize_file_name(UrlValidator
+          .make_unique(resource: resource, filename: CGI.unescape(filename), association: association))
 
       upload_attributes.merge(
         upload_file_name: sanitized_filename,

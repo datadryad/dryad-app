@@ -47,8 +47,8 @@ module Stash
         it 'raises an exception for S3 download errors' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 404, body: '', headers: {})
@@ -59,8 +59,8 @@ module Stash
         it 'sets up info_hash on success' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 200, body: '', headers: {})

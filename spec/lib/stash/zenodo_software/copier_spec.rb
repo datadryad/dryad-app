@@ -237,7 +237,7 @@ module Stash
                                         deposition_id: @zc.deposition_id)
             @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
             @file2 = create(:software_file, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                                              file_state: 'copied')
+                                            file_state: 'copied')
             @resource2.reload
           end
 
@@ -297,7 +297,7 @@ module Stash
                                           deposition_id: @zc.deposition_id)
               @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
               @file2 = create(:software_file, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                                                file_state: 'created')
+                                              file_state: 'created')
               @resource2.reload
             end
 
