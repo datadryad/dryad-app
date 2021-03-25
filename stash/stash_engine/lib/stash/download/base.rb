@@ -93,8 +93,9 @@ module Stash
 
         write_thread = Thread.new do
           # tracking downloads needs to happen in the threads
-          @download_history = StashEngine::DownloadHistory.mark_start(ip: cc.request.remote_ip, user_agent: cc.request.user_agent,
-                                                                      resource_id: @resource_id, file_id: @file_id)
+          # This class is gone since no longer used to track downloads
+          # @download_history = StashEngine::DownloadHistory.mark_start(ip: cc.request.remote_ip, user_agent: cc.request.user_agent,
+          #                                                            resource_id: @resource_id, file_id: @file_id)
           # this only modifies the write file with contents of merritt stream
           save_to_file(merritt_stream: merritt_stream, write_file: write_file)
         end
@@ -116,7 +117,8 @@ module Stash
         read_file&.close unless read_file&.closed?
         write_file&.close unless write_file&.closed?
         ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
-        StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
+        # class no longer exists to track history, and we're really not using this class anymore -- remants before presigned download urls
+        # StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
