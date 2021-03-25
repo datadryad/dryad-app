@@ -7,7 +7,7 @@ module StashApi
     include StashApi::Presenter
 
     def initialize(file_id:)
-      @se_file_upload = StashEngine::FileUpload.find(file_id)
+      @se_file_upload = StashEngine::DataFile.find(file_id)
       @resource = @se_file_upload.resource
     end
 

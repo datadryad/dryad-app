@@ -270,7 +270,7 @@ module StashEngine
       resource.identifier.resources.reverse_each do |res|
         break if res.id != resource.id && res&.current_curation_activity&.status == 'published' # break once reached previous published
 
-        if res.files_changed?
+        if res.files_changed?(association: 'data_files')
           changed = true
           break
         end

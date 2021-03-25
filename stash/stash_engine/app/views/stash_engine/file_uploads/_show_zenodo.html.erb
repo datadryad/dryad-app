@@ -2,7 +2,7 @@
 <ul class="c-review-files__list">
 <% uploaded = resource.previous_resource&.software_submitted? %>
 
-<% resource.software_uploads.each do |fu| %>
+<% resource.software_files.each do |fu| %>
   <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
     <li>
       <% if fu.file_state == 'copied' && uploaded %>

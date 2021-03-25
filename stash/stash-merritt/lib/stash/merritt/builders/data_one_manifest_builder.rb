@@ -8,7 +8,7 @@ module Stash
       class DataONEManifestBuilder < Stash::Repo::FileBuilder
         attr_reader :uploads
 
-        # @param uploads [Array[StashEngine::FileUpload]] a list of file uploads
+        # @param uploads [Array[StashEngine::DataFile]] a list of file uploads
         def initialize(uploads)
           super(file_name: 'mrt-dataone-manifest.txt')
           @uploads = uploads

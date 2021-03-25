@@ -27,7 +27,7 @@ module StashApi
         file_upload_hash[k] = params[v] if params[v]
       end
 
-      fu = StashEngine::FileUpload.create(file_upload_hash)
+      fu = StashEngine::DataFile.create(file_upload_hash)
       check_file_size(file_upload: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
@@ -40,7 +40,7 @@ module StashApi
     def validate_url(url)
       url_translator = Stash::UrlTranslator.new(url)
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-      validation_hash = validator.upload_attributes_from(translator: url_translator, resource: @resource)
+      validation_hash = validator.upload_attributes_from(translator: url_translator, resource: @resource, association: 'data_files')
       (render json: { error: 'The URL you are adding already exists.' }.to_json, status: 403) && yield if validation_hash[:status_code] == 409
       (render json: { error: 'Socket, connection or response error.' }.to_json, status: 403) && yield if validation_hash[:status_code] == 499
       unless validation_hash[:status_code].between?(200, 299)
@@ -56,7 +56,9 @@ module StashApi
       unless params[:size] && params[:mimeType] && params[:url]
         (render json: { error: 'You must supply a size, mimetype and url.' }.to_json, status: 403) && yield
       end
-      (render json: { error: 'You have already supplied this url' }.to_json, status: 403) && yield if @resource.url_in_version?(params[:url])
+      if @resource.url_in_version?(association: 'generic_files', url: params[:url])
+        (render json: { error: 'You have already supplied this url' }.to_json, status: 403) && yield
+      end
       my_path = params[:path] || ::File.basename(URI.parse(params[:url]).path)
       (render json: { error: 'You must supply a path (filename) for this url' }.to_json, status: 403) && yield if my_path.blank?
       { resource_id: @resource.id, url: params[:url], status_code: 200, file_state: 'created',
@@ -93,7 +95,7 @@ module StashApi
     end
 
     def validate_digest_type
-      digest_types = StashEngine::FileUpload.digest_types.keys
+      digest_types = StashEngine::DataFile.digest_types.keys
       return if params[:digestType].nil? || digest_types.include?(params[:digestType])
 
       (render json: { error:

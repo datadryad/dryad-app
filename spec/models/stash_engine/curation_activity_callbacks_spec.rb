@@ -225,7 +225,7 @@ module StashEngine
         end
 
         it 'sets flags for published with file changes' do
-          @resource.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+          @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
           @resource.reload
           create(:curation_activity, resource: @resource, status: 'published')
 
