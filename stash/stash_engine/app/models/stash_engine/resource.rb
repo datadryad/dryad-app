@@ -242,6 +242,24 @@ module StashEngine
       joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
     end)
 
+    # ------------------------------------------------------------
+    # File upload utility methods
+    # TODO: these are obsolete, but we will want to remove Stash::Merritt::Sword classes at the same time that rely
+    # on direct file uploads when we do further cleanup of the Merritt classes.  May also deprecate all current Merritt
+    # classes if they offer a better API than SWORD.
+
+    def self.uploads_dir
+      File.join(Rails.root, 'uploads')
+    end
+
+    def self.upload_dir_for(resource_id)
+      File.join(uploads_dir, resource_id.to_s)
+    end
+
+    def upload_dir
+      Resource.upload_dir_for(id)
+    end
+
     # ---------
     # software file utility methods
 
