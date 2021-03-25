@@ -17,16 +17,21 @@ class UploadFiles extends React.Component {
                 id: 'software', name: 'Software', description: 'e.g., Example1, example2, example3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'},
             {
-                id: 'suplemental', name: 'Suplemental Information', description: 'e.g., Example1, example2, example3',
+                id: 'supplemental', name: 'Supplemental Information', description: 'e.g., Example1, example2, example3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
+        // createdManifestFiles: this.getUploadedFiles(),
         chosenFiles: [],
         submitButtonDisabled: true,
         showModal: false,
         urls: null,
-        failedUrls: []  //TODO: unify initialization of array states. Maybe better start with empty array instead of null
+        failedUrls: []
     };
+
+    componentDidMount() {
+        this.updateManifestFiles(this.props.file_uploads);
+    }
 
     uploadFilesHandler = (event, typeId) => {
         const newFiles = [...event.target.files];
@@ -40,10 +45,10 @@ class UploadFiles extends React.Component {
         this.updateFileList(newFiles);
     }
 
-    updateManifestFiles = (data) => {
-        const failedUrls = this.pullFailedUrls(data);
+    updateManifestFiles = (files) => {
+        const failedUrls = this.pullFailedUrls(files);
         this.updateFailedUrls(failedUrls);
-        let successfulUrls = this.pullSuccessfulUrls(data);
+        let successfulUrls = this.pullSuccessfulUrls(files);
         if (this.state.chosenFiles.length) {
             successfulUrls = this.discardAlreadyChosen(successfulUrls);
         }
@@ -196,7 +201,7 @@ class UploadFiles extends React.Component {
     }
 
     onChangeUrls = (event) => {
-        this.setState({urls: event.target.value})
+        this.setState({urls: event.target.value});
     }
 
     buildFailedUrlList = () => {
@@ -279,7 +284,6 @@ class UploadFiles extends React.Component {
         return (
             <div className={classes.UploadFiles}>
                 <h1>Upload Files</h1>
-                {/*<p>Resource: {this.props.resource_id}</p>*/}
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
                 {this.state.upload_type.map((upload_type) => {
                     return <UploadType
