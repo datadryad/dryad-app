@@ -48,8 +48,8 @@ module Stash
         it 'expects download to return success: false in hash if 404 from S3' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 404,
@@ -65,8 +65,8 @@ module Stash
         it 'expects download to return success: false in hash if 500 from S3' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 500,
@@ -82,8 +82,8 @@ module Stash
         it 'expects download to return success: true in hash and dl file if 200' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
@@ -98,8 +98,8 @@ module Stash
         it 'expects downloads to have correct digests' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
@@ -115,8 +115,8 @@ module Stash
         it 'expect digest not to match normal values if body is changed' do
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
@@ -134,8 +134,8 @@ module Stash
 
           # first return from Merritt
           stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           # second return from S3
           stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,

@@ -12,7 +12,7 @@ module Stash
         @resource = create(:resource)
 
         @software_http_upload = create(:software_file, upload_file_size: 1000,
-                                                         url: 'http://example.org/example', resource: @resource)
+                                                       url: 'http://example.org/example', resource: @resource)
 
         @change_list = FileChangeList.new(resource: @resource)
 
