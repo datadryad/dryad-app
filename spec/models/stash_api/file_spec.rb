@@ -11,8 +11,8 @@ module StashApi
       create(:resource_state, resource: resource, user: user)
       create(:version, resource_id: resource.id)
 
-      @file_upload = create(:file_upload, resource_id: resource.id)
-      display_file = StashApi::File.new(file_id: @file_upload.id)
+      @data_file = create(:data_file, resource_id: resource.id)
+      display_file = StashApi::File.new(file_id: @data_file.id)
 
       generic_path = double('generic_path')
       allow(generic_path).to receive(:dataset_path).and_return('dataset_foobar_path')
@@ -31,35 +31,35 @@ module StashApi
 
     describe :file_display do
       it 'has correct path' do
-        expect(@metadata[:path]).to eq(@file_upload.upload_file_name)
+        expect(@metadata[:path]).to eq(@data_file.upload_file_name)
       end
 
       it 'has correct size' do
-        expect(@metadata[:size]).to eq(@file_upload.upload_file_size)
+        expect(@metadata[:size]).to eq(@data_file.upload_file_size)
       end
 
       it 'has the correct mimeType' do
-        expect(@metadata[:mimeType]).to eq(@file_upload.upload_content_type)
+        expect(@metadata[:mimeType]).to eq(@data_file.upload_content_type)
       end
 
       it 'has the correct status' do
-        expect(@metadata[:status]).to eq(@file_upload.file_state)
+        expect(@metadata[:status]).to eq(@data_file.file_state)
       end
 
       it 'has a url' do
-        expect(@metadata[:url]).to eq(@file_upload.url)
+        expect(@metadata[:url]).to eq(@data_file.url)
       end
 
       it 'shows the correct digest' do
-        expect(@metadata[:digest]).to eq(@file_upload.digest)
+        expect(@metadata[:digest]).to eq(@data_file.digest)
       end
 
       it 'shows the correct digestType' do
-        expect(@metadata[:digestType]).to eq(@file_upload.digest_type)
+        expect(@metadata[:digestType]).to eq(@data_file.digest_type)
       end
 
       it 'shows the correct description' do
-        expect(@metadata[:description]).to eq(@file_upload.description)
+        expect(@metadata[:description]).to eq(@data_file.description)
       end
     end
 

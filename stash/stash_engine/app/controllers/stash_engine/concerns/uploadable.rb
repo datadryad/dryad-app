@@ -119,7 +119,7 @@ module StashEngine
       def create_upload(url)
         url_translator = Stash::UrlTranslator.new(url)
         validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-        @file_model.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
+        @file_model.create(validator.upload_attributes_from(translator: url_translator, resource: resource, association: @resource_assoc))
       end
 
       def more_bytes_coming
@@ -127,7 +127,7 @@ module StashEngine
       end
 
       def unique_upload_path(original_filename)
-        filename = UrlValidator.make_unique(resource: resource, filename: original_filename)
+        filename = UrlValidator.make_unique(resource: resource, filename: original_filename, association: @resource_assoc)
         File.join(@upload_dir, filename)
       end
 

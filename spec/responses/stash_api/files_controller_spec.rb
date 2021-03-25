@@ -127,8 +127,8 @@ module StashApi
         hsh = response_body_hash
         lnks = hsh['_links']
         # @file_id is set in before
-        file_upload = StashEngine::FileUpload.find(@file_id)
-        resource = file_upload.resource
+        data_file = StashEngine::DataFile.find(@file_id)
+        resource = data_file.resource
         ident_obj = resource.identifier
         # the dataset path is messed up because rails either doesn't encode or double-encodes when you use the helper, so workaround
         ds_path = stash_api.dataset_path('foobar').gsub('foobar', CGI.escape(ident_obj.to_s))
@@ -144,8 +144,8 @@ module StashApi
     describe '#index' do
 
       before(:each) do
-        create_list(:file_upload, 25, resource_id: @resources[0].id)
-        create_list(:file_upload, 4, resource_id: @resources[1].id)
+        create_list(:data_file, 25, resource_id: @resources[0].id)
+        create_list(:data_file, 4, resource_id: @resources[1].id)
       end
 
       it 'shows an index of files for a public dataset version' do
@@ -218,7 +218,7 @@ module StashApi
       before(:each) do
         # make two lists of files for versions that are representative of how stuff works for versioning
         # with second version inheriting the files from the first showing as copied over internally
-        @files = [create_list(:file_upload, 4, resource_id: @resources[0].id)]
+        @files = [create_list(:data_file, 4, resource_id: @resources[0].id)]
         tmp = @files.first.map(&:amoeba_dup)
         tmp.each do |f|
           f.file_state = 'copied'
@@ -275,7 +275,7 @@ module StashApi
       before(:each) do
         # make two lists of files for versions that are representative of how stuff works for versioning
         # with second version inheriting the files from the first showing as copied over internally
-        @files = [create_list(:file_upload, 4, resource_id: @resources[0].id)]
+        @files = [create_list(:data_file, 4, resource_id: @resources[0].id)]
         tmp = @files.first.map(&:amoeba_dup)
         tmp.each do |f|
           f.file_state = 'copied'

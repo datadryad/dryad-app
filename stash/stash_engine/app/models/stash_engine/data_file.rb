@@ -1,3 +1,4 @@
+require 'byebug'
 module StashEngine
   class DataFile < GenericFile
 
@@ -5,27 +6,6 @@ module StashEngine
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
-    end
-
-    # returns the latest version number in which this filename was created
-    def version_file_created_in
-      return resource.stash_version if file_state == 'created' || file_state.blank?
-
-      sql = <<-SQL
-             SELECT versions.*
-               FROM stash_engine_file_uploads uploads
-                    JOIN stash_engine_resources resource
-                      ON uploads.resource_id = resource.id
-                    JOIN stash_engine_versions versions
-                      ON resource.id = versions.resource_id
-              WHERE resource.identifier_id = ?
-                AND uploads.upload_file_name = ?
-                AND uploads.file_state = 'created'
-           ORDER BY versions.version DESC
-              LIMIT 1;
-      SQL
-
-      Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes

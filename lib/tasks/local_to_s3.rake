@@ -34,7 +34,7 @@ namespace :local_to_s3 do
         # If the last activity is more than 6 months ago, skip copying and
         # remove any file uploads that were marked as "created" for this
         # resource, because they won't be available to the user
-        resource.file_uploads.where(file_state: 'created').map(&:destroy)
+        resource.data_files.where(file_state: 'created').map(&:destroy)
         puts " -- #{res_dir} --> not copied due to age"
         next
       end

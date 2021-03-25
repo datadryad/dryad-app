@@ -1,5 +1,5 @@
 <% #takes local variable of resource %>
-<% dups = resource.duplicate_filenames(method: @resource_assoc) %>
+<% dups = resource.duplicate_filenames(association: @resource_assoc) %>
 <div class="c-manifest">
   <div id="manifest_errors">
     <% if resource.send(@resource_assoc).newly_created.errors.count > 0 || dups.count > 0 %>

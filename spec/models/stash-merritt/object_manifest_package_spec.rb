@@ -44,9 +44,9 @@ module Stash
         create(:resource_type, resource: @resource)
         create(:author, resource: @resource)
         create(:author, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
         @resource.reload
 
         @resource.new_file_uploads.find_each do |upload|
@@ -160,7 +160,7 @@ module Stash
 
           it 'writes mrt-delete.txt if needed' do
             deleted = []
-            @resource.file_uploads.each_with_index do |upload, index|
+            @resource.data_files.each_with_index do |upload, index|
               next unless index.even?
 
               upload.file_state = 'deleted'

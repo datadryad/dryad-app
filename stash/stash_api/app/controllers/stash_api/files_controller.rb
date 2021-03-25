@@ -98,7 +98,7 @@ module StashApi
     # prevent people from sending bad filenames
     def sanitize_filename(filename)
       @original_filename = filename
-      StashEngine::FileUpload.sanitize_file_name(filename)
+      StashEngine::DataFile.sanitize_file_name(filename)
     end
 
     # only allow to proceed if no other current uploads or only other url-type uploads
@@ -128,7 +128,7 @@ module StashApi
 
     def save_file_to_db
       handle_previous_duplicates(upload_filename: @sanitized_name)
-      StashEngine::FileUpload.create(
+      StashEngine::DataFile.create(
         upload_file_name: @sanitized_name,
         upload_content_type: file_content_type,
         upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
@@ -147,11 +147,11 @@ module StashApi
     end
 
     def handle_previous_duplicates(upload_filename:)
-      StashEngine::FileUpload.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |file_upload|
-        if file_upload.file_state == 'copied'
-          file_upload.update(file_state: 'deleted')
+      StashEngine::DataFile.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |data_file|
+        if data_file.file_state == 'copied'
+          data_file.update(file_state: 'deleted')
         else
-          file_upload.destroy!
+          data_file.destroy!
         end
       end
     end
@@ -177,10 +177,10 @@ module StashApi
         resource = prev_resources.first unless prev_resources.blank?
       end
 
-      visible = resource.file_uploads.present_files
+      visible = resource.data_files.present_files
       all_count = visible.count
-      file_uploads = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
-      results = file_uploads.map { |i| StashApi::File.new(file_id: i.id).metadata }
+      data_files = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
+      results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end
 
@@ -208,7 +208,7 @@ module StashApi
     end
 
     def require_viewable_file
-      f = StashEngine::FileUpload.where(id: params[:id]).first
+      f = StashEngine::DataFile.where(id: params[:id]).first
       render json: { error: 'not-found' }.to_json, status: 404 if f.nil? || !f.resource.may_view?(ui_user: @user)
     end
   end

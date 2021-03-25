@@ -12,7 +12,7 @@
 
 <p>If the download process does not begin automatically within several seconds, click the link above to start the download.</p>
 
-<% sfw = @resource.software_uploads
+<% sfw = @resource.software_files.present_files
 %>
 <% if sfw.count.positive? %>
   <hr/>

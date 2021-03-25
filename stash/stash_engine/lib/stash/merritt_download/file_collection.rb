@@ -28,7 +28,7 @@ module Stash
 
       # downloads files and sets status in list, raises error if something fails
       def download_files
-        copy_files = @resource.file_uploads.where(file_state: %w[created copied])
+        copy_files = @resource.data_files.where(file_state: %w[created copied])
 
         copy_files.each do |f|
           status = @smdf.download_file(db_file: f)

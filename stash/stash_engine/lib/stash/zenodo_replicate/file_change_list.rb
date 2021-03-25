@@ -34,21 +34,21 @@ module Stash
 
       # list of file objects to upload
       def upload_list
-        return @resource.file_uploads.present_files unless published_previously?
+        return @resource.data_files.present_files unless published_previously?
 
         # upload anything that has changed since last publish or anything that doesn't exist in Zenodo's files
         ppr = previous_published_resource
 
         # anything that was submitted since the last publish
-        changed = StashEngine::FileUpload
+        changed = StashEngine::DataFile
           .joins(:resource)
           .where('stash_engine_resources.identifier_id = ?', @resource.identifier_id)
-          .where('stash_engine_file_uploads.resource_id > ? AND stash_engine_file_uploads.resource_id <= ?', ppr.id, @resource.id)
+          .where('stash_engine_generic_files.resource_id > ? AND stash_engine_generic_files.resource_id <= ?', ppr.id, @resource.id)
           .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
 
         # this will pick up any missing files that we have locally, but not on zenodo, may be required for old datasets that
         # have been published before, but never had files sent to zenodo because we weren't sending old datasets
-        not_in_zenodo = StashEngine::FileUpload
+        not_in_zenodo = StashEngine::DataFile
           .where(resource_id: @resource.id)
           .present_files
           .where.not(upload_file_name: @existing_zenodo_filenames).distinct.pluck(:upload_file_name)

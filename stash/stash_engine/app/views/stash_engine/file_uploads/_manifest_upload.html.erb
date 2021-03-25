@@ -2,7 +2,7 @@
 <br/>
 <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
 
-  <% my_route = (@file_model == StashEngine::SoftwareUpload ?
+  <% my_route = (@file_model == StashEngine::SoftwareFile ?
                      stash_engine.software_upload_validate_urls_path(resource.id) : stash_engine.file_upload_validate_urls_path(resource.id)) %>
 
   <%= form_with(url: my_route, remote: true, id: 'url_validate') do %>
