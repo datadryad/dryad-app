@@ -35,27 +35,24 @@
 
 	<h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
-		<h2 class="t-upload__choose-heading--active">Step 1: Choose your files</h2>
+  <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
 
-		<!-- Begin Choose Files Component -->
-		<!--#include file="includes/choose.html" -->
-		<!-- End Choose Files Component -->
+  <!--#include file="includes/upload-modal.html" -->
 
-    <div class="t-upload__container">
-		  <h2 class="t-upload__choose-heading">Step 2: Upload your files</h2>
-      <form class="o-button__inline-form" action="">
-        <button disabled class="o-button__undo">undo all changes</button>
-      </form>
-    </div>
+   <div class="c-uploadwidgets">
+    <!--#include file="includes/upload-widget-data.html" -->
+    <!--#include file="includes/upload-widget-software.html" -->
+    <!--#include file="includes/upload-widget-supplemental.html" -->
+  </div>
 
-		<!-- Begin Upload Files Component -->
-		<!--#include file="includes/upload_2-4.html" -->
-		<!-- End Upload Files Component -->
+  <h2 class="o-heading__level2">Files</h2>
+
+  <!--#include file="includes/upload-table.html" -->
 
 		<!-- Begin Dataset Navigation Object -->
 		<div class="o-dataset-nav">
 			<button class="o-button__icon-left">Back to My Datasets</button>
-			<button class="o-button__icon-right">Proceed to Review</button>
+			<button class="o-button__icon-right">Proceed to Upload Software</button>
 		</div>
 		<!-- End Dataset Navigation Object -->
 
