@@ -12,11 +12,13 @@ module StashEngine
 
     def jounral_integration; end
 
-    def our_community; end
-
     def our_governance; end
 
     def our_mission; end
+
+    def our_membership; end
+
+    def join_us; end
 
     def our_platform; end
 
