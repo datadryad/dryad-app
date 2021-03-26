@@ -12,10 +12,14 @@ function loadPublications() {
         $( ".js-publications" )
         // don't navigate away from the field on tab when selecting an item
             .bind( "keydown", function( event ) {
-                if ( event.keyCode === $.ui.keyCode.TAB &&
-                    $( this ).autocomplete( "instance" ).menu.active ) {
-                    event.preventDefault();
-                }
+                if ( event.keyCode === $.ui.keyCode.TAB ) {
+		    if ( $( this ).autocomplete( "instance" ).menu.active ) {
+			event.preventDefault();
+		    }
+		    // else do the normal tab actions, which will retain the values if one was just selected
+                } else {
+		    $("#internal_datum_publication_issn").val(''); // clear any ISSN that was saved previously, so user selection can overwrite it
+		}
             })
             .autocomplete({
 		// when page is loaded, IF the dataset has been filled in already,
@@ -79,10 +83,13 @@ function loadPublications() {
 		    // do nothing
 		},
                 focus: function() {
-                    // prevent value inserted on focus		    
+                    // prevent value inserted on focus
                     return false;
-                },
-            });
+                }
+            }).blur(function (event) {
+		var form = $(this.form);
+                $(form).trigger('submit.rails');
+	    });
     });
 
     // moving focus saves
