@@ -71,10 +71,10 @@ module StashEngine
             }
           )
           .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/html' })
+        @resource.current_resource_state.update(resource_state: 'in_progress')
       end
 
-      it 'returns json when request with format html' do
-        @resource.current_resource_state.update(resource_state: 'in_progress')
+      it 'returns json when request to validate urls with format html' do  # TODO
         @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/funbar.txt' }
         post @url, params: params
@@ -85,6 +85,18 @@ module StashEngine
         expect(body[0]['upload_file_size']).to eql(37_221)
         expect(body[0]['file_state']).to eql('created')
         expect(body[0]['url']).to eql('http://example.org/funbar.txt')
+      end
+
+      it 'returns json when request to destroy manifest file' do
+        @resource.update(file_uploads: [create(:file_upload)])
+        @resource.file_uploads.first.update(url: 'http://example.org/funbar.txt')
+        @file = @resource.file_uploads.first
+        @url = StashEngine::Engine.routes.url_helpers.destroy_error_file_upload_path(id: @file.id)
+        patch @url, as: :html
+
+        expect(response).to be_successful
+        body = JSON.parse(response.body)
+        expect(body['url']).to eql(@file.url)
       end
 
     end

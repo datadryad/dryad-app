@@ -33,9 +33,9 @@ module StashEngine
             render 'stash_engine/file_uploads/destroy_error.js.erb'
           end
           format.html do
-            @id = @file.url
+            @url = @file.url
             @file.destroy
-            render json: @id
+            render json: { url: @url }
           end
         end
       end

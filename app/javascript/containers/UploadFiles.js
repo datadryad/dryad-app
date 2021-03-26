@@ -21,7 +21,6 @@ class UploadFiles extends React.Component {
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
-        // createdManifestFiles: this.getUploadedFiles(),
         chosenFiles: [],
         submitButtonDisabled: true,
         showModal: false,
