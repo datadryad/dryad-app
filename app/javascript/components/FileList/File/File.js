@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const file = (props) => {
     return (
@@ -8,7 +8,7 @@ const file = (props) => {
             <td>{props.file.url}</td>
             <td>{props.file.typeId}</td>
             <td>{props.file.sizeKb}</td>
-            <td><a href="#" onClick={props.clicked}>Remove</a></td>
+            <td><a href="#!" onClick={props.click}>Remove</a></td>
         </tr>
     )
 }

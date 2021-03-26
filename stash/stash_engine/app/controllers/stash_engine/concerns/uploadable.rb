@@ -32,6 +32,11 @@ module StashEngine
             @file.destroy
             render 'stash_engine/file_uploads/destroy_error.js.erb'
           end
+          format.html do
+            @url = @file.url
+            @file.destroy
+            render json: { url: @url }
+          end
         end
       end
 
@@ -74,7 +79,7 @@ module StashEngine
             render 'stash_engine/file_uploads/validate_urls.js.erb'
           end
           format.html do
-            render json: @resource.send(@resource_assoc).validated_table
+            render json: @resource.send(@resource_assoc)
           end
         end
       end
