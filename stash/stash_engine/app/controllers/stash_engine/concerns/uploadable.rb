@@ -74,12 +74,16 @@ module StashEngine
           url_param = params[:url]
           return if url_param.blank?
 
-          urls_from(url_param).each { |url| create_upload(url) }
+          url_errors = []
+          urls_from(url_param).each { |url|
+            result = create_upload(url)
+            url_errors.push(result) if result[:status_code] != 200
+          }
           format.js do
             render 'stash_engine/file_uploads/validate_urls.js.erb'
           end
           format.html do
-            render json: @resource.send(@resource_assoc)
+            render json: { :valid_urls => @resource.send(@resource_assoc), :invalid_urls => url_errors }
           end
         end
       end
@@ -127,7 +131,13 @@ module StashEngine
       def create_upload(url)
         url_translator = Stash::UrlTranslator.new(url)
         validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-        @file_model.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
+        attributes = validator.upload_attributes_from(translator: url_translator, resource: resource)
+        if attributes[:status_code] != 200
+          {:url => attributes[:url], :status_code => attributes[:status_code]}
+        else
+          @file_model.create(attributes)
+        end
+
       end
 
       def more_bytes_coming

@@ -9,6 +9,7 @@ const failed_url_list = (props) => {
             <h1 className={classes.UrlValidationTitle}>Validation Status</h1>
             {props.failedUrls.map((url) => {
                 return <Url
+                    key={url.id}
                     click={() => props.clicked(url.id)}
                     url={url}
                 />
