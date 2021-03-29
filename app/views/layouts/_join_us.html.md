@@ -2,17 +2,17 @@
 
 <p>We make it easy and affordable to curate, publish, and preserve research data
 by providing robust infrastructure, services, and expertise to meet your
-organizations needs for public release of data and meeting funder mandates. We
+organization's needs for public release of data and for meeting funder mandates. We
 are a non-profit organization and exist to promote an environment where research
 data are openly available, managed, preserved, integrated with publications, and
 routinely re-used to create knowledge. When you join Dryad as a Member you join
-a community of organizations committed to leading in best practices for and
-open data publishingsharing. See more information on our Membership or reach out
-to us at <a href="mailto:director@datadryad.org">director@datadryad.org</a>
+a community of organizations committed to leading in best practices for
+open data publishing. See more information on our Membership or reach out
+to us at <a href="mailto:info@datadryad.org">info@datadryad.org</a>
 and join our community of members today.
 </p>
 
-<h2>Institutional Membership</h2>
+<h2 id="institutional">Institutional Membership</h2>
 
 <p>Join the Dryad community and better support your researchers with data
 publishing services they have come to rely on – helping them share, publish, and
@@ -29,6 +29,47 @@ address an immediate need but allows us to position the library as a source of
 expertise on related issues more generally. Our partnership with Dryad allows
 Lane Medical Library offer exceptional data storage and curation so we can focus
 our resources on education, guidance, and community building.
-<strong>Director, Research & Instruction, Lane Medical Library,
+
+<strong>-Director, Research & Instruction, Lane Medical Library,
 Stanford</strong>
 </blockquote>
+
+<p>
+Membership will also help you gain insight into data publishing activities at your organization
+and connect you with like-minded organizations committed to sustaining shared infrastructure
+for data publishing, curation, management, and preservation. Along with benefiting from Dryad’s
+core services members have access to:
+</p>
+<ul>
+<li><b>Unlimited data publishing deposits</b> – all fees, including large file costs, will be covered for submissions made by researchers affiliated with your institution.</li>
+<li><b>Hands-on administrative dashboard</b> – administrators will have access to a dashboard of all activity from your institution including curation and publishing activity for each dataset. This critical information provides a unique insight into data publishing activities at your institution and allows you to connect with your researchers.</li>
+<li><b>Branded instance</b> – users logging into Dryad from member institutions will access a custom-branded interface with their institution’s logo.</li>
+<li><b>Integrate with local resources</b>  – Dryad members can integrate Dryad metadata and data, via API, with their local repository, ILS system, or storage system.</li>
+<li><b>Training and help</b> – the Dryad team will help you get set up for success and will assist when you need it.</li>
+<li><b>Shape Dryad’s strategic direction</b> – Contribute your institution’s views and priorities at Dryad-hosted events throughout the year. Exercise your vote to elect Dryad’s Board of Directors and influence the bylaws.</li>
+</ul>
+
+<h3 id="institutional-fee">Institutional Member Fee Structure</h3>
+<p>
+All member levels include the benefits listed above. The level selected should reflect your institution’s anticipated research output. Please select the level that you believe is the best fit for your institution. We are happy to discuss this decision with you.
+</p>
+
+<p>
+We offer several levels of memberships. All fees listed are annual and in USD.
+<ul>
+<li><b>Level I Membership:</b> 	$3,000  –  Primarily teaching institutions or small research output</li>
+<li><b>Level II Membership:</b> 	$7,500 – Medium, research-intensive institutions</li>
+<li><b>Level III Membership:</b> $13,000  – Large, research-intensive institutions</li>
+</ul>
+</p>
+<p>
+Our open membership is focused on accessible and transparent membership fees and services. If you are interested in joining Dryad’s member community, please reach out directly to <a href="mailto:info@datadryad.org">info@datadryad.org</a>.
+</p>
+
+<h2 id="publisher">Publisher Membership</h2>
+<p>
+Individual journals, publishers, and scholarly societies can join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for your authors.
+</p>
+<p>
+For more information on Publisher Membership, please contact <a href="mailto:info@datadryad.org">info@datadryad.org</a>.
+</p>
