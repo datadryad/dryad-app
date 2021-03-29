@@ -55,6 +55,11 @@
 </div>
 
 <div class="bio">
+  <img src="/images/Aadithya_Sekar_Profile.jpeg" alt="Aadithya Sekar" title="Aadithya Sekar">
+  <p><strong>Aadithya Sekar</strong>, B.S. Biochemistry<br>Dryad Curator<br>Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
+</div>
+
+<div class="bio">
     <img src="/images/HSchubloom.jpg" alt="Hannah Schubloom" title="Hannah Schubloom">
   <p><strong>Hannah Schubloom</strong>, B.A, M.Sc in Neuroscience<br>Data Curator<br>Hannah has a research background focused on neuroscience and neuromodulation, and graduated with a M.Sc. from McGill University. Prior to joining Dryad, she worked as a Research Program Manager at PLOS ONE and a Research Associate at Halo Neuroscience. In her spare time, Hannah enjoys cooking, candle-making and spending time with her cat, Uni.</p>
 </div>
