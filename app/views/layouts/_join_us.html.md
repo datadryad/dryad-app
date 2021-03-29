@@ -40,7 +40,7 @@ and connect you with like-minded organizations committed to sustaining shared in
 for data publishing, curation, management, and preservation. Along with benefiting from Dryad’s
 core services members have access to:
 </p>
-<ul class="text-styles">
+<ul class="c-text_styles">
 <li><strong>Unlimited data publishing deposits</strong> – all fees, including large file costs, will be covered for submissions made by researchers affiliated with your institution.</li>
 <li><strong>Hands-on administrative dashboard</strong> – administrators will have access to a dashboard of all activity from your institution including curation and publishing activity for each dataset. This critical information provides a unique insight into data publishing activities at your institution and allows you to connect with your researchers.</li>
 <li><strong>Branded instance</strong> – users logging into Dryad from member institutions will access a custom-branded interface with their institution’s logo.</li>
@@ -56,7 +56,7 @@ All member levels include the benefits listed above. The level selected should r
 
 <p>
 We offer several levels of memberships. All fees listed are annual and in USD.
-<ul class="text-styles">
+<ul class="c-text_styles">
 <li><strong>Level I Membership:</strong> 	$3,000  –  Primarily teaching institutions or small research output</li>
 <li><strong>Level II Membership:</strong> 	$7,500 – Medium, research-intensive institutions</li>
 <li><strong>Level III Membership:</strong> $13,000  – Large, research-intensive institutions</li>
