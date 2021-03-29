@@ -19,8 +19,8 @@ publishing services they have come to rely on – helping them share, publish, a
 preserve their curated data with unlimited dataset submissions. See our
 <a href="/stash/our_membership">list of members</a>.
 
-<blockquote>
-Joining the Dryad community has helped us build stronger connections with
+<blockquote class="c-text_styles">
+<em>Joining the Dryad community has helped us build stronger connections with
 researchers on campus, engage more fully in discussions related to the
 management and sharing of research data, and become part of the broader open
 science community. Being able to address the question “How can I share my data?”
@@ -28,9 +28,9 @@ with a top of the line and curation-focused platform not only helps us to
 address an immediate need but allows us to position the library as a source of
 expertise on related issues more generally. Our partnership with Dryad allows
 Lane Medical Library offer exceptional data storage and curation so we can focus
-our resources on education, guidance, and community building.
+our resources on education, guidance, and community building.</em>
 
-<strong>-Director, Research & Instruction, Lane Medical Library,
+<strong>&mdash;Director, Research & Instruction, Lane Medical Library,
 Stanford</strong>
 </blockquote>
 
@@ -40,13 +40,13 @@ and connect you with like-minded organizations committed to sustaining shared in
 for data publishing, curation, management, and preservation. Along with benefiting from Dryad’s
 core services members have access to:
 </p>
-<ul>
-<li><b>Unlimited data publishing deposits</b> – all fees, including large file costs, will be covered for submissions made by researchers affiliated with your institution.</li>
-<li><b>Hands-on administrative dashboard</b> – administrators will have access to a dashboard of all activity from your institution including curation and publishing activity for each dataset. This critical information provides a unique insight into data publishing activities at your institution and allows you to connect with your researchers.</li>
-<li><b>Branded instance</b> – users logging into Dryad from member institutions will access a custom-branded interface with their institution’s logo.</li>
-<li><b>Integrate with local resources</b>  – Dryad members can integrate Dryad metadata and data, via API, with their local repository, ILS system, or storage system.</li>
-<li><b>Training and help</b> – the Dryad team will help you get set up for success and will assist when you need it.</li>
-<li><b>Shape Dryad’s strategic direction</b> – Contribute your institution’s views and priorities at Dryad-hosted events throughout the year. Exercise your vote to elect Dryad’s Board of Directors and influence the bylaws.</li>
+<ul class="text-styles">
+<li><strong>Unlimited data publishing deposits</strong> – all fees, including large file costs, will be covered for submissions made by researchers affiliated with your institution.</li>
+<li><strong>Hands-on administrative dashboard</strong> – administrators will have access to a dashboard of all activity from your institution including curation and publishing activity for each dataset. This critical information provides a unique insight into data publishing activities at your institution and allows you to connect with your researchers.</li>
+<li><strong>Branded instance</strong> – users logging into Dryad from member institutions will access a custom-branded interface with their institution’s logo.</li>
+<li><strong>Integrate with local resources</strong>  – Dryad members can integrate Dryad metadata and data, via API, with their local repository, ILS system, or storage system.</li>
+<li><strong>Training and help</strong> – the Dryad team will help you get set up for success and will assist when you need it.</li>
+<li><strong>Shape Dryad’s strategic direction</strong> – Contribute your institution’s views and priorities at Dryad-hosted events throughout the year. Exercise your vote to elect Dryad’s Board of Directors and influence the bylaws.</li>
 </ul>
 
 <h3 id="institutional-fee">Institutional Member Fee Structure</h3>
@@ -56,10 +56,10 @@ All member levels include the benefits listed above. The level selected should r
 
 <p>
 We offer several levels of memberships. All fees listed are annual and in USD.
-<ul>
-<li><b>Level I Membership:</b> 	$3,000  –  Primarily teaching institutions or small research output</li>
-<li><b>Level II Membership:</b> 	$7,500 – Medium, research-intensive institutions</li>
-<li><b>Level III Membership:</b> $13,000  – Large, research-intensive institutions</li>
+<ul class="text-styles">
+<li><strong>Level I Membership:</strong> 	$3,000  –  Primarily teaching institutions or small research output</li>
+<li><strong>Level II Membership:</strong> 	$7,500 – Medium, research-intensive institutions</li>
+<li><strong>Level III Membership:</strong> $13,000  – Large, research-intensive institutions</li>
 </ul>
 </p>
 <p>

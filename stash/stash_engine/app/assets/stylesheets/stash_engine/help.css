@@ -14,6 +14,10 @@
  *= require_self
  */
 
+/*
+
+// IDK who put styles directly in css, but they should be in the scss, not here and they were interfering with our other styles
+
 .markdown_styles h1 {
   color: #e65722;
 }
@@ -33,3 +37,4 @@
 .markdown_styles li {
   padding: 5px;
 }
+ */
