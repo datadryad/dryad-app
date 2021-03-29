@@ -4,8 +4,9 @@ import axios from 'axios';
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
 import FileList from "../components/FileList/FileList";
-import classes from './UploadFiles.module.css';
 import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
+import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
+import classes from './UploadFiles.module.css';
 
 class UploadFiles extends React.Component {
     state = {
@@ -22,7 +23,8 @@ class UploadFiles extends React.Component {
             }
         ],
         chosenFiles: [],
-        submitButtonDisabled: true,
+        submitButtonFilesDisabled: true,
+        submitButtonUrlsDisabled: true,
         showModal: false,
         urls: null,
         failedUrls: []
@@ -35,6 +37,8 @@ class UploadFiles extends React.Component {
     uploadFilesHandler = (event, typeId) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
+            // This differentiates computer user chosen files from manifest ones.
+            // The manifest file id's are the id's from the objects created.
             file.id = null;
             file.status = 'Pending';
             file.url = null;
@@ -135,8 +139,12 @@ class UploadFiles extends React.Component {
         }
     }
 
-    toggleCheckedConfirm = (event) => {
-        this.setState({submitButtonDisabled: !event.target.checked});
+    toggleCheckedFiles = (event) => {
+        this.setState({submitButtonFilesDisabled: !event.target.checked});
+    }
+
+    toggleCheckedUrls = (event) => {
+        this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
     showModal = () => {
@@ -150,6 +158,7 @@ class UploadFiles extends React.Component {
     submitUrlsHandler = (event) => {
         event.preventDefault();
         this.hideModal();
+        this.toggleCheckedUrls(event);
 
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
@@ -237,21 +246,10 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
-                    <div>
-                        <input
-                            type="checkbox" id="confirm_not_personal_health" className={classes.ConfirmPersonalHealth}
-                            onChange={(event) => this.toggleCheckedConfirm(event)}
-                        />
-                        <label htmlFor="confirm_not_personal_health">
-                            <span className={classes.MandatoryField}>{'\u00A0\u00A0\u00A0\u00A0'}* </span>
-                            I confirm that no Personal Health Information or
-                            Sensitive Data are being uploaded with this submission.
-                        </label>
-                        <input
-                            className={classes.UploadFilesSubmit} type="submit" value="Upload pending files"
-                            disabled={this.state.submitButtonDisabled}
-                        />
-                    </div>
+                    <ConfirmSubmit
+                        buttonLabel='Upload pending files'
+                        disabled={this.state.submitButtonFilesDisabled}
+                        changed={this.toggleCheckedFiles} />
                 </div>
             )
         } else {
@@ -269,7 +267,11 @@ class UploadFiles extends React.Component {
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
-                clicked={this.hideModal} />
+                clicked={this.hideModal}
+                buttonLabel='Validate Files'
+                disabled={this.state.submitButtonUrlsDisabled}
+                changed={this.toggleCheckedUrls}
+                />
         } else {
             return null;
         }
