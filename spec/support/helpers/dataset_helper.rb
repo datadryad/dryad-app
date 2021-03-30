@@ -33,7 +33,7 @@ module DatasetHelper
 
   def navigate_to_upload_urls
     click_button('Enter URLs', match: :first)
-    expect(page).to have_content('Enter data file URLs')
+    expect(page).to have_content('Enter URLs')
   end
 
   def navigate_to_software_upload_urls

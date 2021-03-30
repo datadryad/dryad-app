@@ -64,6 +64,8 @@ module StashEngine
 
     describe '#upload_manifest' do
       before(:each) do
+        @resource.current_resource_state.update(resource_state: 'in_progress')
+
         stub_request(:head, 'http://example.org/funbar.txt')
           .with(
             headers: {
@@ -71,23 +73,42 @@ module StashEngine
             }
           )
           .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/html' })
-        @resource.current_resource_state.update(resource_state: 'in_progress')
+
+        stub_request(:head, 'http://example.org/foobar.txt')
+          .with(
+            headers: {
+              'Accept' => '*/*'
+            }
+          )
+          .to_return(status: 404)
       end
 
-      it 'returns json when request to validate urls with format html' do  # TODO
+      it 'returns json when request to validate urls with format html' do
         @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/funbar.txt' }
         post @url, params: params
 
         expect(response).to be_successful
         body = JSON.parse(response.body)
-        expect(body[0]['upload_file_name']).to eql('funbar.txt')
-        expect(body[0]['upload_file_size']).to eql(37_221)
-        expect(body[0]['file_state']).to eql('created')
-        expect(body[0]['url']).to eql('http://example.org/funbar.txt')
+        valid_url = body['valid_urls'].first
+        expect(valid_url['upload_file_name']).to eql('funbar.txt')
+        expect(valid_url['upload_file_size']).to eql(37_221)
+        expect(valid_url['file_state']).to eql('created')
+        expect(valid_url['url']).to eql('http://example.org/funbar.txt')
       end
 
-      it 'returns json when request to destroy manifest file' do
+      it 'returns json with bad urls when request to validate urls with html format' do
+        @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
+        params = { 'url' => 'http://example.org/foobar.txt' }
+        post @url, params: params
+
+        expect(response).to be_successful
+        body = JSON.parse(response.body)
+        invalid_url = body['invalid_urls'].first
+        expect(invalid_url['url']).to eql(params['url'])
+      end
+
+      it 'returns json when request to destroy manifest file with html format' do
         @resource.update(file_uploads: [create(:file_upload)])
         @resource.file_uploads.first.update(url: 'http://example.org/funbar.txt')
         @file = @resource.file_uploads.first
