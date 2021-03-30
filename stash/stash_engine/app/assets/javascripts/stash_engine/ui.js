@@ -1495,20 +1495,11 @@ function joelsReady(){
     });
   }
 
-  if (document.querySelector('.js-uploadmodal__button-show-modal')) {
-    var buttonShowModal = document.querySelectorAll('.js-uploadmodal__button-show-modal');
-    var buttonCloseModal = document.querySelectorAll('.js-uploadmodal__button-close-modal');
+  if (document.querySelector('#js-uploadmodal__button-show-modal')) {
+    var buttonShowModal = document.querySelector('#js-uploadmodal__button-show-modal');
 
-    buttonShowModal.forEach(function(button) {
-      button.addEventListener('click', function() {
-        uploadModal.showModal();
-      });
-    });
-
-    buttonCloseModal.forEach(function(button) {
-      button.addEventListener('click', function() {
-        uploadModal.close();
-      });
+    buttonShowModal.addEventListener('click', function() {
+      uploadModal.showModal();
     });
   }
 

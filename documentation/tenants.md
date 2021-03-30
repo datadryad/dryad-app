@@ -114,7 +114,7 @@ Adding the logo and institution to the list
 
 Logos go into `app/assets/images/tenants`
 
-Add the institution to the list in `app/views/layouts/_our_community.html.md`
+Add the institution to the list in `app/views/layouts/_our_membership.html.md`
 
 
 

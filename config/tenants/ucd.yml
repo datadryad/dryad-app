@@ -65,9 +65,9 @@ production:
   enabled: true
   repository:
     domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/ucd_lib_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucd_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_ucd_password] %>
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: ezid
     shoulder: "doi:10.25338/B8"
