@@ -4,8 +4,9 @@ import axios from 'axios';
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
 import FileList from "../components/FileList/FileList";
-import classes from './UploadFiles.module.css';
 import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
+import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
+import classes from './UploadFiles.module.css';
 
 class UploadFiles extends React.Component {
     state = {
@@ -22,19 +23,25 @@ class UploadFiles extends React.Component {
             }
         ],
         chosenFiles: [],
-        submitButtonDisabled: true,
+        submitButtonFilesDisabled: true,
+        submitButtonUrlsDisabled: true,
         showModal: false,
         urls: null,
         failedUrls: []
     };
 
     componentDidMount() {
-        this.updateManifestFiles(this.props.file_uploads);
+        const files = [];
+        files['valid_urls'] = this.props.file_uploads;
+        files['invalid_urls'] = [];
+        this.updateManifestFiles(files);
     }
 
     uploadFilesHandler = (event, typeId) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
+            // This differentiates computer user chosen files from manifest ones.
+            // The manifest file id's are the id's from the objects created.
             file.id = null;
             file.status = 'Pending';
             file.url = null;
@@ -45,9 +52,11 @@ class UploadFiles extends React.Component {
     }
 
     updateManifestFiles = (files) => {
-        const failedUrls = this.pullFailedUrls(files);
-        this.updateFailedUrls(failedUrls);
-        let successfulUrls = this.pullSuccessfulUrls(files);
+        if (files['invalid_urls'].length)
+            this.updateFailedUrls(files['invalid_urls']);
+        if (!files['valid_urls'].length) return;
+
+        let successfulUrls = files['valid_urls'];
         if (this.state.chosenFiles.length) {
             successfulUrls = this.discardAlreadyChosen(successfulUrls);
         }
@@ -55,15 +64,16 @@ class UploadFiles extends React.Component {
         this.updateFileList(newManifestFiles);
     }
 
-    pullFailedUrls = (urls) => {
-        return urls.filter(url => {
-            return url.status_code !== 200;
-        })
-    }
-
     updateFailedUrls = (urls) => {
+        this.includeIds(urls);
         this.includeErrorMessages(urls);
         this.setState({failedUrls: urls});
+    }
+
+    includeIds = (urls) => {
+        urls.map((url, index) => {
+            urls[index].id = index;
+        })
     }
 
     includeErrorMessages = (urls) => {
@@ -98,12 +108,6 @@ class UploadFiles extends React.Component {
         }
     }
 
-    pullSuccessfulUrls = (data) => {
-        return data.filter(file => {
-            return file.status_code === 200;
-        })
-    }
-
     formatFileSize = (fileSize) => {
         return (fileSize / 1000).toFixed(2).toString() + ' kB';
     }
@@ -125,7 +129,7 @@ class UploadFiles extends React.Component {
         // and need to call the method to make ajax request and remove
         // in backend.
         if (chosenFiles[fileIndex].id) {
-            this.removeManifestFileHandler(chosenFiles[fileIndex].id, false);
+            this.removeManifestFileHandler(chosenFiles[fileIndex].id);
         }
         chosenFiles.splice(fileIndex, 1);
         if (!chosenFiles.length) {
@@ -135,8 +139,12 @@ class UploadFiles extends React.Component {
         }
     }
 
-    toggleCheckedConfirm = (event) => {
-        this.setState({submitButtonDisabled: !event.target.checked});
+    toggleCheckedFiles = (event) => {
+        this.setState({submitButtonFilesDisabled: !event.target.checked});
+    }
+
+    toggleCheckedUrls = (event) => {
+        this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
     showModal = () => {
@@ -150,6 +158,7 @@ class UploadFiles extends React.Component {
     submitUrlsHandler = (event) => {
         event.preventDefault();
         this.hideModal();
+        this.toggleCheckedUrls(event);
 
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
@@ -157,8 +166,8 @@ class UploadFiles extends React.Component {
 
         const urlsObject = {url: this.state.urls};
         axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
-            .then(resp => {
-                this.updateManifestFiles(resp.data);
+            .then(response => {
+                this.updateManifestFiles(response.data);
             })
             .catch(error => console.log(error));
     };
@@ -206,28 +215,28 @@ class UploadFiles extends React.Component {
     buildFailedUrlList = () => {
         if (this.state.failedUrls.length) {
             return (
-                <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeManifestFileHandler} />
+                <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeFailedUrlHandler} />
             )
         } else {
             return null;
         }
     }
 
-    removeManifestFileHandler = (fileId, fromFailedUrls=true) => {
+    removeManifestFileHandler = (fileId) => {
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         axios.patch(`/stash/file_uploads/${fileId}/destroy_error`)
             .then(response => {
-                fromFailedUrls ? this.removeFailedUrl(fileId) : null;
+                console.log(response.status);
             })
             .catch(error => console.log(error));
     }
 
-    removeFailedUrl = (id) => {
+    removeFailedUrlHandler = (urlId) => {
         const failedUrls = this.state.failedUrls.filter(url => {
-            return url.id !== id;
+            return url.id !== urlId;
         })
         this.setState({failedUrls: failedUrls});
     }
@@ -237,21 +246,10 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
-                    <div>
-                        <input
-                            type="checkbox" id="confirm_not_personal_health" className={classes.ConfirmPersonalHealth}
-                            onChange={(event) => this.toggleCheckedConfirm(event)}
-                        />
-                        <label htmlFor="confirm_not_personal_health">
-                            <span className={classes.MandatoryField}>{'\u00A0\u00A0\u00A0\u00A0'}* </span>
-                            I confirm that no Personal Health Information or
-                            Sensitive Data are being uploaded with this submission.
-                        </label>
-                        <input
-                            className={classes.UploadFilesSubmit} type="submit" value="Upload pending files"
-                            disabled={this.state.submitButtonDisabled}
-                        />
-                    </div>
+                    <ConfirmSubmit
+                        buttonLabel='Upload pending files'
+                        disabled={this.state.submitButtonFilesDisabled}
+                        changed={this.toggleCheckedFiles} />
                 </div>
             )
         } else {
@@ -269,7 +267,11 @@ class UploadFiles extends React.Component {
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
-                clicked={this.hideModal} />
+                clicked={this.hideModal}
+                buttonLabel='Validate Files'
+                disabled={this.state.submitButtonUrlsDisabled}
+                changed={this.toggleCheckedUrls}
+                />
         } else {
             return null;
         }
