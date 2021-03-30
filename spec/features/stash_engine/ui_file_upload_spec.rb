@@ -58,7 +58,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
         .to_return(status: 404)
     end
 
-    xit 'validates a URL that works' do
+    it 'validates a URL that works' do
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
