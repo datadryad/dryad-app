@@ -73,19 +73,12 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(fu.upload_file_size).to eq(37_221)
     end
 
-    xit 'shows problem with bad URL' do
+    it 'shows problem with bad URL' do
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
       expect(page).to have_content('The URL was not found')
-
-      # and it made it into the database
-      fu = @resource.file_uploads.first
-      expect(fu.upload_file_name).to be_nil
-      expect(fu.upload_content_type).to be_nil
-      expect(fu.upload_file_size).to be_nil
-      expect(fu.status_code).to eq(404)
     end
   end
 
