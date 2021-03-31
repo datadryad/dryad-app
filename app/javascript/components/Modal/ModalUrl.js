@@ -16,7 +16,8 @@ const modal_url = (props) => {
                     <textarea id="location_urls" name="url" rows="15" cols="100" onChange={props.changedUrls} />
                     <br/><br/><br/>
                     <ConfirmSubmit
-                        buttonLabel={props.buttonLabel}
+                        id='confirm_to_validate'
+                        buttonLabel='Validate Files'
                         disabled={props.disabled}
                         changed={props.changed} />
                 </form>

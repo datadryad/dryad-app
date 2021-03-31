@@ -52,10 +52,9 @@ class UploadFiles extends React.Component {
     }
 
     updateManifestFiles = (files) => {
-        if (files['invalid_urls'].length)
-            this.updateFailedUrls(files['invalid_urls']);
-        if (!files['valid_urls'].length) return;
+        this.updateFailedUrls(files['invalid_urls']);
 
+        if (!files['valid_urls'].length) return;
         let successfulUrls = files['valid_urls'];
         if (this.state.chosenFiles.length) {
             successfulUrls = this.discardAlreadyChosen(successfulUrls);
@@ -65,15 +64,11 @@ class UploadFiles extends React.Component {
     }
 
     updateFailedUrls = (urls) => {
-        this.includeIds(urls);
+        if (!urls.length) return;
         this.includeErrorMessages(urls);
-        this.setState({failedUrls: urls});
-    }
-
-    includeIds = (urls) => {
-        urls.map((url, index) => {
-            urls[index].id = index;
-        })
+        let failedUrls = [...this.state.failedUrls];
+        failedUrls = failedUrls.concat(urls);
+        this.setState({failedUrls: failedUrls});
     }
 
     includeErrorMessages = (urls) => {
@@ -152,6 +147,7 @@ class UploadFiles extends React.Component {
     };
 
     hideModal = () => {
+        this.setState({submitButtonUrlsDisabled: true})
         this.setState({showModal: false});
     }
 
@@ -168,6 +164,7 @@ class UploadFiles extends React.Component {
         axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
             .then(response => {
                 this.updateManifestFiles(response.data);
+                this.setState({urls: null});
             })
             .catch(error => console.log(error));
     };
@@ -234,9 +231,9 @@ class UploadFiles extends React.Component {
             .catch(error => console.log(error));
     }
 
-    removeFailedUrlHandler = (urlId) => {
-        const failedUrls = this.state.failedUrls.filter(url => {
-            return url.id !== urlId;
+    removeFailedUrlHandler = (index) => {
+        const failedUrls = this.state.failedUrls.filter((url, urlIndex) => {
+            return urlIndex !== index;
         })
         this.setState({failedUrls: failedUrls});
     }
@@ -247,6 +244,7 @@ class UploadFiles extends React.Component {
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
                     <ConfirmSubmit
+                        id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
                         disabled={this.state.submitButtonFilesDisabled}
                         changed={this.toggleCheckedFiles} />
@@ -268,7 +266,6 @@ class UploadFiles extends React.Component {
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
                 clicked={this.hideModal}
-                buttonLabel='Validate Files'
                 disabled={this.state.submitButtonUrlsDisabled}
                 changed={this.toggleCheckedUrls}
                 />
@@ -288,6 +285,7 @@ class UploadFiles extends React.Component {
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
                 {this.state.upload_type.map((upload_type) => {
                     return <UploadType
+                        key={upload_type.id}
                         changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
                         clicked={() => this.showModal(upload_type.id)}
                         id={upload_type.id}

@@ -4,9 +4,9 @@ const confirm_submit = (props) => {
     return (
         <div>
             <input
-                type="checkbox" id="confirm_to_validate" className={classes.ConfirmPersonalHealth}
+                type="checkbox" id={props.id} className={classes.ConfirmPersonalHealth}
                 onChange={props.changed} />
-            <label htmlFor="confirm_to_validate">
+            <label htmlFor={props.id}>
                 <span className={classes.MandatoryField}>{'\u00A0\u00A0\u00A0\u00A0'}* </span>
                 I confirm that no Personal Health Information or
                 Sensitive Data are being uploaded with this submission.
