@@ -1,0 +1,27 @@
+// ##### Upload Modal Component ##### //
+
+.c-uploadmodal {
+  border: none;
+}
+
+.c-uploadmodal__textarea-url-label {
+  @extend %o-heading__level2;
+  display: block;
+  margin-top: 0;
+  margin-bottom: $spacing-md;
+}
+
+.c-uploadmodal__textarea-url {
+  width: 100%;
+  height: 200px;
+}
+
+.c-uploadmodal__text-content {
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.c-uploadmodal__button-validate {
+  display: block;
+  margin-top: $spacing-md;
+}

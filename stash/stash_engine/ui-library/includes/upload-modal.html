@@ -1,0 +1,15 @@
+
+<p>For testing this as a standalone component, uncomment the code on line #4 of this file to reveal a button for showing the modal.</p>
+
+<!-- <button type="button" id="js-uploadmodal__button-show-modal">Show Modal</button> -->
+
+<dialog id="js-uploadmodal" class="c-uploadmodal">
+  <form method="dialog">
+    <label class="c-uploadmodal__textarea-url-label" for="c-uploadmodal__textarea-url">Enter URLs</label>
+    <textarea id="c-uploadmodal__textarea-url" class="c-uploadmodal__textarea-url" name="" placeholder="List file location URLs here"></textarea>
+    <div class="c-uploadmodal__text-content">Place each URL on a new line.</div>
+    <input type="checkbox" name="" id="js-uploadmodal__checkbox-confirm">
+    <label class="c-input__required-note" for="js-uploadmodal__checkbox-confirm">I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.</label>
+    <button type="submit" id="js-uploadmodal__button-validate" class="c-uploadmodal__button-validate o-button__submit" disabled>Validate Files</button>
+  </form>
+</dialog>
