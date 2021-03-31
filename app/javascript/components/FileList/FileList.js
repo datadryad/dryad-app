@@ -21,6 +21,7 @@ const file_list = (props) => {
                 <tbody>
                 {props.chosenFiles.map((file, index) => {
                     return <File
+                        key={index}
                         click={() => props.clicked(index)}
                         file={file}
                     />
