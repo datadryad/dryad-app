@@ -23,7 +23,6 @@ module StashDatacite
         expect(@review.authors).to eq(@resource.authors)
       end
 
-
       it 'extracts the version' do
         expect(@review.version).to eq(@resource.stash_version)
       end
