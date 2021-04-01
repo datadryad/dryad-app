@@ -56,7 +56,7 @@ module StashEngine
               return
             end
             @my_file = save_final_file
-            render 'stash_engine/file_uploads/create.js.erb'
+            render 'stash_engine/data_files/create.js.erb'
           end
         end
       end
@@ -71,7 +71,7 @@ module StashEngine
 
           urls_from(url_param).each { |url| create_upload(url) }
           format.js do
-            render 'stash_engine/file_uploads/validate_urls.js.erb'
+            render 'stash_engine/data_files/validate_urls.js.erb'
           end
         end
       end
