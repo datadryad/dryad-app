@@ -3,7 +3,7 @@ require 'fileutils'
 require 'stash/url_translator'
 
 module StashEngine
-  class FileUploadsController < ApplicationController
+  class DataFilesController < ApplicationController
 
     def setup_class_info
       @file_model = StashEngine::DataFile
