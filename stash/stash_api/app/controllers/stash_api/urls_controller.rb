@@ -16,10 +16,10 @@ module StashApi
     # POST '/datasets/:dataset_id/urls'
     def create
       data_file_hash = if params['skipValidation'] == true
-                           skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
-                         else
-                           validate_url(params[:url]) { return }
-                         end
+                         skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
+                       else
+                         validate_url(params[:url]) { return }
+                       end
       validate_digest_type { return }
 
       # merge additional params as translated from API (value) to database field (key)
