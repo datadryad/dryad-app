@@ -934,14 +934,14 @@ module StashEngine
           end
         end
 
-        describe :new_file_uploads do
+        describe :new_data_files do
           it 'defaults to empty' do
             res3 = create(:resource, user_id: user.id)
-            expect(res3.new_file_uploads).to be_empty
+            expect(res3.new_data_files).to be_empty
           end
 
           it 'includes only created' do
-            new = @res1.new_file_uploads
+            new = @res1.new_data_files
             created_files.each { |f| expect(new).to include(f) }
             copied_files.each { |f| expect(new).not_to include(f) }
             deleted_files.each { |f| expect(new).not_to include(f) }
