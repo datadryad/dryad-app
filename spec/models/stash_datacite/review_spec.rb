@@ -62,7 +62,7 @@ module StashDatacite
       end
 
       it 'extracts the file uploads' do
-        expect(@review.data_files).to eq(@resource.current_data_files)
+        expect(@review.data_files).to eq(@resource.current_file_uploads)
       end
 
       it 'extracts the geolocation points' do

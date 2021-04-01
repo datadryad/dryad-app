@@ -834,7 +834,7 @@ module StashEngine
 
     describe 'data filess' do
 
-      describe :current_data_files do
+      describe :current_file_uploads do
         attr_reader :created_files
         attr_reader :copied_files
         attr_reader :deleted_files
