@@ -95,7 +95,7 @@ Notice the bottom where it renders some dynamic javascript files into the page a
 - see *uploadable* as above for most common methods of the controllers
   - *presign_upload* presigns an upload for s3 and evaporate.js (renders plain data as evaporate.js uses)
   - *upload_complete* responds to the upload complete event and adds to database and returns json.
-  - `file_uploads_controller` and `software_uploads_controller` have very little code of their own but mostly set up the file model
+  - `file_uploads_controller` and `software_files_controller` have very little code of their own but mostly set up the file model
     (software or data) to use.  Most code is in `uploadable`.  This is similar with the models for these in the database where
     most code lives in a common concern that is included in both.
 - Rendering of the file currently in the database is done by `uploadable#index`.  Notice it accepts *js* and renders the

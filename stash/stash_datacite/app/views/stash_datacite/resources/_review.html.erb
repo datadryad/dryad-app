@@ -63,13 +63,13 @@
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
-    <% if @review.software_uploads.count > 0 %>
+    <% if @review.software_files.count > 0 %>
       <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
     <h2 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/file_uploads/show_zenodo", locals: { resource: @resource } %>
-        <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_upload_path',
+        <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_file_path',
                     class: 'c-review-files-button o-button__icon-left', role: 'button' %>
       </div>
     <% end %>

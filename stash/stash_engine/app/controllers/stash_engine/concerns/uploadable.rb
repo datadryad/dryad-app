@@ -19,7 +19,7 @@ module StashEngine
         respond_to do |format|
           format.js do
             resource
-            render 'stash_engine/file_uploads/index.js.erb'
+            render 'stash_engine/data_files/index.js.erb'
           end
         end
       end
@@ -30,7 +30,7 @@ module StashEngine
           format.js do
             @url = @file.url
             @file.destroy
-            render 'stash_engine/file_uploads/destroy_error.js.erb'
+            render 'stash_engine/data_files/destroy_error.js.erb'
           end
         end
       end
@@ -40,7 +40,7 @@ module StashEngine
         respond_to do |format|
           format.js do
             @file.smart_destroy!
-            render 'stash_engine/file_uploads/destroy_manifest.js.erb'
+            render 'stash_engine/data_files/destroy_manifest.js.erb'
           end
         end
       end
@@ -49,7 +49,7 @@ module StashEngine
       def create
         respond_to do |format|
           format.js do
-            add_to_file(@accum_file, @file_upload) # this accumulates bytes into file for chunked uploads
+            add_to_file(@accum_file, @data_file) # this accumulates bytes into file for chunked uploads
             if more_bytes_coming
               # do not render changes to page until full file uploads and is saved into db
               head :ok, content_type: 'application/javascript'

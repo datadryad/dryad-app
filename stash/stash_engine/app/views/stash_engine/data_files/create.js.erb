@@ -1,6 +1,6 @@
 $('#not_uploaded_file_<%= @temp_id%>').remove();
 
-<%= render partial: 'stash_engine/file_uploads/redraw_files_table.js', locals: { resource: @resource} %>
+<%= render partial: 'stash_engine/data_files/redraw_files_table.js', locals: { resource: @resource} %>
 
 // these are the upload buttons for items with the remove link visible, so upload hasn't started
 var to_upload_buttons = $('.js-unuploaded .js-remove_link:visible').closest('.js-unuploaded').find('.js-upload-it');

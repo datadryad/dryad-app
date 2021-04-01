@@ -89,7 +89,7 @@ module Stash
         describe "with #{Stash::Merritt::ObjectManifestPackage}" do
 
           before(:each) do
-            @resource.new_file_uploads.find_each do |upload|
+            @resource.new_data_files.find_each do |upload|
               upload_file_name = upload.upload_file_name
               filename_encoded = URI.encode_www_form_component(upload_file_name)
               filename_decoded = URI.decode_www_form_component(filename_encoded)

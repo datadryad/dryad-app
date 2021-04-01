@@ -13,7 +13,7 @@ module DatasetHelper
     expect(page).to have_content('Dataset: Basic Information')
   end
 
-  def navigate_to_software_upload
+  def navigate_to_software_file
     # Sets this up as a page that can see the software/supp info upload page.
     se_identifier = StashEngine::Identifier.all.first
     StashEngine::InternalDatum.create(identifier_id: se_identifier.id, data_type: 'publicationISSN', value: '1687-7667')
@@ -36,7 +36,7 @@ module DatasetHelper
     expect(page).to have_content('Step 2: Enter Files')
   end
 
-  def navigate_to_software_upload_urls
+  def navigate_to_software_file_urls
     click_link 'Upload by URL'
     expect(page).to have_content('Step 2: Enter Files')
   end

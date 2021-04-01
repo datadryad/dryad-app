@@ -147,7 +147,7 @@ Checking for Chunked Upload in the UI
 -------------------------------------
 
 The other process that is long-running might a a user upload to the
-UI. The user uploads hit the path /stash/file_uploads with a post
+UI. The user uploads hit the path /stash/data_files with a post
 request for each segment of the file. You can grep the logs to see if
 there are a lot of them happening in the past hour or past 10 minutes
 or some other time you can grep for. Restarting in the middle of an

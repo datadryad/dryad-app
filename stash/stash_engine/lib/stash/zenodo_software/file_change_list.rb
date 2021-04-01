@@ -30,12 +30,12 @@ module Stash
 
       # list of file objects to upload
       def upload_list
-        @resource.software_uploads.newly_created
+        @resource.software_files.newly_created
       end
 
       # list of filenames for deletion from zenodo
       def delete_list
-        @resource.software_uploads.deleted_from_version.pluck(:upload_file_name)
+        @resource.software_files.deleted_from_version.pluck(:upload_file_name)
       end
     end
   end
