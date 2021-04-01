@@ -276,7 +276,7 @@ module StashEngine
         end
       end
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
-      resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
+      resource.update_column(:file_view, false) unless resource.current_data_files.present?
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 

@@ -3,7 +3,7 @@
 <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
 
   <% my_route = (@file_model == StashEngine::SoftwareFile ?
-                     stash_engine.software_upload_validate_urls_path(resource.id) : stash_engine.file_upload_validate_urls_path(resource.id)) %>
+                     stash_engine.software_file_validate_urls_path(resource.id) : stash_engine.data_file_validate_urls_path(resource.id)) %>
 
   <%= form_with(url: my_route, remote: true, id: 'url_validate') do %>
 
@@ -29,13 +29,13 @@
 
 
 <div id="validated_errors">
-  <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: resource} %>
+  <%= render partial: 'stash_engine/data_files/validated_errors', locals: {resource: resource} %>
 </div>
 
 <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
 
 <div class="c-upload" id="validated_files">
-	<%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: resource} %>
+	<%= render partial: 'stash_engine/data_files/validated_files', locals: {resource: resource} %>
 </div>
 
 <script type="text/javascript">

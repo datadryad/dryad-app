@@ -22,7 +22,7 @@
 </div>
 <div class="c-upload">
   <div id="upload_list">
-    <%# render partial: 'stash_engine/file_uploads/files_upload_line', locals: {resource: resource, uploads: uploads} %>
+    <%# render partial: 'stash_engine/data_files/files_upload_line', locals: {resource: resource, uploads: uploads} %>
   </div>
 </div>
 
@@ -42,7 +42,7 @@
 <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
 
 <div class="c-upload" id="validated_files" data-load="<%= polymorphic_path(file, resource_id: @resource.id, format: :js) %>">
-  <%# render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
+  <%# render partial: 'stash_engine/data_files/validated_files', locals: {resource: @resource} %>
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
 
@@ -60,15 +60,15 @@
   // *****
   // *preview_to_page* does the annoying work of tracking files from dropping or selecting and displaying on page before uploading
   // *****
-  <%= render partial: 'stash_engine/file_uploads/preview_to_page.js' %>
+  <%= render partial: 'stash_engine/data_files/preview_to_page.js' %>
 
   // *****
   // *s3_upload* mostly focuses on uploading files in sequence by calling the evaporate library and displaying some changes
   // *****
-  <%= render partial: 'stash_engine/file_uploads/s3_upload.js', locals: {resource: resource, file: file} %>
+  <%= render partial: 'stash_engine/data_files/s3_upload.js', locals: {resource: resource, file: file} %>
 
   // *****
   // *evaporate* configures and uses the library for uploading to S3 and returning a promise that it will upload or fail
   // *****
-  <%= render partial: 'stash_engine/file_uploads/evaporate.js', locals: {resource: resource} %>
+  <%= render partial: 'stash_engine/data_files/evaporate.js', locals: {resource: resource} %>
 </script>

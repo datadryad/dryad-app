@@ -3,11 +3,11 @@
 <%# these are to set some things that change because we have multiple models for different types of files, will rework when
  # we have all going into one model with a "type" of file %>
 
-<% rails_presign_url = (@file_model == StashEngine::SoftwareFile ? software_upload_presign_url_path(resource) :
-                      file_upload_presign_url_path(resource) )%>
+<% rails_presign_url = (@file_model == StashEngine::SoftwareFile ? software_file_presign_url_path(resource) :
+                      data_file_presign_url_path(resource) )%>
 
-<% complete_path = (@file_model == StashEngine::SoftwareFile ? software_upload_complete_path(resource) :
-                       file_upload_complete_path(resource) ) %>
+<% complete_path = (@file_model == StashEngine::SoftwareFile ? software_file_complete_path(resource) :
+                       data_file_complete_path(resource) ) %>
 
 <% s3_directory = resource.s3_dir_name(type: (@file_model == StashEngine::SoftwareFile ? 'software' : 'data')) %>
 
