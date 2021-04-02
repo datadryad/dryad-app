@@ -1,12 +1,8 @@
+/*
+    TODO: see if it's possible to remove this classes and uses only
+      the ones from UI Library
+*/
+
 .UploadFiles {
     margin-bottom: 50px;
-}
-
-h1 {
-    color: #cf4817;
-}
-
-h1.FileTitle {
-    font-size: x-large;
-    color: #005581;
 }
