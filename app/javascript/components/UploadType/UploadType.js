@@ -1,15 +1,20 @@
 import React from 'react';
-import classes from './UploadType.module.css';
 
 const upload_type = (props) => {
     return (
-        <div className={classes.UploadType}>
-            <h1 className={classes.UploadTypeTitle}>{props.name}</h1>
-            <p className={classes.UploadTypeDescription}>{props.description}</p>
-            <input id={props.id} type='file' onChange={props.changed} multiple={true} />
-            <label htmlFor={props.id} className={classes.ChooseFilesButton}>{props.buttonFiles}</label>
-            <button className={classes.EnterURLsButton} onClick={props.clicked}>{props.buttonURLs}</button>
-        </div>
+        <section className="c-uploadwidget--data">
+            <header>
+                <img src={props.logo} alt={props.alt} />
+                <h2>{props.name}</h2>
+            </header>
+            <b>{props.description}</b>
+
+            <div className="c-choose">
+                <label htmlFor={props.id} className="c-choose__input-file-label">{props.buttonFiles}</label>
+                <input id={props.id} className="c-choose__input-file" type='file' onChange={props.changed} multiple={true} />
+            </div>
+            <button className="js-uploadmodal__button-show-modal" onClick={props.clicked}>{props.buttonURLs}</button>
+        </section>
     );
 }
 
