@@ -54,7 +54,7 @@ module Stash
           .where.not(upload_file_name: @existing_zenodo_filenames).distinct.pluck(:upload_file_name)
 
         # and limit to only items that still exist in the current version: eliminates duplicates and recently deleted files
-        @resource.file_uploads.where(upload_file_name: (changed + not_in_zenodo)).present_files
+        @resource.data_files.where(upload_file_name: (changed + not_in_zenodo)).present_files
       end
 
       # list of filenames for deletion from zenodo
@@ -62,7 +62,7 @@ module Stash
         return [] unless published_previously?
 
         # existing zenodo filenames on Zenodo server minus current existing database filenames leaves the ones to delete
-        @existing_zenodo_filenames - @resource.file_uploads.present_files.distinct.pluck(:upload_file_name)
+        @existing_zenodo_filenames - @resource.data_files.present_files.distinct.pluck(:upload_file_name)
       end
 
       def published_previously?
