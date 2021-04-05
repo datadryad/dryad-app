@@ -15,20 +15,20 @@ module StashApi
 
     # POST '/datasets/:dataset_id/urls'
     def create
-      file_upload_hash = if params['skipValidation'] == true
-                           skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
-                         else
-                           validate_url(params[:url]) { return }
-                         end
+      data_file_hash = if params['skipValidation'] == true
+                         skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
+                       else
+                         validate_url(params[:url]) { return }
+                       end
       validate_digest_type { return }
 
       # merge additional params as translated from API (value) to database field (key)
       { digest_type: :digestType, upload_file_name: :path, upload_content_type: :mimeType, digest: :digest, description: :description }.each do |k, v|
-        file_upload_hash[k] = params[v] if params[v]
+        data_file_hash[k] = params[v] if params[v]
       end
 
-      fu = StashEngine::DataFile.create(file_upload_hash)
-      check_file_size(file_upload: fu) { return }
+      fu = StashEngine::DataFile.create(data_file_hash)
+      check_file_size(data_file: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
         format.any { render json: file.metadata, status: 201 }
@@ -77,10 +77,10 @@ module StashApi
       false
     end
 
-    def check_file_size(file_upload:)
+    def check_file_size(data_file:)
       return if @resource.size <= @resource.tenant.max_submission_size
 
-      file_upload.destroy # because this item won't fit
+      data_file.destroy # because this item won't fit
       (render json: { error:
                           'This file would make your submission size larger than the maximum of ' \
                           "#{view_context.filesize(@resource.tenant.max_submission_size)}" }.to_json, status: 403) && yield

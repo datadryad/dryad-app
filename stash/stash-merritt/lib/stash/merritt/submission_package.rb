@@ -66,7 +66,7 @@ module Stash
       end
 
       def new_uploads
-        resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
+        resource.new_data_files.reject { |upload| upload.file_state == 'deleted' }
       end
 
       def builders

@@ -10,12 +10,12 @@
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
 <div id="choose_method">
-  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
+  <%= render partial: 'stash_engine/data_files/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
 </div>
 
 <!-- manifest workflow -->
 <div class="manifest_upload" class="limits_and_part_2">
-  <%= render partial: 'stash_engine/file_uploads/manifest_upload',
+  <%= render partial: 'stash_engine/data_files/manifest_upload',
        locals: { resource: @resource } %>
 </div>
 

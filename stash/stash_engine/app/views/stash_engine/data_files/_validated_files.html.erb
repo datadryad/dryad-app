@@ -16,7 +16,7 @@
         <th class="c-manifest-table__version-col">Status</th>
         <th class="c-manifest-table__actions-col">Actions</th>
       </tr>
-      <%= render partial: "stash_engine/file_uploads/manifest_upload_line",
+      <%= render partial: "stash_engine/data_files/manifest_upload_line",
                collection: resource.send(@resource_assoc).validated_table.limit(rows), as: :uploaded_file %>
       <% if resource.latest_file_states.count > 10 %>
         </tbody> <!-- closing tbody which shows/hides rows greater than 10 -->
