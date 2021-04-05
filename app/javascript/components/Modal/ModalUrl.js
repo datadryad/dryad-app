@@ -4,24 +4,27 @@ import ConfirmSubmit from "../ConfirmSubmit/ConfirmSubmit";
 
 const modal_url = (props) => {
     return (
-        <div className={classes.ModalUrl}>
+        <dialog className={classes.ModalUrl} open>
             <section className={classes.ModalUrlMain}>
-                {props.children}
-                <div className={classes.ModalHeader}>
-                    <h1 className={classes.ModalUrlTitle}>Enter URLs</h1>
-                    <button className={classes.CloseButton} onClick={props.clicked} />
-                </div>
-                <p>Upload data from a URL on an external server (e.g., Box, Dropbox, lab server). The total size of data files cannot exceed 300 GB.</p>
-                <form onSubmit={props.submitted}>
-                    <textarea id="location_urls" name="url" rows="15" cols="100" onChange={props.changedUrls} />
-                    <br/><br/><br/>
+                <form method='dialog' onSubmit={(event) => props.submitted(event)}>
+                    <div className="c-uploadmodal__header">
+                        <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">Enter
+                            URLs</label>
+                        <button className="c-uploadmodal__button-close-modal js-uploadmodal__button-close-modal"
+                                aria-label="close" type="button" onClick={(event) => props.clicked(event)} />
+                    </div>
+                    <textarea id="location_urls" className="c-uploadmodal__textarea-url" name="url"
+                              onChange={props.changedUrls}
+                              placeholder="List file location URLs here" />
+                    <div className="c-uploadmodal__text-content">Place each URL on a new line.</div>
                     <ConfirmSubmit
-                        buttonLabel={props.buttonLabel}
+                        id='confirm_to_validate'
+                        buttonLabel='Validate Files'
                         disabled={props.disabled}
                         changed={props.changed} />
                 </form>
             </section>
-        </div>
+        </dialog>
     );
 }
 

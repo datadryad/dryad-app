@@ -2,6 +2,7 @@ require 'rails_helper'
 require 'pry-remote'
 require 'fileutils'
 # binding.remote_pry
+
 RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
   include MerrittHelper
@@ -82,6 +83,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
   end
 
+  # TODO: Deprecated. Remove it!
   describe 'software URL validation' do
 
     before(:each) do
