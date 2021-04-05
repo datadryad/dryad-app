@@ -149,15 +149,20 @@ class UploadFiles extends React.Component {
         this.setState({showModal: true});
     };
 
-    hideModal = () => {
-        this.setState({submitButtonUrlsDisabled: true})
-        this.setState({showModal: false});
+    hideModal = (event) => {
+        if (event.type === 'submit' || event.type === 'click'
+            || (event.type === 'keydown' && event.keyCode === 27)) {
+            this.setState({submitButtonUrlsDisabled: true})
+            this.setState({showModal: false});
+        }
     }
 
     submitUrlsHandler = (event) => {
         event.preventDefault();
-        this.hideModal();
+        this.hideModal(event);
         this.toggleCheckedUrls(event);
+
+        if (!this.state.urls) return;
 
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
@@ -265,14 +270,16 @@ class UploadFiles extends React.Component {
 
     buildModal = () => {
         if (this.state.showModal) {
+            document.addEventListener('keydown', this.hideModal);
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
                 clicked={this.hideModal}
                 disabled={this.state.submitButtonUrlsDisabled}
                 changed={this.toggleCheckedUrls}
-                />
+            />
         } else {
+            document.removeEventListener('keydown', this.hideModal);
             return null;
         }
     }

@@ -6,12 +6,12 @@ const modal_url = (props) => {
     return (
         <dialog className={classes.ModalUrl} open>
             <section className={classes.ModalUrlMain}>
-                <form method='dialog' onSubmit={props.submitted}>
+                <form method='dialog' onSubmit={(event) => props.submitted(event)}>
                     <div className="c-uploadmodal__header">
                         <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">Enter
                             URLs</label>
                         <button className="c-uploadmodal__button-close-modal js-uploadmodal__button-close-modal"
-                                aria-label="close" type="button" onClick={props.clicked} />
+                                aria-label="close" type="button" onClick={(event) => props.clicked(event)} />
                     </div>
                     <textarea id="location_urls" className="c-uploadmodal__textarea-url" name="url"
                               onChange={props.changedUrls}
