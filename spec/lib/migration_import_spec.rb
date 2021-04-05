@@ -60,7 +60,7 @@ RSpec.describe MigrationImport do
     xit 'has subsidiary objects and some spot checks of objects off the resource' do
       res = @identifier.resources.first
       expect(res.authors.count).to eq(2)
-      expect(res.file_uploads.count).to eq(2)
+      expect(res.data_files.count).to eq(2)
       expect(res.edit_histories.count).to eq(1)
       expect(res.stash_version.version).to eq(1)
       # expect(res.share.secret_id.length).to eq(43)

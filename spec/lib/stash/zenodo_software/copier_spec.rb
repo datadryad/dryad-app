@@ -24,7 +24,7 @@ module Stash
         @resource = create(:resource)
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
-        @file = create(:software_upload, resource_id: @resource.id)
+        @file = create(:software_file, resource_id: @resource.id)
         WebMock.disable_net_connect!(allow_localhost: true)
       end
 
@@ -217,7 +217,7 @@ module Stash
           end
 
           it "doesn't call @deposit.publish if the user has removed all current files" do
-            @resource.software_uploads.each { |sup| sup.update(file_state: 'deleted') }
+            @resource.software_files.each { |sup| sup.update(file_state: 'deleted') }
             @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
             deposit = @zsc.instance_variable_get(:@deposit)
             allow(deposit).to receive(:update_metadata)
@@ -236,8 +236,8 @@ module Stash
             @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
                                         deposition_id: @zc.deposition_id)
             @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-            @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                                              file_state: 'copied')
+            @file2 = create(:software_file, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
+                                            file_state: 'copied')
             @resource2.reload
           end
 
@@ -296,8 +296,8 @@ module Stash
               @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
                                           deposition_id: @zc.deposition_id)
               @zsc2 = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
-              @file2 = create(:software_upload, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
-                                                file_state: 'created')
+              @file2 = create(:software_file, resource_id: @resource2.id, upload_file_name: @file.upload_file_name,
+                                              file_state: 'created')
               @resource2.reload
             end
 

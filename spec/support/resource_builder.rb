@@ -86,7 +86,7 @@ module StashDatacite
     end
 
     def add_stash_file(stash_file)
-      StashEngine::FileUpload.create(
+      StashEngine::DataFile.create(
         resource_id: se_resource_id,
         upload_file_name: stash_file.pathname,
         upload_content_type: stash_file.mime_type.to_s,

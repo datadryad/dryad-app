@@ -102,7 +102,7 @@ module Stash
         end
 
         # update metadata
-        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
+        @deposit.update_metadata(software_file: true, doi: @copy.software_doi)
 
         # update files
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
@@ -124,8 +124,8 @@ module Stash
       def publish_dataset
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
-        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
-        @deposit.publish if @resource.software_uploads.present_files.count > 0 # do not actually publish unless there are files
+        @deposit.update_metadata(software_file: true, doi: @copy.software_doi)
+        @deposit.publish if @resource.software_files.present_files.count > 0 # do not actually publish unless there are files
         @copy.update(state: 'finished', error_info: nil)
       end
 
@@ -140,7 +140,7 @@ module Stash
                           'only see published metadata changes.')
           return
         end
-        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
+        @deposit.update_metadata(software_file: true, doi: @copy.software_doi)
         @copy.update(state: 'finished', error_info: nil)
       end
 
@@ -155,7 +155,7 @@ module Stash
 
         return if resources.count < 1
 
-        unsubmitted_count = resources.map { |res| res.software_uploads.count }.reduce(0, :+)
+        unsubmitted_count = resources.map { |res| res.software_files.count }.reduce(0, :+)
 
         return unless unsubmitted_count.positive?
 
@@ -171,7 +171,7 @@ module Stash
       end
 
       def files_changed?
-        change_count = @resource.software_uploads.deleted_from_version.count + @resource.software_uploads.newly_created.count
+        change_count = @resource.software_files.deleted_from_version.count + @resource.software_files.newly_created.count
         change_count.positive?
       end
 
@@ -194,7 +194,7 @@ module Stash
 
       def update_zenodo_relation
         # only add link to zenodo software if they have any files left that they haven't deleted
-        if @resource.software_uploads.where(file_state: %w[created copied]).count.positive?
+        if @resource.software_files.where(file_state: %w[created copied]).count.positive?
           StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
         else
           StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)

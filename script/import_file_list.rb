@@ -20,8 +20,8 @@ class ImportFileList
       size = i.attribute('length').value.try(:to_i)
       content_type = i.attribute('type').value
       #puts "#{fn} #{size} #{content_type}"
-      unless StashEngine::FileUpload.where(upload_file_name: fn).where(resource_id: @resource_id).count > 0
-        StashEngine::FileUpload.create({
+      unless StashEngine::DataFile.where(upload_file_name: fn).where(resource_id: @resource_id).count > 0
+        StashEngine::DataFile.create({
             upload_file_name: fn,
             upload_content_type: content_type,
             upload_file_size: size,
