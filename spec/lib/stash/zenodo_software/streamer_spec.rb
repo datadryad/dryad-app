@@ -11,9 +11,9 @@ module Stash
 
       before(:each) do
         @resource = create(:resource)
-        @resource.software_uploads << create(:software_upload)
+        @resource.software_files << create(:software_file)
 
-        # @software_http_upload = create(:software_upload, upload_file_size: 1000,
+        # @software_http_upload = create(:software_file, upload_file_size: 1000,
         #                               url: 'http://example.org/example', resource: @resource)
 
         @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: @change_list)
@@ -21,7 +21,7 @@ module Stash
 
         @random_body = Random.new.bytes(rand(1000)).b
 
-        @streamer = Streamer.new(file_model: @resource.software_uploads.first, zenodo_bucket_url: @bucket_url)
+        @streamer = Streamer.new(file_model: @resource.software_files.first, zenodo_bucket_url: @bucket_url)
       end
 
       describe '#stream' do

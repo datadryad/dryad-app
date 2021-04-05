@@ -100,8 +100,9 @@ module StashEngine
 
     def resources_with_file_changes
       Resource.distinct.where(identifier_id: id)
-        .joins(:file_uploads)
-        .where(stash_engine_file_uploads: { file_state: %w[created deleted] })
+        .joins(:data_files)
+        .where(stash_engine_generic_files: { file_state: %w[created deleted] })
+        .where(stash_engine_generic_files: { type: 'StashEngine::DataFile' })
     end
 
     # these are items that are embargoed or published and can show metadata
@@ -394,7 +395,7 @@ module StashEngine
       # because there is nothing of interest to see in this version of no-file changes between published versions
       unchanged = true
       resources.each do |res|
-        unchanged &&= res.files_unchanged?
+        unchanged &&= res.files_unchanged?(association: 'data_files')
         if res.file_view == true
           res.update_column(:file_view, false) if unchanged
           unchanged = true
@@ -427,7 +428,7 @@ module StashEngine
     # rubocop:disable Naming/PredicateName
     # Nope: I don't think taking the 'has_' off this method is helpful
     def has_zenodo_software?
-      SoftwareUpload.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+      SoftwareFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
     end
     # rubocop:enable Naming/PredicateName
 

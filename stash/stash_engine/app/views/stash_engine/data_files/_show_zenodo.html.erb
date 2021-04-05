@@ -1,0 +1,21 @@
+<%# the resource is passed in. Only link previously submitted files. %>
+<ul class="c-review-files__list">
+<% uploaded = resource.previous_resource&.software_submitted? %>
+
+<% resource.software_files.each do |fu| %>
+  <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
+    <li>
+      <% if fu.file_state == 'copied' && uploaded %>
+        <%= link_to fu.upload_file_name, stash_url_helpers.download_zenodo_path(file_id: fu.last_version_file&.id), target: '_blank' %>
+      <% else %>
+        <%= fu.upload_file_name %>
+      <% end %>
+      &nbsp;&nbsp;&nbsp;<%= filesize(fu.upload_file_size) %>
+
+      <% if fu.file_state == 'created' %>
+        &nbsp;&nbsp;&nbsp;<small>new</small>
+      <% end %>
+    </li>
+  </div>
+<% end %>
+</ul>

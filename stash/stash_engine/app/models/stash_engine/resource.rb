@@ -10,8 +10,10 @@ module StashEngine
     # Relations
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
-    has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
-    has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
+    has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
+    has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
+    has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
+    has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
@@ -26,10 +28,13 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
-    has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
     # download tokens are for Merritt version downloads with presigned URL caching
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
+
+    # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
+    ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
+      .map { |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
 
     accepts_nested_attributes_for :curation_activities
 
@@ -40,8 +45,7 @@ module StashEngine
 
     amoeba do
       include_association :authors
-      include_association :file_uploads
-      include_association :software_uploads
+      include_association :generic_files
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
@@ -51,28 +55,18 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
-        # this is a new rubocop cop complaint (must not be locked to a version of testing).
-        # I think this may have been done for some reason (two separate loops) because of mutation or errors, IDK.
-        # I'm not going to go back and revise right now.
-        # rubocop:disable Style/CombinableLoops
-        %i[file_uploads software_uploads].each do |meth|
-          new_resource.public_send(meth).each do |file|
-            raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+        new_resource.generic_files.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-            if file.file_state == 'created'
-              file.file_state = 'copied'
-              file.save
-            end
+          if file.file_state == 'created'
+            file.file_state = 'copied'
+            file.save
           end
         end
 
-        # for some reason a where clause will not work with AR in this instance
-        # new_resource.file_uploads.where(file_state: 'deleted').delete_all
-        %i[file_uploads software_uploads].each do |meth|
-          resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
-          resources.each(&:delete)
-        end
-        # rubocop:enable Style/CombinableLoops
+        # I think there was something weird about Amoeba that required this approach
+        resources = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        resources.each(&:delete)
       end)
     end
 
@@ -250,6 +244,9 @@ module StashEngine
 
     # ------------------------------------------------------------
     # File upload utility methods
+    # TODO: these are obsolete, but we will want to remove Stash::Merritt::Sword classes at the same time that rely
+    # on direct file uploads when we do further cleanup of the Merritt classes.  May also deprecate all current Merritt
+    # classes if they offer a better API than SWORD.
 
     def self.uploads_dir
       File.join(Rails.root, 'uploads')
@@ -266,14 +263,6 @@ module StashEngine
     # ---------
     # software file utility methods
 
-    def self.software_upload_dir_for(resource_id)
-      File.join(uploads_dir, "#{resource_id}_sfw")
-    end
-
-    def software_upload_dir
-      Resource.software_upload_dir_for(id)
-    end
-
     # tells whether software uploaded to zenodo for this resource has been published or not
     def software_published?
       zc = zenodo_copies.where(copy_type: 'software_publish', state: 'finished')
@@ -286,7 +275,7 @@ module StashEngine
     end
 
     # gets the latest files that are not deleted in db, current files for this version
-    def current_file_uploads(my_class: StashEngine::FileUpload)
+    def current_file_uploads(my_class: StashEngine::DataFile)
       subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
                                          '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
@@ -294,14 +283,14 @@ module StashEngine
     end
 
     # gets new files in this version
-    def new_file_uploads
-      subquery = FileUpload.where(resource_id: id).where("file_state = 'created'")
+    def new_data_files
+      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
-    def latest_file_states(model: 'StashEngine::FileUpload')
+    def latest_file_states(model: 'StashEngine::DataFile')
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
@@ -309,58 +298,52 @@ module StashEngine
     end
 
     # the size of this resource (created + copied files)
-    def size
-      file_uploads.where(file_state: %w[copied created]).sum(:upload_file_size)
+    def size(association: 'data_files')
+      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
     end
 
     # just the size of the new files
-    def new_size
-      file_uploads.where(file_state: %w[created]).sum(:upload_file_size)
+    def new_size(association: 'data_files')
+      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
-    def upload_type(method: 'file_uploads')
-      return :manifest if send(method).newly_created.url_submission.count > 0
-      return :files if send(method).newly_created.file_submission.count > 0
+    def upload_type(association: 'data_files')
+      return :manifest if send(association).newly_created.url_submission.count > 0
+      return :files if send(association).newly_created.file_submission.count > 0
 
       :unknown
     end
 
-    # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames(method: 'file_uploads')
-      table_name = (method == 'file_uploads' ? 'stash_engine_file_uploads' : 'stash_engine_software_uploads')
+    # returns the list of files with duplicate names in created state where we shouldn't have any
+    def duplicate_filenames(association: 'data_files')
+      target_class_name = ASSOC_TO_FILE_CLASS[association]
+      raise 'Invalid table name' if target_class_name.blank?
+
       sql = <<-SQL
         SELECT *
-        FROM #{table_name} AS a
+        FROM stash_engine_generic_files AS a
         JOIN (SELECT upload_file_name
-          FROM #{table_name}
-          WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created')
+          FROM stash_engine_generic_files
+          WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created') AND type = ?
           GROUP BY upload_file_name HAVING count(*) >= 2) AS b
         ON a.upload_file_name = b.upload_file_name
-        WHERE a.resource_id = ?
+        WHERE a.resource_id = ? AND type = ?
       SQL
       # get the correct ActiveRecord model based on the method name
-      "StashEngine::#{method.to_s.singularize.camelize}".constantize.find_by_sql([sql, id, id])
+      target_class_name.constantize.find_by_sql([sql, id, target_class_name, id, target_class_name])
     end
 
-    def url_in_version?(url)
-      file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+    def url_in_version?(url:, association: 'data_files')
+      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
     end
 
-    def files_unchanged?
-      !files_changed?
+    def files_unchanged?(association: 'data_files')
+      !files_changed?(association: association)
     end
 
-    def files_changed?
-      file_uploads.where(file_state: %w[created deleted]).count.positive?
-    end
-
-    def software_unchanged?
-      !software_changed?
-    end
-
-    def software_changed?
-      software_uploads.where(file_state: %w[created deleted]).count.positive?
+    def files_changed?(association: 'data_files')
+      send(association).where(file_state: %w[created deleted]).count.positive?
     end
 
     # ------------------------------------------------------------
@@ -717,8 +700,9 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
+    # this just sends a **COPY** job to zenodo (ie Merritt duplication), not for replication which could be sfw or supp
     def send_to_zenodo
-      return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
+      return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
       ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data') if zenodo_copies.data.empty?
       ZenodoCopyJob.perform_later(id)

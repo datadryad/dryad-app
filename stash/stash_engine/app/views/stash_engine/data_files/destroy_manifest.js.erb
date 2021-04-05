@@ -1,0 +1,6 @@
+// set link states again to what they were for few/many files
+<%= render partial: 'stash_engine/data_files/redraw_files_table.js', locals: { resource: @resource} %>
+$('#upload_message').removeClass();
+$('#upload_message').addClass('c-upload__upload-complete-text');
+$('#upload_message').html('<p>The file has been removed</p>');
+$('#upload_message').show(0);

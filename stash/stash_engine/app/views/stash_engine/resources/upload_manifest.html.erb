@@ -10,12 +10,12 @@
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
 <div id="choose_method">
-  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
+  <%= render partial: 'stash_engine/data_files/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
 </div>
 
 <!-- manifest workflow -->
 <div class="manifest_upload" class="limits_and_part_2">
-  <%= render partial: 'stash_engine/file_uploads/manifest_upload',
+  <%= render partial: 'stash_engine/data_files/manifest_upload',
        locals: { resource: @resource } %>
 </div>
 
@@ -36,7 +36,7 @@
 
   $(function () {
     // set up initial page loaded state
-    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type(method: @resource_assoc).to_s) %>'); // set lockout so you can't change view if you have files already
+    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type(association: @resource_assoc).to_s) %>'); // set lockout so you can't change view if you have files already
     $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
     confirmToValidate(); // add event to require checking acceptance before validating
   });

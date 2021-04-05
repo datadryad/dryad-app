@@ -58,8 +58,8 @@ module StashDatacite
         @file_uploads ||= @resource.current_file_uploads
       end
 
-      def software_uploads
-        @software_uploads ||= @resource.current_file_uploads(my_class: StashEngine::SoftwareUpload)
+      def software_files
+        @software_files ||= @resource.current_file_uploads(my_class: StashEngine::SoftwareFile)
       end
 
       def geolocation_points
