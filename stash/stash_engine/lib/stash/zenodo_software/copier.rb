@@ -118,7 +118,6 @@ module Stash
         end
 
         # update metadata
-        # TODO: Metadata needs to be different based on copy type (software, supp)
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
 
         # update files
@@ -142,7 +141,7 @@ module Stash
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
-        @deposit.publish if @resource.software_files.present_files.count > 0 # do not actually publish unless there are files
+        @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
         @copy.update(state: 'finished', error_info: nil)
       end
 
@@ -164,44 +163,39 @@ module Stash
       private
 
       def error_if_any_previous_unfinished
-        # items that don't have entries in the zenodo_copies table, need <= resource.id because otherwise it may pick up later
-        # entries being edited that haven't been added yet.  TODO: Do I need to limit to only software-type uploads somehow?
-        resources = @resource.identifier.resources
-          .joins('LEFT JOIN stash_engine_zenodo_copies ON stash_engine_resources.id = stash_engine_zenodo_copies.resource_id')
-          .where('stash_engine_zenodo_copies.resource_id IS NULL').where('stash_engine_resources.id <= ?', @resource)
 
-        return if resources.count < 1
+        res = @resource.identifier.zenodo_copies
+            .where('stash_engine_zenodo_copies.resource_id < ?', @resource.id)
+            .where('stash_engine_zenodo_copies.copy_type like ?%', @dataset_type.to_s)
+            .where("stash_engine_zenodo_copies.state <> 'finished'")
 
-        unsubmitted_count = resources.map { |res| res.software_files.count }.reduce(0, :+)
-
-        return unless unsubmitted_count.positive?
+        return if res.count < 1
 
         raise ZE, "identifier_id #{@resource.identifier.id}: Cannot replicate a later version until earlier " \
-              'versions with software have replicated. An earlier is missing from ZenodoCopies table.'
+              'versions with have replicated. An earlier is missing from ZenodoCopies table.'
       end
 
       def error_if_more_than_one_replication_for_resource
-        # this also catches an error if something is trying to publish that hasn't had a software-type submission yet for this resource
-        return if @resource.zenodo_copies.where(copy_type: 'software').count == 1 # can have software and software_publish for same resource
+        return if @resource.zenodo_copies.where(copy_type: @copy.copy_type).count == 1 # can have software and software_publish for same resource
 
         raise ZE, "resource_id #{@resource.id}: Exactly one replication of the same type (software or data) is allowed per resource."
       end
 
       def files_changed?
-        change_count = @resource.software_files.deleted_from_version.count + @resource.software_files.newly_created.count
+        change_count = @resource.send(@resource_method).deleted_from_version.count + @resource.send(@resource_method).newly_created.count
         change_count.positive?
       end
 
       def error_if_bad_type
-        return if %w[software software_publish].include?(@copy.copy_type)
+        return unless @copy.copy_type.start_with('data')
 
-        raise ZE, "copy_id #{@copy.id}: Needs to be of the correct type (software not data)"
+        raise ZE, "copy_id #{@copy.id}: Needs to be of the correct type (not data)"
       end
 
       def nothing_to_submit?
         return false if submitted_before? || files_changed?
 
-        @copy.update(state: 'finished', error_info: 'No software to submit to Zenodo for this resource id')
+        @copy.update(state: 'finished', error_info: 'Nothing to submit to Zenodo for this resource id')
         true
       end
 
@@ -211,7 +205,7 @@ module Stash
 
       def update_zenodo_relation
         # only add link to zenodo software if they have any files left that they haven't deleted
-        if @resource.software_files.where(file_state: %w[created copied]).count.positive?
+        if @resource.send(@resource_method).where(file_state: %w[created copied]).count.positive?
           StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
         else
           StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
