@@ -27,8 +27,8 @@ module Stash
   module ZenodoSoftware
 
     REPLI_ASSOC = {
-      software: {s3: 'software', resource: :software_files},
-      supp: {s3: 'supplemental', resource: :supp_files}
+      software: { s3: 'software', resource: :software_files },
+      supp: { s3: 'supplemental', resource: :supp_files }
     }.with_indifferent_access.freeze
 
     class Copier
@@ -37,7 +37,7 @@ module Stash
       # as a utility manually submit sometime in the future.
       # It adds all entries for submitting in the zenodo_copies table as needed, and resets if needed to test again.
       def self.test_submit(resource_id:, publication: false, type: 'software')
-        rep_type = if type== 'software'
+        rep_type = if type == 'software'
                      (publication == true ? 'software_publish' : 'software')
                    else
                      (publication == true ? 'supp_publish' : 'supp')
@@ -60,7 +60,8 @@ module Stash
       include Stash::ZenodoReplicate::CopierMixin
 
       def initialize(copy_id:, dataset_type: :software)
-        raise "copy_type must be :software or :supp" unless Stash::ZenodoSoftware::REPLI_ASSOC.keys.include?(dataset_type)
+        raise 'copy_type must be :software or :supp' unless Stash::ZenodoSoftware::REPLI_ASSOC.keys.include?(dataset_type)
+
         # set up the associations that get used variably
         @dataset_type = dataset_type
         @resource_method = Stash::ZenodoSoftware::REPLI_ASSOC[@dataset_type][:resource]
@@ -71,7 +72,7 @@ module Stash
           .send(@dataset_type).order(id: :desc).first
         @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
-        file_change_list = FileChangeList.new(resource: @resource, resource_method: @resource_method )
+        file_change_list = FileChangeList.new(resource: @resource, resource_method: @resource_method)
         @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: file_change_list)
         # I was creating this later, but it can be created earlier and eases testing to do it earlier
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
@@ -163,11 +164,10 @@ module Stash
       private
 
       def error_if_any_previous_unfinished
-
         res = @resource.identifier.zenodo_copies
-            .where('stash_engine_zenodo_copies.resource_id < ?', @resource.id)
-            .where('stash_engine_zenodo_copies.copy_type like ?%', @dataset_type.to_s)
-            .where("stash_engine_zenodo_copies.state <> 'finished'")
+          .where('stash_engine_zenodo_copies.resource_id < ?', @resource.id)
+          .where('stash_engine_zenodo_copies.copy_type like ?%', @dataset_type.to_s)
+          .where("stash_engine_zenodo_copies.state <> 'finished'")
 
         return if res.count < 1
 
