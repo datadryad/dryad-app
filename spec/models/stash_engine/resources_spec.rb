@@ -47,7 +47,7 @@ module StashEngine
         before(:each) do
           @resource = create(:resource, identifier: create(:identifier))
           @identifier = @resource.identifier
-          @resource.software_uploads << create(:software_upload)
+          @resource.software_files << create(:software_file)
         end
 
         it 'sends the software to zenodo' do
@@ -832,28 +832,7 @@ module StashEngine
       end
     end
 
-    describe 'file uploads' do
-      describe 'uploads directory' do
-        before(:each) do
-          allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
-        end
-        describe :uploads_dir do
-          it 'returns the uploads directory' do
-            expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
-          end
-        end
-        describe :upload_dir_for do
-          it 'returns a separate directory by resource ID' do
-            expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
-          end
-        end
-        describe :upload_dir do
-          it 'returns the upload directory for this resource' do
-            resource = Resource.create
-            expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
-          end
-        end
-      end
+    describe 'data filess' do
 
       describe :current_file_uploads do
         attr_reader :created_files
@@ -863,7 +842,7 @@ module StashEngine
           @res1 = create(:resource, user_id: user.id)
 
           @created_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'created',
               upload_file_name: "created#{i}.bin",
@@ -871,7 +850,7 @@ module StashEngine
             )
           end
           @copied_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'copied',
               upload_file_name: "copied#{i}.bin",
@@ -879,7 +858,7 @@ module StashEngine
             )
           end
           @deleted_files = Array.new(3) do |i|
-            FileUpload.create(
+            DataFile.create(
               resource: @res1,
               file_state: 'deleted',
               upload_file_name: "deleted#{i}.bin",
@@ -905,16 +884,16 @@ module StashEngine
             @res2 = @res1.amoeba_dup
           end
 
-          it 'copies the records' do
-            expected_names = @res1.file_uploads.map(&:upload_file_name)
-            actual_names = @res2.file_uploads.map(&:upload_file_name)
-            expect(actual_names).to contain_exactly(*expected_names)
+          it 'copies the non-deleted records' do
+            created_and_copied = (created_files + copied_files).map(&:upload_file_name)
+            new_names = @res2.data_files.map(&:upload_file_name)
+            expect(new_names).to match_array(created_and_copied)
           end
 
           it 'copies all current records' do
             old_current_names = @res1.current_file_uploads.map(&:upload_file_name)
             new_current_names = @res2.current_file_uploads.map(&:upload_file_name)
-            expect(new_current_names).to contain_exactly(*old_current_names)
+            expect(new_current_names).to match_array(old_current_names)
           end
 
           it 'sets all current records to "copied"' do
@@ -922,7 +901,7 @@ module StashEngine
           end
 
           it 'doesn\'t copy deleted files' do
-            expect(@res2.file_uploads.deleted).to be_empty
+            expect(@res2.data_files.deleted).to be_empty
           end
         end
 
@@ -937,7 +916,7 @@ module StashEngine
 
         describe :upload_type do
           it 'returns :unknown for no uploads' do
-            @res1.file_uploads.delete_all
+            @res1.data_files.delete_all
             expect(@res1.upload_type).to eq(:unknown)
           end
 
@@ -955,14 +934,14 @@ module StashEngine
           end
         end
 
-        describe :new_file_uploads do
+        describe :new_data_files do
           it 'defaults to empty' do
             res3 = create(:resource, user_id: user.id)
-            expect(res3.new_file_uploads).to be_empty
+            expect(res3.new_data_files).to be_empty
           end
 
           it 'includes only created' do
-            new = @res1.new_file_uploads
+            new = @res1.new_data_files
             created_files.each { |f| expect(new).to include(f) }
             copied_files.each { |f| expect(new).not_to include(f) }
             deleted_files.each { |f| expect(new).not_to include(f) }
@@ -970,30 +949,26 @@ module StashEngine
         end
       end
 
-      describe :file_uploads do
+      describe :data_files do
         before(:each) do
           @resource = create(:resource)
-          calc_file_paths = Array.new(3) do |i|
-            tempfile = Tempfile.new(["foo-#{i}", 'bin'])
-            File.write(tempfile.path, '')
-            tempfile.path
-          end
-          @uploads = calc_file_paths.map do |path|
-            create(:file_upload,
+          @uploads = Array.new(3) do |_i|
+            create(:data_file,
                    resource: @resource,
-                   upload_file_name: File.basename(path),
                    file_state: :created)
           end
         end
 
         describe :latest_file_states do
           it 'finds the latest version of each file' do
-            new_latest = @uploads.each_with_index.map do |upload, _i|
-              create(:file_upload,
-                     resource: upload.resource,
-                     upload_file_name: upload.upload_file_name,
+            # add copies of these files to the resource
+            new_latest = @uploads.each_with_index.map do |f, _i|
+              create(:data_file,
+                     resource: f.resource,
+                     upload_file_name: f.upload_file_name,
                      file_state: :copied)
             end
+            @resource.reload
             latest = @resource.latest_file_states
             expect(latest.count).to eq(new_latest.size)
             latest.each { |upload| expect(new_latest).to include(upload) }
@@ -1004,7 +979,7 @@ module StashEngine
           it 'identifies duplicate files' do
             original = @uploads[0]
             file_name = original.upload_file_name
-            duplicate = create(:file_upload,
+            duplicate = create(:data_file,
                                resource_id: @resource.id,
                                upload_file_name: file_name,
                                file_state: :created)
@@ -1017,7 +992,7 @@ module StashEngine
 
         describe :url_in_version? do
           it 'returns false if not present' do
-            expect(@resource.url_in_version?('http://example.org/')).to eq(false)
+            expect(@resource.url_in_version?(url: 'http://example.org/')).to eq(false)
           end
 
           it 'returns true if present' do
@@ -1026,7 +1001,7 @@ module StashEngine
             upload.status_code = 200
             upload.save
 
-            expect(@resource.url_in_version?('http://example.org/')).to eq(true)
+            expect(@resource.url_in_version?(url: 'http://example.org/')).to eq(true)
           end
         end
       end
@@ -1468,15 +1443,10 @@ module StashEngine
         # This is all horribly hacky because of the way these tests don't load Rails correctly, we need move tests to
         # a real Rails environment.
 
-        require 'active_job'
-        rails_root = Dir.mktmpdir('rails_root')
-        root_path = Pathname.new(rails_root)
-        allow(Rails).to receive(:root).and_return(root_path)
-
         require_relative '../../../stash/stash_engine/app/jobs/stash_engine/zenodo_copy_job'
 
         @resource = create(:resource)
-        create(:file_upload, resource: @resource)
+        create(:data_file, resource_id: @resource.id)
       end
 
       it 'creates a zenodo_copy record in database' do

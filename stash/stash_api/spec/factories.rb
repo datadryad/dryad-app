@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory(:file_upload, class: StashEngine::FileUpload) do
+  factory(:data_file, class: StashEngine::DataFile) do
     id { nil }
     upload_file_name { 'test.txt' }
     upload_content_type { 'text/plain' }

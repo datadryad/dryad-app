@@ -100,10 +100,10 @@ module StashEngine
 
     # uses presigned
     def file_stream
-      file_upload = FileUpload.find(params[:file_id])
-      if file_upload&.resource&.may_download?(ui_user: current_user)
-        CounterLogger.general_hit(request: request, file: file_upload)
-        @file_presigned.download(file: file_upload)
+      data_file = DataFile.find(params[:file_id])
+      if data_file&.resource&.may_download?(ui_user: current_user)
+        CounterLogger.general_hit(request: request, file: data_file)
+        @file_presigned.download(file: data_file)
       else
         render status: 403, plain: 'You are not authorized to download this file until it has been published.'
       end
@@ -113,7 +113,7 @@ module StashEngine
     # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
     # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
     def zenodo_file
-      sfw_upload = SoftwareUpload.where(id: params[:file_id]).first
+      sfw_upload = SoftwareFile.where(id: params[:file_id]).first
       res = sfw_upload&.resource
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 

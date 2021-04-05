@@ -1,24 +1,93 @@
 <h1>Our Membership</h1>
 
-<p>Dryad’s Members are part of a non-profit, shared community working together
-to promote data publishing, curation, and preservation. The community benefits
-from Dryad’s services designed specifically for the Member community. Our
-community is open to a full spectrum of stakeholder organizations including
-universities, research institutions and academic libraries. See more about
-<a href="/stash/join_us">joining us as a member organization</a>.</p>
+<p>Dryad’s Members are part of a non-profit, shared community working together to promote
+data publishing, curation, and preservation. The community benefits from Dryad’s services designed
+specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations
+including universities, research institutions and academic libraries. See more about <a href="/stash/join_us">joining us as a member organization</a>.</p>
 
 <h2>Institutional Members</h2>
 
-<table>
-<tr>
-<td>Some great table goes here</td>
-</tr>
+<table class="c-table_institutions">
+  <tbody>
+  <tr>
+    <td>
+      <ul>
+        <li>California State University, East Bay</li>
+        <li>Chan Zuckerberg Initiative</li>
+        <li>Claremont Graduate University</li>
+        <li>Claremont McKenna College</li>
+        <li>Columbia University</li>
+        <li>Desert Research Institute</li>
+        <li>Harvey Mudd College</li>
+        <li>Indian Institute of Technology Dhanbad</li>
+        <li>Keck Graduate Institute</li>
+        <li>King Abdullah University of Science and Technology</li>
+        <li>Kyoto University</li>
+        <li>Lawrence Berkeley National Lab</li>
+        <li>Macquarie University</li>
+        <li>Montana State University</li>
+        <li>Netherlands Institute of Ecology (NIOO-KNAW)</li>
+        <li>North Carolina State University</li>
+        <li>The Ohio State University</li>
+        <li>Stanford University</li>
+        <li>Texas Tech University</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>University of California, California Digital Library</li>
+        <li>UC Berkeley</li>
+        <li>UC Davis</li>
+        <li>UC Irvine</li>
+        <li>UCLA</li>
+        <li>UC Merced</li>
+        <li>UC Riverside</li>
+        <li>UC San Francisco</li>
+        <li>UC San Diego</li>
+        <li>UC Santa Barbara</li>
+        <li>UC Santa Cruz</li>
+        <li>University of Illinois, Urbana-Champagne</li>
+        <li>University of Minnesota</li>
+        <li>University of New Mexico</li>
+        <li>University of New South Wales, Sydney</li>
+        <li>The University of Rhode Island</li>
+        <li>Victoria University, Melbourne</li>
+        <li>Yale University</li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
 </table>
 
 <h2>Publisher Members</h2>
 
-<table>
-<tr>
-<td>Some great table goes here</td>
-</tr>
+<table class="c-table_institutions">
+  <tbody>
+  <tr>
+    <td>
+      <ul>
+        <li>American Academy for the Advancement of Science</li>
+        <li>American Genetic Association</li>
+        <li>American Society of Naturalists</li>
+        <li>Association for Tropical Biology and Conservation</li>
+        <li>Botanical Society of America</li>
+        <li>British Ecological Society</li>
+        <li>Cambridge University Press</li>
+        <li>European Society for Evolutionary Biology</li>
+    </ul>
+  </td>
+  <td>
+    <ul>
+        <li>German National Library of Medicine</li>
+        <li>Nordic Society Oikos</li>
+        <li>Oxford University Press</li>
+        <li>Society for the Study of Evolution</li>
+        <li>Society of Systematic Biologists</li>
+        <li>The Genetics Society</li>
+        <li>The Royal Society</li>
+        <li>Wiley</li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
 </table>

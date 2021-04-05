@@ -1,0 +1,66 @@
+<% #takes locals: resource, rows: (<number>) %>
+<% rows = 10 if rows.blank?
+  rows = rows.to_i
+%>
+<div>
+  <% if resource.nil? %>
+    <span id="no_chosen2">Unable to display files. Please refresh the page.</span>  
+  <% elsif resource.send(@resource_assoc).validated_table.count < 1 %>
+    <span id="no_chosen2">No files have been uploaded.</span>
+  <% else %>
+    <table class="c-lined-table">
+      <tr class="c-lined-table__head">
+        <th class="c-manifest-table__filename-col">Filename</th>
+        <th class="c-manifest-table__url-col">URL</th>
+        <th class="c-manifest-table__size-col">Size</th>
+        <th class="c-manifest-table__version-col">Status</th>
+        <th class="c-manifest-table__actions-col">Actions</th>
+      </tr>
+      <%= render partial: "stash_engine/data_files/manifest_upload_line",
+               collection: resource.send(@resource_assoc).validated_table.limit(rows), as: :uploaded_file %>
+      <% if resource.latest_file_states.count > 10 %>
+        </tbody> <!-- closing tbody which shows/hides rows greater than 10 -->
+      <% end %>
+    </table>
+    <% if resource.send(@resource_assoc).validated_table.count > 10 %>
+      <% if rows == 10 %>
+        <p id="show_all_files">
+          <%= link_to 'Show all files', polymorphic_path(@file_model, resource_id: resource.id, rows: 99999), format: 'js', remote: true %>
+        </p>
+      <% else %>
+        <p id="show_10_files">
+          <%= link_to 'Show 10 files', polymorphic_path(@file_model,resource_id: resource.id, rows: 10), format: 'js', remote: true %>
+        </p>
+      <% end %>
+    <% end %>
+    <p id="display_size">Total: <%= filesize(resource.send(@resource_assoc).present_files.sum(:upload_file_size)) %></p>
+    <% services = resource.send(@resource_assoc).newly_created.where.not(cloud_service: nil).select(:cloud_service).distinct(:cloud_service) %>
+    <% if services.count > 0 %>
+      <p>You have added sharing URLs from
+        <%= english_list(array: services.map{|i| i.cloud_service.capitalize }, conjunction: 'and') %>.
+        These URLs have been modified so they can be downloaded directly.
+      </p>
+    <% end %>
+    <div class="bad_upload">
+      <% if resource.send(@resource_assoc).present_files.sum(:upload_file_size) > current_tenant.max_submission_size %>
+        <p id="over_manifest_size">
+          Your file size is over <%= filesize(current_tenant.max_submission_size) %>. You must remove some files to
+          bring your total under this limit before you can upload these files.
+        </p>
+      <% end %>
+      <% if resource.send(@resource_assoc).present_files.count > current_tenant.max_files %>
+        <p id="over_count">
+          The number of files you added is more than <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %>.
+          In order to submit your dataset you must remove some files.
+        </p>
+      <% end %>
+      <% if resource.send(@resource_assoc).newly_created.sum(:upload_file_size) > current_tenant.max_total_version_size && resource.upload_type == :files %>
+        <p id="over_version_size">
+          Your files added to this version are over <%= filesize(current_tenant.max_total_version_size) %>.
+          You must remove some files to bring your uploaded files under the limit.  If you need to make a larger
+          submisison, you may submit your files as URLs from a server.
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

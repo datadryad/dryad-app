@@ -1,0 +1,6 @@
+// redraw table
+$('#validated_files').html("<%= escape_javascript(
+          render partial: 'stash_engine/data_files/validated_files', locals: {resource: resource, rows: params[:rows] }) %>");
+
+// reset method lockout & add events to few/many rows links again
+setUploadMethodLockout('<%= escape_javascript(resource.upload_type(association: @resource_assoc).to_s) %>');
