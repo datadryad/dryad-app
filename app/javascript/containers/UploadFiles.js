@@ -12,13 +12,16 @@ class UploadFiles extends React.Component {
     state = {
         upload_type: [
             {
-                id: 'data', name: 'Data', description: 'eg., Spreadsheets, example1, example2',
-                buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'},
+                id: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad', name: 'Data',
+                description: 'Example 1, example 2, example 3',
+                buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                id: 'software', name: 'Software', description: 'e.g., Example1, example2, example3',
-                buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'},
+                id: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo', name: 'Software',
+                description: 'Example 1, example 2, example 3',
+                buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                id: 'supplemental', name: 'Supplemental Information', description: 'e.g., Example1, example2, example3',
+                id: 'supplemental', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
+                name: 'Supplemental Information', description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
@@ -52,10 +55,9 @@ class UploadFiles extends React.Component {
     }
 
     updateManifestFiles = (files) => {
-        if (files['invalid_urls'].length)
-            this.updateFailedUrls(files['invalid_urls']);
-        if (!files['valid_urls'].length) return;
+        this.updateFailedUrls(files['invalid_urls']);
 
+        if (!files['valid_urls'].length) return;
         let successfulUrls = files['valid_urls'];
         if (this.state.chosenFiles.length) {
             successfulUrls = this.discardAlreadyChosen(successfulUrls);
@@ -65,15 +67,11 @@ class UploadFiles extends React.Component {
     }
 
     updateFailedUrls = (urls) => {
-        this.includeIds(urls);
+        if (!urls.length) return;
         this.includeErrorMessages(urls);
-        this.setState({failedUrls: urls});
-    }
-
-    includeIds = (urls) => {
-        urls.map((url, index) => {
-            urls[index].id = index;
-        })
+        let failedUrls = [...this.state.failedUrls];
+        failedUrls = failedUrls.concat(urls);
+        this.setState({failedUrls: failedUrls});
     }
 
     includeErrorMessages = (urls) => {
@@ -151,14 +149,20 @@ class UploadFiles extends React.Component {
         this.setState({showModal: true});
     };
 
-    hideModal = () => {
-        this.setState({showModal: false});
+    hideModal = (event) => {
+        if (event.type === 'submit' || event.type === 'click'
+            || (event.type === 'keydown' && event.keyCode === 27)) {
+            this.setState({submitButtonUrlsDisabled: true})
+            this.setState({showModal: false});
+        }
     }
 
     submitUrlsHandler = (event) => {
         event.preventDefault();
-        this.hideModal();
+        this.hideModal(event);
         this.toggleCheckedUrls(event);
+
+        if (!this.state.urls) return;
 
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
@@ -168,6 +172,7 @@ class UploadFiles extends React.Component {
         axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
             .then(response => {
                 this.updateManifestFiles(response.data);
+                this.setState({urls: null});
             })
             .catch(error => console.log(error));
     };
@@ -234,9 +239,9 @@ class UploadFiles extends React.Component {
             .catch(error => console.log(error));
     }
 
-    removeFailedUrlHandler = (urlId) => {
-        const failedUrls = this.state.failedUrls.filter(url => {
-            return url.id !== urlId;
+    removeFailedUrlHandler = (index) => {
+        const failedUrls = this.state.failedUrls.filter((url, urlIndex) => {
+            return urlIndex !== index;
         })
         this.setState({failedUrls: failedUrls});
     }
@@ -247,6 +252,7 @@ class UploadFiles extends React.Component {
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
                     <ConfirmSubmit
+                        id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
                         disabled={this.state.submitButtonFilesDisabled}
                         changed={this.toggleCheckedFiles} />
@@ -255,7 +261,7 @@ class UploadFiles extends React.Component {
         } else {
             return (
                 <div>
-                    <h1 className={classes.FileTitle}>Files</h1>
+                    <h2 className="o-heading__level2">Files</h2>
                     <p>No files have been selected.</p>
                 </div>
             )
@@ -264,15 +270,16 @@ class UploadFiles extends React.Component {
 
     buildModal = () => {
         if (this.state.showModal) {
+            document.addEventListener('keydown', this.hideModal);
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
                 clicked={this.hideModal}
-                buttonLabel='Validate Files'
                 disabled={this.state.submitButtonUrlsDisabled}
                 changed={this.toggleCheckedUrls}
-                />
+            />
         } else {
+            document.removeEventListener('keydown', this.hideModal);
             return null;
         }
     }
@@ -284,21 +291,27 @@ class UploadFiles extends React.Component {
 
         return (
             <div className={classes.UploadFiles}>
-                <h1>Upload Files</h1>
+                {modalURL}
+                <h1 className="o-heading__level1">
+                    Upload Your Files <span className="t-upload__heading-optional">(optional)</span>
+                </h1>
                 <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
-                {this.state.upload_type.map((upload_type) => {
-                    return <UploadType
-                        changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
-                        clicked={() => this.showModal(upload_type.id)}
-                        id={upload_type.id}
-                        name={upload_type.name}
-                        description={upload_type.description}
-                        buttonFiles={upload_type.buttonFiles}
-                        buttonURLs={upload_type.buttonURLs} />
-                })}
+                <div className="c-uploadwidgets">
+                    {this.state.upload_type.map((upload_type) => {
+                        return <UploadType
+                            key={upload_type.id}
+                            changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
+                            clicked={() => this.showModal(upload_type.id)}
+                            id={upload_type.id}
+                            logo={upload_type.logo}
+                            name={upload_type.name}
+                            description={upload_type.description}
+                            buttonFiles={upload_type.buttonFiles}
+                            buttonURLs={upload_type.buttonURLs} />
+                    })}
+                </div>
                 {failedUrls}
                 {chosenFiles}
-                {modalURL}
             </div>
         );
     }
