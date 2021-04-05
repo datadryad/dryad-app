@@ -35,7 +35,10 @@ cd apps/ui/current
 RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2019-11
 cp shopping* ~/tools/journal-payments/shoppingcart/
 cd ~/tools/journal-payments/shoppingcart
+git pull
+git add <new-file>
 git commit -a -m "add reports for 2019-11"
+git push origin main
 ```
 
 Dataset Info Report
