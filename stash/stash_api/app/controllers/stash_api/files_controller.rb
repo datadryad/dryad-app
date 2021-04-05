@@ -59,7 +59,7 @@ module StashApi
         render json: { error: 'This file must be part of an an in-progress version' }.to_json, status: 403
         return
       end
-      file_hash = make_deleted(file_upload: @stash_file)
+      file_hash = make_deleted(data_file: @stash_file)
       respond_to do |format|
         format.any { render json: file_hash, status: 200 }
       end
@@ -195,16 +195,16 @@ module StashApi
 
     # make a file deleted and return the hash for what it looks like after with HATEOAS, I forgot this marks for deletion
     # also in second version
-    def make_deleted(file_upload:)
-      case file_upload.file_state
+    def make_deleted(data_file:)
+      case data_file.file_state
       when 'created' # delete from db since it's new in this version
-        my_hate = { '_links': StashApi::File.new(file_id: file_upload.id).links.except(:self) }
-        file_upload.destroy
+        my_hate = { '_links': StashApi::File.new(file_id: data_file.id).links.except(:self) }
+        data_file.destroy
         return my_hate
       when 'copied' # make 'deleted' which will remove in this version on next submission
-        file_upload.update!(file_state: 'deleted')
+        data_file.update!(file_state: 'deleted')
       end
-      StashApi::File.new(file_id: file_upload.id).metadata
+      StashApi::File.new(file_id: data_file.id).metadata
     end
 
     def require_viewable_file

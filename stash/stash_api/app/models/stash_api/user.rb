@@ -31,7 +31,7 @@ module StashApi
     end
 
     def parent_version
-      @version ||= Version.new(resource_id: @se_file_upload.resource_id)
+      @version ||= Version.new(resource_id: @se_data_file.resource_id)
     end
 
     private
