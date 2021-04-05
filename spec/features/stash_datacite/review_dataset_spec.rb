@@ -62,7 +62,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
-  context :software_uploaded do
+  context :software_fileed do
     before(:each, js: true) do
       # Sign in and create a new dataset
       visit root_path
@@ -80,7 +80,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     # I do not know how we test this entire flow when it involves the outside S3 service from the page that is hard to mock
     # I think we will need to add requests tests for more specific things for these calls
     xit 'shows the software/supp info if uploaded', js: true do
-      navigate_to_software_upload
+      navigate_to_software_file
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
@@ -98,7 +98,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     xit "doesn't show the software info if software not uploaded", js: true do
-      navigate_to_software_upload
+      navigate_to_software_file
 
       click_on('Proceed to Review')
       expect(page).not_to have_content('Software Files Hosted by Zenodo')
@@ -107,7 +107,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     xit 'sets MIT License for software at Zenodo', js: true do
-      navigate_to_software_upload
+      navigate_to_software_file
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end

@@ -19,7 +19,7 @@ module StashEngine
         respond_to do |format|
           format.js do
             resource
-            render 'stash_engine/file_uploads/index.js.erb'
+            render 'stash_engine/data_files/index.js.erb'
           end
         end
       end
@@ -30,7 +30,7 @@ module StashEngine
           format.js do
             @url = @file.url
             @file.destroy
-            render 'stash_engine/file_uploads/destroy_error.js.erb'
+            render 'stash_engine/data_files/destroy_error.js.erb'
           end
           format.html do
             @url = @file.url
@@ -45,7 +45,7 @@ module StashEngine
         respond_to do |format|
           format.js do
             @file.smart_destroy!
-            render 'stash_engine/file_uploads/destroy_manifest.js.erb'
+            render 'stash_engine/data_files/destroy_manifest.js.erb'
           end
         end
       end
@@ -54,14 +54,14 @@ module StashEngine
       def create
         respond_to do |format|
           format.js do
-            add_to_file(@accum_file, @file_upload) # this accumulates bytes into file for chunked uploads
+            add_to_file(@accum_file, @data_file) # this accumulates bytes into file for chunked uploads
             if more_bytes_coming
               # do not render changes to page until full file uploads and is saved into db
               head :ok, content_type: 'application/javascript'
               return
             end
             @my_file = save_final_file
-            render 'stash_engine/file_uploads/create.js.erb'
+            render 'stash_engine/data_files/create.js.erb'
           end
         end
       end
@@ -80,7 +80,7 @@ module StashEngine
             url_errors.push(result) if result[:status_code] != 200
           end
           format.js do
-            render 'stash_engine/file_uploads/validate_urls.js.erb'
+            render 'stash_engine/data_files/validate_urls.js.erb'
           end
           format.html do
             render json: { valid_urls: @resource.send(@resource_assoc), invalid_urls: url_errors }
@@ -144,7 +144,7 @@ module StashEngine
       end
 
       def unique_upload_path(original_filename)
-        filename = UrlValidator.make_unique(resource: resource, filename: original_filename)
+        filename = UrlValidator.make_unique(resource: resource, filename: original_filename, association: @resource_assoc)
         File.join(@upload_dir, filename)
       end
 

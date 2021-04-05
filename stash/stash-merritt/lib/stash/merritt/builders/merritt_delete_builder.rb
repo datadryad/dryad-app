@@ -20,7 +20,7 @@ module Stash
         end
 
         def contents
-          del_files = resource.file_uploads.deleted
+          del_files = resource.data_files.deleted
           del_files.blank? ? nil : del_files.map(&:upload_file_name).join("\n")
         end
       end

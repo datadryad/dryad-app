@@ -1,0 +1,74 @@
+<%# locals: file, resource, uploads %>
+
+<h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
+
+<div>
+  <%# form_with model: file, multipart: true, id: 'fileupload' do |f| %>
+    <div class="c-choose">
+      <%# f.hidden_field :resource_id %>
+      <div id="upload_bg" class="c-choose__drop o-drop">
+        Drag and drop files here<br/><br/>
+        or<br/><br/>
+        <input type="file" name="upload[upload]" id="upload_upload" multiple="multiple" class="c-input__file">
+        <label class="c-input__file-label" id="choose-the-files" for="upload_upload">Choose Files</label>
+      </div>
+      <div class="c-choose__label">
+      </div>
+    </div>
+  <%# end %>
+</div>
+<div class="t-upload__container">
+  <h2 class="t-upload__choose-heading--active" id="upload_tweaker_head">Step 3: Upload New Files</h2>
+</div>
+<div class="c-upload">
+  <div id="upload_list">
+    <%# render partial: 'stash_engine/data_files/files_upload_line', locals: {resource: resource, uploads: uploads} %>
+  </div>
+</div>
+
+<div>
+  <div id="size_in_upload"></div>
+  <div id="confirm_text_upload" style="display: none;">
+    <p>
+      <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
+      <strong style="color: red;"> *</strong>
+      <label for="confirm_to_upload">I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.</label>
+    </p>
+  </div>
+  <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload">Upload</button>
+  <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
+</div>
+
+<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
+
+<div class="c-upload" id="validated_files" data-load="<%= polymorphic_path(file, resource_id: @resource.id, format: :js) %>">
+  <%# render partial: 'stash_engine/data_files/validated_files', locals: {resource: @resource} %>
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+
+<div class="c-upload__upload-complete-text" id="upload_message" style="display: none;" role="status" aria-live="polite">
+</div>
+
+<script>
+  /* The encapsulation below isn't perfect, but divides methods into three main sections.  They are only needed in the upload
+     page, so isn't loaded with all the general javascript in the asset pipeline.  Some areas need to pull in Rails settings
+     so use js.erb templating to do set up.
+
+     We will likely need to rework this extensively with files redesign and if we use a framework to better separate concerns.
+   */
+
+  // *****
+  // *preview_to_page* does the annoying work of tracking files from dropping or selecting and displaying on page before uploading
+  // *****
+  <%= render partial: 'stash_engine/data_files/preview_to_page.js' %>
+
+  // *****
+  // *s3_upload* mostly focuses on uploading files in sequence by calling the evaporate library and displaying some changes
+  // *****
+  <%= render partial: 'stash_engine/data_files/s3_upload.js', locals: {resource: resource, file: file} %>
+
+  // *****
+  // *evaporate* configures and uses the library for uploading to S3 and returning a promise that it will upload or fail
+  // *****
+  <%= render partial: 'stash_engine/data_files/evaporate.js', locals: {resource: resource} %>
+</script>

@@ -5388,6 +5388,17 @@ html.no-details .o-showhide__summary {
   .c-table-heading__button {
     display: none; } }
 
+table.c-table_institutions {
+  border: none; }
+
+table.c-table_institutions td {
+  padding-right: 2em;
+  vertical-align: top; }
+
+table.c-table_institutions ul li {
+  list-style-type: none;
+  line-height: 1.7ex; }
+
 @media (min-width: 760px) {
   .c-table-latest td:nth-of-type(1) {
     font-size: 1.1em; } }
@@ -5472,6 +5483,22 @@ html.no-details .o-showhide__summary {
   .c-table-submitted--details td:nth-of-type(6) {
     margin: 0;
     font-size: 1.2em; } }
+
+blockquote.c-text_styles {
+  line-height: 135%; }
+  blockquote.c-text_styles strong {
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 1px 0; }
+
+ul.c-text_styles li {
+  margin: 1.2ex 0;
+  padding: 0; }
+
+ul.c-text_styles strong {
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 1px 0; }
 
 .c-upload {
   margin: 0 0 20px; }

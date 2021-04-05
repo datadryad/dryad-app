@@ -44,12 +44,12 @@ module Stash
         create(:resource_type, resource: @resource)
         create(:author, resource: @resource)
         create(:author, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
-        create(:file_upload, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
+        create(:data_file, resource: @resource)
         @resource.reload
 
-        @resource.new_file_uploads.find_each do |upload|
+        @resource.new_data_files.find_each do |upload|
           upload_file_name = upload.upload_file_name
           filename_encoded = URI.encode_www_form_component(upload_file_name)
           filename_decoded = URI.decode_www_form_component(filename_encoded)
@@ -92,7 +92,7 @@ module Stash
         describe 'public/system' do
           it 'writes mrt-dataone-manifest.txt' do
             # This file should look like spec/data/stash-merritt/mrt-dataone-manifest.txt
-            @resource.new_file_uploads.find_each do |upload|
+            @resource.new_data_files.find_each do |upload|
               target_string = "#{upload.upload_file_name} | #{upload.upload_content_type}"
               expect(Stash::Aws::S3).to have_received(:put)
                 .with(s3_key: /mrt-dataone-manifest\.txt/,
@@ -160,7 +160,7 @@ module Stash
 
           it 'writes mrt-delete.txt if needed' do
             deleted = []
-            @resource.file_uploads.each_with_index do |upload, index|
+            @resource.data_files.each_with_index do |upload, index|
               next unless index.even?
 
               upload.file_state = 'deleted'
