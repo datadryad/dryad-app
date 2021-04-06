@@ -185,7 +185,7 @@ module Stash
 
           it "calls required methods for publishing flow and other types of datasets (ie supplemental) don't interfere" do
             @zc3 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'supp',
-                          deposition_id: @zc.deposition_id)
+                                        deposition_id: @zc.deposition_id)
             @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
             stub_get_existing_ds(deposition_id: @zc2.deposition_id)
             deposit = @zsc.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
