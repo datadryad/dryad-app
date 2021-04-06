@@ -22,7 +22,7 @@ module Stash
         @carried_over = create(:software_file, file_state: :copied, resource: @resource)
         @deleted = create(:software_file, file_state: :deleted, resource: @resource)
 
-        @file_change_list = FileChangeList.new(resource: @resource)
+        @file_change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
       end
 
       describe '#upload_list' do
