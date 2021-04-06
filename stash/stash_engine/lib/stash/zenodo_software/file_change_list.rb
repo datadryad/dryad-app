@@ -24,7 +24,7 @@ module Stash
       # since our last publication, add any files that don't exist at Zenodo and remove any files that no longer exist
       # in our data and leave the rest of the files that stayed the same alone.
 
-      def initialize(resource:, resource_method: nil)
+      def initialize(resource:, resource_method:)
         @resource_method = resource_method
         @resource = resource
       end
