@@ -30,6 +30,7 @@ class UploadFiles extends React.Component {
         submitButtonUrlsDisabled: true,
         showModal: false,
         urls: null,
+        currentManifestFileType: null,
         failedUrls: []
     };
 
@@ -145,8 +146,9 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
-    showModal = () => {
+    showModal = (uploadTypeId) => {
         this.setState({showModal: true});
+        this.setState({currentManifestFileType: uploadTypeId});
     };
 
     hideModal = (event) => {
@@ -154,6 +156,7 @@ class UploadFiles extends React.Component {
             || (event.type === 'keydown' && event.keyCode === 27)) {
             this.setState({submitButtonUrlsDisabled: true})
             this.setState({showModal: false});
+            this.setState({currentManifestFileType: null})
         }
     }
 
@@ -169,7 +172,9 @@ class UploadFiles extends React.Component {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         const urlsObject = {url: this.state.urls};
-        axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
+        // This is from Rails Stash Engine routes
+        const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
+        axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
             .then(response => {
                 this.updateManifestFiles(response.data);
                 this.setState({urls: null});
@@ -190,7 +195,7 @@ class UploadFiles extends React.Component {
             transformed.push({
                 id: file.id, name: file.original_filename,
                 status: 'New', url: file.url,
-                typeId: 'D/S/Su', sizeKb: this.formatFileSize(file.upload_file_size)
+                typeId: file.type, sizeKb: this.formatFileSize(file.upload_file_size)
             })
         })
 
