@@ -32,7 +32,7 @@ module Stash
       end
 
       def upload_type
-        return @resource.resource_type.resource_type_general if dataset_type == :data
+        return @resource.resource_type.resource_type_general if @dataset_type == :data
 
         'software'
       end
