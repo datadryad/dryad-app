@@ -60,7 +60,7 @@ module Stash
       include Stash::ZenodoReplicate::CopierMixin
 
       def initialize(copy_id:, dataset_type: :software)
-        raise 'copy_type must be :software or :supp' unless Stash::ZenodoSoftware::REPLI_ASSOC.keys.include?(dataset_type)
+        raise 'dataset_type must be :software or :supp' unless Stash::ZenodoSoftware::REPLI_ASSOC.keys.map(&:intern).include?(dataset_type)
 
         # set up the associations that get used variably
         @dataset_type = dataset_type
@@ -164,15 +164,17 @@ module Stash
       private
 
       def error_if_any_previous_unfinished
-        res = @resource.identifier.zenodo_copies
-          .where('stash_engine_zenodo_copies.resource_id < ?', @resource.id)
-          .where('stash_engine_zenodo_copies.copy_type like ?%', @dataset_type.to_s)
-          .where("stash_engine_zenodo_copies.state <> 'finished'")
+        resources = @resource.identifier.resources.where('id < ?', @resource.id)
 
-        return if res.count < 1
+        resources.each do |res|
+          next if res.send(@resource_method).present_files.count < 1 # none of these types of files
 
-        raise ZE, "identifier_id #{@resource.identifier.id}: Cannot replicate a later version until earlier " \
-              'versions with have replicated. An earlier is missing from ZenodoCopies table.'
+          copy_record = res.zenodo_copies.where('copy_type like ?', "#{@dataset_type.to_s}%").first
+          if copy_record.nil? || copy_record.state != 'finished'
+            raise ZE, "identifier_id #{@resource.identifier.id}: Cannot replicate a later version until earlier " \
+              'versions with files have replicated. An earlier is missing or incomplete in the ZenodoCopies table.'
+          end
+        end
       end
 
       def error_if_more_than_one_replication_for_resource
@@ -187,7 +189,7 @@ module Stash
       end
 
       def error_if_bad_type
-        return unless @copy.copy_type.start_with('data')
+        return unless @copy.copy_type.starts_with?('data')
 
         raise ZE, "copy_id #{@copy.id}: Needs to be of the correct type (not data)"
       end
