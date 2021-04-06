@@ -131,7 +131,9 @@ module StashEngine
       def create_upload(url)
         url_translator = Stash::UrlTranslator.new(url)
         validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-        attributes = validator.upload_attributes_from(translator: url_translator, resource: resource)
+        attributes = validator.upload_attributes_from(
+          translator: url_translator, resource: resource, association: @resource_assoc
+        )
         if attributes[:status_code] != 200
           { url: attributes[:url], status_code: attributes[:status_code] }
         else
