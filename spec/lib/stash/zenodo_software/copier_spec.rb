@@ -183,6 +183,21 @@ module Stash
             expect(@zc2.state).to eq('finished')
           end
 
+          it "calls required methods for publishing flow and other types of datasets (ie supplemental) don't interfere" do
+            @zc3 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'supp',
+                          deposition_id: @zc.deposition_id)
+            @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc2.id)
+            stub_get_existing_ds(deposition_id: @zc2.deposition_id)
+            deposit = @zsc.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
+            expect(deposit).to receive(:update_metadata)
+            expect(deposit).to_not receive(:reopen_for_editing)
+            expect(deposit).to receive(:publish)
+            @zsc.add_to_zenodo
+            @zc2.reload
+            expect(@zc2.state).to eq('finished')
+            expect(@zc3.state).to eq('enqueued')
+          end
+
           it 'calls to reopen closed (published) for metadata updates and no file changes' do
             @zc2.update(state: 'finished')
             @resource2 = create(:resource, identifier_id: @resource.identifier_id)
