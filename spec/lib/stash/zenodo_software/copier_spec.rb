@@ -251,7 +251,7 @@ module Stash
             @zc_lone.reload
             # should not see any webmock errors because it shouldn't try contacting the internet
             expect(@zc_lone.state).to eq('finished')
-            expect(@zc_lone.error_info).to include('No software to submit')
+            expect(@zc_lone.error_info).to include('Nothing to submit to Zenodo')
           end
 
           it "doesn't reopen a done dataset just to write the metadata (when not publishing)" do
