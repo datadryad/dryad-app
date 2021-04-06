@@ -23,7 +23,7 @@ module Stash
       before(:each) do
         @resource = create(:resource)
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
-        @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id)
+        @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id, dataset_type: :software)
         @file = create(:software_file, resource_id: @resource.id)
         WebMock.disable_net_connect!(allow_localhost: true)
       end
@@ -108,7 +108,7 @@ module Stash
             # if it had attempted any requests, we'd have webmock request errors
             @zc.reload
             expect(@zc.state).to eq('error')
-            expect(@zc.error_info). to include('Needs to be of the correct type (software not data)')
+            expect(@zc.error_info). to include('Needs to be of the correct type')
           end
 
           it 'rejects multiple replications for the same resource and type (software)' do
@@ -126,7 +126,7 @@ module Stash
             @zsc.add_to_zenodo
             @zc.reload
             expect(@zc.state).to eq('finished')
-            expect(@zc.error_info).to start_with('No software to submit')
+            expect(@zc.error_info).to start_with('Nothing to submit to Zenodo')
           end
 
           it "rejects a submission if earlier software versions haven't been replicated" do
@@ -140,7 +140,7 @@ module Stash
             @zsc2.add_to_zenodo
             @zc2.reload
             expect(@zc2.state).to eq('error')
-            expect(@zc2.error_info).to include('Cannot replicate a later version until earlier versions with software have replicated')
+            expect(@zc2.error_info).to include('Cannot replicate a later version until earlier versions with files have replicated')
           end
         end
 
@@ -185,7 +185,8 @@ module Stash
 
           it 'calls to reopen closed (published) for metadata updates and no file changes' do
             @zc2.update(state: 'finished')
-            @zc3 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software_publish',
+            @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            @zc3 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software_publish',
                                         deposition_id: @zc.deposition_id)
             @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc3.id)
             stub_get_existing_closed_ds(deposition_id: @zc3.deposition_id)
@@ -193,7 +194,8 @@ module Stash
             deposit = @zsc.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
             expect(deposit).to receive(:update_metadata)
             expect(deposit).to receive(:reopen_for_editing)
-            expect(deposit).to receive(:publish)
+            # shouldn't receive publish because no file changes and zenodo won't let us
+            # expect(deposit).to receive(:publish)
             @zsc.add_to_zenodo
             @zc2.reload
             expect(@zc2.state).to eq('finished')
