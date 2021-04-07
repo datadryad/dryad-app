@@ -1,4 +1,5 @@
 require 'httparty'
+require 'stash/google/gmail'
 require_relative 'identifier_rake_functions'
 
 # rubocop:disable Metrics/BlockLength
@@ -347,6 +348,13 @@ namespace :curation_stats do
       stats.recalculate unless stats.created_at > 2.seconds.ago
     end
   end
-
 end
+
+namespace :journal_email do
+  desc 'Acquire a token for working with the target GMail account'
+  task initialize_gmail_token: :environment do
+    Stash::Google::GMail.initialize_gmail_token
+  end
+end
+
 # rubocop:enable Metrics/BlockLength
