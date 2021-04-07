@@ -67,7 +67,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('funbar.txt')
 
       # and it made it into the database
-      fu = @resource.file_uploads.first
+      fu = @resource.data_files.first
       expect(fu.upload_file_name).to eq('funbar.txt')
       expect(fu.upload_content_type).to eq('text/plain')
       expect(fu.upload_file_size).to eq(37_221)
@@ -81,7 +81,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('The URL was not found')
 
       # and it made it into the database
-      fu = @resource.file_uploads.first
+      fu = @resource.data_files.first
       expect(fu.upload_file_name).to be_nil
       expect(fu.upload_content_type).to be_nil
       expect(fu.upload_file_size).to be_nil
@@ -92,8 +92,8 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
   describe 'software URL validation' do
 
     before(:each) do
-      navigate_to_software_upload
-      navigate_to_software_upload_urls
+      navigate_to_software_file
+      navigate_to_software_file_urls
 
       # get resource and clean up uploads directories
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
@@ -125,7 +125,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('funbar.txt')
 
       # and it made it into the database
-      su = @resource.software_uploads.first
+      su = @resource.software_files.first
       expect(su.upload_file_name).to eq('funbar.txt')
       expect(su.upload_content_type).to eq('text/plain')
       expect(su.upload_file_size).to eq(37_221)
@@ -140,7 +140,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('The URL was not found')
 
       # and it made it into the database
-      su = @resource.software_uploads.first
+      su = @resource.software_files.first
       expect(su.upload_file_name).to be_nil
       expect(su.upload_content_type).to be_nil
       expect(su.upload_file_size).to be_nil

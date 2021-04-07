@@ -35,7 +35,7 @@ module Stash
 
       describe '#download_files' do
         before(:each) do
-          @file_upload = create(:file_upload, resource_id: @resource.id)
+          @data_file = create(:data_file, resource_id: @resource.id)
         end
 
         it 'raises an exception for Merritt download errors' do
@@ -46,9 +46,9 @@ module Stash
 
         it 'raises an exception for S3 download errors' do
           # first return from Merritt
-          stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 404, body: '', headers: {})
@@ -58,14 +58,14 @@ module Stash
 
         it 'sets up info_hash on success' do
           # first return from Merritt
-          stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
-                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: { 'Content-Type': 'application/json' })
+          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
+                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                            headers: { 'Content-Type': 'application/json' })
 
           stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 200, body: '', headers: {})
           @fc.download_files
-          expect(@fc.info_hash.keys).to include(@file_upload.upload_file_name)
+          expect(@fc.info_hash.keys).to include(@data_file.upload_file_name)
         end
       end
     end

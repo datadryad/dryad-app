@@ -23,14 +23,14 @@ module StashEngine
       @redirected_to = nil
     end
 
-    def self.make_unique(resource:, filename:)
-      dups = resource.file_uploads.present_files.where(upload_file_name: filename)
+    def self.make_unique(resource:, filename:, association:)
+      dups = resource.send(association).present_files.where(upload_file_name: filename)
       return filename unless dups.count > 0
 
       ext = File.extname(filename)
       core_name = File.basename(filename, ext)
       counter = 2
-      counter += 1 while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+      counter += 1 while resource.send(association).present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
       "#{core_name}-#{counter}#{ext}"
     end
 
@@ -65,7 +65,7 @@ module StashEngine
     end
 
     # need to give make_unique method may need moving
-    def upload_attributes_from(translator:, resource:)
+    def upload_attributes_from(translator:, resource:, association:)
       valid = validate
       upload_attributes = {
         resource_id: resource.id,
@@ -79,13 +79,15 @@ module StashEngine
 
       # don't allow duplicate URLs that have already been put into this version this time
       # (duplicate indicated with 409 Conflict)
-      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(url)
+      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(association: 'generic_files', url: url)
 
-      sanitized_filename = StashEngine::FileUpload.sanitize_file_name(UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename)))
+      sanitized_filename = StashEngine::GenericFile
+        .sanitize_file_name(UrlValidator
+          .make_unique(resource: resource, filename: CGI.unescape(filename), association: association))
 
       upload_attributes.merge(
         upload_file_name: sanitized_filename,
-        original_filename: UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename)),
+        original_filename: UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename), association: association),
         upload_content_type: mime_type,
         upload_file_size: size
       )

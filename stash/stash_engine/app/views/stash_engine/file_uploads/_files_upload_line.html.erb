@@ -1,6 +1,0 @@
-<%# takes local variables passed in resource: and uploads: %>
-<% if resource.file_uploads.count < 1 %>
-  <span id="no_chosen1">No files chosen</span>
-<% else %>
-  <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: uploads %>
-<% end %>

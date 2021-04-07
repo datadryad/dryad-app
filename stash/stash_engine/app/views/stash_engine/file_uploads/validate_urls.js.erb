@@ -1,9 +1,0 @@
-// manifest workflow
-
-$('#validated_errors').html("<%= escape_javascript(
-          render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource}) %>");
-$('#post_submit_spinner').hide();
-$("#validate_files").show();
-
-// redraw files table
-<%= render partial: 'stash_engine/file_uploads/redraw_files_table.js', locals: { resource: @resource} %>

@@ -8,7 +8,7 @@ module DatabaseHelper
     @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id,
                                               authors: [create(:author)], descriptions: [create(:description)],
                                               stash_version: create(:version, version: 1, merritt_version: 1),
-                                              file_uploads: [create(:file_upload)])
+                                              data_files: [create(:data_file)])
   end
 
   # this essentially creates a new resource (version) to start working on for a user

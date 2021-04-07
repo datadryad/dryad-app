@@ -24,18 +24,19 @@ module Stash
       # since our last publication, add any files that don't exist at Zenodo and remove any files that no longer exist
       # in our data and leave the rest of the files that stayed the same alone.
 
-      def initialize(resource:)
+      def initialize(resource:, resource_method:)
+        @resource_method = resource_method
         @resource = resource
       end
 
       # list of file objects to upload
       def upload_list
-        @resource.software_uploads.newly_created
+        @resource.send(@resource_method).newly_created
       end
 
       # list of filenames for deletion from zenodo
       def delete_list
-        @resource.software_uploads.deleted_from_version.pluck(:upload_file_name)
+        @resource.send(@resource_method).deleted_from_version.pluck(:upload_file_name)
       end
     end
   end
