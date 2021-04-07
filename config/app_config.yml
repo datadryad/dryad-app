@@ -158,8 +158,11 @@ defaults: &DEFAULTS
     key: AKIA2KERHV5EVVGMUL2M
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google:
+    gmail_account_name: journal-submit-app@datadryad.org
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
+    gmail_processing_label: dev-journal-submit
+    gmail_error_label: journal-submit-error
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
@@ -258,6 +261,12 @@ production:
     bucket: dryad-s3-prd
     key: AKIA2KERHV5EVVGMUL2M
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  google:
+    gmail_account_name: journal-submit-app@datadryad.org
+    gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
+    gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
+    gmail_processing_label: journal-submit
+    gmail_error_label: journal-submit-error
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
