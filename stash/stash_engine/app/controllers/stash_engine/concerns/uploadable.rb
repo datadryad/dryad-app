@@ -83,7 +83,11 @@ module StashEngine
             render 'stash_engine/data_files/validate_urls.js.erb'
           end
           format.html do
-            render json: { valid_urls: @resource.send(@resource_assoc), invalid_urls: url_errors }
+            render json: {
+              # map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately
+              valid_urls: @resource.generic_files.map(&:attributes),
+              invalid_urls: url_errors
+            }
           end
         end
       end
