@@ -75,8 +75,8 @@ module Stash
               }
             )
             .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
-          expect(MetadataGenerator).to receive(:new).with(resource: @resource, software_upload: true).and_call_original
-          resp = @szd.update_metadata(software_upload: true, doi: 'http://doi.org/12577/snakk')
+          expect(MetadataGenerator).to receive(:new).with(resource: @resource, dataset_type: :software).and_call_original
+          resp = @szd.update_metadata(doi: 'http://doi.org/12577/snakk', dataset_type: :software)
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
 

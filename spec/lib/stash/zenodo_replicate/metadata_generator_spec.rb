@@ -131,7 +131,7 @@ module Stash
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
 
-          @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, software_upload: true)
+          @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, dataset_type: :software)
         end
 
         it 'changes upload_type to :software' do

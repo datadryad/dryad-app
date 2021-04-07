@@ -80,7 +80,7 @@ module StashDatacite
       end
 
       def urls_validated?
-        if @resource.file_uploads.newly_created.errors.count > 0 || @resource.software_uploads.newly_created.errors.count > 0
+        if @resource.data_files.newly_created.errors.count > 0 || @resource.software_files.newly_created.errors.count > 0
           false
         else
           true
@@ -88,15 +88,15 @@ module StashDatacite
       end
 
       def over_manifest_file_size?(size_limit)
-        @resource.file_uploads.present_files.sum(:upload_file_size) > size_limit
+        @resource.data_files.present_files.sum(:upload_file_size) > size_limit
       end
 
       def over_manifest_file_count?(count_limit)
-        @resource.file_uploads.present_files.count > count_limit
+        @resource.data_files.present_files.count > count_limit
       end
 
       def over_version_size?(size_limit)
-        @resource.upload_type == :files && @resource.file_uploads.newly_created.sum(:upload_file_size) > size_limit
+        @resource.upload_type == :files && @resource.data_files.newly_created.sum(:upload_file_size) > size_limit
       end
 
       def required_total

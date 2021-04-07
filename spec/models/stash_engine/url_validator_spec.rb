@@ -177,7 +177,7 @@ module StashEngine
         url_validator = UrlValidator.new(url: 'http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
         resource = create(:resource)
         translator = Stash::UrlTranslator.new('http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
-        result = url_validator.upload_attributes_from(translator: translator, resource: resource)
+        result = url_validator.upload_attributes_from(translator: translator, resource: resource, association: 'data_files')
 
         expect(result[:upload_file_name]).to eq('My_cAT_hAS_FlEaS.jpg')
         expect(result[:original_filename]).to eq('My cAT hAS FlEaS.jpg')

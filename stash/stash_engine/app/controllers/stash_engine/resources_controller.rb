@@ -120,28 +120,28 @@ module StashEngine
 
     # Upload files view for resource
     def upload
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::DataFile
+      @resource_assoc = :data_files
 
-      @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
+      @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
     end
 
     # upload by manifest view for resource
     def upload_manifest
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::DataFile
+      @resource_assoc = :data_files
     end
 
     # Upload files view for resource
     def up_code
-      @file_model = StashEngine::SoftwareUpload
-      @resource_assoc = :software_uploads
+      @file_model = StashEngine::SoftwareFile
+      @resource_assoc = :software_files
 
-      @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
-      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareUpload')
-      if resource.upload_type(method: 'software_uploads') == :manifest
+      @file = SoftwareFile.new(resource_id: resource.id) # this seems needed for the upload control
+      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
+      if resource.upload_type(association: 'software_files') == :manifest
         render 'upload_manifest'
       else
         render 'upload'
@@ -150,8 +150,8 @@ module StashEngine
 
     # upload by manifest view for resource
     def up_code_manifest
-      @file_model = StashEngine::SoftwareUpload
-      @resource_assoc = :software_uploads
+      @file_model = StashEngine::SoftwareFile
+      @resource_assoc = :software_files
       render 'upload_manifest'
     end
 
@@ -176,9 +176,9 @@ module StashEngine
     end
 
     def lockout_incompatible_sfw_uploads
-      if request[:action] == 'up_code' && resource.upload_type(method: 'software_uploads') == :manifest
+      if request[:action] == 'up_code' && resource.upload_type(association: 'software_files') == :manifest
         redirect_to up_code_manifest_resource_path(resource)
-      elsif request[:action] == 'up_code_manifest' && resource.upload_type(method: 'software_uploads') == :files
+      elsif request[:action] == 'up_code_manifest' && resource.upload_type(association: 'software_files') == :files
         redirect_to up_code_resource_path(resource)
       end
     end

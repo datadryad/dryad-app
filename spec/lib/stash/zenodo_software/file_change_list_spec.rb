@@ -18,22 +18,22 @@ module Stash
       before(:each) do
         WebMock.disable_net_connect!(allow_localhost: true)
         @resource = create(:resource)
-        @created = create(:software_upload, file_state: :created, resource: @resource)
-        @carried_over = create(:software_upload, file_state: :copied, resource: @resource)
-        @deleted = create(:software_upload, file_state: :deleted, resource: @resource)
+        @created = create(:software_file, file_state: :created, resource: @resource)
+        @carried_over = create(:software_file, file_state: :copied, resource: @resource)
+        @deleted = create(:software_file, file_state: :deleted, resource: @resource)
 
-        @file_change_list = FileChangeList.new(resource: @resource)
+        @file_change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
       end
 
       describe '#upload_list' do
         it 'gives list of newly created to upload' do
-          expect(@file_change_list.upload_list).to eq(@resource.software_uploads.newly_created)
+          expect(@file_change_list.upload_list).to eq(@resource.software_files.newly_created)
         end
       end
 
       describe '#delete_list' do
         it 'gives list of items to remove' do
-          expect(@file_change_list.delete_list).to eq(@resource.software_uploads.deleted_from_version.map(&:upload_file_name))
+          expect(@file_change_list.delete_list).to eq(@resource.software_files.deleted_from_version.map(&:upload_file_name))
         end
       end
     end

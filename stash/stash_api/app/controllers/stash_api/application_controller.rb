@@ -47,7 +47,7 @@ module StashApi
     end
 
     def require_file_id(file_id:)
-      @stash_files = StashEngine::FileUpload.where(id: file_id)
+      @stash_files = StashEngine::DataFile.where(id: file_id)
       if @stash_files.count < 1
         render json: { error: 'not-found' }.to_json, status: 404
       else

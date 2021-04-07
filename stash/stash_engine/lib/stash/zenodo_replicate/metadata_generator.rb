@@ -7,11 +7,11 @@ module Stash
     # and the "Deposit metadata" they request, which is kind of similar to ours, but slightly different
     # rubocop:disable Metrics/ClassLength
     class MetadataGenerator
-      def initialize(resource:, software_upload: false)
+      def initialize(resource:, dataset_type: :data)
         # Software uploads are a little different because 1) they use Zenodo DOIs, and 2) They use a different license
         # than the dataset license and they should be 'software' rather than 'dataset'.
         @resource = resource
-        @software_upload = software_upload
+        @dataset_type = dataset_type
       end
 
       # returns a hash of the metadata from the list of methods, you can make it into json to send
@@ -19,7 +19,7 @@ module Stash
         out_hash = {}.with_indifferent_access
         %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method locations communities].each do |meth|
-          next if meth == 'doi' && @software_upload
+          next if meth == 'doi' && @dataset_type != :data
 
           result = send(meth)
           out_hash[meth] = result unless result.blank?
@@ -32,7 +32,7 @@ module Stash
       end
 
       def upload_type
-        return @resource.resource_type.resource_type_general unless @software_upload
+        return @resource.resource_type.resource_type_general if @dataset_type == :data
 
         'software'
       end
@@ -68,7 +68,7 @@ module Stash
       end
 
       def license
-        return license_for_data unless @software_upload
+        return license_for_data if @dataset_type == :data
 
         license_for_software
       end
@@ -102,10 +102,10 @@ module Stash
         end
 
         # this relation is for myself and created in Dryad, so doesn't make sense to send to zenodo
-        related.delete_if { |i| i[:identifier].include?('/zenodo.') && @software_upload }
+        related.delete_if { |i| i[:identifier].include?('/zenodo.') && @dataset_type != :data }
 
         # This is adding the link back from zenodo to our datasets for software
-        if @software_upload
+        if @dataset_type != :data
           related.push(relation: 'isSourceOf',
                        identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
                        scheme: 'doi')
@@ -150,7 +150,7 @@ module Stash
         return doi if Rails.env == 'production'
 
         # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own, don't bork their own DOIs
-        doi.gsub!(/^10\.5072/, '10.55072') unless @software_upload
+        doi.gsub!(/^10\.5072/, '10.55072') if @dataset_type == :data
         doi
       end
 

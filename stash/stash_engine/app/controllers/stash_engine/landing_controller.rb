@@ -151,7 +151,7 @@ module StashEngine
     def update_zero_sizes!(ds_info_obj)
       return unless resource
 
-      resource.file_uploads.where(upload_file_size: 0).where(file_state: 'created').each do |f|
+      resource.data_files.where(upload_file_size: 0).where(file_state: 'created').each do |f|
         f.update(upload_file_size: ds_info_obj.file_size(f.upload_file_name))
       end
     end

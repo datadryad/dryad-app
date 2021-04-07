@@ -10,12 +10,12 @@
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
 <div id="choose_method" style="margin-bottom: 2em;">
-  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
+  <%= render partial: 'stash_engine/data_files/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
 </div>
 
 <!-- file upload workflow -->
 <div class="files_upload">
-  <%= render partial: 'stash_engine/file_uploads/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
+  <%= render partial: 'stash_engine/data_files/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
 </div>
 
 <div class="o-dataset-nav">
