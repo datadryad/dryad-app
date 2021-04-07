@@ -10,8 +10,8 @@ const upload_type = (props) => {
             <b>{props.description}</b>
 
             <div className="c-choose">
-                <label htmlFor={props.id} className="c-choose__input-file-label">{props.buttonFiles}</label>
-                <input id={props.id} className="c-choose__input-file" type='file' onChange={props.changed} multiple={true} />
+                <label htmlFor={props.type} className="c-choose__input-file-label">{props.buttonFiles}</label>
+                <input id={props.type} className="c-choose__input-file" type='file' onChange={props.changed} multiple={true} />
             </div>
             <button className="js-uploadmodal__button-show-modal" onClick={props.clicked}>{props.buttonURLs}</button>
         </section>
