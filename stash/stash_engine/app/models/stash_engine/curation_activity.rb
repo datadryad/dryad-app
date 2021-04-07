@@ -183,6 +183,7 @@ module StashEngine
     def copy_to_zenodo
       resource.send_to_zenodo
       resource.send_software_to_zenodo(publish: true)
+      resource.send_supp_to_zenodo(publish: true)
     end
 
     def remove_peer_review
