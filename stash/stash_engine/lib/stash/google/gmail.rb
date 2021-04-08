@@ -7,6 +7,9 @@ require "fileutils"
 # require 'stash/google/gmail'
 #
 # Stash::Google::GMail.list_messages(label: label)
+#
+# This class is currently focused on only the processing needed for processing metadata emails from
+# journals, but it can easily be expanded for more generic GMail functionality.
 
 module Stash
   module Google
@@ -23,30 +26,29 @@ module Stash
 
       # Verify we can connect to GMail, we can read the user's labels, and the target label exists
       def self.validate_gmail_connection
-        user_id = "me"
-        label_results = gmail.list_user_labels user_id
-        if label_results.labels.empty?
+        labels = gmail.list_user_labels("me").labels
+        if labels.empty?
           puts "Error: Unable to read user labels found"
         else
-          target = APP_CONFIG[:google][:gmail_processing_label]
-          message = "Error: Authorization to #{APP_CONFIG[:google][:gmail_account_name]} is working, but unable to locate the target label `#{target}`"
-          label_results.labels.each do |label|
-            if label.name == target
-              message = "Initialization complete: Found label `#{target}` in account #{APP_CONFIG[:google][:gmail_account_name]}"
+          message = "Error: Authorization to #{APP_CONFIG[:google][:gmail_account_name]} is working, but unable to locate the target label `#{processing_label_name}`"
+          labels.each do |label|
+            if label.name == processing_label_name
+              message = "Initialization complete: Found label `#{processing_label_name}` in account #{APP_CONFIG[:google][:gmail_account_name]}"
             end
           end
           puts "\n#{message}"
         end
       end
-
-
-##### ######################################################
       
-      def self.list_messages(label:)
-        return unless label
-        
-        # TODO ######
+      def self.messages_to_process
+        messages = gmail.list_user_messages("me", label_ids: processing_label.id).messages
+        return unless messages.present?
+        messages.each do |message|
+          puts "M #{message.id} -- #{message}"
+        end
       end
+      
+      #######################################################
       
       class << self
         private
@@ -57,8 +59,6 @@ module Stash
 
         # Ensure valid credentials, either by restoring from a saved token
         # or intitiating a (command-line) OAuth2 authorization. 
-        #
-        # @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
         def initialize_gmail_service
           @gmail = ::Google::Apis::GmailV1::GmailService.new
           @gmail.client_options.application_name = APPLICATION_NAME
@@ -67,8 +67,7 @@ module Stash
                                                    APP_CONFIG[:google][:gmail_client_secret])
           token_store = ::Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
           authorizer = ::Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
-          user_id = "default"
-          credentials = authorizer.get_credentials(user_id)
+          credentials = authorizer.get_credentials("default")
           
           if credentials.nil?
             url = authorizer.get_authorization_url(base_url: OOB_URI)
@@ -80,12 +79,31 @@ module Stash
             puts "\n#{url}\n\n"
             print "AUTH CODE: "
             code = $stdin.gets
+            # [Google::Auth::UserRefreshCredentials] OAuth2 credentials
             credentials = authorizer.get_and_store_credentials_from_code(user_id: user_id,
                                                                          code: code,
                                                                          base_url: OOB_URI)
           end
           @gmail.authorization = credentials
           @gmail
+        end
+
+        def processing_label_name
+          APP_CONFIG[:google][:gmail_processing_label]
+        end
+
+        def processing_label
+          return @processing_label unless @processing_label.blank?
+          
+          labels = gmail.list_user_labels("me").labels
+          unless labels.empty?            
+            labels.each do |label|
+              if label.name == processing_label_name
+                @processing_label = label
+              end
+            end
+          end
+          @processing_label
         end
 
       end
