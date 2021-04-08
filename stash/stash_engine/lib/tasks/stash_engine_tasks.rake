@@ -352,8 +352,8 @@ end
 
 namespace :journal_email do
   desc 'Acquire a token for working with the target GMail account'
-  task initialize_gmail_token: :environment do
-    Stash::Google::GMail.initialize_gmail_token
+  task validate_gmail_connection: :environment do
+    Stash::Google::GMail.validate_gmail_connection
   end
 end
 
