@@ -32,16 +32,9 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
-  describe 'normal URL validation' do
+  describe 'URL validation' do
 
     before(:each) do
-      navigate_to_upload
-      navigate_to_upload_urls
-
-      # get resource and clean up uploads directories
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
-
       stub_request(:head, 'http://example.org/funbar.txt')
         .with(
           headers: {
@@ -57,15 +50,22 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
           }
         )
         .to_return(status: 404)
+
+      navigate_to_upload
+      # get resource and clean up uploads directories
+      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
+      @resource = StashEngine::Resource.find(@resource_id)
     end
 
-    it 'validates a URL that works' do
+    it 'validate data file URL that works' do
+      navigate_to_upload_urls('data_manifest') # first position is for data files
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
-      expect(page).to have_content('37.22 kB')
+      expect(page).to have_content('37.22 KB')
       expect(page).to have_content('funbar.txt')
+      expect(page).to have_content('Data')
 
       # and it made it into the database
       fu = @resource.data_files.first
@@ -74,50 +74,23 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(fu.upload_file_size).to eq(37_221)
     end
 
-    it 'shows problem with bad URL' do
+    it 'shows problem with bad data file URL' do
+      navigate_to_upload_urls('data_manifest') # first position is for data files
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
-
       expect(page).to have_content('The URL was not found')
     end
-  end
 
-  # TODO: Deprecated. Remove it!
-  describe 'software URL validation' do
-
-    before(:each) do
-      navigate_to_software_file
-      navigate_to_software_file_urls
-
-      # get resource and clean up uploads directories
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
-
-      stub_request(:head, 'http://example.org/funbar.txt')
-        .with(
-          headers: {
-            'Accept' => '*/*'
-          }
-        )
-        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
-
-      stub_request(:head, 'http://example.org/foobar.txt')
-        .with(
-          headers: {
-            'Accept' => '*/*'
-          }
-        )
-        .to_return(status: 404)
-    end
-
-    xit 'validates a URL that works' do
+    it 'validates software file URL that works' do
+      navigate_to_upload_urls('software_manifest') # first position is for data files
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
-      expect(page).to have_content('37.22 kB')
+      expect(page).to have_content('37.22 KB')
       expect(page).to have_content('funbar.txt')
+      expect(page).to have_content('Software')
 
       # and it made it into the database
       su = @resource.software_files.first
@@ -126,20 +99,13 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(su.upload_file_size).to eq(37_221)
     end
 
-    xit 'shows problem with bad URL' do
+    it 'shows problem with bad URL' do
+      navigate_to_upload_urls('software_manifest')
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
-
-      expect(page).to have_content('Describe Dataset')
       expect(page).to have_content('The URL was not found')
-
-      # and it made it into the database
-      su = @resource.software_files.first
-      expect(su.upload_file_name).to be_nil
-      expect(su.upload_content_type).to be_nil
-      expect(su.upload_file_size).to be_nil
-      expect(su.status_code).to eq(404)
     end
   end
+
 end

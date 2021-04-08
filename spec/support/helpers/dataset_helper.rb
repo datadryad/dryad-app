@@ -31,8 +31,8 @@ module DatasetHelper
     expect(page).to have_content('Enter URLs', count: 3)
   end
 
-  def navigate_to_upload_urls
-    click_button('Enter URLs', match: :first)
+  def navigate_to_upload_urls(file_type)
+    click_button(file_type)
     expect(page).to have_content('Enter URLs')
   end
 

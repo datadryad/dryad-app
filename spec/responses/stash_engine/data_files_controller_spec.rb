@@ -84,7 +84,7 @@ module StashEngine
       end
 
       it 'returns json when request to validate urls with format html' do
-        @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/funbar.txt' }
         post @url, params: params
 
@@ -98,7 +98,7 @@ module StashEngine
       end
 
       it 'returns json with bad urls when request to validate urls with html format' do
-        @url = StashEngine::Engine.routes.url_helpers.file_upload_validate_urls_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/foobar.txt' }
         post @url, params: params
 
@@ -109,10 +109,10 @@ module StashEngine
       end
 
       it 'returns json when request to destroy manifest file with html format' do
-        @resource.update(file_uploads: [create(:file_upload)])
-        @resource.file_uploads.first.update(url: 'http://example.org/funbar.txt')
-        @file = @resource.file_uploads.first
-        @url = StashEngine::Engine.routes.url_helpers.destroy_error_file_upload_path(id: @file.id)
+        @resource.update(data_files: [create(:data_file)])
+        @file = @resource.data_files.first
+        @file.update(url: 'http://example.org/funbar.txt')
+        @url = StashEngine::Engine.routes.url_helpers.destroy_error_data_file_path(id: @file.id)
         patch @url, as: :html
 
         expect(response).to be_successful
