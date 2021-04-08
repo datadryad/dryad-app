@@ -189,11 +189,11 @@ Configuring/updating the Rails connection with GMail
 
 Several settings need to be in the server's settings to connect with GMail.
 
-The client_id and client_secret can be found in the Rails credentials file, but
+The gmail_client_id and gmail_client_secret can be found in the Rails credentials file, but
 if they need to be updated, they must be obtained from Google:
 - must be logged in as journal-submit-app@datadryad.org
 - go to https://console.cloud.google.com/apis/credentials
-- select project "Dryad v1 Gmail API" (if needed)
+- select project "Dryad v2 Gmail API" (if needed)
 - see the download icon for the entry "OAuth client"
 - copy the client_id and client_secret out of the downloaded file
 

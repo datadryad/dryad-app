@@ -1,5 +1,5 @@
 require 'httparty'
-require 'stash/google/gmail'
+require 'stash/google/journal_gmail'
 require_relative 'identifier_rake_functions'
 
 # rubocop:disable Metrics/BlockLength
@@ -353,7 +353,7 @@ end
 namespace :journal_email do
   desc 'Acquire a token for working with the target GMail account'
   task validate_gmail_connection: :environment do
-    Stash::Google::GMail.validate_gmail_connection
+    Stash::Google::JournalGMail.validate_gmail_connection
   end
 end
 
