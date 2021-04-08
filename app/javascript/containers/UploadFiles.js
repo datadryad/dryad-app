@@ -1,5 +1,8 @@
-import React from "react";
+import React from 'react';
 import axios from 'axios';
+
+import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
+// import '../../../stash/stash_engine/evaporate_init.js';
 
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
@@ -8,19 +11,28 @@ import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
 import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
 import classes from './UploadFiles.module.css';
 
+/**
+ * Constants
+ */
+const activeRecordTypetoFileType = {
+    'StashEngine::SoftwareFile': 'software',
+    'StashEngine::DataFile': 'data',
+    'StashEngine::Supplemental': 'supplemental'
+}
+
 class UploadFiles extends React.Component {
     state = {
         upload_type: [
             {
-                id: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad', name: 'Data',
+                type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad', name: 'Data',
                 description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                id: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo', name: 'Software',
+                type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo', name: 'Software',
                 description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                id: 'supplemental', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
+                type: 'supplemental', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
                 name: 'Supplemental Information', description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
@@ -30,6 +42,11 @@ class UploadFiles extends React.Component {
         submitButtonUrlsDisabled: true,
         showModal: false,
         urls: null,
+        // TODO: workaround to deal with manifest file types when making request.
+        //  See better way: maybe when clicking in URL button for an Upload Type,
+        //  send the type information to the modal somehow. And when submitting carry on
+        //  that information en add to request URL.
+        currentManifestFileType: null,
         failedUrls: []
     };
 
@@ -40,16 +57,19 @@ class UploadFiles extends React.Component {
         this.updateManifestFiles(files);
     }
 
-    uploadFilesHandler = (event, typeId) => {
+    uploadFilesHandler = (event, type) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
             // This differentiates computer user chosen files from manifest ones.
-            // The manifest file id's are the id's from the objects created.
-            file.id = null;
+            // The manifest file id's are the id's from the objects created in db.
+            // Other than that this is used to the S3 presign upload process
+            file.id = generateQuickId();
+
+            // file.sanitized_name = file_sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
-            file.typeId = typeId;
-            file.sizeKb = this.formatFileSize(file.size);
+            file.type_ = type;
+            file.sizeKb = formatSizeUnits(file.size);
         });
         this.updateFileList(newFiles);
     }
@@ -106,10 +126,6 @@ class UploadFiles extends React.Component {
         }
     }
 
-    formatFileSize = (fileSize) => {
-        return (fileSize / 1000).toFixed(2).toString() + ' kB';
-    }
-
     updateFileList = (files) => {
         if (!this.state.chosenFiles.length){
             this.setState({chosenFiles: files});
@@ -120,15 +136,12 @@ class UploadFiles extends React.Component {
         }
     }
 
-    deleteFileHandler = (fileIndex) => {
+    removeFileHandler = (fileIndex) => {
         let chosenFiles = [...this.state.chosenFiles];
-        // id is null for files from file system by construction.
-        // If it's there, the line corresponds to a manifest file,
-        // and need to call the method to make ajax request and remove
-        // in backend.
-        if (chosenFiles[fileIndex].id) {
-            this.removeManifestFileHandler(chosenFiles[fileIndex].id);
+        if (! (chosenFiles[fileIndex] instanceof File)) {
+            this.removeManifestFileHandler(chosenFiles[fileIndex]);
         }
+        // TODO: change this! Only remove if removed in backend.
         chosenFiles.splice(fileIndex, 1);
         if (!chosenFiles.length) {
             this.setState({chosenFiles: []});
@@ -145,8 +158,9 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
-    showModal = () => {
+    showModal = (uploadType) => {
         this.setState({showModal: true});
+        this.setState({currentManifestFileType: uploadType});
     };
 
     hideModal = (event) => {
@@ -154,6 +168,7 @@ class UploadFiles extends React.Component {
             || (event.type === 'keydown' && event.keyCode === 27)) {
             this.setState({submitButtonUrlsDisabled: true})
             this.setState({showModal: false});
+            this.setState({currentManifestFileType: null})
         }
     }
 
@@ -169,7 +184,8 @@ class UploadFiles extends React.Component {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         const urlsObject = {url: this.state.urls};
-        axios.post(`/stash/file_upload/validate_urls/${this.props.resource_id}`, urlsObject)
+        const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
+        axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
             .then(response => {
                 this.updateManifestFiles(response.data);
                 this.setState({urls: null});
@@ -190,7 +206,8 @@ class UploadFiles extends React.Component {
             transformed.push({
                 id: file.id, name: file.original_filename,
                 status: 'New', url: file.url,
-                typeId: 'D/S/Su', sizeKb: this.formatFileSize(file.upload_file_size)
+                type_: activeRecordTypetoFileType[file.type],
+                sizeKb: formatSizeUnits(file.upload_file_size)
             })
         })
 
@@ -227,12 +244,13 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeManifestFileHandler = (fileId) => {
+    removeManifestFileHandler = (file) => {
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        axios.patch(`/stash/file_uploads/${fileId}/destroy_error`)
+        const typeFilePartialRoute = file.type_ + '_files';
+        axios.patch(`/stash/${typeFilePartialRoute}/${file.id}/destroy_error`)
             .then(response => {
                 console.log(response.status);
             })
@@ -250,7 +268,7 @@ class UploadFiles extends React.Component {
         if (this.state.chosenFiles.length) {
             return (
                 <div>
-                    <FileList chosenFiles={this.state.chosenFiles} clicked={this.deleteFileHandler} />
+                    <FileList chosenFiles={this.state.chosenFiles} clicked={this.removeFileHandler} />
                     <ConfirmSubmit
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
@@ -299,10 +317,10 @@ class UploadFiles extends React.Component {
                 <div className="c-uploadwidgets">
                     {this.state.upload_type.map((upload_type) => {
                         return <UploadType
-                            key={upload_type.id}
-                            changed={(event) => this.uploadFilesHandler(event, upload_type.id)}
-                            clicked={() => this.showModal(upload_type.id)}
-                            id={upload_type.id}
+                            key={upload_type.type}
+                            changed={(event) => this.uploadFilesHandler(event, upload_type.type)}
+                            clicked={() => this.showModal(upload_type.type)}
+                            type={upload_type.type}
                             logo={upload_type.logo}
                             name={upload_type.name}
                             description={upload_type.description}
