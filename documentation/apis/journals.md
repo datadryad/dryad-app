@@ -198,9 +198,11 @@ if they need to be updated, they must be obtained from Google:
 - copy the client_id and client_secret out of the downloaded file
 
 Rails needs more than just the above credentials. It also needs a token that
-will allow it to read from a specific GMail account. You can test whether the
+will allow it to read from a specific GMail account. The toke is stored in a
+file called `token.yaml`, one directory above the codebase, so it is not
+affected by updates to the codebase. You can test whether the
 token is valid and/or reset the token by running:
-`rails journal_email:initialize_gmail_token`
+`rails journal_email:validate_gmail_connection`
 
 
 OLD -- Troubleshooting
