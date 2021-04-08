@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'stash/aws/s3'
 
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
@@ -190,8 +191,8 @@ module StashDatacite
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
         if error_uploads.present?
-          messages << "Some files can not be submitted because they may have had errors uploading. " \
-            "Please re-upload the following files if you still see this error in a few minutes."
+          messages << 'Some files can not be submitted because they may have had errors uploading. ' \
+            'Please re-upload the following files if you still see this error in a few minutes.'
           messages << "Files with upload errors: #{error_uploads.join(',')}"
         end
 
