@@ -64,7 +64,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       check('confirm_to_validate')
       click_on('validate_files')
 
-      expect(page).to have_content('37.22 kB')
+      expect(page).to have_content('37.22 KB')
       expect(page).to have_content('funbar.txt')
 
       # and it made it into the database
