@@ -37,7 +37,7 @@ module Stash
       end
 
       def initialize(copy_id:)
-        @assoc_method = :data
+        @dataset_type = :data
         @copy = StashEngine::ZenodoCopy.find(copy_id)
         @previous_copy = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id).where('id < ? ', @copy.id)
           .data.order(id: :desc).first
