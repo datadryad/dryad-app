@@ -533,6 +533,7 @@ module StashDatacite
 
         before(:each) do
           expect(completions.required_completed).to eq(REQUIRED_COUNT) # just to be sure
+          @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
         end
 
         it 'warns on missing title' do
