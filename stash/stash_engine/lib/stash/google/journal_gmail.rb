@@ -6,8 +6,8 @@ require 'fileutils'
 # Example of use:
 #
 # require 'stash/google/journal_gmail'
-# Stash::Google::JournalGMail.messages_to_process
-# Stash::Google::JournalGMail.message_contents(message:)
+# m = Stash::Google::JournalGMail.messages_to_process
+# Stash::Google::JournalGMail.message_contents(message: m.first)
 #
 # This class is currently focused on the processing needed for metadata emails from
 # journals, but it could  expanded for more generic GMail functionality.
@@ -42,19 +42,44 @@ module Stash
         end
       end
 
-      def labels
+      def self.labels
         gmail.list_user_labels('me').labels
       end
 
+      # The messages returned by this method are stubs. For actual information about each
+      # message, you must use one of the methods that start with "message_"
       def self.messages_to_process
-        return nil unless processing_label.present?
+        return unless processing_label.present?
 
         gmail.list_user_messages('me', label_ids: processing_label.id).messages
       end
 
-      # TODO: -- more methods
       def self.message_contents(message:)
-        # gmail.
+        return unless message.present?
+
+        gmail.get_user_message('me', message.id)&.payload&.body&.data
+      end
+
+      def self.message_header(message:, header_name:)
+        return unless message.present? && header_name.present?
+
+        headers = gmail.get_user_message('me', message.id)&.payload&.headers
+        return unless headers.present?
+
+        header_val = nil
+        headers.each do |header|
+          header_val = header.value if header.name == header_name
+        end
+        header_val
+      end
+
+      def self.message_subject(message:)
+        message_header(message: message, header_name: 'Subject')
+      end
+
+      def self.message_sender(message:)
+        message_header(message: message, header_name: 'X-Original-From') ||
+          message_header(message: message, header_name: 'X-Original-Sender')
       end
 
       def self.remove_processing_label(message:); end
