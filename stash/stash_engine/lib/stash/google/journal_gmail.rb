@@ -9,9 +9,10 @@ require 'fileutils'
 # m = Stash::Google::JournalGMail.messages_to_process
 # Stash::Google::JournalGMail.message_contents(message: m.first)
 #
-# This class is currently focused on the processing needed for metadata emails from
-# journals, but it could  expanded for more generic GMail functionality.
+# This class is focused on the processing needed for metadata emails from
+# journals, but it could be expanded for more generic GMail functionality.
 
+# rubocop:disable Metrics/ClassLength
 module Stash
   module Google
     class JournalGMail
@@ -27,13 +28,12 @@ module Stash
 
       # Verify we can connect to GMail, we can read the user's labels, and the target label exists
       def self.validate_gmail_connection
-        labels = gmail.list_user_labels('me').labels
-        if labels.empty?
+        if user_labels.empty?
           puts 'Error: Unable to read user labels found'
         else
           message = "Error: Authorization to #{APP_CONFIG[:google][:journal_account_name]} is working, " \
                     "but unable to locate the target label `#{processing_label_name}`"
-          labels.each do |label|
+          user_labels.each do |label|
             if label.name == processing_label_name
               message = "Initialization complete: Found label `#{processing_label_name}` in account #{APP_CONFIG[:google][:journal_account_name]}"
             end
@@ -42,12 +42,12 @@ module Stash
         end
       end
 
-      def self.labels
+      def self.user_labels
         gmail.list_user_labels('me').labels
       end
 
-      # The messages returned by this method are stubs. For actual information about each
-      # message, you must use one of the methods that start with "message_"
+      # The messages returned by this method are stubs, containing only the message id. For actual
+      # information about each message, you must use one of the methods that start with "message_"
       def self.messages_to_process
         return unless processing_label.present?
 
@@ -82,12 +82,25 @@ module Stash
           message_header(message: message, header_name: 'X-Original-Sender')
       end
 
-      def self.remove_processing_label(message:); end
+      def self.message_labels(message:)
+        return unless message.present?
 
-      def self.add_error_label(message:); end
+        gmail.get_user_message('me', message.id)&.label_ids
+      end
+
+      def self.remove_processing_label(message:)
+        mod_request = ::Google::Apis::GmailV1::ModifyMessageRequest.new
+        mod_request.remove_label_ids = [processing_label.id]
+        gmail.modify_message('me', message.id, mod_request)
+      end
+
+      def self.add_error_label(message:)
+        mod_request = ::Google::Apis::GmailV1::ModifyMessageRequest.new
+        mod_request.add_label_ids = [error_label.id]
+        gmail.modify_message('me', message.id, mod_request)
+      end
 
       #######################################################
-
       class << self
         private
 
@@ -133,10 +146,10 @@ module Stash
         end
 
         def label_by_name(name: nil)
-          return unless name.present? && labels.present?
+          return unless name.present? && user_labels.present?
 
           found_label = nil
-          labels.each do |label|
+          user_labels.each do |label|
             found_label = label if label.name == name
           end
           found_label
@@ -154,3 +167,4 @@ module Stash
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
