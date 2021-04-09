@@ -61,6 +61,23 @@ module StashEngine
       end
     end
 
+    describe :send_supp_to_zenodo do
+      before(:each) do
+        @resource = create(:resource, identifier: create(:identifier))
+        @identifier = @resource.identifier
+        @resource.supp_files << create(:supp_file)
+      end
+
+      it 'sends the supplemental to zenodo' do
+        expect(@identifier).to receive(:'has_zenodo_supp?').and_call_original
+        expect(StashEngine::ZenodoSuppJob).to receive(:perform_later)
+        @resource.send_supp_to_zenodo
+        copy_record = @resource.zenodo_copies.supp.first
+        expect(copy_record.resource_id).to eq(@resource.id)
+        expect(copy_record.state).to eq('enqueued')
+      end
+    end
+
     describe :s3_dir_name do
 
       before(:each) do

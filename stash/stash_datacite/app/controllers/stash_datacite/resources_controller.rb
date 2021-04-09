@@ -72,6 +72,7 @@ module StashDatacite
       resource.reload
 
       resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+      resource.send_supp_to_zenodo
 
       # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
       # There is also one for curators and need to return back to different pages/filter setting for each dataset they
