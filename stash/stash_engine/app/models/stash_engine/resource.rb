@@ -719,6 +719,17 @@ module StashEngine
       ZenodoSoftwareJob.perform_later(zc.id)
     end
 
+    # if publish: true then it just publishes, which is a separate operation than updating files
+    def send_supp_to_zenodo(publish: false)
+      return unless identifier.has_zenodo_supp?
+
+      rep_type = (publish == true ? 'supp_publish' : 'supp')
+      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
+
+      zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
+      ZenodoSuppJob.perform_later(zc.id)
+    end
+
     # type can currently be data, software or supplemental
     ALLOWED_UPLOAD_TYPES = { base: '', data: '/data', software: '/sfw',
                              supplemental: '/supp', manifest: '/manifest' }.with_indifferent_access.freeze
