@@ -182,7 +182,7 @@ module StashDatacite
             expect(completions.urls_validated?).to eq(false)
           end
 
-          it 'returns false when at least one Zenodo files has an error' do
+          it 'returns false when at least one Zenodo file has an error' do
             # good uploads for dataset
             resource.data_files.newly_created.find_each do |upload|
               upload.status_code = 200
@@ -201,6 +201,32 @@ module StashDatacite
           it 'returns true for non-manifest uploads' do
             expect(completions.urls_validated?).to eq(true)
           end
+        end
+      end
+
+      describe :s3_error_uploads do
+
+        it 'verifies uploads to s3 are present' do
+          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
+            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(true)
+          end
+          expect(completions.s3_error_uploads).to eq([])
+        end
+
+        it 'returns missing files when files uploaded to s3 are not present' do
+          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
+            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          end
+          expect(completions.s3_error_uploads).to eq(@resource.generic_files.map(&:upload_file_name))
+        end
+
+        it 'only checks files that are new uploads and are not urls' do
+          @resource.generic_files.first.update(file_state: 'copied')
+          @resource.generic_files.second.update(url: 'http://example.com')
+          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
+            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          end
+          expect(completions.s3_error_uploads).to eq([@resource.generic_files.last.upload_file_name])
         end
       end
 
@@ -507,6 +533,7 @@ module StashDatacite
 
         before(:each) do
           expect(completions.required_completed).to eq(REQUIRED_COUNT) # just to be sure
+          @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
         end
 
         it 'warns on missing title' do

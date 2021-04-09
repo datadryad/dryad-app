@@ -19,7 +19,7 @@ function uploadListToS3() {
     sequence = sequence.then(function() {
       return evaporateIt(k, v);
     }).catch(function() {
-      failArr.push(k["sanitized"]);
+      failArr.push(v["sanitized"]);
     });
   })
 
@@ -41,7 +41,7 @@ function uploadListToS3() {
     }else{
       $('#upload_message').removeClass();
       $('#upload_message').addClass('c-upload__upload-error-text');
-      $('#upload_message').html(`<p>The following files had problems uploading, please upload them again:<br/>${failArr.join(", ")}</p>`);
+      $('#upload_message').html(`<p>The following files had errors while uploading, please upload them again:<br/>${failArr.join(", ")}</p>`);
       $('#upload_message').show();
     }
     failArr = [];
