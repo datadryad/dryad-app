@@ -1,3 +1,5 @@
+require 'stash/aws/s3'
+
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class GenericFilesController < ApplicationController
@@ -74,17 +76,24 @@ module StashEngine
           # destroy any previous with this name and overwrite with this one
           @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
 
-          @file_model.create(
-            upload_file_name: params[:name],
-            upload_content_type: params[:type],
-            upload_file_size: params[:size],
-            resource_id: @resource.id,
-            upload_updated_at: Time.new,
-            file_state: 'created',
-            original_filename: params[:original]
-          )
+          _db_file =
+            @file_model.create(
+              upload_file_name: params[:name],
+              upload_content_type: params[:type],
+              upload_file_size: params[:size],
+              resource_id: @resource.id,
+              upload_updated_at: Time.new,
+              file_state: 'created',
+              original_filename: params[:original]
+            )
 
           render json: { msg: 'ok' }
+          # I tried code like this, but it always runs into some race condition and fails for large files
+          # since I think Amazon hasn't assembled files from parts right away upon them completing in Evaporate.
+          # unless Stash::Aws::S3.exists?(s3_key: db_file.calc_s3_path)
+          #  db_file.destroy!
+          #  render json: { msg: "bad upload at S3 for #{params[:name]}"}, status: :bad_request
+          # end
         end
       end
     end
