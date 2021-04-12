@@ -12,6 +12,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Ror
   include Mocks::Stripe
+  include Mocks::Aws
 
   before(:each) do
     mock_repository!
@@ -19,6 +20,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     mock_ror!
     mock_datacite!
     mock_stripe!
+    mock_aws!
     ignore_zenodo!
     @author = create(:user, tenant_id: 'dryad')
 
@@ -33,7 +35,6 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
   end
 
   describe 'URL validation' do
-
     before(:each) do
       stub_request(:head, 'http://example.org/funbar.txt')
         .with(
@@ -52,13 +53,12 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
         .to_return(status: 404)
 
       navigate_to_upload
-      # get resource and clean up uploads directories
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
     end
 
     it 'validate data file URL that works' do
-      navigate_to_upload_urls('data_manifest') # first position is for data files
+      click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -75,7 +75,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it 'shows problem with bad data file URL' do
-      navigate_to_upload_urls('data_manifest') # first position is for data files
+      click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -83,7 +83,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it 'validates software file URL that works' do
-      navigate_to_upload_urls('software_manifest') # first position is for data files
+      click_button('software_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -100,11 +100,38 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it 'shows problem with bad URL' do
-      navigate_to_upload_urls('software_manifest')
+      click_button('software_manifest')
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
       expect(page).to have_content('The URL was not found')
+    end
+  end
+
+  describe 'File upload' do
+    before(:each) do
+      # stub_request(:head, 'funbar.txt')
+      #   .with(
+      #     headers: {
+      #       'Accept' => '*/*'
+      #     }
+      #   )
+      #   .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+
+      navigate_to_upload
+      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
+      @resource = StashEngine::Resource.find(@resource_id)
+    end
+
+    it 'it shows Loading label when uploading to S3' do
+      # Workaround to expose input file type element, removing the class from the element
+      page.execute_script('$("#data").removeClass()')
+      attach_file('data', "#{Rails.root}/spec/fixtures/merritt_ark_changing_test.txt", make_visible: true)
+      expect(page).to have_content('merritt_ark_changing_test.txt')
+
+      check('confirm_to_upload')
+      click_on('validate_files')
+      expect(page).to have_content('Loading...')
     end
   end
 
