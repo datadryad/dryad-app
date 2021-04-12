@@ -31,16 +31,6 @@ module DatasetHelper
     expect(page).to have_content('Enter URLs', count: 3)
   end
 
-  def navigate_to_upload_urls(file_type)
-    click_button(file_type)
-    expect(page).to have_content('Enter URLs')
-  end
-
-  def navigate_to_software_file_urls
-    click_link 'Upload by URL'
-    expect(page).to have_content('Step 2: Enter Files')
-  end
-
   def navigate_to_review
     click_link 'Review and Submit'
     expect(page).to have_content('Review Description')
