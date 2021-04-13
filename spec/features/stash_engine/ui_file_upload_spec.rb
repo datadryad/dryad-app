@@ -1,3 +1,4 @@
+require_relative '../../../stash/stash_engine/lib/stash/aws/s3'
 require 'rails_helper'
 require 'pry-remote'
 require 'fileutils'
@@ -108,8 +109,9 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
   end
 
-  describe 'File upload' do
+  describe 'S3 file uploading' do
     before(:each) do
+      # TODO: remove if it's not necessary
       # stub_request(:head, 'funbar.txt')
       #   .with(
       #     headers: {
@@ -123,15 +125,28 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       @resource = StashEngine::Resource.find(@resource_id)
     end
 
-    it 'it shows Loading label when uploading to S3' do
-      # Workaround to expose input file type element, removing the class from the element
+    it 'shows Uploading label when uploading' do
+      # Workaround to expose input file type element, removing the class from the input element
       page.execute_script('$("#data").removeClass()')
       attach_file('data', "#{Rails.root}/spec/fixtures/merritt_ark_changing_test.txt", make_visible: true)
       expect(page).to have_content('merritt_ark_changing_test.txt')
 
       check('confirm_to_upload')
       click_on('validate_files')
-      expect(page).to have_content('Loading...')
+      expect(page).to have_content('Uploading...')
+    end
+
+    it 'creates S3 entry after upload is complete' do
+      # Workaround to expose input file type element, removing the class from the input element
+      page.execute_script('$("#data").removeClass()')
+      attach_file('data', "#{Rails.root}/spec/fixtures/merritt_ark_changing_test.txt", make_visible: true)
+
+      check('confirm_to_upload')
+      click_on('validate_files')
+
+      result = Stash::Aws::S3.exists?(s3_key: '37fb70ac-1/data/merritt_ark_changing_test.txt')
+      puts result #DB
+      expect(result).to be true
     end
   end
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-
-import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
-// import '../../../stash/stash_engine/evaporate_init.js';
+import Evaporate from 'evaporate';
+import AWS from 'aws-sdk';
 
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
@@ -11,10 +10,13 @@ import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
 import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
 import classes from './UploadFiles.module.css';
 
+import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
+
+
 /**
  * Constants
  */
-const activeRecordTypetoFileType = {
+const ActiveRecordTypeToFileType = {
     'StashEngine::SoftwareFile': 'software',
     'StashEngine::DataFile': 'data',
     'StashEngine::Supplemental': 'supplemental'
@@ -45,7 +47,7 @@ class UploadFiles extends React.Component {
         // TODO: workaround to deal with manifest file types when making request.
         //  See better way: maybe when clicking in URL button for an Upload Type,
         //  send the type information to the modal somehow. And when submitting carry on
-        //  that information en add to request URL.
+        //  that information and add to request URL.
         currentManifestFileType: null,
         failedUrls: []
     };
@@ -57,7 +59,7 @@ class UploadFiles extends React.Component {
         this.updateManifestFiles(files);
     }
 
-    uploadFilesHandler = (event, type) => {
+    addFilesHandler = (event, type) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
             // This differentiates computer user chosen files from manifest ones.
@@ -72,6 +74,63 @@ class UploadFiles extends React.Component {
             file.sizeKb = formatSizeUnits(file.size);
         });
         this.updateFileList(newFiles);
+    }
+
+    uploadFilesHandler = () => {
+        const config = {
+            aws_key: this.props.app_config_s3.table.key,
+            bucket: this.props.app_config_s3.table.bucket,
+            awsRegion: this.props.app_config_s3.table.region,
+            signerUrl: `/stash/data_file/presign_upload/${this.props.resource_id}`,
+            awsSignatureVersion: "4",
+            computeContentMd5: true,
+            cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
+            cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
+        }
+        Evaporate.create(config).then(this.uploadFileToS3);
+        const chosenFiles = this.state.chosenFiles;
+        chosenFiles[0].status = 'Uploading...';
+        this.setState({chosenFiles: chosenFiles});
+    }
+
+    uploadFileToS3 = evaporate => {
+        const addConfig = {
+            name: '37fb70ac-1/data/' + this.state.chosenFiles[0].name,  //TODO: get the path from method
+            file: this.state.chosenFiles[0],
+            contentType: this.state.chosenFiles[0].type,
+            // progress: progressValue => {
+            //     $('#progress_' + key).attr('value', progressValue);
+            // },
+            // cancelled: function () {
+            //     allDone.reject();
+            // },
+            error: function (msg) {
+                console.log(msg);
+            },
+            complete: (_xhr, awsKey) => {
+                const csrf_token = document.querySelector('[name=csrf-token]');
+                if (csrf_token)  // there isn't csrf token when running Capybara tests
+                    console.log(csrf_token); //DB
+                    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+                axios.post(
+                    '/stash/data_file/upload_complete/' + this.props.resource_id,
+                    {
+                        resource_id: this.props.resource_id,
+                        name: this.state.chosenFiles[0].name,
+                        size: this.state.chosenFiles[0].size,
+                        type: this.state.chosenFiles[0].type,
+                        original: this.state.chosenFiles[0].name
+                    })
+                    .then(response => console.log(response))
+                    .catch(error => console.log(error));
+            }
+        }
+        // console.log('Este é o s3_directory: ' + '37fb70ac-1/data/' + this.state.chosenFiles[0].name); //DB
+        evaporate.add(addConfig)
+            .then(
+                awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
+                reason => console.log('File did not upload successfully: ', reason)
+            );
     }
 
     updateManifestFiles = (files) => {
@@ -206,7 +265,7 @@ class UploadFiles extends React.Component {
             transformed.push({
                 id: file.id, name: file.original_filename,
                 status: 'New', url: file.url,
-                type_: activeRecordTypetoFileType[file.type],
+                type_: ActiveRecordTypeToFileType[file.type],
                 sizeKb: formatSizeUnits(file.upload_file_size)
             })
         })
@@ -268,12 +327,13 @@ class UploadFiles extends React.Component {
         if (this.state.chosenFiles.length) {
             return (
                 <div>
-                    <FileList chosenFiles={this.state.chosenFiles} clicked={this.removeFileHandler} />
+                    <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
                     <ConfirmSubmit
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
                         disabled={this.state.submitButtonFilesDisabled}
-                        changed={this.toggleCheckedFiles} />
+                        changed={this.toggleCheckedFiles}
+                        clicked={this.uploadFilesHandler} />
                 </div>
             )
         } else {
@@ -292,7 +352,7 @@ class UploadFiles extends React.Component {
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
-                clicked={this.hideModal}
+                clickedClose={this.hideModal}
                 disabled={this.state.submitButtonUrlsDisabled}
                 changed={this.toggleCheckedUrls}
             />
@@ -318,7 +378,7 @@ class UploadFiles extends React.Component {
                     {this.state.upload_type.map((upload_type) => {
                         return <UploadType
                             key={upload_type.type}
-                            changed={(event) => this.uploadFilesHandler(event, upload_type.type)}
+                            changed={(event) => this.addFilesHandler(event, upload_type.type)}
                             clicked={() => this.showModal(upload_type.type)}
                             type={upload_type.type}
                             logo={upload_type.logo}
