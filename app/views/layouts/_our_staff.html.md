@@ -44,11 +44,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/lpolischuk.jpg" alt="Lori Polischuk" title="Lori Polischuk">
-  <p><strong>Lori Polischuk</strong>, BA Political Science, MA Political Science<br>Curation Program Manager<br>Lori has a research and teaching background in political science and public policy. Prior to joining Dryad she worked in healthcare and biotechnology, most recently with Invitae as a Project Manager leading an API integration project. In her spare time, Lori enjoys sharpening her data analysis skills, traveling in an RV with her pets, and following politics.</p>
-</div>
-
-<div class="bio">
   <img src="/images/rscherle.jpg" alt="Ryan Scherle" title="Ryan Scherle">
   <p><strong>Ryan Scherle</strong>, PhD Computer Science and Cognitive Science<br>Dryad Developer<br>Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
 </p>
@@ -63,4 +58,3 @@
     <img src="/images/HSchubloom.jpg" alt="Hannah Schubloom" title="Hannah Schubloom">
   <p><strong>Hannah Schubloom</strong>, B.A, M.Sc in Neuroscience<br>Data Curator<br>Hannah has a research background focused on neuroscience and neuromodulation, and graduated with a M.Sc. from McGill University. Prior to joining Dryad, she worked as a Research Program Manager at PLOS ONE and a Research Associate at Halo Neuroscience. In her spare time, Hannah enjoys cooking, candle-making and spending time with her cat, Uni.</p>
 </div>
-
