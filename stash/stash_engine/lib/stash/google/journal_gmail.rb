@@ -7,7 +7,7 @@ require 'fileutils'
 #
 # require 'stash/google/journal_gmail'
 # m = Stash::Google::JournalGMail.messages_to_process
-# Stash::Google::JournalGMail.message_contents(message: m.first)
+# Stash::Google::JournalGMail.message_content(message: m.first)
 #
 # This class is focused on the processing needed for metadata emails from
 # journals, but it could be expanded for more generic GMail functionality.
@@ -54,7 +54,7 @@ module Stash
         gmail.list_user_messages('me', label_ids: processing_label.id).messages
       end
 
-      def self.message_contents(message:)
+      def self.message_content(message:)
         return unless message.present?
 
         gmail.get_user_message('me', message.id)&.payload&.body&.data
@@ -98,6 +98,24 @@ module Stash
         mod_request = ::Google::Apis::GmailV1::ModifyMessageRequest.new
         mod_request.add_label_ids = [error_label.id]
         gmail.modify_message('me', message.id, mod_request)
+      end
+
+      def self.process
+        messages = Stash::Google::JournalGMail.messages_to_process
+        return unless messages
+
+        messages.each do |m|
+          puts "Will process -- #{m.id} -- #{Stash::Google::JournalGMail.message_subject(message: m)}"
+          content = Stash::Google::JournalGMail.message_content(message: m)
+          result = StashEngine::Manuscript.from_message_content(content: content)
+          if result.success?
+            puts "-- created #{result.payload}"
+          # TODO-reinstate-when-tested  remove_processing_label(message: m)
+          else
+            puts "-- ERROR #{result.error} -- Adding error label to #{m.id}"
+            # TODO-reinstate add_error_label(message: m)
+          end
+        end
       end
 
       #######################################################

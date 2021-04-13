@@ -355,6 +355,11 @@ namespace :journal_email do
   task validate_gmail_connection: :environment do
     Stash::Google::JournalGMail.validate_gmail_connection
   end
+
+  desc 'Process all messages in the GMail account that have the target label'
+  task process: :environment do
+    Stash::Google::JournalGMail.process
+  end
 end
 
 # rubocop:enable Metrics/BlockLength
