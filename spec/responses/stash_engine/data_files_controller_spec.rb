@@ -60,6 +60,13 @@ module StashEngine
         expect(i.upload_content_type).to eql(@json_hash[:type])
         expect(i.original_filename).to eql(@json_hash[:original])
       end
+
+      it 'returns json after file upload to s3 is complete, when request with format html' do
+        post @url, params: @json_hash
+        expect(response).to be_successful
+        body = JSON.parse(response.body)
+        expect(body['msg']).to eql('ok')
+      end
     end
 
     describe '#upload_manifest' do
