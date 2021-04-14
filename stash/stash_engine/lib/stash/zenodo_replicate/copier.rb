@@ -1,6 +1,7 @@
 require 'stash/merritt_download'
 require 'http'
 require 'stash/zenodo_replicate'
+require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_software/file_collection'
 
 # require 'stash/zenodo_replicate'
