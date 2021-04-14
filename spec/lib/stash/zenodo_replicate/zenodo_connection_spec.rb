@@ -73,6 +73,20 @@ module Stash
           expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
+        it 'considers already done if not found (404) for delete request' do
+          stub_request(:delete, 'https://example.test.com/?access_token=ThisIsAFakeToken')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 404, body: '{"message": "Object does not exists.", "status": 404}',
+                       headers: { 'Content-Type' => 'application/json' })
+          resp = ZenodoConnection.standard_request(:delete, 'https://example.test.com')
+          expect(resp).to eq({ 'message' => 'Object does not exists.', 'status' => 404 })
+        end
+
         it 'raises error if not a success status (504)' do
           stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
             .with(
