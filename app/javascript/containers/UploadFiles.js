@@ -88,9 +88,6 @@ class UploadFiles extends React.Component {
             cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
         }
         Evaporate.create(config).then(this.uploadFileToS3);
-        const chosenFiles = this.state.chosenFiles;
-        chosenFiles[0].status = 'Uploading...';
-        this.setState({chosenFiles: chosenFiles});
     }
 
     uploadFileToS3 = evaporate => {
@@ -98,9 +95,11 @@ class UploadFiles extends React.Component {
             name: '37fb70ac-1/data/' + this.state.chosenFiles[0].name,  //TODO: get the path from method
             file: this.state.chosenFiles[0],
             contentType: this.state.chosenFiles[0].type,
-            // progress: progressValue => {
-            //     $('#progress_' + key).attr('value', progressValue);
-            // },
+            progress: progressValue => {
+                document.getElementById(
+                    `progressbar_${this.state.chosenFiles[0].id}`
+                ).value = progressValue;
+            },
             // cancelled: function () {
             //     allDone.reject();
             // },
@@ -110,7 +109,6 @@ class UploadFiles extends React.Component {
             complete: (_xhr, awsKey) => {
                 const csrf_token = document.querySelector('[name=csrf-token]');
                 if (csrf_token)  // there isn't csrf token when running Capybara tests
-                    console.log(csrf_token); //DB
                     axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
                 axios.post(
                     '/stash/data_file/upload_complete/' + this.props.resource_id,
@@ -121,11 +119,25 @@ class UploadFiles extends React.Component {
                         type: this.state.chosenFiles[0].type,
                         original: this.state.chosenFiles[0].name
                     })
-                    .then(response => console.log(response))
+                    .then(response => {
+                        console.log(response);
+                        const chosenFiles = this.state.chosenFiles;
+                        chosenFiles[0].status = 'New';
+                        this.setState({chosenFiles: chosenFiles});
+                    })
                     .catch(error => console.log(error));
             }
         }
         // console.log('Este é o s3_directory: ' + '37fb70ac-1/data/' + this.state.chosenFiles[0].name); //DB
+
+        // Before start uploading change file status cel to a progress bar
+        const status_cel = document.getElementById(`status_${this.state.chosenFiles[0].id}`);
+        status_cel.innerText = '';
+        const node = document.createElement('progress');
+        const progressBar = status_cel.appendChild(node);
+        progressBar.setAttribute('id', `progressbar_${this.state.chosenFiles[0].id}`)
+        progressBar.setAttribute('value', '');
+
         evaporate.add(addConfig)
             .then(
                 awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
