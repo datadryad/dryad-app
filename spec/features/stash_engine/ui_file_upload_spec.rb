@@ -123,30 +123,45 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
-    end
-
-    it 'shows Uploading label when uploading' do
       # Workaround to expose input file type element, removing the class from the input element
       page.execute_script('$("#data").removeClass()')
+
       attach_file('data', "#{Rails.root}/spec/fixtures/merritt_ark_changing_test.txt", make_visible: true)
       expect(page).to have_content('merritt_ark_changing_test.txt')
+      expect(page).to have_content('Pending')
 
       check('confirm_to_upload')
       click_on('validate_files')
-      expect(page).to have_content('Uploading...')
     end
 
-    it 'creates S3 entry after upload is complete' do
-      # Workaround to expose input file type element, removing the class from the input element
-      page.execute_script('$("#data").removeClass()')
-      attach_file('data', "#{Rails.root}/spec/fixtures/merritt_ark_changing_test.txt", make_visible: true)
-
-      check('confirm_to_upload')
-      click_on('validate_files')
-
+    xit 'creates S3 entry after upload is complete' do
+      # TODO: S3.exists? mock returns true now.
+      #  See if it's possible to return something from the Evaporate using S3 mocks
       result = Stash::Aws::S3.exists?(s3_key: '37fb70ac-1/data/merritt_ark_changing_test.txt')
-      puts result #DB
       expect(result).to be true
+    end
+
+    it 'vanishes Pending file status when start to upload' do
+      expect(page).not_to have_content('Pending')
+    end
+
+    it 'shows progress bar when start to upload' do
+      expect(page.has_css?('progress')).to be true
+    end
+
+    xit 'achieves 50% of the progress bar after starting to upload' do
+      expect(page.find('progress')[:value]).to eql('50')
+    end
+
+    xit 'shows "New" label after upload is complete' do
+      stub_request(:post, 'https://s3-us-west-2.amazonaws.com')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200)
+      expect(page).to have_content('New')
     end
   end
 
