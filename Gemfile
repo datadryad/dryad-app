@@ -5,6 +5,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'aws-sdk-s3', '~> 1.87'
+gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false

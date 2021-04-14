@@ -141,6 +141,7 @@ namespace :dev_ops do
     puts 'Re-enqueuing Zenodo replication jobs that were deferred'
     StashEngine::ZenodoCopyJob.enqueue_deferred
     StashEngine::ZenodoSoftwareJob.enqueue_deferred
+    StashEngine::ZenodoSuppJob.enqueue_deferred
   end
 
   desc 'Gets Counter token for submitting a report'
