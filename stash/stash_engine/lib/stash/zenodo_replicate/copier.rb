@@ -1,6 +1,6 @@
 require 'stash/merritt_download'
 require 'http'
-require 'stash/zenodo_replicate/copier_mixin'
+require 'stash/zenodo_replicate'
 require 'stash/zenodo_software/file_collection'
 
 # require 'stash/zenodo_replicate'
@@ -55,7 +55,7 @@ module Stash
         @copy.increment!(:retries)
 
         # a zenodo deposit class for working with deposits
-        @deposit = Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition

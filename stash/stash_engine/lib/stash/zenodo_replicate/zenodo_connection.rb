@@ -48,6 +48,8 @@ module Stash
           # zenodo's servers seem to give 504s sometimes
           raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" if r.status.code >= 500
 
+          return resp if method.to_sym == :delete && r.status.code == 404 # ignore deleting if it already doesn't exist
+
           # for things like 400 errors that aren't likely to change with a Retry
           raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
 
