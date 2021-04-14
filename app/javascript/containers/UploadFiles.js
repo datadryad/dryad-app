@@ -91,59 +91,74 @@ class UploadFiles extends React.Component {
     }
 
     uploadFileToS3 = evaporate => {
-        const addConfig = {
-            name: '37fb70ac-1/data/' + this.state.chosenFiles[0].name,  //TODO: get the path from method
-            file: this.state.chosenFiles[0],
-            contentType: this.state.chosenFiles[0].type,
-            progress: progressValue => {
-                document.getElementById(
-                    `progressbar_${this.state.chosenFiles[0].id}`
-                ).value = progressValue;
-            },
-            // cancelled: function () {
-            //     allDone.reject();
-            // },
-            error: function (msg) {
-                console.log(msg);
-            },
-            complete: (_xhr, awsKey) => {
-                const csrf_token = document.querySelector('[name=csrf-token]');
-                if (csrf_token)  // there isn't csrf token when running Capybara tests
-                    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-                axios.post(
-                    '/stash/data_file/upload_complete/' + this.props.resource_id,
-                    {
-                        resource_id: this.props.resource_id,
-                        name: this.state.chosenFiles[0].name,
-                        size: this.state.chosenFiles[0].size,
-                        type: this.state.chosenFiles[0].type,
-                        original: this.state.chosenFiles[0].name
-                    })
-                    .then(response => {
-                        console.log(response);
-                        const chosenFiles = this.state.chosenFiles;
-                        chosenFiles[0].status = 'New';
-                        this.setState({chosenFiles: chosenFiles});
-                    })
-                    .catch(error => console.log(error));
+        this.state.chosenFiles.map(file => {
+            const addConfig = {
+                //TODO: get the path from method
+                name: '37fb70ac-1/data/' + file.name,
+                file: file,
+                contentType: file.type,
+                progress: progressValue => {
+                    document.getElementById(
+                        `progressbar_${file.id}`
+                    ).value = progressValue;
+                },
+                // cancelled: function () {
+                //     allDone.reject();
+                // },
+                error: function (msg) {
+                    console.log(msg);
+                },
+                complete: (_xhr, awsKey) => {
+                    const csrf_token = document.querySelector('[name=csrf-token]');
+                    if (csrf_token)  // there isn't csrf token when running Capybara tests
+                        axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+                    axios.post(
+                        '/stash/data_file/upload_complete/' + this.props.resource_id,
+                        {
+                            resource_id: this.props.resource_id,
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            original: file.name
+                        })
+                        .then(response => {
+                            console.log(response);
+                            this.setFileUploadComplete(file);
+                        })
+                        .catch(error => console.log(error));
+                }
             }
-        }
-        // console.log('Este é o s3_directory: ' + '37fb70ac-1/data/' + this.state.chosenFiles[0].name); //DB
+            // Before start uploading, change file status cel to a progress bar
+            this.changeStatusToProgressBar(file.id);
 
-        // Before start uploading change file status cel to a progress bar
-        const status_cel = document.getElementById(`status_${this.state.chosenFiles[0].id}`);
+            evaporate.add(addConfig)
+                .then(
+                    awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
+                    reason => console.log('File did not upload successfully: ', reason)
+                );
+        })
+
+    }
+
+    setFileUploadComplete = (file) => {
+        const chosenFiles = this.state.chosenFiles;
+        const fileId = chosenFiles.map((item) => {
+            return item.id;
+        }).indexOf(file.id);
+        chosenFiles[fileId].status = 'New';
+        this.setState({chosenFiles: chosenFiles});
+    }
+
+    changeStatusToProgressBar = (fileId) => {
+        const status_cel = document.getElementById(`status_${fileId}`);
         status_cel.innerText = '';
         const node = document.createElement('progress');
         const progressBar = status_cel.appendChild(node);
-        progressBar.setAttribute('id', `progressbar_${this.state.chosenFiles[0].id}`)
+        progressBar.setAttribute('id', `progressbar_${fileId}`)
         progressBar.setAttribute('value', '');
-
-        evaporate.add(addConfig)
-            .then(
-                awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
-                reason => console.log('File did not upload successfully: ', reason)
-            );
     }
+
+
 
     updateManifestFiles = (files) => {
         this.updateFailedUrls(files['invalid_urls']);
