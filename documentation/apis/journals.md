@@ -184,21 +184,28 @@ To see these changes:
 Technical details for the journal module
 ========================================
 
-Configuring the journal-submit webapp
--------------------------------------
+Configuring/updating the Rails connection with GMail
+-----------------------------------------------------
 
-Several settings need to be in the server's Maven settings.xml
-file. The following are example settings for the main production
-server. Please choose unique settings for your own server's label and
-error label, e.g. dev-journal-submit and dev-journal-submit-error for
-the dev server.
+Several settings need to be in the server's settings to connect with GMail.
 
-The JSON data for the clientsecret can be found in the Maven settings
-on dev or production, or can be obtained directly from Google via
-https://console.developers.google.com/project/journal-submit/apiui/credential
-and is the downloaded JSON for "Client ID for native application."
+The gmail_client_id and gmail_client_secret can be found in the Rails credentials file, but
+if they need to be updated, they must be obtained from Google:
+- must be logged in as journal-submit-app@datadryad.org
+- go to https://console.cloud.google.com/apis/credentials
+- select project "Dryad v2 Gmail API" (if needed)
+- see the download icon for the entry "OAuth client"
+- copy the client_id and client_secret out of the downloaded file
 
-Troubleshooting
+Rails needs more than just the above credentials. It also needs a token that
+will allow it to read from a specific GMail account. The toke is stored in a
+file called `token.yaml`, one directory above the codebase, so it is not
+affected by updates to the codebase. You can test whether the
+token is valid and/or reset the token by running:
+`rails journal_email:validate_gmail_connection`
+
+
+OLD -- Troubleshooting
 ---------------
 
 If running http://localhost:9999/journal-submit/test returns errors,
@@ -210,29 +217,6 @@ webapp.
 If running http://localhost:9999/journal-submit/retrieve returns an
 error saying that messages are still being processed, you can clear
 that by running http://localhost:9999/journal-submit/clear.
-
-
-Authorizing the webapp
-----------------------
-
-This should only need to be done when a server is deploying the webapp
-for the very first time: the credentials should remain authorized
-unless and until someone revokes the access through the Google
-Developer Console.
-
-Once configured, built, and running, start the Tomcat instance and
-authorize the webapp for accessing the Gmail account:
-
-Go to a web browser and navigate to
-http://localhost:9999/journal-submit/authorize (or whatever address
-the Tomcat server is running at) and follow the OAuth2 instructions.
-
-When you are provided with an auth code, copy it and make a call to
-http://localhost:9999/journal-submit/authorize?code=whateverthecodeis
-to authorize the webapp.
-
-Restart tomcat and run http://localhost:9999/journal-submit/test and
-you should get a test message in your journal-submit.log file.
 
 
 Configuring the Gmail labels
