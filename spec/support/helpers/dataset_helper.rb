@@ -106,4 +106,22 @@ module DatasetHelper
     find('#agree_to_payment').click
   end
 
+  def attach_files
+    # Workaround to expose input file type element, removing the class from the input element
+    page.execute_script('$("#data").removeClass()')
+    page.execute_script('$("#software").removeClass()')
+    page.execute_script('$("#supplemental").removeClass()')
+
+    attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+    attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_100.ods")
+    attach_file('supplemental', "#{Rails.root}/spec/fixtures/file_example_ODS_1000.ods")
+    expect(page).to have_content('file_example_ODS_10.ods')
+    expect(page).to have_content('data', count: 1)
+    expect(page).to have_content('file_example_ODS_100.ods')
+    expect(page).to have_content('software', count: 1)
+    expect(page).to have_content('file_example_ODS_1000.ods')
+    expect(page).to have_content('supplemental', count: 2) # one inside the file type box and other into the table raw
+    expect(page).to have_content('Pending', count: 3)
+  end
+
 end

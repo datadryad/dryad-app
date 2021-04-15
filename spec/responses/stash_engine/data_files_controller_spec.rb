@@ -93,9 +93,9 @@ module StashEngine
       it 'returns json when request to validate urls with format html' do
         @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/funbar.txt' }
-        post @url, params: params
+        response_code = post @url, params: params
+        expect(response_code).to eql(200)
 
-        expect(response).to be_successful
         body = JSON.parse(response.body)
         valid_url = body['valid_urls'].first
         expect(valid_url['upload_file_name']).to eql('funbar.txt')
@@ -107,9 +107,9 @@ module StashEngine
       it 'returns json with bad urls when request to validate urls with html format' do
         @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         params = { 'url' => 'http://example.org/foobar.txt' }
-        post @url, params: params
+        response_code = post @url, params: params
+        expect(response_code).to eql(200)
 
-        expect(response).to be_successful
         body = JSON.parse(response.body)
         invalid_url = body['invalid_urls'].first
         expect(invalid_url['url']).to eql(params['url'])
@@ -120,9 +120,9 @@ module StashEngine
         @file = @resource.data_files.first
         @file.update(url: 'http://example.org/funbar.txt')
         @url = StashEngine::Engine.routes.url_helpers.destroy_error_data_file_path(id: @file.id)
-        patch @url, as: :html
+        response_code = patch @url, as: :html
+        expect(response_code).to eql(200)
 
-        expect(response).to be_successful
         body = JSON.parse(response.body)
         expect(body['url']).to eql(@file.url)
       end

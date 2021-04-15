@@ -62,15 +62,14 @@ class UploadFiles extends React.Component {
     addFilesHandler = (event, type) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
-            // This differentiates computer user chosen files from manifest ones.
-            // The manifest file id's are the id's from the objects created in db.
-            // Other than that this is used to the S3 presign upload process
+            // This is used to the S3 presign upload process
             file.id = generateQuickId();
 
             // file.sanitized_name = file_sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
-            file.type_ = type;
+            file.uploadType = type;
+            file.manifest = false;
             file.sizeKb = formatSizeUnits(file.size);
         });
         this.updateFileList(newFiles);
@@ -91,10 +90,11 @@ class UploadFiles extends React.Component {
     }
 
     uploadFileToS3 = evaporate => {
-        this.state.chosenFiles.map(file => {
+        const pendingFiles = this.getPendingFiles();
+        pendingFiles.map(file => {
             const addConfig = {
                 //TODO: get the path from method
-                name: '37fb70ac-1/data/' + file.name,
+                name: `${this.props.s3_dir_name}/${file.name}`, //TODO: get sanitized file.name
                 file: file,
                 contentType: file.type,
                 progress: progressValue => {
@@ -113,7 +113,7 @@ class UploadFiles extends React.Component {
                     if (csrf_token)  // there isn't csrf token when running Capybara tests
                         axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
                     axios.post(
-                        '/stash/data_file/upload_complete/' + this.props.resource_id,
+                        `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
                         {
                             resource_id: this.props.resource_id,
                             name: file.name,
@@ -138,6 +138,12 @@ class UploadFiles extends React.Component {
                 );
         })
 
+    }
+
+    getPendingFiles = () => {
+        return this.state.chosenFiles.filter((file) => {
+            return file.status === 'Pending';
+        });
     }
 
     setFileUploadComplete = (file) => {
@@ -280,7 +286,7 @@ class UploadFiles extends React.Component {
     };
 
     /**
-     * The controller returned data consists of an array of UrlValidator
+     * The returned controller data consists of an array of UrlValidator
      * upload_attributes objects. Select only the attributes consistent with
      * this.state.chosenFiles attributes.
      * @param manifestFiles
@@ -292,7 +298,8 @@ class UploadFiles extends React.Component {
             transformed.push({
                 id: file.id, name: file.original_filename,
                 status: 'New', url: file.url,
-                type_: ActiveRecordTypeToFileType[file.type],
+                uploadType: ActiveRecordTypeToFileType[file.type],
+                manifest: true,
                 sizeKb: formatSizeUnits(file.upload_file_size)
             })
         })
@@ -335,8 +342,7 @@ class UploadFiles extends React.Component {
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        const typeFilePartialRoute = file.type_ + '_files';
-        axios.patch(`/stash/${typeFilePartialRoute}/${file.id}/destroy_error`)
+        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_error`)
             .then(response => {
                 console.log(response.status);
             })
