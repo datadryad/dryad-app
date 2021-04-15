@@ -16,7 +16,7 @@
   resource_id: @resource.id,
   file_uploads: @resource.generic_files.map(&:attributes),
   app_config_s3: APP_CONFIG[:s3],
-  s3_dir_name: @resource.s3_dir_name(type: 'data')
+  s3_dir_name: @resource.s3_dir_name(type: 'base')
 }) %>
 
 <div class="o-dataset-nav">
