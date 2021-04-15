@@ -16,6 +16,7 @@ module StashEngine
           assert_equal @resource.id, props[:resource_id]
           assert_equal @resource.data_files.first.attributes, props[:file_uploads].first.stringify_keys
           assert_equal APP_CONFIG[:s3].to_h, props[:app_config_s3][:table]
+          assert_equal @resource.s3_dir_name(type: 'data'), props[:s3_dir_name]
         end
       end
     end
