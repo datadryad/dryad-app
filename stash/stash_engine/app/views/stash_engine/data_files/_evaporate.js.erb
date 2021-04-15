@@ -91,6 +91,8 @@ function evaporateIt(key, complexFileObj) {
             allDone.resolve();
           },
           error: result => {
+            var myObj = JSON.parse(result.responseText)
+            console.log(myObj["msg"]);
             allDone.reject();
           },
           dataType: 'json'

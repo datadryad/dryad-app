@@ -361,6 +361,7 @@ module StashApi
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       @resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+      @resource.send_supp_to_zenodo
 
       case @json.first['path']
       when '/versionStatus'

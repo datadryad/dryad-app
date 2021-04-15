@@ -65,12 +65,10 @@ module Stash
         s3_bucket.objects(prefix: "#{s3_key}/").batch_delete!
       end
 
-      # TODO: add by cacods: see if it's worth to have this or better implement it.
-      def self.objects_all(s3_key:)
-        return unless s3_key
+      def self.objects(starts_with:)
+        return unless starts_with
 
-        s3_key = s3_key.chop if s3_key.ends_with?('/')
-        s3_bucket.objects(prefix: "#{s3_key}/").map { |i| [i.key, i.size] }
+        s3_bucket.objects(prefix: starts_with)
       end
 
       class << self

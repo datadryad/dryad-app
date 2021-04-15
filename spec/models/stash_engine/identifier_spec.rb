@@ -933,5 +933,25 @@ module StashEngine
         expect(@identifier.has_zenodo_software?).to eq(false)
       end
     end
+
+    describe '#has_zenodo_supp' do
+      before(:each) do
+        @supp_file = SuppFile.create(upload_file_name: 'test', file_state: 'created')
+      end
+
+      it 'correctly detects current zenodo supplemental' do
+        @res3.supp_files << @supp_file
+        expect(@identifier.has_zenodo_supp?).to eq(true)
+      end
+
+      it 'correctly detects former zenodo supplemental' do
+        @res1.supp_files << @supp_file
+        expect(@identifier.has_zenodo_supp?).to eq(true)
+      end
+
+      it 'correctly detects no zenodo supplemental' do
+        expect(@identifier.has_zenodo_supp?).to eq(false)
+      end
+    end
   end
 end

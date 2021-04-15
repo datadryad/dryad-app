@@ -70,8 +70,14 @@ $("#upload_bg").on("drop", function(event) {
   event.preventDefault();
   event.stopPropagation();
   stageToPage(event.originalEvent.dataTransfer.files);
+  // remove upload messages from last try
+  $('#upload_message').removeClass();
+  $('#upload_message').hide();
 });
 
 $("#upload_upload").on("change", function(event) {
   stageToPage(event.target.files);
+  // remove upload messages from last try
+  $('#upload_message').removeClass();
+  $('#upload_message').hide();
 });
