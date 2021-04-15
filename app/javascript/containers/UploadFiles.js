@@ -21,6 +21,11 @@ const ActiveRecordTypeToFileType = {
     'StashEngine::DataFile': 'data',
     'StashEngine::Supplemental': 'supplemental'
 }
+const AllowedUploadFileTypes = {
+    'data': 'data',
+    'software': 'sfw',
+    'supplemental': 'supp'
+}
 
 class UploadFiles extends React.Component {
     state = {
@@ -92,9 +97,12 @@ class UploadFiles extends React.Component {
     uploadFileToS3 = evaporate => {
         const pendingFiles = this.getPendingFiles();
         pendingFiles.map(file => {
+            //TODO: get sanitized file.name
+            //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
+            const evaporateUrl =
+                `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.name}`;
             const addConfig = {
-                //TODO: get the path from method
-                name: `${this.props.s3_dir_name}/${file.name}`, //TODO: get sanitized file.name
+                name: evaporateUrl,
                 file: file,
                 contentType: file.type,
                 progress: progressValue => {
@@ -102,9 +110,6 @@ class UploadFiles extends React.Component {
                         `progressbar_${file.id}`
                     ).value = progressValue;
                 },
-                // cancelled: function () {
-                //     allDone.reject();
-                // },
                 error: function (msg) {
                     console.log(msg);
                 },
