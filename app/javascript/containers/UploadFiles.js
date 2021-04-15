@@ -85,6 +85,8 @@ class UploadFiles extends React.Component {
             aws_key: this.props.app_config_s3.table.key,
             bucket: this.props.app_config_s3.table.bucket,
             awsRegion: this.props.app_config_s3.table.region,
+            // Assign any first signerUrl, but it changes for each upload file type
+            // when call evaporate object add method bellow
             signerUrl: `/stash/data_file/presign_upload/${this.props.resource_id}`,
             awsSignatureVersion: "4",
             computeContentMd5: true,
@@ -136,7 +138,8 @@ class UploadFiles extends React.Component {
             // Before start uploading, change file status cel to a progress bar
             this.changeStatusToProgressBar(file.id);
 
-            evaporate.add(addConfig)
+            const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
+            evaporate.add(addConfig, {signerUrl: signerUrl})
                 .then(
                     awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
                     reason => console.log('File did not upload successfully: ', reason)
