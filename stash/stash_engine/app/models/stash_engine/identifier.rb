@@ -430,6 +430,10 @@ module StashEngine
     def has_zenodo_software?
       SoftwareFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
     end
+
+    def has_zenodo_supp?
+      SuppFile.joins(:resource).where(stash_engine_resources: { identifier_id: id }).count.positive?
+    end
     # rubocop:enable Naming/PredicateName
 
     # gets the resources which are in zenodo and have viewable files for the context, used by the landing page.
