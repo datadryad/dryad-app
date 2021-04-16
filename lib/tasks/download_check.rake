@@ -16,12 +16,12 @@ namespace :download_check do
   end
 
   task merritt_all_latest_public: :environment do
-    ids = StashEngine::Identifier.publicly_viewable.limit(100).offset(8000)
+    ids = StashEngine::Identifier.publicly_viewable
     # these can produce errors for testing
     # ids = StashEngine::Identifier.where(id: [113, 151, 210, 2108, 2143, 2150, 5149, 5186])
     dl_merritt = DownloadCheck::Merritt.new(identifiers: ids)
     dl_merritt.check_all_files
     dl_merritt.output_csv(filename: 'all_merritt_public.csv')
-    puts "wrote all_merritt_public.csv"
+    puts 'wrote all_merritt_public.csv'
   end
 end

@@ -33,6 +33,7 @@ module DownloadCheck
       end
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def check_all_files
       @accumulator = []
       last_query_time = Time.new
@@ -42,7 +43,7 @@ module DownloadCheck
         puts "#{idx + 1}/#{@identifiers.count} checking #{identifier.identifier}, resource: #{res.id}"
         res.data_files.present_files.each do |file|
           if file.nil? || res.download_uri.blank?
-            save_error(resource: res, file: file, error: "file or download_url blank")
+            save_error(resource: res, file: file, error: 'file or download_url blank')
             next
           end
 
@@ -65,13 +66,13 @@ module DownloadCheck
             if file.upload_file_size != size
               save_error(resource: res, file: file, error: "bad content length: db: #{file.upload_file_size} vs s3: #{size}")
             end
-
           rescue Stash::Download::MerrittError, HTTP::Error => e
             save_error(resource: res, file: file, error: e)
           end
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def save_error(resource:, file:, error:)
       ark = %r{/d/(.+)$}.match(resource.download_uri)
