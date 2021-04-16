@@ -1,4 +1,5 @@
 require 'http'
+require 'stash/zenodo_software'
 require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
