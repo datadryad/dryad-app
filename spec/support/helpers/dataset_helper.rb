@@ -124,6 +124,8 @@ module DatasetHelper
     expect(page).to have_content('supplemental', count: 1)
     expect(page).to have_content('Pending', count: 3)
   end
+  # rubocop:enable Metrics/AbcSize
+
 
   def build_stub_requests(valid, invalid)
     stub_request(:head, valid)
