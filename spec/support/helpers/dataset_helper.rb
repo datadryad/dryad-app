@@ -126,7 +126,6 @@ module DatasetHelper
   end
   # rubocop:enable Metrics/AbcSize
 
-
   def build_stub_requests(valid, invalid)
     stub_request(:head, valid)
       .with(
