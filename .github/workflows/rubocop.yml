@@ -16,12 +16,12 @@ jobs:
 
     # Install Ruby - using the version found in the Gemfile.lock
     - name: 'Install Ruby'
-      uses: actions/setup-ruby@v1
+      uses: ruby/setup-ruby@v1.68.0
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
 
     - name: 'Retrieve Cached Gems'
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.5
       with:
         path: vendor/bundle
         key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
