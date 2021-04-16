@@ -37,22 +37,9 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
   describe 'URL manifest files validation' do
     before(:each) do
-      stub_request(:head, 'http://example.org/funbar.txt')
-        .with(
-          headers: {
-            'Accept' => '*/*'
-          }
-        )
-        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
-
-      stub_request(:head, 'http://example.org/foobar.txt')
-        .with(
-          headers: {
-            'Accept' => '*/*'
-          }
-        )
-        .to_return(status: 404)
-
+      @valid_url_manifest = 'http://example.org/funbar.txt'
+      @invalid_url_manifest = 'http://example.org/foobar.txt'
+      build_stub_requests(@valid_url_manifest, @invalid_url_manifest)
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
@@ -60,53 +47,58 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
     it 'validate data file URL that works' do
       click_button('data_manifest')
-      fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
-      click_on('validate_files')
+      validate_url_manifest(@valid_url_manifest)
 
-      expect(page).to have_content('37.22 KB')
-      expect(page).to have_content('funbar.txt')
+      expect_validate_commons
       expect(page).to have_content('Data')
 
       # and it made it into the database
       fu = @resource.data_files.first
-      expect(fu.upload_file_name).to eq('funbar.txt')
-      expect(fu.upload_content_type).to eq('text/plain')
-      expect(fu.upload_file_size).to eq(37_221)
+      expect_new_entry_to_have(fu)
     end
 
     it 'shows problem with bad data file URL' do
       click_button('data_manifest')
-      fill_in('location_urls', with: 'http://example.org/foobar.txt')
-      check('confirm_to_validate')
-      click_on('validate_files')
+      validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
     end
 
     it 'validates software file URL that works' do
       click_button('software_manifest')
-      fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
-      click_on('validate_files')
+      validate_url_manifest(@valid_url_manifest)
 
-      expect(page).to have_content('37.22 KB')
-      expect(page).to have_content('funbar.txt')
+      expect_validate_commons
       expect(page).to have_content('Software')
 
       # and it made it into the database
-      su = @resource.software_files.first
-      expect(su.upload_file_name).to eq('funbar.txt')
-      expect(su.upload_content_type).to eq('text/plain')
-      expect(su.upload_file_size).to eq(37_221)
+      fu = @resource.software_files.first
+      expect_new_entry_to_have(fu)
     end
 
-    it 'shows problem with bad URL' do
+    it 'shows problem with bad software URL' do
       click_button('software_manifest')
-      fill_in('location_urls', with: 'http://example.org/foobar.txt')
-      check('confirm_to_validate')
-      click_on('validate_files')
+      validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
     end
+
+    it 'validate supplemental file URL that works' do
+      click_button('supp_manifest')
+      validate_url_manifest(@valid_url_manifest)
+
+      expect_validate_commons
+      expect(page).to have_content('Supplemental')
+
+      # and it made it into the database
+      fu = @resource.supp_files.first
+      expect_new_entry_to_have(fu)
+    end
+
+    it 'shows problem with bad supplemental file URL' do
+      click_button('supp_manifest')
+      validate_url_manifest(@invalid_url_manifest)
+      expect(page).to have_content('The URL was not found')
+    end
+
   end
 
   describe 'S3 file uploading' do

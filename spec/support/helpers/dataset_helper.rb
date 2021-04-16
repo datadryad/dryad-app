@@ -107,21 +107,56 @@ module DatasetHelper
   end
 
   def attach_files
-    # Workaround to expose input file type element, removing the class from the input element
+    # Workaround to expose input file type elements
     page.execute_script('$("#data").removeClass()')
     page.execute_script('$("#software").removeClass()')
-    page.execute_script('$("#supplemental").removeClass()')
+    page.execute_script('$("#supp").removeClass()')
 
     attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
     attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_100.ods")
-    attach_file('supplemental', "#{Rails.root}/spec/fixtures/file_example_ODS_1000.ods")
+    attach_file('supp', "#{Rails.root}/spec/fixtures/file_example_ODS_1000.ods")
     expect(page).to have_content('file_example_ODS_10.ods')
     expect(page).to have_content('data', count: 1)
     expect(page).to have_content('file_example_ODS_100.ods')
     expect(page).to have_content('software', count: 1)
     expect(page).to have_content('file_example_ODS_1000.ods')
-    expect(page).to have_content('supplemental', count: 2) # one inside the file type box and other into the table raw
+    expect(page).to have_content('supplemental', count: 1)
     expect(page).to have_content('Pending', count: 3)
+  end
+
+  def build_stub_requests(valid, invalid)
+    stub_request(:head, valid)
+      .with(
+        headers: {
+          'Accept' => '*/*'
+        }
+      )
+      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+
+    stub_request(:head, invalid)
+      .with(
+        headers: {
+          'Accept' => '*/*'
+        }
+      )
+      .to_return(status: 404)
+  end
+
+  def validate_url_manifest(url)
+    fill_in('location_urls', with: url)
+    check('confirm_to_validate')
+    click_on('validate_files')
+  end
+
+  def expect_validate_commons
+    expect(page).to have_content('37.22 KB')
+    expect(page).to have_content('funbar.txt')
+  end
+
+  def expect_new_entry_to_have(fu)
+    expect(fu.upload_file_name).to eq('funbar.txt')
+    expect(fu.upload_content_type).to eq('text/plain')
+    expect(fu.upload_file_size).to eq(37_221)
   end
 
 end
