@@ -106,6 +106,7 @@ module DatasetHelper
     find('#agree_to_payment').click
   end
 
+  # rubocop:disable Metrics/AbcSize
   def attach_files
     # Workaround to expose input file type elements
     page.execute_script('$("#data").removeClass()')
