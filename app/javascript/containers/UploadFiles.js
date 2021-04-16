@@ -19,7 +19,7 @@ import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resource
 const ActiveRecordTypeToFileType = {
     'StashEngine::SoftwareFile': 'software',
     'StashEngine::DataFile': 'data',
-    'StashEngine::Supplemental': 'supplemental'
+    'StashEngine::SuppFile': 'supp'
 }
 const AllowedUploadFileTypes = {
     'data': 'data',
@@ -39,7 +39,7 @@ class UploadFiles extends React.Component {
                 description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                type: 'supplemental', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
+                type: 'supp', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
                 name: 'Supplemental Information', description: 'Example 1, example 2, example 3',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
@@ -238,6 +238,7 @@ class UploadFiles extends React.Component {
 
     removeFileHandler = (fileIndex) => {
         let chosenFiles = [...this.state.chosenFiles];
+        console.log(chosenFiles); //DB
         if (! (chosenFiles[fileIndex] instanceof File)) {
             this.removeManifestFileHandler(chosenFiles[fileIndex]);
         }
