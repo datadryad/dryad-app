@@ -52,7 +52,7 @@ module StashEngine
     # Breaks a large string of content into an array of lines,
     # stripping any material after the ending tag
     def content_to_lines
-      lines = @content.split(%r{\n+|\r+|<br/>|<br />})
+      lines = @content.split(%r{\n+|\r+|<br/>|<br />|<BR/>|<BR />})
       puts "LIN #{lines}"
       # remove any lines after EndDryadContent
       last_dryad_line = 0
