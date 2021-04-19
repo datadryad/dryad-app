@@ -35,6 +35,8 @@ module DownloadCheck
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def check_all_files
+      # we always have to do this because the normalizer in 'http.rb' randomly mangles some things
+      @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
       @accumulator = []
       last_query_time = Time.new
 
@@ -55,7 +57,7 @@ module DownloadCheck
 
             url = file.merritt_s3_presigned_url
 
-            resp = HTTP.get(url)
+            resp = @http.get(url)
             size = resp.headers['Content-Length']&.to_i || 0
 
             if resp.status.code >= 400
