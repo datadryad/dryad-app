@@ -4,18 +4,18 @@ require 'byebug'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine
-  RSpec.describe DataFilesController, type: :request do
+  RSpec.describe SuppFilesController, type: :request do
     include GenericFilesHelper
 
     before(:each) do
       generic_before
       # HACK: in session because requests specs don't allow session in rails 4
-      allow_any_instance_of(DataFilesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
+      allow_any_instance_of(SuppFilesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
     describe '#presign_upload' do
       before(:each) do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_presign_url_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.supp_file_presign_url_path(resource_id: @resource.id)
         @json_hash = { 'to_sign' => "AWS4-HMAC-SHA256\n20210213T001147Z\n20210213/us-west-2/s3/aws4_request\n" \
                                   '98fd9689d64ec7d84eb289ba859a122f07f7944e802edc4d5666d3e2df6ce7d6',
                        'datetime' => '20210213T001147Z' }
@@ -33,7 +33,7 @@ module StashEngine
     describe '#upload_complete' do
 
       before(:each) do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_complete_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.supp_file_complete_path(resource_id: @resource.id)
         @json_hash = {
           'name' => 'lkhe_hg.jpg', 'size' => 1_843_444,
           'type' => 'image/jpeg', 'original' => 'lkhe*hg.jpg'
@@ -43,7 +43,7 @@ module StashEngine
       it 'creates a database entry after file upload to s3 is complete' do
         response_code = post @url, params: @json_hash, as: :json
         expect(response_code).to eql(200)
-        generic_new_db_entry_expects(@json_hash, @resource.data_files.first)
+        generic_new_db_entry_expects(@json_hash, @resource.supp_files.first)
       end
 
       it 'returns json when request with format html, after file upload to s3 is complete' do
@@ -57,20 +57,20 @@ module StashEngine
       end
 
       it 'returns json when request with format html to validate urls' do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.supp_file_validate_urls_path(resource_id: @resource.id)
         generic_validate_urls_expects(@url)
       end
 
       it 'returns json with bad urls when request with html format to validate urls' do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.supp_file_validate_urls_path(resource_id: @resource.id)
         generic_bad_urls_expects(@url)
       end
 
       it 'returns json when request with html format to destroy manifest file ' do
-        @resource.update(data_files: [create(:data_file)])
-        @file = @resource.data_files.first
+        @resource.update(supp_files: [create(:supp_file)])
+        @file = @resource.supp_files.first
         @file.update(url: 'http://example.org/funbar.txt')
-        @url = StashEngine::Engine.routes.url_helpers.destroy_error_data_file_path(id: @file.id)
+        @url = StashEngine::Engine.routes.url_helpers.destroy_error_supp_file_path(id: @file.id)
         generic_destroy_manifest_expects(@url, @file)
       end
 

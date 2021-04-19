@@ -21,7 +21,7 @@ const file_list = (props) => {
                 {props.chosenFiles.map((file, index) => {
                     return <File
                         key={index}
-                        click={() => props.clicked(index)}
+                        click={() => props.clickedRemove(index)}
                         file={file}
                     />
                 })}

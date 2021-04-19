@@ -108,7 +108,7 @@ function evaporateIt(key, complexFileObj) {
     evaporate.add(addConfig, overrides)
         .then(
             awsObjectKey => console.log('File successfully uploaded to:', awsObjectKey),
-            reason => console.log('File did not upload sucessfully:', reason)
+            reason => console.log('File did not upload successfully:', reason)
         );
   }
 
