@@ -88,7 +88,7 @@ module StashEngine
 
     def upload_complete
       respond_to do |format|
-        format.json do
+        format.any(:json, :html) do
           # destroy any previous with this name and overwrite with this one
           @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
 

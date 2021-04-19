@@ -11,7 +11,9 @@ const modal_url = (props) => {
                         <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">Enter
                             URLs</label>
                         <button className="c-uploadmodal__button-close-modal js-uploadmodal__button-close-modal"
-                                aria-label="close" type="button" onClick={(event) => props.clicked(event)} />
+                                aria-label="close"
+                                type="button"
+                                onClick={(event) => props.clickedClose(event)} />
                     </div>
                     <textarea id="location_urls" className="c-uploadmodal__textarea-url" name="url"
                               onChange={props.changedUrls}
