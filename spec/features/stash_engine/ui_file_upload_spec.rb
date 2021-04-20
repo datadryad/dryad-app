@@ -45,7 +45,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       @file2.url = 'http://example.com/example.csv'
       @file2.save
       @file3 = create_supplemental_file(@resource_id)
-      click_link('Upload Files') # click on it to show the table with the file
+      click_link('Upload Files') # click on it to refresh the page and show the table with the file
     end
 
     it 'shows files already uploaded' do
@@ -79,6 +79,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it 'shows problem with bad data file URL' do
+      # TODO: test for url already existent
       click_button('data_manifest')
       validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
@@ -199,6 +200,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     end
 
     it 'only changes table status column to a progress bar if file status is Pending' do
+      # TODO: test for table row with other status than 'Pending'
       pending_file_table_row = page.find('td', text: 'Pending')
       check('confirm_to_upload')
       click_on('validate_files')
@@ -206,6 +208,31 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       within(pending_file_table_row) do
         expect(page.has_css?('progress')).to be true
       end
+    end
+  end
+
+  describe 'Destroy file uploaded and manifest file' do
+    before(:each) do
+      navigate_to_upload
+      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
+      @resource = StashEngine::Resource.find(@resource_id)
+      @file1 = create_data_file(@resource_id)
+      @file2 = create_software_file(@resource_id)
+      @file2.url = 'http://example.com/example.csv'
+      @file2.save
+      @file3 = create_supplemental_file(@resource_id)
+      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+    end
+
+    xit 'calls destroy_manifest when removing New file' do
+      # TODO: to solve error:
+      #     Failure/Error: raise ActionController::UnknownFormat, message
+      #      ActionController::UnknownFormat:
+      #        StashEngine::DataFilesController#destroy_manifest is missing a template for this request format and variant.
+      #        request.formats: ["text/html"]
+      #        request.variant: []
+      first('td > a').click
+      expect_any_instance_of(StashEngine::GenericFilesController).to receive(:destroy_manifest).and_return('OK')
     end
   end
 

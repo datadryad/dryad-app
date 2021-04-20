@@ -16,15 +16,15 @@ import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resource
 /**
  * Constants
  */
-const ActiveRecordTypeToFileType = {
-    'StashEngine::SoftwareFile': 'software',
+const RailsActiveRecordToUploadType = {
     'StashEngine::DataFile': 'data',
+    'StashEngine::SoftwareFile': 'software',
     'StashEngine::SuppFile': 'supp'
 }
 const AllowedUploadFileTypes = {
     'data': 'data',
     'software': 'sfw',
-    'supplemental': 'supp'
+    'supp': 'supp'
 }
 
 class UploadFiles extends React.Component {
@@ -291,7 +291,7 @@ class UploadFiles extends React.Component {
             ...file,
             name: file.original_filename,
             status: 'New',
-            uploadType: ActiveRecordTypeToFileType[file.type],
+            uploadType: RailsActiveRecordToUploadType[file.type],
             sizeKb: formatSizeUnits(file.upload_file_size)
         }))
     }
@@ -331,9 +331,9 @@ class UploadFiles extends React.Component {
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_error`)
+        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
             .then(response => {
-                console.log(response.status);
+                console.log(response.data);
             })
             .catch(error => console.log(error));
     }
