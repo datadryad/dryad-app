@@ -12,7 +12,6 @@ module StashEngine
         ms_number = "ms-#{Faker::Number.number(digits: 4)}"
         title = Faker::Lorem.sentence
         content = "Journal Name: #{@journal.title}\n" \
-                  "Journal Code: RSOS\n" \
                   "Online ISSN: #{@journal.issn}\n" \
                   "MS Reference Number: #{ms_number}\n" \
                   "MS Title: #{title}\n" \
