@@ -23,6 +23,7 @@ const file_list = (props) => {
                         key={index}
                         click={() => props.clickedRemove(index)}
                         file={file}
+                        index={index}
                     />
                 })}
                 </tbody>

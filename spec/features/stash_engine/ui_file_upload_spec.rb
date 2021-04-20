@@ -35,6 +35,27 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
+  describe 'Upload Files index' do
+    before(:each) do
+      navigate_to_upload
+      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
+      @resource = StashEngine::Resource.find(@resource_id)
+      @file1 = create_data_file(@resource_id)
+      @file2 = create_software_file(@resource_id)
+      @file2.url = 'http://example.com/example.csv'
+      @file2.save
+      @file3 = create_supplemental_file(@resource_id)
+      click_link('Upload Files') # click on it to show the table with the file
+    end
+
+    it 'shows files already uploaded' do
+      expect(page).to have_content(@file1.original_filename)
+      expect(page).to have_content(@file2.url)
+      expect(page).to have_content(@file3.original_filename)
+      expect(page).to have_content('New', count: 3)
+    end
+  end
+
   describe 'URL manifest files validation' do
     before(:each) do
       @valid_url_manifest = 'http://example.org/funbar.txt'
@@ -118,6 +139,14 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
     it 'shows progress bar when start to upload' do
       expect(page.has_css?('progress', count: 3)).to be true
+    end
+
+    xit 'removes file from database when click Remove button' do
+      # At the time this placeholder test was first written the remove function
+      # was working for manifest files and files that are displayed
+      # after loading the files already uploaded. The remove function
+      # was not working for chosen files from user file system that have
+      # just uploaded. TODO: Implement this test!
     end
 
     xit 'creates S3 entry after upload is complete' do
