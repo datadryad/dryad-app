@@ -32,6 +32,8 @@ module Stash
 
       def upload_files(zenodo_bucket_url:)
         @file_change_list.upload_list.each do |upload|
+          next if upload.upload_file_size.nil? || upload.upload_file_size == 0
+
           streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
           digests = ['md5']
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
