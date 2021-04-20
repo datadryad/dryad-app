@@ -31,11 +31,11 @@ module StashEngine
       find_journal
       puts "JOURNAL #{@journal}"
 
-      # clean authors (and any other parts of the hash that need cleaning)
-      clean_authors
+      parse_author_list
       puts "AUTH #{@hash['ms authors']}"
 
-      # TODO: ident = find_associated_identifier(hash)
+      find_associated_identifier
+      puts "IDENT #{@identifier}"
     end
 
     # Breaks a large string of content into an array of lines,
@@ -109,10 +109,34 @@ module StashEngine
       @journal
     end
 
+    def find_associated_identifier
+      @identifier = nil
+      # prefer finding by data doi
+      data_doi = @hash['dryad data doi']
+      puts "DATA DOI #{data_doi}"
+      if data_doi
+        data_doi.downcase!
+        data_doi.sub!(/^doi:/, '')
+        @identifier = StashEngine::Identifier.where(identifier: data_doi).first
+      end
+
+      # find by manuscript number
+      ms_number = @hash['ms reference number']
+      if ms_number && !@identifier
+        int_data = StashEngine::InternalDatum.where(value: ms_number, data_type: 'manuscriptNumber')
+        int_data.each do |datum|
+          ident = datum.stash_identifier
+          @identifier = ident if ident.journal == @journal
+        end
+      end
+
+      @identifier
+    end
+
     # Convert the author string into an array of names
     # Author lists generally come as either "last, first; last, first"
     # or as "first last, first last and first last" (sometimes with the Oxford comma before the 'and' token)
-    def clean_authors
+    def parse_author_list
       author_string = @hash['ms authors']
       return unless author_string
 
