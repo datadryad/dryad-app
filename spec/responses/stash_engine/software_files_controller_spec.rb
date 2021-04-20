@@ -6,6 +6,7 @@ require 'byebug'
 module StashEngine
   RSpec.describe SoftwareFilesController, type: :request do
     include GenericFilesHelper
+    include Mocks::Aws
 
     before(:each) do
       generic_before
@@ -51,9 +52,9 @@ module StashEngine
       end
     end
 
-    describe '#upload_manifest' do
+    describe '#validate_urls' do
       before(:each) do
-        generic_before_upload_manifest
+        create_stub_requests
       end
 
       it 'returns json when request with format html to validate urls' do
@@ -65,13 +66,17 @@ module StashEngine
         @url = StashEngine::Engine.routes.url_helpers.software_file_validate_urls_path(resource_id: @resource.id)
         generic_bad_urls_expects(@url)
       end
+    end
 
-      it 'returns json when request with html format to destroy manifest file ' do
+    describe '#destroy_manifest' do
+      before(:each) do
+        mock_aws!
+      end
+      it 'returns json when request with html format' do
         @resource.update(software_files: [create(:software_file)])
         @file = @resource.software_files.first
-        @file.update(url: 'http://example.org/funbar.txt')
-        @url = StashEngine::Engine.routes.url_helpers.destroy_error_software_file_path(id: @file.id)
-        generic_destroy_manifest_expects(@url, @file)
+        @url = StashEngine::Engine.routes.url_helpers.destroy_manifest_software_file_path(id: @file.id)
+        generic_destroy_expects(@url)
       end
 
     end

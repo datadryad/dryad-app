@@ -49,6 +49,10 @@ module StashEngine
           @file.smart_destroy!
           render 'stash_engine/data_files/destroy_manifest.js.erb'
         end
+        format.html do
+          @file.smart_destroy!
+          render plain: 'OK'
+        end
       end
     end
 
