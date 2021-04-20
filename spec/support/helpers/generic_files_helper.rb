@@ -38,7 +38,8 @@ module GenericFilesHelper
     response_code = post url, params: json_hash
     expect(response_code).to eql(200)
     body = JSON.parse(response.body)
-    expect(body['msg']).to eql('ok')
+    new_file = StashEngine::GenericFile.first
+    expect(body['new_file'].to_json).to eql(new_file.to_json)
   end
 
   def generic_before_upload_manifest

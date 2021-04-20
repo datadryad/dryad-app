@@ -103,7 +103,7 @@ module StashEngine
               original_filename: params[:original]
             )
 
-          render json: { msg: 'ok' }
+          render json: { new_file: _db_file }
           # I tried code like this, but it always runs into some race condition and fails for large files
           # since I think Amazon hasn't assembled files from parts right away upon them completing in Evaporate.
           # unless Stash::Aws::S3.exists?(s3_key: db_file.calc_s3_path)
