@@ -52,6 +52,20 @@ module Stash
           allow_any_instance_of(Streamer).to receive(:stream).and_raise(Stash::ZenodoReplicate::ZenodoError)
           expect { @file_collection.upload_files(zenodo_bucket_url: @bucket_url) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
+
+        it 'skips zero-length (empty) files since Zenodo will not take them' do
+          @resource = create(:resource)
+          @software_http_upload = create(:software_file, upload_file_size: 0,
+                                                         url: 'http://example.org/example', resource: @resource)
+          @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
+          @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: @change_list)
+          @bucket_url = 'https://example.org/my/great/test/bucket'
+
+          allow(@change_list).to receive(:upload_list).and_return(@resource.software_files)
+
+          expect_any_instance_of(Streamer).not_to receive(:stream)
+          @file_collection.upload_files(zenodo_bucket_url: @bucket_url)
+        end
       end
 
       describe '#check_digests' do
