@@ -110,10 +110,10 @@ module Stash
           result = StashEngine::Manuscript.from_message_content(content: content)
           if result.success?
             puts "-- created #{result.payload}"
-          # TODO-reinstate-when-tested  remove_processing_label(message: m)
+            remove_processing_label(message: m)
           else
             puts "-- ERROR #{result.error} -- Adding error label to #{m.id}"
-            # TODO-reinstate add_error_label(message: m)
+            add_error_label(message: m)
           end
         end
       end
