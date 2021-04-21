@@ -39,7 +39,8 @@ module Stash
         read_pipe.define_singleton_method(:rewind) { nil }
         write_pipe.binmode
 
-        http = HTTP.timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+          .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
         response = http.get(@file_model.zenodo_replication_url)
 
         put_response = nil
