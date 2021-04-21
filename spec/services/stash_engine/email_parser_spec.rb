@@ -75,7 +75,7 @@ module StashEngine
       end
 
       it 'finds journal from journal code' do
-        content = "Journal Code: #{@journal.code}"
+        content = "Journal Code: #{@journal.journal_code}"
         parser = EmailParser.new(content: content)
         expect(parser.journal).to eq(@journal)
       end
