@@ -1,5 +1,41 @@
 module DatasetHelper
 
+  def create_data_file(resource_id)
+    StashEngine::DataFile.create(
+      {
+        resource_id: resource_id,
+        upload_file_name: 'example_data_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_software_file(resource_id)
+    StashEngine::SoftwareFile.create(
+      {
+        resource_id: resource_id,
+        upload_file_name: 'example_software_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_supplemental_file(resource_id)
+    StashEngine::SuppFile.create(
+      {
+        resource_id: resource_id,
+        upload_file_name: 'example_supp_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        file_state: 'created'
+      }
+    )
+  end
+
   def start_new_dataset
     click_button 'Start New Dataset'
     expect(page).to have_content('Describe Dataset', wait: 15)

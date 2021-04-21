@@ -38,10 +38,11 @@ module GenericFilesHelper
     response_code = post url, params: json_hash
     expect(response_code).to eql(200)
     body = JSON.parse(response.body)
-    expect(body['msg']).to eql('ok')
+    new_file = StashEngine::GenericFile.first
+    expect(body['new_file'].to_json).to eql(new_file.to_json)
   end
 
-  def generic_before_upload_manifest
+  def create_stub_requests
     @resource.current_resource_state.update(resource_state: 'in_progress')
 
     stub_request(:head, 'http://example.org/funbar.txt')
@@ -84,11 +85,9 @@ module GenericFilesHelper
     expect(invalid_url['url']).to eql(params['url'])
   end
 
-  def generic_destroy_manifest_expects(url, file)
+  def generic_destroy_expects(url)
     response_code = patch url, as: :html
     expect(response_code).to eql(200)
-
-    body = JSON.parse(response.body)
-    expect(body['url']).to eql(file.url)
+    expect(body).to eql('OK')
   end
 end

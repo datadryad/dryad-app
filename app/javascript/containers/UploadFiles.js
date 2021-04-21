@@ -16,15 +16,15 @@ import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resource
 /**
  * Constants
  */
-const ActiveRecordTypeToFileType = {
-    'StashEngine::SoftwareFile': 'software',
+const RailsActiveRecordToUploadType = {
     'StashEngine::DataFile': 'data',
+    'StashEngine::SoftwareFile': 'software',
     'StashEngine::SuppFile': 'supp'
 }
 const AllowedUploadFileTypes = {
     'data': 'data',
     'software': 'sfw',
-    'supplemental': 'supp'
+    'supp': 'supp'
 }
 
 class UploadFiles extends React.Component {
@@ -58,18 +58,14 @@ class UploadFiles extends React.Component {
     };
 
     componentDidMount() {
-        const files = [];
-        files['valid_urls'] = this.props.file_uploads;
-        files['invalid_urls'] = [];
-        this.updateManifestFiles(files);
+        const files = this.props.file_uploads;
+        const transformed = this.transformData(files);
+        this.setState({chosenFiles: transformed});
     }
 
     addFilesHandler = (event, type) => {
         const newFiles = [...event.target.files];
         newFiles.map((file) => {
-            // This is used to the S3 presign upload process
-            file.id = generateQuickId();
-
             // file.sanitized_name = file_sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
@@ -97,53 +93,54 @@ class UploadFiles extends React.Component {
     }
 
     uploadFileToS3 = evaporate => {
-        const pendingFiles = this.getPendingFiles();
-        pendingFiles.map(file => {
-            //TODO: get sanitized file.name
-            //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
-            const evaporateUrl =
-                `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.name}`;
-            const addConfig = {
-                name: evaporateUrl,
-                file: file,
-                contentType: file.type,
-                progress: progressValue => {
-                    document.getElementById(
-                        `progressbar_${file.id}`
-                    ).value = progressValue;
-                },
-                error: function (msg) {
-                    console.log(msg);
-                },
-                complete: (_xhr, awsKey) => {
-                    const csrf_token = document.querySelector('[name=csrf-token]');
-                    if (csrf_token)  // there isn't csrf token when running Capybara tests
-                        axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-                    axios.post(
-                        `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
-                        {
-                            resource_id: this.props.resource_id,
-                            name: file.name,
-                            size: file.size,
-                            type: file.type,
-                            original: file.name
-                        })
-                        .then(response => {
-                            console.log(response);
-                            this.setFileUploadComplete(file);
-                        })
-                        .catch(error => console.log(error));
+        this.state.chosenFiles.map((file, index) => {
+            if (file.status === 'Pending') {
+                //TODO: get sanitized file.name
+                //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
+                const evaporateUrl =
+                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.name}`;
+                const addConfig = {
+                    name: evaporateUrl,
+                    file: file,
+                    contentType: file.type,
+                    progress: progressValue => {
+                        document.getElementById(
+                            `progressbar_${index}`
+                        ).value = progressValue;
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    },
+                    complete: (_xhr, awsKey) => {
+                        const csrf_token = document.querySelector('[name=csrf-token]');
+                        if (csrf_token)  // there isn't csrf token when running Capybara tests
+                            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+                        axios.post(
+                            `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
+                            {
+                                resource_id: this.props.resource_id,
+                                name: file.name,
+                                size: file.size,
+                                type: file.type,
+                                original: file.name
+                            })
+                            .then(response => {
+                                console.log(response);
+                                this.setFileUploadComplete(response.data.new_file, index);
+                            })
+                            .catch(error => console.log(error));
+                    }
                 }
-            }
-            // Before start uploading, change file status cel to a progress bar
-            this.changeStatusToProgressBar(file.id);
+                // Before start uploading, change file status cel to a progress bar
+                this.changeStatusToProgressBar(index);
 
-            const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
-            evaporate.add(addConfig, {signerUrl: signerUrl})
-                .then(
-                    awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
-                    reason => console.log('File did not upload successfully: ', reason)
-                );
+                const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
+                evaporate.add(addConfig, {signerUrl: signerUrl})
+                    .then(
+                        awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
+                        reason => console.log('File did not upload successfully: ', reason)
+                    );
+            }
         })
 
     }
@@ -154,25 +151,21 @@ class UploadFiles extends React.Component {
         });
     }
 
-    setFileUploadComplete = (file) => {
+    setFileUploadComplete = (file, index) => {
         const chosenFiles = this.state.chosenFiles;
-        const fileId = chosenFiles.map((item) => {
-            return item.id;
-        }).indexOf(file.id);
-        chosenFiles[fileId].status = 'New';
+        chosenFiles[index].id = file.id;
+        chosenFiles[index].status = 'New';
         this.setState({chosenFiles: chosenFiles});
     }
 
-    changeStatusToProgressBar = (fileId) => {
-        const status_cel = document.getElementById(`status_${fileId}`);
+    changeStatusToProgressBar = (chosenFilesIndex) => {
+        const status_cel = document.getElementById(`status_${chosenFilesIndex}`);
         status_cel.innerText = '';
         const node = document.createElement('progress');
         const progressBar = status_cel.appendChild(node);
-        progressBar.setAttribute('id', `progressbar_${fileId}`)
+        progressBar.setAttribute('id', `progressbar_${chosenFilesIndex}`);
         progressBar.setAttribute('value', '');
     }
-
-
 
     updateManifestFiles = (files) => {
         this.updateFailedUrls(files['invalid_urls']);
@@ -238,9 +231,8 @@ class UploadFiles extends React.Component {
 
     removeFileHandler = (fileIndex) => {
         let chosenFiles = [...this.state.chosenFiles];
-        console.log(chosenFiles); //DB
-        if (! (chosenFiles[fileIndex] instanceof File)) {
-            this.removeManifestFileHandler(chosenFiles[fileIndex]);
+        if (chosenFiles[fileIndex].status !== 'Pending') {
+            this.removeFile(chosenFiles[fileIndex]);
         }
         // TODO: change this! Only remove if removed in backend.
         chosenFiles.splice(fileIndex, 1);
@@ -294,26 +286,14 @@ class UploadFiles extends React.Component {
             .catch(error => console.log(error));
     };
 
-    /**
-     * The returned controller data consists of an array of UrlValidator
-     * upload_attributes objects. Select only the attributes consistent with
-     * this.state.chosenFiles attributes.
-     * @param manifestFiles
-     * @returns {[]}
-     */
-    transformData = (manifestFiles) => {
-        const transformed = []
-        manifestFiles.map(file => {
-            transformed.push({
-                id: file.id, name: file.original_filename,
-                status: 'New', url: file.url,
-                uploadType: ActiveRecordTypeToFileType[file.type],
-                manifest: true,
-                sizeKb: formatSizeUnits(file.upload_file_size)
-            })
-        })
-
-        return transformed;
+    transformData = (files) => {
+        return files.map(file => ({
+            ...file,
+            name: file.original_filename,
+            status: 'New',
+            uploadType: RailsActiveRecordToUploadType[file.type],
+            sizeKb: formatSizeUnits(file.upload_file_size)
+        }))
     }
 
     /**
@@ -346,14 +326,14 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeManifestFileHandler = (file) => {
+    removeFile = (file) => {
         const csrf_token = document.querySelector('[name=csrf-token]');
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_error`)
+        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
             .then(response => {
-                console.log(response.status);
+                console.log(response.data);
             })
             .catch(error => console.log(error));
     }

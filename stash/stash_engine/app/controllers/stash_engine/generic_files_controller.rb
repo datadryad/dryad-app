@@ -49,6 +49,10 @@ module StashEngine
           @file.smart_destroy!
           render 'stash_engine/data_files/destroy_manifest.js.erb'
         end
+        format.html do
+          @file.smart_destroy!
+          render plain: 'OK'
+        end
       end
     end
 
@@ -92,7 +96,7 @@ module StashEngine
           # destroy any previous with this name and overwrite with this one
           @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
 
-          _db_file =
+          db_file =
             @file_model.create(
               upload_file_name: params[:name],
               upload_content_type: params[:type],
@@ -103,7 +107,7 @@ module StashEngine
               original_filename: params[:original]
             )
 
-          render json: { msg: 'ok' }
+          render json: { new_file: db_file }
           # I tried code like this, but it always runs into some race condition and fails for large files
           # since I think Amazon hasn't assembled files from parts right away upon them completing in Evaporate.
           # unless Stash::Aws::S3.exists?(s3_key: db_file.calc_s3_path)
