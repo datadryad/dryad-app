@@ -42,11 +42,9 @@ module StashEngine
     # stripping any material after the ending tag
     def parse_content_to_lines
       @lines = @content.split(%r{\n+|\r+|<br/>|<br />|<BR/>|<BR />})
-      puts "LIN #{@lines}"
       # remove any lines after EndDryadContent
       last_dryad_line = 0
       @lines.each_with_index do |val, index|
-        puts "#{val} => #{index}"
         if val.include?('EndDryadContent')
           last_dryad_line = index
           break
@@ -63,7 +61,6 @@ module StashEngine
       downcase_tags = ['journal code', 'article status', 'publication doi', 'dryad data doi']
       @hash = {}.with_indifferent_access
       @lines.each_with_index do |line, index|
-        puts "-- ln #{index} -- #{line}"
         next unless line.include?(':')
 
         colon_index = line.index(':')
@@ -72,7 +69,6 @@ module StashEngine
         if allowed_tags.include?(tag)
           value = line[colon_index + 1..].strip
           value.downcase! if downcase_tags.include?(tag)
-          puts "  -- tag |#{tag}|#{value}|"
           @hash[tag] = value
         end
         # if the line starts the abstract, add all of the remaining lines, and break from the loop
@@ -81,7 +77,6 @@ module StashEngine
         value = line[colon_index + 1..]
         remaining_lines = @lines[index + 1..]
         value += " #{remaining_lines.join(' ')}" if remaining_lines.present?
-        puts "  -- tag |#{tag}|#{value}|"
         @hash[tag] = value.strip
         break
 
@@ -90,24 +85,19 @@ module StashEngine
     end
 
     def find_journal
-      puts "HASH #{@hash}"
       @journal = nil
       # prefer finding by journal code, fallback to ISSN or title
       @journal = StashEngine::Journal.where(journal_code: @hash['journal code'].downcase).first if @hash['journal code']
-      puts "    -- j1 #{@journal}"
       return if @journal
 
       @journal = StashEngine::Journal.where(issn: @hash['print issn']).first if @hash['print issn']
-      puts "    -- j2 #{@journal}"
       return if @journal
 
       @journal = StashEngine::Journal.where(issn: @hash['online issn']).first if @hash['online issn']
-      puts "    -- j3 #{@journal}"
       return if @journal
 
       @journal = StashEngine::Journal.where(title: @hash['journal name']).first if @hash['journal name']
 
-      puts "    -- j4 #{@journal}"
       @journal
     end
 
@@ -115,7 +105,6 @@ module StashEngine
       @identifier = nil
       # prefer finding by data doi
       data_doi = @hash['dryad data doi']
-      puts "DATA DOI #{data_doi}"
       if data_doi
         data_doi.downcase!
         data_doi.sub!(/^doi:/, '')
@@ -146,7 +135,6 @@ module StashEngine
 
       # first check to see if the authors are semicolon-separated
       split_string = author_string.split(';')
-      puts "SPLIT #{split_string}"
 
       # if it didn't have semicolons, it must have commas
       if split_string.size == 1
