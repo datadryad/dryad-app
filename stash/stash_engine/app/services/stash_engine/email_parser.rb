@@ -60,6 +60,7 @@ module StashEngine
       # Although journal emails may contain many fields, we only use the fields that are listed here
       allowed_tags = ['journal code', 'journal name', 'ms reference number', 'ms title', 'ms authors', 'article status',
                       'publication doi', 'keywords', 'dryad data doi', 'print issn', 'online issn']
+      downcase_tags = ['journal code', 'article status', 'publication doi', 'dryad data doi']
       @hash = {}.with_indifferent_access
       @lines.each_with_index do |line, index|
         puts "-- ln #{index} -- #{line}"
@@ -70,6 +71,7 @@ module StashEngine
         # if the line starts with a valid tag, add it to the hash
         if allowed_tags.include?(tag)
           value = line[colon_index + 1..].strip
+          value.downcase! if downcase_tags.include?(tag)
           puts "  -- tag |#{tag}|#{value}|"
           @hash[tag] = value
         end
@@ -152,7 +154,7 @@ module StashEngine
 
         # although, if there was only one author and it was listed as lastname, firstname, it would have a comma too...
         if split_string.length == 2 && !split_string[1].include?(' and ')
-          authors << [split_string[0], split_string[1]]
+          authors << [split_string[0].strip, split_string[1].strip]
           split_string = []
         end
       end
@@ -194,14 +196,14 @@ module StashEngine
           auth = comma_match[1]
         else
           # it's simply "lastname, firstname", so return it in that order
-          return { family_name: comma_match[1], given_name: comma_match[2] }.with_indifferent_access
+          return { family_name: comma_match[1].strip, given_name: comma_match[2].strip }.with_indifferent_access
         end
       end
       # rubocop:enable Style/CaseLikeIf
 
       space_match = auth.match(/^(.+) +(.*)$/)
       if space_match
-        { family_name: "#{space_match[2]}#{suffix}", given_name: space_match[1] }.with_indifferent_access
+        { family_name: "#{space_match[2].strip}#{suffix}", given_name: space_match[1].strip }.with_indifferent_access
       else
         # there is only one word in the name: assign it to the familyName
         { family_name: auth, given_name: '' }.with_indifferent_access

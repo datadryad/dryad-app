@@ -7,6 +7,22 @@ require 'database_cleaner'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
+  desc 'Import journal codes from a local file'
+  task import_journal_codes: :environment do
+    File.foreach('journal_codes.csv') do |line|
+      code, issn = line.split(',')
+      code.downcase!
+      issn.chomp!
+      puts "code=#{code} issn=#{issn}"
+      journal = StashEngine::Journal.where(issn: issn).first
+      if journal
+        journal.journal_code = code
+        journal.save
+        puts "  -- #{code} saved to #{journal.title}"
+      end
+    end
+  end
+
   desc 'Migrate content from the v1 journal module'
   task migrate_journal_metadata: :environment do
     File.foreach('journalISSNs.txt') do |issn|
