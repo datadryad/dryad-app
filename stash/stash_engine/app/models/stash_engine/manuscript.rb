@@ -6,7 +6,6 @@ module StashEngine
 
     # Create a new Manuscript from the content of an email message
     def self.from_message_content(content:)
-      puts("CON #{content}")
       result = OpenStruct.new(success?: false, error: 'No content')
       return result unless content
 

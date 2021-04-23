@@ -57,7 +57,14 @@ module Stash
       def self.message_content(message:)
         return unless message.present?
 
-        gmail.get_user_message('me', message.id)&.payload&.body&.data
+        payload = gmail.get_user_message('me', message.id)&.payload
+        content = payload&.body&.data
+
+        # Some emails contain multiple "parts". These typically contain duplicate information,
+        # in plain text and HTML, so only return content of the first one
+        content ||= payload&.parts&.first&.body&.data
+
+        content
       end
 
       def self.message_header(message:, header_name:)
@@ -105,14 +112,14 @@ module Stash
         return unless messages
 
         messages.each do |m|
-          puts "Will process -- #{m.id} -- #{Stash::Google::JournalGMail.message_subject(message: m)}"
+          puts "Processing message #{m.id} -- #{Stash::Google::JournalGMail.message_subject(message: m)}"
           content = Stash::Google::JournalGMail.message_content(message: m)
           result = StashEngine::Manuscript.from_message_content(content: content)
           if result.success?
-            puts "-- created #{result.payload}"
+            puts " -- created Manuscript #{result.payload.id}"
             remove_processing_label(message: m)
           else
-            puts "-- ERROR #{result.error} -- Adding error label to #{m.id}"
+            puts " -- ERROR #{result.error} -- Adding error label to #{m.id}"
             add_error_label(message: m)
           end
         end
