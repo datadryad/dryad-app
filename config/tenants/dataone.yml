@@ -49,7 +49,7 @@ production:
   manager_email: ["Daniella.Lowenberg@ucop.edu"]
   repository:
     domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/dataone_dash"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
