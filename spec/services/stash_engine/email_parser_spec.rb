@@ -17,7 +17,7 @@ module StashEngine
         parser = EmailParser.new(content: content)
         hash = parser.metadata_hash
 
-        expect(hash['journal code']).to eq('RSOS')
+        expect(hash['journal code']).to eq('rsos')
       end
 
       it 'turns an HTML message into a hash' do
@@ -25,7 +25,7 @@ module StashEngine
         parser = EmailParser.new(content: content)
         hash = parser.metadata_hash
 
-        expect(hash['journal code']).to eq('RSOS')
+        expect(hash['journal code']).to eq('rsos')
       end
 
       it 'ignores content after the EndDryadContent tag' do
