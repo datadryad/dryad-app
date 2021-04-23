@@ -19,4 +19,46 @@ module DatabaseHelper
     new_res.curation_activities.update_all(user_id: user.id) if user
     new_res.save!
   end
+
+  def create_data_file(resource_id)
+    StashEngine::DataFile.create(
+      {
+        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        resource_id: resource_id,
+        upload_file_name: 'example_data_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_software_file(resource_id)
+    StashEngine::SoftwareFile.create(
+      {
+        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        resource_id: resource_id,
+        upload_file_name: 'example_software_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_supplemental_file(resource_id)
+    StashEngine::SuppFile.create(
+      {
+        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        resource_id: resource_id,
+        upload_file_name: 'example_supp_file.csv',
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
 end

@@ -63,13 +63,13 @@ class UploadFiles extends React.Component {
         this.setState({chosenFiles: transformed});
     }
 
-    addFilesHandler = (event, type) => {
-        const newFiles = [...event.target.files];
-        newFiles.map((file) => {
-            // file.sanitized_name = file_sanitize(file.name);
+    addFilesHandler = (event, uploadType) => {
+        const newFiles = this.discardAlreadyChosenByName([...event.target.files], uploadType);
+        newFiles.map(file => {
+            // TODO: file.sanitized_name = file_sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
-            file.uploadType = type;
+            file.uploadType = uploadType;
             file.manifest = false;
             file.sizeKb = formatSizeUnits(file.size);
         });
@@ -173,7 +173,7 @@ class UploadFiles extends React.Component {
         if (!files['valid_urls'].length) return;
         let successfulUrls = files['valid_urls'];
         if (this.state.chosenFiles.length) {
-            successfulUrls = this.discardAlreadyChosen(successfulUrls);
+            successfulUrls = this.discardAlreadyChosenById(successfulUrls);
         }
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
@@ -220,7 +220,7 @@ class UploadFiles extends React.Component {
     }
 
     updateFileList = (files) => {
-        if (!this.state.chosenFiles.length){
+        if (!this.state.chosenFiles.length) {
             this.setState({chosenFiles: files});
         } else {
             let chosenFiles = [...this.state.chosenFiles];
@@ -290,7 +290,7 @@ class UploadFiles extends React.Component {
         return files.map(file => ({
             ...file,
             name: file.original_filename,
-            status: 'New',
+            status: 'New',  // TODO: correctly define the status based on status in database
             uploadType: RailsActiveRecordToUploadType[file.type],
             sizeKb: formatSizeUnits(file.upload_file_size)
         }))
@@ -299,17 +299,24 @@ class UploadFiles extends React.Component {
     /**
      * The controller returns data with the successfully inserted manifest
      * files into the table. Check for the files already added to this.state.chosenFiles.
-     * @param data
+     * @param files
      * @returns {[]}
      */
-    discardAlreadyChosen = (data) => {
-        const chosenFiles = [...this.state.chosenFiles];
-        const idsAlready = chosenFiles.map(item => item.id);
-        data = data.filter(file => {
+    discardAlreadyChosenById = (files) => {
+        const idsAlready = this.state.chosenFiles.map(item => item.id);
+        return files.filter(file => {
             return !idsAlready.includes(file.id);
-        })
+        });
+    }
 
-        return data;
+    discardAlreadyChosenByName = (files, uploadType) => {
+        let filesAlreadySelected = this.state.chosenFiles.filter(file => {
+            return !file.url && file.uploadType === uploadType;
+        });
+        filesAlreadySelected = filesAlreadySelected.map(item => item.name);
+        return files.filter(file => {
+            return !filesAlreadySelected.includes(file.name);
+        });
     }
 
     onChangeUrls = (event) => {
