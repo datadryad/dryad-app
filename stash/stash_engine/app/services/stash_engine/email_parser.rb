@@ -1,6 +1,6 @@
 module StashEngine
 
-  # rubocop:disable Metrics/ClassLength, Metrics/MethodLength
+  # rubocop:disable Metrics/ClassLength, Metrics/MethodLength, Metrics/AbcSize
   class EmailParser
     attr_reader :journal, :identifier
 
@@ -26,22 +26,15 @@ module StashEngine
     def parse
       parse_content_to_lines
       lines_to_hash
-      puts "HASH #{@hash}"
-
       find_journal
-      puts "JOURNAL #{@journal}"
-
       parse_author_list
-      puts "AUTH #{@hash['ms authors']}"
-
       find_associated_identifier
-      puts "IDENT #{@identifier}"
     end
 
     # Breaks a large string of content into an array of lines,
     # stripping any material after the ending tag
     def parse_content_to_lines
-      @lines = @content.split(%r{\n+|\r+|<br/>|<br />|<BR/>|<BR />})
+      @lines = @content.split(%r{\n+|\r+|<br>|<br/>|<br />|<BR>|<BR/>|<BR />})
       # remove any lines after EndDryadContent
       last_dryad_line = 0
       @lines.each_with_index do |val, index|
@@ -59,12 +52,17 @@ module StashEngine
       allowed_tags = ['journal code', 'journal name', 'ms reference number', 'ms title', 'ms authors', 'article status',
                       'publication doi', 'keywords', 'dryad data doi', 'print issn', 'online issn']
       downcase_tags = ['journal code', 'article status', 'publication doi', 'dryad data doi']
+      transformed_tags = { 'manuscript number' => 'ms reference number',
+                           'article title' => 'ms title',
+                           'all authors' => 'ms authors' }
       @hash = {}.with_indifferent_access
       @lines.each_with_index do |line, index|
         next unless line.include?(':')
 
         colon_index = line.index(':')
         tag = line[0..colon_index - 1].downcase
+        # if the tag is a legacy tag used by journals with the old EditorialManager style, transform it into a normal tag
+        tag = transformed_tags[tag] if transformed_tags.keys.include?(tag)
         # if the line starts with a valid tag, add it to the hash
         if allowed_tags.include?(tag)
           value = line[colon_index + 1..].strip
@@ -149,10 +147,13 @@ module StashEngine
 
       split_string.each do |auth|
         if auth.include?(' and ')
-          # It's the end of the list, so we parse both names
+          # It's the end of the list, so we parse both names,
+          # but check to ensure they are both present
           two_auths = auth.split(' and ')
-          authors << parse_author_name(two_auths[0])
-          authors << parse_author_name(two_auths[1])
+          auth1 = parse_author_name(two_auths[0])
+          authors << auth1 if auth1['family_name'].present?
+          auth2 = parse_author_name(two_auths[1])
+          authors << auth2 if auth2['family_name'].present?
         else
           authors << parse_author_name(auth)
         end
@@ -179,8 +180,8 @@ module StashEngine
           # the last name will be the last word in group 1 + ", " + suffix
           suffix = ", #{comma_match[2].strip}"
           auth = comma_match[1]
-        elsif comma_match[2].match(/(Ph|J)\.*D\.*|M\.*[DAS]c*\.*/)
-          # if it's a title situation, throw the title away and assume the part before is "firstname lastname"
+        elsif comma_match[2].match(/(Ph|J)\.*\s*D\.*|M\.*\s*[DAS]c*\.*|B\.*\s*S\.*/)
+          # if it's a trailing title (Ph.D, M.D.), throw the title away and assume the part before is "firstname lastname"
           auth = comma_match[1]
         else
           # it's simply "lastname, firstname", so return it in that order
@@ -200,4 +201,4 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ClassLength, Metrics/MethodLength
+# rubocop:enable Metrics/ClassLength, Metrics/MethodLength, Metrics/AbcSize

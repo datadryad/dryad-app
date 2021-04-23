@@ -25,7 +25,6 @@ module StashEngine
         expect(result.success?).to be_truthy
         expect(result.payload).not_to be_nil
         expect(result.payload.manuscript_number).to eq(@ms_number)
-        puts("PAYLmmet #{result.payload.metadata} -- #{@title}")
         expect(result.payload.metadata['ms title']).to eq(@title)
       end
 
