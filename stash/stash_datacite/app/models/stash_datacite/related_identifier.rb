@@ -38,6 +38,8 @@ module StashDatacite
 
     enum work_type: %i[undefined article dataset preprint software supplemental_information]
 
+    enum added_by: {default: 0,  zenodo: 1}
+
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
