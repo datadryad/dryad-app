@@ -59,7 +59,7 @@
 
     <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource } %>
-        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
@@ -69,7 +69,7 @@
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource } %>
-        <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_file_path',
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
                     class: 'c-review-files-button o-button__icon-left', role: 'button' %>
       </div>
     <% end %>

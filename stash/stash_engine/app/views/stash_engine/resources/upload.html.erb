@@ -14,21 +14,20 @@
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
 <%= react_component("UploadFiles", {
   resource_id: @resource.id,
-  file_uploads: @resource.generic_files.map(&:attributes),
+  file_uploads: @resource.generic_files.validated_table.map(&:attributes),
   app_config_s3: APP_CONFIG[:s3],
   s3_dir_name: @resource.s3_dir_name(type: 'base')
 }) %>
 
 <div class="o-dataset-nav">
+  <%# TODO: Verify if this condition is necessary after React Upload Page %>
   <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
     <!-- standard upload page -->
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-
-    <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>
     <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
     <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% end %>
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
 </div>
 

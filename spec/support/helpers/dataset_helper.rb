@@ -1,41 +1,5 @@
 module DatasetHelper
 
-  def create_data_file(resource_id)
-    StashEngine::DataFile.create(
-      {
-        resource_id: resource_id,
-        upload_file_name: 'example_data_file.csv',
-        upload_content_type: 'text/plain',
-        upload_file_size: 31_726,
-        file_state: 'created'
-      }
-    )
-  end
-
-  def create_software_file(resource_id)
-    StashEngine::SoftwareFile.create(
-      {
-        resource_id: resource_id,
-        upload_file_name: 'example_software_file.csv',
-        upload_content_type: 'text/plain',
-        upload_file_size: 31_726,
-        file_state: 'created'
-      }
-    )
-  end
-
-  def create_supplemental_file(resource_id)
-    StashEngine::SuppFile.create(
-      {
-        resource_id: resource_id,
-        upload_file_name: 'example_supp_file.csv',
-        upload_content_type: 'text/plain',
-        upload_file_size: 31_726,
-        file_state: 'created'
-      }
-    )
-  end
-
   def start_new_dataset
     click_button 'Start New Dataset'
     expect(page).to have_content('Describe Dataset', wait: 15)
@@ -142,7 +106,6 @@ module DatasetHelper
     find('#agree_to_payment').click
   end
 
-  # rubocop:disable Metrics/AbcSize
   def attach_files
     # Workaround to expose input file type elements
     page.execute_script('$("#data").removeClass()')
@@ -152,15 +115,7 @@ module DatasetHelper
     attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
     attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_100.ods")
     attach_file('supp', "#{Rails.root}/spec/fixtures/file_example_ODS_1000.ods")
-    expect(page).to have_content('file_example_ODS_10.ods')
-    expect(page).to have_content('data', count: 1)
-    expect(page).to have_content('file_example_ODS_100.ods')
-    expect(page).to have_content('software', count: 1)
-    expect(page).to have_content('file_example_ODS_1000.ods')
-    expect(page).to have_content('supplemental', count: 1)
-    expect(page).to have_content('Pending', count: 3)
   end
-  # rubocop:enable Metrics/AbcSize
 
   def build_stub_requests(valid, invalid)
     stub_request(:head, valid)
