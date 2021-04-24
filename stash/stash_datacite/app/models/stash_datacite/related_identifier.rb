@@ -146,6 +146,36 @@ module StashDatacite
       end
     end
 
+    def self.latest_zenodo_relations(resource:)
+      resource.related_identifiers.where(added_by: 'zenodo').destroy_all
+
+      sfw_copy = resource.zenodo_copies.where(copy_type: %w[software software_publish]).where('software_doi IS NOT NULL').order(:resource_id).last
+      if sfw_copy.present?
+        doi = standardize_doi(sfw_copy.software_doi)
+        create(related_identifier: doi,
+               related_identifier_type: 'doi',
+               relation_type: 'isderivedfrom',
+               work_type: 'software',
+               verified: true,
+               resource_id: resource.id,
+               added_by: 'zenodo'
+        )
+      end
+
+      supp_copy = resource.zenodo_copies.where(copy_type: %w[supp supp_publish]).where('software_doi IS NOT NULL').order(:resource_id).last
+      if supp_copy.present?
+        doi = standardize_doi(supp_copy.software_doi)
+        create(related_identifier: doi,
+               related_identifier_type: 'doi',
+               relation_type: 'issupplementto',
+               work_type: 'supplemental_information',
+               verified: true,
+               resource_id: resource.id,
+               added_by: 'zenodo'
+        )
+      end
+    end
+
     def self.remove_zenodo_relation(resource_id:, doi:)
       doi = standardize_doi(doi)
       existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
