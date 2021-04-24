@@ -104,8 +104,6 @@ module Stash
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
-        update_zenodo_relation
-
         return publish_dataset if @copy.copy_type.end_with?('_publish')
 
         return metadata_only_update unless files_changed?
@@ -129,6 +127,8 @@ module Stash
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
+
+        update_zenodo_relation
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
