@@ -68,8 +68,7 @@ module StashEngine
     def upload_attributes_from(translator:, resource:, association:)
       valid = validate
       upload_attributes = {
-        resource_id: resource.id,
-        url: url,
+        resource_id: resource.id, url: url,
         status_code: status_code,
         file_state: 'created',
         original_url: (translator.direct_download.nil? ? nil : @url),
