@@ -9,6 +9,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include MerrittHelper
   include DatasetHelper
   include DatabaseHelper
+  include GenericFilesHelper
   include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
@@ -90,7 +91,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'does not allow to select new files already in the table and are of the same upload type' do
       attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
-      expect(page).to have_content('file_example_ODS_10.ods')
+      expect(page).to have_content('file_example_ODS_10.ods', count: 1)
     end
 
     it 'allow to select new files already in the table and are not of the same upload type' do
@@ -101,15 +102,17 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'URL manifest files validation' do
     before(:each) do
-      @valid_url_manifest = 'http://example.org/funbar.txt'
-      @invalid_url_manifest = 'http://example.org/foobar.txt'
+      @file_name1 = 'funbar.txt'
+      @valid_url_manifest = "http://example.org/#{@file_name1}"
+      @file_name2 = 'foobar.txt'
+      @invalid_url_manifest = "http://example.org/#{@file_name2}"
       build_stub_requests(@valid_url_manifest, @invalid_url_manifest)
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
     end
 
-    it 'validate data file URL that works' do
+    it 'validates data file URL that works' do
       click_button('data_manifest')
       validate_url_manifest(@valid_url_manifest)
 
@@ -146,7 +149,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('The URL was not found')
     end
 
-    it 'validate supplemental file URL that works' do
+    it 'validates supplemental file URL that works' do
       click_button('supp_manifest')
       validate_url_manifest(@valid_url_manifest)
 
@@ -162,6 +165,30 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_button('supp_manifest')
       validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
+    end
+
+    it 'validates file URL equal to other file URL from other upload types' do
+      @manifest = create_software_file(@resource_id)
+      @manifest.update(url: @valid_url_manifest, original_filename: @file_name1)
+
+      click_button('data_manifest')
+      validate_url_manifest(@valid_url_manifest)
+
+      expect(page).to have_content(/^\b#{@file_name1}\b/, count: 2)
+    end
+
+
+    it 'shows only non-deleted files after validating URLs' do
+      @manifest_deleted = create_data_file(@resource_id)
+      @manifest_deleted.update(
+        url: 'http://example.org/example_data_file.csv', file_state: 'deleted'
+      )
+
+      click_button('data_manifest')
+      validate_url_manifest(@valid_url_manifest)
+
+      expect_validate_commons
+      expect(page).not_to have_content(@manifest_deleted.original_filename)
     end
   end
 
@@ -250,6 +277,25 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       within(pending_file_table_row) do
         expect(page.has_css?('progress')).to be true
       end
+    end
+
+    it 'does not allow to select new file from file system with the same name of a manifest file' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+    end
+
+    it 'does not allow to add a manifest file with the same name of a file selected from file system' do
+      StashEngine::GenericFile.find_by(original_filename: 'funbar.txt').destroy
+
+      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+
+      click_button('data_manifest')
+      fill_in('location_urls', with: 'http://example.org/funbar.txt')
+      check('confirm_to_validate')
+      click_on('validate_files')
+
+      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
     end
   end
 
