@@ -38,7 +38,7 @@ module StashDatacite
 
     enum work_type: %i[undefined article dataset preprint software supplemental_information]
 
-    enum added_by: {default: 0,  zenodo: 1}
+    enum added_by: { default: 0, zenodo: 1 }
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental Information' }.with_indifferent_access
@@ -130,6 +130,7 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Naming/AccessorMethodName
     def self.set_latest_zenodo_relations(resource:)
       resource.related_identifiers.where(added_by: 'zenodo').destroy_all
 
@@ -142,22 +143,20 @@ module StashDatacite
                work_type: 'software',
                verified: true,
                resource_id: resource.id,
-               added_by: 'zenodo'
-        )
+               added_by: 'zenodo')
       end
 
       supp_copy = resource.zenodo_copies.where(copy_type: %w[supp supp_publish]).where('software_doi IS NOT NULL').order(:resource_id).last
-      if supp_copy.present? && resource.supp_files.present_files.count.positive?
-        doi = standardize_doi(supp_copy.software_doi)
-        create(related_identifier: doi,
-               related_identifier_type: 'doi',
-               relation_type: 'issupplementto',
-               work_type: 'supplemental_information',
-               verified: true,
-               resource_id: resource.id,
-               added_by: 'zenodo'
-        )
-      end
+      return unless supp_copy.present? && resource.supp_files.present_files.count.positive?
+
+      doi = standardize_doi(supp_copy.software_doi)
+      create(related_identifier: doi,
+             related_identifier_type: 'doi',
+             relation_type: 'issupplementto',
+             work_type: 'supplemental_information',
+             verified: true,
+             resource_id: resource.id,
+             added_by: 'zenodo')
     end
 
     def self.remove_zenodo_relation(resource_id:, doi:)
