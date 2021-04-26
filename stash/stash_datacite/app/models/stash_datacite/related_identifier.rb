@@ -158,6 +158,7 @@ module StashDatacite
              resource_id: resource.id,
              added_by: 'zenodo')
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Naming/AccessorMethodName
 
     def self.remove_zenodo_relation(resource_id:, doi:)
       doi = standardize_doi(doi)
