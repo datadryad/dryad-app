@@ -127,7 +127,6 @@ module Stash
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
                                                     relation_type: 'ispartof', resource_id: @resource.id,
                                                     verified: true, hidden: false)
-          # r = StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: test_doi)
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
 
