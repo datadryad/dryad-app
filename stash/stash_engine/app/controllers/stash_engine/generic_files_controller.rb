@@ -75,7 +75,7 @@ module StashEngine
         format.html do
           render json: {
             # map(&:attributes): one way for translating ActiveRecord field type to json
-            valid_urls: @resource.generic_files.map(&:attributes),
+            valid_urls: @resource.generic_files.validated_table.map(&:attributes),
             invalid_urls: url_errors
           }
         end

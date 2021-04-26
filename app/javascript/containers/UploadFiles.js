@@ -276,15 +276,40 @@ class UploadFiles extends React.Component {
         if (csrf_token)  // there isn't csrf token when running Capybara tests
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
-        const urlsObject = {url: this.state.urls};
-        const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
-        axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
-            .then(response => {
-                this.updateManifestFiles(response.data);
-                this.setState({urls: null});
-            })
-            .catch(error => console.log(error));
+        const urlsObject = {
+            url: this.discardFilesAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
+        };
+        if (urlsObject['url'].length) {
+            const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
+            axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
+                .then(response => {
+                    this.updateManifestFiles(response.data);
+                    this.setState({urls: null});
+                })
+                .catch(error => console.log(error));
+        }
     };
+
+    discardFilesAlreadyChosen = (urls, uploadType) => {
+        let filesAlreadySelected = this.state.chosenFiles.filter(file => {
+            return file.uploadType === uploadType;
+        });
+        if (!filesAlreadySelected.length) return urls;
+
+        urls = urls.split('\n');
+        const final_urls = [...urls];
+
+        for (let i = 0; i < urls.length; i++) {
+            for (let j = 0; j < filesAlreadySelected.length; j++) {
+                if (urls[i].includes(filesAlreadySelected[j].name)) {
+                    const index = final_urls.indexOf(urls[i]);
+                    final_urls.splice(index, 1);
+                }
+            }
+        }
+
+        return final_urls.join('\n');
+    }
 
     transformData = (files) => {
         return files.map(file => ({
@@ -311,7 +336,7 @@ class UploadFiles extends React.Component {
 
     discardAlreadyChosenByName = (files, uploadType) => {
         let filesAlreadySelected = this.state.chosenFiles.filter(file => {
-            return !file.url && file.uploadType === uploadType;
+            return file.uploadType === uploadType;
         });
         filesAlreadySelected = filesAlreadySelected.map(item => item.name);
         return files.filter(file => {
