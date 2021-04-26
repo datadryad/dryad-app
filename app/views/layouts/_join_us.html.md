@@ -66,6 +66,27 @@ We offer several levels of memberships. All fees listed are annual and in USD.
 Our open membership is focused on accessible and transparent membership fees and services. If you are interested in joining Dryad’s member community, please reach out directly to <a href="mailto:info@datadryad.org">info@datadryad.org</a>.
 </p>
 
+<h2 id="consortia">Consortia Membership</h2>
+
+<p>
+A Dryad Consortium is a group of three or more organizations that have come together to collectively participate in Dryad’s membership program and use Dryad’s services and resources within their consortium. The benefits of a Dryad Consortium allow like-minded organizations to share knowledge and pool resources to increase the uptake of Dryad services.
+</p>
+<p>
+A Dryad Consortium designates a single organization within the consortium that is the Consortium Lead and serves as the main contact point for Dryad communication and billing. The Consortium Lead works with the Dryad team and helps implement the adoption of Dryad within their consortium. The Dryad Consortium can distribute costs and align activities across their Consortium Organizations to align with their own policies and practices.
+</p>
+
+<h3 id="consortia-fee">Consortia Member Fee Structure</h3>
+<p>
+All member levels include the benefits listed for Institutional Members. The level selected should reflect your consortia’s anticipated research output. In the first year of membership, there is an additional setup fee of $200 per institution. Please select the level that you believe is the best fit for your consortia.  We are happy to discuss this decision with you.
+</p>
+<p>
+Consortia costs align with our Institutional Membership fee structure and are based on the anticipated research output of each institution, with a 20% discount then applied.
+For example, if a consortium consists of three Level I institutes and two Level II institutes, the cost would be 3 x $3000 ($9000 for the Level I institutions), 2 x $7500 ($15,000 for the Level II institutions) for a sum of $24,000 with then a 20% discount applied, for a total consortia member fee of $19,200.
+</p>
+<p>
+If you are interested in joining Dryad’s member community as a consortia, please reach out to us at <a href="mailto:info@datadryad.org">info@datadryad.org</a>.
+</p>
+
 <h2 id="publisher">Publisher Membership</h2>
 <p>
 Individual journals, publishers, and scholarly societies can join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for your authors.
