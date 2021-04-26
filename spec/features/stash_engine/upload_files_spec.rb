@@ -177,7 +177,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content(/^\b#{@file_name1}\b/, count: 2)
     end
 
-
     it 'shows only non-deleted files after validating URLs' do
       @manifest_deleted = create_data_file(@resource_id)
       @manifest_deleted.update(
