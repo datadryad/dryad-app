@@ -93,9 +93,9 @@ module StashDatacite
       end
 
       it 'adds a record to the database for replicated zenodo software that has files' do
-        zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
                              copy_type: 'software', software_doi: @test_doi)
-        software_file = create(:software_file, resource_id: @resource.id)
+        create(:software_file, resource_id: @resource.id)
         expect(@resource.related_identifiers.count).to eq(0)
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
         expect(@resource.related_identifiers.count).to eq(1)
@@ -108,9 +108,9 @@ module StashDatacite
       end
 
       it 'adds a record to the database for replicated zenodo supplemental info that has files' do
-        zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
                              copy_type: 'supp', software_doi: @test_doi)
-        supp_file = create(:supp_file, resource_id: @resource.id)
+        create(:supp_file, resource_id: @resource.id)
         expect(@resource.related_identifiers.count).to eq(0)
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
         expect(@resource.related_identifiers.count).to eq(1)
@@ -123,12 +123,12 @@ module StashDatacite
       end
 
       it "doesn't add multiple zenodo dois for multiple versions and DOIs in Zenodo" do
-        zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
                              copy_type: 'software', software_doi: @test_doi)
         resource2 = create(:resource)
-        zenodo_copy2 = create(:zenodo_copy, resource_id: resource2.id, identifier_id: resource2.identifier_id,
+        create(:zenodo_copy, resource_id: resource2.id, identifier_id: resource2.identifier_id,
                              copy_type: 'software', software_doi: @test_doi2)
-        software_file = create(:software_file, resource_id: resource2.id)
+        create(:software_file, resource_id: resource2.id)
         expect(resource2.related_identifiers.count).to eq(0)
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: resource2)
         expect(resource2.related_identifiers.count).to eq(1)
@@ -141,7 +141,7 @@ module StashDatacite
       end
 
       it "doesn't add any relations if user has deleted all files of that type" do
-        zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
+        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
                              copy_type: 'software', software_doi: @test_doi)
         expect(@resource.related_identifiers.count).to eq(0)
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
