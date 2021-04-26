@@ -77,10 +77,7 @@
 
 <ul>
 <li>
-<a href="https://github.com/datadryad/governance/blob/main/annual-reports/DryadAnnualReport2019.pdf">Annual report for 2019</a>
-</li>
-<li>
-<a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">Previous years' Annual reports</a>
+<a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">Our Annual Reports</a>
 </li>
 </ul>
 
