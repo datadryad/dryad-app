@@ -6,6 +6,8 @@ require 'byebug'
 module StashEngine
   RSpec.describe DataFilesController, type: :request do
     include GenericFilesHelper
+    include DatabaseHelper
+    include DatasetHelper
     include Mocks::Aws
 
     before(:each) do
@@ -54,17 +56,43 @@ module StashEngine
 
     describe '#validate_urls' do
       before(:each) do
-        create_stub_requests
+        @valid_manifest_url = 'http://example.org/funbar.txt'
+        @invalid_manifest_url = 'http://example.org/foobar.txt'
+        create_valid_stub_request(@valid_manifest_url)
+        create_invalid_stub_request(@invalid_manifest_url)
       end
 
-      it 'returns json when request with format html to validate urls' do
+      it 'returns json when request with format html' do
         @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_validate_urls_expects(@url)
       end
 
-      it 'returns json with bad urls when request with html format to validate urls' do
+      it 'returns json with bad urls when request with html format' do
         @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_bad_urls_expects(@url)
+      end
+
+      it 'returns only non-deleted files' do
+        @manifest_deleted = create_data_file(@resource.id)
+        @manifest_deleted.update(
+          url: 'http://example.org/example_data_file.csv', file_state: 'deleted'
+        )
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        post @url, params: { 'url' => @valid_manifest_url }
+
+        body = JSON.parse(response.body)
+        expect(body['valid_urls'].length).to eql(1)
+      end
+
+      it 'validates url from a differente upload type' do
+        @manifest = create_software_file(@resource.id)
+        @manifest.update(url: @valid_manifest_url)
+
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        post @url, params: { 'url' => @valid_manifest_url }
+
+        body = JSON.parse(response.body)
+        expect(body['valid_urls'].length).to eql(2)
       end
     end
 
