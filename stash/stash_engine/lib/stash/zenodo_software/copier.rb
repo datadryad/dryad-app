@@ -1,4 +1,5 @@
 require 'http'
+require 'stash/zenodo_software'
 require 'stash/zenodo_replicate/zenodo_connection'
 require 'stash/zenodo_replicate/copier_mixin'
 require 'stash/zenodo_replicate/deposit'
@@ -103,8 +104,6 @@ module Stash
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
-        update_zenodo_relation
-
         return publish_dataset if @copy.copy_type.end_with?('_publish')
 
         return metadata_only_update unless files_changed?
@@ -128,6 +127,9 @@ module Stash
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
+
+        # make sure the dataset has the relationships for these things sent to zenodo
+        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
@@ -203,15 +205,6 @@ module Stash
 
       def submitted_before?
         !@previous_copy.nil?
-      end
-
-      def update_zenodo_relation
-        # only add link to zenodo software if they have any files left that they haven't deleted
-        if @resource.send(@resource_method).where(file_state: %w[created copied]).count.positive?
-          StashDatacite::RelatedIdentifier.add_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
-        else
-          StashDatacite::RelatedIdentifier.remove_zenodo_relation(resource_id: @resource.id, doi: @copy.software_doi)
-        end
       end
     end
   end

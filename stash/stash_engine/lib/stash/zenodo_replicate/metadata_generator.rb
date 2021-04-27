@@ -7,6 +7,7 @@ module Stash
     # and the "Deposit metadata" they request, which is kind of similar to ours, but slightly different
     # rubocop:disable Metrics/ClassLength
     class MetadataGenerator
+      # currently dataset_type may be :data, :software or :supp (for supplemental)
       def initialize(resource:, dataset_type: :data)
         # Software uploads are a little different because 1) they use Zenodo DOIs, and 2) They use a different license
         # than the dataset license and they should be 'software' rather than 'dataset'.
@@ -33,8 +34,9 @@ module Stash
 
       def upload_type
         return @resource.resource_type.resource_type_general if @dataset_type == :data
+        return 'software' if @dataset_type == :software
 
-        'software'
+        'other'
       end
 
       def publication_date
@@ -97,21 +99,42 @@ module Stash
       end
 
       def related_identifiers
-        related = @resource.related_identifiers.where(verified: true).where(hidden: false).map do |ri|
+        case @dataset_type
+        when :software
+          related_software
+        when :supp
+          related_supp
+        else
+          related_data
+        end
+      end
+
+      def related_data
+        @resource.related_identifiers.where(verified: true).where(hidden: false).map do |ri|
+          { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
+        end || []
+      end
+
+      def related_software
+        related = @resource.related_identifiers.where(verified: true).where(hidden: false).where.not(added_by: 'zenodo').map do |ri|
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
-        # this relation is for myself and created in Dryad, so doesn't make sense to send to zenodo
-        related.delete_if { |i| i[:identifier].include?('/zenodo.') && @dataset_type != :data }
+        related.push(relation: 'isSourceOf',
+                     identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
+                     scheme: 'doi')
+        related || []
+      end
 
-        # This is adding the link back from zenodo to our datasets for software
-        if @dataset_type != :data
-          related.push(relation: 'isSourceOf',
-                       identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
-                       scheme: 'doi')
+      def related_supp
+        related = @resource.related_identifiers.where(verified: true).where(hidden: false).where.not(added_by: 'zenodo').map do |ri|
+          { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
-        related ||= []
-        related
+
+        related.push(relation: 'isSupplementTo',
+                     identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
+                     scheme: 'doi')
+        related || []
       end
 
       def method
