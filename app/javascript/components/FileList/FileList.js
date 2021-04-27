@@ -10,11 +10,11 @@ const file_list = (props) => {
                 <thead>
                 <tr>
                     <th scope="col">Filename</th>
-                    <th>Status</th>
-                    <th>URL</th>
-                    <th>Type</th>
-                    <th>Size</th>
-                    <th>Actions</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>

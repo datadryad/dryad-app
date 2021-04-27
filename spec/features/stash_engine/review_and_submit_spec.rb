@@ -44,7 +44,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
 
     it 'shows right links to edit files' do
       click_link('Review and Submit')
-      sleep 3
+      sleep 5
       expect(page).to have_link('Edit Files', href: '/stash/resources/1/upload', count: 2)
     end
   end

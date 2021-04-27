@@ -8,8 +8,10 @@ import ModalUrl from "../components/Modal/ModalUrl";
 import FileList from "../components/FileList/FileList";
 import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
 import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
+import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import classes from './UploadFiles.module.css';
 
+// TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
 
@@ -54,7 +56,8 @@ class UploadFiles extends React.Component {
         //  send the type information to the modal somehow. And when submitting carry on
         //  that information and add to request URL.
         currentManifestFileType: null,
-        failedUrls: []
+        failedUrls: [],
+        loading: false
     };
 
     componentDidMount() {
@@ -280,11 +283,12 @@ class UploadFiles extends React.Component {
             url: this.discardFilesAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
         if (urlsObject['url'].length) {
+            this.setState({loading: true});
             const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
             axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
                 .then(response => {
                     this.updateManifestFiles(response.data);
-                    this.setState({urls: null});
+                    this.setState({urls: null, loading: false});
                 })
                 .catch(error => console.log(error));
         }
@@ -382,6 +386,7 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
+                    {this.state.loading ? <LoadingSpinner /> : null}
                     <ConfirmSubmit
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
@@ -394,7 +399,7 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <h2 className="o-heading__level2">Files</h2>
-                    <p>No files have been selected.</p>
+                    {this.state.loading ? <LoadingSpinner /> : <p>No files have been selected.</p>}
                 </div>
             )
         }
