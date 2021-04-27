@@ -5,7 +5,7 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/ClassLength, Metrics/MethodLength
 module StashDatacite
   class PublicationsController < ApplicationController
     # rubocop:disable Metrics/AbcSize
@@ -62,7 +62,6 @@ module StashDatacite
       save_doi
     end
 
-    # rubocop:disable Metrics/MethodLength
     def save_doi
       form_doi = params[:internal_datum][:doi]
       return if form_doi.blank?
@@ -94,7 +93,6 @@ module StashDatacite
       ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
       @resource.reload
     end
-    # rubocop:enable Metrics/MethodLength
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
     def parse_msid(issn:, msid:)
@@ -123,15 +121,18 @@ module StashDatacite
       return if @pub_issn&.value.blank?
       return if @msid&.value.blank?
 
-      my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn&.value)}/manuscripts/#{CGI.escape(@msid&.value)}"
-      response = HTTParty.get(my_url,
-                              query: { access_token: APP_CONFIG.old_dryad_access_token },
-                              headers: { 'Content-Type' => 'application/json' })
-      if response.code > 299
+      journal = StashEngine::Journal.where(issn: @pub_issn.value).first
+      if journal.blank?
+        @error = 'Journal not recognized by Dryad'
+        return
+      end
+      manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid.value).first
+      if manu.blank?
         @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
         return
       end
-      dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, httparty_response: response)
+
+      dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, manuscript: manu)
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{e}")
@@ -230,4 +231,4 @@ module StashDatacite
 
   end
 end
-# rubocop:enable Metrics/ClassLength
+# rubocop:enable Metrics/ClassLength, Metrics/MethodLength

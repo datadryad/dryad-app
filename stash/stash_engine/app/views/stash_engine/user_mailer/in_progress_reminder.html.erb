@@ -1,14 +1,20 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>We noticed that you have begun a submission to Dryad, “<%= @resource.title %>”, but have not completed the process.</p>
+<p>We noticed that you have initiated a submission to Dryad, “<%= @resource.title %>”, but have not completed the process.</p>
 
-<p>If you are ready for this dataset to enter the submission process, please follow these steps:</p>
+<p>When you are prepared to submit this dataset for curation and archiving, please follow these steps:</p>
 <ol>
-<li>Login</li>
-<li>Click on “my datasets”</li>
-<li>Click “resume” in line with your dataset title</li>
-<li>On page 3 of the submission form, click “submit”</li>
+<li>Log in at https://datadryad.org/</li>
+<li>Navigate to “My Datasets”</li>
+<li>Locate your submission with the status "In Progress"</li>
+<li>Click “Resume” to access your submission</li>
+<ul>
+  <li>If you have pending edits, incorporate the updates then click "Resume"</li>
+  <li>If you do not have edits, you can simply delete the version of the submission that shows in your dashboard under "In Progress"</li>
+</ul>
+<li>Click “Submit”</li>
 </ol>
 
-<p>If you do not intend to submit this dataset, you may “delete” this dataset. Please get in touch with any questions at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>If you do not intend to submit this dataset, you may select the option to “Delete” this dataset from your dashboard.</p>
 
+<p>Please get in touch with any questions at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
