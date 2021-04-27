@@ -27,7 +27,9 @@ module StashEngine
       parse_content_to_lines
       lines_to_hash
       find_journal
+      parse_keywords
       parse_author_list
+      parse_manuscript_number
       find_associated_identifier
     end
 
@@ -197,6 +199,24 @@ module StashEngine
         # there is only one word in the name: assign it to the familyName
         { family_name: auth, given_name: '' }.with_indifferent_access
       end
+    end
+
+    def parse_keywords
+      return [] if @hash['keywords'].blank?
+
+      @hash['keywords'] = @hash['keywords'].split(/[,;]/).map(&:strip)
+    end
+
+    # Apply the journal's regex to the manuscript number, removing any irrelevant parts
+    def parse_manuscript_number
+      regex = @journal&.manuscript_number_regex
+      return if regex.blank?
+
+      msid = @hash['ms reference number']
+      return if msid.match(regex).blank?
+
+      result = msid.match(regex)[1]
+      @hash['ms reference number'] = result if result.present?
     end
 
   end
