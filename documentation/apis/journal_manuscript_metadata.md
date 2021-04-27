@@ -121,15 +121,12 @@ Dryad metadata can be parsed from a plaintext email as long as it
 occurs in a single block in the email, starting with the Journal Code
 and ending with EndDryadContent (or the end of the email itself).
 
-Notices to the Dryad system can be generated as separate items from a
-manuscript submission system, or alternatively the metadata may be
-combined into existing routine notices to authors, as long
-as the content needed by the Dryad system is in a self-contained
-section of the email. Some journals add the Dryad notice to their
-standard emails to authors, prefacing the Dryad content with a
-statement like: "Below is the information about your manuscript that
-we are relaying to the Dryad repository to facilitate your data
-archiving."
+Notices to the Dryad system can be generated as Dryad-specific messages from a
+manuscript submission system. Alternatively, the metadata may be combined into
+existing routine notices to authors. Some journals add the Dryad notice to their
+standard emails to authors, prefacing the Dryad content with a statement like:
+"Below is the information about your manuscript that we are relaying to the
+Dryad repository to facilitate your data archiving."
 
 Example email:
 
