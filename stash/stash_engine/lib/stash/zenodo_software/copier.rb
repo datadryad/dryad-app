@@ -129,7 +129,7 @@ module Stash
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
 
         # make sure the dataset has the relationships for these things sent to zenodo
-        StashDataCite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
+        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
