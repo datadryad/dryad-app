@@ -1,8 +1,5 @@
-Journal Module & v1 Server
-==========================
-
-The journal module runs as part of the v1 server. For details about
-its inner workings, see the [Journal Module Documentation](../apis/journals.md).
+V1 Server
+===========
 
 Restarting the v1 Server
 ------------------------
@@ -27,3 +24,4 @@ The v1 server can be restarted by:
 4. `bin/tomcat_start.sh`
 5. After a few minutes, visit one of the URLs above to verify that the
    server has started.
+

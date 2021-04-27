@@ -360,6 +360,11 @@ namespace :journal_email do
   task process: :environment do
     Stash::Google::JournalGMail.process
   end
+
+  desc 'Clean outdated manuscript entries'
+  task clean_old_manuscripts: :environment do
+    StashEngine::Manuscript.where('created_at < ?', 2.years.ago).delete_all
+  end
 end
 
 # rubocop:enable Metrics/BlockLength

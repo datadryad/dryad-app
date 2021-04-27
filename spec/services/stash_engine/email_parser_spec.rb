@@ -79,6 +79,17 @@ module StashEngine
         parser = EmailParser.new(content: content)
         expect(parser.journal).to eq(@journal)
       end
+
+      it 'applies the manuscript_number_regex to clean manuscript numbers' do
+        regex = '.*?(\d+-\d+).*?'
+        @journal.manuscript_number_regex = regex
+        @journal.save
+        ms_number = "ABC#{Faker::Number.number(digits: 2)}-#{Faker::Number.number(digits: 4)}.R2"
+        target_ms_number = ms_number.match(regex)[1]
+        content = "Journal Code: #{@journal.journal_code}\nMS Reference Number: #{ms_number}"
+        parser = EmailParser.new(content: content)
+        expect(parser.manuscript_number).to eq(target_ms_number)
+      end
     end
 
     describe '#authors' do
