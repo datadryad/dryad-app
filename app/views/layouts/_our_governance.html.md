@@ -32,7 +32,7 @@
 
 <div class="bio">
   <img src="/images/murphy.jpg" alt="Fiona Murphy" title="Fiona Murphy">
-  <p><strong>Fiona Murphy (Class of 2020)</strong> held a range of scholarly publishing roles with Oxford University Press, Bloomsbury Academic and Wiley after completing a DPhil in English Literature. As Publisher for Earth and Environmental Sciences at Wiley, she began to specialize in emerging scholarly communications with particular emphasis on Open Science and Open Data. Now an independent research data and publishing consultant advising institutions, learned societies and commercial publishing companies, Fiona is also an Associate Fellow at the University of Reading and has written and presented widely on data publishing, open data and open science. She is a past and current member of several research projects including PREPARDE (Peer Review of Research Data in the Earth Sciences), Data2Paper (a cloud-based app for automating the data article submission process) and the Scholarly Commons Working Group (a Force11 project devising principles and practices for open science systems). An active member – and sometime Co-Chair – for several Research Data Alliance Groups focusing on data publishing policies, workflows and accreditation systems, Fiona has organized a number of data-related events and sessions at scientific meetings. She regularly writes and reviews articles on these topics and recently co-edited a special issue on persistent identifiers.</p>
+  <p><strong>Fiona Murphy (Class of 2023)</strong> held a range of scholarly publishing roles with Oxford University Press, Bloomsbury Academic and Wiley after completing a DPhil in English Literature. As Publisher for Earth and Environmental Sciences at Wiley, she began to specialize in emerging scholarly communications with particular emphasis on Open Science and Open Data. Now an independent research data and publishing consultant advising institutions, learned societies and commercial publishing companies, Fiona is also an Associate Fellow at the University of Reading and has written and presented widely on data publishing, open data and open science. She is a past and current member of several research projects including PREPARDE (Peer Review of Research Data in the Earth Sciences), Data2Paper (a cloud-based app for automating the data article submission process) and the Scholarly Commons Working Group (a Force11 project devising principles and practices for open science systems). An active member – and sometime Co-Chair – for several Research Data Alliance Groups focusing on data publishing policies, workflows and accreditation systems, Fiona has organized a number of data-related events and sessions at scientific meetings. She regularly writes and reviews articles on these topics and recently co-edited a special issue on persistent identifiers.</p>
 </div>
 
 <div class="bio">
@@ -77,10 +77,7 @@
 
 <ul>
 <li>
-<a href="https://github.com/datadryad/governance/blob/main/annual-reports/DryadAnnualReport2019.pdf">Annual report for 2019</a>
-</li>
-<li>
-<a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">Previous years' Annual reports</a>
+<a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">Our Annual Reports</a>
 </li>
 </ul>
 
