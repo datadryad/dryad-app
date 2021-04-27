@@ -126,7 +126,7 @@ module Stash
           test_doi = "https://doi.org/#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
                                                     relation_type: 'ispartof', resource_id: @resource.id,
-                                                    verified: true, hidden: false)
+                                                    verified: true, hidden: false, added_by: 'zenodo')
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
 
@@ -139,6 +139,36 @@ module Stash
 
         it 'sets the software license instead of the dataset license' do
           expect(@mg.license).to eq(@sl.identifier)
+        end
+
+        it "removes our dryad citation link for zenodo because this is that citation object's metadata" do
+          ids = @mg.related_identifiers.map { |i| i[:identifier] }
+          expect(ids).to include(@related_id2.related_identifier) # other relation should still exist
+          expect(ids).not_to include(@related_id.related_identifier) # zenodo id for this shouldn't exist
+        end
+
+        it 'adds isSupplementTo to the Zenodo software to reference the Dryad dataset' do
+          ids = @mg.related_identifiers.map { |i| i[:identifier] }
+          expect(ids).to include(StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier))
+        end
+      end
+
+      describe :supp_generation do
+        before(:each) do
+          # takes what is done for the general replication case and adds stuff for supplemental
+
+          test_doi = "https://doi.org/#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
+          @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
+                               relation_type: 'issupplementto', resource_id: @resource.id,
+                               verified: true, hidden: false, added_by: 'zenodo')
+
+          @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
+
+          @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, dataset_type: :supp)
+        end
+
+        it 'changes resource type to other for :supp' do
+          expect(@mg.upload_type).to eq('other')
         end
 
         it "removes our dryad citation link for zenodo because this is that citation object's metadata" do

@@ -34,8 +34,8 @@ module Stash
 
       def upload_type
         return @resource.resource_type.resource_type_general if @dataset_type == :data
-
-        'software'
+        return 'software' if @dataset_type == :software
+        'other'
       end
 
       def publication_date
