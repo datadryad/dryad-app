@@ -221,3 +221,32 @@ Keywords: great research, stellar data
 - Again, apply the correct label to the email.
 - Again, force the email to be processed.
 - View the results in server logs and the status of the submitted dataset.
+
+
+Sample Rails commands
+-----------------------
+
+To initialize the GMail connection:
+`rails journal_email:validate_gmail_connection`
+
+To process emails:
+`rails journal_email:process`
+
+To use individual emails:
+```
+require 'stash/google/journal_gmail'
+m=Stash::Google::JournalGMail.messages_to_process.first
+mc=Stash::Google::JournalGMail.message_content(message: m)
+ms=Stash::Google::JournalGMail.message_subject(message: m)
+l=Stash::Google::JournalGMail.message_labels(message: m)
+```
+
+To access parsed metadata:
+```
+m=StashEngine::Manuscript.last
+m.status
+m.journal
+m.manuscript_number
+m.metadata['ms title']
+m.metadata['ms authors']
+```
