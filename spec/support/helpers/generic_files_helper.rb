@@ -42,18 +42,18 @@ module GenericFilesHelper
     expect(body['new_file'].to_json).to eql(new_file.to_json)
   end
 
-  def create_stub_requests
-    @resource.current_resource_state.update(resource_state: 'in_progress')
-
-    stub_request(:head, 'http://example.org/funbar.txt')
+  def create_valid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/html' })
+      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+  end
 
-    stub_request(:head, 'http://example.org/foobar.txt')
+  def create_invalid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'

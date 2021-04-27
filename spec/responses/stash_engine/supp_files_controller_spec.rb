@@ -54,7 +54,10 @@ module StashEngine
 
     describe '#upload_manifest' do
       before(:each) do
-        create_stub_requests
+        @valid_manifest_url = 'http://example.org/funbar.txt'
+        @invalid_manifest_url = 'http://example.org/foobar.txt'
+        create_valid_stub_request(@valid_manifest_url)
+        create_invalid_stub_request(@invalid_manifest_url)
       end
 
       it 'returns json when request with format html to validate urls' do
