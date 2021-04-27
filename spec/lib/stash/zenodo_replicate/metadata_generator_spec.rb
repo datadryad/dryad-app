@@ -159,8 +159,8 @@ module Stash
 
           test_doi = "https://doi.org/#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
-                               relation_type: 'issupplementto', resource_id: @resource.id,
-                               verified: true, hidden: false, added_by: 'zenodo')
+                                                    relation_type: 'issupplementto', resource_id: @resource.id,
+                                                    verified: true, hidden: false, added_by: 'zenodo')
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
 
