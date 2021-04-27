@@ -1,19 +1,19 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>This is a reminder that your submission to Dryad, “<%= @resource.title %>” is still in private for the peer review
-    status and has not begun the curation process.</p>
+<p>This is a reminder that your submission to Dryad, “<%= @resource.title %>” is still in "Private for Peer Review"
+    status and has not entered our curation process.</p>
 
-<p>If your related article has been accepted or you are ready for the curation and publication process to begin, please:</p>
+<p>If your related article has been accepted or if you are ready to initiate the curation process and proceed to publication, please follow these steps:</p>
 <ol>
     <li>Login to https://datadryad.org</li>
     <li>Click on “My Datasets”</li>
     <li>Click “Update” on your dataset</li>
-    <li>On page 3 of the submission form, uncheck the box for private for peer review and click submit</li>
+    <li>On page 4 of the submission form (Review and Submit page), uncheck the box for private for peer review</li>
+    <li>Click "Submit"
 </ol>
 
 <p>If your related article is still in the peer review process, you may ignore this email.</p>
 
-<p>If your related article has been rejected or you will not be proceeding with the submission of this dataset, please let us know.</p>
+<p>If your related article has been rejected or you will not be proceeding with the submission of this dataset, kindly let us know.</p>
 
 <p>Please get in touch with any questions at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
-
