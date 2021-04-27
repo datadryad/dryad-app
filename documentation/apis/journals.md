@@ -22,8 +22,7 @@ Metadata about the journals and their workflows is stored in Dryad's
 Meaning of fields
 -----------------
 
-Some of the fields in `StashEngine::Journal` are being updated as we
-transition journals from older workflows to newer ones.
+Options for processing in `StashEngine::Journal`
 
 - *allow_review_workflow* -- Was previously used to determine whether
   a journal allowed authors to submit data during the manuscript
