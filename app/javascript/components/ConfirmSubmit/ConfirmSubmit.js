@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from './ConfirmSubmit.module.css';
+
 const confirm_submit = (props) => {
     return (
         <div>
