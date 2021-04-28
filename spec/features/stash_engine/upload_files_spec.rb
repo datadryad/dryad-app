@@ -246,6 +246,10 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         .with(headers: { 'Accept' => '*/*' }).to_return(status: 200)
       expect(page).to have_content('New')
     end
+
+    xit 'sanitize file name before save it in database' do
+      # TODO (cacods): to implement mocking Evaporate javascript library.
+    end
   end
 
   describe 'S3 file uploading mixed with already selected manifest files' do

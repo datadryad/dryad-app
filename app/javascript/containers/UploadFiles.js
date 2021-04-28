@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
+import sanitize from '../lib/sanitize_filename';
 
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from "../components/Modal/ModalUrl";
@@ -69,7 +70,7 @@ class UploadFiles extends React.Component {
     addFilesHandler = (event, uploadType) => {
         const newFiles = this.discardAlreadyChosenByName([...event.target.files], uploadType);
         newFiles.map(file => {
-            // TODO: file.sanitized_name = file_sanitize(file.name);
+            file.sanitized_name = sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
             file.uploadType = uploadType;
@@ -98,10 +99,9 @@ class UploadFiles extends React.Component {
     uploadFileToS3 = evaporate => {
         this.state.chosenFiles.map((file, index) => {
             if (file.status === 'Pending') {
-                //TODO: get sanitized file.name
                 //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
                 const evaporateUrl =
-                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.name}`;
+                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
                 const addConfig = {
                     name: evaporateUrl,
                     file: file,
@@ -122,7 +122,7 @@ class UploadFiles extends React.Component {
                             `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
                             {
                                 resource_id: this.props.resource_id,
-                                name: file.name,
+                                name: file.sanitized_name,
                                 size: file.size,
                                 type: file.type,
                                 original: file.name
