@@ -29,17 +29,20 @@ including universities, research institutions and academic libraries. See more a
         <li>Netherlands Institute of Ecology (NIOO-KNAW)</li>
         <li>North Carolina State University</li>
         <li>The Ohio State University</li>
-        <li>Stanford University</li>
-        <li>Texas Tech University</li>
+        <li>Pitzer College</li>
+        <li>Pomona College</li>
+        <li>Scripps College</li>
+        <li>Stanford University</li>  
       </ul>
     </td>
     <td>
       <ul>
+       <li>Texas Tech University</li>
         <li>University of California, California Digital Library</li>
         <li>UC Berkeley</li>
         <li>UC Davis</li>
         <li>UC Irvine</li>
-        <li>UCLA</li>
+        <li>UC Los Angeles</li>
         <li>UC Merced</li>
         <li>UC Riverside</li>
         <li>UC San Francisco</li>
@@ -51,6 +54,7 @@ including universities, research institutions and academic libraries. See more a
         <li>University of New Mexico</li>
         <li>University of New South Wales, Sydney</li>
         <li>The University of Rhode Island</li>
+        <li>University of Wisconsin, Madison
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
