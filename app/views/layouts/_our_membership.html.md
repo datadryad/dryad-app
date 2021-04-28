@@ -42,7 +42,7 @@ including universities, research institutions and academic libraries. See more a
         <li>UC Berkeley</li>
         <li>UC Davis</li>
         <li>UC Irvine</li>
-        <li>UC Los Angeles</li>
+        <li>UCLA</li>
         <li>UC Merced</li>
         <li>UC Riverside</li>
         <li>UC San Francisco</li>
@@ -54,7 +54,6 @@ including universities, research institutions and academic libraries. See more a
         <li>University of New Mexico</li>
         <li>University of New South Wales, Sydney</li>
         <li>The University of Rhode Island</li>
-        <li>University of Wisconsin, Madison
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
