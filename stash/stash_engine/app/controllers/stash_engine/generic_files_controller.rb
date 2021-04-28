@@ -157,6 +157,7 @@ module StashEngine
     end
 
     # Remove any unwanted characters from the uploaded file's name
+    # TODO (cacods): seems to not be called
     def sanitize_filename
       uploaded_file = params[:upload][:upload]
       return unless uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
