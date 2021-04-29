@@ -112,9 +112,9 @@ module DatasetHelper
     page.execute_script('$("#software").removeClass()')
     page.execute_script('$("#supp").removeClass()')
 
-    attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
-    attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_100.ods")
-    attach_file('supp', "#{Rails.root}/spec/fixtures/file_example_ODS_1000.ods")
+    attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
+    attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods")
+    attach_file('supp', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods")
   end
 
   def build_stub_requests(valid, invalid)

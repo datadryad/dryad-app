@@ -110,6 +110,7 @@ class UploadFiles extends React.Component {
                         document.getElementById(
                             `progressbar_${index}`
                         ).value = progressValue;
+                    // ).value = progressValue ? progressValue : 0;  // if file size is 0 progressValue is NaN
                     },
                     error: function (msg) {
                         console.log(msg);
@@ -318,7 +319,7 @@ class UploadFiles extends React.Component {
     transformData = (files) => {
         return files.map(file => ({
             ...file,
-            name: file.original_filename,
+            sanitized_name: file.upload_file_name,
             status: 'New',  // TODO: correctly define the status based on status in database
             uploadType: RailsActiveRecordToUploadType[file.type],
             sizeKb: formatSizeUnits(file.upload_file_size)
