@@ -46,7 +46,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file2 = create_software_file(@resource_id)
       @file2.update(url: 'http://example.com/example.csv')
       @file3 = create_supplemental_file(@resource_id)
-      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+      click_link('Upload Files') # to refresh the page
     end
 
     it 'shows files already uploaded' do
@@ -67,6 +67,23 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link('Upload Files') # click on it to refresh the page and show the table with the file
 
       expect(page).to_not have_content(@file4.original_filename)
+    end
+
+    it 'shows sanitized file names' do
+      @file = create_data_file(@resource_id)
+      @file.update(
+        original_filename: '\u0000 ssh*authorized?keys.csv',
+        upload_file_name: '_u0000_ssh_authorized_keys.csv'
+      )
+      @manifest_file = create_software_file(@resource_id)
+      @manifest_file.update(
+        original_filename: 'new example*2.com',
+        upload_file_name: 'new_example2.com',
+        url: 'http://example.com/new%20example*2.com'
+      )
+      click_link('Upload Files') # to refresh the page
+      expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
+      expect(page).to have_content('new_example2')
     end
   end
 
@@ -94,9 +111,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('file_example_ODS_10.ods', count: 1)
     end
 
-    it 'allow to select new files already in the table and are not of the same upload type' do
+    it 'allows to select new files already in the table and are not of the same upload type' do
       attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods', count: 2)
+    end
+
+    it 'sanitizes file name' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/\\u0000 ssh*authorized?keys.csv")
+      expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
     end
   end
 
@@ -188,6 +210,23 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect_validate_commons
       expect(page).not_to have_content(@manifest_deleted.original_filename)
+    end
+
+    it 'shows sanitized file names and escaped URls' do
+      @url_manifest = 'http://example.org/my%20file*name.txt'
+      stub_request(:head, @url_manifest)
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+
+      click_button('data_manifest')
+      validate_url_manifest(@url_manifest)
+
+      expect(page).to have_content('my_filename.txt')
+      expect(page).to have_content('http://example.org/my%20file*name.txt')
     end
 
     # Solve the problem of disappearing spinner right after the axios request
