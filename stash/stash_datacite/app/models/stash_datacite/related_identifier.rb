@@ -38,6 +38,8 @@ module StashDatacite
 
     enum work_type: %i[undefined article dataset preprint software supplemental_information]
 
+    enum added_by: { default: 0, zenodo: 1 }
+
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
@@ -128,21 +130,35 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
-    def self.add_zenodo_relation(resource_id:, doi:)
-      doi = standardize_doi(doi)
-      existing_item = where(resource_id: resource_id).where(related_identifier_type: 'doi')
-        .where(related_identifier: doi).last
-      if existing_item.nil?
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Naming/AccessorMethodName
+    def self.set_latest_zenodo_relations(resource:)
+      resource.related_identifiers.where(added_by: 'zenodo').destroy_all
+
+      sfw_copy = resource.zenodo_copies.where(copy_type: %w[software software_publish]).where('software_doi IS NOT NULL').order(:resource_id).last
+      if sfw_copy.present? && resource.software_files.present_files.count.positive?
+        doi = standardize_doi(sfw_copy.software_doi)
         create(related_identifier: doi,
                related_identifier_type: 'doi',
                relation_type: 'isderivedfrom',
                work_type: 'software',
                verified: true,
-               resource_id: resource_id)
-      else
-        existing_item.update(related_identifier: doi, relation_type: 'isderivedfrom', work_type: 'software', verified: true)
+               resource_id: resource.id,
+               added_by: 'zenodo')
       end
+
+      supp_copy = resource.zenodo_copies.where(copy_type: %w[supp supp_publish]).where('software_doi IS NOT NULL').order(:resource_id).last
+      return unless supp_copy.present? && resource.supp_files.present_files.count.positive?
+
+      doi = standardize_doi(supp_copy.software_doi)
+      create(related_identifier: doi,
+             related_identifier_type: 'doi',
+             relation_type: 'issupplementto',
+             work_type: 'supplemental_information',
+             verified: true,
+             resource_id: resource.id,
+             added_by: 'zenodo')
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Naming/AccessorMethodName
 
     def self.remove_zenodo_relation(resource_id:, doi:)
       doi = standardize_doi(doi)

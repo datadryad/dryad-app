@@ -19,18 +19,6 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
-    xit 'warns when dataset info could not be found' do
-      # this stubs the old dryad api tha Daisie was calling, soon to be changed more
-      stub_request(:get, 'https://api.datadryad.example.org/api/v1/organizations/1573-8469/manuscripts/APPS-D-grog-plant0001221?access_token=bad_token')
-        .with(headers: { 'Content-Type' => 'application/json' })
-        .to_return(status: 404, body: '', headers: {})
-      find('input[value="manuscript"]').click
-      fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: '1573-8469', msid: 'APPS-D-grog-plant0001221')
-      click_button 'Import Manuscript Metadata'
-      expect(page.find('div#population-warnings')).to have_content('We could not find metadata to import for this manuscript. ' \
-          'Please enter your metadata below.')
-    end
-
     xit "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
@@ -42,30 +30,6 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       find('input[value="manuscript"]').click
       click_button 'Import Manuscript Metadata'
       expect(page.find('div#population-warnings')).to have_content('Please fill in the form completely')
-    end
-
-    # Commenting this one out for now. seems to fail randomly
-    xit 'works for successful request to Dryad manuscript API' do
-      stub_request(:get, 'https://api.datadryad.example.org/api/v1/organizations/1759-6831/manuscripts/JSE-2017-12-137?access_token=bad_token')
-        .with(
-          headers: {
-            'Content-Type' => 'application/json'
-          }
-        ).to_return(status: 200,
-                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'dryad_manuscript.json')),
-                    headers: { 'Content-Type' => 'application/json' })
-      journal = 'Journal of Systematics and Evolution'
-      issn = '1759-6831'
-      msid = 'JSE-2017-12-137'
-      fill_manuscript_info(name: journal, issn: issn, msid: msid)
-      click_button 'Import Manuscript Metadata'
-      expect(page).to have_field('title',
-                                 with: 'Leaf and infructescence fossils of Alnus (Betulaceae) from the late Eocene ' \
-        'of the southeastern Qinghai-Tibetan Plateau',
-                                 wait: 40)
-      # The autofill just populates info into the database and then displays the info from the database on the page.
-      # We already have unit tests for population into the database and also tests for field display on the entry page,
-      # so this is just a basic test to be sure population is happening.
     end
 
   end

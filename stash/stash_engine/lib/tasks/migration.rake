@@ -7,8 +7,29 @@ require 'database_cleaner'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
-  desc 'Migrate content from the v1 journal module'
+  desc 'Import journal codes from a local file'
+  task import_journal_codes: :environment do
+    File.foreach('journal_codes.csv') do |line|
+      code, issn = line.split(',')
+      code.downcase!
+      issn.chomp!
+      puts "code=#{code} issn=#{issn}"
+      journal = StashEngine::Journal.where(issn: issn).first
+      if journal
+        journal.journal_code = code
+        journal.save
+        puts "  -- #{code} saved to #{journal.title}"
+      end
+    end
+  end
+
+  desc 'DEPRECATED -- Migrate content from the v1 journal module'
   task migrate_journal_metadata: :environment do
+    puts 'WARNING! This task is deprecated --- data in the v1 server is no longer up to date, ' \
+         'so please do not import it into a current Dryad production system! ' \
+         'You will have 1 minute to cancel before this script proceeds.'
+    sleep(1.minute)
+
     File.foreach('journalISSNs.txt') do |issn|
       issn = issn.strip
       url = "#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{issn}"
