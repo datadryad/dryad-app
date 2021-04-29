@@ -226,7 +226,7 @@ namespace :dev_ops do
     end
 
     # delete any file records for deleted items
-    new_res.data_files.deleted_from_version.each {|f| f.destroy!}
+    new_res.data_files.deleted_from_version.each(&:destroy!)
   end
 
   desc 'Updates database for Merritt ark changes'
