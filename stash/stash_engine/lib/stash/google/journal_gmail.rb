@@ -7,7 +7,7 @@ require 'fileutils'
 #
 # require 'stash/google/journal_gmail'
 # m = Stash::Google::JournalGMail.messages_to_process
-# Stash::Google::JournalGMail.message_contents(message: m.first)
+# Stash::Google::JournalGMail.message_content(message: m.first)
 #
 # This class is focused on the processing needed for metadata emails from
 # journals, but it could be expanded for more generic GMail functionality.
@@ -54,10 +54,11 @@ module Stash
         gmail.list_user_messages('me', label_ids: processing_label.id).messages
       end
 
-      def self.message_contents(message:)
+      def self.message_content(message:)
         return unless message.present?
 
-        gmail.get_user_message('me', message.id)&.payload&.body&.data
+        payload = gmail.get_user_message('me', message.id)&.payload
+        find_content(payload)
       end
 
       def self.message_header(message:, header_name:)
@@ -100,12 +101,46 @@ module Stash
         gmail.modify_message('me', message.id, mod_request)
       end
 
+      def self.process
+        messages = Stash::Google::JournalGMail.messages_to_process
+        return unless messages
+
+        messages.each do |m|
+          puts "Processing message #{m.id} -- #{Stash::Google::JournalGMail.message_subject(message: m)}"
+          content = Stash::Google::JournalGMail.message_content(message: m)
+          result = StashEngine::Manuscript.from_message_content(content: content)
+          remove_processing_label(message: m)
+          if result.success?
+            puts " -- created Manuscript #{result.payload.id}"
+          else
+            puts " -- ERROR #{result.error} -- Adding error label to #{m.id}"
+            add_error_label(message: m)
+          end
+        end
+      end
+
+      def self.gmail
+        @gmail ||= initialize_gmail_service
+      end
+
       #######################################################
       class << self
         private
 
-        def gmail
-          @gmail ||= initialize_gmail_service
+        # Locate the textual content of a message's payload.
+        # Simple emails contain the content directly in a "body" object. But MIME Multipart messages
+        # can have a tree of "parts". Traverse the tree until we find a part that has textual content.
+        def find_content(payload)
+          return nil unless payload.present?
+
+          content = payload.body&.data
+          return content if content.present?
+
+          parts = payload.parts
+          parts.each do |part|
+            content = find_content(part)
+            return content if content.present?
+          end
         end
 
         # Ensure valid credentials, either by restoring from a saved token

@@ -226,13 +226,6 @@ module Stash
             expect(@zc2.deposition_id).to eq(@zc.deposition_id)
           end
 
-          it 'updates the relationship to our record for the zenodo doi' do
-            stub_get_existing_ds(deposition_id: @zc2.deposition_id)
-            allow(@zsc).to receive(:publish_dataset).and_return(nil)
-            @zsc.add_to_zenodo
-            expect(@resource.related_identifiers.map(&:related_identifier).first).to eq("https://doi.org/10.5072/zenodo.#{@zc.deposition_id}")
-          end
-
           it "doesn't call @deposit.publish if the user has removed all current files" do
             @resource.software_files.each { |sup| sup.update(file_state: 'deleted') }
             @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
