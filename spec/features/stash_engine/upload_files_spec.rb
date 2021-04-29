@@ -50,9 +50,9 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows files already uploaded' do
-      expect(page).to have_content(@file1.original_filename)
+      expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
-      expect(page).to have_content(@file3.original_filename)
+      expect(page).to have_content(@file3.upload_file_name)
       expect(page).to have_content('New', count: 3)
     end
 
@@ -107,12 +107,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new files already in the table and are of the same upload type' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods', count: 1)
     end
 
     it 'allows to select new files already in the table and are not of the same upload type' do
-      attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+      attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods', count: 2)
     end
 
@@ -191,7 +191,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'validates file URL equal to other file URL from other upload types' do
       @manifest = create_software_file(@resource_id)
-      @manifest.update(url: @valid_url_manifest, original_filename: @file_name1)
+      @manifest.update(url: @valid_url_manifest, upload_file_name: @file_name1)
 
       click_button('data_manifest')
       validate_url_manifest(@valid_url_manifest)
@@ -257,6 +257,20 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page.has_css?('progress', count: 3)).to be true
     end
 
+    it 'shows empty progress bar if file has 0 size' do
+      # Remove already attached files
+      first("a[href='#!']").click
+      first("a[href='#!']").click
+      first("a[href='#!']").click
+
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt")
+      check('confirm_to_upload')
+      click_on('validate_files')
+
+      expect(page.has_css?('progress[value]')).to be true
+      expect(find('progress')['value']).to eq('0')
+    end
+
     xit 'removes file from database when click Remove button' do
       # At the time this placeholder test was first written the remove function
       # was working for manifest files and files that are displayed
@@ -286,7 +300,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('New')
     end
 
-    xit 'sanitize file name before save it in database' do
+    xit 'sanitizes file name before save it in database' do
       # TODO (cacods): to implement mocking Evaporate javascript library.
     end
   end
@@ -307,7 +321,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # Workaround to expose input file type element, removing the class from the input element
       page.execute_script('$("#data").removeClass()')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods')
       expect(page).to have_content('Pending', count: 1)
 
@@ -330,21 +344,22 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new file from file system with the same name of a manifest file' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
     end
 
     it 'does not allow to add a manifest file with the same name of a file selected from file system' do
-      StashEngine::GenericFile.find_by(original_filename: 'funbar.txt').destroy
+      # Remove manifest file added before
+      all("a[href='#!']").last.click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
     end
   end

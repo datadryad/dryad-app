@@ -109,8 +109,7 @@ class UploadFiles extends React.Component {
                     progress: progressValue => {
                         document.getElementById(
                             `progressbar_${index}`
-                        ).value = progressValue;
-                    // ).value = progressValue ? progressValue : 0;  // if file size is 0 progressValue is NaN
+                        ).setAttribute('value', progressValue);
                     },
                     error: function (msg) {
                         console.log(msg);
@@ -339,11 +338,13 @@ class UploadFiles extends React.Component {
         });
     }
 
+    // TODO: maybe merge this with discardAlreadyChosenById
     discardAlreadyChosenByName = (files, uploadType) => {
         let filesAlreadySelected = this.state.chosenFiles.filter(file => {
             return file.uploadType === uploadType;
         });
-        filesAlreadySelected = filesAlreadySelected.map(item => item.name);
+        filesAlreadySelected = filesAlreadySelected.map(file => file.sanitized_name);
+
         return files.filter(file => {
             return !filesAlreadySelected.includes(file.name);
         });
