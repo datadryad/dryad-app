@@ -349,7 +349,6 @@ Software and Supplemental Information can be uploaded for publication at'
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
       expect(page).to have_content('New')
     end
@@ -378,7 +377,6 @@ Software and Supplemental Information can be uploaded for publication at'
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
 
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")

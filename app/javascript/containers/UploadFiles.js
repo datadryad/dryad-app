@@ -8,7 +8,7 @@ import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from '../components/Modal/ModalUrl';
 import FileList from '../components/FileList/FileList';
 import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
-import ConfirmSubmit from '../components/ConfirmSubmit/ConfirmSubmit';
+import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import Instructions from '../components/Instructions/Instructions';
 import classes from './UploadFiles.module.css';
@@ -390,9 +390,10 @@ class UploadFiles extends React.Component {
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
                     {this.state.loading ? <LoadingSpinner /> : null}
-                    <ConfirmSubmit
+                    <ValidateFiles
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
+                        checkConfirmed={true}
                         disabled={this.state.submitButtonFilesDisabled}
                         changed={this.toggleCheckedFiles}
                         clicked={this.uploadFilesHandler} />
@@ -414,10 +415,7 @@ class UploadFiles extends React.Component {
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
-                clickedClose={this.hideModal}
-                disabled={this.state.submitButtonUrlsDisabled}
-                changed={this.toggleCheckedUrls}
-            />
+                clickedClose={this.hideModal} />
         } else {
             document.removeEventListener('keydown', this.hideModal);
             return null;
