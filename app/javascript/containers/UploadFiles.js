@@ -5,11 +5,12 @@ import AWS from 'aws-sdk';
 import sanitize from '../lib/sanitize_filename';
 
 import UploadType from '../components/UploadType/UploadType';
-import ModalUrl from "../components/Modal/ModalUrl";
-import FileList from "../components/FileList/FileList";
-import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
-import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
-import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import ModalUrl from '../components/Modal/ModalUrl';
+import FileList from '../components/FileList/FileList';
+import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
+import ConfirmSubmit from '../components/ConfirmSubmit/ConfirmSubmit';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import Instructions from '../components/Instructions/Instructions';
 import classes from './UploadFiles.module.css';
 
 // TODO: check if this is the best way to refer to stash_engine files.
@@ -34,16 +35,16 @@ class UploadFiles extends React.Component {
     state = {
         upload_type: [
             {
-                type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad', name: 'Data',
-                description: 'Example 1, example 2, example 3',
+                type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad',
+                name: 'Data', description: 'e.g., csv, fasta',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo', name: 'Software',
-                description: 'Example 1, example 2, example 3',
+                type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
+                name: 'Software', description: 'e.g., code packages, scripts',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
                 type: 'supp', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
-                name: 'Supplemental Information', description: 'Example 1, example 2, example 3',
+                name: 'Supplemental Information', description: 'e.g., figures, supporting tables',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
@@ -434,7 +435,7 @@ class UploadFiles extends React.Component {
                 <h1 className="o-heading__level1">
                     Upload Your Files <span className="t-upload__heading-optional">(optional)</span>
                 </h1>
-                <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
+                <Instructions />
                 <div className="c-uploadwidgets">
                     {this.state.upload_type.map((upload_type) => {
                         return <UploadType
