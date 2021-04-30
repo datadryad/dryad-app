@@ -57,14 +57,6 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'journal',
-      name: 'Journal API',
-      description: 'The Dryad Journal API used for the autocomplete for publications/manuscripts on the Dataset entry page',
-      documentation: 'The Journal API is used by the Dataset entry page to retrieve publication information when the user enters a manuscript number.<br><br>The core logic behind it can be found in `stash_datacite/app/controllers/publication_controller.rb` and in the `stash_engine/lib/stash/import` directory.',
-      internally_managed: true,
-      status: 1
-    },
-    {
       abbreviation: 'oai',
       name: 'Merritt OAI server',
       description: 'The Merritt OAI server that Dryad uses to determine the status of a dataset submission',
