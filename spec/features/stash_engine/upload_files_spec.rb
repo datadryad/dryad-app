@@ -51,7 +51,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows correct introductory text' do
       expect(page.text).to have_content(
-        'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive.
+        'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server'\
+' (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive.
 We require that you include a README file to provide key information for understanding and using your data.
 Software and Supplemental Information can be uploaded for publication at'
       )
@@ -323,7 +324,7 @@ Software and Supplemental Information can be uploaded for publication at'
     end
 
     xit 'sanitizes file name before save it in database' do
-      # TODO (cacods): to implement mocking Evaporate javascript library.
+      # TODO: (cacods) to implement when mocking Evaporate javascript library.
     end
   end
 
