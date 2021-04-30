@@ -137,7 +137,6 @@ module DatasetHelper
 
   def validate_url_manifest(url)
     fill_in('location_urls', with: url)
-    check('confirm_to_validate')
     click_on('validate_files')
   end
 

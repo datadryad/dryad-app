@@ -5,7 +5,7 @@ require 'httparty'
 module StashEngine
   module StatusDashboard
 
-    class DBBackupService < DependencyCheckerService
+    class DbBackupService < DependencyCheckerService
 
       BACKUP_DIR = '/dryad/apps/ui/shared/cron/backups'
 

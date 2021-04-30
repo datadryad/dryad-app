@@ -49,6 +49,25 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link('Upload Files') # to refresh the page
     end
 
+    it 'shows correct introductory text' do
+      expect(page.text).to have_content(
+        'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive.
+We require that you include a README file to provide key information for understanding and using your data.
+Software and Supplemental Information can be uploaded for publication at'
+      )
+      expect(page.text).to have_content(
+        'You will have the opportunity to choose a separate license for your software on the review page.'
+      )
+      expect(page).to have_link('Zenodo', href: 'https://zenodo.org')
+      expect(find_link('Zenodo')[:target]).to eq('_blank')
+    end
+
+    it 'shows correct Upload Type boxes example texts' do
+      expect(page).to have_content('e.g., csv, fasta')
+      expect(page).to have_content('e.g., code packages, scripts')
+      expect(page).to have_content('e.g., figures, supporting tables')
+    end
+
     it 'shows files already uploaded' do
       expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
@@ -97,12 +116,15 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows files selected with "Pending" status' do
-      expect(page).to have_content('file_example_ODS_10.ods')
-      expect(page).to have_content('data', count: 1)
-      expect(page).to have_content('file_example_ODS_100.ods')
-      expect(page).to have_content('software', count: 1)
-      expect(page).to have_content('file_example_ODS_1000.ods')
-      expect(page).to have_content('supplemental', count: 1)
+      within(page.find('tr', text: 'file_example_ODS_10.ods')) do
+        expect(page).to have_content('data')
+      end
+      within(page.find('tr', text: 'file_example_ODS_100.ods')) do
+        expect(page).to have_content('software')
+      end
+      within(page.find('tr', text: 'file_example_ODS_1000.ods')) do
+        expect(page).to have_content('supp')
+      end
       expect(page).to have_content('Pending', count: 3)
     end
 
@@ -327,7 +349,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
       expect(page).to have_content('New')
     end
@@ -356,7 +377,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
 
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
