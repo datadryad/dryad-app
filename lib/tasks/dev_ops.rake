@@ -288,6 +288,8 @@ namespace :dev_ops do
       puts "deposition_id: #{zc.deposition_id}, copy_type: #{zc.copy_type}, doi: #{zc.software_doi || identifier.identifier}"
     end
 
+    puts "\nAsk Merritt to remove the item with url #{identifier.resources.first.download_uri}\n"
+
     puts "\nRemoving from the database\n"
 
     identifier.destroy!
