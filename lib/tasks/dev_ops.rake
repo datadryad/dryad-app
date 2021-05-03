@@ -1,6 +1,8 @@
 require 'yaml'
 require_relative 'dev_ops/passenger'
 require_relative 'dev_ops/download_uri'
+require 'rsolr'
+require 'ezid/client'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
@@ -227,6 +229,70 @@ namespace :dev_ops do
 
     # delete any file records for deleted items
     new_res.data_files.deleted_from_version.each(&:destroy!)
+  end
+
+  desc 'Takes a DOI (bare, without doi on front) and destroys it'
+  task destroy_dataset: :environment do
+    # apparently I have to do this, at least in some cases because arguments to rake are ugly
+    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
+
+    # rubocop:disable Style/BlockDelimiters
+    ARGV.each { |a| task a.to_sym do; end }
+    # rubocop:enable Style/BlockDelimiters
+
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 2
+      puts 'Takes a DOI (bare, without doi on front) and destroys it like 10.18737/D7CC8B'
+      next
+    end
+
+    identif_str = ARGV[1].strip
+
+    puts "Are you sure you want to delete #{identif_str}?  (Type 'yes' to proceed)"
+    response = $stdin.gets
+    exit unless response.strip.casecmp('YES').zero?
+
+    # get identifier
+    identifier = StashEngine::Identifier.where(identifier: identif_str).first
+
+    if identifier.nil?
+      puts 'The DOI was not found to remove'
+      exit
+    end
+
+    puts 'Deleting from SOLR'
+    solr = RSolr.connect url: Blacklight.connection_config[:url]
+    solr.delete_by_query("uuid:\"doi:#{identif_str}\"")
+    solr.commit
+
+    tenant = identifier.resources.last.tenant
+    if tenant.identifier_service.provider == 'ezid'
+      puts 'tombstoning EZID'
+      ezid_client = ::Ezid::Client.new(user: tenant.identifier_service.account, password: tenant.identifier_service.password)
+      params = { status: 'unavailable | withdrawn' }
+      begin
+        ezid_client.modify_identifier("doi:#{identif_str}", params)
+      rescue Ezid::IdentifierNotFoundError
+        puts "EZID couldn't find identifier to create a tombstone"
+      end
+    else
+      puts 'Please remove access in the DataCite UI -- this functionality may be added later'
+    end
+
+    puts "\nYou may need to ask Zenodo to remove the following deposition_ids or DOIs manually"
+    identifier.zenodo_copies.order(:deposition_id, :copy_type).each do |zc|
+      puts "deposition_id: #{zc.deposition_id}, copy_type: #{zc.copy_type}, doi: #{zc.software_doi || identifier.identifier}"
+    end
+
+    puts "\nAsk Merritt to remove the item with url #{identifier.resources.first.download_uri}\n"
+
+    puts "\nRemoving from the database\n"
+
+    identifier.destroy!
   end
 
   desc 'Updates database for Merritt ark changes'
