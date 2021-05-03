@@ -270,7 +270,7 @@ module StashEngine
       zc.count.positive?
     end
 
-    def zenodo_published?(type: 'software')
+    def zenodo_submitted?(type: 'software')
       zc = zenodo_copies.where(copy_type: type, state: 'finished')
       zc.count.positive?
     end
