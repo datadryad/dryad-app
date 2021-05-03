@@ -15,5 +15,7 @@ module StashEngine
     scope :data, -> { where(copy_type: 'data') }
     scope :software, -> { where(copy_type: %w[software software_publish]) }
     scope :supp, -> { where(copy_type: %w[supp supp_publish]) }
+
+    scope :done, -> { where('deposition_id IS NOT NULL').where(state: 'finished') }
   end
 end
