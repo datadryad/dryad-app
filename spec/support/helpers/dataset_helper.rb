@@ -117,16 +117,18 @@ module DatasetHelper
     attach_file('supp', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods")
   end
 
-  def build_stub_requests(valid, invalid)
-    stub_request(:head, valid)
+  def build_valid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
       .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+  end
 
-    stub_request(:head, invalid)
+  def build_invalid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
