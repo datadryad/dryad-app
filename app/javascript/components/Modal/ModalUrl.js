@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './ModalUrl.module.css';
-import ConfirmSubmit from "../ConfirmSubmit/ConfirmSubmit";
+import ValidateFiles from "../ValidateFiles/ValidateFiles";
 
 const modal_url = (props) => {
     return (
@@ -19,11 +19,11 @@ const modal_url = (props) => {
                               onChange={props.changedUrls}
                               placeholder="List file location URLs here" />
                     <div className="c-uploadmodal__text-content">Place each URL on a new line.</div>
-                    <ConfirmSubmit
+                    <ValidateFiles
                         id='confirm_to_validate'
                         buttonLabel='Validate Files'
-                        disabled={props.disabled}
-                        changed={props.changed} />
+                        checkConfirmed={false}
+                        disabled={false} />
                 </form>
             </section>
         </dialog>
