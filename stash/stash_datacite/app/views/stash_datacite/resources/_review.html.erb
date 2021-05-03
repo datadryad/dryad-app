@@ -72,8 +72,6 @@
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software' } %>
-        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
-                    class: 'c-review-files-button o-button__icon-left', role: 'button' %>
       </div>
     <% end %>
 
@@ -82,8 +80,6 @@
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp' } %>
-        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
-                    class: 'c-review-files-button o-button__icon-left', role: 'button' %>
       </div>
     <% end %>
 
