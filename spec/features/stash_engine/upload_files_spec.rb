@@ -151,7 +151,8 @@ Software and Supplemental Information can be uploaded for publication at'
       @valid_url_manifest = "http://example.org/#{@file_name1}"
       @file_name2 = 'foobar.txt'
       @invalid_url_manifest = "http://example.org/#{@file_name2}"
-      build_stub_requests(@valid_url_manifest, @invalid_url_manifest)
+      build_valid_stub_request(@valid_url_manifest)
+      build_invalid_stub_request(@invalid_url_manifest)
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
@@ -250,6 +251,24 @@ Software and Supplemental Information can be uploaded for publication at'
 
       expect(page).to have_content('my_filename.txt')
       expect(page).to have_content('http://example.org/my%20file*name.txt')
+    end
+
+    it 'shows cut url if url\'s length is big' do
+      @big_url = 'https://path_to/a_big_url_that_is_to_test_cutting_url_with_ellipsis.txt'
+      build_valid_stub_request(@big_url)
+      click_button('data_manifest')
+      validate_url_manifest(@big_url)
+
+      expect(page).to have_content('https://path_to/a_big_url_that..._cutting_url_with_ellipsis.txt')
+    end
+
+    it 'shows uncut url if url\' lenght is short' do
+      @short_url = 'https://path_to/short_url.txt'
+      build_valid_stub_request(@short_url)
+      click_button('data_manifest')
+      validate_url_manifest(@short_url)
+
+      expect(page).to have_content('https://path_to/short_url.txt')
     end
 
     # Solve the problem of disappearing spinner right after the axios request
