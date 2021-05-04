@@ -2,14 +2,18 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
+import sanitize from '../lib/sanitize_filename';
 
 import UploadType from '../components/UploadType/UploadType';
-import ModalUrl from "../components/Modal/ModalUrl";
-import FileList from "../components/FileList/FileList";
-import FailedUrlList from "../components/FailedUrlList/FailedUrlList";
-import ConfirmSubmit from "../components/ConfirmSubmit/ConfirmSubmit";
+import ModalUrl from '../components/Modal/ModalUrl';
+import FileList from '../components/FileList/FileList';
+import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
+import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import Instructions from '../components/Instructions/Instructions';
 import classes from './UploadFiles.module.css';
 
+// TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
 
@@ -31,16 +35,16 @@ class UploadFiles extends React.Component {
     state = {
         upload_type: [
             {
-                type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad', name: 'Data',
-                description: 'Example 1, example 2, example 3',
+                type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad',
+                name: 'Data', description: 'e.g., csv, fasta',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
-                type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo', name: 'Software',
-                description: 'Example 1, example 2, example 3',
+                type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
+                name: 'Software', description: 'e.g., code packages, scripts',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
                 type: 'supp', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
-                name: 'Supplemental Information', description: 'Example 1, example 2, example 3',
+                name: 'Supplemental Information', description: 'e.g., figures, supporting tables',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs'
             }
         ],
@@ -54,7 +58,8 @@ class UploadFiles extends React.Component {
         //  send the type information to the modal somehow. And when submitting carry on
         //  that information and add to request URL.
         currentManifestFileType: null,
-        failedUrls: []
+        failedUrls: [],
+        loading: false
     };
 
     componentDidMount() {
@@ -66,7 +71,7 @@ class UploadFiles extends React.Component {
     addFilesHandler = (event, uploadType) => {
         const newFiles = this.discardAlreadyChosenByName([...event.target.files], uploadType);
         newFiles.map(file => {
-            // TODO: file.sanitized_name = file_sanitize(file.name);
+            file.sanitized_name = sanitize(file.name);
             file.status = 'Pending';
             file.url = null;
             file.uploadType = uploadType;
@@ -95,10 +100,9 @@ class UploadFiles extends React.Component {
     uploadFileToS3 = evaporate => {
         this.state.chosenFiles.map((file, index) => {
             if (file.status === 'Pending') {
-                //TODO: get sanitized file.name
                 //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
                 const evaporateUrl =
-                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.name}`;
+                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
                 const addConfig = {
                     name: evaporateUrl,
                     file: file,
@@ -106,7 +110,7 @@ class UploadFiles extends React.Component {
                     progress: progressValue => {
                         document.getElementById(
                             `progressbar_${index}`
-                        ).value = progressValue;
+                        ).setAttribute('value', progressValue);
                     },
                     error: function (msg) {
                         console.log(msg);
@@ -119,7 +123,7 @@ class UploadFiles extends React.Component {
                             `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
                             {
                                 resource_id: this.props.resource_id,
-                                name: file.name,
+                                name: file.sanitized_name,
                                 size: file.size,
                                 type: file.type,
                                 original: file.name
@@ -280,11 +284,12 @@ class UploadFiles extends React.Component {
             url: this.discardFilesAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
         if (urlsObject['url'].length) {
+            this.setState({loading: true});
             const typeFilePartialRoute = this.state.currentManifestFileType + '_file';
             axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
                 .then(response => {
                     this.updateManifestFiles(response.data);
-                    this.setState({urls: null});
+                    this.setState({urls: null, loading: false});
                 })
                 .catch(error => console.log(error));
         }
@@ -314,7 +319,7 @@ class UploadFiles extends React.Component {
     transformData = (files) => {
         return files.map(file => ({
             ...file,
-            name: file.original_filename,
+            sanitized_name: file.upload_file_name,
             status: 'New',  // TODO: correctly define the status based on status in database
             uploadType: RailsActiveRecordToUploadType[file.type],
             sizeKb: formatSizeUnits(file.upload_file_size)
@@ -334,11 +339,13 @@ class UploadFiles extends React.Component {
         });
     }
 
+    // TODO: maybe merge this with discardAlreadyChosenById
     discardAlreadyChosenByName = (files, uploadType) => {
         let filesAlreadySelected = this.state.chosenFiles.filter(file => {
             return file.uploadType === uploadType;
         });
-        filesAlreadySelected = filesAlreadySelected.map(item => item.name);
+        filesAlreadySelected = filesAlreadySelected.map(file => file.sanitized_name);
+
         return files.filter(file => {
             return !filesAlreadySelected.includes(file.name);
         });
@@ -382,9 +389,11 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
-                    <ConfirmSubmit
+                    {this.state.loading ? <LoadingSpinner /> : null}
+                    <ValidateFiles
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
+                        checkConfirmed={true}
                         disabled={this.state.submitButtonFilesDisabled}
                         changed={this.toggleCheckedFiles}
                         clicked={this.uploadFilesHandler} />
@@ -394,7 +403,7 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <h2 className="o-heading__level2">Files</h2>
-                    <p>No files have been selected.</p>
+                    {this.state.loading ? <LoadingSpinner /> : <p>No files have been selected.</p>}
                 </div>
             )
         }
@@ -406,10 +415,7 @@ class UploadFiles extends React.Component {
             return <ModalUrl
                 submitted={this.submitUrlsHandler}
                 changedUrls={this.onChangeUrls}
-                clickedClose={this.hideModal}
-                disabled={this.state.submitButtonUrlsDisabled}
-                changed={this.toggleCheckedUrls}
-            />
+                clickedClose={this.hideModal} />
         } else {
             document.removeEventListener('keydown', this.hideModal);
             return null;
@@ -427,7 +433,7 @@ class UploadFiles extends React.Component {
                 <h1 className="o-heading__level1">
                     Upload Your Files <span className="t-upload__heading-optional">(optional)</span>
                 </h1>
-                <p>Data is curated and preserved at Dryad. Software and supplemental information are preserved at Zenodo.</p>
+                <Instructions />
                 <div className="c-uploadwidgets">
                     {this.state.upload_type.map((upload_type) => {
                         return <UploadType

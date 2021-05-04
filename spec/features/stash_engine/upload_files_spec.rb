@@ -46,13 +46,33 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file2 = create_software_file(@resource_id)
       @file2.update(url: 'http://example.com/example.csv')
       @file3 = create_supplemental_file(@resource_id)
-      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+      click_link('Upload Files') # to refresh the page
+    end
+
+    it 'shows correct introductory text' do
+      expect(page.text).to have_content(
+        'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server'\
+' (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive.
+We require that you include a README file to provide key information for understanding and using your data.
+Software and Supplemental Information can be uploaded for publication at'
+      )
+      expect(page.text).to have_content(
+        'You will have the opportunity to choose a separate license for your software on the review page.'
+      )
+      expect(page).to have_link('Zenodo', href: 'https://zenodo.org')
+      expect(find_link('Zenodo')[:target]).to eq('_blank')
+    end
+
+    it 'shows correct Upload Type boxes example texts' do
+      expect(page).to have_content('e.g., csv, fasta')
+      expect(page).to have_content('e.g., code packages, scripts')
+      expect(page).to have_content('e.g., figures, supporting tables')
     end
 
     it 'shows files already uploaded' do
-      expect(page).to have_content(@file1.original_filename)
+      expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
-      expect(page).to have_content(@file3.original_filename)
+      expect(page).to have_content(@file3.upload_file_name)
       expect(page).to have_content('New', count: 3)
     end
 
@@ -68,6 +88,23 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect(page).to_not have_content(@file4.original_filename)
     end
+
+    it 'shows sanitized file names' do
+      @file = create_data_file(@resource_id)
+      @file.update(
+        original_filename: '\u0000 ssh*authorized?keys.csv',
+        upload_file_name: '_u0000_ssh_authorized_keys.csv'
+      )
+      @manifest_file = create_software_file(@resource_id)
+      @manifest_file.update(
+        original_filename: 'new example*2.com',
+        upload_file_name: 'new_example2.com',
+        url: 'http://example.com/new%20example*2.com'
+      )
+      click_link('Upload Files') # to refresh the page
+      expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
+      expect(page).to have_content('new_example2')
+    end
   end
 
   describe 'Select files to upload' do
@@ -80,23 +117,31 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows files selected with "Pending" status' do
-      expect(page).to have_content('file_example_ODS_10.ods')
-      expect(page).to have_content('data', count: 1)
-      expect(page).to have_content('file_example_ODS_100.ods')
-      expect(page).to have_content('software', count: 1)
-      expect(page).to have_content('file_example_ODS_1000.ods')
-      expect(page).to have_content('supplemental', count: 1)
+      within(page.find('tr', text: 'file_example_ODS_10.ods')) do
+        expect(page).to have_content('data')
+      end
+      within(page.find('tr', text: 'file_example_ODS_100.ods')) do
+        expect(page).to have_content('software')
+      end
+      within(page.find('tr', text: 'file_example_ODS_1000.ods')) do
+        expect(page).to have_content('supp')
+      end
       expect(page).to have_content('Pending', count: 3)
     end
 
     it 'does not allow to select new files already in the table and are of the same upload type' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods', count: 1)
     end
 
-    it 'allow to select new files already in the table and are not of the same upload type' do
-      attach_file('software', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+    it 'allows to select new files already in the table and are not of the same upload type' do
+      attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods', count: 2)
+    end
+
+    it 'sanitizes file name' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/\\u0000 ssh*authorized?keys.csv")
+      expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
     end
   end
 
@@ -169,7 +214,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'validates file URL equal to other file URL from other upload types' do
       @manifest = create_software_file(@resource_id)
-      @manifest.update(url: @valid_url_manifest, original_filename: @file_name1)
+      @manifest.update(url: @valid_url_manifest, upload_file_name: @file_name1)
 
       click_button('data_manifest')
       validate_url_manifest(@valid_url_manifest)
@@ -188,6 +233,31 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect_validate_commons
       expect(page).not_to have_content(@manifest_deleted.original_filename)
+    end
+
+    it 'shows sanitized file names and escaped URls' do
+      @url_manifest = 'http://example.org/my%20file*name.txt'
+      stub_request(:head, @url_manifest)
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+
+      click_button('data_manifest')
+      validate_url_manifest(@url_manifest)
+
+      expect(page).to have_content('my_filename.txt')
+      expect(page).to have_content('http://example.org/my%20file*name.txt')
+    end
+
+    # Solve the problem of disappearing spinner right after the axios request
+    xit 'shows a spinner while validating urls' do
+      click_button('data_manifest')
+      validate_url_manifest(@valid_url_manifest)
+
+      expect(page).to have_content('img.spinner')
     end
   end
 
@@ -208,6 +278,20 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows progress bar when start to upload' do
       expect(page.has_css?('progress', count: 3)).to be true
+    end
+
+    it 'shows empty progress bar if file has 0 size' do
+      # Remove already attached files
+      first("a[href='#!']").click
+      first("a[href='#!']").click
+      first("a[href='#!']").click
+
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt")
+      check('confirm_to_upload')
+      click_on('validate_files')
+
+      expect(page.has_css?('progress[value]')).to be true
+      expect(find('progress')['value']).to eq('0')
     end
 
     xit 'removes file from database when click Remove button' do
@@ -238,6 +322,10 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         .with(headers: { 'Accept' => '*/*' }).to_return(status: 200)
       expect(page).to have_content('New')
     end
+
+    xit 'sanitizes file name before save it in database' do
+      # TODO: (cacods) to implement when mocking Evaporate javascript library.
+    end
   end
 
   describe 'S3 file uploading mixed with already selected manifest files' do
@@ -256,13 +344,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # Workaround to expose input file type element, removing the class from the input element
       page.execute_script('$("#data").removeClass()')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/file_example_ODS_10.ods")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
       expect(page).to have_content('file_example_ODS_10.ods')
       expect(page).to have_content('Pending', count: 1)
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
       expect(page).to have_content('New')
     end
@@ -279,21 +366,21 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new file from file system with the same name of a manifest file' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
     end
 
     it 'does not allow to add a manifest file with the same name of a file selected from file system' do
-      StashEngine::GenericFile.find_by(original_filename: 'funbar.txt').destroy
+      # Remove manifest file added before
+      all("a[href='#!']").last.click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
 
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
-      check('confirm_to_validate')
       click_on('validate_files')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/funbar.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
     end
   end

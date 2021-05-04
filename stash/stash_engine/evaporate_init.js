@@ -71,6 +71,7 @@ function sanitize(input, replacement) {
 window.file_sanitize = function (input, options) {
   var replacement = (options && options.replacement) || '_';
   var output = sanitize(input, replacement);
+  // TODO (cacods): seems `replacement` to never be equal ''
   if (replacement === '') {
     return output;
   }

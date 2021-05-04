@@ -20,12 +20,14 @@ module DatabaseHelper
     new_res.save!
   end
 
+  # TODO: make only one method to create generi files
   def create_data_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
     StashEngine::DataFile.create(
       {
-        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        original_filename: filename,
+        upload_file_name: filename,
         resource_id: resource_id,
-        upload_file_name: 'example_data_file.csv',
         upload_content_type: 'text/plain',
         upload_file_size: 31_726,
         status_code: 200,
@@ -35,11 +37,12 @@ module DatabaseHelper
   end
 
   def create_software_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
     StashEngine::SoftwareFile.create(
       {
-        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        original_filename: filename,
+        upload_file_name: filename,
         resource_id: resource_id,
-        upload_file_name: 'example_software_file.csv',
         upload_content_type: 'text/plain',
         upload_file_size: 31_726,
         status_code: 200,
@@ -49,11 +52,12 @@ module DatabaseHelper
   end
 
   def create_supplemental_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
     StashEngine::SuppFile.create(
       {
-        original_filename: Faker::File.file_name(dir: '', directory_separator: ''),
+        original_filename: filename,
+        upload_file_name: filename,
         resource_id: resource_id,
-        upload_file_name: 'example_supp_file.csv',
         upload_content_type: 'text/plain',
         upload_file_size: 31_726,
         status_code: 200,
