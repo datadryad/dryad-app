@@ -6,3 +6,17 @@
 .UploadFiles {
     margin-bottom: 50px;
 }
+
+.LoadingSpinner {
+    height: 70px;
+    width: 70px;
+    margin-top: -20px;
+}
+
+img.Spinner {
+    display: block;
+    margin: auto;
+    height: 50%;
+    width: 50%;
+    object-fit: contain;
+}
