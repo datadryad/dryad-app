@@ -30,8 +30,21 @@
   <% end %>
 </div>
 
-<% if @review.software_files.count > 0 %>
-	<%= render partial: 'stash_datacite/licenses/software_license' %>
+<% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>
+	<div>
+		<h3>License and Terms of Service for Zenodo</h3>
+
+		<p>Software and supplemental files uploaded will be managed and preserved at Zenodo. Your related DOI will be linked to
+			your dataset.</p>
+
+		<%= render partial: 'stash_datacite/licenses/software_license' if @review.software_files.count.positive? %>
+
+		<% if @review.supp_files.count.positive? %>
+			<p>Supplemental information is published with the Creative Commons Attribution 4.0 International (CC BY 4.0) license</p>
+		<% end %>
+	</div>
+
+
 <% end %>
 
 <div>
