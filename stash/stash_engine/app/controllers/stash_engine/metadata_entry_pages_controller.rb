@@ -23,7 +23,7 @@ module StashEngine
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # GET /stash/edit/{doi}/{edit_code}
     def edit_by_doi
       redirect_to root_path, alert: 'The target dataset is being processed. Please try again later.' and return if resource.processing?
@@ -36,6 +36,11 @@ module StashEngine
 
       if ownership_transfer_needed?
         if current_user
+          ca = CurationActivity.create(status: @resource.current_curation_status || 'in_progress',
+                                       user_id: 0,
+                                       resource_id: @resource.id,
+                                       note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code")
+          @resource.curation_activities << ca
           @resource.user_id = current_user.id
           @resource.save
         else
@@ -58,7 +63,7 @@ module StashEngine
 
       redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # create a new version of this resource before editing with find or create
     def new_version
