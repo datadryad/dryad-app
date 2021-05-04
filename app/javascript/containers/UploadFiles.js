@@ -9,7 +9,6 @@ import ModalUrl from '../components/Modal/ModalUrl';
 import FileList from '../components/FileList/FileList';
 import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import Instructions from '../components/Instructions/Instructions';
 import classes from './UploadFiles.module.css';
 
@@ -59,7 +58,8 @@ class UploadFiles extends React.Component {
         //  that information and add to request URL.
         currentManifestFileType: null,
         failedUrls: [],
-        loading: false
+        loading: false,
+        removingIndex: null
     };
 
     componentDidMount() {
@@ -233,13 +233,30 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeFileHandler = (fileIndex) => {
-        let chosenFiles = [...this.state.chosenFiles];
-        if (chosenFiles[fileIndex].status !== 'Pending') {
-            this.removeFile(chosenFiles[fileIndex]);
+    removeFileHandler = (index) => {
+        const file = this.state.chosenFiles[index];
+        if (file.status !== 'Pending') {
+            const csrf_token = document.querySelector('[name=csrf-token]');
+            if (csrf_token)  // there isn't csrf token when running Capybara tests
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+
+            this.setState({removingIndex: index});
+            // this.showRemovingSpinner(index);
+            axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({removingIndex: null});
+                    this.removeFileLine(index);
+                })
+                .catch(error => console.log(error));
+        } else {
+            this.removeFileLine(index);
         }
-        // TODO: change this! Only remove if removed in backend.
-        chosenFiles.splice(fileIndex, 1);
+    }
+
+    removeFileLine = (index) => {
+        let chosenFiles = [...this.state.chosenFiles];
+        chosenFiles.splice(index, 1);
         if (!chosenFiles.length) {
             this.setState({chosenFiles: []});
         } else {
@@ -365,18 +382,6 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeFile = (file) => {
-        const csrf_token = document.querySelector('[name=csrf-token]');
-        if (csrf_token)  // there isn't csrf token when running Capybara tests
-            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
-        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => console.log(error));
-    }
-
     removeFailedUrlHandler = (index) => {
         const failedUrls = this.state.failedUrls.filter((url, urlIndex) => {
             return urlIndex !== index;
@@ -384,12 +389,19 @@ class UploadFiles extends React.Component {
         this.setState({failedUrls: failedUrls});
     }
 
-    buildFileList = () => {
+    buildFileList = (removingIndex) => {
         if (this.state.chosenFiles.length) {
             return (
                 <div>
-                    <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
-                    {this.state.loading ? <LoadingSpinner /> : null}
+                    <FileList
+                        chosenFiles={this.state.chosenFiles}
+                        clickedRemove={this.removeFileHandler}
+                        removingIndex={removingIndex} />
+                    { this.state.loading ?
+                        <div className={classes.LoadingSpinner}>
+                            {/*TODO: see better place to put the image*/}
+                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        </div> : null }
                     <ValidateFiles
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
@@ -403,7 +415,11 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <h2 className="o-heading__level2">Files</h2>
-                    {this.state.loading ? <LoadingSpinner /> : <p>No files have been selected.</p>}
+                    { this.state.loading ?
+                        <div className={classes.LoadingSpinner}>
+                            {/*TODO: see better place to put the image*/}
+                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        </div> : <p>No files have been selected.</p> }
                 </div>
             )
         }
@@ -424,7 +440,7 @@ class UploadFiles extends React.Component {
 
     render () {
         let failedUrls = this.buildFailedUrlList();
-        let chosenFiles = this.buildFileList();
+        let chosenFiles = this.buildFileList(this.state.removingIndex);
         let modalURL = this.buildModal();
 
         return (

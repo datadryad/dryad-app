@@ -321,6 +321,18 @@ Software and Supplemental Information can be uploaded for publication at'
       # just uploaded. TODO: Implement this test!
     end
 
+    xit 'does not remove line from Files table if failed calling ajax to remove the file' do
+      # TODO: mock axios?
+    end
+
+    xit 'removes line from Files table if successfuly calling ajax to remove the file' do
+      # TODO: mock axios?
+    end
+
+    xit 'shows spinner when calling ajax to remove the file' do
+      # TODO: mock axios?
+    end
+
     xit 'creates S3 entry after upload is complete' do
       # TODO: S3.exists? mock returns true now.
       #  See if it's possible to return something from the Evaporate using S3 mocks
