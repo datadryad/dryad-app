@@ -11,6 +11,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
   include Mocks::Ror
   include Mocks::Stripe
   include Mocks::Aws
+  include AjaxHelper
 
   before(:each) do
     mock_repository!
@@ -44,7 +45,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
 
     it 'shows right links to edit files' do
       click_link('Review and Submit')
-      sleep 3
+      wait_for_ajax(15)
       expect(page).to have_link('Edit Files', href: '/stash/resources/1/upload', count: 1)
     end
   end
