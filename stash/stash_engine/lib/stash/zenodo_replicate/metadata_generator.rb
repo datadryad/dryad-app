@@ -72,7 +72,7 @@ module Stash
       def license
         return license_for_data if @dataset_type == :data
 
-        return 'cc-zero' if @dataset_type == :supp
+        return 'CC-BY-4.0' if @dataset_type == :supp
 
         license_for_software
       end
