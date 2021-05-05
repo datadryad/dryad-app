@@ -113,13 +113,13 @@ module StashApi
         expect(output[:locations].first[:place]).to eq(@meta.hash[:locations].first[:place])
       end
 
-      it 'creates a new curation activity and sets the publication date' do
+      it 'creates new curation activities and sets the publication date' do
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
-        expect(@resource.curation_activities.size).to eq(1)
+        expect(@resource.curation_activities.size).to eq(2) # one for default creation, one for the API
 
         @curation_activity = Fixtures::StashApi::CurationMetadata.new
         dataset_id = CGI.escape(output[:identifier])
@@ -129,7 +129,7 @@ module StashApi
         expect(response_code).to eq(200)
 
         @resource.reload
-        expect(@resource.curation_activities.size).to eq(2)
+        expect(@resource.curation_activities.size).to eq(3)
         expect(@resource.publication_date).to be
       end
 
@@ -139,7 +139,7 @@ module StashApi
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
-        expect(@resource.curation_activities.size).to eq(1)
+        expect(@resource.curation_activities.size).to eq(2)
 
         # Set a publication date in the past
         publish_date = Time.now - 10.days
@@ -153,7 +153,7 @@ module StashApi
         expect(response_code).to eq(200)
 
         @resource.reload
-        expect(@resource.curation_activities.size).to eq(2)
+        expect(@resource.curation_activities.size).to eq(3)
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
       end
     end
