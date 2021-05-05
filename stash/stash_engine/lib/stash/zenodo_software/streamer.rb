@@ -60,7 +60,7 @@ module Stash
 
         size = 0
         response.body.each do |chunk|
-          size += chunk.length
+          size += chunk.bytesize
           digests_obj.accumulate_digests(chunk: chunk)
           write_pipe.write(chunk)
         end
