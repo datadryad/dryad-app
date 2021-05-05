@@ -21,7 +21,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'uri'
 require 'stash/wrapper/module_info'
 
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name          = Stash::Wrapper::NAME
   s.version       = Stash::Wrapper::VERSION
   s.authors       = ['David Moles']
