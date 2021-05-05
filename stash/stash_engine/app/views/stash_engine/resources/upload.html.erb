@@ -20,14 +20,37 @@
 }) %>
 
 <div class="o-dataset-nav">
-  <%# TODO: Verify if this condition is necessary after React Upload Page %>
-  <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
-    <!-- standard upload page -->
-    <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-  <% else %>
-    <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
-    <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-  <% end %>
-  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
 </div>
+
+<!-- it's a little squidgy to have this in here, but it isn't used in any other page and doesn't need to be precompiled or put anywhere else -->
+<div id="popup_dialog" style="display:none;">
+  <p>
+    Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
+    allow your uploads to finish before proceeding.
+  </p>
+</div>
+
+<script>
+  $('.js-nav-out').click(function(e) {
+    if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){
+      e.preventDefault();
+      $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: 'Finish upload before proceeding'
+      });
+    }
+  });
+
+  $(document).keyup(function(e) {
+    if (e.key === "Escape") {
+      $("#popup_dialog").dialog("close");
+    }
+  });
+</script>
+
 
