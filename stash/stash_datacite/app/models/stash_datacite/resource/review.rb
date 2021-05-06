@@ -62,6 +62,10 @@ module StashDatacite
         @software_files ||= @resource.current_file_uploads(my_class: StashEngine::SoftwareFile)
       end
 
+      def supp_files
+        @supp_files ||= @resource.current_file_uploads(my_class: StashEngine::SuppFile)
+      end
+
       def geolocation_points
         @geolocation_points ||= GeolocationPoint.only_geo_points(@resource.id)
       end

@@ -12,18 +12,31 @@
 
 <p>If the download process does not begin automatically within several seconds, click the link above to start the download.</p>
 
-<% sfw = @resource.software_files.present_files
+<%
+    sfw = @resource.software_files.present_files
+    supp = @resource.supp_files.present_files
 %>
-<% if sfw.count.positive? %>
+
+<% if sfw.count.positive? || supp.count.positive? %>
   <hr/>
   <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
-  <p>These additional files may be downloaded from Zenodo</p>
+<% end %>
+
+<% if sfw.count.positive? && @resource.zenodo_copies.software.done.count.positive? %>
+  <h3>Software files available at Zenodo</h3>
 
   <% sfw.order("lower(upload_file_name) ASC").each do |s| %>
     <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
   <% end %>
 <% end %>
 
+<% if supp.count.positive? && @resource.zenodo_copies.supp.done.count.positive? %>
+  <h3>Supplemental files available at Zenodo</h3>
+
+  <% supp.order("lower(upload_file_name) ASC").each do |s| %>
+    <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
+  <% end %>
+<% end %>
 <!-- placeholder empty div that can have contents inserted for popup and then shown -->
 <div id="popup_dialog" style="display:none;"></div>
 

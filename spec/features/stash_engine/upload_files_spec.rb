@@ -341,6 +341,11 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(find('progress')['value']).to eq('0')
     end
 
+    it 'disallows navigation away with pending uploads' do
+      click_on('Proceed to Review')
+      expect(page).to have_text('please click Upload pending files')
+    end
+
     xit 'removes file from database when click Remove button' do
       # At the time this placeholder test was first written the remove function
       # was working for manifest files and files that are displayed
