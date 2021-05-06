@@ -38,14 +38,14 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
-      @file1 = create_data_file(@resource_id)
-      @file2 = create_software_file(@resource_id)
-      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+      @file1 = create_data_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
+      @file2 = create_software_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
+      # click_link('Upload Files') # click on it to refresh the page and show the table with the file
     end
 
     it 'shows right links to edit files' do
       click_link('Review and Submit')
-      wait_for_ajax(15)
+      # wait_for_ajax(15)
       expect(page).to have_link('Edit Files', href: '/stash/resources/1/upload', count: 1)
     end
   end
