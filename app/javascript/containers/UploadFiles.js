@@ -362,7 +362,6 @@ class UploadFiles extends React.Component {
     discardFilesAlreadyChosen = (files, uploadType) => {
         const filenames = files.map(file => file.name);
         const newFilenames = this.discardAlreadyChosenByName(filenames, uploadType);
-        debugger;
         if (filenames.length === newFilenames.length) return files;
 
         const newFiles = files.filter(file => {
@@ -375,7 +374,6 @@ class UploadFiles extends React.Component {
     }
 
     discardAlreadyChosenByName = (filenames, uploadType) => {
-        debugger;
         let filesAlreadySelected = this.state.chosenFiles.filter(file => {
             return file.uploadType === uploadType;
         });
