@@ -17,7 +17,6 @@ const file = (props) => {
                 <td><a href="#!" onClick={props.click}>Remove</a></td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
-                        {/* TODO: see better place to put the image */}
                         <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
                     </div>
                 </td> }
