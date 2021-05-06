@@ -107,14 +107,18 @@ module DatasetHelper
   end
 
   def attach_files
-    # Workaround to expose input file type elements
-    page.execute_script('$("#data").removeClass()')
-    page.execute_script('$("#software").removeClass()')
-    page.execute_script('$("#supp").removeClass()')
-
-    attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
-    attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods")
-    attach_file('supp', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods")
+    attach_file(
+      'data',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+    )
+    attach_file(
+      'software',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+    )
+    attach_file(
+      'supp',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods", make_visible: { left: 0 }
+    )
   end
 
   def build_valid_stub_request(url)

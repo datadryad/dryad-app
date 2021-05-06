@@ -7,7 +7,7 @@ const upload_type = (props) => {
                 <img src={props.logo} alt={props.alt} />
                 <h2>{props.name}</h2>
             </header>
-            <b>{props.description}</b>
+            <b style={{textAlign: 'center'}}>{props.description}</b>
 
             <div className="c-choose">
                 <label htmlFor={props.type} className="c-choose__input-file-label">{props.buttonFiles}</label>
