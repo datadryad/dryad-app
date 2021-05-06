@@ -1,14 +1,10 @@
 <% # moving this here since I suspect this will need to be used again later %>
-<div>
-  <h3>License and Terms of Service for Software</h3>
-  <p>Software and other files uploaded will be managed and preserved at Zenodo. Your related DOI will be linked to
-    your dataset. Please select a license from the below dropdown list for your Zenodo deposit. For guidance,
+    <p>Please select a license from the dropdown list below for your Zenodo software. For guidance,
     check <a href="https://choosealicense.com/" target="_blank">choosealicense.org</a>.</p>
   <div>
-    <label for="zenodo_license" class="required">Select license for files (type to search within list)</label>
+    <label for="zenodo_license" class="required">Select license for software files (type to search within list)</label>
     <%= select_tag 'zenodo_license',
                    options_from_collection_for_select(StashEngine::SoftwareLicense.all, 'identifier', 'name',
                                                       @resource&.identifier&.software_license&.identifier || 'MIT') %>
 
   </div>
-</div>

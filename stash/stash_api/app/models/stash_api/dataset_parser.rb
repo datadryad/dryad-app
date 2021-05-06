@@ -23,8 +23,13 @@ module StashApi
     end
 
     # this is the basic required metadata
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def parse
       clear_previous_metadata
+      @resource.curation_activities << StashEngine::CurationActivity.create(status: @resource.current_curation_status || 'in_progress',
+                                                                            user_id: @user.id,
+                                                                            resource_id: @resource.id,
+                                                                            note: 'Created by API user')
       owning_user_id = establish_owning_user_id
       @resource.update(
         title: @hash['title'],
@@ -45,6 +50,7 @@ module StashApi
       @resource.identifier.save
       @resource.identifier
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     private
 
