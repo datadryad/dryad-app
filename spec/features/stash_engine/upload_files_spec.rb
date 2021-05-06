@@ -163,7 +163,6 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(page).to have_content('file_example_ODS_10.ods', count: 2)
     end
 
-
     it 'sanitizes file name' do
       attach_file(
         'data',
