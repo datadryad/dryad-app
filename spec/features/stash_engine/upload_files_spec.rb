@@ -50,6 +50,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows correct introductory text' do
+      expect(page).to have_content('Upload Your Files')
       expect(page.text).to have_content(
         'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server'\
 ' (e.g., Box, Dropbox, AWS, lab server). We do not recommend using Google Drive.
@@ -129,18 +130,44 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(page).to have_content('Pending', count: 3)
     end
 
-    it 'does not allow to select new files already in the table and are of the same upload type' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
+    it 'does not allow to select new FILE already in the table and of the same upload type' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      )
       expect(page).to have_content('file_example_ODS_10.ods', count: 1)
+      expect(page).to have_content('A file of the same type is already in the table.')
+    end
+
+    it 'does not allow to select new FILES already in the table and of the same upload type' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 }
+      )
+      attach_file(
+        'data',
+        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
+           #{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods],
+        make_visible: { left: 0 }
+      )
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+      expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
+      expect(page).to have_content('Some files of the same type are already in the table.')
     end
 
     it 'allows to select new files already in the table and are not of the same upload type' do
-      attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
+      attach_file(
+        'software',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      )
       expect(page).to have_content('file_example_ODS_10.ods', count: 2)
     end
 
     it 'sanitizes file name' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/\\u0000 ssh*authorized?keys.csv")
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/\\u0000 ssh*authorized?keys.csv", make_visible: { left: 0 }
+      )
       expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
     end
   end
@@ -151,7 +178,8 @@ Software and Supplemental Information can be uploaded for publication at'
       @valid_url_manifest = "http://example.org/#{@file_name1}"
       @file_name2 = 'foobar.txt'
       @invalid_url_manifest = "http://example.org/#{@file_name2}"
-      build_stub_requests(@valid_url_manifest, @invalid_url_manifest)
+      build_valid_stub_request(@valid_url_manifest)
+      build_invalid_stub_request(@invalid_url_manifest)
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
@@ -252,6 +280,24 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(page).to have_content('http://example.org/my%20file*name.txt')
     end
 
+    it 'shows cut url if url\'s length is big' do
+      @big_url = 'https://path_to/a_big_url_that_is_to_test_cutting_url_with_ellipsis.txt'
+      build_valid_stub_request(@big_url)
+      click_button('data_manifest')
+      validate_url_manifest(@big_url)
+
+      expect(page).to have_content('https://path_to/a_big_url_that..._cutting_url_with_ellipsis.txt')
+    end
+
+    it 'shows uncut url if url\' lenght is short' do
+      @short_url = 'https://path_to/short_url.txt'
+      build_valid_stub_request(@short_url)
+      click_button('data_manifest')
+      validate_url_manifest(@short_url)
+
+      expect(page).to have_content('https://path_to/short_url.txt')
+    end
+
     # Solve the problem of disappearing spinner right after the axios request
     xit 'shows a spinner while validating urls' do
       click_button('data_manifest')
@@ -282,11 +328,11 @@ Software and Supplemental Information can be uploaded for publication at'
 
     it 'shows empty progress bar if file has 0 size' do
       # Remove already attached files
-      first("a[href='#!']").click
-      first("a[href='#!']").click
-      first("a[href='#!']").click
+      first(:link, 'Remove').click
+      first(:link, 'Remove').click
+      first(:link, 'Remove').click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt")
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { left: 0 })
       check('confirm_to_upload')
       click_on('validate_files')
 
@@ -305,6 +351,29 @@ Software and Supplemental Information can be uploaded for publication at'
       # after loading the files already uploaded. The remove function
       # was not working for chosen files from user file system that have
       # just uploaded. TODO: Implement this test!
+    end
+
+    xit 'does not remove line from Files table if failed calling ajax to remove the file' do
+      # TODO: mock axios?
+    end
+
+    xit 'removes line from Files table if successfuly calling ajax to remove the file' do
+      # TODO: mock axios?
+    end
+
+    it 'removes warning messages after clicking in Remove link' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      )
+      # the message for already added file is displayed
+
+      first(:link, 'Remove').click
+      expect(page).not_to have_content('A file of the same type is already in the table.')
+    end
+
+    xit 'shows spinner when calling ajax to remove the file' do
+      # TODO: mock axios?
     end
 
     xit 'creates S3 entry after upload is complete' do
@@ -335,24 +404,18 @@ Software and Supplemental Information can be uploaded for publication at'
 
   describe 'S3 file uploading mixed with already selected manifest files' do
     before(:each) do
-      stub_request(:head, 'http://example.org/funbar.txt')
-        .with(
-          headers: {
-            'Accept' => '*/*'
-          }
-        )
-        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
-
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
-      # Workaround to expose input file type element, removing the class from the input element
-      page.execute_script('$("#data").removeClass()')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      )
       expect(page).to have_content('file_example_ODS_10.ods')
       expect(page).to have_content('Pending', count: 1)
 
+      build_valid_stub_request('http://example.org/funbar.txt')
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       click_on('validate_files')
@@ -370,23 +433,78 @@ Software and Supplemental Information can be uploaded for publication at'
       end
     end
 
-    it 'does not allow to select new file from file system with the same name of a manifest file' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
+    it 'does not allow to select new FILE from file system with the same name of manifest FILE' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+      expect(page).to have_content('A file of the same type is already in the table.')
     end
 
-    it 'does not allow to add a manifest file with the same name of a file selected from file system' do
-      # Remove manifest file added before
-      all("a[href='#!']").last.click
+    it 'does not allow to select new FILES from file system with the same name of manifest FILES' do
+      first(:link, 'Remove').click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
-
+      build_valid_stub_request('http://example.org/file_example_ODS_10.ods')
       click_button('data_manifest')
-      fill_in('location_urls', with: 'http://example.org/funbar.txt')
+      fill_in('location_urls', with: 'http://example.org/file_example_ODS_10.ods')
       click_on('validate_files')
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt")
+      attach_file(
+        'data',
+        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
+           #{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods], make_visible: { left: 0 }
+      )
+
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+      expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
+      expect(page).to have_content('Some files of the same type are already in the table.')
+    end
+
+    it 'does not allow to add a manifest FILE with the same name of a FILE selected from file system' do
+      build_valid_stub_request('http://example.org/file_example_ODS_10.ods')
+      click_button('data_manifest')
+      fill_in('location_urls', with: 'http://example.org/file_example_ODS_10.ods')
+      click_on('validate_files')
+
+      expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
+      expect(page).to have_content('A file of the same type is already in the table.')
+    end
+
+    it 'does not allow to add manifest FILEs with the same name of FILES selected from file system' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+      )
+
+      build_valid_stub_request('http://example.org/file_example_ODS_10.ods')
+      build_valid_stub_request('http://example.org/file_example_ODS_100.ods')
+      click_button('data_manifest')
+      fill_in('location_urls', with: "http://example.org/file_example_ODS_10.ods\nhttp://example.org/file_example_ODS_100.ods")
+      click_on('validate_files')
+
+      expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
+      expect(page).to have_content(/^\bfile_example_ODS_100.ods\b/, count: 1)
+      expect(page).to have_content('Some files of the same type are already in the table.')
+    end
+
+    it 'removes warning message when adding new file from file system' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+      )
+      expect(page).not_to have_content('A file of the same type is already in the table.')
+    end
+
+    it 'removes warning message when adding new manifest file' do
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+
+      build_valid_stub_request('http://example.org/funbar_2.txt')
+      click_button('data_manifest')
+      fill_in('location_urls', with: 'http://example.org/funbar_2.txt')
+      click_on('validate_files')
+      expect(page).not_to have_content('A file of the same type is already in the table.')
     end
   end
 

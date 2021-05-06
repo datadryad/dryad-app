@@ -1,0 +1,7 @@
+img.Spinner {
+    display: block;
+    margin: auto;
+    height: 50%;
+    width: 50%;
+    object-fit: contain;
+}
