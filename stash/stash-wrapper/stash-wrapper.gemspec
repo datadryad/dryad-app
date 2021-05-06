@@ -21,7 +21,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'uri'
 require 'stash/wrapper/module_info'
 
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name          = Stash::Wrapper::NAME
   s.version       = Stash::Wrapper::VERSION
   s.authors       = ['David Moles']
@@ -45,12 +45,10 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.8'
   s.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.9'
 
-  s.add_development_dependency 'bundler', '~> 2.1.4'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
   s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rake', '~> 12.0'
-  s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'rubocop', '~> 0.57.2'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
