@@ -40,7 +40,6 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       @resource = StashEngine::Resource.find(@resource_id)
       @file1 = create_data_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
       @file2 = create_software_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
-      # click_link('Upload Files') # click on it to refresh the page and show the table with the file
     end
 
     it 'shows right links to edit files' do

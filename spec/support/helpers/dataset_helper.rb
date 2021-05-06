@@ -107,26 +107,32 @@ module DatasetHelper
   end
 
   def attach_files
-    # Workaround to expose input file type elements
-    page.execute_script('$("#data").removeClass()')
-    page.execute_script('$("#software").removeClass()')
-    page.execute_script('$("#supp").removeClass()')
-
-    attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods")
-    attach_file('software', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods")
-    attach_file('supp', "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods")
+    attach_file(
+      'data',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+    )
+    attach_file(
+      'software',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+    )
+    attach_file(
+      'supp',
+      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods", make_visible: { left: 0 }
+    )
   end
 
-  def build_stub_requests(valid, invalid)
-    stub_request(:head, valid)
+  def build_valid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
       .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+  end
 
-    stub_request(:head, invalid)
+  def build_invalid_stub_request(url)
+    stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'

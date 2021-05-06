@@ -9,8 +9,8 @@ import ModalUrl from '../components/Modal/ModalUrl';
 import FileList from '../components/FileList/FileList';
 import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import Instructions from '../components/Instructions/Instructions';
+import WarningMessage from '../components/WarningMessage/WarningMessage';
 import classes from './UploadFiles.module.css';
 
 // TODO: check if this is the best way to refer to stash_engine files.
@@ -29,6 +29,10 @@ const AllowedUploadFileTypes = {
     'data': 'data',
     'software': 'sfw',
     'supp': 'supp'
+}
+const Messages = {
+    'fileAlreadySelected': 'A file of the same type is already in the table.',
+    'filesAlreadySelected': 'Some files of the same type are already in the table.'
 }
 
 class UploadFiles extends React.Component {
@@ -59,7 +63,9 @@ class UploadFiles extends React.Component {
         //  that information and add to request URL.
         currentManifestFileType: null,
         failedUrls: [],
-        loading: false
+        loading: false,
+        removingIndex: null,
+        warningMessage: null
     };
 
     componentDidMount() {
@@ -69,7 +75,8 @@ class UploadFiles extends React.Component {
     }
 
     addFilesHandler = (event, uploadType) => {
-        const newFiles = this.discardAlreadyChosenByName([...event.target.files], uploadType);
+        this.setState({warningMessage: null});
+        const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
         newFiles.map(file => {
             file.sanitized_name = sanitize(file.name);
             file.status = 'Pending';
@@ -233,13 +240,31 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeFileHandler = (fileIndex) => {
-        let chosenFiles = [...this.state.chosenFiles];
-        if (chosenFiles[fileIndex].status !== 'Pending') {
-            this.removeFile(chosenFiles[fileIndex]);
+    removeFileHandler = (index) => {
+        this.setState({warningMessage: null});
+        const file = this.state.chosenFiles[index];
+        if (file.status !== 'Pending') {
+            const csrf_token = document.querySelector('[name=csrf-token]');
+            if (csrf_token)  // there isn't csrf token when running Capybara tests
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+
+            this.setState({removingIndex: index});
+            // this.showRemovingSpinner(index);
+            axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({removingIndex: null});
+                    this.removeFileLine(index);
+                })
+                .catch(error => console.log(error));
+        } else {
+            this.removeFileLine(index);
         }
-        // TODO: change this! Only remove if removed in backend.
-        chosenFiles.splice(fileIndex, 1);
+    }
+
+    removeFileLine = (index) => {
+        let chosenFiles = [...this.state.chosenFiles];
+        chosenFiles.splice(index, 1);
         if (!chosenFiles.length) {
             this.setState({chosenFiles: []});
         } else {
@@ -270,6 +295,7 @@ class UploadFiles extends React.Component {
     }
 
     submitUrlsHandler = (event) => {
+        this.setState({warningMessage: null});
         event.preventDefault();
         this.hideModal(event);
         this.toggleCheckedUrls(event);
@@ -281,7 +307,7 @@ class UploadFiles extends React.Component {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         const urlsObject = {
-            url: this.discardFilesAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
+            url: this.discardUrlsAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
         if (urlsObject['url'].length) {
             this.setState({loading: true});
@@ -295,25 +321,19 @@ class UploadFiles extends React.Component {
         }
     };
 
-    discardFilesAlreadyChosen = (urls, uploadType) => {
-        let filesAlreadySelected = this.state.chosenFiles.filter(file => {
-            return file.uploadType === uploadType;
-        });
-        if (!filesAlreadySelected.length) return urls;
-
+    discardUrlsAlreadyChosen = (urls, uploadType) => {
         urls = urls.split('\n');
-        const final_urls = [...urls];
+        const filenames = urls.map(url => url.split('/').pop());
+        const newFilenames = this.discardAlreadyChosenByName(filenames, uploadType);
+        if (filenames.length === newFilenames.length) return urls.join('\n');
 
-        for (let i = 0; i < urls.length; i++) {
-            for (let j = 0; j < filesAlreadySelected.length; j++) {
-                if (urls[i].includes(filesAlreadySelected[j].name)) {
-                    const index = final_urls.indexOf(urls[i]);
-                    final_urls.splice(index, 1);
-                }
-            }
-        }
+        const newUrls = urls.filter(url => {
+            return newFilenames.some(filename => url.includes(filename));
+        });
 
-        return final_urls.join('\n');
+        const countRepeated = urls.length - newUrls.length;
+        this.setWarningMessage(countRepeated);
+        return newUrls.join('\n');
     }
 
     transformData = (files) => {
@@ -339,16 +359,41 @@ class UploadFiles extends React.Component {
         });
     }
 
-    // TODO: maybe merge this with discardAlreadyChosenById
-    discardAlreadyChosenByName = (files, uploadType) => {
+    discardFilesAlreadyChosen = (files, uploadType) => {
+        const filenames = files.map(file => file.name);
+        const newFilenames = this.discardAlreadyChosenByName(filenames, uploadType);
+        if (filenames.length === newFilenames.length) return files;
+
+        const newFiles = files.filter(file => {
+            return newFilenames.includes(file.name);
+        });
+
+        const countRepeated = files.length - newFiles.length;
+        this.setWarningMessage(countRepeated);
+        return newFiles;
+    }
+
+    discardAlreadyChosenByName = (filenames, uploadType) => {
         let filesAlreadySelected = this.state.chosenFiles.filter(file => {
             return file.uploadType === uploadType;
         });
-        filesAlreadySelected = filesAlreadySelected.map(file => file.sanitized_name);
+        if (!filesAlreadySelected.length) return filenames;
 
-        return files.filter(file => {
-            return !filesAlreadySelected.includes(file.name);
-        });
+        const filenamesAlreadySelected = filesAlreadySelected.map(file => file.sanitized_name);
+        return filenames.filter(filename => {
+            return !filenamesAlreadySelected.includes(sanitize(filename));
+        })
+    }
+
+    setWarningMessage = (countRepeated) => {
+        if (countRepeated < 0) return;
+        if (countRepeated === 0) {
+            this.setState({warningMessage: null});
+        }
+        let message;
+        if (countRepeated === 1) message = Messages['fileAlreadySelected'];
+        if (countRepeated > 1) message = Messages['filesAlreadySelected'];
+        this.setState({warningMessage: message});
     }
 
     onChangeUrls = (event) => {
@@ -365,18 +410,6 @@ class UploadFiles extends React.Component {
         }
     }
 
-    removeFile = (file) => {
-        const csrf_token = document.querySelector('[name=csrf-token]');
-        if (csrf_token)  // there isn't csrf token when running Capybara tests
-            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
-        axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => console.log(error));
-    }
-
     removeFailedUrlHandler = (index) => {
         const failedUrls = this.state.failedUrls.filter((url, urlIndex) => {
             return urlIndex !== index;
@@ -384,12 +417,19 @@ class UploadFiles extends React.Component {
         this.setState({failedUrls: failedUrls});
     }
 
-    buildFileList = () => {
+    buildFileList = (removingIndex) => {
         if (this.state.chosenFiles.length) {
             return (
                 <div>
-                    <FileList chosenFiles={this.state.chosenFiles} clickedRemove={this.removeFileHandler} />
-                    {this.state.loading ? <LoadingSpinner /> : null}
+                    <FileList
+                        chosenFiles={this.state.chosenFiles}
+                        clickedRemove={this.removeFileHandler}
+                        removingIndex={removingIndex} />
+                    { this.state.loading ?
+                        <div className={classes.LoadingSpinner}>
+                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        </div> : null }
+                    {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
                     <ValidateFiles
                         id='confirm_to_validate_files'
                         buttonLabel='Upload pending files'
@@ -403,7 +443,10 @@ class UploadFiles extends React.Component {
             return (
                 <div>
                     <h2 className="o-heading__level2">Files</h2>
-                    {this.state.loading ? <LoadingSpinner /> : <p>No files have been selected.</p>}
+                    { this.state.loading ?
+                        <div className={classes.LoadingSpinner}>
+                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        </div> : <p>No files have been selected.</p> }
                 </div>
             )
         }
@@ -424,14 +467,14 @@ class UploadFiles extends React.Component {
 
     render () {
         let failedUrls = this.buildFailedUrlList();
-        let chosenFiles = this.buildFileList();
+        let chosenFiles = this.buildFileList(this.state.removingIndex);
         let modalURL = this.buildModal();
 
         return (
             <div className={classes.UploadFiles}>
                 {modalURL}
                 <h1 className="o-heading__level1">
-                    Upload Your Files <span className="t-upload__heading-optional">(optional)</span>
+                    Upload Your Files
                 </h1>
                 <Instructions />
                 <div className="c-uploadwidgets">
