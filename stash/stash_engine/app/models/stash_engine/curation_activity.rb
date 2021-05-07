@@ -67,11 +67,16 @@ module StashEngine
     # ------------------------------------------
 
     # When the status is published/embargoed send to Stripe and DataCite
-    after_create :submit_to_datacite, :update_solr, :process_payment, :remove_peer_review,
-                 if: proc { |ca|
-                       !ca.resource.skip_datacite_update && (ca.published? || ca.embargoed?) &&
-                                 latest_curation_status_changed?
-                     }
+    after_create do
+      if !resource.skip_datacite_update &&
+          (published? || embargoed?) &&
+          latest_curation_status_changed?
+        submit_to_datacite
+        update_solr
+        process_payment
+        remove_peer_review
+      end
+    end
 
     after_create :copy_to_zenodo, if: proc { |ca|
       !ca.resource.skip_datacite_update && ca.published? && latest_curation_status_changed?
