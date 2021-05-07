@@ -130,3 +130,23 @@
 	color: $design-red-color;
 	font-weight: bold;
 }
+
+.c-upload__loading-spinner {
+	width: 70px;
+	height: 70px;
+	margin-top: -20px;
+}
+
+img.c-upload__spinner {
+	display: block;
+	width: 50%;
+	height: 50%;
+	margin: auto;
+	object-fit: contain;
+}
+
+.c-upload__warning-text {
+	margin: 10px 0 0;
+	color: #ffc107;
+	font-weight: bold;
+}
