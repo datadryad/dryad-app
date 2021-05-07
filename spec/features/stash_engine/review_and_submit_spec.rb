@@ -40,6 +40,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       @resource = StashEngine::Resource.find(@resource_id)
       @file1 = create_data_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
       @file2 = create_software_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
+      sleep 1
     end
 
     # TODO: it fails same times. Better to solve this before releasing it again
