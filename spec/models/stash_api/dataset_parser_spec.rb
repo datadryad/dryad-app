@@ -317,7 +317,6 @@ module StashApi
         new_resource.current_editor_id = @user.id
         new_resource.save!
         @resource = new_resource
-
         dp = DatasetParser.new(hash: @update_metadata, id: @stash_identifier, user: @user)
         @stash_identifier = dp.parse
         expect(@stash_identifier.resources.count).to eq(2)
