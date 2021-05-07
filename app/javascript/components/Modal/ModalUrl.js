@@ -1,11 +1,10 @@
 import React from 'react';
-import classes from './ModalUrl.module.css';
 import ValidateFiles from "../ValidateFiles/ValidateFiles";
 
 const modal_url = (props) => {
     return (
-        <dialog className={classes.ModalUrl} open>
-            <section className={classes.ModalUrlMain}>
+        <div>
+            <dialog id="js-uploadmodal" className="c-uploadmodal" style={{'width': '751px', 'height': '370px', 'z-index': '100149', 'top': '351px'}} open>
                 <form method='dialog' onSubmit={(event) => props.submitted(event)}>
                     <div className="c-uploadmodal__header">
                         <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">Enter
@@ -25,8 +24,9 @@ const modal_url = (props) => {
                         checkConfirmed={false}
                         disabled={false} />
                 </form>
-            </section>
-        </dialog>
+            </dialog>
+            <div className="backdrop" style={{'z-index': '100148'}} />
+        </div>
     );
 }
 

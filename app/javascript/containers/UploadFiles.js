@@ -11,7 +11,6 @@ import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
 import Instructions from '../components/Instructions/Instructions';
 import WarningMessage from '../components/WarningMessage/WarningMessage';
-import classes from './UploadFiles.module.css';
 
 // TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
@@ -249,7 +248,6 @@ class UploadFiles extends React.Component {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
             this.setState({removingIndex: index});
-            // this.showRemovingSpinner(index);
             axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
                 .then(response => {
                     console.log(response.data);
@@ -426,8 +424,8 @@ class UploadFiles extends React.Component {
                         clickedRemove={this.removeFileHandler}
                         removingIndex={removingIndex} />
                     { this.state.loading ?
-                        <div className={classes.LoadingSpinner}>
-                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        <div className="c-upload__loading-spinner">
+                            <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                         </div> : null }
                     {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
                     <ValidateFiles
@@ -444,8 +442,8 @@ class UploadFiles extends React.Component {
                 <div>
                     <h2 className="o-heading__level2">Files</h2>
                     { this.state.loading ?
-                        <div className={classes.LoadingSpinner}>
-                            <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        <div className="c-upload__loading-spinner">
+                            <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                         </div> : <p>No files have been selected.</p> }
                 </div>
             )
@@ -471,7 +469,7 @@ class UploadFiles extends React.Component {
         let modalURL = this.buildModal();
 
         return (
-            <div className={classes.UploadFiles}>
+            <div className="c-upload">
                 {modalURL}
                 <h1 className="o-heading__level1">
                     Upload Your Files

@@ -1,8 +1,0 @@
-/*
-    TODO: see if it's possible to remove this classe and uses only
-      the ones from UI Library
-*/
-
-input[type=checkbox] {
-    margin-right: 5px;
-}
