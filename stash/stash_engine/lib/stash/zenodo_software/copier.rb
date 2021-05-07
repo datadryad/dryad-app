@@ -104,6 +104,9 @@ module Stash
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
+        # make sure the dataset has the relationships for these things sent to zenodo
+        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
+
         return publish_dataset if @copy.copy_type.end_with?('_publish')
 
         return metadata_only_update unless files_changed?
