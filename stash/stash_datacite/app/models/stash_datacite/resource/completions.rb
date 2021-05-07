@@ -90,6 +90,8 @@ module StashDatacite
       end
 
       def s3_error_uploads
+        return if @resource.submitted?
+
         files = @resource.generic_files.newly_created.file_submission
         errored_uploads = []
         files.each do |f|
