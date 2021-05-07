@@ -68,8 +68,9 @@ module StashEngine
 
       it "doesn't submit when status isn't changed" do
         @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
-        CurationActivity.create(resource_id: @resource.id, status: 'published')
         expect(@mock_idgen).to have_received(:update_identifier_metadata!).once
+        CurationActivity.create(resource_id: @resource.id, status: 'published')
+        expect(@mock_idgen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
 
       end
 
