@@ -220,6 +220,14 @@ module StashDatacite
           expect(completions.s3_error_uploads).to eq(@resource.generic_files.map(&:upload_file_name))
         end
 
+        it 'does not check missing files once Merritt processing is complete' do
+          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
+            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          end
+          allow(@resource).to receive('submitted?').and_return(true)
+          expect(completions.s3_error_uploads).to be(nil)
+        end
+
         it 'only checks files that are new uploads and are not urls' do
           @resource.generic_files.first.update(file_state: 'copied')
           @resource.generic_files.second.update(url: 'http://example.com')
