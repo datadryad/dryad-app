@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ellipsize from '../../../lib/string_patch';
-import classes from './File.module.css';
 
 const file = (props) => {
     return (
@@ -17,7 +16,7 @@ const file = (props) => {
                 <td><a href="#!" onClick={props.click}>Remove</a></td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
-                        <img className={classes.Spinner} src="../../../images/spinner.gif" alt="Loading spinner" />
+                        <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                     </div>
                 </td> }
         </tr>

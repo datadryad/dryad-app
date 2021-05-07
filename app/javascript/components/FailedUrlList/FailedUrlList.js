@@ -1,7 +1,6 @@
 import React from "react";
 
 import Url from "./Url/Url";
-import classes from './FailedUrlList.module.css';
 
 const failed_url_list = (props) => {
     return (
