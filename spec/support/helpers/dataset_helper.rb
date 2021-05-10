@@ -141,8 +141,8 @@ module DatasetHelper
       .to_return(status: 404)
   end
 
-  def validate_url_manifest(url)
-    fill_in('location_urls', with: url)
+  def validate_url_manifest(urls)
+    fill_in('location_urls', with: urls)
     click_on('validate_files')
   end
 
