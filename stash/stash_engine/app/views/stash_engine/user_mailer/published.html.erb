@@ -7,10 +7,16 @@
 
 <p>Please cite it using this DOI: <%= @resource.identifier_str %></p>
 
-<% related = @resource.related_identifiers&.where("related_identifier LIKE '%/zenodo.%'")&.where(work_type: 'software')&.first %>
+<% rel_sfw = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'software')&.first %>
 
-<% unless related.nil? %>
-  <p>Your related software is being published at Zenodo: <%= link_to related.related_identifier, related.related_identifier %></p>
+<% rel_supp = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'supplemental_information')&.first %>
+
+<% unless rel_sfw.nil? %>
+  <p>Your related software is being published at Zenodo: <%= link_to rel_sfw.related_identifier, rel_sfw.related_identifier %></p>
+<% end %>
+
+<% unless rel_supp.nil? %>
+  <p>Your supplemental information is being published at Zenodo: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
 <% end %>
 
 <p>If you would like to version or update your dataset you may do so by clicking "Update" on your "My Datasets" page.</p>

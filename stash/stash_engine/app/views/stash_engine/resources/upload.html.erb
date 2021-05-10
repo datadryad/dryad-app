@@ -1,5 +1,5 @@
 <%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
-  @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
+    @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -7,27 +7,50 @@
   <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
 <% end %>
 
-<h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
+<!--<h1 class="o-heading__level1">Upload Your <%#= @datatype %></h1>-->
+<!--<h1 class="o-heading__level1">Upload Your Files</h1>-->
 
-<div id="choose_method" style="margin-bottom: 2em;">
-  <%= render partial: 'stash_engine/data_files/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
-</div>
-
-<!-- file upload workflow -->
-<div class="files_upload">
-  <%= render partial: 'stash_engine/data_files/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
-</div>
+<%= javascript_pack_tag 'application' %>
+<!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
+<%= react_component("UploadFiles", {
+  resource_id: @resource.id,
+  file_uploads: @resource.generic_files.validated_table.map(&:attributes),
+  app_config_s3: APP_CONFIG[:s3],
+  s3_dir_name: @resource.s3_dir_name(type: 'base')
+}) %>
 
 <div class="o-dataset-nav">
-  <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
-    <!-- standard upload page -->
-    <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-
-    <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-  <% else %>
-    <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
-    <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-  <% end %>
+  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
 </div>
+
+<!-- it's a little squidgy to have this in here, but it isn't used in any other page and doesn't need to be precompiled or put anywhere else -->
+<div id="popup_dialog" style="display:none;">
+  <p>
+    Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
+    allow your uploads to finish before proceeding.
+  </p>
+</div>
+
+<script>
+  $('.js-nav-out').click(function(e) {
+    if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){
+      e.preventDefault();
+      $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: 'Finish upload before proceeding'
+      });
+    }
+  });
+
+  $(document).keyup(function(e) {
+    if (e.key === "Escape") {
+      $("#popup_dialog").dialog("close");
+    }
+  });
+</script>
+
 

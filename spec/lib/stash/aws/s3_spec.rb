@@ -25,6 +25,14 @@ module Stash
         end
       end
 
+      describe '#objects' do
+        it 'calls s3 to get list of objects' do
+          # Basic test that the bucket receives an objects message. "send" bypasses it being a private method, so can test
+          expect(Stash::Aws::S3.send(:s3_bucket)).to receive(:objects).with(prefix: '12xu')
+          Stash::Aws::S3.objects(starts_with: '12xu')
+        end
+      end
+
     end
   end
 end
