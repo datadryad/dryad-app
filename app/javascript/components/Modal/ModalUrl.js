@@ -4,7 +4,12 @@ import ValidateFiles from "../ValidateFiles/ValidateFiles";
 const modal_url = (props) => {
     return (
         <div>
-            <dialog id="js-uploadmodal" className="c-uploadmodal" style={{'width': '751px', 'height': '370px', 'z-index': '100149', 'top': '351px'}} open>
+            <dialog id="js-uploadmodal"
+                    className="c-uploadmodal"
+                    style={{
+                        'width': '60%', 'height': '370px', 'max-width': '750px', 'min-width': '220px',
+                        'z-index': '100149', 'top': '50%'}}
+                    open>
                 <form method='dialog' onSubmit={(event) => props.submitted(event)}>
                     <div className="c-uploadmodal__header">
                         <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">Enter

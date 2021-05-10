@@ -198,7 +198,6 @@ Software and Supplemental Information can be uploaded for publication at'
     end
 
     it 'shows problem with bad data file URL' do
-      # TODO: test for url already existent
       click_button('data_manifest')
       validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
@@ -248,6 +247,21 @@ Software and Supplemental Information can be uploaded for publication at'
       validate_url_manifest(@valid_url_manifest)
 
       expect(page).to have_content(/^\b#{@file_name1}\b/, count: 2)
+    end
+
+    it 'correctly blocks adding same files when there are excess of new lines between the URL lines' do
+      click_button('data_manifest')
+      @file_name2 = 'funbar_2.txt'
+      @valid_url_manifest2 = "http://example.org/#{@file_name2}"
+      build_valid_stub_request(@valid_url_manifest2)
+      validate_url_manifest("#{@valid_url_manifest}\n#{@valid_url_manifest2}")
+
+      click_button('data_manifest')
+      validate_url_manifest("\n#{@valid_url_manifest}\n\n#{@valid_url_manifest2}\n\n")
+
+      expect(page).to have_content(/^\b#{@file_name1}\b/, count: 1)
+      expect(page).to have_content(/^\b#{@file_name2}\b/, count: 1)
+      expect(page).to have_content('Some files of the same type are already in the table.')
     end
 
     it 'shows only non-deleted files after validating URLs' do
