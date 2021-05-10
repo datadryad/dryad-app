@@ -20,6 +20,7 @@ local:
 test:
   <<: *default
   host: localhost
+#  host: aws-dev-db.co33oyzjqasf.us-east-1.rds.amazonaws.com
   database: dashv2_test
   username: travis
   password: ""

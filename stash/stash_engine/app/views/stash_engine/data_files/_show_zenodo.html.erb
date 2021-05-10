@@ -1,8 +1,8 @@
-<%# the resource is passed in. Only link previously submitted files. %>
+<%# the resource and zenodo_type (software, supp) is passed in. Only link previously submitted files. %>
 <ul class="c-review-files__list">
-<% uploaded = resource.previous_resource&.software_submitted? %>
+<% uploaded = resource.previous_resource&.zenodo_submitted?(type: zenodo_type) %>
 
-<% resource.software_files.each do |fu| %>
+<% resource.send("#{zenodo_type}_files").each do |fu| %>
   <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
     <li>
       <% if fu.file_state == 'copied' && uploaded %>

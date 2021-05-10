@@ -19,4 +19,50 @@ module DatabaseHelper
     new_res.curation_activities.update_all(user_id: user.id) if user
     new_res.save!
   end
+
+  # TODO: make only one method to create generi files
+  def create_data_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
+    StashEngine::DataFile.create(
+      {
+        original_filename: filename,
+        upload_file_name: filename,
+        resource_id: resource_id,
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_software_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
+    StashEngine::SoftwareFile.create(
+      {
+        original_filename: filename,
+        upload_file_name: filename,
+        resource_id: resource_id,
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
+
+  def create_supplemental_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
+    StashEngine::SuppFile.create(
+      {
+        original_filename: filename,
+        upload_file_name: filename,
+        resource_id: resource_id,
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created'
+      }
+    )
+  end
 end

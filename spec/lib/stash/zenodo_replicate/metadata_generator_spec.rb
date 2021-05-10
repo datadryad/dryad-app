@@ -77,6 +77,11 @@ module Stash
         expect(@mg.license).to eq('cc-zero')
       end
 
+      it 'sets license to cc-zero for supplemental information' do
+        @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, dataset_type: :supp)
+        expect(@mg.license).to eq('CC-BY-4.0')
+      end
+
       it 'has keywords output' do
         s = create(:subject)
         @resource.subjects << s

@@ -5,16 +5,13 @@ require 'byebug'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine
   RSpec.describe DataFilesController, type: :request do
-    include Mocks::Tenant
+    include GenericFilesHelper
+    include DatabaseHelper
+    include DatasetHelper
+    include Mocks::Aws
 
     before(:each) do
-      mock_tenant!
-      @user = create(:user, role: 'superuser')
-      @resource = create(:resource, user_id: @user.id)
-      @resource.current_resource_state.update(resource_state: 'submitted')
-      @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
-      @resource.reload
-
+      generic_before
       # HACK: in session because requests specs don't allow session in rails 4
       allow_any_instance_of(DataFilesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
@@ -28,19 +25,11 @@ module StashEngine
       end
 
       it 'correctly generates a presigned upload request when asked for' do
-        # don't ask me how the encryption internals work, but we should receive the same response to the same request,
-        # so this will detect if the signing function changes.
-        response_code = get @url, params: @json_hash, as: :json
-        expect(response_code).to eql(200)
-        expect(response.body).to eql('a6c982052753f2377819a2d6162b60ca4b7b940794e882acc0b226f8ff803e99')
+        generic_presign_expects(@url, @json_hash)
       end
 
       it 'rejects presigned requests without permissions to upload files for resource' do
-        @user.update(role: 'user')
-        @user2 = create(:user, role: 'user')
-        @resource.update(user_id: @user2.id) # not the owner
-        response_code = get @url, params: @json_hash,  as: :json
-        expect(response_code).to eql(403)
+        generic_rejects_presign_expects(@url, @json_hash)
       end
     end
 
@@ -48,17 +37,74 @@ module StashEngine
 
       before(:each) do
         @url = StashEngine::Engine.routes.url_helpers.data_file_complete_path(resource_id: @resource.id)
-        @json_hash =  { 'name' => 'lkhe_hg.jpg', 'size' => 1_843_444, 'type' => 'image/jpeg', 'original' => 'lkhe*hg.jpg' }.with_indifferent_access
+        @json_hash = {
+          'name' => 'lkhe_hg.jpg', 'size' => 1_843_444,
+          'type' => 'image/jpeg', 'original' => 'lkhe*hg.jpg'
+        }.with_indifferent_access
       end
 
       it 'creates a database entry after file upload to s3 is complete' do
-        response_code = post @url, params: @json_hash,  as: :json
+        response_code = post @url, params: @json_hash, as: :json
         expect(response_code).to eql(200)
-        i = @resource.data_files.first
-        expect(i.upload_file_name).to eql(@json_hash[:name])
-        expect(i.upload_file_size).to eql(@json_hash[:size])
-        expect(i.upload_content_type).to eql(@json_hash[:type])
-        expect(i.original_filename).to eql(@json_hash[:original])
+        generic_new_db_entry_expects(@json_hash, @resource.data_files.first)
+      end
+
+      it 'returns json when request with format html, after file upload to s3 is complete' do
+        generic_returns_json_after_complete(@url, @json_hash)
+      end
+    end
+
+    describe '#validate_urls' do
+      before(:each) do
+        @valid_manifest_url = 'http://example.org/funbar.txt'
+        @invalid_manifest_url = 'http://example.org/foobar.txt'
+        create_valid_stub_request(@valid_manifest_url)
+        create_invalid_stub_request(@invalid_manifest_url)
+      end
+
+      it 'returns json when request with format html' do
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        generic_validate_urls_expects(@url)
+      end
+
+      it 'returns json with bad urls when request with html format' do
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        generic_bad_urls_expects(@url)
+      end
+
+      it 'returns only non-deleted files' do
+        @manifest_deleted = create_data_file(@resource.id)
+        @manifest_deleted.update(
+          url: 'http://example.org/example_data_file.csv', file_state: 'deleted'
+        )
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        post @url, params: { 'url' => @valid_manifest_url }
+
+        body = JSON.parse(response.body)
+        expect(body['valid_urls'].length).to eql(1)
+      end
+
+      it 'validates url from a differente upload type' do
+        @manifest = create_software_file(@resource.id)
+        @manifest.update(url: @valid_manifest_url)
+
+        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        post @url, params: { 'url' => @valid_manifest_url }
+
+        body = JSON.parse(response.body)
+        expect(body['valid_urls'].length).to eql(2)
+      end
+    end
+
+    describe '#destroy_manifest' do
+      before(:each) do
+        mock_aws!
+      end
+      it 'returns json when request with html format' do
+        @resource.update(data_files: [create(:data_file)])
+        @file = @resource.data_files.first
+        @url = StashEngine::Engine.routes.url_helpers.destroy_manifest_data_file_path(id: @file.id)
+        generic_destroy_expects(@url)
       end
     end
   end

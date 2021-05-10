@@ -2,6 +2,20 @@
 
 .c-uploadmodal {
   border: none;
+
+  &::backdrop { // native
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  + .backdrop { // polyfill
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.c-uploadmodal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .c-uploadmodal__textarea-url-label {
@@ -9,6 +23,13 @@
   display: block;
   margin-top: 0;
   margin-bottom: $spacing-md;
+}
+
+.c-uploadmodal__button-close-modal {
+  display: block;
+  padding: 15px;
+  border: none;
+  background: $design-white-color inline('../images/icon_close-blue.png') center / 18px no-repeat;
 }
 
 .c-uploadmodal__textarea-url {

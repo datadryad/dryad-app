@@ -264,13 +264,14 @@ module StashEngine
     # software file utility methods
 
     # tells whether software uploaded to zenodo for this resource has been published or not
-    def software_published?
-      zc = zenodo_copies.where(copy_type: 'software_publish', state: 'finished')
+    # types are software or supp
+    def zenodo_published?(type: 'software')
+      zc = zenodo_copies.where(copy_type: "#{type}_publish", state: 'finished')
       zc.count.positive?
     end
 
-    def software_submitted?
-      zc = zenodo_copies.where(copy_type: 'software', state: 'finished')
+    def zenodo_submitted?(type: 'software')
+      zc = zenodo_copies.where(copy_type: type, state: 'finished')
       zc.count.positive?
     end
 
