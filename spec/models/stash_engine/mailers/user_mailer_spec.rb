@@ -122,6 +122,39 @@ module StashEngine
 
     end
 
+    describe 'publication email' do
+
+      before(:each) do
+        # the fake resource is so I don't have to rewrite all tests just to test related id email and can begin using factories
+        # in a limited way instead of mocking every possible method in the world.
+
+        @fake_resource = create(:resource)
+        @test_doi = "#{rand.to_s[2..6]}/zenodo.#{rand.to_s[2..11]}"
+        @test_doi2 = "#{rand.to_s[2..6]}/zenodo.#{rand.to_s[2..11]}"
+
+        create(:related_identifier, related_identifier: "https://doi.org/#{@test_doi}",
+                                    resource_id: @fake_resource.id, added_by: 'zenodo', work_type: 'software')
+
+        create(:related_identifier, related_identifier: "https://doi.org/#{@test_doi2}",
+                                    resource_id: @fake_resource.id, added_by: 'zenodo', work_type: 'supplemental_information')
+
+        allow(@resource).to receive(:related_identifiers).and_return(@fake_resource.related_identifiers)
+      end
+
+      it 'should show info about zenodo software doi and zenodo supplemental info when present' do
+        allow(@resource).to receive(:current_curation_status).and_return('published')
+        allow(@resource).to receive(:publication_date).and_return(Date.today)
+
+        UserMailer.status_change(@resource, 'published').deliver_now
+        delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
+
+        expect(delivery.body.to_s).to include('Your related software is being published at Zenodo')
+        expect(delivery.body.to_s).to include('Your supplemental information is being published at Zenodo')
+        expect(delivery.body.to_s).to include(@test_doi)
+        expect(delivery.body.to_s).to include(@test_doi2)
+      end
+    end
+
     describe 'embargoed status changes' do
       it "should send an modified email when embargoed_until_article_appears'" do
         allow(@resource).to receive(:current_curation_status).and_return('embargoed')
