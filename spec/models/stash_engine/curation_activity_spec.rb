@@ -45,7 +45,7 @@ module StashEngine
         @user = create(:user)
         @identifier = create(:identifier)
         @resource = create(:resource, identifier_id: @identifier.id)
-        @resource_state = create(:resource_state, resource_id: @resource.id)
+        @resource_state = create(:resource_state, :submitted, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
         @version = create(:version, resource_id: @resource.id)
 
@@ -53,45 +53,45 @@ module StashEngine
         allow(@mock_idgen).to receive('update_identifier_metadata!'.intern) # .and_return('called make metadata')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
 
-        # get rid of callbacks for adding one and testing
         @curation_activity1 = create(:curation_activity, resource: @resource)
-        # CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+      end
+
+      it 'does submit when Published is set' do
+        create(:curation_activity, resource_id: @resource.id, status: 'published')
+        expect(@mock_idgen).to have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
         CurationActivity.create(resource_id: @resource.id, status: 'curation')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit when status isn't changed" do
-        CurationActivity.skip_callback(:create, :after, :submit_to_datacite, :process_payment)
         @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
-        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
-
+        expect(@mock_idgen).to have_received(:update_identifier_metadata!).once
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+        expect(@mock_idgen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
+
       end
 
       it "doesn't submit if never sent to Merritt" do
         @resource_state.update(resource_state: 'in_progress')
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit if no version number" do
         @version.update!(version: nil, merritt_version: nil)
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit non-production (test) identifiers after first version" do
         @resource2 = create(:resource, identifier_id: @identifier.id)
         @resource_state2 = create(:resource_state, resource_id: @resource2.id)
         @version2 = create(:version, resource_id: @resource2.id, version: 2, merritt_version: 2)
-        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
         CurationActivity.create(resource: @resource2, status: 'published')
-        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
       end
     end
 
@@ -101,7 +101,6 @@ module StashEngine
         @identifier = create(:identifier)
         @resource = create(:resource, identifier_id: @identifier.id, user: @user)
 
-        CurationActivity.skip_callback(:create, :after, :update_solr)
         allow_any_instance_of(CurationActivity).to receive(:should_update_doi?).and_return(true)
 
         logger = double(ActiveSupport::Logger)
