@@ -106,9 +106,10 @@ module StashEngine
         # The tenant, if set, does two things in conjunction.  it limits to items with a tenant_id of the tenant OR
         # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
         # tenant is only set for admins (not superusers).
+        # The journals, if set, limits to items associated with one of the given journals.
         #
         # if resource_id is set then only returns that resource id
-        def where(params:, tenant: nil, identifier_id: nil)
+        def where(params:, tenant: nil, journals: nil, identifier_id: nil)
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
@@ -124,6 +125,7 @@ module StashEngine
                                  status_filter: params.fetch(:curation_status, ''),
                                  publication_filter: params.fetch(:publication_name, ''),
                                  admin_tenant: tenant,
+                                 admin_journals: journals,
                                  identifier_id: identifier_id)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
@@ -136,14 +138,16 @@ module StashEngine
 
         # Create the WHERE portion of the query based on the filters set by the user (if any)
         # rubocop:disable Metrics/ParameterLists
-        def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:, publication_filter:, admin_tenant:, identifier_id: nil)
+        def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:,
+                               publication_filter:, admin_tenant:, admin_journals:, identifier_id: nil)
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
-            create_tenant_limit(admin_tenant)
+            create_tenant_limit(admin_tenant),
+            create_journals_limit(admin_journals)
           ].compact
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
         end
@@ -201,6 +205,13 @@ module StashEngine
           ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.tenant_id,
                                                         admin_tenant.ror_ids])
         end
+
+        def create_journals_limit(admin_journals)
+          return nil if admin_journals.blank?
+
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( seid.value IN (?) )', admin_journals])
+        end
+
       end
 
     end
