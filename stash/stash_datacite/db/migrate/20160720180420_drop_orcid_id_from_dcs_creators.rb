@@ -1,5 +1,4 @@
 class DropOrcidIdFromDcsCreators < ActiveRecord::Migration[4.2]
-  # rubocop:disable Metrics/MethodLength
   def change
     # Create missing name identifier records
     execute <<-SQL
@@ -34,5 +33,5 @@ class DropOrcidIdFromDcsCreators < ActiveRecord::Migration[4.2]
     # Remove old orcid_id column
     remove_column :dcs_creators, :orcid_id
   end
-  # rubocop:enable Metrics/MethodLength
+
 end

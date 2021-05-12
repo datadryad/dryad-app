@@ -18,7 +18,6 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     class Completions
@@ -214,4 +213,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

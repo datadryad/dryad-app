@@ -1,7 +1,5 @@
 require 'faker'
 require 'json'
-
-# rubocop:disable Metrics/ClassLength
 module Fixtures
   module StashApi
     class Metadata
@@ -145,4 +143,3 @@ module Fixtures
     end
   end
 end
-# rubocop:enable Metrics/ClassLength
