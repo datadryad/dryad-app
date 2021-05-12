@@ -1,7 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class SessionsController < ApplicationController
 
     before_action :require_login, only: %i[callback]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
@@ -39,7 +39,6 @@ module StashEngine
     def choose_login; end
 
     # this only available in non-production environments and only if special environment variable set when starting server
-    # rubocop:disable Metrics/AbcSize
     def test_login
       return render(body: 'unauthorized', status: 401) if Rails.env.include?('prod') || ENV['TEST_LOGIN'].blank?
 
@@ -59,7 +58,6 @@ module StashEngine
       session[:user_id] = existing.id
       redirect_to dashboard_path, status: :found
     end
-    # rubocop:enable Metrics/AbcSize
 
     def choose_sso
       tenants = [OpenStruct.new(id: '', name: '')]

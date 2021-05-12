@@ -1,7 +1,6 @@
 require 'csv'
 
 # rubocop:disable Metrics/BlockLength
-# rubocop:disable Metrics/MethodLength
 # rubocop:disable Lint/UselessAssignment
 # rubocop:disable Metrics/AbcSize
 namespace :affiliation_import do
@@ -296,6 +295,5 @@ namespace :affiliation_import do
 end
 # rubocop:enable Metrics/BlockLength
 
-# rubocop:enable Metrics/MethodLength
 # rubocop:enable Lint/UselessAssignment
 # rubocop:enable Metrics/AbcSize

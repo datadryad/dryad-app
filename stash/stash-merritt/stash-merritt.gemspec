@@ -21,7 +21,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stash/merritt/module_info'
 require 'uri'
 
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name          = Stash::Merritt::NAME
   s.version       = Stash::Merritt::VERSION
   s.authors       = ['David Moles']

@@ -22,8 +22,6 @@ require 'stash/aws/s3'
 #
 # We may lose some history of metadata changes for zenodo software but we only care about published versions at Zenodo and
 # at least the latest metadata changes on publication are present.  File changes get versioned internally at Zenodo.
-
-# rubocop:disable Metrics/ClassLength
 module Stash
   module ZenodoSoftware
 
@@ -212,4 +210,3 @@ module Stash
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

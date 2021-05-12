@@ -3,7 +3,7 @@
 require 'datacite/mapping'
 
 module StashDatacite
-  class Geolocation < ApplicationRecord # rubocop:disable Metrics/ClassLength
+  class Geolocation < ApplicationRecord
     self.table_name = 'dcs_geo_locations'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id', optional: true
