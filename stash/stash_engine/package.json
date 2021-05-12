@@ -6,8 +6,7 @@
   "scripts": {
     "copy-pkg-files": "copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.css ui-library/css/vendor && copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.js ui-library/js/vendor",
     "publish": "gh-pages --dist dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify evaporate_init.js -o app/assets/javascripts/stash_engine/evaporate_bundle.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
@@ -47,15 +46,8 @@
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.19.0"
   },
-  "dependencies": {
-    "aws-sdk": "^2.859.0",
-    "evaporate": "^2.1.4",
-    "truncate-utf8-bytes": "^1.0.2"
-  },
-  "aws-sdk": "^2.834.0",
   "browser-sync": "^2.26.14",
   "del": "^4.1.1",
-  "evaporate": "^2.1.4",
   "fsevents": "^2.3.1",
   "jshint": "^2.12.0",
   "stylelint": {
@@ -76,6 +68,5 @@
       ],
       "no-descending-specificity": null
     }
-  },
-  "truncate-utf8-bytes": "^1.0.2"
+  }
 }

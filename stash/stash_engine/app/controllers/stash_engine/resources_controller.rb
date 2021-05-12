@@ -6,7 +6,7 @@ module StashEngine
     before_action :require_login
     before_action :require_modify_permission, except: %i[index new]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
-    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
+    # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
     before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
     before_action :bust_cache, only: %i[upload manifest up_code up_code_manifest review]
@@ -125,7 +125,7 @@ module StashEngine
 
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
-      render 'upload_manifest' if resource.upload_type == :manifest
+      # render 'upload_manifest' if resource.upload_type == :manifest
     end
 
     # upload by manifest view for resource

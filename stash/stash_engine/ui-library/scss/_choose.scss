@@ -1,44 +1,13 @@
 // ##### Choose Files Component ##### //
 
-.c-choose {
-  font-size: 85%;
-
-	@include bp(screen1) {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
+.c-choose__input-file {
+	@extend %hide;
 }
 
-.c-choose__drop {
-	display: none;
-
-	@include bp(screen1) {
-		display: block;
-		margin: 0 20px 0 0;
-	}
-
-}
-
-.c-choose__or {
-	display: none;
-
-	@include bp(screen1) {
-		display: block;
-		margin: 0 20px 0 0;
-		color: $design-dark-blue-color;
-		font-size: 1.5em;
-		font-weight: bold;
-	}
-
-}
-
-.c-input__file:focus + .c-input__file-label {
-	outline: 2px solid $design-orange-color;
-}
-
-.c-choose__label {
-	flex: 0 0 auto;
-	margin: 0 10vw 0 0;
+.c-choose__input-file-label {
+	display: block;
+	padding: $spacing-sm;
+	background-color: var(--c-uploadwidget-color);
+	text-align: center;
+	cursor: pointer;
 }

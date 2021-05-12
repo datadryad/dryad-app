@@ -10,6 +10,9 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 
+gem 'react-rails', '~> 2.6.1'
+gem 'webpacker'
+
 # ############################################################
 # Local engines
 
@@ -42,7 +45,8 @@ gem 'rubocop', '~> 0.90.0'
 gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'turbolinks'
 
 gem 'uglifier', '~> 4.2.0'
@@ -103,6 +107,9 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-github', require: false
   gem 'rspec-rails'
+
+  gem 'rspec-html'
+
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
   gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)

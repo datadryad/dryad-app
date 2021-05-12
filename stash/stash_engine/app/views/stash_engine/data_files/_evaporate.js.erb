@@ -12,7 +12,7 @@
 <% s3_directory = resource.s3_dir_name(type: (@file_model == StashEngine::SoftwareFile ? 'software' : 'data')) %>
 
 /* Based on https://lea.verou.me/2016/12/resolve-promises-externally-with-this-one-weird-trick/
-   It keeps files uploading one at a time in evaporateIt function by not fulfilling promise until the
+   It keeps files uploading one at a time in evaporateIt function by not fulfilling promise until
    the file is complete.  Keeps most of the configuration intact without a lot of rewriting.
 
    May revisit later as we move to reworking the uploads more in another framework.  This example is
@@ -108,7 +108,7 @@ function evaporateIt(key, complexFileObj) {
     evaporate.add(addConfig, overrides)
         .then(
             awsObjectKey => console.log('File successfully uploaded to:', awsObjectKey),
-            reason => console.log('File did not upload sucessfully:', reason)
+            reason => console.log('File did not upload successfully:', reason)
         );
   }
 

@@ -25,7 +25,7 @@ StashEngine::Engine.routes.draw do
   post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
-  resources :data_files, :software_files do
+  resources :data_files, :software_files, :supp_files do
     member do
       patch 'remove'
       patch 'remove_unuploaded'
@@ -42,12 +42,15 @@ StashEngine::Engine.routes.draw do
   # these are weird and different and want to get rid of these with file redesign
   match 'data_file/validate_urls/:resource_id', to: 'data_files#validate_urls', as: 'data_file_validate_urls', via: %i[get post put]
   match 'software_file/validate_urls/:resource_id', to: 'software_files#validate_urls', as: 'software_file_validate_urls', via: %i[get post put]
+  match 'supp_file/validate_urls/:resource_id', to: 'supp_files#validate_urls', as: 'supp_file_validate_urls', via: %i[get post put]
 
   get 'data_file/presign_upload/:resource_id', to: 'data_files#presign_upload', as: 'data_file_presign_url'
   get 'software_file/presign_upload/:resource_id', to: 'software_files#presign_upload', as: 'software_file_presign_url'
+  get 'supp_file/presign_upload/:resource_id', to: 'supp_files#presign_upload', as: 'supp_file_presign_url'
 
   post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
   post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
+  post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
 
   resource :data_file do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
@@ -60,6 +63,7 @@ StashEngine::Engine.routes.draw do
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
+  get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
 
   # download related
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]

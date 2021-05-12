@@ -38,6 +38,9 @@ development: &DEVELOPMENT
 local_dev:
   <<: *DEVELOPMENT
 
+aws_db:
+  <<: *default
+
 local:
   <<: *default
   #Add any items that need to override the defaults here
