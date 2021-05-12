@@ -98,6 +98,7 @@ module StashApi
     # prevent people from sending bad filenames
     def sanitize_filename(filename)
       @original_filename = filename
+      # TODO: replace with GenericFile?
       StashEngine::DataFile.sanitize_file_name(filename)
     end
 

@@ -102,6 +102,11 @@ module StashDatacite
         @resource.reload
         expect(@review.embargo).to eq(embargo)
       end
+
+      it 'calls current file uploads for supp_files' do
+        expect(@resource).to receive(:current_file_uploads).with(my_class: StashEngine::SuppFile)
+        @review.supp_files
+      end
     end
   end
 end

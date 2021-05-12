@@ -139,14 +139,6 @@ module StashDatacite
         expect(re.verified).to be(true)
         expect(re.added_by).to eq('zenodo')
       end
-
-      it "doesn't add any relations if user has deleted all files of that type" do
-        create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-                             copy_type: 'software', software_doi: @test_doi)
-        expect(@resource.related_identifiers.count).to eq(0)
-        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
-        expect(@resource.related_identifiers.count).to eq(0)
-      end
     end
 
     describe 'self.remove_zenodo_relation' do
