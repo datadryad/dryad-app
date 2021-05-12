@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/ClassLength
 module StashEngine
 
   # Mails users about submissions
@@ -166,4 +165,3 @@ module StashEngine
   end
 
 end
-# rubocop:enable Metrics/ClassLength

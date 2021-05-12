@@ -4,8 +4,6 @@ require 'database_cleaner'
 
 # Tasks for migration of various content into the Dryad environment. Tasks in this file are not intended for
 # long-term use; they are either for a single migration or for use over a limited time period.
-
-# rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
   desc 'Import journal codes from a local file'
   task import_journal_codes: :environment do
@@ -124,4 +122,3 @@ namespace :dryad_migration do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

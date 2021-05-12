@@ -1,7 +1,7 @@
 require 'json'
 require 'byebug'
 
-# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:disable Metrics/AbcSize
 class JsonStats
 
   def initialize(filename)
@@ -58,4 +58,4 @@ class JsonStats
   end
 end
 
-# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:enable Metrics/AbcSize

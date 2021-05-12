@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/ClassLength
-
 # CurationStats stores some statistics about the submission/curation process
 # that rarely change and take a little time to calculate. This class may only be
 # instantiated once for each date. Rather than instantiating with `new` or `create`,
@@ -55,7 +53,7 @@ module StashEngine
     # The number of datasets available for curation on that day
     # (either entered 'curation' or 'submitted', and the author made the last change)
     # - author made the ca to 'curation' or 'submitted', or if it was system, author made the last non-system one
-    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def populate_datasets_to_be_curated
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
@@ -89,7 +87,7 @@ module StashEngine
       end
       update(datasets_to_be_curated: datasets_found.size)
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
     def populate_new_datasets_to_submitted
@@ -200,4 +198,3 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ClassLength
