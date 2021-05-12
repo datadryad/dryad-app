@@ -32,7 +32,6 @@ module StashEngine
     # reused in a few places.  If we move to a different repo this will need to change.
     #
     # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
-    # rubocop:disable Metrics/AbcSize
     def merritt_s3_presigned_url
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
@@ -47,7 +46,6 @@ module StashEngine
       raise Stash::Download::MerrittError,
             "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
-    # rubocop:enable Metrics/AbcSize
 
     # example
     # http://mrtexpress-stage.cdlib.org/dv/<version>/<ark>/<file pathname>

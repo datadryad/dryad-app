@@ -12,7 +12,6 @@ module LinkOut
   # to the nucleotide databases (and here to the NUCCORE database), which should, however,
   # be the most common use-case, and may also need to be restricted to sequences for those
   # articles that also have a DOI.
-  # rubocop:disable Metrics/ClassLength
   class PubmedSequenceService
 
     include ::LinkOut::Helper
@@ -165,5 +164,5 @@ module LinkOut
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
+
 end

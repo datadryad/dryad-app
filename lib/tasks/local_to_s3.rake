@@ -3,8 +3,6 @@
 # See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/1079
 
 require 'stash/aws/s3'
-
-# rubocop:disable Metrics/BlockLength
 namespace :local_to_s3 do
 
   desc 'Copy current files from the local directory to S3'
@@ -60,4 +58,3 @@ namespace :local_to_s3 do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

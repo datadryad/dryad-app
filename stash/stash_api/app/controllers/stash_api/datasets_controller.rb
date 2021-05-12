@@ -74,7 +74,6 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def em_update_status
       # If final_disposition is available, update the status of this dataset
       disposition = params['article']['final_disposition']
@@ -111,7 +110,6 @@ module StashApi
         status: 'Success'
       }
     end
-    # rubocop:enable Metrics/MethodLength
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -352,8 +350,6 @@ module StashApi
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def do_patch
       content_type = request.headers['content-type']
       return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
@@ -381,8 +377,6 @@ module StashApi
       end
       yield
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     def update_curation_status(new_status)
       note = 'status updated via API call'

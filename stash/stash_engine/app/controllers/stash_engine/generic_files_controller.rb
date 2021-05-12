@@ -1,6 +1,4 @@
 require 'stash/aws/s3'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class GenericFilesController < ApplicationController
 
@@ -188,4 +186,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

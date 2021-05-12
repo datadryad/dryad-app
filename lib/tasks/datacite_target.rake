@@ -1,6 +1,4 @@
 require_relative 'datacite_target/dash_updater'
-
-# rubocop:disable Metrics/BlockLength
 namespace :datacite_target do
 
   # This will update only items that are in non-Dryad tenants
@@ -43,4 +41,3 @@ namespace :datacite_target do
   end
 
 end
-# rubocop:enable Metrics/BlockLength
