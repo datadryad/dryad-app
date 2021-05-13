@@ -11,6 +11,7 @@ const file_list = (props) => {
                 <tr>
                     <th scope="col">Filename</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Tabular Data Check</th>
                     <th scope="col">URL</th>
                     <th scope="col">Type</th>
                     <th scope="col">Size</th>

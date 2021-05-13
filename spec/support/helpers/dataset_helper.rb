@@ -109,15 +109,15 @@ module DatasetHelper
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { left: 0 }
     )
   end
 

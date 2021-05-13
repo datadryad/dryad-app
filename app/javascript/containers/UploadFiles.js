@@ -305,7 +305,6 @@ class UploadFiles extends React.Component {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
 
         const urlsObject = {
-            // CONTINUE 1: see Firefox and Chromium for width, max-width, min-width etc.
             url: this.discardUrlsAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
         if (urlsObject['url'].length) {
