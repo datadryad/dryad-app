@@ -14,13 +14,18 @@ module StashEngine
       end
     end
 
+    # gets cached citation or retrieves a new one
     def self.citation_metadata(doi:, stash_identifier:)
       # check for cached citation
       cites = where(doi: doi)
       return cites.first unless cites.blank?
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
-      create(citation: datacite_metadata.html_citation, doi: doi, identifier_id: stash_identifier.id)
+      html_citation = datacite_metadata.html_citation
+      if html_citation.blank?
+        html_citation = "Citation text unavailable for <a href=\"#{doi}\" target=\"_blank\">#{doi}</a>"
+      end
+      create(citation: html_citation, doi: doi, identifier_id: stash_identifier.id)
     end
   end
 end
