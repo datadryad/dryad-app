@@ -46,7 +46,7 @@ module StashEngine
 
         result = @ed_service.check_citation_log(temp_file)
         expect(result[0]).to eq(true)
-        expect(result[1]).to start_with("Completed populating citations")
+        expect(result[1]).to start_with('Completed populating citations')
 
         File.delete(temp_file)
       end

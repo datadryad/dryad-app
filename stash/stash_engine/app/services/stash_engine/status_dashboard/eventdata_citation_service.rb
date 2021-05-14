@@ -12,7 +12,7 @@ module StashEngine
         # It may take the script a while to run so we shouldn't really consider it a problem until Tuesday
         # Also, do not check any environments but production.
         if (Time.new.wday < 2 && Time.new.hour < 9) || Rails.env != 'production'
-          record_status(online: true, message: "Assumed online -- checks of logs start tuesday after running on Sunday")
+          record_status(online: true, message: 'Assumed online -- checks of logs start tuesday after running on Sunday')
           return true
         end
 
