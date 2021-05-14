@@ -73,6 +73,7 @@ namespace :counter do
       counter_stat.citation_count = citations.length
       counter_stat.citation_updated = Time.new
       counter_stat.save!
+      puts "Completed populating citations at #{Time.new.utc.iso8601}"
     end
   end
 
