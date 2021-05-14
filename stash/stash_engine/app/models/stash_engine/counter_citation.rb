@@ -22,9 +22,7 @@ module StashEngine
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
       html_citation = datacite_metadata.html_citation
-      if html_citation.blank?
-        html_citation = "Citation text unavailable for <a href=\"#{doi}\" target=\"_blank\">#{doi}</a>"
-      end
+      html_citation = "Citation text unavailable for <a href=\"#{doi}\" target=\"_blank\">#{doi}</a>" if html_citation.blank?
       create(citation: html_citation, doi: doi, identifier_id: stash_identifier.id)
     end
   end
