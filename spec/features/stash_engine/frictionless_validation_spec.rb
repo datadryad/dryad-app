@@ -48,13 +48,24 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows Passed if file is plain-text and tabular' do
+    it 'shows "Issues found" if file is plain-text and tabular and there are a report for it' do
       @file = create_data_file(StashEngine::Resource.last.id)
       @file.update(upload_content_type: 'text/csv')
-      @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', file: @file)
+      @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', generic_file: @file)
       click_link 'Upload Files'
-      within('table') do
-        expect(page).to have_content('Passed')
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('Issues found')
+      end
+    end
+
+    it 'shows empty cell if file is plain-text and tabular and there are not a report for it' do
+      @file = create_data_file(StashEngine::Resource.last.id)
+      @file.update(upload_content_type: 'text/csv')
+      @report = StashEngine::FrictionlessReport.create(report: nil, generic_file: @file)
+      click_link 'Upload Files'
+
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('')
       end
     end
   end

@@ -12,9 +12,11 @@
 
 <%= javascript_pack_tag 'application' %>
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
-<%= react_component("UploadFiles", {
+<%= react_component('UploadFiles', {
   resource_id: @resource.id,
-  file_uploads: @resource.generic_files.validated_table.map(&:attributes),
+  file_uploads: @resource.generic_files.validated_table.as_json(
+    methods: :type, include: { frictionless_report: { only: [:report] } }
+  ),
   app_config_s3: APP_CONFIG[:s3],
   s3_dir_name: @resource.s3_dir_name(type: 'base')
 }) %>
