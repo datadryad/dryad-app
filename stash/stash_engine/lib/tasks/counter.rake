@@ -2,8 +2,6 @@ require 'net/scp'
 require_relative 'counter/validate_file'
 require_relative 'counter/log_combiner'
 require_relative 'counter/json_stats'
-
-# rubocop:disable Metrics/BlockLength
 namespace :counter do
 
   desc 'get and combine files from the other servers'
@@ -85,4 +83,3 @@ namespace :counter do
     puts "note: in order to scp, you must add this server's public key to the authorized keys for the server you want to copy from"
   end
 end
-# rubocop:enable Metrics/BlockLength

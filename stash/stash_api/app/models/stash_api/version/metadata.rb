@@ -8,7 +8,6 @@ module StashApi
         @resource = resource
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def value
         # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
         # use by others besides ourselves because we don't want others to use them.
@@ -37,7 +36,7 @@ module StashApi
           loosenValidation: @resource.loosen_validation || nil
         }
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable
 
       def visibility
         if @resource.meta_view || @resource.file_view

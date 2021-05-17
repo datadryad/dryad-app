@@ -1,7 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
 
     include SharedSecurityController
@@ -13,7 +12,6 @@ module StashEngine
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
-    # rubocop:disable Metrics/AbcSize
     def index
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
@@ -40,7 +38,6 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def data_popup
@@ -85,7 +82,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def curation_activity_change
       respond_to do |format|
         format.js do
@@ -117,7 +114,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
     def activity_log
@@ -233,5 +230,5 @@ module StashEngine
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
+
 end

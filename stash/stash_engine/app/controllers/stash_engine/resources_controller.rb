@@ -1,6 +1,4 @@
 require_dependency 'stash_engine/application_controller'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login
@@ -190,4 +188,3 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ClassLength

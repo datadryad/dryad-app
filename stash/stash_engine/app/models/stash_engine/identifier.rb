@@ -237,7 +237,6 @@ module StashEngine
       Journal.where(issn: publication_issn).first
     end
 
-    # rubocop:disable Metrics/AbcSize
     def record_payment
       return if payment_type.present? && payment_type != 'unknown'
 
@@ -259,7 +258,6 @@ module StashEngine
       end
       save
     end
-    # rubocop:enable Metrics/AbcSize
 
     def allow_review?
       return true if journal.blank?
@@ -370,7 +368,6 @@ module StashEngine
     end
 
     # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
-    # rubocop:disable Metrics/MethodLength
     def fill_resource_view_flags
       my_pub = false
       resources.each do |res|
@@ -403,7 +400,6 @@ module StashEngine
         res.update_column(:file_view, false) unless res.current_file_uploads.present?
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
     # In this case we still may call this and want to show some version of the files because there was never a version remaining

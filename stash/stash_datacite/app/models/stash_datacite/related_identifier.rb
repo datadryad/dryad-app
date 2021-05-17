@@ -5,8 +5,6 @@ require 'http'
 module StashDatacite
 
   class ExternalServerError < RuntimeError; end
-
-  # rubocop:disable Metrics/ClassLength
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
@@ -130,7 +128,7 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
-    # rubocop:disable Metrics/MethodLength, Naming/AccessorMethodName
+    # rubocop:disable Naming/AccessorMethodName
     def self.set_latest_zenodo_relations(resource:)
       resource.related_identifiers.where(added_by: 'zenodo').destroy_all
 
@@ -158,7 +156,7 @@ module StashDatacite
              resource_id: resource.id,
              added_by: 'zenodo')
     end
-    # rubocop:enable Metrics/MethodLength, Naming/AccessorMethodName
+    # rubocop:enable Naming/AccessorMethodName
 
     def self.remove_zenodo_relation(resource_id:, doi:)
       doi = standardize_doi(doi)
@@ -257,5 +255,5 @@ module StashDatacite
       self.related_identifier = related_identifier.strip unless related_identifier.nil?
     end
   end
-  # rubocop:enable Metrics/ClassLength
+
 end

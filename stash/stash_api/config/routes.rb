@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 StashApi::Engine.routes.draw do
 
   # use_doorkeeper
@@ -40,4 +39,3 @@ StashApi::Engine.routes.draw do
   get '/queue_length', to: 'submission_queue#length'
 
 end
-# rubocop:enable Metrics/BlockLength

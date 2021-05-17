@@ -3,7 +3,6 @@ require_relative '../stash/link_out/labslink_service'
 require_relative '../stash/link_out/pubmed_sequence_service'
 require_relative '../stash/link_out/pubmed_service'
 
-# rubocop:disable Metrics/BlockLength
 namespace :link_out do
 
   desc 'Generate and then push the LinkOut file(s) to the LinkOut FTP servers'
@@ -133,4 +132,3 @@ namespace :link_out do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

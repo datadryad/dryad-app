@@ -242,7 +242,6 @@ module Stash
         affiliation.save if affiliation.present?
       end
 
-      # rubocop:disable Metrics/AbcSize
       def populate_author(hash)
         new_auth = StashEngine::Author.new(resource_id: @resource.id, author_orcid: hash['ORCID'],
                                            author_first_name: hash['given'], author_last_name: hash['family'])
@@ -257,7 +256,6 @@ module Stash
         populate_affiliation(author, hash)
         author.save
       end
-      # rubocop:enable Metrics/AbcSize
 
       def populate_authors
         return unless @sm['author'].present? && @sm['author'].any?

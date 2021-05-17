@@ -9,8 +9,6 @@
 #
 # If you want to get just one identifier for redrawing a single row, something like this should work
 # @dataset = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: 37575).first
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   module AdminDatasets
     class CurationTableRow
@@ -64,7 +62,6 @@ module StashEngine
 
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
       #
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def initialize(result)
         return unless result.is_a?(Array) && result.length >= 22
 
@@ -92,7 +89,7 @@ module StashEngine
         @citations = result[21] || 0
         @relevance = result.length > 22 ? result[22] : nil
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable
       #
 
       # lets you get a resource when you need it and caches it
@@ -217,4 +214,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

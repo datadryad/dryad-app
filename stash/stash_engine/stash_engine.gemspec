@@ -19,7 +19,7 @@ require 'stash_engine/version'
 # travis or on new software installs intended for development or testing because add_development_dependency is weak sauce
 # for our uses.
 
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name        = 'stash_engine'
   s.version     = StashEngine::VERSION
   s.authors     = ['sfisher']
