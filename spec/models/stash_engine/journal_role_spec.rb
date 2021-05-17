@@ -5,11 +5,11 @@ module StashEngine
   RSpec.describe JournalRole, type: :model do
 
     before(:each) do
-      @org = build(:journal_organization)
-      @journal1 = build(:journal)
-      @journal2 = build(:journal)
-      @journal3 = build(:journal, sponsor: @org)
-      @user = build(:user)
+      @org = create(:journal_organization)
+      @journal1 = create(:journal)
+      @journal2 = create(:journal)
+      @journal3 = create(:journal, sponsor: @org)
+      @user = create(:user)
       @journal_role1 = create(:journal_role, journal: @journal1, user: @user)
       @journal_role2 = create(:journal_role, journal: @journal2, user: @user, role: 'admin')
       @journal_role3 = create(:journal_role, journal: nil, journal_organization: @org, user: @user, role: 'org-admin')
@@ -24,8 +24,6 @@ module StashEngine
 
     describe 'users associations with journals' do
       it 'returns journals associated directly with the user' do
-        puts "#{@journal1.title} | #{@journal2.title} | #{@journal3.title}"
-        puts "u #{@user.journals.map(&:title)}"
         expect(@user.journals.size).to eql(2)
         expect(@user.journals).to include(@journal1)
         expect(@user.journals).to include(@journal2)
