@@ -202,6 +202,17 @@ module StashDatacite
             expect(completions.urls_validated?).to eq(true)
           end
         end
+
+        describe 'has_data?' do
+          it 'returns false if no data files present' do
+            @resource.data_files.destroy_all
+            expect(@completions.has_data?).to eq(false)
+          end
+
+          it 'returns true if data files are present' do
+            expect(@completions.has_data?).to eq(true)
+          end
+        end
       end
 
       describe :s3_error_uploads do
