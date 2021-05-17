@@ -196,11 +196,7 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
-        unless contains_data?
-          messages << 'Data files are required for submission.  If you only have software or supplemental ' \
-                      'information, please submit directly to ' \
-                      '<a href="https://zenodo.org" target="_blank" style="color: white">https://zenodo.org</a>'
-        end
+
         if error_uploads.present?
           messages << 'Some files can not be submitted because they may have had errors uploading. ' \
             'Please re-upload the following files if you still see this error in a few minutes.'
