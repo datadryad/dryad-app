@@ -36,7 +36,7 @@ module StashEngine
     def journals_as_admin
       admin_journals = journals.merge(JournalRole.admins)
 
-      admin_orgs = StashEngine::JournalRole.where(user_id: id, role: 'org-admin').map(&:journal_organization)
+      admin_orgs = StashEngine::JournalRole.where(user_id: id, role: 'org_admin').map(&:journal_organization)
       admin_org_journals = admin_orgs.map(&:journals_sponsored).flatten
 
       admin_journals + admin_org_journals
