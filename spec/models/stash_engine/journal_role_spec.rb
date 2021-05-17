@@ -12,7 +12,7 @@ module StashEngine
       @user = create(:user)
       @journal_role1 = create(:journal_role, journal: @journal1, user: @user)
       @journal_role2 = create(:journal_role, journal: @journal2, user: @user, role: 'admin')
-      @journal_role3 = create(:journal_role, journal: nil, journal_organization: @org, user: @user, role: 'org-admin')
+      @journal_role3 = create(:journal_role, journal: nil, journal_organization: @org, user: @user, role: 'org_admin')
     end
 
     describe 'basic JournalRoles are supported' do
