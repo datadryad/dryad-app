@@ -99,6 +99,11 @@ module StashDatacite
         errored_uploads
       end
 
+      # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
+      def contains_data?
+        @resource.data_files.present_files.count.positive?
+      end
+
       def over_manifest_file_size?(size_limit)
         @resource.data_files.present_files.sum(:upload_file_size) > size_limit
       end
@@ -191,6 +196,7 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+
         if error_uploads.present?
           messages << 'Some files can not be submitted because they may have had errors uploading. ' \
             'Please re-upload the following files if you still see this error in a few minutes.'

@@ -51,4 +51,23 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     end
   end
 
+  describe 'Warn for no data files' do
+    before(:each) do
+      ActionMailer::Base.deliveries = []
+      # Sign in and create a new dataset
+      sign_in(@author)
+      visit root_path
+      click_link 'My Datasets'
+      start_new_dataset
+      fill_required_fields
+      # navigate_to_review
+    end
+
+    it 'warns that there are no data files' do
+      click_link 'Review and Submit'
+
+      expect(page).to have_text('We notice you do not have any data files in this submission.')
+    end
+  end
+
 end

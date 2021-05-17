@@ -33,6 +33,7 @@ module DatasetHelper
 
   def navigate_to_review
     click_link 'Review and Submit'
+    page.send_keys :escape if page.has_content?('We notice you do not have any data files in this submission.')
     expect(page).to have_content('Review Description')
   end
 

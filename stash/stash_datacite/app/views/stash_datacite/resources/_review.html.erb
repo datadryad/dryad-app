@@ -119,6 +119,17 @@
   <% end %>
 </div>
 
+  <!-- hidden dialog with info about data belongs in Dryad -->
+  <div id="popup_dialog" style="display:none;">
+    <p>
+      Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
+    </p>
+    <p>
+      If you are only interested in uploading software or supplemental
+      information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
+    </p>
+  </div>
+
 <script type="text/javascript">
   // display some flash messages, (why do we need this?, ajax?)
   <% flash.each do |type, message| %>
@@ -140,6 +151,24 @@
       $('#submit_dataset').prop('disabled', true);
     }
   }
+
+  // make a popup if no data files
+  <% unless @completions.contains_data? %>
+    $("#popup_dialog").dialog({
+      autoOpen: true,
+      height: 'auto',
+      width: '500px',
+      modal: true,
+      title: 'Submitting Data Files to Dryad'
+    });
+
+    // allow to close dialog with escape key
+    $(document).keyup(function(e) {
+      if (e.key === "Escape") {
+        $("#popup_dialog").dialog("close");
+      }
+    });
+  <% end %>
 </script>
 
 
