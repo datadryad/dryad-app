@@ -1,8 +1,4 @@
 require 'json'
-require 'capistrano/puma'
-
-install_plugin Capistrano::Puma
-install_plugin Capistrano::Puma::Systemd
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
