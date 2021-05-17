@@ -7,7 +7,7 @@ require 'byebug'
 # getting cert errors, maybe https://www.engineyard.com/blog/ruby-ssl-error-certificate-verify-failed fixes it ?
 
 module StashEngine
-  class UrlValidator # rubocop:disable Metrics/ClassLength
+  class UrlValidator
 
     attr_reader :mime_type, :size, :url, :status_code, :redirected_to, :filename
 
@@ -35,7 +35,7 @@ module StashEngine
     end
 
     # this method does the magic and checks the URL
-    def validate # rubocop:disable Metrics/MethodLength
+    def validate
       unless correctly_formatted_url?
         @status_code = 400 # bad request because the URL is malformed
         return false

@@ -1,5 +1,4 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class User < ApplicationRecord
 
     has_many :resources
@@ -153,5 +152,5 @@ module StashEngine
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
+
 end

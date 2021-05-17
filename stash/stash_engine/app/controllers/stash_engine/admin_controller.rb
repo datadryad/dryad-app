@@ -94,7 +94,6 @@ module StashEngine
     end
 
     # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
-    # rubocop:disable Metrics/AbcSize
     def limit_to_tenant!
       @stats[:user_count] = @stats[:user_count].where(tenant_id: current_user.tenant_id)
       @stats[:dataset_count] = @stats[:dataset_count].joins(resources: :user)
@@ -105,7 +104,6 @@ module StashEngine
       @stats[:dataset_submitted_7days] = @stats[:dataset_submitted_7days].joins(resources: :user)
         .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct
     end
-    # rubocop:enable Metrics/AbcSize
 
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)

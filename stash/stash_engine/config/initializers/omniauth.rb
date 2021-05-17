@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
            callback_path: '/stash/auth/shibboleth/callback',
@@ -41,4 +40,4 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     Rack::Response.new(['302 Moved'], 302, 'Location' => env['omniauth.origin'] || '/').finish
   end
 end
-# rubocop:enable Metrics/BlockLength
+

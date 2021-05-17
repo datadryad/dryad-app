@@ -51,7 +51,6 @@ module StashApi
       validation_hash
     end
 
-    # rubocop:disable Metrics/AbcSize
     def skipped_validation_hash(_hsh)
       unless params[:size] && params[:mimeType] && params[:url]
         (render json: { error: 'You must supply a size, mimetype and url.' }.to_json, status: 403) && yield
@@ -64,7 +63,6 @@ module StashApi
       { resource_id: @resource.id, url: params[:url], status_code: 200, file_state: 'created',
         upload_file_name: my_path, upload_content_type: params[:mimeType], upload_file_size: params[:size] }
     end
-    # rubocop:enable Metrics/AbcSize
 
     def require_correctly_formatted_url
       (render json: { error: 'The URL you supplied is invalid.' }.to_json, status: 403) unless correctly_formatted_url?(params[:url])

@@ -1,6 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
 
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -57,7 +56,6 @@ module StashDatacite
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
@@ -115,7 +113,6 @@ module StashDatacite
       StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
                                            resource_id: last.resource_id)
     end
-    # rubocop:enable Metrics/AbcSize
 
     def max_submission_size
       current_tenant.max_submission_size.to_i
@@ -173,4 +170,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

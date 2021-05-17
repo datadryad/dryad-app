@@ -1,8 +1,6 @@
 # require the items for the notifier
 Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
 require 'ostruct'
-
-# rubocop:disable Metrics/ClassLength
 class CollectionSetSpec
   describe 'collection_set' do
 
@@ -162,4 +160,3 @@ class CollectionSetSpec
     end
   end
 end
-# rubocop:enable Metrics/ClassLength
