@@ -12,6 +12,7 @@ module StashEngine
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
+    # rubocop:disable Metrics/AbcSize
     def index
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
@@ -38,6 +39,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def data_popup
