@@ -10,11 +10,15 @@ module StashEngine
 
     describe 'journals_sponsored' do
       it 'returns nil when there are none' do
-        expect(@org.journals_sponsored).to be_nil
+        expect(@org.journals_sponsored).to be_blank
       end
 
       it 'returns sponsored journals with a direct relationship' do
-        expect(@org.journals_sponsored.size).to be(1)
+        user = create(:user)
+        journal = create(:journal, sponsor: @org)
+        create(:journal_role, journal: nil, journal_organization: @org, user: user, role: 'org-admin')
+        expect(@org.journals_sponsored.size).to eq(1)
+        expect(@org.journals_sponsored.first).to eq(journal)
       end
 
     end
