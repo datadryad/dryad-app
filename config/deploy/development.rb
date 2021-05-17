@@ -8,7 +8,6 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :rails_env, "development"
-set :passenger_pool, '6'
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost1 localhost2' bundle exec cap development deploy
@@ -17,14 +16,6 @@ role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 set :ssm_root_path, '/uc3/dryad/dev/'
 set :aws_region, 'us-west-2'
-
-#on roles(:all) do |host|
-#  puts "setting server host: #{host.hostname}"
-#end
-
-#set :passenger_pid, "#{deploy_to}/passenger.pid"
-#set :passenger_log, "#{deploy_to}/passenger.log"
-#set :passenger_port, "3000"
 
 
 # role-based syntax

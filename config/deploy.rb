@@ -1,4 +1,8 @@
 require 'json'
+require 'capistrano/puma'
+
+install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Systemd
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
@@ -39,20 +43,6 @@ set :default_env, { path: '/apps/dryad/local/bin:$PATH' }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
-
-# passenger in gemfile set since we have both passenger and capistrano-passenger in gemfile
-set :passenger_in_gemfile, true
-
-# Set whether to restart with touch of touch of tmp/restart.txt.
-# There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
-set :passenger_restart_with_touch, false
-
-set :passenger_restart_options, -> { "#{deploy_to} --ignore-passenger-not-running" }
-set :passenger_environment_variables, {}
-
-set :passenger_pid, "#{deploy_to}/passenger.pid"
-set :passenger_log, "#{deploy_to}/passenger.log"
-set :passenger_port, "3000"
 
 # Run migrations on the app server, otherwise they only run on the db role server
 # See https://github.com/capistrano/rails/issues/78
@@ -95,7 +85,7 @@ namespace :deploy do
     end
   end
   
-  desc 'Restart Phusion'
+  desc 'Restart Puma???'
   task :restart do
     on roles(:app), wait: 5 do
       # Your restart mechanism here, for example:
@@ -145,33 +135,6 @@ namespace :deploy do
   task :install do
     on roles(:app) do
       execute "cd '#{release_path}' && bundle install --without=test --deployment"
-    end
-  end
-
-  #Rake::Task["start"].clear_actions
-  desc 'Start Phusion'
-  task :start do
-    on roles(:app) do
-      within current_path do
-        with rails_env: fetch(:rails_env) do
-          execute "cd #{deploy_to}/current; bundle install --deployment"
-
-          # https://www.phusionpassenger.com/library/config/standalone/reference/#--max-requests-max_requests
-          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
-              "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)}"
-        end
-      end
-    end
-  end
-
-  #Rake::Task["stop"].clear_actions
-  desc 'Stop Phusion'
-  task :stop do
-    on roles(:app) do
-      if test("[ -f '#{fetch(:passenger_pid)}' ]")
-        execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
-      end
     end
   end
 
