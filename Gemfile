@@ -29,9 +29,9 @@ end
 # Deployment
 
 gem 'capistrano', '~> 3.11'
-gem 'puma', '~> 5.2.2'
-gem 'capistrano-rails', '~> 1.4'
 gem 'capistrano3-puma', '~> 5.0.4'
+gem 'capistrano-rails', '~> 1.4'
+gem 'puma', '~> 5.2.2'
 gem 'rubocop', '~> 0.90.0'
 # not currently used for our simple case and because of some problems
 # gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
