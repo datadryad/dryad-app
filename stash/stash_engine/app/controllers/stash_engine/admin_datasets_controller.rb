@@ -76,6 +76,37 @@ module StashEngine
       end
     end
 
+    def current_editor_popup
+      respond_to do |format|
+        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
+        # using the last submitted resource should apply the curation to the correct place, even with windows held open
+        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
+        format.js
+      end
+    end
+
+    def current_editor_change
+      respond_to do |format|
+        format.js do
+          @identifier = Identifier.find(params[:identifier_id])
+          @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
+
+          @this_state = (params[:resource][:curation_activity][:status].blank? ? @last_state : params[:resource][:curation_activity][:status])
+
+          @note = params[:resource][:curation_activity][:note] || 'Changing current editor'
+          @resource.current_editor_id = params[:resource][:current_editor_id]
+          decipher_curation_activity
+          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
+                                                                   status: @status,
+                                                                   note: @note)
+          @resource.save
+          @resource.reload
+          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
+        end
+      end
+    end
+
     # rubocop:disable Metrics/AbcSize
     def curation_activity_change
       respond_to do |format|
