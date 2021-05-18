@@ -42,11 +42,12 @@ namespace :counter do
     $stdout.sync = true
     puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"
 
-    Dir.glob(File.join(ENV['JSON_DIRECTORY'], '*.json')).sort.each do |f|
+    js = JsonStats.new
+    Dir.glob(File.join(ENV['JSON_DIRECTORY'], '????-??.json')).sort.each do |f|
       puts f
-      js = JsonStats.new(f)
-      js.update_stats
+      js.update_stats(f)
     end
+    js.update_database
   end
 
   # this allows stats to be zeroed without destroying citation count which happens in another process and means that our
