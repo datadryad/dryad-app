@@ -81,20 +81,22 @@ module StashEngine
         @curation_activity_id = result[12]
         @status = result[13]
         @updated_at = result[14]
-        @editor_id = result[15]
-        @editor_name = result[16..17].join(', ')
+        @editor_id = curators.map(&:id).include?(result[15].to_i) ? result[15] : nil
+        @editor_name = @editor_id ? result[16..17].join(', ') : nil
         @author_names = result[18]
         @views = (result[20].nil? ? 0 : result[19] - result[20])
         @downloads = result[20] || 0
         @citations = result[21] || 0
         @relevance = result.length > 22 ? result[22] : nil
       end
-      # rubocop:enable
-      #
 
       # lets you get a resource when you need it and caches it
       def resource
         @resource ||= StashEngine::Resource.find_by(id: @resource_id)
+      end
+
+      def curators
+        @curators ||= StashEngine::User.where(role: 'superuser').or(StashEngine::User.where(role: 'tenant_curator'))
       end
 
       class << self
