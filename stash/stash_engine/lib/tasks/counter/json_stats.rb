@@ -56,7 +56,6 @@ class JsonStats
 
   # does all updates to the database from the tally hash at once when called.
   def update_database
-    byebug
     @tally_hash.each_pair do |k, v|
       doi_obj = StashEngine::Identifier.find_by_identifier(k)
       next if doi_obj.nil?
