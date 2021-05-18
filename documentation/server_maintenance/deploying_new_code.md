@@ -143,18 +143,6 @@ load-balancer.bash uc3-dryad-prd-alb register uc3-dryaduix2-prd-2a
 load-balancer.bash uc3-dryad-prd-alb register uc3-dryaduix2-prd-2c
 ```
 
-Checking for Chunked Upload in the UI
--------------------------------------
-
-The other process that is long-running might a a user upload to the
-UI. The user uploads hit the path /stash/data_files with a post
-request for each segment of the file. You can grep the logs to see if
-there are a lot of them happening in the past hour or past 10 minutes
-or some other time you can grep for. Restarting in the middle of an
-upload will stall that user's upload. They could delete and upload
-again, but it's better to not interrupt them if possible to wait for
-them to finish.
-
 
 Setting a server to "Maintenance Mode"
 --------------------------------------
@@ -165,5 +153,4 @@ addresses and not to us. You'll need to do on both servers for
 maintenance on both.
 
 Maintenance mode shows outside IP addresses a maintenance page served
-by Apache, while our internal IP addresses have traffic passed through
-and are able to see the application served by Passenger.
+by Apache, while our internal IP addresses have traffic passed through.

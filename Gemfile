@@ -30,9 +30,7 @@ end
 
 gem 'capistrano', '~> 3.11'
 gem 'puma', '~> 5.2.2'
-# gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-# gem 'passenger', '~> 6.0.5'
 gem 'capistrano3-puma', '~> 5.0.4'
 gem 'rubocop', '~> 0.90.0'
 # not currently used for our simple case and because of some problems

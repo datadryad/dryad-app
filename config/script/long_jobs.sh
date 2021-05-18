@@ -38,7 +38,7 @@ if [ "$EUID" != "0" ]; then
     # Presumably we are running as the role account. In any case, we are not
     # root, so cannot create/remove the lockfile.
 
-    # Set up path and other env vars for rails, same as original passenger.erb
+    # Set up path and other env vars for rails
     export RAILS_ENV='development'
     export RAILS_ROOT=/dryad/apps/ui/current
 

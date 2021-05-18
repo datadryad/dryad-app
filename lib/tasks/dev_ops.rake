@@ -1,5 +1,4 @@
 require 'yaml'
-require_relative 'dev_ops/passenger'
 require_relative 'dev_ops/download_uri'
 require 'rsolr'
 require 'ezid/client'
@@ -96,18 +95,6 @@ namespace :dev_ops do
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db ' \
                 "-h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['database']} | gzip > #{file}.gz"
     exec command
-  end
-
-  desc 'Kill large memory usage passenger processes'
-  task kill_bloated_passengers: :environment do
-    passenger = DevOps::Passenger.new
-
-    passenger.kill_bloated_pids! unless passenger.items_submitting?
-
-    # puts "passenger.status: #{passenger.status}"
-    # puts "out: \n #{passenger.stdout}"
-    # puts passenger.bloated_pids
-    # puts passenger.items_submitting?
   end
 
   # we really don't want to babysit all of our processes too much and have them re-attempt a few times over days

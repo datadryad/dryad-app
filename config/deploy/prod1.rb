@@ -8,7 +8,6 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :rails_env, 'production'
-set :passenger_pool, '12'
 
 #set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
 
@@ -23,10 +22,6 @@ set :aws_region, 'us-west-2'
 #on roles(:all) do |host|
 #  puts "setting server host: #{host.hostname}"
 #end
-
-#set :passenger_pid, "#{deploy_to}/passenger.pid"
-#set :passenger_log, "#{deploy_to}/passenger.log"
-#set :passenger_port, "3000"
 
 # role-based syntax
 # ==================
