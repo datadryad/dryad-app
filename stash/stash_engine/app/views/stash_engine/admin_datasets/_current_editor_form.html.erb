@@ -10,7 +10,7 @@
     <% if resource.curatable? %>
       <%= f.fields_for :current_editor, resource do |r| %>
         <div class="c-input">
-            <label class="c-input__label">Current Curator</label>
+            <label class="c-input__label">Curator</label>
           <%= r.select :id, options_for_select(build_editor_select(@resource.current_editor_id)), include_blank: true %>
         </div>
       <% end %>
