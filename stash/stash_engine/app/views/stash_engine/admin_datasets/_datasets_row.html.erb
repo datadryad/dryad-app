@@ -34,7 +34,7 @@
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
                      action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
                    method: :get, remote: true) do -%>
-        <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
+        <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" alt="Update status">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       <% end %>
@@ -72,7 +72,7 @@
 	  <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
 				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
 	                method: :get, remote: true) do -%>
-	      <button class="c-admin-edit-icon" aria-label="Update curator" alt="Update curator">
+	      <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" alt="Update curator">
 		  <i class="fa fa-pencil" aria-hidden="true"></i>
 	      </button>
 	  <% end %>
