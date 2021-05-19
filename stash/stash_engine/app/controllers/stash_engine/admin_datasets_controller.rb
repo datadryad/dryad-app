@@ -87,30 +87,20 @@ module StashEngine
     end
 
     def current_editor_change
-      logger.debug "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-      logger.debug "current_editor_change #{params}"
-      logger.debug " - pr  #{params[:resource]}"
-      logger.debug " - pre #{params[:resource][:current_editor]}"
       respond_to do |format|
         format.js do
           editor_id = params[:resource][:current_editor][:id]
           editor_name = StashEngine::User.find(editor_id)&.name
           @identifier = Identifier.find(params[:identifier_id])
           @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
-          @resource.current_editor_id = params[:resource][:current_editor][:id]
-          @note = params[:resource][:curation_activity][:note]
-          @note = "Changing current editor to #{editor_name}" if @note.blank?
+          @resource.current_editor_id = editor_id
+          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
           decipher_curation_activity
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
-          logger.debug "XXXXXXXX g #{@resource.current_editor_id} #{@resource.valid?}"
-          logger.debug "YYY #{@resource.errors.full_messages}"
           @resource.save
-          logger.debug("XXXXXXXX h")
           @resource.reload
-          puts " -- editor should be #{editor_id} #{editor_name}"
-          puts " -- editor now #{@resource.current_editor_id}"
           # Refresh the page the same way we would for a change of curation activity
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
           render :curation_activity_change
