@@ -14,7 +14,7 @@ class JsonStats
   def update_stats(filename)
     stats = JSON.parse(File.read(filename))
     datasets = stats['report-datasets']
-    datasets.each_with_index do |ds, idx|
+    datasets.each_with_index do |ds, _idx|
       next if ds['dataset-id'].blank? || ds['dataset-id'].first.blank? || ds['dataset-id'].first['value'].blank? || ds['performance'].blank?
 
       doi = ds['dataset-id'].first['value']
@@ -48,7 +48,7 @@ class JsonStats
     doi.strip!
     doi.downcase!
 
-    @tally_hash[doi] = { investigation: 0, request: 0 } unless @tally_hash.has_key?(doi)
+    @tally_hash[doi] = { investigation: 0, request: 0 } unless @tally_hash.key?(doi)
 
     @tally_hash[doi][:investigation] += invest
     @tally_hash[doi][:request] += request
