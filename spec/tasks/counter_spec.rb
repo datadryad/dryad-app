@@ -8,14 +8,13 @@ describe 'counter:cop_manual', type: :task do
     ENV['JSON_DIRECTORY'] = @path.to_s
 
     # some items to spot check
-    @test_items = { "10.5061/dryad.234"=>{:investigation=>192, :request=>174},
-              "10.5061/dryad.1992"=>{:investigation=>62, :request=>9},
-              "10.5061/dryad.1924"=>{:investigation=>69, :request=>4},
-              "10.5061/dryad.7881"=>{:investigation=>18, :request=>4},
-              "10.5061/dryad.1159"=>{:investigation=>34, :request=>0},
-              "10.5061/dryad.1421"=>{:investigation=>10, :request=>6}
-    }
-    @test_items.keys.each do |k|
+    @test_items = { '10.5061/dryad.234' => { investigation: 192, request: 174 },
+                    '10.5061/dryad.1992' => { investigation: 62, request: 9 },
+                    '10.5061/dryad.1924' => { investigation: 69, request: 4 },
+                    '10.5061/dryad.7881' => { investigation: 18, request: 4 },
+                    '10.5061/dryad.1159' => { investigation: 34, request: 0 },
+                    '10.5061/dryad.1421' => { investigation: 10, request: 6 } }
+    @test_items.each_key do |k|
       create(:identifier, identifier: k)
     end
   end
