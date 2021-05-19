@@ -68,7 +68,7 @@
   <td class="c-admin-hide-border-left">
       <% if (%w[superuser tenant_curator].include?(current_user.role) &&
 	     dataset.resource&.permission_to_edit?(user: current_user) &&
-             dataset.resource_state == 'submitted') %>
+             dataset.resource.curatable?) %>
 	  <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
 				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
 	                method: :get, remote: true) do -%>
