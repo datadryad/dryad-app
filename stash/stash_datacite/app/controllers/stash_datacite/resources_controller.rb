@@ -117,7 +117,9 @@ module StashDatacite
     def check_required_fields(resource)
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
-      warnings << submission_size_warning_message(APP_CONFIG.maximums.merritt_size) if completions.over_manifest_file_size?(APP_CONFIG.maximums.merritt_size)
+      if completions.over_manifest_file_size?(APP_CONFIG.maximums.merritt_size)
+        warnings << submission_size_warning_message(APP_CONFIG.maximums.merritt_size)
+      end
       warnings << file_count_warning_message(APP_CONFIG.maximums.files) if completions.over_manifest_file_count?(APP_CONFIG.maximums.files)
       @completions = completions
       @data = warnings
