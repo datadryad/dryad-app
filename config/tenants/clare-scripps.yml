@@ -23,10 +23,6 @@ default: &default
     entity_id: https://webauth.scrippscollege.edu/idp/shibboleth
     entity_domain: scrippscollege.edu
   default_license: cc0
-  ## maximum total size (default 300 GB for now for size, 10 GB for file uploads)
-  max_submission_size: 3.0e+11
-  max_total_version_size: 1.0e+10
-  max_files: 1000
   campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
