@@ -28,9 +28,6 @@ default: &default
   authentication:
     strategy: author_match
   default_license: cc0
-  max_submission_size: 100000000000
-  max_total_version_size: 10000000000
-  max_files: 1000
   campus_contacts: ["norah.sliger@example.org"]
   data_deposit_agreement: false
 

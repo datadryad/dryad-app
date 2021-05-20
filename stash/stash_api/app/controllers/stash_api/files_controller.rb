@@ -156,7 +156,7 @@ module StashApi
     end
 
     def check_total_size_violations
-      return if @resource.new_size <= @resource.tenant.max_total_version_size && @resource.size <= @resource.tenant.max_submission_size
+      return if @resource.new_size <= @resource.tenant.max_total_version_size && @resource.size <= APP_CONFIG.maximums.merritt_size
 
       (render json: { error:
                           'The files for this dataset are larger than the allowed version or total object size' }.to_json,

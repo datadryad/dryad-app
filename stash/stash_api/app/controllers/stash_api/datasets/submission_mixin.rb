@@ -23,7 +23,7 @@ module SubmissionMixin
 
   def check_dataset_completions
     errors = errors_for_completions
-    if @resource.new_size > @resource.tenant.max_total_version_size && @resource.size > @resource.tenant.max_submission_size
+    if @resource.size > APP_CONFIG.maximums.merritt_size
       errors.push('The files for this dataset are larger than the allowed version or total object size')
     end
     if @resource.identifier&.processing?

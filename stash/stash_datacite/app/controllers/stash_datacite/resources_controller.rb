@@ -114,10 +114,6 @@ module StashDatacite
                                            resource_id: last.resource_id)
     end
 
-    def max_submission_size
-      current_tenant.max_submission_size.to_i
-    end
-
     def max_version_size
       current_tenant.max_total_version_size.to_i
     end
@@ -129,7 +125,7 @@ module StashDatacite
     def check_required_fields(resource)
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
-      warnings << submission_size_warning_message(max_submission_size) if completions.over_manifest_file_size?(max_submission_size)
+      warnings << submission_size_warning_message(APP_CONFIG.maximums.merritt_size) if completions.over_manifest_file_size?(APP_CONFIG.maximums.merritt_size)
       warnings << file_count_warning_message(max_file_count) if completions.over_manifest_file_count?(max_file_count)
       warnings << version_size_warning_message(max_version_size) if completions.over_version_size?(max_version_size)
       @completions = completions
