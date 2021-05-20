@@ -42,23 +42,16 @@
       </p>
     <% end %>
     <div class="bad_upload">
-      <% if resource.send(@resource_assoc).present_files.sum(:upload_file_size) > current_tenant.max_submission_size %>
+      <% if resource.send(@resource_assoc).present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size %>
         <p id="over_manifest_size">
-          Your file size is over <%= filesize(current_tenant.max_submission_size) %>. You must remove some files to
+          Your file size is over <%= filesize(APP_CONFIG.maximums.merritt_size) %>. You must remove some files to
           bring your total under this limit before you can upload these files.
         </p>
       <% end %>
-      <% if resource.send(@resource_assoc).present_files.count > current_tenant.max_files %>
+      <% if resource.send(@resource_assoc).present_files.count > APP_CONFIG.maximums.files %>
         <p id="over_count">
-          The number of files you added is more than <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %>.
+          The number of files you added is more than <%= number_with_delimiter(APP_CONFIG.maximums.files, :delimiter => ',') %>.
           In order to submit your dataset you must remove some files.
-        </p>
-      <% end %>
-      <% if resource.send(@resource_assoc).newly_created.sum(:upload_file_size) > current_tenant.max_total_version_size && resource.upload_type == :files %>
-        <p id="over_version_size">
-          Your files added to this version are over <%= filesize(current_tenant.max_total_version_size) %>.
-          You must remove some files to bring your uploaded files under the limit.  If you need to make a larger
-          submisison, you may submit your files as URLs from a server.
         </p>
       <% end %>
     </div>
