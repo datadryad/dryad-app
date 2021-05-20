@@ -117,6 +117,8 @@ module StashDatacite
     def check_required_fields(resource)
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
+
+      # TODO: why are some warnings added in here and the rest are in the completions class?
       if completions.over_manifest_file_size?(APP_CONFIG.maximums.merritt_size)
         warnings << submission_size_warning_message(APP_CONFIG.maximums.merritt_size)
       end
@@ -132,10 +134,6 @@ module StashDatacite
 
     def submission_size_warning_message(size)
       "Remove some files until you have a smaller dataset size than #{filesize(size)}"
-    end
-
-    def version_size_warning_message(size)
-      "Remove some files until you have a smaller version size than #{filesize(size)}, or upload by URL instead."
     end
 
     def resource_submitted_message(resource)
