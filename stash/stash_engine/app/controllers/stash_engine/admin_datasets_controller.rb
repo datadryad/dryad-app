@@ -1,5 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class AdminDatasetsController < ApplicationController
 
@@ -258,3 +259,4 @@ module StashEngine
   end
 
 end
+# rubocop:enable Metrics/ClassLength
