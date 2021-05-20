@@ -13,6 +13,7 @@ module StashEngine
   module AdminDatasets
     class CurationTableRow
 
+      @logger = Rails.logger
       attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :storage_size,
                   :search_words, :resource_id, :title, :publication_date, :tenant_id, :resource_state_id,
                   :resource_state, :curation_activity_id, :status, :updated_at, :editor_id, :editor_name,
@@ -106,6 +107,7 @@ module StashEngine
         #
         # if resource_id is set then only returns that resource id
         def where(params:, tenant: nil, journals: nil, identifier_id: nil)
+          @logger.debug "XXXX ctr params #{params}"
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
@@ -119,7 +121,7 @@ module StashEngine
                                  all_advanced: params.fetch(:all_advanced, false),
                                  tenant_filter: params.fetch(:tenant, ''),
                                  status_filter: params.fetch(:curation_status, ''),
-                                 editor_filter: params.fetch(:editor_id, ''),
+                                 editor_filter: params.fetch(:filter_editor_idb, ''),
                                  publication_filter: params.fetch(:publication_name, ''),
                                  admin_tenant: tenant,
                                  admin_journals: journals,
@@ -147,6 +149,7 @@ module StashEngine
             create_tenant_limit(admin_tenant),
             create_journals_limit(admin_journals)
           ].compact
+          @logger.debug "XXXXX where clause #{where_clause}"
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
         end
         # rubocop:enable Metrics/ParameterLists
