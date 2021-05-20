@@ -11,8 +11,11 @@ Dryad manages two types of information about journals:
 Metadata about journals
 =======================
 
-Metadata about the journals and their workflows is stored in Dryad's
-`StashEngine::Journal` model.
+Metadata about the journals and their workflows is stored in the following
+models:
+- `StashEngine::Journal`
+- `StashEngine::JournalRoles`
+- `StashEngine::JournalOrganizations`
 
 Meaning of fields
 -----------------
@@ -32,6 +35,23 @@ Options for processing in `StashEngine::Journal`
   "hide" a dataset until the associated article was published. Now
   controls whether an automatic 1-year blackout/embargo is added to
   the dataset.
+
+Adding journal administrators
+-------------------------------
+
+A user can be set as a journal administrator in two ways:
+- Database: `insert into stash_engine_journal_roles (journal_id, user_id, role) values (1, 3, 'admin');`
+- Rails console: `StashEngine::JournalRole.create(user: u, journal: j, role: 'admin')`
+
+A user can also be set as an organizational administrator. The organization may
+be a publisher, society, or other organization that sponsors the data
+publication fees for a journal. To add a user as an organizational
+administrator:
+1. Ensure that the `JournalOrganization` exists
+2. Ensure that all appropriate journals have the `JournalOrganization` listed as
+   their `sponsor`
+3. Ensure that the administrator has a `User` account
+3. Add a `JournalRole` as in `StashEngine::JournalRole.create(user: u, journal_organization: o, role: 'org_admin')`
 
 Metadata about Manuscripts
 =============================
