@@ -57,6 +57,7 @@ module StashEngine
       SCAN_CLAUSE = 'sei.search_words LIKE %{term}'
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
       STATUS_CLAUSE = 'seca.status = %{term}'
+      EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
@@ -117,6 +118,7 @@ module StashEngine
                                  all_advanced: params.fetch(:all_advanced, false),
                                  tenant_filter: params.fetch(:tenant, ''),
                                  status_filter: params.fetch(:curation_status, ''),
+                                 editor_filter: params.fetch(:editor_id, ''),
                                  publication_filter: params.fetch(:publication_name, ''),
                                  admin_tenant: tenant,
                                  identifier_id: identifier_id)}
@@ -131,11 +133,13 @@ module StashEngine
 
         # Create the WHERE portion of the query based on the filters set by the user (if any)
         # rubocop:disable Metrics/ParameterLists
-        def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:, publication_filter:, admin_tenant:, identifier_id: nil)
+        def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:,
+                               editor_filter:, publication_filter:, admin_tenant:, identifier_id: nil)
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
+            add_term_to_clause(EDITOR_CLAUSE, editor_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
             create_tenant_limit(admin_tenant)

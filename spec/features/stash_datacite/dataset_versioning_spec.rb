@@ -195,7 +195,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Curation')
           expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
-          expect(page).to have_text(@curator.name_last_first)
+          expect(page).to have_text(@curator.name.to_s)
           expect(page).to have_text(@resource.identifier.identifier)
         end
       end
