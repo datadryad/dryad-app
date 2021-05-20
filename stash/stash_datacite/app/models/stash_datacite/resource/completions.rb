@@ -112,10 +112,6 @@ module StashDatacite
         @resource.data_files.present_files.count > count_limit
       end
 
-      def over_version_size?(size_limit)
-        @resource.upload_type == :files && @resource.data_files.newly_created.sum(:upload_file_size) > size_limit
-      end
-
       def required_total
         5
       end
