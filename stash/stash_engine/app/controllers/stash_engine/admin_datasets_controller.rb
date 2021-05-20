@@ -24,10 +24,8 @@ module StashEngine
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
-      Rails.logger.debug "xXXX adc filt #{params['filter_editor_id']} -- ten #{params['tenant']}"
-      Rails.logger.debug "XXXX adc params #{helpers.sortable_table_params}"
       @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
-                                                                     tenant: tenant_limit,                                                                     
+                                                                     tenant: tenant_limit,
                                                                      journals: journal_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil

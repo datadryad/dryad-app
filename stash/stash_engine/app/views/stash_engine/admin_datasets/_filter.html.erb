@@ -9,8 +9,8 @@
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
 
-  <label for="filter_editor_idb">Curator:</label>
-  <%= select_tag(:filter_editor_idb, options_for_select( [['Curator', '']] + editor_select, params[:filter_editor_idb]),
+  <label for="editor_id">Curator:</label>
+  <%= select_tag(:editor_id, options_for_select( [['Curator', '']] + editor_select, params[:editor_id]),
 		 class: 'c-horizontal-form__input--status',                 
 		 onchange: "this.form.submit();" ) %>
 
@@ -23,7 +23,7 @@
   &nbsp;
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
-  <% params.except(:controller, :action, :tenant, :curation_status, :filter_editor_idb,
+  <% params.except(:controller, :action, :tenant, :curation_status, :editor_id,
 		   :commit, :page, :page_size, :show_all, :publication_name).each_pair do |k,v| %>
     <%= hidden_field_tag k, v, id: "filter_#{k}" %>
   <% end %>
