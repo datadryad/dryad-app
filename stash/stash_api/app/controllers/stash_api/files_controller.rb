@@ -110,18 +110,18 @@ module StashApi
     end
 
     def check_header_file_size
-      return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= @resource.tenant.max_total_version_size
+      return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= APP_CONFIG.maximums.merritt_size
 
       (render json: { error:
-                         "Your file size is larger than the maximum submission size of #{resource.tenant.max_total_version_size} bytes" }.to_json,
+                         "Your file size is larger than the maximum submission size of #{APP_CONFIG.maximums.merritt_size} bytes" }.to_json,
               status: 403) && yield
     end
 
     def check_file_size
-      return if Stash::Aws::S3.size(s3_key: @file_path) <= @resource.tenant.max_total_version_size
+      return if Stash::Aws::S3.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
 
       (render json: { error:
-          "Your file size is larger than the maximum submission size of #{view_context.filesize(resource.tenant.max_total_version_size)}" }.to_json,
+          "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json,
               status: 403) && yield
     end
 
@@ -156,7 +156,7 @@ module StashApi
     end
 
     def check_total_size_violations
-      return if @resource.new_size <= @resource.tenant.max_total_version_size && @resource.size <= APP_CONFIG.maximums.merritt_size
+      return if @resource.new_size <= APP_CONFIG.maximums.merritt_size && @resource.size <= APP_CONFIG.maximums.merritt_size
 
       (render json: { error:
                           'The files for this dataset are larger than the allowed version or total object size' }.to_json,
