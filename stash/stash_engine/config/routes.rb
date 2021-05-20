@@ -27,15 +27,9 @@ StashEngine::Engine.routes.draw do
   resources :tenants, only: %i[index show]
   resources :data_files, :software_files, :supp_files do
     member do
-      patch 'remove'
-      patch 'remove_unuploaded'
-      patch 'restore'
-      patch 'destroy_error' # destroy an errored file in manifest upload
       patch 'destroy_manifest' # destroy file from manifest method
     end
   end
-
-
 
   resources :edit_histories, only: [:index]
 
@@ -51,12 +45,6 @@ StashEngine::Engine.routes.draw do
   post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
   post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
   post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
-
-  resource :data_file do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
-    member do
-      patch 'revert'
-    end
-  end
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
