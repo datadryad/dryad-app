@@ -4,23 +4,24 @@
   <% if current_user.superuser? %>
     <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
                    class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+
+      <label for="editor_id">Curator:</label>
+      <%= select_tag(:editor_id, options_for_select( [['Curator', '']] + editor_select, params[:editor_id]),
+		     class: 'c-horizontal-form__input',                 
+		     onchange: "this.form.submit();" ) %>
+
   <% end %>
   <label for="curation_status">Status:</label>
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
-                 class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+                 class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
 
-  <label for="editor_id">Curator:</label>
-  <%= select_tag(:editor_id, options_for_select( [['Curator', '']] + editor_select, params[:editor_id]),
-		 class: 'c-horizontal-form__input--status',                 
-		 onchange: "this.form.submit();" ) %>
-
+  <p>
   <% if @publications.any? %>
-    <p>
       <label for="publication_name">Journal Name:</label>
       <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', id: 'publication_name') %>
-    </p>
   <% end %>
-  &nbsp;
+  </p>
+ 
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
   <% params.except(:controller, :action, :tenant, :curation_status, :editor_id,
