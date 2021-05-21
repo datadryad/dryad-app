@@ -64,13 +64,65 @@ class UploadFiles extends React.Component {
         failedUrls: [],
         loading: false,
         removingIndex: null,
-        warningMessage: null
+        warningMessage: null,
+        validating: null
     };
 
     componentDidMount() {
         const files = this.props.file_uploads;
         const transformed = this.transformData(files);
-        this.setState({chosenFiles: transformed});
+        const withTabularCheckStatus = this.addTabularCheckStatus(transformed);
+        this.setState({chosenFiles: withTabularCheckStatus})
+        this.addCsrfToken();
+    }
+
+    addTabularCheckStatus = (files) => {
+        return files.map(file => ({
+                ...file,
+                tabularCheckStatus: this.setTabularCheckStatus(file)
+            }))
+    }
+
+    setTabularCheckStatus = (file) => {
+        if (!this.isCsv(file)) {
+            return 'N/A';
+        } else {
+            return file.frictionless_report && file.frictionless_report.report
+                ? 'Issues found'
+                : 'Passed'
+        }
+    }
+
+    getErrorMessage = (url) => {
+        switch (url.status_code) {
+            case 200:
+                return '';
+            case 400:
+                return 'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS';
+            case 401:
+                return 'The URL was not authorized for download.';
+            case 403: case 404:
+                return 'The URL was not found.';
+            case 410:
+                return 'The requested URL is no longer available.';
+            case 411:
+                return 'URL cannot be downloaded, please link directly to data file';
+            case 414:
+                return `The server will not accept the request, because the URL ${url} is too long.`;
+            case 408: case 499:
+                return 'The server timed out waiting for the request to complete.';
+            case 409:
+                return "You've already added this URL in this version.";
+            case 500: case 501: case 502: case 503: case 504: case 505: case 506:
+            case 507: case 508: case 509: case 510: case 511:
+                return 'Encountered a remote server error while retrieving the request.';
+        }
+    }
+
+    addCsrfToken = () => {
+        const csrf_token = document.querySelector('[name=csrf-token]');
+        if (csrf_token)  // there isn't csrf token when running Capybara tests
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
     }
 
     addFilesHandler = (event, uploadType) => {
@@ -122,9 +174,6 @@ class UploadFiles extends React.Component {
                         console.log(msg);
                     },
                     complete: (_xhr, awsKey) => {
-                        const csrf_token = document.querySelector('[name=csrf-token]');
-                        if (csrf_token)  // there isn't csrf token when running Capybara tests
-                            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
                         axios.post(
                             `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
                             {
@@ -187,7 +236,35 @@ class UploadFiles extends React.Component {
         }
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
+        const tabularFiles = newManifestFiles.filter(file => this.isCsv(file));
+        this.validateFrictionless(tabularFiles);
     }
+
+    validateFrictionless = (files) => {
+        this.setState({validating: true});
+        files = this.updateTabularCheckStatus(files);
+        this.updateAlreadyChosenById(files);
+        axios.post(
+            `/stash/data_file/validate_frictionless/${this.props.resource_id}`,
+            files.map(file => file.id)
+        ).then(response => {
+            this.setState({validating: false});
+            files = this.updateTabularCheckStatus(files);
+            this.updateAlreadyChosenById(files);
+        })
+    }
+
+    updateAlreadyChosenById = (filesToUpdate) => {
+        const chosenFiles = [...this.state.chosenFiles];
+        debugger;
+        let index;
+        filesToUpdate.forEach((fileToUpdate) => {
+            index = chosenFiles.findIndex(file => file.id === fileToUpdate.id);
+            chosenFiles[index] = fileToUpdate;
+        })
+        this.setState({chosenFiles: chosenFiles});
+    }
+
 
     updateFailedUrls = (urls) => {
         if (!urls.length) return;
@@ -203,33 +280,8 @@ class UploadFiles extends React.Component {
         })
     }
 
-    getErrorMessage = (url) => {
-        switch (url.status_code) {
-            case 200:
-                return '';
-            case 400:
-                return 'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS';
-            case 401:
-                return 'The URL was not authorized for download.';
-            case 403: case 404:
-                return 'The URL was not found.';
-            case 410:
-                return 'The requested URL is no longer available.';
-            case 411:
-                return 'URL cannot be downloaded, please link directly to data file';
-            case 414:
-                return `The server will not accept the request, because the URL ${url} is too long.`;
-            case 408: case 499:
-                return 'The server timed out waiting for the request to complete.';
-            case 409:
-                return "You've already added this URL in this version.";
-            case 500: case 501: case 502: case 503: case 504: case 505: case 506:
-            case 507: case 508: case 509: case 510: case 511:
-                return 'Encountered a remote server error while retrieving the request.';
-        }
-    }
-
     updateFileList = (files) => {
+        files = this.labelNonTabular(files);
         if (!this.state.chosenFiles.length) {
             this.setState({chosenFiles: files});
         } else {
@@ -239,14 +291,40 @@ class UploadFiles extends React.Component {
         }
     }
 
+    hasPlainTextTabular = (files) => {
+        return files.some(file => {
+            return file.sanitized_name.split('.').pop() === 'csv'
+                || file.upload_content_type === 'text/csv';
+        });
+    }
+
+    updateTabularCheckStatus = (tabularFiles) => {
+        if (this.state.validating) {
+            return tabularFiles.map(file => ({...file, tabularCheckStatus: 'Checking...'}));
+        } else {
+            return tabularFiles.map(file => ({
+                ...file,
+                tabularCheckStatus: file.frictionless_report && file.frictionless_report.report
+                    ? 'Issues found'
+                    : 'Passed'
+            }));
+        }
+    }
+
+    labelNonTabular = (files) => {
+        return files.map(file => ({
+            ...file,
+            tabularCheckStatus: this.isCsv(file) ? null : 'N/A'
+        }));
+    }
+
+    isCsv = (file) => file.sanitized_name.split('.').pop() === 'csv'
+        || file.upload_content_type === 'text/csv';
+
     removeFileHandler = (index) => {
         this.setState({warningMessage: null});
         const file = this.state.chosenFiles[index];
         if (file.status !== 'Pending') {
-            const csrf_token = document.querySelector('[name=csrf-token]');
-            if (csrf_token)  // there isn't csrf token when running Capybara tests
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
             this.setState({removingIndex: index});
             axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
                 .then(response => {
@@ -300,10 +378,6 @@ class UploadFiles extends React.Component {
 
         if (!this.state.urls) return;
 
-        const csrf_token = document.querySelector('[name=csrf-token]');
-        if (csrf_token)  // there isn't csrf token when running Capybara tests
-            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
         const urlsObject = {
             url: this.discardUrlsAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
@@ -354,7 +428,7 @@ class UploadFiles extends React.Component {
      * @returns {[]}
      */
     discardAlreadyChosenById = (files) => {
-        const idsAlready = this.state.chosenFiles.map(item => item.id);
+        const idsAlready = this.state.chosenFiles.map(file => file.id);
         return files.filter(file => {
             return !idsAlready.includes(file.id);
         });
