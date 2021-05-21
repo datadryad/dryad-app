@@ -127,7 +127,7 @@ module StashApi
             identifier: art_params['article_doi']
           }.with_indifferent_access
         end
-        em_params['manuscriptNumber'] = art_params['manuscript_number'] if art_params['manuscript_number']
+        em_params['manuscriptNumber'] = art_params['manuscript_number'] || em_params['document_id'] || 'EM-DEPOSIT'
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
         keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
