@@ -121,14 +121,14 @@ module DatasetHelper
     )
   end
 
-  def build_valid_stub_request(url)
+  def build_valid_stub_request(url, mime_type = 'text/plain')
     stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
   end
 
   def build_invalid_stub_request(url)

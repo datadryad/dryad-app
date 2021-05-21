@@ -138,7 +138,7 @@ module StashEngine
     end
 
     def validate_frictionless
-      # TODO: add exceptions for download error
+      # TODO: add exceptions for downloading errors
       tempfile = Down.download(url)
 
       result = call_frictionless(tempfile)
