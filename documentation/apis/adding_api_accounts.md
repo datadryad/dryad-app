@@ -24,9 +24,12 @@ To create an API account:
    the API, also have the application id for this newly-created
    application for the next steps (it is shown as an ID in the URL when
    you're viewing that application information).
-4. Then, in the database, update the `oauth_applications` table to
+4. In the database, update the `oauth_applications` table to
    relate the user with the application:
    `update oauth_applications set owner_type = 'StashEngine::User', owner_id = <user id> where id = <application id>;`
+5. Verify that the associated user account has a `tenant_id` set. If it is null,
+   set it to `dryad`.
+   `select * from stash_engine_users where id= <user id>;`
 
 To set permissions for the API account:
 - The user can be set to a `superuser` or tenant-based `admin` role using
