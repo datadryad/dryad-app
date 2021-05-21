@@ -246,17 +246,18 @@ class UploadFiles extends React.Component {
         this.updateAlreadyChosenById(files);
         axios.post(
             `/stash/generic_file/validate_frictionless/${this.props.resource_id}`,
-            files.map(file => file.id)
+            {file_ids: files.map(file => file.id)}
         ).then(response => {
             this.setState({validating: false});
-            files = this.updateTabularCheckStatus(files);
+            const transformed = this.transformData(response.data);
+            files = this.updateTabularCheckStatus(transformed);
             this.updateAlreadyChosenById(files);
         })
+            .catch(error => console.log(error));
     }
 
     updateAlreadyChosenById = (filesToUpdate) => {
         const chosenFiles = [...this.state.chosenFiles];
-        debugger;
         let index;
         filesToUpdate.forEach((fileToUpdate) => {
             index = chosenFiles.findIndex(file => file.id === fileToUpdate.id);
