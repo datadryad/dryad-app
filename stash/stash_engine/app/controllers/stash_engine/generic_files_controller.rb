@@ -1,4 +1,5 @@
 require 'stash/aws/s3'
+require 'down'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -80,6 +81,21 @@ module StashEngine
           }
         end
       end
+    end
+
+    def validate_frictionless
+      tabular_files = StashEngine::GenericFile.tabular_files
+      begin
+        files = tabular_files.find(params['file_ids'])
+      rescue ActiveRecord::RecordNotFound => e
+        render json: { status: 'found non-csv file(s)' }
+        return
+      end
+
+      files.each(&:validate_frictionless)
+      render json: files.as_json(
+        methods: :type, include: { frictionless_report: { only: [:report] } }
+      )
     end
 
     # quick start guide for setup because the bucket needs to be set a certain way for CORS, also

@@ -52,6 +52,10 @@ StashEngine::Engine.routes.draw do
   post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
   post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
 
+  post 'data_file/validate_frictionless/:resource_id',
+       to: 'data_files#validate_frictionless',
+       as: 'data_file_validate_frictionless'
+
   resource :data_file do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
       patch 'revert'

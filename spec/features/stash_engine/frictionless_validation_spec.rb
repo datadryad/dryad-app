@@ -16,6 +16,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Ror
   include Mocks::Stripe
   include Mocks::Aws
+  include AjaxHelper
 
   before(:each) do
     mock_repository!
@@ -37,10 +38,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   end
 
   describe 'Tabular Data Check Index' do
-    it 'shows N/A for plain-text non-tabular data files' do
-      @resource_id = StashEngine::Resource.last.id
-      @file = create_data_file(@resource_id)
-      @file.update(upload_content_type: 'application/vnd.oasis.opendocument.spreadsheet')
+    before(:each) do
+      @file = create_data_file(StashEngine::Resource.last.id)
+    end
+
+    it 'shows N/A for non-plain-text tabular data files' do
+      @file.update(upload_file_name: 'non_tabular')
       click_link 'Upload Files'
 
       within('table') do
@@ -48,8 +51,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Issues found" if file is plain-text and tabular and there are a report for it' do
-      @file = create_data_file(StashEngine::Resource.last.id)
+    it 'shows "Issues found" if file is plain-text and tabular and there is a report for it' do
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', generic_file: @file)
       click_link 'Upload Files'
@@ -58,14 +60,23 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows empty cell if file is plain-text and tabular and there are not a report for it' do
-      @file = create_data_file(StashEngine::Resource.last.id)
+    it 'shows "Passed" if file is plain-text and tabular, there is a report for it but it is empty' do
+      # This is a weird case, and must not occur.
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: nil, generic_file: @file)
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('')
+        expect(text).to eq('Passed')
+      end
+    end
+
+    it 'shows "Passed" if file is plain-text and tabular and there is not a report' do
+      @file.update(upload_content_type: 'text/csv')
+      click_link 'Upload Files'
+
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('Passed')
       end
     end
   end
@@ -93,7 +104,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     # TODO: remove if the column is always there
-    xit 'displays column if there are New manifest tabular files' do
+    xit 'shows column if there are New manifest tabular files' do
       click_link 'Upload Files'
       url = 'http://example.org/table.csv'
       stub_request(:any, url).to_return(
@@ -104,6 +115,49 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       validate_url_manifest(url)
 
       expect(page).to have_content('Tabular Data Check')
+    end
+
+    it 'shows "Checking..." when a New manifest csv file is submitted' do
+      click_link 'Upload Files'
+
+      # file is csv if has csv extension or hasn't csv extension but has text/csv mime type
+      url_csv = 'http://example.org/table.csv'
+      url_wo_csv = 'http://example.org/table'
+      url = [url_csv, url_wo_csv].sample
+      mime_type = url == url_csv ? %w[text/csv application/octet-stream].sample : 'text/csv'
+
+      stub_request(:head, url)
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
+      click_button('data_manifest')
+
+      # increases network latency to capture possible vanishing "Checking..." status
+      # default latency: 5
+      # 100: magic number (it worked first setting 100 first time)
+      # throughput: capybara complains if not defined (got from https://selenium-python.readthedocs.io/api.html)
+      page.driver.browser.network_conditions = { throughput: 500 * 1024, latency: 100 }
+
+      validate_url_manifest(url)
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('Checking...')
+      end
+    end
+
+    it 'shows "Passed" when csv file is submitted and passed in frictionless validation' do
+      click_link 'Upload Files'
+      url = 'http://example.org/table.csv'
+      build_valid_stub_request(url)
+
+      click_button('data_manifest')
+      validate_url_manifest(url)
+      wait_for_ajax(15)
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('Passed')
+      end
     end
   end
 end

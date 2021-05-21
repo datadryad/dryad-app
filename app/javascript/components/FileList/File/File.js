@@ -7,12 +7,10 @@ const file = (props) => {
         <tr>
             <th scope='row'>{props.file.sanitized_name}</th>
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
-            <td>{props.file.upload_content_type !== 'text/csv' ?
-                    'N/A' : props.file.frictionless_report.report ? 'Issues found' : null}
-            </td>
-            <td><a href={props.file.url}
-                   title={props.file.url}>{props.file.url ? ellipsize(props.file.url) : props.file.url}</a>
-            </td>
+            <td>{props.file.tabularCheckStatus}</td>
+            <td><a href={props.file.url} title={props.file.url}>
+                {props.file.url ? ellipsize(props.file.url) : props.file.url}
+            </a></td>
             <td>{props.file.uploadType}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
