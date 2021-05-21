@@ -2,6 +2,13 @@
 
 require 'stash/aws/s3'
 
+# this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
+# to output digital storage sizes
+#
+include StashEngine::ApplicationHelper
+
+# ActionController::Base.helpers.number_to_human_size only returns results in MiB, not MB or similar
+
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
 
 # also
@@ -212,10 +219,10 @@ module StashDatacite
           software_files: { name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size },
           supp_files: { name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size } }.each_pair do |k, v|
           if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
-            messages << "Remove some #{v[:name]} until you have a smaller total size than #{v[:size_limit]}"
+            messages << "Remove some #{v[:name]} until you have a smaller total size than #{ filesize(v[:size_limit]) }"
           end
           if over_file_count?(file_list: @resource.send(k).present_files)
-            messages << "Remove some files until you have fewer than #{APP_CONFIG.maximums.files} #{v[:name]}"
+            messages << "Remove some files until you have #{APP_CONFIG.maximums.files} #{v[:name]} or fewer"
           end
         end
 
