@@ -108,8 +108,8 @@ module StashDatacite
         file_list.sum(:upload_file_size) > limit
       end
 
-      def over_file_count?(count_limit)
-        @resource.data_files.present_files.count > count_limit
+      def over_file_count?(file_list:)
+        file_list.count > APP_CONFIG.maximums.files
       end
 
       def required_total
@@ -184,7 +184,7 @@ module StashDatacite
 
       def all_warnings
         messages = []
-        error_uploads = s3_error_uploads
+
         messages << 'Add a dataset title' unless title
         messages << 'Add an abstract' unless abstract
         messages << 'For data related to a journal article, you must supply a manuscript number or DOI' unless article_id
@@ -193,24 +193,34 @@ module StashDatacite
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
 
+        messages = file_warnings(messages)
+
+        # do not require strict related works identifier checking right now
+        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
+        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
+        messages
+      end
+
+      def file_warnings(messages)
+        error_uploads = s3_error_uploads
         if error_uploads.present?
           messages << 'Some files can not be submitted because they may have had errors uploading. ' \
             'Please re-upload the following files if you still see this error in a few minutes.'
           messages << "Files with upload errors: #{error_uploads.join(',')}"
         end
 
-        if over_size?(limit: APP_CONFIG.maximums.merritt_size, file_list: @resource.data_files.present_files)
-          messages << "Remove some files until you have a smaller dataset size than #{APP_CONFIG.maximums.merritt_size}"
+        { data_files: {name: 'data files', size_limit: APP_CONFIG.maximums.merritt_size},
+          software_files: {name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size},
+          supp_files: {name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size}
+        }.each_pair do |k, v|
+          if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
+            messages << "Remove some #{v[:name]} until you have a smaller total size than #{v[:size_limit]}"
+          end
+          if over_file_count?(file_list: @resource.send(k).present_files)
+            messages << "Remove some files until you have fewer than #{APP_CONFIG.maximums.files} #{v[:name]}"
+          end
         end
 
-        if over_file_count?(APP_CONFIG.maximums.files)
-          "Remove some files until you have a smaller file count than #{APP_CONFIG.maximums.files} files"
-        end
-
-
-        # do not require strict related works identifier checking right now
-        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
-        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
         messages
       end
 
