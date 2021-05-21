@@ -1,5 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class AdminDatasetsController < ApplicationController
 
@@ -81,6 +82,38 @@ module StashEngine
         @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
+      end
+    end
+
+    def current_editor_popup
+      respond_to do |format|
+        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
+        # using the last submitted resource should apply the curation to the correct place, even with windows held open
+        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
+        format.js
+      end
+    end
+
+    def current_editor_change
+      respond_to do |format|
+        format.js do
+          editor_id = params[:resource][:current_editor][:id]
+          editor_name = StashEngine::User.find(editor_id)&.name
+          @identifier = Identifier.find(params[:identifier_id])
+          @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
+          @resource.current_editor_id = editor_id
+          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
+          decipher_curation_activity
+          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
+                                                                   status: @status,
+                                                                   note: @note)
+          @resource.save
+          @resource.reload
+          # Refresh the page the same way we would for a change of curation activity
+          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
+          render :curation_activity_change
+        end
       end
     end
 
@@ -234,3 +267,4 @@ module StashEngine
   end
 
 end
+# rubocop:enable Metrics/ClassLength

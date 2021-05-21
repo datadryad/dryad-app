@@ -5,6 +5,10 @@ module StashEngine
     has_many :journal_roles
     has_many :journals, through: :journal_roles
 
+    scope :curators, -> do
+      where(role: %w[superuser tenant_curator])
+    end
+
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
       raise "More than one user matches the ID or email returned by ORCID, user_ids: #{users.map(&:id).join(', ')}" if users.count > 1
