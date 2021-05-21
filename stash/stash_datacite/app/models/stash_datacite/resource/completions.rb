@@ -219,7 +219,7 @@ module StashDatacite
           software_files: { name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size },
           supp_files: { name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size } }.each_pair do |k, v|
           if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
-            messages << "Remove some #{v[:name]} until you have a smaller total size than #{ filesize(v[:size_limit]) }"
+            messages << "Remove some #{v[:name]} until you have a smaller total size than #{filesize(v[:size_limit])}"
           end
           if over_file_count?(file_list: @resource.send(k).present_files)
             messages << "Remove some files until you have #{APP_CONFIG.maximums.files} #{v[:name]} or fewer"
