@@ -193,12 +193,11 @@ module StashDatacite
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
 
-        messages = file_warnings(messages)
+        file_warnings(messages)
 
         # do not require strict related works identifier checking right now
         # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
         # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
-        messages
       end
 
       def file_warnings(messages)
@@ -209,10 +208,9 @@ module StashDatacite
           messages << "Files with upload errors: #{error_uploads.join(',')}"
         end
 
-        { data_files: {name: 'data files', size_limit: APP_CONFIG.maximums.merritt_size},
-          software_files: {name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size},
-          supp_files: {name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size}
-        }.each_pair do |k, v|
+        { data_files: { name: 'data files', size_limit: APP_CONFIG.maximums.merritt_size },
+          software_files: { name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size },
+          supp_files: { name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size } }.each_pair do |k, v|
           if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
             messages << "Remove some #{v[:name]} until you have a smaller total size than #{v[:size_limit]}"
           end
