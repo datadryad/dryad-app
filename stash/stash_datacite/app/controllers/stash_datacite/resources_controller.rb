@@ -118,22 +118,8 @@ module StashDatacite
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
 
-      # TODO: why are some warnings added in here and the rest are in the completions class?
-      if completions.over_manifest_file_size?(APP_CONFIG.maximums.merritt_size)
-        warnings << submission_size_warning_message(APP_CONFIG.maximums.merritt_size)
-      end
-      warnings << file_count_warning_message(APP_CONFIG.maximums.files) if completions.over_manifest_file_count?(APP_CONFIG.maximums.files)
       @completions = completions
       @data = warnings
-    end
-
-    def file_count_warning_message(count)
-      format_count = number_with_delimiter(count, delimiter: ',')
-      "Remove some files until you have a smaller file count than #{format_count} files"
-    end
-
-    def submission_size_warning_message(size)
-      "Remove some files until you have a smaller dataset size than #{filesize(size)}"
     end
 
     def resource_submitted_message(resource)

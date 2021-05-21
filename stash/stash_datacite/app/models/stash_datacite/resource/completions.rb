@@ -104,11 +104,11 @@ module StashDatacite
         @resource.data_files.present_files.count.positive?
       end
 
-      def over_manifest_file_size?(size_limit)
-        @resource.data_files.present_files.sum(:upload_file_size) > size_limit
+      def over_size?(limit:, file_list:)
+        file_list.sum(:upload_file_size) > limit
       end
 
-      def over_manifest_file_count?(count_limit)
+      def over_file_count?(count_limit)
         @resource.data_files.present_files.count > count_limit
       end
 
@@ -198,6 +198,15 @@ module StashDatacite
             'Please re-upload the following files if you still see this error in a few minutes.'
           messages << "Files with upload errors: #{error_uploads.join(',')}"
         end
+
+        if over_size?(limit: APP_CONFIG.maximums.merritt_size, file_list: @resource.data_files.present_files)
+          messages << "Remove some files until you have a smaller dataset size than #{APP_CONFIG.maximums.merritt_size}"
+        end
+
+        if over_file_count?(APP_CONFIG.maximums.files)
+          "Remove some files until you have a smaller file count than #{APP_CONFIG.maximums.files} files"
+        end
+
 
         # do not require strict related works identifier checking right now
         # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
