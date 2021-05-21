@@ -64,7 +64,7 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: ezid
-    shoulder: "doi:10.18737/D7"
+    shoulder: "doi:10.18736/D6"
     account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
     id_scheme: doi
