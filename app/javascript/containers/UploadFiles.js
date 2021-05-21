@@ -146,7 +146,7 @@ class UploadFiles extends React.Component {
             awsRegion: this.props.app_config_s3.table.region,
             // Assign any first signerUrl, but it changes for each upload file type
             // when call evaporate object add method bellow
-            signerUrl: `/stash/data_file/presign_upload/${this.props.resource_id}`,
+            signerUrl: `/stash/generic_file/presign_upload/${this.props.resource_id}`,
             awsSignatureVersion: "4",
             computeContentMd5: true,
             cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
@@ -245,7 +245,7 @@ class UploadFiles extends React.Component {
         files = this.updateTabularCheckStatus(files);
         this.updateAlreadyChosenById(files);
         axios.post(
-            `/stash/data_file/validate_frictionless/${this.props.resource_id}`,
+            `/stash/generic_file/validate_frictionless/${this.props.resource_id}`,
             files.map(file => file.id)
         ).then(response => {
             this.setState({validating: false});

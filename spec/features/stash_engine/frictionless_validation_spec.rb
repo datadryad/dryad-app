@@ -39,7 +39,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'Tabular Data Check Index' do
     before(:each) do
-      @file = create_data_file(StashEngine::Resource.last.id)
+      @file = create_generic_file(StashEngine::Resource.last.id)
     end
 
     it 'shows N/A for non-plain-text tabular data files' do
@@ -82,9 +82,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   end
 
   describe 'Tabular Data Check Validation' do
+    before(:each) do
+      @upload_type = %w[data software supp].sample
+    end
     it 'shows Tabular Data Check column' do
       click_link 'Upload Files'
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/table.csv", make_visible: { left: 0 })
+      attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/table.csv", make_visible: { left: 0 })
       check('confirm_to_upload')
       click_on('validate_files')
 
@@ -94,7 +97,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # Needs to mock S3 submission via Evaporate
     xit 'shows "N/A" after submitting file to S3 and the file is not plain/text tabular' do
       click_link 'Upload Files'
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 })
+      attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 })
       check('confirm_to_upload')
       click_on('validate_files')
 
@@ -111,7 +114,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         body: File.new("#{Rails.root}/spec/fixtures/stash_engine/table.csv"), status: 200
       )
 
-      click_button('data_manifest')
+      click_button("#{@upload_type}_manifest")
       validate_url_manifest(url)
 
       expect(page).to have_content('Tabular Data Check')
@@ -133,7 +136,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
           }
         )
         .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
-      click_button('data_manifest')
+      click_button("#{@upload_type}_manifest")
 
       # increases network latency to capture possible vanishing "Checking..." status
       # default latency: 5
@@ -152,7 +155,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       url = 'http://example.org/table.csv'
       build_valid_stub_request(url)
 
-      click_button('data_manifest')
+      click_button("#{@upload_type}_manifest")
       validate_url_manifest(url)
       wait_for_ajax(15)
       within(:xpath, '//table/tbody/tr/td[2]') do

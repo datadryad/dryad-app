@@ -13,12 +13,12 @@ module StashEngine
     before(:each) do
       generic_before
       # HACK: in session because requests specs don't allow session in rails 4
-      allow_any_instance_of(DataFilesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
+      allow_any_instance_of(GenericFilesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
     describe '#presign_upload' do
       before(:each) do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_presign_url_path(resource_id: @resource.id)
+        @url = StashEngine::Engine.routes.url_helpers.generic_file_presign_url_path(resource_id: @resource.id)
         @json_hash = { 'to_sign' => "AWS4-HMAC-SHA256\n20210213T001147Z\n20210213/us-west-2/s3/aws4_request\n" \
                                   '98fd9689d64ec7d84eb289ba859a122f07f7944e802edc4d5666d3e2df6ce7d6',
                        'datetime' => '20210213T001147Z' }
@@ -34,7 +34,6 @@ module StashEngine
     end
 
     describe '#upload_complete' do
-
       before(:each) do
         @url = StashEngine::Engine.routes.url_helpers.data_file_complete_path(resource_id: @resource.id)
         @json_hash = {
@@ -111,7 +110,7 @@ module StashEngine
     describe '#validate_frictionless' do
       before(:each) do
         @file = create(:generic_file)
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_frictionless_path(
+        @url = StashEngine::Engine.routes.url_helpers.generic_file_validate_frictionless_path(
           resource_id: @resource.id
         )
       end
@@ -121,7 +120,7 @@ module StashEngine
         expect(response_code).to eql(200)
       end
 
-      it 'returns status message if there are not only tabular files' do
+      it 'returns status message if not only tabular files were posted' do
         @file.update(upload_file_name: 'irmao_do_jorel.jpg', upload_content_type: 'image/jpg')
         file2 = create(:generic_file)
         file2.update(upload_file_name: 'vovo_juju.csv', upload_content_type: 'application/octet-stream')
@@ -157,6 +156,7 @@ module StashEngine
           expect(generic_file).to receive(:validate_frictionless)
         end
 
+        # TODO: get rid of
         xit 'calls frictionless validation on the downloaded file (other tentative)' do
           allow_any_instance_of(described_class).to receive(:validate_frictionless).and_return(true)
 
