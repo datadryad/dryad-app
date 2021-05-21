@@ -782,6 +782,7 @@ module StashEngine
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'system set back to curation')
+      update(current_editor_id: prior_version.current_editor_id) if prior_version.current_editor_id
     end
   end
 end

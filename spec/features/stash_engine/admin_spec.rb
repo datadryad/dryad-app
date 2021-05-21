@@ -127,6 +127,25 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_link('Submission Queue')
       end
 
+      it 'allows assigning a curator', js: true do
+        @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+
+        visit root_path
+        find('.o-sites__summary', text: 'Admin').click
+        find('.o-sites__group-item', text: 'Dataset Curation').click
+
+        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_css('button[title="Update curator"]')
+        find('button[title="Update curator"]').click
+        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        click_button('Submit')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text(@curator.name.to_s)
+        end
+
+      end
+
       # Skipping this test that fails intermittently, for a feature we're not actually using
       xit 'allows changing user role as a superuser', js: true do
         visit stash_url_helpers.admin_path

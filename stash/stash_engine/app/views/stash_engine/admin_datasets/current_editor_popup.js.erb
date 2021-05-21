@@ -1,0 +1,27 @@
+// replace dialog div with contents of dialog text from partial
+<% title = @resource.title.html_safe %>
+
+$('#popup_dialog').html("<%= escape_javascript(
+          render partial: 'stash_engine/admin_datasets/current_editor_form', locals: {
+            resource: @resource, curation_activity: @curation_activity}) %>");
+
+
+// now open a jquery ui modal dialog
+$(function() {
+
+  $("#popup_dialog").dialog({
+    autoOpen: true,
+    height: 'auto',
+    width: '500px',
+    modal: true,
+    title: '<%= escape_javascript(title) %>'
+  });
+
+  // make the cancel button in the dialog hide the dialog
+  $("#cancel_dialog").click(function (e) {
+    e.preventDefault();
+    $('#popup_dialog').dialog('close');
+  });
+
+
+});
