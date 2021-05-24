@@ -64,11 +64,11 @@ As an example, the widget can be constructed to automatically display
 a linked banner if Dryad has data for the article
 `doi:10.1186/1471-2148-12-60` as follows:
 
-<pre>
+```
 <a
 href="http://datadryad.org/widgets/dataPackageForPub?referrer=BMC&pubId=doi%3A10.1186%2F1471-2148-12-60">
 <img
 src="http://datadryad.org/widgets/bannerForPub?referrer=BMC&pubId=doi%3A10.1186%2F1471-2148-12-60"
-alt="Data in Dryad"></img>
+alt="Data in Dryad" />
 </a>
-</pre>
+```
