@@ -531,7 +531,7 @@ Software and Supplemental Information can be uploaded for publication at'
       @file2.url = 'http://example.com/example.csv'
       @file2.save
       @file3 = create_supplemental_file(@resource_id)
-      click_link 'Upload Files'  # refresh the page to show the table with the file
+      click_link 'Upload Files' # refresh the page to show the table with the file
     end
 
     xit 'calls destroy_manifest when removing New file' do
