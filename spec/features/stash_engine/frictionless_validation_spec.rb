@@ -41,12 +41,11 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     before(:each) do
       # @file = create_generic_file(StashEngine::Resource.last.id)
       @file = create(:generic_file,
-          resource_id: StashEngine::Resource.last.id,
-          upload_content_type: 'text/plain',
-          upload_file_size: 31_726,
-          status_code: 200,
-          file_state: 'created'
-      )
+                     resource_id: StashEngine::Resource.last.id,
+                     upload_content_type: 'text/plain',
+                     upload_file_size: 31_726,
+                     status_code: 200,
+                     file_state: 'created')
     end
 
     it 'shows N/A for non-plain-text tabular data files' do
