@@ -15,7 +15,6 @@ import WarningMessage from '../components/WarningMessage/WarningMessage';
 // TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
-
 /**
  * Constants
  */
