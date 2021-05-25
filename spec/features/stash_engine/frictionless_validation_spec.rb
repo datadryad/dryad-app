@@ -50,6 +50,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows N/A for non-plain-text tabular data files' do
       @file.update(upload_file_name: 'non_tabular')
+      sleep 1
       click_link 'Upload Files'
 
       within('table') do
@@ -60,6 +61,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'shows "Issues found" if file is plain-text and tabular and there is a report for it' do
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', generic_file: @file)
+      sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
@@ -71,6 +73,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # This is a weird case, and must not occur.
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: nil, generic_file: @file)
+      sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
@@ -80,6 +83,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows "Passed" if file is plain-text and tabular and there is not a report' do
       @file.update(upload_content_type: 'text/csv')
+      sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
@@ -136,6 +140,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
+      sleep 1
 
       click_button("#{@upload_type}_manifest")
 
@@ -168,6 +173,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       stub_file3 = File.open(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
       stub_request(:get, url_non_csv)
         .to_return(body: stub_file3, status: 200)
+      sleep 1
 
       click_button("#{@upload_type}_manifest")
       page.driver.browser.network_conditions = { throughput: 500 * 1024, latency: 100 }
@@ -186,6 +192,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
+      sleep 1
 
       click_button("#{@upload_type}_manifest")
       validate_url_manifest(url)
@@ -203,6 +210,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
+      sleep 1
 
       click_button("#{@upload_type}_manifest")
       validate_url_manifest(url)
@@ -230,6 +238,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       stub_file3 = File.open(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))
       stub_request(:get, url_non_csv)
         .to_return(body: stub_file3, status: 200)
+      sleep 1
 
       click_button("#{@upload_type}_manifest")
       validate_url_manifest("#{url_csv_1}\n#{url_csv_2}\n#{url_non_csv}")
