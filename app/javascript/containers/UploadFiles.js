@@ -32,6 +32,12 @@ const Messages = {
     'fileAlreadySelected': 'A file of the same type is already in the table.',
     'filesAlreadySelected': 'Some files of the same type are already in the table.'
 }
+const TabularCheckStatus = {
+    'checking': 'Checking...',
+    'issues_found': 'Issues found',
+    'passed': 'Passed',
+    'na': 'N/A'
+}
 
 class UploadFiles extends React.Component {
     state = {
@@ -84,11 +90,11 @@ class UploadFiles extends React.Component {
 
     setTabularCheckStatus = (file) => {
         if (!this.isCsv(file)) {
-            return 'N/A';
+            return TabularCheckStatus['na'];
         } else {
             return file.frictionless_report && file.frictionless_report.report
-                ? 'Issues found'
-                : 'Passed'
+                ? TabularCheckStatus['issues_found']
+                : TabularCheckStatus['passed']
         }
     }
 
@@ -300,13 +306,13 @@ class UploadFiles extends React.Component {
 
     updateTabularCheckStatus = (tabularFiles) => {
         if (this.state.validating) {
-            return tabularFiles.map(file => ({...file, tabularCheckStatus: 'Checking...'}));
+            return tabularFiles.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
         } else {
             return tabularFiles.map(file => ({
                 ...file,
                 tabularCheckStatus: file.frictionless_report && file.frictionless_report.report
-                    ? 'Issues found'
-                    : 'Passed'
+                    ? TabularCheckStatus['issues_found']
+                    : TabularCheckStatus['passed']
             }));
         }
     }
@@ -314,7 +320,7 @@ class UploadFiles extends React.Component {
     labelNonTabular = (files) => {
         return files.map(file => ({
             ...file,
-            tabularCheckStatus: this.isCsv(file) ? null : 'N/A'
+            tabularCheckStatus: this.isCsv(file) ? null : TabularCheckStatus['na']
         }));
     }
 
