@@ -2,7 +2,7 @@ require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
-require 'down/http'
+require 'down'
 
 module StashEngine
   # rubocop:disable Metrics/ClassLength
@@ -140,7 +140,7 @@ module StashEngine
 
     def validate_frictionless
       # TODO: add exceptions for downloading errors
-      tempfile = Down::Http.download(url)
+      tempfile = Down.download(url)
 
       result = call_frictionless(tempfile)
       result_hash = JSON.parse(result)
