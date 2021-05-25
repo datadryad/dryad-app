@@ -74,7 +74,7 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
       expect(page).to have_content(@file3.upload_file_name)
-      expect(page).to have_content('New', count: 3)
+      expect(page).to have_content('Uploaded', count: 3)
     end
 
     it 'shows the right navigation buttons at the bottom' do
@@ -433,7 +433,7 @@ Software and Supplemental Information can be uploaded for publication at'
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       click_on('validate_files')
-      expect(page).to have_content('New')
+      expect(page).to have_content('Uploaded')
     end
 
     it 'only changes table status column to a progress bar if file status is Pending' do
