@@ -61,6 +61,8 @@ module StashEngine
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
+      CURATOR_IDS = StashEngine::User.curators.map(&:id)
+
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
       #
       def initialize(result)
@@ -82,7 +84,7 @@ module StashEngine
         @curation_activity_id = result[12]
         @status = result[13]
         @updated_at = result[14]
-        @editor_id = StashEngine::User.curators.map(&:id).include?(result[15].to_i) ? result[15] : nil
+        @editor_id = CURATOR_IDS.include?(result[15].to_i) ? result[15] : nil
         @editor_name = @editor_id ? "#{result[17]} #{result[16]}" : nil
         @author_names = result[18]
         @views = (result[20].nil? ? 0 : result[19] - result[20])
