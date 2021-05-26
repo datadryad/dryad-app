@@ -88,6 +88,7 @@ module StashEngine
       begin
         files = tabular_files.find(params['file_ids'])
       rescue ActiveRecord::RecordNotFound => e
+        puts "Record not found: #{e.inspect}" # only for rubocop
         render json: { status: 'found non-csv file(s)' }
         return
       end
