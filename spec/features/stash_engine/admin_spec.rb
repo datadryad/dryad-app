@@ -129,6 +129,7 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'allows assigning a curator', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+        stub_const('StashEngine::AdminDatasets::CurationTableRow::CURATOR_IDS', [@curator.id])
 
         visit root_path
         find('.o-sites__summary', text: 'Admin').click
