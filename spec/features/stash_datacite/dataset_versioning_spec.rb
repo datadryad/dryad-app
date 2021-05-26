@@ -21,6 +21,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     ignore_zenodo!
     neuter_curation_callbacks!
     @curator = create(:user, role: 'superuser')
+    stub_const('StashEngine::AdminDatasets::CurationTableRow::CURATOR_IDS', [@curator.id])
     @author = create(:user)
     @document_list = []
   end
@@ -186,7 +187,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Admin page', js: true do
         within(:css, '.c-lined-table__row') do
-
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit Dataset"]')
           expect(page).to have_css('button[aria-label="Update status"]')
