@@ -133,6 +133,7 @@ class UploadFiles extends React.Component {
     addFilesHandler = (event, uploadType) => {
         this.setState({warningMessage: null});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
+        // TODO: make a function?; future: unify adding file attributes
         newFiles.map(file => {
             file.sanitized_name = sanitize(file.name);
             file.status = 'Pending';
@@ -287,7 +288,7 @@ class UploadFiles extends React.Component {
     }
 
     updateFileList = (files) => {
-        files = this.labelNonTabular(files);
+        this.labelNonTabular(files);
         if (!this.state.chosenFiles.length) {
             this.setState({chosenFiles: files});
         } else {
@@ -318,10 +319,9 @@ class UploadFiles extends React.Component {
     }
 
     labelNonTabular = (files) => {
-        return files.map(file => ({
-            ...file,
-            tabularCheckStatus: this.isCsv(file) ? null : TabularCheckStatus['na']
-        }));
+        files.map(file => {
+            file.tabularCheckStatus = this.isCsv(file) ? null : TabularCheckStatus['na']
+        });
     }
 
     isCsv = (file) => file.sanitized_name.split('.').pop() === 'csv'
