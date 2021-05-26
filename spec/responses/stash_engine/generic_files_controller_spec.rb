@@ -140,13 +140,13 @@ module StashEngine
             .to_return(body: body_file, status: 200)
         end
 
-        it 'downloads file' do
+        it 'downloads file successfully' do
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
           assert_requested :get, @file.url, times: 1
         end
 
-        it 'downloads more than one file' do
+        it 'downloads more than one file successfully' do
           file2 = create(:generic_file)
           file2.update(upload_file_name: 'invalid2.csv', url: 'http://example.com/invalid2.csv')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid2.csv'))
@@ -157,6 +157,12 @@ module StashEngine
           expect(response_code).to eql(200)
           assert_requested :get, @file.url, times: 1
           assert_requested :get, file2.url, times: 1
+        end
+
+        it 'downloads file unsuccessfully' do
+        end
+
+        it 'downloads more than one file unsuccessfully' do
         end
 
         # TODO: this needs to be fixed using mock

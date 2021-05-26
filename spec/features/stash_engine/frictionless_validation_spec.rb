@@ -97,7 +97,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @upload_type = %w[data software supp].sample
       click_link 'Upload Files'
     end
-    # TODO: skipping until intermittently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move tests from here to React only tests
     xit 'shows Tabular Data Check column' do
       attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/table.csv", make_visible: { left: 0 })
       check('confirm_to_upload')
@@ -106,7 +107,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('Tabular Data Check')
     end
 
-    # Needs to mock S3 submission via Evaporate
+    # xit: Needs to mock S3 submission via Evaporate
     xit 'shows "N/A" after submitting file to S3 and the file is not plain/text tabular' do
       attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 })
       check('confirm_to_upload')
@@ -117,7 +118,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    # TODO: remove if the column is always there
+    # TODO: xit: remove if the column is always there
     xit 'shows column if there are new manifest tabular files' do
       url = 'http://example.org/table.csv'
       stub_request(:any, url).to_return(
@@ -130,7 +131,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('Tabular Data Check')
     end
 
-    # TODO: skipping until intermittently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move tests from here to React only tests
     xit 'shows "Checking..." when a new manifest csv file is submitted' do
       # file is csv if has csv extension or hasn't csv extension but has text/csv mime type
       url_csv = 'http://example.org/table.csv'
@@ -158,7 +160,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    # TODO: skiping until intermitently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move tests from here to React only tests
     xit 'shows "Checking..." for new manifest csv files submitted and "N/A" for new manifest non-csv files' do
       url_csv_1 = 'http://example.org/table.csv'
       url_csv_2 = 'http://example.org/invalid.csv'
@@ -188,7 +191,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    # TODO: skipping until intermittently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move tests from here to React only tests
     xit 'shows "Passed" when csv file is submitted and pass in frictionless validation' do
       url = 'http://example.org/table.csv'
       build_valid_stub_request(url)
@@ -207,7 +211,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    # TODO: skipping until intermittently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move tests from here to React only tests
     xit 'shows "Issues found" when csv file is submitted and does not pass in frictionless validation' do
       url = 'http://example.org/invalid.csv'
       build_valid_stub_request(url)
@@ -226,7 +231,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    # TODO: skipping until intermittently capybara tests been solved
+    # TODO: xit: skipping until intermittently capybara tests been solved or
+    #   else forget about and move test from here to React only tests
     xit 'shows "Passed" for new manifest csv files submitted and "N/A" for new manifest non-csv files' do
       url_csv_1 = 'http://example.org/table.csv'
       url_csv_2 = 'http://example.org/table2.csv'
