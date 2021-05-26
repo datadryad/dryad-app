@@ -176,7 +176,7 @@ module StashEngine
           expect(generic_file).to receive(:validate_frictionless)
         end
 
-        # TODO: get rid of
+        # TODO: trying the above again: get rid of
         xit 'calls frictionless validation on the downloaded file (other tentative)' do
           allow_any_instance_of(described_class).to receive(:validate_frictionless).and_return(true)
 
@@ -225,7 +225,7 @@ module StashEngine
         end
       end
 
-      describe 'invalid file system files' do
+      describe 'invalid S3 files' do
         before(:each) do
           @file.update(upload_file_name: 'invalid.csv')
           @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
@@ -240,6 +240,30 @@ module StashEngine
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
           assert_requested :get, /#{@s3_domain}.*/, times: 1
+        end
+
+        it 'saves frictionless report' do
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+
+          report = @file.frictionless_report
+          expect(report.report).to include("\"errors\": [\n") # it's '"errors": []' for valid files
+        end
+      end
+
+      describe 'valid S3 files' do
+        it 'does not save frictionless report' do
+          @file.update(upload_file_name: 'table.csv')
+          @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+          stub_request(:get, /#{@s3_domain}.*/)
+            .with(
+              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
+            ).to_return(status: 200, body: body_file, headers: {})
+
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+          expect(StashEngine::FrictionlessReport.exists?).to be(false)
         end
       end
     end
