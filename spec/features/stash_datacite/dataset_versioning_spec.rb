@@ -21,7 +21,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     ignore_zenodo!
     neuter_curation_callbacks!
     @curator = create(:user, role: 'superuser')
-    stub_const('StashEngine::AdminDatasets::CurationTableRow::CURATOR_IDS', [@curator.id])
     @author = create(:user)
     @document_list = []
   end
