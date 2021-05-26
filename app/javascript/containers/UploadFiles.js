@@ -73,6 +73,17 @@ class UploadFiles extends React.Component {
         this.setState({chosenFiles: transformed});
     }
 
+    // checks the file list if any files are pending and if so returns true (or false)
+    pendingFiles = () => {
+        if(this.state.chosenFiles.length === 0) return false;
+
+        // https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
+        const retState = this.state.chosenFiles.some(element => {
+            if(element.id === undefined) return true;
+        });
+        return (retState === true ? true : false);
+    }
+
     addFilesHandler = (event, uploadType) => {
         this.setState({warningMessage: null});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
@@ -432,13 +443,15 @@ class UploadFiles extends React.Component {
                             <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                         </div> : null }
                     {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
-                    <ValidateFiles
-                        id='confirm_to_validate_files'
-                        buttonLabel='Upload pending files'
-                        checkConfirmed={true}
-                        disabled={this.state.submitButtonFilesDisabled}
-                        changed={this.toggleCheckedFiles}
-                        clicked={this.uploadFilesHandler} />
+                    {this.pendingFiles() ?
+                        <ValidateFiles
+                            id='confirm_to_validate_files'
+                            buttonLabel='Upload pending files'
+                            checkConfirmed={true}
+                            disabled={this.state.submitButtonFilesDisabled}
+                            changed={this.toggleCheckedFiles}
+                            clicked={this.uploadFilesHandler}/>
+                        : null}
                 </div>
             )
         } else {
