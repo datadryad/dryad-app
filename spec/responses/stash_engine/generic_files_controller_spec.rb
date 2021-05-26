@@ -57,8 +57,8 @@ module StashEngine
       before(:each) do
         @valid_manifest_url = 'http://example.org/funbar.txt'
         @invalid_manifest_url = 'http://example.org/foobar.txt'
-        create_valid_stub_request(@valid_manifest_url)
-        create_invalid_stub_request(@invalid_manifest_url)
+        build_valid_stub_request(@valid_manifest_url)
+        build_invalid_stub_request(@invalid_manifest_url)
       end
 
       it 'returns json when request with format html' do
@@ -222,6 +222,24 @@ module StashEngine
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
           expect(StashEngine::FrictionlessReport.exists?).to be(false)
+        end
+      end
+
+      describe 'invalid file system files' do
+        before(:each) do
+          @file.update(upload_file_name: 'invalid.csv')
+          @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          stub_request(:get, /#{@s3_domain}.*/)
+            .with(
+              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
+            ).to_return(status: 200, body: body_file, headers: {})
+        end
+
+        it 'downloads file from S3 successfully' do
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+          assert_requested :get, /#{@s3_domain}.*/, times: 1
         end
       end
     end

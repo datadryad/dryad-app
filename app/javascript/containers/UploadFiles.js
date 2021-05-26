@@ -395,6 +395,7 @@ class UploadFiles extends React.Component {
                     this.updateManifestFiles(response.data);
                     this.setState({urls: null, loading: false});
                 })
+                // TODO: besides log error set urls: null, loading: false and set tabular check status to some status
                 .catch(error => console.log(error));
         }
     };
