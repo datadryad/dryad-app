@@ -16,4 +16,3 @@ module StashEngine
     end
   end
 end
-
