@@ -191,7 +191,10 @@ class UploadFiles extends React.Component {
                             })
                             .then(response => {
                                 console.log(response);
-                                this.setFileUploadComplete(response.data.new_file, index);
+                                this.updateFileData(response.data.new_file, index);
+                                this.isCsv(this.state.chosenFiles[index])
+                                    ? this.validateFrictionless([this.state.chosenFiles[index]])
+                                    : null;
                             })
                             .catch(error => console.log(error));
                     }
@@ -216,9 +219,10 @@ class UploadFiles extends React.Component {
         });
     }
 
-    setFileUploadComplete = (file, index) => {
+    updateFileData = (file, index) => {
         const chosenFiles = this.state.chosenFiles;
         chosenFiles[index].id = file.id;
+        chosenFiles[index].sanitized_name = file.upload_file_name;
         chosenFiles[index].status = 'New';
         this.setState({chosenFiles: chosenFiles});
     }
