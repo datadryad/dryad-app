@@ -5,7 +5,6 @@ require 'stash/download' # for the thing that prevents character mangling in htt
 require 'http'
 
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class GenericFile < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
@@ -167,5 +166,5 @@ module StashEngine
       result['tasks'].first['errors'].empty?
     end
   end
-  # rubocop: enable Metrics/ClassLength
+
 end
