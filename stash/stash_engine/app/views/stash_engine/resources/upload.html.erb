@@ -15,7 +15,7 @@
 <%= react_component("UploadFiles", {
   resource_id: @resource.id,
   file_uploads: @resource.generic_files.validated_table.map(&:attributes),
-  app_config_s3: APP_CONFIG[:s3],
+  app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
   s3_dir_name: @resource.s3_dir_name(type: 'base')
 }) %>
 
