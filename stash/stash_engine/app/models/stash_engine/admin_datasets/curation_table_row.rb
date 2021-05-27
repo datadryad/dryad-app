@@ -63,7 +63,7 @@ module StashEngine
 
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
       #
-      def initialize(result)
+      def initialize(result, curator_ids)
         return unless result.is_a?(Array) && result.length >= 22
 
         # Convert the array of results into attribute values
@@ -82,7 +82,7 @@ module StashEngine
         @curation_activity_id = result[12]
         @status = result[13]
         @updated_at = result[14]
-        @editor_id = StashEngine::User.curators.map(&:id).include?(result[15].to_i) ? result[15] : nil
+        @editor_id = curator_ids.include?(result[15].to_i) ? result[15] : nil
         @editor_name = @editor_id ? "#{result[17]} #{result[16]}" : nil
         @author_names = result[18]
         @views = (result[20].nil? ? 0 : result[19] - result[20])
@@ -126,7 +126,8 @@ module StashEngine
                                  identifier_id: identifier_id)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
-          results = ApplicationRecord.connection.execute(query).map { |result| new(result) }
+          curator_ids = StashEngine::User.curators.map(&:id)
+          results = ApplicationRecord.connection.execute(query).map { |result| new(result, curator_ids) }
           # If the user is trying to sort by author names, then
           (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
         end

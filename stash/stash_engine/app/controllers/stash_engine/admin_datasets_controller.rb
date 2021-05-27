@@ -157,6 +157,9 @@ module StashEngine
       resource_ids = @identifier.resources.collect(&:id)
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+    rescue ActiveRecord::RecordNotFound
+      admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
+      redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
     end
 
     def stats_popup

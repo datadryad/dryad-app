@@ -219,7 +219,7 @@ class UploadFiles extends React.Component {
     setFileUploadComplete = (file, index) => {
         const chosenFiles = this.state.chosenFiles;
         chosenFiles[index].id = file.id;
-        chosenFiles[index].status = 'New';
+        chosenFiles[index].status = 'Uploaded';
         this.setState({chosenFiles: chosenFiles});
     }
 
@@ -421,7 +421,7 @@ class UploadFiles extends React.Component {
         return files.map(file => ({
             ...file,
             sanitized_name: file.upload_file_name,
-            status: 'New',  // TODO: correctly define the status based on status in database
+            status: 'Uploaded',
             uploadType: RailsActiveRecordToUploadType[file.type],
             sizeKb: formatSizeUnits(file.upload_file_size)
         }))

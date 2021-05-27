@@ -59,3 +59,21 @@
 
 <div id="popup_dialog" style="display:none;">
 </div>
+
+<% if current_user.superuser? %>
+    <div id="dangerous_actions">
+	<div style="float: left"><h2>Dangerous Actions</h2>
+
+	    <div style="float: left">
+		<% res = @identifier&.latest_resource %>
+		<%= form_with(url: metadata_entry_pages_new_version_path, method: :post, local: true) do -%>
+			<button class="o-button__submit">Forcibly Edit Dataset</button>
+			<%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
+			<%= hidden_field_tag :return_url, '/stash/dashboard' %>
+		<% end %>
+		<p>Forcibly editing a dataset will assign it to you, and begin an editing session.
+		Please only do this if you know the author is unable/unwilling to submit it.</p>
+	    </div>
+	</div>
+    </div>
+<% end %>
