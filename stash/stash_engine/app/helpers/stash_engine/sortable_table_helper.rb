@@ -49,7 +49,7 @@ module StashEngine
     # Passthrough for query parameters that are allowed on pages with sortable tables
     def sortable_table_params
       params.permit(:q, :sort, :direction, :page, :page_size, :show_all,
-                    :tenant, :curation_status, :publication_name, :all_advanced)
+                    :tenant, :editor_id, :curation_status, :publication_name, :all_advanced)
     end
 
     # Generate a string for ordering ActiveRecord selections. If no sort order

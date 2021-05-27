@@ -1,8 +1,6 @@
 # this require needed in tests, but not really in app, though it doesn't hurt anything
 require_relative '../../../app/helpers/stash_engine/application_helper'
 require 'stripe'
-
-# rubocop:disable Metrics/ClassLength
 module Stash
   module Payments
     class Invoicer
@@ -165,4 +163,3 @@ module Stash
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

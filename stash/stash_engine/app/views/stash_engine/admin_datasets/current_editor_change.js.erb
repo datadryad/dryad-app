@@ -1,0 +1,5 @@
+<% # redrawing full row rather than trying to fix each item.  Will I need to reattach all button events after?  So far doesn't seem like it. %>
+
+$("#js-dataset-row-id-<%= @resource.identifier.id %>").replaceWith("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/datasets_row', locals: { dataset: @curation_row }) %>")
+
+$("#popup_dialog").dialog("close");

@@ -70,7 +70,6 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(body: nil, status: 404) unless id
@@ -106,7 +105,6 @@ module StashEngine
       logger.debug(e)
       render(body: nil, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
-    # rubocop:enable Metrics/AbcSize
 
     # ############################################################
     # Private

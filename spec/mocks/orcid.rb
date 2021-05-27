@@ -5,7 +5,6 @@ module Mocks
     class << self
 
       # Its a Hash Rubocop, get over yourself!
-      # rubocop:disable Metrics/AbcSize
       def omniauth_response(user)
         {
           uid: user.present? && user.orcid.present? ? user.orcid : Faker::Pid.orcid,
@@ -25,8 +24,6 @@ module Mocks
           }
         }
       end
-
-      # rubocop:enable Metrics/AbcSize
 
       def email_response(user)
         {

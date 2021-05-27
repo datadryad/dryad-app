@@ -21,5 +21,11 @@ module StashEngine
       status_select(statuses)
     end
 
+    def editor_select
+      curators = StashEngine::User.curators
+      curators.sort { |a, b| a.last_name <=> b.last_name }.map do |c|
+        [c.name, c.id]
+      end
+    end
   end
 end

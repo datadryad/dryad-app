@@ -2,8 +2,6 @@ require_dependency 'stash_engine/application_controller'
 require 'stash/download/file_presigned'
 require 'stash/download/version_presigned'
 require 'http'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
@@ -40,7 +38,6 @@ module StashEngine
     end
 
     # for downloading the full version
-    # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
@@ -68,7 +65,6 @@ module StashEngine
       end
     end
 
-    # rubocop:enable Metrics/MethodLength
     # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
     def assembly_status
       @resource = nil
@@ -204,4 +200,3 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ClassLength

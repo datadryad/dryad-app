@@ -1,5 +1,5 @@
 class CreateDoorkeeperTables < ActiveRecord::Migration[4.2]
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength
   def change
     create_table :oauth_applications do |t|
       t.string  :name,         null: false
@@ -66,5 +66,5 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[4.2]
       column: :application_id
     )
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength
 end

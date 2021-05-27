@@ -33,7 +33,6 @@ module DownloadCheck
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def check_all_files
       # we always have to do this because the normalizer in 'http.rb' randomly mangles some things
       @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
@@ -74,7 +73,7 @@ module DownloadCheck
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable
 
     def save_error(resource:, file:, error:)
       ark = %r{/d/(.+)$}.match(resource.download_uri)

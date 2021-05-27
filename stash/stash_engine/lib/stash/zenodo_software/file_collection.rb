@@ -58,7 +58,6 @@ module Stash
       end
 
       # contains response: and digest: keys
-      # rubocop:disable Metrics/AbcSize
       def check_digests(streamer_response:, file_model:)
         out = streamer_response
         upload = file_model
@@ -75,7 +74,7 @@ module Stash
         raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
               "Database: #{upload.digest}"
       end
-      # rubocop:enable Metrics/AbcSize
+
     end
   end
 end

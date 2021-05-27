@@ -164,7 +164,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       it 'submits a curation status changes and reflects in the page and history afterwards' do
         within(:css, '.c-lined-table__row', wait: 10) do
-          all(:css, 'button')[2].click
+          find('button[title="Update status"]').click
         end
 
         # select the author action required
@@ -176,7 +176,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).to have_text('Author Action Required')
-          all(:css, 'button').last.click
+          find('button[title="View Activity Log"]').click
         end
 
         expect(page).to have_text('My cat says hi')

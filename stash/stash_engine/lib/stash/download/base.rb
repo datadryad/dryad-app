@@ -25,7 +25,6 @@ module Stash
       end
 
       # this is a method that should be overridden
-      # rubocop:disable Metrics/AbcSize
       def stream_response(url:, tenant:, filename:, read_timeout: 30)
         cc.request.env['rack.hijack'].call
         user_stream = cc.request.env['rack.hijack_io']
@@ -51,7 +50,6 @@ module Stash
         end
         cc.response.close
       end
-      # rubocop:enable Metrics/AbcSize
 
       # these send methods are the streaming methods for a 'rack.hijack',
       def send_headers(stream:, header_obj:, filename:)
@@ -77,7 +75,6 @@ module Stash
         raise e
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def send_stream(user_stream:, merritt_stream:)
         # use this file to write contents of the stream
         FileUtils.mkdir_p(Rails.root.join('uploads')) # ensures this file is created if it doesn't exist, needed mostly for tests
@@ -120,7 +117,7 @@ module Stash
         # class no longer exists to track history, and we're really not using this class anymore -- remants before presigned download urls
         # StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable
 
       def save_to_file(merritt_stream:, write_file:)
         chunk_size = 1024 * 512 # 512k
