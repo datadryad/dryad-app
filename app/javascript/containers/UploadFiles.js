@@ -15,7 +15,6 @@ import WarningMessage from '../components/WarningMessage/WarningMessage';
 // TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
-
 /**
  * Constants
  */
@@ -32,6 +31,12 @@ const AllowedUploadFileTypes = {
 const Messages = {
     'fileAlreadySelected': 'A file of the same type is already in the table.',
     'filesAlreadySelected': 'Some files of the same type are already in the table.'
+}
+const TabularCheckStatus = {
+    'checking': 'Checking...',
+    'issues_found': 'Issues found',
+    'passed': 'Passed',
+    'na': 'N/A'
 }
 
 class UploadFiles extends React.Component {
@@ -85,11 +90,11 @@ class UploadFiles extends React.Component {
 
     setTabularCheckStatus = (file) => {
         if (!this.isCsv(file)) {
-            return 'N/A';
+            return TabularCheckStatus['na'];
         } else {
             return file.frictionless_report && file.frictionless_report.report
-                ? 'Issues found'
-                : 'Passed'
+                ? TabularCheckStatus['issues_found']
+                : TabularCheckStatus['passed']
         }
     }
 
@@ -128,6 +133,7 @@ class UploadFiles extends React.Component {
     addFilesHandler = (event, uploadType) => {
         this.setState({warningMessage: null});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
+        // TODO: make a function?; future: unify adding file attributes
         newFiles.map(file => {
             file.sanitized_name = sanitize(file.name);
             file.status = 'Pending';
@@ -282,7 +288,7 @@ class UploadFiles extends React.Component {
     }
 
     updateFileList = (files) => {
-        files = this.labelNonTabular(files);
+        this.labelNonTabular(files);
         if (!this.state.chosenFiles.length) {
             this.setState({chosenFiles: files});
         } else {
@@ -301,22 +307,21 @@ class UploadFiles extends React.Component {
 
     updateTabularCheckStatus = (tabularFiles) => {
         if (this.state.validating) {
-            return tabularFiles.map(file => ({...file, tabularCheckStatus: 'Checking...'}));
+            return tabularFiles.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
         } else {
             return tabularFiles.map(file => ({
                 ...file,
                 tabularCheckStatus: file.frictionless_report && file.frictionless_report.report
-                    ? 'Issues found'
-                    : 'Passed'
+                    ? TabularCheckStatus['issues_found']
+                    : TabularCheckStatus['passed']
             }));
         }
     }
 
     labelNonTabular = (files) => {
-        return files.map(file => ({
-            ...file,
-            tabularCheckStatus: this.isCsv(file) ? null : 'N/A'
-        }));
+        files.map(file => {
+            file.tabularCheckStatus = this.isCsv(file) ? null : TabularCheckStatus['na']
+        });
     }
 
     isCsv = (file) => file.sanitized_name.split('.').pop() === 'csv'
