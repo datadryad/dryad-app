@@ -16,8 +16,8 @@ module StashApi
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
     before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
-    before_action :require_api_user, only: %i[create update]
-    before_action :optional_api_user, except: %i[create update]
+    before_action :require_api_user, only: %i[create update em_submission_metadata]
+    before_action :optional_api_user, except: %i[create update em_submission_metadata]
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
@@ -145,7 +145,20 @@ module StashApi
       end
 
       em_authors = []
-      params['authors'].each do |auth|
+      auth_array = params['authors'] || params['author']
+      if auth_array.is_a?(Array)
+        auth_array.each do |auth|
+          em_authors << {
+            firstName: auth['first_name'],
+            lastName: auth['last_name'],
+            email: auth['email'],
+            orcid: auth['orcid'],
+            affiliation: auth['institution']
+          }.with_indifferent_access.compact
+        end
+      else
+        # assume there is only one author, so the param is an author hash
+        auth = auth_array
         em_authors << {
           firstName: auth['first_name'],
           lastName: auth['last_name'],
