@@ -129,6 +129,7 @@ module StashEngine
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
 
       if @identifier.in_progress_only?
+        @identifier.in_progress_resource.update(current_editor_id: current_user&.id)
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?

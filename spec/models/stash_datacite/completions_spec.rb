@@ -249,7 +249,8 @@ module StashDatacite
         end
       end
 
-      describe :over_manifest_file_size? do
+      # takes size and AR list of files
+      describe :over_size? do
         attr_reader :actual_size
 
         before(:each) do
@@ -261,12 +262,12 @@ module StashDatacite
 
         it 'returns true if file size > limit' do
           limit = actual_size - 1
-          expect(completions.over_manifest_file_size?(limit)).to eq(true)
+          expect(completions.over_size?(limit: limit, file_list: resource.data_files.present_files)).to eq(true)
         end
 
         it 'returns false if file size <= limit' do
           limit = actual_size
-          expect(completions.over_manifest_file_size?(limit)).to eq(false)
+          expect(completions.over_size?(limit: limit, file_list: resource.data_files.present_files)).to eq(false)
         end
 
         it 'counts copied files as well as new uploads' do
@@ -276,42 +277,24 @@ module StashDatacite
               f.save!
             end
             limit = actual_size - 1
-            expect(completions.over_manifest_file_size?(limit)).to eq(true)
+            expect(completions.over_size?(limit: limit, file_list: resource.data_files.present_files)).to eq(true)
           end
         end
       end
 
-      describe :over_version_size? do
-        attr_reader :actual_size
-
-        before(:each) do
-          @actual_size = @resource.data_files.present_files.inject(0) { |sum, f| sum + f.upload_file_size }
-        end
-
-        it 'returns true if file size > limit' do
-          limit = @actual_size - 1
-          expect(completions.over_version_size?(limit)).to eq(true)
-        end
-
-        it 'returns false if file size <= limit' do
-          limit = actual_size
-          expect(completions.over_version_size?(limit)).to eq(false)
-        end
-      end
-
-      describe :over_manifest_file_count? do
+      describe :over_file_count? do
         attr_reader :actual_count
         before(:each) do
           @actual_count = resource.data_files.present_files.count
         end
         it 'returns true if file count > limit' do
-          limit = actual_count - 1
-          expect(completions.over_manifest_file_count?(limit)).to eq(true)
+          allow(APP_CONFIG.maximums).to receive(:files).and_return(actual_count - 1)
+          expect(completions.over_file_count?(file_list: resource.data_files.present_files)).to eq(true)
         end
 
         it 'returns false if file count <= limit' do
-          limit = actual_count
-          expect(completions.over_manifest_file_count?(limit)).to eq(false)
+          allow(APP_CONFIG.maximums).to receive(:files).and_return(actual_count + 1)
+          expect(completions.over_file_count?(file_list: resource.data_files.present_files)).to eq(false)
         end
 
         it 'counts copied files as well as new uploads' do
@@ -320,8 +303,8 @@ module StashDatacite
               f.file_state = :copied
               f.save!
             end
-            limit = actual_count - 1
-            expect(completions.over_manifest_file_count?(limit)).to eq(true)
+            allow(APP_CONFIG.maximums).to receive(:files).and_return(actual_count - 1)
+            expect(completions.over_file_count?(file_list: resource.data_files.present_files)).to eq(true)
           end
         end
       end

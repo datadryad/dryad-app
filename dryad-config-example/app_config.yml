@@ -148,6 +148,10 @@ defaults: &DEFAULTS
     bucket: a-test-bucket
     key: abcdefg
     secret: HIJKLMNOP
+  maximums:
+    merritt_size: 3.0e+10
+    zenodo_size: 5.0e+9
+    files: 100
 
 development: &DEVELOPMENT
   <<: *DEFAULTS

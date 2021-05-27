@@ -30,9 +30,6 @@ default: &default
     entity_id: urn:mace:incommon:ucop.edu
     entity_domain: .ucop.edu
   default_license: cc_by
-  max_submission_size: 100000000000
-  max_total_version_size: 10000000000
-  max_files: 1000
   campus_contacts: ["quaren@example.org"] # for testing
   data_deposit_agreement: false
 

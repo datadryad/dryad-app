@@ -23,10 +23,6 @@ default: &default
     entity_id: https://idp.iitism.ac.in/idp/shibboleth               
     entity_domain: idp.iitism.ac.in
   default_license: cc0
-  ## maximum total size (default 100 MB for now)
-  max_submission_size: 3.0e+11
-  max_total_version_size: 1.0e+10
-  max_files: 1000
   campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
