@@ -2,6 +2,13 @@
 
 require 'stash/aws/s3'
 
+# this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
+# to output digital storage sizes
+#
+include StashEngine::ApplicationHelper
+
+# ActionController::Base.helpers.number_to_human_size only returns results in MiB, not MB or similar
+
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
 
 # also
@@ -18,7 +25,6 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     class Completions
@@ -90,6 +96,8 @@ module StashDatacite
       end
 
       def s3_error_uploads
+        return if @resource.submitted?
+
         files = @resource.generic_files.newly_created.file_submission
         errored_uploads = []
         files.each do |f|
@@ -98,16 +106,17 @@ module StashDatacite
         errored_uploads
       end
 
-      def over_manifest_file_size?(size_limit)
-        @resource.data_files.present_files.sum(:upload_file_size) > size_limit
+      # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
+      def contains_data?
+        @resource.data_files.present_files.count.positive?
       end
 
-      def over_manifest_file_count?(count_limit)
-        @resource.data_files.present_files.count > count_limit
+      def over_size?(limit:, file_list:)
+        file_list.sum(:upload_file_size) > limit
       end
 
-      def over_version_size?(size_limit)
-        @resource.upload_type == :files && @resource.data_files.newly_created.sum(:upload_file_size) > size_limit
+      def over_file_count?(file_list:)
+        file_list.count > APP_CONFIG.maximums.files
       end
 
       def required_total
@@ -182,7 +191,7 @@ module StashDatacite
 
       def all_warnings
         messages = []
-        error_uploads = s3_error_uploads
+
         messages << 'Add a dataset title' unless title
         messages << 'Add an abstract' unless abstract
         messages << 'For data related to a journal article, you must supply a manuscript number or DOI' unless article_id
@@ -190,15 +199,33 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+
+        file_warnings(messages)
+
+        # do not require strict related works identifier checking right now
+        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
+        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
+      end
+
+      def file_warnings(messages)
+        error_uploads = s3_error_uploads
         if error_uploads.present?
           messages << 'Some files can not be submitted because they may have had errors uploading. ' \
             'Please re-upload the following files if you still see this error in a few minutes.'
           messages << "Files with upload errors: #{error_uploads.join(',')}"
         end
 
-        # do not require strict related works identifier checking right now
-        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
-        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
+        { data_files: { name: 'data files', size_limit: APP_CONFIG.maximums.merritt_size },
+          software_files: { name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size },
+          supp_files: { name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size } }.each_pair do |k, v|
+          if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
+            messages << "Remove some #{v[:name]} until you have a smaller total size than #{filesize(v[:size_limit])}"
+          end
+          if over_file_count?(file_list: @resource.send(k).present_files)
+            messages << "Remove some files until you have #{APP_CONFIG.maximums.files} #{v[:name]} or fewer"
+          end
+        end
+
         messages
       end
 
@@ -212,4 +239,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

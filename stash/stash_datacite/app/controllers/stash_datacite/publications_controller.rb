@@ -5,10 +5,8 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
-# rubocop:disable Metrics/ClassLength, Metrics/MethodLength
 module StashDatacite
   class PublicationsController < ApplicationController
-    # rubocop:disable Metrics/AbcSize
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       @resource = StashEngine::Resource.find(params[:internal_datum][:resource_id])
@@ -138,7 +136,6 @@ module StashDatacite
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{e}")
       @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
     end
-    # rubocop:enable Metrics/AbcSize
 
     def update_doi_metadata
       unless params[:internal_datum][:doi].present?
@@ -231,4 +228,3 @@ module StashDatacite
 
   end
 end
-# rubocop:enable Metrics/ClassLength, Metrics/MethodLength

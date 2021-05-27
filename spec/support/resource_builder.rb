@@ -6,7 +6,7 @@ require 'time'
 
 # Borrowed from stash_migrator
 module StashDatacite
-  class ResourceBuilder # rubocop:disable Metrics/ClassLength
+  class ResourceBuilder
     DESCRIPTION_TYPE = Datacite::Mapping::DescriptionType
 
     attr_reader :user_id, :tenant_id, :dcs_resource, :stash_files, :upload_time

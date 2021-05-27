@@ -23,7 +23,7 @@ module StashEngine
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     # GET /stash/edit/{doi}/{edit_code}
     def edit_by_doi
       redirect_to root_path, alert: 'The target dataset is being processed. Please try again later.' and return if resource.processing?
@@ -63,7 +63,7 @@ module StashEngine
 
       redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # create a new version of this resource before editing with find or create
     def new_version
@@ -129,6 +129,7 @@ module StashEngine
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
 
       if @identifier.in_progress_only?
+        @identifier.in_progress_resource.update(current_editor_id: current_user&.id)
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?

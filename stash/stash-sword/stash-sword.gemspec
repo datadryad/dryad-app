@@ -21,7 +21,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'uri'
 require 'stash/sword/module_info'
 
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name          = Stash::Sword::NAME
   s.version       = Stash::Sword::VERSION
   s.authors       = ['David Moles']

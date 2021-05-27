@@ -4,7 +4,7 @@ require 'action_controller'
 module Stash
   module Merritt
     module Builders
-      class MerrittOAIDCBuilder < Stash::Repo::FileBuilder # rubocop:disable Metrics/ClassLength
+      class MerrittOAIDCBuilder < Stash::Repo::FileBuilder
         ROOT_ATTRIBUTES = {
           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
           'xsi:noNamespaceSchemaLocation' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd',

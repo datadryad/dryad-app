@@ -1,0 +1,42 @@
+<% # locals: resource, curation_activity %>
+<div class="o-admin-dialog">
+    
+  <%= form_with model: StashEngine::Resource.new, url: current_editor_change_path(resource.id),
+                method: :post, remote: true do |f| %>
+
+    <p class="c-alert--error">Unable to save your changes at this time due to an internal error. Please contact a developer.</p>
+    
+    <%# Users cannot change the editor once the files are published %>
+    <% if resource.curatable? %>
+      <%= f.fields_for :current_editor, resource do |r| %>
+        <div class="c-input">
+            <label class="c-input__label">Curator</label>
+          <%= r.select :id, options_for_select(editor_select), include_blank: true %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%# User can always add a note %>
+    <%= f.fields_for :curation_activity, curation_activity do |ca| %>
+      <div class="c-input">
+        <label class="c-input__label">Notes</label>
+        <%= ca.text_area :note, class: 'c-input__textarea' %>
+      </div>
+    <% end %>
+
+    <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
+
+    <%= submit_tag 'Submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+  <% end %>
+
+</div>
+
+<script type="text/javascript">
+  $('.o-admin-dialog form .c-alert--error').hide();
+
+  $('.o-admin-dialog form').on("ajax:error", function(e) {
+    $(e.target).find('.c-alert--error').show();
+  });
+</script>

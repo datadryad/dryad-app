@@ -8,7 +8,7 @@ module StashDatacite
     # this class creates a schema.org dataset structure that can be output as json+ld or others
     # https://developers.google.com/search/docs/data-types/datasets
     # https://schema.org/Dataset
-    class SchemaDataset # rubocop:disable Metrics/ClassLength
+    class SchemaDataset
       ITEMS_TO_ADD = {
         '@id' => :doi_url,
         'name' => :names,

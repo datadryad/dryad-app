@@ -1,7 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
 
     include SharedSecurityController
@@ -17,10 +17,16 @@ module StashEngine
     def index
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
+      journal_limit = (if current_user.role != 'superuser' &&
+                        current_user.journals_as_admin.present?
+                         current_user.journals_as_admin.map(&:title)
+                       end)
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params, tenant: tenant_limit)
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
+                                                                     tenant: tenant_limit,
+                                                                     journals: journal_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
@@ -79,7 +85,39 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def current_editor_popup
+      respond_to do |format|
+        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
+        # using the last submitted resource should apply the curation to the correct place, even with windows held open
+        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
+        format.js
+      end
+    end
+
+    def current_editor_change
+      respond_to do |format|
+        format.js do
+          editor_id = params[:resource][:current_editor][:id]
+          editor_name = StashEngine::User.find(editor_id)&.name
+          @identifier = Identifier.find(params[:identifier_id])
+          @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
+          @resource.current_editor_id = editor_id
+          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
+          decipher_curation_activity
+          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
+                                                                   status: @status,
+                                                                   note: @note)
+          @resource.save
+          @resource.reload
+          # Refresh the page the same way we would for a change of curation activity
+          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
+          render :curation_activity_change
+        end
+      end
+    end
+
+    # rubocop:disable Metrics/AbcSize
     def curation_activity_change
       respond_to do |format|
         format.js do
@@ -111,7 +149,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
     def activity_log
@@ -119,6 +157,9 @@ module StashEngine
       resource_ids = @identifier.resources.collect(&:id)
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+    rescue ActiveRecord::RecordNotFound
+      admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
+      redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
     end
 
     def stats_popup
@@ -227,5 +268,6 @@ module StashEngine
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
+
 end
+# rubocop:enable Metrics/ClassLength

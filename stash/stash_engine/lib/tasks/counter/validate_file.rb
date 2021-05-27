@@ -3,7 +3,6 @@ require 'ipaddr'
 require 'uri'
 
 # this is a long, but very consistent and simple class, so suck it rubocop
-# rubocop:disable Metrics/ClassLength
 module Counter
   class ValidateFile
 
@@ -179,4 +178,3 @@ module Counter
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

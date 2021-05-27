@@ -186,7 +186,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Admin page', js: true do
         within(:css, '.c-lined-table__row') do
-
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit Dataset"]')
           expect(page).to have_css('button[aria-label="Update status"]')
@@ -195,7 +194,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Curation')
           expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
-          expect(page).to have_text(@curator.name_last_first)
+          expect(page).to have_text(@curator.name.to_s)
           expect(page).to have_text(@resource.identifier.identifier)
         end
       end

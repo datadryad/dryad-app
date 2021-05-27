@@ -1,7 +1,5 @@
 require 'byebug'
 require 'pp'
-
-# rubocop:disable Metrics/BlockLength
 namespace :users do
   desc 'Merge old and new users (into old account like it works in the UI)'
   task merge_users: :environment do
@@ -38,4 +36,3 @@ namespace :users do
   end
 
 end
-# rubocop:enable Metrics/BlockLength
