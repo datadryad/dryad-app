@@ -22,20 +22,12 @@ StashEngine::Engine.routes.draw do
     resources :internal_data, shallow: true
   end
 
-  post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
-  post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
   resources :data_files, :software_files, :supp_files do
     member do
-      patch 'remove'
-      patch 'remove_unuploaded'
-      patch 'restore'
-      patch 'destroy_error' # destroy an errored file in manifest upload
       patch 'destroy_manifest' # destroy file from manifest method
     end
   end
-
-
 
   resources :edit_histories, only: [:index]
 
@@ -57,12 +49,6 @@ StashEngine::Engine.routes.draw do
   post 'generic_file/validate_frictionless/:resource_id',
        to: 'generic_files#validate_frictionless',
        as: 'generic_file_validate_frictionless'
-
-  resource :data_file do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
-    member do
-      patch 'revert'
-    end
-  end
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
@@ -141,10 +127,15 @@ StashEngine::Engine.routes.draw do
   get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
   get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
   get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
-  get 'ds_admin/curation_activity_change/:id', to: 'admin_datasets#curation_activity_change'
+#  get 'ds_admin/curation_activity_change/:id', to: 'admin_datasets#curation_activity_change'
+  get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
+#  get 'ds_admin/current_editor_change/:id', to: 'admin_datasets#current_editor_change'
   get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
   get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
-
+  post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
+  post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
+  post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
+  
   # routing for submission queue controller
   get 'submission_queue', to: 'submission_queue#index'
   get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'

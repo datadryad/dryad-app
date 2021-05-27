@@ -11,8 +11,6 @@ require 'fileutils'
 #
 # This class is focused on the processing needed for metadata emails from
 # journals, but it could be expanded for more generic GMail functionality.
-
-# rubocop:disable Metrics/ClassLength
 module Stash
   module Google
     class JournalGMail
@@ -145,7 +143,6 @@ module Stash
 
         # Ensure valid credentials, either by restoring from a saved token
         # or intitiating a (command-line) OAuth2 authorization.
-        # rubocop:disable Metrics/MethodLength
         def initialize_gmail_service
           @gmail = ::Google::Apis::GmailV1::GmailService.new
           @gmail.client_options.application_name = APPLICATION_NAME
@@ -174,7 +171,6 @@ module Stash
           @gmail.authorization = credentials
           @gmail
         end
-        # rubocop:enable Metrics/MethodLength
 
         def processing_label_name
           APP_CONFIG[:google][:journal_processing_label]
@@ -202,4 +198,3 @@ module Stash
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

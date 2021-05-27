@@ -197,7 +197,6 @@ module StashEngine
     end
 
     # Triggered on a status change
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def email_status_change_notices
       return if previously_published?
 
@@ -284,7 +283,7 @@ module StashEngine
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
       resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable
 
     # Helper methods
     # ------------------------------------------

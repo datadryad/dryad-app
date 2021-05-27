@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/ClassLength
 module StashEngine
 
   # Mails users about submissions
@@ -10,12 +9,10 @@ module StashEngine
     def status_change(resource, status)
       return unless %w[submitted peer_review published embargoed].include?(status)
 
-      user = resource.authors.first || resource.user
-      return unless user.present? && user_email(user).present?
-
-      @user_name = user_name(user)
       assign_variables(resource)
-      mail(to: user_email(user),
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
@@ -71,12 +68,10 @@ module StashEngine
       logger.warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
       return unless resource.present?
 
-      user = resource.authors.first || resource.user
-      return unless user.present? && user_email(user).present?
-
-      @user_name = user_name(user)
       assign_variables(resource)
-      mail(to: user_email(user),
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
@@ -84,12 +79,10 @@ module StashEngine
       logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
       return unless resource.present?
 
-      user = resource.authors.first || resource.user
-      return unless user.present? && user_email(user).present?
-
-      @user_name = user_name(user)
       assign_variables(resource)
-      mail(to: user_email(user),
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
@@ -140,6 +133,8 @@ module StashEngine
 
     def assign_variables(resource)
       @resource = resource
+      @user = resource.authors.first || resource.user
+      @user_name = user_name(@user)
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
@@ -166,4 +161,3 @@ module StashEngine
   end
 
 end
-# rubocop:enable Metrics/ClassLength

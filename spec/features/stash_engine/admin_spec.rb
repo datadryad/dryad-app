@@ -28,19 +28,6 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_link('Admin')
     end
 
-    # Skipping this test that fails intermittently, for a feature we're not actually using
-    xit 'shows users for institution' do
-      visit stash_url_helpers.admin_path
-      expect(page).to have_link(@user.name)
-    end
-
-    # Skipping this test that fails intermittently, for a feature we're not actually using
-    xit "shows a user's activity page" do
-      visit stash_url_helpers.admin_user_dashboard_path(@user)
-      expect(page).to have_text("#{@user.name}'s Activity")
-      expect(page).to have_css("[href$='resource_id=#{@resource.id}']")
-    end
-
     it "shows a user's version history for a dataset" do
       visit stash_url_helpers.edit_histories_path(resource_id: @resource.id)
       expect(page).to have_text('1 (Submitted)')
@@ -140,6 +127,25 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_link('Submission Queue')
       end
 
+      it 'allows assigning a curator', js: true do
+        @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+
+        visit root_path
+        find('.o-sites__summary', text: 'Admin').click
+        find('.o-sites__group-item', text: 'Dataset Curation').click
+
+        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_css('button[title="Update curator"]')
+        find('button[title="Update curator"]').click
+        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        click_button('Submit')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text(@curator.name.to_s)
+        end
+
+      end
+
       # Skipping this test that fails intermittently, for a feature we're not actually using
       xit 'allows changing user role as a superuser', js: true do
         visit stash_url_helpers.admin_path
@@ -154,6 +160,37 @@ RSpec.feature 'Admin', type: :feature do
         expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
       end
 
+    end
+
+    context :journal_admin do
+      before(:each) do
+        @journal = create(:journal)
+        @journal_admin = create(:user, tenant_id: 'mock_tenant')
+        @journal_role = create(:journal_role, journal: @journal, user: @journal_admin, role: 'admin')
+        @journal_admin.reload
+
+        sign_in(@journal_admin, false)
+      end
+
+      it 'has admin link' do
+        visit root_path
+        expect(page).to have_link('Admin')
+      end
+
+      it 'only shows datasets from the target journal' do
+        ident1 = create(:identifier)
+        res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
+        ident2 = create(:identifier)
+        res2 = create(:resource, identifier_id: ident2.id, user: @user, tenant_id: @admin.tenant_id)
+        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.issn)
+        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        ident1.reload
+
+        click_link('Admin')
+        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text(res1.title)
+        expect(page).to_not have_text(res2.title)
+      end
     end
 
     context :tenant_curator do

@@ -51,7 +51,6 @@ module StashApi
       validation_hash
     end
 
-    # rubocop:disable Metrics/AbcSize
     def skipped_validation_hash(_hsh)
       unless params[:size] && params[:mimeType] && params[:url]
         (render json: { error: 'You must supply a size, mimetype and url.' }.to_json, status: 403) && yield
@@ -64,7 +63,6 @@ module StashApi
       { resource_id: @resource.id, url: params[:url], status_code: 200, file_state: 'created',
         upload_file_name: my_path, upload_content_type: params[:mimeType], upload_file_size: params[:size] }
     end
-    # rubocop:enable Metrics/AbcSize
 
     def require_correctly_formatted_url
       (render json: { error: 'The URL you supplied is invalid.' }.to_json, status: 403) unless correctly_formatted_url?(params[:url])
@@ -78,12 +76,12 @@ module StashApi
     end
 
     def check_file_size(data_file:)
-      return if @resource.size <= @resource.tenant.max_submission_size
+      return if @resource.size <= APP_CONFIG.maximums.merritt_size
 
       data_file.destroy # because this item won't fit
       (render json: { error:
                           'This file would make your submission size larger than the maximum of ' \
-                          "#{view_context.filesize(@resource.tenant.max_submission_size)}" }.to_json, status: 403) && yield
+                          "#{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json, status: 403) && yield
     end
 
     # only allow to proceed if no other current uploads or only other url-type uploads

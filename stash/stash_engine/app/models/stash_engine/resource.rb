@@ -620,7 +620,6 @@ module StashEngine
 
     # TODO: Move this to the Author model as `Author.from_user` perhaps so that we do not need to comingle
     # StashDatacite objects directly here.
-    # rubocop:disable Metrics/AbcSize
     def fill_author_from_user!
       f_name = user.first_name
       l_name = user.last_name
@@ -638,7 +637,6 @@ module StashEngine
       # disabling because we no longer wnat this with UC Press
       # author.affiliation_by_name(user.tenant.short_name) if user.try(:tenant)
     end
-    # rubocop:enable Metrics/AbcSize
 
     # -----------------------------------------------------------
     # Publication
@@ -784,6 +782,7 @@ module StashEngine
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'system set back to curation')
+      update(current_editor_id: prior_version.current_editor_id) if prior_version.current_editor_id
     end
   end
 end

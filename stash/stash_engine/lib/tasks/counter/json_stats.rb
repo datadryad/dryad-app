@@ -1,18 +1,20 @@
 require 'json'
 require 'byebug'
 
-# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:disable Metrics/AbcSize
 class JsonStats
 
-  def initialize(filename)
-    @stats = JSON.parse(File.read(filename))
+  def initialize
+    # the tally hash is a simple structure like { '10.18737/D7MS44' => { investigation: 7, request: 2}, etc }
+    # It keeps things in memory since constantly updating to the database for each addition for each month was slow
+    # and once all files are done, then can update all the records in database at the end one time and speed this up a lot.
+    @tally_hash = {}
   end
 
-  def update_stats
-    datasets = @stats['report-datasets']
-    datasets.each_with_index do |ds, idx|
-      puts "  #{idx}/#{datasets.length} processed" if idx % 100 == 0
-
+  def update_stats(filename)
+    stats = JSON.parse(File.read(filename))
+    datasets = stats['report-datasets']
+    datasets.each_with_index do |ds, _idx|
       next if ds['dataset-id'].blank? || ds['dataset-id'].first.blank? || ds['dataset-id'].first['value'].blank? || ds['performance'].blank?
 
       doi = ds['dataset-id'].first['value']
@@ -24,7 +26,7 @@ class JsonStats
         next if perf.blank? || perf['instance'].blank?
 
         perf['instance'].each do |instance|
-          # make sure all this crap is valid before doing anything with it
+          # make sure all this is valid before doing anything with it
           next if instance['access-method'].blank? || !%w[machine regular].include?(instance['access-method'])
           next if instance['metric-type'].blank? || !%w[unique-dataset-investigations unique-dataset-requests].include?(instance['metric-type'])
           next if instance['count'].blank? || !instance['count'].integer?
@@ -38,24 +40,36 @@ class JsonStats
         end
       end
 
-      # puts "#{doi} request: #{unique_request}  invest: #{unique_invest}"
-      update_database(doi: doi, request: unique_request, invest: unique_invest)
+      update_hash(doi: doi, request: unique_request, invest: unique_invest)
     end
   end
 
-  def update_database(doi:, request:, invest:)
+  def update_hash(doi:, request:, invest:)
     doi.strip!
-    doi_obj = StashEngine::Identifier.find_by_identifier(doi)
-    return if doi_obj.nil?
+    doi.downcase!
 
-    stat = doi_obj.counter_stat
-    stat.unique_investigation_count += invest
-    stat.unique_request_count += request
-    # these are needed to keep the citations rolling
-    stat.created_at = Time.new - 48.hours
-    stat.updated_at = Time.new - 48.hours
-    stat.save
+    @tally_hash[doi] = { investigation: 0, request: 0 } unless @tally_hash.key?(doi)
+
+    @tally_hash[doi][:investigation] += invest
+    @tally_hash[doi][:request] += request
+  end
+
+  # does all updates to the database from the tally hash at once when called.
+  def update_database
+    @tally_hash.each_pair do |k, v|
+      doi_obj = StashEngine::Identifier.find_by_identifier(k)
+      next if doi_obj.nil?
+
+      stat = doi_obj.counter_stat
+      stat.unique_investigation_count = v[:investigation]
+      stat.unique_request_count = v[:request]
+      # these are needed to keep the citations rolling
+      stat.created_at = Time.new - 48.hours
+      stat.updated_at = Time.new - 48.hours
+      stat.save
+      puts "Updated database for #{k} -- investigation: #{v[:investigation]}, request: #{v[:request]}"
+    end
   end
 end
 
-# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:enable Metrics/AbcSize

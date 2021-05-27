@@ -1,6 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
 
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -57,7 +56,6 @@ module StashDatacite
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
@@ -115,41 +113,13 @@ module StashDatacite
       StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
                                            resource_id: last.resource_id)
     end
-    # rubocop:enable Metrics/AbcSize
-
-    def max_submission_size
-      current_tenant.max_submission_size.to_i
-    end
-
-    def max_version_size
-      current_tenant.max_total_version_size.to_i
-    end
-
-    def max_file_count
-      current_tenant.max_files.to_i
-    end
 
     def check_required_fields(resource)
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
-      warnings << submission_size_warning_message(max_submission_size) if completions.over_manifest_file_size?(max_submission_size)
-      warnings << file_count_warning_message(max_file_count) if completions.over_manifest_file_count?(max_file_count)
-      warnings << version_size_warning_message(max_version_size) if completions.over_version_size?(max_version_size)
+
       @completions = completions
       @data = warnings
-    end
-
-    def file_count_warning_message(count)
-      format_count = number_with_delimiter(count, delimiter: ',')
-      "Remove some files until you have a smaller file count than #{format_count} files"
-    end
-
-    def submission_size_warning_message(size)
-      "Remove some files until you have a smaller dataset size than #{filesize(size)}"
-    end
-
-    def version_size_warning_message(size)
-      "Remove some files until you have a smaller version size than #{filesize(size)}, or upload by URL instead."
     end
 
     def resource_submitted_message(resource)
@@ -173,4 +143,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

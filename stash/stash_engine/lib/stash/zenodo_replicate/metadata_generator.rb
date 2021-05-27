@@ -5,7 +5,6 @@ module Stash
 
     # to generate the metadata for the Zenodo API, see https://developers.zenodo.org/#depositions
     # and the "Deposit metadata" they request, which is kind of similar to ours, but slightly different
-    # rubocop:disable Metrics/ClassLength
     class MetadataGenerator
       # currently dataset_type may be :data, :software or :supp (for supplemental)
       def initialize(resource:, dataset_type: :data)
@@ -186,6 +185,6 @@ module Stash
       end
 
     end
-    # rubocop:enable Metrics/ClassLength
+
   end
 end
