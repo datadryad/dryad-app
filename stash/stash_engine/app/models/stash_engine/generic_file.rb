@@ -2,10 +2,9 @@ require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
-require 'down'
+require 'http'
 
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class GenericFile < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
@@ -137,22 +136,35 @@ module StashEngine
     end
 
     def validate_frictionless
-      # TODO: add exceptions for downloading errors
-      tempfile = Down.download(url)
-
-      result = call_frictionless(tempfile)
+      tempfile_path = download_file
+      result = call_frictionless(tempfile_path)
       result_hash = JSON.parse(result)
       FrictionlessReport.create(report: result, generic_file_id: id) \
-        unless errors_not_found(result_hash)
+        unless validation_errors_not_found(result_hash)
     end
 
-    def call_frictionless(file)
-      `frictionless validate #{file.path} --json`
+    def download_file
+      http = HTTP.use(
+        normalize_uri: { normalizer: Stash::Download::NORMALIZER }
+      ).timeout(connect: 10, read: 10).follow(max_hops: 10)
+      dl_url = url || direct_s3_presigned_url
+      result = http.get(dl_url)
+      begin
+        tempfile = Tempfile.new([upload_file_name, '.csv'])
+        File.open(tempfile, 'wb') { |f| f.write(result.body.to_s) }
+        tempfile.path
+      rescue HTTP::Error => e
+        puts "I should handle exception #{e} here"
+      end
     end
 
-    def errors_not_found(result)
+    def call_frictionless(file_path)
+      `frictionless validate #{file_path} --json`
+    end
+
+    def validation_errors_not_found(result)
       result['tasks'].first['errors'].empty?
     end
   end
-  # rubocop: enable Metrics/ClassLength
+
 end
