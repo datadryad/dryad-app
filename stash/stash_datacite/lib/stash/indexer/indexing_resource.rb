@@ -51,8 +51,6 @@ module Datacite
     end
   end
 end
-
-# rubocop:disable Metrics/ClassLength
 module Stash
   module Indexer
     class IndexingResource
@@ -67,7 +65,6 @@ module Stash
       end
 
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
-      # rubocop:disable Metrics/MethodLength
       def to_index_document
         georss = calc_bounding_box
         {
@@ -92,7 +89,6 @@ module Stash
           dryad_author_affiliation_id_sm: author_affiliation_ids
         }
       end
-      # rubocop:enable Metrics/MethodLength
 
       def default_title
         @resource&.title&.strip
@@ -177,7 +173,7 @@ module Stash
         # elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
 
-      def calc_bounding_box # rubocop:disable Metrics/AbcSize
+      def calc_bounding_box
         lat_min, lat_max, long_min, long_max = nil
         geo_location_points.each do |pt|
           lat_min = [lat_min, pt.latitude].compact.min
@@ -271,4 +267,3 @@ module Stash
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

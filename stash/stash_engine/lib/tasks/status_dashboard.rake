@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :status_dashboard do
 
   desc 'Check Solr'
@@ -132,4 +131,3 @@ namespace :status_dashboard do
   ].freeze
   # rubocop:enable Layout/LineLength
 end
-# rubocop:enable Metrics/BlockLength

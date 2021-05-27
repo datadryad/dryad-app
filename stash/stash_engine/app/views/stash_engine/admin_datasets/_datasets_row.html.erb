@@ -1,5 +1,6 @@
 <%# takes dataset as local variable, dataset is a custom object of type StashEngine::AdminDatasets::CurationTableRow %>
 <tr class="c-lined-table__row" id="js-dataset-row-id-<%= dataset.identifier_id %>">
+  <!-- Title -->
   <td class="c-admin-hide-border-right">
     <% if dataset&.qualified_identifier %>
       <%= link_to dataset.title, show_path(id: dataset.qualified_identifier), target: :blank %>
@@ -16,6 +17,7 @@
     <% end %>
     <%= render partial: 'stash_engine/admin_datasets/show_stats_button', locals: { resource_id: dataset.resource_id } %>
   </td>
+  <!-- Status -->
   <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
     <% if (dataset.resource_state == 'error') %>
       Merritt Error
@@ -32,12 +34,13 @@
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
                      action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
                    method: :get, remote: true) do -%>
-        <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
+        <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" alt="Update status">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       <% end %>
     <% end %>
   </td>
+  <!-- Authors -->
   <td>
     <% if (dataset&.author_names&.length || 0) > 50 %>
       <%= "#{dataset.author_names[0..49]} ..." %>
@@ -45,7 +48,9 @@
       <%= dataset.author_names %>
     <% end %>
   </td>
+  <!-- Identifier -->
   <td><%= dataset.identifier %></td>
+  <!-- Last Modified -->
   <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= dataset.identifier_id %>">
     <%= formatted_datetime(dataset.updated_at) %>
   </td>
@@ -58,8 +63,24 @@
       </button>
     <% end %>
   </td>
-  <td id="js-curation-activity-user-<%= dataset.identifier_id %>"><%= dataset.editor_name %></td>
+  <!-- Curation -->
+  <td class="c-admin-hide-border-right" id="js-curation-activity-user-<%= dataset.identifier_id %>"><%= dataset.editor_name %></td>
+  <td class="c-admin-hide-border-left">
+      <% if (%w[superuser tenant_curator].include?(current_user.role) &&
+	     dataset.resource&.permission_to_edit?(user: current_user) &&
+             dataset.resource.curatable?) %>
+	  <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
+				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
+	                method: :get, remote: true) do -%>
+	      <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" alt="Update curator">
+		  <i class="fa fa-pencil" aria-hidden="true"></i>
+	      </button>
+	  <% end %>
+      <% end %>
+  </td>                    
+  <!-- Size -->
   <td><%= filesize(dataset.storage_size) %></td>
+  <!-- Publication Date -->
   <td class="c-admin" id="js-embargo-state-<%= dataset.identifier_id %>">
     <%= formatted_date(dataset.publication_date) %>
   </td>

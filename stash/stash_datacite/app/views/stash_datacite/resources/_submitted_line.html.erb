@@ -19,7 +19,7 @@
     <% end %>
   </td>
   <td>
-    <% if line.resource.dataset_in_progress_editor.id == current_user.id %>
+    <% if line.resource.dataset_in_progress_editor&.id == current_user.id %>
 	<%= button_to 'Preview', stash_url_helpers.show_path(line.external_identifier),
 	 form_class: 'o-button__inline-form',
 	 class: 'o-button__plain-text6',
@@ -31,7 +31,7 @@
          disabled: (line.resource.identifier && ( line.resource.identifier.in_progress? || line.resource.processing? || line.resource.current_curation_status == 'curation') ),
 				 data: { disable_with: "Opening..." } %>
     <% else %>
-      Dataset being edited by <%= line.resource.dataset_in_progress_editor.name %>
+      Dataset being edited by <%= line.resource.dataset_in_progress_editor&.name %>
     <% end %>
   </td>
 </tr>

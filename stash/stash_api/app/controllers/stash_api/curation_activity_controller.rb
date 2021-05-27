@@ -65,7 +65,6 @@ module StashApi
     private
 
     # Publish, embargo or simply change the status
-    # rubocop:disable Metrics/MethodLength
     def create_curation_activity(resource)
       return unless resource.present?
 
@@ -100,7 +99,6 @@ module StashApi
                                            note: ca_note,
                                            created_at: params[:curation_activity][:created_at] || Time.now.utc)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def record_published_date(resource)
       return if resource.publication_date.present?

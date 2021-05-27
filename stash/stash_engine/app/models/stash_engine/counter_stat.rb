@@ -8,17 +8,17 @@ module StashEngine
     # all these "check" methods may be obsolete if we do scripts for population of everything ahead
     # and then we could just pull from database
     def check_unique_investigation_count
-      update_if_necessary
+      # update_if_necessary
       unique_investigation_count
     end
 
     def check_unique_request_count
-      update_if_necessary
+      # update_if_necessary
       unique_request_count
     end
 
     def check_citation_count
-      update_if_necessary
+      # update_if_necessary
       citation_count
     end
 

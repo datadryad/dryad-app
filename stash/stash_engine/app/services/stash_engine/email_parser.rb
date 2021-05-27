@@ -1,6 +1,4 @@
 module StashEngine
-
-  # rubocop:disable Metrics/ClassLength, Metrics/MethodLength, Metrics/AbcSize
   class EmailParser
     attr_reader :journal, :identifier
 
@@ -221,4 +219,3 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ClassLength, Metrics/MethodLength, Metrics/AbcSize

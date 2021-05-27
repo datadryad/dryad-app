@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 namespace :publication_updater do
 
   # Query to retrieve the latest resource and its latest curation activity
@@ -62,4 +61,3 @@ namespace :publication_updater do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

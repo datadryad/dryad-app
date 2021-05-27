@@ -18,7 +18,6 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     class Completions
@@ -90,12 +89,19 @@ module StashDatacite
       end
 
       def s3_error_uploads
+        return if @resource.submitted?
+
         files = @resource.generic_files.newly_created.file_submission
         errored_uploads = []
         files.each do |f|
           errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.exists?(s3_key: f.calc_s3_path)
         end
         errored_uploads
+      end
+
+      # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
+      def contains_data?
+        @resource.data_files.present_files.count.positive?
       end
 
       def over_manifest_file_size?(size_limit)
@@ -190,6 +196,7 @@ module StashDatacite
         messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+
         if error_uploads.present?
           messages << 'Some files can not be submitted because they may have had errors uploading. ' \
             'Please re-upload the following files if you still see this error in a few minutes.'
@@ -212,4 +219,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

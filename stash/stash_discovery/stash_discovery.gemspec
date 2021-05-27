@@ -21,7 +21,7 @@ require 'stash_discovery/version'
 # for our uses.
 
 # Describe your gem and declare its dependencies:
-Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |s|
   s.name        = 'stash_discovery'
   s.version     = StashDiscovery::VERSION
   s.authors     = ['David Moles']

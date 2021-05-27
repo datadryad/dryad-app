@@ -1,10 +1,13 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class User < ApplicationRecord
 
     has_many :resources
     has_many :journal_roles
     has_many :journals, through: :journal_roles
+
+    scope :curators, -> do
+      where(role: %w[superuser tenant_curator])
+    end
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -34,7 +37,12 @@ module StashEngine
     end
 
     def journals_as_admin
-      journals.merge(JournalRole.admins)
+      admin_journals = journals.merge(JournalRole.admins)
+
+      admin_orgs = StashEngine::JournalRole.where(user_id: id, role: 'org_admin').map(&:journal_organization)
+      admin_org_journals = admin_orgs.map(&:journals_sponsored).flatten
+
+      admin_journals + admin_org_journals
     end
 
     NO_MIGRATE_STRING = 'xxxxxx'.freeze
@@ -148,5 +156,5 @@ module StashEngine
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
+
 end

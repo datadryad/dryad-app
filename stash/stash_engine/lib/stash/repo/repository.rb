@@ -4,7 +4,7 @@ require 'concurrent'
 module Stash
   module Repo
     # Abstraction for a repository
-    class Repository # rubocop:disable Metrics/ClassLength
+    class Repository
       attr_reader :url_helpers, :executor
 
       # Initializes this repository

@@ -1,5 +1,4 @@
 require 'stash/aws/s3'
-require 'down'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine

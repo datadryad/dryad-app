@@ -7,8 +7,6 @@ require 'stash/aws/s3'
 
 require_dependency 'stash_api/application_controller'
 require 'stash/download/file_presigned'
-
-# rubocop:disable Metrics/ClassLength
 module StashApi
   class FilesController < ApplicationController
 
@@ -214,4 +212,3 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

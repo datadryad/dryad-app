@@ -49,20 +49,34 @@ Layout/LineLength:
 
 # AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
 Metrics/AbcSize:
-  Max: 30
+  Max: 45
 
-# The default MethodLength can flag methods which essentially do nothing, simply because they invoke another method with several parameters
+# The default Lengths can flag methods which essentially do nothing, simply because they invoke another method with several parameters
+Metrics/ClassLength:
+  Max: 200
+  Exclude:
+    - '**/spec/**/*.rb'
+    
 Metrics/MethodLength:
-  Max: 20
+  Max: 30
+  Exclude:
+    - '**/spec/**/*.rb'
+
+Metrics/BlockLength:
+  Max: 200
+  Exclude:
+    - '**/spec/**/*.rb'
+
+Metrics/ModuleLength:
   Exclude:
     - '**/spec/**/*.rb'
 
 # reasonable complexity
 Metrics/PerceivedComplexity:
-  Max: 15
+  Max: 20
 
 Metrics/CyclomaticComplexity:
-  Max: 15
+  Max: 20
 
 # We meant to do that
 Naming/MemoizedInstanceVariableName:
@@ -166,13 +180,3 @@ Style/RedundantRegexpEscape:
 Style/SlicingWithRange:
   Enabled: true
 
-# ############################################################
-# Special cases for specs
-
-Metrics/BlockLength:
-  Exclude:
-    - '**/spec/**/*.rb'
-
-Metrics/ModuleLength:
-  Exclude:
-    - '**/spec/**/*.rb'

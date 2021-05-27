@@ -1,6 +1,4 @@
 require_dependency 'stash_datacite/application_controller'
-
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   class ContributorsController < ApplicationController
     before_action :set_contributor, only: %i[update delete]
@@ -146,4 +144,3 @@ module StashDatacite
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

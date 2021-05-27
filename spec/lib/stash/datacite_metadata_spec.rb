@@ -17,6 +17,22 @@ module Stash
       @meta.raw_metadata
     end
 
+    describe '#raw_metadata' do
+      it 'handles json parse errors' do
+        WebMock.reset!
+        stub_request(:get, %r{doi\.org/10\.1111%2Fmec\.13594})
+          .with(
+            headers: {
+              'Accept' => 'application/citeproc+json',
+              'Host' => 'doi.org',
+              'User-Agent' => /.*/
+            }
+          ).to_return(status: 200, body: '<!DOCTYPE html><html><head></head><body>Awesome webpage instead.</body></html>', headers: {})
+        @meta = Stash::DataciteMetadata.new(doi: '10.1111/mec.13594')
+        expect(@meta.raw_metadata).to be_falsey
+      end
+    end
+
     describe '#journal' do
       it 'returns the journal from container-title' do
         expect(@meta.journal).to eq('Molecular Ecology')
