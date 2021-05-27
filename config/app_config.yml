@@ -155,7 +155,7 @@ defaults: &DEFAULTS
   s3:
     region: us-west-2
     bucket: dryad-s3-dev
-    key: AKIA2KERHV5EVVGMUL2M
+    key: AKIAIQ5XWADKJZ556SBQ
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
