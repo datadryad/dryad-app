@@ -129,6 +129,16 @@ namespace :status_dashboard do
       status: 1
     },
     {
+      abbreviation: 'event_data_citation',
+      name: 'DataCite Event Data Citations Pre-population',
+      description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
+      documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
+          'The cron logs to /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log.' \
+          'Looks for "Completed populating citations" and date that is not too old.',
+      internally_managed: true,
+      status: 1
+    },
+    {
       abbreviation: 'counter_calculation',
       name: 'Counter Calculation Script',
       description: 'Dryad calculates stats weekly and submits them to the DataCite hub, required for correct stats',
