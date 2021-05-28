@@ -132,6 +132,7 @@ namespace :identifiers do
     # Remove resources that have been "in progress" for more than a year without updates
     StashEngine::Resource.in_progress.each do |res|
       next unless res.updated_at < 1.year.ago
+      next unless res.current_curation_status == 'in_progress'
 
       ident = res.identifier
       s3_dir = res.s3_dir_name(type: 'base')
