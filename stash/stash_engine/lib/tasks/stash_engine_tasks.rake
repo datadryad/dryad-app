@@ -127,6 +127,57 @@ namespace :identifiers do
     end
   end
 
+  desc 'remove in_progress versions that have lingered for too long'
+  task remove_old_versions: :environment do
+    # Remove resources that have been "in progress" for more than a year without updates
+    StashEngine::Resource.in_progress.each do |res|
+      next unless res.updated_at < 1.year.ago
+
+      ident = res.identifier
+      s3_dir = res.s3_dir_name(type: 'base')
+      puts "#{ident.id} Res #{res.id} -- #{res.updated_at}"
+      puts "   DESTROY s3 #{s3_dir}"
+      ## Stash::Aws::S3.delete_dir(s3_key: s3_dir)
+      puts "   DESTROY resource #{res.id}"
+      ## res.destroy
+      puts "   DESTROY identifier #{ident.id}" if ident.resources.size > 1
+      ident.reload
+      ## ident.destroy if ident.resources.blank?
+    end
+
+    # Remove directories in AWS that have no corresponding resource, or whose resource is already submitted
+    s3_prefix = StashEngine::Resource.last.s3_dir_name(type: 'base')
+    s3_prefix = if s3_prefix.include?('-')
+                  s3_prefix.split('-').first
+                else
+                  ''
+                end
+    Stash::Aws::S3.objects(starts_with: s3_prefix).each do |s3o|
+      # - get resource ID from it
+      id_prefix = s3o.key.split('/').first
+      res_id = if id_prefix.include?('-')
+                 id_prefix.split('-').last
+               else
+                 id_prefix
+               end
+      puts "key is #{s3o.key} -- #{id_prefix} -- #{res_id}"
+
+      # - check if the resource exists
+      if StashEngine::Resource.exists?(id: res_id)
+        r = StashEngine::Resource.find(res_id)
+        if r.submitted? && r.updated_at < 1.month.ago
+          # if the resource is state == submitted and has been for a month (so zenodo has processed), delete the data
+          puts "   submitted -- DELETE s3 dir #{id_prefix}"
+          ##  Stash::Aws::S3.delete_dir(s3_key: id_prefix)
+        end
+      else
+        # there is no reasource, delete the files
+        puts "   deleted -- DELETE s3 dir #{id_prefix}"
+        ##  Stash::Aws::S3.delete_dir(s3_key: id_prefix)
+      end
+    end
+  end
+
   # This task is deprecated, since we no longer want to automatically expire the review date,
   # we send reminders instead (below)
   desc 'Set datasets to `submitted` when their peer review period has expired'
