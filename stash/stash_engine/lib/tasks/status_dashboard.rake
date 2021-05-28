@@ -56,6 +56,14 @@ namespace :status_dashboard do
       status: 1
     },
     {
+      abbreviation: 'submission_queue',
+      name: 'Submission Queue',
+      description: 'The submisison queue manages processing of submissions to Merritt',
+      documentation: '',
+      internally_managed: true,
+      status: 1
+    },
+    {
       abbreviation: 'oai',
       name: 'Merritt OAI server',
       description: 'The Merritt OAI server that Dryad uses to determine the status of a dataset submission',
@@ -118,6 +126,16 @@ namespace :status_dashboard do
       description: 'Dryad uses Datacite\'s EventData API to gather Counter statistics',
       documentation: 'Dryad uses the EventData API to collect statistics for Counter.<br><br>The logic behind this integration can be found in `stash_engine/lib/stash/event_data`',
       internally_managed: false,
+      status: 1
+    },
+    {
+      abbreviation: 'event_data_citation',
+      name: 'DataCite Event Data Citations Pre-population',
+      description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
+      documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
+          'The cron logs to /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log.' \
+          'Looks for "Completed populating citations" and date that is not too old.',
+      internally_managed: true,
       status: 1
     },
     {

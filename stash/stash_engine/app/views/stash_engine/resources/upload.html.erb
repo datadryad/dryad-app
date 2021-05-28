@@ -17,7 +17,7 @@
   file_uploads: @resource.generic_files.validated_table.as_json(
     methods: :type, include: { frictionless_report: { only: [:report] } }
   ),
-  app_config_s3: APP_CONFIG[:s3],
+  app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
   s3_dir_name: @resource.s3_dir_name(type: 'base')
 }) %>
 
