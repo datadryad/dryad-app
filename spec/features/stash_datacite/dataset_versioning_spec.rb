@@ -186,7 +186,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Admin page', js: true do
         within(:css, '.c-lined-table__row') do
-
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit Dataset"]')
           expect(page).to have_css('button[aria-label="Update status"]')

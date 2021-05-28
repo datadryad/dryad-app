@@ -56,6 +56,14 @@ namespace :status_dashboard do
       status: 1
     },
     {
+      abbreviation: 'submission_queue',
+      name: 'Submission Queue',
+      description: 'The submisison queue manages processing of submissions to Merritt',
+      documentation: '',
+      internally_managed: true,
+      status: 1
+    },
+    {
       abbreviation: 'oai',
       name: 'Merritt OAI server',
       description: 'The Merritt OAI server that Dryad uses to determine the status of a dataset submission',
