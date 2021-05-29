@@ -136,7 +136,7 @@ namespace :identifiers do
 
       ident = res.identifier
       s3_dir = res.s3_dir_name(type: 'base')
-      puts "#{ident.id} Res #{res.id} -- #{res.updated_at}"
+      puts "ident #{ident.id} Res #{res.id} -- updated_at #{res.updated_at}"
       puts "   DESTROY s3 #{s3_dir}"
       ## Stash::Aws::S3.delete_dir(s3_key: s3_dir)
       puts "   DESTROY resource #{res.id}"
@@ -154,26 +154,24 @@ namespace :identifiers do
                   ''
                 end
     Stash::Aws::S3.objects(starts_with: s3_prefix).each do |s3o|
-      # - get resource ID from it
       id_prefix = s3o.key.split('/').first
       res_id = if id_prefix.include?('-')
                  id_prefix.split('-').last
                else
                  id_prefix
                end
-      puts "key is #{s3o.key} -- #{id_prefix} -- #{res_id}"
+      puts "checking S3 key #{s3o.key} -- id_prefix #{id_prefix} -- res_id #{res_id}"
 
-      # - check if the resource exists
       if StashEngine::Resource.exists?(id: res_id)
         r = StashEngine::Resource.find(res_id)
         if r.submitted? && r.updated_at < 1.month.ago
           # if the resource is state == submitted and has been for a month (so zenodo has processed), delete the data
-          puts "   submitted -- DELETE s3 dir #{id_prefix}"
+          puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           ##  Stash::Aws::S3.delete_dir(s3_key: id_prefix)
         end
       else
         # there is no reasource, delete the files
-        puts "   deleted -- DELETE s3 dir #{id_prefix}"
+        puts "   resource is deleted -- DELETE s3 dir #{id_prefix}"
         ##  Stash::Aws::S3.delete_dir(s3_key: id_prefix)
       end
     end
