@@ -145,7 +145,6 @@ module StashEngine
         FrictionlessReport.create(report: result, generic_file_id: id) \
         unless validation_errors_not_found(result_hash)
       end
-
     end
 
     def download_file
