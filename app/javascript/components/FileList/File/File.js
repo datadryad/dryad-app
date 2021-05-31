@@ -4,11 +4,13 @@ import ellipsize from '../../../lib/string_patch';
 
 import classes from './File.module.css';
 
+// TODO: remove constant duplicate from UploadFiles component
 const TabularCheckStatus = {
     'checking': 'Checking...',
     'issues_found': 'Issues found',
     'passed': 'Passed',
-    'na': 'N/A'
+    'na': 'N/A',
+    'error_validating': 'Validation error'
 }
 
 const statusCss = (status) => {
@@ -17,6 +19,8 @@ const statusCss = (status) => {
             return classes.Blinking
         case TabularCheckStatus['passed']:
             return classes.Passed
+        case TabularCheckStatus['error_validating']:
+            return classes.ValidationError
         default:
             return null
     }

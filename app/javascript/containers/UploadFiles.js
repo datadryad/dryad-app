@@ -36,7 +36,8 @@ const TabularCheckStatus = {
     'checking': 'Checking...',
     'issues_found': 'Issues found',
     'passed': 'Passed',
-    'na': 'N/A'
+    'na': 'N/A',
+    'error_validating': 'Validation error'
 }
 
 class UploadFiles extends React.Component {
@@ -92,9 +93,11 @@ class UploadFiles extends React.Component {
         if (!this.isCsv(file)) {
             return TabularCheckStatus['na'];
         } else {
-            return file.frictionless_report && file.frictionless_report.report
-                ? TabularCheckStatus['issues_found']
-                : TabularCheckStatus['passed']
+            return file.frictionless_report ?
+                file.frictionless_report.report ?
+                    TabularCheckStatus['issues_found'] :
+                    TabularCheckStatus['error_validating'] :
+                TabularCheckStatus['passed']
         }
     }
 

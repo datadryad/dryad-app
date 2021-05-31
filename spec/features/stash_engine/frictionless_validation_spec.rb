@@ -69,15 +69,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Passed" if file is plain-text and tabular, there is a report for it but it is empty' do
-      # This is a weird case, and must not occur.
+    it 'shows "Validation error" if file is plain-text and tabular, there is a report for it but it is empty' do
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: nil, generic_file: @file)
       sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('Passed')
+        expect(text).to eq('Validation error')
       end
     end
 
