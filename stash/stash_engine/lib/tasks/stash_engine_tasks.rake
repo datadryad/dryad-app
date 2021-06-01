@@ -127,7 +127,7 @@ namespace :identifiers do
     end
   end
 
-  desc 'remove in_progress versions that have lingered for too long'
+  desc 'remove in_progress versions and temporary files that have lingered for too long'
   task remove_old_versions: :environment do
     dry_run = ENV['DRY_RUN'] == 'true'
     if dry_run
