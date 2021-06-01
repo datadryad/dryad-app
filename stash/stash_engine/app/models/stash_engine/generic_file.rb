@@ -2,10 +2,12 @@ require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
+require 'down'
 
 module StashEngine
   class GenericFile < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_one :frictionless_report, dependent: :destroy
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
@@ -16,6 +18,10 @@ module StashEngine
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
+    scope :tabular_files, -> {
+      present_files.where(upload_content_type: 'text/csv')
+        .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
+    }
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
 
@@ -129,5 +135,22 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
+    def validate_frictionless
+      # TODO: add exceptions for downloading errors
+      tempfile = Down.download(url)
+
+      result = call_frictionless(tempfile)
+      result_hash = JSON.parse(result)
+      FrictionlessReport.create(report: result, generic_file_id: id) \
+        unless errors_not_found(result_hash)
+    end
+
+    def call_frictionless(file)
+      `frictionless validate #{file.path} --json`
+    end
+
+    def errors_not_found(result)
+      result['tasks'].first['errors'].empty?
+    end
   end
 end
