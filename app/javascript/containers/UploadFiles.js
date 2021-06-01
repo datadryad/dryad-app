@@ -133,6 +133,11 @@ class UploadFiles extends React.Component {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
     }
 
+    // checks the file list if any files are pending and if so returns true (or false)
+    hasPendingFiles = () => {
+        return this.getPendingFiles().length > 0;
+    }
+
     addFilesHandler = (event, uploadType) => {
         this.setState({warningMessage: null});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
@@ -519,13 +524,15 @@ class UploadFiles extends React.Component {
                             <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                         </div> : null }
                     {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
-                    <ValidateFiles
-                        id='confirm_to_validate_files'
-                        buttonLabel='Upload pending files'
-                        checkConfirmed={true}
-                        disabled={this.state.submitButtonFilesDisabled}
-                        changed={this.toggleCheckedFiles}
-                        clicked={this.uploadFilesHandler} />
+                    {this.hasPendingFiles() ?
+                        <ValidateFiles
+                            id='confirm_to_validate_files'
+                            buttonLabel='Upload pending files'
+                            checkConfirmed={true}
+                            disabled={this.state.submitButtonFilesDisabled}
+                            changed={this.toggleCheckedFiles}
+                            clicked={this.uploadFilesHandler}/>
+                        : null}
                 </div>
             )
         } else {
