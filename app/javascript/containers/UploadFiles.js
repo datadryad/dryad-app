@@ -74,14 +74,8 @@ class UploadFiles extends React.Component {
     }
 
     // checks the file list if any files are pending and if so returns true (or false)
-    pendingFiles = () => {
-        if(this.state.chosenFiles.length === 0) return false;
-
-        // https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
-        const retState = this.state.chosenFiles.some(element => {
-            if(element.id === undefined) return true;
-        });
-        return (retState === true ? true : false);
+    hasPendingFiles = () => {
+        return this.getPendingFiles().length > 0;
     }
 
     addFilesHandler = (event, uploadType) => {
@@ -443,7 +437,7 @@ class UploadFiles extends React.Component {
                             <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
                         </div> : null }
                     {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
-                    {this.pendingFiles() ?
+                    {this.hasPendingFiles() ?
                         <ValidateFiles
                             id='confirm_to_validate_files'
                             buttonLabel='Upload pending files'

@@ -49,7 +49,7 @@ describe('upload files', () => {
     expect(button).toBeDefined();
   });
 
-  describe('pendingFiles', () => {
+  describe('hasPendingFiles', () => {
 
     // pending files do not have ids yet
     it('returns false if no files', () => {
@@ -60,10 +60,10 @@ describe('upload files', () => {
           s3_dir_name={"b759e787-333"}
       />)
       const upInstance = upFiles.getInstance();
-      expect(upInstance.pendingFiles()).toBeFalsy();
+      expect(upInstance.hasPendingFiles()).toBeFalsy();
     });
 
-    it("is false if a files have ids", () => {
+    it("is false if files have ids or status besides pending", () => {
       const upFiles = create(<UploadFiles
           resource_id={333}
           file_uploads={[]}
@@ -71,8 +71,8 @@ describe('upload files', () => {
           s3_dir_name={"b759e787-333"}
       />)
       const upInstance = upFiles.getInstance();
-      upInstance.state.chosenFiles = [{id: 2737}, {id: 3732}];
-      expect(upInstance.pendingFiles()).toBeFalsy();
+      upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {id: 3732, status: 'Uploaded'}];
+      expect(upInstance.hasPendingFiles()).toBeFalsy();
     });
 
     it("is true if any files don't have ids", () => {
@@ -83,8 +83,8 @@ describe('upload files', () => {
           s3_dir_name={"b759e787-333"}
       />)
       const upInstance = upFiles.getInstance();
-      upInstance.state.chosenFiles = [{id: 2737}, {bug: "fun"}];
-      expect(upInstance.pendingFiles()).toBeTruthy();
+      upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {name: "fun.jpg", status: 'Pending'}];
+      expect(upInstance.hasPendingFiles()).toBeTruthy();
     });
   });
 });
