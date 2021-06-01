@@ -36,6 +36,21 @@ afterEach(() => {
 });
 
 describe('upload files', () => {
+
+  let upFiles;
+  beforeEach(() => {
+    upFiles = create(<UploadFiles
+        resource_id={333}
+        file_uploads={[]}
+        app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
+        s3_dir_name={"b759e787-333"}
+    />)
+  });
+
+  afterEach(() => {
+    upFiles = null;
+  });
+
   it('does a basic test that UploadFiles loads and checks for data manifest button', () => {
     act(() => {
       ReactDOM.render(<UploadFiles
@@ -53,39 +68,20 @@ describe('upload files', () => {
 
     // pending files do not have ids yet
     it('returns false if no files', () => {
-      const upFiles = create(<UploadFiles
-          resource_id={333}
-          file_uploads={[]}
-          app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
-          s3_dir_name={"b759e787-333"}
-      />)
       const upInstance = upFiles.getInstance();
       expect(upInstance.hasPendingFiles()).toBeFalsy();
     });
 
     it("is false if files have ids or status besides pending", () => {
-      const upFiles = create(<UploadFiles
-          resource_id={333}
-          file_uploads={[]}
-          app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
-          s3_dir_name={"b759e787-333"}
-      />)
       const upInstance = upFiles.getInstance();
       upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {id: 3732, status: 'Uploaded'}];
       expect(upInstance.hasPendingFiles()).toBeFalsy();
     });
 
     it("is true if any files don't have ids", () => {
-      const upFiles = create(<UploadFiles
-          resource_id={333}
-          file_uploads={[]}
-          app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
-          s3_dir_name={"b759e787-333"}
-      />)
       const upInstance = upFiles.getInstance();
       upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {name: "fun.jpg", status: 'Pending'}];
       expect(upInstance.hasPendingFiles()).toBeTruthy();
     });
   });
 });
-
