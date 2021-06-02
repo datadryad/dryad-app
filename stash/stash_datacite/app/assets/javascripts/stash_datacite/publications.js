@@ -17,6 +17,7 @@ function loadPublications() {
 			event.preventDefault();
 		    }
 		    // else do the normal tab actions, which will retain the values if one was just selected
+		}
             })
             .autocomplete({
 		// when page is loaded, IF the dataset has been filled in already,
