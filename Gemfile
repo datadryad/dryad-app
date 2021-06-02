@@ -34,7 +34,7 @@ gem 'rubocop', '~> 0.90.0'
 # Use Puma as the app server
 gem "puma", group: :puma, require: false
 # Our homegrown artisinal SSM gem
-gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0'
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
 # ############################################################
 # UI
@@ -129,7 +129,6 @@ group :development, :test, :local_dev do
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
-  gem 'puma'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)

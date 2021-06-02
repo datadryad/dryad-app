@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/CDLUC3/uc3-ssm
+  revision: bc398fdbdce0e6041a119813a47de857916eda56
+  branch: 0.3.0rc0
+  specs:
+    uc3-ssm (0.3.0)
+      aws-sdk-ssm (~> 1.84)
+      logger (~> 1.4)
+      yaml (~> 0.1)
+
 PATH
   remote: stash
   specs:
@@ -160,6 +170,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
+    aws-sdk-ssm (1.110.0)
+      aws-sdk-core (~> 3, >= 3.112.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.3)
       aws-eventstream (~> 1, >= 1.0.2)
     babel-source (5.8.35)
@@ -222,8 +235,6 @@ GEM
       sshkit (>= 1.9.0)
     capistrano-bundler (2.0.1)
       capistrano (~> 3.1)
-    capistrano-passenger (0.2.1)
-      capistrano (~> 3.0)
     capistrano-rails (1.6.1)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
@@ -528,6 +539,7 @@ GEM
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.4.3)
     loofah (2.9.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -619,9 +631,6 @@ GEM
     parallel (1.20.1)
     parser (3.0.1.1)
       ast (~> 2.4.1)
-    passenger (6.0.8)
-      rack
-      rake (>= 0.8.1)
     posix-spawn (0.3.15)
     postrank-uri (1.0.24)
       addressable (>= 2.4.0)
@@ -907,6 +916,7 @@ GEM
       xml-mapping (~> 0.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yaml (0.1.1)
     yui-compressor (0.12.0)
     zaru (0.3.0)
 
@@ -919,7 +929,6 @@ DEPENDENCIES
   bootsnap
   byebug
   capistrano (~> 3.11)
-  capistrano-passenger
   capistrano-rails (~> 1.4)
   capybara
   capybara-screenshot
@@ -946,7 +955,6 @@ DEPENDENCIES
   mysql2 (~> 0.5.3)
   net-sftp
   oai
-  passenger (~> 6.0.5)
   pry
   pry-rails
   pry-remote
@@ -973,6 +981,7 @@ DEPENDENCIES
   stash_engine!
   stripe
   turbolinks
+  uc3-ssm!
   uglifier (~> 4.2.0)
   web-console
   webdrivers
@@ -981,4 +990,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.1.4
+   2.2.17
