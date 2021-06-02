@@ -54,6 +54,7 @@ including universities, research institutions and academic libraries. See more a
         <li>University of New Mexico</li>
         <li>University of New South Wales, Sydney</li>
         <li>The University of Rhode Island</li>
+		<li>University of Wisconsin, Madison</li>
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
