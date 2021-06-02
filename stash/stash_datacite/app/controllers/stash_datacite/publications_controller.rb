@@ -53,8 +53,12 @@ module StashDatacite
     end
 
     def save_form_to_internal_data
-      @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
-      @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
+      @pub_name = params[:internal_datum][:publication_name]
+      @pub_issn = params[:internal_datum][:publication_issn]
+      fix_removable_asterisk
+      @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
+      @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
+
       parsed_msid = parse_msid(issn: params[:internal_datum][:publication_issn], msid: params[:internal_datum][:msid])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
       save_doi
@@ -202,6 +206,18 @@ module StashDatacite
     end
 
     private
+
+    # Check whether the journal name ends with an asterisk that can be removed, because the journal name
+    # exactly matches a name we have in the database
+    def fix_removable_asterisk
+      return unless @pub_name.end_with?('*')
+
+      journal = StashEngine::Journal.where(title: @pub_name.chop).first
+      return unless journal.present?
+
+      @pub_issn = journal.issn
+      @pub_name = journal.title
+    end
 
     # Re-order a journal list to prioritize exact matches at the beginning of the string, then
     # exact matches within the string, otherwise leaving the order unchanged
