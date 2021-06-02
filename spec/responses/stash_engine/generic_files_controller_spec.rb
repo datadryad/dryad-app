@@ -229,25 +229,48 @@ module StashEngine
         before(:each) do
           @file.update(upload_file_name: 'invalid.csv')
           @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          @body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
           stub_request(:get, /#{@s3_domain}.*/)
             .with(
               headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
-            ).to_return(status: 200, body: body_file, headers: {})
+            ).to_return(status: 200, body: @body_file, headers: {})
         end
 
         it 'downloads file from S3 successfully' do
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
-          assert_requested :get, /#{@s3_domain}.*/, times: 1
+          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
         end
 
-        it 'saves frictionless report' do
+        it 'saves frictionless report with report if downloads successfully' do
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
 
           report = @file.frictionless_report
           expect(report.report).to include("\"errors\": [\n") # it's '"errors": []' for valid files
+        end
+
+        it 'downloads file from S3 unsuccessfully, so the report is created but without content' do
+          stub_request(:get, /#{@s3_domain}.*/)
+            .with(
+              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
+            ).to_raise(HTTP::Error)
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+          assert_requested :get, /#{@s3_domain}.*/, body: '', times: 1
+
+          report = @file.frictionless_report
+          expect(report.report).to eq(nil)
+        end
+
+        it 'could not write to tempfile, so the report is created but without content' do
+          allow(Tempfile).to receive(:new).and_raise Errno::ENOENT
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
+
+          report = @file.frictionless_report
+          expect(report.report).to eq(nil)
         end
       end
 

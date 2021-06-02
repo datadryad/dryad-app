@@ -136,11 +136,15 @@ module StashEngine
     end
 
     def validate_frictionless
-      tempfile_path = download_file
-      result = call_frictionless(tempfile_path)
-      result_hash = JSON.parse(result)
-      FrictionlessReport.create(report: result, generic_file_id: id) \
+      download_result = download_file
+      if download_result.instance_of?(HTTP::Error) || download_result.instance_of?(Errno::ENOENT)
+        FrictionlessReport.create(report: nil, generic_file_id: id)
+      else
+        result = call_frictionless(download_result)
+        result_hash = JSON.parse(result)
+        FrictionlessReport.create(report: result, generic_file_id: id) \
         unless validation_errors_not_found(result_hash)
+      end
     end
 
     def download_file
@@ -148,13 +152,22 @@ module StashEngine
         normalize_uri: { normalizer: Stash::Download::NORMALIZER }
       ).timeout(connect: 10, read: 10).follow(max_hops: 10)
       dl_url = url || direct_s3_presigned_url
-      result = http.get(dl_url)
       begin
-        tempfile = Tempfile.new([upload_file_name, '.csv'])
-        File.open(tempfile, 'wb') { |f| f.write(result.body.to_s) }
-        tempfile.path
+        result = http.get(dl_url)
       rescue HTTP::Error => e
-        puts "I should handle exception #{e} here"
+        puts "Error downloading file: #{e.message}"
+        return e
+      end
+      begin
+        # It's required file to have csv extension for frictionless to return
+        # correct validation report
+        tempfile = Tempfile.new([upload_file_name, '.csv'])
+        tempfile.write(result.body.to_s)
+        tempfile.close
+        tempfile.path
+      rescue Errno::ENOENT => e
+        puts "Error writing to file: #{e.message}"
+        e
       end
     end
 
