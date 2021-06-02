@@ -33,7 +33,7 @@ const file = (props) => {
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
                 {props.file.tabularCheckStatus === TabularCheckStatus['issues_found']
-                    ? <a href="#">{props.file.tabularCheckStatus}</a>
+                    ? <a href="#!" onClick={props.clickValidationReport}>{props.file.tabularCheckStatus}</a>
                     : props.file.tabularCheckStatus}
             </span></td>
             <td><a href={props.file.url} title={props.file.url}>
@@ -42,7 +42,7 @@ const file = (props) => {
             <td>{props.file.uploadType}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
-                <td><a href="#!" onClick={props.click}>Remove</a></td> :
+                <td><a href="#!" onClick={props.clickRemove}>Remove</a></td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
                         <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
