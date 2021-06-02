@@ -29,12 +29,12 @@ end
 # Deployment
 
 gem 'capistrano', '~> 3.11'
-gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.90.0'
-# not currently used for our simple case and because of some problems
-# gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
+# Use Puma as the app server
+gem "puma", group: :puma, require: false
+# Our homegrown artisinal SSM gem
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0'
 
 # ############################################################
 # UI
