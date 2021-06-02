@@ -493,7 +493,7 @@ class UploadFiles extends React.Component {
                             changed={(event) => this.addFilesHandler(event, upload_type.type)}
                             clicked={(event) => {
                                 if(event.target.id.includes('manifest')){
-                                    this.showModal(upload_type.type);
+                                    this.showModal(upload_type.type); // for manifest upload dialog
                                 }else{
                                     // triggers change to reset file uploads to null before onChange to allow files to be added again
                                     event.target.value = null;
