@@ -573,10 +573,10 @@ class UploadFiles extends React.Component {
     }
 
     render () {
-        let failedUrls = this.buildFailedUrlList();
-        let chosenFiles = this.buildFileList(this.state.removingIndex);
-        let modalURL = this.buildModal();
-        let modalValidationReport = this.buildValidationReportModal();
+        const failedUrls = this.buildFailedUrlList();
+        const chosenFiles = this.buildFileList(this.state.removingIndex);
+        const modalURL = this.buildModal();
+        const modalValidationReport = this.buildValidationReportModal();
 
         return (
             <div className="c-upload">
