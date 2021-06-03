@@ -141,9 +141,10 @@ module StashEngine
         FrictionlessReport.create(report: nil, generic_file_id: id)
       else
         result = call_frictionless(download_result)
-        result_hash = JSON.parse(result)
-        FrictionlessReport.create(report: result, generic_file_id: id) \
-        unless validation_errors_not_found(result_hash)
+        # Add 'report' top level key that is required for calling React frictionless-components
+        result_hash = { report: JSON.parse(result) }
+        FrictionlessReport.create(report: result_hash.to_json, generic_file_id: id) \
+          unless validation_errors_not_found(result_hash)
       end
     end
 
@@ -176,7 +177,7 @@ module StashEngine
     end
 
     def validation_errors_not_found(result)
-      result['tasks'].first['errors'].empty?
+      result[:report]['tasks'].first['errors'].empty?
     end
   end
 end
