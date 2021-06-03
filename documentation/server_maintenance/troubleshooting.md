@@ -5,8 +5,6 @@ Some common problems and how to deal with them.
 
 Also see the notes on [Interactions with Merritt](merritt.md)
 
-For information on deleting a dataset, see the (private) description
-on the [Dryad Operations page](https://confluence.ucop.edu/display/Stash/Dryad+Operation).
 
 Dataset is not showing up in searches
 ===================================
@@ -127,9 +125,7 @@ Changing the latest queue state doesn't matter since it will enqueue
 when it's submitted by them again.
 
 
-
-
-Setting embargo on a Dataset that was accidentally published
+Setting embargo on a dataset that was accidentally published
 =============================================================
 
 First, go to the UI and add a curation note about manually embargoing
@@ -154,6 +150,68 @@ embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies 
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31
 ```
+
+Removing data that was accidentally published
+===================================================
+
+Removing an entire dataset
+--------------------------
+
+Dataset removal should not be taken lightly. Make sure you "really" need to
+remove it, due to highly sensitive data and/or serious copyright issues.
+
+If you need to completely remove a dataset from existence, you can run
+```
+rails dev_ops:destroy_dataset 10.27837/dryad.catfood
+```
+
+This command will remove the dataset from Dryad, and give instructions to remove
+it from associated services (e.g., Merritt and Zenodo).
+
+It is possible to delete a dataset through the API, but only if you are using a
+version of Dryad that includes the branch `migration-destroy-dataset`. You can
+then make a `DELETE` call to `/api/datasets/<DOI>`.
+
+
+Removing portions of a dataset
+------------------------------
+
+The explicit versions are set as ordinal numbers in Dryad and Merritt in the
+`stash_engine_versions` table, but every version doesn't really need to exist
+sequentially. The version number for Merritt needs to be set correctly to
+download the files correctly from Merrit. They also do not need to be the same
+ordinal numbers in each system (Merritt has a different version number than
+Dryad in rare circumstances). These version numbers only display to
+administrators, not normal users, so it is ok if they don't make complete sense.
+
+To disappear a version non-destructively, but prevent access: in
+`stash_engine_resources,` set `meta_view` and `file_view` to false(zero).
+
+To actually remove a version and it is gone forever:
+- Mark any offending versions as non-viewable, as described above. This prevents
+  viewing/downloading the dataset while you are working on the subsequent steps.
+-  Have the author submit the latest version of the dataset so it doesn't contain
+  the problem items such as removing the sensitive files or making redacted
+  versions of them and overwriting the old versions.
+- Review the history of any offending files in the `stash_engine_generic_files`
+  and identify which resources have files that need to be removed from
+  Merritt/Zenodo. You will need to manually request that these versions be
+  removed. 
+  -  What needs to happen in Merritt is documented at
+     [Removing older versions of a Dash/Dryad dataset object in Merritt](https://confluence.ucop.edu/pages/viewpage.action?pageId=221218281)
+- Merritt may give us a new ARK for the new dataset.  We will edit the
+  `stash_engine_resource.download_url` to contain the new ARK, encoded for the new
+  dataset.
+- For any resources that have been removed from Merritt, also remove them from Dryad
+- For the remaining resources, go into the `stash_engine_generic_files` and edit
+  the file uploads to match the files that are actually in Merritt.
+  Essentially change any files that appear for the first time to a
+  `file_state` of "created" and delete the rows for any files that have been removed.
+- Go into `stash_engine_versions` and change the version and merritt_version to
+  match the actual versions in Merritt. Check the downloads of both the full
+  version and the individual files in the Dryad UI to be sure they still work.
+  They should work if things were changed correctly.
+
 
 Error message: Maybe you tried to change something you didn't have access to
 ============================================================================
