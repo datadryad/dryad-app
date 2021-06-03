@@ -44,14 +44,14 @@ namespace :deploy do
     end
   end
 
-  desc 'Retrieve encrypted crendtials file from SSM ParameterStore'
-  task :retrieve_credentials do
-    on roles(:app), wait: 1 do
-      ssm = Uc3Ssm::ConfigResolver.new
-      credentials_yml_enc = ssm.parameter_for_key('credentials_yml_enc')
-      IO.write("#{release_path}/config/credentials.yml.enc", credentials_yml_enc.chomp)
-    end
-  end
+  #desc 'Retrieve encrypted crendtials file from SSM ParameterStore'
+  #task :retrieve_credentials do
+  #  on roles(:app), wait: 1 do
+  #    ssm = Uc3Ssm::ConfigResolver.new
+  #    credentials_yml_enc = ssm.parameter_for_key('credentials_yml_enc')
+  #    IO.write("#{release_path}/config/credentials.yml.enc", credentials_yml_enc.chomp)
+  #  end
+  #end
 end
 
 namespace :git do
