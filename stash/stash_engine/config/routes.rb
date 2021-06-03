@@ -137,6 +137,9 @@ StashEngine::Engine.routes.draw do
   get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start'
   get 'submission_queue/ungraceful_start', to: 'submission_queue#ungraceful_start'
 
+  # routing for zenodo_queue
+  get 'zenodo_queue', to: 'zenodo_queue#index'
+
   # Administrative Status Dashboard that displays statuses of external dependencies
   get 'status_dashboard', to: 'status_dashboard#show'
 
