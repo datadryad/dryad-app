@@ -42,11 +42,6 @@ module StashEngine
       @zenodo_copy = ZenodoCopy.find(params[:id])
 
       @delayed_jobs = running_jobs(@zenodo_copy)
-
-      # this is an error if it shows a different state
-      if @delayed_jobs.count == 0 && !%w[error deferred].include?(@zenodo_copy.state)
-        @zenodo_copy.update(state: 'error')
-      end
     end
 
     def identifier_details
