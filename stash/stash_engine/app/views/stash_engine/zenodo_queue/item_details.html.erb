@@ -1,0 +1,28 @@
+<h2>Item details for Zenodo Copy ID <%= @zenodo_copy.id %>, doi:<%= @zenodo_copy&.identifier&.identifier %></h2>
+
+<h3>Delayed Job Info</h3>
+
+<% if @delayed_jobs.count.positive? %>
+  <table class="c-lined-table">
+    <% @delayed_jobs.first.attributes.each_pair do |k, v| %>
+      <tr class="c-lined-table__row">
+        <td style="width: 10em; font-weight: bolder"><%= k %></td>
+        <td><pre style="margin: 0; padding: 0;"><%= v || ' ' %></pre></td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p>This item isn't currently processing in the delayed job runner.</p>
+<% end %>
+
+<h3>Zenodo Copy Info</h3>
+<table class="c-lined-table">
+  <% @zenodo_copy.attributes.each_pair do |k, v| %>
+    <tr class="c-lined-table__row">
+      <td style="width: 10em; font-weight: bolder"><%= k %></td>
+      <td><pre style="margin: 0; padding: 0;"><%= v || ' ' %></pre></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to('back to queue list', zenodo_queue_path) %>
