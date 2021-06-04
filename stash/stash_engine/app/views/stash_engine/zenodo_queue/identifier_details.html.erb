@@ -1,0 +1,7 @@
+<h2>identifier details for doi:<%= @identifier.identifier %></h2>
+
+<div id="status_table">
+  <%= render partial: 'status_table' %>
+</div>
+
+<%= link_to('back to queue list', zenodo_queue_path) %>
