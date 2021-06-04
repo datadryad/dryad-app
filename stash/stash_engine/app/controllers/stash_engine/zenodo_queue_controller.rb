@@ -1,4 +1,4 @@
-require_dependency "stash_engine/application_controller"
+require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ZenodoQueueController < ApplicationController
@@ -8,10 +8,10 @@ module StashEngine
 
     before_action :require_superuser
 
-    ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size error_info]
-    ALLOWED_ORDER = %w[asc desc]
+    ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size error_info].freeze
+    ALLOWED_ORDER = %w[asc desc].freeze
 
-    BASIC_SQL = <<~SQL
+    BASIC_SQL = <<~SQL.freeze
       SELECT *,
           CASE
             WHEN copy_type LIKE '%software%' THEN
@@ -61,13 +61,13 @@ module StashEngine
       @zenodo_copy = ZenodoCopy.find(params[:id])
       copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
 
-      previous_unfinished = ZenodoCopy.where("id < ?", params[:id])
-                                      .where(identifier_id: @zenodo_copy.identifier_id)
-                                      .where("copy_type LIKE ?", "%#{copy_type}%")
-                                      .where("state != 'finished'").count
+      previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
+        .where(identifier_id: @zenodo_copy.identifier_id)
+        .where('copy_type LIKE ?', "%#{copy_type}%")
+        .where("state != 'finished'").count
 
       if previous_unfinished.positive?
-        render plain: "You may only resubmit a later item in a series after earlier items have successfully processed"
+        render plain: 'You may only resubmit a later item in a series after earlier items have successfully processed'
         return
       end
 
@@ -96,11 +96,11 @@ module StashEngine
     # pass in the zenodo copy
     def running_jobs(zc)
       if zc.copy_type.include?('software')
-        Delayed::Job.where("handler LIKE ?", "%- #{zc.id}%").where(queue: 'zenodo_software')
+        Delayed::Job.where('handler LIKE ?', "%- #{zc.id}%").where(queue: 'zenodo_software')
       elsif zc.copy_type.include?('supp')
-        Delayed::Job.where("handler LIKE ?", "%- #{zc}.id}%").where(queue: 'zenodo_supp')
+        Delayed::Job.where('handler LIKE ?', "%- #{zc}.id}%").where(queue: 'zenodo_supp')
       else
-        Delayed::Job.where("handler LIKE ?", "%- #{zc.resource_id}%").where(queue: 'zenodo_copy')
+        Delayed::Job.where('handler LIKE ?', "%- #{zc.resource_id}%").where(queue: 'zenodo_copy')
       end
     end
 
