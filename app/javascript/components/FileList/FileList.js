@@ -22,7 +22,8 @@ const file_list = (props) => {
                 {props.chosenFiles.map((file, index) => {
                     return <File
                         key={index}
-                        click={() => props.clickedRemove(index)}
+                        clickRemove={() => props.clickedRemove(index)}
+                        clickValidationReport={() => props.clickedValidationReport(index)}
                         file={file}
                         index={index}
                         removingIndex={props.removingIndex}

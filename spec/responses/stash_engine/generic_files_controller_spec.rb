@@ -192,7 +192,17 @@ module StashEngine
           expect(response_code).to eql(200)
 
           report = @file.frictionless_report
-          expect(report.report).to include("\"errors\": [\n") # it's '"errors": []' for valid files
+          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
+          expect(report.report).to include('errors":[{')
+        end
+
+        it 'saves frictionless report with top level "report" key' do
+          # util for when calling React frictionless-components in front-end
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+
+          report_hash = JSON.parse(@file.frictionless_report.report)
+          expect(report_hash.keys).to eq(['report'])
         end
 
         it 'saves frictionless report for more than one file' do
@@ -205,10 +215,11 @@ module StashEngine
           response_code = post @url, params: { file_ids: [@file.id, file2.id] }
           expect(response_code).to eql(200)
 
+          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
           report = @file.frictionless_report
-          expect(report.report).to include("\"errors\": [\n")
+          expect(report.report).to include('"errors":[{')
           report2 = file2.frictionless_report
-          expect(report2.report).to include("\"errors\": [\n")
+          expect(report2.report).to include('"errors":[{')
         end
       end
 
@@ -247,7 +258,8 @@ module StashEngine
           expect(response_code).to eql(200)
 
           report = @file.frictionless_report
-          expect(report.report).to include("\"errors\": [\n") # it's '"errors": []' for valid files
+          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
+          expect(report.report).to include('"errors":[{')
         end
 
         it 'downloads file from S3 unsuccessfully, so the report is created but without content' do
