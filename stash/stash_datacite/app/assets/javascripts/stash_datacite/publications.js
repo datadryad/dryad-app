@@ -17,8 +17,6 @@ function loadPublications() {
 			event.preventDefault();
 		    }
 		    // else do the normal tab actions, which will retain the values if one was just selected
-                } else {
-		    $("#internal_datum_publication_issn").val(''); // clear any ISSN that was saved previously, so user selection can overwrite it
 		}
             })
             .autocomplete({
@@ -45,6 +43,7 @@ function loadPublications() {
                 source: function (request, response) {
 		    // save the user's typed request in the database with an asterisk, in case they don't click on an autocomplete result
 		    $("#internal_datum_publication_name").val(request.term + "*");
+		    $("#internal_datum_publication_issn").val(''); // clear any ISSN that was saved previously
 		    var form = $(this.form);
                     $(form).trigger('submit.rails');
 		    $.ajax({
