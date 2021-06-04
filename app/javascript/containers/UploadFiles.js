@@ -6,6 +6,7 @@ import sanitize from '../lib/sanitize_filename';
 
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from '../components/Modal/ModalUrl';
+import ModalValidationReport from "../components/ModalValidationReport/ModalValidationReport";
 import FileList from '../components/FileList/FileList';
 import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
@@ -61,12 +62,14 @@ class UploadFiles extends React.Component {
         submitButtonFilesDisabled: true,
         submitButtonUrlsDisabled: true,
         showModal: false,
+        showValidationReportModal: false,
         urls: null,
         // TODO: workaround to deal with manifest file types when making request.
         //  See better way: maybe when clicking in URL button for an Upload Type,
         //  send the type information to the modal somehow. And when submitting carry on
         //  that information and add to request URL.
         currentManifestFileType: null,
+        validationReportIndex: null,
         failedUrls: [],
         loading: false,
         removingIndex: null,
@@ -77,16 +80,30 @@ class UploadFiles extends React.Component {
     componentDidMount() {
         const files = this.props.file_uploads;
         const transformed = this.transformData(files);
-        const withTabularCheckStatus = this.addTabularCheckStatus(transformed);
-        this.setState({chosenFiles: withTabularCheckStatus})
+        const withTabularCheckStatus = this.updateTabularCheckStatus(transformed);
+        this.setState({chosenFiles: withTabularCheckStatus});
         this.addCsrfToken();
     }
 
-    addTabularCheckStatus = (files) => {
+    transformData = (files) => {
         return files.map(file => ({
+            ...file,
+            sanitized_name: file.upload_file_name,
+            status: 'Uploaded',
+            uploadType: RailsActiveRecordToUploadType[file.type],
+            sizeKb: formatSizeUnits(file.upload_file_size),
+        }))
+    }
+
+    updateTabularCheckStatus = (files) => {
+        if (this.state.validating) {
+            return files.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
+        } else {
+            return files.map(file => ({
                 ...file,
                 tabularCheckStatus: this.setTabularCheckStatus(file)
-            }))
+            }));
+        }
     }
 
     setTabularCheckStatus = (file) => {
@@ -196,15 +213,13 @@ class UploadFiles extends React.Component {
                                 size: file.size,
                                 type: file.type,
                                 original: file.name
-                            })
-                            .then(response => {
+                            }).then(response => {
                                 console.log(response);
                                 this.updateFileData(response.data.new_file, index);
-                                this.isCsv(this.state.chosenFiles[index])
-                                    ? this.validateFrictionless([this.state.chosenFiles[index]])
-                                    : null;
-                            })
-                            .catch(error => console.log(error));
+                                this.isCsv(this.state.chosenFiles[index]) ?
+                                    this.validateFrictionless([this.state.chosenFiles[index]]) :
+                                    null;
+                            }).catch(error => console.log(error));
                     }
                 }
                 // Before start uploading, change file status cel to a progress bar
@@ -270,8 +285,7 @@ class UploadFiles extends React.Component {
             const transformed = this.transformData(response.data);
             files = this.updateTabularCheckStatus(transformed);
             this.updateAlreadyChosenById(files);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => console.log(error));
     }
 
     updateAlreadyChosenById = (filesToUpdate) => {
@@ -315,19 +329,6 @@ class UploadFiles extends React.Component {
             return file.sanitized_name.split('.').pop() === 'csv'
                 || file.upload_content_type === 'text/csv';
         });
-    }
-
-    updateTabularCheckStatus = (tabularFiles) => {
-        if (this.state.validating) {
-            return tabularFiles.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
-        } else {
-            return tabularFiles.map(file => ({
-                ...file,
-                tabularCheckStatus: file.frictionless_report && file.frictionless_report.report
-                    ? TabularCheckStatus['issues_found']
-                    : TabularCheckStatus['passed']
-            }));
-        }
     }
 
     labelNonTabular = (files) => {
@@ -374,18 +375,27 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
-    showModal = (uploadType) => {
-        this.setState({showModal: true});
-        this.setState({currentManifestFileType: uploadType});
+    showModalHandler = (uploadType) => {
+        this.setState({showModal: true, currentManifestFileType: uploadType});
     };
 
     hideModal = (event) => {
         if (event.type === 'submit' || event.type === 'click'
             || (event.type === 'keydown' && event.keyCode === 27)) {
-            this.setState({submitButtonUrlsDisabled: true})
-            this.setState({showModal: false});
-            this.setState({currentManifestFileType: null})
+            this.setState({
+                submitButtonUrlsDisabled: true,
+                showModal: false,
+                currentManifestFileType: null
+            })
         }
+    }
+
+    hideModalValidationReport = (event) => {
+        this.setState({showValidationReportModal: false, validationReportIndex: null});
+    }
+
+    showModalValidationReportHandler = (index) => {
+        this.setState({showValidationReportModal: true, validationReportIndex: index});
     }
 
     submitUrlsHandler = (event) => {
@@ -428,16 +438,6 @@ class UploadFiles extends React.Component {
         const countRepeated = urls.length - newUrls.length;
         this.setWarningMessage(countRepeated);
         return newUrls.join('\n');
-    }
-
-    transformData = (files) => {
-        return files.map(file => ({
-            ...file,
-            sanitized_name: file.upload_file_name,
-            status: 'Uploaded',
-            uploadType: RailsActiveRecordToUploadType[file.type],
-            sizeKb: formatSizeUnits(file.upload_file_size)
-        }))
     }
 
     /**
@@ -518,6 +518,7 @@ class UploadFiles extends React.Component {
                     <FileList
                         chosenFiles={this.state.chosenFiles}
                         clickedRemove={this.removeFileHandler}
+                        clickedValidationReport={this.showModalValidationReportHandler}
                         removingIndex={removingIndex} />
                     { this.state.loading ?
                         <div className="c-upload__loading-spinner">
@@ -561,14 +562,26 @@ class UploadFiles extends React.Component {
         }
     }
 
+    buildValidationReportModal = () => {
+        if (this.state.showValidationReportModal) {
+            return <ModalValidationReport
+                report={this.state.chosenFiles[this.state.validationReportIndex].frictionless_report.report}
+                clickedClose={this.hideModalValidationReport} />
+        } else {
+            return null;
+        }
+    }
+
     render () {
-        let failedUrls = this.buildFailedUrlList();
-        let chosenFiles = this.buildFileList(this.state.removingIndex);
-        let modalURL = this.buildModal();
+        const failedUrls = this.buildFailedUrlList();
+        const chosenFiles = this.buildFileList(this.state.removingIndex);
+        const modalURL = this.buildModal();
+        const modalValidationReport = this.buildValidationReportModal();
 
         return (
             <div className="c-upload">
                 {modalURL}
+                {modalValidationReport}
                 <h1 className="o-heading__level1">
                     Upload Your Files
                 </h1>
@@ -578,7 +591,7 @@ class UploadFiles extends React.Component {
                         return <UploadType
                             key={upload_type.type}
                             changed={(event) => this.addFilesHandler(event, upload_type.type)}
-                            clicked={() => this.showModal(upload_type.type)}
+                            clicked={() => this.showModalHandler(upload_type.type)}
                             type={upload_type.type}
                             logo={upload_type.logo}
                             name={upload_type.name}
