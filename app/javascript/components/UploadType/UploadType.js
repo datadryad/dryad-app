@@ -11,7 +11,7 @@ const upload_type = (props) => {
 
             <div className="c-choose">
                 <label htmlFor={props.type} className="c-choose__input-file-label">{props.buttonFiles}</label>
-                <input id={props.type} className="c-choose__input-file" type='file' onChange={props.changed} multiple={true} />
+                <input id={props.type} className="c-choose__input-file" type='file' onClick={props.clicked} onChange={props.changed} multiple={true} />
             </div>
             <button id={props.type + '_manifest'} className="js-uploadmodal__button-show-modal" onClick={props.clicked}>{props.buttonURLs}</button>
         </section>
