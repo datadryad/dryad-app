@@ -9,9 +9,10 @@ module StashEngine
       # logger.debug('before getting citation events')
       dois = cite_events.results
       # logger.debug('after getting citation events')
+      # dois, but eliminate blank citations
       dois.map do |citation_event|
         citation_metadata(doi: citation_event, stash_identifier: stash_identifier)
-      end
+      end.reject(&:nil?)
     end
 
     # gets cached citation or retrieves a new one
@@ -22,7 +23,8 @@ module StashEngine
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
       html_citation = datacite_metadata.html_citation
-      html_citation = "Citation text unavailable for <a href=\"#{doi}\" target=\"_blank\">#{doi}</a>" if html_citation.blank?
+      return nil if html_citation.blank?  # do not save to database and return nil early
+
       create(citation: html_citation, doi: doi, identifier_id: stash_identifier.id)
     end
   end
