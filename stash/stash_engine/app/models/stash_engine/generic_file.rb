@@ -179,5 +179,4 @@ module StashEngine
       result['tasks'].first['errors'].empty?
     end
   end
-
 end
