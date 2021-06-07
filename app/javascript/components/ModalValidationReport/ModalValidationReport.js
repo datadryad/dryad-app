@@ -1,8 +1,8 @@
 import React from 'react';
 
-import 'frictionless-components/lib/styles';
-import {render} from 'frictionless-components/lib/render';
-import {Report} from 'frictionless-components/lib/components/Report';
+import '@cacods/frictionless-components/lib/styles';
+import {render} from '@cacods/frictionless-components/lib/render';
+import {Report} from '@cacods/frictionless-components/lib/components/Report';
 
 class ModalValidationReport extends React.Component {
     componentDidMount() {
