@@ -168,8 +168,9 @@ namespace :identifiers do
 
       if StashEngine::Resource.exists?(id: res_id)
         r = StashEngine::Resource.find(res_id)
-        if r.submitted? && r.updated_at < 1.month.ago
-          # if the resource is state == submitted and has been for a month (so zenodo has processed), delete the data
+        if r.submitted? &&
+           (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
+          # if the resource is state == submitted and all zenodo transfers have completed, delete the data
           puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           Stash::Aws::S3.delete_dir(s3_key: id_prefix) unless dry_run
         end
