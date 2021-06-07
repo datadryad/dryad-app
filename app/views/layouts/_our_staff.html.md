@@ -18,7 +18,16 @@
 
 <div class="bio">
   <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
-  <p><strong>Daniella Lowenberg</strong><br>Product Manager<br>Daniella has a background in Microbiology. After leaving the lab, she was a Publications Manager at PLOS ONE where she implemented and oversaw the PLOS Data Policy. For the last three years, Daniella has been a data publishing and data metrics product manager at California Digital Library, within the University of California. She is currently the Product Manager for Dryad and project lead for the Sloan Foundation funded Make Data Count project.</p>
+  <p><strong>Daniella Lowenberg</strong><br/>
+  Product Manager<br/>
+  Daniella has a background in Microbiology. After leaving the lab, she was a
+  Publications Manager at PLOS ONE where she implemented and oversaw the PLOS
+  Data Policy. Since 2017, Daniella has been a data publishing and data metrics
+  product manager at California Digital Library, within the University of
+  California. She is currently the Product Manager for Dryad, Principal
+  Investigator for the Sloan Foundation funded Make Data Count initiative, and
+  co-chair of the FORCE11 Research Data Publishing Ethics working group.
+  </p>
 </div>
 
 <div class="bio">
