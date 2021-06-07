@@ -155,17 +155,15 @@ module StashEngine
       dl_url = url || direct_s3_presigned_url
       begin
         result = http.get(dl_url)
-      rescue HTTP::Error => e
-        puts "Error downloading file: #{e.message}"
-        return e
-      end
-      begin
         # It's required file to have csv extension for frictionless to return
         # correct validation report
         tempfile = Tempfile.new([upload_file_name, '.csv'])
         tempfile.write(result.body.to_s)
         tempfile.close
         tempfile.path
+      rescue HTTP::Error => e
+        puts "Error downloading file: #{e.message}"
+        e
       rescue Errno::ENOENT => e
         puts "Error writing to file: #{e.message}"
         e

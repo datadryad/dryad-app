@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.12.13",
+    "@cacods/frictionless-components": "^0.2.15",
     "@rails/webpacker": "5.2.1",
     "aws-sdk": "^2.881.0",
     "axios": "^0.21.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "evaporate": "^2.1.4",
-    "frictionless-components": "^0.2.15",
     "identity-obj-proxy": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
