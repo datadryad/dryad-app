@@ -35,7 +35,7 @@ const Messages = {
 }
 const TabularCheckStatus = {
     'checking': 'Checking...',
-    'issues_found': 'Issues found',
+    'view_issues': 'View issues',
     'passed': 'Passed',
     'na': 'N/A',
     'error_validating': 'Validation error'
@@ -112,7 +112,7 @@ class UploadFiles extends React.Component {
         } else {
             return file.frictionless_report ?
                 file.frictionless_report.report ?
-                    TabularCheckStatus['issues_found'] :
+                    TabularCheckStatus['view_issues'] :
                     TabularCheckStatus['error_validating'] :
                 TabularCheckStatus['passed']
         }
@@ -565,6 +565,7 @@ class UploadFiles extends React.Component {
     buildValidationReportModal = () => {
         if (this.state.showValidationReportModal) {
             return <ModalValidationReport
+                file={this.state.chosenFiles[this.state.validationReportIndex]}
                 report={this.state.chosenFiles[this.state.validationReportIndex].frictionless_report.report}
                 clickedClose={this.hideModalValidationReport} />
         } else {

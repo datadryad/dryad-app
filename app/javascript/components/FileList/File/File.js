@@ -7,7 +7,7 @@ import classes from './File.module.css';
 // TODO: remove constant duplicate from UploadFiles component
 const TabularCheckStatus = {
     'checking': 'Checking...',
-    'issues_found': 'Issues found',
+    'view_issues': 'View issues',
     'passed': 'Passed',
     'na': 'N/A',
     'error_validating': 'Validation error'
@@ -32,7 +32,7 @@ const file = (props) => {
             <th scope='row'>{props.file.sanitized_name}</th>
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
-                {props.file.tabularCheckStatus === TabularCheckStatus['issues_found']
+                {props.file.tabularCheckStatus === TabularCheckStatus['view_issues']
                     ? <a href="#!" onClick={props.clickValidationReport}>{props.file.tabularCheckStatus}</a>
                     : props.file.tabularCheckStatus}
             </span></td>
