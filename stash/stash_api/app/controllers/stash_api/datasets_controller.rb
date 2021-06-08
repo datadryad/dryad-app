@@ -55,7 +55,7 @@ module StashApi
       respond_to do |format|
         format.any do
           if @stash_identifier&.first_submitted_resource.present?
-            # Once the dataset has been submitted by an author, only update the status,
+            # Once the dataset has been submitted by an author, only update the status and manuscript number,
             # but don't actually process the metadata from EM
             em_response = em_update_status
             status_code = em_response[:status] == 'Success' ? 200 : 403
@@ -74,7 +74,20 @@ module StashApi
       end
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_status
+      # If manuscript number is available, update it
+      art_params = params['article']
+      manu = art_params['manuscript_number'] unless art_params.blank?
+      if manu.present?
+        datum = StashEngine::InternalDatum.where(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber').first
+        if datum.present?
+          datum.update(value: manu)
+        else
+          StashEngine::InternalDatum.create(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber', value: manu)
+        end
+      end
+
       # If final_disposition is available, update the status of this dataset
       disposition = params['article']['final_disposition']
       unless disposition && (@resource.current_curation_status == 'peer_review')
@@ -112,7 +125,6 @@ module StashApi
     end
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_reformat_request
       em_params = {}.with_indifferent_access
 
