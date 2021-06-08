@@ -1051,6 +1051,20 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@cacods/frictionless-components@^0.2.16":
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/@cacods/frictionless-components/-/frictionless-components-0.2.16.tgz#7e6e661ddfb94af998130291c23d632e4385c0c8"
+  integrity sha512-AtFj6XX7APErJDI8VeY1Mcftoa+LBuWdlfFTOlEoW7cVmiuAmhWuDIEOnVk8BOlr1g89wIPfuIxDRUGXfZ7XxQ==
+  dependencies:
+    "@types/lodash" "^4.14.168"
+    "@types/marked" "^2.0.1"
+    classnames "^2.3.1"
+    jsonschema "^1.4.0"
+    jszip "^3.6.0"
+    lodash "^4.17.21"
+    marked "^2.0.1"
+    use-async-effect "^2.2.3"
+
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
@@ -4012,20 +4026,6 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
-
-frictionless-components@^0.2.15:
-  version "0.2.15"
-  resolved "https://registry.yarnpkg.com/frictionless-components/-/frictionless-components-0.2.15.tgz#1716ffde5145423a8e20fd1f1d776e8a92117884"
-  integrity sha512-tMlu7DpWJC7aQ9KNvuTCqOX5Qlf068PMiVqfv8p08EqjE5q3VthtZEDizEkW5kB+S/fXbGR0N2nAMcJ/2yx3bA==
-  dependencies:
-    "@types/lodash" "^4.14.168"
-    "@types/marked" "^2.0.1"
-    classnames "^2.3.1"
-    jsonschema "^1.4.0"
-    jszip "^3.6.0"
-    lodash "^4.17.21"
-    marked "^2.0.1"
-    use-async-effect "^2.2.3"
 
 from2@^2.1.0:
   version "2.3.0"
