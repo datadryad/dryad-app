@@ -58,14 +58,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Issues found" if file is plain-text and tabular and there is a report for it' do
+    it 'shows "View issues" if file is plain-text and tabular and there is a report for it' do
       @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', generic_file: @file)
       sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('Issues found')
+        expect(text).to eq('View issues')
       end
     end
 
