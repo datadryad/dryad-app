@@ -189,12 +189,12 @@ module StashApi
       deposit_url = if metadata[:_links][:self][:href]
                       request.protocol + request.host_with_port + metadata[:_links][:self][:href]
                     else
-                      null
+                      nil
                     end
       edit_url = if metadata[:editLink]
                    request.protocol + request.host_with_port + metadata[:editLink]
                  else
-                   null
+                   nil
                  end
 
       {
