@@ -2,7 +2,7 @@ namespace :zenodo do
   desc 'Queue feeder that keeps migration items going to the delayed job queue with sleep in between'
   task feed_queue: :environment do
     trap('SIGINT') do
-      puts "Exiting zenodo feeder"
+      puts 'Exiting zenodo feeder'
       exit
     end
 
@@ -20,13 +20,14 @@ namespace :zenodo do
       LIMIT #{max_feed_queue};
     SQL
 
-    while true do
+    loop do
       puts Time.new.iso8601
       StashEngine::Identifier.find_by_sql(sql).each do |identifier|
         break if Delayed::Job.count >= max_feed_queue
+
         resource = identifier.latest_resource_with_public_download
         resource.send_to_zenodo(note: 'Sent by migration')
-        puts "  inserting #{identifier.to_s}"
+        puts "  inserting #{identifier}"
         sleep 0.5
       end
       sleep 30
