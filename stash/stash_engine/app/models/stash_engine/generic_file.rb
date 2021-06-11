@@ -140,6 +140,7 @@ module StashEngine
       if download_result.instance_of?(HTTP::Error) || download_result.instance_of?(Errno::ENOENT)
         FrictionlessReport.create(report: nil, generic_file_id: id)
       else
+        # TODO(#1296): rescue from errors here!
         result = call_frictionless(download_result)
         # Add 'report' top level key that is required for calling React frictionless-components
         result_hash = { report: JSON.parse(result) }

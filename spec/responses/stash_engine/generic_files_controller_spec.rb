@@ -115,7 +115,7 @@ module StashEngine
         )
       end
 
-      it 'can call validate frictionless' do
+      it 'calls validate frictionless' do
         response_code = post @url, params: { file_ids: [@file.id] }
         expect(response_code).to eql(200)
       end
@@ -136,8 +136,8 @@ module StashEngine
         before(:each) do
           @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          stub_request(:get, @file.url)
-            .to_return(body: body_file, status: 200)
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
         end
 
         it 'downloads file successfully' do
@@ -176,7 +176,7 @@ module StashEngine
           expect(generic_file).to receive(:validate_frictionless)
         end
 
-        # TODO: trying the above again: get rid of
+        # TODO: trying the above again: get rid of this
         xit 'calls frictionless validation on the downloaded file (other tentative)' do
           allow_any_instance_of(described_class).to receive(:validate_frictionless).and_return(true)
 
@@ -194,6 +194,16 @@ module StashEngine
           report = @file.frictionless_report
           # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
           expect(report.report).to include('errors":[{')
+        end
+
+        it 'saves first status as checking before call validation' do
+          allow(FrictionlessReport).to receive(:create).with(
+            report: nil, generic_file_id: @file.id, status: 'checking'
+          )
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+
+          expect(FrictionlessReport).to have_received(:create)
         end
 
         it 'saves frictionless report with top level "report" key' do
