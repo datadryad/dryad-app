@@ -29,12 +29,12 @@ end
 # Deployment
 
 gem 'capistrano', '~> 3.11'
-gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.90.0'
-# not currently used for our simple case and because of some problems
-# gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
+# Use Puma as the app server
+gem "puma", group: :puma, require: false
+# Our homegrown artisinal SSM gem
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
 # ############################################################
 # UI
@@ -45,8 +45,8 @@ gem 'rubocop', '~> 0.90.0'
 gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
-# gem 'therubyracer', platforms: :ruby
-gem 'mini_racer'
+gem 'therubyracer', platforms: :ruby
+# gem 'mini_racer'
 gem 'turbolinks'
 
 gem 'uglifier', '~> 4.2.0'
@@ -129,7 +129,6 @@ group :development, :test, :local_dev do
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
-  gem 'puma'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
