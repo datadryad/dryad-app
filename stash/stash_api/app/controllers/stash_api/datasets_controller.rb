@@ -186,11 +186,15 @@ module StashApi
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
+      deposit_url = (request.protocol + request.host_with_port + metadata[:_links][:self][:href] if metadata[:_links][:self][:href])
+      edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
+
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
-        deposit_url: metadata[:_links][:self][:href],
-        deposit_edit_url: metadata[:editLink],
+        deposit_url: deposit_url,
+        deposit_edit_url: edit_url,
+        deposit_upload_url: edit_url,
         status: 'Success'
       }.compact
     end
