@@ -219,6 +219,26 @@ module StashApi
         expect(res.title).to eq(article[:article_title])
       end
 
+      it 'allows update of deposit metadata using the raw identifier, without <<doi:>>' do
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        @meta.make_submission_metadata
+        response_code = post "/api/v2/em_submission_metadata/#{ERB::Util.url_encode(ident.identifier)}",
+                             params: @meta.json,
+                             headers: default_authenticated_headers
+        expect(response_code).to eq(201)
+        ident.reload
+        res.reload
+        hsh = @meta.hash
+        expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
+        article = hsh[:article]
+        expect(res.title).to eq(article[:article_title])
+      end
+
       it 'does not update core fields after the user has submitted edits' do
         @meta.make_submission_metadata
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
