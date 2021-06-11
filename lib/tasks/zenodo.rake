@@ -11,7 +11,7 @@ namespace :zenodo do
 
     sql = <<~SQL.strip
       SELECT ids.* FROM stash_engine_identifiers ids
-        LEFT JOIN stash_engine_zenodo_copies cops
+        LEFT JOIN (SELECT id, identifier_id FROM stash_engine_zenodo_copies WHERE copy_type = 'data') cops
         ON ids.id = cops.identifier_id
       WHERE ids.pub_state = 'published'
         AND cops.id IS NULL
