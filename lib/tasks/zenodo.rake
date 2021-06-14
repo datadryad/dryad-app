@@ -26,7 +26,10 @@ namespace :zenodo do
         break if Delayed::Job.count >= max_feed_queue
 
         resource = identifier.latest_resource_with_public_download
-        resource.send_to_zenodo(note: 'Sent by migration')
+        resource&.send_to_zenodo(note: 'Sent by migration')
+
+        # set retries to 10 so our daily retries for old migrations don't overwhelm current items and we can retry manually
+        ZenodoCopy.where(resource_id: resource.id, copy_type: 'data').update(retries: 10)
         puts "  inserting #{identifier}"
         sleep 0.5
       end
