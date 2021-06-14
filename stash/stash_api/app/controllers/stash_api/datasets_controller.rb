@@ -362,7 +362,13 @@ module StashApi
       # check to see if the identifier is actually an id and not a DOI first
       return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
 
-      id_type, id_text = id.split(':', 2)
+      if id.include?(':')
+        id_type, id_text = id.split(':', 2)
+      else
+        # assume it's a DOI, without the prefix
+        id_type = 'DOI'
+        id_text = id
+      end
       render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
@@ -375,7 +381,7 @@ module StashApi
     private
 
     def setup_identifier_and_resource_for_put
-      @stash_identifier = get_stash_identifier(params[:id])
+      @stash_identifier = get_stash_identifier(params[:id]) || get_stash_identifier(params[:deposit_id])
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
