@@ -139,7 +139,7 @@ module StashApi
             identifier: art_params['article_doi']
           }.with_indifferent_access
         end
-        em_params['manuscriptNumber'] = art_params['manuscript_number'] || em_params['document_id'] || 'EM-DEPOSIT'
+        em_params['manuscriptNumber'] = art_params['manuscript_number']
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
         keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
@@ -155,6 +155,7 @@ module StashApi
           em_params['funders'] = em_funders
         end
       end
+      em_params['manuscriptNumber'] ||= params['document_id'] || 'EM-DEPOSIT'
 
       em_authors = []
       auth_array = params['authors'] || params['author']
