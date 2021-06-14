@@ -700,10 +700,10 @@ module StashEngine
     end
 
     # this just sends a **COPY** job to zenodo (ie Merritt duplication), not for replication which could be sfw or supp
-    def send_to_zenodo
+    def send_to_zenodo(note: nil)
       return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
-      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data') if zenodo_copies.data.empty?
+      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note) if zenodo_copies.data.empty?
       ZenodoCopyJob.perform_later(id)
     end
 
