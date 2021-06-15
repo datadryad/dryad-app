@@ -129,6 +129,7 @@ module StashApi
       em_params = {}.with_indifferent_access
 
       em_params['publicationName'] = params['journal_full_title']
+      em_params['title'] = params['deposit_data']['deposit_description'] if params['deposit_data']
       art_params = params['article']
       if art_params
         if art_params['article_doi']
