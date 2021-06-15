@@ -40,9 +40,9 @@ namespace :zenodo do
   end
 
   desc 'Gives stats for the zenodo replication of old datasets'
-  task migration_stats: :environment  do
+  task migration_stats: :environment do
 
-    puts "Stats for old datasets being copied to Zenodo--excludes items already sent since we began replicating"
+    puts 'Stats for old datasets being copied to Zenodo--excludes items already sent since we began replicating'
     elapsed = Time.new - Zenodo::Stats.first_migration
     count_migrated = Zenodo::Stats.count_migrated
     count_remaining = Zenodo::Stats.count_remaining
@@ -54,13 +54,13 @@ namespace :zenodo do
     time_remaining = size_remaining / bytes_per_second
 
     puts "#{count_migrated} of #{count_migrated + count_remaining} old datasets have been replicated"
-    puts "#{"%.2f" % (count_migrated.to_f/(count_migrated+count_remaining)*100)}% by number of old datasets have been replicated"
+    puts "#{format('%.2f', (count_migrated.to_f / (count_migrated + count_remaining) * 100))}% by number of old datasets have been replicated"
 
     puts "#{StashEngine::ApplicationController.helpers.filesize(size_migrated)} of " \
-        "#{StashEngine::ApplicationController.helpers.filesize(size_remaining+size_migrated)} of the old datasets have been replicated"
+        "#{StashEngine::ApplicationController.helpers.filesize(size_remaining + size_migrated)} of the old datasets have been replicated"
 
-    puts "#{"%.2f" % (size_migrated.to_f/(size_remaining+size_migrated)*100)}% complete by size"
+    puts "#{format('%.2f', (size_migrated.to_f / (size_remaining + size_migrated) * 100))}% complete by size"
 
-    puts "Optimistic completion date: #{(Time.new + time_remaining).strftime("%Y-%m-%d")}"
+    puts "Optimistic completion date: #{(Time.new + time_remaining).strftime('%Y-%m-%d')}"
   end
 end
