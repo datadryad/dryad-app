@@ -135,12 +135,15 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
+    def set_checking_status
+      @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
+    end
+
     def validate_frictionless
       download_result = download_file
       if download_result.instance_of?(HTTP::Error) || download_result.instance_of?(Errno::ENOENT)
-        FrictionlessReport.create(generic_file_id: id, status: 'error')
+        @report.update(generic_file_id: id, status: 'error')
       else
-        report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
         # TODO(#1296): rescue from errors here!
         result = call_frictionless(download_result)
         # Add 'report' top level key that is required for calling
@@ -151,7 +154,7 @@ module StashEngine
                  else
                    'issues'
                  end
-        report.update(report: result_hash.to_json, status: status)
+        @report.update(report: result_hash.to_json, status: status)
       end
     end
 

@@ -57,6 +57,7 @@ module StashEngine
         return
       end
 
+      files.each(&:set_checking_status)
       files.each(&:validate_frictionless)
       render json: files.as_json(
         methods: :type, include: { frictionless_report: { only: %w[report status] } }
