@@ -19,11 +19,11 @@ module StashEngine
       end
       it {
         should define_enum_for(:status).with_values(
-          { valid_: 'valid', invalid_: 'invalid', checking: 'checking', error: 'error' }
+          %w[issues noissues checking error].map { |i| [i.to_sym, i] }.to_h
         ).backed_by_column_of_type(:string)
       }
       it 'is valid with valid attributes' do
-        expect(FrictionlessReport.new(generic_file: @file, status: 'valid')).to be_valid
+        expect(FrictionlessReport.new(generic_file: @file, status: 'checking')).to be_valid
       end
     end
   end
