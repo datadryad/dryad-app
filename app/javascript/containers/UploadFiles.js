@@ -33,12 +33,12 @@ const Messages = {
     'fileAlreadySelected': 'A file of the same type is already in the table.',
     'filesAlreadySelected': 'Some files of the same type are already in the table.'
 }
-const TabularCheckStatus = {
+export const TabularCheckStatus = {
     'checking': 'Checking...',
-    'view_issues': 'View issues',
-    'passed': 'Passed',
+    'issues': 'View issues',
+    'noissues': 'Passed',
     'na': 'N/A',
-    'error_validating': 'Validation error'
+    'error': 'Validation error'
 }
 
 class UploadFiles extends React.Component {
@@ -109,12 +109,8 @@ class UploadFiles extends React.Component {
     setTabularCheckStatus = (file) => {
         if (!this.isCsv(file)) {
             return TabularCheckStatus['na'];
-        } else {
-            return file.frictionless_report ?
-                file.frictionless_report.report ?
-                    TabularCheckStatus['view_issues'] :
-                    TabularCheckStatus['error_validating'] :
-                TabularCheckStatus['passed']
+        } else if (file.frictionless_report) {
+            return TabularCheckStatus[file.frictionless_report.status]
         }
     }
 

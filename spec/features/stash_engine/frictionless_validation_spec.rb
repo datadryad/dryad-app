@@ -58,9 +58,11 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "View issues" if file is plain-text and tabular and there is a report for it' do
+    it 'shows "View issues" if file is plain-text and status is "issues"' do
       @file.update(upload_content_type: 'text/csv')
-      @report = StashEngine::FrictionlessReport.create(report: '[{errors: errors}]', generic_file: @file)
+      @report = StashEngine::FrictionlessReport.create!(
+        report: '[{errors: errors}]', generic_file: @file, status: 'issues'
+      )
       sleep 1
       click_link 'Upload Files'
 
@@ -69,24 +71,25 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Validation error" if file is plain-text and tabular, there is a report for it but it is empty' do
+    it 'shows "Passed" if file is plain-text and tabular, and the status is "noissues"' do
       @file.update(upload_content_type: 'text/csv')
-      @report = StashEngine::FrictionlessReport.create(report: nil, generic_file: @file)
-      sleep 1
-      click_link 'Upload Files'
-
-      within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('Validation error')
-      end
-    end
-
-    it 'shows "Passed" if file is plain-text and tabular and there is not a report' do
-      @file.update(upload_content_type: 'text/csv')
+      @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to eq('Passed')
+      end
+    end
+
+    it 'shows "Validation error" if file is plain-text and tabular, and the status is "error"' do
+      @file.update(upload_content_type: 'text/csv')
+      @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'error')
+      sleep 1
+      click_link 'Upload Files'
+
+      within(:xpath, '//table/tbody/tr/td[2]') do
+        expect(text).to eq('Validation error')
       end
     end
   end

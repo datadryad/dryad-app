@@ -4,7 +4,7 @@ require 'byebug'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine
-  RSpec.describe DataFilesController, type: :request do
+  RSpec.describe GenericFilesController, type: :request do
     include GenericFilesHelper
     include DatabaseHelper
     include DatasetHelper
@@ -132,6 +132,18 @@ module StashEngine
         expect(body).to eql({ 'status' => 'found non-csv file(s)' })
       end
 
+      it 'returns status when called with tabular file' do
+        @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
+        body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+        # The request for downloading the file
+        stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+        post @url, params: { file_ids: [@file.id] }
+        expect(response.status).to eql(200)
+        response_body = JSON.parse(response.body)
+        expect(response_body[0]['frictionless_report']['status']).to eq('issues')
+      end
+
       describe 'invalid manifest files' do
         before(:each) do
           @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
@@ -187,23 +199,19 @@ module StashEngine
           expect(GenericFile).to receive(:validate_frictionless)
         end
 
-        it 'saves frictionless report' do
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-
-          report = @file.frictionless_report
-          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
-          expect(report.report).to include('errors":[{')
-        end
-
         it 'saves first status as checking before call validation' do
+          model_instance = instance_double(FrictionlessReport)
           allow(FrictionlessReport).to receive(:create).with(
-            report: nil, generic_file_id: @file.id, status: 'checking'
-          )
+            generic_file_id: @file.id, status: 'checking'
+          ).and_return(model_instance)
+          allow(model_instance).to receive(:update).and_return(true)
+
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
 
-          expect(FrictionlessReport).to have_received(:create)
+          expect(FrictionlessReport).to have_received(:create).with(
+            generic_file_id: @file.id, status: 'checking'
+          )
         end
 
         it 'saves frictionless report with top level "report" key' do
@@ -215,10 +223,20 @@ module StashEngine
           expect(report_hash.keys).to eq(['report'])
         end
 
+        it 'saves frictionless report with status "issues" when file is invalid' do
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+
+          report = @file.frictionless_report
+          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
+          expect(report.report).to include('errors":[{')
+          expect(report.status).to eq('issues')
+        end
+
         it 'saves frictionless report for more than one file' do
           file2 = create(:generic_file)
           file2.update(upload_file_name: 'invalid2.csv', url: 'http://example.com/invalid2.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid2.csv'))
           stub_request(:get, file2.url)
             .to_return(body: body_file, status: 200)
 
@@ -234,7 +252,7 @@ module StashEngine
       end
 
       describe 'valid manifest files' do
-        it 'does not save frictionless report' do
+        it 'saves frictionless report with status "noissues"' do
           @file.update(upload_file_name: 'table.csv', url: 'http://example.com/table.csv')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
           stub_request(:get, 'http://example.com/table.csv')
@@ -242,7 +260,9 @@ module StashEngine
 
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
-          expect(StashEngine::FrictionlessReport.exists?).to be(false)
+          report = @file.frictionless_report
+          expect(report.report).to include('"errors":[]')
+          expect(report.status).to eq('noissues')
         end
       end
 
@@ -263,16 +283,17 @@ module StashEngine
           assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
         end
 
-        it 'saves frictionless report with report if downloads successfully' do
+        it 'saves frictionless report if downloads successfully, with status' do
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
 
           report = @file.frictionless_report
           # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
           expect(report.report).to include('"errors":[{')
+          expect(report.status).to eq('issues')
         end
 
-        it 'downloads file from S3 unsuccessfully, so the report is created but without content' do
+        it 'downloads file from S3 unsuccessfully, so the report is created with status "error"' do
           stub_request(:get, /#{@s3_domain}.*/)
             .with(
               headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
@@ -282,7 +303,8 @@ module StashEngine
           assert_requested :get, /#{@s3_domain}.*/, body: '', times: 1
 
           report = @file.frictionless_report
-          expect(report.report).to eq(nil)
+          expect(report.report).to be(nil)
+          expect(report.status).to eq('error')
         end
 
         it 'could not write to tempfile, so the report is created but without content' do
@@ -292,12 +314,13 @@ module StashEngine
           assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
 
           report = @file.frictionless_report
-          expect(report.report).to eq(nil)
+          expect(report.report).to be(nil)
+          expect(report.status).to eq('error')
         end
       end
 
       describe 'valid S3 files' do
-        it 'does not save frictionless report' do
+        it 'saves frictionless report with status "noissues"' do
           @file.update(upload_file_name: 'table.csv')
           @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
@@ -308,7 +331,9 @@ module StashEngine
 
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
-          expect(StashEngine::FrictionlessReport.exists?).to be(false)
+          report = @file.frictionless_report
+          expect(report.report).to include('"errors":[]')
+          expect(report.status).to eq('noissues')
         end
       end
     end
