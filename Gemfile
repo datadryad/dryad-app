@@ -32,7 +32,7 @@ gem 'capistrano', '~> 3.11'
 gem 'capistrano-rails', '~> 1.4'
 gem 'rubocop', '~> 0.90.0'
 # Use Puma as the app server
-gem "puma", group: :puma, require: false
+gem 'puma', group: :puma, require: false
 # Our homegrown artisinal SSM gem
 gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
