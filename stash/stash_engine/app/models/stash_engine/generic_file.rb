@@ -135,16 +135,26 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
+    def set_checking_status
+      @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
+    end
+
     def validate_frictionless
       download_result = download_file
       if download_result.instance_of?(HTTP::Error) || download_result.instance_of?(Errno::ENOENT)
-        FrictionlessReport.create(report: nil, generic_file_id: id)
+        @report.update(generic_file_id: id, status: 'error')
       else
+        # TODO(#1296): rescue from errors here!
         result = call_frictionless(download_result)
-        # Add 'report' top level key that is required for calling React frictionless-components
+        # Add 'report' top level key that is required for calling
+        # React frictionless-components
         result_hash = { report: JSON.parse(result) }
-        FrictionlessReport.create(report: result_hash.to_json, generic_file_id: id) \
-          unless validation_errors_not_found(result_hash)
+        status = if validation_issues_not_found(result_hash)
+                   'noissues'
+                 else
+                   'issues'
+                 end
+        @report.update(report: result_hash.to_json, status: status)
       end
     end
 
@@ -179,7 +189,7 @@ module StashEngine
       output
     end
 
-    def validation_errors_not_found(result)
+    def validation_issues_not_found(result)
       result[:report]['tasks'].first['errors'].empty?
     end
   end

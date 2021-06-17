@@ -1,25 +1,18 @@
 import React from 'react';
 
+import { TabularCheckStatus } from "../../../containers/UploadFiles";
+
 import ellipsize from '../../../lib/string_patch';
 
 import classes from './File.module.css';
-
-// TODO: remove constant duplicate from UploadFiles component
-const TabularCheckStatus = {
-    'checking': 'Checking...',
-    'view_issues': 'View issues',
-    'passed': 'Passed',
-    'na': 'N/A',
-    'error_validating': 'Validation error'
-}
 
 const statusCss = (status) => {
     switch (status) {
         case TabularCheckStatus['checking']:
             return classes.Blinking
-        case TabularCheckStatus['passed']:
+        case TabularCheckStatus['noissues']:
             return classes.Passed
-        case TabularCheckStatus['error_validating']:
+        case TabularCheckStatus['error']:
             return classes.ValidationError
         default:
             return null
@@ -32,7 +25,7 @@ const file = (props) => {
             <th scope='row'>{props.file.sanitized_name}</th>
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
-                {props.file.tabularCheckStatus === TabularCheckStatus['view_issues']
+                {props.file.tabularCheckStatus === TabularCheckStatus['issues']
                     ? <a href="#!" onClick={props.clickValidationReport}>{props.file.tabularCheckStatus}</a>
                     : props.file.tabularCheckStatus}
             </span></td>
