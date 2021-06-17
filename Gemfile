@@ -114,6 +114,8 @@ group :test do
   gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
+  # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
+  gem 'shoulda-matchers', '~> 4.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
