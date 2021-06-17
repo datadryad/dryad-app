@@ -85,6 +85,18 @@
 </div>
 
 <div class="bio">
+    <img src="/images/ALiu.png" alt="Anna Liu" title="Anna Liu">
+  <p><strong>Anna Liu</strong><br/>
+	Data Curator<br/>
+	Anna is currently studying Data Science at UC San Diego and is interested in
+    the intersection between Data Science and Design. She has previously worked
+    as a Research Assistant intern, helping to document government responses to
+    the COVID-19 pandemic. Outside of academics, Anna enjoys hanging out with
+    friends, drinking boba, and playing badminton.
+	</p>
+</div>
+
+<div class="bio">
     <img src="/images/Dryad_logo_square_transparent.png" alt="Sasha Mushegian" title="Sasha Mushegian">
   <p><strong>Sasha Mushegian</strong>, PhD Zoology<br/>
   Data Curator<br/>
