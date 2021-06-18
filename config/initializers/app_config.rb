@@ -8,3 +8,8 @@ ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml
 APP_CONFIG = ac.to_ostruct
 
 ENV['SSL_CERT_FILE'] = APP_CONFIG.ssl_cert_file if APP_CONFIG.ssl_cert_file
+
+if `uname -r`.include?('amzn') # only install on our amazon servers
+  ENV['PYENV_ROOT']='/dryad/.pyenv'
+  ENV['PATH']="/dryad/.pyenv/bin:#{ENV['PATH']}"
+end
