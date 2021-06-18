@@ -171,12 +171,6 @@ module StashEngine
           assert_requested :get, file2.url, times: 1
         end
 
-        it 'downloads file unsuccessfully' do
-        end
-
-        it 'downloads more than one file unsuccessfully' do
-        end
-
         # TODO: this needs to be fixed using mock
         xit 'calls frictionless validation on the downloaded file' do
           generic_file = instance_double(GenericFile)
@@ -307,8 +301,41 @@ module StashEngine
           expect(report.status).to eq('error')
         end
 
-        it 'could not write to tempfile, so the report is created but without content' do
+        it 'could not write to tempfile, so the report is created with status "error"' do
           allow(Tempfile).to receive(:new).and_raise Errno::ENOENT
+          response_code = post @url, params: { file_ids: [@file.id] }
+          expect(response_code).to eql(200)
+          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
+
+          report = @file.frictionless_report
+          expect(report.report).to be(nil)
+          expect(report.status).to eq('error')
+        end
+
+        it 'creates report with status "error", because the file does not exist when calling validation' do
+          allow_any_instance_of(GenericFile).to receive(:call_frictionless).and_return(
+            '{
+  "version": "4.10.0",
+  "time": 0.003,
+  "errors": [
+    {
+      "code": "scheme-error",
+      "name": "Scheme Error",
+      "tags": [],
+      "note": "[Errno 2] No such file or directory: \'/tmp/invalid.csv\'",
+      "message": "The data source could not be successfully loaded: [Errno 2] No such file or directory: \'/tmp/invlaid.csv\'",
+      "description": "Data reading error because of incorrect scheme."
+    }
+  ],
+  "tasks": [],
+  "stats": {
+    "errors": 1,
+    "tasks": 0
+  },
+  "valid": false
+}
+'
+          )
           response_code = post @url, params: { file_ids: [@file.id] }
           expect(response_code).to eql(200)
           assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
