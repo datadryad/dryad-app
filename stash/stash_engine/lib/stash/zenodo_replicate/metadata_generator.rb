@@ -61,7 +61,7 @@ module Stash
       end
 
       def description
-        @resource.descriptions.where(description_type: 'abstract').first.description
+        @resource.descriptions.where(description_type: 'abstract').first.description || 'No abstract available'
       end
 
       def access_right
