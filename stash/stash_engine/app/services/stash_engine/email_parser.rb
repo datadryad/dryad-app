@@ -211,7 +211,7 @@ module StashEngine
       return if regex.blank?
 
       msid = @hash['ms reference number']
-      return if msid.match(regex).blank?
+      return if msid.blank? || msid.match(regex).blank?
 
       result = msid.match(regex)[1]
       @hash['ms reference number'] = result if result.present?
