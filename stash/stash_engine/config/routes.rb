@@ -121,9 +121,7 @@ StashEngine::Engine.routes.draw do
   get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
   get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
   get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
-#  get 'ds_admin/curation_activity_change/:id', to: 'admin_datasets#curation_activity_change'
   get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
-#  get 'ds_admin/current_editor_change/:id', to: 'admin_datasets#current_editor_change'
   get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
   get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
   post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
@@ -154,5 +152,9 @@ StashEngine::Engine.routes.draw do
 
   # Curation stats
   get 'curation_stats', to: 'curation_stats#index'
+
+  # Journals
+  get 'journals', to: 'journals#index'
+  
 end
 # rubocop:enable Metrics/BlockLength
