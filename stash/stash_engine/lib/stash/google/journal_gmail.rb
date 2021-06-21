@@ -88,12 +88,16 @@ module Stash
       end
 
       def self.remove_processing_label(message:)
+        return unless processing_label
+
         mod_request = ::Google::Apis::GmailV1::ModifyMessageRequest.new
         mod_request.remove_label_ids = [processing_label.id]
         gmail.modify_message('me', message.id, mod_request)
       end
 
       def self.add_error_label(message:)
+        return unless error_label
+
         mod_request = ::Google::Apis::GmailV1::ModifyMessageRequest.new
         mod_request.add_label_ids = [error_label.id]
         gmail.modify_message('me', message.id, mod_request)
@@ -191,7 +195,7 @@ module Stash
         end
 
         def error_label
-          @error_lable ||= label_by_name(name: APP_CONFIG[:google][:journal_error_label])
+          @error_label ||= label_by_name(name: APP_CONFIG[:google][:journal_error_label])
         end
 
       end
