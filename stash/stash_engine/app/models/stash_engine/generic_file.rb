@@ -185,7 +185,7 @@ module StashEngine
     def write_tempfile(result)
       # It's required file to have csv extension for frictionless to return
       # correct validation report
-      tempfile = Tempfile.new([upload_file_name, '.csv'], Rails.root.join('tmp'))
+      tempfile = Tempfile.new([upload_file_name, '.csv'], Rails.root.join('tmp'), binmode: true)
       tempfile.write(result.body.to_s)
       tempfile.rewind
       tempfile
