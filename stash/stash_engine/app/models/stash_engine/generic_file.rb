@@ -197,7 +197,7 @@ module StashEngine
     def call_frictionless(file)
       # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
       # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
-      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate #{file_path} --json 2>&1"
+      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate #{file.path} --json 2>&1"
       result = `#{cmd}`
       logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
       file.close!
