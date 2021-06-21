@@ -432,7 +432,7 @@ class UploadFiles extends React.Component {
         });
 
         const countRepeated = urls.length - newUrls.length;
-        this.setWarningMessage(countRepeated);
+        this.setWarningRepeatedFile(countRepeated);
         return newUrls.join('\n');
     }
 
@@ -459,7 +459,7 @@ class UploadFiles extends React.Component {
         });
 
         const countRepeated = files.length - newFiles.length;
-        this.setWarningMessage(countRepeated);
+        this.setWarningRepeatedFile(countRepeated);
         return newFiles;
     }
 
@@ -475,7 +475,7 @@ class UploadFiles extends React.Component {
         })
     }
 
-    setWarningMessage = (countRepeated) => {
+    setWarningRepeatedFile = (countRepeated) => {
         if (countRepeated < 0) return;
         if (countRepeated === 0) {
             this.setState({warningMessage: null});

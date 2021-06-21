@@ -140,22 +140,33 @@ module StashEngine
     end
 
     def validate_frictionless
-      download_result = download_file
-      if download_result.instance_of?(HTTP::Error) || download_result.instance_of?(Errno::ENOENT)
+      result = download_file
+      if result.instance_of?(HTTP::Error)
         @report.update(generic_file_id: id, status: 'error')
-      else
-        # TODO(#1296): rescue from errors here!
-        result = call_frictionless(download_result)
-        # Add 'report' top level key that is required for calling
-        # React frictionless-components
-        result_hash = { report: JSON.parse(result) }
-        status = if validation_issues_not_found(result_hash)
-                   'noissues'
-                 else
-                   'issues'
-                 end
-        @report.update(report: result_hash.to_json, status: status)
+        return
       end
+      result = write_tempfile(result)
+      if result.instance_of?(Errno::ENOENT)
+        @report.update(generic_file_id: id, status: 'error')
+        return
+      end
+      # TODO(#1296): rescue from errors here!
+      result = call_frictionless(result)
+      logger.debug(result.to_s) # DB
+      logger.debug('#############################################################################') # DB
+      # Add 'report' top level key that is required for calling
+      # React frictionless-components
+      result_hash = { report: JSON.parse(result) }
+      if validation_error(result_hash[:report])
+        @report.update(status: 'error')
+        return
+      end
+      status = if validation_issues_not_found(result_hash)
+                 'noissues'
+               else
+                 'issues'
+               end
+      @report.update(report: result_hash.to_json, status: status)
     end
 
     def download_file
@@ -164,33 +175,37 @@ module StashEngine
       ).timeout(connect: 10, read: 10).follow(max_hops: 10)
       dl_url = url || direct_s3_presigned_url
       begin
-        result = http.get(dl_url)
-        # It's required file to have csv extension for frictionless to return
-        # correct validation report
-        tempfile = Tempfile.new([upload_file_name, '.csv'])
-        tempfile.write(result.body.to_s)
-        tempfile.close
-        tempfile.path
+        http.get(dl_url)
       rescue HTTP::Error => e
         puts "Error downloading file: #{e.message}"
-        e
-      rescue Errno::ENOENT => e
-        puts "Error writing to file: #{e.message}"
         e
       end
     end
 
-    def call_frictionless(file_path)
-      # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
-      # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
-      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate #{file_path} --json 2>&1"
-      output = `#{cmd}`
-      logger.debug("Frictionless validation:\n  #{cmd}\n  #{output}")
-      output
+    def write_tempfile(result)
+      # It's required file to have csv extension for frictionless to return
+      # correct validation report
+      tempfile = Tempfile.new([upload_file_name, '.csv'], Rails.root.join('tmp'))
+      tempfile.write(result.body.to_s)
+      tempfile.rewind
+      tempfile
+    rescue Errno::ENOENT => e
+      puts "Error writing to file: #{e.message}"
+      e
+    end
+
+    def call_frictionless(file)
+      result = `frictionless validate #{file.path} --json`
+      file.close!
+      result
     end
 
     def validation_issues_not_found(result)
       result[:report]['tasks'].first['errors'].empty?
+    end
+
+    def validation_error(result)
+      !result['errors'].empty? && result['errors'].first['code'] == 'scheme-error'
     end
   end
 end
