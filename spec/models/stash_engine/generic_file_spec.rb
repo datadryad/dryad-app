@@ -134,6 +134,20 @@ module StashEngine
         end
 
       end
+
+      describe 'amoeba duplication' do
+        before(:each) do
+          @report = create(:frictionless_report, generic_file: @upload)
+          @resource2 = @resource.amoeba_dup
+          @resource2.save
+          @upload2 = GenericFile.last
+        end
+
+        it 'copies frictionless report' do
+          expect(@upload2.frictionless_report.id).not_to eq(@upload.frictionless_report.id)
+          expect(@upload2.frictionless_report.report).to eq(@upload.frictionless_report.report)
+        end
+      end
     end
   end
 end
