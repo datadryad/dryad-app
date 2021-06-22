@@ -8,6 +8,10 @@ module StashEngine
   class GenericFile < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
+    amoeba do
+      enable
+      propagate
+    end
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
