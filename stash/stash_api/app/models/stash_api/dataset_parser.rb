@@ -30,7 +30,7 @@ module StashApi
                                                                             note: 'Created by API user')
       owning_user_id = establish_owning_user_id
       @resource.update(
-        title: @hash['title'],
+        title: remove_html(@hash['title']),
         user_id: owning_user_id,
         current_editor_id: owning_user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
@@ -51,6 +51,10 @@ module StashApi
     # rubocop:enable
 
     private
+
+    def remove_html(in_string)
+      ActionView::Base.full_sanitizer.sanitize(in_string)
+    end
 
     def establish_owning_user_id
       if @hash['userId']&.to_s&.match(/\d{4}-\d{4}-\d{4}-\d{3,4}X?/)
