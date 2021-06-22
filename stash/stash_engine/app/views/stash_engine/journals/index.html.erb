@@ -19,7 +19,9 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <th class="c-admin-table <%= sort_display('allow_blackout') %>">
 	  <%= sortable_column_head sort_field: 'allow_blackout', title: 'Automatic embargo?' %>
       </th>
-      <th class="c-admin-table">Covers DPC?</th>
+      <th class="c-admin-table <%= sort_display('payment_plan_type') %>">
+	  <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment Plan' %>
+      </th>
       <th class="c-admin-table <%= sort_display('name') %>">
 	  <%= sortable_column_head sort_field: 'name', title: 'Sponsored by' %>
       </th>
@@ -29,7 +31,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <td><%= journal.title %></td>
       <td><span style="white-space: nowrap;"><%= journal.issn %></span></td>
       <td><%= journal.allow_blackout %></td>
-      <td><%= journal.will_pay? %></td>
+      <td><%= journal.payment_plan_type %></td>
       <td><%= journal.sponsor&.name %></td>
   </tr>
 
