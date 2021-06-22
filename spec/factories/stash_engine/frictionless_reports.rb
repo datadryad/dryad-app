@@ -4,5 +4,6 @@ FactoryBot.define do
     generic_file
 
     report { Faker::Json.shallow_json }
+    status { %w[issues noissues checking error][rand(4)] }
   end
 end
