@@ -64,7 +64,7 @@ your own directory to begin modifying it.
 Our npmjs.com organization is called `cdl-dryad` which I hope allows all
 developers to work with and publish the component we use.
 
-The page at `https://github.com/CDL-Dryad/components/blob/dev/docs/dev_workflow.md` gives
+The page at `https://github.com/CDL-Dryad/components/blob/main/docs/dev_workflow.md` gives
 additional information on how to work with the frictionless UI components.
 
 
