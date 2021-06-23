@@ -262,6 +262,45 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of the curation timeline for each dataset'
+  task curation_timeline_report: :environment do
+    launch_day = Date.new(2019, 9, 17)
+    datasets = StashEngine::Identifier.publicly_viewable.where(created_at: launch_day..Date.today)
+    CSV.open('curation_timeline_report.csv', 'w') do |csv|
+      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size FileFormats]
+      datasets.each do |i|
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        created_date_str = i.created_at&.strftime('%Y-%m-%d')
+        next unless i.resources.submitted.present?
+
+        curation_start_date = i.resources.submitted.each do |r|
+          break r.curation_start_date if r.curation_start_date.present?
+        end
+        curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
+
+        times_curated = 0
+        in_curation = false
+        i.resources.each do |r|
+          r.curation_activities.each do |ca|
+            if in_curation && %w[embargoed withdrawn published action_required].include?(ca.status)
+              # detect moves from in_curation to out
+              in_curation = false
+            elsif !in_curation && %w[curation].include?(ca.status)
+              # detect and count moves from out of curation to in_curation
+              in_curation = true
+              times_curated += 1
+            end
+          end
+        end
+
+        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
+
+        csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
+                i.storage_size, file_formats]
+      end
+    end
+  end
+
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
     # Get the year-month specified in YEAR_MONTH environment variable.
