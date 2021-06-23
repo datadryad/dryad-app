@@ -276,6 +276,7 @@ namespace :identifiers do
         curation_start_date = i.resources.submitted.each do |r|
           break r.curation_start_date if r.curation_start_date.present?
         end
+        next unless curation_start_date > launch_day
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
 
         times_curated = 0
@@ -297,7 +298,7 @@ namespace :identifiers do
         # had problems during the migration from the v1 server, so they were "created" after
         # launch day, even though they are actually older items.
         next unless times_curated > 0 
-
+        
         file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
 
         csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
