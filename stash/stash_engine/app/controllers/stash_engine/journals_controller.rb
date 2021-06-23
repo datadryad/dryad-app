@@ -8,9 +8,9 @@ module StashEngine
 
     def index
       params.permit(:q)
-
+      params[:sort] = 'title' if params[:sort].blank?
       @all_journals = Journal.all
-      @journals = Journal.joins(:sponsor).where.not(payment_plan_type: [nil, '']).order(helpers.sortable_table_order, id: :asc)
+      @journals = Journal.joins(:sponsor).where.not(payment_plan_type: [nil, '']).order(helpers.sortable_table_order, title: :asc)
 
       respond_to do |format|
         format.html
