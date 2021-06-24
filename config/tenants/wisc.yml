@@ -6,8 +6,8 @@ default: &default
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "WISC"
-  short_name: "University of Wisconsin-Madison"
-  long_name: "University of Wisconsin-Madison"
+  short_name: "University of Wisconsin–Madison"
+  long_name: "University of Wisconsin–Madison"
   publisher_id: grid.14003.36
   ror_ids:
     - https://ror.org/01y2jtd41

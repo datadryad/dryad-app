@@ -96,6 +96,14 @@ module Stash
         resp
       end
       # rubocop:enable Naming/AccessorMethodName
+
+      def previous_deposition_id
+        return @copy.deposition_id unless @copy.deposition_id.blank?
+
+        return @previous_copy.deposition_id unless @previous_copy.nil?
+
+        nil
+      end
     end
   end
 end

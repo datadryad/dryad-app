@@ -31,12 +31,6 @@ module Stash
         raise ZenodoError, "identifier_id #{@copy.identifier_id}: Cannot replicate when a previous replication for the " \
               'identifier has not finished yet. Items must replicate in order.'
       end
-
-      def previous_deposition_id
-        return @previous_copy.deposition_id unless @previous_copy.nil?
-
-        nil
-      end
     end
   end
 end

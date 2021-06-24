@@ -55,7 +55,7 @@ module StashApi
       respond_to do |format|
         format.any do
           if @stash_identifier&.first_submitted_resource.present?
-            # Once the dataset has been submitted by an author, only update the status,
+            # Once the dataset has been submitted by an author, only update the status and manuscript number,
             # but don't actually process the metadata from EM
             em_response = em_update_status
             status_code = em_response[:status] == 'Success' ? 200 : 403
@@ -74,7 +74,20 @@ module StashApi
       end
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_status
+      # If manuscript number is available, update it
+      art_params = params['article']
+      manu = art_params['manuscript_number'] unless art_params.blank?
+      if manu.present?
+        datum = StashEngine::InternalDatum.where(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber').first
+        if datum.present?
+          datum.update(value: manu)
+        else
+          StashEngine::InternalDatum.create(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber', value: manu)
+        end
+      end
+
       # If final_disposition is available, update the status of this dataset
       disposition = params['article']['final_disposition']
       unless disposition && (@resource.current_curation_status == 'peer_review')
@@ -112,11 +125,11 @@ module StashApi
     end
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_reformat_request
       em_params = {}.with_indifferent_access
 
       em_params['publicationName'] = params['journal_full_title']
+      em_params['title'] = params['deposit_data']['deposit_description'] if params['deposit_data']
       art_params = params['article']
       if art_params
         if art_params['article_doi']
@@ -127,7 +140,7 @@ module StashApi
             identifier: art_params['article_doi']
           }.with_indifferent_access
         end
-        em_params['manuscriptNumber'] = art_params['manuscript_number'] || em_params['document_id'] || 'EM-DEPOSIT'
+        em_params['manuscriptNumber'] = art_params['manuscript_number']
         em_params['title'] = art_params['article_title']
         em_params['abstract'] = art_params['abstract']
         keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
@@ -143,6 +156,7 @@ module StashApi
           em_params['funders'] = em_funders
         end
       end
+      em_params['manuscriptNumber'] ||= params['document_id'] || 'EM-DEPOSIT'
 
       em_authors = []
       auth_array = params['authors'] || params['author']
@@ -174,11 +188,15 @@ module StashApi
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
+      deposit_url = (request.protocol + request.host_with_port + metadata[:_links][:self][:href] if metadata[:_links][:self][:href])
+      edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
+
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
-        deposit_url: metadata[:_links][:self][:href],
-        deposit_edit_url: metadata[:editLink],
+        deposit_url: deposit_url,
+        deposit_edit_url: edit_url,
+        deposit_upload_url: edit_url,
         status: 'Success'
       }.compact
     end
@@ -346,7 +364,13 @@ module StashApi
       # check to see if the identifier is actually an id and not a DOI first
       return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
 
-      id_type, id_text = id.split(':', 2)
+      if id.include?(':')
+        id_type, id_text = id.split(':', 2)
+      else
+        # assume it's a DOI, without the prefix
+        id_type = 'DOI'
+        id_text = id
+      end
       render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
@@ -359,7 +383,7 @@ module StashApi
     private
 
     def setup_identifier_and_resource_for_put
-      @stash_identifier = get_stash_identifier(params[:id])
+      @stash_identifier = get_stash_identifier(params[:id]) || get_stash_identifier(params[:deposit_id])
       @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
 
