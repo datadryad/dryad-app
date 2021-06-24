@@ -589,7 +589,10 @@ class UploadFiles extends React.Component {
                         return <UploadType
                             key={upload_type.type}
                             changed={(event) => this.addFilesHandler(event, upload_type.type)}
-                            clicked={() => this.showModalHandler(upload_type.type)}
+                            // triggers change to reset file uploads to null before onChange to allow files to be added again
+                            clickedFiles={(event) => event.target.value = null}
+
+                            clickedModal={() => this.showModalHandler(upload_type.type)}
                             type={upload_type.type}
                             logo={upload_type.logo}
                             name={upload_type.name}
