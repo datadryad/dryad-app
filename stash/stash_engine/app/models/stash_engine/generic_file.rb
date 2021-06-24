@@ -25,6 +25,10 @@ module StashEngine
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
+        .or(present_files.where(upload_content_type: 'application/vnd.ms-excel'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.xls'))
+        .or(present_files.where(upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.xlsx'))
     }
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
@@ -140,6 +144,7 @@ module StashEngine
     end
 
     def set_checking_status
+      # TODO: not necessary to have this method
       @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
     end
 
@@ -156,8 +161,6 @@ module StashEngine
       end
       # TODO(#1296): rescue from errors here!
       result = call_frictionless(result)
-      logger.debug(result.to_s) # DB
-      logger.debug('#############################################################################') # DB
       # Add 'report' top level key that is required for calling
       # React frictionless-components
       result_hash = { report: JSON.parse(result) }
@@ -187,15 +190,23 @@ module StashEngine
     end
 
     def write_tempfile(result)
-      # It's required file to have csv extension for frictionless to return
+      # It's required file to have valid tabular extension for frictionless to return
       # correct validation report
-      tempfile = Tempfile.new([upload_file_name, '.csv'], Rails.root.join('tmp'), binmode: true)
+      tempfile = Tempfile.new([upload_file_name, set_extension], Rails.root.join('tmp'), binmode: true)
       tempfile.write(result.body.to_s)
       tempfile.rewind
       tempfile
     rescue Errno::ENOENT => e
       puts "Error writing to file: #{e.message}"
       e
+    end
+
+    def set_extension
+      return '.csv' if (upload_file_name.last(4) == '.csv') || (upload_content_type == 'text/csv')
+      return '.xls' if (upload_file_name.last(4) == '.xls') || (upload_content_type == 'application/vnd.ms-excel')
+
+      '.xlsx' if (upload_file_name.last(5) == '.xlsx') ||
+        (upload_content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     end
 
     def call_frictionless(file)
