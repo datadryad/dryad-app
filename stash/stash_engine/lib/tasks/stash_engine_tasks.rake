@@ -267,7 +267,7 @@ namespace :identifiers do
     launch_day = Date.new(2019, 9, 17)
     datasets = StashEngine::Identifier.publicly_viewable.where(created_at: launch_day..Date.today)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
-      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size FileFormats]
+      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
       datasets.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         created_date_str = i.created_at&.strftime('%Y-%m-%d')
@@ -277,6 +277,7 @@ namespace :identifiers do
           break r.curation_start_date if r.curation_start_date.present?
         end
         next unless curation_start_date > launch_day
+
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
 
         times_curated = 0
@@ -297,12 +298,14 @@ namespace :identifiers do
         # Skip datasets that bypassed the normal curation process. These are mostly items that
         # had problems during the migration from the v1 server, so they were "created" after
         # launch day, even though they are actually older items.
-        next unless times_curated > 0 
-        
-        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
+        next unless times_curated > 0
+
+        num_files = i.latest_resource.data_files.size
+
+        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort.reject!(&:empty?)
 
         csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
-                i.storage_size, file_formats]
+                i.storage_size, num_files, file_formats]
       end
     end
   end
