@@ -76,9 +76,28 @@ module StashApi
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_status
-      # If manuscript number is available, update it
+      puts "XXXXX updating status"
       art_params = params['article']
       manu = art_params['manuscript_number'] unless art_params.blank?
+      disposition = params['article']['final_disposition']
+      sharing_link = @stash_identifier&.last_submitted_resource&.shares&.first&.sharing_link
+      
+      # Reject general metadata updates
+      unless manu.present? ||
+             (disposition.present? && (@resource.current_curation_status == 'peer_review'))
+        return {
+          deposit_id: @stash_identifier.identifier,
+          deposit_doi: @stash_identifier.identifier,
+          deposit_url: sharing_link,
+          deposit_edit_url:  request.protocol + request.host_with_port + "/stash/edit/#{CGI.escape(@stash_identifier.to_s)}/#{@stash_identifier&.edit_code}",
+          error_message: 'Once the Dryad dataset has been edited by a user, metadata updates are not allowed ' \
+                         'via the Editorial Manager API. You may, however, submit an update with a change to ' \
+                         'the manuscript_number, or update the final_disposition for a dataset that has previously been in peer_review status.',
+          status: 'Error'
+        }
+      end
+      
+      # If manuscript number is available, update it
       if manu.present?
         datum = StashEngine::InternalDatum.where(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber').first
         if datum.present?
@@ -89,37 +108,25 @@ module StashApi
       end
 
       # If final_disposition is available, update the status of this dataset
-      disposition = params['article']['final_disposition']
-      unless disposition && (@resource.current_curation_status == 'peer_review')
-        return {
-          deposit_id: @stash_identifier.identifier,
-          deposit_doi: @stash_identifier.identifier,
-          deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
-          deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
-          error_message: 'Once the Dryad dataset has been edited by a user, metadata updates are not allowed ' \
-                         'via the Editorial Manager API. You may, however, submit an update with a change to ' \
-                         'the final_disposition for a dataset that has previously been in peer_review status.',
-          status: 'Error'
-        }
+      if disposition.present? && (@resource.current_curation_status == 'peer_review')
+        if disposition.downcase == 'accept'
+          # article is accepted -> transition peer_review to curation
+          @resource.curation_activities <<
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
+                                                 note: 'updating status based on API notification from Editorial Manager journal')
+        else
+          # any other article disposition -> transition peer_review to action_required
+          @resource.curation_activities <<
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
+                                                 note: 'updating status based on API notification from Editorial Manager journal')
+        end
       end
-
-      if disposition.downcase == 'accept'
-        # article is accepted -> transition peer_review to curation
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
-                                               note: 'updating status based on API notification from Editorial Manager journal')
-      else
-        # any other article disposition -> transition peer_review to action_required
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
-                                               note: 'updating status based on API notification from Editorial Manager journal')
-      end
-
+      
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
-        deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
-        deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+        deposit_url: sharing_link,
+        deposit_edit_url: request.protocol + request.host_with_port + "/stash/edit/#{CGI.escape(@stash_identifier.to_s)}/#{@stash_identifier&.edit_code}",
         status: 'Success'
       }
     end
@@ -188,7 +195,8 @@ module StashApi
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
-      deposit_url = (request.protocol + request.host_with_port + metadata[:_links][:self][:href] if metadata[:_links][:self][:href])
+      puts "XXXX em_reformat #{metadata}"
+      deposit_url = metadata[:sharingLink] || (request.protocol + request.host_with_port + metadata[:_links][:self][:href] if metadata[:_links][:self][:href])
       edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
 
       {
