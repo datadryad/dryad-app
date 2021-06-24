@@ -302,7 +302,7 @@ namespace :identifiers do
 
         num_files = i.latest_resource.data_files.size
 
-        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort.reject!(&:empty?)
+        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
 
         csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
                 i.storage_size, num_files, file_formats]
