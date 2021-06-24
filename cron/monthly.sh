@@ -19,3 +19,6 @@ export FORCE_SUBMISSION="`date --date="$(date +%Y-%m-15) - 1 month" "+%Y-%m"`"
 
 # run the script with the above settings, this is just a ruby script (no rails)
 /apps/dryad/apps/ui/current/stash/script/counter-uploader/main.rb >> /apps/dryad/apps/ui/shared/cron/logs/counter-uploader.log 2>&1
+
+# Clean outdated content from the database and temporary S3 store
+bundle exec rails identifiers:remove_old_versions >> /apps/dryad/apps/ui/shared/cron/logs/remove_old_versions.log 2>&1

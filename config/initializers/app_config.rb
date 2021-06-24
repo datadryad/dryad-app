@@ -4,6 +4,9 @@ require 'yaml'
 # this will interpret any ERB in the yaml file first before bringing in
 ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result)[Rails.env]
 
+ac[:app_version] = (File.exist?(Rails.root.join('.version')) ? File.read(Rails.root.join('.version')) : '' )
+ac[:app_revision] = (File.exist?(Rails.root.join('REVISION')) ? File.read(Rails.root.join('REVISION')) : '' )
+
 # this will make the config available under the APP_CONFIG constant and methods like APP_CONFIG.metadata_engines
 APP_CONFIG = ac.to_ostruct
 

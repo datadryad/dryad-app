@@ -70,11 +70,9 @@ including universities, research institutions and academic libraries. See more a
   <tr>
     <td>
       <ul>
-        <li>American Academy for the Advancement of Science</li>
         <li>American Genetic Association</li>
         <li>American Society of Naturalists</li>
         <li>Association for Tropical Biology and Conservation</li>
-        <li>Botanical Society of America</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
         <li>European Society for Evolutionary Biology</li>
@@ -82,12 +80,10 @@ including universities, research institutions and academic libraries. See more a
   </td>
   <td>
     <ul>
-        <li>German National Library of Medicine</li>
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
-        <li>The Genetics Society</li>
         <li>The Royal Society</li>
         <li>Wiley</li>
       </ul>

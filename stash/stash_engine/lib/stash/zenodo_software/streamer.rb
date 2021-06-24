@@ -1,6 +1,7 @@
 require 'stash/aws/s3'
 require 'http'
 require 'stash/zenodo_software/digests' # may be required if called from zenodo_replicate
+require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 
 module Stash
   module ZenodoSoftware
@@ -31,7 +32,7 @@ module Stash
       # This takes an argument of the digests types you want returned as an array, see DIGEST_INITIALIZERS for types.  It returns
       # the zenodo response and the hexdigests for the types you specify
 
-      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def stream(digest_types: [])
         digests_obj = Digests.new(digest_types: digest_types)
 
@@ -75,11 +76,14 @@ module Stash
         end
 
         { response: put_response, digests: digests_obj.hex_digests }
+      rescue Stash::Download::MerrittError => e
+        raise Stash::ZenodoReplicate::ZenodoError, "Couldn't create presigned URL for id: #{@file_model.id}, fn: #{@file_model.upload_file_name}\n" \
+            "Original error: #{e}\n#{e.backtrace.join("\n")}"
       rescue HTTP::Error => e
         raise Stash::ZenodoReplicate::ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
             "Original error: #{e}\n#{e.backtrace.join("\n")}"
       end
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
   end
 end
