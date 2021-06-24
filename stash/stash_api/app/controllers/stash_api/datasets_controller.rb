@@ -79,7 +79,8 @@ module StashApi
       art_params = params['article']
       manu = art_params['manuscript_number'] unless art_params.blank?
       disposition = params['article']['final_disposition']
-      sharing_link = @stash_identifier&.shares&.first&.sharing_link
+      sharing_link = @stash_identifier&.shares&.first&.sharing_link ||
+                     "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
 
       # Reject general metadata updates
       unless manu.present? ||
