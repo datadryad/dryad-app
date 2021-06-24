@@ -35,21 +35,34 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     visit root_path
     click_link 'My Datasets'
     start_new_dataset
+
+    # This has been tested with each mime type isolated.
+    # When inserting a new mime type, comment this line,
+    # run the tests with it only and than,
+    # add to the array, and uncomment it.
+    # For instance, when adding ODS do:
+    #  @tabular_mime_type = 'application/vnd.oasis.opendocument.spreadsheet'
+    # and comment the line below.
+    # Run the tests and if the tests pass, delete the line above and uncomment
+    # the line below.
+    @tabular_mime_type = %w[
+      text/csv
+      application/vnd.ms-excel
+      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    ][rand(3)]
   end
 
   describe 'Tabular Data Check Index' do
     before(:each) do
-      # @file = create_generic_file(StashEngine::Resource.last.id)
       @file = create(:generic_file,
                      resource_id: StashEngine::Resource.last.id,
-                     upload_content_type: 'text/plain',
-                     upload_file_size: 31_726,
+                     upload_content_type: @tabular_mime_type,
                      status_code: 200,
                      file_state: 'created')
     end
 
     it 'shows N/A for non-plain-text tabular data files' do
-      @file.update(upload_file_name: 'non_tabular')
+      @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf')
       sleep 1
       click_link 'Upload Files'
 
@@ -58,8 +71,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "View issues" if file is plain-text and status is "issues"' do
-      @file.update(upload_content_type: 'text/csv')
+    it 'shows "View issues" if file is tabular and status is "issues"' do
       @report = StashEngine::FrictionlessReport.create!(
         report: '[{errors: errors}]', generic_file: @file, status: 'issues'
       )
@@ -71,8 +83,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Passed" if file is plain-text and tabular, and the status is "noissues"' do
-      @file.update(upload_content_type: 'text/csv')
+    it 'shows "Passed" if file is tabular, and the status is "noissues"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
       click_link 'Upload Files'
@@ -102,7 +113,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move tests from here to React only tests
     xit 'shows Tabular Data Check column' do
-      attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/table.csv", make_visible: { left: 0 })
+      attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/valid.csv", make_visible: { left: 0 })
       check('confirm_to_upload')
       click_on('validate_files')
 
@@ -122,9 +133,9 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     # TODO: xit: remove if the column is always there
     xit 'shows column if there are new manifest tabular files' do
-      url = 'http://example.org/table.csv'
+      url = 'http://example.org/valid.csv'
       stub_request(:any, url).to_return(
-        body: File.new("#{Rails.root}/spec/fixtures/stash_engine/table.csv"), status: 200
+        body: File.new("#{Rails.root}/spec/fixtures/stash_engine/valid.csv"), status: 200
       )
 
       click_button("#{@upload_type}_manifest")
@@ -137,13 +148,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     #   else forget about and move tests from here to React only tests
     xit 'shows "Checking..." when a new manifest csv file is submitted' do
       # file is csv if has csv extension or hasn't csv extension but has text/csv mime type
-      url_csv = 'http://example.org/table.csv'
+      url_csv = 'http://example.org/valid.csv'
       url_wo_csv = 'http://example.org/table'
       url = [url_csv, url_wo_csv].sample
       mime_type = url == url_csv ? %w[text/csv application/octet-stream].sample : 'text/csv'
       build_valid_stub_request(url, mime_type)
 
-      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
       sleep 1
@@ -165,14 +176,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move tests from here to React only tests
     xit 'shows "Checking..." for new manifest csv files submitted and "N/A" for new manifest non-csv files' do
-      url_csv_1 = 'http://example.org/table.csv'
+      url_csv_1 = 'http://example.org/valid.csv'
       url_csv_2 = 'http://example.org/invalid.csv'
       url_non_csv = 'http://example.org/file_10.ods'
       build_valid_stub_request(url_csv_1, 'text/csv')
       build_valid_stub_request(url_csv_2, 'text/csv')
       build_valid_stub_request(url_non_csv, 'application/ods')
 
-      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url_csv_1)
         .to_return(body: stub_file1, status: 200)
       stub_file2 = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
@@ -196,10 +207,10 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move tests from here to React only tests
     xit 'shows "Passed" when csv file is submitted and pass in frictionless validation' do
-      url = 'http://example.org/table.csv'
+      url = 'http://example.org/valid.csv'
       build_valid_stub_request(url)
 
-      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+      stub_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url)
         .to_return(body: stub_file, status: 200)
       sleep 1
@@ -236,17 +247,17 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move test from here to React only tests
     xit 'shows "Passed" for new manifest csv files submitted and "N/A" for new manifest non-csv files' do
-      url_csv_1 = 'http://example.org/table.csv'
-      url_csv_2 = 'http://example.org/table2.csv'
+      url_csv_1 = 'http://example.org/valid.csv'
+      url_csv_2 = 'http://example.org/valid2.csv'
       url_non_csv = 'http://example.org/file_10.ods'
       build_valid_stub_request(url_csv_1, 'text/csv')
       build_valid_stub_request(url_csv_2, 'text/csv')
       build_valid_stub_request(url_non_csv, 'application/ods')
 
-      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+      stub_file1 = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
       stub_request(:get, url_csv_1)
         .to_return(body: stub_file1, status: 200)
-      stub_file2 = File.open(File.expand_path('spec/fixtures/stash_engine/table2.csv'))
+      stub_file2 = File.open(File.expand_path('spec/fixtures/stash_engine/valid2.csv'))
       stub_request(:get, url_csv_2)
         .to_return(body: stub_file2, status: 200)
       stub_file3 = File.open(File.expand_path('spec/fixtures/stash_engine/file_10.ods'))

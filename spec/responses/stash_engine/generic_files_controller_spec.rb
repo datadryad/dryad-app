@@ -6,6 +6,7 @@ require 'byebug'
 module StashEngine
   RSpec.describe GenericFilesController, type: :request do
     include GenericFilesHelper
+    include FrictionlessHelper
     include DatabaseHelper
     include DatasetHelper
     include Mocks::Aws
@@ -120,28 +121,148 @@ module StashEngine
         expect(response_code).to eql(200)
       end
 
-      it 'returns status message if not only tabular files were posted' do
-        @file.update(upload_file_name: 'irmao_do_jorel.jpg', upload_content_type: 'image/jpg')
-        file2 = create(:generic_file)
-        file2.update(upload_file_name: 'vovo_juju.csv', upload_content_type: 'application/octet-stream')
-        file3 = create(:generic_file)
-        file3.update(upload_file_name: 'vovo_juju', upload_content_type: 'text/csv')
-        response_code = post @url, params: { file_ids: [@file.id, file2.id, file3.id] }
-        expect(response_code).to eql(200)
-        body = JSON.parse(response.body)
-        expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+      describe 'non-tabular files with allowed tabular files' do
+        before(:each) do
+          @file.update(upload_file_name: 'irmao_do_jorel.jpg', upload_content_type: 'image/jpg')
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by csv extension' do
+          csv = create(:generic_file)
+          csv.update(upload_file_name: 'vovo_juju.csv')
+          response_code = post @url, params: { file_ids: [@file.id, csv.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by xls extension' do
+          xls = create(:generic_file)
+          xls.update(upload_file_name: 'vovo_juju.xls')
+          response_code = post @url, params: { file_ids: [@file.id, xls.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by xlsx extension' do
+          xlsx = create(:generic_file)
+          xlsx.update(upload_file_name: 'vovo_juju.xlsx')
+          response_code = post @url, params: { file_ids: [@file.id, xlsx.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by json extension' do
+          json = create(:generic_file)
+          json.update(upload_file_name: 'vovo_juju.json')
+          response_code = post @url, params: { file_ids: [@file.id, json.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by csv MIME type' do
+          csv = create(:generic_file)
+          csv.update(upload_file_name: 'vovo_juju', upload_content_type: 'text/csv')
+          response_code = post @url, params: { file_ids: [@file.id, csv.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by xls MIME type' do
+          xls = create(:generic_file)
+          xls.update(upload_file_name: 'vovo_juju', upload_content_type: 'application/vnd.ms-excel')
+          response_code = post @url, params: { file_ids: [@file.id, xls.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by xlsx MIME type' do
+          xlsx = create(:generic_file)
+          xlsx.update(upload_file_name: 'vovo_juju',
+                      upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+          response_code = post @url, params: { file_ids: [@file.id, xlsx.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
+
+        it 'returns status message if posted other than allowed tabular files -- valid inferred by json MIME type' do
+          json = create(:generic_file)
+          json.update(upload_file_name: 'vovo_juju', upload_content_type: 'application/json')
+          response_code = post @url, params: { file_ids: [@file.id, json.id] }
+          expect(response_code).to eql(200)
+          body = JSON.parse(response.body)
+          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
+        end
       end
 
-      it 'returns status when called with tabular file' do
-        @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
-        body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-        # The request for downloading the file
-        stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+      describe 'allowed tabular files' do
+        it 'returns report when called with csv file -- infered by extension' do
+          @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
 
-        post @url, params: { file_ids: [@file.id] }
-        expect(response.status).to eql(200)
-        response_body = JSON.parse(response.body)
-        expect(response_body[0]['frictionless_report']['status']).to eq('issues')
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with csv file -- infered by MIME type' do
+          @file.update(upload_content_type: 'text/csv', url: 'http://example.com/invalid.csv')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with xls file -- infered by extension' do
+          @file.update(upload_file_name: 'invalid.xls', url: 'http://example.com/invalid.xls')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with xls file -- infered by MIME type' do
+          @file.update(upload_content_type: 'application/vnd.ms-excel', url: 'http://example.com/invalid.xls')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with xlsx file -- infered by extension' do
+          @file.update(upload_file_name: 'invalid.xlsx', url: 'http://example.com/invalid.xlsx')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with xlsx file -- infered by MIME type' do
+          @file.update(
+            upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            url: 'http://example.com/invalid.xlsx'
+          )
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
       end
 
       describe 'invalid manifest files' do
@@ -227,6 +348,18 @@ module StashEngine
           expect(report.status).to eq('issues')
         end
 
+        it 'returns status when called with csv file and the file has issues' do
+          @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect(response.status).to eql(200)
+          response_body = JSON.parse(response.body)
+          expect(response_body[0]['frictionless_report']['status']).to eq('issues')
+        end
+
         it 'saves frictionless report for more than one file' do
           file2 = create(:generic_file)
           file2.update(upload_file_name: 'invalid2.csv', url: 'http://example.com/invalid2.csv')
@@ -247,9 +380,9 @@ module StashEngine
 
       describe 'valid manifest files' do
         it 'saves frictionless report with status "noissues"' do
-          @file.update(upload_file_name: 'table.csv', url: 'http://example.com/table.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
-          stub_request(:get, 'http://example.com/table.csv')
+          @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+          stub_request(:get, 'http://example.com/valid.csv')
             .to_return(body: body_file, status: 200)
 
           response_code = post @url, params: { file_ids: [@file.id] }
@@ -348,9 +481,9 @@ module StashEngine
 
       describe 'valid S3 files' do
         it 'saves frictionless report with status "noissues"' do
-          @file.update(upload_file_name: 'table.csv')
+          @file.update(upload_file_name: 'valid.csv')
           @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/table.csv'))
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
           stub_request(:get, /#{@s3_domain}.*/)
             .with(
               headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
