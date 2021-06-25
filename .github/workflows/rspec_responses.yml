@@ -70,6 +70,12 @@ jobs:
     - name: 'Install frictionless python package'
       run: pip install frictionless
 
+    - name: 'Install frictionless python package for excel'
+      run: pip install frictionless[excel]
+
+    - name: 'Install frictionless python package for json'
+      run: pip install frictionless[json]
+
     - name: 'Compile Assets'
       run: bin/rails assets:precompile
 
