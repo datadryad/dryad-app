@@ -22,7 +22,7 @@ class ModalValidationReport extends React.Component {
                             'z-index': '100149', 'top': '50%'}}
                         open>
                     <div className="c-uploadmodal__header">
-                        <h2 className={classes.FileTitle}>Formatting Report: {this.props.file.sanitized_name}</h2>
+                        <h2 className="c-datasets-heading__heading o-heading__level1">Formatting Report: {this.props.file.sanitized_name}</h2>
                         <button className={classes.CloseButton}
                                 aria-label="close"
                                 type="button"
