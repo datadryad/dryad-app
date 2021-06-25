@@ -18,23 +18,23 @@
     }
   },
   "dependencies": {
-    "@babel/preset-react": "^7.12.13",
-    "@cdl-dryad/frictionless-components": "^0.3.5",
+    "@babel/preset-react": "^7.14.5",
+    "@cdl-dryad/frictionless-components": "^0.3.6",
     "@rails/webpacker": "5.2.1",
-    "aws-sdk": "^2.881.0",
+    "aws-sdk": "^2.934.0",
     "axios": "^0.21.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "evaporate": "^2.1.4",
     "identity-obj-proxy": "^3.0.0",
     "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react_ujs": "^2.6.1",
     "truncate-utf8-bytes": "^1.0.2"
   },
   "devDependencies": {
-    "@webpack-cli/serve": "^1.3.0",
-    "jest": "^27.0.1",
+    "@webpack-cli/serve": "^1.5.1",
+    "jest": "^27.0.5",
     "react-test-renderer": "^17.0.2",
     "webpack-dev-server": "^3.11.2"
   },
