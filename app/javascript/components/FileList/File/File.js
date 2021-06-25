@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabularCheckStatus } from "../../../containers/UploadFiles";
+import {TabularCheckStatus} from "../../../containers/UploadFiles";
 
 import ellipsize from '../../../lib/string_patch';
 
@@ -26,7 +26,7 @@ const file = (props) => {
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
                 {props.file.tabularCheckStatus === TabularCheckStatus['issues']
-                    ? <a href="#!" onClick={props.clickValidationReport}>{props.file.tabularCheckStatus}</a>
+                    ? <button onClick={props.clickValidationReport} type="button">{props.file.tabularCheckStatus}</button>
                     : props.file.tabularCheckStatus}
             </span></td>
             <td><a href={props.file.url} title={props.file.url}>
@@ -35,7 +35,7 @@ const file = (props) => {
             <td>{props.file.uploadType}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
-                <td><a href="#!" onClick={props.clickRemove}>Remove</a></td> :
+                <td><button onClick={props.clickRemove} type="button">Remove</button></td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
                         <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
