@@ -30,13 +30,15 @@ const AllowedUploadFileTypes = {
     'supp': 'supp'
 }
 const Messages = {
-    'fileAlreadySelected': 'A file of the same type is already in the table.',
-    'filesAlreadySelected': 'Some files of the same type are already in the table.'
+    'fileAlreadySelected': 'A file of the same type is already in the table, and was not added.',
+    'filesAlreadySelected': 'Some files of the same type are already in the table, and were not added.'
 }
 const ValidTabular = {
-    'extensions': ['csv', 'xls', 'xlsx'],
+    'extensions': ['csv', 'xls', 'xlsx', 'json'],
     'mime_types': ['text/csv', 'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/json'
+    ]
 }
 export const TabularCheckStatus = {
     'checking': 'Checking...',
