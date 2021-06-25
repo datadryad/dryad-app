@@ -8,9 +8,12 @@
   - python-pip
     
 ### System wide installation
-1. Install frictionless framework
+1. Install frictionless framework (general and for the tabular files Dryad wish to analyse)
+- For the last update of this document, there are 4 types: csv, xls, xlsx, json.
 ```bash
 $ pip install frictionless
+$ pip install frictionless[excel]
+$ pip install frictionless[json]
 ```
 
 Obs.: it's common to have Python 2 and Python 3 installed in the same system.

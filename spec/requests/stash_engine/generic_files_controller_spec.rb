@@ -24,6 +24,13 @@ module StashEngine
 # -----\n")
       end
 
+      it 'can call external process for json files' do
+        result = `frictionless validate --path "#{Rails.root}/spec/fixtures/stash_engine/valid.json"`
+        expect(result).to eq("# -----
+# valid: #{Rails.root}/spec/fixtures/stash_engine/valid.json
+# -----\n")
+      end
+
       it 'returns json report' do
         result = `frictionless validate "#{Rails.root}/spec/fixtures/stash_engine/valid.csv" --json`
         expect(result).to include('"errors": []')

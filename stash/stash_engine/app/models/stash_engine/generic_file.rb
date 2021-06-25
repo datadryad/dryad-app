@@ -29,6 +29,8 @@ module StashEngine
         .or(present_files.where('upload_file_name LIKE ?', '%.xls'))
         .or(present_files.where(upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
         .or(present_files.where('upload_file_name LIKE ?', '%.xlsx'))
+        .or(present_files.where(upload_content_type: 'application/json'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.json'))
     }
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
@@ -204,15 +206,16 @@ module StashEngine
     def set_extension
       return '.csv' if (upload_file_name.last(4) == '.csv') || (upload_content_type == 'text/csv')
       return '.xls' if (upload_file_name.last(4) == '.xls') || (upload_content_type == 'application/vnd.ms-excel')
-
-      '.xlsx' if (upload_file_name.last(5) == '.xlsx') ||
+      return '.xlsx' if (upload_file_name.last(5) == '.xlsx') ||
         (upload_content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+      '.json' if (upload_file_name.last(5) == '.json') || (upload_content_type == 'application/json')
     end
 
     def call_frictionless(file)
       # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
       # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
-      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate #{file.path} --json 2>&1"
+      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate --path #{file.path} --json 2>&1"
       result = `#{cmd}`
       logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
       file.close!

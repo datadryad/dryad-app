@@ -201,7 +201,7 @@ module StashEngine
       end
 
       describe 'allowed tabular files' do
-        it 'returns report when called with csv file -- infered by extension' do
+        it 'returns report when called with csv file -- inferred by extension' do
           @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
           # The request for downloading the file
@@ -211,7 +211,7 @@ module StashEngine
           expect_right_response(response)
         end
 
-        it 'returns report when called with csv file -- infered by MIME type' do
+        it 'returns report when called with csv file -- inferred by MIME type' do
           @file.update(upload_content_type: 'text/csv', url: 'http://example.com/invalid.csv')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
           # The request for downloading the file
@@ -221,7 +221,7 @@ module StashEngine
           expect_right_response(response)
         end
 
-        it 'returns report when called with xls file -- infered by extension' do
+        it 'returns report when called with xls file -- inferred by extension' do
           @file.update(upload_file_name: 'invalid.xls', url: 'http://example.com/invalid.xls')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
           # The request for downloading the file
@@ -231,7 +231,7 @@ module StashEngine
           expect_right_response(response)
         end
 
-        it 'returns report when called with xls file -- infered by MIME type' do
+        it 'returns report when called with xls file -- inferred by MIME type' do
           @file.update(upload_content_type: 'application/vnd.ms-excel', url: 'http://example.com/invalid.xls')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
           # The request for downloading the file
@@ -241,7 +241,7 @@ module StashEngine
           expect_right_response(response)
         end
 
-        it 'returns report when called with xlsx file -- infered by extension' do
+        it 'returns report when called with xlsx file -- inferred by extension' do
           @file.update(upload_file_name: 'invalid.xlsx', url: 'http://example.com/invalid.xlsx')
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
           # The request for downloading the file
@@ -251,12 +251,32 @@ module StashEngine
           expect_right_response(response)
         end
 
-        it 'returns report when called with xlsx file -- infered by MIME type' do
+        it 'returns report when called with xlsx file -- inferred by MIME type' do
           @file.update(
             upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             url: 'http://example.com/invalid.xlsx'
           )
           body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with json file -- inferred by extension' do
+          @file.update(upload_file_name: 'invalid.json', url: 'http://example.com/invalid.json')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.json'))
+          # The request for downloading the file
+          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+          post @url, params: { file_ids: [@file.id] }
+          expect_right_response(response)
+        end
+
+        it 'returns report when called with json file -- inferred by MIME type' do
+          @file.update(upload_content_type: 'application/json', url: 'http://example.com/invalid.json')
+          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.json'))
           # The request for downloading the file
           stub_request(:get, @file.url).to_return(body: body_file, status: 200)
 

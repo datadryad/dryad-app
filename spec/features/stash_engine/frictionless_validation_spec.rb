@@ -39,17 +39,20 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # This has been tested with each mime type isolated.
     # When inserting a new mime type, comment this line,
     # run the tests with it only and than,
-    # add to the array, and uncomment it.
+    # add to the array, increasing the rand argument by one, and uncomment it.
+    # This is done to not increase so much the tests for each new tabular type.
+    #
     # For instance, when adding ODS do:
     #  @tabular_mime_type = 'application/vnd.oasis.opendocument.spreadsheet'
     # and comment the line below.
     # Run the tests and if the tests pass, delete the line above and uncomment
-    # the line below.
+    # the line below, making the changes related above.
     @tabular_mime_type = %w[
       text/csv
       application/vnd.ms-excel
       application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-    ][rand(3)]
+      application/json
+    ][rand(4)]
   end
 
   describe 'Tabular Data Check Index' do
@@ -94,7 +97,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows "Validation error" if file is plain-text and tabular, and the status is "error"' do
-      @file.update(upload_content_type: 'text/csv')
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'error')
       sleep 1
       click_link 'Upload Files'
