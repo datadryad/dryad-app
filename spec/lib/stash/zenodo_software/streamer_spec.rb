@@ -3,6 +3,8 @@ require 'digest'
 
 require 'rails_helper'
 
+require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
@@ -83,6 +85,19 @@ module Stash
               body: {}.to_json, # the body is just passed through to other classes
               headers: { 'Content-Type': 'application/json' }
             )
+
+          expect do
+            @streamer.stream(digest_types: ['md5'])
+          end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
+        end
+
+        it 'raises Stash::ZenodoReplicate::ZenodoError for handling with MerrittErrors' do
+          stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
+          @resource.data_files << create(:data_file)
+          data_file = @resource.data_files.first
+
+          # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::MerrittError, "can't create presigned url")
+          @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url)
 
           expect do
             @streamer.stream(digest_types: ['md5'])
