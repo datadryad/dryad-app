@@ -31,8 +31,15 @@ const AllowedUploadFileTypes = {
     'supp': 'supp'
 }
 const Messages = {
-    'fileAlreadySelected': 'A file of the same type is already in the table.',
-    'filesAlreadySelected': 'Some files of the same type are already in the table.'
+    'fileAlreadySelected': 'A file of the same type is already in the table, and was not added.',
+    'filesAlreadySelected': 'Some files of the same type are already in the table, and were not added.'
+}
+const ValidTabular = {
+    'extensions': ['csv', 'xls', 'xlsx', 'json'],
+    'mime_types': ['text/csv', 'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/json'
+    ]
 }
 export const TabularCheckStatus = {
     'checking': 'Checking...',
@@ -108,7 +115,7 @@ class UploadFiles extends React.Component {
     }
 
     setTabularCheckStatus = (file) => {
-        if (!this.isCsv(file)) {
+        if (!this.isTabular(file)) {
             return TabularCheckStatus['na'];
         } else if (file.frictionless_report) {
             return TabularCheckStatus[file.frictionless_report.status]
@@ -213,7 +220,7 @@ class UploadFiles extends React.Component {
                             }).then(response => {
                                 console.log(response);
                                 this.updateFileData(response.data.new_file, index);
-                                this.isCsv(this.state.chosenFiles[index]) ?
+                                this.isTabular(this.state.chosenFiles[index]) ?
                                     this.validateFrictionless([this.state.chosenFiles[index]]) :
                                     null;
                             }).catch(error => console.log(error));
@@ -266,7 +273,7 @@ class UploadFiles extends React.Component {
         }
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
-        const tabularFiles = newManifestFiles.filter(file => this.isCsv(file));
+        const tabularFiles = newManifestFiles.filter(file => this.isTabular(file));
         this.validateFrictionless(tabularFiles);
     }
 
@@ -330,12 +337,14 @@ class UploadFiles extends React.Component {
 
     labelNonTabular = (files) => {
         files.map(file => {
-            file.tabularCheckStatus = this.isCsv(file) ? null : TabularCheckStatus['na']
+            file.tabularCheckStatus = this.isTabular(file) ? null : TabularCheckStatus['na']
         });
     }
 
-    isCsv = (file) => file.sanitized_name.split('.').pop() === 'csv'
-        || file.upload_content_type === 'text/csv';
+    isTabular = (file) => {
+        return ValidTabular['extensions'].includes(file.sanitized_name.split('.').pop())
+            || ValidTabular['mime_types'].includes(file.upload_content_type)
+    }
 
     removeFileHandler = (index) => {
         this.setState({warningMessage: null});
