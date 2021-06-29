@@ -21,12 +21,13 @@ const statusCss = (status) => {
 
 const file = (props) => {
     let tabularInfo;
-
     if(props.removingIndex !== props.index) {
       if(props.file.tabularCheckStatus === TabularCheckStatus['checking']) {
         tabularInfo = <div>
           <img className="c-upload__spinner js-tabular-checking" src="../../../images/spinner.gif" alt="Validating spinner" style={{padding: 0, width: '2rem'}} />
         </div>;
+      }else if(props.file.tabularCheckStatus === TabularCheckStatus['noissues']) {
+        tabularInfo = props.file.tabularCheckStatus;
       }else{
         tabularInfo = <button onClick={props.clickValidationReport} type="button">{props.file.tabularCheckStatus}</button>;
       }
