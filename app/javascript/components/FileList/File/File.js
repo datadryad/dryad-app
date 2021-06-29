@@ -32,7 +32,7 @@ const file = (props) => {
         case TabularCheckStatus['issues']:
           tabularInfo = <div style={{display: 'flex', alignItems: 'center'}}>
                 <img src="../../../images/emblem-important.png" alt="Warning icon" style={{padding: 0, width: '1.5rem'}} />
-                <button onClick={props.clickValidationReport} type="button" style={{padding: '10px'}}>{props.file.tabularCheckStatus}</button>
+                <button className="o-button__plain-text5" onClick={props.clickValidationReport} type="button" style={{padding: '10px'}}>{props.file.tabularCheckStatus}</button>
               </div>;
           break;
         default:
