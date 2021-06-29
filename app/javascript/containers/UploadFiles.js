@@ -115,7 +115,7 @@ class UploadFiles extends React.Component {
     }
 
     setTabularCheckStatus = (file) => {
-        if (!this.isTabular(file)) {
+        if (!this.isValidTabular(file)) {
             return TabularCheckStatus['na'];
         } else if (file.frictionless_report) {
             return TabularCheckStatus[file.frictionless_report.status]
@@ -169,6 +169,7 @@ class UploadFiles extends React.Component {
             file.url = null;
             file.uploadType = uploadType;
             file.manifest = false;
+            file.upload_file_size = file.size;
             file.sizeKb = formatSizeUnits(file.size);
         });
         this.updateFileList(newFiles);
@@ -220,7 +221,7 @@ class UploadFiles extends React.Component {
                             }).then(response => {
                                 console.log(response);
                                 this.updateFileData(response.data.new_file, index);
-                                this.isTabular(this.state.chosenFiles[index]) ?
+                                this.isValidTabular(this.state.chosenFiles[index]) ?
                                     this.validateFrictionless([this.state.chosenFiles[index]]) :
                                     null;
                             }).catch(error => console.log(error));
@@ -273,7 +274,7 @@ class UploadFiles extends React.Component {
         }
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
-        const tabularFiles = newManifestFiles.filter(file => this.isTabular(file));
+        const tabularFiles = newManifestFiles.filter(file => this.isValidTabular(file));
         this.validateFrictionless(tabularFiles);
     }
 
@@ -337,13 +338,14 @@ class UploadFiles extends React.Component {
 
     labelNonTabular = (files) => {
         files.map(file => {
-            file.tabularCheckStatus = this.isTabular(file) ? null : TabularCheckStatus['na']
+            file.tabularCheckStatus = this.isValidTabular(file) ? null : TabularCheckStatus['na']
         });
     }
 
-    isTabular = (file) => {
-        return ValidTabular['extensions'].includes(file.sanitized_name.split('.').pop())
-            || ValidTabular['mime_types'].includes(file.upload_content_type)
+    isValidTabular = (file) => {
+        return (ValidTabular['extensions'].includes(file.sanitized_name.split('.').pop())
+            || ValidTabular['mime_types'].includes(file.upload_content_type))
+            && (file.upload_file_size <= this.props.frictionless.size_limit);
     }
 
     removeFileHandler = (index) => {

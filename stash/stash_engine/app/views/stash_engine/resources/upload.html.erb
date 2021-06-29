@@ -18,7 +18,8 @@
     methods: :type, include: { frictionless_report: { only: [:report, :status] } }
   ),
   app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
-  s3_dir_name: @resource.s3_dir_name(type: 'base')
+  s3_dir_name: @resource.s3_dir_name(type: 'base'),
+  frictionless: APP_CONFIG[:frictionless].to_h
 }) %>
 
 <div class="o-dataset-nav">
