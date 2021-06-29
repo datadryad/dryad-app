@@ -19,7 +19,7 @@ class ModalValidationReport extends React.Component {
                 <dialog className="c-uploadmodal"
                         style={{
                             'width': '60%', 'max-width': '950px', 'min-width': '220px',
-                            'z-index': '100149', 'top': '50%'}}
+                            'zIndex': '100149', 'top': '50%'}}
                         open>
                     <div className="c-uploadmodal__header">
                         <h2 className="c-datasets-heading__heading o-heading__level1">Formatting Report: {this.props.file.sanitized_name}</h2>
@@ -31,7 +31,7 @@ class ModalValidationReport extends React.Component {
                     <div id="validation_report">
                     </div>
                 </dialog>
-                <div className="backdrop" style={{'z-index': '100148'}} />
+                <div className="backdrop" style={{'zIndex': '100148'}} />
             </div>
         )
     }
