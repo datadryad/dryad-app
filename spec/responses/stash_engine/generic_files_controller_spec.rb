@@ -117,6 +117,11 @@ module StashEngine
       end
 
       it 'calls validate frictionless' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
+        # The request for downloading the file
+        stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
         response_code = post @url, params: { file_ids: [@file.id] }
         expect(response_code).to eql(200)
       end
@@ -248,6 +253,7 @@ module StashEngine
           stub_request(:get, @file.url).to_return(body: body_file, status: 200)
 
           post @url, params: { file_ids: [@file.id] }
+          sleep 1 # sometimes fails probably due to the request
           expect_right_response(response)
         end
 
@@ -261,6 +267,7 @@ module StashEngine
           stub_request(:get, @file.url).to_return(body: body_file, status: 200)
 
           post @url, params: { file_ids: [@file.id] }
+          sleep 1 # sometimes fails probably due to the request
           expect_right_response(response)
         end
 
