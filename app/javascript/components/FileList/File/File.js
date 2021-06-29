@@ -20,14 +20,26 @@ const statusCss = (status) => {
 }
 
 const file = (props) => {
+    let tabularInfo;
+
+    if(props.removingIndex !== props.index) {
+      if(props.file.tabularCheckStatus === TabularCheckStatus['checking']) {
+        tabularInfo = <div>
+          <img className="c-upload__spinner js-tabular-checking" src="../../../images/spinner.gif" alt="Validating spinner" style={{padding: 0, width: '2rem'}} />
+        </div>;
+      }else{
+        tabularInfo = <button onClick={props.clickValidationReport} type="button">{props.file.tabularCheckStatus}</button>;
+      }
+    }else{
+      tabularInfo = props.file.tabularCheckStatus;
+    }
+
     return (
         <tr>
             <th scope='row'>{props.file.sanitized_name}</th>
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
-                {props.file.tabularCheckStatus === TabularCheckStatus['issues']
-                    ? <button onClick={props.clickValidationReport} type="button">{props.file.tabularCheckStatus}</button>
-                    : props.file.tabularCheckStatus}
+                {tabularInfo}
             </span></td>
             <td><a href={props.file.url} title={props.file.url}>
                 {props.file.url ? ellipsize(props.file.url) : props.file.url}
