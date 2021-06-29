@@ -3,7 +3,7 @@
 }
 
 .Passed {
-    color: #3c763e;
+    font-weight: normal;
 }
 
 .ValidationError {
