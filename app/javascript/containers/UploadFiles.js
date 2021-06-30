@@ -423,10 +423,9 @@ class UploadFiles extends React.Component {
             axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
                 .then(response => {
                     this.updateManifestFiles(response.data);
-                    this.setState({urls: null, loading: false});
                 })
-                // TODO: besides log error set urls: null, loading: false and set tabular check status to some status
-                .catch(error => console.log(error));
+                .catch(error => console.log(error))
+                .finally(() => this.setState({urls: null, loading: false}));
         }
     };
 
