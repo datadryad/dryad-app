@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabularCheckStatus } from "../../../containers/UploadFiles";
+import {TabularCheckStatus} from "../../../containers/UploadFiles";
 
 import ellipsize from '../../../lib/string_patch';
 
@@ -20,14 +20,34 @@ const statusCss = (status) => {
 }
 
 const file = (props) => {
+    let tabularInfo;
+
+    if(props.removingIndex !== props.index) {
+      switch (props.file.tabularCheckStatus) {
+        case TabularCheckStatus['checking']:
+          tabularInfo = <div>
+            <img className="c-upload__spinner js-tabular-checking" src="../../../images/spinner.gif" alt="Validating spinner" style={{padding: 0, width: '2rem'}} />
+          </div>;
+          break;
+        case TabularCheckStatus['issues']:
+          tabularInfo = <div style={{display: 'flex', alignItems: 'center'}}>
+                <img src="../../../images/emblem-important.png" alt="Warning icon" style={{padding: 0, width: '1.5rem'}} />
+                <button className="o-button__plain-text5" onClick={props.clickValidationReport} type="button" style={{padding: '10px'}}>{props.file.tabularCheckStatus}</button>
+              </div>;
+          break;
+        default:
+          tabularInfo = props.file.tabularCheckStatus;
+      }
+    }else{
+      tabularInfo = props.file.tabularCheckStatus;
+    }
+
     return (
         <tr>
             <th scope='row'>{props.file.sanitized_name}</th>
             <td id={`status_${props.index}`} className='c-uploadtable__status'>{props.file.status}</td>
             <td><span className={statusCss(props.file.tabularCheckStatus)}>
-                {props.file.tabularCheckStatus === TabularCheckStatus['issues']
-                    ? <a href="#!" onClick={props.clickValidationReport}>{props.file.tabularCheckStatus}</a>
-                    : props.file.tabularCheckStatus}
+                {tabularInfo}
             </span></td>
             <td><a href={props.file.url} title={props.file.url}>
                 {props.file.url ? ellipsize(props.file.url) : props.file.url}
@@ -35,7 +55,7 @@ const file = (props) => {
             <td>{props.file.uploadType}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
-                <td><a href="#!" onClick={props.clickRemove}>Remove</a></td> :
+                <td><button onClick={props.clickRemove} type="button">Remove</button></td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
                         <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
