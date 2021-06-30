@@ -146,7 +146,6 @@ module StashEngine
     end
 
     def set_checking_status
-      # TODO: not necessary to have this method
       @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
     end
 

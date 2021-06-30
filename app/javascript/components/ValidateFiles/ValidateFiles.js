@@ -14,7 +14,7 @@ const validate_files = (props) => {
     return (
         <div>
             {checkConfirm}
-            <input type="submit" id="validate_files" //TODO: Define id for each ValidateFiles instance
+            <input type="submit" id="validate_files"
                    className="c-uploadmodal__button-validate o-button__submit"
                    disabled={props.disabled}
                    value={props.buttonLabel}
