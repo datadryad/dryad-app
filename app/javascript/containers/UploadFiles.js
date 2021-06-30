@@ -256,12 +256,12 @@ class UploadFiles extends React.Component {
     }
 
     changeStatusToProgressBar = (chosenFilesIndex) => {
-        const status_cel = document.getElementById(`status_${chosenFilesIndex}`);
-        status_cel.innerText = '';
+        const statusCel = document.getElementById(`status_${chosenFilesIndex}`);
+        statusCel.innerText = '';
         const node = document.createElement('progress');
-        const progressBar = status_cel.appendChild(node);
+        const progressBar = statusCel.appendChild(node);
         progressBar.setAttribute('id', `progressbar_${chosenFilesIndex}`);
-        progressBar.setAttribute('value', '');
+        progressBar.setAttribute('value', '0');
     }
 
     updateManifestFiles = (files) => {
