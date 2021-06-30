@@ -342,9 +342,9 @@ Software and Supplemental Information can be uploaded for publication at'
 
     it 'shows empty progress bar if file has 0 size' do
       # Remove already attached files
-      first(:link, 'Remove').click
-      first(:link, 'Remove').click
-      first(:link, 'Remove').click
+      first(:button, 'Remove').click
+      first(:button, 'Remove').click
+      first(:button, 'Remove').click
 
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { left: 0 })
       check('confirm_to_upload')
@@ -384,7 +384,7 @@ Software and Supplemental Information can be uploaded for publication at'
       )
       # the message for already added file is displayed
 
-      first(:link, 'Remove').click
+      first(:button, 'Remove').click
       expect(page).not_to have_content('A file of the same type is already in the table, and was not added.')
     end
 
@@ -455,7 +455,7 @@ Software and Supplemental Information can be uploaded for publication at'
     end
 
     it 'does not allow to select new FILES from file system with the same name of manifest FILES' do
-      first(:link, 'Remove').click
+      first(:button, 'Remove').click
 
       build_valid_stub_request('http://example.org/file_10.ods')
       click_button('data_manifest')
