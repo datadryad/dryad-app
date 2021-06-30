@@ -166,7 +166,7 @@ module StashEngine
       result_hash = { report: JSON.parse(result) }
       if validation_error(result_hash[:report])
         @report.update(report: result_hash.to_json, status: 'error')
-        logger.error "Some error occurred calling frictionless. See database for report_id #{@report.id}"
+        logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
         return
       end
       status = if validation_issues_not_found(result_hash)
@@ -185,7 +185,7 @@ module StashEngine
       begin
         http.get(dl_url)
       rescue HTTP::Error => e
-        logger.error "Error downloading file: #{e.message}"
+        logger.error("Error downloading file: #{e.message}")
         e
       end
     end
@@ -198,7 +198,7 @@ module StashEngine
       tempfile.rewind
       tempfile
     rescue Errno::ENOENT => e
-      logger.error "Error writing to file: #{e.message}"
+      logger.error("Error writing to file: #{e.message}")
       e
     end
 

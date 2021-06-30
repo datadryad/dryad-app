@@ -7,8 +7,8 @@ const modal_url = (props) => {
             <dialog id="js-uploadmodal"
                     className="c-uploadmodal"
                     style={{
-                        'width': '60%', 'height': '370px', 'max-width': '750px', 'min-width': '220px',
-                        'z-index': '100149', 'top': '50%'}}
+                        'width': '60%', 'height': '370px', 'maxWidth': '750px', 'minWidth': '220px',
+                        'zIndex': '100149', 'top': '50%'}}
                     open>
                 <form method='dialog' onSubmit={(event) => props.submitted(event)}>
                     <div className="c-uploadmodal__header">
@@ -30,7 +30,7 @@ const modal_url = (props) => {
                         disabled={false} />
                 </form>
             </dialog>
-            <div className="backdrop" style={{'z-index': '100148'}} />
+            <div className="backdrop" style={{'zIndex': '100148'}} />
         </div>
     );
 }
