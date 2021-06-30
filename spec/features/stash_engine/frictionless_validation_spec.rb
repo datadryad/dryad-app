@@ -92,7 +92,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('Passed')
+        expect(text).to eq('No issues')
       end
     end
 
