@@ -373,10 +373,10 @@ namespace :identifiers do
       curr_sponsor = nil
       sponsor_summary = []
       StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
-        if j.sponsor.name != curr_sponsor
+        if j.sponsor&.name != curr_sponsor
           write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
           sponsor_summary = []
-          curr_sponsor = j.sponsor.name
+          curr_sponsor = j.sponsor&.name
         end
         journal_item_count = 0
         sc_report.each do |item|
@@ -385,7 +385,7 @@ namespace :identifiers do
             sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
           end
         end
-        csv << [j.sponsor.name, j.title, journal_item_count]
+        csv << [j.sponsor&.name, j.title, journal_item_count]
       end
       write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
     end
