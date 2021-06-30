@@ -330,17 +330,6 @@ module StashEngine
           expect(generic_file).to receive(:validate_frictionless)
         end
 
-        # TODO: trying the above again: get rid of this
-        xit 'calls frictionless validation on the downloaded file (other tentative)' do
-          allow_any_instance_of(described_class).to receive(:validate_frictionless).and_return(true)
-
-          controller = GenericFilesController.new
-          controller.params = { file_ids: [@file.id] }
-          controller.validate_frictionless
-
-          expect(GenericFile).to receive(:validate_frictionless)
-        end
-
         it 'saves first status as checking before call validation' do
           model_instance = instance_double(FrictionlessReport)
           allow(FrictionlessReport).to receive(:create).with(
