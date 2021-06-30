@@ -321,12 +321,11 @@ namespace :identifiers do
       year_month = ENV['YEAR_MONTH']
     end
 
-    p "Writing Shopping Cart Reports for #{year_month} to file..."
-    p '-- main report'
+    p "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID InstitutionName
-                JournalName JournalISSN SponsorName SponsorName2]
+                JournalName JournalISSN SponsorName]
       StashEngine::Identifier.publicly_viewable.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
