@@ -900,6 +900,9 @@ GEM
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wicked_pdf (2.1.0)
+      activesupport
+    wkhtmltopdf-binary (0.12.6.5)
     xml-mapping (0.10.1)
     xml-mapping_extensions (0.4.9)
       mime-types (~> 3.0)
@@ -978,6 +981,8 @@ DEPENDENCIES
   webdrivers
   webmock
   webpacker
+  wicked_pdf
+  wkhtmltopdf-binary
   yui-compressor
 
 BUNDLED WITH
