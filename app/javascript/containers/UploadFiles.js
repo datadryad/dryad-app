@@ -160,7 +160,7 @@ class UploadFiles extends React.Component {
     }
 
     addFilesHandler = (event, uploadType) => {
-        this.setState({warningMessage: null});
+        this.setState({warningMessage: null, submitButtonFilesDisabled: true});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
         // TODO: make a function?; future: unify adding file attributes
         newFiles.map(file => {
