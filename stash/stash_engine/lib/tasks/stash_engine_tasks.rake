@@ -330,7 +330,7 @@ namespace :identifiers do
       # Limit the query to datasets that existed at the time of the target report,
       # and have been updated the within the month of the target.
       limit_date = Date.parse("#{year_month}-01")
-      limit_date_filter = "updated_at > #{limit_date - 1.day} AND created_at < #{limit_date + 1.month}"
+      limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
       StashEngine::Identifier.publicly_viewable.where(limit_date_filter).each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
