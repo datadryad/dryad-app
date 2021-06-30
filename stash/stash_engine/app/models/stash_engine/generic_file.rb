@@ -153,21 +153,21 @@ module StashEngine
     def validate_frictionless
       result = download_file
       if result.instance_of?(HTTP::Error)
-        @report.update(generic_file_id: id, status: 'error')
+        @report.update(status: 'error')
         return
       end
       result = write_tempfile(result)
       if result.instance_of?(Errno::ENOENT)
-        @report.update(generic_file_id: id, status: 'error')
+        @report.update(status: 'error')
         return
       end
-      # TODO(#1296): rescue from errors here!
       result = call_frictionless(result)
       # Add 'report' top level key that is required for calling
       # React frictionless-components
       result_hash = { report: JSON.parse(result) }
       if validation_error(result_hash[:report])
-        @report.update(status: 'error')
+        @report.update(report: result_hash.to_json, status: 'error')
+        logger.error "Some error occurred calling frictionless. See database for report_id #{@report.id}"
         return
       end
       status = if validation_issues_not_found(result_hash)
@@ -186,7 +186,7 @@ module StashEngine
       begin
         http.get(dl_url)
       rescue HTTP::Error => e
-        puts "Error downloading file: #{e.message}"
+        logger.error "Error downloading file: #{e.message}"
         e
       end
     end
@@ -199,7 +199,7 @@ module StashEngine
       tempfile.rewind
       tempfile
     rescue Errno::ENOENT => e
-      puts "Error writing to file: #{e.message}"
+      logger.error "Error writing to file: #{e.message}"
       e
     end
 
@@ -227,7 +227,11 @@ module StashEngine
     end
 
     def validation_error(result)
-      !result['errors'].empty? && result['errors'].first['code'] == 'scheme-error'
+      # See https://framework.frictionlessdata.io/docs/references/errors-reference/
+      # for an extensive list of all possible error. Note that there are the errors
+      # specific to the validation of a tabular file and the errors for another reason.
+      # This method test for errors others than the validation errors.
+      !result['errors'].empty?
     end
   end
 end
