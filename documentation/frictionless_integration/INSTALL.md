@@ -19,12 +19,16 @@ $ pip install frictionless
 $ pip install frictionless[excel]
 $ pip install frictionless[json]
 ```
+2. Upgrading
+```bash
+$ pip install frictionless --upgrade
+```
 
 Obs.: it's common to have Python 2 and Python 3 installed in the same system.
 In this case, it's possible that you have to use `pip3` instead of `pip` in the
 command above.
 
-### Project level installation
+### Project level installation and upgrading
 You can create a virtual environment to wrap a specific python environment for the project.
 (Note: on our servers we are using pyenv and some annoying hacks to get it working
 within the systemd setup.)
@@ -43,15 +47,23 @@ $ virtualenv [-p <python3_path>] <env_dir>
 $ <env_dir>/bin/activate
 ```
 
-4. Install frictionless framework
+4. Install frictionless framework plugins for all the tabular packages that you want to validate.
+- See a list of all the types on https://framework.frictionlessdata.io > Tutorials > Formats Tutorials
 ```bash
 $ pip install frictionless
+$ pip install frictionless[excel]
+$ pip install frictionless[json]
+```
+
+5. Upgrade frictionless package
+```bash
+$ pip install frictionless --upgrade
 ```
 
 ### Run frictionless from inside ruby/rails code
 - Place the call for frictionless between backticks, e.g.:
 ```ruby
-result = `frictionless validate <tabular_file_path>`
+result = `frictionless validate --path <tabular_file_path>`
 ```
 However note, that additional code has been added (for production) to
 1. Be sure pyenv has loaded correctly
