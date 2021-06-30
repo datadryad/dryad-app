@@ -86,7 +86,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    it 'shows "Passed" if file is tabular, and the status is "noissues"' do
+    it 'shows "No issues" if file is tabular, and the status is "noissues"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
       click_link 'Upload Files'
