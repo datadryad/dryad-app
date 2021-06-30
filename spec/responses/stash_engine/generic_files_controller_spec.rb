@@ -473,6 +473,9 @@ module StashEngine
         end
 
         it 'creates report with status "error", because the file does not exist when calling validation' do
+          # When calling frictionless there're various error that can happen, besides
+          # the errors for the validation per se. This test is just an example showing
+          # the "errors" key with possible error. And the 'scheme-error'.
           allow_any_instance_of(GenericFile).to receive(:call_frictionless).and_return(
             '{
   "version": "4.10.0",
@@ -483,7 +486,7 @@ module StashEngine
       "name": "Scheme Error",
       "tags": [],
       "note": "[Errno 2] No such file or directory: \'/tmp/invalid.csv\'",
-      "message": "The data source could not be successfully loaded: [Errno 2] No such file or directory: \'/tmp/invlaid.csv\'",
+      "message": "The data source could not be successfully loaded: [Errno 2] No such file or directory: \'/tmp/invalid.csv\'",
       "description": "Data reading error because of incorrect scheme."
     }
   ],
@@ -501,7 +504,7 @@ module StashEngine
           assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
 
           report = @file.frictionless_report
-          expect(report.report).to be(nil)
+          expect(report.report).to include('scheme-error')
           expect(report.status).to eq('error')
         end
       end
