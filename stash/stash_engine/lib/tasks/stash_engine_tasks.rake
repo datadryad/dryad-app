@@ -367,6 +367,7 @@ namespace :identifiers do
       time_period = md[2]
       deferred_filename = "#{md[1]}#{time_period}_deferred_summary.csv"
     end
+
     puts "Writing summary report to #{deferred_filename}"
     CSV.open(deferred_filename, 'w') do |csv|
       csv << %w[SponsorName JournalName Count]
@@ -374,7 +375,7 @@ namespace :identifiers do
       sponsor_summary = []
       StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
         if j.sponsor.name != curr_sponsor
-          write_sponsor_summary(name: curr_sponsor, report_period: prefix, file_suffix: time_period, table: sponsor_summary)
+          write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
           sponsor_summary = []
           curr_sponsor = j.sponsor.name
         end
@@ -395,6 +396,7 @@ namespace :identifiers do
   end
 
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
+  # rubocop:disable Metrics/MethodLength
   def write_sponsor_summary(name:, file_prefix:, report_period:, table:)
     return if name.blank? || table.blank?
 
@@ -402,15 +404,31 @@ namespace :identifiers do
     puts "Writing sponsor summary to #{filename}"
     table_content = ''
     table.each do |row|
-      table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td></tr>"
+      table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td></tr>"
     end
     html_content = <<-HTMLEND
+      <head><style>
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+      th {
+          background-color: #005581;
+          color: white;
+          text-align: left;
+          padding: 10px;
+      }
+      td {
+          padding: 10px;
+      }
+      </style></head>
       <h1>#{name}</h1>
-      <p>Dryad submissions accepted under a deferred payment plan.</p>
-      <p>Reporting period: #{report_period}.</p>
-      <p>Report generated on: #{Date.today}.</p>
+      <p>Dryad submissions accepted under a deferred payment plan.<br/>
+      Reporting period: #{report_period}<br/>
+      Report generated on: #{Date.today}</p>
       <table>
-       <tr><th>DOI</th><th>Journal Name</th><th>Approval Date</th></tr>
+       <tr><th width="25%">DOI</th>
+           <th width="55%">Journal Name</th>
+           <th width="20%">Approval Date</th></tr>
        #{table_content}
       </table>
     HTMLEND
@@ -420,6 +438,7 @@ namespace :identifiers do
       file << pdf
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report: :environment do
