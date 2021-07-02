@@ -13,6 +13,9 @@ https://www.valentinog.com/blog/testing-react/
 https://reactjs.org/docs/test-renderer.html
 
 const uploadFiles = require('UploadFiles.js');
+
+to run try 'yarn jest'
+if you need to see console.log output, do 'yarn jest --verbose false'
  */
 
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
