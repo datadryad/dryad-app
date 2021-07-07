@@ -30,9 +30,14 @@ const file = (props) => {
           </div>;
           break;
         case TabularCheckStatus['issues']:
+          let jsReport = "";
+          try {
+            jsReport = JSON.parse(props.file.frictionless_report.report);
+          }catch(e){ console.log(e) }
           tabularInfo = <div style={{display: 'flex', alignItems: 'center'}}>
                 <img src="../../../images/emblem-important.png" alt="Warning icon" style={{padding: 0, width: '1.5rem'}} />
-                <button className="o-button__plain-text5" onClick={props.clickValidationReport} type="button" style={{padding: '10px'}}>{props.file.tabularCheckStatus}</button>
+                <button className="o-button__plain-text5" onClick={props.clickValidationReport}
+                        type="button" style={{padding: '10px'}}>View {jsReport?.report?.stats?.errors} issues</button>
               </div>;
           break;
         default:
