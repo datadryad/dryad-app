@@ -32,7 +32,7 @@ module Stash
       # This takes an argument of the digests types you want returned as an array, see DIGEST_INITIALIZERS for types.  It returns
       # the zenodo response and the hexdigests for the types you specify
 
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def stream(digest_types: [])
         digests_obj = Digests.new(digest_types: digest_types)
 
@@ -41,7 +41,7 @@ module Stash
         write_pipe.binmode
 
         http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-          .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
+          .timeout(connect: 30, read: 60, write: 60).follow(max_hops: 10)
         response = http.get(@file_model.zenodo_replication_url)
 
         put_response = nil
@@ -83,7 +83,7 @@ module Stash
         raise Stash::ZenodoReplicate::ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
             "Original error: #{e}\n#{e.backtrace.join("\n")}"
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
