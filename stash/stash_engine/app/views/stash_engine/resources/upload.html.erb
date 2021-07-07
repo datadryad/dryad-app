@@ -29,15 +29,17 @@
 
 <!-- it's a little squidgy to have this in here, but it isn't used in any other page and doesn't need to be precompiled or put anywhere else -->
 <div id="popup_dialog" style="display:none;">
-  <p>
-    Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
-    allow your uploads to finish before proceeding.
-  </p>
 </div>
 
 <script>
-  $('.js-nav-out').click(function(e) {
+  $('.js-nav-out').on('click', function(e) {
     if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){
+      var text = `
+        <p>
+          Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
+          allow your uploads to finish before proceeding.
+        </p>`;
+      $("#popup_dialog").html(text);
       e.preventDefault();
       $("#popup_dialog").dialog({
         autoOpen: true,
@@ -45,6 +47,23 @@
         width: '500px',
         modal: true,
         title: 'Finish upload before proceeding'
+      });
+    }
+
+    if( $(".js-tabular-checking").length > 0){
+      var text = `
+        <p>
+          Your tabular files are currently being checked for formatting and consistency issues. Please wait for the checks
+          to complete before navigating away from this page.
+        </p>`;
+      $("#popup_dialog").html(text);
+      e.preventDefault();
+      $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: 'Allow tabular consistency checks to complete'
       });
     }
   });
