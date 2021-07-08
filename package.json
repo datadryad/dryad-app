@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.14.5",
-    "@cdl-dryad/frictionless-components": "^0.3.8",
+    "@cdl-dryad/frictionless-components": "^0.3.9",
     "@rails/webpacker": "5.2.1",
     "aws-sdk": "^2.934.0",
     "axios": "^0.21.1",
