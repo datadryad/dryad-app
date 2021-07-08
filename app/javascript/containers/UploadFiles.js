@@ -44,7 +44,7 @@ const ValidTabular = {
 export const TabularCheckStatus = {
     'checking': 'Checking...',
     'issues': 'View issues',
-    'noissues': 'No issues',
+    'noissues': 'Passed',
     'na': 'N/A',
     'error': 'Validation error'
 }
