@@ -37,7 +37,7 @@ const file = (props) => {
           tabularInfo = <div style={{display: 'flex', alignItems: 'center'}}>
                 <img src="../../../images/emblem-important.png" alt="Warning icon" style={{padding: 0, width: '1.5rem'}} />
                 <button className="o-button__plain-text5" onClick={props.clickValidationReport}
-                        type="button" style={{padding: '10px'}}>View {jsReport?.report?.stats?.errors} issues</button>
+                        type="button" style={{padding: '10px'}}>View {jsReport?.report?.stats?.errors} Issues</button>
               </div>;
           break;
         default:
@@ -57,7 +57,7 @@ const file = (props) => {
             <td><a href={props.file.url} title={props.file.url}>
                 {props.file.url ? ellipsize(props.file.url) : props.file.url}
             </a></td>
-            <td>{props.file.uploadType}</td>
+            <td>{capitalize(props.file.uploadType)}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
                 <td><button onClick={props.clickRemove} type="button">Remove</button></td> :
@@ -68,6 +68,10 @@ const file = (props) => {
                 </td> }
         </tr>
     )
+}
+
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export default file;

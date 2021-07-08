@@ -19,8 +19,8 @@ const badList = (props) => {
       Please view the issues from the links below and correct them.
       <ol>
         <li>
-          Manually correct the issues shown in your local copy of the file. Clicking the <em>View n issues</em> for each
-          file gives detailed information about all the issues found.
+          Manually correct the issues shown in your local copy of the file. Click <em>View n issues</em> for each
+          file to get detailed information about the issues found.
         </li>
         <li>Remove the file from the list with the <em>Remove</em> action.</li>
         <li>Re-upload the corrected file using the <em>Choose Files</em> or <em>Enter URLs</em> button above.</li>
