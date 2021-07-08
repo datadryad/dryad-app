@@ -9,24 +9,31 @@ const badList = (props) => {
   let issueMsg = '';
 
   if(errorFiles.length > 0){
-    errorMsg = <p>Our tabular format checker couldn't read {makeAndString(errorFiles)} correctly.
-      Please check that file type is set correctly and the file appears correct.
-    </p>;
+    errorMsg = <div className="c-alert__text-lite">Our tabular format checker couldn't read {makeAndString(errorFiles)} correctly.
+      Please check that file is correctly formatted tabular data.
+    </div>;
   }
 
   if(issueFiles.length > 0){
-    issueMsg = <p>Our tabular format checker found formatting issues in {makeAndString(issueFiles)}.
-      Please view the issues from the links below and correct
-      the issues, if appropriate.
-    </p>;
+    issueMsg = <div className="c-alert__text-lite">Our tabular format checker found formatting issues in {makeAndString(issueFiles)}.
+      Please view the issues from the links below and correct them.
+      <ol>
+        <li>
+          Manually correct the issues shown in your local copy of the file. Clicking the <em>View n issues</em> for each
+          file gives detailed information about all the issues found.
+        </li>
+        <li>Remove the file from the list with the <em>Remove</em> action.</li>
+        <li>Re-upload the corrected file using the <em>Choose Files</em> or <em>Enter URLs</em> button above.</li>
+      </ol>
+    </div>;
   }
 
-  return <div className="js-alert c-alert--error" role="alert">
+  return <div className="js-alert c-alert--error-lite" role="alert">
       <div className="c-alert__text">
         {errorMsg}
         {issueMsg}
       </div>
-      <button aria-label="close" className="js-alert__close o-button__close c-alert__close"></button>
+      <button aria-label="close" className="js-alert__close o-button__close-lite c-alert__close-lite"></button>
     </div>;
 }
 
