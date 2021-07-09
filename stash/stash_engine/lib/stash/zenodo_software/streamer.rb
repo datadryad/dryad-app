@@ -41,7 +41,7 @@ module Stash
         write_pipe.binmode
 
         http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-          .timeout(connect: 30, read: 60, write: 60).follow(max_hops: 10)
+          .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
         response = http.get(@file_model.zenodo_replication_url)
 
         put_response = nil
