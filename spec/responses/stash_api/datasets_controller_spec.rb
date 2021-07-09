@@ -195,8 +195,8 @@ module StashApi
         expect(ident.publication_name).to eq(hsh[:journal_full_title])
         expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
 
-        article = hsh[:article]
-        expect(res.title).to eq(article[:article_title])
+        dd = hsh['deposit_data']
+        expect(res.title).to eq(dd['deposit_description'])
       end
 
       it 'allows update of deposit metadata with new submission metadata' do
@@ -215,8 +215,8 @@ module StashApi
         res.reload
         hsh = @meta.hash
         expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
-        article = hsh[:article]
-        expect(res.title).to eq(article[:article_title])
+        dd = hsh['deposit_data']
+        expect(res.title).to eq(dd['deposit_description'])
       end
 
       it 'allows update of deposit metadata using the raw identifier, without <<doi:>>' do
@@ -235,11 +235,11 @@ module StashApi
         res.reload
         hsh = @meta.hash
         expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
-        article = hsh[:article]
-        expect(res.title).to eq(article[:article_title])
+        dd = hsh['deposit_data']
+        expect(res.title).to eq(dd['deposit_description'])
       end
 
-      it 'does not update core fields after the user has submitted edits' do
+      it 'does not update core fields after the user has submitted edits, but does update selected fields' do
         @meta.make_submission_metadata
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
@@ -247,12 +247,16 @@ module StashApi
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
         res = ident.latest_resource
         res.resource_states.first.update(resource_state: 'submitted')
-        @meta.make_submission_metadata
+        saved_title = res.title
+        res.contributors = []
+        @meta.make_submission_metadata # creates a new fake title
         response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
                              params: @meta.json,
                              headers: default_authenticated_headers
-
-        expect(response_code).to eq(403)
+        expect(response_code).to eq(200)
+        res.reload
+        expect(res.title).to eq(saved_title)
+        expect(res.contributors).not_to be_blank
       end
 
       it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
