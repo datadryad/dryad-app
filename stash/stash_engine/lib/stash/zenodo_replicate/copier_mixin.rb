@@ -12,7 +12,7 @@ module Stash
       # return an error if replicating already, shouldn't start another replication
       def error_if_replicating
         repli_count = @resource.identifier.zenodo_copies.send(@dataset_type).where(state: %w[replicating error])
-          .where('stash_engine_zenodo_copies.resource_id <= ?', @resource.id).where('stash_engine_zenodo_copies.id < ?', @copy.id).count
+          .where('stash_engine_zenodo_copies.resource_id <= ?', @resource.id).where('stash_engine_zenodo_copies.id <= ?', @copy.id).count
         # rubocop goes bonkers on this and suggests guardclause but when you do it suggests an if statement
         # rubocop:disable Style/GuardClause
         if repli_count.positive?
