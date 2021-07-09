@@ -113,7 +113,7 @@ module StashApi
                                                   author_email: auth['email'],
                                                   author_orcid: auth['orcid'])
           if auth['institution'].present?
-            affil = StashEngine::Affiliation.from_long_name(long_name: auth['institution'])
+            affil = StashDatacite::Affiliation.from_long_name(long_name: auth['institution'])
             new_author.affiliation = affil
           end
           @resource.authors << new_author
