@@ -249,14 +249,18 @@ module StashApi
         res.resource_states.first.update(resource_state: 'submitted')
         saved_title = res.title
         res.contributors = []
-        @meta.make_submission_metadata # creates a new fake title
+        res.subjects.clear
+        @meta.make_submission_metadata # creates a new fake metadata deposit
         response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
                              params: @meta.json,
                              headers: default_authenticated_headers
         expect(response_code).to eq(200)
         res.reload
-        expect(res.title).to eq(saved_title)
+        expect(res.title).to eq(saved_title) # title should not be overwritten
         expect(res.contributors).not_to be_blank
+        expect(res.subjects.map(&:subject)).to include(@meta.hash['article']['keywords'].first)
+        expect(res.current_curation_activity.note).to include('Funders')
+        expect(res.current_curation_activity.note).to include('Keywords')
       end
 
       it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
