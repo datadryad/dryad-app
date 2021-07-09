@@ -74,7 +74,7 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def em_update_selected_fields
       logger.debug('em_update_selected_fields')
 
@@ -102,27 +102,63 @@ module StashApi
         fields_changed << 'Funders'
       end
 
-      # TODO: Add co-authors if they were not added by the submitter
+      # Add co-authors if they were not added by the submitter
+      if @resource.authors.size < 2 && params['authors'].present?
+        params['authors'].each do |auth|
+          next if auth['first_name'] == @resource.user.first_name &&
+                  auth['last_name'] == @resource.user.last_name
 
-      # TODO: Add keywords if they were not added by the submitter
+          new_author = StashEngine::Author.create(author_first_name: auth['first_name'],
+                                                  author_last_name: auth['last_name'],
+                                                  author_email: auth['email'],
+                                                  author_orcid: auth['orcid'])
+          if auth['institution'].present?
+            affil = StashEngine::Affiliation.from_long_name(long_name: auth['institution'])
+            new_author.affiliation = affil
+          end
+          @resource.authors << new_author
+        end
+        fields_changed << 'Authors'
+      end
 
-      # TODO: If final_disposition is available, update the status of this dataset
+      # Add keywords if they were not added by the submitter
+      if @resource.subjects.blank? && art_params['keywords'].present?
+        @resource.subjects.clear
+        art_params['keywords'].each do |kw|
+          subs = StashDatacite::Subject.where(subject: kw)
+          sub = if subs.blank?
+                  StashDatacite::Subject.create(subject: kw)
+                else
+                  subs.first
+                end
+          @resource.subjects << sub
+        end
+        fields_changed << 'Keywords'
+      end
+
+      # Update curation note about what was changed
+      if fields_changed.present?
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id,
+                                               status: @resource.current_curation_status,
+                                               note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}")
+      end
+
+      # If final_disposition is available, update the status of this dataset
       disposition = params['article']['final_disposition']
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
           @resource.curation_activities <<
             StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
-                                                 note: 'updating status based on API notification from Editorial Manager journal')
+                                                 note: 'updating status based on API notification from Editorial Manager')
         else
           # any other article disposition -> transition peer_review to action_required
           @resource.curation_activities <<
             StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
-                                                 note: 'updating status based on API notification from Editorial Manager journal')
+                                                 note: 'updating status based on API notification from Editorial Manager')
         end
       end
-
-      # TODO: Update curation note about what was changed
 
       sharing_link = @stash_identifier&.shares&.first&.sharing_link ||
                      "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
@@ -196,7 +232,7 @@ module StashApi
       em_params['authors'] = em_authors if em_authors.present?
       em_params
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
