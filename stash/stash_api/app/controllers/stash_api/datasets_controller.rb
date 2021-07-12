@@ -176,6 +176,9 @@ module StashApi
     def em_reformat_request
       em_params = {}.with_indifferent_access
 
+      # EM doesn't set an item owner, so default it to system, and the actual user will need to claim it
+      em_params['userId'] = 0
+
       em_params['publicationName'] = params['journal_full_title']
       art_params = params['article']
       if art_params
