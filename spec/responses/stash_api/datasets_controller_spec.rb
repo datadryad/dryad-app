@@ -23,6 +23,7 @@ module StashApi
       mock_tenant!
       mock_datacite_and_idgen!
       @user = create(:user, role: 'superuser', tenant_id: 'dryad')
+      @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
