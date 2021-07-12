@@ -104,9 +104,9 @@ module StashApi
 
       # Add co-authors if they were not added by the submitter
       if @resource.authors.size < 2 && params['authors'].present?
+        curr_auths = @resource.authors.map(&:author_full_name)
         params['authors'].each do |auth|
-          next if auth['first_name'] == @resource.user.first_name &&
-                  auth['last_name'] == @resource.user.last_name
+          next if curr_auths.include?("#{auth['last_name']}, #{auth['first_name']}")
 
           new_author = StashEngine::Author.create(author_first_name: auth['first_name'],
                                                   author_last_name: auth['last_name'],
