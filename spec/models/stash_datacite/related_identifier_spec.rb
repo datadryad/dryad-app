@@ -140,9 +140,9 @@ module StashDatacite
         expect(re.added_by).to eq('zenodo')
       end
 
-      it "removes an existing relation if all files have been removed from zenodo" do
+      it 'removes an existing relation if all files have been removed from zenodo' do
         create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier_id,
-               copy_type: 'software', software_doi: @test_doi)
+                             copy_type: 'software', software_doi: @test_doi)
         sfw_file = create(:software_file, resource_id: @resource.id)
         expect(@resource.related_identifiers.count).to eq(0)
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
