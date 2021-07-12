@@ -93,27 +93,27 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to include('issues')
+        expect(text).to include('Issues')
       end
     end
 
-    it 'shows "No issues" if file is tabular, and the status is "noissues"' do
+    it 'shows "Passed" if file is tabular, and the status is "noissues"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('No issues')
+        expect(text).to eq('Passed')
       end
     end
 
-    it 'shows "Validation error" if file is plain-text and tabular, and the status is "error"' do
+    it 'shows "Validation Error" if file is plain-text and tabular, and the status is "error"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'error')
       sleep 1
       click_link 'Upload Files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq('Validation error')
+        expect(text).to eq('Validation Error')
       end
     end
   end

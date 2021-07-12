@@ -119,13 +119,13 @@ Software and Supplemental Information can be uploaded for publication at'
 
     it 'shows files selected with "Pending" status' do
       within(page.find('tr', text: 'file_10.ods')) do
-        expect(page).to have_content('data')
+        expect(page).to have_content('Data')
       end
       within(page.find('tr', text: 'file_100.ods')) do
-        expect(page).to have_content('software')
+        expect(page).to have_content('Software')
       end
       within(page.find('tr', text: 'file_1000.ods')) do
-        expect(page).to have_content('supp')
+        expect(page).to have_content('Supp')
       end
       expect(page).to have_content('Pending', count: 3)
     end

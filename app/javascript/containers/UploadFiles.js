@@ -43,10 +43,10 @@ const ValidTabular = {
 }
 export const TabularCheckStatus = {
     'checking': 'Checking...',
-    'issues': 'View issues',
-    'noissues': 'No issues',
+    'issues': 'View Issues',
+    'noissues': 'Passed',
     'na': 'N/A',
-    'error': 'Validation error'
+    'error': 'Validation Error'
 }
 
 class UploadFiles extends React.Component {
