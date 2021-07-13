@@ -27,12 +27,11 @@ module CkeditorHelper
         ckeditor.focusManager.blur( true );
         // ckeditor.updateElement();
     SCRIPT
+
     # the blur() above is needed because capybara behaves oddly. https://makandracards.com/makandra/12661-how-to-solve-selenium-focus-issues
     page.execute_script script_text
     expect(first('.cke').present?).to eql(true)
-    # aargh this is annoying, but it turns out it needs time to start the ajax request and the wait_for_ajax wasn't enough by itself
-    sleep 0.5
-    wait_for_ajax
+    # wait_for_ajax
   end
 
 end
