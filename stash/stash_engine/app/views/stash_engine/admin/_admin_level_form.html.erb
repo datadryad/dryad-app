@@ -2,7 +2,7 @@
 <div class="o-admin-dialog">
   <p>Choose <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s Role</p>
   <%
-    role_radios = [ ['user', 'User'], ['admin', 'Administrator'], ['superuser', 'Superuser'] ]
+    role_radios = [ ['user', 'User'], ['admin', 'Administrator'], ['curator', 'Curator'], ['superuser', 'Superuser'] ]
     role_radios.pop if current_user.role == 'admin' # don't give admins a choice to make a superuser
   %>
 

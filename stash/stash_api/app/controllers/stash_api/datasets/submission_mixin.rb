@@ -36,7 +36,7 @@ module SubmissionMixin
 
   def errors_for_completions
     completions = StashDatacite::Resource::Completions.new(@resource)
-    if @resource.loosen_validation && @user.superuser?
+    if @resource.loosen_validation && @user.curator?
       completions.relaxed_warnings
     else
       completions.all_warnings

@@ -1,7 +1,7 @@
 <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
               method: 'get', id: 'filter_form', local: true) do -%>
   <label for="tenant" class="c-horizontal-form__input--filter-by">Filter by:</label>
-  <% if current_user.superuser? %>
+  <% if current_user.curator? %>
     <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
                    class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
 

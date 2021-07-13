@@ -6,7 +6,7 @@ module StashEngine
     has_many :journals, through: :journal_roles
 
     scope :curators, -> do
-      where(role: %w[superuser tenant_curator])
+      where(role: %w[superuser curator tenant_curator])
     end
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
@@ -34,6 +34,10 @@ module StashEngine
 
     def superuser?
       role == 'superuser'
+    end
+
+    def curator?
+      role == 'superuser' || role == 'curator'
     end
 
     def journals_as_admin

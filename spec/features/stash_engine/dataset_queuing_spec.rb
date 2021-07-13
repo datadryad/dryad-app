@@ -27,7 +27,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     mock_tenant!
     neuter_curation_callbacks!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
-    @author = create(:user, tenant_id: 'dryad', role: 'superuser')
+    @superuser = create(:user, tenant_id: 'dryad', role: 'superuser')
     @document_list = []
   end
 
@@ -40,7 +40,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     before(:each, js: true) do
       ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
-      sign_in(@author)
+      sign_in(@superuser)
       visit root_path
       click_link 'My Datasets'
       3.times do
@@ -52,7 +52,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
         check 'agree_to_payment'
         click_button 'submit_dataset'
       end
-      @resource = StashEngine::Resource.where(user: @author).last
+      @resource = StashEngine::Resource.where(user: @superuser).last
     end
 
     it 'should show queuing', js: true do

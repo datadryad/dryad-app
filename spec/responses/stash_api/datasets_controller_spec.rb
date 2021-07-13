@@ -22,7 +22,7 @@ module StashApi
       mock_ror!
       mock_tenant!
       mock_datacite_and_idgen!
-      @user = create(:user, role: 'superuser', tenant_id: 'dryad')
+      @user = create(:user, role: 'curator', tenant_id: 'dryad')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
@@ -55,7 +55,7 @@ module StashApi
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
       end
 
-      it 'creates a new dataset with a userId explicitly set by superuser)' do
+      it 'creates a new dataset with a userId explicitly set by curator)' do
         test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
                                              last_name: Faker::Name.last_name,
                                              email: Faker::Internet.email)
@@ -287,7 +287,7 @@ module StashApi
 
         @user1 = create(:user, tenant_id: 'ucop', role: nil)
         @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
-        @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
+        @user3 = create(:user, tenant_id: 'ucb', role: 'curator')
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -355,7 +355,7 @@ module StashApi
           expect(output[:count]).to eq(5)
         end
 
-        it 'gets a list of all datasets because superusers are omniscient' do
+        it 'gets a list of all datasets because curators are omniscient' do
           get '/api/v2/datasets', headers: default_authenticated_headers
           output = response_body_hash
           expect(output[:count]).to eq(@identifiers.count)
@@ -421,7 +421,7 @@ module StashApi
           expect(hsh['_embedded']['stash:datasets'][0]['versionNumber']).to eq(1)
         end
 
-        it 'shows the 2nd, unpublished version to superusers who see everything by default' do
+        it 'shows the 2nd, unpublished version to curators who see everything by default' do
 
           get '/api/v2/datasets', headers: default_authenticated_headers
           hsh = response_body_hash
@@ -560,7 +560,7 @@ module StashApi
         expect(hsh['editLink']).to eq(nil)
       end
 
-      it 'shows the private record for superuser' do
+      it 'shows the private record for curator' do
         @identifier.edit_code = Faker::Number.number(digits: 6)
         @identifier.save
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
@@ -606,7 +606,7 @@ module StashApi
       end
 
       describe 'PATCH to submit dataset' do
-        xit 'submits dataset when the PATCH operation for versionStatus=submitted (superuser & owner)' do
+        xit 'submits dataset when the PATCH operation for versionStatus=submitted (curator & owner)' do
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,
                                 headers: default_authenticated_headers.merge('Content-Type' => 'application/json-patch+json')
