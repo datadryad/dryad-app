@@ -102,25 +102,6 @@ module StashApi
         fields_changed << 'Funders'
       end
 
-      # Add co-authors if they were not added by the submitter
-      if @resource.authors.size < 2 && params['authors'].present?
-        curr_auths = @resource.authors.map(&:author_full_name)
-        params['authors'].each do |auth|
-          next if curr_auths.include?("#{auth['last_name']}, #{auth['first_name']}")
-
-          new_author = StashEngine::Author.create(author_first_name: auth['first_name'],
-                                                  author_last_name: auth['last_name'],
-                                                  author_email: auth['email'],
-                                                  author_orcid: auth['orcid'])
-          if auth['institution'].present?
-            affil = StashDatacite::Affiliation.from_long_name(long_name: auth['institution'])
-            new_author.affiliation = affil
-          end
-          @resource.authors << new_author
-        end
-        fields_changed << 'Authors'
-      end
-
       # Add keywords if they were not added by the submitter
       if @resource.subjects.blank? && art_params['keywords'].present?
         @resource.subjects.clear
