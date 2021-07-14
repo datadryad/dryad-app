@@ -20,7 +20,7 @@ module StashEngine
     helper_method :id
 
     # -- gets the resource for display from the identifier --
-    # some users get to see more than the public such as owners, superusers, admins
+    # some users get to see more than the public such as owners, curators, admins
     def resource
       return @resource unless @resource.nil?
 

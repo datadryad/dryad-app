@@ -18,7 +18,7 @@ module StashEngine
       mock_tenant!
       neuter_curation_callbacks!
 
-      @curator = create(:user, tenant_id: 'dryad', role: 'superuser')
+      @curator = create(:user, tenant_id: 'dryad', role: 'curator')
       @user = create(:user, tenant_id: 'dryad', role: 'user')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
 

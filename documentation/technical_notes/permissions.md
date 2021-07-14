@@ -4,7 +4,10 @@ Permissions in Dryad
 
 Dryad has several levels of permissions. Some permissions are defined by the
 `User.role` field:
-- *superuser* -- Has full access to all features in the system
+- *superuser* -- Has full access to all features in the system. Superusers
+  automatically have permissions to do anything that any other type of user can do.
+- *curator* -- Has access to most features, though not some that are more
+  dangerous and only useful to developers.
 - *tenant_curator* -- Has view and edit access to all datasets in the associated
   tenant
 - *admin* -- Has view access to all datasets in the associated tenant,

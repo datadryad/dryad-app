@@ -1,7 +1,7 @@
 <% unless authors.nil? %>
     <% authors.each do |author| %>
 	<div class="o-metadata__group1">
-	    <% if current_user && current_user.role == 'superuser' %>
+	    <% if current_user && current_user.curator? %>
 		<%= ([ (author.author_full_name ?
 			"<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
 		     author.affiliations.map{|i|

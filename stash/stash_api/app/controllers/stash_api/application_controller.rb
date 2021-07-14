@@ -92,13 +92,13 @@ module StashApi
     end
 
     def require_curator
-      return if %w[superuser tenant_curator].include?(@user.role)
+      return if %w[superuser curator tenant_curator].include?(@user.role)
 
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
     def require_admin
-      return if %w[superuser admin tenant_curator].include?(@user.role) ||
+      return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
                 @user.journals_as_admin.present?
 
       render json: { error: 'unauthorized' }.to_json, status: 401

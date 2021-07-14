@@ -2,7 +2,7 @@
 Dataset Metadata
 =================
 
-Datasets in the Dryad API consist largely descriptive metadata
+Datasets in the Dryad API consist largely of descriptive metadata
 inspired by the
 [DataCite Metadata Schema](https://schema.datacite.org/). However,
 some of the fields have different names, and there are some

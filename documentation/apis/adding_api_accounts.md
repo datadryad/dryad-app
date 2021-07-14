@@ -32,7 +32,9 @@ To create an API account:
    `select * from stash_engine_users where id= <user id>;`
 
 To set permissions for the API account:
-- The user can be set to a `superuser` or tenant-based `admin` role using
+- Determine which role the account should have. For details on the available
+  roles, see the [Permissions](../technical_notes/permissions.md) document.
+- The user can be given an appropraite role using
   either the database or rails console:
   `update stash_engine_users set role='admin' where id= <user id>;`
   `StashEngine::User.find(<user id>).update(role: 'admin')`
