@@ -61,7 +61,11 @@ module StashEngine
         redirect_to choose_sso_path and return if current_user.tenant_id.blank?
       end
 
-      redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
+      if @resource&.current_resource_state&.resource_state != 'in_progress'
+        new_version
+      else
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
+      end
     end
     # rubocop:enable Metrics/AbcSize
 
