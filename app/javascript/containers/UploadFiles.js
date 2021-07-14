@@ -45,7 +45,7 @@ export const TabularCheckStatus = {
     'checking': 'Checking...',
     'issues': 'View Issues',
     'noissues': 'Passed',
-    'na': 'N/A',
+    'na': 'Too Large For Validation',
     'error': 'Validation Error'
 }
 
