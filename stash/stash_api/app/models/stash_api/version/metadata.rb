@@ -47,20 +47,16 @@ module StashApi
       end
 
       def sharing_link
-        puts "XXXXXX making sharing link!!!"
         curation_activity = StashEngine::CurationActivity.latest(resource: @resource)
         case curation_activity.status
         when 'in_progress'
-          puts "a #{@resource.identifier.shares.first.sharing_link}"
           # if it's in_progress, return the sharing_link for the previous submitted version
           prev_submitted_res = @resource&.identifier&.last_submitted_resource
           prev_submitted_res&.identifier&.shares&.first&.sharing_link
         when 'embargoed', 'withdrawn'
-          puts "b"
         # suppress the link -- even if the user has the rights to view
         # the metadata, they should not be downloading it
         else
-          puts "c"
           @resource&.identifier&.shares&.first&.sharing_link
         end
       end
