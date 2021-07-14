@@ -9,7 +9,7 @@ namespace :zenodo do
     end
 
     # try to only fill the queue to this level, will be re-filled frequently, anyway
-    max_feed_queue = 8
+    max_feed_queue = 1  # only start another long (50GB+) when nothing much is happening since these take forever, don't monopolize queue
 
     sql = <<~SQL.strip
       SELECT ids.* FROM stash_engine_identifiers ids
@@ -17,7 +17,7 @@ namespace :zenodo do
         ON ids.id = cops.identifier_id
       WHERE ids.pub_state = 'published'
         AND cops.id IS NULL
-        AND ids.storage_size < 1e+10
+        AND ids.storage_size < 1e+50
       ORDER BY RAND()
       LIMIT #{max_feed_queue};
     SQL
