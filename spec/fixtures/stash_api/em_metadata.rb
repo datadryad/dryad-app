@@ -20,15 +20,24 @@ module Fixtures
       end
 
       def make_deposit_metadata
+        add_title
         add_journal_name
         add_author
       end
 
       def make_submission_metadata
+        add_title
         add_journal_name
         add_embargo_info
         add_article
         add_author
+      end
+
+      def add_title
+        title = Faker::Book.title
+        dd = ActiveSupport::HashWithIndifferentAccess.new
+        dd.merge!(deposit_description: title)
+        @metadata[:deposit_data] = dd
       end
 
       def add_journal_name
@@ -63,11 +72,11 @@ module Fixtures
         article.merge!(abstract: Faker::Lorem.paragraph)
         article.merge!(final_disposition: 'ACCEPT')
         article.merge!(keywords: [Faker::Cosmere.aon, Faker::Cosmere.metal, Faker::Cosmere.spren])
-        article.merge!(funding_source: [{
-                         "funder": 'National Institutes of Health',
-                         "funder_id": 'http://dx.doi.org/10.13039/100000002',
-                         "award_number": '12345',
-                         "grant_recipient": '33182'
+        article.merge!(funding_information: [{
+                         "funder": Faker::Company.name,
+                         "funder_id": Faker::Pid.doi,
+                         "award_number": Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4),
+                         "grant_recipient": Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4)
                        }])
 
         @metadata[:article] = article
