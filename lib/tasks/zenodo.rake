@@ -9,7 +9,7 @@ namespace :zenodo do
     end
 
     # try to only fill the queue to this level, will be re-filled frequently, anyway
-    max_feed_queue = 1  # only start another long (50GB+) when nothing much is happening since these take forever, don't monopolize queue
+    max_feed_queue = 1 # only start another long (50GB+) when nothing much is happening since these take forever, don't monopolize queue
 
     sql = <<~SQL.strip
       SELECT ids.* FROM stash_engine_identifiers ids
