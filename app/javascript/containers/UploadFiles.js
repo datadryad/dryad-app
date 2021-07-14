@@ -605,6 +605,7 @@ class UploadFiles extends React.Component {
                             clickedModal={() => this.showModalHandler(upload_type.type)}
                             type={upload_type.type}
                             logo={upload_type.logo}
+                            alt={upload_type.alt}
                             name={upload_type.name}
                             description={upload_type.description}
                             buttonFiles={upload_type.buttonFiles}
