@@ -177,6 +177,7 @@ module StashApi
 
         expect(ident).to be
         expect(ident.publication_name).to eq(hsh[:journal_full_title])
+        expect(res.hold_for_peer_review).to be_truthy
         expect(res.authors.first.author_first_name).to eq(hsh[:authors].first[:first_name])
         expect(res.authors.first.author_last_name).to eq(hsh[:authors].first[:last_name])
         expect(res.authors.first.author_orcid).to eq(hsh[:authors].first[:orcid])
