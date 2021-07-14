@@ -468,8 +468,8 @@ Software and Supplemental Information can be uploaded for publication at'
       )
 
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
-      expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
-      expect(page).to have_content('Some files of the same type are already in the table.')
+      # expect(page).to have_content(/^\bfile_example_ODS_10.ods\b/, count: 1)
+      expect(page).to have_content('same type are already in the table')
     end
 
     it 'does not allow to add a manifest FILE with the same name of a FILE selected from file system' do

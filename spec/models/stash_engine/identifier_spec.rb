@@ -250,8 +250,8 @@ module StashEngine
             expect(@identifier.latest_viewable_resource(user: @user)).to eql(@identifier.latest_resource)
           end
 
-          it 'returns the latest non-published for a superuser' do
-            user2 = User.new(role: 'superuser')
+          it 'returns the latest non-published for a curator' do
+            user2 = User.new(role: 'curator')
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
           end
 
@@ -774,7 +774,7 @@ module StashEngine
         Identifier.destroy_all
         @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@ucop.edu', tenant_id: 'ucop', role: nil)
         @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
-        @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
+        @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
 
         @identifiers = [create(:identifier, identifier: '10.1072/FK2000'),
                         create(:identifier, identifier: '10.1072/FK2001'),
@@ -874,7 +874,7 @@ module StashEngine
         expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is some ucop joe blow private one
       end
 
-      it 'user_viewable for a superuser, they love it all' do
+      it 'user_viewable for a curator, they love it all' do
         identifiers = Identifier.user_viewable(user: @user3)
         expect(identifiers.count).to eq(@identifiers.length)
       end

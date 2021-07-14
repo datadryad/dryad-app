@@ -296,7 +296,7 @@ module StashApi
 
         @user1 = create(:user, tenant_id: 'ucop', role: nil)
         @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
-        @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
+        @user3 = create(:user, tenant_id: 'ucb', role: 'curator')
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),

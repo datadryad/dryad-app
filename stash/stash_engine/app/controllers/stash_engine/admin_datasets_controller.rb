@@ -12,13 +12,14 @@ module StashEngine
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
-    # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
+    # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     # rubocop:disable Metrics/AbcSize
     def index
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
       journal_limit = (if current_user.role != 'superuser' &&
-                        current_user.journals_as_admin.present?
+                          current_user.role != 'curator' &&
+                          current_user.journals_as_admin.present?
                          current_user.journals_as_admin.map(&:title)
                        end)
 

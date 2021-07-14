@@ -4,7 +4,7 @@ module StashEngine
     def self.included(c)
       c.helper_method \
         %i[
-          owner? admin? superuser?
+          owner? admin? curator? superuser?
         ]
     end
 
@@ -50,18 +50,18 @@ module StashEngine
     end
 
     def require_curator
-      return if current_user && %w[superuser tenant_curator].include?(current_user.role)
+      return if current_user && %w[superuser curator tenant_curator].include?(current_user.role)
 
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_engine.dashboard_path
     end
 
     def ajax_require_curator
-      return false unless current_user && %w[superuser tenant_curator].include?(current_user.role)
+      return false unless current_user && %w[superuser curator tenant_curator].include?(current_user.role)
     end
 
     def require_admin
-      return if current_user && (%w[admin superuser tenant_curator].include?(current_user.role) ||
+      return if current_user && (%w[admin superuser curator tenant_curator].include?(current_user.role) ||
                                  current_user.journals_as_admin.present?)
 
       flash[:alert] = 'You must be an administrator to view this information.'
@@ -80,7 +80,7 @@ module StashEngine
     def require_in_progress_editor
       return if valid_edit_code? ||
                 resource.dataset_in_progress_editor.id == current_user.id ||
-                current_user.superuser?
+                current_user.curator?
 
       display_authorization_failure
     end
@@ -102,6 +102,10 @@ module StashEngine
 
     def admin?(resource:)
       resource&.admin_for_this_item?(user: current_user)
+    end
+
+    def curator?
+      current_user.present? && current_user.curator?
     end
 
     def superuser?
