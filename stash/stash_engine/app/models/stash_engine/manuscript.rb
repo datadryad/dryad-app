@@ -68,7 +68,7 @@ module StashEngine
       # once we receive a notification from the journal, we know that the manuscript is no longer in
       # review, so remove the hold_for_peer_review setting
       resource.update(hold_for_peer_review: false)
-      
+
       StashEngine::CurationActivity.create(resource: resource,
                                            status: target_status,
                                            user_id: 0,  # system user

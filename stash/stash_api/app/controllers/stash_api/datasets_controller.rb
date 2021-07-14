@@ -67,6 +67,10 @@ module StashApi
                    DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
                  end
             @stash_identifier = dp.parse
+
+            # By default, we select the peer review checkbox, since EM will be using the review URL
+            @stash_identifier.latest_resource.update(hold_for_peer_review: true)
+
             ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
             render json: em_reformat_response(ds.metadata), status: 201
           end
