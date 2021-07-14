@@ -17,7 +17,7 @@ namespace :zenodo do
         ON ids.id = cops.identifier_id
       WHERE ids.pub_state = 'published'
         AND cops.id IS NULL
-        AND ids.storage_size < 1e+50
+        AND ids.storage_size > 5e+10
       ORDER BY RAND()
       LIMIT #{max_feed_queue};
     SQL
