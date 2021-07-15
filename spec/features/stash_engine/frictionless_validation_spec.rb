@@ -65,23 +65,23 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
                      file_state: 'created')
     end
 
-    it 'shows N/A for non-tabular files' do
+    it 'shows Uploaded Too Large For Validation for non-tabular files' do
       @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf')
       sleep 1
       click_link 'Upload Files'
 
       within('table') do
-        expect(page).to have_content('N/A')
+        expect(page).to have_content('Uploaded Too Large For Validation')
       end
     end
 
-    it 'shows N/A for tabular files greater than the size limit' do
+    it 'shows Uploaded Too Large For Validation for tabular files greater than the size limit' do
       @file.update(upload_file_size: APP_CONFIG[:frictionless][:size_limit] + 1)
       sleep 1
       click_link 'Upload Files'
 
       within('table') do
-        expect(page).to have_content('N/A')
+        expect(page).to have_content('Uploaded Too Large For Validation')
       end
     end
 
