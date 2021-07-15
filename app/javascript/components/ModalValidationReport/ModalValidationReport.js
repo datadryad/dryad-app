@@ -16,15 +16,14 @@ class ModalValidationReport extends React.Component {
     render () {
         return (
             <div>
-                <dialog
-                    className="c-uploadmodal"
+                <dialog className="c-uploadmodal"
                         style={{
                             'width': '60%', 'max-width': '950px', 'min-width': '220px',
                             'zIndex': '100149', 'top': '50%'}}
                         open>
                     <div className="c-uploadmodal__header">
                         <h2 className="c-datasets-heading__heading o-heading__level1">Formatting Report: {this.props.file.sanitized_name}</h2>
-                        <button autofocus
+                        <button autoFocus
                                 className={classes.CloseButton}
                                 aria-label="close"
                                 type="button"
@@ -43,6 +42,7 @@ class ModalValidationReport extends React.Component {
                     </ol>
                     <div id="validation_report">
                     </div>
+                  <button onClick={(event) => this.props.clickedClose(event)}>Close</button>
                 </dialog>
                 <div className="backdrop" style={{'zIndex': '100148'}} />
             </div>
