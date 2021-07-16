@@ -46,7 +46,7 @@ export const TabularCheckStatus = {
     'issues': 'View Issues',
     'noissues': 'Passed',
     'na': 'Too Large For Validation',
-    'error': 'Validation Error'
+    'error': "Couldn't Read Tabular Data"
 }
 
 class UploadFiles extends React.Component {

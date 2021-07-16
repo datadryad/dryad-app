@@ -9,8 +9,8 @@ const badList = (props) => {
   let issueMsg = '';
 
   if(errorFiles.length > 0){
-    errorMsg = <div className="c-alert__text-lite">Our tabular format checker couldn't read {makeAndString(errorFiles)} correctly.
-      Please check that file is correctly formatted tabular data.
+    errorMsg = <div className="c-alert__text-lite">Our tabular format checker couldn't read tabular data from {makeAndString(errorFiles)}.
+      If you expect them to have consistent tabular data, check they are readable and formatted correctly.
     </div>;
   }
 
