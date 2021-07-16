@@ -13,7 +13,7 @@ const statusCss = (status) => {
         case TabularCheckStatus['noissues']:
             return classes.Passed
         case TabularCheckStatus['error']:
-            return classes.ValidationError
+            return classes.Passed
         default:
             return null
     }
