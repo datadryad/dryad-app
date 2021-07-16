@@ -41,6 +41,13 @@ const file = (props) => {
             </div>
           </div>;
           break;
+        case TabularCheckStatus['na']:
+          if (props.file.sanitized_name?.match(/csv$|xls$|xlsx$|json$/)) {
+            tabularInfo = props.file.tabularCheckStatus;
+          }else{
+            tabularInfo = '';
+          }
+          break;
         default:
           tabularInfo = props.file.tabularCheckStatus;
       }
