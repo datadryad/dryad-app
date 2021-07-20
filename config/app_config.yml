@@ -169,7 +169,8 @@ defaults: &DEFAULTS
     zenodo_size: 50_000_000_000
     files: 1000
   frictionless:
-    size_limit: 6291456
+    # 25 MB and below
+    size_limit: 25_000_000
 
 development: &DEVELOPMENT
   <<: *DEFAULTS

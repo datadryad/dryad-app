@@ -3404,14 +3404,15 @@ datalist {
 .o-link__primary, .o-link__secondary, .markdown_styles a, .t-landing__main a, .category-block .more_facets_link, .home-facet-link, .c-footer__policy-group a,
 .c-footer__social-group a, .c-latest__title, .c-orcid__id, .c-uploadtable a, .c-uploadtable button, .c-why-share__text-group a {
   color: #337ab7;
-  text-decoration: underline; }
+  /* text-decoration: underline; */ }
   .o-link__primary:hover, .o-link__secondary:hover, .markdown_styles a:hover, .t-landing__main a:hover, .category-block .more_facets_link:hover, .home-facet-link:hover, .c-footer__policy-group a:hover,
   .c-footer__social-group a:hover, .c-latest__title:hover, .c-orcid__id:hover, .c-uploadtable a:hover, .c-uploadtable button:hover, .c-why-share__text-group a:hover, .o-link__primary:focus, .o-link__secondary:focus, .markdown_styles a:focus, .t-landing__main a:focus, .category-block .more_facets_link:focus, .home-facet-link:focus, .c-footer__policy-group a:focus,
   .c-footer__social-group a:focus, .c-latest__title:focus, .c-orcid__id:focus, .c-uploadtable a:focus, .c-uploadtable button:focus, .c-why-share__text-group a:focus, .o-link__primary:visited:hover, .o-link__secondary:visited:hover, .markdown_styles a:visited:hover, .t-landing__main a:visited:hover, .category-block .more_facets_link:visited:hover, .home-facet-link:visited:hover, .c-footer__policy-group a:visited:hover,
   .c-footer__social-group a:visited:hover, .c-latest__title:visited:hover, .c-orcid__id:visited:hover, .c-uploadtable a:visited:hover, .c-uploadtable button:visited:hover, .c-why-share__text-group a:visited:hover, .o-link__primary:visited:focus, .o-link__secondary:visited:focus, .markdown_styles a:visited:focus, .t-landing__main a:visited:focus, .category-block .more_facets_link:visited:focus, .home-facet-link:visited:focus, .c-footer__policy-group a:visited:focus,
   .c-footer__social-group a:visited:focus, .c-latest__title:visited:focus, .c-orcid__id:visited:focus, .c-uploadtable a:visited:focus, .c-uploadtable button:visited:focus, .c-why-share__text-group a:visited:focus {
     color: #cf4817;
-    text-decoration: none; }
+    /* text-decoration: none; */
+    text-decoration: underline; }
   .o-link__primary:visited, .o-link__secondary:visited, .markdown_styles a:visited, .t-landing__main a:visited, .category-block .more_facets_link:visited, .home-facet-link:visited, .c-footer__policy-group a:visited,
   .c-footer__social-group a:visited, .c-latest__title:visited, .c-orcid__id:visited, .c-uploadtable a:visited, .c-uploadtable button:visited, .c-why-share__text-group a:visited {
     color: #883f88; }
@@ -3927,6 +3928,15 @@ html.no-details .o-showhide__summary {
   border: 1px solid #d12c1d;
   background-color: white;
   background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20294.995%20294.995%22%20width%3D%22512%22%20height%3D%22512%22%3E%3Cpath%20d%3D%22M291.874%20248.279L165.605%2026.526c-4.007-7.037-10.776-11.26-18.107-11.26s-14.101%204.202-18.107%2011.239L3.121%20248.238c-3.979%206.989-4.164%2015.013-.493%2021.326%203.67%206.313%2010.663%2010.165%2018.705%2010.165h252.329c8.042%200%2015.035-3.852%2018.705-10.165%203.671-6.313%203.487-14.296-.493-21.285zM146.665%2086.229c9.665%200%2017.5%207.835%2017.5%2017.5v63c0%209.665-7.835%2017.5-17.5%2017.5s-17.5-7.835-17.5-17.5v-63c0-9.665%207.835-17.5%2017.5-17.5zm.833%20117.776c9.665%200%2017.5%207.835%2017.5%2017.5s-7.835%2017.5-17.5%2017.5-17.5-7.835-17.5-17.5%207.835-17.5%2017.5-17.5z%22%20fill%3D%22%23D80027%22%2F%3E%3C%2Fsvg%3E'); }
+
+.c-alert--error-icon {
+  display: block;
+  padding-left: 20px;
+  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20294.995%20294.995%22%20width%3D%22512%22%20height%3D%22512%22%3E%3Cpath%20d%3D%22M291.874%20248.279L165.605%2026.526c-4.007-7.037-10.776-11.26-18.107-11.26s-14.101%204.202-18.107%2011.239L3.121%20248.238c-3.979%206.989-4.164%2015.013-.493%2021.326%203.67%206.313%2010.663%2010.165%2018.705%2010.165h252.329c8.042%200%2015.035-3.852%2018.705-10.165%203.671-6.313%203.487-14.296-.493-21.285zM146.665%2086.229c9.665%200%2017.5%207.835%2017.5%2017.5v63c0%209.665-7.835%2017.5-17.5%2017.5s-17.5-7.835-17.5-17.5v-63c0-9.665%207.835-17.5%2017.5-17.5zm.833%20117.776c9.665%200%2017.5%207.835%2017.5%2017.5s-7.835%2017.5-17.5%2017.5-17.5-7.835-17.5-17.5%207.835-17.5%2017.5-17.5z%22%20fill%3D%22%23D80027%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: left 8px;
+  background-size: 20px;
+  color: white; }
 
 .c-alert__text-lite {
   color: #d12c1d; }
@@ -5558,7 +5568,8 @@ ul.c-text_styles strong {
   border: none;
   background-color: transparent;
   color: #005581;
-  font-weight: bold; }
+  font-weight: bold;
+  text-decoration: none; }
 
 .c-upload__no-files-text {
   margin: 0 0 10px;

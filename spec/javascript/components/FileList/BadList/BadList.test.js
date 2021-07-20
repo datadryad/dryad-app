@@ -22,7 +22,7 @@ afterEach(() => {
 });
 
 describe('BadList', () => {
-  it("displays errors if couldn't read a file", () => {
+  it("displays if couldn't read a file", () => {
     const testBad = [
       {
         "upload_file_name": "cat.csv",
@@ -36,7 +36,7 @@ describe('BadList', () => {
       ReactDOM.render(<BadList chosenFiles={testBad} />, container);
     });
 
-    expect(container.textContent).toContain("couldn't read cat.csv");
+    expect(container.textContent).toContain("couldn't read tabular data from cat.csv");
   });
 
   it("displays issues if they are present", () => {
