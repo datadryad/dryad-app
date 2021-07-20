@@ -6,7 +6,7 @@
         remote: true do |f| %>
     <%= hidden_field_tag :log_page, 'true' %>
     <div class="c-input">
-      <label class="c-input__label" for="curation_activity[note]">Notes</label>
+      <label class="c-input__label" for="curation_activity_note">Notes</label>
       <%= f.text_area(:note, class: 'c-input__textarea') %>
     </div>
     <%= f.hidden_field :resource_id %>
