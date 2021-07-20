@@ -13,7 +13,7 @@ const statusCss = (status) => {
         case TabularCheckStatus['noissues']:
             return classes.Passed
         case TabularCheckStatus['error']:
-            return classes.ValidationError
+            return classes.Passed
         default:
             return null
     }
@@ -35,10 +35,18 @@ const file = (props) => {
             jsReport = JSON.parse(props.file.frictionless_report.report);
           }catch(e){ console.log(e) }
           tabularInfo = <div style={{display: 'flex', alignItems: 'center'}}>
-                <img src="../../../images/emblem-important.png" alt="Warning icon" style={{padding: 0, width: '1.5rem'}} />
+            <div className="c-alert--error-icon">
                 <button className="o-button__plain-text5" onClick={props.clickValidationReport}
                         type="button" style={{padding: '10px'}}>View {jsReport?.report?.stats?.errors} Issues</button>
-              </div>;
+            </div>
+          </div>;
+          break;
+        case TabularCheckStatus['na']:
+          if (props.file.sanitized_name?.match(/csv$|xls$|xlsx$|json$/)) {
+            tabularInfo = props.file.tabularCheckStatus;
+          }else{
+            tabularInfo = '';
+          }
           break;
         default:
           tabularInfo = props.file.tabularCheckStatus;
@@ -60,7 +68,11 @@ const file = (props) => {
             <td>{capitalize(props.file.uploadType)}</td>
             <td>{props.file.sizeKb}</td>
             { props.removingIndex !== props.index ?
-                <td><button onClick={props.clickRemove} type="button">Remove</button></td> :
+                <td>
+                  <button onClick={props.clickRemove} type="button" className="c-upload__button">
+                    Remove
+                  </button>
+                </td> :
                 <td style={{padding: 0, width: '74px'}}>
                     <div>
                         <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />

@@ -45,6 +45,16 @@
 	background-image: inline('../images/icon_warning.svg');
 }
 
+.c-alert--error-icon {
+	display: block;
+	padding-left: 20px;
+	background-image: inline('../images/icon_warning.svg');
+	background-repeat: no-repeat;
+	background-position: left 8px;
+	background-size: 20px;
+	color: $design-white-color;
+}
+
 .c-alert__text {
 	// empty
 }
