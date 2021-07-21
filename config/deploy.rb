@@ -1,4 +1,3 @@
-
 require "uc3-ssm"
 
 # config valid only for current version of Capistrano
@@ -15,6 +14,8 @@ set :default_env,      { path: "$PATH" }
 
 # Gets the current Git tag and revision
 set :version_number, `git describe --tags`
+
+set :migration_role, :app
 
 # Default value for linked_dirs is []
 append :linked_dirs,
