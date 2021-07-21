@@ -55,9 +55,9 @@ module StashApi
       respond_to do |format|
         format.any do
           if @stash_identifier&.first_submitted_resource.present?
-            # Once the dataset has been submitted by an author, only update the status and manuscript number,
-            # but don't actually process the metadata from EM
-            em_response = em_update_status
+            # Once the dataset has been submitted by an author, only update selected fields,
+            # but don't fully process the metadata from EM
+            em_response = em_update_selected_fields
             status_code = em_response[:status] == 'Success' ? 200 : 403
             render json: em_response, status: status_code
           else
@@ -67,6 +67,10 @@ module StashApi
                    DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
                  end
             @stash_identifier = dp.parse
+
+            # By default, we select the peer review checkbox, since EM will be using the review URL
+            @stash_identifier.latest_resource.update(hold_for_peer_review: true)
+
             ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
             render json: em_reformat_response(ds.metadata), status: 201
           end
@@ -74,10 +78,14 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def em_update_status
-      # If manuscript number is available, update it
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    def em_update_selected_fields
+      logger.debug('em_update_selected_fields')
+
+      fields_changed = []
       art_params = params['article']
+
+      # If manuscript number is available, update it
       manu = art_params['manuscript_number'] unless art_params.blank?
       if manu.present?
         datum = StashEngine::InternalDatum.where(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber').first
@@ -86,40 +94,65 @@ module StashApi
         else
           StashEngine::InternalDatum.create(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber', value: manu)
         end
+        fields_changed << 'Manuscript Number'
+      end
+
+      # Add funding info if it was not added by the submitter
+      if @resource.contributors.blank? && art_params['funding_information'].present?
+        art_params['funding_information'].each do |f|
+          @resource.contributors << StashDatacite::Contributor.create(contributor_name: f['funder'],
+                                                                      contributor_type: 'funder', award_number: f['award_number'])
+        end
+        fields_changed << 'Funders'
+      end
+
+      # Add keywords if they were not added by the submitter
+      if @resource.subjects.blank? && art_params['keywords'].present?
+        @resource.subjects.clear
+        art_params['keywords'].each do |kw|
+          subs = StashDatacite::Subject.where(subject: kw)
+          sub = if subs.blank?
+                  StashDatacite::Subject.create(subject: kw)
+                else
+                  subs.first
+                end
+          @resource.subjects << sub
+        end
+        fields_changed << 'Keywords'
+      end
+
+      # Update curation note about what was changed
+      if fields_changed.present?
+        @resource.curation_activities <<
+          StashEngine::CurationActivity.create(user_id: @user.id,
+                                               status: @resource.current_curation_status,
+                                               note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}")
       end
 
       # If final_disposition is available, update the status of this dataset
       disposition = params['article']['final_disposition']
-      unless disposition && (@resource.current_curation_status == 'peer_review')
-        return {
-          deposit_id: @stash_identifier.identifier,
-          deposit_doi: @stash_identifier.identifier,
-          deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
-          deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
-          error_message: 'Once the Dryad dataset has been edited by a user, metadata updates are not allowed ' \
-                         'via the Editorial Manager API. You may, however, submit an update with a change to ' \
-                         'the final_disposition for a dataset that has previously been in peer_review status.',
-          status: 'Error'
-        }
+      if disposition.present? && (@resource.current_curation_status == 'peer_review')
+        if disposition.downcase == 'accept'
+          # article is accepted -> transition peer_review to curation
+          @resource.curation_activities <<
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
+                                                 note: 'updating status based on API notification from Editorial Manager')
+        else
+          # any other article disposition -> transition peer_review to action_required
+          @resource.curation_activities <<
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
+                                                 note: 'updating status based on API notification from Editorial Manager')
+        end
       end
 
-      if disposition.downcase == 'accept'
-        # article is accepted -> transition peer_review to curation
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
-                                               note: 'updating status based on API notification from Editorial Manager journal')
-      else
-        # any other article disposition -> transition peer_review to action_required
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
-                                               note: 'updating status based on API notification from Editorial Manager journal')
-      end
-
+      sharing_link = @stash_identifier&.shares&.first&.sharing_link ||
+                     "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
-        deposit_url: "/api/v2/datasets/#{CGI.escape(@se_identifier.to_s)}",
-        deposit_edit_url: "/stash/edit/#{CGI.escape(@se_identifier.to_s)}/#{@se_identifier&.edit_code}",
+        deposit_url: sharing_link,
+        deposit_edit_url: "#{request.protocol}#{request.host_with_port}" \
+                          "/stash/edit/#{CGI.escape(@stash_identifier.to_s)}/#{@stash_identifier&.edit_code}",
         status: 'Success'
       }
     end
@@ -128,8 +161,10 @@ module StashApi
     def em_reformat_request
       em_params = {}.with_indifferent_access
 
+      # EM doesn't set an item owner, so default it to system, and the actual user will need to claim it
+      em_params['userId'] = 0
+
       em_params['publicationName'] = params['journal_full_title']
-      em_params['title'] = params['deposit_data']['deposit_description'] if params['deposit_data']
       art_params = params['article']
       if art_params
         if art_params['article_doi']
@@ -145,9 +180,9 @@ module StashApi
         em_params['abstract'] = art_params['abstract']
         keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
         em_params['keywords'] = keywords if keywords
-        if art_params['funding_source']
+        if art_params['funding_information']
           em_funders = []
-          art_params['funding_source'].each do |f|
+          art_params['funding_information'].each do |f|
             em_funders << {
               organization: f['funder'],
               awardNumber: f['award_number']
@@ -156,6 +191,7 @@ module StashApi
           em_params['funders'] = em_funders
         end
       end
+      em_params['title'] = params['deposit_data']['deposit_description'] if params['deposit_data']
       em_params['manuscriptNumber'] ||= params['document_id'] || 'EM-DEPOSIT'
 
       em_authors = []
@@ -184,17 +220,16 @@ module StashApi
       em_params['authors'] = em_authors if em_authors.present?
       em_params
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata)
-      deposit_url = (request.protocol + request.host_with_port + metadata[:_links][:self][:href] if metadata[:_links][:self][:href])
+      sharing_link = @stash_identifier.shares&.first&.sharing_link
       edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
-
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
-        deposit_url: deposit_url,
+        deposit_url: sharing_link,
         deposit_edit_url: edit_url,
         deposit_upload_url: edit_url,
         status: 'Success'

@@ -101,7 +101,7 @@ module StashEngine
         # params are params from the form.
         # The tenant, if set, does two things in conjunction.  it limits to items with a tenant_id of the tenant OR
         # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
-        # tenant is only set for admins (not superusers).
+        # tenant is only set for tenant admins (not superusers or curators).
         # The journals, if set, limits to items associated with one of the given journals.
         #
         # if resource_id is set then only returns that resource id

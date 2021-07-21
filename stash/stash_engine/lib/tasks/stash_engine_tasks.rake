@@ -262,6 +262,54 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of the curation timeline for each dataset'
+  task curation_timeline_report: :environment do
+    launch_day = Date.new(2019, 9, 17)
+    datasets = StashEngine::Identifier.publicly_viewable.where(created_at: launch_day..Date.today)
+    CSV.open('curation_timeline_report.csv', 'w') do |csv|
+      csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
+      datasets.each do |i|
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        created_date_str = i.created_at&.strftime('%Y-%m-%d')
+        next unless i.resources.submitted.present?
+
+        curation_start_date = i.resources.submitted.each do |r|
+          break r.curation_start_date if r.curation_start_date.present?
+        end
+        next unless curation_start_date > launch_day
+
+        curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
+
+        times_curated = 0
+        in_curation = false
+        i.resources.each do |r|
+          r.curation_activities.each do |ca|
+            if in_curation && %w[embargoed withdrawn published action_required].include?(ca.status)
+              # detect moves from in_curation to out
+              in_curation = false
+            elsif !in_curation && %w[curation].include?(ca.status)
+              # detect and count moves from out of curation to in_curation
+              in_curation = true
+              times_curated += 1
+            end
+          end
+        end
+
+        # Skip datasets that bypassed the normal curation process. These are mostly items that
+        # had problems during the migration from the v1 server, so they were "created" after
+        # launch day, even though they are actually older items.
+        next unless times_curated > 0
+
+        num_files = i.latest_resource.data_files.size
+
+        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
+
+        csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
+                i.storage_size, num_files, file_formats]
+      end
+    end
+  end
+
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
     # Get the year-month specified in YEAR_MONTH environment variable.
@@ -272,12 +320,18 @@ namespace :identifiers do
     else
       year_month = ENV['YEAR_MONTH']
     end
+
     p "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID InstitutionName
-                JournalName SponsorName]
-      StashEngine::Identifier.publicly_viewable.each do |i|
+                JournalName JournalISSN SponsorName]
+
+      # Limit the query to datasets that existed at the time of the target report,
+      # and have been updated the within the month of the target.
+      limit_date = Date.parse("#{year_month}-01")
+      limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
+      StashEngine::Identifier.publicly_viewable.where(limit_date_filter).each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
 
@@ -288,12 +342,107 @@ namespace :identifiers do
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
         csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
-                i.publication_name, i.journal&.sponsor_name]
+                i.publication_name, i.publication_issn, i.journal&.sponsor&.name]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
   end
+
+  desc 'Generate reports of items that should be billed for deferred journals'
+  task deferred_journal_reports: :environment do
+    # Get the input shopping cart report in SC_REPORT environment variable.
+    if ENV['SC_REPORT'].blank?
+      puts 'Usage: deferred_journal_reports SC_REPORT=<shopping_cart_report_filename>'
+      exit
+    else
+      sc_report_file = ENV['SC_REPORT']
+      puts "Producing deferred journal reports for #{sc_report_file}"
+    end
+
+    sc_report = CSV.parse(File.read(sc_report_file), headers: true)
+
+    md = /(.*)shopping_cart_report_(.*).csv/.match(sc_report_file)
+    time_period = nil
+    prefix = ''
+    deferred_filename = 'deferred_summary.csv'
+    if md.present? && md.size > 1
+      prefix = md[1]
+      time_period = md[2]
+      deferred_filename = "#{md[1]}#{time_period}_deferred_summary.csv"
+    end
+
+    puts "Writing summary report to #{deferred_filename}"
+    CSV.open(deferred_filename, 'w') do |csv|
+      csv << %w[SponsorName JournalName Count]
+      curr_sponsor = nil
+      sponsor_summary = []
+      StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
+        if j.sponsor&.name != curr_sponsor
+          write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+          sponsor_summary = []
+          curr_sponsor = j.sponsor&.name
+        end
+        journal_item_count = 0
+        sc_report.each do |item|
+          if item['JournalISSN'] == j.issn
+            journal_item_count += 1
+            sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
+          end
+        end
+        csv << [j.sponsor&.name, j.title, journal_item_count]
+      end
+      write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+    end
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
+  # rubocop:disable Metrics/MethodLength
+  def write_sponsor_summary(name:, file_prefix:, report_period:, table:)
+    return if name.blank? || table.blank?
+
+    filename = "#{file_prefix}deferred_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"
+    puts "Writing sponsor summary to #{filename}"
+    table_content = ''
+    table.each do |row|
+      table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td></tr>"
+    end
+    html_content = <<-HTMLEND
+      <head><style>
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+      th {
+          background-color: #005581;
+          color: white;
+          text-align: left;
+          padding: 10px;
+      }
+      td {
+          padding: 10px;
+      }
+      </style></head>
+      <h1>#{name}</h1>
+      <p>Dryad submissions accepted under a deferred payment plan.<br/>
+      Reporting period: #{report_period}<br/>
+      Report generated on: #{Date.today}</p>
+      <table>
+       <tr><th width="25%">DOI</th>
+           <th width="55%">Journal Name</th>
+           <th width="20%">Approval Date</th></tr>
+       #{table_content}
+      </table>
+    HTMLEND
+
+    pdf = WickedPdf.new.pdf_from_string(html_content)
+    File.open(filename, 'wb') do |file|
+      file << pdf
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
 
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report: :environment do

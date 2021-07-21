@@ -175,7 +175,7 @@ module Stash
           copy_record = res.zenodo_copies.where('copy_type like ?', "#{@dataset_type}%").first
           if copy_record.nil? || copy_record.state != 'finished'
             raise ZE, "identifier_id #{@resource.identifier.id}: Cannot replicate a later version until earlier " \
-              'versions with files have replicated. An earlier is missing or incomplete in the ZenodoCopies table.'
+              "versions with files have replicated. Resource id #{res.id} is incomplete or not present in the ZenodoCopies table."
           end
         end
       end

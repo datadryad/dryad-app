@@ -32,6 +32,12 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('Admin Dashboard')
       end
 
+      it 'is accessible by curators' do
+        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
+        visit dashboard_path
+        expect(page).to have_text('Admin Dashboard')
+      end
+
       it 'is accessible by super users' do
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit dashboard_path
@@ -68,14 +74,14 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(all('.c-lined-table__row').length).to eql(2)
       end
 
-      it 'lets superusers see all datasets' do
-        sign_in(create(:user, role: 'superuser'))
+      it 'lets curators see all datasets' do
+        sign_in(create(:user, role: 'curator'))
         visit dashboard_path
         expect(all('.c-lined-table__row').length).to eql(6)
       end
 
       it 'has ajax showing counter stats and citations', js: true do
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
         el = find('td', text: @identifiers.first.resources.first.title)
         el = el.first(:xpath, './following-sibling::td').find(:css, '.js-stats')
@@ -88,7 +94,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'generates a csv having dataset information with citations, views and downloads' do
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
         click_link('Get Comma Separated Values (CSV) for import into Excel')
 
@@ -104,7 +110,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'generates a csv that includes submitter institutional name' do
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
         click_link('Get Comma Separated Values (CSV) for import into Excel')
 
@@ -158,7 +164,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
         @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit "#{dashboard_path}?curation_status=curation"
       end
 

@@ -3,8 +3,8 @@ require 'delayed_job_active_record'
 
 Delayed::Worker.destroy_failed_jobs = false
 Delayed::Worker.sleep_delay = 60
-Delayed::Worker.max_attempts = 2
-Delayed::Worker.max_run_time = 6.hours
+Delayed::Worker.max_attempts = 1 # fail for now because trying again during a time of unreliablity doesn't help
+Delayed::Worker.max_run_time = 24.hours
 # Was going to change, but looks like read ahead is ignored for MySQL and if using priority, anyway.
 # https://stackoverflow.com/questions/35734246/how-does-priority-interact-with-read-ahead-in-delayed-job
 Delayed::Worker.read_ahead = 5

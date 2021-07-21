@@ -20,7 +20,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_tenant!
     ignore_zenodo!
     neuter_curation_callbacks!
-    @curator = create(:user, role: 'superuser')
+    @curator = create(:user, role: 'curator')
     @author = create(:user)
     @document_list = []
   end
