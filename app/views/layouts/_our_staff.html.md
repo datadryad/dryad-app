@@ -69,14 +69,6 @@
 </div>
 
 <div class="bio">
-    <img src="/images/NJacobs.jpg" alt="Nate Jacobs" title="Nate Jacobs">
-  <p><strong>Nate Jacobs</strong>, PhD Neuroscience <br/>
-  Data Curator<br/>
-  Nate has a background in systems neuroscience, open science advocacy, and technology startups. He graduated with a PhD from the University of California, Irvine. He is the founder and CEO of the micropublishing startup flashpub.io. When he’s not plotting the next revolution in scholarly communication, Nate enjoys surfing, espresso, and creative writing.</p>
-</div>
-
-
-<div class="bio">
     <img src="/images/MKenney.jpg" alt="Mariah Kenney" title="Mariah Kenney">
   <p><strong>Mariah Kenney</strong>, M.Sc. in Ecology and Evolutionary
     biology<br/>
@@ -94,13 +86,6 @@
     the COVID-19 pandemic. Outside of academics, Anna enjoys hanging out with
     friends, drinking boba, and playing badminton.
 	</p>
-</div>
-
-<div class="bio">
-    <img src="/images/Dryad_logo_square_transparent.png" alt="Sasha Mushegian" title="Sasha Mushegian">
-  <p><strong>Sasha Mushegian</strong>, PhD Zoology<br/>
-  Data Curator<br/>
-  Sasha has a background in ecology and evolution experience and graduated with a PhD from the University of Basel. In addition to her work for Dryad, she is a postdoctoral researcher in ecological genomics. In her free time, Sasha enjoys reading and hiking.</p>
 </div>
 
 <div class="bio">

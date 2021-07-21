@@ -10,7 +10,7 @@
     <% if current_user && %w[development test local_dev].include?(Rails.env) %>
       <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant&.tenant_id %>]</span>
     <% end %>
-    <% if current_user && current_user.role == 'superuser' %>
+    <% if current_user && current_user.curator? %>
       <div class="c-header__nav-item">
         <div class="o-sites">
           <details class="o-showhide o-sites__details" role="group">
@@ -19,10 +19,12 @@
 		<%= link_to 'Dataset Curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'o-sites__group-item' %>
 		<%= link_to 'Curation Stats', stash_url_helpers.curation_stats_path, class: 'o-sites__group-item' %>
 		<%= link_to 'Journals', stash_url_helpers.journals_path, class: 'o-sites__group-item' %>
-              <%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
-              <%= link_to 'Status Dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
-              <%= link_to 'Submission Queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true), class: 'o-sites__group-item' %>
-              <%= link_to 'Zenodo Submissions', stash_url_helpers.zenodo_queue_path, class: 'o-sites__group-item' %>
+		<%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
+		<% if current_user.superuser? %>
+		    <%= link_to 'Status Dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
+		    <%= link_to 'Submission Queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true), class: 'o-sites__group-item' %>
+		    <%= link_to 'Zenodo Submissions', stash_url_helpers.zenodo_queue_path, class: 'o-sites__group-item' %>
+		<% end %>
             </div>
           </details>
         </div>

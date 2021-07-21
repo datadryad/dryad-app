@@ -175,6 +175,12 @@ module StashEngine
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
+      it 'returns true if curator' do
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        @user.role = 'curator'
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
       it 'returns false if admin for different tenant' do
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
         @user.role = 'admin'
@@ -395,12 +401,12 @@ module StashEngine
         expect(@resource.may_download?(ui_user: @resource.user)).to be true
       end
 
-      it 'returns true if being viewed by a superuser' do
+      it 'returns true if being viewed by a curator' do
         @resource.identifier.update(pub_state: 'unpublished')
         @resource.update(file_view: false)
         @resource.reload
-        a_superuser = User.create(role: 'superuser')
-        expect(@resource.may_download?(ui_user: a_superuser)).to be true
+        a_curator = User.create(role: 'curator')
+        expect(@resource.may_download?(ui_user: a_curator)).to be true
       end
 
       it 'returns true if being viewed by a journal admin' do
@@ -477,10 +483,10 @@ module StashEngine
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
 
-      it 'allows superuser to view anything' do
+      it 'allows curator to view anything' do
         @identifier.update(pub_state: 'unpublished')
         @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
-        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'superuser')
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'curator')
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
     end
@@ -1326,7 +1332,7 @@ module StashEngine
         before(:each) do
           # user has only user permission and is part of the UCOP tenant
           @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
-          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
+          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
           @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
           @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
                         create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
@@ -1417,7 +1423,7 @@ module StashEngine
             @resources[2].update(identifier_id: @identifier.id)
           end
 
-          it 'shows all resources for the identifier to the superuser' do
+          it 'shows all resources for the identifier to the curator' do
             resources = @identifier.resources.visible_to_user(user: @user3)
             expect(resources.count).to eq(3)
           end

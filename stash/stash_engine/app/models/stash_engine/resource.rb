@@ -220,7 +220,7 @@ module StashEngine
     scope :visible_to_user, ->(user:) do
       if user.nil?
         with_visibility(states: %w[published embargoed])
-      elsif user.superuser?
+      elsif user.curator?
         all
       else
         tenant_admin = (user.tenant_id if user.role == 'admin')
@@ -552,13 +552,13 @@ module StashEngine
 
     # can edit means they are not locked out because edits in progress and have permission
     def can_edit?(user:)
-      permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.superuser?)
+      permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.curator?)
     end
 
     def admin_for_this_item?(user: nil)
       return false if user.nil?
 
-      user.superuser? ||
+      user.curator? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
@@ -570,7 +570,7 @@ module StashEngine
     def permission_to_edit?(user:)
       return false unless user
 
-      # superuser, dataset owner or admin for the same tenant
+      # cuartor, dataset owner or admin for the same tenant
       admin_for_this_item?(user: user)
     end
 

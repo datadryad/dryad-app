@@ -6,10 +6,10 @@ module StashEngine
     include SharedSecurityController
     helper SortableTableHelper
 
-    before_action :require_superuser
+    before_action :require_curator
     before_action :setup_paging, only: [:index]
 
-    # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
+    # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
       proposed_changes = StashEngine::ProposedChange.includes(identifier: :resources)
         .joins(identifier: :resources).where(approved: false, rejected: false)

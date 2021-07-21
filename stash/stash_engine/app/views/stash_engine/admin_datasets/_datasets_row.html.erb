@@ -28,7 +28,7 @@
     <% end %>
   </td>
   <td class="c-admin-hide-border-left">
-      <% if (%w[superuser tenant_curator].include?(current_user.role) &&
+      <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
 	     dataset.resource&.permission_to_edit?(user: current_user) &&
 	     dataset.resource_state == 'submitted') %>
       <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',
@@ -66,7 +66,7 @@
   <!-- Curation -->
   <td class="c-admin-hide-border-right" id="js-curation-activity-user-<%= dataset.identifier_id %>"><%= dataset.editor_name %></td>
   <td class="c-admin-hide-border-left">
-      <% if (%w[superuser tenant_curator].include?(current_user.role) &&
+      <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
 	     dataset.resource&.permission_to_edit?(user: current_user) &&
              dataset.resource.curatable?) %>
 	  <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets',

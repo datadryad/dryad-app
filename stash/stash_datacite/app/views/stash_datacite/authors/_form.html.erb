@@ -32,7 +32,7 @@
 	author.author_orcid.blank? &&
 	author.author_email.present? &&
 	author.resource.identifier.pub_state == 'published' &&
-	current_user&.role == 'superuser'
+	current_user&.curator?
     %>
 	<span>
 	    Link to associate ORCID: <%= author.orcid_invite_path %>

@@ -11,7 +11,7 @@ module Stash
     module ZenodoConnection
 
       SLEEP_TIME = 15
-      RETRY_LIMIT = 20
+      RETRY_LIMIT = 5
       ZENODO_PADDING_TIME = 2
 
       # checks that can access API with token and return boolean
@@ -22,7 +22,6 @@ module Stash
         false
       end
 
-      # rubocop:disable Metrics/AbcSize
       def self.standard_request(method, url, **args)
         retries = 0
 
@@ -33,7 +32,7 @@ module Stash
         begin
           resp = nil
           http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-            .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
+            .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
 
           my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
@@ -67,7 +66,6 @@ module Stash
           # rubocop:enable Style/GuardClause
         end
       end
-      # rubocop:enable Metrics/AbcSize
 
       # NOTE: Alex suggested we use a URL like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22
       # to do lookups by DOIs to see they exist before proceeding with a retry on a POST request.

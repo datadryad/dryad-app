@@ -25,6 +25,7 @@ including universities, research institutions and academic libraries. See more a
         <li>Kyoto University</li>
         <li>Lawrence Berkeley National Lab</li>
         <li>Macquarie University</li>
+        <li>Michigan State University</li>
         <li>Montana State University</li>
         <li>Netherlands Institute of Ecology (NIOO-KNAW)</li>
         <li>North Carolina State University</li>
@@ -32,12 +33,12 @@ including universities, research institutions and academic libraries. See more a
         <li>Pitzer College</li>
         <li>Pomona College</li>
         <li>Scripps College</li>
-        <li>Stanford University</li>  
       </ul>
     </td>
     <td>
       <ul>
-       <li>Texas Tech University</li>
+        <li>Stanford University</li> 
+        <li>Texas Tech University</li>
         <li>University of California, California Digital Library</li>
         <li>UC Berkeley</li>
         <li>UC Davis</li>

@@ -1,11 +1,10 @@
 
-
 Status Dashboard
 ==================
 
 The status dashboard allows monitoring of the various services that
 are required for Dryad to run, both internal and external. The status dashboard
-is only viewable to superusers.
+is only viewable to curators.
 
 To add a new checker:
 - add a checker to `stash/stash_engine/app/services/stash_engine/status_dashboard/`
