@@ -15,7 +15,8 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-console.log('Hello World from Webpacker')
+import '@cdl-dryad/frictionless-components/dist/frictionless-components.css'
+
 // Support component names relative to this directory:
 var componentRequireContext = require.context("containers", true);
 var ReactRailsUJS = require("react_ujs");
