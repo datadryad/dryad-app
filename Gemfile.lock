@@ -991,7 +991,7 @@ DEPENDENCIES
   web-console
   webdrivers
   webmock
-  webpacker
+  webpacker (~> 5.4.0)
   wicked_pdf
   wkhtmltopdf-binary
   yui-compressor

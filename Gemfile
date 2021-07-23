@@ -10,7 +10,7 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 gem 'react-rails', '~> 2.6.1'
-gem 'webpacker'
+gem 'webpacker', '~> 5.4.0'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
