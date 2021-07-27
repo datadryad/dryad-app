@@ -61,7 +61,8 @@
   border: 1px solid $design-dark-gray-color;
 }
 
-.c-lined-table__head>th {
+/* .c-lined-table__head>th */
+th.c-admin-table {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid $design-dark-gray-color;

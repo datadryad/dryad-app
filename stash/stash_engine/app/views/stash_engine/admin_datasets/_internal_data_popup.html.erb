@@ -10,7 +10,7 @@
       <%= f.select(:data_type, options_for_select( @options, @internal_datum.data_type), {}, { disabled: ( params[:sub_method] == 'put' ) } ) %>
     </div>
     <div class="c-input">
-      <label class="c-input__label">Value</label>
+      <label class="c-input__label" for="internal_datum_value">Value</label>
       <%= f.text_area(:value, class: 'c-input__textarea') %>
     </div>
     <%= f.submit 'Submit' %>
