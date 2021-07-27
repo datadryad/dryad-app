@@ -8,5 +8,10 @@
     remote:        data-remote
 -%>
 <span class="page<%= ' current' if page.current? %>">
-  <%= link_to_unless page.current?, page, url, {:remote => remote, :rel => page.next? ? 'next' : page.prev? ? 'prev' : nil} %>
+  <% if page.current? %>
+    <span aria-label="Current page, page <%= page %>" aria-current="true"><%= page %></span>
+  <% else %>
+    <%= link_to page, url, {:remote => remote, :rel => (page.next? ? 'next' : page.prev? ? 'prev' : nil), 'aria-label': "Go to page #{page}"} %>
+  <% end %>
+
 </span>
