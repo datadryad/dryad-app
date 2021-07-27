@@ -132,8 +132,9 @@ module StashDatacite
     def self.set_latest_zenodo_relations(resource:)
       resource.related_identifiers.where(added_by: 'zenodo').destroy_all
 
+      # software file relation
       sfw_copy = resource.zenodo_copies.software.first
-      if resource.software_files.present_files.count.positive?
+      if sfw_copy&.software_doi.present? && resource.software_files.present_files.count.positive?
         doi = standardize_doi(sfw_copy.software_doi)
         create(related_identifier: doi,
                related_identifier_type: 'doi',
@@ -144,9 +145,10 @@ module StashDatacite
                added_by: 'zenodo')
       end
 
-      return unless resource.supp_files.present_files.count.positive?
-
+      # supplemental file relations
       supp_copy = resource.zenodo_copies.supp.first
+
+      return unless supp_copy&.software_doi.present? && resource.supp_files.present_files.count.positive?
 
       doi = standardize_doi(supp_copy.software_doi)
       create(related_identifier: doi,
