@@ -10,7 +10,7 @@
   <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
 <% end %>
 <%= paginator.render do -%>
-  <nav class="pagination">
+  <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
     <% unless params[:show_all] == false %>
       <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
     <% end %>

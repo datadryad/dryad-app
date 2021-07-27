@@ -3730,19 +3730,19 @@ html.no-details .o-showhide__summary {
 
 @media (min-width: 870px) {
   .o-sites__subgroup-item {
+    padding: 10px 10px 10px 30px;
     border-right: 1px solid #9d9fa2;
-    border-left: 1px solid #9d9fa2;
-    padding: 10px 10px 10px 30px; }
+    border-left: 1px solid #9d9fa2; }
     .o-sites__subgroup-item:hover, .o-sites__subgroup-item:focus {
       color: #cf4817;
       text-decoration: underline; } }
 
 @media (min-width: 870px) {
   .o-sites__subgroup-lastitem {
+    padding: 10px 10px 10px 30px;
     border-right: 1px solid #9d9fa2;
-    border-left: 1px solid #9d9fa2;
     border-bottom: 1px solid #9d9fa2;
-    padding: 10px 10px 10px 30px; }
+    border-left: 1px solid #9d9fa2; }
     .o-sites__subgroup-lastitem:hover, .o-sites__subgroup-lastitem:focus {
       color: #cf4817;
       text-decoration: underline; } }
@@ -5284,6 +5284,19 @@ html.no-details .o-showhide__summary {
 .c-space-paginator {
   margin: 15px 0; }
 
+.screen-reader-only {
+  position: absolute;
+  top: auto;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden; }
+
+.c-admin-table-header__hidden {
+  overflow: hidden;
+  border-width: 0 1px 0 0;
+  border-color: black; }
+
 .c-admin-table__user-campus {
   width: 27%; }
 
@@ -5298,6 +5311,20 @@ html.no-details .o-showhide__summary {
 
 .c-admin-table__user-last-login {
   width: 20%; }
+
+/* this cascading is to get it to override a style from hell I can't get rid of */
+.c-lined-table__head > th.c-admin-hide-border-right {
+  padding: 8px;
+  border-collapse: collapse;
+  border: 1px solid #4e5050;
+  border-right: none;
+  font-weight: bold;
+  text-align: left; }
+
+.c-lined-table__head > th.c-admin-hide-border-left {
+  border-collapse: collapse;
+  border: 1px solid #4e5050;
+  border-left: none; }
 
 .c-lined-table__row > td.c-admin-hide-border-right {
   border-right: none; }
@@ -5621,7 +5648,8 @@ img.c-upload__spinner {
   border-collapse: collapse;
   border: 1px solid #4e5050; }
 
-.c-lined-table__head > th {
+/* .c-lined-table__head>th */
+th.c-admin-table {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid #4e5050;
