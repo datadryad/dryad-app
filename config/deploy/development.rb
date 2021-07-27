@@ -9,6 +9,7 @@
 
 set :rails_env, "development"
 set :passenger_pool, '6'
+set :special_login, ' TEST_LOGIN=true '
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost1 localhost2' bundle exec cap development deploy
