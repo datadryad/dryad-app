@@ -12,6 +12,7 @@ import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
 import Instructions from '../components/Instructions/Instructions';
 import WarningMessage from '../components/WarningMessage/WarningMessage';
+import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
