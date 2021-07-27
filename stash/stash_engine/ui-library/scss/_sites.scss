@@ -143,9 +143,9 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
+    padding: 10px 10px 10px 30px;
     border-right: 1px solid $design-light-gray-color;
     border-left: 1px solid $design-light-gray-color;
-    padding: 10px 10px 10px 30px;
 
     &:hover,
     &:focus {
@@ -160,10 +160,10 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
-    border-right: 1px solid $design-light-gray-color;
-    border-left: 1px solid $design-light-gray-color;
-    border-bottom: 1px solid $design-light-gray-color;
     padding: 10px 10px 10px 30px;
+    border-right: 1px solid $design-light-gray-color;
+    border-bottom: 1px solid $design-light-gray-color;
+    border-left: 1px solid $design-light-gray-color;
 
     &:hover,
     &:focus {
