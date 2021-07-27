@@ -182,6 +182,7 @@ module StashApi
         expect(res.authors.first.author_last_name).to eq(hsh[:authors].first[:last_name])
         expect(res.authors.first.author_orcid).to eq(hsh[:authors].first[:orcid])
         expect(res.authors.first.author_email).to eq(hsh[:authors].first[:email])
+        expect(output[:deposit_upload_url]).to be_truthy
       end
 
       it 'creates a new dataset from EM submission metadata' do
@@ -199,6 +200,7 @@ module StashApi
 
         dd = hsh['deposit_data']
         expect(res.title).to eq(dd['deposit_description'])
+        expect(output[:deposit_upload_url]).to be_falsey
       end
 
       it 'allows update of deposit metadata with new submission metadata' do
