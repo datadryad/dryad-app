@@ -86,6 +86,10 @@ module Stash
         error_if_out_of_order
         error_if_any_previous_unfinished
         error_if_more_than_one_replication_for_resource
+
+        # make sure the dataset has the relationships for these things synchronized to zenodo
+        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
+
         return if nothing_to_submit?
 
         @copy.update(state: 'replicating')
@@ -101,9 +105,6 @@ module Stash
         # update the database with current information on this dataset from Zenodo
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
-
-        # make sure the dataset has the relationships for these things sent to zenodo
-        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
 
         return publish_dataset if @copy.copy_type.end_with?('_publish')
 
