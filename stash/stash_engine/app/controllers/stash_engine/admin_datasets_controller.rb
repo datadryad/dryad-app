@@ -180,7 +180,11 @@ module StashEngine
         return
       end
       @page = params[:page] || '1'
-      @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+      @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
+                     10
+                  else
+                    params[:page_size].to_i
+                   end
     end
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
