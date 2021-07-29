@@ -182,8 +182,8 @@ module StashEngine
       @page = params[:page] || '1'
       @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
                      10
-                  else
-                    params[:page_size].to_i
+                   else
+                     params[:page_size].to_i
                    end
     end
 
