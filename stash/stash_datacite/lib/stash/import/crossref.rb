@@ -224,7 +224,7 @@ module Stash
       end
 
       def related_identifier_will_change?(proposed_change:)
-        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'cites').first
+        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', work_type: 'primary_article').first
         proposed_change.publication_doi != related_identifier&.related_identifier
       end
 
@@ -278,7 +278,7 @@ module Stash
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                                     related_identifier_type: 'doi',
                                     relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
-                                    work_type: 'article',
+                                    work_type: 'primary_article',
                                     verified: true,
                                     hidden: false
                                   })

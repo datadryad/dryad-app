@@ -78,8 +78,8 @@ module StashDatacite
 
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
 
-        # user is expanding on a DOI that we already have; update it in the DB
-        rd.update(related_identifier: standard_doi, work_type: 'article', hidden: false)
+        # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
+        rd.update(related_identifier: standard_doi, work_type: 'primary_article', hidden: false)
         rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
         return nil
       end
@@ -90,7 +90,7 @@ module StashDatacite
                                     related_identifier: standard_doi,
                                     related_identifier_type: 'doi',
                                     relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
-                                    work_type: 'article',
+                                    work_type: 'primary_article',
                                     hidden: false)
       ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
       @resource.reload
