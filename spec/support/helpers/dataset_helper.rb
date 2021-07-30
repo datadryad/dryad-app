@@ -110,26 +110,26 @@ module DatasetHelper
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { left: 0 }
     )
   end
 
-  def build_valid_stub_request(url)
+  def build_valid_stub_request(url, mime_type = 'text/plain')
     stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
   end
 
   def build_invalid_stub_request(url)

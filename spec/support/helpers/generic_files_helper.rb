@@ -42,26 +42,6 @@ module GenericFilesHelper
     expect(body['new_file'].to_json).to eql(new_file.to_json)
   end
 
-  def create_valid_stub_request(url)
-    stub_request(:head, url)
-      .with(
-        headers: {
-          'Accept' => '*/*'
-        }
-      )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
-  end
-
-  def create_invalid_stub_request(url)
-    stub_request(:head, url)
-      .with(
-        headers: {
-          'Accept' => '*/*'
-        }
-      )
-      .to_return(status: 404)
-  end
-
   def generic_validate_urls_expects(url)
     params = { 'url' => 'http://example.org/funbar.txt' }
     response_code = post url, params: params
