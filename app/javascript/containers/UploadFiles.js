@@ -50,6 +50,13 @@ export const TabularCheckStatus = {
     'error': "Couldn't Read Tabular Data"
 }
 
+export const displayAriaMsg = (msg) => {
+    const el = document.getElementById('aria-info');
+    const content = document.createTextNode(msg);
+    el.innerHTML = '';
+    el.appendChild(content);
+}
+
 class UploadFiles extends React.Component {
     state = {
         upload_type: [
@@ -161,6 +168,7 @@ class UploadFiles extends React.Component {
     }
 
     addFilesHandler = (event, uploadType) => {
+        displayAriaMsg("Your files were added and are pending upload.");
         this.setState({warningMessage: null, submitButtonFilesDisabled: true});
         const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
         // TODO: make a function?; future: unify adding file attributes
@@ -228,7 +236,7 @@ class UploadFiles extends React.Component {
                             }).catch(error => console.log(error));
                     }
                 }
-                // Before start uploading, change file status cel to a progress bar
+                // Before start uploading, change file status cell to a progress bar
                 this.changeStatusToProgressBar(index);
 
                 const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
@@ -254,6 +262,7 @@ class UploadFiles extends React.Component {
         chosenFiles[index].sanitized_name = file.upload_file_name;
         chosenFiles[index].status = 'Uploaded';
         this.setState({chosenFiles: chosenFiles});
+        displayAriaMsg(`${file.original_filename} finished uploading`);
     }
 
     changeStatusToProgressBar = (chosenFilesIndex) => {
@@ -364,6 +373,7 @@ class UploadFiles extends React.Component {
         } else {
             this.removeFileLine(index);
         }
+        displayAriaMsg(`${file.sanitized_name} removed`);
     }
 
     removeFileLine = (index) => {
