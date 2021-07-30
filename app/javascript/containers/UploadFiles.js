@@ -6,11 +6,13 @@ import sanitize from '../lib/sanitize_filename';
 
 import UploadType from '../components/UploadType/UploadType';
 import ModalUrl from '../components/Modal/ModalUrl';
+import ModalValidationReport from "../components/ModalValidationReport/ModalValidationReport";
 import FileList from '../components/FileList/FileList';
 import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
 import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
 import Instructions from '../components/Instructions/Instructions';
 import WarningMessage from '../components/WarningMessage/WarningMessage';
+import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
 import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
@@ -30,8 +32,22 @@ const AllowedUploadFileTypes = {
     'supp': 'supp'
 }
 const Messages = {
-    'fileAlreadySelected': 'A file of the same type is already in the table.',
-    'filesAlreadySelected': 'Some files of the same type are already in the table.'
+    'fileAlreadySelected': 'A file of the same type is already in the table, and was not added.',
+    'filesAlreadySelected': 'Some files of the same type are already in the table, and were not added.'
+}
+const ValidTabular = {
+    'extensions': ['csv', 'xls', 'xlsx', 'json'],
+    'mime_types': ['text/csv', 'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/json'
+    ]
+}
+export const TabularCheckStatus = {
+    'checking': 'Checking...',
+    'issues': 'View Issues',
+    'noissues': 'Passed',
+    'na': 'Too Large For Validation',
+    'error': "Couldn't Read Tabular Data"
 }
 
 class UploadFiles extends React.Component {
@@ -39,7 +55,7 @@ class UploadFiles extends React.Component {
         upload_type: [
             {
                 type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad',
-                name: 'Data', description: 'e.g., csv, fasta, README',
+                name: 'Data', description: 'e.g., csv, fasta',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
                 type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
@@ -55,157 +71,56 @@ class UploadFiles extends React.Component {
         submitButtonFilesDisabled: true,
         submitButtonUrlsDisabled: true,
         showModal: false,
+        showValidationReportModal: false,
         urls: null,
         // TODO: workaround to deal with manifest file types when making request.
         //  See better way: maybe when clicking in URL button for an Upload Type,
         //  send the type information to the modal somehow. And when submitting carry on
         //  that information and add to request URL.
         currentManifestFileType: null,
+        validationReportIndex: null,
         failedUrls: [],
         loading: false,
         removingIndex: null,
-        warningMessage: null
+        warningMessage: null,
+        validating: null
     };
 
     componentDidMount() {
         const files = this.props.file_uploads;
         const transformed = this.transformData(files);
-        this.setState({chosenFiles: transformed});
+        const withTabularCheckStatus = this.updateTabularCheckStatus(transformed);
+        this.setState({chosenFiles: withTabularCheckStatus});
+        this.addCsrfToken();
     }
 
-    // checks the file list if any files are pending and if so returns true (or false)
-    hasPendingFiles = () => {
-        return this.getPendingFiles().length > 0;
+    transformData = (files) => {
+        return files.map(file => ({
+            ...file,
+            sanitized_name: file.upload_file_name,
+            status: 'Uploaded',
+            uploadType: RailsActiveRecordToUploadType[file.type],
+            sizeKb: formatSizeUnits(file.upload_file_size),
+        }))
     }
 
-    addFilesHandler = (event, uploadType) => {
-        this.setState({warningMessage: null});
-        const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
-        newFiles.map(file => {
-            file.sanitized_name = sanitize(file.name);
-            file.status = 'Pending';
-            file.url = null;
-            file.uploadType = uploadType;
-            file.manifest = false;
-            file.sizeKb = formatSizeUnits(file.size);
-        });
-        this.updateFileList(newFiles);
-    }
-
-    uploadFilesHandler = () => {
-        const config = {
-            aws_key: this.props.app_config_s3.table.key,
-            bucket: this.props.app_config_s3.table.bucket,
-            awsRegion: this.props.app_config_s3.table.region,
-            // Assign any first signerUrl, but it changes for each upload file type
-            // when call evaporate object add method bellow
-            signerUrl: `/stash/data_file/presign_upload/${this.props.resource_id}`,
-            awsSignatureVersion: "4",
-            computeContentMd5: true,
-            cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
-            cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
+    updateTabularCheckStatus = (files) => {
+        if (this.state.validating) {
+            return files.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
+        } else {
+            return files.map(file => ({
+                ...file,
+                tabularCheckStatus: this.setTabularCheckStatus(file)
+            }));
         }
-        Evaporate.create(config).then(this.uploadFileToS3);
     }
 
-    uploadFileToS3 = evaporate => {
-        this.state.chosenFiles.map((file, index) => {
-            if (file.status === 'Pending') {
-                //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
-                const evaporateUrl =
-                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
-                const addConfig = {
-                    name: evaporateUrl,
-                    file: file,
-                    contentType: file.type,
-                    progress: progressValue => {
-                        document.getElementById(
-                            `progressbar_${index}`
-                        ).setAttribute('value', progressValue);
-                    },
-                    error: function (msg) {
-                        console.log(msg);
-                    },
-                    complete: (_xhr, awsKey) => {
-                        const csrf_token = document.querySelector('[name=csrf-token]');
-                        if (csrf_token)  // there isn't csrf token when running Capybara tests
-                            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-                        axios.post(
-                            `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
-                            {
-                                resource_id: this.props.resource_id,
-                                name: file.sanitized_name,
-                                size: file.size,
-                                type: file.type,
-                                original: file.name
-                            })
-                            .then(response => {
-                                console.log(response);
-                                this.setFileUploadComplete(response.data.new_file, index);
-                            })
-                            .catch(error => console.log(error));
-                    }
-                }
-                // Before start uploading, change file status cel to a progress bar
-                this.changeStatusToProgressBar(index);
-
-                const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
-                evaporate.add(addConfig, {signerUrl: signerUrl})
-                    .then(
-                        awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
-                        reason => console.log('File did not upload successfully: ', reason)
-                    );
-            }
-        })
-
-    }
-
-    getPendingFiles = () => {
-        return this.state.chosenFiles.filter((file) => {
-            return file.status === 'Pending';
-        });
-    }
-
-    setFileUploadComplete = (file, index) => {
-        const chosenFiles = this.state.chosenFiles;
-        chosenFiles[index].id = file.id;
-        chosenFiles[index].status = 'Uploaded';
-        this.setState({chosenFiles: chosenFiles});
-    }
-
-    changeStatusToProgressBar = (chosenFilesIndex) => {
-        const status_cel = document.getElementById(`status_${chosenFilesIndex}`);
-        status_cel.innerText = '';
-        const node = document.createElement('progress');
-        const progressBar = status_cel.appendChild(node);
-        progressBar.setAttribute('id', `progressbar_${chosenFilesIndex}`);
-        progressBar.setAttribute('value', '');
-    }
-
-    updateManifestFiles = (files) => {
-        this.updateFailedUrls(files['invalid_urls']);
-
-        if (!files['valid_urls'].length) return;
-        let successfulUrls = files['valid_urls'];
-        if (this.state.chosenFiles.length) {
-            successfulUrls = this.discardAlreadyChosenById(successfulUrls);
+    setTabularCheckStatus = (file) => {
+        if (!this.isValidTabular(file)) {
+            return TabularCheckStatus['na'];
+        } else if (file.frictionless_report) {
+            return TabularCheckStatus[file.frictionless_report.status]
         }
-        const newManifestFiles = this.transformData(successfulUrls);
-        this.updateFileList(newManifestFiles);
-    }
-
-    updateFailedUrls = (urls) => {
-        if (!urls.length) return;
-        this.includeErrorMessages(urls);
-        let failedUrls = [...this.state.failedUrls];
-        failedUrls = failedUrls.concat(urls);
-        this.setState({failedUrls: failedUrls});
-    }
-
-    includeErrorMessages = (urls) => {
-        urls.map((url, index) => {
-            urls[index].error_message = this.getErrorMessage(url);
-        })
     }
 
     getErrorMessage = (url) => {
@@ -234,7 +149,178 @@ class UploadFiles extends React.Component {
         }
     }
 
+    addCsrfToken = () => {
+        const csrf_token = document.querySelector('[name=csrf-token]');
+        if (csrf_token)  // there isn't csrf token when running Capybara tests
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
+    }
+
+    // checks the file list if any files are pending and if so returns true (or false)
+    hasPendingFiles = () => {
+        return this.getPendingFiles().length > 0;
+    }
+
+    addFilesHandler = (event, uploadType) => {
+        this.setState({warningMessage: null, submitButtonFilesDisabled: true});
+        const newFiles = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
+        // TODO: make a function?; future: unify adding file attributes
+        newFiles.map(file => {
+            file.sanitized_name = sanitize(file.name);
+            file.status = 'Pending';
+            file.url = null;
+            file.uploadType = uploadType;
+            file.manifest = false;
+            file.upload_file_size = file.size;
+            file.sizeKb = formatSizeUnits(file.size);
+        });
+        this.updateFileList(newFiles);
+    }
+
+    uploadFilesHandler = () => {
+        const config = {
+            aws_key: this.props.app_config_s3.table.key,
+            bucket: this.props.app_config_s3.table.bucket,
+            awsRegion: this.props.app_config_s3.table.region,
+            // Assign any first signerUrl, but it changes for each upload file type
+            // when call evaporate object add method bellow
+            signerUrl: `/stash/generic_file/presign_upload/${this.props.resource_id}`,
+            awsSignatureVersion: "4",
+            computeContentMd5: true,
+            cryptoMd5Method: data => { return AWS.util.crypto.md5(data, 'base64'); },
+            cryptoHexEncodedHash256: data => { return AWS.util.crypto.sha256(data, 'hex'); }
+        }
+        Evaporate.create(config).then(this.uploadFileToS3);
+    }
+
+    uploadFileToS3 = evaporate => {
+        this.state.chosenFiles.map((file, index) => {
+            if (file.status === 'Pending') {
+                //TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
+                const evaporateUrl =
+                    `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
+                const addConfig = {
+                    name: evaporateUrl,
+                    file: file,
+                    contentType: file.type,
+                    progress: progressValue => {
+                        document.getElementById(
+                            `progressbar_${index}`
+                        ).setAttribute('value', progressValue);
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    },
+                    complete: (_xhr, awsKey) => {
+                        axios.post(
+                            `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
+                            {
+                                resource_id: this.props.resource_id,
+                                name: file.sanitized_name,
+                                size: file.size,
+                                type: file.type,
+                                original: file.name
+                            }).then(response => {
+                                console.log(response);
+                                this.updateFileData(response.data.new_file, index);
+                                this.isValidTabular(this.state.chosenFiles[index]) ?
+                                    this.validateFrictionless([this.state.chosenFiles[index]]) :
+                                    null;
+                            }).catch(error => console.log(error));
+                    }
+                }
+                // Before start uploading, change file status cel to a progress bar
+                this.changeStatusToProgressBar(index);
+
+                const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
+                evaporate.add(addConfig, {signerUrl: signerUrl})
+                    .then(
+                        awsObjectKey => console.log('File successfully uploaded to: ', awsObjectKey),
+                        reason => console.log('File did not upload successfully: ', reason)
+                    );
+            }
+        })
+
+    }
+
+    getPendingFiles = () => {
+        return this.state.chosenFiles.filter((file) => {
+            return file.status === 'Pending';
+        });
+    }
+
+    updateFileData = (file, index) => {
+        const chosenFiles = this.state.chosenFiles;
+        chosenFiles[index].id = file.id;
+        chosenFiles[index].sanitized_name = file.upload_file_name;
+        chosenFiles[index].status = 'Uploaded';
+        this.setState({chosenFiles: chosenFiles});
+    }
+
+    changeStatusToProgressBar = (chosenFilesIndex) => {
+        const statusCel = document.getElementById(`status_${chosenFilesIndex}`);
+        statusCel.innerText = '';
+        const node = document.createElement('progress');
+        const progressBar = statusCel.appendChild(node);
+        progressBar.setAttribute('id', `progressbar_${chosenFilesIndex}`);
+        progressBar.setAttribute('value', '0');
+    }
+
+    updateManifestFiles = (files) => {
+        this.updateFailedUrls(files['invalid_urls']);
+
+        if (!files['valid_urls'].length) return;
+        let successfulUrls = files['valid_urls'];
+        if (this.state.chosenFiles.length) {
+            successfulUrls = this.discardAlreadyChosenById(successfulUrls);
+        }
+        const newManifestFiles = this.transformData(successfulUrls);
+        this.updateFileList(newManifestFiles);
+        const tabularFiles = newManifestFiles.filter(file => this.isValidTabular(file));
+        this.validateFrictionless(tabularFiles);
+    }
+
+    validateFrictionless = (files) => {
+        this.setState({validating: true});
+        files = this.updateTabularCheckStatus(files);
+        this.updateAlreadyChosenById(files);
+        axios.post(
+            `/stash/generic_file/validate_frictionless/${this.props.resource_id}`,
+            {file_ids: files.map(file => file.id)}
+        ).then(response => {
+            this.setState({validating: false});
+            const transformed = this.transformData(response.data);
+            files = this.updateTabularCheckStatus(transformed);
+            this.updateAlreadyChosenById(files);
+        }).catch(error => console.log(error));
+    }
+
+    updateAlreadyChosenById = (filesToUpdate) => {
+        const chosenFiles = [...this.state.chosenFiles];
+        let index;
+        filesToUpdate.forEach((fileToUpdate) => {
+            index = chosenFiles.findIndex(file => file.id === fileToUpdate.id);
+            chosenFiles[index] = fileToUpdate;
+        })
+        this.setState({chosenFiles: chosenFiles});
+    }
+
+
+    updateFailedUrls = (urls) => {
+        if (!urls.length) return;
+        this.includeErrorMessages(urls);
+        let failedUrls = [...this.state.failedUrls];
+        failedUrls = failedUrls.concat(urls);
+        this.setState({failedUrls: failedUrls});
+    }
+
+    includeErrorMessages = (urls) => {
+        urls.map((url, index) => {
+            urls[index].error_message = this.getErrorMessage(url);
+        })
+    }
+
     updateFileList = (files) => {
+        this.labelNonTabular(files);
         if (!this.state.chosenFiles.length) {
             this.setState({chosenFiles: files});
         } else {
@@ -244,14 +330,29 @@ class UploadFiles extends React.Component {
         }
     }
 
+    hasPlainTextTabular = (files) => {
+        return files.some(file => {
+            return file.sanitized_name.split('.').pop() === 'csv'
+                || file.upload_content_type === 'text/csv';
+        });
+    }
+
+    labelNonTabular = (files) => {
+        files.map(file => {
+            file.tabularCheckStatus = this.isValidTabular(file) ? null : TabularCheckStatus['na']
+        });
+    }
+
+    isValidTabular = (file) => {
+        return (ValidTabular['extensions'].includes(file.sanitized_name.split('.').pop())
+            || ValidTabular['mime_types'].includes(file.upload_content_type))
+            && (file.upload_file_size <= this.props.frictionless.size_limit);
+    }
+
     removeFileHandler = (index) => {
         this.setState({warningMessage: null});
         const file = this.state.chosenFiles[index];
         if (file.status !== 'Pending') {
-            const csrf_token = document.querySelector('[name=csrf-token]');
-            if (csrf_token)  // there isn't csrf token when running Capybara tests
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
             this.setState({removingIndex: index});
             axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
                 .then(response => {
@@ -283,18 +384,27 @@ class UploadFiles extends React.Component {
         this.setState({submitButtonUrlsDisabled: !event.target.checked});
     }
 
-    showModal = (uploadType) => {
-        this.setState({showModal: true});
-        this.setState({currentManifestFileType: uploadType});
+    showModalHandler = (uploadType) => {
+        this.setState({showModal: true, currentManifestFileType: uploadType});
     };
 
     hideModal = (event) => {
         if (event.type === 'submit' || event.type === 'click'
             || (event.type === 'keydown' && event.keyCode === 27)) {
-            this.setState({submitButtonUrlsDisabled: true})
-            this.setState({showModal: false});
-            this.setState({currentManifestFileType: null})
+            this.setState({
+                submitButtonUrlsDisabled: true,
+                showModal: false,
+                currentManifestFileType: null
+            })
         }
+    }
+
+    hideModalValidationReport = (event) => {
+        this.setState({showValidationReportModal: false, validationReportIndex: null});
+    }
+
+    showModalValidationReportHandler = (index) => {
+        this.setState({showValidationReportModal: true, validationReportIndex: index});
     }
 
     submitUrlsHandler = (event) => {
@@ -305,12 +415,7 @@ class UploadFiles extends React.Component {
 
         if (!this.state.urls) return;
 
-        const csrf_token = document.querySelector('[name=csrf-token]');
-        if (csrf_token)  // there isn't csrf token when running Capybara tests
-            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token.content;
-
         const urlsObject = {
-            // CONTINUE 1: see Firefox and Chromium for width, max-width, min-width etc.
             url: this.discardUrlsAlreadyChosen(this.state.urls, this.state.currentManifestFileType)
         };
         if (urlsObject['url'].length) {
@@ -319,9 +424,9 @@ class UploadFiles extends React.Component {
             axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
                 .then(response => {
                     this.updateManifestFiles(response.data);
-                    this.setState({urls: null, loading: false});
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.log(error))
+                .finally(() => this.setState({urls: null, loading: false}));
         }
     };
 
@@ -339,18 +444,8 @@ class UploadFiles extends React.Component {
         });
 
         const countRepeated = urls.length - newUrls.length;
-        this.setWarningMessage(countRepeated);
+        this.setWarningRepeatedFile(countRepeated);
         return newUrls.join('\n');
-    }
-
-    transformData = (files) => {
-        return files.map(file => ({
-            ...file,
-            sanitized_name: file.upload_file_name,
-            status: 'Uploaded',
-            uploadType: RailsActiveRecordToUploadType[file.type],
-            sizeKb: formatSizeUnits(file.upload_file_size)
-        }))
     }
 
     /**
@@ -360,7 +455,7 @@ class UploadFiles extends React.Component {
      * @returns {[]}
      */
     discardAlreadyChosenById = (files) => {
-        const idsAlready = this.state.chosenFiles.map(item => item.id);
+        const idsAlready = this.state.chosenFiles.map(file => file.id);
         return files.filter(file => {
             return !idsAlready.includes(file.id);
         });
@@ -376,7 +471,7 @@ class UploadFiles extends React.Component {
         });
 
         const countRepeated = files.length - newFiles.length;
-        this.setWarningMessage(countRepeated);
+        this.setWarningRepeatedFile(countRepeated);
         return newFiles;
     }
 
@@ -392,7 +487,7 @@ class UploadFiles extends React.Component {
         })
     }
 
-    setWarningMessage = (countRepeated) => {
+    setWarningRepeatedFile = (countRepeated) => {
         if (countRepeated < 0) return;
         if (countRepeated === 0) {
             this.setState({warningMessage: null});
@@ -431,6 +526,7 @@ class UploadFiles extends React.Component {
                     <FileList
                         chosenFiles={this.state.chosenFiles}
                         clickedRemove={this.removeFileHandler}
+                        clickedValidationReport={this.showModalValidationReportHandler}
                         removingIndex={removingIndex} />
                     { this.state.loading ?
                         <div className="c-upload__loading-spinner">
@@ -474,14 +570,27 @@ class UploadFiles extends React.Component {
         }
     }
 
+    buildValidationReportModal = () => {
+        if (this.state.showValidationReportModal) {
+            return <ModalValidationReport
+                file={this.state.chosenFiles[this.state.validationReportIndex]}
+                report={this.state.chosenFiles[this.state.validationReportIndex].frictionless_report.report}
+                clickedClose={this.hideModalValidationReport} />
+        } else {
+            return null;
+        }
+    }
+
     render () {
-        let failedUrls = this.buildFailedUrlList();
-        let chosenFiles = this.buildFileList(this.state.removingIndex);
-        let modalURL = this.buildModal();
+        const failedUrls = this.buildFailedUrlList();
+        const chosenFiles = this.buildFileList(this.state.removingIndex);
+        const modalURL = this.buildModal();
+        const modalValidationReport = this.buildValidationReportModal();
 
         return (
             <div className="c-upload">
                 {modalURL}
+                {modalValidationReport}
                 <h1 className="o-heading__level1">
                     Upload Your Files
                 </h1>
@@ -491,16 +600,13 @@ class UploadFiles extends React.Component {
                         return <UploadType
                             key={upload_type.type}
                             changed={(event) => this.addFilesHandler(event, upload_type.type)}
-                            clicked={(event) => {
-                                if(event.target.id.includes('manifest')){
-                                    this.showModal(upload_type.type); // for manifest upload dialog
-                                }else{
-                                    // triggers change to reset file uploads to null before onChange to allow files to be added again
-                                    event.target.value = null;
-                                }
-                            } }
+                            // triggers change to reset file uploads to null before onChange to allow files to be added again
+                            clickedFiles={(event) => event.target.value = null}
+
+                            clickedModal={() => this.showModalHandler(upload_type.type)}
                             type={upload_type.type}
                             logo={upload_type.logo}
+                            alt={upload_type.alt}
                             name={upload_type.name}
                             description={upload_type.description}
                             buttonFiles={upload_type.buttonFiles}
