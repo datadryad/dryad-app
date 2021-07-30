@@ -30,9 +30,8 @@ end
 # Deployment
 
 gem 'capistrano', '~> 3.11'
-gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.5'
+gem 'puma'
 gem 'rubocop', '~> 0.90.0'
 # not currently used for our simple case and because of some problems
 # gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
@@ -130,7 +129,6 @@ group :development, :test, :local_dev do
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
-  gem 'puma'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
