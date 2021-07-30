@@ -3981,6 +3981,9 @@ html.no-details .o-showhide__summary {
   text-align: center;
   cursor: pointer; }
 
+.pseudo-focus-button-label {
+  outline: 2px solid red; }
+
 @media (min-width: 760px) {
   .c-columns {
     display: -webkit-box;
