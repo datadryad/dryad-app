@@ -310,6 +310,12 @@ module Stash
       def populate_publication_issn
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
 
+        # We only want to save the ISSN if we receive one that we already know about. Otherwise,
+        # it is likely an alternative ISSN for a journal where we have a different primary ISSN
+        # (most journals have separate ISSNs for print, online, linking)
+        # In that case, we will save the journal name, and look up the correct ISSN from the name.
+        return unless StashEngine::Journal.where(issn: @sm['ISSN'].first).present?
+
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationISSN')
         datum.update(value: @sm['ISSN'].first)
@@ -321,6 +327,14 @@ module Stash
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationName')
         datum.update(value: publisher)
+
+        journal = StashEngine::Journal.where(title: publisher)
+        return unless journal.present?
+
+        # If the publication name matches an existing journal, populate/update the ISSN
+        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
+                                                                 data_type: 'publicationISSN')
+        datum.update(value: journal.first.issn)
       end
 
       def populate_title
