@@ -3,7 +3,6 @@ import React from 'react';
 class UploadType extends React.Component {
 
   componentDidMount() {
-    console.log("mounted event");
 
     document.querySelectorAll('input.c-choose__input-file').forEach(item => {
       item.removeEventListener('focus', this.lblEventFocus);
@@ -33,7 +32,7 @@ class UploadType extends React.Component {
           <b style={{textAlign: 'center'}}>{this.props.description}</b>
 
           <div className="c-choose">
-            <label htmlFor={this.props.type} className="c-choose__input-file-label">{this.props.buttonFiles}</label>
+            <label htmlFor={this.props.type} aria-label={`upload ${this.props.type} files`} className="c-choose__input-file-label">{this.props.buttonFiles}</label>
             <input id={this.props.type} className="c-choose__input-file" type='file' onClick={this.props.clickedFiles}
                    onChange={this.props.changed} multiple={true}/>
           </div>
