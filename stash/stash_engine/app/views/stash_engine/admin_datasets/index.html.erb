@@ -14,8 +14,11 @@
   <div class="c-space-paginator">
     <%= paginate @datasets, params: { page_size: @page_size, show_all: false } %><br/>
     Page Size:
-    <% [10, 50, 100].each do |ps| %>
-      <% if ps == params[:page_size].to_i %>
+    <%
+      current_ps = params[:page_size].to_i
+      current_ps = 10 if current_ps == 0
+      [10, 50, 100].each do |ps| %>
+      <% if ps == current_ps %>
         <%= ps %>
       <% else %>
         <%= link_to ps, request.parameters.merge(page_size: ps, page: 1) %>
