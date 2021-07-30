@@ -8,7 +8,6 @@ require 'cgi'
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
-      puts "XXXX #{params}"
       @se_id = StashEngine::Identifier.find(params[:identifier_id])
       @resource = StashEngine::Resource.find(params[:resource_id])
       save_form_to_internal_data
