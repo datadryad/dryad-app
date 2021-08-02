@@ -104,11 +104,11 @@ module StashDatacite
     end
 
     def work_type_friendly
-      WORK_TYPE_CHOICES[work_type] || work_type.capitalize
+      WORK_TYPE_CHOICES[work_type] || work_type.humanize
     end
 
     def work_type_friendly_plural
-      WORK_TYPE_CHOICES_PLURAL[work_type] || work_type.capitalize.pluralize
+      WORK_TYPE_CHOICES_PLURAL[work_type] || work_type.humanize.pluralize
     end
 
     def self.related_identifier_type_mapping_obj(str)

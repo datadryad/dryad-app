@@ -8,7 +8,6 @@ module StashDatacite
       @metadata_entry = Resource::MetadataEntry.new(@resource, current_tenant)
       @metadata_entry.resource_type
       se_id = StashEngine::Identifier.find(@resource.identifier_id)
-      puts "se_id #{se_id}"
       @publication_issn = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationISSN')
       @publication_name = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationName')
       @msid = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
