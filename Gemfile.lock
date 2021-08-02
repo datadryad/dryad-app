@@ -958,7 +958,7 @@ DEPENDENCIES
   mocha
   mysql2 (~> 0.5.3)
   net-sftp
-  oai
+  oai (>= 0.3.1)
   pry
   pry-rails
   pry-remote
