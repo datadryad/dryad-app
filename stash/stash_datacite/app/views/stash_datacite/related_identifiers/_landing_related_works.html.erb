@@ -1,5 +1,5 @@
 
-<!-- Article IDs -->
+<% # Article IDs %>
 
 <% article_ids = @resource.related_identifiers.where(work_type: [:article, :primary_article]).where(hidden: false).order(work_type: :desc) %>
 <% if article_ids.present? %>
@@ -21,7 +21,7 @@
     </ul>
 <% end %>
 
-<!-- All other related IDs -->
+<% # All other related IDs %>
 
 <% other_relations = @resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).distinct.order(:work_type) %>
 <% other_relations.each do |orel| %>
