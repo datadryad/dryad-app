@@ -27,6 +27,8 @@ append :linked_dirs,
        "public/system",
        "uploads"
 
+append :linked_files, %w{config/notifier_state.yml}
+
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
