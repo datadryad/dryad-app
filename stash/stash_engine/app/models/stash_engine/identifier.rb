@@ -292,7 +292,7 @@ module StashEngine
       doi = nil
       resources.each do |res|
         dois = res.related_identifiers&.select { |id| id.related_identifier_type == 'doi' && id.work_type == 'primary_article' }
-        doi = dois&.first&.related_identifier
+        doi = dois&.last&.related_identifier
         break unless doi.nil?
       end
       doi
