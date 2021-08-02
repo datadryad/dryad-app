@@ -18,7 +18,7 @@ stash/script/counter-uploader/reports/*.json
 stash/script/counter-uploader/tmp/*.json
 
 # notifier state which is shared/linked and not comitted
-config/notifier_state.yml
+config/notifier_state.json
 
 # JS library files from node/react
 node_modules
