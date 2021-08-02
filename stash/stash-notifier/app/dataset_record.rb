@@ -1,6 +1,6 @@
 require 'active_support/core_ext/object/to_query'
 require_relative './config'
-require 'oai'
+# require 'oai'
 require 'nokogiri'
 
 class DatasetRecord
