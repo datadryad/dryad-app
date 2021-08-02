@@ -1,8 +1,6 @@
 require_relative '../../stash/stash-notifier/app/config'
 require_relative '../../stash/stash-notifier/app/state'
 require 'byebug'
-
-# rubocop:disable Metrics/BlockLength
 namespace :notifier do
 
   desc 'run the notifier'
