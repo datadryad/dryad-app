@@ -197,6 +197,7 @@ module StashApi
 
       em_authors = []
       auth_array = params['authors'] || params['author']
+      puts "EEEEEEEEEEE auth_array #{auth_array}"
       if auth_array.is_a?(Array)
         auth_array.each do |auth|
           em_authors << {
@@ -207,7 +208,7 @@ module StashApi
             affiliation: auth['institution']
           }.with_indifferent_access.compact
         end
-      else
+      elsif auth_array.present?
         # assume there is only one author, so the param is an author hash
         auth = auth_array
         em_authors << {
