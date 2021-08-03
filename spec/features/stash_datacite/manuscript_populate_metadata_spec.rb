@@ -108,7 +108,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       # Tell the form that we're really doing the import and not just an ajax autocomplete.
       # For normal use, this is set by javascript, but within rspec, it wasn't working properly,
       # so we force it here.
-      page.execute_script("$('#internal_datum_do_import').val('true')")
+      page.execute_script("$('#do_import').val('true')")
 
       click_button 'Import Article Metadata'
     end
