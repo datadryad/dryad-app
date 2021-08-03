@@ -159,15 +159,7 @@ Configuring/updating the Rails connection with GMail
 
 Several settings need to be in the server's settings to connect with GMail.
 
-The gmail_client_id and gmail_client_secret can be found in the Rails credentials file, but
-if they need to be updated, they must be obtained from Google:
-- must be logged in as journal-submit-app@datadryad.org
-- go to https://console.cloud.google.com/apis/credentials
-- select project "Dryad v2 Gmail API" (if needed)
-- see the download icon for the entry "OAuth client"
-- copy the client_id and client_secret out of the downloaded file
-
-Rails needs more than just the above credentials. It also needs a token that
+Rails reads the GMail credentials from the credentials file, but it also needs a token that
 will allow it to read from a specific GMail account. The toke is stored in a
 file called `token.yaml`, one directory above the codebase, so it is not
 affected by updates to the codebase. You can test whether the
@@ -176,6 +168,15 @@ token is valid and/or reset the token by running:
 
 If something is wrong with the authorization, you can delete the `token.yaml`
 file and generate it again.
+
+Rarely, if the validation process above produces an error, you may need to regenerate
+the application-level GMail credentials:
+- must be logged in to GMail as journal-submit-app@datadryad.org
+- go to https://console.cloud.google.com/apis/credentials
+- select project "Dryad v2 Gmail API" (if needed)
+- see the download icon for the entry "OAuth client"
+- copy the client_id and client_secret out of the downloaded file and put them
+  into the Rails credentials file
 
 
 Configuring the Gmail labels

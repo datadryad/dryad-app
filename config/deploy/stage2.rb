@@ -9,6 +9,7 @@
 
 set :rails_env, 'stage'
 set :passenger_pool, '6'
+set :special_login, ' TEST_LOGIN=true '
 
 namespace :deploy do
   before :starting, :stop_delayed_job

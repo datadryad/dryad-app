@@ -7,10 +7,11 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 gem 'aws-sdk-s3', '~> 1.87'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'mysql2', '~> 0.5.3'
+gem 'passenger'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 gem 'react-rails', '~> 2.6.1'
-gem 'webpacker'
+gem 'webpacker', '~> 5.4.0'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
@@ -30,12 +31,12 @@ end
 # Deployment
 
 gem 'capistrano', '~> 3.11'
-gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.4'
-gem 'passenger', '~> 6.0.5'
 gem 'rubocop', '~> 0.90.0'
-# not currently used for our simple case and because of some problems
-# gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
+# Use Puma as the app server
+gem 'puma', group: :puma, require: false
+# Our homegrown artisinal SSM gem
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
 # ############################################################
 # UI
@@ -46,8 +47,8 @@ gem 'rubocop', '~> 0.90.0'
 gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
-# gem 'therubyracer', platforms: :ruby
-gem 'mini_racer'
+gem 'therubyracer', platforms: :ruby
+# gem 'mini_racer'
 gem 'turbolinks'
 
 gem 'uglifier', '~> 4.2.0'
@@ -115,6 +116,8 @@ group :test do
   gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
+  # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
+  gem 'shoulda-matchers', '~> 4.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
@@ -130,7 +133,6 @@ group :development, :test, :local_dev do
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
-  gem 'puma'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)

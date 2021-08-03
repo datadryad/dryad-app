@@ -2,14 +2,15 @@
 
 %o-link__primary {
   color: $link-body-color;
-  text-decoration: underline;
+  /* text-decoration: underline; */
 
   &:hover,
   &:focus,
   &:visited:hover,
   &:visited:focus {
     color: $link-body-hover-color;
-    text-decoration: none;
+    /* text-decoration: none; */
+    text-decoration: underline;
   }
 
   &:visited {

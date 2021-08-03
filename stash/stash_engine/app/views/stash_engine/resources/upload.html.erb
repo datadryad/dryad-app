@@ -3,21 +3,23 @@
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<% if @datatype == 'Software' %>
-  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
-<% end %>
-
-<!--<h1 class="o-heading__level1">Upload Your <%#= @datatype %></h1>-->
-<!--<h1 class="o-heading__level1">Upload Your Files</h1>-->
-
 <%= javascript_pack_tag 'application' %>
+<%= stylesheet_pack_tag 'application' %>
+
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
-<%= react_component("UploadFiles", {
+<%= react_component('UploadFiles', {
   resource_id: @resource.id,
-  file_uploads: @resource.generic_files.validated_table.map(&:attributes),
+  file_uploads: @resource.generic_files.validated_table.as_json(
+    methods: :type, include: { frictionless_report: { only: [:report, :status] } }
+  ),
   app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
-  s3_dir_name: @resource.s3_dir_name(type: 'base')
+  s3_dir_name: @resource.s3_dir_name(type: 'base'),
+  frictionless: APP_CONFIG[:frictionless].to_h
 }) %>
+
+<!-- display messages to let arias know what's happening -->
+<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
+</div>
 
 <div class="o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
@@ -26,15 +28,17 @@
 
 <!-- it's a little squidgy to have this in here, but it isn't used in any other page and doesn't need to be precompiled or put anywhere else -->
 <div id="popup_dialog" style="display:none;">
-  <p>
-    Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
-    allow your uploads to finish before proceeding.
-  </p>
 </div>
 
 <script>
-  $('.js-nav-out').click(function(e) {
+  $('.js-nav-out').on('click', function(e) {
     if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){
+      var text = `
+        <p>
+          Your files have not yet finished uploading, please click <strong>Upload pending files</strong> or
+          allow your uploads to finish before proceeding.
+        </p>`;
+      $("#popup_dialog").html(text);
       e.preventDefault();
       $("#popup_dialog").dialog({
         autoOpen: true,
@@ -42,6 +46,23 @@
         width: '500px',
         modal: true,
         title: 'Finish upload before proceeding'
+      });
+    }
+
+    if( $(".js-tabular-checking").length > 0){
+      var text = `
+        <p>
+          Your tabular files are currently being checked for formatting and consistency issues. Please wait for the checks
+          to complete before navigating away from this page.
+        </p>`;
+      $("#popup_dialog").html(text);
+      e.preventDefault();
+      $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: 'Allow tabular consistency checks to complete'
       });
     }
   });
