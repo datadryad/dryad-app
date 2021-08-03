@@ -152,6 +152,8 @@ defaults: &DEFAULTS
     merritt_size: 3.0e+10
     zenodo_size: 5.0e+9
     files: 100
+  frictionless:
+    size_limit: 6291456
 
 development: &DEVELOPMENT
   <<: *DEFAULTS

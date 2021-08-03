@@ -1,14 +1,15 @@
-<% @award_string = "<span>Award: </span>".html_safe %>
 <% unless contributors.nil? || contributors.length < 1 %>
   <h2 class="o-heading__level2">Funding</h2>
   <% contributors.each do |contributor| %>
+      <% @award_string = ", <span>Award: #{contributor.award_number}</span>".html_safe %>
       <% if current_user && current_user.curator? %>
-	  <p><%= contributor.contributor_name_friendly(show_asterisk: true) %><%= "," %>
+	  <p>
+	      <%= contributor.contributor_name_friendly(show_asterisk: true) %><% if contributor.award_number.present? %><%= @award_string %><% end %>
+	  </p>
       <% else %>
-	  <p><%= contributor.contributor_name_friendly %><%= "," %>
-      <% end %>
-      <% if contributor.award_number.present? %>
-        <%= @award_string %><%= contributor.award_number %></p>
+	  <p>
+	      <%= contributor.contributor_name_friendly %><% if contributor.award_number.present? %><%= @award_string %><% end %>
+	  </p>
       <% end %>
   <% end %>
 <% end %>
