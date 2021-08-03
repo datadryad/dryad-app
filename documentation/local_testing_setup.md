@@ -141,8 +141,8 @@ use commands like:
 - page.find_by_id('author_affiliation_long_name').value
 - page.document
 - page.current_url
-- page.execute_script("$('#internal_datum_doi').val('true')") #suppresses return value
-- page.evaluate_script("$('#internal_datum_doi')").first.value
+- page.execute_script("$('#doi').val('true')") #suppresses return value
+- page.evaluate_script("$('#doi')").first.value
   
 
 ## Notes about Rubocop, .ruby-version, Bundler and Rake

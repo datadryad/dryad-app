@@ -430,7 +430,8 @@ module StashEngine
         @fake_article_doi = 'http://doi.org/10.1234/bogus-doi'
         allow_any_instance_of(Resource).to receive(:related_identifiers).and_return([OpenStruct.new(related_identifier: @fake_article_doi,
                                                                                                     related_identifier_type: 'doi',
-                                                                                                    relation_type: 'cites')])
+                                                                                                    relation_type: 'cites',
+                                                                                                    work_type: 'primary_article')])
         expect(@identifier.publication_article_doi).to eql(@fake_article_doi)
       end
     end
