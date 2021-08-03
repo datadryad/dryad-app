@@ -772,7 +772,7 @@ module StashEngine
             expect(res1.current_state).to eq('error')
             expect(resource.current_state).to eq('submitted')
           end
-          it 'does not call prepare_for_curation when :in_progess' do
+          it 'does not call prepare_for_curation when :in_progress' do
             resource.preserve_curation_status = true
             expect(resource).not_to receive(:prepare_for_curation)
             resource.current_state = 'in_progress'

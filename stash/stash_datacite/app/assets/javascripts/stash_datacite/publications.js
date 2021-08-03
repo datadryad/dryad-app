@@ -21,29 +21,29 @@ function loadPublications() {
             })
             .autocomplete({
 		// when page is loaded, IF the dataset has been filled in already,
-		// internal_datum_publication will have an ISSN (for a controlled value),
-		// or internal_datum_publication_name will have a text value, so use one of 
+		// publication will have an ISSN (for a controlled value),
+		// or publication_name will have a text value, so use one of 
 		// these values to fill in the journal title
 		create: function(a) {
-		    if($("#internal_datum_publication_issn").val()){
+		    if($("#publication_issn").val()){
 			$.ajax({
-                            url: "/stash_datacite/publications/issn/"+ $("#internal_datum_publication_issn").val(),
+                            url: "/stash_datacite/publications/issn/" + $("#publication_issn").val(),
                             dataType: "json",
                             success: function( data ) {
-				$("#internal_datum_publication").val("")
+				$("#publication").val("")
 				if (data.title != null) {
-				    $("#internal_datum_publication").val(data.title);
+				    $("#publication").val(data.title);
 				}
 			    }
 			});
-		    } else if($("#internal_datum_publication_name").val()){
-			$("#internal_datum_publication").val($("#internal_datum_publication_name").val())
+		    } else if($("#publication_name").val()){
+			$("#publication").val($("#publication_name").val())
 		    }
 		},
                 source: function (request, response) {
 		    // save the user's typed request in the database with an asterisk, in case they don't click on an autocomplete result
-		    $("#internal_datum_publication_name").val(request.term + "*");
-		    $("#internal_datum_publication_issn").val(''); // clear any ISSN that was saved previously
+		    $("#publication_name").val(request.term + "*");
+		    $("#publication_issn").val(''); // clear any ISSN that was saved previously
 		    var form = $(this.form);
                     $(form).trigger('submit.rails');
 		    $.ajax({
@@ -70,8 +70,8 @@ function loadPublications() {
                 select: function( event, ui ) {
                     new_value = ui.item.value;
                     new_label = ui.item.label;
-                    $("#internal_datum_publication_issn").val(new_value);
-                    $("#internal_datum_publication_name").val(new_label);
+                    $("#publication_issn").val(new_value);
+                    $("#publication_name").val(new_label);
                     ui.item.value = ui.item.label;
                     var form = $(this.form);
                     $(form).trigger('submit.rails');
@@ -106,7 +106,7 @@ function loadPublications() {
     // trap the submit button, change hidden 'do_import' = 'true' and then submit when this button is clicked
     $('.js-populate-submit').click(function(e){
         e.preventDefault();
-        $('#internal_datum_do_import').val('true');
+        $('#do_import').val('true');
         $(this).closest("form").submit();
     });
 

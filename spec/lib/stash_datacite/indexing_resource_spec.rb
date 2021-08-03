@@ -55,7 +55,7 @@ module Stash
         @resource_state = create(:resource_state, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
         create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi', relation_type: 'cites',
-                                    related_identifier: 'doi123')
+                                    related_identifier: 'doi123', work_type: 'primary_article')
         @version = create(:version, resource_id: @resource.id)
         @affil1 = create(:affiliation, long_name: 'Lafayette Tech', ror_id: 'https://ror.example.org/16xx22bs')
         @affil2 = create(:affiliation, long_name: 'Orinda Tech', ror_id: 'https://ror.example.org/18dl67sn1')
