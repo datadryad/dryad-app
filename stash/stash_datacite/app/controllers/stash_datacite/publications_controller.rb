@@ -8,15 +8,15 @@ require 'cgi'
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
-      @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
-      @resource = StashEngine::Resource.find(params[:internal_datum][:resource_id])
+      @se_id = StashEngine::Identifier.find(params[:identifier_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       save_form_to_internal_data
       respond_to do |format|
         format.js do
-          if params[:internal_datum][:do_import] == 'true'
-            @error = 'Please fill in the form completely' if params[:internal_datum][:msid].blank? && params[:internal_datum][:doi].blank?
+          if params[:do_import] == 'true'
+            @error = 'Please fill in the form completely' if params[:msid].blank? && params[:primary_article_doi].blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
-            update_doi_metadata if params[:internal_datum][:doi].present? && params[:import_type] == 'published'
+            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] == 'published'
             manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
               params[:import_type] == 'published'
             params[:import_type] == 'published'
@@ -53,19 +53,19 @@ module StashDatacite
     end
 
     def save_form_to_internal_data
-      @pub_name = params[:internal_datum][:publication_name]
-      @pub_issn = params[:internal_datum][:publication_issn]
+      @pub_name = params[:publication_name]
+      @pub_issn = params[:publication_issn]
       fix_removable_asterisk
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
 
-      parsed_msid = parse_msid(issn: params[:internal_datum][:publication_issn], msid: params[:internal_datum][:msid])
+      parsed_msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
       save_doi
     end
 
     def save_doi
-      form_doi = params[:internal_datum][:doi]
+      form_doi = params[:primary_article_doi]
       return if form_doi.blank?
 
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
@@ -78,8 +78,8 @@ module StashDatacite
 
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
 
-        # user is expanding on a DOI that we already have; update it in the DB
-        rd.update(related_identifier: standard_doi, work_type: 'article', hidden: false)
+        # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
+        rd.update(related_identifier: standard_doi, work_type: 'primary_article', hidden: false)
         rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
         return nil
       end
@@ -90,7 +90,7 @@ module StashDatacite
                                     related_identifier: standard_doi,
                                     related_identifier_type: 'doi',
                                     relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
-                                    work_type: 'article',
+                                    work_type: 'primary_article',
                                     hidden: false)
       ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
       @resource.reload
@@ -115,11 +115,11 @@ module StashDatacite
     end
 
     def update_manuscript_metadata
-      if !params[:internal_datum][:publication].blank? && params[:internal_datum][:publication_issn].blank?
+      if !params[:publication].blank? && params[:publication_issn].blank?
         @error = 'Please select your journal from the autocomplete drop-down list'
         return
       end
-      return if params[:internal_datum][:publication].blank? # keeps the default fill-in message
+      return if params[:publication].blank? # keeps the default fill-in message
       return if @pub_issn&.value.blank?
       return if @msid&.value.blank?
 
@@ -142,13 +142,13 @@ module StashDatacite
     end
 
     def update_doi_metadata
-      unless params[:internal_datum][:doi].present?
+      unless params[:primary_article_doi].present?
         @error = 'Please enter a DOI to import metadata'
         return
       end
-      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:internal_datum][:doi])
+      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:primary_article_doi])
       unless cr.present?
-        @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:internal_datum][:doi]}"
+        @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:primary_article_doi]}"
         return
       end
 

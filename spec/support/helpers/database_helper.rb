@@ -20,7 +20,24 @@ module DatabaseHelper
     new_res.save!
   end
 
-  # TODO: make only one method to create generi files
+  # TODO: this will replace the others 3 below
+  def create_generic_file(resource_id)
+    filename = Faker::File.file_name(dir: '', directory_separator: '')
+    StashEngine::GenericFile.create(
+      {
+        original_filename: filename,
+        upload_file_name: filename,
+        resource_id: resource_id,
+        upload_content_type: 'text/plain',
+        upload_file_size: 31_726,
+        status_code: 200,
+        file_state: 'created',
+        type: %w[StashEngine::DataFile StashEngine::SoftwareFile StashEngine::SuppFile][rand(3)]
+      }
+    )
+  end
+
+  # TODO: make only one method to create generic files
   def create_data_file(resource_id)
     filename = Faker::File.file_name(dir: '', directory_separator: '')
     StashEngine::DataFile.create(

@@ -5,7 +5,11 @@
 		<%= ([ (author.author_full_name ?
 			"<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
 		     author.affiliations.map{|i|
-					     (i.try(:smart_name) ? "<span class='o-metadata__affiliation'>#{h(i.smart_name(show_asterisk: true))}</span>" : nil)
+					     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
+					       "<span class='o-metadata__affiliation'>#{h(i.smart_name(show_asterisk: true))}</span>"
+					     else
+					       nil
+					     end
 		     } +
 		     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ])
 		     .flatten.reject(&:blank?).join(", ").html_safe %>
@@ -13,7 +17,11 @@
 		<%= ([ (author.author_full_name ?
 			"<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
 		     author.affiliations.map{|i|
-					     (i.try(:smart_name) ? "<span class='o-metadata__affiliation'>#{h(i.try(:smart_name))}</span>" : nil)
+					     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
+					       "<span class='o-metadata__affiliation'>#{h(i.smart_name(show_asterisk: false))}</span>"
+					     else
+					       nil
+					     end
 		     } +
 		     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ])
 		     .flatten.reject(&:blank?).join(", ").html_safe %>

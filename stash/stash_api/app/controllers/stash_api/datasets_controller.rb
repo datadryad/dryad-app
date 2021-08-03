@@ -207,7 +207,7 @@ module StashApi
             affiliation: auth['institution']
           }.with_indifferent_access.compact
         end
-      else
+      elsif auth_array.present?
         # assume there is only one author, so the param is an author hash
         auth = auth_array
         em_authors << {
