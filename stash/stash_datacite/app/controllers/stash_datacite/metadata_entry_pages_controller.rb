@@ -12,7 +12,7 @@ module StashDatacite
       @publication_name = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationName')
       @msid = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
       @doi = StashDatacite::RelatedIdentifier.find_or_initialize_by(resource_id: @resource.id, related_identifier_type: 'doi',
-                                                                    relation_type: 'cites')
+                                                                    work_type: 'primary_article')
       @resource.update(updated_at: Time.current)
       respond_to do |format|
         format.js

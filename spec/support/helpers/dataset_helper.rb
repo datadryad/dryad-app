@@ -73,16 +73,16 @@ module DatasetHelper
 
   def fill_manuscript_info(name:, issn:, msid:)
     choose('choose_manuscript')
-    page.execute_script("$('#internal_datum_publication').val('#{name}')")
-    page.execute_script("$('#internal_datum_publication_issn').val('#{issn}')") # must do to fill hidden field for issn
-    page.execute_script("$('#internal_datum_publication_name').val('#{name}')") # must do to fill hidden field for issn
-    fill_in 'internal_datum[msid]', with: msid
+    page.execute_script("$('#publication').val('#{name}')")
+    page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field for issn
+    page.execute_script("$('#publication_name').val('#{name}')") # must do to fill hidden field for issn
+    fill_in 'msid', with: msid
   end
 
   def fill_crossref_info(name:, doi:)
     choose('choose_published')
-    fill_in 'internal_datum[publication]', with: name
-    fill_in 'internal_datum[doi]', with: doi
+    fill_in 'publication', with: name
+    fill_in 'primary_article_doi', with: doi
   end
 
   def fill_in_author
@@ -110,26 +110,26 @@ module DatasetHelper
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_10.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_100.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_example_ODS_1000.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { left: 0 }
     )
   end
 
-  def build_valid_stub_request(url)
+  def build_valid_stub_request(url, mime_type = 'text/plain')
     stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
+      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
   end
 
   def build_invalid_stub_request(url)
