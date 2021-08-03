@@ -60,8 +60,8 @@ gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
-gem 'stripe'
 gem 'oai', '>= 0.3.1'
+gem 'stripe'
 
 # #########################
 # Testing download examples
