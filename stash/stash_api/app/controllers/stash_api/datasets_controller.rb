@@ -197,7 +197,6 @@ module StashApi
 
       em_authors = []
       auth_array = params['authors'] || params['author']
-      puts "EEEEEEEEEEE auth_array #{auth_array}"
       if auth_array.is_a?(Array)
         auth_array.each do |auth|
           em_authors << {
