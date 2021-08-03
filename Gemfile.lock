@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/CDLUC3/uc3-ssm
-  revision: 5af8578418e9f6563f68ad92af54350b25396846
-  branch: main
+  revision: bc398fdbdce0e6041a119813a47de857916eda56
+  branch: 0.3.0rc0
   specs:
-    uc3-ssm (0.3.1)
+    uc3-ssm (0.3.0)
       aws-sdk-ssm (~> 1.84)
       logger (~> 1.4)
       yaml (~> 0.1)
@@ -564,6 +564,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
+    mime-types-data (3.2021.0704)
     mini_mime (1.1.0)
     mini_portile2 (2.5.3)
     minitest (5.14.4)
@@ -627,9 +628,6 @@ GEM
     parallel (1.20.1)
     parser (3.0.2.0)
       ast (~> 2.4.1)
-    passenger (6.0.10)
-      rack
-      rake (>= 0.8.1)
     posix-spawn (0.3.15)
     postrank-uri (1.0.24)
       addressable (>= 2.4.0)
