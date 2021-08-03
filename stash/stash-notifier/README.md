@@ -17,7 +17,7 @@ has these commonly used parameters:
 
 ## State
 
-The script maintains state in the state/\<environment\>.json file which
+The script maintains state in the `shared/config/notifier_state.json` file which
 tracks the last time for an OAI-PMH item so as not to duplicate retrieving
 the whole feed every time, but just starting from where it left off.
 The state also tracks items for retrying notifications to Dryad (if there
@@ -42,7 +42,7 @@ usually some variation of a Merritt collection name.
 
 For run time configuration set these environment variables:
 
-- STASH\_ENV is the application environment you'd like it work with from
+- RAILS\_ENV is the application environment you'd like it work with from
 the notifier.yml file.  It will default to *development* unless something
 else is set otherwise.
 
@@ -53,14 +53,14 @@ with is logs/\<environment\>.log in the application directory.
 
 ## Running and a sample run
 
-Execute "main.rb" which is a Ruby file.  You would want to do a "bundle install" if you have
-not run it before.  Bundler will install all the required libraries (gems).
+The script used to run as a script, but now it runs on the new servers by a rake task a non-full-Rails environment
+rake task.
 
 See this sample run.
 
 ```
-$ STASH_ENV=localhost NOTIFIER_OUTPUT=stdout ./main.rb
-I, [2019-01-28T15:44:08.432653 #24225]  INFO -- : Starting notifier run for localhost environment
+$ RAILS_ENV=development bundle exec rails notifier:execute
+I, [2019-01-28T15:44:08.432653 #24225]  INFO -- : Starting notifier run for development environment
 /Users/sfisher/.rbenv/versions/2.4.1/lib/ruby/gems/2.4.0/gems/oai-0.4.0/lib/oai/client.rb:96: warning: constant ::Fixnum is deprecated
 I, [2019-01-28T15:44:08.442428 #24225]  INFO -- : Checking OAI feed for cdl_dryaddev -- http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?from=2019-01-24T21%3A39%3A58Z&metadataPrefix=stash_wrapper&set=cdl_dryaddev&until=2019-01-28T23%3A44%3A08Z&verb=ListRecords
 I, [2019-01-28T15:44:08.542798 #24225]  INFO -- : Notifying Dryad status, doi:10.5072/dryad.80gb5mn0, version: 2 ---- Testing the version number (2019-01-24T21:39:58Z)
@@ -69,55 +69,8 @@ I, [2019-01-28T15:44:08.723412 #24225]  INFO -- : Finished notifier run for loca
 
 ## How should I deploy this?
 
-Creating a special deployment script will likely take more time than it
-will save and this items is unlikely to re-deployed very often.
+Copy any old statefile to `shared/config/notifier_state.json`.
 
-1. git clone this repository.
-2. Recursively copy the directory stash-notifier to the spot where you
-want to run it.  (cp with the -r option.)
-3. Change to the stash-notifier directory and do "bundle install" to be sure all gems
-are installed.
-
-Really it doesn't need a bunch of other stuff.  It's a simple Ruby (2.6.x)
-script and as long as Ruby and the Gems it needs are installed, it should be happy.
-
-## What about saving state?
-
-Just save the state/\<environment\>.json fiie(s) to somewhere safe.  You
-can copy them back in to a new deploy if you want.
-
-Even if you lose them, you can just run the script and it will check all
-items in the OAI-PMH feed.  If Dryad has already been notified that something
-has finished in Merritt then it takes no action.
-
-## Example of swapping out notifier for a new version of code
-
-```shell script
-cd apps
-
-# get the code and copy the code
-git clone git@github.com:CDL-Dryad/dryad-app.git
-mkdir stash-notifier2
-cp -r dryad-app/stash/stash-notifier/* stash-notifier2
-
-# bundle install
-cd stash-notifier2
-bundle install
-
-# copy the state
-cd state
-# wait until you get a copy without the pid file or delete it
-cp -v ~/apps/stash-notifier/state/* .
-
-cd ~/apps
-
-# wait for pid file not to exist and it's not running and swap it out
-ls stash-notifier/state
-mv stash-notifier stash-notifier-old; mv stash-notifier2 stash-notifier
-
-# monitor output of runs if you want to verify
-tail -f /dryad/apps/ui/shared/cron/logs/stash-notifier.log
-
-# remove your temporary repo clone
-rm -rf dryad-app
-```
+It is now deployed with the app, however, you would want to copy the old state file from any old
+server to the new server (by scp or similar) if you don't want it to try notifying about every
+new dataset since the beginning of time.  
