@@ -61,6 +61,7 @@ gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
 gem 'stripe'
+gem 'oai', '>= 0.3.1'
 
 # #########################
 # Testing download examples
@@ -101,8 +102,7 @@ group :test do
   gem 'guard-rspec'
   # Mocking and stubbing library (http://gofreerange.com/mocha/docs)
   gem 'mocha', require: false
-  # IDK why, but even when this loads in the gemfile for the stash-notifier library it doesn't work in tests in Travis.ci
-  gem 'oai', '>= 0.3.1'
+
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
   gem 'rspec-github', require: false
