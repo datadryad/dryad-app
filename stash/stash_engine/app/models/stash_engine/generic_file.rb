@@ -2,12 +2,16 @@ require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
-require 'down'
+require 'http'
 
 module StashEngine
   class GenericFile < ApplicationRecord
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
+    amoeba do
+      enable
+      propagate
+    end
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
@@ -21,6 +25,12 @@ module StashEngine
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
+        .or(present_files.where(upload_content_type: 'application/vnd.ms-excel'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.xls'))
+        .or(present_files.where(upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.xlsx'))
+        .or(present_files.where(upload_content_type: 'application/json'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.json'))
     }
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
@@ -135,22 +145,92 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
-    def validate_frictionless
-      # TODO: add exceptions for downloading errors
-      tempfile = Down.download(url)
+    def set_checking_status
+      @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
+    end
 
-      result = call_frictionless(tempfile)
-      result_hash = JSON.parse(result)
-      FrictionlessReport.create(report: result, generic_file_id: id) \
-        unless errors_not_found(result_hash)
+    def validate_frictionless
+      result = download_file
+      if result.instance_of?(HTTP::Error)
+        @report.update(status: 'error')
+        return
+      end
+      result = write_tempfile(result)
+      if result.instance_of?(Errno::ENOENT)
+        @report.update(status: 'error')
+        return
+      end
+      result = call_frictionless(result)
+      # Add 'report' top level key that is required for calling
+      # React frictionless-components
+      result_hash = { report: JSON.parse(result) }
+      if validation_error(result_hash[:report])
+        @report.update(report: result_hash.to_json, status: 'error')
+        logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
+        return
+      end
+      status = if validation_issues_not_found(result_hash)
+                 'noissues'
+               else
+                 'issues'
+               end
+      @report.update(report: result_hash.to_json, status: status)
+    end
+
+    def download_file
+      http = HTTP.use(
+        normalize_uri: { normalizer: Stash::Download::NORMALIZER }
+      ).timeout(connect: 10, read: 10).follow(max_hops: 10)
+      dl_url = url || direct_s3_presigned_url
+      begin
+        http.get(dl_url)
+      rescue HTTP::Error => e
+        logger.error("Error downloading file: #{e.message}")
+        e
+      end
+    end
+
+    def write_tempfile(result)
+      # It's required file to have valid tabular extension for frictionless to return
+      # correct validation report
+      tempfile = Tempfile.new([upload_file_name, set_extension], Rails.root.join('tmp'), binmode: true)
+      tempfile.write(result.body.to_s)
+      tempfile.rewind
+      tempfile
+    rescue Errno::ENOENT => e
+      logger.error("Error writing to file: #{e.message}")
+      e
+    end
+
+    def set_extension
+      return '.csv' if (upload_file_name.last(4) == '.csv') || (upload_content_type == 'text/csv')
+      return '.xls' if (upload_file_name.last(4) == '.xls') || (upload_content_type == 'application/vnd.ms-excel')
+      return '.xlsx' if (upload_file_name.last(5) == '.xlsx') ||
+        (upload_content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+      '.json' if (upload_file_name.last(5) == '.json') || (upload_content_type == 'application/json')
     end
 
     def call_frictionless(file)
-      `frictionless validate #{file.path} --json`
+      # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
+      # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
+      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate --path #{file.path} --json 2>&1"
+      result = `#{cmd}`
+      logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
+      file.close!
+      result
     end
 
-    def errors_not_found(result)
-      result['tasks'].first['errors'].empty?
+    def validation_issues_not_found(result)
+      result[:report]['tasks'].first['errors'].empty?
+    end
+
+    def validation_error(result)
+      # See https://framework.frictionlessdata.io/docs/references/errors-reference/
+      # for an extensive list of all possible error. Note that there are the errors
+      # specific to the validation of a tabular file and the errors for another reason.
+      # This method test for errors others than the validation errors.
+      !result['errors'].empty?
     end
   end
 end

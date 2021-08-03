@@ -129,6 +129,15 @@ module Stash
             expect(@zc.error_info).to start_with('Nothing to submit to Zenodo')
           end
 
+          it 'calls to synchronize the zenodo related works, even if there is not software' do
+            @file.destroy
+            expect(StashDatacite::RelatedIdentifier).to receive(:set_latest_zenodo_relations).with(resource: @resource)
+            @zsc.add_to_zenodo
+            @zc.reload
+            expect(@zc.state).to eq('finished')
+            expect(@zc.error_info).to start_with('Nothing to submit to Zenodo')
+          end
+
           it "rejects a submission if earlier software versions haven't been replicated" do
             # use the default replication as the earlier version but without any replication info in zenodo_copy table
             @zc.destroy

@@ -10,7 +10,7 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'rb-readline', '~> 0.5.5', require: false
 gem 'react-rails', '~> 2.6.1'
-gem 'webpacker'
+gem 'webpacker', '~> 5.4.0'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
@@ -31,10 +31,11 @@ end
 
 gem 'capistrano', '~> 3.11'
 gem 'capistrano-rails', '~> 1.4'
-gem 'puma'
 gem 'rubocop', '~> 0.90.0'
-# not currently used for our simple case and because of some problems
-gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: 'main'
+# Use Puma as the app server
+gem 'puma', group: :puma, require: false
+# Our homegrown artisinal SSM gem
+gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
 # ############################################################
 # UI
@@ -114,6 +115,8 @@ group :test do
   gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
+  # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
+  gem 'shoulda-matchers', '~> 4.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
