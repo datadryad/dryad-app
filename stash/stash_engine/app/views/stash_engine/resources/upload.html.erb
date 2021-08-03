@@ -3,13 +3,6 @@
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<% if @datatype == 'Software' %>
-  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
-<% end %>
-
-<!--<h1 class="o-heading__level1">Upload Your <%#= @datatype %></h1>-->
-<!--<h1 class="o-heading__level1">Upload Your Files</h1>-->
-
 <%= javascript_pack_tag 'application' %>
 <%= stylesheet_pack_tag 'application' %>
 
@@ -23,6 +16,10 @@
   s3_dir_name: @resource.s3_dir_name(type: 'base'),
   frictionless: APP_CONFIG[:frictionless].to_h
 }) %>
+
+<!-- display messages to let arias know what's happening -->
+<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
+</div>
 
 <div class="o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
