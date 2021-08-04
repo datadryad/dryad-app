@@ -61,10 +61,6 @@ end
 namespace :cleanup do
   desc "Remove all of the example config files"
   task :remove_example_configs do
-    # I think this might get rid of the extraneous error message with manual deploy since it is trying to use the
-    # branch as an additional rake task and this adds a blank rake task for the branch so it doesn't error
-    ARGV.each { |a| task a.to_sym do ; end }
-
     on roles(:app), wait: 1 do
       execute "rm -f #{release_path}/config/*.yml.sample"
       execute "rm -f #{release_path}/config/initializers/*.rb.example"
