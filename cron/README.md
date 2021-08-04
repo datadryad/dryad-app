@@ -2,9 +2,8 @@
 
 Most of the Dryad Cron jobs are executed via the shell scripts in this directory.
 
-The files deploy with the code (in `apps/ui/current`), but the scheduled crons point to
-`/apps/dryad/apps/ui/shared/cron`, so we should re-symlink this directory after
-a successful deploy until we can get the crontab changed in puppet.
+The files deploy with the code (in `apps/ui/current`), but the logs and shared items are in
+`/apps/dryad/apps/ui/shared/cron`.
 
 ## Frequencies:
 
@@ -28,11 +27,33 @@ example crontab
 
 ```shell
 # Run jobs every 5 minutes
-*/5 * * * * /apps/dryad/apps/ui/shared/cron/every_5.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+*/5 * * * * /apps/dryad/apps/ui/current/cron/every_5.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs at noon each day
-00 12 * * * /apps/dryad/apps/ui/shared/cron/daily.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+00 12 * * * /apps/dryad/apps/ui/current/cron/daily.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs every Sunday at 21:00
-00 21 * * 0 /apps/dryad/apps/ui/shared/cron/weekly.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+00 21 * * 0 /apps/dryad/apps/ui/current/cron/weekly.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+```
+
+##Transport to new server
+- Set up ssh so you can scp files
+- Do commands like these after checking out the counter processor from github on the new server
+  and being in the same directory on the new server.
+  
+```bash
+scp <user>@<domain>:~/apps/counter/counter-processor/config/config.yaml .
+scp <user>@<domain>:~/apps/counter/counter-processor/config/secrets.yaml .
+cd ../maxmind_geoip
+scp <user>@<domain>:~/apps/counter/counter-processor/maxmind_geoip/* .
+cd ..
+mkdir state
+cd state
+scp <user>@<domain>:~/apps/counter/counter-processor/state/* .
+```
+
+Also copy over any old finished reports
+```bash
+cd /apps/dryad/apps/ui/shared/cron/counter-json
+scp <user>@<domain>:/apps/dryad-prd-shared/json-reports/* .
 ```
