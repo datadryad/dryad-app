@@ -15,9 +15,10 @@ module StashEngine
       SQL
 
       # leave tenant_id blank if you want stats for all
-      def initialize(tenant_id: nil, since: START_OF_AD_TIME)
+      def initialize(tenant_id: nil, since: START_OF_AD_TIME, untouched_since: Time.now)
         @tenant_id = tenant_id
         @since = since
+        @untouched_since = untouched_since
       end
 
       # it seems like ActiveRecord caches queries so, not sure I need to cache this
@@ -56,7 +57,7 @@ module StashEngine
       end
 
       def datasets_with_curation_status_count(status:)
-        query = "#{STATUS_QUERY_BASE} WHERE ser.updated_at > '#{@since}' AND seca.status = '#{status}'"
+        query = "#{STATUS_QUERY_BASE} WHERE ser.updated_at < '#{@untouched_since}' AND ser.created_at > '#{@since}' AND seca.status = '#{status}'"
         ApplicationRecord.connection.execute(query)&.first&.first
       end
 
