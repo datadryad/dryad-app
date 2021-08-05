@@ -84,4 +84,64 @@ namespace :counter do
     puts "SCP_HOSTS are set as #{ENV['SCP_HOSTS'].split(' ')}" if ENV['SCP_HOSTS']
     puts "note: in order to scp, you must add this server's public key to the authorized keys for the server you want to copy from"
   end
+
+  desc 'look for missing reports and force send them to datacite'
+  task datacite_pusher: :environment do
+    # something like this will get a list of reports that have been sent to DataCite and their IDs
+    # RAILS_ENV=production REPORT_DIR="/my/report/dir" REPORT_IDS=true bundle exec rails counter:datacite_pusher
+    $stdout.sync = true
+
+    require_relative '../../../script/counter-uploader/submitted_reports'
+    require_relative '../../../script/counter-uploader/uploader'
+    require_relative '../../../script/counter-uploader/utility_methods'
+
+    if ENV['REPORT_DIR'].blank?
+      puts 'You must set an environment varaiable for REPORT_DIR to upload to DataCite.'
+      puts 'Optional environment variables:'
+      puts "\tREPORT_IDS -- if set, only reports the yyyy-mm and ids that have been sent to DataCite."
+      puts "\tFORCE_SUBMISSION may be set with a comma separated list of yyyy-mm values and those reports"
+      puts "\twill be sent again, even if they appear to have already been submitted successfully."
+      next # this is like return but from a rake task
+    end
+
+    # setup variables needed
+    report_directory = ENV['REPORT_DIR']
+    # if ENV['REPORT_IDS'] is set then just report the IDs for our reports
+    # if ENV['FORCE_SUBMISSION'] is set with comma separated yyyy-mm values then those reports will be
+    # submitted again, even if they already appear to have been submitted
+
+    force_list = UtilityMethods.force_submission_list
+
+    # retrieve all the information about already submitted reports from DataCite
+    submitted_reports = SubmittedReports.new
+    submitted_reports.process_reports
+
+    # display submitted report info and exit if that option was chosen
+    if ENV['REPORT_IDS']
+      UtilityMethods.output_report_table(submitted_reports)
+      next # ie exit from rake task
+    end
+
+    # get the json files we have non-zero reports for and are in the correct filename format
+    json_files = Dir.glob(File.join(report_directory, '*.json'))
+    json_files.keep_if { |f| f.match(/\d{4}-\d{2}.json$/) && File.size(f) > 0 }
+    json_files.sort!
+
+    # go through our report files and try to submit unsubmitted/problem ones (and any you want to force submission for)
+    json_files.each do |json_file|
+      month_year = File.basename(json_file, '.json')
+      submitted_report = submitted_reports.reports[month_year]
+      if UtilityMethods.needs_submission?(month_year: month_year, report_info: submitted_report, report_directory: report_directory,
+                                          force_list: force_list)
+        puts "adding or updating #{month_year} with #{submitted_report&.pages || 'unsubmitted'} pages"
+
+        report_id = (submitted_report.nil? ? nil : submitted_report.id)
+        uploader = Uploader.new(report_id: report_id, file_name: json_file)
+        token = uploader.process
+        puts "report submitted with id #{token}\n\n"
+      else
+        puts "skipping #{submitted_report.year_month} with #{submitted_report.pages} pages\n\n"
+      end
+    end
+  end
 end
