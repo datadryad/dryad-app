@@ -89,6 +89,9 @@ namespace :counter do
   task datacite_pusher: :environment do
     # something like this will get a list of reports that have been sent to DataCite and their IDs
     # RAILS_ENV=production REPORT_DIR="/my/report/dir" REPORT_IDS=true bundle exec rails counter:datacite_pusher
+    #
+    # for typical monthly run of submitting missing and forcing last month
+    # RAILS_ENV=production REPORT_DIR="/my/report/dir" FORCE_SUBMISSION="2021-11" bundle exec rails counter:datacite_pusher
     $stdout.sync = true
 
     require_relative '../../../script/counter-uploader/submitted_reports'
