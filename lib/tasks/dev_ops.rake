@@ -146,11 +146,6 @@ namespace :dev_ops do
     StashEngine::ZenodoSuppJob.enqueue_deferred
   end
 
-  desc 'Gets Counter token for submitting a report'
-  task get_counter_token: :environment do
-    puts APP_CONFIG[:counter][:token]
-  end
-
   # this is for Merritt changes moving the old UC collections into the Dryad collections
   # After things are moved, two things need to happen 1) the tenant config needs to be
   # changed to point to dryad, and 2) this script needs to be run against the text file
