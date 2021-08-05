@@ -36,7 +36,7 @@ example crontab
 00 21 * * 0 /apps/dryad/apps/ui/current/cron/weekly.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
 ```
 
-##Transport to new server
+##counter-processor move to new server (require for counter weekly cron to work after move)
 - Set up ssh so you can scp files
 - Do commands like these after checking out the counter processor from github on the new server
   and being in the same directory on the new server.
