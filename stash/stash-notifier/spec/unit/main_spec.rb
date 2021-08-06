@@ -14,6 +14,7 @@ RSpec.describe 'main' do
 
     file_contents = File.open(File.join(__dir__, '..', 'data', 'oai-example.xml')).read
 
+    allow(State).to receive(:statefile_path).and_return(File.join(__dir__, '..', '..', 'state', 'test.json'))
     # stub the request for the oai-pmh feed
     stub_request(:get, %r{mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2})
       .to_return(status: 200, body: file_contents, headers: {})
