@@ -12,6 +12,8 @@ echo "Starting counter run at $dt"
 # this is for flexility but right now only used in production for real purposes
 source "${RAILS_ENV}_counter.sh"
 
+COUNTER_JSON_STORAGE="/apps/dryad/apps/ui/shared/cron/counter-json"
+
 # --------------------------------------
 # combining daily logs from both servers
 # --------------------------------------
@@ -25,9 +27,11 @@ bundle exec rails counter:combine_files
 # set up python and run counter-processor (maybe twice)
 # ---------------------------------------
 echo "Running counter-processor"
-export VIRTUAL_ENV=/apps/dryad/python_venv/python3.7.9
-export PATH=$VIRTUAL_ENV/bin:$PATH
-export PYTHONPATH=$VIRTUAL_ENV
+# should no longer need to do this on the new servers because pyenv is installed into the environment with 3.7.9
+# export VIRTUAL_ENV=/apps/dryad/python_venv/python3.7.9
+# export PATH=$VIRTUAL_ENV/bin:$PATH
+# export PYTHONPATH=$VIRTUAL_ENV
+
 python --version
 cd /apps/dryad/apps/counter/counter-processor
 # may need to to run the following lines to get dependencies (like bundler) before the first time the processor is run
