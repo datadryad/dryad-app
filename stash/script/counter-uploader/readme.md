@@ -1,23 +1,22 @@
 # The reworked Counter-Uploader tool
 
 The old tool depended on state files and we also ran into a number
-of issues uploading reports. It was quite manual and it was difficult to keep *state* in sync between the
-Python tool that calculates stats and the things we needed to do to re-submit failures.
-It's better to minimize the shared state and get as much as possible from the live sources
-such as by querying DataCite.  That way we know it is up to date and in sync.
+of issues uploading reports. It was quite manual and it was difficult to keep *state* in sync.
 
-If you invoke the ./main.rb file without setting environment variables it will give info.
+This gets the state and report ids from datacite and checks them against the json report files locally.
+
+
 
 ## Upload unsubmitted (or suspiciously small) reports for DataCite Counter EventData
 
-Reports should be in the same directory and named in the format 'yyyy-mm.json'. The
+Reports should be in the directory you specify and in the format 'yyyy-mm.json'. The
 tool will scan your files and scan the known reports at DataCite and resubmit things
 that DataCite does not have or that have a suspiciously small number of results.
 
 Use a command like this:
 
 ```shell script
-REPORT_DIR="</path/to/my/reports/directory>" TOKEN="<my-token>" ./main.rb
+RAILS_ENV=production REPORT_DIR="/my/report/dir" bundle exec rails counter:datacite_pusher
 ```
 
 ## Force upload of JSON reports (even if they're not suspicious)
@@ -28,7 +27,7 @@ appear suspicious at DataCite.
 Use a command like this:
 
 ```shell script
-FORCE_SUBMISSION="2018-10, 2019-03, 2020-01" REPORT_DIR="</path/to/my/reports/directory>" TOKEN="<my-token>" ./main.rb
+RAILS_ENV=production REPORT_DIR="/my/report/dir" FORCE_SUBMISSION="2021-11" bundle exec rails counter:datacite_pusher
 ```
 
 ## Get information about the reports at DataCite, but don't upload any reports
@@ -38,7 +37,7 @@ with the number of pages of results each of those months has. It's useful for tr
 down submission problems.
 
 ```shell script
-REPORT_IDS=true ./main.rb
+RAILS_ENV=production REPORT_DIR="/my/report/dir" REPORT_IDS=true bundle exec rails counter:datacite_pusher
 ```
 
 At the end of the output it will print out report months, DataCite report identifiers and
