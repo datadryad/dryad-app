@@ -7,6 +7,7 @@ can be found in `/dryad/init.d/README.delayed_job.md`.
 
 ## Some things errored and I want to send them through again
 - Go to the *Admin | Zenodo Submissions* menu, find the item in the list and click *resend*.
+- Click the "Reset stalled to error state" which finds anything incorrectly showing running still and reset it to error.
 - If there are multiple items for the same identifier, you will need to send them through
   in order for the same copy type (see the id column for order)
 - You can click the link for an item under the "ident.id" to just seem replication jobs for that identifier.
