@@ -27,6 +27,8 @@ append :linked_dirs,
        "public/system",
        "uploads"
 
+append :linked_files, 'config/notifier_state.json'
+
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
@@ -56,6 +58,9 @@ namespace :git do
   end
 end
 
+namespace :cleanup do
+  desc "Remove all of the example config files"
+  task :remove_example_configs do
     on roles(:app), wait: 1 do
       execute "rm -f #{release_path}/config/*.yml.sample"
       execute "rm -f #{release_path}/config/initializers/*.rb.example"
