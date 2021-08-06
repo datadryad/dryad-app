@@ -6,54 +6,45 @@ On servers where the transfer process lives, detailed documentation
 can be found in `/dryad/init.d/README.delayed_job.md`.
 
 ## Some things errored and I want to send them through again
-- Go to the Database table *stash_engine_zenodo_copies*
-- Look up item(s) by *identifier_id*
-- Reset the *error* status to *deferred* status instead, also reset the *retries* to 0 (it will stop retrying at 3).
-- If there are more rows with error status for that identifier (such as "out of order" errors), then reset each of them to *deferred* as well as the *retries* to 0.
-- on the -2c server, execute `~/bin/long_jobs.dryad restart`.  That will re-enqueue the *deferred* for sending to zenodo again.
-- If items for the same dataset arrive out of order or before an earlier one finishes processing, the later one may still error.   Repeat resetting the error statuses to *deferred* and rerunning `long_jobs.dryad restart` until all versions of the the error have gone through (or identify other causes for the error if they are not fixed by resubmitting).
-
+- Go to the *Admin | Zenodo Submissions* menu, find the item in the list and click *resend*.
+- Click the "Reset stalled to error state" which finds anything incorrectly showing running still and reset it to error.
+- If there are multiple items for the same identifier, you will need to send them through
+  in order for the same copy type (see the id column for order)
+- You can click the link for an item under the "ident.id" to just seem replication jobs for that identifier.
+  
 
 ## It's not processing? Why? Look at this stuff
-- (On 2c) Check `sudo systemctl status delayed_job` for status or
+- On second server (2c or 2) rather than first (2a or 1).
+- OLD SERVERS: `cd ~/apps/ui/current` and then `RAILS_ENV=production bundle exec bin/delayed_job -n 3 start` (or stop).
+- NEW SERVERS: Check `sudo systemctl status delayed_job` for status or
   start the daemon with `sudo systemctl start delayed_job`
-- Delayed jobs has a bare work queue in the table `delayed_jobs`.  Jobs should appear here until processed successfully and then will be deleted on success.
-- The application state of the zenodo jobs is maintained in `stash_engine_zenodo_copies` and also contains important info such as the deposition id (zenodo's internal id)
-- Most errors and stack traces should be saved into the error field in the table above so we don't have to spend hours digging through logs to figure out problems
+- There may be long (or stalled) jobs running on all workers.  The delayed_job table shows what is actually running in delayed job.
+  Sometimes restarting delayed_job may help.   Some items in the queue may show SIGTERM in their error column in the delayed_job table
+  And you can delete it there and resubmit in the admin page again after if you want.
 
 ## We're about to have a maintenance, shutdow or restart, what do I do?
-- (On 2c) "pause" or "drain" the jobs at least a few hours or more ahead so they don't get cut off in the middle of something that takes many hours to process.
+- (On 2c) "pause" or "drain" the jobs a bit ahead so they don't get cut off in the middle.  If they do get cut off you can
+  resend them afterwards.
+- If you deploy, the delayed_job daemon is stopped before deploy and restarted after deploy. (on old servers--Ashley is looking at how
+  to do this with her puppeting).
 - Check status with `~/bin/long_jobs.dryad status`
-- Let jobs drain out with `~/bin/long_jobs.dryad drain`.  This really just touches two files in the `~/app/ui/releases` directory. The files are: `defer_jobs.txt` (zenodo replication) and `hold-submissions.txt` (Merritt submissions).  When these files are present then the internal state of these is put into a `defered` or `rejected-shutting-down` when it's their turn to run.  These states are in their own tables and not the delayed_job work queue because the delayed_job queue is very simple and dumb.
+- Let jobs drain out with `~/bin/long_jobs.dryad drain`.  This really just touches two files in the `~/app/ui/releases` directory.
+  The files are: `defer_jobs.txt` (zenodo replication) and `hold-submissions.txt` (Merritt submissions).  When these files are present then the internal state of these is put into a `defered` or `rejected-shutting-down` when it's their turn to run.  These states are in their own tables and not the delayed_job work queue because the delayed_job queue is very simple and dumb.
 
 ## We just finished maintenance, what do I do?
-- (On 2c) `~/bin/long_jobs.dryad restart`  .  This takes the jobs that were rejected/deferred and resets their status to 'enqueued' and re-inserts them into the work queue.
+- (On 2c) `~/bin/long_jobs.dryad restart`.  This takes the jobs that were rejected/deferred and resets their status to 'enqueued' and re-inserts them into the work queue.
 - The deferred job things (zenodo) only runs on one server (2c), but currently the Merritt submission queue runs on both inside the web server processes so it is more complicated.
+- Start delayed_job if it's not running.  It should get restarted if you deployed code (old servers). 
 - For Merritt queues:
   - Be sure the `~/app/ui/releases/hold-submissions.txt` files are deleted.
   - Look at the Merritt queue page in the UI and note which server you're accessing.
   - For the 'rejected shutting down' jobs showing as the other server (in `stash_engine_repo_queue_states`, manipulate the database to set the latest state's hostname to the server you're on.
   - Click "Restart submissions which were shut down gracefully".  It should re-enqueue them on your current server.
 
-## Example of manually submitting a Zenodo copy from the console
-
-```
-RAILS_ENV=local_dev bin/delayed_job start
-```
-
-from RAILS_ENV=local_dev rails console:
-```
-resource = StashEngine::Resource.find(<id>)
-resource.send_to_zenodo
-```
-
-You can now check the stash_engine_zenodo_copies and delayed_jobs tables for status
-or if you want to look at the item on zenodo (it has their id in the table).
-
 ## ActiveJob / Delayed Job Background
 
-The Rails framework ActiveJob libraries are meant to address these
-issues and are a common standard way to address background processing
+The Rails framework ActiveJob libraries are meant to be a common standard
+way to address background processing
 for a Rails application.  ActiveJob works as a wrapper around the most
 popular backends for asynchronous queuing and processing that are most
 commonly mentioned: Sidekiq, Resque and (Shopify's) Delayed Job.  If
@@ -62,16 +53,7 @@ only a bit of configuration change if more scaling is needed.
 
 Delayed Job is attractive since it saves its queue in a table in the
 application's MySQL database and doesn't require another server
-technology (Redis) to be installed and managed.  It also doesn't
-involve extra worry for saving queue state like the technologies that
-rely on Redis which is an in-memory store and may not save the queue
-in the case of an irregular exit or crash.
-
-The Redis-backed asyncronous queuing systems apparently are very fast
-and can handlea huge numbers of queuing requests with ease, but I
-believe are all overkill for the few dozens to hundreds or even few
-thousands of queueing jobs we'll likely do every day (this scale is
-very small compared to how some people use these systems).
+technology (Redis) to be installed and managed.
 
 Delayed Job saves queue state to the database (from request by
 ActiveJob) and a separate independent Delayed Job daemon process picks
