@@ -151,6 +151,50 @@ embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies 
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31
 ```
 
+Please unpublish dataset (but it will likely be published again later)
+======================================================================
+
+This isn't the same as removing, but involves many systems because publication triggers many events
+with external systems.  It has some similarities to un-embargoing, or deleting but we need to remove metadata where we can
+without actually deleting.
+
+Do these SQL statements, filling in the appropriate info:
+```
+select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
+select id, file_view, meta_view from stash_engine_resources where identifier_id=;
+select * from stash_engine_curation_activities where resource_id=;
+update stash_engine_curation_activities set status='submitted' where id=;
+update stash_engine_resources set file_view=false, meta_view=false where identifier_id=;
+update stash_engine_resources set publication_date=NULL where id=;
+update stash_engine_identifiers set pub_state='unpublished' where id=;
+select deposition_id from stash_engine_zenodo_copies WHERE copy_type="data" and resource_id=;
+```
+
+It's pretty impossible to remove from Zenodo without contacting them and waiting a while, so an embargo for a century
+or two might serve the purpose.
+````
+# the parameters are 1) resource_id, 2) deposition_id (see last sql above), 3) date far in the future
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo <resource-id> <deposition-id> 2200-12-31
+````
+
+Remove from our SOLR search:
+```
+bundle exec rails c -e production # console for production environment
+solr = RSolr.connect url: Blacklight.connection_config[:url]
+solr.delete_by_query("uuid:\"doi:<doi>\"")  # replace the <doi> in that string
+solr.commit
+exit
+```
+
+What to do at datacite?
+- doi.datacite.org, login and search for doi under dois tab
+- Click `update doi (form)`
+- You cannot change this back to a draft now because it was published
+- Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
+- Click `Update DOI`
+- (if it's EZID, you may have to do this a different way, but most are datacite dois)
+
+
 Removing data that was accidentally published
 ===================================================
 
