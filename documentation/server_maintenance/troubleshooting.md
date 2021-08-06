@@ -167,11 +167,11 @@ update stash_engine_curation_activities set status='submitted' where id=;
 update stash_engine_resources set file_view=false, meta_view=false where identifier_id=;
 update stash_engine_resources set publication_date=NULL where id=;
 update stash_engine_identifiers set pub_state='unpublished' where id=;
-select deposition_id from stash_engine_zenodo_copies WHERE copy_type="data" and resource_id=;
+select deposition_id from stash_engine_zenodo_copies WHERE resource_id=;
 ```
 
 It's pretty impossible to remove from Zenodo without contacting them and waiting a while, so an embargo for a century
-or two might serve the purpose.
+or two might serve the purpose.  Do this for each of the unique deposition_ids listed in the query above. 
 ````
 # the parameters are 1) resource_id, 2) deposition_id (see last sql above), 3) date far in the future
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo <resource-id> <deposition-id> 2200-12-31
