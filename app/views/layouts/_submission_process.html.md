@@ -73,7 +73,7 @@ If you have questions or require assistance, contact <a href="mailto:help@datadr
 </p>
 
 <p>
-<a href="https://frictionlessdata.io/">Learn more about the Frictionless Data project</a> at Open Knowledge
+<a href="https://frictionlessdata.io/">Learn more about the Frictionless Data project</a> at the Open Knowledge
 Foundation. 
 </p>
 
