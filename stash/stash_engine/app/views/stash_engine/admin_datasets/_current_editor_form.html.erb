@@ -11,7 +11,7 @@
       <%= f.fields_for :current_editor, resource do |r| %>
         <div class="c-input">
             <label class="c-input__label">Curator</label>
-          <%= r.select :id, options_for_select(editor_select), include_blank: true %>
+          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select), include_blank: true %>
         </div>
       <% end %>
     <% end %>

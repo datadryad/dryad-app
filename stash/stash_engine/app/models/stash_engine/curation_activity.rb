@@ -211,6 +211,8 @@ module StashEngine
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
+        return if previously_submitted?
+
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
     end
@@ -227,6 +229,18 @@ module StashEngine
         end
       end
       prev_pub
+    end
+
+    def previously_submitted?
+      # ignoring the current CA, is there a submitted status at any point for this resource?
+      prev_sub = false
+      resource.curation_activities&.each do |ca|
+        if (ca.id != id) && ca.submitted?
+          prev_sub = true
+          break
+        end
+      end
+      prev_sub
     end
 
     # Triggered on a status of :published
