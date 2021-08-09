@@ -211,7 +211,7 @@ module StashEngine
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
-        return if previously_submitted? # Don't sent multiple emails for the same resource
+        return if previously_submitted? # Don't send multiple emails for the same resource
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
