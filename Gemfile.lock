@@ -721,6 +721,11 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    restforce (2.5.4)
+      faraday (>= 0.9.0, <= 1.0)
+      faraday_middleware (>= 0.8.8, <= 1.0)
+      hashie (>= 1.2.0, < 4.0)
+      json (>= 1.7.5)
     retriable (3.1.2)
     rexml (3.2.5)
     rinku (2.0.6)
@@ -957,6 +962,7 @@ DEPENDENCIES
   rails (~> 5.2)
   rb-readline (~> 0.5.5)
   react-rails (~> 2.6.1)
+  restforce (~> 2.5.3)
   rspec-collection_matchers
   rspec-github
   rspec-html
