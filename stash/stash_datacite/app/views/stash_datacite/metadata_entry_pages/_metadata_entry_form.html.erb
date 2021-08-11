@@ -45,7 +45,7 @@
   </fieldset>
 
 
-    <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
+    <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'cke_description_abstract' %>
     <%= render partial: "stash_datacite/descriptions/form", locals: {
         description: @metadata_entry.abstract, description_type: :abstract, description_name: "abstract" }  %>
 
@@ -59,11 +59,11 @@
     <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
     <% end %>
 
-    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
+    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'cke_description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
     <%= render partial: "stash_datacite/descriptions/form", locals: {
         description: @metadata_entry.methods, description_type: :methods, description_name: "methods" } %>
 
-    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
+    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'cke_description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
     <%= render partial: "stash_datacite/descriptions/form", locals: {
         description: @metadata_entry.other, description_type: :other, description_name: 'usage notes' } %>
 
