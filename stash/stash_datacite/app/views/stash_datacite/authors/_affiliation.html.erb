@@ -1,4 +1,5 @@
 <% my_suffix = field_suffix(author) %>
+
 <%= form.fields_for :affiliation, author.affiliation do |affil_fields| %>
 		<label class="c-input__label required" for="instit_affil_<%= my_suffix %>">Institutional Affiliation</label>
     <%= affil_fields.text_field(:long_name, id: "instit_affil_#{my_suffix}", class: 'c-input__text js-affiliation') %>
