@@ -1,5 +1,5 @@
 <%# the local variable 'resource' should be passed in to this partial %>
-<% form_id = "dc_fos_subject_#{resource.id}" %>
+<% form_id = "dc_fos_subjects_#{resource.id}" %>
 <%= form_with(url: fos_subjects_update_path, method: :patch, remote: true, authenticity_token: true, id: form_id,
               class: 'c-input' ) do |f| %>
   <% my_suffix = field_suffix(resource) %>
@@ -9,7 +9,7 @@
   <%= hidden_field_tag :id, resource.id %>
   <%= hidden_field_tag(:form_id, form_id) %>
 
-  <datalist id="<%= "fos_subjects_#{my_suffix}" %>">
+  <datalist id="<%= "fos_subject_#{my_suffix}" %>">
     <%= options_for_select(StashDatacite::Subject.fos.pluck(:subject).uniq.sort, resource&.subjects&.fos&.first&.subject) %>
   </datalist>
 <% end %>
