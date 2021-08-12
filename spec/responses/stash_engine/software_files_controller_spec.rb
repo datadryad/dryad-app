@@ -6,6 +6,7 @@ require 'byebug'
 module StashEngine
   RSpec.describe SoftwareFilesController, type: :request do
     include GenericFilesHelper
+    include DatasetHelper
     include Mocks::Aws
 
     before(:each) do
@@ -56,8 +57,8 @@ module StashEngine
       before(:each) do
         @valid_manifest_url = 'http://example.org/funbar.txt'
         @invalid_manifest_url = 'http://example.org/foobar.txt'
-        create_valid_stub_request(@valid_manifest_url)
-        create_invalid_stub_request(@invalid_manifest_url)
+        build_valid_stub_request(@valid_manifest_url)
+        build_invalid_stub_request(@invalid_manifest_url)
       end
 
       it 'returns json when request with format html to validate urls' do

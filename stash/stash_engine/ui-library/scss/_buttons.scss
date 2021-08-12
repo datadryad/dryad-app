@@ -229,6 +229,12 @@
   background: transparent inline('../images/icon_close.svg') center / 15px no-repeat;
 }
 
+.o-button__close-lite {
+  padding: 10px;
+  border: none;
+  background: transparent inline('../images/icon_close-red.svg') center / 15px no-repeat;
+}
+
 %o-button__add-remove {
   display: inline-block;
   text-align: left;

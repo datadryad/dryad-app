@@ -38,8 +38,29 @@
 	background-image: inline('../images/icon_warning-white.svg');
 }
 
+.c-alert--error-lite {
+	@extend %c-alert;
+	border: 1px solid $design-red-color;
+	background-color: $design-white-color;
+	background-image: inline('../images/icon_warning.svg');
+}
+
+.c-alert--error-icon {
+	display: block;
+	padding-left: 20px;
+	background-image: inline('../images/icon_warning.svg');
+	background-repeat: no-repeat;
+	background-position: left 8px;
+	background-size: 20px;
+	color: $design-white-color;
+}
+
 .c-alert__text {
 	// empty
+}
+
+.c-alert__text-lite {
+	color: $design-red-color;
 }
 
 .c-alert__close {

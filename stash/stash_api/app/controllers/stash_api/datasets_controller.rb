@@ -54,6 +54,7 @@ module StashApi
       # reformatted before and after the normal processing.
       respond_to do |format|
         format.any do
+          deposit_request = params['article'].blank?
           if @stash_identifier&.first_submitted_resource.present?
             # Once the dataset has been submitted by an author, only update selected fields,
             # but don't fully process the metadata from EM
@@ -72,7 +73,7 @@ module StashApi
             @stash_identifier.latest_resource.update(hold_for_peer_review: true)
 
             ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
-            render json: em_reformat_response(ds.metadata), status: 201
+            render json: em_reformat_response(metadata: ds.metadata, deposit_request: deposit_request), status: 201
           end
         end
       end
@@ -135,12 +136,12 @@ module StashApi
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
           @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'curation',
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'submitted',
                                                  note: 'updating status based on API notification from Editorial Manager')
         else
           # any other article disposition -> transition peer_review to action_required
           @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'action_required',
+            StashEngine::CurationActivity.create(user_id: @user.id, status: 'withdrawn',
                                                  note: 'updating status based on API notification from Editorial Manager')
         end
       end
@@ -206,7 +207,7 @@ module StashApi
             affiliation: auth['institution']
           }.with_indifferent_access.compact
         end
-      else
+      elsif auth_array.present?
         # assume there is only one author, so the param is an author hash
         auth = auth_array
         em_authors << {
@@ -223,7 +224,7 @@ module StashApi
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
-    def em_reformat_response(metadata)
+    def em_reformat_response(metadata:, deposit_request:)
       sharing_link = @stash_identifier.shares&.first&.sharing_link
       edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
       {
@@ -231,7 +232,7 @@ module StashApi
         deposit_doi: @stash_identifier.identifier,
         deposit_url: sharing_link,
         deposit_edit_url: edit_url,
-        deposit_upload_url: edit_url,
+        deposit_upload_url: deposit_request ? edit_url : nil,
         status: 'Success'
       }.compact
     end

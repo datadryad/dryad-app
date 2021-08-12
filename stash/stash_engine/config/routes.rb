@@ -39,10 +39,16 @@ StashEngine::Engine.routes.draw do
   get 'data_file/presign_upload/:resource_id', to: 'data_files#presign_upload', as: 'data_file_presign_url'
   get 'software_file/presign_upload/:resource_id', to: 'software_files#presign_upload', as: 'software_file_presign_url'
   get 'supp_file/presign_upload/:resource_id', to: 'supp_files#presign_upload', as: 'supp_file_presign_url'
+  # TODO: this is to be the replacement for the 3 above
+  get 'generic_file/presign_upload/:resource_id', to: 'generic_files#presign_upload', as: 'generic_file_presign_url'
 
   post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
   post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
   post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
+
+  post 'generic_file/validate_frictionless/:resource_id',
+       to: 'generic_files#validate_frictionless',
+       as: 'generic_file_validate_frictionless'
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
