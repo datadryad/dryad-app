@@ -157,7 +157,7 @@ namespace :deploy do
           execute "cd #{deploy_to}/current; bundle install --deployment"
 
           # https://www.phusionpassenger.com/library/config/standalone/reference/#--max-requests-max_requests
-          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
+          execute "cd #{deploy_to}/current; #{fetch(:special_login)} bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
               "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)}"
         end

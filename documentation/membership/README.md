@@ -24,8 +24,8 @@ Your Identity and Access Management team can use the following information to ma
 - [Attribute Release Policies](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/membership/dyrad_attribute_release.xml)
 
 Dryad Service Provider Metadata
-- [Dryad stage/test service provider](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/membership/Dryad-stage-SP-Metadata-11202020.xml)
-- [Dryad production service provider](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/membership/Dryad-SP-Metadata-11202020.xml)
+- [Dryad stage/test service provider](https://mdq.incommon.org/entities/https%3A%2F%2Fdash-stg.cdlib.org%2Fshibboleth)
+- [Dryad production service provider](https://mdq.incommon.org/entities/https%3A%2F%2Fdatadryad.org%2Fshibboleth)
 
 Once configurations have occurred in both your IdP and on Dryad's SP, you can attempt the test again.
 

@@ -47,6 +47,23 @@ module StashEngine
       end
     end
 
+    def validate_frictionless
+      tabular_files = StashEngine::GenericFile.tabular_files
+      begin
+        files = tabular_files.find(params['file_ids'])
+      rescue ActiveRecord::RecordNotFound => e
+        puts "Record not found: #{e.inspect}" # only for rubocop
+        render json: { status: 'found non-csv file(s)' }
+        return
+      end
+
+      files.each(&:set_checking_status)
+      files.each(&:validate_frictionless)
+      render json: files.as_json(
+        methods: :type, include: { frictionless_report: { only: %w[report status] } }
+      )
+    end
+
     # quick start guide for setup because the bucket needs to be set a certain way for CORS, also
     # https://github.com/TTLabs/EvaporateJS/wiki/Quick-Start-Guide
     #

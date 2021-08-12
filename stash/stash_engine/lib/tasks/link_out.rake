@@ -69,7 +69,7 @@ namespace :link_out do
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
     resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids).pluck(:id)
     related_identifiers = StashDatacite::RelatedIdentifier.where(resource_id: resource_ids, related_identifier_type: 'doi',
-                                                                 relation_type: 'cites').order(created_at: :desc)
+                                                                 work_type: 'primary_article').order(created_at: :desc)
     related_identifiers.each do |data|
       p "  looking for pmid for #{data.related_identifier}"
       pmid = pubmed_service.lookup_pubmed_id(data.related_identifier.gsub('doi:', ''))

@@ -1,0 +1,12 @@
+.Blinking {
+    font-weight: bold;
+}
+
+.Passed {
+    font-weight: normal;
+}
+
+.ValidationError {
+    /* From _alert.scss */
+    color: rgb(209, 44, 29);
+}

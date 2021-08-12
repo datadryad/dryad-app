@@ -34,7 +34,7 @@ module StashDatacite
                              'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom',
                              'is source of': 'issourceof' }.freeze
 
-    enum work_type: %i[undefined article dataset preprint software supplemental_information]
+    enum work_type: %i[undefined article dataset preprint software supplemental_information primary_article]
 
     enum added_by: { default: 0, zenodo: 1 }
 
@@ -46,7 +46,7 @@ module StashDatacite
                                  supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
-                                    supplemental_information: 'ispartof' }.with_indifferent_access
+                                    supplemental_information: 'ispartof', primary_article: 'cites' }.with_indifferent_access
 
     # these keys will be case-insensitive matches
     ACCESSION_TYPES = {
@@ -104,11 +104,11 @@ module StashDatacite
     end
 
     def work_type_friendly
-      WORK_TYPE_CHOICES[work_type] || work_type.capitalize
+      WORK_TYPE_CHOICES[work_type] || work_type.humanize
     end
 
     def work_type_friendly_plural
-      WORK_TYPE_CHOICES_PLURAL[work_type] || work_type.capitalize.pluralize
+      WORK_TYPE_CHOICES_PLURAL[work_type] || work_type.humanize.pluralize
     end
 
     def self.related_identifier_type_mapping_obj(str)
@@ -132,8 +132,9 @@ module StashDatacite
     def self.set_latest_zenodo_relations(resource:)
       resource.related_identifiers.where(added_by: 'zenodo').destroy_all
 
+      # software file relation
       sfw_copy = resource.zenodo_copies.software.first
-      if resource.software_files.present_files.count.positive?
+      if sfw_copy&.software_doi.present? && resource.software_files.present_files.count.positive?
         doi = standardize_doi(sfw_copy.software_doi)
         create(related_identifier: doi,
                related_identifier_type: 'doi',
@@ -144,9 +145,10 @@ module StashDatacite
                added_by: 'zenodo')
       end
 
-      return unless resource.supp_files.present_files.count.positive?
-
+      # supplemental file relations
       supp_copy = resource.zenodo_copies.supp.first
+
+      return unless supp_copy&.software_doi.present? && resource.supp_files.present_files.count.positive?
 
       doi = standardize_doi(supp_copy.software_doi)
       create(related_identifier: doi,
