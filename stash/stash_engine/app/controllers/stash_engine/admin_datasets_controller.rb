@@ -22,12 +22,18 @@ module StashEngine
                           current_user.journals_as_admin.present?
                          current_user.journals_as_admin.map(&:title)
                        end)
+      funder_limit = (if current_user.role != 'superuser' &&
+                         current_user.role != 'curator' &&
+                         current_user.funders_as_admin.present?
+                        current_user.funders_as_admin.map(&:funder_id)
+                      end)
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
       @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
                                                                      tenant: tenant_limit,
-                                                                     journals: journal_limit)
+                                                                     journals: journal_limit,
+                                                                     funders: funder_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
