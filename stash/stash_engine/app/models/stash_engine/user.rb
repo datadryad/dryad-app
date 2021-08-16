@@ -49,6 +49,10 @@ module StashEngine
       admin_journals + admin_org_journals
     end
 
+    def funders_as_admin
+      StashEngine::FunderRole.where(user_id: id, role: 'admin')
+    end
+    
     NO_MIGRATE_STRING = 'xxxxxx'.freeze
 
     def migration_complete?
