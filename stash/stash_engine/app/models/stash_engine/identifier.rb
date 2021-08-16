@@ -23,7 +23,7 @@ module StashEngine
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
     scope :with_visibility, ->(states:, journal_issns: nil, user_id: nil, tenant_id: nil) do
-      where(id: Resource.with_visibility(states: states, journal_issns: journal_issns, user_id: user_id, tenant_id: tenant_id)
+      where(id: Resource.with_visibility(states: states, journal_issns: journal_issns, funder_ids: funder_ids, user_id: user_id, tenant_id: tenant_id)
                         .select('identifier_id').distinct.map(&:identifier_id))
     end
 
@@ -41,6 +41,7 @@ module StashEngine
         with_visibility(states: %w[published embargoed],
                         tenant_id: tenant_admin,
                         journal_issns: user.journals_as_admin.map(&:issn),
+                        funder_ids: user.funders_as_admin.map(&:funder_id),
                         user_id: user.id)
       end
     end

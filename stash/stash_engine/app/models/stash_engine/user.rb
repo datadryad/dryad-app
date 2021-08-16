@@ -52,7 +52,7 @@ module StashEngine
     def funders_as_admin
       StashEngine::FunderRole.where(user_id: id, role: 'admin')
     end
-    
+
     NO_MIGRATE_STRING = 'xxxxxx'.freeze
 
     def migration_complete?
