@@ -19,16 +19,16 @@ module StashEngine
 
       end
 
-      it 'disallows editing a resource that has no funder' do
+      it 'disallows admin when resource has no funder' do
         expect(@res.admin_for_this_item?(user: @user)).to be_falsey
       end
 
-      it 'allows editing a resource that has the same funder' do
+      it 'allows admin when resource has the same funder' do
         @res.contributors << create(:contributor, resource: @res, name_identifier_id: @funder_role1.funder_id)
         expect(@res.admin_for_this_item?(user: @user)).to be_truthy
       end
 
-      it 'disallows editing a resource that has a different funder' do
+      it 'disallows admin when resource has a different funder' do
         @res.contributors << create(:contributor, resource: @res, name_identifier_id: 'non-matching funder ID')
         expect(@res.admin_for_this_item?(user: @user)).to be_falsey
         #### TODO
