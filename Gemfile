@@ -7,7 +7,6 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 gem 'mysql2', '~> 0.5.3'
 gem 'passenger'
 gem 'rails', '~> 5.2'
-gem 'rb-readline', '~> 0.5.5', require: false
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
 
