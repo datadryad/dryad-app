@@ -18,8 +18,10 @@ Dryad has several levels of permissions. Some permissions are defined by the
 Other permissions are orthogonal to the `User.role`:
 - *journal_admin* -- Has view and edit access to all datasets associated with an
    article in the appropriate journal. Journal administrators are defined by
-  `User.journal_role`, so they may overlap or overried permissions defined by
-  `User.role`. 
+  `User.journal_role`.
+- *funder_admin* -- Has view and edit access to all datasets associated with a
+   given funder. Funder administrators are defined by
+  `FunderRole`
 - *API access* -- All users are able to use the public API without authentication. However,
   some portions of the API require authication. Once a user is
   authenticated through the API, their other permissions take
