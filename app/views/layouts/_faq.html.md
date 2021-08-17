@@ -298,7 +298,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 </p>
 
 <p>
-    Dryad has implemented the Make Data Count (<a href="https://makedatacount.org">https://makedatacount.org</a>) project
+    Dryad has implemented the <a href="https://makedatacount.org">Make Data Count</a> project
     recommendations. This means that that views and downloads on each dataset landing page are standardized against the
     COUNTER Code of Practice for Research Data. Within this framework, Dryad also exposes all related citations to a
     dataset on the landing page. These are updated each time a new citation from an article or other source has been
