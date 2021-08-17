@@ -6,7 +6,7 @@
 </div>
 
 <h2 class="o-heading__page-span">Preliminary Information</h2>
-  <div class="js-contributors_form">
+  <div class="js-contributors_form_top">
     <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
   </div>
 
@@ -25,7 +25,7 @@
           <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: stash_datacite.authors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
+    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
 
   <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
@@ -41,12 +41,13 @@
         <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add' %>
+    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
   </fieldset>
 
 
-    <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract, description_type: :abstract }  %>
+    <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'cke_description_abstract' %>
+    <%= render partial: "stash_datacite/descriptions/form", locals: {
+        description: @metadata_entry.abstract, description_type: :abstract, description_name: "abstract" }  %>
 
   <p class="c-input__required-note">required fields</p>
 
@@ -58,11 +59,13 @@
     <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
     <% end %>
 
-    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %>
+    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'cke_description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
+    <%= render partial: "stash_datacite/descriptions/form", locals: {
+        description: @metadata_entry.methods, description_type: :methods, description_name: "methods" } %>
 
-    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
+    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'cke_description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
+    <%= render partial: "stash_datacite/descriptions/form", locals: {
+        description: @metadata_entry.other, description_type: :other, description_name: 'usage notes' } %>
 
 
     <h2 class="o-heading__page-span">Related Works</h2>
