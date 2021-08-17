@@ -62,7 +62,8 @@ module StashEngine
 
     def require_admin
       return if current_user && (%w[admin superuser curator tenant_curator].include?(current_user.role) ||
-                                 current_user.journals_as_admin.present?)
+                                 current_user.journals_as_admin.present? ||
+                                 current_user.funders_as_admin.present?)
 
       flash[:alert] = 'You must be an administrator to view this information.'
       redirect_to stash_engine.dashboard_path
