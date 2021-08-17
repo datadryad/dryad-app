@@ -4,16 +4,11 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # ############################################################
 # Rails
 
-gem 'aws-sdk-s3', '~> 1.87'
-gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'mysql2', '~> 0.5.3'
 gem 'passenger'
 gem 'rails', '~> 5.2'
-gem 'rb-readline', '~> 0.5.5', require: false
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
-gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
 
 # ############################################################
 # Local engines
@@ -50,19 +45,24 @@ gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
 # gem 'mini_racer'
 gem 'turbolinks'
-
 gem 'uglifier', '~> 4.2.0'
 gem 'yui-compressor'
 
 # ############################################################
 # Misc
 
+gem 'aws-sdk-s3', '~> 1.87'
 gem 'bootsnap', require: false
 gem 'exception_notification'
+gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
+gem 'rb-readline', '~> 0.5.5', require: false
+gem 'restforce', '~> 2.5.3'
 gem 'stripe'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 # #########################
 # Testing download examples
