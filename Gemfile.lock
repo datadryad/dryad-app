@@ -731,7 +731,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    restforce (2.5.4)
+    restforce (3.2.0)
       faraday (>= 0.9.0, <= 1.0)
       faraday_middleware (>= 0.8.8, <= 1.0)
       hashie (>= 1.2.0, < 4.0)
@@ -974,7 +974,7 @@ DEPENDENCIES
   rails (~> 5.2)
   rb-readline (~> 0.5.5)
   react-rails (~> 2.6.1)
-  restforce (~> 2.5.3)
+  restforce (~> 3.0)
   rspec-collection_matchers
   rspec-github
   rspec-html
@@ -1007,4 +1007,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.2.17
+   2.2.24
