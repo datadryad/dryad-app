@@ -570,12 +570,12 @@ module StashEngine
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
-        funders_match? ||
+        funders_match?(user: user) ||
         user.journals_as_admin.include?(identifier&.journal) ||
         (user.journals_as_admin.present? && identifier&.journal.blank?)
     end
 
-    def funders_match?
+    def funders_match?(user:)
       user_funders = user.funders_as_admin
       resource_funders = contributors
       return unless user_funders.present? && resource_funders.present?
