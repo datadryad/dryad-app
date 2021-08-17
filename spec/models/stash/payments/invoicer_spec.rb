@@ -12,7 +12,6 @@ module Stash
         allow(@identifier).to receive(:payment_id=)
         allow(@identifier).to receive(:payment_type=)
         allow(@identifier).to receive(:save).and_return(true)
-        allow(@identifier).to receive(:storage_size).and_return(5.01e+10.to_i)
 
         @resource_id = 17
         @resource = double(StashEngine::Resource)
@@ -43,6 +42,7 @@ module Stash
         allow(@invoicer).to receive(:create_invoice).and_return(fake_invoice)
         allow(@invoicer).to receive(:create_customer).and_return(fake_customer)
         allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return(nil)
+        allow(@invoicer).to receive(:ds_size).and_return(5.01e+10.to_i)
 
         allow(Stripe::InvoiceItem).to receive(:create) { |hsh| hsh }
       end
