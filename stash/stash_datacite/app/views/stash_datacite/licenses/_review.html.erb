@@ -102,16 +102,10 @@ $(document).ready(function(){
         $('.js-submission').attr('disabled', true); //disable input
     }
   });
+});
 
-	$('#zenodo_license').selectize({
-		sortField: 'text'
-	});
-
-	// write this into the form that gets sent on submission of dataset
-	$('#zenodo_license').change(function (){
-		var selected = $(this).children("option:selected").val();
-		$("#software_license").val(selected);
-	});
+$('#zenodo_license').on('change', function(e){
+	$('#software_license').val($("#zenodo_license option:selected").val());
 });
 </script>
 
