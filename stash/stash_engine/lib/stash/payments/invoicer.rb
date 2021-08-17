@@ -60,9 +60,9 @@ module Stash
       end
 
       def ds_size
-        # generally we should have populated this into the identifier from Merritt by callback, but the sum of
-        # all the file sizes for a version is a fallback
-        resource.identifier.storage_size || StashEngine::DataFile.where(resource_id: resource.id).sum(:upload_file_size)
+        # Only charge based on the files present in the item at time of publication, even if
+        # the Merritt history has larger files.
+        StashEngine::DataFile.where(resource_id: resource.id).sum(:upload_file_size)
       end
 
       def overage_bytes

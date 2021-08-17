@@ -14,7 +14,7 @@ defaults: &DEFAULTS
     host: ezid.cdlib.org
     port: 443
   google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
-  contact_us_uri: mailto:help@datadryad.org
+  contact_us_uri: help@datadryad.org
   # sandbox orcid credentials
   orcid:
     site: https://sandbox.orcid.org/

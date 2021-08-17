@@ -42,6 +42,7 @@ module StashEngine
           LEFT OUTER JOIN stash_engine_resource_states sers ON sers.id = j2.latest_resource_state_id
           LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
           LEFT OUTER JOIN stash_engine_counter_stats secs ON sei.id = secs.identifier_id
+          LEFT OUTER JOIN dcs_contributors dcs_c ON ser.id = dcs_c.resource_id
       SQL
 
       # add extra joins when I need to reach into author affiliations for every dataset
@@ -103,9 +104,10 @@ module StashEngine
         # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
         # tenant is only set for tenant admins (not superusers or curators).
         # The journals, if set, limits to items associated with one of the given journals.
+        # The funders, if set, limits to items associated with one of the given funders.
         #
         # if resource_id is set then only returns that resource id
-        def where(params:, tenant: nil, journals: nil, identifier_id: nil)
+        def where(params:, tenant: nil, journals: nil, funders: nil, identifier_id: nil)
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
@@ -123,6 +125,7 @@ module StashEngine
                                  publication_filter: params.fetch(:publication_name, ''),
                                  admin_tenant: tenant,
                                  admin_journals: journals,
+                                 admin_funders: funders,
                                  identifier_id: identifier_id)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
@@ -137,7 +140,7 @@ module StashEngine
         # Create the WHERE portion of the query based on the filters set by the user (if any)
         # rubocop:disable Metrics/ParameterLists
         def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:, editor_filter:,
-                               publication_filter:, admin_tenant:, admin_journals:, identifier_id: nil)
+                               publication_filter:, admin_tenant:, admin_journals:, admin_funders:, identifier_id: nil)
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
@@ -146,7 +149,8 @@ module StashEngine
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
             create_tenant_limit(admin_tenant),
-            create_journals_limit(admin_journals)
+            create_journals_limit(admin_journals),
+            create_funders_limit(admin_funders)
           ].compact
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
         end
@@ -209,6 +213,12 @@ module StashEngine
           return nil if admin_journals.blank?
 
           ActiveRecord::Base.send(:sanitize_sql_array, ['( seid.value IN (?) )', admin_journals])
+        end
+
+        def create_funders_limit(admin_funders)
+          return nil if admin_funders.blank?
+
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( dcs_c.name_identifier_id IN (?) )', admin_funders])
         end
 
       end

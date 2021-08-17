@@ -26,7 +26,7 @@
     <!-- list individual files -->
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
-        <summary class="o-showhide__summary c-file-group__summary">
+        <summary role="button" class="o-showhide__summary c-file-group__summary">
           <%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ?
                                  res.publication_date : res.updated_at) %>
           <%= ( res_id.positive? && res.id > res_id ? '*' : '' ) -%>

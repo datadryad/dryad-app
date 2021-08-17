@@ -22,12 +22,18 @@ module StashEngine
                           current_user.journals_as_admin.present?
                          current_user.journals_as_admin.map(&:title)
                        end)
+      funder_limit = (if current_user.role != 'superuser' &&
+                         current_user.role != 'curator' &&
+                         current_user.funders_as_admin.present?
+                        current_user.funders_as_admin.map(&:funder_id)
+                      end)
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
       @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
                                                                      tenant: tenant_limit,
-                                                                     journals: journal_limit)
+                                                                     journals: journal_limit,
+                                                                     funders: funder_limit)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
@@ -78,7 +84,7 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def curation_activity_popup
       respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
+        @identifier = Identifier.where(id: params[:id]).first
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
         @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
@@ -88,7 +94,7 @@ module StashEngine
 
     def current_editor_popup
       respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first # changed this to use identifier_id rather than resource_id
+        @identifier = Identifier.where(id: params[:id]).first
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
         @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
@@ -99,13 +105,19 @@ module StashEngine
     def current_editor_change
       respond_to do |format|
         format.js do
-          editor_id = params[:resource][:current_editor][:id]
-          editor_name = StashEngine::User.find(editor_id)&.name
           @identifier = Identifier.find(params[:identifier_id])
           @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
-          @resource.current_editor_id = editor_id
-          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
           decipher_curation_activity
+          editor_id = params[:resource][:current_editor][:id]
+          if editor_id&.to_i == 0
+            @resource.current_editor_id = nil
+            editor_name = 'unassigned'
+            @status = 'submitted'
+          else
+            @resource.current_editor_id = editor_id
+            editor_name = StashEngine::User.find(editor_id)&.name
+          end
+          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
