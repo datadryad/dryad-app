@@ -84,13 +84,25 @@ git push --delete origin <tag-name>
 After creating tags, you will usually want to create an official
 "release" along with release notes in the GitHub user interface.
 
-Suspending jobs for deployment
-------------------------------
+Suspending and re-enabling jobs around deployment
+-------------------------------------------------
 
 Dryad servers send datasets to Merritt and Zenodo using job
 queues. These queues should be suspended during a redeploy to ensure
 a dataset is not in the process of being transferred when the code is
 changed out.
+
+Briefly, a little while ahead:
+- On 2c, run `~/bin/long_jobs.dryad drain`.  It touches the defer_jobs.txt and hold-submissions.txt files in `~/app/ui/releases`.
+- On 2a, touch `~/app/ui/releases/hold-submissions.txt`
+
+Deploy
+
+After
+- Run `~/bin/long_jobs.dryad restart` on 2c.
+- Remove `~/app/ui/releases/hold-submissions.txt` on 2a.
+- Reset the servername in the repo_queue_state table for any jobs being held to match the server name you're looking at in the UI.
+- Click "Restart submissions which were shut down gracefully."  It'll send them through again.
 
 For information on starting/stopping these transfers, see:
 - [Zenodo extra copies](../zenodo_integration/delayed_jobs.md)
@@ -112,49 +124,6 @@ production ALB as well:
 /apps/dryad/alb/alb_register.sh stg a
 /apps/dryad/alb/alb_register.sh stg c
 ```
-
-If you are logged into the ops server, see these notes :
-
-```
-$ ssh uc3-aws2-ops.cdlib.org
-$ sudo su - uc3aws
-
-# our albs are named uc3-dryad-prd-alb or uc3-dryad-stg-alb
-
-######## stage ########
-
-### deregister
-load-balancer.bash uc3-dryad-stg-alb deregister uc3-dryaduix2-stg-2a
-load-balancer.bash uc3-dryad-stg-alb deregister uc3-dryaduix2-stg-2c
-
-### reregister
-load-balancer.bash uc3-dryad-stg-alb register uc3-dryaduix2-stg-2a
-load-balancer.bash uc3-dryad-stg-alb register uc3-dryaduix2-stg-2c
-
-
-######## production ########
-
-### deregister
-load-balancer.bash uc3-dryad-prd-alb deregister uc3-dryaduix2-prd-2a
-load-balancer.bash uc3-dryad-prd-alb deregister uc3-dryaduix2-prd-2c
-
-### reregister
-load-balancer.bash uc3-dryad-prd-alb register uc3-dryaduix2-prd-2a
-load-balancer.bash uc3-dryad-prd-alb register uc3-dryaduix2-prd-2c
-```
-
-Checking for Chunked Upload in the UI
--------------------------------------
-
-The other process that is long-running might a a user upload to the
-UI. The user uploads hit the path /stash/data_files with a post
-request for each segment of the file. You can grep the logs to see if
-there are a lot of them happening in the past hour or past 10 minutes
-or some other time you can grep for. Restarting in the middle of an
-upload will stall that user's upload. They could delete and upload
-again, but it's better to not interrupt them if possible to wait for
-them to finish.
-
 
 Setting a server to "Maintenance Mode"
 --------------------------------------

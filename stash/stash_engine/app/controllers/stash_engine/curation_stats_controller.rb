@@ -11,7 +11,10 @@ module StashEngine
       params.permit(:format)
 
       @all_stats = CurationStats.all
-      @stats = CurationStats.where(date: 1.month.ago..Date.today).order('date DESC')
+      @current_stats = CurationStats.where(date: 1.month.ago..Date.today).order('date DESC')
+
+      @admin_stats = StashEngine::AdminDatasetsController::Stats.new
+      @admin_stats_2day = StashEngine::AdminDatasetsController::Stats.new(untouched_since: Time.now - 2.days)
 
       respond_to do |format|
         format.html

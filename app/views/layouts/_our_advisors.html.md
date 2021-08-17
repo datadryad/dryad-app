@@ -157,8 +157,8 @@ community.</p>
     working for use and adoption of AmeliCA XML for the journals being
     published by various scholarly societies in India for making
     enriched reading formats and for interoperability of data and
-    information. He can be reached at <a href="http://twitter.com/SridharGutam">@SridharGutam</a> and more about him
-    at can be read from <a href="https://www.iihr.res.in/sridhar-gutam">https://www.iihr.res.in/sridhar-gutam</a>
+    information. He can be reached at <a href="http://twitter.com/SridharGutam">@SridharGutam</a> and you can
+    <a href="https://www.iihr.res.in/sridhar-gutam">read more about his background</a>.
     </p>
 </div>
 
@@ -215,9 +215,11 @@ community.</p>
     applications of data science, especially techniques, methods, and
     tools for reproducible research and open science in archaeology
     and the sciences broadly. See
-	<a href="http://faculty.washington.edu/bmarwick/">http://faculty.washington.edu/bmarwick/</a>
-	for interviews, his public and professional writing, and more
-    about Ben's teaching and research.
+	<a href="http://faculty.washington.edu/bmarwick/">
+    his interviews, writing, and more
+    about his teaching and research
+  </a>.
+	
     </p>
 </div>
 
@@ -237,6 +239,7 @@ community.</p>
       benefits from an interdisciplinary team of collaborators from
       agriculture, biodiversity science, climatology, evolution and
       viticulture, as well as from shared long-term datasets from across North
-      America and Europe. <a href="https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich">https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich</a>
+      America and Europe. See <a href="https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich">
+      Elizabeth's Profile</a>
     </p>
 </div>

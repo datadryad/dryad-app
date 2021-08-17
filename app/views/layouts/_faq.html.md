@@ -48,8 +48,7 @@
 <p>
     The base DPC per data submission is $120 USD. DPCs are invoiced upon curator approval/publication, unless the submitter
     is based at a <a href="/stash/our_membership#institutional">member institution</a> (determined by login credentials),
-    an associated journal or publisher has an agreement with Dryad to sponsor the DPC (
-    <a href="https://datadryad.org/docs/JournalLookup.pdf">see list</a>) or the submitter is based
+    an associated journal or publisher has an agreement with Dryad to sponsor the DPC or the submitter is based
     in a fee-waiver country (see above).
 </p>
 
@@ -298,7 +297,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 </p>
 
 <p>
-    Dryad has implemented the Make Data Count (<a href="https://makedatacount.org">https://makedatacount.org</a>) project
+    Dryad has implemented the <a href="https://makedatacount.org">Make Data Count</a> project
     recommendations. This means that that views and downloads on each dataset landing page are standardized against the
     COUNTER Code of Practice for Research Data. Within this framework, Dryad also exposes all related citations to a
     dataset on the landing page. These are updated each time a new citation from an article or other source has been
