@@ -25,7 +25,7 @@
           <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: stash_datacite.authors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
+    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
 
   <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
@@ -41,7 +41,7 @@
         <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add' %>
+    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
   </fieldset>
 
 
