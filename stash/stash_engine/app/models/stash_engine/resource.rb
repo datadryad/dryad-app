@@ -65,8 +65,8 @@ module StashEngine
         end
 
         # I think there was something weird about Amoeba that required this approach
-        resources = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        resources.each(&:delete)
+        deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        deleted_files.each(&:destroy)
       end)
     end
 
