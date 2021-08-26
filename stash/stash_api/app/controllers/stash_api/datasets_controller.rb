@@ -83,28 +83,26 @@ module StashApi
     end
 
     def em_depositing_user
-      puts "#### @current_user is #{@current_user}, @user is #{@user&.first_name}"
       author = params['authors'] || params['author']
       if author.is_a?(Array)
         return unless author.size == 1
+
         author = author.first
       end
-      return unless author.present? && (author['orcid'] || author['email'])     
+      return unless author.present? && (author['orcid'] || author['email'])
 
       # Find by ORCID or email
       user = StashEngine::User.where(orcid: author['orcid']).or(StashEngine::User.where(email: author['email'])).first
-            
+
       # If not, make a user
-      unless user
-        user = StashEngine::User.create(first_name: author['first_name'],
+      user ||= StashEngine::User.create(first_name: author['first_name'],
                                         last_name: author['last_name'],
                                         email: author['email'],
                                         orcid: author['orcid'],
                                         role: 'user')
-      end
-      user.id      
+      user
     end
-    
+
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
     def em_update_selected_fields
       logger.debug('em_update_selected_fields')
@@ -190,12 +188,11 @@ module StashApi
 
       # For a deposit_request, we can set the user ID, and a subsequent call will
       # login the user. Otherwise, the submission will be owned by the system user.
-      if deposit_request
-        puts "##### Setting owner to #{em_depositing_user}"
-        em_params['userId'] = em_depositing_user
-      else
-        em_params['userId'] = 0
-      end
+      em_params['userId'] = if deposit_request
+                              em_depositing_user.id
+                            else
+                              0
+                            end
 
       em_params['publicationName'] = params['journal_full_title']
       art_params = params['article']
