@@ -59,7 +59,7 @@ gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
 gem 'rb-readline', '~> 0.5.5', require: false
-gem 'restforce', '~> 2.5.3'
+gem 'restforce', '~> 3.0'
 gem 'stripe'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
