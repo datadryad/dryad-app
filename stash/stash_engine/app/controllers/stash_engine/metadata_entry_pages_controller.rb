@@ -58,6 +58,7 @@ module StashEngine
       # log them in as the dataset owner, and ensure the tenant_id is set correctly.
       unless current_user
         session[:user_id] = resource.user_id
+        session[:target_page] = metadata_entry_pages_find_or_create_path(resource_id: resource.id)
         redirect_to choose_sso_path and return if current_user.tenant_id.blank?
       end
 
