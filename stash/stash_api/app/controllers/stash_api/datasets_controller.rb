@@ -99,6 +99,7 @@ module StashApi
                                         last_name: author['last_name'],
                                         email: author['email'],
                                         orcid: author['orcid'],
+                                        tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
                                         role: 'user')
       user
     end

@@ -97,6 +97,13 @@ module StashEngine
       new(StashEngine.tenants[tenant_id])
     end
 
+    def self.find_by_long_name(tenant_name)
+      all.each do |t|
+        return t if t.long_name == tenant_name
+      end
+      nil
+    end
+
     def full_url(path)
       d = Rails.application.default_url_options
       if d[:port].blank?

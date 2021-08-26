@@ -63,6 +63,11 @@ module StashEngine
         tenant = Tenant.find('exemplia')
         expect_exemplia(tenant)
       end
+
+      it 'finds the tenant by long_name' do
+        tenant = Tenant.find_by_long_name('University of Exemplia')
+        expect_exemplia(tenant)
+      end
     end
 
     describe :omniauth_login_path do
