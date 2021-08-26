@@ -163,18 +163,36 @@ module StashEngine
       result = call_frictionless(result)
       # Add 'report' top level key that is required for calling
       # React frictionless-components
-      result_hash = { report: JSON.parse(result) }
-      if validation_error(result_hash[:report])
-        @report.update(report: result_hash.to_json, status: 'error')
-        logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
-        return
+      result = clean_frictionless_json(result)
+
+      begin
+        result_hash = { report: JSON.parse(result) }
+        if validation_error(result_hash[:report])
+          @report.update(report: result_hash.to_json, status: 'error')
+          logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
+          return
+        end
+        status = if validation_issues_not_found(result_hash)
+                   'noissues'
+                 else
+                   'issues'
+                 end
+        @report.update(report: result_hash.to_json, status: status)
+      rescue JSON::ParserError => e
+        @report.update(report: '{}', status: 'error')
+        logger.error("Unknown error calling frictionless on generic file #{id} for resource #{resource.id} -- #{e}")
       end
-      status = if validation_issues_not_found(result_hash)
-                 'noissues'
-               else
-                 'issues'
-               end
-      @report.update(report: result_hash.to_json, status: status)
+    end
+
+    # Given a (mostly) JSON response from Frictionless, discard anything before the opening
+    # brace or after the closing brace, because it is typically a warning message from Python
+    # that Frictionless didn't handle properly.
+    def clean_frictionless_json(in_str)
+      return in_str unless in_str.include?('{') && in_str.include?('}')
+
+      first_brace = in_str.index('{')
+      last_brace =  in_str.rindex('}')
+      in_str[first_brace..last_brace]
     end
 
     def download_file
