@@ -55,6 +55,7 @@ module StashApi
       respond_to do |format|
         format.any do
           deposit_request = params['article'].blank?
+
           if @stash_identifier&.first_submitted_resource.present?
             # Once the dataset has been submitted by an author, only update selected fields,
             # but don't fully process the metadata from EM
@@ -63,9 +64,11 @@ module StashApi
             render json: em_response, status: status_code
           else
             dp = if @resource
-                   DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
+                   DatasetParser.new(hash: em_reformat_request(deposit_request: deposit_request),
+                                     id: @resource.identifier, user: @user)
                  else
-                   DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+                   DatasetParser.new(hash: em_reformat_request(deposit_request: deposit_request),
+                                     id: nil, user: @user)
                  end
             @stash_identifier = dp.parse
 
@@ -77,6 +80,28 @@ module StashApi
           end
         end
       end
+    end
+
+    def em_depositing_user
+      author = params['authors'] || params['author']
+      if author.is_a?(Array)
+        return unless author.size == 1
+
+        author = author.first
+      end
+      return unless author.present? && (author['orcid'] || author['email'])
+
+      # Find by ORCID or email
+      user = StashEngine::User.where(orcid: author['orcid']).or(StashEngine::User.where(email: author['email'])).first
+
+      # If not, make a user
+      user ||= StashEngine::User.create(first_name: author['first_name'],
+                                        last_name: author['last_name'],
+                                        email: author['email'],
+                                        orcid: author['orcid'],
+                                        tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
+                                        role: 'user')
+      user
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
@@ -159,11 +184,16 @@ module StashApi
     end
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
-    def em_reformat_request
+    def em_reformat_request(deposit_request: false)
       em_params = {}.with_indifferent_access
 
-      # EM doesn't set an item owner, so default it to system, and the actual user will need to claim it
-      em_params['userId'] = 0
+      # For a deposit_request, we can set the user ID, and a subsequent call will
+      # login the user. Otherwise, the submission will be owned by the system user.
+      em_params['userId'] = if deposit_request
+                              em_depositing_user.id
+                            else
+                              0
+                            end
 
       em_params['publicationName'] = params['journal_full_title']
       art_params = params['article']

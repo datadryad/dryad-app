@@ -9,6 +9,8 @@
       "email": "amy.author@test.demo",
       "people_id": "126",
       "orcid": "1234-1234-1234-1234",
+      "institution": "North Carolina State University",
+      "institution_id": "1234",
       "corresponding": true,
       "custom_user_ids": [
          {
