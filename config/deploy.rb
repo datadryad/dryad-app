@@ -56,6 +56,9 @@ namespace :git do
   end
 end
 
+namespace :cleanup do
+  desc "Remove all of the example config files"
+  task :remove_example_configs do
     on roles(:app), wait: 1 do
       execute "rm -f #{release_path}/config/*.yml.sample"
       execute "rm -f #{release_path}/config/initializers/*.rb.example"
