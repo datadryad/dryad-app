@@ -17,7 +17,7 @@ module Stash
         @cc = controller_context
       end
 
-      # file is file_upload from ActiveRecord
+      # file is file from ActiveRecord object
       def download(file:)
         tenant = file&.resource&.tenant
         if file.blank? || tenant.blank?

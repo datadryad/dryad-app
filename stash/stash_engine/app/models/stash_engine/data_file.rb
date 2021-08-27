@@ -36,7 +36,7 @@ module StashEngine
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-        .timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
+        .timeout(connect: 5, read: 5).timeout(5).follow(max_hops: 2)
         .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
 
       r = http.get(merritt_presign_info_url)
