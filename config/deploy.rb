@@ -27,6 +27,8 @@ append :linked_dirs,
        "public/system",
        "uploads"
 
+append :linked_files, 'config/notifier_state.json'
+
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
