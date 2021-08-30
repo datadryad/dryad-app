@@ -100,7 +100,7 @@ RSpec.describe Uploader do
       stub_request(:post, 'https://api.datacite.org/reports')
         .with(headers: {
                 'Accept' => 'gzip',
-                'Authorization' => 'Bearer 12xup3856',
+                'Authorization' => "Bearer #{APP_CONFIG[:counter][:token]}",
                 'Connection' => 'close',
                 'Content-Encoding' => 'gzip',
                 'Content-Type' => 'application/gzip',
@@ -141,12 +141,6 @@ RSpec.describe UtilityMethods do
       fl = %w[2010-11 2011-12 2018-05 2019-10]
       result = UtilityMethods.needs_submission?(month_year: @month_year, report_directory: @report_dir, report_info: @report_info, force_list: fl)
       expect(result).to be(true)
-    end
-  end
-
-  describe 'check_env_variables' do
-    it "gives message and exits if ENV['TOKEN'] and ENV['REPORT_DIR'] are nil" do
-      expect { UtilityMethods.check_env_variables }.to raise_error(SystemExit)
     end
   end
 
