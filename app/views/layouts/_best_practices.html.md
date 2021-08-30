@@ -115,7 +115,7 @@
 </ul>
 
 
-<img src="/images/dataset-structure.jpeg" alt="Dataset organization">
+<img src="/images/dataset-structure.png" alt="Dataset organization">
 
 
 
