@@ -20,16 +20,19 @@
         please see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use CC0?</a>
     </li>
     <li>
-        While Dryad can host software scripts and snapshots of software source code, we recommend the use of a public
-        software repository with version control for the ongoing maintenance of software packages.
+      For software scripts and snapshots of software source code, files can be uploaded via Dryad and published at
+      Zenodo, which allows public software deposits with version control for the ongoing maintenance of software packages.
+      If you are only seeking to store code, software, and/or supplemental information please
+      <a href="https://zenodo.org" target="_blank">visit Zenodo</a>.
     </li>
 </ul>
 
 <h2 id="size">What are the size limits?</h2>
 
 <p>
-    There is a limit of 300GB per data publication uploaded through the web interface. We can accept larger submissions,
-    but the submitter needs to <a href="mailto:help@datadryad.org">contact us</a> for assistance.
+  There is a limit of 300GB per data publication uploaded through the web interface. We can accept larger submissions,
+  but the submitter needs to <a href="mailto:help@datadryad.org">contact us</a> for assistance. We recommend that
+  individual files should not exceed 10GB. This ensures files are easily accessed and downloaded by Dryad users.
 </p>
 
 <h2 id="cost">How much does it cost?</h2>
@@ -195,7 +198,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 <h2 id="ppr">How does Dryad’s Private for Peer Review feature work?</h2>
 
 <p>
-  On the 'Review and Submit' page of the submission form, we offer the option to make the dataset private during your
+  On the final page of the submission process, we offer the option to make the dataset private during your
   related manuscript’s peer review process. After selecting this option, you will be presented with a private,
   randomized URL that allows for a double-blind download of the dataset. This link can be used by the journal
   office to access the data files during the review period or shared with collaborators while the dataset is not
@@ -279,8 +282,8 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 </p>
 
 <p>
-    Through our integration, researchers may upload software during the data submission process that will be triaged
-    and published at Zenodo. The software will not go through Dryad curation processes but it will be time-released with
+    Through our integration, any software uploaded during the data submission process will be triaged and published at Zenodo.
+    The software will not go through Dryad curation processes but it will be time-released with
     the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad
     landing page under “Related Works”.
 <p>
@@ -320,8 +323,8 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
         to data from any field.
     </li>
     <li>
-        <strong>Cite and publicize your data publication</strong> with your given DOI. The recommended citation format
-        appears on your dataset landing page.
+        <strong>Cite and publicize your data publication</strong> with your given DOI assigned upon submission. The
+        recommended citation format appears on your dataset landing page.
     </li>
 </ul>
 
