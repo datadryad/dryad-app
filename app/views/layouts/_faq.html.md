@@ -48,7 +48,8 @@
 <p>
     The base DPC per data submission is $120 USD. DPCs are invoiced upon curator approval/publication, unless the submitter
     is based at a <a href="/stash/our_membership#institutional">member institution</a> (determined by login credentials),
-    an associated journal or publisher has an agreement with Dryad to sponsor the DPC or the submitter is based
+    an associated journal or publisher has an agreement with Dryad to sponsor the DPC
+    (<a href="/stash/journals">see list</a>) or the submitter is based
     in a fee-waiver country (see above).
 </p>
 
@@ -56,7 +57,7 @@
 
 <p>
     For submissions without a sponsor or waiver, Dryad charges excess storage fees for data totaling over 50GB. For
-    data packages in excess of 50GB, submitters will be charged $50 for each additional 10GB, or part thereof. (Submissions
+    data packages in excess of 50GB, submitters will be charged $50 for each additional 10GB, or part thereof (submissions
     between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on).
 </p>
 
@@ -194,13 +195,14 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 <h2 id="ppr">How does Dryad’s Private for Peer Review feature work?</h2>
 
 <p>
-    On page four of the submission process, we offer the option to make the dataset private during your related
-    manuscript’s peer review process. After selecting this option, you will be presented with a private, randomized URL
-    that allows for a double-blind download of the dataset. This link can be used at the journal office during the
-    review period or for sharing with collaborators to access the data files while the dataset is not yet published.
-    When your manuscript has been accepted, you can take your dataset out of private for peer review,
-    so that the Dryad curation team can begin the checks and publication processes. To do this, log in to Dryad and
-    navigate to "My Datasets". Find the submission with the status "Private for Peer Review" and  click 'Update'. Deselect the Private for Peer Review box on the 'Review and Submit' page (page 4). At the bottom of this page, click ‘Submit'.
+  On the 'Review and Submit' page of the submission form, we offer the option to make the dataset private during your
+  related manuscript’s peer review process. After selecting this option, you will be presented with a private,
+  randomized URL that allows for a double-blind download of the dataset. This link can be used by the journal
+  office to access the data files during the review period or shared with collaborators while the dataset is not
+  yet published. When your manuscript has been accepted, you can take your dataset out of private for peer review,
+  so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate
+  to "My Datasets". Find the submission with the status "Private for Peer Review" and click 'Update'. Deselect the
+  "Private for Peer Review" checkbox on the 'Review and Submit' page. At the bottom of this page, click ‘Submit'.
 </p>
 
 <h2 id="when-to-submit">When should I submit my data?</h2>
