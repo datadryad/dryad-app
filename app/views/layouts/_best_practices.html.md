@@ -46,7 +46,7 @@
   </li>
   <li>
     <strong>External resources:</strong> Links to associated data stored in other data repositories, code in
-    software repositories, and associated publications can be included in "Related works".<br/><br/>
+    software repositories, and associated publications can be included in "Related works".
   </li>
 </ul>
 
