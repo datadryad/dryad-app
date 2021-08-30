@@ -24,7 +24,7 @@ default: &default
   authentication:
     strategy: shibboleth
     entity_id: https://myidp.nmsu.edu
-    entity_domain: sts.windows.net
+    entity_domain: myidp.nmsu.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
