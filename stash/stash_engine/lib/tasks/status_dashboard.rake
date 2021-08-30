@@ -58,7 +58,7 @@ namespace :status_dashboard do
     {
       abbreviation: 'submission_queue',
       name: 'Submission Queue',
-      description: 'The submisison queue manages processing of submissions to Merritt',
+      description: 'The submission queue manages processing of submissions to Merritt',
       documentation: '',
       internally_managed: true,
       status: 1
