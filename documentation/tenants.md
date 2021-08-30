@@ -88,7 +88,8 @@ authentication:
       search for the item in the list while having your browser inspector open
       to the network tab you may be able to dig out the entity id.  I found mine
       in the response for the file "DiscoFeed" where it had some JSON with the
-      display name I selected and the entityID.
+      display name I selected and the entityID.  But seems like it only allows
+      discovery for some institutions.
     - (old way) can normally be found by looking up the institution’s from
        the InCommon config file. On stage/prod, this is
        `/apps/dryad/local/shibboleth-sp/var/InCommon-metadata.xml`. If the
