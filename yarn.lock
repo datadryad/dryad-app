@@ -958,10 +958,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cdl-dryad/frictionless-components@^0.3.13":
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/@cdl-dryad/frictionless-components/-/frictionless-components-0.3.13.tgz#1f058e0f9cb54a1ed4f769ca64809de81c9b3f0c"
-  integrity sha512-dhjeDKmHDKDrLktxFZaG77IIaQbwdwxA1FunCx4CaFaJt2ecaca0+++x5VzeEsfJIX9f3bALPla5LfqqiQvqdQ==
+"@cdl-dryad/frictionless-components@^0.3.14":
+  version "0.3.14"
+  resolved "https://registry.yarnpkg.com/@cdl-dryad/frictionless-components/-/frictionless-components-0.3.14.tgz#c4b357cd98f0f1aba83db4c5165175c9a4fc2bb7"
+  integrity sha512-fy2AL2/YbLBqzwDYPnaeyEunNaimgpxYz4wAc9QlgQINWqgo9sFrDwF4M3AWZxAu8qVZBAAHHauV36KV3mUsIQ==
   dependencies:
     "@types/lodash" "^4.14.168"
     "@types/marked" "^2.0.1"

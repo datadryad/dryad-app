@@ -7,6 +7,8 @@ class StateSpec
   describe 'state' do
 
     before(:each) do
+      allow(State).to receive(:statefile_path).and_return(File.join(__dir__, '..', '..', 'state', 'test.json'))
+
       Config.initializer(environment: 'test')
 
       logger = double('logger')

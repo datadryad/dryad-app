@@ -82,23 +82,14 @@ up some things in ~/install or logs
 
 ## Fix the Notifier if it's on this server (the 2a servers)
 
-- [ ] Get latest version of notifier code
-```shell script
-cd ~/apps
-mv stash-notifier stash-notifier-old
-cp -avr ~/apps/ui/current/stash/stash-notifier stash-notifier
-cp "stash-notifier-old/state/${RAILS_ENV}.json" stash-notifier/state/
-cd stash-notifier
-bundle install
-```
+Copy any state file from an old server to `shared/config/notifier_state.json`.  It will pick up at the date/time
+of the old state looking for new datasets.
 
-- [ ] Either check or test the stash-notifier to be sure it's working
-```shell script
-# Either check output for latest runs to be sure it's working
-less /dryad/apps/ui/shared/cron/logs/stash-notifier.log
-# or run manually run the tool to test
-STASH_ENV="$RAILS_ENV" NOTIFIER_OUTPUT=stdout /dryad/apps/stash-notifier/main.rb
-```
+Runs like: 
+
+`RAILS_ENV=development bundle exec rails notifier:execute`
+
+It is in a cron script.
 
 ## Check the disk isn't full
 - [ ] for good measure check `df` to see free space and clean something up if needed
