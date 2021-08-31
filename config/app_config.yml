@@ -171,6 +171,14 @@ defaults: &DEFAULTS
   frictionless:
     # 25 MB and below
     size_limit: 25_000_000
+  rate_limit:
+    # number of requests allowed per minute
+    all_requests: 120
+    zip_downloads: 10
+    api_requests_anon: 30
+    api_requests_auth: 120
+    api_requests_v1: 30
+      
 
 development: &DEVELOPMENT
   <<: *DEFAULTS

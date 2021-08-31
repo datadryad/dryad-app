@@ -16,6 +16,9 @@ require 'capybara-screenshot/rspec'
 # Clear all of the screenshots from old tests
 Dir[Rails.root.join('tmp/capybara/*')].each { |f| File.delete(f) }
 
+# Do not allow rack-attack to limit the rate of requests during testing
+Rack::Attack.enabled = false
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
