@@ -21,7 +21,7 @@ PATH
       sync (~> 0.5)
       tins (~> 1.25)
     stash_discovery (0.0.2)
-      blacklight (~> 6.5)
+      blacklight (~> 6.11)
       config (~> 2.2, >= 2.2.1)
       devise-guests (~> 0.5)
       ffi (~> 1.13, >= 1.13.1)
@@ -138,7 +138,7 @@ GEM
     benchmark_methods (0.7)
     bibtex-ruby (6.0.0)
       latex-decode (~> 0.0)
-    blacklight (6.24.0)
+    blacklight (6.11)
       bootstrap-sass (~> 3.2)
       deprecation
       globalid

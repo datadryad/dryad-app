@@ -36,10 +36,10 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  s.add_dependency 'blacklight', '~> 6.5'
+  s.add_dependency 'blacklight', '~> 6.11'
   s.add_dependency 'config', '~> 2.2', '>= 2.2.1'
   s.add_dependency 'ffi', '~> 1.13', '>= 1.13.1'
-  s.add_dependency 'geoblacklight', '~> 1.1', '>= 1.1.2'
+  s.add_dependency 'geoblacklight', '~> 1.9.1'
   s.add_dependency 'jquery-rails', '~> 4.1'
   s.add_dependency 'rails', '~> 5.2'
   s.add_dependency 'rsolr', '~> 2.3'
