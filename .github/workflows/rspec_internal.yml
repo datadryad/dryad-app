@@ -62,9 +62,6 @@ jobs:
     - name: 'RSpec Controller Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/controllers
 
-    - name: 'RSpec Request Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/requests
-
     - name: 'RSpec Job Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/jobs
 
