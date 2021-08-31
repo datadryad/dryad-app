@@ -17,25 +17,83 @@ RSpec.describe 'Rack::Attack', type: :request do
     Rack::Attack.enabled = false
   end
 
-  describe 'GET homepage' do
+  describe 'rack-attack limiting' do
     # Set the headers, if you'd blocking specific IPs you can change
     # this programmatically.
-    let(:headers) { { 'REMOTE_ADDR' => '1.2.3.4' } }
+    let(:headers) { { 'REMOTE_ADDR': '1.2.3.4' } }
 
-    it 'succeeds initially, blocks after too many attempts, then allows afteer time passes' do
+    it 'limits basic page access' do
+      # succeeds initially, blocks after too many attempts, then allows afteer time passes
+      target_url = '/stash'
       freeze_time do
-        120.times do
-          get '/stash', headers: headers
+        APP_CONFIG[:rate_limit][:all_requests].times do
+          get target_url, headers: headers
           expect(response).to have_http_status(:success)
         end
 
-        get '/stash', headers: headers
+        get target_url, headers: headers
         expect(response).to have_http_status(:too_many_requests)
       end
 
       travel_to(2.minutes.from_now) do
-        get '/stash', headers: headers
+        get target_url, headers: headers
         expect(response).to have_http_status(:success)
+      end
+    end
+
+    it 'throttles anonymous API access' do
+      target_url = '/api/v2/datasets'
+      freeze_time do
+        APP_CONFIG[:rate_limit][:api_requests_anon].times do
+          get target_url, headers: headers
+          expect(response).to have_http_status(:success)
+        end
+
+        get target_url, headers: headers
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      travel_to(2.minutes.from_now) do
+        get target_url, headers: headers
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    it 'throttles authenticated API access' do
+      auth_headers = { 'REMOTE_ADDR': '1.2.3.4',
+                       'HTTP_AUTHORIZATION': 'abc' }
+      target_url = '/api/v2/datasets'
+      freeze_time do
+        APP_CONFIG[:rate_limit][:api_requests_auth].times do
+          get target_url, headers: auth_headers
+          expect(response).to have_http_status(:success)
+        end
+
+        get target_url, headers: headers
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      travel_to(2.minutes.from_now) do
+        get target_url, headers: headers
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    it 'throttles download of zip files' do
+      target_url = '/stash/downloads/download_resource/BOGUS'
+      freeze_time do
+        APP_CONFIG[:rate_limit][:zip_downloads].times do
+          get target_url, headers: headers
+          expect(response).to have_http_status(:not_found)
+        end
+
+        get target_url, headers: headers
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      travel_to(2.minutes.from_now) do
+        get target_url, headers: headers
+        expect(response).to have_http_status(:not_found)
       end
     end
 

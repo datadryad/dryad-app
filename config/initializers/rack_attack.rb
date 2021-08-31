@@ -39,28 +39,28 @@ end
 
 # Baseline throttle all requests by IP
 # But don't return anything for /assets, which are just part of each page and should not be tracked.
-Rack::Attack.throttle('all_requests_by_IP', limit: 120, period: 1.minute) do |req|
+Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_requests], period: 1.minute) do |req|
   req.ip unless req.path.start_with?('/assets')
 end
 
 # Zip downloads have a much lower limit than other requests,
 # since it is expensive for Merritt to asemble the zip files.
-Rack::Attack.throttle('zip_downloads', limit: 10, period: 1.minute) do |req|
+Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downloads], period: 1.minute) do |req|
   "zip_download_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
 # Registered API users get preferential treatment over anonymous users. Assume API users have
 # a valid auth code. If the auth data is bad, it will be caught and blocked later in the process.
-Rack::Attack.throttle('API_requests_by_registered_users', limit: 120, period: 1.minute) do |req|
+Rack::Attack.throttle('API_requests_by_registered_users', limit: APP_CONFIG[:rate_limit][:api_requests_auth], period: 1.minute) do |req|
   "api-user-#{req.ip}" if req.path.start_with?('/api') && req.has_header?('HTTP_AUTHORIZATION')
 end
 
-Rack::Attack.throttle('API_requests_by_anonymous_users', limit: 30, period: 1.minute) do |req|
+Rack::Attack.throttle('API_requests_by_anonymous_users', limit: APP_CONFIG[:rate_limit][:api_requests_anon], period: 1.minute) do |req|
   "anon-api-user-#{req.ip}" if req.path.start_with?('/api') && !req.has_header?('HTTP_AUTHORIZATION')
 end
 
-Rack::Attack.throttle('v1_resource_requests', limit: 30, period: 1.minute) do |req|
+Rack::Attack.throttle('v1_resource_requests', limit: APP_CONFIG[:rate_limit][:api_requests_v1], period: 1.minute) do |req|
   "v1-api-user-#{req.ip}" if req.path.start_with?('/resource')
 end
 
