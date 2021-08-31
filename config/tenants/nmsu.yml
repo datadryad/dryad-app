@@ -23,8 +23,8 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://myidp.nmsu.edu
-    entity_domain: myidp.nmsu.edu
+    entity_id: https://sts.windows.net/a3ec87a8-9fb8-4158-ba8f-f11bace1ebaa/
+    entity_domain: sts.windows.net
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
