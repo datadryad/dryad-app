@@ -67,12 +67,12 @@ RSpec.describe 'Rack::Attack', type: :request do
           expect(response).to have_http_status(:success)
         end
 
-        get target_url, headers: headers
+        get target_url, headers: auth_headers
         expect(response).to have_http_status(:too_many_requests)
       end
 
       travel_to(2.minutes.from_now) do
-        get target_url, headers: headers
+        get target_url, headers: auth_headers
         expect(response).to have_http_status(:success)
       end
     end
