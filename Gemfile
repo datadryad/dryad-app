@@ -58,6 +58,7 @@ gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
 gem 'oai', '>= 0.3.1'
+gem 'rack-attack'
 gem 'rb-readline', '~> 0.5.5', require: false
 gem 'restforce', '~> 3.0'
 gem 'stripe'

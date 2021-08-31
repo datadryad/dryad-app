@@ -648,6 +648,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-attack (6.5.0)
+      rack (>= 1.0, < 3)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -967,6 +969,7 @@ DEPENDENCIES
   pry-rails
   pry-remote
   puma
+  rack-attack
   rails (~> 5.2)
   rb-readline (~> 0.5.5)
   react-rails (~> 2.6.1)
