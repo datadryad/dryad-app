@@ -26,7 +26,10 @@
     that you will not have to include this information a second time.
 </p>
 
-<p>Once you are logged in, within "My Datasets" you can begin your submission.</p>
+<p>
+  Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My Datasets" to begin your data
+  submission now!
+</p>
 
 <h2 id="uploading">Uploading your data</h3>
 <p>
@@ -90,10 +93,21 @@ Foundation.
 </p>
 
 <h2 id="publication">Dataset Publication</h3>
+
 <p>
-    Once your dataset has been approved by our curators it will be published and publicly available. We will notify you
-    by email and this email will contain a permanent DOI that can be used to <a href="/stash/faq#cite">cite your dataset</a>.
-    If the cost of your dataset is not covered by a journal, your institution, or a country waiver you will
-    <a href="/stash/faq#cost">receive an invoice</a>. Datasets can be versioned at any time by clicking <a href="/stash/faq#update">&quot;update&quot;</a> on
-    your dataset.
+  Once your submission has been reviewed and approved by our team of curators, you will receive a notification of
+  publication via email and your dataset will be made publicly available. The
+  <a href="/stash/faq#cite">DOI provided to you</a> upon submission will remain unchanged.
+</p>
+
+<p>
+  If the data publication charge is not covered by a journal, your institution, or if you are not eligible for a fee
+  waiver, <a href="/stash/faq#cost">an invoice</a> will be generated and sent upon publication.
+</p>
+
+<p>
+  Datasets can be updated via your Dryad dashboard. Please note, any edits made will create a new version of your
+  submission. Only the most recent version of your dataset will be packaged and available for download via the
+  ‘Download Dataset’ button. Versioning applies only to changes made to the data files uploaded, any edits to the
+  metadata will not create a new version.
 </p>

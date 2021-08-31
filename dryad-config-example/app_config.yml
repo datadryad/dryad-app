@@ -154,7 +154,16 @@ defaults: &DEFAULTS
     files: 100
   frictionless:
     size_limit: 6291456
-
+  rate_limit:
+    # number of requests allowed per minute
+    # these rates are low to facilitate quick testing of the rate limiter,
+    # but the rate limiter is disabled for most rspec classes
+    all_requests: 10
+    zip_downloads: 2
+    api_requests_anon: 5
+    api_requests_auth: 10
+    api_requests_v1: 5     
+    
 development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [emailme@example.org]
