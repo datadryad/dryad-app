@@ -9,7 +9,7 @@ PATH
       typesafe_enum (~> 0.1, >= 0.1.8)
       xml-mapping_extensions (~> 0.4, >= 0.4.9)
     stash_discovery (0.0.2)
-      blacklight (~> 6.5)
+      blacklight (~> 6.11)
       config (~> 2.2, >= 2.2.1)
       devise-guests (~> 0.5)
       ffi (~> 1.13, >= 1.13.1)
@@ -137,7 +137,7 @@ GEM
     benchmark_methods (0.7)
     bibtex-ruby (6.0.0)
       latex-decode (~> 0.0)
-    blacklight (6.24.0)
+    blacklight (6.11)
       bootstrap-sass (~> 3.2)
       deprecation
       globalid
