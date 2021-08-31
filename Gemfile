@@ -5,7 +5,6 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'mysql2', '~> 0.5.3'
-gem 'passenger'
 gem 'rails', '~> 5.2'
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
@@ -59,6 +58,7 @@ gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'net-sftp'
 gem 'rack-attack'
+gem 'oai', '>= 0.3.1'
 gem 'rb-readline', '~> 0.5.5', require: false
 gem 'restforce', '~> 3.0'
 gem 'stripe'
@@ -104,8 +104,7 @@ group :test do
   gem 'guard-rspec'
   # Mocking and stubbing library (http://gofreerange.com/mocha/docs)
   gem 'mocha', require: false
-  # IDK why, but even when this loads in the gemfile for the stash-notifier library it doesn't work in tests in Travis.ci
-  gem 'oai'
+
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
   gem 'rspec-github', require: false

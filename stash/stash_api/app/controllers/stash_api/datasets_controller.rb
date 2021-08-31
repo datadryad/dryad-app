@@ -392,6 +392,8 @@ module StashApi
         when 202
           render status: 202, plain: 'The version of the dataset is being assembled. ' \
           "Check back in around #{time_ago_in_words(res.download_token.available + 30.seconds)} and it should be ready to download."
+        when 408
+          render status: 503, plain: 'Download Service Unavailable for this request'
         else
           render status: 404, plain: 'Not found'
         end
