@@ -2,6 +2,7 @@
 require 'active_support/core_ext/hash'
 require_relative 'config'
 require_relative 'dataset_record'
+require_relative 'dryad_notifier'
 require 'time'
 
 class CollectionSet

@@ -22,7 +22,10 @@ module State
   end
 
   def self.statefile_path
-    File.expand_path(File.join(File.dirname(__FILE__), '..', 'state', "#{Config.environment}.json"))
+    # now changed to refer to the config directory under rails which is up quite a few directories
+    # File.expand_path(File.join(File.dirname(__FILE__), '..', 'state', "#{Config.environment}.json"))
+
+    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'config', 'notifier_state.json'))
   end
 
   def self.save_state_hash(hash:)

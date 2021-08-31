@@ -8,17 +8,13 @@ PATH=$PATH:/apps/dryad/local/bin
 
 cd /apps/dryad/apps/ui/current/
 
-# gets the token from our config by way of rake task and sets variable for last line and also variable for report dir
-tok=`bundle exec rails dev_ops:get_counter_token RAILS_ENV=$1`
-# set env for last line of output
-export TOKEN=`echo "$tok" | tail -n1`
-export REPORT_DIR="/apps/dryad-prd-shared/json-reports"
+export REPORT_DIR="/apps/dryad/apps/ui/shared/cron/counter-json"
 
 # force submission for last month (and will submit other missing months)
 export FORCE_SUBMISSION="`date --date="$(date +%Y-%m-15) - 1 month" "+%Y-%m"`"
 
-# run the script with the above settings, this is just a ruby script (no rails)
-/apps/dryad/apps/ui/current/stash/script/counter-uploader/main.rb >> /apps/dryad/apps/ui/shared/cron/logs/counter-uploader.log 2>&1
+# run the script with the above settings (RAILS_ENV, REPORT_DIR, FORCE_SUBMISSION)
+bundle exec rails counter:datacite_pusher >> /apps/dryad/apps/ui/shared/cron/logs/counter-uploader.log 2>&1
 
 # Clean outdated content from the database and temporary S3 store
 bundle exec rails identifiers:remove_old_versions >> /apps/dryad/apps/ui/shared/cron/logs/remove_old_versions.log 2>&1

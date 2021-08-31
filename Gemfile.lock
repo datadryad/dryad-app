@@ -628,9 +628,6 @@ GEM
     parallel (1.20.1)
     parser (3.0.2.0)
       ast (~> 2.4.1)
-    passenger (6.0.10)
-      rack
-      rake (>= 0.8.1)
     posix-spawn (0.3.15)
     postrank-uri (1.0.24)
       addressable (>= 2.4.0)
@@ -967,8 +964,7 @@ DEPENDENCIES
   mocha
   mysql2 (~> 0.5.3)
   net-sftp
-  oai
-  passenger
+  oai (>= 0.3.1)
   pry
   pry-rails
   pry-remote

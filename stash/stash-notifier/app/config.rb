@@ -19,6 +19,7 @@ module Config
     @@logger = if logger_std_out
                  Logger.new($stdout)
                else
+                 # this isn't used by rake task and always set to standard out
                  Logger.new(File.join(proj_root, 'log', "#{environment}.log"))
                end
     # this is an example from the docs for escaping sensitive info, but it's simply changing the time to be UTC

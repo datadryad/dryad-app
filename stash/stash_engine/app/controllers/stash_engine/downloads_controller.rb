@@ -82,7 +82,7 @@ module StashEngine
       logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}") if @status_hash[:status] == 408
       render json: @status_hash
     rescue HTTP::TimeoutError
-      logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}")
+      logger.warn("HTTP Timeout from Merritt in downloads_controller#assembly_status for Resource #{@resource&.id}")
       render json: { status: 408 }
     end
 
@@ -193,7 +193,7 @@ module StashEngine
     end
 
     def notify_download_timeout
-      msg = "Timeout in downloads_controller#download_resource for #{@resource&.id} for IP #{request.remote_ip}"
+      msg = "Timeout in downloads_controller#download_resource for resource #{@resource&.id} for IP #{request.remote_ip}"
       logger.warn(msg)
       ExceptionNotifier.notify_exception(Stash::Download::MerrittException.new(msg))
     end
