@@ -51,7 +51,7 @@ Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downl
 end
 
 # Registered API users get preferential treatment over anonymous users. Assume API users have
-# a valid auth code. If the auth data is bad, it will be caught and blocked later in the process.
+# a valid auth code. If the auth data is bad, it will be caught and blocked by the API controllers.
 Rack::Attack.throttle('API_requests_by_registered_users', limit: APP_CONFIG[:rate_limit][:api_requests_auth], period: 1.minute) do |req|
   "api-user-#{req.ip}" if req.path.start_with?('/api') && req.has_header?('HTTP_AUTHORIZATION')
 end
