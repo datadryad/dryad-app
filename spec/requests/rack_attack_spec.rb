@@ -18,8 +18,6 @@ RSpec.describe 'Rack::Attack', type: :request do
   end
 
   describe 'rack-attack limiting' do
-    # Set the headers, if you'd blocking specific IPs you can change
-    # this programmatically.
     let(:headers) { { 'REMOTE_ADDR': '1.2.3.4' } }
 
     it 'limits basic page access' do
