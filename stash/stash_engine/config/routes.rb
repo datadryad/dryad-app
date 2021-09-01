@@ -91,6 +91,7 @@ StashEngine::Engine.routes.draw do
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
   post 'sessions/sso', to: 'sessions#sso', as: 'sso'
 
+  get 'close_page', to: 'pages#close_page'
   get 'faq', to: 'pages#faq'
   get 'best_practices', to: 'pages#best_practices'
   get 'our_community', to: 'pages#our_membership'
