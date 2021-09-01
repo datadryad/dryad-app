@@ -4,13 +4,13 @@
 
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
-require 'stash/download/version_presigned'
 require 'rsolr'
 
 module StashApi
   class DatasetsController < ApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
+    include StashApi::Concerns::Downloadable
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
@@ -382,24 +382,7 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: res)
-      if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
-        @status_hash = @version_presigned.download
-        case @status_hash[:status]
-        when 200
-          StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
-          redirect_to @status_hash[:url]
-        when 202
-          render status: 202, plain: 'The version of the dataset is being assembled. ' \
-          "Check back in around #{time_ago_in_words(res.download_token.available + 30.seconds)} and it should be ready to download."
-        when 408
-          render status: 503, plain: 'Download Service Unavailable for this request'
-        else
-          render status: 404, plain: 'Not found'
-        end
-      else
-        render plain: 'download for this version of the dataset is unavailable', status: 404
-      end
+      download_version(resource: res)
     end
 
     # rubocop:disable Layout/LineLength
