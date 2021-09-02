@@ -247,7 +247,7 @@ module StashApi
       describe 'permissions' do
         before(:each) do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-                                                                        .and_return({ status: 200, url: 'http://example.com/fun' }.with_indifferent_access)
+            .and_return({ status: 200, url: 'http://example.com/fun' }.with_indifferent_access)
         end
 
         it 'downloads a public version' do
@@ -311,7 +311,7 @@ module StashApi
 
         it 'handles 202 from Merritt presigned library' do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-                                                                        .and_return({ status: 202, url: 'http://example.com/fun' }.with_indifferent_access)
+            .and_return({ status: 202, url: 'http://example.com/fun' }.with_indifferent_access)
           # some horrific callback or something that is untraceable keeps resetting file_view to false
           @resources[0].update(file_view: true)
 
@@ -325,7 +325,7 @@ module StashApi
 
         it 'handles 408 from Merritt presigned library' do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-                                                                        .and_return({ status: 408 }.with_indifferent_access)
+            .and_return({ status: 408 }.with_indifferent_access)
           # some horrific callback or something that is untraceable keeps resetting file_view to false
           @resources[0].update(file_view: true)
 
@@ -338,7 +338,7 @@ module StashApi
 
         it 'handles other random code from Merritt presigned library' do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-                                                                        .and_return({ status: 417 }.with_indifferent_access)
+            .and_return({ status: 417 }.with_indifferent_access)
           # some horrific callback or something that is untraceable keeps resetting file_view to false
           @resources[0].update(file_view: true)
 
