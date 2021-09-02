@@ -41,12 +41,16 @@ module StashApi
       @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
                     create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)]
 
-      @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                               create(:curation_activity, resource: @resources[0], status: 'curation'),
-                               create(:curation_activity, resource: @resources[0], status: 'published')]]
+      @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress', user_id: @user1.id),
+                               create(:curation_activity, resource: @resources[0], status: 'curation', user_id: @user1.id),
+                               create(:curation_activity, resource: @resources[0], status: 'published', user_id: @user1.id)]]
 
-      @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                               create(:curation_activity, resource: @resources[1], status: 'curation')]
+      @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress', user_id: @user1.id),
+                               create(:curation_activity, resource: @resources[1], status: 'curation', user_id: @user1.id)]
+
+      # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
+      # Took me hours to figure out and really annoying.
+      @sys_user = create(:user, id: 0, tenant_id: @tenant_ids.first, role: 'user', first_name: "system user")
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -230,70 +234,73 @@ module StashApi
     # Note: doesn't have json return, but a file is returned.
     describe '#download' do
       before(:each) do
-        @resources[0].update(publication_date: Time.new - 24.hours)
         @resources[0].current_state = 'submitted' # has to show submitted to merritt in order to download
+        @resources[0].update(publication_date: Time.new - 24.hours)
         # callbacks or something weird are adding states for this resource so, add published again as final state
         create(:curation_activity, resource: @resources[0], status: 'published')
 
         @resources[1].current_state = 'submitted' # has to show submitted to merritt in order to download
-        allow_any_instance_of(Stash::Download::Version).to receive(:download) do |o|
-          # o is the object instance and cc is the controller context
-          o.cc.response.headers['Content-Type'] = 'text/plain'
-          o.cc.response.headers['Content-Disposition'] = 'inline' # normally attachment for downloads, really, though
-          o.cc.response.headers['Content-Length'] = 20
-          o.cc.response.headers['Last-Modified'] = Time.now.httpdate
-          o.cc.response_body = 'This file is awesome'
-          # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method
-        end
+
+        allow_any_instance_of(Stash::Download::VersionPresigned).to receive("valid_resource?").and_return(true)
+
+        allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
+          .and_return({status: 200, url: 'http://example.com/fun'}.with_indifferent_access)
       end
 
-      # TODO: Fix this with new visibility rules in API
-      xit 'downloads a public version' do
-        response_code = get "/api/v2/versions/#{@resources[0].id}/download", {}, {}
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+      it 'downloads a public version' do
+        # some horrific callback or something that is untraceable keeps resetting file_view to false
+        @resources[0].update(file_view: true)
+        response_code = get "/api/v2/versions/#{@resources[0].id}/download"
+        expect(response_code).to eq(302)
+        expect(response.body).to include('http://example.com/fun')
+        expect(response.body).to include('redirected')
       end
 
       it 'allows owner to download private, but submitted to Merritt version' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
+
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/v2/versions/#{@resources[1].id}/download",
                             headers: { 'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+
+        expect(response_code).to eq(302)
+        expect(response.body).to include('http://example.com/fun')
+        expect(response.body).to include('redirected')
       end
 
       it 'allows superuser to download private, but submitted to Merritt version' do
         response_code = get "/api/v2/versions/#{@resources[1].id}/download",
                             headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
+        expect(response.body).to include('http://example.com/fun')
+        expect(response.body).to include('redirected')
       end
 
       it 'disallows random user from downloading non-public, but submitted version' do
         @user.update(role: 'user')
         response_code = get "/api/v2/versions/#{@resources[1].id}/download",
                             headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(403)
+        expect(response_code).to eq(404)
       end
 
       it 'disallows nil user from downloading non-public, but submitted version' do
         response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*')
-        expect(response_code).to eq(403)
+        expect(response_code).to eq(404)
       end
 
       it 'allows admin to download private, but submitted to Merritt version' do
         @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
         response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
+        expect(response.body).to include('http://example.com/fun')
+        expect(response.body).to include('redirected')
       end
 
       it "disallows download if it's not submitted to Merritt" do
         @resources[1].current_state = 'in_progress'
         response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(403)
+        expect(response_code).to eq(404)
       end
     end
   end
