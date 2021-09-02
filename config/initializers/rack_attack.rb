@@ -39,8 +39,9 @@ end
 
 # Baseline throttle all requests by IP
 # But don't return anything for /assets, which are just part of each page and should not be tracked.
+# Also, don't throttle AWS presign requests for upload chunks that will be sent to S3 for files
 Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_requests], period: 1.minute) do |req|
-  req.ip unless req.path.start_with?('/assets')
+  req.ip unless req.path.start_with?('/assets') || req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+})
 end
 
 # Zip downloads have a much lower limit than other requests,
