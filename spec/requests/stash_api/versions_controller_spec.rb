@@ -242,65 +242,113 @@ module StashApi
         @resources[1].current_state = 'submitted' # has to show submitted to merritt in order to download
 
         allow_any_instance_of(Stash::Download::VersionPresigned).to receive('valid_resource?').and_return(true)
-
-        allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-          .and_return({ status: 200, url: 'http://example.com/fun' }.with_indifferent_access)
       end
 
-      it 'downloads a public version' do
-        # some horrific callback or something that is untraceable keeps resetting file_view to false
-        @resources[0].update(file_view: true)
-        response_code = get "/api/v2/versions/#{@resources[0].id}/download"
-        expect(response_code).to eq(302)
-        expect(response.body).to include('http://example.com/fun')
-        expect(response.body).to include('redirected')
+      describe 'permissions' do
+        before(:each) do
+          allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
+                                                                        .and_return({ status: 200, url: 'http://example.com/fun' }.with_indifferent_access)
+        end
+
+        it 'downloads a public version' do
+          # some horrific callback or something that is untraceable keeps resetting file_view to false
+          @resources[0].update(file_view: true)
+          response_code = get "/api/v2/versions/#{@resources[0].id}/download"
+          expect(response_code).to eq(302)
+          expect(response.body).to include('http://example.com/fun')
+          expect(response.body).to include('redirected')
+        end
+
+        it 'allows owner to download private, but submitted to Merritt version' do
+          @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                     owner_id: @user1.id, owner_type: 'StashEngine::User')
+
+          access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                              headers: { 'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
+
+          expect(response_code).to eq(302)
+          expect(response.body).to include('http://example.com/fun')
+          expect(response.body).to include('redirected')
+        end
+
+        it 'allows superuser to download private, but submitted to Merritt version' do
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                              headers: default_authenticated_headers.merge('Accept' => '*')
+          expect(response_code).to eq(302)
+          expect(response.body).to include('http://example.com/fun')
+          expect(response.body).to include('redirected')
+        end
+
+        it 'disallows random user from downloading non-public, but submitted version' do
+          @user.update(role: 'user')
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download",
+                              headers: default_authenticated_headers.merge('Accept' => '*')
+          expect(response_code).to eq(404)
+        end
+
+        it 'disallows nil user from downloading non-public, but submitted version' do
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*')
+          expect(response_code).to eq(404)
+        end
+
+        it 'allows admin to download private, but submitted to Merritt version' do
+          @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+          expect(response_code).to eq(302)
+          expect(response.body).to include('http://example.com/fun')
+          expect(response.body).to include('redirected')
+        end
+
+        it "disallows download if it's not submitted to Merritt" do
+          @resources[1].current_state = 'in_progress'
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+          expect(response_code).to eq(404)
+        end
       end
 
-      it 'allows owner to download private, but submitted to Merritt version' do
-        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
+      describe 'response codes' do
 
-        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                            headers: { 'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
+        it 'handles 202 from Merritt presigned library' do
+          allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
+                                                                        .and_return({ status: 202, url: 'http://example.com/fun' }.with_indifferent_access)
+          # some horrific callback or something that is untraceable keeps resetting file_view to false
+          @resources[0].update(file_view: true)
 
-        expect(response_code).to eq(302)
-        expect(response.body).to include('http://example.com/fun')
-        expect(response.body).to include('redirected')
-      end
+          @resources[0].download_token.update(available: Time.new)
 
-      it 'allows superuser to download private, but submitted to Merritt version' do
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                            headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(302)
-        expect(response.body).to include('http://example.com/fun')
-        expect(response.body).to include('redirected')
-      end
+          response_code = get "/api/v2/versions/#{@resources[0].id}/download"
+          expect(response_code).to eq(202)
+          expect(response.body).to include('being assembled')
+          expect(response.body).to include('less than a minute')
+        end
 
-      it 'disallows random user from downloading non-public, but submitted version' do
-        @user.update(role: 'user')
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                            headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(404)
-      end
+        it 'handles 408 from Merritt presigned library' do
+          allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
+                                                                        .and_return({ status: 408 }.with_indifferent_access)
+          # some horrific callback or something that is untraceable keeps resetting file_view to false
+          @resources[0].update(file_view: true)
 
-      it 'disallows nil user from downloading non-public, but submitted version' do
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*')
-        expect(response_code).to eq(404)
-      end
+          @resources[0].download_token.update(available: Time.new)
 
-      it 'allows admin to download private, but submitted to Merritt version' do
-        @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(302)
-        expect(response.body).to include('http://example.com/fun')
-        expect(response.body).to include('redirected')
-      end
+          response_code = get "/api/v2/versions/#{@resources[0].id}/download"
+          expect(response_code).to eq(503)
+          expect(response.body).to include('Download Service Unavailable for this request')
+        end
 
-      it "disallows download if it's not submitted to Merritt" do
-        @resources[1].current_state = 'in_progress'
-        response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(404)
+        it 'handles other random code from Merritt presigned library' do
+          allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
+                                                                        .and_return({ status: 417 }.with_indifferent_access)
+          # some horrific callback or something that is untraceable keeps resetting file_view to false
+          @resources[0].update(file_view: true)
+
+          @resources[0].download_token.update(available: Time.new)
+
+          response_code = get "/api/v2/versions/#{@resources[0].id}/download"
+          expect(response_code).to eq(404)
+          expect(response.body).to include('Not found')
+        end
+
       end
     end
   end
