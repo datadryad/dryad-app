@@ -50,7 +50,7 @@ module StashApi
 
       # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
       # Took me hours to figure out and really annoying.
-      @sys_user = create(:user, id: 0, tenant_id: @tenant_ids.first, role: 'user', first_name: "system user")
+      @sys_user = create(:user, id: 0, tenant_id: @tenant_ids.first, role: 'user', first_name: 'system user')
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -241,10 +241,10 @@ module StashApi
 
         @resources[1].current_state = 'submitted' # has to show submitted to merritt in order to download
 
-        allow_any_instance_of(Stash::Download::VersionPresigned).to receive("valid_resource?").and_return(true)
+        allow_any_instance_of(Stash::Download::VersionPresigned).to receive('valid_resource?').and_return(true)
 
         allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
-          .and_return({status: 200, url: 'http://example.com/fun'}.with_indifferent_access)
+          .and_return({ status: 200, url: 'http://example.com/fun' }.with_indifferent_access)
       end
 
       it 'downloads a public version' do
