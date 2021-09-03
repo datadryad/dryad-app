@@ -103,8 +103,8 @@ module StashEngine
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('Thank you for submitting your dataset')
             when 'published'
-              expect(delivery.body.to_s).to include('Your dataset is now published and public.')
-              expect(delivery.body.to_s).to include("Please cite it using this DOI: #{@identifier.identifier}")
+              expect(delivery.body.to_s).to include('approved for publication')
+              expect(delivery.body.to_s).to include(@identifier.identifier.to_s)
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
