@@ -104,7 +104,7 @@ module StashEngine
               expect(delivery.body.to_s).to include('Thank you for submitting your dataset')
             when 'published'
               expect(delivery.body.to_s).to include('approved for publication')
-              expect(delivery.body.to_s).to include("#{@identifier.identifier}")
+              expect(delivery.body.to_s).to include(@identifier.identifier.to_s)
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
