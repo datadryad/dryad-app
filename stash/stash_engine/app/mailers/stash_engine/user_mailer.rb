@@ -97,17 +97,6 @@ module StashEngine
            subject: "#{rails_env} dependency offline: #{dependency.name}")
     end
 
-    def helpdesk_notice(resource, message)
-      logger.warn('Unable to send helpdesk notice; nil resource') unless resource.present?
-      return unless resource.present?
-
-      assign_variables(resource)
-      @message = message
-      mail(to: @helpdesk_email,
-           bcc: @bcc_emails,
-           subject: "#{rails_env} Need assistance: \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
-    end
-
     def zenodo_error(zenodo_copy_obj)
       @zen = zenodo_copy_obj
       logger.warn('Unable to report zenodo error, no zenodo copy object') unless @zen.present?
