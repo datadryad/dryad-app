@@ -89,18 +89,22 @@ module StashApi
 
         author = author.first
       end
-      return unless author.present? && (author['orcid'] || author['email'])
+      return unless author.present?
 
-      # Find by ORCID or email
-      user = StashEngine::User.where(orcid: author['orcid']).or(StashEngine::User.where(email: author['email'])).first
+      user = nil
+      if author['orcid'].present?
+        user = StashEngine::User.where(orcid: author['orcid'])&.first
+        # If not found, but we have an ORCID (validated by EM), make a new user
+        user ||= StashEngine::User.create(first_name: author['first_name'],
+                                          last_name: author['last_name'],
+                                          email: author['email'],
+                                          orcid: author['orcid'],
+                                          tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
+                                          role: 'user')
+      elsif author['email'].present?
+        user = StashEngine::User.where(email: author['email'])&.first
+      end
 
-      # If not, make a user
-      user ||= StashEngine::User.create(first_name: author['first_name'],
-                                        last_name: author['last_name'],
-                                        email: author['email'],
-                                        orcid: author['orcid'],
-                                        tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
-                                        role: 'user')
       user
     end
 
@@ -189,7 +193,7 @@ module StashApi
 
       # For a deposit_request, we can set the user ID, and a subsequent call will
       # login the user. Otherwise, the submission will be owned by the system user.
-      em_params['userId'] = if deposit_request
+      em_params['userId'] = if deposit_request && em_depositing_user
                               em_depositing_user.id
                             else
                               0
