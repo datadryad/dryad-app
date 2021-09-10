@@ -17,6 +17,7 @@ bundle exec rails counter:populate_citations >> /apps/dryad/apps/ui/shared/cron/
 # the MDC/counter processor only runs in the production environment to send stats to the datacite hub, no need to run in other environments
 if [ "$RAILS_ENV" == "production" ] || [ "$RAILS_ENV" == "stage" ]
 then
+    source ~/.profile.d/pyenv
     cd /apps/dryad/apps/ui/current/cron
     ./counter.sh >> /apps/dryad/apps/ui/shared/cron/logs/counter.log 2>&1
 fi
