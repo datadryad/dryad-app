@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # ############################################################
 # Rails
 
-gem 'irb', '~> 1.3.7' 
+gem 'irb', '~> 1.3.7'
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2'
 gem 'react-rails', '~> 2.6.1'
