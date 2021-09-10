@@ -167,7 +167,6 @@ module StashApi
       end
 
       it 'creates a new dataset from EM deposit metadata' do
-        # the following works for post with headers
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
@@ -183,6 +182,18 @@ module StashApi
         expect(res.authors.first.author_orcid).to eq(hsh[:authors].first[:orcid])
         expect(res.authors.first.author_email).to eq(hsh[:authors].first[:email])
         expect(output[:deposit_upload_url]).to be_truthy
+      end
+
+      it 'assigns dataset to system user when ORCID is blank' do
+        @meta.hash['authors'].first['orcid'] = ''
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
+        res = ident.latest_resource
+
+        expect(ident).to be
+        expect(res.user_id).to eq(@system_user.id)
       end
 
       it 'creates a new dataset from EM submission metadata' do
