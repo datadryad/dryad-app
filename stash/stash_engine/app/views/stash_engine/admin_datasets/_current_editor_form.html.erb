@@ -1,5 +1,7 @@
-<% # locals: resource, curation_activity %>
+<% # locals: resource, curation_activity, title %>
 <div class="o-admin-dialog">
+
+  <h1><%= title %></h1>
     
   <%= form_with model: StashEngine::Resource.new, url: current_editor_change_path(resource.id),
                 method: :post, remote: true do |f| %>

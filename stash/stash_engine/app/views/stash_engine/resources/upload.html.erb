@@ -26,10 +26,6 @@
   <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
 </div>
 
-<!-- it's a little squidgy to have this in here, but it isn't used in any other page and doesn't need to be precompiled or put anywhere else -->
-<div id="popup_dialog" style="display:none;">
-</div>
-
 <script>
   $('.js-nav-out').on('click', function(e) {
     if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){

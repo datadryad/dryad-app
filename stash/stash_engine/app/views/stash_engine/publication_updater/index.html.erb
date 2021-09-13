@@ -53,14 +53,10 @@
   </div>
 
   <script type="text/javascript">
-    $("#proposed-change-dialog").dialog({
-      autoOpen: false,
-      modal: true,
-      title: 'Please wait'
-    });
 
     $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){
-      $("#proposed-change-dialog").dialog("open");
+      $('#genericModalContent').html('<h1>Please wait . . .</h1>');
+      $('#genericModalDialog')[0].showModal();
     });
   </script>
 </div>
