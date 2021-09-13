@@ -19,7 +19,7 @@ $(function() {
   // make the cancel button in the dialog hide the dialog
   $("#cancel_dialog").click(function (e) {
     e.preventDefault();
-    $('#popup_dialog').dialog('close');
+    $('#genericModalDialog')[0].close();
   });
 
   // Publication Date should only show when the user sets the status to Complete

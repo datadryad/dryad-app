@@ -61,7 +61,7 @@ $(function() {
     // make the cancel button in the dialog hide the dialog and stop the polling
     $("#cancel_dialog").click(function (e) {
         e.preventDefault();
-        $('#popup_dialog').dialog('close');
+        $('#genericModalDialog')[0].close();
     });
 
     $('#popup_dialog').on('dialogclose', function(event) {
