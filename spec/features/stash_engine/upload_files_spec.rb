@@ -357,7 +357,7 @@ Software and Supplemental Information can be uploaded for publication at'
     it 'disallows navigation away with pending uploads' do
       click_on('Proceed to Review')
       sleep 0.5
-      expect(page).to have_text('please click Upload pending files')
+      expect(page).to have_text('please click "Upload pending files"')
     end
 
     xit 'removes file from database when click Remove button' do
