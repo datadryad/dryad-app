@@ -1,0 +1,21 @@
+
+.modalDialog button, .modalDialog input[type=submit], {
+  @extend %o-button__plain-text;
+  background-color: $design-lighter-blue-color;
+}
+
+.modalDialog h1 {
+  @extend %o-heading__level1;
+}
+
+.modalDialog h2 {
+  @extend %o-heading__level2;
+}
+
+.modalDialog h3 {
+  @extend %o-heading__level3;
+}
+
+.modalDialog .c-uploadmodal__button-close-modal {
+  background-color: white;
+}

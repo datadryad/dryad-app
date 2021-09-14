@@ -2,4 +2,4 @@
 
 $("#js-dataset-row-id-<%= @resource.identifier.id %>").replaceWith("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/datasets_row', locals: { dataset: @curation_row }) %>")
 
-$("#popup_dialog").dialog("close");
+$('#genericModalDialog')[0].close();
