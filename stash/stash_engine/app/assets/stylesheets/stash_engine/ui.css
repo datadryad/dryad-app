@@ -2890,7 +2890,7 @@ html.no-multiplebgs .o-banner {
       padding: 7px 16px;
       font-size: 1.3em; } }
 
-.o-button__plain-text1, .o-button__plain-text2, .o-button__plain-text3 {
+.o-button__plain-text1, .o-button__plain-text2, .o-button__plain-text3, .modalDialog button, .modalDialog input[type=submit] {
   display: inline-block;
   padding: 8px 12px;
   border: none;
@@ -3299,7 +3299,7 @@ datalist {
   border: none;
   background: #4891af url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2217.812%22%20height%3D%2218.12%22%20viewBox%3D%220%200%2017.812%2018.12%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23FFF%22%20stroke-miterlimit%3D%2210%22%3E%3Ccircle%20cx%3D%226.823%22%20cy%3D%228.318%22%20r%3D%226.073%22%2F%3E%3Cpath%20d%3D%22M11.393%2012.509l6.074%205.314%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E') top 4px center no-repeat; }
 
-.o-heading__level1, .o-heading__level1-home, .o-heading__level1-getting-started {
+.o-heading__level1, .o-heading__level1-home, .modalDialog h1, .o-heading__level1-getting-started {
   margin: 0 0 20px;
   color: #cf4817;
   font-size: 2em;
@@ -3308,7 +3308,7 @@ datalist {
 .o-heading__level1-home {
   text-align: center; }
 
-.o-heading__level2, .o-heading__level2-login-with, .c-uploadmodal__textarea-url-label, .c-uploadwidget--data header h2,
+.o-heading__level2, .modalDialog h2, .o-heading__level2-login-with, .c-uploadmodal__textarea-url-label, .c-uploadwidget--data header h2,
 .c-uploadwidget--software header h2,
 .c-uploadwidget--supplemental header h2, .o-heading__level2-why-share, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
   margin: 12px 0 20px;
@@ -3319,7 +3319,7 @@ datalist {
 .o-heading__level2-why-share {
   text-align: center; }
 
-.o-heading__level3, .o-heading__level3-file-title, .o-heading__level3-related-works {
+.o-heading__level3, .o-heading__level3-file-title, .o-heading__level3-related-works, .modalDialog h3 {
   margin: 0 0 20px;
   color: black;
   font-size: 1.1em;
@@ -3573,6 +3573,12 @@ datalist {
   margin: 7px 0 0 8px;
   float: left;
   font-size: 1.3em; }
+
+.modalDialog button, .modalDialog input[type=submit] {
+  background-color: #9fc7d8; }
+
+.modalDialog .c-uploadmodal__button-close-modal {
+  background-color: white; }
 
 /* Proposed Change Object */
 .c-proposed-change-table__row-separator {
