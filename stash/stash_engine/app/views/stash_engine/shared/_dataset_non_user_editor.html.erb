@@ -1,13 +1,19 @@
 <% # takes resource as local %>
 <% unless current_user&.id == resource.user_id %>
+  <% revertible = resource.identifier.resources.count > 1 %>
   <div class="c-admin-editing-banner">
     <div class="o-div__placeholder"></div>
     <div class="o-div__editing_msg">
       You are editing <%= resource.user.name %>'s dataset.
+      <% unless revertible %>
+        <p>This dataset has never been submitted, so no checkpoints have been created.  Any changes you make are permanent.</p>
+      <% end %>
     </div>
     <div>
-      <%= button_to 'Cancel and Discard Changes', stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: 'Are you sure?' },
-          form_class: 'o-button__inline-form', class: 'o-button__cancel-edit' %>
+      <% if revertible %>
+        <%= button_to 'Cancel and Discard Changes', stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: 'Are you sure?' },
+            form_class: 'o-button__inline-form', class: 'o-button__cancel-edit' %>
+      <% end %>
     </div>
   </div>
 <% end %>
