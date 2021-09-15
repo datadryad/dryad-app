@@ -55,7 +55,7 @@
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h2 class="o-heading__level2">Data Files Hosted by Dryad</h2>
+    <h3 class="o-heading__level2">Data Files Hosted by Dryad</h3>
 
     <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource } %>
@@ -68,7 +68,7 @@
     <% end %>
 
     <% if @review.software_files.count.positive? %>
-    <h2 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
+    <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software' } %>
@@ -76,7 +76,7 @@
     <% end %>
 
     <% if @review.supp_files.count.positive? %>
-      <h2 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
+      <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp' } %>
