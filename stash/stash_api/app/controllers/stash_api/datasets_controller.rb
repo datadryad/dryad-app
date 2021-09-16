@@ -298,7 +298,7 @@ module StashApi
         ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
 
-      datasets = paged_datasets(datasets: ds_query)
+      datasets = paged_datasets(datasets: ds_query, page_size: per_page)
       render json: datasets
     end
 
@@ -306,7 +306,6 @@ module StashApi
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
       page = params['page'] || 1
-      per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
       query = params['q']
 
       begin
@@ -437,6 +436,10 @@ module StashApi
     end
 
     private
+
+    def per_page
+      [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
+    end
 
     def setup_identifier_and_resource_for_put
       @stash_identifier = get_stash_identifier(params[:id]) || get_stash_identifier(params[:deposit_id])
