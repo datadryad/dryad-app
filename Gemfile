@@ -115,7 +115,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 3.142.0'
+  gem 'selenium-webdriver'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
   # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
