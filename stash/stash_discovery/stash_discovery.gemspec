@@ -36,22 +36,23 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  s.add_dependency 'blacklight', '~> 6.11'
-  s.add_dependency 'config', '~> 2.2', '>= 2.2.1'
-  s.add_dependency 'ffi', '~> 1.13', '>= 1.13.1'
-  s.add_dependency 'geoblacklight', '~> 1.9.1'
-  s.add_dependency 'jquery-rails', '~> 4.1'
-  s.add_dependency 'rails', '~> 5.2'
-  s.add_dependency 'rsolr', '~> 2.3'
-  s.add_dependency 'sass-rails', '~> 5.0'
-  s.add_dependency 'solr_wrapper', '~> 2.2'
-  s.add_dependency 'turbolinks', '~> 5.2'
+  # s.add_dependency 'blacklight', '~> 7.19.2'  # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
+  # s.add_dependency 'config'
+  # s.add_dependency 'ffi'
+  s.add_dependency 'geoblacklight', '~> 3.4.0'
+  # s.add_dependency 'jquery-rails'
+  # s.add_dependency 'net-http-persistent', '~> 2.0'
+  # s.add_dependency 'rails'
+  # s.add_dependency 'rsolr'
+  # s.add_dependency 'sass-rails'
+  # s.add_dependency 'solr_wrapper'
+  # s.add_dependency 'turbolinks'
 
   # extra deps from generated GeoBlacklight app
-  s.add_dependency 'devise-guests', '~> 0.5'
-
-  s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  # s.add_dependency 'devise-guests'
+  #
+  # s.add_development_dependency 'nokogiri'
+  # s.add_development_dependency 'rubocop'
+  # s.add_development_dependency 'simplecov'
+  # s.add_development_dependency 'simplecov-console'
 end
