@@ -6,7 +6,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 gem 'irb', '~> 1.3.7'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.2'
+gem 'rails', '~> 5.2.6'
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
 
@@ -53,19 +53,18 @@ gem 'yui-compressor'
 
 gem 'aws-sdk-s3', '~> 1.87'
 # this lock may prevent error messages from geoblacklight until we can update it
-gem 'blacklight', '= 6.11'
-gem 'bootsnap', require: false
+# gem 'blacklight', '= 6.11'
+# gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'httparty'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder'
 gem 'net-sftp'
-gem 'oai', '>= 0.3.1'
+gem 'oai'
 gem 'rack-attack'
-gem 'rb-readline', '~> 0.5.5', require: false
-gem 'restforce', '~> 3.0'
-gem 'stripe'
-gem 'wicked_pdf'
+gem 'rb-readline', require: false
+gem 'restforce'
+# gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 
 # #########################

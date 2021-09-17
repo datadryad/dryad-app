@@ -42,18 +42,18 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'rest-client', '~> 2.0'
-  s.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.8'
-  s.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.9'
+  s.add_dependency 'rest-client'
+  s.add_dependency 'typesafe_enum'
+  s.add_dependency 'xml-mapping_extensions'
 
-  s.add_development_dependency 'equivalent-xml', '~> 0.6', '>= 0.6.0'
+  s.add_development_dependency 'equivalent-xml'
 
-  s.add_development_dependency 'diffy', '~> 3.1'
-  s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rake', '~> 12.0'
-  s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
-  s.add_development_dependency 'webmock', '~> 3.0'
-  s.add_development_dependency 'yard', '~> 0.9', '>= 0.9.12'
+  # s.add_development_dependency 'diffy'
+  # s.add_development_dependency 'nokogiri'
+  # s.add_development_dependency 'rake'
+  # s.add_development_dependency 'rubocop'
+  # s.add_development_dependency 'simplecov'
+  # s.add_development_dependency 'simplecov-console'
+  # s.add_development_dependency 'webmock'
+  # s.add_development_dependency 'yard'
 end

@@ -57,7 +57,6 @@ module Stash
         raise DataciteError, "DataCite failed to #{operation} for resource #{@resource&.id} -- #{response.inspect}" unless response.status == 201
       end
 
-      # replacement for Cirneco which isn't working with Ruby 2.6.6 (because of Maremma?)
       def post_metadata(data, options = {})
         unless options[:username].present? && options[:password].present?
           return OpenStruct.new(body: { 'errors' => [{ 'title' => 'Username or password missing' }] })
@@ -92,7 +91,6 @@ module Stash
         http.put(url, headers: headers, body: payload)
       end
 
-      # replacement for Cirneco which isn't working with Ruby 2.6.6 (because of Maremma?)
       def get_doi(doi, options = {})
         unless options[:username].present? && options[:password].present?
           return OpenStruct.new(body: { 'errors' => [{ 'title' => 'Username or password missing' }] })

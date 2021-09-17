@@ -14,9 +14,9 @@ group :development, :local_dev, :test do
   gem 'factory_bot_rails', require: false
   gem 'nokogiri'
   gem 'rake'
-  gem 'rspec', '~> 3.5'
-  gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.85.1'
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'rubocop'
   gem 'simplecov'
   gem 'simplecov-console'
   gem 'webmock'
