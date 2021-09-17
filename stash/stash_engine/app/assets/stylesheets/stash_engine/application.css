@@ -13,7 +13,7 @@
  * require jquery-ui
  *= require_tree .
  *= require_self
- * require font-awesome
+ *= require font-awesome
  */
 
 /* I think  require font-awesome is not longer needed */

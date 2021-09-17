@@ -57,6 +57,7 @@ PATH
       delayed_job_active_record
       ezid-client
       filesize
+      font-awesome-rails
       http
       httparty
       httpclient
@@ -327,6 +328,8 @@ GEM
       ffi (>= 1.0.0)
       rake
     filesize (0.2.0)
+    font-awesome-rails (4.7.0.7)
+      railties (>= 3.2, < 7)
     formatador (0.3.0)
     fuubar (2.5.1)
       rspec-core (~> 3.0)

@@ -10,7 +10,7 @@ require 'jquery-turbolinks'
 require 'filesize'
 require 'kaminari'
 require 'amoeba'
-# require 'font-awesome-rails' # perhaps not needed because of way Joel did his integration
+require 'font-awesome-rails'
 
 require 'stash_engine/engine'
 require 'stash/repo'
