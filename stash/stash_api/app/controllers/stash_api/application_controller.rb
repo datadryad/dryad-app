@@ -18,8 +18,12 @@ module StashApi
       @page ||= (params[:page].to_i.positive? ? params[:page].to_i : 1)
     end
 
-    def paging_hash(result_count:, page_size: DEFAULT_PAGE_SIZE)
-      up = UrlPager.new(current_url: request.original_url, result_count: result_count, current_page: page, page_size: page_size)
+    def per_page
+      [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
+    end
+
+    def paging_hash(result_count:)
+      up = UrlPager.new(current_url: request.original_url, result_count: result_count, current_page: page, page_size: per_page)
       up.paging_hash
     end
 

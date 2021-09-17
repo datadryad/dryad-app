@@ -422,6 +422,17 @@ module StashApi
           # this would be private based on curation status, but the journal admin should be able to see it
           expect(dois).to include(@identifiers[1].to_s)
         end
+
+        it 'correctly pages index results' do
+          # There are 8 results total
+          get '/api/v2/datasets?page=2&per_page=2', headers: default_authenticated_headers
+          output = response_body_hash
+          expect(output['_links']['last']['href']).to include('page=4')
+
+          get '/api/v2/datasets?page=2&per_page=3', headers: default_authenticated_headers
+          output = response_body_hash
+          expect(output['_links']['last']['href']).to include('page=3')
+        end
       end
 
       describe 'shows appropriate latest resource metadata under identifier based on user' do
@@ -504,7 +515,7 @@ module StashApi
         expect(result['curationStatus']).to eq('Published')
       end
 
-      it 'correctly pages results' do
+      it 'correctly pages search results' do
         # the mocked solr response reports that there are 110 total results, but only
         # includes 5 of those results
         get '/api/v2/search?q=data&page=2&per_page=6', headers: default_authenticated_headers
