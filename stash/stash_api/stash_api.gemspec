@@ -45,8 +45,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'doorkeeper'
-  s.add_dependency 'mysql2'
+  s.add_dependency 'doorkeeper', '~> 5.5.2'
+  s.add_dependency 'mysql2', '~> 0.5.3'
   s.add_dependency 'rails', '~> 5.2.6'
 
   # s.add_development_dependency 'colorize'

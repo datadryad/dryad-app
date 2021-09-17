@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   # s.add_dependency 'rails'
   # s.add_dependency 'rsolr'
   # s.add_dependency 'sass-rails'
-  s.add_dependency 'solr_wrapper'
+  s.add_dependency 'solr_wrapper', '~> 3.1.2'
   # s.add_dependency 'turbolinks'
 
   # extra deps from generated GeoBlacklight app

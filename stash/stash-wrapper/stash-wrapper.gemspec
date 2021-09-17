@@ -42,8 +42,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'typesafe_enum'
-  s.add_dependency 'xml-mapping_extensions'
+  s.add_dependency 'typesafe_enum', '~> 0.1.9'
+  s.add_dependency 'xml-mapping_extensions', '~> 0.4.9'
 
   # s.add_development_dependency 'diffy'
   # s.add_development_dependency 'equivalent-xml'

@@ -36,17 +36,17 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  s.add_dependency 'amatch'
-  s.add_dependency 'kaminari'
-  s.add_dependency 'leaflet-rails'
-  s.add_dependency 'loofah'
-  s.add_dependency 'mysql2'
+  s.add_dependency 'amatch', '~> 0.4.0'
+  s.add_dependency 'kaminari', '~> 1.2.1'
+  s.add_dependency 'leaflet-rails', '~> 1.7.0'
+  s.add_dependency 'loofah', '~> 2.12.0'
+  s.add_dependency 'mysql2', '~> 0.5.3'
   s.add_dependency 'rails', '~> 5.2.6'
-  s.add_dependency 'responders'
-  s.add_dependency 'rubyzip'
+  s.add_dependency 'responders', '~> 3.0.1'
+  s.add_dependency 'rubyzip', '~> 2.3.2'
   s.add_dependency 'serrano', '~> 1.0.0'
-  s.add_dependency 'sync'
-  s.add_dependency 'tins'
+  s.add_dependency 'sync', '~> 0.5.0'
+  s.add_dependency 'tins', '~> 1.29.1'
 
   # s.add_dependency 'datacite-mapping'
   # s.add_dependency 'stash_discovery'

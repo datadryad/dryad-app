@@ -44,8 +44,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'datacite-mapping'
   s.add_dependency 'merritt-manifest'
-  s.add_dependency 'rest-client'
-  s.add_dependency 'rubyzip'
+  s.add_dependency 'rest-client', '~> 2.1.0'
+  s.add_dependency 'rubyzip', '~> 2.3.2'
 
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine'
