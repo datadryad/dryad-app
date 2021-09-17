@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'delayed_job_active_record'
   s.add_dependency 'ezid-client'
   s.add_dependency 'filesize'
-  # s.add_dependency 'font-awesome-rails'
+  s.add_dependency 'font-awesome-rails'
   s.add_dependency 'http'
   s.add_dependency 'httparty'
   s.add_dependency 'httpclient'
