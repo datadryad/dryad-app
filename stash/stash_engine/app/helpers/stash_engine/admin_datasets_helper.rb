@@ -1,3 +1,5 @@
+require 'stash/salesforce'
+
 module StashEngine
   module AdminDatasetsHelper
 
@@ -35,13 +37,10 @@ module StashEngine
       matchdata = instring.match(/(.*)SF ?#? ?(\d+)(.*)/)
       return instring unless matchdata
 
-      render inline: matchdata[1] + link_to("SF #{matchdata[2]}", salesforce_link(case_num: matchdata[2])) + matchdata[3]
-    end
+      sf_link = Stash::Salesforce.case_view_url(case_num: matchdata[2])
+      return instring unless sf_link
 
-    def salesforce_link(case_num: '')
-      # @sf.query("SELECT Id FROM Case Where CaseNumber = '00006729'").first['Id']
-      
-      "https#{case_id}"
+      render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end
   end
 end
