@@ -199,9 +199,10 @@ RSpec.feature 'CurationActivity', type: :feature do
         end
         expect(page).to have_text('Activity Log for')
         expect(page).to have_text('Not a valid SF link')
-        # For 'SF #0001', the reference should be processed, but it's not a valid case number, so the text is not changed
+        # 'SF #0001' is not a valid case number, so the text is not changed
         expect(page).to have_text('SF #0001')
-        # For 'SF #0002', the reference should be turned into a link with the caseID 'abc'
+        # 'SF #0002' should be turned into a link with the caseID 'abc',
+        # and the '#' dropped to display the normalized form of the case number
         expect(page).to have_link('SF 0002', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc/view')
       end
 
