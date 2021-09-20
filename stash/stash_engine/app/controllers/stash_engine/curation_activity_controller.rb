@@ -3,6 +3,7 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class CurationActivityController < ApplicationController
     include SharedSecurityController
+    helper AdminDatasetsHelper
 
     before_action :require_curator, only: :index
     before_action :ajax_require_curator, only: :status_change

@@ -178,7 +178,12 @@ defaults: &DEFAULTS
     api_requests_anon: 30
     api_requests_auth: 120
     api_requests_v1: 30
-      
+  salesforce:
+    username: ryan@datadryad.org
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
+    security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
+    client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_secret] %>
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
