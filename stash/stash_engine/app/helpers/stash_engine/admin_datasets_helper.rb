@@ -42,5 +42,9 @@ module StashEngine
 
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end
+
+    def salesforce_links(doi)
+      Stash::Salesforce.find_cases_by_doi(doi)
+    end
   end
 end

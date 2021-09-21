@@ -2,6 +2,10 @@
 # Stash::Salesforce.find('Lead', '00Q5e000007HsfvEAC')
 # Stash::Salesforce.case_id(case_num: '00006729')
 
+# Restforce doesn't consistently implement 'empty?',
+# so don't allow Rubocop to suggest it
+# rubocop:disable Style/ZeroLengthPredicate
+
 module Stash
   class Salesforce
 
@@ -10,7 +14,7 @@ module Stash
       return unless case_num
 
       result = db_query("SELECT Id FROM Case Where CaseNumber = '#{case_num}'")
-      return if result.empty?
+      return unless result && result.size > 0
 
       result.first['Id']
     end
@@ -20,6 +24,21 @@ module Stash
       return unless caseid
 
       "https://dryad.lightning.force.com/lightning/r/Case/#{caseid}/view"
+    end
+
+    def self.find_cases_by_doi(doi)
+      result = db_query("SELECT Id FROM Case Where Subject like '%#{doi}%' " \
+                        "or DOI__c like '%#{doi}%' ")
+      return unless result && result.size > 0
+
+      cases_found = []
+      result.each do |res|
+        found = find(obj_type: 'Case', obj_id: res['Id'])
+        next unless found&.CaseNumber
+
+        cases_found << { title: "SF #{found.CaseNumber}", path: case_view_url(case_num: found.CaseNumber) }.to_ostruct
+      end
+      cases_found
     end
 
     def self.current_user
@@ -55,3 +74,5 @@ module Stash
     end
   end
 end
+
+# rubocop:enable Style/ZeroLengthPredicate
