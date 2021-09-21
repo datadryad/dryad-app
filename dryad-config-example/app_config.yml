@@ -162,8 +162,14 @@ defaults: &DEFAULTS
     zip_downloads: 2
     api_requests_anon: 5
     api_requests_auth: 10
-    api_requests_v1: 5     
-    
+    api_requests_v1: 5
+  salesforce:
+    username: nobody@datadryad.org
+    password: nopass
+    security_token: notoken
+    client_id: noclientid
+    client_secret: noclientsecret
+
 development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [emailme@example.org]
