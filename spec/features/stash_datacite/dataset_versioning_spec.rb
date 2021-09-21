@@ -8,11 +8,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Ror
+  include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
 
   before(:each) do
     mock_repository!
+    mock_salesforce!
     mock_solr!
     mock_ror!
     mock_datacite_and_idgen!
