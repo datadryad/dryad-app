@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  # get '/latest', to: 'latest#index', as: 'latest_index'
+  get '/latest', to: 'latest#index', as: 'latest_index'
   # blacklight_for :catalog
 
   # Endpoint for LinkOut
