@@ -1,21 +1,24 @@
 # When in the 'test' environment, only use the content from dryad-config-example, not the content
 # in the main part of this file.
-<% if Rails.env == 'test' %>
-<%= YamlHelper.output_test_section(example_filename: 'blacklight.yml') %>
-<% else %>
 
-development: &DEVELOPMENT
+# blacklight yaml parsing now no longer allows inheriting settings from an alias
+
+
+development:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 
 aws_db:
-  <<: *DEVELOPMENT
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 
 local:
-  <<: *DEVELOPMENT
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 
 local_dev:
-  <<: *DEVELOPMENT
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 
 stage:
   adapter: solr
@@ -34,5 +37,3 @@ production:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-prd.cdlib.org:8983/solr/geoblacklight" %>
 
-# Terminate the if statement from the beginning of this file.
-<% end %>

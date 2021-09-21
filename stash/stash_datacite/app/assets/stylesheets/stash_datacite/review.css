@@ -22,8 +22,6 @@
   width: 450px;
   margin: 0 auto auto auto;
   padding-bottom: 30px;
-  // page-break-inside: avoid; // causes overflows to previous footer if it would break across pages
-  // transform: none !important;
 }
 .review li {
   margin: -15px;

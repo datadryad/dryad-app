@@ -1,31 +1,153 @@
 en:
   geoblacklight:
+    bbox_label: 'Bounding Box'
+    citation:
+      retrieved_from: 'Retrieved from %{document_url}'
     download:
       download: 'Download'
+      download_link: 'Original %{download_format}'
       success: 'Your file %{title} is ready for download'
-      hgl_success: 'You should receive an email when your download is ready'
+      hgl_success: 'You should receive an email when your download is ready.'
+      hgl_request: 'Request Layer'
+      hgl_request_button: 'Request'
+      hgl_close: 'Close'
+      hgl_instructions: 'Please enter your email address. You will receive a link to download the layer when it is ready.' ## new variable
+      hgl_email: 'Email'
       error: 'Sorry, the requested file could not be downloaded'
-      error_with_url: 'Sorry, the requested file could not be downloaded, try downloading it directly from: %{link}'
+      error_with_url: 'Sorry, the requested file could not be downloaded. Try downloading it directly from: %{link}'
+      export_formats: 'Export Formats'
+      export_link: 'Export'
+      export_shapefile_link: 'Shapefile'
+      export_kmz_link: 'KMZ'
+      export_geojson_link: 'GeoJSON'
     home:
       headline: 'Explore and discover...'
       search_heading: 'Find the data you need'
       category_heading: 'Find by...'
-      map_heading: 'Find by location in map'
+      map_heading: 'Find by location'
+      institution: 'Institution'
+      data_type: 'Data type'
+      placename: 'Placename'
+      subject: 'Subject'
+      publication: 'Journal'
+      version: 'GeoBlacklight version %{version}'
     tools:
-      login_to_view: 'Login to view and download'
+      login_to_view: 'Login to View and Download'
+      open_carto: 'Open in Carto'
+      open_arcgis: 'Open in ArcGIS Online'
     formats:
       arcgrid: 'ArcGRID'
       geojson: 'GeoJSON'
       geotiff: 'GeoTIFF'
       kmz: 'KMZ'
       shapefile: 'Shapefile'
+      jpg: 'JPG'
+      esri_geodatabase: 'ESRI Geodatabase'
+      sqlite_database: 'SQLite Database'
+    map:
+      label: 'Zoomable map'
     references:
       wms: 'Web Mapping Service (WMS)'
+      wms_abv: 'WMS'
+      wms_label: 'layers'
       wfs: 'Web Feature Service (WFS)'
+      wfs_abv: 'WFS'
+      wfs_label: 'typeNames'
+      iiif: 'International Image Interoperability Framework (IIIF)'
       iso19139: 'ISO 19139'
       mods: 'MODS'
       fgdc: 'FGDC'
+      html: 'HTML'
       feature_layer: 'ArcGIS Feature Layer'
       tiled_map_layer: 'ArcGIS Tiled Map Layer'
       dynamic_map_layer: 'ArcGIS Dynamic Map Layer'
       image_map_layer: 'ArcGIS Image Map Layer'
+      data_dictionary: 'Documentation'
+      services: 'Web services'
+      services_close: 'Close'
+      tms: 'Tile Map Service'
+    relations:
+      ancestor: 'Source Datasets'
+      descendant: 'Derived Datasets'
+      browse_all: "Browse all %{count} records..."
+    metadata:
+      toggle_summary: 'Toggle summary'
+      view_metadata: 'View Metadata'
+      more_details: 'More details at'
+      metadata_error: 'The metadata view for selected schema is not available'
+      metadata_trace: 'Please select another metadata view. Alternately, try downloading the file or reaching out to the holding institution.'
+    show:
+      attribute: 'Attribute'
+      value: 'Value'
+      click_map: 'Click on map to inspect values'
+    help_text:
+      viewer_protocol:
+        dynamic_map_layer:
+          title: ArcGIS Dynamic Map Layer
+          content: An ArcGIS Dynamic Map Layer represents vector data (points, lines, and polygons). Map image layers are dynamically rendered image tiles.
+        feature_layer:
+          title: ArcGIS Feature Layer
+          content: An ArcGIS Feature Layer Service displays vector data (points, lines, and polygons) as individual or collected features.
+        iiif:
+          title: IIIF Service
+          content: The International Image Interoperability Framework (IIIF) web service API displays an image from a server. This image can be panned and zoomed.
+        iiif_manifest:
+          title: IIIF Service
+          content: The International Image Interoperability Framework (IIIF) web service API displays an image from a server. This image can be panned and zoomed.
+        image_map_layer:
+          title: ArcGIS Image Map Layer
+          content: An ArcGIS Image Map Layer displays raster data (a grid of cells used to store imagery).
+        index_map:
+          title: Index Map
+          content: Index maps are a "table of contents" that allow users to select a specific map or item within a larger set and navigate to it for viewing or downloading.
+        oembed:
+          title: Embedded Content
+          content: This content is embedded through a third-party viewer.
+        tiled_map_layer:
+          title: ArcGIS Tiled Map Layer
+          content: An ArcGIS Tiled Map Layer Service displays set of web-accessible tiles that reside on a server.
+        tms:
+          title: Tile Map Service
+          content: A Tile Map Service displays georeferenced map tiles as an image on a map.
+        wms:
+          title: Web Map Service (WMS)
+          content: A Web Map Service displays a geospatial dataset as map images.
+  blacklight:
+    icon:
+      arrow-circle-down: Arrow within a circle, pointing down
+      baruch-cuny: Baruch College
+      berkeley: University of California, Berkeley
+      cd-rom: CD-Rom
+      chicago: The University of Chicago
+      columbia: Columbia University
+      cornell: Cornell University
+      dvd-rom: DVD-Rom
+      esri-globe: Esri Global
+      harvard: Harvard University
+      illinois: University of Illinois
+      indiana: Indiana University
+      iowa: University of Iowa
+      lewis-clark: Lewis & Clark
+      maryland: University of Maryland
+      massgis: MassGIS
+      michigan-state: Michigan State University
+      michigan: University of Michigan
+      minnesota: University of Minnesota
+      mit: Massachusetts Institute of Technology
+      multilinestring: Multi-line string
+      multipoint: Multi-point
+      multipolygon: Multi-polygon
+      nyu: New York University
+      ohio-state: The Ohio State University
+      penn-state: Penn State University
+      princeton: Princeton University
+      public: Public content
+      purdue: Purdue University
+      restricted: Restricted content
+      sms: SMS
+      stanford: Stanford University
+      texas: The University of Texas at Austin
+      tufts: Tufts University
+      ucla: University of California, Los Angeles
+      uva: University of Virginia
+      wisconsin: University of Wisconsin
