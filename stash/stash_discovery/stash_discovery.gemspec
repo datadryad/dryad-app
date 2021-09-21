@@ -36,17 +36,21 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  # s.add_dependency 'blacklight', '~> 7.19.2'  # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
+  s.add_dependency 'blacklight', '~> 7.19.2'  # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
+  s.add_dependency 'bootstrap', '~> 4.0' # because there is a generator that adds this
+  s.add_dependency 'bootstrap-sass'
   # s.add_dependency 'config'
   # s.add_dependency 'ffi'
   s.add_dependency 'geoblacklight', '~> 3.4.0'
   # s.add_dependency 'jquery-rails'
   # s.add_dependency 'net-http-persistent', '~> 2.0'
+  s.add_dependency 'popper_js'
   # s.add_dependency 'rails'
   # s.add_dependency 'rsolr'
-  # s.add_dependency 'sass-rails'
+  s.add_dependency 'sass-rails', '>= 3.2'
   s.add_dependency 'solr_wrapper', '~> 3.1.2'
   # s.add_dependency 'turbolinks'
+  s.add_dependency 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 
   # extra deps from generated GeoBlacklight app
   # s.add_dependency 'devise-guests'

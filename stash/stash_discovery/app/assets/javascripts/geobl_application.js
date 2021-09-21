@@ -15,6 +15,10 @@
 //= require handlebars.runtime
 //
 // Required by Blacklight
-//= require blacklight/blacklight
+//= require popper
+//= require bootstrap
 
-//= require geoblacklight_override
+// Twitter Typeahead for autocomplete
+// require twitter/typeahead
+//= require blacklight/blacklight
+//= require turbolinks
