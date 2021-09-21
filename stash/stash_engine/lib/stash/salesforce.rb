@@ -57,18 +57,16 @@ module Stash
       private
 
       def sf_client
-        @sf_client ||= init_sf_client
-      end
+        return @sf_client if @sf_client
 
-      def init_sf_client
-        client = Restforce.new(username: APP_CONFIG[:salesforce][:username],
-                               password: APP_CONFIG[:salesforce][:password],
-                               security_token: APP_CONFIG[:salesforce][:security_token],
-                               client_id: APP_CONFIG[:salesforce][:client_id],
-                               client_secret: APP_CONFIG[:salesforce][:client_secret],
-                               api_version: '39.0')
-        client.authenticate!
-        client
+        @sf_client = Restforce.new(username: APP_CONFIG[:salesforce][:username],
+                                   password: APP_CONFIG[:salesforce][:password],
+                                   security_token: APP_CONFIG[:salesforce][:security_token],
+                                   client_id: APP_CONFIG[:salesforce][:client_id],
+                                   client_secret: APP_CONFIG[:salesforce][:client_secret],
+                                   api_version: '39.0')
+        @sf_client.authenticate!
+        @sf_client
       end
 
     end
