@@ -39,16 +39,30 @@
   </table>
 </div>
 
-<% sf_links = salesforce_links(@identifier.identifier) %>
-<% if sf_links %>
-    <div id="salesforce_links" style="clear: both">
-	<div style="float: left"><h2>Salesforce Cases</h2>
-	    <ul>
-		<% sf_links.each do |sf_link| %>
-		    <li><%= link_to sf_link.title, sf_link.path, target: :blank %></li>
-		<% end %>
-	    </ul>
+<% if %w[admin superuser curator tenant_curator].include?(current_user.role) %>
+    <div id="salesforce_links" style="clear: both">	
+	<div style="float: left"><h2>Salesforce Cases</h2></div>
+	<div style="float: right">
+	    <br/>
+	    <%= button_to "Create Salesforce Case",
+	     url_for(action: 'create_salesforce_case',
+		     only_path: false),
+	     method: :get,
+	     class: 'o-button__submit',
+	     form: {target: '_blank'}
+	     %>
 	</div>
+	
+	<% sf_links = salesforce_links(@identifier.identifier) %>
+	<% if sf_links %>
+	    <div id="sf_link_list" style="clear: both">
+		<ul>
+		    <% sf_links.each do |sf_link| %>
+			<li><%= link_to sf_link.title, sf_link.path, target: :blank %></li>
+		    <% end %>
+		</ul>
+	    </div>
+	<% end %>
     </div>
 <% end %>
 
