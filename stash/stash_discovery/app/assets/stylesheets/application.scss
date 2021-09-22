@@ -1,6 +1,14 @@
+/*
+*= require leaflet-label
+*/
+@import 'customizations';
 @import 'bootstrap';
-@import 'blacklight/blacklight';
-@import 'geoblacklight/geoblacklight';
+@import 'blacklight';
+@import 'geoblacklight';
+
+// @import 'bootstrap';
+// @import 'blacklight/blacklight';
+// @import 'geoblacklight/geoblacklight';
 
 /* these positions are a fix to keep the geoblacklight under the titlebar w drop-down menu which is set to 1 */
 div.jumbotron{

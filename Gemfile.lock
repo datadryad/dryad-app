@@ -47,9 +47,11 @@ PATH
       blacklight (~> 7.19.2)
       bootstrap (~> 4.0)
       bootstrap-sass
+      devise
+      devise-guests (~> 0.6)
       geoblacklight (~> 3.4.0)
-      popper_js
-      sass-rails (>= 3.2)
+      jquery-rails
+      rsolr (>= 1.0, < 3)
       solr_wrapper (~> 3.1.2)
       twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
     stash_engine (0.0.17)
@@ -166,6 +168,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    bcrypt (3.1.16)
     bindex (0.8.1)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
@@ -250,6 +253,14 @@ GEM
       delayed_job (>= 3.0, < 5)
     deprecation (1.1.0)
       activesupport
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
+    devise-guests (0.7.0)
+      devise
     diff-lcs (1.4.4)
     diffy (3.4.0)
     docile (1.4.0)
@@ -769,6 +780,8 @@ GEM
     view_component (2.40.0)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
