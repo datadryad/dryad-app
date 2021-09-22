@@ -178,7 +178,7 @@ module StashApi
 
       visible = resource.data_files.present_files
       all_count = visible.count
-      data_files = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
+      data_files = visible.limit(per_page).offset(per_page * (page - 1))
       results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end

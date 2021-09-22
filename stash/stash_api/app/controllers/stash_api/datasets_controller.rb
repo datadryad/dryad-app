@@ -306,7 +306,6 @@ module StashApi
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
       page = params['page'] || 1
-      per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
       query = params['q']
 
       begin
@@ -317,7 +316,6 @@ module StashApi
         # once we have the solr_response, use the DOIs to build the 'real' response
         mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
         datasets = paging_hash_results(all_count: solr_response['numFound'],
-                                       page_size: per_page,
                                        results: mapped_results)
         render json: datasets
       rescue RSolr::Error::Http
@@ -565,18 +563,18 @@ module StashApi
       @resource = nr
     end
 
-    def paged_datasets(datasets:, page_size: DEFAULT_PAGE_SIZE)
+    def paged_datasets(datasets:)
       all_count = datasets.count
-      results = datasets.limit(page_size).offset(page_size * (page - 1))
+      results = datasets.limit(per_page).offset(per_page * (page - 1))
       mapped_results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
-      paging_hash_results(all_count: all_count, page_size: page_size, results: mapped_results)
+      paging_hash_results(all_count: all_count, results: mapped_results)
     end
 
-    def paging_hash_results(all_count:, page_size:, results:)
+    def paging_hash_results(all_count:, results:)
       return if results.nil?
 
       {
-        '_links' => paging_hash(result_count: all_count, page_size: page_size),
+        '_links' => paging_hash(result_count: all_count),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }

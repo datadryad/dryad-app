@@ -1,2 +1,7 @@
-<h2 class="o-heading__level2">Citation</h2>
+<% if params[:controller].include?('landing') %>
+  <h2 class="o-heading__level2">Citation</h2>
+<% else %>
+  <h3 class="o-heading__level2">Citation</h3>
+<% end %>
+
 <p><%= citation(authors, title, resource_type, identifier, publication_year) %></p>
