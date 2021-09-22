@@ -39,7 +39,21 @@
   </table>
 </div>
 
-<div id="internal_data">
+<% sf_links = salesforce_links(@identifier.identifier) %>
+<% if sf_links %>
+    <div id="salesforce_links" style="clear: both">
+	<div style="float: left"><h2>Salesforce Cases</h2>
+	    <ul>
+		<% sf_links.each do |sf_link| %>
+		    <li><%= link_to sf_link.title, sf_link.path, target: :blank %></li>
+		<% end %>
+	    </ul>
+	</div>
+    </div>
+<% end %>
+
+
+<div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal Data</h2></div>
   <% if %w[admin superuser curator tenant_curator].include?(current_user.role) %>
     <div style="float: right">
@@ -51,7 +65,7 @@
       <% end %>
     </div>
   <% end %>
-
+  
   <div id="internal_data_table" style="clear: both">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>

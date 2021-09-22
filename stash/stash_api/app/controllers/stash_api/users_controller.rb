@@ -38,7 +38,7 @@ module StashApi
 
     def paged_users(results)
       all_count = results.count
-      results = results.limit(page_size).offset(page_size * (page - 1))
+      results = results.limit(per_page).offset(per_page * (page - 1))
       results = results.map { |user| User.new(user_id: user.id).metadata }
       paging_hash_results(all_count, results)
     end

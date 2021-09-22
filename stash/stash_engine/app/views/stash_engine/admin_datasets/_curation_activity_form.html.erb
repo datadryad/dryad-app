@@ -1,6 +1,6 @@
 <% # locals: resource, curation_activity, title %>
 
-<h1><%= title %></h1>
+<h1>Edit curation status of <%= title %></h1>
 
 <%= form_with model: StashEngine::Resource.new, url: curation_activity_change_path(resource.id),
               method: :post, remote: true do |f| %>
