@@ -183,6 +183,13 @@ module StashEngine
       end
     end
 
+    def create_salesforce_case
+      puts "XXXX XPs #{params}"
+      # create the case
+      # redirect to it
+      redirect_to 'https://google.com'
+    end
+
     private
 
     def setup_paging
