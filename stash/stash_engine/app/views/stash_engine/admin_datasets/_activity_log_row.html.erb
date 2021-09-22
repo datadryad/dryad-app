@@ -5,5 +5,5 @@
   <td><%= curation_activity.resource.stash_version.version %></td>
   <td><%= curation_activity.readable_status %></td>
   <td><%= curation_activity.user&.name || "System" %></td>
-  <td><%= curation_activity.note %></td>
+  <td><%= format_external_references(curation_activity.note) %></td>
 </tr>

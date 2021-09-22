@@ -4,12 +4,14 @@ RSpec.feature 'Admin', type: :feature do
   include Mocks::Datacite
   include Mocks::Ror
   include Mocks::RSolr
+  include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
 
   context :administrative_user do
 
     before(:each) do
+      mock_salesforce!
       mock_solr!
       mock_stripe!
       mock_ror!

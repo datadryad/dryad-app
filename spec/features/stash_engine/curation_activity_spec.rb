@@ -10,6 +10,7 @@ RSpec.feature 'CurationActivity', type: :feature do
   include DatasetHelper
   include Mocks::Repository
   include Mocks::RSolr
+  include Mocks::Salesforce
   include Mocks::Datacite
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
@@ -156,6 +157,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_aws!
+        mock_salesforce!
         mock_stripe!
         mock_ror!
         mock_repository!
@@ -186,6 +188,31 @@ RSpec.feature 'CurationActivity', type: :feature do
         end
 
         expect(page).to have_text('My cat says hi')
+      end
+
+      it 'renders salesforce links in notes field' do
+        @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
+        @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
+        @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
+        within(:css, '.c-lined-table__row', wait: 10) do
+          find('button[title="View Activity Log"]').click
+        end
+        expect(page).to have_text('Activity Log for')
+        expect(page).to have_text('Not a valid SF link')
+        # 'SF #0001' is not a valid case number, so the text is not changed
+        expect(page).to have_text('SF #0001')
+        # 'SF #0002' should be turned into a link with the caseID 'abc',
+        # and the '#' dropped to display the normalized form of the case number
+        expect(page).to have_link('SF 0002', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc/view')
+      end
+
+      it 'renders salesforce section' do
+        within(:css, '.c-lined-table__row', wait: 10) do
+          find('button[title="View Activity Log"]').click
+        end
+        expect(page).to have_text('Activity Log for')
+        expect(page).to have_text('Salesforce Cases')
+        expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
       end
 
       it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
