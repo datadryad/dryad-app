@@ -22,7 +22,7 @@ en:
       export_geojson_link: 'GeoJSON'
     home:
       headline: 'Explore data'
-      search_heading: 'Search or browse'
+      search_heading: 'Search and browse'
       category_heading: 'Find by...'
       map_heading: 'Find by location in map'
       institution: 'Institution'
