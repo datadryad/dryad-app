@@ -6426,7 +6426,7 @@ ul li {
   margin-bottom: 1em;
   line-height: 125%; }
 
-body {
+body, body#yes-really {
   max-width: 1220px;
   margin: 0 auto;
   padding: 10px;
@@ -6434,10 +6434,10 @@ body {
   /* Blacklight/geoblacklight resets */
   font-size: initial; }
   @media (min-width: 480px) {
-    body {
+    body, body#yes-really {
       padding: 10px 20px; } }
   @media (min-width: 760px) {
-    body {
+    body, body#yes-really {
       padding: 10px 30px; } }
 
 *:focus {
