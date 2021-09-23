@@ -110,7 +110,7 @@
 @import 'resets';
 @import 'ui-library';
 
-body {
+body, body#yes-really {
 	max-width: $screen-max - ($spacing-lg * 2);
 	margin: 0 auto;
 	padding: 10px;
