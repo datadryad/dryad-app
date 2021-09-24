@@ -1,6 +1,6 @@
 # use example
 # require 'stash/salesforce'
-# Stash::Salesforce.find('Lead', '00Q5e000007HsfvEAC')
+# Stash::Salesforce.find(obj_type: 'Case', obj_id: '00Q5e000007HsfvEAC')
 # Stash::Salesforce.case_id(case_num: '00006729')
 
 # Restforce doesn't consistently implement 'empty?',
@@ -60,12 +60,13 @@ module Stash
       return unless identifier
 
       sf_client.create('Case',
-                       Subject: 'Ryan-test Your Dryad data submission - DOI:10.5061/dryad.0002a',
-                       Description: 'This is a test',
+                       Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
+                       DOI__c: identifier.identifier,
+                       Dataset_Title__c: identifier.latest_resource&.title,
                        Origin: 'Web',
-                       SuppliedName: 'Web Name',
-                       SuppliedEmail: 'web@email.com',
-                       Reason: 'I love cases')
+                       SuppliedName: identifier.latest_resource&.user&.name,
+                       SuppliedEmail: identifier.latest_resource&.user&.email
+                      )
     end
 
     class << self
