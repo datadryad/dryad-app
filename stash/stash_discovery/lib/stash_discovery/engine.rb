@@ -7,7 +7,7 @@ require 'rsolr'
 
 # For undocumented reasons, sass-rails won't load without an explicit require
 require 'bootstrap'
-require 'bootstrap-sass'
+# require 'bootstrap-sass'
 require 'sass-rails'
 require 'twitter-typeahead-rails'
 
