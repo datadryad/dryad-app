@@ -38,7 +38,7 @@ module StashEngine
       return instring unless matchdata
 
       sf_link = Stash::Salesforce.case_view_url(case_num: matchdata[2])
-      return instring unless sf_link
+      return instring unless sf_link.present?
 
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end

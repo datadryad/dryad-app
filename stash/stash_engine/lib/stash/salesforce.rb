@@ -24,7 +24,9 @@ module Stash
       return unless case_id.present? || case_num.present?
 
       case_id = case_id(case_num: case_num) unless case_id.present?
-      "https://dryad.lightning.force.com/lightning/r/Case/#{case_id}/view"
+      return unless case_id.present?
+
+      "#{APP_CONFIG[:salesforce][:server]}/lightning/r/Case/#{case_id}/view"
     end
 
     def self.find_cases_by_doi(doi)
