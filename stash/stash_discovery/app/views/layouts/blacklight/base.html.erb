@@ -1,4 +1,5 @@
-<%# this basic template puts the stash layout in, based on the base.html.erb in blacklight, but modified -%>
+<%# this basic template puts the stash layout in, based on the base.html.erb in blacklight, but modified to get rid
+    of the geoblacklight bars and to incorporate our bars and things into geoblacklight layout-%>
 <!DOCTYPE html>
 <%= content_tag :html, class: 'no-js', **html_tag_attributes do %>
   <head>
@@ -11,7 +12,7 @@
     <%# below stylesheet is called 'application', but should probably be geoblacklight specific name %>
     <%= stylesheet_link_tag "application", media: "all" %>
     <%#= WAS javascript_include_tag "application" %>
-    <%= javascript_include_tag "geobl_application" %>
+    <%= javascript_include_tag "geobl_application", 'data-turbolinks-track': 'reload' %>
 
     <%= content_for(:head) %>
 

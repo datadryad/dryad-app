@@ -13,7 +13,7 @@
 // require jquery
 // require jquery_ujs
 // these following two are supposed to be right
-// require turbolinks
+// require turbolinks // had to disable turbolinks since otherwise map turns blank and doesn't load correctly
 //= require jquery3
 //= require rails-ujs
 // require activestorage -- this doesn't work for some reason
@@ -26,6 +26,7 @@
 //= require bootstrap
 //= require blacklight/blacklight
 
+// if remove require tree below then the map stops loading
 //= require_tree .
 
 Blacklight.doSearchContextBehavior = function(){
