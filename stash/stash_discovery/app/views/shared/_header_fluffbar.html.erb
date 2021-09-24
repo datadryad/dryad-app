@@ -1,3 +1,9 @@
+<%
+  # This replaces the header bar in geoblacklight since it contains both a geoblacklight application bar and the search.
+  # It's called from our special layout which is only for Geoblacklight and customized.  It has different top content
+  # for the search result page (catalog with search params) vs the explore page.
+%>
+
 <% if controller_name == 'catalog' && (has_search_parameters? || params[:action] == 'show') %>
   <div class="geobl-search-spacing">
     <%= render_search_bar  %>

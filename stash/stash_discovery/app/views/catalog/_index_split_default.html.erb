@@ -1,11 +1,12 @@
 <% # header bar for doc items in index view -%>
+<% # this partial is updated from blacklight 3.4 and we also need to replace icky chars in all the document ids, otherwise the accordion doesn't work %>
 <%= content_tag :div, class: 'documentHeader index-split row', data: { layer_id: document.id, geom: document.geometry.geojson } do %>
   <h3 class="index_title col">
     <% counter = document_counter_with_offset(document_counter) %>
     <span class="document-counter">
       <%= t('blacklight.search.documents.counter', :counter => counter) if counter %>
     </span>
-    <%# link_to_document document, counter: counter %>
+    <%= link_to_document document, counter: counter %>
   </h3>
   <span class='status-icons'>
     <%= render partial: 'header_icons', locals: { document: document } %>
@@ -13,16 +14,16 @@
     <button
       class="caret-toggle btn"
       data-toggle="collapse"
-      data-target="#doc-<%= document.id %>-fields-collapse"
+      data-target="#doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse"
       aria-label="<%= t('geoblacklight.metadata.toggle_summary') %>"
       aria-expanded="false"
-      aria-controls="doc-<%= document.id %>-fields-collapse">
+      aria-controls="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse">
     </button>
   </span>
 <% end %>
 
 <div class='more-info-area'>
-  <div id="doc-<%= document.id %>-fields-collapse" class='collapse'>
+  <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse" class='collapse'>
     <small>
       <%= geoblacklight_present(:index_fields_display, document) %>
     </small>
