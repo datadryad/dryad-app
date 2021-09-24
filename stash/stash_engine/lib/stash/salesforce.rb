@@ -1,4 +1,5 @@
 # use example
+# require 'stash/salesforce'
 # Stash::Salesforce.find('Lead', '00Q5e000007HsfvEAC')
 # Stash::Salesforce.case_id(case_num: '00006729')
 
@@ -19,11 +20,11 @@ module Stash
       result.first['Id']
     end
 
-    def self.case_view_url(case_num:)
-      caseid = case_id(case_num: case_num)
-      return unless caseid
+    def self.case_view_url(case_id: nil, case_num: nil)
+      return unless case_id.present? || case_num.present?
 
-      "https://dryad.lightning.force.com/lightning/r/Case/#{caseid}/view"
+      case_id = case_id(case_num: case_num) unless case_id.present?
+      "https://dryad.lightning.force.com/lightning/r/Case/#{case_id}/view"
     end
 
     def self.find_cases_by_doi(doi)
@@ -51,6 +52,18 @@ module Stash
 
     def self.db_query(query)
       sf_client.query(query)
+    end
+
+    def self.create_case(identifier)
+      return unless identifier
+
+      sf_client.create('Case',
+                       Subject: 'Ryan-test Your Dryad data submission - DOI:10.5061/dryad.0002a',
+                       Description: 'This is a test',
+                       Origin: 'Web',
+                       SuppliedName: 'Web Name',
+                       SuppliedEmail: 'web@email.com',
+                       Reason: 'I love cases')
     end
 
     class << self
