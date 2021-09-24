@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   # s.add_dependency 'activestorage'
   s.add_dependency 'blacklight', '~> 7.19.2'  # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
   s.add_dependency 'bootstrap', '~> 4.0' # because there is a generator that adds this
-  s.add_dependency 'bootstrap-sass'
+  # s.add_dependency 'bootstrap-sass'
   # s.add_dependency 'config'
   s.add_dependency 'devise'
   s.add_dependency 'devise-guests', '~> 0.6'
