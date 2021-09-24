@@ -21,7 +21,6 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
 end

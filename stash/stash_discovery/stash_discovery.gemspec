@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   # s.add_dependency 'activestorage'
-  s.add_dependency 'blacklight', '~> 7.19.2'  # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
+  s.add_dependency 'blacklight', '~> 7.19.2' # not really sure this needs to be put in separately since geoblacklight pulls it in, probably
   s.add_dependency 'bootstrap', '~> 4.0' # because there is a generator that adds this
   # s.add_dependency 'bootstrap-sass'
   # s.add_dependency 'config'
