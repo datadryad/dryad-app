@@ -52,9 +52,7 @@ gem 'yui-compressor'
 # Misc
 
 gem 'aws-sdk-s3', '~> 1.87'
-# this lock may prevent error messages from geoblacklight until we can update it
-# gem 'blacklight', '= 6.11'
-# gem 'bootsnap', require: false
+gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'httparty'
