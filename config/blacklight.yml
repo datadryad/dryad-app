@@ -2,7 +2,9 @@
 # in the main part of this file.
 
 # blacklight yaml parsing now no longer allows inheriting settings from an alias
-
+test:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/geoblacklight" %>
 
 development:
   adapter: solr
