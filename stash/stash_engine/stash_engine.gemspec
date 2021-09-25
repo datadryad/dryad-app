@@ -38,8 +38,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'amoeba', '~> 3.2.0'
-  # s.add_dependency 'bolognese'
-  # s.add_dependency 'carrierwave'
+  s.add_dependency 'aws-sdk-s3', '~> 1.87'
   s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '~> 1.1.9'
   s.add_dependency 'daemons', '~> 1.4.1'
@@ -49,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ezid-client', '~> 1.9.1'
   s.add_dependency 'filesize', '~> 0.2.0'
   s.add_dependency 'font-awesome-rails', '~> 4.7.0.7'
+  s.add_dependency 'google-apis-gmail_v1', '~> 0.3'
   s.add_dependency 'http', '~> 5.0.2'
   s.add_dependency 'httparty', '~> 0.19.0'
   s.add_dependency 'httpclient', '~> 2.8.3'
@@ -65,6 +65,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'posix-spawn', '~> 0.3.15'
   s.add_dependency 'rails', '~> 5.2.6'
   s.add_dependency 'redcarpet', '~> 3.5.1'
+  s.add_dependency 'restforce', '~>5.1.0'
   s.add_dependency 'rest-client', '~> 2.1.0'
   s.add_dependency 'rinku', '~> 2.0.6'
   s.add_dependency 'rsolr', '~> 2.3.0'

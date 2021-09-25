@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'amatch', '~> 0.4.0'
+  s.add_dependency 'httparty', '~> 0.19.0'
   s.add_dependency 'kaminari', '~> 1.2.1'
   s.add_dependency 'leaflet-rails', '~> 1.7.0'
   s.add_dependency 'loofah', '~> 2.12.0'
@@ -48,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sync', '~> 0.5.0'
   s.add_dependency 'tins', '~> 1.29.1'
 
-  # s.add_dependency 'datacite-mapping'
+  s.add_dependency 'datacite-mapping', '~> 0.4.0'
   # s.add_dependency 'stash_discovery'
   # s.add_dependency 'stash_engine'
   # s.add_dependency 'stash-wrapper'
