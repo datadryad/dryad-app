@@ -42,8 +42,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'datacite-mapping'
-  s.add_dependency 'merritt-manifest'
+  s.add_dependency 'datacite-mapping', '~> 0.4.0'
+  s.add_dependency 'merritt-manifest', '~> 0.1.3'
   s.add_dependency 'rest-client', '~> 2.1.0'
   s.add_dependency 'rubyzip', '~> 2.3.2'
 

@@ -12,8 +12,8 @@ PATH
   remote: stash
   specs:
     stash-merritt (0.2.1)
-      datacite-mapping
-      merritt-manifest
+      datacite-mapping (~> 0.4.0)
+      merritt-manifest (~> 0.1.3)
       rest-client (~> 2.1.0)
       rubyzip (~> 2.3.2)
       stash-sword
@@ -33,6 +33,8 @@ PATH
       rails (~> 5.2.6)
     stash_datacite (0.0.5)
       amatch (~> 0.4.0)
+      datacite-mapping (~> 0.4.0)
+      httparty (~> 0.19.0)
       kaminari (~> 1.2.1)
       leaflet-rails (~> 1.7.0)
       loofah (~> 2.12.0)
@@ -46,15 +48,16 @@ PATH
     stash_discovery (0.0.2)
       blacklight (~> 7.19.2)
       bootstrap (~> 4.0)
-      devise
+      devise (~> 4.8.0)
       devise-guests (~> 0.6)
       geoblacklight (~> 3.4.0)
-      jquery-rails
+      jquery-rails (~> 4.4.0)
       rsolr (>= 1.0, < 3)
       solr_wrapper (~> 3.1.2)
       twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
     stash_engine (0.0.17)
       amoeba (~> 3.2.0)
+      aws-sdk-s3 (~> 1.87)
       ckeditor (~> 4.3.0)
       concurrent-ruby (~> 1.1.9)
       daemons (~> 1.4.1)
@@ -64,6 +67,7 @@ PATH
       ezid-client (~> 1.9.1)
       filesize (~> 0.2.0)
       font-awesome-rails (~> 4.7.0.7)
+      google-apis-gmail_v1 (~> 0.3)
       http (~> 5.0.2)
       httparty (~> 0.19.0)
       httpclient (~> 2.8.3)
@@ -81,6 +85,7 @@ PATH
       rails (~> 5.2.6)
       redcarpet (~> 3.5.1)
       rest-client (~> 2.1.0)
+      restforce (~> 5.1.0)
       rinku (~> 2.0.6)
       rsolr (~> 2.3.0)
       stripe (~> 5.38.0)
@@ -823,7 +828,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  aws-sdk-s3 (~> 1.87)
   binding_of_caller
   bootsnap
   byebug
@@ -845,7 +849,6 @@ DEPENDENCIES
   guard
   guard-rspec
   http
-  httparty
   irb (~> 1.3.7)
   jbuilder
   jquery-rails
@@ -853,7 +856,7 @@ DEPENDENCIES
   mocha
   mysql2 (~> 0.5.3)
   net-sftp
-  oai
+  oai (~> 1.1.0)
   pry
   pry-rails
   pry-remote
@@ -862,7 +865,6 @@ DEPENDENCIES
   rails (~> 5.2.6)
   rb-readline
   react-rails (~> 2.6.1)
-  restforce
   rspec-collection_matchers
   rspec-github
   rspec-html

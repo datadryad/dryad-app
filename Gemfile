@@ -50,18 +50,14 @@ gem 'yui-compressor'
 
 # ############################################################
 # Misc
-
-gem 'aws-sdk-s3', '~> 1.87'
 gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'google-apis-gmail_v1', '~> 0.3'
-gem 'httparty'
 gem 'jbuilder'
 gem 'net-sftp'
-gem 'oai'
+gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'restforce'
 # gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 

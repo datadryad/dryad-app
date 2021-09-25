@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
 gemspec
-
-gem 'httparty'
-gem 'mysql2', '~> 0.5.3'
 gem 'parallel_tests', group: %i[development test]
 
 path '..' do
