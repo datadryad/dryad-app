@@ -58,7 +58,7 @@ gem 'net-sftp'
 gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-# gem 'wicked_pdf', '~> 1.4.0'
+gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 
 # #########################
