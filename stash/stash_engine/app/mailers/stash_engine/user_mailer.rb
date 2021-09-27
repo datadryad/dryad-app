@@ -47,8 +47,9 @@ module StashEngine
       # need to calculate url here because url helpers work erratically in the mailer template itself
       path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       @url = orcid_invite.landing(path)
+      @resource = orcid_invite.resource
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
-      assign_variables(orcid_invite.resource)
       mail(to: orcid_invite.email,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
