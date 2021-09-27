@@ -29,6 +29,18 @@ module Stash
       "#{APP_CONFIG[:salesforce][:server]}/lightning/r/Case/#{case_id}/view"
     end
 
+    def self.sf_user
+      sf_client.user_info
+    end
+
+    def self.find(obj_type:, obj_id:)
+      sf_client.find(obj_type, obj_id)
+    end
+
+    def self.db_query(query)
+      sf_client.query(query)
+    end
+
     def self.find_cases_by_doi(doi)
       result = db_query("SELECT Id, Status, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
                         "or DOI__c like '%#{doi}%' ")
@@ -53,28 +65,41 @@ module Stash
       cases_found
     end
 
-    def self.current_user
-      sf_client.user_info
+    def self.find_user_by_orcid(orcid)
+      result = db_query("SELECT Id FROM User Where EmployeeNumber='#{orcid}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
     end
 
-    def self.find(obj_type:, obj_id:)
-      sf_client.find(obj_type, obj_id)
+    def self.find_account_by_name(name)
+      return unless name
+
+      result = db_query("SELECT Id FROM Account Where Name='#{name}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
     end
 
-    def self.db_query(query)
-      sf_client.query(query)
-    end
+    def self.create_case(identifier:, owner:)
+      return unless identifier && owner
 
-    def self.create_case(identifier)
-      return unless identifier
+      case_id = sf_client.create('Case',
+                                 Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
+                                 DOI__c: identifier.identifier,
+                                 Dataset_Title__c: identifier.latest_resource&.title,
+                                 Origin: 'Web',
+                                 SuppliedName: identifier.latest_resource&.user&.name,
+                                 SuppliedEmail: identifier.latest_resource&.user&.email,
+                                 Journal__c: find_account_by_name(identifier.journal&.title),
+                                 Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.user&.tenant&.long_name))
 
-      sf_client.create('Case',
-                       Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
-                       DOI__c: identifier.identifier,
-                       Dataset_Title__c: identifier.latest_resource&.title,
-                       Origin: 'Web',
-                       SuppliedName: identifier.latest_resource&.user&.name,
-                       SuppliedEmail: identifier.latest_resource&.user&.email)
+      # Update the OwnerId after the case is created, because if the Id does not match
+      # an existing SF user with the correct permissions, it would prevent the case from being created.
+      owner_id = find_user_by_orcid(owner.orcid)
+      sf_client.update('Case', Id: case_id, OwnerId: owner_id) if owner_id
+
+      case_id
     end
 
     class << self

@@ -184,10 +184,9 @@ module StashEngine
     end
 
     def create_salesforce_case
-      puts "XXXX XPs #{params}"
       # create the case
       @identifier = Identifier.find(params[:id])
-      sf_case_id = Stash::Salesforce.create_case(@identifier)
+      sf_case_id = Stash::Salesforce.create_case(identifier: @identifier, owner: current_user)
 
       # redirect to it
       sf_url = Stash::Salesforce.case_view_url(case_id: sf_case_id)
