@@ -30,7 +30,7 @@ module Stash
     end
 
     def self.find_cases_by_doi(doi)
-      result = db_query("SELECT Id FROM Case Where Subject like '%#{doi}%' " \
+      result = db_query("SELECT Id, Status, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
                         "or DOI__c like '%#{doi}%' ")
       return unless result && result.size > 0
 
@@ -39,7 +39,16 @@ module Stash
         found = find(obj_type: 'Case', obj_id: res['Id'])
         next unless found&.CaseNumber
 
-        cases_found << { title: "SF #{found.CaseNumber}", path: case_view_url(case_num: found.CaseNumber) }.to_ostruct
+        reason = if found.Reason.present? && found.Reason != 'Other'
+                   found.Reason
+                 else
+                   found.Case_Reason_Other__c
+                 end
+
+        cases_found << { title: "SF #{found.CaseNumber}",
+                         path: case_view_url(case_num: found.CaseNumber),
+                         status: found.Status,
+                         reason: reason }.to_ostruct
       end
       cases_found
     end
@@ -65,8 +74,7 @@ module Stash
                        Dataset_Title__c: identifier.latest_resource&.title,
                        Origin: 'Web',
                        SuppliedName: identifier.latest_resource&.user&.name,
-                       SuppliedEmail: identifier.latest_resource&.user&.email
-                      )
+                       SuppliedEmail: identifier.latest_resource&.user&.email)
     end
 
     class << self

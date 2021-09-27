@@ -56,11 +56,32 @@
 	<% sf_links = salesforce_links(@identifier.identifier) %>
 	<% if sf_links %>
 	    <div id="sf_link_list" style="clear: both">
-		<ul>
+		<table class="c-lined-table" id="curation_table">
+		    <tr class="c-lined-table__head">
+			<th class="c-admin-table">
+			    Case
+			</th>
+			<th class="c-admin-table">
+			    Status
+			</th>
+			<th class="c-admin-table">
+			    Reason
+			</th>			    
+		    </tr>
 		    <% sf_links.each do |sf_link| %>
-			<li><%= link_to sf_link.title, sf_link.path, target: :blank %></li>
+			<tr class="c-lined-table__row">
+			    <td>				
+				<%= link_to sf_link.title, sf_link.path, target: :blank %>
+			    </td>
+			    <td>
+				<%= sf_link.status %>
+			    </td>
+			    <td>
+				<%= sf_link.reason %>
+			    </td>
+			</tr>
 		    <% end %>
-		</ul>
+		</table>
 	    </div>
 	<% end %>
     </div>
