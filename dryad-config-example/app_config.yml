@@ -164,6 +164,7 @@ defaults: &DEFAULTS
     api_requests_auth: 10
     api_requests_v1: 5
   salesforce:
+    server: https://testsalesforce.com
     username: nobody@datadryad.org
     password: nopass
     security_token: notoken
