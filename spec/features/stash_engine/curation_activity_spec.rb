@@ -203,7 +203,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('SF #0001')
         # 'SF #0002' should be turned into a link with the caseID 'abc',
         # and the '#' dropped to display the normalized form of the case number
-        expect(page).to have_link('SF 0002', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc/view')
+        expect(page).to have_link('SF 0002', href: 'https://testsalesforce.com/lightning/r/Case/abc/view')
       end
 
       it 'renders salesforce section' do
