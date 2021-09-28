@@ -132,11 +132,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           end
 
           expect(page).to have_text(@resource.identifier)
-
-          within(:css, '.c-lined-table__row:last-child') do
-            expect(page).to have_text('Submitted')
-            expect(page).to have_text(@author.name)
-          end
+          expect(page).to have_text('Submitted')
+          expect(page).to have_text(@author.name)
         end
 
       end
@@ -211,11 +208,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         # it has the user comment when they clicked to submit and end in-progress edit
         expect(page).to have_text(@resource.edit_histories.last.user_comment)
 
-        within(:css, '.c-lined-table__row:last-child') do
-          expect(page).to have_text('Curation')
-          expect(page).to have_text('Dryad System')
-          expect(page).to have_text('system set back to curation')
-        end
+        expect(page).to have_text('Curation')
+        expect(page).to have_text('Dryad System')
+        expect(page).to have_text('system set back to curation')
       end
 
     end
@@ -272,10 +267,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text(@resource.identifier.identifier)
 
-        within(:css, '.c-lined-table__row:last-child') do
-          expect(page).to have_text('Submitted')
-          expect(page).to have_text(@author.name)
-        end
+        expect(page).to have_text('Submitted')
+        expect(page).to have_text(@author.name)
       end
 
     end
