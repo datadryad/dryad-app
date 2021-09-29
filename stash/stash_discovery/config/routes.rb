@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # blacklight_for :catalog
 
   # Endpoint for LinkOut
-  # get :discover, to: 'catalog#discover'
+  get :discover, to: 'catalog#discover'
 
   # the ones below coming from new routing for geoblacklight
   #--------------------------------------------------------

@@ -3,6 +3,8 @@
 # Stash::Salesforce.find(obj_type: 'Case', obj_id: '00Q5e000007HsfvEAC')
 # Stash::Salesforce.case_id(case_num: '00006729')
 
+require 'restforce'
+
 # Restforce doesn't consistently implement 'empty?',
 # so don't allow Rubocop to suggest it
 # rubocop:disable Style/ZeroLengthPredicate
@@ -108,12 +110,12 @@ module Stash
       def sf_client
         return @sf_client if @sf_client
 
-        @sf_client = Restforce.new(username: APP_CONFIG[:salesforce][:username],
-                                   password: APP_CONFIG[:salesforce][:password],
-                                   security_token: APP_CONFIG[:salesforce][:security_token],
-                                   client_id: APP_CONFIG[:salesforce][:client_id],
-                                   client_secret: APP_CONFIG[:salesforce][:client_secret],
-                                   api_version: '39.0')
+        @sf_client = ::Restforce.new(username: APP_CONFIG[:salesforce][:username],
+                                     password: APP_CONFIG[:salesforce][:password],
+                                     security_token: APP_CONFIG[:salesforce][:security_token],
+                                     client_id: APP_CONFIG[:salesforce][:client_id],
+                                     client_secret: APP_CONFIG[:salesforce][:client_secret],
+                                     api_version: '39.0')
         @sf_client.authenticate!
         @sf_client
       end
