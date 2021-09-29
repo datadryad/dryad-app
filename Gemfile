@@ -6,7 +6,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 gem 'irb', '~> 1.3.7'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.2'
+gem 'rails', '~> 5.2.6'
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
 
@@ -50,22 +50,15 @@ gem 'yui-compressor'
 
 # ############################################################
 # Misc
-
-gem 'aws-sdk-s3', '~> 1.87'
-# this lock may prevent error messages from geoblacklight until we can update it
-gem 'blacklight', '= 6.11'
 gem 'bootsnap', require: false
 gem 'exception_notification'
 gem 'google-apis-gmail_v1', '~> 0.3'
-gem 'httparty'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder'
 gem 'net-sftp'
-gem 'oai', '>= 0.3.1'
+gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
-gem 'rb-readline', '~> 0.5.5', require: false
-gem 'restforce', '~> 3.0'
-gem 'stripe'
-gem 'wicked_pdf'
+gem 'rb-readline', require: false
+gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 
 # #########################
@@ -116,7 +109,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 3.142.0'
+  gem 'selenium-webdriver'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
   # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)

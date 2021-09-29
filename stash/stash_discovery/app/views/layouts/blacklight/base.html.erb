@@ -1,0 +1,52 @@
+<%# this basic template puts the stash layout in, based on the base.html.erb in blacklight, but modified to get rid
+    of the geoblacklight bars and to incorporate our bars and things into geoblacklight layout-%>
+<!DOCTYPE html>
+<%= content_tag :html, class: 'no-js', **html_tag_attributes do %>
+  <head>
+
+    <%= render 'layouts/stash_engine/standard_head' %>
+    <%= stylesheet_link_tag "stash_engine/application", media: "all" %>
+    <%# render 'layouts/head' -- the former geoblacklight specific head %>
+
+    <%# these are blacklight things from app/views/layouts/blacklight/base.html.erb, geoblacklight doesn't have different layout now %>
+    <%# below stylesheet is called 'application', but should probably be geoblacklight specific name %>
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%#= WAS javascript_include_tag "application" %>
+    <%= javascript_include_tag "geobl_application", 'data-turbolinks-track': 'reload' %>
+
+    <%= content_for(:head) %>
+
+  </head>
+  <body id="yes-really" class='<%= render_body_class %> <%= "#{controller_name}_#{action_name}" %>'>
+  <!-- had to add the id yes-really to force our body styles rather than the nasty bootstrap crap -->
+    <%# the geoblacklight extras used to be just below the "skip to main content in the top area" %>
+    <%#= render partial: 'layouts/geoblacklight_extras' %>
+    <%= render 'layouts/stash_engine/top_area' %>
+    <%#= this has both banner and search box from blacklight -- render partial: 'shared/header_navbar' %>
+    <!-- id below used to be "maincontent" in our main area -->
+    <main id="main-container" class="<%= container_classes %>" role="main" aria-label="<%= t('blacklight.main.aria.main_container') %>">
+      <!--
+      <div class="geobl-search-spacing">
+        <%# render_search_bar  %>
+      </div>
+      -->
+      <%= render 'shared/header_fluffbar' %>
+
+      <%= content_for(:container_header) %>
+
+      <%= render partial: 'shared/flash_msg', layout: 'shared/flash_messages' %>
+
+      <div class="row">
+        <%= content_for?(:content) ? yield(:content) : yield %>
+      </div>
+    </main>
+    <%= render partial: "stash_engine/shared/footer" %>
+    <%= render partial: 'shared/modal' %>
+  </body>
+  </html>
+<% end %>
+
+<script>
+  // fix the link to be correct for blacklight without having to change our own heading templates
+  $('a.c-skipnav')[0].href="#main-container";
+</script>

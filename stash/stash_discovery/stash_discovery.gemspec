@@ -36,22 +36,19 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  s.add_dependency 'blacklight', '~> 6.11'
-  s.add_dependency 'config', '~> 2.2', '>= 2.2.1'
-  s.add_dependency 'ffi', '~> 1.13', '>= 1.13.1'
-  s.add_dependency 'geoblacklight', '~> 1.9.1'
-  s.add_dependency 'jquery-rails', '~> 4.1'
-  s.add_dependency 'rails', '~> 5.2'
-  s.add_dependency 'rsolr', '~> 2.3'
-  s.add_dependency 'sass-rails', '~> 5.0'
-  s.add_dependency 'solr_wrapper', '~> 2.2'
-  s.add_dependency 'turbolinks', '~> 5.2'
+  s.add_dependency 'blacklight', '~> 7.19.2'
+  s.add_dependency 'bootstrap', '~> 4.0'
+  s.add_dependency 'devise', '~> 4.8.0'
+  s.add_dependency 'devise-guests', '~> 0.6'
+  s.add_dependency 'geoblacklight', '~> 3.4.0'
+  s.add_dependency 'jquery-rails', '~> 4.4.0'
+  s.add_dependency 'rsolr', '>= 1.0', '< 3'
+  s.add_dependency 'solr_wrapper', '~> 3.1.2'
+  # s.add_dependency 'turbolinks'
+  s.add_dependency 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 
-  # extra deps from generated GeoBlacklight app
-  s.add_dependency 'devise-guests', '~> 0.5'
-
-  s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rubocop', '~> 0.57.2'
-  s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  # s.add_development_dependency 'nokogiri'
+  # s.add_development_dependency 'rubocop'
+  # s.add_development_dependency 'simplecov'
+  # s.add_development_dependency 'simplecov-console'
 end
