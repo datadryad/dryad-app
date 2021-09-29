@@ -1,0 +1,77 @@
+// Local Application Customizations
+
+// Set Header Logo
+$logo-image: image_url('blacklight/logo.svg') !default;
+
+.navbar-brand {  /* The main logo image for the Blacklight instance */
+  @if $logo-image {
+    background: transparent $logo-image no-repeat top left;
+  }
+}
+
+// Optional
+// Override default Bootstrap variables here
+
+// Example: Bootstrap Colors
+$blue:    #007bff !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default;
+$orange:  #fd7e14 !default;
+$yellow:  #ffc107 !default;
+$green:   #28a745 !default;
+$teal:    #20c997 !default;
+$cyan:    #17a2b8 !default;
+
+// Example: Bootstrap Link color
+$link-color: $blue;
+
+// search bar better spacing
+div.geobl-search-spacing {
+  margin: 0 1.5rem 1rem 0;
+}
+
+// make search button match our colors
+#search, a.catalog_startOverLink {
+  background-color: #4891af;
+  z-index: 0; // needed for crazy thing where menu goes behind it
+}
+
+#map {
+  z-index: 0; // menus go behind without this
+}
+
+a.catalog_startOverLink:hover {
+  background-color: #41839e;
+}
+
+a.btn-primary {
+  background-color: #4891af;
+}
+
+a.btn-primary:hover {
+  background-color: #41839e;
+}
+
+// The facets shouldn't be lime green
+h3.bg-success, h3.facet-limit-active h3.card-header {
+  background-color: rgba(0, 0, 0, 0.07) !important; }
+
+// the dumb selected items shouldn't be lime green
+ul.facet-values li .selected {
+  color: black !important;
+}
+
+// links visited, no text decoration
+a.facet-select {
+  color: #005581;
+}
+
+a.facet-select:visited, div.more_facets a, div.page_links a {
+  color: #337ab7;
+}
+
+a.facet-select:hover {
+  color: rgb(237, 129, 90);
+}

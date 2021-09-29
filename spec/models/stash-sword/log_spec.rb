@@ -30,6 +30,7 @@ module Stash
           ENV['RAILS_ENV'] = env
           expect(Class.new { include LogUtils }.new.level).to eq(lvl)
         end
+        ENV['RAILS_ENV'] = 'test'  # otherwise database cleaner errors, also shouldn't change the rails environment after test
       end
 
       it 'logs an error response' do
