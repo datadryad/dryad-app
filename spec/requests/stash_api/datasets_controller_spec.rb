@@ -594,6 +594,11 @@ module StashApi
         expect(hsh['editLink']).to eq(nil)
       end
 
+      it 'shows the dataset with the correct json type, even if not set explicitly in accept headers' do
+        get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: { 'ACCEPT' => '*/*' }
+        expect(response.headers['Content-type']).to eq('application/json')
+      end
+
       it 'shows the private record for superuser' do
         @identifier.edit_code = Faker::Number.number(digits: 6)
         @identifier.save
