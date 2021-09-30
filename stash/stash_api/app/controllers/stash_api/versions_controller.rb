@@ -7,6 +7,7 @@ module StashApi
     include StashApi::Concerns::Downloadable
 
     before_action :require_json_headers, only: %i[show index]
+    before_action :force_json_content_type, except: :download
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
     before_action -> { require_resource_id(resource_id: params[:id]) }, only: %i[show download]
     before_action :optional_api_user

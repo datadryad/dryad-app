@@ -13,6 +13,7 @@ module StashApi
     include StashApi::Concerns::Downloadable
 
     before_action :require_json_headers, only: %i[show create index update]
+    before_action :force_json_content_type
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
     before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]

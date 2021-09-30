@@ -5,6 +5,7 @@ module StashApi
   class UrlsController < ApplicationController
 
     before_action :require_json_headers
+    before_action :force_json_content_type
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: %i[create]
     before_action :doorkeeper_authorize!, only: :create
     before_action :require_api_user, only: :create
