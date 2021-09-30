@@ -596,7 +596,7 @@ module StashApi
 
       it 'shows the dataset with the correct json type, even if not set explicitly in accept headers' do
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: { 'ACCEPT' => '*/*' }
-        expect(response.headers['Content-type']).to eq('application/json')
+        expect(response.headers['Content-type']).to eq('application/json; charset=utf-8')
       end
 
       it 'shows the private record for superuser' do

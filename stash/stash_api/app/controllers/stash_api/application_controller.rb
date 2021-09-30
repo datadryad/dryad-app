@@ -118,7 +118,7 @@ module StashApi
     end
 
     def force_json_content_type
-      response.headers['Content-Type'] = 'application/json'
+      response.headers['Content-Type'] = 'application/json; charset=utf-8'
     end
   end
 end
