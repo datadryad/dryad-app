@@ -190,3 +190,42 @@ notification is sent by one of these alarms, it goes to Slack, the
 admin email, and developers' phones.
 
  
+Curator PC
+==============
+
+AWS allows running servers that you can connect with a virtual desktop. We are
+using this feature for the curator PC.
+
+How the machine runs:
+- We use EC2. There is also an option via Lightsail, but the Lightsail servers
+  are far less configurable, and server specs cannot be changed without
+  completely rebuilding the server.
+- To minimize lag, we run on Amazon's datacenter in Ohio.
+  
+
+To properly configure a Windows Server
+- Login with the password you obtain from EC2
+  - Select the instance in EC2
+  - Actions, Security, Get Windows Password.
+- Reset the password for the Administrator, and save the new password
+  - net user Administrator "new_password"
+- Older versions of Windows Server (pre-2022) default to having
+  only IE installed. IE is not compatible with modern websites, and should be
+  removed
+- Create users
+  - In the same tool that you create the users, add them to the group "Remote
+    Desktop Users"
+  - By default, only 2 simultaneous users are allowed. If you want more
+    - Install Remote Desktop Services
+	- Purchase “RDS User” Client Access Licenses (CALs)
+
+To connect to Windows Server
+- PC users connect with Remote Desktop Connection
+- Mac users download the app Microsoft Remote Desktop
+- Connect using the IP and the assigned user/passwoord
+- A user account may only be logged in from one place at a time
+
+Downloads
+- File downloads will continue while your local machine sleeps
+- Users must update their browser settings so files download into the Data drive
+
