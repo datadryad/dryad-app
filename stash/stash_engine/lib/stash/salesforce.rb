@@ -16,7 +16,8 @@ module Stash
     def self.case_id(case_num:)
       return unless case_num
 
-      result = db_query("SELECT Id FROM Case Where CaseNumber = '#{case_num}'")
+      result = db_query("SELECT Id FROM Case Where CaseNumber = '#{case_num}' " \
+                        "or CaseNumber like '%00#{case_num}'")
       return unless result && result.size > 0
 
       result.first['Id']
