@@ -30,10 +30,12 @@ Fields in the shopping cart report
 
 To run the report and retrieve the files:
 ```
-# On dryad-prd-a
-cd apps/ui/current
-RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2019-11
-cp shopping* ~/tools/journal-payments/shoppingcart/
+# On dryad-prd (in personal account, where the journal-payments repository is checked out)
+sudo su - dryad
+cd /apps/dryad/apps/ui/current
+RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2020-11
+exit # go back to personal account
+cp /apps/dryad/apps/ui/current/shopping* ~/journal-payments/shoppingcart/
 cd ~/tools/journal-payments/shoppingcart
 git pull
 git add <new-file>

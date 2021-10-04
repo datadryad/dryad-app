@@ -16,8 +16,8 @@
 mkmf.log
 
 # Built gem
-
 *.gem
+Gemfile.lock
 
 # Database
 
