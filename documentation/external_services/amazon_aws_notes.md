@@ -213,6 +213,8 @@ To properly configure a Windows Server
   only IE installed. IE is not compatible with modern websites, and should be
   removed
 - Create users
+  - When creating a user DO NOT select "force password change on first
+    login". This will prevent some users from connecting.
   - In the same tool that you create the users, add them to the group "Remote
     Desktop Users"
   - By default, only 2 simultaneous users are allowed. If you want more
