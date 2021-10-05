@@ -53,6 +53,28 @@ administrator:
 3. Ensure that the administrator has a `User` account
 3. Add a `JournalRole` as in `StashEngine::JournalRole.create(user: u, journal_organization: o, role: 'org_admin')`
 
+
+Updating journals for payment plans and integrations
+----------------------------------------------------
+
+When a journal changes payment plans, simply update the `payment_plan_type`
+field.
+
+When a journal integrates with the email process, the journal must have the
+`manuscript_number_regex` to properly process the email messages. The 
+`issn` must also be set to select the proper email messages.
+
+When a journal starts using API access, the associated API account must be
+designated as an administrator of the journal. To enable a set of journals for
+an API user, use something like:
+```
+u = StashEngine::User.find(<user_id>)
+jj = StashEngine::Journal.where("title like '<title>%'") # or search by sponsor_id
+jj.each do |j|
+  StashEngine::JournalRole.new(user:u, journal:j, role:'admin').save
+end
+```
+
 Metadata about Manuscripts
 =============================
 
