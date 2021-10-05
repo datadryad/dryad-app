@@ -132,7 +132,7 @@ module Stash
       end
 
       def handle_success(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
       rescue StandardError => e
@@ -142,7 +142,7 @@ module Stash
 
       # rubcop:disable Metrics/MethodLength
       def handle_failure(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
