@@ -26,7 +26,7 @@ module Stash
         errors = schema.validate(doc)
         return xml if errors.empty?
 
-        log.error(errors.join("\n"))
+        logger.error(errors.join("\n"))
         raise errors[0]
       end
 
