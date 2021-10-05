@@ -45,17 +45,14 @@ module Stash
         msg = "Submission failed for resource #{resource_id}"
         msg << ': ' << message if message
         msg << "\n" << error.to_s
-        msg << "\n" << backtrace_str if backtrace_str
+        msg << "\n" << error.full_message if backtrace_str
         logger.error(msg)
       end
 
       def backtrace_str
         return unless error.respond_to?(:backtrace)
 
-        backtrace = error.backtrace
-        return unless backtrace
-
-        backtrace.join("\n")
+        error.full_message
       end
     end
   end
