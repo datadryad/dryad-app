@@ -31,7 +31,7 @@ module Stash
         @password = password
         @on_behalf_of = on_behalf_of || username
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}", logger: logger)
-        @log          = logger || default_logger
+        @logger       = logger || default_logger
       end
 
       # Creates a new resource for the specified DOI with the specified payload
@@ -41,7 +41,7 @@ module Stash
       # @param packaging [Packaging] the packaging (defaults to {Packaging::SIMPLE_ZIP})
       # @return [DepositReceipt] the deposit receipt
       def create(doi:, payload:, packaging: Packaging::SIMPLE_ZIP)
-        log.debug("Stash::Sword::Client.create(doi: #{doi}, payload: #{payload})")
+        logger.debug("Stash::Sword::Client.create(doi: #{doi}, payload: #{payload})")
         uri = collection_uri.to_s
         response = do_post(uri, payload, create_request_headers(payload, doi, packaging))
         receipt_from(response)
@@ -57,10 +57,10 @@ module Stash
       # @param packaging [Packaging] the packaging (defaults to {Packaging::SIMPLE_ZIP})
       # @return [Integer] the response code (if the request succeeds)
       def update(edit_iri:, payload:, packaging: Packaging::SIMPLE_ZIP)
-        log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, payload: #{payload})")
+        logger.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, payload: #{payload})")
         uri = to_uri(edit_iri).to_s
         response = do_put(uri, payload, packaging)
-        log.debug(to_log_msg(response))
+        logger.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue StandardError => e
         log_error(e)
@@ -76,7 +76,7 @@ module Stash
       end
 
       def receipt_from(response)
-        log.debug(to_log_msg(response))
+        logger.debug(to_log_msg(response))
 
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?
@@ -85,11 +85,11 @@ module Stash
       end
 
       def receipt_from_location(response)
-        log.debug('Desposit receipt not provided in SWORD response body')
+        logger.debug('Desposit receipt not provided in SWORD response body')
         edit_iri = response.headers[:location]
         return nil unless edit_iri
 
-        log.debug("Retrieving deposit receipt from Location header Edit-IRI: #{edit_iri}")
+        logger.debug("Retrieving deposit receipt from Location header Edit-IRI: #{edit_iri}")
         body = helper.get(uri: to_uri(edit_iri))
         return nil unless body
 
@@ -122,7 +122,7 @@ module Stash
         content << EOL
         content << "--#{boundary}--#{EOL}"
 
-        log.debug("Payload:\n\t#{content.map(&:to_s).join("\t")}")
+        logger.debug("Payload:\n\t#{content.map(&:to_s).join("\t")}")
 
         SequenceIO.new(content).binmode
       end

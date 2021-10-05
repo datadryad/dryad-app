@@ -17,7 +17,7 @@ module Stash
 
       # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!
-        log.info("#{Time.now.xmlschema} #{description}")
+        logger.info("#{Time.now.xmlschema} #{description}")
         previously_submitted = StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'processing').count.positive?
         if Stash::Repo::Repository.hold_submissions?
           # to mark that it needs to be re-enqueued and processed later
@@ -40,7 +40,7 @@ module Stash
           resource = StashEngine::Resource.find(resource_id)
           description_for(resource)
                          rescue StandardError => e
-                           log.error("Can't find resource #{resource_id}: #{e}\n#{e.backtrace.join("\n")}")
+                           logger.error("Can't find resource #{resource_id}: #{e}\n#{e.backtrace.join("\n")}")
                            "#{self.class} for missing resource #{resource_id}"
         end
       end
@@ -90,7 +90,7 @@ module Stash
       end
 
       def log_info(message)
-        log.info("#{Time.now.xmlschema} #{self.class}: #{message}")
+        logger.info("#{Time.now.xmlschema} #{self.class}: #{message}")
       end
     end
   end
