@@ -75,7 +75,7 @@ module Stash
 
       def submit(package)
         log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
-        sword_helper = SwordHelper.new(package: package, logger: log)
+        sword_helper = SwordHelper.new(package: package, logger: logger)
         sword_helper.submit!
       end
 
