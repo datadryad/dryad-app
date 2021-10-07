@@ -195,8 +195,6 @@ module Datacite
             if c.contributor_type == 'funder' && c.name_identifier_id.present?
               # all our funders that have ids come from crossref
               FunderIdentifier.new(type: FunderIdentifierType::CROSSREF_FUNDER_ID, value: c.name_identifier_id)
-            else
-              nil
             end
 
           FundingReference.new(
