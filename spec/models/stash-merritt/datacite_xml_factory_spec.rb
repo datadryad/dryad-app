@@ -80,12 +80,12 @@ module Datacite
         dc_xml_string = @xml_factory.build_datacite_xml
         doc = Nokogiri::XML(dc_xml_string)
         doc.remove_namespaces! # to simplify the xpath expressions for convenience
-        x_funder = doc.xpath("//resource/fundingReferences/fundingReference").first
+        x_funder = doc.xpath('//resource/fundingReferences/fundingReference').first
 
-        expect(x_funder.xpath("funderName").to_s).to include(contributor.contributor_name.encode(xml: :text))
-        expect(x_funder.xpath("funderIdentifier").to_s).to include('funderIdentifierType="Crossref Funder ID"')
-        expect(x_funder.xpath("funderIdentifier").to_s).to include(contributor.name_identifier_id.encode(xml: :text))
-        expect(x_funder.xpath("awardNumber").to_s).to include(contributor.award_number.encode(xml: :text))
+        expect(x_funder.xpath('funderName').to_s).to include(contributor.contributor_name.encode(xml: :text))
+        expect(x_funder.xpath('funderIdentifier').to_s).to include('funderIdentifierType="Crossref Funder ID"')
+        expect(x_funder.xpath('funderIdentifier').to_s).to include(contributor.name_identifier_id.encode(xml: :text))
+        expect(x_funder.xpath('awardNumber').to_s).to include(contributor.award_number.encode(xml: :text))
       end
 
       it 'leaves out funderIdentifier if contributor has blank name_identifier_id' do
@@ -93,11 +93,11 @@ module Datacite
         dc_xml_string = @xml_factory.build_datacite_xml
         doc = Nokogiri::XML(dc_xml_string)
         doc.remove_namespaces! # to simplify the xpath expressions for convenience
-        x_funder = doc.xpath("//resource/fundingReferences/fundingReference").first
+        x_funder = doc.xpath('//resource/fundingReferences/fundingReference').first
 
-        expect(x_funder.xpath("funderName").to_s).to include(contributor.contributor_name.encode(xml: :text))
-        expect(x_funder.xpath("funderIdentifier").to_s).to be_blank
-        expect(x_funder.xpath("awardNumber").to_s).to include(contributor.award_number.encode(xml: :text))
+        expect(x_funder.xpath('funderName').to_s).to include(contributor.contributor_name.encode(xml: :text))
+        expect(x_funder.xpath('funderIdentifier').to_s).to be_blank
+        expect(x_funder.xpath('awardNumber').to_s).to include(contributor.award_number.encode(xml: :text))
       end
     end
   end
