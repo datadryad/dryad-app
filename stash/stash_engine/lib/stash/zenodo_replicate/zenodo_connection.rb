@@ -61,7 +61,7 @@ module Stash
             sleep SLEEP_TIME
             retry
           else
-            raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
+            raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.full_message}"
           end
           # rubocop:enable Style/GuardClause
         end

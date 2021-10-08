@@ -32,7 +32,7 @@ module Stash
         raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
           "#{file.merritt_presign_info_url}\n" \
           "Original HTTP library error: #{e}\n" \
-          "#{e.backtrace.join("\n")}"
+          "#{e.full_message}"
       end
     end
   end

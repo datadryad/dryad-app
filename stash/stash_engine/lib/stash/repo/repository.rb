@@ -104,7 +104,7 @@ module Stash
         remove_s3_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
-        msg << to_msg(e)
+        msg << e.full_message
         logger.warn(msg)
       end
 
@@ -155,7 +155,7 @@ module Stash
       # rubcop:enable Metrics/MethodLength
 
       def log_error(error)
-        logger.error(to_msg(error))
+        logger.error(error.full_message)
       end
 
       def remove_if_exists(file)
@@ -172,17 +172,6 @@ module Stash
       def remove_s3_data_files(resource)
         Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
         Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
-      end
-
-      def to_msg(error)
-        msg = error.to_s
-        if (backtrace = (error.respond_to?(:backtrace) && error.backtrace))
-          backtrace.each do |line|
-            msg += "\n"
-            msg += line
-          end
-        end
-        msg
       end
 
       def update_submission_log(result)
