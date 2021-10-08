@@ -1,4 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
+require 'http'
 module StashDatacite
   class ContributorsController < ApplicationController
     before_action :set_contributor, only: %i[update delete]
@@ -79,8 +80,8 @@ module StashDatacite
       if args['name_identifier_id'].present?
         # init with the contrib name as-is
       else
-        # init with contrib name getting an asterisk
-        @contributor.contributor_name = "#{args['contributor_name']}*"
+        # init with contrib name getting an asterisk unless I can get an exact name match from fundref
+        @contributor.contributor_name = "#{args['contributor_name']}*" unless set_exact_match(contributor_name: args[:contributor_name])
       end
 
       @contributor.save
@@ -107,6 +108,41 @@ module StashDatacite
       end
       matches_at_beginning + matches_within + other_items
     end
+
+    # tries to set an exact match for the contributor name, returns true/false if it was successfully set
+    # rubocop:disable Naming/AccessorMethodName
+    def set_exact_match(contributor_name:)
+      return false if contributor_name.blank?
+
+      # clean up name
+      simple_name = contributor_name.gsub(/\*$/, '').strip.downcase
+      simple_name.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
+
+      # get response
+      resp = HTTP.get('https://api.crossref.org/funders', params: { 'query' => simple_name},
+                                                          headers: {'Content-Type' => 'application/json'})
+
+      json = resp.parse
+
+      # make key/value pairs with name as a key and {uri: and :normalized } as value
+      hash = {}
+      json['message']['items'].each do |i|
+        hash[i['name'].downcase] = { url: i['uri'], normalized: i['name'] }
+        i['alt-names'].each do |j|
+          hash[j.downcase] = {url: i['uri'], normalized: j }
+        end
+      end
+
+      return false if hash[simple_name].nil?
+
+      # set info according to match in fundref
+      @contributor.name_identifier_id = hash[simple_name][:url]
+      @contributor.contributor_name = hash[simple_name][:normalized]
+      true
+    rescue HTTP::Error
+      false # no exact match if http error, we won't wait around for FundRef to start working again
+    end
+    # rubocop:enable Naming/AccessorMethodName
 
     def resource
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
