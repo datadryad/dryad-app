@@ -115,11 +115,11 @@ module StashDatacite
       return false if contributor_name.blank?
 
       # clean up name
-      simple_name = contributor_name.gsub(/\*$/, '').strip.downcase
-      simple_name.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
+      simple_name = contributor_name.gsub(/\*$/, '').strip.downcase # remove a star at the end if there is one and downcase
+      search_name = simple_name.gsub(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
       # get response
-      resp = HTTP.get('https://api.crossref.org/funders', params: { 'query' => simple_name},
+      resp = HTTP.get('https://api.crossref.org/funders', params: { 'query' => search_name},
                                                           headers: {'Content-Type' => 'application/json'})
 
       json = resp.parse
