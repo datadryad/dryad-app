@@ -36,7 +36,7 @@ begin
     # save the state to the file after each set has run
     State.save_sets_state
   rescue HTTPClient::TimeoutError, HTTPClient::BadResponseError => e
-    Config.logger.error("Timeout error for set #{set.name}\n#{e}\n#{e.backtrace.join("\n")}")
+    Config.logger.error("Timeout error for set #{set.name}\n#{e}\n#{e.full_message}")
   end
 ensure
   Config.logger.info("Finished notifier run for #{Config.environment} environment\n")
