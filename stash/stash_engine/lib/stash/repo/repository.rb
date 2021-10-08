@@ -57,7 +57,7 @@ module Stash
 
       # Returns a logger
       # @return [Logger] a logger
-      def log
+      def logger
         Rails.logger
       end
 
@@ -105,7 +105,7 @@ module Stash
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << to_msg(e)
-        log.warn(msg)
+        logger.warn(msg)
       end
 
       def self.update_repo_queue_state(resource_id:, state:)
@@ -132,7 +132,7 @@ module Stash
       end
 
       def handle_success(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
       rescue StandardError => e
@@ -142,7 +142,7 @@ module Stash
 
       # rubcop:disable Metrics/MethodLength
       def handle_failure(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
@@ -155,7 +155,7 @@ module Stash
       # rubcop:enable Metrics/MethodLength
 
       def log_error(error)
-        log.error(to_msg(error))
+        logger.error(to_msg(error))
       end
 
       def remove_if_exists(file)

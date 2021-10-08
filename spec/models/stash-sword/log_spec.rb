@@ -12,7 +12,7 @@ module Stash
       before(:each) do
         @log_io = StringIO.new
         @log_utils = Class.new { include LogUtils }.new
-        @log_utils.instance_variable_set(:@log, LogUtils.create_default_logger(@log_io, log_utils.level))
+        @log_utils.instance_variable_set(:@logger, LogUtils.create_default_logger(@log_io, log_utils.level))
       end
 
       def log_str
