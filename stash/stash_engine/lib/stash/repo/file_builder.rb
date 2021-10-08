@@ -5,7 +5,7 @@ require 'stash/aws/s3'
 module Stash
   module Repo
     class FileBuilder
-      def log
+      def logger
         Rails.logger
       end
 
