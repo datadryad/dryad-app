@@ -119,8 +119,8 @@ module StashDatacite
       search_name = simple_name.gsub(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
       # get response
-      resp = HTTP.get('https://api.crossref.org/funders', params: { 'query' => search_name},
-                                                          headers: {'Content-Type' => 'application/json'})
+      resp = HTTP.get('https://api.crossref.org/funders', params: { 'query' => search_name },
+                                                          headers: { 'Content-Type' => 'application/json' })
 
       json = resp.parse
 
@@ -129,7 +129,7 @@ module StashDatacite
       json['message']['items'].each do |i|
         hash[i['name'].downcase] = { url: i['uri'], normalized: i['name'] }
         i['alt-names'].each do |j|
-          hash[j.downcase] = {url: i['uri'], normalized: j }
+          hash[j.downcase] = { url: i['uri'], normalized: j }
         end
       end
 
