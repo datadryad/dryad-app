@@ -213,6 +213,8 @@ To properly configure a Windows Server
   only IE installed. IE is not compatible with modern websites, and should be
   removed
 - Create users
+  - When creating a user DO NOT select "force password change on first
+    login". This will prevent some users from connecting.
   - In the same tool that you create the users, add them to the group "Remote
     Desktop Users"
   - By default, only 2 simultaneous users are allowed. If you want more
@@ -229,3 +231,14 @@ Downloads
 - File downloads will continue while your local machine sleeps
 - Users must update their browser settings so files download into the Data drive
 
+
+Using the Dryad code on Windows
+-------------------------------
+
+Windows has difficulty cloning the Dryad code due to a filename with crazy
+characters, which we intentionally created to test filenames.
+
+The code should be able to be cloned with:
+`git clone -c core.protectNTFS=false -n https://github.com/CDL-Dryad/dryad-app.git`
+
+Windows cannot easily run `bundle install`, due to missing Unix utilities.
