@@ -17,9 +17,9 @@ namespace :funders do
     StashDatacite::Contributor.where(contributor_type: 'funder').where('name_identifier_id IS NULL or name_identifier_id = ""')
       .each_with_index do |contrib, idx|
       simple_name = contrib.contributor_name.gsub(/\*$/, '').strip.downcase # remove a star at the end if there is one and downcase
-      if lookup[simple_name].present?
-        contrib.update!(contributor_name: lookup[simple_name][:name], name_identifier_id: lookup[simple_name][:uri])
-      end
+
+      contrib.update!(contributor_name: lookup[simple_name][:name], name_identifier_id: lookup[simple_name][:uri]) if lookup[simple_name].present?
+
       puts "Checked #{idx} funders for missing ids" if idx % 100 == 0 && idx != 0
     end
   end
