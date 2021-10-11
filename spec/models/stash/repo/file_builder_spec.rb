@@ -26,7 +26,7 @@ module Stash
           logger = instance_double(Logger)
           allow(Rails).to receive(:logger).and_return(logger)
           builder = FileBuilder.new
-          expect(builder.log).to be(logger)
+          expect(builder.logger).to be(logger)
         end
       end
 

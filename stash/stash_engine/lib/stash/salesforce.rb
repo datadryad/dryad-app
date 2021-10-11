@@ -16,7 +16,8 @@ module Stash
     def self.case_id(case_num:)
       return unless case_num
 
-      result = db_query("SELECT Id FROM Case Where CaseNumber = '#{case_num}'")
+      result = db_query("SELECT Id FROM Case Where CaseNumber = '#{case_num}' " \
+                        "or CaseNumber like '%00#{case_num}'")
       return unless result && result.size > 0
 
       result.first['Id']
@@ -86,13 +87,15 @@ module Stash
     def self.create_case(identifier:, owner:)
       return unless identifier && owner
 
+      case_user = identifier.latest_resource&.authors&.first || identifier.latest_resource&.user
+
       case_id = sf_client.create('Case',
                                  Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
                                  DOI__c: identifier.identifier,
                                  Dataset_Title__c: identifier.latest_resource&.title,
                                  Origin: 'Web',
-                                 SuppliedName: identifier.latest_resource&.user&.name,
-                                 SuppliedEmail: identifier.latest_resource&.user&.email,
+                                 SuppliedName: user_name(case_user),
+                                 SuppliedEmail: user_email(case_user),
                                  Journal__c: find_account_by_name(identifier.journal&.title),
                                  Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.user&.tenant&.long_name))
 
@@ -119,6 +122,16 @@ module Stash
         @sf_client.authenticate!
         @sf_client
       end
+
+      # rubocop:disable Style/NestedTernaryOperator
+      def user_email(user)
+        user.present? ? (user.respond_to?(:author_email) ? user.author_email : user.email) : nil
+      end
+
+      def user_name(user)
+        user.present? ? (user.respond_to?(:author_standard_name) ? user.author_standard_name : user.name) : nil
+      end
+      # rubocop:enable Style/NestedTernaryOperator
 
     end
   end

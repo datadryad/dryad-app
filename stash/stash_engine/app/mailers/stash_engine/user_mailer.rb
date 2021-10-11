@@ -60,7 +60,7 @@ module StashEngine
       return unless resource.present?
 
       assign_variables(resource)
-      @backtrace = to_backtrace(error)
+      @backtrace = error.full_message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
@@ -135,12 +135,6 @@ module StashEngine
       return "[#{Rails.env}]" unless Rails.env == 'production'
 
       ''
-    end
-
-    # TODO: look at Rails standard ways to report/format backtrace
-    def to_backtrace(e)
-      backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
-      "#{e.class}: #{e}\n#{backtrace}"
     end
 
     def address_list(addresses)

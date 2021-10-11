@@ -24,6 +24,9 @@ test/dummy/tmp/
 test/dummy/.sass-cache
 doc/*
 
+# ignore gemfile.lock since it makes the dependencies too strict and the lock should be controlled by the application overall
+Gemfile.lock
+
 # ############################################################
 # Database
 

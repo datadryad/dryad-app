@@ -85,7 +85,7 @@ module Stash
       rescue Stash::EventData::QueryFailure => e
         logger.error('DataCite event-data error')
         logger.error("#{Time.new.utc} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
-        logger.error("#{Time.new.utc} #{e}\n#{e.backtrace.join("\n")}")
+        logger.error("#{Time.new.utc} #{e}\n#{e.full_message}")
         []
       end
     end

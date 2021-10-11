@@ -43,7 +43,6 @@ gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
-# gem 'mini_racer'
 gem 'turbolinks'
 gem 'uglifier', '~> 4.2.0'
 gem 'yui-compressor'
