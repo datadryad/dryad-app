@@ -166,9 +166,9 @@ Software and Supplemental Information can be uploaded for publication at'
     it 'sanitizes file name' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/\\u0000 ssh*authorized?keys.csv", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { left: 0 }
       )
-      expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
+      expect(page).to have_content('crazy_chars_are(crazy)')
     end
   end
 
