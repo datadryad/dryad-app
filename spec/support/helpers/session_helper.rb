@@ -47,11 +47,10 @@ module SessionsHelper
     rescue Net::ReadTimeout => e
       if times_retried < max_retries
         times_retried += 1
-        puts "Failed to visit #{current_url}, retry #{times_retried}/#{max_retries}"
+        logger.info("Failed to visit #{current_url}, retry #{times_retried}/#{max_retries}")
         retry
       else
-        puts e.message
-        puts e.backtrace.inspect
+        logger.error(e.full_message)
         exit(1)
       end
     end

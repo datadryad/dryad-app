@@ -3,15 +3,10 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
 <div class="bio">
-  <img src="/images/tcruse.jpeg" alt="Trisha Cruse" title="Trisha Cruse">
-  <p><strong>Patricia (Trisha) Cruse</strong><br/>
-  Interim Executive Director<br/>
-  Patricia (Trisha) Cruse joined Dryad as the Interim Executive
-  Director in Spring 2021. She was previously the Executive Director of DataCite
-  and Director of the University of California Curation Center (UC3) at the
-  California Digital Library (CDL). Her work centers on building sustainable
-  organizations and bringing diverse communities together with the view that
-  together we can go farther.</p>
+  <img src="/images/jgibson.jpeg" alt="Jennifer Gibson" title="Jennifer Gibson">
+  <p><strong>Jennifer Gibson</strong><br/>
+  Executive Director<br/>
+  </p>
 </div>
 
 <h2 id="dev">Product Development Team</h2>
@@ -104,13 +99,6 @@
   <p><strong>Ari Orona</strong><br/>
   Data Curator<br/>
   Ari graduated with a B.S. in Biochemistry from Arizona State University, with a diverse background in clinical research. In addition to her Data Curator role at Dryad, she works as a Data Analyst at the University of Virginia. In her spare time, Ari enjoys baking, reading, and conquering her latest favorite video game.</p>
-</div>
-
-<div class="bio">
-    <img src="/images/HSchubloom.jpg" alt="Hannah Schubloom" title="Hannah Schubloom">
-  <p><strong>Hannah Schubloom</strong>, M.Sc in Neuroscience<br/>
-  Data Curator<br/>
-  Hannah has a research background focused on neuroscience and neuromodulation, and graduated with a M.Sc. from McGill University. Prior to joining Dryad, she worked as a Research Program Manager at PLOS ONE and a Research Associate at Halo Neuroscience. In her spare time, Hannah enjoys cooking, candle-making and spending time with her cat, Uni.</p>
 </div>
 
 <div class="bio">

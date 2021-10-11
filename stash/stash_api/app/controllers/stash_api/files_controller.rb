@@ -11,6 +11,7 @@ module StashApi
   class FilesController < ApplicationController
 
     before_action :require_json_headers, only: %i[show index destroy]
+    before_action :force_json_content_type, except: :download
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
     before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy download]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]

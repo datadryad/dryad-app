@@ -4,6 +4,7 @@ module StashApi
   class UsersController < ApplicationController
 
     before_action :require_json_headers
+    before_action :force_json_content_type
     before_action :doorkeeper_authorize!, only: %i[show index]
     before_action :require_api_user, only: %i[show index]
     before_action :require_admin, only: %i[show index]

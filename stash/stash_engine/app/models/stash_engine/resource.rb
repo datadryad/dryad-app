@@ -722,8 +722,12 @@ module StashEngine
     def send_to_zenodo(note: nil)
       return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
-      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note) if zenodo_copies.data.empty?
-      ZenodoCopyJob.perform_later(id)
+      existing_copy = zenodo_copies.data.first
+      if existing_copy.nil?
+        existing_copy = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note)
+      end
+
+      ZenodoCopyJob.perform_later(id) if existing_copy.state == 'enqueued'
     end
 
     # if publish: true then it just publishes, which is a separate operation than updating files

@@ -102,6 +102,7 @@ module StashEngine
         update(file_state: 'deleted')
       else
         # remove all of this filename for this resource from the database
+        FrictionlessReport.where(generic_file_id: id).destroy_all
         self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
       end
 

@@ -20,7 +20,7 @@ module Stash
         false
       rescue StandardError => e
         Rails.logger.error("Error adding record with hash #{solr_hash || 'nil'}: #{e}")
-        Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
+        Rails.logger.debug(e.full_message) if e.backtrace
         false
       end
 
@@ -32,7 +32,7 @@ module Stash
         false
       rescue StandardError => e
         Rails.logger.error("Error deleting record with identifier #{doi || 'nil'}: #{e}")
-        Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
+        Rails.logger.debug(e.full_message) if e.backtrace
         false
       end
 
