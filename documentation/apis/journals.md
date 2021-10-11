@@ -54,8 +54,49 @@ administrator:
 3. Add a `JournalRole` as in `StashEngine::JournalRole.create(user: u, journal_organization: o, role: 'org_admin')`
 
 
+Cleaning journal names
+=======================
+
+When a journal name is not recognized by the system, the title is stored with an
+asterisk appended. Periodically, new journals should be added to the system, and
+old datasets should be updated to link them to the new journals.
+
+To process all journal titles in the system, converting any with an asterisk to
+the corresponding journal that has the same name:
+`rails journals:clean_titles_with_asterisks`
+
+To search for journals that are candidates to fix, in the database:
+```
+SELECT value, COUNT(value)
+FROM stash_engine_internal_data
+WHERE value like '%*%'
+GROUP BY value
+HAVING COUNT(value) > 1
+ORDER BY COUNT(value);
+```
+
+Journal titles stored with datasets may differ slightly in spelling from the
+accepted titles. To replace a single title throughout the system, use something
+like this:
+```
+old_name = 'The Greatest Journal*'
+new_id = 123
+StashEngine::Journal.replace_uncontrolled_journal(old_name:, new_id:)
+```
+
+If you need to create an entry for a new journal in the system, you may edit any
+of the relevant fields, but the most critical are `title` and `issn`. Use a
+command like this to create the journal:
+```
+j = StashEngine::Journal.create(title: '', issn: '',
+                                notify_contacts: ["automated-messages@datadryad.org"], allow_review_workflow: true,
+								allow_embargo: false, allow_blackout: false, sponsor_id: nil)
+```
+
+
+
 Updating journals for payment plans and integrations
-----------------------------------------------------
+====================================================
 
 When a journal changes payment plans, simply update the `payment_plan_type`
 field.
@@ -74,6 +115,7 @@ jj.each do |j|
   StashEngine::JournalRole.new(user:u, journal:j, role:'admin').save
 end
 ```
+
 
 Metadata about Manuscripts
 =============================
@@ -173,8 +215,8 @@ When the email contains `Article Status: rejected`, the associated dataset will
 be moved to `withdrawn` status.
 
 
-Technical details
-=================
+Details of email processing
+===========================
 
 Configuring/updating the Rails connection with GMail
 -----------------------------------------------------
