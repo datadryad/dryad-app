@@ -554,6 +554,25 @@ namespace :curation_stats do
   end
 end
 
+namespace :journals do
+  desc 'Clean journals that have exact name matches except for an asterisk'
+  task clean_titles_with_asterisks: :environment do
+    data = StashEngine::InternalDatum.where("data_type = 'publicationName' and value like '%*'")
+    data.each do |d|
+      name = d.value
+      next unless name.ends_with?('*')
+
+      jj = StashEngine::Journal.where(title: name[0..-2])
+      next unless jj.present?
+
+      j = jj.first
+      puts "Cleaning journal: #{name}"
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+    end
+    nil
+  end
+end
+
 namespace :journal_email do
   desc 'Acquire a token for working with the target GMail account'
   task validate_gmail_connection: :environment do
