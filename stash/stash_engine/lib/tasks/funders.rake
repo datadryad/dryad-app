@@ -20,7 +20,7 @@ namespace :funders do
       if lookup[simple_name].present?
         contrib.update!(contributor_name: contrib.contributor_name.gsub(/\*$/, '').strip, name_identifier_id: lookup[simple_name])
       end
-      puts "Checked #{idx} funders for ids" if idx % 100 == 0 && idx != 0
+      puts "Checked #{idx} funders for missing ids" if idx % 100 == 0 && idx != 0
     end
   end
 end
