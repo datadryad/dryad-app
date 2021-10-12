@@ -6,6 +6,14 @@
   <img src="/images/jgibson.jpeg" alt="Jennifer Gibson" title="Jennifer Gibson">
   <p><strong>Jennifer Gibson</strong><br/>
   Executive Director<br/>
+  Jen joined Dryad as Executive Director in October 2021. Since 2005, she has
+  worked with scientists, funders, publishers, libraries, developers and others
+  to explore fresh paths toward accelerating discovery through open research
+  communication and open-technology innovation. Prior to Dryad, Jennifer was
+  Head of Open Research Communication for eLife, a non-profit and research
+  funder-backed initiative to transform science publishing. She is Chair of the
+  Board of Directors for OASPA (2020-2022) and a former member of the board for
+  FORCE11 (2018-2020). Learn more about Jen at <a href="https://www.linkedin.com/in/jmclenna/">https://www.linkedin.com/in/jmclenna/</a>.
   </p>
 </div>
 
