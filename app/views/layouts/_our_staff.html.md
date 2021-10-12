@@ -13,7 +13,8 @@
   Head of Open Research Communication for eLife, a non-profit and research
   funder-backed initiative to transform science publishing. She is Chair of the
   Board of Directors for OASPA (2020-2022) and a former member of the board for
-  FORCE11 (2018-2020). Learn more about Jen at <a href="https://www.linkedin.com/in/jmclenna/">https://www.linkedin.com/in/jmclenna/</a>.
+  FORCE11 (2018-2020). Learn more about Jen at
+  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank">LinkedIn</a>.
   </p>
 </div>
 
