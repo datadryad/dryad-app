@@ -171,7 +171,7 @@ defaults: &DEFAULTS
   frictionless:
     # 5 MB and below
     size_limit: 5_000_000
-    missing_values: "na,n/a,.,none,NA,N/A,N.A.,n.a.,-,nil,NIL,NULL,null,empty,blank"
+    missing_values: "na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank"
   rate_limit:
     # number of requests allowed per minute
     all_requests: 120
