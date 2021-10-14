@@ -24,8 +24,15 @@ module StashEngine
       # We can remove the workaround if it changes in Merritt at some point in the future.
 
       domain, local_id = resource.merritt_protodomain_and_local_id
-      "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-          "producer%2F#{ERB::Util.url_encode(upload_file_name.gsub('#', '%23'))}?no_redirect=true"
+
+      if upload_file_name.include?('#')
+        # Merritt needs the components double-encoded when there is a '#' in the filename
+        "#{domain}/api/presign-file/#{ERB::Util.url_encode(local_id)}/#{resource.stash_version.merritt_version}/" \
+        "producer%252F#{ERB::Util.url_encode(ERB::Util.url_encode(upload_file_name))}?no_redirect=true"
+      else
+        "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
+        "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+      end
     end
 
     # this will do the http request to Merritt to get the presigned URL, putting here instead of other classes since it gets
