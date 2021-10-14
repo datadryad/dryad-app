@@ -34,6 +34,9 @@ module Stash
       # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
       # The ROR limit appears to be 40 results (even with paging :/)
       def self.find_by_ror_name(query)
+        return [] unless query.present?
+        return [] if query.downcase == 'ne' # For some reason, ROR errors on this query string
+
         resp = query_ror(URI, { 'query': query }, HEADERS)
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
         results.present? ? results.flatten.uniq : []
