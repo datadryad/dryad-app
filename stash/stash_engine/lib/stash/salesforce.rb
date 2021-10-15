@@ -40,6 +40,11 @@ module Stash
       sf_client.find(obj_type, obj_id)
     end
 
+    # Update an object, using fields in the kv_hash like {ISSN__c: '1234-5678'}
+    def self.update(obj_type:, obj_id:, kv_hash:)
+      sf_client.update(obj_type, Id: obj_id, **kv_hash)
+    end
+
     def self.db_query(query)
       sf_client.query(query)
     end
@@ -78,7 +83,7 @@ module Stash
     def self.find_account_by_name(name)
       return unless name
 
-      result = db_query("SELECT Id FROM Account Where Name='#{name}'")
+      result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
       return unless result && result.size > 0
 
       result.first['Id']
