@@ -591,8 +591,11 @@ namespace :journals do
     end
 
     StashEngine::Journal.all.each do |j|
-      sf_id = Stash::Salesforce.find_account_by_name(j.title)
+      # Only check the journal in Salesforce if Dryad has a business relationship
+      # with the journal (payment plan or integration)
+      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
 
+      sf_id = Stash::Salesforce.find_account_by_name(j.title)
       unless sf_id.present?
         puts "MISSING from Salesforce -- #{j.title}"
         next
