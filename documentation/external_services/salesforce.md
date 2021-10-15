@@ -42,3 +42,12 @@ sf_journals = @sf.query('select Id, Name, Type, Type_of_Journal_Sponsorship__c f
 sf_journals.first.Name
 sf_journals.current_page
 ```		
+
+Salesforce configuration
+--------------------------
+
+To create/edit fields in Salesforce objects:
+- Setup
+- Object Manager
+- Select the type of object (e.g., "case")
+- Fields and Relationships
