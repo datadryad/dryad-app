@@ -237,9 +237,9 @@ module StashEngine
         "frictionless validate --path #{file.path} --json --field-missing-values '#{APP_CONFIG.frictionless.missing_values}' 2>&1"
       starting = Time.new
       result = `#{cmd}`
-      logger.info("Frictionless validation:\n  #{cmd}\n  #{result}")
+      logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
       ending = Time.new
-      logger.info("VALIDATION TOOK: #{ending-starting} seconds")
+      logger.debug("#{File.basename(file.path)}: Frictionless valiation took: #{ending-starting} seconds")
       file.close!
       result
     end
