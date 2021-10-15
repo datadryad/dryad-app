@@ -40,7 +40,7 @@ module Stash
       sf_client.find(obj_type, obj_id)
     end
 
-    # Update an object, using fields in the kv_hash like {ISSN__c: '1234-5678'}
+    # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
     def self.update(obj_type:, obj_id:, kv_hash:)
       sf_client.update(obj_type, Id: obj_id, **kv_hash)
     end
