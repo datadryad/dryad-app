@@ -235,8 +235,11 @@ module StashEngine
       # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
       cmd = 'eval "$(pyenv init -)" 2>/dev/null; ' \
         "frictionless validate --path #{file.path} --json --field-missing-values '#{APP_CONFIG.frictionless.missing_values}' 2>&1"
+      starting = Time.new
       result = `#{cmd}`
       logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
+      ending = Time.new
+      logger.debug("VALIDATION TOOK: #{ending-starting} seconds")
       file.close!
       result
     end
