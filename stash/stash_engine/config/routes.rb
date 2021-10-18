@@ -102,6 +102,7 @@ StashEngine::Engine.routes.draw do
   get 'our_platform', to: 'pages#our_platform'
   get 'our_staff', to: 'pages#our_staff'
   get 'our_advisors', to: 'pages#our_advisors'
+  get 'pb_tombstone', to: 'pages#pb_tombstone'
   get 'submission_process', to: 'pages#submission_process'
   get 'why_use', to: 'pages#why_use'
   get 'dda', to: 'pages#dda' # data deposit agreement
