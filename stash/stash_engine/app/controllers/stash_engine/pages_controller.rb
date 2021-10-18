@@ -27,6 +27,8 @@ module StashEngine
 
     def our_staff; end
 
+    def pb_tombstone; end
+
     def publishing_charges; end
 
     def submission_process; end
