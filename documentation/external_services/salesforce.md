@@ -43,6 +43,21 @@ sf_journals.first.Name
 sf_journals.current_page
 ```		
 
+
+Synchronizing between Dryad and Salesforce
+------------------------------------------
+
+To report on the correspondence between Dryad journal settings and Salesforce
+journal settings:
+
+```
+rails journals:check_salesforce_sync
+```
+
+To clean up metadata in Salesforce associated with journals, add `DRY_RUN=false`
+to the end of the above command.
+
+
 Salesforce configuration
 --------------------------
 
