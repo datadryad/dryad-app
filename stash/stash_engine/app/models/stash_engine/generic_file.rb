@@ -239,7 +239,7 @@ module StashEngine
       result = `#{cmd}`
       logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
       ending = Time.new
-      logger.debug("#{File.basename(file.path)}: Frictionless valiation took: #{ending-starting} seconds")
+      F      logger.debug("#{File.basename(file.path)}: Frictionless validation took: #{ending-starting} seconds")
       file.close!
       result
     end
