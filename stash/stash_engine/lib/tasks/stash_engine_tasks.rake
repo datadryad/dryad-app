@@ -1,4 +1,5 @@
 require 'httparty'
+require 'stash/salesforce'
 require 'stash/google/journal_gmail'
 require_relative 'identifier_rake_functions'
 
@@ -568,6 +569,47 @@ namespace :journals do
       j = jj.first
       puts "Cleaning journal: #{name}"
       StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+    end
+    nil
+  end
+
+  desc 'Compare journal differences between Dryad and Salesforce'
+  task check_salesforce_sync: :environment do
+
+    dry_run = if ENV['DRY_RUN'].blank?
+                true
+              else
+                ENV['DRY_RUN'] != 'false'
+              end
+
+    puts 'Processing with DRY_RUN' if dry_run
+
+    jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
+    jj.each do |j|
+      found_journal = StashEngine::Journal.where(title: j['Name'])
+      puts "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
+    end
+
+    StashEngine::Journal.all.each do |j|
+      # Only check the journal in Salesforce if Dryad has a business relationship
+      # with the journal (payment plan or integration)
+      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
+
+      sf_id = Stash::Salesforce.find_account_by_name(j.title)
+      unless sf_id.present?
+        puts "MISSING from Salesforce -- #{j.title}"
+        next
+      end
+
+      sfj = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_id)
+      if sfj['ISSN__c'] != j.issn
+        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.issn}"
+        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.issn }) unless dry_run
+      end
+
+      sf_parent_id = sfj['ParentId']
+      sf_parent = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_parent_id)
+      puts "SPONSOR MISMATCH for #{j.issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
     end
     nil
   end
