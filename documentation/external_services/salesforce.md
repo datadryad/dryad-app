@@ -42,3 +42,27 @@ sf_journals = @sf.query('select Id, Name, Type, Type_of_Journal_Sponsorship__c f
 sf_journals.first.Name
 sf_journals.current_page
 ```		
+
+
+Synchronizing between Dryad and Salesforce
+------------------------------------------
+
+To report on the correspondence between Dryad journal settings and Salesforce
+journal settings:
+
+```
+rails journals:check_salesforce_sync
+```
+
+To clean up metadata in Salesforce associated with journals, add `DRY_RUN=false`
+to the end of the above command.
+
+
+Salesforce configuration
+--------------------------
+
+To create/edit fields in Salesforce objects:
+- Setup
+- Object Manager
+- Select the type of object (e.g., "case")
+- Fields and Relationships
