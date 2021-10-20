@@ -63,6 +63,9 @@ gem 'restforce', '~> 2.5.3'
 gem 'stripe'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
+gem 'amazing_print'
+gem 'rails_semantic_logger'
+
 
 # #########################
 # Testing download examples
