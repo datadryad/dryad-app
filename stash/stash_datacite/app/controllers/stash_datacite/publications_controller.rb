@@ -212,7 +212,7 @@ module StashDatacite
     def fix_removable_asterisk
       return unless @pub_name.end_with?('*')
 
-      journal = StashEngine::Journal.where(title: @pub_name.chop).first
+      journal = StashEngine::Journal.find_by_title(@pub_name)
       return unless journal.present?
 
       @pub_issn = journal.issn
