@@ -83,14 +83,6 @@ module StashEngine
       reload
     end
 
-    def update_stash_identifier_last_resource
-      return if identifier.nil?
-
-      # identifier.update(latest_resource_id: id) # set to my resource_id
-      res = Resource.where(identifier_id: identifier_id).order(id: :desc).first
-      identifier.update_column(:latest_resource_id, res&.id) # no callbacks, does bad stuff when duplicating with amoeba dup
-    end
-
     def remove_identifier_with_no_resources
       # if no more resources after a removal for a StashEngine::Identifier then there is no remaining content for that Identifier
       # only in-progress resources are destroyed, but there may be earlier submitted ones
@@ -106,11 +98,10 @@ module StashEngine
       Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
-    after_create :init_state_and_version, :update_stash_identifier_last_resource
+    after_create :init_state_and_version
     # for some reason, after_create not working, so had to add after_update
-    after_update :update_stash_identifier_last_resource
     before_destroy :remove_s3_temp_files
-    after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
+    after_destroy :remove_identifier_with_no_resources
 
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
