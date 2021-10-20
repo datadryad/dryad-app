@@ -56,6 +56,14 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker   
+
+
+  ##### Test rails_semantic_logger #####
+  #
+  config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.json", formatter: :json)
+  #
+  ##### END Test rails_semantic_logger #####
+
   
   Rails.application.default_url_options = { host: 'dryad-dev.cdlib.org' }
 
