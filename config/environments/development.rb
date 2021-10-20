@@ -62,6 +62,11 @@ Rails.application.configure do
   #
   config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.json", formatter: :json)
   config.colorize_logging = false
+  config.log_tags = {
+    request_id: :request_id,
+    ip:         :remote_ip,
+    user:       -> request { request.cookie_jar['login'] }
+  }
 
   #
   ##### END Test rails_semantic_logger #####
