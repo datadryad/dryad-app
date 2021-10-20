@@ -63,6 +63,8 @@ Rails.application.configure do
   # See also config/initializers/json_log.rb
 
 
+  config.rails_semantic_logger.add_file_appender = false
+  config.semantic_logger.add_appender(file_name: 'log/json.log', formatter: :json)
   config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.log")
   config.log_tags = {
     request_id: :request_id,
