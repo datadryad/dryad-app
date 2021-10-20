@@ -61,10 +61,10 @@ Rails.application.configure do
   ##### Test rails_semantic_logger #####
   #
   #config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.json", formatter: :json)
-  config.log_tags = {
-    request_id: :request_id,
-    ip:         :remote_ip,
-  }
+  #config.log_tags = {
+  #  request_id: :request_id,
+  #  ip:         :remote_ip,
+  #}
 
   #
   ##### END Test rails_semantic_logger #####
