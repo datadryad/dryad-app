@@ -939,7 +939,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  amazing_print
   aws-sdk-s3 (~> 1.87)
   binding_of_caller
   bootsnap
