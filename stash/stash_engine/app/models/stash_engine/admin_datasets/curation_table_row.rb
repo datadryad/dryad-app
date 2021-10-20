@@ -32,11 +32,10 @@ module StashEngine
       SQL
 
       FROM_CLAUSE = <<-SQL
-          FROM stash_engine_resources ser
-          INNER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
+          FROM stash_engine_identifiers sei
+          INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id
           LEFT OUTER JOIN stash_engine_internal_data seid ON sei.id = seid.identifier_id AND seid.data_type = 'publicationName'
           LEFT OUTER JOIN stash_engine_users seu ON ser.current_editor_id = seu.id
-          INNER JOIN (SELECT MAX(r2.id) r_id FROM stash_engine_resources r2 GROUP BY r2.identifier_id) j1 ON j1.r_id = ser.id
           LEFT OUTER JOIN (SELECT rs2.resource_id, MAX(rs2.id) latest_resource_state_id FROM stash_engine_resource_states rs2 GROUP BY rs2.resource_id) j2 ON j2.resource_id = ser.id
           LEFT OUTER JOIN (SELECT ca2.resource_id, MAX(ca2.id) latest_curation_activity_id FROM stash_engine_curation_activities ca2 GROUP BY ca2.resource_id) j3 ON j3.resource_id = ser.id
           LEFT OUTER JOIN stash_engine_resource_states sers ON sers.id = j2.latest_resource_state_id
