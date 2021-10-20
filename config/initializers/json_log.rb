@@ -3,6 +3,7 @@
 # per https://github.com/reidmorrison/rails_semantic_logger/issues/73
 #
 
-SemanticLogger.add_appender(file_name: 'json_formatter.json', formatter: :json)
+config.rails_semantic_logger.format = :json
+#SemanticLogger.add_appender(file_name: 'json_formatter.json', formatter: :json)
 
 
