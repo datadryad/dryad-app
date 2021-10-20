@@ -61,6 +61,8 @@ Rails.application.configure do
   ##### Test rails_semantic_logger #####
   #
   config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.json", formatter: :json)
+  config.colorize_logging = false
+
   #
   ##### END Test rails_semantic_logger #####
 
