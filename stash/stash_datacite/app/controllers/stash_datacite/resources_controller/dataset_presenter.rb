@@ -64,13 +64,13 @@ module StashDatacite
       end
 
       def embargo_status
-        @resource&.current_curation_activity&.status
+        @resource&.last_curation_activity&.status
       end
 
       def embargo_status_pretty
         return 'Processing' if @resource&.current_resource_state&.resource_state == 'error'
 
-        @resource&.current_curation_activity&.readable_status
+        @resource&.last_curation_activity&.readable_status
       end
 
       def publication_date

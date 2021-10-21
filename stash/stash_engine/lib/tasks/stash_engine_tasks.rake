@@ -228,7 +228,7 @@ namespace :identifiers do
         StashEngine::CurationActivity.create(
           resource_id: r.id,
           user_id: 0,
-          status: r.current_curation_activity.status,
+          status: r.last_curation_activity.status,
           note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
         )
       end
@@ -253,7 +253,7 @@ namespace :identifiers do
         StashEngine::CurationActivity.create(
           resource_id: r.id,
           user_id: 0,
-          status: r.current_curation_activity.status,
+          status: r.last_curation_activity.status,
           note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
         )
       end

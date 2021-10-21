@@ -59,7 +59,7 @@ stash/stash_engine/app/controllers/stash_engine/landing_controller.rb
 Curation Status
 =====================
 
-Curation status is stored in resource.current_curation_activity (StashEngine::CurationActivity).
+Curation status is stored in resource.last_curation_activity (StashEngine::CurationActivity).
 
 Allowable values:
 - in_progress = the submitter is still working on the resource
