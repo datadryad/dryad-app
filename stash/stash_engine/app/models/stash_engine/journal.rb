@@ -17,14 +17,14 @@ module StashEngine
 
       title = title.chop if title.end_with?('*')
       journal = StashEngine::Journal.where(title: title).first
-      
+
       unless journal.present?
         alt = StashEngine::JournalTitle.where(title: title).first
         journal = alt.journal if alt.present?
       end
       journal
     end
-    
+
     # Replace an uncontrolled journal name (typically containing '*')
     # with a controlled journal reference, using an id
     def self.replace_uncontrolled_journal(old_name:, new_id:)
