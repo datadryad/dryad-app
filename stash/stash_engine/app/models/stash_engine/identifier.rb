@@ -372,6 +372,7 @@ module StashEngine
     def fill_resource_view_flags
       my_pub = false
       resources.each do |res|
+        res.reload
         ca = res.last_curation_activity
         case ca&.status # nil for no status
         when 'withdrawn'
