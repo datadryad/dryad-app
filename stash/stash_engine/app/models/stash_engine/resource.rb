@@ -379,16 +379,12 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      (submitted? && !files_published?) || current_curation_activity&.embargoed?
-    end
-
-    def current_curation_activity
-      curation_activities.order(:id).last
+      (submitted? && !files_published?) || last_curation_activity&.embargoed?
     end
 
     # Shortcut to the current curation activity's status
     def current_curation_status
-      current_curation_activity.status
+      last_curation_activity.status
     end
 
     # Create the initial CurationActivity

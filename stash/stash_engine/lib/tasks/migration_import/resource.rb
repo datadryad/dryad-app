@@ -118,7 +118,6 @@ module MigrationImport
                     'in_progress'
                   end
       @ar_resource.curation_activities << StashEngine::CurationActivity.create(status: out_state, user_id: ar_user_id)
-      @ar_resource.update_column(:current_curation_activity_id, @ar_resource.curation_activities.first)
     end
 
     def add_edit_histories
