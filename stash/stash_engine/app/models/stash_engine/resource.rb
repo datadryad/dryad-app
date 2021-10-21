@@ -208,15 +208,9 @@ module StashEngine
       end
     end
 
-    # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
-    # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
+    # limits to the latest resource for each dataset if added to resources
     scope :latest_per_dataset, (-> do
-      subquery = <<-SQL
-        SELECT max(id) AS id FROM stash_engine_resources WHERE identifier_id IS NOT NULL GROUP BY identifier_id
-        UNION
-        SELECT id FROM stash_engine_resources WHERE identifier_id IS NULL
-      SQL
-      joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
+      joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end)
 
     # ------------------------------------------------------------
