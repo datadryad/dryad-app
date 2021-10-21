@@ -22,6 +22,10 @@ module StashEngine
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
+    has_one :last_curation_activity,
+            class_name: 'StashEngine::CurationActivity',
+            primary_key: 'last_curation_activity_id',
+            foreign_key: 'id'
     has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
@@ -138,20 +142,6 @@ module StashEngine
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
-    scope :latest_curation_activity_per_resource, -> do
-      joins(:curation_activities).group('stash_engine_resources.id')
-        .maximum('stash_engine_curation_activities.id')
-        .collect { |k, v| { resource_id: k, curation_activity_id: v } }
-    end
-
-    # ------------------------------------------------------------
-    # Scopes for curation status, which is now how we know about public display (and should imply successful Merritt submission status)
-    scope :latest_curation_activity, ->(resource_id = nil) do
-      rslts = joins(:curation_activities)
-      rslts = rslts.where(stash_engine_resources: { id: resource_id }) if resource_id.present?
-      rslts.group('stash_engine_resources.id').maximum('stash_engine_curation_activities.id')
-    end
-
     scope :with_public_metadata, -> do
       where(meta_view: true)
     end
@@ -163,21 +153,9 @@ module StashEngine
 
     # this is METADATA published
     scope :published, -> do
-      joins(:curation_activities).where('stash_engine_resources.publication_date < ?', Time.now.utc)
-        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                   status: %w[published embargoed] })
+      joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+        .where('stash_engine_resources.publication_date < ?', Time.now.utc)
     end
-
-    # complicated join & subquery that may be reused to get the last curation state for each resource
-    SUBQUERY_FOR_LATEST_CURATION = <<~HEREDOC
-      SELECT resource_id, max(id) as id
-      FROM stash_engine_curation_activities
-      GROUP BY resource_id
-    HEREDOC
-      .freeze
-
-    JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
-                               'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
 
     JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
                              'LEFT OUTER JOIN stash_engine_internal_data ' \
@@ -212,7 +190,7 @@ module StashEngine
         str += " OR (dcs_contributors.contributor_type = 'funder' AND dcs_contributors.name_identifier_id IN (?))"
         arr.push(funder_ids)
       end
-      joins(JOIN_FOR_LATEST_CURATION).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
+      joins(:last_curation_activity).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
     end
 
     scope :visible_to_user, ->(user:) do
