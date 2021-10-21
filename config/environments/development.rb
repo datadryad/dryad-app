@@ -57,23 +57,10 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker   
 
-
-  ##### Test rails_semantic_logger #####
-  #
-  # See also config/initializers/json_log.rb
-
-
-  config.rails_semantic_logger.add_file_appender = false
-  config.semantic_logger.add_appender(file_name: 'log/json.log', formatter: :json)
+  # Set up rails_semantic_logger file_appender instances for both local text log
+  # and a json log for indexing into OpenSearch.
   config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.log")
-  config.log_tags = {
-    request_id: :request_id,
-    ip:         :remote_ip,
-  }
-
-  #
-  ##### END Test rails_semantic_logger #####
-
+  config.semantic_logger.add_appender(file_name: "log/#{Rails.env}_json.log", formatter: :json)
   
   Rails.application.default_url_options = { host: 'dryad-dev.cdlib.org' }
 
