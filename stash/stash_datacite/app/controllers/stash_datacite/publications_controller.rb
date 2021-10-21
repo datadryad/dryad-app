@@ -36,8 +36,11 @@ module StashDatacite
         # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
-        matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40)
-
+        matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
+        alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
+        alt_matches.each do |am|
+          matches << { title: am.title, issn: am.journal.issn }
+        end
         render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
       end
     end
@@ -228,7 +231,7 @@ module StashDatacite
       other_items = []
       match_term = term.downcase
       result_list.each do |result_item|
-        name = result_item['title'].downcase
+        name = result_item[:title].downcase
         if name == match_term
           exact_match << result_item
         elsif name.start_with?(match_term)
