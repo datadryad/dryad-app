@@ -66,6 +66,18 @@
 </div>
 
 <div class="bio">
+    <img src="/images/sgrewe.jpg" alt="Spencer Grewe" title="Spencer Grewe">
+  <p><strong>Spencer Grewe</strong><br/>
+  Data Curator<br/>
+  Spencer has research experience in biophysics and bioinformatics, and he
+  recently graduated with an M.A. in Chemistry from the University of
+  Virginia. Prior to joining Dryad, he taught chemistry and became interested
+  in science communication. In his spare time, he enjoys reading books, making
+  digital art, and exploring the outdoors.
+  </p>
+</div>
+
+<div class="bio">
     <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
   <p><strong>Jess Herzog</strong><br/>
   Data Curator<br/>
