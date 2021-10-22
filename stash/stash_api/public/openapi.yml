@@ -13,6 +13,9 @@ info:
     Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) will also be expanded further in the future as more
     documentation is created (though not all of it may be relevant to API users).
 
+    Rate limits:
+      - Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files.
+      - Authenticated users of the API are limited to 120 requests per minute.
   version: "2.1.0"
 
 servers:
