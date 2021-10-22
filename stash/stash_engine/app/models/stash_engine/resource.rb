@@ -384,7 +384,8 @@ module StashEngine
 
     # Shortcut to the current curation activity's status
     def current_curation_status
-      reload.last_curation_activity.status
+      reload
+      last_curation_activity.status
     end
 
     # Create the initial CurationActivity
