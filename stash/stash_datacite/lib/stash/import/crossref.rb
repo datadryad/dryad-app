@@ -328,13 +328,13 @@ module Stash
                                                                  data_type: 'publicationName')
         datum.update(value: publisher)
 
-        journal = StashEngine::Journal.where(title: publisher)
+        journal = StashEngine::Journal.find_by_title(publisher)
         return unless journal.present?
 
         # If the publication name matches an existing journal, populate/update the ISSN
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationISSN')
-        datum.update(value: journal.first.issn)
+        datum.update(value: journal.issn)
       end
 
       def populate_title

@@ -563,10 +563,9 @@ namespace :journals do
       name = d.value
       next unless name.ends_with?('*')
 
-      jj = StashEngine::Journal.where(title: name[0..-2])
-      next unless jj.present?
+      j = StashEngine::Journal.find_by_title(name[0..-2])
+      next unless j.present?
 
-      j = jj.first
       puts "Cleaning journal: #{name}"
       StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
     end
@@ -586,7 +585,7 @@ namespace :journals do
 
     jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
     jj.each do |j|
-      found_journal = StashEngine::Journal.where(title: j['Name'])
+      found_journal = StashEngine::Journal.find_by_title(j['Name'])
       puts "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
     end
 

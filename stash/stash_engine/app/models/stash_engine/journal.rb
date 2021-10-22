@@ -1,6 +1,7 @@
 module StashEngine
   class Journal < ApplicationRecord
     validates :issn, uniqueness: true
+    has_many :alternate_titles, class_name: 'JournalTitle', dependent: :destroy
     has_many :journal_roles
     has_many :users, through: :journal_roles
     belongs_to :sponsor, class_name: 'JournalOrganization', optional: true
@@ -9,6 +10,19 @@ module StashEngine
       payment_plan_type == 'SUBSCRIPTION' ||
         payment_plan_type == 'PREPAID' ||
         payment_plan_type == 'DEFERRED'
+    end
+
+    def self.find_by_title(title)
+      return unless title.present?
+
+      title = title.chop if title.end_with?('*')
+      journal = StashEngine::Journal.where(title: title).first
+
+      unless journal.present?
+        alt = StashEngine::JournalTitle.where(title: title).first
+        journal = alt.journal if alt.present?
+      end
+      journal
     end
 
     # Replace an uncontrolled journal name (typically containing '*')
