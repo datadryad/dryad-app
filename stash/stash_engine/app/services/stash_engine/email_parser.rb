@@ -94,7 +94,7 @@ module StashEngine
       @journal = StashEngine::Journal.where(issn: @hash['online issn']).first if @hash['online issn']
       return if @journal
 
-      @journal = StashEngine::Journal.where(title: @hash['journal name']).first if @hash['journal name']
+      @journal = StashEngine::Journal.find_by_title(@hash['journal name']) if @hash['journal name']
 
       @journal
     end
