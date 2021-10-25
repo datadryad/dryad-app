@@ -25,6 +25,7 @@ module StashApi
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
           curationStatus: StashEngine::CurationActivity.latest(resource: @resource)&.readable_status,
+          versionChanges: version_changes,
           publicationDate: @resource.publication_date&.strftime('%Y-%m-%d'),
           lastModificationDate: @resource.updated_at&.utc&.strftime('%Y-%m-%d'),
           visibility: visibility,
@@ -37,6 +38,15 @@ module StashApi
         }
       end
       # rubocop:enable
+
+      def version_changes
+        return 'none' if @resource.stash_version.version == 1
+
+        file_states = @resource.generic_files&.map(&:file_state)
+        return 'files_changed' if file_states && (file_states - ['copied']).present?
+
+        'metadata_changed'
+      end
 
       def visibility
         if @resource.meta_view || @resource.file_view
