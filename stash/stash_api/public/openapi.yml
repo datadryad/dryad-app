@@ -554,10 +554,12 @@ components:
               type: integer
             versionStatus:
               type: string
+              description: Internal processing status, aka Merritt State.
             userId:
               type: integer
             curationStatus:
               type: string
+              description: Status in the curation workflow. See https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/submission_flow.md
             visibility:
               type: string
             lastModificationDate:
