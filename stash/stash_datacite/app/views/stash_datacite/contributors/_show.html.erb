@@ -1,5 +1,9 @@
 <% unless contributors.nil? || contributors.length < 1 %>
-  <h2 class="o-heading__level2">Funding</h2>
+	<% if params[:controller].include?('landing') %>
+  	<h2 class="o-heading__level2">Funding</h2>
+	<% else %>
+		<h3 class="o-heading__level2">Funding</h3>
+	<% end %>
   <% contributors.each do |contributor| %>
       <% @award_string = ", <span>Award: #{contributor.award_number}</span>".html_safe %>
       <% if current_user && current_user.curator? %>

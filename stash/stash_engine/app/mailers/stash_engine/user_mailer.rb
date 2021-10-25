@@ -47,8 +47,9 @@ module StashEngine
       # need to calculate url here because url helpers work erratically in the mailer template itself
       path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       @url = orcid_invite.landing(path)
+      @resource = orcid_invite.resource
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
-      assign_variables(orcid_invite.resource)
       mail(to: orcid_invite.email,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
@@ -59,7 +60,7 @@ module StashEngine
       return unless resource.present?
 
       assign_variables(resource)
-      @backtrace = to_backtrace(error)
+      @backtrace = error.full_message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
@@ -95,17 +96,6 @@ module StashEngine
       @message = message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} dependency offline: #{dependency.name}")
-    end
-
-    def helpdesk_notice(resource, message)
-      logger.warn('Unable to send helpdesk notice; nil resource') unless resource.present?
-      return unless resource.present?
-
-      assign_variables(resource)
-      @message = message
-      mail(to: @helpdesk_email,
-           bcc: @bcc_emails,
-           subject: "#{rails_env} Need assistance: \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
     end
 
     def zenodo_error(zenodo_copy_obj)
@@ -145,12 +135,6 @@ module StashEngine
       return "[#{Rails.env}]" unless Rails.env == 'production'
 
       ''
-    end
-
-    # TODO: look at Rails standard ways to report/format backtrace
-    def to_backtrace(e)
-      backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
-      "#{e.class}: #{e}\n#{backtrace}"
     end
 
     def address_list(addresses)

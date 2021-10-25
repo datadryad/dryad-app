@@ -1,4 +1,5 @@
 require 'httparty'
+require 'stash/salesforce'
 require 'stash/google/journal_gmail'
 require_relative 'identifier_rake_functions'
 
@@ -81,11 +82,9 @@ namespace :identifiers do
     p "Embargoing resources whose publication_date > '#{now}'"
     query = <<-SQL
       SELECT ser.id, ser.identifier_id, seca.user_id
-      FROM stash_engine_resources ser
-        LEFT OUTER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
-        INNER JOIN (SELECT MAX(r2.id) r_id FROM stash_engine_resources r2 GROUP BY r2.identifier_id) j1 ON j1.r_id = ser.id
-        LEFT OUTER JOIN (SELECT ca2.resource_id, MAX(ca2.id) latest_curation_activity_id FROM stash_engine_curation_activities ca2 GROUP BY ca2.resource_id) j3 ON j3.resource_id = ser.id
-        LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
+      FROM stash_engine_identifiers sei
+        JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id
+        LEFT OUTER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id
       WHERE seca.status != 'embargoed' AND ser.publication_date >
     SQL
 
@@ -227,7 +226,7 @@ namespace :identifiers do
         StashEngine::CurationActivity.create(
           resource_id: r.id,
           user_id: 0,
-          status: r.current_curation_activity.status,
+          status: r.last_curation_activity.status,
           note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
         )
       end
@@ -252,7 +251,7 @@ namespace :identifiers do
         StashEngine::CurationActivity.create(
           resource_id: r.id,
           user_id: 0,
-          status: r.current_curation_activity.status,
+          status: r.last_curation_activity.status,
           note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
         )
       end
@@ -551,6 +550,65 @@ namespace :curation_stats do
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
     end
+  end
+end
+
+namespace :journals do
+  desc 'Clean journals that have exact name matches except for an asterisk'
+  task clean_titles_with_asterisks: :environment do
+    data = StashEngine::InternalDatum.where("data_type = 'publicationName' and value like '%*'")
+    data.each do |d|
+      name = d.value
+      next unless name.ends_with?('*')
+
+      j = StashEngine::Journal.find_by_title(name[0..-2])
+      next unless j.present?
+
+      puts "Cleaning journal: #{name}"
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+    end
+    nil
+  end
+
+  desc 'Compare journal differences between Dryad and Salesforce'
+  task check_salesforce_sync: :environment do
+
+    dry_run = if ENV['DRY_RUN'].blank?
+                true
+              else
+                ENV['DRY_RUN'] != 'false'
+              end
+
+    puts 'Processing with DRY_RUN' if dry_run
+
+    jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
+    jj.each do |j|
+      found_journal = StashEngine::Journal.find_by_title(j['Name'])
+      puts "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
+    end
+
+    StashEngine::Journal.all.each do |j|
+      # Only check the journal in Salesforce if Dryad has a business relationship
+      # with the journal (payment plan or integration)
+      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
+
+      sf_id = Stash::Salesforce.find_account_by_name(j.title)
+      unless sf_id.present?
+        puts "MISSING from Salesforce -- #{j.title}"
+        next
+      end
+
+      sfj = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_id)
+      if sfj['ISSN__c'] != j.issn
+        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.issn}"
+        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.issn }) unless dry_run
+      end
+
+      sf_parent_id = sfj['ParentId']
+      sf_parent = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_parent_id)
+      puts "SPONSOR MISMATCH for #{j.issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
+    end
+    nil
   end
 end
 

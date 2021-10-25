@@ -68,10 +68,10 @@
 
 		<% if @resource.identifier.large_files? %>
 			<p>
-				This submisison contains large files.
-				For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size) %>,
-				submitters will be charged $50 for each additional 10GB,
-				or part thereof. (Submissions between 50 and 60GB = $50, between 60 and 70GB = $100, and so on).
+				This submission contains large files.
+				For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size).gsub(' ', '') %>,
+				submitters will be charged $50 USD for each additional 10GB,
+				or part thereof. Submissions between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on.
 			</p>
 		<% end %>
 

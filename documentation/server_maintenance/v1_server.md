@@ -69,4 +69,9 @@ is an export of the database contents in AWS S3, in
 
 Data files -- The data files are archived in S3's Glacier storage, in the S3
 bucket `dryad-assetstore-east`. Note that these bitstreams will not make any
-sense unless you have the corresponding metadata from the database.
+sense unless you have the corresponding metadata from the database. First find
+the associated `item_id` values for the dataset (by looking for the DOI and
+DOI+suffixes in the `metadatavalue` table). There will be one for each data
+file, plus a dataset-level `item_id`. Associate these IDs to bitstreams by
+following the join tables `item2bundle` and `bundle2bitstream`. The
+`internal_id` in the `bitstream` table corresponds to the filename in S3.

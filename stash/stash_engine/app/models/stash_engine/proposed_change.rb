@@ -41,7 +41,7 @@ module StashEngine
 
     def add_metadata_updated_curation_note(provenance, resource)
       resource.curation_activities << StashEngine::CurationActivity.new(
-        user_id: resource.current_curation_activity.user_id,
+        user_id: resource.last_curation_activity.user_id,
         status: resource.current_curation_status,
         note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE}"
       )

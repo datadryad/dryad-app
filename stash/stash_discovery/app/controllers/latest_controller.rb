@@ -93,7 +93,7 @@ class LatestController < ApplicationController
 
   def set_cached_latest
     key = "#{floor_stamp(Time.new)}_latest_datasets"
-    Rails.cache.write(key, search_results(params)) unless Rails.cache.exist?(key)
+    Rails.cache.write(key, search_service.search_results) unless Rails.cache.exist?(key)
     (@response, @document_list) = Rails.cache.fetch(key)
   end
 end

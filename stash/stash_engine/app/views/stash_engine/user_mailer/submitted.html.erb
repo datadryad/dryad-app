@@ -1,20 +1,26 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Thank you for submitting your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) to Dryad.</p>
+<p>Thank you for submitting your dataset entitled, "<%= @resource.title %>".</p>
 
-<p>Your dataset will be curated shortly, and the below are the next steps:
-<ul>
-  <li>We encourage you to check that your files, metadata, contributor information and relevant documentation adhere to our submission guidelines. <a href=https://datadryad.org/stash/submission_process#curation>[Curation checklist]</a>.  Assuring that your dataset meets all of our requirements will ensure that the curation process is as efficient and timely as possible.</li> 
-<li>Your submission can be viewed and revised throughout the process through ‘My Datasets’ under ‘Submitted’.</li>
-<li>You will receive an email if the curators have questions about your dataset or upon publication if there are no issues.</li>  
-</ul>
-</p>
+<p>Your submission will soon enter our curation process. Once your submission
+    has been reviewed and approved by our curators, your dataset will be
+    published, pending any questions or requests from our team and/or timed
+    publication requirements dictated by the journal title associated with your
+    submission. </p> 
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
-<p>Your dataset has been assigned a unique identifier, called a DOI (<%= @resource.identifier_str %>). If your dataset is associated 
-  with a manuscript submission, you may provide this DOI to the journal, although it will not be live until the dataset is published. For private access prior to publication, you may share your dataset using this temporary link: <a href="<%= shr %>"><%= shr %></a>.</p>
 
-<p>If you were asked at submission to agree to payment, you will receive an invoice when your dataset is published.</p>
+<p>Your dataset has been assigned a unique digital object
+    identifier (DOI): <%= @resource.identifier_str %><br/>
+    If your dataset is associated with a manuscript submission, you may provide
+    this DOI to the journal office. The link will only be active upon
+    publication of your dataset and it will not change post-publication. For
+    private access prior to publication, you may share your dataset using the
+    unique URL: <a href="<%= shr %>"><%= shr %></a>.</p>
 
-<p>Thank you again for submitting your dataset to Dryad. Should you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>If you were required to agree to payment on the final page of the submission
+    form, you will receive an invoice via email upon publication.</p>
+
+<p>Thank you for choosing Dryad to host your data. We appreciate your support. If
+    you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
 

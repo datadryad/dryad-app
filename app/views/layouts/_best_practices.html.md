@@ -24,10 +24,30 @@
 <h2 id="gather">Gather all relevant data needed for reanalysis</h2>
 
 <ul>
-<li><strong>Consider all of the information necessary for one to reuse your dataset and replicate the analyses in your publication</strong>. Gather and organize everything--this may include experimental method details, raw data files, organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit out superfluous or ambiguous content that would confuse others.</li>
-<li><strong>Unprocessed and processed data:</strong> Providing both unprocessed and processed data can be valuable for re-analysis, assuming the data are of a reasonable size. Including unprocessed raw digital data from a recording instrument or database ensures that no details are lost, and any issues in the processing pipeline can be discovered and rectified. Processed data are cleaned, formatted, organized and ready for reuse by others. </li>
-<li><strong>Code:</strong> Programming scripts communicate to others all of the steps in processing and analysis. Including them ensures that your results are reproducible by others. Informative comments throughout your code will help future users understand its logic.</li>
-<li><strong>External resources:</strong> Links to associated data stored in other data repositories, code in software repositories, and associated publications can be included in "Related works".</li>
+  <li>
+    <strong>Consider all of the information necessary for one to reuse your dataset and replicate the analyses in
+    your publication</strong>. Gather and organize everything--this may include experimental method details, raw data files,
+    organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data
+    processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit
+    out superfluous or ambiguous content that would confuse others.<br/><br/>
+    Additionally, if applicable, please do not include any data visualizations that will appear in the published
+    article. For example, data figures and/or other supplementary material already present within the manuscript.<br/><br/>
+  </li>
+  <li>
+    <strong>Unprocessed and processed data:</strong> Providing both unprocessed and processed data can be valuable for
+    re-analysis, assuming the data are of a reasonable size. Including unprocessed raw digital data from a recording
+    instrument or database ensures that no details are lost, and any issues in the processing pipeline can be discovered
+    and rectified. Processed data are cleaned, formatted, organized and ready for reuse by others.<br/><br/>
+  </li>
+  <li>
+    <strong>Code:</strong> Programming scripts communicate to others all of the steps in processing and analysis.
+    Including them ensures that your results are reproducible by others. Informative comments throughout your code will
+    help future users understand its logic.<br/><br/>
+  </li>
+  <li>
+    <strong>External resources:</strong> Links to associated data stored in other data repositories, code in
+    software repositories, and associated publications can be included in "Related works".
+  </li>
 </ul>
 
 
@@ -95,7 +115,7 @@
 </ul>
 
 
-<img src="/images/dataset-structure.jpeg" alt="Dataset organization">
+<img src="/images/dataset-structure.png" alt="Dataset organization">
 
 
 
@@ -105,7 +125,10 @@
 
 <p>Plain text README files are recommended, however, PDF is acceptable when formatting is important.</p>
 
-<p>If you included a README in a compressed archive of files, please also upload it externally in the README section so that users are aware of the contents before downloading. </p>
+<p>
+  If you include a README in a compressed archive of files, please also upload it externally in the README section
+  so that users are aware of the contents before downloading.
+</p>
 
 <p>Cornell University's Research Data Management Service Group has created an excellent <a href="https://data.research.cornell.edu/content/readme">README template</a></p>
 
@@ -127,10 +150,10 @@
 <li>key of definitions of variable names, column headings and row labels, data codes (including missing data), and measurement units</li></ul></li>
 </ul>
 
-
-
-
-<h3>> Log in and go to "My Datasets" to start your submission now! </h3>
+<p>
+  Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My Datasets" to begin your data
+  submission now!
+</p>
 
 
 <h2 id="examples">Examples of good reusability practices</h2>

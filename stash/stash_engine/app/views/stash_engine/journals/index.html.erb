@@ -25,6 +25,9 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <th class="c-admin-table <%= sort_display('name') %>">
 	  <%= sortable_column_head sort_field: 'name', title: 'Sponsored by' %>
       </th>
+      <th class="c-admin-table">
+	  Metadata Last Received
+      </th>
   </tr>
   <% @journals.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
@@ -33,6 +36,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <td><%= journal.allow_blackout %></td>
       <td><%= journal.payment_plan_type %></td>
       <td><%= journal.sponsor&.name %></td>
+      <td><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at %></td>
   </tr>
 
 <% end -%>

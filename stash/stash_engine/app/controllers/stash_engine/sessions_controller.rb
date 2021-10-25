@@ -17,7 +17,7 @@ module StashEngine
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
     def orcid_callback
       emails = orcid_api_emails(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
-      user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
+      user = StashEngine::User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
       employment = handle_orcid_employments(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
       user.update(affiliation_id: employment&.id) unless employment.blank?
       session[:user_id] = user.id

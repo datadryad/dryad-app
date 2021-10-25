@@ -8,6 +8,9 @@ module StashEngine
       @hostname = request.host
     end
 
+    # Utility page that closes itself
+    def close_page; end
+
     def best_practices; end
 
     def jounral_integration; end
@@ -23,6 +26,8 @@ module StashEngine
     def our_platform; end
 
     def our_staff; end
+
+    def pb_tombstone; end
 
     def publishing_charges; end
 

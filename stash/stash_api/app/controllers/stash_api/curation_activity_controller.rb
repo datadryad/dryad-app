@@ -37,7 +37,7 @@ module StashApi
       resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
-        format.any { render json: resource&.reload&.current_curation_activity }
+        format.any { render json: resource&.reload&.last_curation_activity }
       end
     end
 
@@ -46,7 +46,7 @@ module StashApi
       resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
-        format.any { render json: resource&.reload&.current_curation_activity }
+        format.any { render json: resource&.reload&.last_curation_activity }
       end
     end
 

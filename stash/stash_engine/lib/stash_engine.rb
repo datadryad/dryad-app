@@ -7,12 +7,10 @@ require 'omniauth-orcid'
 require 'jquery-rails'
 require 'jquery-ui-rails'
 require 'jquery-turbolinks'
-require 'carrierwave'
-require 'jquery-fileupload-rails'
 require 'filesize'
 require 'kaminari'
 require 'amoeba'
-require 'font-awesome-rails' # perhaps not needed because of way Joel did his integration
+require 'font-awesome-rails'
 
 require 'stash_engine/engine'
 require 'stash/repo'

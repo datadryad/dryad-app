@@ -1,19 +1,31 @@
 <% unless abstract.try(:description).blank? %>
-  <h2 class="o-heading__level2">Abstract</h2>
+  <% if params[:controller].include?('landing') %>
+    <h2 class="o-heading__level2">Abstract</h2>
+  <% else %>
+    <h3 class="o-heading__level2">Abstract</h3>
+  <% end %>
   <div class="t-landing__text-wall">
     <%= raw(abstract.description) %>
   </div>
 <% end %>
 
 <% unless methods.try(:description).blank? %>
-  <h2 class="o-heading__level2">Methods</h2>
+  <% if params[:controller].include?('landing') %>
+    <h2 class="o-heading__level2">Methods</h2>
+  <% else %>
+    <h3 class="o-heading__level2">Methods</h3>
+  <% end %>
   <div class="t-landing__text-wall">
     <%= raw(methods.description) %>
   </div>
 <% end %>
 
 <% unless other.try(:description).blank? %>
-  <h2 class="o-heading__level2">Usage Notes</h2>
+  <% if params[:controller].include?('landing') %>
+    <h2 class="o-heading__level2">Usage Notes</h2>
+  <% else %>
+    <h3 class="o-heading__level2">Usage Notes</h3>
+  <% end %>
   <div class="t-landing__text-wall">
     <%= raw(other.description) %>
   </div>

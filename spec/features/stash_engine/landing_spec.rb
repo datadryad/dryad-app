@@ -1,6 +1,6 @@
 require 'byebug'
 require 'pry-remote'
-require_relative '../../responses/stash_engine/download_helpers'
+require_relative '../../requests/stash_engine/download_helpers'
 
 RSpec.feature 'Landing', type: :feature, js: true do
 

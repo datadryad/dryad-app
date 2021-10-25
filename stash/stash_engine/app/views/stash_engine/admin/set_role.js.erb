@@ -1,2 +1,2 @@
 $('#user_role_<%= @user.id %>').html("<%= escape_javascript(@user.role.capitalize) %>");
-$('#change_user_dialog').dialog('close');
+$('#genericModalDialog')[0].close();

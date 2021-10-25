@@ -83,12 +83,20 @@ authentication:
 - `authentication_strategy` is usually shibboleth right now.  There are
   other keys and values under authentication depending on the strategy
   chosen.
-  - `entity_id` can normally be found by looking up the institution’s from
-    the InCommon config file. On stage/prod, this is
-    `/apps/dryad/local/shibboleth-sp/var/InCommon-metadata.xml`. If the
+  - `entity_id`
+    - Seems that if you go to https://dryad-stg.cdlib.org/cgi-bin/printenv and
+      search for the item in the list while having your browser inspector open
+      to the network tab you may be able to dig out the entity id.  I found mine
+      in the response for the file "DiscoFeed" where it had some JSON with the
+      display name I selected and the entityID.  But seems like it only allows
+      discovery for some institutions.
+    - (old way) can normally be found by looking up the institution’s from
+       the InCommon config file. On stage/prod, this is
+       `/apps/dryad/local/shibboleth-sp/var/InCommon-metadata.xml`. If the
     institution is not part of InCommon, the shibboleth for that
     institution may be configured separately. Look at the files in prod
     directory `/apps/dryad/local/shibboleth-sp/etc/shibboleth`.
+    
   - `entity_domain` is simply the domain portion of the entity_id
 - A strategy of `author_match` allows login by that institution without
   shibboleth validation, but requires an author to be from the same tenant

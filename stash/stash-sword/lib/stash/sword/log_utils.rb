@@ -2,12 +2,12 @@ module Stash
   module Sword
     module LogUtils
 
-      def log
-        @log ||= default_logger
+      def logger
+        @logger ||= default_logger
       end
 
       def log_error(e)
-        log.error(to_log_msg(e))
+        logger.error(to_log_msg(e))
       end
 
       def to_log_msg(e)
@@ -20,7 +20,7 @@ module Stash
 
       def log_hash(hash)
         msg = hash_to_log_msg(hash)
-        log.debug(msg)
+        logger.debug(msg)
       end
 
       def hash_to_log_msg(hash)

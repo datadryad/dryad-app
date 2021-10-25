@@ -93,6 +93,10 @@ module StashApi
     end
 
     def parse_internal_data
+      if @hash['publicationName'].present? && @hash['publicationISSN'].blank?
+        @hash['publicationISSN'] = StashEngine::Journal.find_by_title(@hash['publicationName'])&.issn
+      end
+
       INTERNAL_DATA_FIELDS.each do |int_field|
         StashEngine::InternalDatum.create(data_type: int_field, stash_identifier: @resource.identifier, value: @hash[int_field]) if @hash[int_field]
       end

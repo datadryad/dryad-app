@@ -12,23 +12,20 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-gem 'doorkeeper'
-gem 'mysql2', '~> 0.5.3'
-
 path '..' do
   gem 'stash_datacite'
   gem 'stash_engine'
 end
 
-group :development, :local_dev, :test do
-  gem 'byebug'
-  gem 'colorize'
-  gem 'combustion'
-  gem 'database_cleaner'
-  gem 'diffy'
-  gem 'factory_bot_rails', require: false
-  gem 'nokogiri'
-  gem 'rspec', '~> 3.5'
-  gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '0.85.1'
-end
+# group :development, :local_dev, :test do
+#   gem 'byebug'
+#   gem 'colorize'
+#   gem 'combustion'
+#   gem 'database_cleaner'
+#   gem 'diffy'
+#   gem 'factory_bot_rails', require: false
+#   gem 'nokogiri'
+#   gem 'rspec'
+#   gem 'rspec-rails'
+#   gem 'rubocop'
+# end
