@@ -68,16 +68,12 @@ module MigrationImport
     # disable the callback methods for this instance of the resource_object
     def disable_callback_methods
       StashEngine::Resource.skip_callback(:create, :after, :init_state_and_version)
-      StashEngine::Resource.skip_callback(:create, :after, :update_stash_identifier_last_resource)
       # StashEngine::Resource.skip_callback(:create, :after, :create_share)
-      StashEngine::Resource.skip_callback(:update, :after, :update_stash_identifier_last_resource)
     end
 
     def enable_callback_methods
       StashEngine::Resource.set_callback(:create, :after, :init_state_and_version)
-      StashEngine::Resource.set_callback(:create, :after, :update_stash_identifier_last_resource)
       # StashEngine::Resource.set_callback(:create, :after, :create_share)
-      StashEngine::Resource.set_callback(:update, :after, :update_stash_identifier_last_resource)
     end
 
     def embargo_fields
@@ -122,7 +118,6 @@ module MigrationImport
                     'in_progress'
                   end
       @ar_resource.curation_activities << StashEngine::CurationActivity.create(status: out_state, user_id: ar_user_id)
-      @ar_resource.update_column(:current_curation_activity_id, @ar_resource.curation_activities.first)
     end
 
     def add_edit_histories

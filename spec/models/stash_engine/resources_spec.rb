@@ -1263,7 +1263,7 @@ module StashEngine
           resource = create(:resource, identifier: @identifier, user_id: user.id)
           resource.reload
           expect(resource.curation_activities.empty?).to eql(false)
-          expect(resource.current_curation_activity.id).to eql(CurationActivity.last.id)
+          expect(resource.last_curation_activity.id).to eql(CurationActivity.last.id)
           expect(resource.current_curation_status).to eql('in_progress')
         end
 

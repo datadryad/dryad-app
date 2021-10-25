@@ -76,7 +76,7 @@ module StashEngine
           end
         @curation_activity = CurationActivity.new(
           resource_id: resource.id,
-          status: resource.current_curation_activity.status
+          status: resource.last_curation_activity&.status
         )
         format.js
       end
