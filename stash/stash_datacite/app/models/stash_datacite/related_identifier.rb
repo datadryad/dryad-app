@@ -213,7 +213,7 @@ module StashDatacite
         # a bad attempt at resolving the URL and logging it.
 
         Rails.logger.error("Failed to live validate URL #{related_identifier}\n" \
-                                "#{e.message}\n#{e&.backtrace}")
+                                "#{e.full_message}")
       end
       false
     end

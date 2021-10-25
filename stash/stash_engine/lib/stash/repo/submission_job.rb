@@ -41,7 +41,7 @@ module Stash
         Concurrent::Promise.new(executor: executor) { ActiveRecord::Base.connection_pool.with_connection { submit! } }.execute
       end
 
-      def log
+      def logger
         Rails.logger
       end
     end

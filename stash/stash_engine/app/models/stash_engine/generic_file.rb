@@ -102,6 +102,7 @@ module StashEngine
         update(file_state: 'deleted')
       else
         # remove all of this filename for this resource from the database
+        FrictionlessReport.where(generic_file_id: id).destroy_all
         self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
       end
 
@@ -163,18 +164,36 @@ module StashEngine
       result = call_frictionless(result)
       # Add 'report' top level key that is required for calling
       # React frictionless-components
-      result_hash = { report: JSON.parse(result) }
-      if validation_error(result_hash[:report])
-        @report.update(report: result_hash.to_json, status: 'error')
-        logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
-        return
+      result = clean_frictionless_json(result)
+
+      begin
+        result_hash = { report: JSON.parse(result) }
+        if validation_error(result_hash[:report])
+          @report.update(report: result_hash.to_json, status: 'error')
+          logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
+          return
+        end
+        status = if validation_issues_not_found(result_hash)
+                   'noissues'
+                 else
+                   'issues'
+                 end
+        @report.update(report: result_hash.to_json, status: status)
+      rescue JSON::ParserError => e
+        @report.update(report: '{}', status: 'error')
+        logger.error("Unknown error calling frictionless on generic file #{id} for resource #{resource.id} -- #{e}")
       end
-      status = if validation_issues_not_found(result_hash)
-                 'noissues'
-               else
-                 'issues'
-               end
-      @report.update(report: result_hash.to_json, status: status)
+    end
+
+    # Given a (mostly) JSON response from Frictionless, discard anything before the opening
+    # brace or after the closing brace, because it is typically a warning message from Python
+    # that Frictionless didn't handle properly.
+    def clean_frictionless_json(in_str)
+      return in_str unless in_str.include?('{') && in_str.include?('}')
+
+      first_brace = in_str.index('{')
+      last_brace =  in_str.rindex('}')
+      in_str[first_brace..last_brace]
     end
 
     def download_file
@@ -214,9 +233,13 @@ module StashEngine
     def call_frictionless(file)
       # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
       # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
-      cmd = "eval \"$(pyenv init -)\" 2>/dev/null; frictionless validate --path #{file.path} --json 2>&1"
+      cmd = 'eval "$(pyenv init -)" 2>/dev/null; ' \
+        "frictionless validate --path #{file.path} --json --field-missing-values '#{APP_CONFIG.frictionless.missing_values}' 2>&1"
+      starting = Time.new
       result = `#{cmd}`
       logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
+      ending = Time.new
+      logger.debug("generic_file.id = #{id}, #{File.basename(file.path)}: Frictionless validation took #{ending - starting} seconds")
       file.close!
       result
     end

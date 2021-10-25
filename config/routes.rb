@@ -108,12 +108,14 @@ Rails.application.routes.draw do
   get '/pages/membershipOverview', to: redirect('stash/our_membership')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')
-  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
+  get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')
+  get '/publicationBlackout', to: redirect('stash/pb_tombstone')
   get '/pages/searching', to: redirect('search')
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
-
+  get '/submit', to: redirect("/stash/resources/new")
+  
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
   # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201

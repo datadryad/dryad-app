@@ -1,0 +1,30 @@
+/* Just putting this in as a text file in case we need it later */
+
+/* create table with the sizes of latest published versions for datasets */
+
+CREATE TABLE tmp_file_version_size SELECT ids.id, sum(fil.upload_file_size) size
+FROM stash_engine_identifiers ids
+JOIN (
+		SELECT max(id) resource_id, identifier_id
+		FROM stash_engine_resources
+		WHERE file_view = 1
+		GROUP BY identifier_id
+	) res_max ON (ids.id = res_max.identifier_id)
+JOIN stash_engine_generic_files fil
+ON fil.resource_id = res_max.resource_id
+WHERE fil.type = 'StashEngine::DataFile' AND fil.file_state IN ('created', 'copied')
+GROUP BY ids.id;
+
+/* size merritt reports */
+
+CREATE TABLE temp_mrt_size SELECT id, storage_size FROM stash_engine_identifiers WHERE pub_state = 'published';
+
+/* add primary keys for these tables on id */
+
+/* join together and export (and then you can export to CSV */
+SELECT temp_mrt_size.id as identifier_id, storage_size, size as last_published_version_size FROM
+temp_mrt_size JOIN tmp_file_version_size
+ON temp_mrt_size.id = tmp_file_version_size.id;
+
+
+

@@ -4,7 +4,34 @@ module StashEngine
   RSpec.describe Journal, type: :model do
 
     before(:each) do
-      @journal = Journal.create(issn: '1234-5678')
+      @journal = create(:journal)
+    end
+
+    describe '#find_by_title' do
+      before(:each) do
+        @alt_title = StashEngine::JournalTitle.create(title: 'An Alternate Title', journal: @journal)
+      end
+
+      it 'returns the journal for the primary title' do
+        j = StashEngine::Journal.find_by_title(@journal.title)
+        expect(j).to eq(@journal)
+      end
+
+      it 'returns the journal for an alternate title' do
+        j = StashEngine::Journal.find_by_title(@alt_title.title)
+        expect(j).to eq(@journal)
+      end
+
+      it 'returns the journal for an alternate title with an asterisk' do
+        j = StashEngine::Journal.find_by_title("#{@alt_title.title}*")
+        expect(j).to eq(@journal)
+      end
+
+      it 'returns nothing for a non-matching title' do
+        j = StashEngine::Journal.find_by_title('non-matching title')
+        expect(j).not_to eq(@journal)
+      end
+
     end
 
     describe '#will_pay?' do

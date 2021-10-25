@@ -91,6 +91,7 @@ StashEngine::Engine.routes.draw do
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
   post 'sessions/sso', to: 'sessions#sso', as: 'sso'
 
+  get 'close_page', to: 'pages#close_page'
   get 'faq', to: 'pages#faq'
   get 'best_practices', to: 'pages#best_practices'
   get 'our_community', to: 'pages#our_membership'
@@ -101,6 +102,7 @@ StashEngine::Engine.routes.draw do
   get 'our_platform', to: 'pages#our_platform'
   get 'our_staff', to: 'pages#our_staff'
   get 'our_advisors', to: 'pages#our_advisors'
+  get 'pb_tombstone', to: 'pages#pb_tombstone'
   get 'submission_process', to: 'pages#submission_process'
   get 'why_use', to: 'pages#why_use'
   get 'dda', to: 'pages#dda' # data deposit agreement
@@ -126,6 +128,7 @@ StashEngine::Engine.routes.draw do
   get 'ds_admin/index/:id', to: 'admin_datasets#index'
   get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
   get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
+  get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case'
   get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
   get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
   get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'

@@ -1,4 +1,5 @@
 require_dependency 'stash_engine/application_controller'
+require 'stash/salesforce'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -75,7 +76,7 @@ module StashEngine
           end
         @curation_activity = CurationActivity.new(
           resource_id: resource.id,
-          status: resource.current_curation_activity.status
+          status: resource.last_curation_activity&.status
         )
         format.js
       end
@@ -181,6 +182,16 @@ module StashEngine
           @resource = Resource.find(params[:id])
         end
       end
+    end
+
+    def create_salesforce_case
+      # create the case
+      @identifier = Identifier.find(params[:id])
+      sf_case_id = Stash::Salesforce.create_case(identifier: @identifier, owner: current_user)
+
+      # redirect to it
+      sf_url = Stash::Salesforce.case_view_url(case_id: sf_case_id)
+      redirect_to sf_url
     end
 
     private

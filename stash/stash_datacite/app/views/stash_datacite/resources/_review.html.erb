@@ -55,7 +55,7 @@
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h2 class="o-heading__level2">Data Files Hosted by Dryad</h2>
+    <h3 class="o-heading__level2">Data Files Hosted by Dryad</h3>
 
     <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource } %>
@@ -68,7 +68,7 @@
     <% end %>
 
     <% if @review.software_files.count.positive? %>
-    <h2 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
+    <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software' } %>
@@ -76,7 +76,7 @@
     <% end %>
 
     <% if @review.supp_files.count.positive? %>
-      <h2 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h2>
+      <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
         <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp' } %>
@@ -96,7 +96,7 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Upload Software', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
+  <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
           class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
@@ -118,17 +118,6 @@
     <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
   <% end %>
 </div>
-
-  <!-- hidden dialog with info about data belongs in Dryad -->
-  <div id="popup_dialog" style="display:none;">
-    <p>
-      Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
-    </p>
-    <p>
-      If you are only interested in uploading software or supplemental
-      information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
-    </p>
-  </div>
 
 <script type="text/javascript">
   // display some flash messages, (why do we need this?, ajax?)
@@ -154,20 +143,20 @@
 
   // make a popup if no data files
   <% unless @completions.contains_data? %>
-    $("#popup_dialog").dialog({
-      autoOpen: true,
-      height: 'auto',
-      width: '500px',
-      modal: true,
-      title: 'Submitting Data Files to Dryad'
-    });
 
-    // allow to close dialog with escape key
-    $(document).keyup(function(e) {
-      if (e.key === "Escape") {
-        $("#popup_dialog").dialog("close");
-      }
-    });
+    let txt = `
+      <h1>Submitting Data Files to Dryad</h1>
+      <p>
+      Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
+    </p>
+    <p>
+      If you are only interested in uploading software or supplemental
+      information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
+    </p>`;
+
+  $('#genericModalContent').html(txt);
+  $('#genericModalDialog')[0].showModal();
+
   <% end %>
 </script>
 

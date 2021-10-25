@@ -4,15 +4,16 @@
 
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
-require 'stash/download/version_presigned'
 require 'rsolr'
 
 module StashApi
   class DatasetsController < ApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
+    include StashApi::Concerns::Downloadable
 
     before_action :require_json_headers, only: %i[show create index update]
+    before_action :force_json_content_type, except: :download
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
     before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
@@ -55,6 +56,7 @@ module StashApi
       respond_to do |format|
         format.any do
           deposit_request = params['article'].blank?
+
           if @stash_identifier&.first_submitted_resource.present?
             # Once the dataset has been submitted by an author, only update selected fields,
             # but don't fully process the metadata from EM
@@ -63,9 +65,11 @@ module StashApi
             render json: em_response, status: status_code
           else
             dp = if @resource
-                   DatasetParser.new(hash: em_reformat_request, id: @resource.identifier, user: @user)
+                   DatasetParser.new(hash: em_reformat_request(deposit_request: deposit_request),
+                                     id: @resource.identifier, user: @user)
                  else
-                   DatasetParser.new(hash: em_reformat_request, id: nil, user: @user)
+                   DatasetParser.new(hash: em_reformat_request(deposit_request: deposit_request),
+                                     id: nil, user: @user)
                  end
             @stash_identifier = dp.parse
 
@@ -77,6 +81,32 @@ module StashApi
           end
         end
       end
+    end
+
+    def em_depositing_user
+      author = params['authors'] || params['author']
+      if author.is_a?(Array)
+        return unless author.size == 1
+
+        author = author.first
+      end
+      return unless author.present?
+
+      user = nil
+      if author['orcid'].present?
+        user = StashEngine::User.where(orcid: author['orcid'])&.first
+        # If not found, but we have an ORCID (validated by EM), make a new user
+        user ||= StashEngine::User.create(first_name: author['first_name'],
+                                          last_name: author['last_name'],
+                                          email: author['email'],
+                                          orcid: author['orcid'],
+                                          tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
+                                          role: 'user')
+      elsif author['email'].present?
+        user = StashEngine::User.where(email: author['email'])&.first
+      end
+
+      user
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
@@ -159,11 +189,16 @@ module StashApi
     end
 
     # Reformat a request from Editorial Manager's Submission call, enabling it to conform to our normal API.
-    def em_reformat_request
+    def em_reformat_request(deposit_request: false)
       em_params = {}.with_indifferent_access
 
-      # EM doesn't set an item owner, so default it to system, and the actual user will need to claim it
-      em_params['userId'] = 0
+      # For a deposit_request, we can set the user ID, and a subsequent call will
+      # login the user. Otherwise, the submission will be owned by the system user.
+      em_params['userId'] = if deposit_request && em_depositing_user
+                              em_depositing_user.id
+                            else
+                              0
+                            end
 
       em_params['publicationName'] = params['journal_full_title']
       art_params = params['article']
@@ -226,7 +261,8 @@ module StashApi
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata:, deposit_request:)
       sharing_link = @stash_identifier.shares&.first&.sharing_link
-      edit_url = (request.protocol + request.host_with_port + metadata[:editLink] if metadata[:editLink])
+      return_link = "?returnURL=#{StashEngine::Engine.routes.url_helpers.close_page_path}"
+      edit_url = (request.protocol + request.host_with_port + metadata[:editLink] + return_link if metadata[:editLink])
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
@@ -271,7 +307,6 @@ module StashApi
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
       page = params['page'] || 1
-      per_page = [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
       query = params['q']
 
       begin
@@ -282,7 +317,6 @@ module StashApi
         # once we have the solr_response, use the DOIs to build the 'real' response
         mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
         datasets = paging_hash_results(all_count: solr_response['numFound'],
-                                       page_size: per_page,
                                        results: mapped_results)
         render json: datasets
       rescue RSolr::Error::Http
@@ -352,22 +386,7 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: res)
-      if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
-        @status_hash = @version_presigned.download
-        case @status_hash[:status]
-        when 200
-          StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
-          redirect_to @status_hash[:url]
-        when 202
-          render status: 202, plain: 'The version of the dataset is being assembled. ' \
-          "Check back in around #{time_ago_in_words(res.download_token.available + 30.seconds)} and it should be ready to download."
-        else
-          render status: 404, plain: 'Not found'
-        end
-      else
-        render plain: 'download for this version of the dataset is unavailable', status: 404
-      end
+      download_version(resource: res)
     end
 
     # rubocop:disable Layout/LineLength
@@ -441,10 +460,10 @@ module StashApi
         render json: ds.metadata, status: 202
       when '/curationStatus'
         update_curation_status(@json.first['value'])
-        render json: @resource.reload.current_curation_activity
+        render json: @resource.reload.last_curation_activity
       when '/publicationISSN'
         update_publication_issn(@json.first['value'])
-        render json: @resource.reload.current_curation_activity
+        render json: @resource.reload.last_curation_activity
       else
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
@@ -545,18 +564,18 @@ module StashApi
       @resource = nr
     end
 
-    def paged_datasets(datasets:, page_size: DEFAULT_PAGE_SIZE)
+    def paged_datasets(datasets:)
       all_count = datasets.count
-      results = datasets.limit(page_size).offset(page_size * (page - 1))
+      results = datasets.limit(per_page).offset(per_page * (page - 1))
       mapped_results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
-      paging_hash_results(all_count: all_count, page_size: page_size, results: mapped_results)
+      paging_hash_results(all_count: all_count, results: mapped_results)
     end
 
-    def paging_hash_results(all_count:, page_size:, results:)
+    def paging_hash_results(all_count:, results:)
       return if results.nil?
 
       {
-        '_links' => paging_hash(result_count: all_count, page_size: page_size),
+        '_links' => paging_hash(result_count: all_count),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }

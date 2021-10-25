@@ -39,7 +39,56 @@
   </table>
 </div>
 
-<div id="internal_data">
+<% if %w[admin superuser curator tenant_curator].include?(current_user.role) %>
+    <div id="salesforce_links" style="clear: both">	
+	<div style="float: left"><h2>Salesforce Cases</h2></div>
+	<div style="float: right">
+	    <br/>
+	    <%= button_to "Create Salesforce Case",
+	     url_for(action: 'create_salesforce_case',
+		     only_path: false),
+	     method: :get,
+	     class: 'o-button__submit',
+	     form: {target: '_blank'}
+	     %>
+	</div>
+	
+	<% sf_links = salesforce_links(@identifier.identifier) %>
+	<% if sf_links %>
+	    <div id="sf_link_list" style="clear: both">
+		<table class="c-lined-table" id="curation_table">
+		    <tr class="c-lined-table__head">
+			<th class="c-admin-table">
+			    Case
+			</th>
+			<th class="c-admin-table">
+			    Status
+			</th>
+			<th class="c-admin-table">
+			    Reason
+			</th>			    
+		    </tr>
+		    <% sf_links.each do |sf_link| %>
+			<tr class="c-lined-table__row">
+			    <td>				
+				<%= link_to sf_link.title, sf_link.path, target: :blank %>
+			    </td>
+			    <td>
+				<%= sf_link.status %>
+			    </td>
+			    <td>
+				<%= sf_link.reason %>
+			    </td>
+			</tr>
+		    <% end %>
+		</table>
+	    </div>
+	<% end %>
+    </div>
+<% end %>
+
+
+<div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal Data</h2></div>
   <% if %w[admin superuser curator tenant_curator].include?(current_user.role) %>
     <div style="float: right">
@@ -51,13 +100,10 @@
       <% end %>
     </div>
   <% end %>
-
+  
   <div id="internal_data_table" style="clear: both">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
-</div>
-
-<div id="popup_dialog" style="display:none;">
 </div>
 
 <% if current_user.curator? %>

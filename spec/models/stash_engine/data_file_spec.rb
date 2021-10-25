@@ -143,10 +143,10 @@ module StashEngine
         )
       end
 
-      it 'doubly-encodes any # signs in filenames because otherwise they prematurely cut off in Merritt' do
+      it 'doubly-encodes arks and filenames when there are # signs in filename because otherwise they prematurely cut off in Merritt' do
         @upload.upload_file_name = '#1 in the world'
         expect(@upload.merritt_presign_info_url).to eq(
-          'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2F%25231%20in%20the%20world?no_redirect=true'
+          'https://merritt.example.com/api/presign-file/ark%253A%252F12345%252F38568/1/producer%252F%25231%2520in%2520the%2520world?no_redirect=true'
         )
       end
     end

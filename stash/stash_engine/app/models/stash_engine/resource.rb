@@ -22,6 +22,10 @@ module StashEngine
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
+    has_one :last_curation_activity,
+            class_name: 'StashEngine::CurationActivity',
+            primary_key: 'last_curation_activity_id',
+            foreign_key: 'id'
     has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
@@ -65,8 +69,8 @@ module StashEngine
         end
 
         # I think there was something weird about Amoeba that required this approach
-        resources = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        resources.each(&:delete)
+        deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        deleted_files.each(&:destroy)
       end)
     end
 
@@ -81,14 +85,6 @@ module StashEngine
       # Need to reload self here because some of the associated dependencies
       # update back on this object when they save (e.g. current_resource_state, etc.)
       reload
-    end
-
-    def update_stash_identifier_last_resource
-      return if identifier.nil?
-
-      # identifier.update(latest_resource_id: id) # set to my resource_id
-      res = Resource.where(identifier_id: identifier_id).order(id: :desc).first
-      identifier.update_column(:latest_resource_id, res&.id) # no callbacks, does bad stuff when duplicating with amoeba dup
     end
 
     def remove_identifier_with_no_resources
@@ -106,11 +102,10 @@ module StashEngine
       Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
-    after_create :init_state_and_version, :update_stash_identifier_last_resource
+    after_create :init_state_and_version
     # for some reason, after_create not working, so had to add after_update
-    after_update :update_stash_identifier_last_resource
     before_destroy :remove_s3_temp_files
-    after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
+    after_destroy :remove_identifier_with_no_resources
 
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
@@ -147,20 +142,6 @@ module StashEngine
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
-    scope :latest_curation_activity_per_resource, -> do
-      joins(:curation_activities).group('stash_engine_resources.id')
-        .maximum('stash_engine_curation_activities.id')
-        .collect { |k, v| { resource_id: k, curation_activity_id: v } }
-    end
-
-    # ------------------------------------------------------------
-    # Scopes for curation status, which is now how we know about public display (and should imply successful Merritt submission status)
-    scope :latest_curation_activity, ->(resource_id = nil) do
-      rslts = joins(:curation_activities)
-      rslts = rslts.where(stash_engine_resources: { id: resource_id }) if resource_id.present?
-      rslts.group('stash_engine_resources.id').maximum('stash_engine_curation_activities.id')
-    end
-
     scope :with_public_metadata, -> do
       where(meta_view: true)
     end
@@ -172,21 +153,9 @@ module StashEngine
 
     # this is METADATA published
     scope :published, -> do
-      joins(:curation_activities).where('stash_engine_resources.publication_date < ?', Time.now.utc)
-        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                   status: %w[published embargoed] })
+      joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+        .where('stash_engine_resources.publication_date < ?', Time.now.utc)
     end
-
-    # complicated join & subquery that may be reused to get the last curation state for each resource
-    SUBQUERY_FOR_LATEST_CURATION = <<~HEREDOC
-      SELECT resource_id, max(id) as id
-      FROM stash_engine_curation_activities
-      GROUP BY resource_id
-    HEREDOC
-      .freeze
-
-    JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
-                               'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
 
     JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
                              'LEFT OUTER JOIN stash_engine_internal_data ' \
@@ -221,7 +190,7 @@ module StashEngine
         str += " OR (dcs_contributors.contributor_type = 'funder' AND dcs_contributors.name_identifier_id IN (?))"
         arr.push(funder_ids)
       end
-      joins(JOIN_FOR_LATEST_CURATION).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
+      joins(:last_curation_activity).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
     end
 
     scope :visible_to_user, ->(user:) do
@@ -239,15 +208,9 @@ module StashEngine
       end
     end
 
-    # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
-    # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
+    # limits to the latest resource for each dataset if added to resources
     scope :latest_per_dataset, (-> do
-      subquery = <<-SQL
-        SELECT max(id) AS id FROM stash_engine_resources WHERE identifier_id IS NOT NULL GROUP BY identifier_id
-        UNION
-        SELECT id FROM stash_engine_resources WHERE identifier_id IS NULL
-      SQL
-      joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
+      joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end)
 
     # ------------------------------------------------------------
@@ -416,16 +379,13 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      (submitted? && !files_published?) || current_curation_activity.embargoed?
-    end
-
-    def current_curation_activity
-      curation_activities.order(:id).last
+      (submitted? && !files_published?) || last_curation_activity&.embargoed?
     end
 
     # Shortcut to the current curation activity's status
     def current_curation_status
-      current_curation_activity.status
+      reload
+      last_curation_activity.status
     end
 
     # Create the initial CurationActivity
@@ -722,8 +682,12 @@ module StashEngine
     def send_to_zenodo(note: nil)
       return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
-      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note) if zenodo_copies.data.empty?
-      ZenodoCopyJob.perform_later(id)
+      existing_copy = zenodo_copies.data.first
+      if existing_copy.nil?
+        existing_copy = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note)
+      end
+
+      ZenodoCopyJob.perform_later(id) if existing_copy.state == 'enqueued'
     end
 
     # if publish: true then it just publishes, which is a separate operation than updating files

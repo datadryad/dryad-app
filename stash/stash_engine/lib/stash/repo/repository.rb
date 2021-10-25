@@ -57,7 +57,7 @@ module Stash
 
       # Returns a logger
       # @return [Logger] a logger
-      def log
+      def logger
         Rails.logger
       end
 
@@ -104,8 +104,8 @@ module Stash
         remove_s3_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
-        msg << to_msg(e)
-        log.warn(msg)
+        msg << e.full_message
+        logger.warn(msg)
       end
 
       def self.update_repo_queue_state(resource_id:, state:)
@@ -132,7 +132,7 @@ module Stash
       end
 
       def handle_success(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
       rescue StandardError => e
@@ -142,7 +142,7 @@ module Stash
 
       # rubcop:disable Metrics/MethodLength
       def handle_failure(result)
-        result.log_to(log)
+        result.log_to(logger)
         update_submission_log(result)
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
@@ -155,7 +155,7 @@ module Stash
       # rubcop:enable Metrics/MethodLength
 
       def log_error(error)
-        log.error(to_msg(error))
+        logger.error(error.full_message)
       end
 
       def remove_if_exists(file)
@@ -172,17 +172,6 @@ module Stash
       def remove_s3_data_files(resource)
         Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
         Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
-      end
-
-      def to_msg(error)
-        msg = error.to_s
-        if (backtrace = (error.respond_to?(:backtrace) && error.backtrace))
-          backtrace.each do |line|
-            msg += "\n"
-            msg += line
-          end
-        end
-        msg
       end
 
       def update_submission_log(result)

@@ -44,7 +44,7 @@ module Stash
         resp = yield
         return resp if resp.status.success?
       rescue HTTP::Error, JSON::ParserError => e
-        raise QueryFailure, "Error from HTTP #{resp&.uri}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}" if my_retry < 1
+        raise QueryFailure, "Error from HTTP #{resp&.uri}\nOriginal error: #{e}\n#{e.full_message}" if my_retry < 1
 
         sleep TIME_BETWEEN_RETRIES
       end

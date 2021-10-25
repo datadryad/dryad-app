@@ -1,0 +1,23 @@
+<dialog id="genericModalDialog" class="modalDialog">
+  <div>
+    <!-- to display anything in the dialog, replace content within the genericModalContent (using Javascript) and attach any events
+      you need for what you add.  The dialog comes with an event for closing and taking no action for the close button.
+
+      Open modal with <item>.showModal(); and close with <item>.close();
+      -->
+    <div id="genericModalContent" style="width: 40rem; float: left;">&nbsp;</div>
+    <button id="genericModalClose" class="c-uploadmodal__button-close-modal" style="float: right;" aria-label="close" type="button"></button>
+  </div>
+</dialog>
+
+<script>
+  // adds the polyfill for firefox and some other browsers that are not up to date.
+  // https://github.com/GoogleChrome/dialog-polyfill
+
+  const modal2 = document.getElementById('genericModalDialog');
+  dialogPolyfill.registerDialog(modal2);
+
+  $('#genericModalClose').click(function(){
+    $('#genericModalDialog')[0].close(); // uses [0] to get native object rather than jQuery object (I think)
+  });
+</script>

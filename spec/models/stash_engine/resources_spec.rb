@@ -1263,7 +1263,7 @@ module StashEngine
           resource = create(:resource, identifier: @identifier, user_id: user.id)
           resource.reload
           expect(resource.curation_activities.empty?).to eql(false)
-          expect(resource.current_curation_activity.id).to eql(CurationActivity.last.id)
+          expect(resource.last_curation_activity.id).to eql(CurationActivity.last.id)
           expect(resource.current_curation_status).to eql('in_progress')
         end
 
@@ -1482,6 +1482,12 @@ module StashEngine
 
       it 'calls perform_later' do
         expect(ZenodoCopyJob).to receive(:perform_later).with(@resource.id)
+        @resource.send_to_zenodo
+      end
+
+      it "doesn't call perform_later if non-finished copy exists and not enqueued" do
+        expect(ZenodoCopyJob).to_not receive(:perform_later).with(@resource.id)
+        ZenodoCopy.create(state: 'replicating', identifier_id: @resource.identifier.id, resource_id: @resource.id, copy_type: 'data', note: '')
         @resource.send_to_zenodo
       end
 

@@ -1,14 +1,12 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been approved by our curation team.
-  Your dataset is now published and public.
+    Your dataset entitled "<%= @resource.title %>" has been reviewed by our curation team and approved for publication.
 </p>
 
-<p>Please cite it using this DOI: <%= @resource.identifier_str %></p>
+<p>Your dataset is now publicly accessible (<%= @resource.identifier_str %>).</p>
 
 <% rel_sfw = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'software')&.first %>
-
 <% rel_supp = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'supplemental_information')&.first %>
 
 <% unless rel_sfw.nil? %>
@@ -19,10 +17,17 @@
   <p>Your supplemental information is being published at Zenodo: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
 <% end %>
 
-<p>If you would like to version or update your dataset you may do so by clicking "Update" on your "My Datasets" page.</p>
+<p>If you would like to update your dataset you may do so, at any time, by
+    clicking "Update" on your "My Datasets" page. Please note, any edits made
+    will create a new version of your submission, however, the DOI will remain
+    unchanged. Once the latest version has been approved by our curation team
+    and published, only the most recent version of your dataset will be packaged
+    and available for download via the "Download Dataset" button. Prior versions
+    can be accessed via the "Data Files" section.</p> 
 
-<p>Thanks again for making your research openly available.</p>
+<p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
 
-<p>The Dryad Team</p>
+<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
 
-<p><a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a></p>
+
+

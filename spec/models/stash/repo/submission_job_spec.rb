@@ -52,7 +52,7 @@ module Stash
 
       describe :log do
         it 'returns the Rails logger' do
-          expect(job.log).to be(logger)
+          expect(job.logger).to be(logger)
         end
       end
     end

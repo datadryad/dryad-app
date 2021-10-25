@@ -6,6 +6,7 @@ module StashApi
   class GeneralController < ApplicationController
 
     before_action :require_json_headers
+    before_action :force_json_content_type
     before_action :doorkeeper_authorize!, only: :test
     before_action :require_api_user, only: :test
 

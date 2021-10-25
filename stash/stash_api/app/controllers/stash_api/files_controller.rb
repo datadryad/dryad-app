@@ -11,6 +11,7 @@ module StashApi
   class FilesController < ApplicationController
 
     before_action :require_json_headers, only: %i[show index destroy]
+    before_action :force_json_content_type, except: :download
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
     before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy download]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
@@ -178,7 +179,7 @@ module StashApi
 
       visible = resource.data_files.present_files
       all_count = visible.count
-      data_files = visible.limit(DEFAULT_PAGE_SIZE).offset(DEFAULT_PAGE_SIZE * (page - 1))
+      data_files = visible.limit(per_page).offset(per_page * (page - 1))
       results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end

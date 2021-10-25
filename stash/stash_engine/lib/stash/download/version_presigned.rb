@@ -21,7 +21,7 @@ module Stash
         @domain = @tenant&.repository&.domain
 
         @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-          .timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
+          .timeout(connect: 5, read: 5).timeout(5.seconds.to_i).follow(max_hops: 3)
           .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
       end
 

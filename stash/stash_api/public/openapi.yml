@@ -13,6 +13,9 @@ info:
     Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) will also be expanded further in the future as more
     documentation is created (though not all of it may be relevant to API users).
 
+    Rate limits:
+      - Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files.
+      - Authenticated users of the API are limited to 120 requests per minute.
   version: "2.1.0"
 
 servers:
@@ -195,6 +198,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
       responses:
         '200':
           description: A list of a dataset's versions
@@ -231,6 +235,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/version_id'
         - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
       responses:
         '200':
           description: A list of the files in the version
@@ -909,7 +914,7 @@ components:
         type: integer
       description:
         Number of results to return on each page. Defaults
-        to 10. Maximum allowed is 100.
+        to 20. Maximum allowed is 100.
 
     publicationISSN:
       in: query

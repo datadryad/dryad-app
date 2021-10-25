@@ -75,11 +75,7 @@ module Stash
         query = <<~SQL.chomp
           SELECT res.* FROM stash_engine_resources res
           JOIN stash_engine_curation_activities cur1
-            ON cur1.resource_id = res.id
-          JOIN 
-            (SELECT max(id) as id from stash_engine_curation_activities
-              GROUP BY resource_id) cur_sub
-            ON cur1.id = cur_sub.id
+            ON res.last_curation_activity_id  = cur1.id
           WHERE cur1.status = 'published'
             AND res.identifier_id = ?
             AND res.id < ?

@@ -1,5 +1,6 @@
-<% # local: identifier %>
+<% # local: identifier, title %>
 <div class="o-admin-dialog">
+  <h1><%= title %></h1>
   <%= form_with model: StashEngine::CurationActivity.new,
         url: curation_note_path(@curation_activity.resource.identifier_id),
         method: :post,

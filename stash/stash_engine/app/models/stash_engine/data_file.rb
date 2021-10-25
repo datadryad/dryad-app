@@ -24,8 +24,15 @@ module StashEngine
       # We can remove the workaround if it changes in Merritt at some point in the future.
 
       domain, local_id = resource.merritt_protodomain_and_local_id
-      "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-          "producer%2F#{ERB::Util.url_encode(upload_file_name.gsub('#', '%23'))}?no_redirect=true"
+
+      if upload_file_name.include?('#')
+        # Merritt needs the components double-encoded when there is a '#' in the filename
+        "#{domain}/api/presign-file/#{ERB::Util.url_encode(local_id)}/#{resource.stash_version.merritt_version}/" \
+        "producer%252F#{ERB::Util.url_encode(ERB::Util.url_encode(upload_file_name))}?no_redirect=true"
+      else
+        "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
+        "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+      end
     end
 
     # this will do the http request to Merritt to get the presigned URL, putting here instead of other classes since it gets
@@ -36,7 +43,7 @@ module StashEngine
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-        .timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
+        .timeout(connect: 5, read: 5).timeout(5).follow(max_hops: 2)
         .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
 
       r = http.get(merritt_presign_info_url)
