@@ -56,6 +56,25 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker   
+
+
+  ## rails_semantic_logger configs.  See: https://logger.rocketjob.io/rails.html
+
+  # Disable default file_appender to fix issue with using multiple appenders.
+  # See: https://github.com/reidmorrison/rails_semantic_logger/issues/73
+  config.rails_semantic_logger.add_file_appender = false
+
+  # Set up rails_semantic_logger file_appender instances for both local text log
+  # and a json log for indexing into OpenSearch.
+  config.semantic_logger.add_appender(file_name: "log/#{Rails.env}.log")
+  config.semantic_logger.add_appender(file_name: "log/#{Rails.env}_json.log", formatter: :json)
+
+  # Additional 'log_tag' fields
+  config.log_tags = {
+    request_id: :request_id,
+    ip:         :remote_ip,
+  } 
+
   
   Rails.application.default_url_options = { host: 'dryad-dev.cdlib.org' }
 
