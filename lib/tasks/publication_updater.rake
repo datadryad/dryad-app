@@ -5,13 +5,11 @@ namespace :publication_updater do
   # and its most recent curation activity was within the past 6 months
   QUERY = <<-SQL.freeze
     SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
-    FROM stash_engine_resources ser
-      INNER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
+    FROM stash_engine_identifiers sei
+      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id 
       LEFT OUTER JOIN dcs_related_identifiers dri ON ser.id = dri.resource_id
         AND dri.work_type = 'primary_article' AND dri.related_identifier_type = 'doi'
-      INNER JOIN (SELECT MAX(r2.id) r_id FROM stash_engine_resources r2 GROUP BY r2.identifier_id) j1 ON j1.r_id = ser.id
-      LEFT OUTER JOIN (SELECT ca2.resource_id, MAX(ca2.id) latest_curation_activity_id FROM stash_engine_curation_activities ca2 GROUP BY ca2.resource_id) j3 ON j3.resource_id = ser.id
-      LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
+      INNER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id
       LEFT OUTER JOIN (SELECT sepc2.identifier_id, MAX(sepc2.id) latest_proposed_change_id FROM stash_engine_proposed_changes sepc2 GROUP BY sepc2.identifier_id) j4 ON j4.identifier_id = sei.id
       LEFT OUTER JOIN stash_engine_proposed_changes sepc ON sepc.id = j4.latest_proposed_change_id AND sepc.approved != 1
     WHERE seca.status NOT IN ('in_progress', 'published', 'embargoed')

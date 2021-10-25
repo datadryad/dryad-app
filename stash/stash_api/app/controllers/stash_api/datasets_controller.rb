@@ -460,10 +460,10 @@ module StashApi
         render json: ds.metadata, status: 202
       when '/curationStatus'
         update_curation_status(@json.first['value'])
-        render json: @resource.reload.current_curation_activity
+        render json: @resource.reload.last_curation_activity
       when '/publicationISSN'
         update_publication_issn(@json.first['value'])
-        render json: @resource.reload.current_curation_activity
+        render json: @resource.reload.last_curation_activity
       else
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end

@@ -274,8 +274,8 @@ module StashApi
         expect(res.title).to eq(saved_title) # title should not be overwritten
         expect(res.contributors).not_to be_blank
         expect(res.subjects.map(&:subject)).to include(@meta.hash['article']['keywords'].first)
-        expect(res.current_curation_activity.note).to include('Funders')
-        expect(res.current_curation_activity.note).to include('Keywords')
+        expect(res.last_curation_activity.note).to include('Funders')
+        expect(res.last_curation_activity.note).to include('Keywords')
       end
 
       it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
