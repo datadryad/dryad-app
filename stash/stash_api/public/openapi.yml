@@ -598,16 +598,20 @@ components:
         - properties:
             versionNumber:
               type: integer
+            userId:
+              type: integer
             versionStatus:
               type: string
               description: Internal processing status, aka Merritt State.
-            userId:
-              type: integer
             curationStatus:
               type: string
               description: Status in the curation workflow. See https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/submission_flow.md
             visibility:
               type: string
+              description: Whether this version is publicly visible or not
+            versionChanges:
+              type: string
+              description: Whether this version has had files_changed, or only metadata_changed
             lastModificationDate:
               type: string
 
