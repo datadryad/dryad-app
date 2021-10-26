@@ -55,7 +55,7 @@ module StashEngine
 
       def read_end_of_file(log)
         f = File.new(log)
-        f.seek(-1024, IO::SEEK_END) # to 1024 bytes before end of file
+        f.seek(-4096, IO::SEEK_END) # before end of file
         f.read.strip.split("\n") # this reads just end of file, strips whitespace and converts to array of lines
       end
 
