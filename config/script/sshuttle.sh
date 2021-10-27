@@ -2,10 +2,13 @@
 FILE=~/sshuttle.pid
 
 # these are the servers we want to tunnel through the server that has access
-domain_arr="uc3-dryadsolrx2-dev.cdlib.org uc3-dryadui01x2-dev.cdlib.org uc3db-dash2-dev.cdlib.org\
-uc3-dryaduix2-stg-2a.cdlib.org uc3-dryaduix2-stg-2c.cdlib.org uc3db-dash2-stg.cdlib.org uc3-dryadsolrx2-stg.cdlib.org \
-uc3-dryaduix2-prd-2a.cdlib.org uc3-dryaduix2-prd-2c.cdlib.org rds-uc3-dryad-prd.cmcguhglinoa.us-west-2.rds.amazonaws.com uc3-dryadsolrx2-prd.cdlib.org \
-merritt-stage.cdlib.org mrtsword-stg.cdlib.org mrtoai-stg.cdlib.org"
+domain_arr="uc3-dryadsolrx2-dev.cdlib.org \                                                                                 
+uc3-dryaduix2-stg-2a.cdlib.org uc3-dryaduix2-stg-2c.cdlib.org uc3db-dash2-stg.cdlib.org uc3-dryadsolrx2-stg.cdlib.org \     
+uc3-dryaduix2-prd-2a.cdlib.org uc3-dryaduix2-prd-2c.cdlib.org rds-uc3-dryad-prd.cmcguhglinoa.us-west-2.rds.amazonaws.com uc\
+3-dryadsolrx2-prd.cdlib.org \                                                                                               
+merritt-stage.cdlib.org mrtsword-stg.cdlib.org mrtoai-stg.cdlib.org \                                                       
+ias-puppet2-ops.cdlib.org puppet.cdlib.org \
+search-os-uc3-logging-stg-suwz42vownvyte6ivqazeifz44.us-west-2.es.amazonaws.com"
 
 # make an array of all the IP addresses for the hosts in the domains in the array above
 declare -a out_array
