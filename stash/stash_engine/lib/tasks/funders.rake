@@ -53,7 +53,7 @@ namespace :funders do
 
   desc 'update IDs for re-importing spreadsheet for items manually matched/entered'
   task import_manual_lookup_csv: :environment do
-    CSV.foreach('/Users/sfisher/Downloads/Funders-10-11-21.csv', :headers => true) do |row|
+    CSV.foreach('/Users/sfisher/Downloads/Funders-10-11-21.csv', headers: true) do |row|
       # find 'database_funder' and 'sugg_id', if 'sugg_id' is filled in then update those items in the database that match
       # the string to have that funder id
       next if row['sugg_id'].blank?
@@ -61,7 +61,6 @@ namespace :funders do
       StashDatacite::Contributor
         .where("contributor_name LIKE ? AND contributor_type = 'funder' AND (name_identifier_id IS NULL OR name_identifier_id = '')",
                "#{row['database_funder'].strip}%").each_with_index do |contrib, idx|
-
 
         better_name = contrib.contributor_name.gsub(/[* ]+$/, '') # removes stars and spaces from the end
         if better_name.downcase == row['database_funder'].strip.downcase
