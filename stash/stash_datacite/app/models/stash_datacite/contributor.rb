@@ -16,10 +16,10 @@ module StashDatacite
     ContributorTypesStrToFull = ContributorTypes.map { |i| [i.downcase, i] }.to_h
 
     # maps DB value to the DataciteMapping class of fun from that gem
-    IdentifierTypesToMapping = Datacite::Mapping::FunderIdentifierType.map{ |i| [i.value.downcase.gsub(' ', '_'), i ] }.to_h
+    IdentifierTypesToMapping = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i] }.to_h
 
     # maps from enum to the special full name/abbreviation like Crossref Funder ID or ROR
-    IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map{ |i| [i.value.downcase.gsub(' ', '_'), i.value ] }.to_h
+    IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i.value] }.to_h
 
     enum contributor_type: ContributorTypesEnum
 
