@@ -74,6 +74,7 @@ including universities, research institutions and academic libraries. See more a
       <ul>
         <li>American Genetic Association</li>
         <li>American Society of Naturalists</li>
+        <li>American Society of Plant Taxonomists</li>
         <li>Association for Tropical Biology and Conservation</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
