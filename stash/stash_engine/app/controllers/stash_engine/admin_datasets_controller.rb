@@ -87,7 +87,12 @@ module StashEngine
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
-        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        @resource =
+          if @identifier.last_submitted_resource&.id.present?
+            Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+          else
+            @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
+          end
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
@@ -97,7 +102,12 @@ module StashEngine
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
-        @resource = Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+        @resource =
+          if @identifier.last_submitted_resource&.id.present?
+            Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
+          else
+            @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
+          end
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
