@@ -739,33 +739,37 @@ module StashEngine
       # gets last resource
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 
-      # try to assign the same person as immediately previous activity, otherwise prefer editor_id and then user_id from resource
-      cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
+      # try to assign credit for the action to the same person as the immediately previous activity,
+      # otherwise prefer editor_id and then user_id from resource
+      prior_cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
         .order(id: :desc).first
-      attribution = (cur_act.nil? ? (current_editor_id || user_id) : cur_act.user_id)
-      curation_to_submitted(prior_version, attribution)
-    end
+      attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
 
-    def curation_to_submitted(prior_version, attribution)
       # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
       # version and the journal needs it)
-      status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
+      target_status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
 
       # Generate the :submitted status
       # This will usually have the side effect of sending out notification emails to the author/journal
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
-      curation_to_curation(prior_version) unless prior_version.blank?
-    end
+      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status)
 
-    def curation_to_curation(prior_version)
       return if prior_version.blank? || prior_version.current_curation_status.blank?
-      # If the prior version was in author :action_required or :curation status we need to set it
-      # back to :curation status. Also carry over the curators note so that it appears in the activity log
-      return unless %w[action_required curation].include?(prior_version.current_curation_status)
+      return if %w[in_progress submitted].include?(prior_version.current_curation_status)
+
+      # If we get here, the previous status was *not* controlled by the submitter,
+      # so set the item back to curation and assign it to the previous curator, with a fallback process
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'system set back to curation')
-      update(current_editor_id: prior_version.current_editor_id) if prior_version.current_editor_id
+                                                                  note: 'system set back to curation and assigned curator')
+
+      target_curator = StashEngine::User.find(prior_version.current_editor_id)
+      if target_curator.nil? || !target_curator.curator?
+        # if the previous curator does not exist,
+        # set it to the most experienced current curator (lowest ID number), but not a superuser
+        target_curator = StashEngine::User.where(role: 'curator').first
+      end
+
+      update(current_editor_id: target_curator.id)
     end
   end
 end
