@@ -42,6 +42,7 @@ module StashDatacite
           { 'contributor_name' => 'Sorbonne Université',
             'name_identifier_id' => '', 'award_number' => '',
             'contributor_type' => 'funder',
+            'identifier_type' => 'crossref_funder_id',
             'resource_id' => @resource.id, 'id' => '' } }
       end
 
@@ -49,6 +50,7 @@ module StashDatacite
         post '/stash_datacite/contributors/create', params: @params_hash, xhr: true
         contrib = StashDatacite::Contributor.where(resource_id: @resource.id).first
         expect(contrib.contributor_name).to eq('Sorbonne Université')
+        expect(contrib.identifier_type).to eq('crossref_funder_id')
         expect(contrib.name_identifier_id).to eq('http://dx.doi.org/10.13039/501100019125')
       end
 
