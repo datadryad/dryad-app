@@ -69,7 +69,7 @@ module StashApi
         expect(ret_fund[:organization]).to eq(funder[:organization])
         expect(ret_fund[:awardNumber]).to eq(funder[:awardNumber])
         expect(ret_fund[:identifier]).to eq(funder[:identifier])
-        expect(ret_fund[:identifier_type]).to eq(funder[:identifier_type])
+        expect(ret_fund[:identifierType]).to eq(funder[:identifierType])
       end
       it 'creates a new dataset with a userId explicitly set by superuser)' do
         test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
