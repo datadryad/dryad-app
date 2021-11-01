@@ -96,7 +96,9 @@
         "funders": [
           {
             "organization": "Albani Fonden",
-            "awardNumber": "FondAlb28"
+            "awardNumber": "FondAlb28",
+            "identifier": "http://dx.doi.org/10.13039/501100008201",
+            "identifier_type": "crossref_funder_id"
           }
         ],
         "keywords": [
