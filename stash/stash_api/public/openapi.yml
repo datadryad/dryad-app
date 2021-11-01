@@ -773,6 +773,11 @@ components:
           type: string
         awardNumber:
           type: string
+        identifier:
+          type: string
+        identifierType:
+          description: type of identifier -- null, isni, grid, crossref_funder_id or other
+          type: string
     relatedWork:
       properties:
         relationship:

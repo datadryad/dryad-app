@@ -11,7 +11,7 @@ module StashApi
           @resource.contributors.where(contributor_type: 'funder').map do |funder|
             {
               organization: funder.contributor_name,
-              identifier_type: funder.identifier_type,
+              identifier_type: funder.identifierType,
               identifier: funder.name_identifier_id,
               awardNumber: funder.award_number
             }
