@@ -15,8 +15,13 @@ module StashApi
         return if @hash['funders'].nil?
 
         @hash['funders'].each do |funder|
-          @resource.contributors << StashDatacite::Contributor.create(contributor_name: funder['organization'],
-                                                                      contributor_type: 'funder', award_number: funder['awardNumber'])
+          @resource.contributors << StashDatacite::Contributor.create(
+            contributor_name: funder['organization'],
+            contributor_type: 'funder',
+            identifier_type: funder['identifier_type'],
+            name_identifier_id: funder['identifier'],
+            award_number: funder['awardNumber']
+          )
         end
       end
 
