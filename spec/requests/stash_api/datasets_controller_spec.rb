@@ -56,6 +56,21 @@ module StashApi
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
       end
 
+      it 'creates a new dataset from minimal metadata with funder' do
+        # the following works for post with headers
+        funder = @meta.add_funder
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(/doi:10./).to match(output[:identifier])
+        hsh = @meta.hash
+        funder = funder.first
+        ret_fund = hsh[:funders].first
+        expect(ret_fund[:organization]).to eq(funder[:organization])
+        expect(ret_fund[:awardNumber]).to eq(funder[:awardNumber])
+        expect(ret_fund[:identifier]).to eq(funder[:identifier])
+        expect(ret_fund[:identifier_type]).to eq(funder[:identifier_type])
+      end
       it 'creates a new dataset with a userId explicitly set by superuser)' do
         test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
                                              last_name: Faker::Name.last_name,
