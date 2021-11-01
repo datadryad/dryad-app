@@ -764,7 +764,7 @@ module StashEngine
 
       target_curator = StashEngine::User.find(prior_version.current_editor_id)
       if target_curator.nil? || !target_curator.curator?
-        # if the previous curator does not exist,
+        # if the previous curator does not exist, or is no longer a curator,
         # set it to the most experienced current curator (lowest ID number), but not a superuser
         target_curator = StashEngine::User.where(role: 'curator').first
       end
