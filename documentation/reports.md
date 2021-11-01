@@ -36,7 +36,7 @@ cd /apps/dryad/apps/ui/current
 RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2020-11
 exit # go back to personal account
 cp /apps/dryad/apps/ui/current/shopping* ~/journal-payments/shoppingcart/
-cd ~/tools/journal-payments/shoppingcart
+cd ~/journal-payments/shoppingcart
 git pull
 git add <new-file>
 git commit -a -m "add reports for 2019-11"
