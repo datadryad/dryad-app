@@ -753,7 +753,7 @@ module StashEngine
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status)
 
-      return if prior_version.blank? || prior_version.current_curation_status.blank?
+      return if prior_version.blank? || prior_version.current_curation_status.blank? || prior_version.current_editor_id.blank?
       return if %w[in_progress submitted].include?(prior_version.current_curation_status)
 
       # If we get here, the previous status was *not* controlled by the submitter,
