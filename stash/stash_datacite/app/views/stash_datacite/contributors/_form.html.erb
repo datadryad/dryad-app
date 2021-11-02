@@ -6,6 +6,7 @@
 	<div class="c-input">
 	    <%= f.label "name_#{my_suffix}", "Granting Organization", class: 'c-input__label' %>
 	    <%= f.text_field :contributor_name, id: "contributor_name_#{my_suffix}", class: "js-funders c-input__text" %>
+			<%= f.hidden_field :identifier_type, value: 'crossref_funder_id' %>
 	    <%= f.hidden_field :name_identifier_id, id: "contributor_name_identifier_id", class: "js-funder-id" %>
 	</div>
 	<div class="c-input">
