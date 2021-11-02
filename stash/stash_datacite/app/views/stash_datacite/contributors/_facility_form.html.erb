@@ -1,0 +1,13 @@
+<%# takes a local of resource %>
+<% contributor = resource.contributors.where(contributor_type: 'sponsor').first ||
+    StashDatacite::Contributor.new(contributor_type: 'sponsor', resource_id: resource.id)
+
+   path = ( contributor.new_record? ? stash_datacite.contributors_new_path : stash_datacite.contributors_update_path )
+%>
+
+<%= form_with(model: contributor, url: path, remote: true, authenticity_token: true, class: 'c-input') do |f| %>
+  <%= f.label "research_facility", "Research Facility", class: 'c-input__label' %>
+  <%= f.text_field :contributor_name, id: "contributor_research_facility", class: "c-input__text" %>
+  <%= f.hidden_field :identifier_type, value: 'ror' %>
+  <%= f.hidden_field :name_identifier_id, id: "facility_name_identifier_id" %>
+<% end %>
