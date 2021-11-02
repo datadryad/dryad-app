@@ -33,11 +33,11 @@ including universities, research institutions and academic libraries. See more a
         <li>The Ohio State University</li>
         <li>Pitzer College</li>
         <li>Pomona College</li>
+        <li>Scripps College</li>
       </ul>
     </td>
     <td>
       <ul>
-        <li>Scripps College</li>
         <li>Stanford University</li> 
         <li>Texas Tech University</li>
         <li>University of California, California Digital Library</li>
@@ -56,7 +56,8 @@ including universities, research institutions and academic libraries. See more a
         <li>University of New Mexico</li>
         <li>University of New South Wales, Sydney</li>
         <li>The University of Rhode Island</li>
-		<li>University of Wisconsin, Madison</li>
+        <li>The University of Sheffield</li>
+		    <li>University of Wisconsin, Madison</li>
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
