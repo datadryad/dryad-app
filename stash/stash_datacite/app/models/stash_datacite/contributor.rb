@@ -15,6 +15,12 @@ module StashDatacite
     ContributorTypesEnum = ContributorTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
     ContributorTypesStrToFull = ContributorTypes.map { |i| [i.downcase, i] }.to_h
 
+    # maps DB value to the DataciteMapping class of fun from that gem
+    IdentifierTypesToMapping = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i] }.to_h
+
+    # maps from enum to the special full name/abbreviation like Crossref Funder ID or ROR
+    IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i.value] }.to_h
+
     enum contributor_type: ContributorTypesEnum
 
     before_save :strip_whitespace
@@ -54,6 +60,20 @@ module StashDatacite
       else
         contributor_name
       end
+    end
+
+    # gives the mapping object used to submit through Datacite mapping gem
+    def identifier_type_mapping_obj
+      return nil if identifier_type.blank?
+
+      IdentifierTypesToMapping[identifier_type]
+    end
+
+    # gives a printable name
+    def identifier_type_friendly
+      return nil if identifier_type.blank?
+
+      IdentifierTypesStrToFull[identifier_type]
     end
 
     # this is to simulate the bad old structure where a user can only have one affiliation

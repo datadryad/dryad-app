@@ -158,7 +158,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def contributor_params
-      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :name_identifier_id,
+      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
                                           :affiliation_id, :award_number, :resource_id)
     end
 

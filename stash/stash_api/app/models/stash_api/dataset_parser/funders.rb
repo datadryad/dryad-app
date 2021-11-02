@@ -7,6 +7,8 @@ module StashApi
       #   {
       #     "organization": "Savannah River Operations Office, U.S. Department of Energy",
       #     "awardNumber": "12345"
+      #     "identifierType": "crossref_funder_id",
+      #     "identifier": "http://dx.doi.org/387867/3798789"
       #   }
       # ]
 
@@ -15,8 +17,13 @@ module StashApi
         return if @hash['funders'].nil?
 
         @hash['funders'].each do |funder|
-          @resource.contributors << StashDatacite::Contributor.create(contributor_name: funder['organization'],
-                                                                      contributor_type: 'funder', award_number: funder['awardNumber'])
+          @resource.contributors << StashDatacite::Contributor.create(
+            contributor_name: funder['organization'],
+            contributor_type: 'funder',
+            identifier_type: funder['identifierType'],
+            name_identifier_id: funder['identifier'],
+            award_number: funder['awardNumber']
+          )
         end
       end
 

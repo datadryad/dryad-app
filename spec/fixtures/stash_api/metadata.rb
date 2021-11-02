@@ -140,6 +140,18 @@ module Fixtures
         }
       end
 
+      def add_funder
+        create_key_and_array(key: :funders)
+        @metadata[:funders].push(
+          {
+            "organization": Faker::Company.name,
+            "awardNumber": Faker::Number.number(digits: 4),
+            "identifier": "http://dx.doi.org/10.13039/fakedoi.#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
+            "identifierType": 'crossref_funder_id'
+          }
+        )
+      end
+
     end
   end
 end

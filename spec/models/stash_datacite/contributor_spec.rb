@@ -70,6 +70,28 @@ module StashDatacite
       end
     end
 
+    describe 'identifier_type_mapping_obj' do
+      it 'returns the Datacite::Mapping enum instance' do
+        expect(@contrib.identifier_type_mapping_obj).to be(Datacite::Mapping::FunderIdentifierType::CROSSREF_FUNDER_ID)
+      end
+
+      it 'maps nil to nil' do
+        @contrib.update(identifier_type: nil)
+        expect(@contrib.identifier_type_mapping_obj).to be_nil
+      end
+    end
+
+    describe 'identifier_type_friendly' do
+      it 'returns nil if null type' do
+        @contrib.update(identifier_type: nil)
+        expect(@contrib.identifier_type_friendly).to be_nil
+      end
+
+      it 'returns a readable name (correct capitalization)' do
+        expect(@contrib.identifier_type_friendly).to eq('Crossref Funder ID')
+      end
+    end
+
     describe 'affiliations' do
       attr_reader :affiliations
       before(:each) do
