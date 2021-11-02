@@ -8,6 +8,7 @@
 <%= form_with(model: contributor, url: path, remote: true, authenticity_token: true, class: 'c-input') do |f| %>
   <%= f.label "research_facility", "Research Facility", class: 'c-input__label' %>
   <%= f.text_field :contributor_name, id: "contributor_research_facility", class: "c-input__text" %>
+  <%# probably need contributor_type: 'sponsor' in here %>
   <%= f.hidden_field :identifier_type, value: 'ror' %>
   <%= f.hidden_field :name_identifier_id, id: "facility_name_identifier_id" %>
 <% end %>
