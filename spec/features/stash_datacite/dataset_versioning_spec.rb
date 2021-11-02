@@ -147,7 +147,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     before(:each) do
       ActionMailer::Base.deliveries = []
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id, tenant_id: @author.tenant_id)
+      @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id,
+                                                tenant_id: @author.tenant_id, current_editor_id: @curator.id)
     end
 
     context :by_curator do
@@ -296,9 +297,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
-      it "has a curation status of 'submitted' when prior version was :withdrawn", js: true do
+      it "has a curation status of 'curation' when prior version was :withdrawn", js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn')
         @resource.reload
 
@@ -310,7 +312,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
       context :published_or_embargoed do
@@ -321,7 +324,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           mock_stripe!
         end
 
-        it "has a curation status of 'submitted' when prior version was :embargoed", js: true do
+        it "has a curation status of 'curation' when prior version was :embargoed", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'embargoed')
           @resource.reload
 
@@ -333,10 +336,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('curation')
+          expect(@resource.current_editor_id).to eql(@curator.id)
         end
 
-        it "has a curation status of 'submitted' when prior version was :published", js: true do
+        it "has a curation status of 'curation' when prior version was :published", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
           @resource.reload
 
@@ -348,7 +352,28 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('curation')
+          expect(@resource.current_editor_id).to eql(@curator.id)
+        end
+
+        it 'has a backup curator when the previous curator is no longer available', js: true do
+          curator2 = create(:user, role: 'curator')
+          create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
+          @resource.reload
+
+          # demote the original curator
+          @curator.update(role: 'user')
+
+          sign_in(@author)
+          click_link 'My Datasets'
+          within(:css, '#user_submitted') do
+            click_button 'Update'
+          end
+          update_dataset
+          @resource.reload
+
+          expect(@resource.current_curation_status).to eql('curation')
+          expect(@resource.current_editor_id).to eql(curator2.id)
         end
 
       end
