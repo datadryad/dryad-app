@@ -58,6 +58,19 @@ function loadContributors() {
 	var form = $(this.form);
 	$(form).trigger('submit.rails');
     });
+
+	// --------------------------
+	// For Research Facility which also goes in contributor as identifier_type: ror, contributor_type: sponsor, javascript id: 'contributor_research_facility'
+	// Looks like this needs to be maintained inside this top-level method in order to load from the ajax action
+	// --------------------------
+
+	// trigger submit on form change
+	$( '#contributor_research_facility' ).on('focus', function () {
+		console.log('focused on research facility');
+	}).change(function() {
+		var form = $(this).parents('form');
+		$(form).trigger('submit.rails');
+	});
 };
 
 /*
@@ -72,3 +85,6 @@ function hideRemoveLinkContributors() {
   }
 };
 */
+
+
+
