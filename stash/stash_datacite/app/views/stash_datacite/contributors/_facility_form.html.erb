@@ -26,7 +26,10 @@
                  $( this ).autocomplete( "instance" ).menu.active ) {
                 event.preventDefault();
              }
-             $('#contributor_facility_form #facility_name_identifier_id').val('') // clear any ROR that was saved previously
+             if (event.keyCode > 45 || event.keyCode === 8) {
+                // reset identifier id in there if they type some meaningful stuff in there
+                $('#contributor_facility_form #facility_name_identifier_id').val('');
+             }
           })
           .autocomplete({
              source: function (request, response) {
@@ -46,16 +49,16 @@
                    }
                 });
              },
-             minLength: 1,
+             minLength: 2 ,
              focus: function () {
                 // prevent value inserted on focus
                 return false;
              },
              select: function (event, ui) {
                 $('#contributor_facility_form #facility_name_identifier_id').val(ui.item.id); // set hidden field ror_id
+                $('#contributor_research_facility').val(ui.item.value); // set the correctly selected name in list
                 var form = $(this).parents('form');
                 $(form).trigger('submit.rails');
-                var savedval = $('#contributor_facility_form #facility_name_identifier_id').val();
              },
              open: function (event, ui) {
              },
@@ -64,9 +67,10 @@
              },
              change: function( event, ui ) {
              }
+             // end of autocomplete below
           }).blur(function (event) {
-         var form = $(this).parents('form');
-         $(form).trigger('submit.rails');
+            var form = $(this).parents('form');
+            $(form).trigger('submit.rails');
       });
    });
 </script>
