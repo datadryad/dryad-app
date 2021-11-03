@@ -249,6 +249,30 @@ module StashDatacite
         end
       end
 
+      describe :duplicate_submission do
+        it 'detects a duplicate submission, even with a slightly different title' do
+          dup = create(:resource, user: @user, title: "#{@resource.title} with a slight difference")
+          expect(@completions.duplicate_submission).to eq(dup)
+        end
+
+        it 'does not register a second version as a duplicate submission' do
+          create(:resource, identifier: @resource.identifier, user: @user, title: @resource.title)
+          expect(@completions.duplicate_submission).to be(nil)
+        end
+
+        it 'does not register a short title as a duplicate submission' do
+          @resource.update(title: 'A short title')
+          create(:resource, user: @user, title: @resource.title)
+          expect(@completions.duplicate_submission).to be(nil)
+        end
+
+        it 'does not register a dataset from a different submitter as a duplicate submission' do
+          user2 = create(:user)
+          create(:resource, user: user2, title: @resource.title)
+          expect(@completions.duplicate_submission).to be(nil)
+        end
+      end
+
       # takes size and AR list of files
       describe :over_size? do
         attr_reader :actual_size
