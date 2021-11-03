@@ -33,20 +33,20 @@ module Stash
     end
 
     def self.sf_user
-      sf_client.user_info
+      sf_client&.user_info
     end
 
     def self.find(obj_type:, obj_id:)
-      sf_client.find(obj_type, obj_id)
+      sf_client&.find(obj_type, obj_id)
     end
 
     # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
     def self.update(obj_type:, obj_id:, kv_hash:)
-      sf_client.update(obj_type, Id: obj_id, **kv_hash)
+      sf_client&.update(obj_type, Id: obj_id, **kv_hash)
     end
 
     def self.db_query(query)
-      sf_client.query(query)
+      sf_client&.query(query)
     end
 
     def self.find_cases_by_doi(doi)
@@ -90,7 +90,7 @@ module Stash
     end
 
     def self.create_case(identifier:, owner:)
-      return unless identifier && owner
+      return unless identifier && owner && sf_client
 
       case_user = identifier.latest_resource&.authors&.first || identifier.latest_resource&.user
 
@@ -118,14 +118,19 @@ module Stash
       def sf_client
         return @sf_client if @sf_client
 
-        @sf_client = ::Restforce.new(username: APP_CONFIG[:salesforce][:username],
-                                     password: APP_CONFIG[:salesforce][:password],
-                                     security_token: APP_CONFIG[:salesforce][:security_token],
-                                     client_id: APP_CONFIG[:salesforce][:client_id],
-                                     client_secret: APP_CONFIG[:salesforce][:client_secret],
-                                     api_version: '39.0')
-        @sf_client.authenticate!
-        @sf_client
+        begin
+          @sf_client = ::Restforce.new(username: APP_CONFIG[:salesforce][:username],
+                                       password: APP_CONFIG[:salesforce][:password],
+                                       security_token: APP_CONFIG[:salesforce][:security_token],
+                                       client_id: APP_CONFIG[:salesforce][:client_id],
+                                       client_secret: APP_CONFIG[:salesforce][:client_secret],
+                                       api_version: '39.0')
+          @sf_client.authenticate!
+          @sf_client
+        rescue StandardError => e
+          Rails.logger.error("Failed to initialize Salesforce client -- #{e}")
+          nil
+        end
       end
 
       # rubocop:disable Style/NestedTernaryOperator
