@@ -44,5 +44,21 @@ module Funders
 
       best_matches[pair_matches.index(pair_matches.max)]
     end
+
+    # tries to do an exact match and return an id
+    def id_match(name:)
+      name = name.strip.downcase
+      # return from the Fundref info if exact match
+      return @lookup[name][:uri] unless @lookup[name].nil?
+
+      # otherwise see if we can find a string match in our database that has funder id filled in
+      matching_contrib =
+        StashDatacite::Contributor.where(contributor_type: 'funder')
+          .where(contributor_name: name)
+          .where("name_identifier_id IS NOT NULL AND name_identifier_id <> ''").first
+      return nil if matching_contrib.nil?
+
+      matching_contrib[:name_identifier_id]
+    end
   end
 end
