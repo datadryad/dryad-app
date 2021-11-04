@@ -86,30 +86,35 @@ namespace :funders do
 
   desc 'imports Tedsheet which is something someone gave us with IDs for some funders'
   task import_tedsheet: :environment do
+    util = Funders::Utils.new
+
     CSV.foreach('/Users/sfisher/Downloads/funderOutputCrossrefFixed__20211006.csv', headers: true) do |row|
       # relevant fields are 'doi', 'funderName', 'funderIdentifier', there seem to be a lot of blank rows
-      next if row['funderIdentifier'].blank?
 
       stash_identifier = StashEngine::Identifier.where(identifier: row['doi']).first
-      next if stash_identifier.nil?
+      next if stash_identifier.nil? || row['funderName'].blank?
 
       res = stash_identifier.latest_resource_with_public_metadata
       next if res.nil?
 
       existing_count = res.contributors.where(contributor_type: 'funder', contributor_name: row['funderName']).count
-      next if existing_count.positive? # it already got added, so skip
+      next if existing_count.positive? # it already got added, so skip adding it again
 
-      full_id = "http://dx.doi.org/#{row['funderIdentifier']}" # because dx.doi.org is how fundref presents them
+      full_id = if row['funderIdentifier'].blank?
+                  util.id_match(name: row['funderName'])
+                else
+                  "http://dx.doi.org/#{row['funderIdentifier']}" # because dx.doi.org is how fundref does, not short in csv
+                end
 
       StashDatacite::Contributor.create!(
-        contributor_name: row['funderName'],b
+        contributor_name: row['funderName'],
         contributor_type: 'funder',
         name_identifier_id: full_id,
         resource_id: res.id,
         award_number: row['awardNumber']
       )
 
-      puts "Added #{row['funderName']} as funder for #{row['doi']}"
+      puts "#{full_id ? '*' : ' '}Added #{row['funderName']} with id #{full_id} for #{row['doi']}"
     end
   end
 end
