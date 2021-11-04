@@ -73,7 +73,7 @@ namespace :funders do
     end
   end
 
-  # had to do this to fix crazy Tedfile with inconsistent line endings
+  # had to do this to fix Tedfile with inconsistent line endings and even multiple line endings (making blank lines)
   # File.open('funderOutputCrossrefFixed__20211006.csv', 'w') do |outfile|
   #   File.foreach('funderOutputCrossref__20211006.csv') do |line|
   #     better_line = line.strip
