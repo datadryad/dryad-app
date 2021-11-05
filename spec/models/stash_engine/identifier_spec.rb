@@ -38,8 +38,8 @@ module StashEngine
       end
 
       @fake_issn = 'bogus-issn-value'
-      int_datum_issn = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
-      int_datum_issn.save!
+      @int_datum_issn = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
+      @int_datum_issn.save!
       @fake_manuscript_number = 'bogus-manuscript-number'
       int_datum_manu = InternalDatum.new(identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: @fake_manuscript_number)
       int_datum_manu.save!
@@ -381,6 +381,15 @@ module StashEngine
         Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
+      end
+
+      it 'replaces a journal payment when the associated journal has changed' do
+        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        @identifier.record_payment
+        expect(@identifier.payment_type).to match(/journal/)
+        @int_datum_issn.update(value: 'not the journal issn')
+        @identifier.record_payment
+        expect(@identifier.payment_type).to match(/unknown/)
       end
 
       it 'records an institution payment' do

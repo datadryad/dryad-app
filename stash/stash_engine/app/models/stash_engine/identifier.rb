@@ -239,6 +239,10 @@ module StashEngine
     end
 
     def record_payment
+      # once we have assigned payment to an entity, keep that entity,
+      # unless it was a journal that the submission is no longer affiliated with
+      # (in general, we don't want to tell a user their payment is covered and then later take it away)
+      clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
       if journal&.will_pay?
@@ -256,6 +260,7 @@ module StashEngine
         self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
       else
         self.payment_type = 'unknown'
+        self.payment_id = nil
       end
       save
     end
@@ -493,6 +498,16 @@ module StashEngine
 
     private
 
+    def clear_payment_for_changed_journal
+      return unless payment_type.present?
+      return unless payment_type.include?('journal')
+      return if payment_id == journal&.issn
+
+      self.payment_type = nil
+      self.payment_id = nil
+      save
+    end
+    
     def abstracts
       return '' unless latest_resource.respond_to?(:descriptions)
 
