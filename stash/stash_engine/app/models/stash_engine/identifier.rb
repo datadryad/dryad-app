@@ -507,7 +507,7 @@ module StashEngine
       self.payment_id = nil
       save
     end
-    
+
     def abstracts
       return '' unless latest_resource.respond_to?(:descriptions)
 
