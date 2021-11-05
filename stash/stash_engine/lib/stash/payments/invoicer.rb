@@ -31,21 +31,6 @@ module Stash
         invoice.send_invoice
       end
 
-      # For a journal, generate an invoice item for the DPC.
-      # Don't create the actual invoice, because we don't want to
-      # send it until the end of the month.
-      def charge_journal_via_invoice
-        set_api_key
-        customer_id = stripe_journal_customer_id
-        return unless customer_id.present?
-
-        # the following line was creating invoice_item from return value, but didn't seem used anywhere
-        create_invoice_items_for_dpc(customer_id)
-        resource.identifier.payment_id = "#{resource.identifier&.publication_issn}-#{invoice_item&.id}"
-        resource.identifier.payment_type = 'journal'
-        resource.identifier.save
-      end
-
       def external_service_online?
         set_api_key
         latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
