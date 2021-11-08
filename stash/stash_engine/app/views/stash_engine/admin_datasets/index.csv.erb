@@ -13,7 +13,7 @@
             resource.views,
             resource.downloads,
             resource.citations,
-            StashEngine::Tenant.find(resource.tenant_id).long_name
+            StashEngine::Tenant.find(resource.tenant_id)&.long_name
     ]
 -%><%= row.to_csv(row_sep: nil).html_safe %>
 <% end -%>
