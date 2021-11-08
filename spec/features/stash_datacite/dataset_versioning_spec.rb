@@ -211,7 +211,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text('Curation')
         expect(page).to have_text('Dryad System')
-        expect(page).to have_text('system set back to curation')
+        expect(page).to have_text('System set back to curation')
       end
 
     end
