@@ -753,16 +753,27 @@ module StashEngine
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status)
 
+      # Warn curators if this is potentially a duplicate
+      completions = StashDatacite::Resource::Completions.new(self)
+      if prior_version.blank? && completions.duplicate_submission
+        dup_id = completions.duplicate_submission.identifier&.identifier
+        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
+                                                                    note: "System noticed possible duplicate dataset #{dup_id}")
+      end
+
       return if prior_version.blank? || prior_version.current_curation_status.blank? || prior_version.current_editor_id.blank?
       return if %w[in_progress submitted].include?(prior_version.current_curation_status)
 
       # If we get here, the previous status was *not* controlled by the submitter,
       # so set the item back to curation and assign it to the previous curator, with a fallback process
+      revert_status_to_curation(prior_curator_id: prior_version.current_editor_id)
+    end
 
+    def revert_status_to_curation(prior_curator_id:)
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'system set back to curation and assigned curator')
+                                                                  note: 'System set back to curation and assigned curator')
 
-      target_curator = StashEngine::User.find(prior_version.current_editor_id)
+      target_curator = StashEngine::User.find(prior_curator_id)
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to the most experienced current curator (lowest ID number), but not a superuser

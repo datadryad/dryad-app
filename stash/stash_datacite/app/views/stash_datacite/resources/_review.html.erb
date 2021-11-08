@@ -141,23 +141,49 @@
     }
   }
 
-  // make a popup if no data files
-  <% unless @completions.contains_data? %>
+ {
+     // make a skippable popup if there is something serious to warn the user about
+     let skippable_warning = '';
 
-    let txt = `
+     <% if @completions.duplicate_submission %>
+     skippable_warning += `
+      <h1>Duplicate Submission Detected</h1>
+      <p>
+        This submission appears to be a duplicate of your previous submission  "<%= @completions.duplicate_submission.title %>".</p>
+      <p>
+        Only one submission should be created for each dataset, unless your data files are too large to fit 
+        into a single submission.
+      </p>
+
+      <p>
+        If you <strong>did not</strong> intend to create a duplicate dataset, return to your <strong>"My Datasets"</strong> page and delete this dataset. 
+        It will be the one nearest the top of the page. Then you may <strong>"Resume"</strong> or <strong>"Update"</strong> the other dataset.
+      </p>
+
+      <p>
+        If you <strong>did</strong> intend to create this dataset, please ensure that the title sufficiently distinguishes it from the
+        other similar dataset(s).
+       </p>`;
+     <% end %>
+
+     <% unless @completions.contains_data? %>
+     skippable_warning += `
       <h1>Submitting Data Files to Dryad</h1>
       <p>
-      Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
-    </p>
-    <p>
-      If you are only interested in uploading software or supplemental
-      information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
-    </p>`;
+        Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
+      </p>
+      <p>
+        If you are only interested in uploading software or supplemental
+        information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
+      </p>`;      
+     <% end %>
+     
+     if(skippable_warning.length > 0) {
+	 $('#genericModalContent').html(skippable_warning);
+	 $('#genericModalDialog')[0].showModal();
+     }
+}
 
-  $('#genericModalContent').html(txt);
-  $('#genericModalDialog')[0].showModal();
-
-  <% end %>
 </script>
 
 
