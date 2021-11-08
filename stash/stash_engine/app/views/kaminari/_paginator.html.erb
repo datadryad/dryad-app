@@ -25,6 +25,6 @@
       <% end -%>
     <% end -%>
     <%= next_page_tag unless current_page.last? %>
-    <%= last_page_tag unless current_page.last? %>
+    <%= last_page_tag unless current_page.last? || params[:show_last_page] == false %>
   </nav>
 <% end -%>

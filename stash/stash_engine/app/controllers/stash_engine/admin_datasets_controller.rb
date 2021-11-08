@@ -31,15 +31,27 @@ module StashEngine
 
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
+
+      if request.format.to_s == 'text/csv' # we want all the results to put in csv
+        page = 1
+        page_size = 1000000
+      else
+        page = @page.to_i
+        page_size = @page_size.to_i
+      end
       @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
                                                                      tenant: tenant_limit,
                                                                      journals: journal_limit,
-                                                                     funders: funder_limit)
+                                                                     funders: funder_limit,
+                                                                     page: page.to_i,
+                                                                     page_size: page_size.to_i)
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
-      # paginate for display, but if CSV, don't paginate
-      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size) unless request.format.to_s == 'text/csv'
+      # paginate for display
+      blank_results = (page.to_i - 1) * page_size.to_i
+      @datasets = Array.new(blank_results, nil) + @datasets # pad out an array with empty results for earlier pages for kaminari
+      @datasets = Kaminari.paginate_array(@datasets, total_count: @datasets.length).page(page).per(page_size)
 
       respond_to do |format|
         format.html

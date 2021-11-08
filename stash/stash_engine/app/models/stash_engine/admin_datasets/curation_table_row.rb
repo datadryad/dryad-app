@@ -105,7 +105,7 @@ module StashEngine
         # The funders, if set, limits to items associated with one of the given funders.
         #
         # if resource_id is set then only returns that resource id
-        def where(params:, tenant: nil, journals: nil, funders: nil, identifier_id: nil)
+        def where(params:, tenant: nil, journals: nil, funders: nil, identifier_id: nil, page: 1, page_size: 10)
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
           # editor_name is derived from 2 DB fields so use the last_name instead
@@ -126,6 +126,7 @@ module StashEngine
                                  admin_funders: funders,
                                  identifier_id: identifier_id)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
+            #{build_limit_clause(page: page, page_size: page_size)}
           "
           curator_ids = StashEngine::User.curators.map(&:id)
           results = ApplicationRecord.connection.execute(query).map { |result| new(result, curator_ids) }
@@ -186,6 +187,11 @@ module StashEngine
           else
             (column.present? && column != 'author_names' ? "ORDER BY #{column} #{direction || 'ASC'}" : '')
           end
+        end
+
+        def build_limit_clause(page:, page_size:)
+          # rows start at 0 and limit is offset, row_count.  I add 1 to the page size so we know if there is a next page of results
+          " LIMIT #{(page - 1) * page_size}, #{4 * page_size}"
         end
 
         def sort_by_author_names(results, direction)
