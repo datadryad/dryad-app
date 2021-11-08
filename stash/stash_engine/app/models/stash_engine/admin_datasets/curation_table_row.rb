@@ -105,6 +105,7 @@ module StashEngine
         # The funders, if set, limits to items associated with one of the given funders.
         #
         # if resource_id is set then only returns that resource id
+        # rubocop:disable Metrics/ParameterLists
         def where(params:, tenant: nil, journals: nil, funders: nil, identifier_id: nil, page: 1, page_size: 10)
           # If a search term was provided include the relevance score in the results for sorting purposes
           relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
@@ -133,6 +134,7 @@ module StashEngine
           # If the user is trying to sort by author names, then
           (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
         end
+        # rubocop:enable Metrics/ParameterLists
 
         private
 
@@ -190,7 +192,8 @@ module StashEngine
         end
 
         def build_limit_clause(page:, page_size:)
-          # rows start at 0 and limit is offset, row_count.  I add 1 to the page size so we know if there is a next page of results
+          # rows start at 0 and limit is offset, row_count.  I multiply page size so we know if there are a few pages afterward
+          # LIMIT [offset,] row_count;
           " LIMIT #{(page - 1) * page_size}, #{4 * page_size}"
         end
 
