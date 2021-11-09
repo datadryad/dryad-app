@@ -132,9 +132,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows assigning a curator', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
 
-        visit root_path
-        find('.o-sites__summary', text: 'Admin').click
-        find('.o-sites__group-item', text: 'Dataset Curation').click
+        visit stash_url_helpers.ds_admin_path
 
         expect(page).to have_text('Admin Dashboard')
         expect(page).to have_css('button[title="Update curator"]')
@@ -151,9 +149,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows un-assigning a curator', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
 
-        visit root_path
-        find('.o-sites__summary', text: 'Admin').click
-        find('.o-sites__group-item', text: 'Dataset Curation').click
+        visit stash_url_helpers.ds_admin_path
 
         expect(page).to have_text('Admin Dashboard')
         expect(page).to have_css('button[title="Update curator"]')
@@ -162,7 +158,7 @@ RSpec.feature 'Admin', type: :feature do
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
-          expect(page).not_to have_text(@curator.name.to_s)
+          expect(page).not_to have_text(@curator.name_last_first)
         end
 
       end
