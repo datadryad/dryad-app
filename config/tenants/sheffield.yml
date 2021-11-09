@@ -21,7 +21,7 @@ default: &default
   authentication:
     strategy: shibboleth
     entity_id: https://idp-qa.shef.ac.uk/shibboleth
-    entity_domain: sheffield.ac.uk
+    entity_domain: shef.ac.uk
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
@@ -62,5 +62,9 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+  authentication:
+    strategy: shibboleth
+    entity_id: https://idp.shef.ac.uk/shibboleth
+    entity_domain: shef.ac.uk
   campus_contacts: [""]
 
