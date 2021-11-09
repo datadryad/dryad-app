@@ -106,6 +106,24 @@ module StashDatacite
         errored_uploads
       end
 
+      # A submission is considered duplicate of another resource if it:
+      #  - is from the same submitter
+      #  - has a different identifier_id (not just a new version)
+      #  - has the first four words of the title in common
+      def duplicate_submission
+        return unless @resource.title && @resource.title.split.size > 3
+
+        other_submissions = StashEngine::Resource.where(user_id: @resource.user_id)
+        found_dup = nil
+        other_submissions.each do |sub|
+          next if sub.identifier_id == @resource.identifier_id
+          next unless sub.title
+
+          found_dup = sub if @resource.title.downcase.split[0..3] == sub.title.downcase.split[0..3]
+        end
+        found_dup
+      end
+
       # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       def contains_data?
         @resource.data_files.present_files.count.positive?

@@ -105,7 +105,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         before(:each, js: true) do
           sign_in(@curator)
           find('summary', text: 'Admin').click
-          click_link 'Dataset Curation'
+          visit stash_url_helpers.ds_admin_path
         end
 
         it 'displays the proper information on the Admin page', js: true do
@@ -162,14 +162,15 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         sign_in(@curator)
         find('summary', text: 'Admin').click
-        click_link 'Dataset Curation'
+        visit stash_url_helpers.ds_admin_path
+
         # Edit the Dataset as an admin
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
         update_dataset(curator: true)
         @resource.reload
-        find('summary', text: 'Admin').click
-        click_link 'Dataset Curation'
+
+        visit stash_url_helpers.ds_admin_path
       end
 
       it 'has a resource_state (Merritt status) of "submitted"', js: true do
@@ -211,7 +212,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text('Curation')
         expect(page).to have_text('Dryad System')
-        expect(page).to have_text('system set back to curation')
+        expect(page).to have_text('System set back to curation')
       end
 
     end
@@ -245,7 +246,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the Admin page', js: true do
         sign_in(@curator)
         find('summary', text: 'Admin').click
-        click_link 'Dataset Curation'
+
+        visit stash_url_helpers.ds_admin_path
+
         within(:css, '.c-lined-table__row') do
           # Make sure the appropriate buttons are available
           # Make sure the right text is shown
@@ -260,7 +263,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the Activity Log page', js: true do
         sign_in(@curator)
         find('summary', text: 'Admin').click
-        click_link 'Dataset Curation'
+        visit stash_url_helpers.ds_admin_path
 
         within(:css, '.c-lined-table__row') do
           find('button[aria-label="View Activity Log"]').click
