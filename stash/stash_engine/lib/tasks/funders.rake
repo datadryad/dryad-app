@@ -72,4 +72,49 @@ namespace :funders do
       puts ''
     end
   end
+
+  # had to do this to fix Tedfile with inconsistent line endings and even multiple line endings (making blank lines)
+  # File.open('funderOutputCrossrefFixed__20211006.csv', 'w') do |outfile|
+  #   File.foreach('funderOutputCrossref__20211006.csv') do |line|
+  #     better_line = line.strip
+  #     next if better_line.empty?
+  #     outfile.puts better_line
+  #   end
+  # end
+  # This also created a crazy unprintable character on the first line as part of the "doi" field which was hard to
+  # troubleshoot.  Had to edit it out in binary mode in vi.
+
+  desc 'imports Tedsheet which is something someone gave us with IDs for some funders'
+  task import_tedsheet: :environment do
+    util = Funders::Utils.new
+
+    CSV.foreach('/Users/sfisher/Downloads/funderOutputCrossrefFixed__20211006.csv', headers: true) do |row|
+      # relevant fields are 'doi', 'funderName', 'funderIdentifier', there seem to be a lot of blank rows
+
+      stash_identifier = StashEngine::Identifier.where(identifier: row['doi']).first
+      next if stash_identifier.nil? || row['funderName'].blank?
+
+      res = stash_identifier.latest_resource_with_public_metadata
+      next if res.nil?
+
+      existing_count = res.contributors.where(contributor_type: 'funder', contributor_name: row['funderName']).count
+      next if existing_count.positive? # it already got added, so skip adding it again
+
+      full_id = if row['funderIdentifier'].blank?
+                  util.id_match(name: row['funderName'])
+                else
+                  "http://dx.doi.org/#{row['funderIdentifier']}" # because dx.doi.org is how fundref does, not short in csv
+                end
+
+      StashDatacite::Contributor.create!(
+        contributor_name: row['funderName'],
+        contributor_type: 'funder',
+        name_identifier_id: full_id,
+        resource_id: res.id,
+        award_number: row['awardNumber']
+      )
+
+      puts "#{full_id ? '*' : ' '}Added #{row['funderName']} with id #{full_id} for #{row['doi']}"
+    end
+  end
 end
