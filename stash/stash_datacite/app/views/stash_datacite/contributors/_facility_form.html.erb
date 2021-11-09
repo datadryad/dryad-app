@@ -1,0 +1,78 @@
+<%# takes a local of resource %>
+<% contributor = resource.contributors.where(contributor_type: 'sponsor').first ||
+    StashDatacite::Contributor.new(contributor_type: 'sponsor', resource_id: resource.id)
+
+   path = ( contributor.new_record? ? stash_datacite.contributors_create_path : stash_datacite.contributors_update_path )
+%>
+
+<%= form_with(model: contributor, url: path, remote: true, authenticity_token: true, id: 'contributor_facility_form', class: 'c-input') do |f| %>
+  <%= f.label "research_facility", "Research Facility", class: 'c-input__label' %>
+  <%= f.text_field :contributor_name, id: "contributor_research_facility", class: "c-input__text js-facility",
+                   title: 'If you conducted your research at a facility other than your institutional affiliation' %>
+  <%# probably need contributor_type: 'sponsor' in here %>
+  <%= f.hidden_field :identifier_type, value: 'ror' %>
+  <%= f.hidden_field :name_identifier_id, id: "facility_name_identifier_id" %>
+  <%= f.hidden_field :contributor_type, value: 'sponsor' %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+<% end %>
+
+<script type="text/javascript">
+
+   $(function () {
+      $('#contributor_facility_form .js-facility')
+          // don't navigate away from the field on tab when selecting an item
+          .bind( "keydown", function( event ) {
+             if ( event.keyCode === $.ui.keyCode.TAB &&
+                 $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+             }
+             if (event.keyCode > 45 || event.keyCode === 8) {
+                // reset identifier id in there if they type some meaningful stuff in there
+                $('#contributor_facility_form #facility_name_identifier_id').val('');
+             }
+          })
+          .autocomplete({
+             source: function (request, response) {
+                $.ajax({
+                   url: "<%= stash_datacite.affiliations_autocomplete_path %>",
+                   dataType: "json",
+                   data: {
+                      term: request.term
+                   },
+                   success: function (data) {
+                      response($.map(data, function (item) {
+                         return {
+                            value: item.long_name,
+                            id: item.id
+                         }
+                      }));
+                   }
+                });
+             },
+             minLength: 2 ,
+             focus: function () {
+                // prevent value inserted on focus
+                return false;
+             },
+             select: function (event, ui) {
+                $('#contributor_facility_form #facility_name_identifier_id').val(ui.item.id); // set hidden field ror_id
+                $('#contributor_research_facility').val(ui.item.value); // set the correctly selected name in list
+                var form = $(this).parents('form');
+                $(form).trigger('submit.rails');
+             },
+             open: function (event, ui) {
+             },
+             close: function (event, ui) {
+                $(this).focus();
+             },
+             change: function( event, ui ) {
+             }
+             // end of autocomplete below
+          }).blur(function (event) {
+            var form = $(this).parents('form');
+            $(form).trigger('submit.rails');
+      });
+   });
+</script>
+

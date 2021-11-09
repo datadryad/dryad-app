@@ -82,6 +82,7 @@ module StashDatacite
       else
         # init with contrib name getting an asterisk unless I can get an exact name match from fundref
         @contributor.contributor_name = "#{args['contributor_name']}*" unless set_exact_match(contributor_name: args[:contributor_name])
+        @contributor.contributor_name = nil if @contributor.contributor_name == '*'
       end
 
       @contributor.save
@@ -165,7 +166,7 @@ module StashDatacite
     def find_or_initialize
       # If it's the same as the previous one, but the award number changed from blank to non-blank, just add the award number
       contrib_name = contributor_params[:contributor_name]
-      unless contrib_name.nil?
+      unless contrib_name.blank?
         contributor = Contributor.where('resource_id = ? AND (contributor_name = ? OR contributor_name = ?)',
                                         contributor_params[:resource_id],
                                         contrib_name,

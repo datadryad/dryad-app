@@ -28,7 +28,14 @@
     <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
 
-  <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %><br/>
+  <div class="c-input__inline">
+    <div class="c-input">
+      <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %>
+    </div>
+    <div class="c-input">
+      <%= render partial: "stash_datacite/contributors/facility_form", locals: { resource: @resource } %>
+    </div>
+  </div>
 
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Funding</legend>
