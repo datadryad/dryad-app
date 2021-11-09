@@ -20,7 +20,7 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://idp-qa.shef.ac.uk/shibboleth
+    entity_id: https://idp-qa.shef.ac.uk/idp/shibboleth
     entity_domain: shef.ac.uk
   default_license: cc0
   campus_contacts: [""]
