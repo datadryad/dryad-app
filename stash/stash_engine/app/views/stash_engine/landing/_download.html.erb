@@ -1,7 +1,23 @@
+<% # takes dataset_identifier as local %>
 <div class="o-download">
   <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 
-  <%= button_to "Download dataset ~ #{filesize(resource.size, 0)}", download_resource_path(resource.id), remote: true,
-                class: 'o-download__files js-download', id: "dl_res_#{resource.id}", data: { disable: true } %>
-
+  <%= button_to "Download dataset", download_resource_path(resource.id), remote: true,
+                class: 'o-download__files js-download', id: "dl_res_#{resource.id}", data: { disable: false } %>
 </div>
+
+<script>
+  $('#<%= "dl_res_#{resource.id}" %>').click(function(event) {
+    console.log(event.target); // gives html dom element
+    console.log($(this)); // gives jQuery object
+    var item = $(this);
+    item.toggleClass("o-download__files o-download__wait");
+    // item.prop('data-disable', 'true');
+    event.preventDefault();
+    console.log('preventing default');
+    $(this).closest('form').submit();
+    console.log('submitted form by AJAX');
+    item.prop('disabled', true);
+    console.log('disabling the element');
+  });
+</script>
