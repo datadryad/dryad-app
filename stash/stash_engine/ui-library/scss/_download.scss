@@ -18,6 +18,12 @@
 	background-image: inline('../images/icon_download.svg');
 }
 
+.o-download__wait {
+	@extend %o-download__button;
+	background-image: inline('../images/icon_spinner_oval.svg');
+	background-size: 20px 20px;
+}
+
 .o-download__docs {
 	@extend %o-download__button;
 	background-image: inline('../images/icon_pdf.svg');
