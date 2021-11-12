@@ -2,7 +2,7 @@ function delayedEnable() {
   // wait a bit so download starts before re-enabling so they don't machine gun click
   setTimeout(function(){
     $('.js-download').prop('disabled', false).removeClass('o-download__wait').addClass('o-download__files');
-  }, 3500);
+  }, 5000);
 }
 
 <% if @status_hash[:status] == 200 %>
