@@ -238,6 +238,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('submitted')
       end
 
+      it 'does not have an automatically-assigned curator', js: true do
+        expect(@resource.current_editor_id).to eq(@author.id)
+      end
+
       # TODO: This is no longer tested the same way... may need to install capybara-email
       xit 'sends out a "submitted" email to the author', js: true do
         expect(ActionMailer::Base.deliveries.count).to eq(1)
