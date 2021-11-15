@@ -86,7 +86,8 @@ module Stash
           dryad_related_publication_name_s: related_publication_name,
           dryad_related_publication_id_s: related_publication_id,
           dryad_author_affiliation_name_sm: author_affiliations,
-          dryad_author_affiliation_id_sm: author_affiliation_ids
+          dryad_author_affiliation_id_sm: author_affiliation_ids,
+          dryad_dataset_file_ext_sm: dataset_file_exts
         }
       end
 
@@ -240,6 +241,12 @@ module Stash
       def author_affiliation_ids
         @resource.authors.map do |author|
           author.affiliations.map(&:ror_id)
+        end.flatten.reject(&:blank?).uniq
+      end
+
+      def dataset_file_exts
+        @resource.data_files.present_files.map do |df|
+          File.extname("#{df.upload_file_name}").gsub(/^./, '').downcase
         end.flatten.reject(&:blank?).uniq
       end
 
