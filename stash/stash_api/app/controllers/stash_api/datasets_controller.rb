@@ -169,7 +169,7 @@ module StashApi
             StashEngine::CurationActivity.create(user_id: @user.id, status: 'submitted',
                                                  note: 'updating status based on API notification from Editorial Manager')
         else
-          # any other article disposition -> transition peer_review to action_required
+          # any other article disposition -> transition peer_review to withdrawn
           @resource.curation_activities <<
             StashEngine::CurationActivity.create(user_id: @user.id, status: 'withdrawn',
                                                  note: 'updating status based on API notification from Editorial Manager')
