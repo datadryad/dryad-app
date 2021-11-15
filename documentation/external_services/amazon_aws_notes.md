@@ -232,6 +232,28 @@ Downloads
 - Users must update their browser settings so files download into the Data drive
 
 
+Using Ubuntu Linux on Windows
+-----------------------------
+
+To setup Ubuntu in your account, use the Windows Subsystem for Linux. Open the
+Command Prompt (or Windows Power Shell) and run:
+`wsl --install -d Ubuntu`
+
+The first time, it will take a while to set up, and finish by asking you to
+create a user account. The Ubuntu account only exists *within* your Windows account,
+so it does not need to be secure. It can simply be `dryad` with password `dryad`.
+
+After the initial setup, to access Ubuntu, you can simply type `wsl`.
+
+To access files in/out of the Ubuntu drive:
+- From Windows Command Prompt or File Explorer, the Ubuntu files have a path like:
+  `\\wsl$\Ubuntu-20.04\home\dryad\*`
+- From Ubuntu, the Windows files have a path like
+  `/mnt/c/DryadData`
+
+Python is available in Ubuntu as `python3`.
+
+
 Using the Dryad code on Windows
 -------------------------------
 
