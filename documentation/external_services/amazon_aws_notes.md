@@ -254,8 +254,32 @@ To access files in/out of the Ubuntu drive:
 Python is available in Ubuntu as `python3`.
 
 
-Using the Dryad code on Windows
--------------------------------
+Using the Dryad code on Windows within Ubuntu
+---------------------------------------------
+
+Once ubuntu is set up:
+```
+sudo apt update
+sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+sudo apt-get install libxml2 libxml2-dev patch curl build-essential libreadline-dev
+sudo apt-get install ruby-dev
+sudo apt install rbenv
+rbenv init
+(add the init command to .bashrc)
+mkdir -p "$(rbenv root)"/plugins
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+rbenv install 2.6.6
+git clone https://github.com/CDL-Dryad/dryad-app.git
+cd dryad-app
+sudo gem install bundler:2.2.27
+cd script/file-download
+bundle install
+(put server and API credentials into download.rb)
+./download.rb <URL to dataset>
+```
+
+Using the Dryad code on Windows (natively)
+------------------------------------------
 
 Windows has difficulty cloning the Dryad code due to a filename with crazy
 characters, which we intentionally created to test filenames.
