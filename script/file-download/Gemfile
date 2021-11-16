@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'byebug'
+# gem 'byebug'
 gem 'http'
 gem 'ruby-progressbar'
