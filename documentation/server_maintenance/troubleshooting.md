@@ -24,6 +24,23 @@ entire system:
 RAILS_ENV=production bundle exec rails rsolr:reindex
 ```
 
+#Clean up and regenerate public search data
+
+Take the following steps:
+
+```ruby
+# get a rails console in the *correct* environment
+bundle exec rails console -e <env> # be sure you use development, stage or production here for <env>
+
+# once in the console, clear out the existing (perhaps out of date or bad) records
+solr = RSolr.connect url: Blacklight.connection_config[:url]
+solr.delete_by_query("uuid:*")
+exit
+
+# in the bash shell again, subsitute the correct environment for <env>
+RAILS_ENV=<env> bundle exec rails rsolr:reindex
+```
+
 Dataset submission issues
 =========================
 
