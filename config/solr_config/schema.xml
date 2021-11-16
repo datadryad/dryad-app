@@ -191,6 +191,7 @@
   <!-- sfisher 08/22/2019 - fields to store the affiliation of authors -->
   <copyField source="dryad_author_affiliation_name_sm" dest="dryad_author_affiliation_name_tmi" maxChars="1000"/>
   <copyField source="dryad_author_affiliation_id_sm" dest="dryad_author_affiliation_id_tmi" maxChars="100"/>
+  <copyField source="dryad_dataset_file_ext_sm" dest="dryad_dataset_file_ext_tmi" maxChars="10"/>
 
 
   <!-- core text search -->
