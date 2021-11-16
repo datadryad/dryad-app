@@ -170,6 +170,8 @@
       <str name="facet.field">dryad_related_publication_name_s</str>
       <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
       <str name="facet.field">dryad_author_affiliation_name_sm</str>
+      <!-- sfisher 11/15/2021 -- provide a facet for file extension -->
+      <str name="facet.field">dryad_dataset_file_ext_sm</str>
 
       <str name="spellcheck">true</str>
     </lst>
