@@ -3,7 +3,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'http'
 require 'json'
-# require 'byebug' # remove byebug, doesn't work well in Windows and only needed for debugging
+require 'byebug'
 require 'cgi'
 require 'fileutils'
 require 'yaml'
