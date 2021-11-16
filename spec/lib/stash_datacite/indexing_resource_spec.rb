@@ -90,7 +90,8 @@ module Stash
         @right = create(:right, resource_id: @resource.id)
         @subject1 = create(:subject, resources: [@resource])
         @subject2 = create(:subject, subject: 'parsimonious', resources: [@resource])
-        @data_files = [ create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id) ]
+        @data_files = [create(:data_file, resource_id: @resource.id),
+                       create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id)]
         @resource.reload
         @ir = IndexingResource.new(resource: @resource)
       end
@@ -287,8 +288,8 @@ module Stash
           # just assembled into the mega-hash for SOLR
           @resource.geolocations = []
           mega_hash = @ir.to_index_document
-          df = @data_files.map { |df| File.extname("#{df.upload_file_name}").gsub(/^./, '').downcase }
-                          .flatten.reject(&:blank?).uniq
+          df = @data_files.map { |d| File.extname(d.upload_file_name.to_s).gsub(/^./, '').downcase }
+            .flatten.reject(&:blank?).uniq
           expected_mega_hash = {
             uuid: @resource.identifier.to_s,
             dc_identifier_s: @resource.identifier.to_s,
