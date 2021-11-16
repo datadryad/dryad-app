@@ -1,8 +1,15 @@
+function delayedEnable() {
+  // wait a bit so download starts before re-enabling so they don't machine gun click
+  setTimeout(function(){
+    $('.js-download').prop('disabled', false).removeClass('o-download__wait').addClass('o-download__files');
+  }, 5000);
+}
+
 <% if @status_hash[:status] == 200 %>
-  $('.js-download').prop('disabled', false);
+  delayedEnable();
   window.location.href = "<%= raw(@status_hash[:url]) %>";
 <% elsif @status_hash[:status] == 202 %>
   <%= render partial: 'download_popup', formats: :js %>
 <% else %>
-  $('.js-download').prop('disabled', false);
+  delayedEnable();
 <% end %>
