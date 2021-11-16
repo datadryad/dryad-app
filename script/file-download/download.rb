@@ -6,28 +6,60 @@ require 'json'
 require 'byebug'
 require 'cgi'
 require 'fileutils'
+require 'yaml'
 require_relative('./copy_file')
 
-if ARGV.length != 1
-  puts 'Call this script with one DOI or landing URL (with doi at the end) to download the files to a local directory'
-  puts 'Example: ./download.rb http://localhost:3000/stash/dataset/doi:10.5072/FK2X92972F'
-  exit
-end
+# set up config file
+config_file = if File.exist?(File.join('C:', 'DryadData', 'api_config.yml'))
+                File.join('C:', 'DryadData', 'api_config.yml')
+              elsif File.exist?(File.join(Dir.home, '.api_config.yml'))
+                File.expand_path(File.join(Dir.home, '.api_config.yml'))
+              else
+                nil
+              end
 
-proposed_doi = ARGV.first
-starting_index = proposed_doi.index('doi:')
-if starting_index.nil?
-  STDERR.puts "Cannot find the doi:xxxxx/xxxxxxx type string in what you entered"
+if config_file.nil?
+  puts "The config file doesn't exist. It should be at C:\\DryadData\\api_config.yml in Windows or ~/.api_config.yml in Linux."
+  puts "It should contain these:"
+  puts ''
+  puts "base_url: https://datadryad.org"
+  puts "api_key: <your-api-key>"
+  puts "api_secret: <your-api-secret>"
+  puts "base_path: <save-path>"
+  puts ''
+  puts "# The base_path above is just the top level directory. Users may choose another directory under it if they wish."
   exit(false)
 end
 
+# read mini-config for api access
+config_info = YAML.load_file(config_file)
+base_url = config_info['base_url'] # /api/v2
+api_key = config_info['api_key']
+api_secret = config_info['api_secret']
+base_path = File.expand_path(config_info['base_path'])
+
+# Ask for the DOI they want to retrieve
+puts "This is an initial testing version of a script to download files directly from the API. That avoids a lot of time and wasted"
+puts "resources creating zip packages and unzipping them."
+puts ''
+puts "If you encounter problems, please let us know at https://github.com/CDL-Dryad/dryad-product-roadmap/projects/1 in the Backlog."
+puts ''
+
+puts "Copy/paste the Dryad landing URL or type it below (format like doi:xxxxx/xxxxx) and press enter:"
+proposed_doi = gets.strip
+proposed_doi = CGI.unescape(proposed_doi) # in case the landing page URL has escaped slashes in it, since I think geoblacklight does that sometimes
+
+starting_index = proposed_doi.index('doi:')
+if starting_index.nil?
+  STDERR.puts "Cannot find the doi:xxxxx/xxxxxxx formatted string in what you entered"
+  exit(false)
+end
+
+# add to base_path with username because of shared data directory in curator PC
+base_path = File.join(base_path, (ENV['USER'] || ENV['USERNAME']) )
+
 doi = proposed_doi[starting_index..-1].strip
 esc_doi = CGI.escape(doi)
-
-base_url = 'https://dryad-dev.cdlib.org' # /api/v2
-api_key = 'fill-me-in'
-api_secret = 'fill-me-in'
-base_path = File.expand_path(__dir__)
 
 save_path = File.join(base_path, doi.gsub(/[~"#%&*:<>?\/\{|}]/, '_'))
 FileUtils.mkdir_p(save_path)
@@ -127,4 +159,4 @@ while (response = http.get(page, headers: default_headers)) do
   page = "#{base_url}#{json['_links']['next']['href']}"
 end
 
-puts "Done retrieving latest submitted files for #{doi}"
+puts "Done retrieving latest submitted files for #{doi} at #{save_path}"
