@@ -61,9 +61,6 @@ base_path = File.join(base_path, (ENV['USER'] || ENV['USERNAME']) )
 doi = proposed_doi[starting_index..-1].strip
 esc_doi = CGI.escape(doi)
 
-save_path = File.join(base_path, doi.gsub(/[~"#%&*:<>?\/\{|}]/, '_'))
-FileUtils.mkdir_p(save_path)
-
 # The change here from the default normalizer in http.rb is that this was the old value :path => uri.normalized_path
 NORMALIZER = ->(uri) do
   uri = HTTP::URI.parse uri
@@ -81,7 +78,6 @@ end
 # set up http client with basic settings
 # --------------------------------------
 http = HTTP.use(normalize_uri: { normalizer: NORMALIZER }).timeout(connect: 30, read: 30, write: 30).follow(max_hops: 10)
-copy_file = CopyFile.new(save_path: save_path)
 
 # get access token for authenticated access and set up default headers
 response = http.post("#{base_url}/oauth/token", json: {grant_type: 'client_credentials', client_id: api_key, client_secret: api_secret})
@@ -117,7 +113,7 @@ json = response.parse
 # ------------
 # Get versions
 # ------------
-response = http.get("#{base_url}#{json['_links']['stash:versions']['href']}", headers: default_headers)
+response = http.get("#{base_url}#{json['_links']['stash:versions']['href']}?per_page=100", headers: default_headers)
 json = response.parse
 
 # -------------------------
@@ -136,6 +132,12 @@ json['_embedded']['stash:versions'].reverse.each do |v|
     break
   end
 end
+
+# make the directory (doi), including version to save to.  Version good so curators don't overwrite different versions
+# and then get confused when files may be different.
+save_path = File.join(base_path, doi.gsub(/[~"#%&*:<>?\/\{|}]/, '_'), "v#{last_version['versionNumber']}")
+FileUtils.mkdir_p(save_path)
+copy_file = CopyFile.new(save_path: save_path)
 
 # ----------------------------------
 # Get the list of files and download
