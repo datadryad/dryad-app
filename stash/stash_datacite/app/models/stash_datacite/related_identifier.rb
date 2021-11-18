@@ -34,19 +34,21 @@ module StashDatacite
                              'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom',
                              'is source of': 'issourceof' }.freeze
 
-    enum work_type: %i[undefined article dataset preprint software supplemental_information primary_article]
+    enum work_type: %i[undefined article dataset preprint software supplemental_information primary_article data_management_plan]
 
     enum added_by: { default: 0, zenodo: 1 }
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
-                          supplemental_information: 'Supplemental Information' }.with_indifferent_access
+                          supplemental_information: 'Supplemental Information',
+                          data_management_plan: 'Data Management Plan' }.with_indifferent_access
 
     # because the plural of Software is Software and not "Softwares" like Rails thinks
     WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
                                  supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
-                                    supplemental_information: 'ispartof', primary_article: 'cites' }.with_indifferent_access
+                                    supplemental_information: 'ispartof', primary_article: 'cites',
+                                    data_management_plan: 'isdocumentedby'}.with_indifferent_access
 
     # these keys will be case-insensitive matches
     ACCESSION_TYPES = {
