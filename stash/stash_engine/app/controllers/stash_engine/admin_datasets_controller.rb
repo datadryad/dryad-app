@@ -76,6 +76,13 @@ module StashEngine
       end
     end
 
+    def diff_popup
+      respond_to do |format|
+        @resource = Resource.find(params[:id])
+        format.js
+      end
+    end
+    
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|

@@ -1,12 +1,24 @@
-  <h1 class="o-heading__level1">Finalize Submission</h1>
+<h1 class="o-heading__level1">Finalize Submission</h1>
+
+<!-- If a curator is viewing this page, highlight the changed fields -->
+<% highlight_fields = current_user.curator? ? @resource.changed_from_previous : [] %>
+
+<!-- --------------------------------------------------- -->
+
+<h2 class="o-heading__page-span">TEST</h2>
+<p>Curator? <%= current_user.curator? %></p>
+<p>Highlight <%= highlight_fields %></p>
+
+<!-- --------------------------------------------------- -->
+
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
-  <h2 class="o-heading__page-span">Review Description</h2>
+    <h2 class="o-heading__page-span">Review Description</h2>
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
-    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str } %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
     <div class="o-metadata__group2">
-      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
     </div>
 
@@ -18,14 +30,14 @@
     </section>
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
-        { abstract: @review.abstract, methods: @review.methods, other: @review.other } %>
+        { abstract: @review.abstract, methods: @review.methods, other: @review.other, highlight_fields: highlight_fields } %>
     <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
 
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
       <section class="t-review__funding-section o-section">
-        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('contributors') } %>
         <%= render partial: "stash_datacite/related_identifiers/show", locals:
-            { related_identifiers: @review.related_identifiers } %>
+            { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
         <%= link_to "Edit Description",
                     stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                     class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>

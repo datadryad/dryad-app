@@ -4,6 +4,7 @@
 	<% else %>
 		<h3 class="o-heading__level2">Funding</h3>
 	<% end %>
+  <div class="<% if highlight %>highlight<% end %>">    
   <% contributors.each do |contributor| %>
       <% @award_string = ", <span>Award: #{contributor.award_number}</span>".html_safe %>
       <% if current_user && current_user.curator? %>
@@ -16,4 +17,5 @@
 	  </p>
       <% end %>
   <% end %>
+  </div>
 <% end %>

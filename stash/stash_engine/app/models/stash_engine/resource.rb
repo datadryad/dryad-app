@@ -731,6 +731,43 @@ module StashEngine
       "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
     end
 
+    def changed_from_previous
+      changed_fields(previous_resource)
+    end
+    
+    def changed_fields(other_resource)
+      return [] unless other_resource
+      changed = []
+
+      changed << 'title' if title != other_resource.title
+      
+      this_abstract = descriptions.type_abstract.map(&:description)
+      that_abstract = other_resource.descriptions.type_abstract.map(&:description)
+      changed << 'abstract' if this_abstract != that_abstract
+
+      this_methods = descriptions.type_methods.map(&:description)
+      that_methods = other_resource.descriptions.type_methods.map(&:description)
+      changed << 'methods' if this_methods != that_methods
+
+      this_other_desc = descriptions.type_other.map(&:description)
+      that_other_desc = other_resource.descriptions.type_other.map(&:description)
+      changed << 'usage_notes' if this_other_desc != that_other_desc
+
+      this_auth_string = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
+      that_auth_string = other_resource.authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
+      changed << 'authors' if this_auth_string != that_auth_string
+
+      this_contrib = contributors.map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      that_contrib = other_resource.contributors.map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      changed << 'contributors' if this_contrib != that_contrib
+
+      this_related = related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
+      that_related = other_resource.related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
+      changed << 'related_identifiers' if this_related != that_related
+            
+      changed
+    end
+    
     private
 
     # -----------------------------------------------------------
