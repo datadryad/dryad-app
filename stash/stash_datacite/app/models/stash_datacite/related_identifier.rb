@@ -48,7 +48,7 @@ module StashDatacite
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
                                     supplemental_information: 'ispartof', primary_article: 'cites',
-                                    data_management_plan: 'isdocumentedby'}.with_indifferent_access
+                                    data_management_plan: 'isdocumentedby' }.with_indifferent_access
 
     # these keys will be case-insensitive matches
     ACCESSION_TYPES = {
