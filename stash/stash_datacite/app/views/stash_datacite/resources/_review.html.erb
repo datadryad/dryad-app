@@ -3,14 +3,6 @@
     <!-- If a curator is viewing this page, highlight the changed fields -->
     <% highlight_fields = current_user.curator? ? @resource.changed_from_previous : [] %>
 
-<!-- --------------------------------------------------- -->
-
-<h2 class="o-heading__page-span">TEST</h2>
-<p>Curator? <%= current_user.curator? %></p>
-<p>Highlight <%= highlight_fields %></p>
-
-<!-- --------------------------------------------------- -->
-
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
     <h2 class="o-heading__page-span">Review Description</h2>
     <%= link_to "Edit Description",
