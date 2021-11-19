@@ -71,19 +71,22 @@ module StashDatacite
       author&.author_orcid ? true : false
     end
 
+    # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliation
       return nil unless @author.present?
-
       args = author_params
-      affil = if args['affiliation']['ror_id'].present?
-                StashDatacite::Affiliation.from_ror_id(ror_id: args['affiliation']['ror_id'])
-              else
-                StashDatacite::Affiliation.from_long_name(long_name: args['affiliation']['long_name'])
-              end
-      args['affiliation']['id'] = affil.id unless affil.blank?
+      if args['affiliation']['long_name'].blank?
+        @author.affiliations.destroy_all
+        return
+      end
 
-      # This would not be necessary if the relationship between author and affiliations
-      # was updated to a one-one and an accepts_nested_attributes_for definition
+      ror_val = ( args['affiliation']['ror_id'].present? ? args['affiliation']['ror_id'] : nil )
+      # find the affiliation with this name and ror_id
+      affil = StashDatacite::Affiliation.where(long_name: args['affiliation']['long_name'], ror_id: ror_val).first
+      if affil.nil?
+        affil = StashDatacite::Affiliation.create(long_name: args['affiliation']['long_name'], ror_id: ror_val)
+      end
+
       @author.affiliation = affil
       @author.save
     end
