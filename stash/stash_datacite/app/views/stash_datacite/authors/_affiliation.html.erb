@@ -1,24 +1,14 @@
-<% my_suffix = field_suffix(author)
-	 my_txt = "instit_affil_#{my_suffix}"
-	 my_id = "instit_id_#{my_suffix}"
-%>
+<% my_suffix = field_suffix(author) %>
 
 <%= form.fields_for :affiliation, author.affiliation do |affil_fields| %>
-		<label class="c-input__label required" for="<%= my_txt %>">Institutional Affiliation</label>
-    <%= affil_fields.text_field(:long_name, id: my_txt, class: 'c-input__text js-affiliation') %>
-    <%= affil_fields.hidden_field :ror_id, id: my_id, class: 'js-affiliation_id' %>
+		<label class="c-input__label required" for="instit_affil_<%= my_suffix %>">Institutional Affiliation</label>
+    <%= affil_fields.text_field(:long_name, id: "instit_affil_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+    <%= affil_fields.hidden_field :id %>
+    <%= affil_fields.hidden_field :ror_id, class: 'js-affiliation_id' %>
 <% end %>
 
 <script type="text/javascript">
 
-	// txtFieldId, idFieldId, autoURL, txtKey, idKey
-	setupAutocomplete('<%= my_txt %>',
-			'<%= my_id %>',
-			"<%= stash_datacite.affiliations_autocomplete_path %>",
-			null,
-			null);
-
-	/*
  $(function () {
      $('<%= "##{form_id}" %> .js-affiliation')
      // don't navigate away from the field on tab when selecting an item
@@ -71,5 +61,4 @@
 	     $(form).trigger('submit.rails');
 	 });
  });
- */
 </script>
