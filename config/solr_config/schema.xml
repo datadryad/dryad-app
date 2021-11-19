@@ -22,7 +22,7 @@
 
     <!-- core generated fields -->
     <field name="text" type="text_en" stored="false" indexed="true" multiValued="true"
-                       termVectors="true" termPositions="true" termOffsets="true" />
+           termVectors="true" termPositions="true" termOffsets="true" />
 
     <!-- dynamic field with simple types by suffix -->
     <dynamicField name="*_b"    type="boolean" stored="true"  indexed="true"/>
@@ -42,13 +42,13 @@
 
     <!-- dynamic Text fields by suffix without storage -->
     <dynamicField name="*_t"    type="text_en" stored="false"  indexed="true"
-                                termVectors="true" termPositions="true" termOffsets="true"/>
+                  termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tm"   type="text_en" stored="false"  indexed="true" multiValued="true"
-                                termVectors="true" termPositions="true" termOffsets="true"/>
+                  termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_ti"   type="text_en" stored="false" indexed="true"
-                                termVectors="true" termPositions="true" termOffsets="true"/>
+                  termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_tmi"  type="text_en" stored="false" indexed="true" multiValued="true"
-                                termVectors="true" termPositions="true" termOffsets="true"/>
+                  termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_sort" type="text_sort" stored="false" indexed="true" multiValued="false"/>
 
     <dynamicField name="*spell" type="textSpell" indexed="true" stored="false" multiValued="true" />
@@ -158,7 +158,7 @@
                geo="true" distErrPct="0.025" maxDistErr="0.000009" distanceUnits="degrees"/>
     <!-- Adding field type for bboxField that enables, among other things, overlap ratio calculations -->
     <fieldType name="bbox" class="solr.BBoxField"
-           geo="true" distanceUnits="kilometers" numberType="pdouble" />
+               geo="true" distanceUnits="kilometers" numberType="pdouble" />
     <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
 
     <!-- JTS-enabled spatial predicates; requires JTS installation -->
@@ -191,8 +191,7 @@
   <!-- sfisher 08/22/2019 - fields to store the affiliation of authors -->
   <copyField source="dryad_author_affiliation_name_sm" dest="dryad_author_affiliation_name_tmi" maxChars="1000"/>
   <copyField source="dryad_author_affiliation_id_sm" dest="dryad_author_affiliation_id_tmi" maxChars="100"/>
-  <copyField source="dryad_dataset_file_ext_sm" dest="dryad_dataset_file_ext_tmi" maxChars="10"/>
-
+  <copyField source="dryad_dataset_file_ext_sm" dest="dryad_dataset_file_ext_tmi" maxChars="100"/>
 
   <!-- core text search -->
   <copyField source="*_ti"               dest="text" />
