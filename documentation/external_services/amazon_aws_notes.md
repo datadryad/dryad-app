@@ -231,6 +231,19 @@ Downloads
 - File downloads will continue while your local machine sleeps
 - Users must update their browser settings so files download into the Data drive
 
+Changing passwords
+----------------------
+
+To change your password:
+1. In the PC, open Settings
+2. Search for 'password'
+3. Select 'Change Your Password'
+4. Choose 'Password' and press the 'Change' button
+5. Complete the change process
+6. The next time you connect with the Remote Desktop, you will need to update the
+  password that it uses to connect.
+
+
 
 Using Ubuntu Linux on Windows
 -----------------------------
