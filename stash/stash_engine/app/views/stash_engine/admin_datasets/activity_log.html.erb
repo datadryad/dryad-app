@@ -33,14 +33,8 @@
         Notes
       </th>
     </tr>
-    <% curr_res = 0 %>  
     <% @curation_activities.each do |ca| %>
-	<% if ca.resource_id != curr_res %>
-	    <%= render partial: 'activity_log_row', locals: { curation_activity: ca, show_diff: true} %>
-	    <% curr_res = ca.resource_id %>  
-	<% else %>
-	    <%= render partial: 'activity_log_row', locals: { curation_activity: ca, show_diff: false} %>
-	<% end %>
+	<%= render partial: 'activity_log_row', locals: { curation_activity: ca } %>
     <% end %>
   </table>
 </div>

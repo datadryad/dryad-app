@@ -2,14 +2,7 @@
 <tr class="c-lined-table__row">
   <td><%= curation_activity.resource_id %></td>
   <td><%= formatted_datetime(curation_activity.created_at) %></td>
-  <td><%= curation_activity.resource.stash_version.version %>
-      <% if show_diff %>
-	  <%= form_with(url: url_for(controller: '/stash_engine/admin_datasets', action: 'diff_popup', id: curation_activity.resource_id, only_path: true),
-			method: :get, remote: true) do -%>
-              <button class="o-button__submit">diff</button>
-	  <% end %>
-      <% end %>
-  </td>
+  <td><%= curation_activity.resource.stash_version.version %></td>
   <td><%= curation_activity.readable_status %></td>
   <td><%= curation_activity.user&.name || "System" %></td>
   <td><%= format_external_references(curation_activity.note) %></td>
