@@ -1,5 +1,5 @@
 <% unless authors.nil? %>
-  <div class="<% if highlight %>highlight<% end %>">
+  <div class="<%= 'highlight' if highlight %>">
     <% authors.each do |author| %>
 	<div class="o-metadata__group1">
 	    <% if current_user && current_user.curator? %>

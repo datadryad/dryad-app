@@ -19,7 +19,7 @@
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
     <div class="o-metadata__group2">
       <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
-      <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+      <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
     </div>
 
     <section class="o-section">
@@ -31,11 +31,11 @@
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
         { abstract: @review.abstract, methods: @review.methods, other: @review.other, highlight_fields: highlight_fields } %>
-    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight: highlight_fields.include?('subjects') } %>
 
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
       <section class="t-review__funding-section o-section">
-        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('contributors') } %>
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('funders') } %>
         <%= render partial: "stash_datacite/related_identifiers/show", locals:
             { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
         <%= link_to "Edit Description",
@@ -70,7 +70,7 @@
     <h3 class="o-heading__level2">Data Files Hosted by Dryad</h3>
 
     <div class="c-review-files">
-        <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource } %>
+        <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight: highlight_fields.include?('data_files') } %>
         <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
@@ -83,7 +83,8 @@
     <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
-        <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software' } %>
+          <%= render partial: "stash_engine/data_files/show_zenodo",
+		     locals: { resource: @resource, zenodo_type: 'software', highlight: highlight_fields.include?('software_files') } %>
       </div>
     <% end %>
 
@@ -91,7 +92,8 @@
       <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
 
       <div class="c-review-files">
-        <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp' } %>
+          <%= render partial: "stash_engine/data_files/show_zenodo",
+		     locals: { resource: @resource, zenodo_type: 'supp', highlight: highlight_fields.include?('supp_files') } %>
       </div>
     <% end %>
 

@@ -740,6 +740,14 @@ module StashEngine
       changed = []
 
       changed << 'title' if title != other_resource.title
+
+      this_auth_string = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
+      that_auth_string = other_resource.authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
+      changed << 'authors' if this_auth_string != that_auth_string
+
+      this_facility = contributors.where(contributor_type: 'sponsor').first&.contributor_name
+      that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
+      changed << 'facility' if this_facility != that_facility
       
       this_abstract = descriptions.type_abstract.map(&:description)
       that_abstract = other_resource.descriptions.type_abstract.map(&:description)
@@ -753,18 +761,20 @@ module StashEngine
       that_other_desc = other_resource.descriptions.type_other.map(&:description)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
-      this_auth_string = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      that_auth_string = other_resource.authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      changed << 'authors' if this_auth_string != that_auth_string
+      changed << 'subjects' if subjects.map(&:subject).to_s != other_resource.subjects.map(&:subject).to_s
 
-      this_contrib = contributors.map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      that_contrib = other_resource.contributors.map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      changed << 'contributors' if this_contrib != that_contrib
+      this_funders = contributors.where(contributor_type: 'funder').map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      that_funders = other_resource.contributors.where(contributor_type: 'funder').map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      changed << 'funders' if this_funders != that_funders
 
       this_related = related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
       that_related = other_resource.related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
       changed << 'related_identifiers' if this_related != that_related
-            
+
+      changed << 'data_files' if files_changed?
+      changed << 'software_files' if files_changed?(association: 'software_files')
+      changed << 'supp_files' if files_changed?(association: 'supp_files')
+      
       changed
     end
     
