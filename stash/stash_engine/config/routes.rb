@@ -127,7 +127,6 @@ StashEngine::Engine.routes.draw do
   get 'ds_admin/index', to: 'admin_datasets#index'
   get 'ds_admin/index/:id', to: 'admin_datasets#index'
   get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
-  get 'ds_admin/diff_popup/:id', to: 'admin_datasets#diff_popup'
   get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
   get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case'
   get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
