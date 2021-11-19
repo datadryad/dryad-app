@@ -734,9 +734,13 @@ module StashEngine
     def changed_from_previous
       changed_fields(previous_resource)
     end
-    
+
+    # Yes, this method looks complex,
+    # but breaking it into a bunch of smaller methods would only make it seem more complex
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def changed_fields(other_resource)
       return [] unless other_resource
+
       changed = []
 
       changed << 'title' if title != other_resource.title
@@ -748,7 +752,7 @@ module StashEngine
       this_facility = contributors.where(contributor_type: 'sponsor').first&.contributor_name
       that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
       changed << 'facility' if this_facility != that_facility
-      
+
       this_abstract = descriptions.type_abstract.map(&:description)
       that_abstract = other_resource.descriptions.type_abstract.map(&:description)
       changed << 'abstract' if this_abstract != that_abstract
@@ -763,21 +767,22 @@ module StashEngine
 
       changed << 'subjects' if subjects.map(&:subject).to_s != other_resource.subjects.map(&:subject).to_s
 
-      this_funders = contributors.where(contributor_type: 'funder').map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      that_funders = other_resource.contributors.where(contributor_type: 'funder').map{|c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      this_funders = contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
+      that_funders = other_resource.contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
       changed << 'funders' if this_funders != that_funders
 
-      this_related = related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
-      that_related = other_resource.related_identifiers.map{|r| "#{r.related_identifier} #{r.work_type}" }.to_s
+      this_related = related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
+      that_related = other_resource.related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
       changed << 'related_identifiers' if this_related != that_related
 
       changed << 'data_files' if files_changed?
       changed << 'software_files' if files_changed?(association: 'software_files')
       changed << 'supp_files' if files_changed?(association: 'supp_files')
-      
+
       changed
     end
-    
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
     private
 
     # -----------------------------------------------------------
