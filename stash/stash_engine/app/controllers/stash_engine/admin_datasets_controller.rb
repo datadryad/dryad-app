@@ -82,7 +82,7 @@ module StashEngine
         format.js
       end
     end
-    
+
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|
