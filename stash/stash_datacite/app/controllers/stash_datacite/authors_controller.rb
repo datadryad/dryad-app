@@ -74,19 +74,18 @@ module StashDatacite
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliation
       return nil unless @author.present?
+
       args = author_params
       if args['affiliation']['long_name'].blank?
         @author.affiliations.destroy_all
         return
       end
 
-      ror_val = ( args['affiliation']['ror_id'].present? ? args['affiliation']['ror_id'] : nil )
-      name = "#{args['affiliation']['long_name']}#{ ror_val.blank? ? '*' : '' }" # add that star to pollute our names and make non-atomic
+      ror_val = (args['affiliation']['ror_id'].present? ? args['affiliation']['ror_id'] : nil)
+      name = "#{args['affiliation']['long_name']}#{ror_val.blank? ? '*' : ''}" # add that star to pollute our names and make non-atomic
       # find the affiliation with this name and ror_id
       affil = StashDatacite::Affiliation.where(long_name: name, ror_id: ror_val).first
-      if affil.nil?
-        affil = StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val)
-      end
+      affil = StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val) if affil.nil?
 
       @author.affiliation = affil
       @author.save
