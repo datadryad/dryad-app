@@ -81,10 +81,11 @@ module StashDatacite
       end
 
       ror_val = ( args['affiliation']['ror_id'].present? ? args['affiliation']['ror_id'] : nil )
+      name = "#{args['affiliation']['long_name']}#{ ror_val.blank? ? '*' : '' }" # add that star to pollute our names and make non-atomic
       # find the affiliation with this name and ror_id
-      affil = StashDatacite::Affiliation.where(long_name: args['affiliation']['long_name'], ror_id: ror_val).first
+      affil = StashDatacite::Affiliation.where(long_name: name, ror_id: ror_val).first
       if affil.nil?
-        affil = StashDatacite::Affiliation.create(long_name: args['affiliation']['long_name'], ror_id: ror_val)
+        affil = StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val)
       end
 
       @author.affiliation = affil
