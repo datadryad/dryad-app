@@ -81,7 +81,8 @@ module StashDatacite
         # init with the contrib name as-is
       else
         # init with contrib name getting an asterisk unless I can get an exact name match from fundref
-        @contributor.contributor_name = "#{args['contributor_name']}*" unless set_exact_match(contributor_name: args[:contributor_name])
+        @contributor.contributor_name = "#{args['contributor_name']}*" unless args[:contributor_type] == 'funder' &&
+                            set_exact_match(contributor_name: args[:contributor_name])
         @contributor.contributor_name = nil if @contributor.contributor_name == '*'
       end
 
