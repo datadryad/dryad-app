@@ -11,65 +11,13 @@
 
 <script type="text/javascript">
 
-	// txtFieldId, idFieldId, autoURL, txtKey, idKey
+	const itemMapper = (item) => {
+		return {id: item.id, value: item.long_name};
+	}
+
+	// txtFieldId, idFieldId, autoURL, resultMapper
 	setupAutocomplete('<%= my_txt %>',
 			'<%= my_id %>',
 			"<%= stash_datacite.affiliations_autocomplete_path %>",
-			null,
-			null);
-
-	/*
- $(function () {
-     $('<%= "##{form_id}" %> .js-affiliation')
-     // don't navigate away from the field on tab when selecting an item
-	 .bind( "keydown", function( event ) {
-             if ( event.keyCode === $.ui.keyCode.TAB &&
-		  $( this ).autocomplete( "instance" ).menu.active ) {
-		 event.preventDefault();
-             }
-	     $('<%= "##{form_id}" %> #author_affiliation_ror_id').val('') // clear any ROR that was saved previously
-	 })
-	 .autocomplete({
-             source: function (request, response) {
-		 $.ajax({
-		     url: "<%= stash_datacite.affiliations_autocomplete_path %>",
-		     dataType: "json",
-		     data: {
-			 term: request.term
-		     },
-		     success: function (data) {
-			 response($.map(data, function (item) {
-			     return {
-				 value: item.long_name,
-				 id: item.id
-			     }
-			 }));
-		     }
-		 });
-             },
-             minLength: 1,
-             focus: function () {
-		 // prevent value inserted on focus
-		 return false;
-             },
-             select: function (event, ui) {
-		 $('<%= "##{form_id}" %> #author_affiliation_ror_id').val(ui.item.id); // set hidden field ror_id
-		 $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id for the affiliation object
-		 var form = $(this).parents('form');
-		 $(form).trigger('submit.rails');
-		 var savedval = $('<%= "##{form_id}" %> #author_affiliation_ror_id').val();
-             },
-             open: function (event, ui) {
-             },
-             close: function (event, ui) {
-		 $(this).focus();
-             },
-	     change: function( event, ui ) {
-	     }
-	 }).blur(function (event) {
-	     var form = $(this).parents('form');
-	     $(form).trigger('submit.rails');
-	 });
- });
- */
+			itemMapper);
 </script>

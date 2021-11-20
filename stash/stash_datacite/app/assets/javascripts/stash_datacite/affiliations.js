@@ -6,8 +6,8 @@
   2. Hidden field to store the ID once it is selected
   3. It is assumed that the parent form above either of these elements is the one that will be submitted with changes.
   4. URL to hit with the autocomplete query (including item to indicate where to substitute the query string)
-  5. Assuming JSON is returned, info on how to get the text
-  6. Assuming JSON is returned, info on how to get the ID
+  5. Give a function to map an object to an {'id':,  'value': } object in case they're called
+     something different when returned from the data source.
 
   We also need to track what changes in the text field (enter/leaving) and do the following
   1) Store the starting value when entering the field or when autocomplete is selected
@@ -16,7 +16,7 @@
      by selecting from the list.
  */
 
-function setupAutocomplete(txtFieldId, idFieldId, autoURL, txtKey, idKey){
+function setupAutocomplete(txtFieldId, idFieldId, autoURL, itemMapper){
   const txtField = $(`#${txtFieldId}`);
   const idField = $(`#${idFieldId}`);
   const parentForm = txtField.parents('form');
@@ -36,6 +36,7 @@ function setupAutocomplete(txtFieldId, idFieldId, autoURL, txtKey, idKey){
   txtField.blur(function() {
     // only submit again if the value has changed since last save
     if (txtField.attr('data-starting') !== txtField.val()){
+      idField.val(''); // reset the idField if the value of the text has changed since the id was last saved
       $(parentForm).trigger('submit.rails');
     }
   });
@@ -59,10 +60,7 @@ function setupAutocomplete(txtFieldId, idFieldId, autoURL, txtKey, idKey){
         },
         success: function (data) {
           response($.map(data, function (item) {
-            return {
-              value: item.long_name,
-              id: item.id
-            }
+            return itemMapper(item);
           }));
         }
       });
