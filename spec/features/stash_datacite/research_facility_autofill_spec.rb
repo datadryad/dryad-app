@@ -44,6 +44,7 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
       first('.ui-menu-item-wrapper', wait: 1).click
       expect(find('#facility_name_identifier_id', visible: false).value).to eql('https://ror.org/TEST2')
       fill_in 'contributor_research_facility', with: 'Testing a non-ROR organization'
+      find('.js-author_first_name').set('meow') # get out of this field
       expect(find('#facility_name_identifier_id', visible: false).value).to eql('')
     end
   end
