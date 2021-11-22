@@ -1,4 +1,5 @@
 <% unless authors.nil? %>
+  <div class="<%= 'highlight' if highlight %>">
     <% authors.each do |author| %>
 	<div class="o-metadata__group1">
 	    <% if current_user && current_user.curator? %>
@@ -31,4 +32,5 @@
     <div class="o-metadata__group1">
 	<%= authors.map{ |author| author.author_email }.reject(&:blank?).join(", ").html_safe  %>
     </div>
+  </div>
 <% end %>
