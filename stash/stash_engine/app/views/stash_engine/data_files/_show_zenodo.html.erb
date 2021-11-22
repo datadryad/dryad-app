@@ -3,7 +3,7 @@
 <% uploaded = resource.previous_resource&.zenodo_submitted?(type: zenodo_type) %>
 
 <% resource.send("#{zenodo_type}_files").each do |fu| %>
-  <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
+  <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> <%= 'highlight' if (highlight && %w[created deleted].include?(fu.file_state)) %>">
     <li>
       <% if fu.file_state == 'copied' && uploaded %>
         <%= link_to fu.upload_file_name, stash_url_helpers.download_zenodo_path(file_id: fu.last_version_file&.id), target: '_blank' %>

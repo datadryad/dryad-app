@@ -77,8 +77,8 @@
     <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
     <listener event="newSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
-       <lst><str name="q">stanford</str></lst>
-       <lst><str name="q">polygon</str></lst>
+        <lst><str name="q">stanford</str></lst>
+        <lst><str name="q">polygon</str></lst>
       </arr>
     </listener>
     <listener event="firstSearcher" class="solr.QuerySenderListener">
@@ -95,7 +95,7 @@
   <requestDispatcher handleSelect="false">
     <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" formdataUploadLimitInKB="2048"/>
     <httpCaching never304="true"/>
-   </requestDispatcher>
+  </requestDispatcher>
 
   <requestHandler name="/search" class="solr.SearchHandler"/>
 
@@ -132,6 +132,7 @@
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
         dryad_author_affiliation_id_tmi^12
+        dryad_dataset_file_ext_tmi^13
       </str>
       <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
@@ -151,6 +152,7 @@
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
         dryad_author_affiliation_id_tmi^12
+        dryad_dataset_file_ext_tmi^13
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
@@ -170,7 +172,6 @@
       <str name="facet.field">dryad_related_publication_name_s</str>
       <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
       <str name="facet.field">dryad_author_affiliation_name_sm</str>
-      <!-- sfisher 11/15/2021 -- provide a facet for file extension -->
       <str name="facet.field">dryad_dataset_file_ext_sm</str>
 
       <str name="spellcheck">true</str>
