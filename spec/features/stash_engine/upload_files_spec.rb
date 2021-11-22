@@ -163,7 +163,7 @@ Software and Supplemental Information can be uploaded for publication at'
       expect(page).to have_content('file_10.ods', count: 2)
     end
 
-    it 'sanitizes file name' do
+    xit 'sanitizes file name' do
       attach_file(
         'data',
         "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { left: 0 }
