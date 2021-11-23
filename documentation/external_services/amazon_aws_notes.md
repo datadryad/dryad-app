@@ -300,4 +300,8 @@ characters, which we intentionally created to test filenames.
 The code should be able to be cloned with:
 `git clone -c core.protectNTFS=false -n https://github.com/CDL-Dryad/dryad-app.git`
 
-Windows cannot easily run `bundle install`, due to missing Unix utilities.
+Download the [Ruby+Devkit 2.6.8-1](https://rubyinstaller.org/downloads/)
+(x64) and install it as administrator. Install the option "with MinGW", since
+it's needed for compiling some ruby gems that might have native-ish code.
+
+The "bundle install" command works from the script\file-download subdirectory.

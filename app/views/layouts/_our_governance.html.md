@@ -60,26 +60,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/mangiafico.jpg" alt="Paolo Mangiafico" title="Paolo Mangiafico">
-  <p>
-    <strong>Paolo Mangiafico (Class of 2021)</strong> is the Scholarly Communications Strategist at Duke University and
-    Director of the <a href="https://trianglesci.org/" target="_blank" title="Scholarly Communication Institute (opens
-    in a new window)">Scholarly Communication Institute</a>, an annual program funded by the Andrew W. Mellon Foundation
-    that brings together leading thinkers and innovators from many disciplines and backgrounds to solve problems and
-    develop initiatives to advance all forms of scholarly communication. In his role at Duke, Paolo works with librarians,
-    technologists, faculty, students, and university leadership to plan and implement programs that promote greater reach
-    and impact for scholarship in many forms, including open access to publications and data and emerging platforms for
-    publishing digital scholarship. His work focuses on how new technologies can be adapted to further the knowledge-sharing
-    mission of research universities and the intersection between social, economic, and technical systems. Paolo has been
-    a fellow in the John Hope Franklin Humanities Institute at Duke, led an early digital library project called The Digital
-    Scriptorium and Duke Libraries’ Web Services and Research & Development departments, and has served as a consultant for
-    universities, university presses, and government agencies, as well as a lecturer in information science. His volunteer
-    civic work has included serving as a member of the Board of Trustees of the Durham County Library and as a tutor at the
-    Durham Literacy Center, and he currently volunteers as a Guardian ad Litem with the Durham County court system.
-  </p>
-</div>
-
-<div class="bio">
   <img src="/images/maccallum.png" alt="Catriona MacCallum" title="Catriona MacCallum">
   <p>
     <strong>Catriona MacCallum (Class of 2022)</strong> is Director of Open Science at Hindawi Ltd, London, UK. She has
@@ -90,6 +70,27 @@
     Open Access Practitioners Group. She also serves on the Advisory Boards of OpenAire and the Royal Society (Publishing),
     and is on the newly launched steering committee of DORA. She is a founding individual of I4OC (the Initiative for Open
     Citations) campaign. She has a PhD (on speciation) from the University of Edinburgh.
+  </p>
+</div>
+
+<div class="bio">
+  <img src="/images/mulvany.jpg" alt="Ian Mulvany" title="Ian Mulvany">
+  <p>
+    <strong>Ian Mulvany (Class of 2024)</strong> is CTO at BMJ where he leads
+  teams that deliver the technologies and features that underpin new products as
+  well as underlying publishing systems. He is responsible for leading on
+  technology strategy for the company and understanding the implications of new
+  and emerging technologies for the business. Previously he helped set up SAGE’s
+  methods innovation incubator SAGE Ocean following a lean product development
+  approach. Prior to SAGE he ran technology operations for eLife, was head of
+  product for Mendeley and ran a number of early web2.0 products for Nature
+  Publishing Group. Over that time he has gained a breadth of experience of
+  modern product management practice, software engineering practice, program
+  management and a deep understanding of the technical underpinnings of many
+  scholarly communication systems. He collaborated in defining the extensions to
+  the NLM DTD required to support software citation and was also one of the
+  original organising members of the Altmetrics conference series that started
+  in 2014.
   </p>
 </div>
 
@@ -137,6 +138,24 @@
 </div>
 
 <div class="bio">
+  <img src="/images/puebla.jpg" alt="Iratxe Puebla" title="Iratxe Puebla">
+  <p>
+    <strong>Iratxe Puebla (Class of 2024)</strong> is Associate Director at
+  ASAPbio, a nonprofit with a mission to accelerate innovation and transparency
+  in life sciences communication, and which supports the productive use of
+  preprints in the life sciences. In her role, Iratxe works in projects related
+  to new initiatives and best practices around preprints and preprint review,
+  she also coordinates the ASAPbio Community. Prior to ASAPbio, Iratxe worked in
+  publishing for 16 years, she held editorial roles at BioMed Central and then
+  PLOS, where she was Deputy Editor-in-Chief at the journal PLOS ONE. During her
+  time at PLOS ONE she was involved in the implementation of PLOS’ data
+  policy. Iratxe is also Facilitation and Integrity Officer for the Committee on
+  Publication Ethics (COPE) and co-lead for the FORCE11 Research Data Publishing
+  Ethics Working Group.
+  </p>
+</div>
+
+<div class="bio">
   <img src="/images/ruttenberg.jpg" alt="Judy Ruttenberg" title="Judy Ruttenberg">
   <p>
     <strong>Judy Ruttenberg (Class of 2023)</strong> is the Director of Scholars and Scholarship at the
@@ -161,19 +180,6 @@
     Conference and is Director with Infrastructure Services for Open Access (IS4OA) which houses the Directory of
     Open Access Journals (DOAJ).   At Taylor & Francis, Caroline has led efforts to roll out data sharing policies as
     well as initiatives related to open scholarship across subject areas. She holds a PhD in Sociology from Uppsala University.
-  </p>
-</div>
-
-<div class="bio">
-  <img src="/images/uhlir.jpg" alt="Paul Uhlir" title="Paul Uhlir">
-  <p>
-    <strong>Paul Uhlir, J.D. (Class of 2021)</strong> is a consultant in information policy and management. He was
-    Scholar at the U.S. National Academy of Sciences (NAS) in Washington, DC in 2015-2016, and Director of its Board
-    on Research Data and Information, 2008-2015. He was employed at the NAS in various capacities from 1985-2016, and
-    at the Department of Commerce in 1984-1985. Paul has won several prizes from the NAS and the international CODATA
-    in data policy, and is a Fellow of the American Association for the Advancement of Science (AAAS). Read more
-    <a href="https://paulfuhlir.com/" target="_blank" title="Read more about Paul (opens in a new window)">detailed
-    information about his professional activities.</a>
   </p>
 </div>
 
