@@ -74,7 +74,7 @@
 </div>
 
 <div class="bio">
-  <img src="/images/mulvany.png" alt="Ian Mulvany" title="Ian Mulvany">
+  <img src="/images/mulvany.jpg" alt="Ian Mulvany" title="Ian Mulvany">
   <p>
     <strong>Ian Mulvany (Class of 2024)</strong> is CTO at BMJ where he leads
   teams that deliver the technologies and features that underpin new products as
@@ -138,7 +138,7 @@
 </div>
 
 <div class="bio">
-  <img src="/images/puebla.png" alt="Iratxe Puebla" title="Iratxe Puebla">
+  <img src="/images/puebla.jpg" alt="Iratxe Puebla" title="Iratxe Puebla">
   <p>
     <strong>Iratxe Puebla (Class of 2024)</strong> is Associate Director at
   ASAPbio, a nonprofit with a mission to accelerate innovation and transparency
