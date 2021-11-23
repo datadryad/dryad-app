@@ -1,64 +1,23 @@
-<% my_suffix = field_suffix(author) %>
+<% my_suffix = field_suffix(author)
+	 my_txt = "instit_affil_#{my_suffix}"
+	 my_id = "instit_id_#{my_suffix}"
+%>
 
 <%= form.fields_for :affiliation, author.affiliation do |affil_fields| %>
-		<label class="c-input__label required" for="instit_affil_<%= my_suffix %>">Institutional Affiliation</label>
-    <%= affil_fields.text_field(:long_name, id: "instit_affil_#{my_suffix}", class: 'c-input__text js-affiliation') %>
-    <%= affil_fields.hidden_field :id %>
-    <%= affil_fields.hidden_field :ror_id, class: 'js-affiliation_id' %>
+		<label class="c-input__label required" for="<%= my_txt %>">Institutional Affiliation</label>
+    <%= affil_fields.text_field(:long_name, id: my_txt, class: 'c-input__text js-affiliation') %>
+    <%= affil_fields.hidden_field :ror_id, id: my_id, class: 'js-affiliation_id' %>
 <% end %>
 
 <script type="text/javascript">
 
- $(function () {
-     $('<%= "##{form_id}" %> .js-affiliation')
-     // don't navigate away from the field on tab when selecting an item
-	 .bind( "keydown", function( event ) {
-             if ( event.keyCode === $.ui.keyCode.TAB &&
-		  $( this ).autocomplete( "instance" ).menu.active ) {
-		 event.preventDefault();
-             }
-	     $('<%= "##{form_id}" %> #author_affiliation_ror_id').val('') // clear any ROR that was saved previously
-	 })
-	 .autocomplete({
-             source: function (request, response) {
-		 $.ajax({
-		     url: "<%= stash_datacite.affiliations_autocomplete_path %>",
-		     dataType: "json",
-		     data: {
-			 term: request.term
-		     },
-		     success: function (data) {
-			 response($.map(data, function (item) {
-			     return {
-				 value: item.long_name,
-				 id: item.id
-			     }
-			 }));
-		     }
-		 });
-             },
-             minLength: 1,
-             focus: function () {
-		 // prevent value inserted on focus
-		 return false;
-             },
-             select: function (event, ui) {
-		 $('<%= "##{form_id}" %> #author_affiliation_ror_id').val(ui.item.id); // set hidden field ror_id
-		 $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id for the affiliation object
-		 var form = $(this).parents('form');
-		 $(form).trigger('submit.rails');
-		 var savedval = $('<%= "##{form_id}" %> #author_affiliation_ror_id').val();
-             },
-             open: function (event, ui) {
-             },
-             close: function (event, ui) {
-		 $(this).focus();
-             },
-	     change: function( event, ui ) {
-	     }
-	 }).blur(function (event) {
-	     var form = $(this).parents('form');
-	     $(form).trigger('submit.rails');
-	 });
- });
+	const itemMapper = (item) => {
+		return {id: item.id, value: item.long_name};
+	}
+
+	// txtFieldId, idFieldId, autoURL, resultMapper
+	setupAutocomplete('<%= my_txt %>',
+			'<%= my_id %>',
+			"<%= stash_datacite.affiliations_autocomplete_path %>",
+			itemMapper);
 </script>
