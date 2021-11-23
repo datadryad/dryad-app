@@ -30,21 +30,22 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
       stub_ror_id_lookup(university: 'University of Testing v2')
       fill_in 'author[affiliation][long_name]', with: 'Testing'
       first('.ui-menu-item-wrapper', wait: 1).click
-      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
+      expect(find('.js-affiliation_id', visible: false).value).to eql('https://ror.org/TEST2')
     end
 
     it 'allows entries that are not registered with ROR', js: true do
       fill_in 'author[affiliation][long_name]', with: 'Testing a non-ROR organization'
-      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('')
+      expect(find('.js-affiliation_id', visible: false).value).to eql('')
     end
 
     it 'allows changing from a ROR-based value to a non-ROR value', js: true do
       stub_ror_id_lookup(university: 'University of Testing v2')
       fill_in 'author[affiliation][long_name]', with: 'Testing'
       first('.ui-menu-item-wrapper', wait: 1).click
-      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
+      expect(find('.js-affiliation_id', visible: false).value).to eql('https://ror.org/TEST2')
       fill_in 'author[affiliation][long_name]', with: 'Testing a non-ROR organization'
-      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('')
+      find('.js-author_first_name').set('meow') # get out of this field
+      expect(find('.js-affiliation_id', visible: false).value).to eql('')
     end
 
   end
