@@ -3,7 +3,7 @@
 <% uploaded = resource.previous_resource&.zenodo_submitted?(type: zenodo_type) %>
 
 <% resource.send("#{zenodo_type}_files").each do |fu| %>
-  <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> <%= 'highlight' if (highlight && %w[created deleted].include?(fu.file_state)) %>">
+  <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
     <li>
       <% if fu.file_state == 'copied' && uploaded %>
         <%= link_to fu.upload_file_name, stash_url_helpers.download_zenodo_path(file_id: fu.last_version_file&.id), target: '_blank' %>
@@ -18,4 +18,21 @@
     </li>
   </div>
 <% end %>
+
+<%# If curator, show all changed files from prev versionse %>
+<% if current_user.curator? && highlight_files.present? %>
+    <li class="highlight">Changed since previous curated version</li>
+    <% highlight_files.each do |fu| %>
+	<div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> highlight">
+	    <li>
+		<%= fu.upload_file_name %>
+		&nbsp;&nbsp;&nbsp;<%= filesize(fu.upload_file_size) %>		    
+		<% if fu.file_state == 'created' %>
+		    &nbsp;&nbsp;&nbsp;<small>new</small>
+		<% end %>
+	    </li>
+	</div>
+    <% end %>
+<% end %>
 </ul>
+

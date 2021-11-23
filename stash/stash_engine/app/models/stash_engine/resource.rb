@@ -318,6 +318,19 @@ module StashEngine
       send(association).where(file_state: %w[created deleted]).count.positive?
     end
 
+    def files_changed_since(other_resource:, association: 'data_files')
+      return [] unless other_resource
+
+      resources = StashEngine::Resource.where(identifier_id: identifier_id)
+        .where('id <= ? AND id > ?', id, other_resource.id).order(id: :desc)
+      result = []
+      resources.each do |r|
+        result << r.send(association).where(file_state: %w[created deleted])
+      end
+
+      result.flatten
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
@@ -504,6 +517,13 @@ module StashEngine
 
     def previous_resource
       StashEngine::Resource.where(identifier_id: identifier_id).where('id < ?', id).order(id: :desc).first
+    end
+
+    def previous_curated_resource
+      StashEngine::Resource.joins(:last_curation_activity)
+        .where("stash_engine_curation_activities.status IN ('published', 'embargoed', 'action_required')")
+        .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
+        .order(id: :desc).first
     end
 
     # ------------------------------------------------------------
@@ -731,8 +751,9 @@ module StashEngine
       "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
     end
 
-    def changed_from_previous
-      changed_fields(previous_resource)
+    # Changes since the previously curated version
+    def changed_from_previous_curated
+      changed_fields(previous_curated_resource)
     end
 
     # Yes, this method looks complex,
@@ -775,9 +796,9 @@ module StashEngine
       that_related = other_resource.related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
       changed << 'related_identifiers' if this_related != that_related
 
-      changed << 'data_files' if files_changed?
-      changed << 'software_files' if files_changed?(association: 'software_files')
-      changed << 'supp_files' if files_changed?(association: 'supp_files')
+      changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
+      changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
+      changed << 'supp_files' if files_changed_since(other_resource: other_resource, association: 'supp_files').present?
 
       changed
     end
