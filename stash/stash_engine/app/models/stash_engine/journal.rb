@@ -15,7 +15,7 @@ module StashEngine
     def self.find_by_title(title)
       return unless title.present?
 
-      title = title.chop if title.end_with?('*')
+      title = title.chop if title&.end_with?('*')
       journal = StashEngine::Journal.where(title: title).first
 
       unless journal.present?
