@@ -20,7 +20,7 @@
 </div>
 
 <div class="o-dataset-nav">
-  <% if params[:controller].end_with?('resources') && params[:action].include?('upload') %>
+  <% if params[:controller]&.end_with?('resources') && params[:action].include?('upload') %>
     <!-- standard upload page -->
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
 
