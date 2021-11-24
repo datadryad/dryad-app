@@ -214,7 +214,9 @@ To properly configure a Windows Server
   removed
 - Create users
   - When creating a user DO NOT select "force password change on first
-    login". This will prevent some users from connecting.
+  login". This will prevent some users from connecting.
+  - DO select "password never expires". Otherwise, users will be locked out of
+    their account when the password expires, and they won't be able to change it.
   - In the same tool that you create the users, add them to the group "Remote
     Desktop Users"
   - By default, only 2 simultaneous users are allowed. If you want more
