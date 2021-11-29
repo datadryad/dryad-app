@@ -215,11 +215,21 @@ What to do at datacite?
 Removing data that was accidentally published
 ===================================================
 
-Removing an entire dataset
+Delete Dataset / Removing an entire dataset
 --------------------------
 
 Dataset removal should not be taken lightly. Make sure you "really" need to
 remove it, due to highly sensitive data and/or serious copyright issues.
+
+If it was published to zenodo, you may want to embargo it all for a long time until
+Alex can remove if it is time-critical.  Do it before deleting it everywhere else since
+it is harder to do after removal.
+
+```
+# the parameters are 1) resource_id, 2) deposition_id (see in stash_engine_zenodo_copies), 3) date far in the future
+RAILS_ENV=production bundle exec rails dev_ops:embargo_zenodo <resource-id> <deposition-id> 2200-12-31
+```
+
 
 If you need to completely remove a dataset from existence, you can run
 ```
