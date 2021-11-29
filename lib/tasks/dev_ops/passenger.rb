@@ -28,8 +28,8 @@ module DevOps
         matches = section.match(/^(\d+).+Memory *: *(\S+)/m)
         pid = matches[1]
         memory = 0
-        memory = matches[2].to_i if matches[2].end_with?('M')
-        memory = matches[2].to_i * 1000 if matches[2].end_with?('G')
+        memory = matches[2].to_i if matches[2]&.end_with?('M')
+        memory = matches[2].to_i * 1000 if matches[2]&.end_with?('G')
         @bloated_pids.push(pid) if memory > BLOATED_MB
       end
       @bloated_pids

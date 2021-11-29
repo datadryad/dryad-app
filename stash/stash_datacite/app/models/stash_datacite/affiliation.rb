@@ -20,7 +20,7 @@ module StashDatacite
       return '' if short_name.blank? && long_name.blank?
 
       chosen_name = (short_name.blank? ? long_name.strip : short_name.strip)
-      if chosen_name.end_with?('*') && !show_asterisk
+      if chosen_name&.end_with?('*') && !show_asterisk
         chosen_name[0..-2]
       else
         chosen_name

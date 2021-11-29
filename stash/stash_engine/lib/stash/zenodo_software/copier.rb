@@ -109,7 +109,7 @@ module Stash
         # make sure the dataset has the relationships for these things synchronized to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
 
-        return publish_dataset if @copy.copy_type.end_with?('_publish')
+        return publish_dataset if @copy.copy_type&.end_with?('_publish')
 
         return metadata_only_update unless files_changed?
 
