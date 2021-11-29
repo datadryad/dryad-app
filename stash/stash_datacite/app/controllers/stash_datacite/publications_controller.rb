@@ -213,7 +213,7 @@ module StashDatacite
     # Check whether the journal name ends with an asterisk that can be removed, because the journal name
     # exactly matches a name we have in the database
     def fix_removable_asterisk
-      return unless @pub_name.end_with?('*')
+      return unless @pub_name&.end_with?('*')
 
       journal = StashEngine::Journal.find_by_title(@pub_name)
       return unless journal.present?

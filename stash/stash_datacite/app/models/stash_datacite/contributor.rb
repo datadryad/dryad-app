@@ -55,7 +55,7 @@ module StashDatacite
     end
 
     def contributor_name_friendly(show_asterisk: false)
-      if contributor_name.end_with?('*') && !show_asterisk
+      if contributor_name&.end_with?('*') && !show_asterisk
         contributor_name[0..-2]
       else
         contributor_name
