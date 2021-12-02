@@ -17,6 +17,7 @@ module StashApi
           abstract: Abstract.new(resource: @resource).value,
           funders: Funders.new(resource: @resource).value,
           keywords: Keywords.new(resource: @resource).value,
+          fieldOfScience: @resource.subjects.fos.first&.subject,
           methods: Methods.new(resource: @resource).value,
           usageNotes: UsageNotes.new(resource: @resource).value,
           locations: Locations.new(resource: @resource).value,
