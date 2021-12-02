@@ -12,8 +12,9 @@ module StashApi
       # ]
 
       def parse
-        clear
         return if @hash['keywords'].blank?
+
+        clear
 
         @hash['keywords'].each do |kw|
           next if kw.blank?
@@ -25,7 +26,7 @@ module StashApi
       private
 
       def clear
-        @resource.subjects.clear
+        @resource.subjects.delete(@resource.subjects.non_fos)
       end
 
       def find_or_create_subject(keyword:)
