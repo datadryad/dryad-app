@@ -128,6 +128,21 @@ processed. For stats without the word 'new', the stat applies to each version of
 the dataset, typically for the purpose of monitoring throughput of the curation
 workflow.
 
+Datasets Affiliated with an Institution
+---------------------------------------
+When talking to institutions, we may want to give them information about datasets with some
+connection to their institution.  This takes into account both author affiliations and funding
+related to the institution.  It takes a string and returns any that have that as a substring.
+This also gives institutions when people didn't autocomplete their ROR correctly.
+
+Run like:
+
+```
+bundle exec rails reports:from_text_institution name="Planck" RAILS_ENV=production
+```
+
+Put the string you want to detect in the `name` variable.  It shows the matches in `author_affiliations`
+and `contributor_affiliations` in the tabular data output.
 
 Authors at an Institution Report (from SQL)
 -------------------------------------------
