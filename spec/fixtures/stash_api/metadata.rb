@@ -152,6 +152,10 @@ module Fixtures
         )
       end
 
+      def add_keywords(number: 3)
+        @metadata[:keywords] = Faker::Lorem.words(number: number)
+      end
+
     end
   end
 end
