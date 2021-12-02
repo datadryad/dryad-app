@@ -25,6 +25,7 @@ Some examples:
 - Information about a dataset: `https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7`
 - Versions of the dataset: `https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions`
 - Files from a version: `https://datadryad.org/api/v2/versions/26724/files`
+- Download the most recent version of a dataset: `https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/download`
 
 # Authentication and accessing private content
 
