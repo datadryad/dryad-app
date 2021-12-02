@@ -49,7 +49,7 @@ module InstitutionDatasets
         matched_contrib_affil = contrib_affil.map(&:contributor_name).uniq
 
         csv << [ident.identifier, ident.pub_state, res.title, matched_affiliations.join('|'), matched_contrib_affil.join('|')]
-        puts "Processed #{idx+1}" if (idx + 1) % 50 == 0
+        puts "Processed #{idx + 1}" if (idx + 1) % 50 == 0
       end
     end
   end
