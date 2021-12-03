@@ -56,13 +56,21 @@
 <h2 id="curation">Curation Team</h2>
 
 <div class="bio">
-    <img src="/images/ibaker.jpg" alt="Ian Baker" title="Ian Baker">
-  <p><strong>Ian Baker</strong><br/>
+    <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
+  <p><strong>Jess Herzog</strong><br/>
+  Publishing Manager<br/>
+  Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
+</div>
+
+<div class="bio">
+    <img src="/images/jdafesh.jpg" alt="Joseph Dafesh" title="Joseph Dafesh">
+  <p><strong>Joseph Dafesh</strong><br/>
   Data Curator<br/>
-  Ian is currently studying applied mathematics and statistics alongside data
-    science at the University of Notre Dame. Alongside his work as a data
-    curator at Dryad, Ian works as an undergraduate research and office
-    assistant. In his free time Ian enjoys reading and traveling.</p>
+  Joseph studied Molecular, Cellular, and Developmental Biology at UC
+  Riverside, and has a background in medicine, research, and biotechnology. He
+  has aspirations to go into Genetic Engineering in the future. For fun Joseph
+  loves working out, going to the beach, and keeping up with the latest fashion trends.
+  </p>
 </div>
 
 <div class="bio">
@@ -78,30 +86,11 @@
 </div>
 
 <div class="bio">
-    <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
-  <p><strong>Jess Herzog</strong><br/>
-  Data Curator<br/>
-  Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
-</div>
-
-<div class="bio">
     <img src="/images/MKenney.jpg" alt="Mariah Kenney" title="Mariah Kenney">
   <p><strong>Mariah Kenney</strong>, M.Sc. in Ecology and Evolutionary
     biology<br/>
 	Data Curator<br/>
 	Mariah has research and teaching background in ecology and evolutionary biology and graduated with a M.Sc. from the University of Michigan. Before joining Dryad, she worked as a Research Associate at the University of Connecticut. In her free time, Mariah enjoys playing music, taking care of her plants, and promoting a sustainable lifestyle.</p>
-</div>
-
-<div class="bio">
-    <img src="/images/ALiu.png" alt="Anna Liu" title="Anna Liu">
-  <p><strong>Anna Liu</strong><br/>
-	Data Curator<br/>
-	Anna is currently studying Data Science at UC San Diego and is interested in
-    the intersection between Data Science and Design. She has previously worked
-    as a Research Assistant intern, helping to document government responses to
-    the COVID-19 pandemic. Outside of academics, Anna enjoys hanging out with
-    friends, drinking boba, and playing badminton.
-	</p>
 </div>
 
 <div class="bio">
