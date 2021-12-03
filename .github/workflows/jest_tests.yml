@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install better yarn
         run: |
-          yarn policies set-version
+          yarn policies set-version stable
           yarn install --frozen-lockfile
       # - name: Install modules
       #   run: yarn
