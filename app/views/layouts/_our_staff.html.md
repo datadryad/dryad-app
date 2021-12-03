@@ -63,7 +63,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/jdafesh.jpg" alt="Joseph Dafesh" title="Joseph Dafesh">
+    <img src="/images/jdafesh.jpeg" alt="Joseph Dafesh" title="Joseph Dafesh">
   <p><strong>Joseph Dafesh</strong><br/>
   Data Curator<br/>
   Joseph studied Molecular, Cellular, and Developmental Biology at UC
