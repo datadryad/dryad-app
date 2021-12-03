@@ -8,9 +8,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install better yarn
+      - name: Install yarn
         run: |
-          yarn policies set-version stable
+          yarn policies set-version 1.22.10
           yarn install --frozen-lockfile
       # - name: Install modules
       #   run: yarn
