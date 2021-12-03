@@ -12,8 +12,7 @@ module Stash
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      def initialize(resource:, file_change_list_obj:)
-        @resource = resource
+      def initialize(file_change_list_obj:)
         @file_change_list = file_change_list_obj
       end
 
@@ -76,10 +75,10 @@ module Stash
       end
 
       # resource method is :software_files or :supp_files, the method from resource to get the right type of files
-      def check_list(resource_method:, deposition_id:)
+      def self.check_uploaded_list(resource:, resource_method:, deposition_id:)
         response = Stash::ZenodoReplicate::Deposit.get_by_deposition(deposition_id: deposition_id)
-        @resource.reload # just in case it's out of date
-        dry_files = @resource.public_send(resource_method).present_files
+        resource.reload # just in case it's out of date
+        dry_files = resource.public_send(resource_method).present_files
         zen_files = response[:files]
 
         # below creates hash with key as filename and the original hash as value, nice function in the 2.6+ ruby versions
@@ -91,7 +90,7 @@ module Stash
 
           if zen_file.blank?
             file_errors << "#{dry_file.upload_file_name} (id: #{dry_file.id}) exists in the Dryad database but not in Zenodo " \
-                "after Zenodo indicated a successful upload"
+                'after Zenodo indicated a successful upload'
             next
           end
 
@@ -101,8 +100,8 @@ module Stash
           end
         end
 
-        if zen_files.count != dry_files.count
-          file_errors << "The number of Dryad files (#{dry_files.count}) does not match the number of Zenodo files (#{zen_files.count})"
+        if zen_files&.count != dry_files&.count
+          file_errors << "The number of Dryad files (#{dry_files&.count}) does not match the number of Zenodo files (#{zen_files&.count})"
         end
 
         raise FileError, file_errors.join("\n") unless file_errors.empty?
