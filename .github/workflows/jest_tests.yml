@@ -8,8 +8,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
-
+      - name: Install better yarn
+        run: |
+          yarn policies set-version
+          yarn install --frozen-lockfile
+      # - name: Install modules
+      #   run: yarn
       - name: Run tests
         run: yarn test
