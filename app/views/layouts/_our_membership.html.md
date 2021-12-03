@@ -51,6 +51,7 @@ including universities, research institutions and academic libraries. See more a
         <li>UC San Diego</li>
         <li>UC Santa Barbara</li>
         <li>UC Santa Cruz</li>
+        <li>The University of British Columbia</li>
         <li>University of Illinois, Urbana-Champagne</li>
         <li>University of Minnesota</li>
         <li>University of New Mexico</li>
