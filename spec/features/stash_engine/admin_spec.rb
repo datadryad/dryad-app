@@ -167,9 +167,9 @@ RSpec.feature 'Admin', type: :feature do
           expect(page).not_to have_text(@curator.name_last_first)
         end
         @resource.reload
-        
+
         expect(@resource.current_editor_id).to eq(nil)
-        expect(@resource.current_curation_status).to eq('peer_review')        
+        expect(@resource.current_curation_status).to eq('peer_review')
       end
 
       it 'allows un-assigning a curator, changing status if it is curation', js: true do
@@ -191,12 +191,12 @@ RSpec.feature 'Admin', type: :feature do
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name_last_first)
-        end        
+        end
         @resource.reload
 
         puts "XXX res status: #{@resource.current_curation_status}"
         expect(@resource.current_editor_id).to eq(nil)
-        expect(@resource.current_curation_status).to eq('submitted')        
+        expect(@resource.current_curation_status).to eq('submitted')
       end
 
       # Skipping this test that fails intermittently, for a feature we're not actually using
