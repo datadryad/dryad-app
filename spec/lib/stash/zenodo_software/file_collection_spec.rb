@@ -16,7 +16,7 @@ module Stash
 
         @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
 
-        @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: @change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: @change_list)
         @bucket_url = 'https://example.org/my/great/test/bucket'
       end
 
@@ -58,7 +58,7 @@ module Stash
           @software_http_upload = create(:software_file, upload_file_size: 0,
                                                          url: 'http://example.org/example', resource: @resource)
           @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
-          @file_collection = FileCollection.new(resource: @resource, file_change_list_obj: @change_list)
+          @file_collection = FileCollection.new(file_change_list_obj: @change_list)
           @bucket_url = 'https://example.org/my/great/test/bucket'
 
           allow(@change_list).to receive(:upload_list).and_return(@resource.software_files)
