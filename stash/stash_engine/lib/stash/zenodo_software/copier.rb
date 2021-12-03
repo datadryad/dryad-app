@@ -128,10 +128,13 @@ module Stash
         # update files
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
-        @copy.update(state: 'finished', error_info: nil)
+        # resources method is the method off resource to call to get file list for that type of file like software or supplemental
+        @file_collection.check_list(resource_method: @resource_method, deposition_id: @resp[:id])
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
+
+        @copy.update(state: 'finished', error_info: nil)
 
         # make sure the dataset has the relationships for these things sent to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
