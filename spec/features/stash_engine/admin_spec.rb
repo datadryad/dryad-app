@@ -146,8 +146,12 @@ RSpec.feature 'Admin', type: :feature do
 
       end
 
-      it 'allows un-assigning a curator', js: true do
+      it 'allows un-assigning a curator, keeping status if it is peer_review', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+        puts "XXX res status: #{@resource.current_curation_status}"
+        ca = create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review')
+        @resource.reload
+        puts "XXX res status: #{@resource.current_curation_status}"
 
         visit stash_url_helpers.ds_admin_path
 
@@ -156,11 +160,43 @@ RSpec.feature 'Admin', type: :feature do
         find('button[title="Update curator"]').click
         find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
         click_button('Submit')
-
+        find('button[title="Update curator"]').click
+        find("#resource_current_editor_id option[value='0']").select_option
+        click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name_last_first)
         end
+        @resource.reload
+        
+        expect(@resource.current_editor_id).to eq(nil)
+        expect(@resource.current_curation_status).to eq('peer_review')        
+      end
 
+      it 'allows un-assigning a curator, changing status if it is curation', js: true do
+        @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+        puts "XXX res status: #{@resource.current_curation_status}"
+        ca = create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation')
+        @resource.reload
+        puts "XXX res status: #{@resource.current_curation_status}"
+
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_css('button[title="Update curator"]')
+        find('button[title="Update curator"]').click
+        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        click_button('Submit')
+        find('button[title="Update curator"]').click
+        find("#resource_current_editor_id option[value='0']").select_option
+        click_button('Submit')
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).not_to have_text(@curator.name_last_first)
+        end        
+        @resource.reload
+
+        puts "XXX res status: #{@resource.current_curation_status}"
+        expect(@resource.current_editor_id).to eq(nil)
+        expect(@resource.current_curation_status).to eq('submitted')        
       end
 
       # Skipping this test that fails intermittently, for a feature we're not actually using
