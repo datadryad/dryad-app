@@ -71,7 +71,30 @@ module StashApi
         expect(ret_fund[:identifier]).to eq(funder[:identifier])
         expect(ret_fund[:identifierType]).to eq(funder[:identifierType])
       end
-      it 'creates a new dataset with a userId explicitly set by superuser)' do
+
+      it 'creates a new dataset with specified keywords' do
+        @meta.add_keywords(number: 3)
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(output[:keywords]).to be
+        expect(output[:keywords].size).to eq(3)
+        expect(output[:keywords].first).to eq(@meta.hash[:keywords].first)
+        expect(output[:keywords].second).to eq(@meta.hash[:keywords].second)
+        expect(output[:keywords].third).to eq(@meta.hash[:keywords].third)
+      end
+
+      it 'creates a new dataset with specified field of science' do
+        fos = Faker::Science.science(:natural)
+        StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
+        @meta.add_field(field_name: 'fieldOfScience', value: fos)
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(output[:fieldOfScience]).to eq(fos)
+      end
+
+      it 'creates a new dataset with a userId explicitly set by superuser' do
         test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
                                              last_name: Faker::Name.last_name,
                                              email: Faker::Internet.email)
