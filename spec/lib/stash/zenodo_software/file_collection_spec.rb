@@ -1,7 +1,7 @@
 require 'stash/zenodo_software'
 
 require 'rails_helper'
-`require_relative 'webmocks_helper'
+require_relative 'webmocks_helper'
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
@@ -115,7 +115,7 @@ module Stash
 
         before(:each) do
           @resource.generic_files.destroy_all # get rid of existing
-          @files = Array.new(10) {|i| create(:software_file, resource_id: @resource.id) }
+          @files = Array.new(10) { |_i| create(:software_file, resource_id: @resource.id) }
           @zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier.id)
         end
 
@@ -125,55 +125,55 @@ module Stash
 
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
                               filenames: @files.map(&:upload_file_name),
-                              filesizes: @files.map(&:upload_file_size) )
+                              filesizes: @files.map(&:upload_file_size))
 
-          expect {
+          expect do
             FileCollection.check_uploaded_list(resource: @resource,
-                                             resource_method: :software_files,
-                                             deposition_id: @zenodo_copy.deposition_id)
-          }.not_to raise_error
+                                               resource_method: :software_files,
+                                               deposition_id: @zenodo_copy.deposition_id)
+          end.not_to raise_error
         end
 
-        it "raises an exception if Zenodo has an extra file" do
+        it 'raises an exception if Zenodo has an extra file' do
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
                               filenames: @files.map(&:upload_file_name),
-                              filesizes: @files.map(&:upload_file_size) )
+                              filesizes: @files.map(&:upload_file_size))
 
           @resource.generic_files.where(id: @files.last.id).destroy_all
 
-          expect {
+          expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
                                                deposition_id: @zenodo_copy.deposition_id)
-          }.to raise_error(FileError, /The number of Dryad files \(9\) does not match/)
+          end.to raise_error(FileError, /The number of Dryad files \(9\) does not match/)
         end
 
-        it "raises an exception if files are missing from zenodo" do
+        it 'raises an exception if files are missing from zenodo' do
           f = @files.last
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
                               filenames: @files.map(&:upload_file_name)[0..-2],
-                              filesizes: @files.map(&:upload_file_size)[0..-2] )
+                              filesizes: @files.map(&:upload_file_size)[0..-2])
 
-          expect {
+          expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
                                                deposition_id: @zenodo_copy.deposition_id)
-          }.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
+          end.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
         end
 
         it "raises an exception if size doesn't match" do
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
                               filenames: @files.map(&:upload_file_name),
-                              filesizes: @files.map(&:upload_file_size) )
+                              filesizes: @files.map(&:upload_file_size))
 
           f = @files.last
           f.update(upload_file_size: f.upload_file_size + 1)
 
-          expect {
+          expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
                                                deposition_id: @zenodo_copy.deposition_id)
-          }.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
+          end.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
         end
       end
     end
