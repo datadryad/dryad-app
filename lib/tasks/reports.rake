@@ -1,4 +1,5 @@
 require_relative 'reports/ror_author_datasets'
+require_relative 'reports/institution_datasets'
 namespace :reports do
 
   # use like: bundle exec rake reports:ror_author_submitted tenant=ucop RAILS_ENV=production
@@ -11,5 +12,17 @@ namespace :reports do
       next
     end
     RorAuthorDatasets.submitted_report(tenant: ENV['tenant'].strip)
+  end
+
+  # gets all from an institution by author or contributor (funder)
+  task from_text_institution: :environment do
+    unless ENV['RAILS_ENV'] && ENV['name']
+      puts 'RAILS_ENV and name bash variables must be explicitly set before running this script'
+      puts 'example: bundle exec rails reports:from_text_institution name="Max Planck" RAILS_ENV=production'
+      next
+    end
+    puts "Creating dataset report for items with author or contributor affiliation like \"#{ENV['name']}\""
+    InstitutionDatasets.datasets_by_name(name: ENV['name'])
+    puts "Done, see #{ENV['name']}-#{Time.now.strftime('%Y-%m-%d')}.tsv"
   end
 end
