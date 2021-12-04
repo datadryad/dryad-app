@@ -1,12 +1,15 @@
 require 'stash/zenodo_software'
 
 require 'rails_helper'
+`require_relative 'webmocks_helper'
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoSoftware
     RSpec.describe FileCollection do
+
+      include WebmocksHelper # drops the helper methods for the class into the testing instance
 
       before(:each) do
         @resource = create(:resource)
@@ -105,6 +108,72 @@ module Stash
           expect do
             @file_collection.check_digests(streamer_response: resp, file_model: @resource.software_files.first)
           end.not_to raise_exception
+        end
+      end
+
+      describe 'self.check_uploaded_list(resource:, resource_method:, deposition_id:)' do
+
+        before(:each) do
+          @resource.generic_files.destroy_all # get rid of existing
+          @files = Array.new(10) {|i| create(:software_file, resource_id: @resource.id) }
+          @zenodo_copy = create(:zenodo_copy, resource_id: @resource.id, identifier_id: @resource.identifier.id)
+        end
+
+        it "doesn't raise exception if dryad files and zenodo files match in name and size" do
+          # throw in a non-software file just to be sure they're ignored when working with software files
+          create(:data_file, resource_id: @resource.id)
+
+          stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
+                              filenames: @files.map(&:upload_file_name),
+                              filesizes: @files.map(&:upload_file_size) )
+
+          expect {
+            FileCollection.check_uploaded_list(resource: @resource,
+                                             resource_method: :software_files,
+                                             deposition_id: @zenodo_copy.deposition_id)
+          }.not_to raise_error
+        end
+
+        it "raises an exception if Zenodo has an extra file" do
+          stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
+                              filenames: @files.map(&:upload_file_name),
+                              filesizes: @files.map(&:upload_file_size) )
+
+          @resource.generic_files.where(id: @files.last.id).destroy_all
+
+          expect {
+            FileCollection.check_uploaded_list(resource: @resource,
+                                               resource_method: :software_files,
+                                               deposition_id: @zenodo_copy.deposition_id)
+          }.to raise_error(FileError, /The number of Dryad files \(9\) does not match/)
+        end
+
+        it "raises an exception if files are missing from zenodo" do
+          f = @files.last
+          stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
+                              filenames: @files.map(&:upload_file_name)[0..-2],
+                              filesizes: @files.map(&:upload_file_size)[0..-2] )
+
+          expect {
+            FileCollection.check_uploaded_list(resource: @resource,
+                                               resource_method: :software_files,
+                                               deposition_id: @zenodo_copy.deposition_id)
+          }.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
+        end
+
+        it "raises an exception if size doesn't match" do
+          stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
+                              filenames: @files.map(&:upload_file_name),
+                              filesizes: @files.map(&:upload_file_size) )
+
+          f = @files.last
+          f.update(upload_file_size: f.upload_file_size + 1)
+
+          expect {
+            FileCollection.check_uploaded_list(resource: @resource,
+                                               resource_method: :software_files,
+                                               deposition_id: @zenodo_copy.deposition_id)
+          }.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
         end
       end
     end

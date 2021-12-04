@@ -65,8 +65,11 @@ module Stash
           metadata: metadata(deposition_id: deposition_id) }
       end
 
-      def stub_existing_files(deposition_id:, filenames: [])
-        resp_data = { files: filenames.map { |fn| { filename: fn } } }.with_indifferent_access
+      def stub_existing_files(deposition_id:, filenames: [], filesizes: [])
+        files = filenames.map.with_index do |fn, idx|
+          { filename: fn,  filesize: filesizes[idx] }
+        end
+        resp_data = { files: files }.with_indifferent_access
         stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}?access_token=ThisIsAFakeToken")
           .with(
             headers: {
