@@ -38,7 +38,7 @@ See the [API accounts](api_accounts.md) document for more information on request
 
 # Submission
 
-The [Submisison API](submission.md) is used by systems that want to partner
+The [Submission API](submission.md) is used by systems that want to partner
 more closely with Dryad and create dataset submissions directly.
 
 
