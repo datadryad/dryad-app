@@ -33,7 +33,11 @@
   <% @zenodo_copies.each do |zc| %>
     <tr class="c-lined-table__row">
       <td><%= link_to(zc.id, zenodo_queue_item_details_path(zc.id)) %></td>
-      <td><%= link_to(zc.identifier_id, zenodo_queue_identifier_details_path(zc.identifier_id)) %></td>
+      <td>
+        <% unless zc.identifier_id.blank? %>
+          <%= link_to(zc.identifier_id, zenodo_queue_identifier_details_path(zc.identifier_id)) %>
+        <% end %>
+      </td>
       <td><%= zc.resource_id %></td>
       <td><%= zc.state %></td>
       <td><%= formatted_datetime(zc.updated_at) %></td>
