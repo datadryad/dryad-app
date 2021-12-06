@@ -149,7 +149,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows un-assigning a curator, keeping status if it is peer_review', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
         puts "XXX res status: #{@resource.current_curation_status}"
-        ca = create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review')
+        create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review')
         @resource.reload
         puts "XXX res status: #{@resource.current_curation_status}"
 
@@ -175,7 +175,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows un-assigning a curator, changing status if it is curation', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
         puts "XXX res status: #{@resource.current_curation_status}"
-        ca = create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation')
+        create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation')
         @resource.reload
         puts "XXX res status: #{@resource.current_curation_status}"
 
