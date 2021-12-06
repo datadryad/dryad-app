@@ -186,6 +186,44 @@ module StashEngine
           end
         end
 
+        describe '#date_last_curated' do
+          it 'selects the correct date_last_curated' do
+            target_date = DateTime.new(2010, 2, 3).utc
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: target_date)
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_curated).to eq(target_date)
+          end
+
+          it 'gives no date_last_curated for uncurated items' do
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: '2010-01-01')
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_curated).to eq(nil)
+          end
+        end
+
+        describe '#date_last_published' do
+          it 'selects the correct date_last_published' do
+            target_date = DateTime.new(2010, 2, 3).utc
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: target_date)
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_published).to eq(target_date)
+          end
+
+          it 'gives no date_last_published for unpublished items' do
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: '2010-01-01')
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_published).to eq(nil)
+          end
+        end
+
         describe '#latest_resource_with_public_metadata' do
 
           it 'finds the last published resource' do

@@ -842,12 +842,12 @@ module StashEngine
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(prior_curator_id: prior_version.current_editor_id, target_status: target_status)
 
-      # If it has been in curation since the last published version, return it to curation
-      # If it has not been in curation since the last published version, leave it as submitted or peer_review
-      if identifier.date_last_curated > identifier.date_last_published
-        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                    note: 'System set back to curation')
-      end
+      # If it has never been published, or it has been in curation more recently than
+      # the last published version, return it to curation status
+      return unless identifier.date_last_published.blank? || identifier.date_last_curated > identifier.date_last_published
+
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
+                                                                  note: 'System set back to curation')
     end
     # rubocop:enable Metrics/AbcSize
 

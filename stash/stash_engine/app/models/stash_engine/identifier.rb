@@ -498,6 +498,7 @@ module StashEngine
       cas.each do |ca|
         return ca.created_at if ca.curation?
       end
+      nil
     end
 
     def date_last_published
@@ -505,6 +506,7 @@ module StashEngine
       cas.each do |ca|
         return ca.created_at if ca.published? || ca.embargoed?
       end
+      nil
     end
 
     # ------------------------------------------------------------
