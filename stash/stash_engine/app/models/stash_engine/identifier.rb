@@ -157,6 +157,16 @@ module StashEngine
       submitted.by_version.first
     end
 
+    def most_recent_curator
+      resources.reverse.each do |r|
+        next unless r.current_editor_id
+
+        user = StashEngine::User.find(r.current_editor_id)
+        return user if user.curator?
+      end
+      nil
+    end
+
     # @return Resource the current 'processing' resource
     def processing_resource
       processing = resources.processing
