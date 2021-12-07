@@ -132,15 +132,12 @@ module StashEngine
           @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
           decipher_curation_activity
           editor_id = params[:resource][:current_editor][:id]
-          puts "XXXX changing curator #{@resource.current_editor_id}"
           if editor_id&.to_i == 0
             @resource.update(current_editor_id: nil)
-            puts "XXXXa changing curator #{@resource.current_editor_id}"
             editor_name = 'unassigned'
             @status = 'submitted' if @resource.current_curation_status == 'curation'
           else
             @resource.update(current_editor_id: editor_id)
-            puts "XXXXb changing curator #{@resource.current_editor_id}"
             editor_name = StashEngine::User.find(editor_id)&.name
           end
           @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
@@ -150,7 +147,6 @@ module StashEngine
           @resource.reload
           # Refresh the page the same way we would for a change of curation activity
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
-          puts "XXXXdone changing curator #{@resource.current_editor_id}"
           render :curation_activity_change
         end
       end

@@ -148,10 +148,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'allows un-assigning a curator, keeping status if it is peer_review', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
-        puts "XXX res status: #{@resource.current_curation_status}"
         create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review')
         @resource.reload
-        puts "XXX res status: #{@resource.current_curation_status}"
 
         visit stash_url_helpers.ds_admin_path
 
@@ -174,10 +172,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'allows un-assigning a curator, changing status if it is curation', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
-        puts "XXX res status: #{@resource.current_curation_status}"
         create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation')
         @resource.reload
-        puts "XXX res status: #{@resource.current_curation_status}"
 
         visit stash_url_helpers.ds_admin_path
 
@@ -194,7 +190,6 @@ RSpec.feature 'Admin', type: :feature do
         end
         @resource.reload
 
-        puts "XXX res status: #{@resource.current_curation_status}"
         expect(@resource.current_editor_id).to eq(nil)
         expect(@resource.current_curation_status).to eq('submitted')
       end

@@ -87,6 +87,28 @@ module StashEngine
         end
       end
 
+      describe '#most_recent_curator' do
+        it 'finds the most recent curator' do
+          user = create(:user, role: 'user')
+          cur1 = create(:user, role: 'curator')
+          cur2 = create(:user, role: 'curator')
+          @res3.update(current_editor_id: user.id)
+          @res2.update(current_editor_id: cur1.id)
+          @res1.update(current_editor_id: cur2.id)
+          @identifier.reload
+          expect(@identifier.most_recent_curator).to eq(cur1)
+        end
+
+        it 'returns nil when there is no curator' do
+          user = create(:user, role: 'user')
+          @res3.update(current_editor_id: user.id)
+          @res2.update(current_editor_id: user.id)
+          @res1.update(current_editor_id: user.id)
+          @identifier.reload
+          expect(@identifier.most_recent_curator).to be_nil
+        end
+      end
+
       describe '#in_progress_resource' do
         it 'returns the in-progress version' do
           ipv = @identifier.in_progress_resource
