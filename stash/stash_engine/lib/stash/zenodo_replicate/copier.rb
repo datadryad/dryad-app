@@ -43,7 +43,6 @@ module Stash
         @previous_copy = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id).where('id < ? ', @copy.id)
           .data.order(id: :desc).first
         @resource = StashEngine::Resource.find(@copy.resource_id)
-        @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
       def add_to_zenodo
@@ -67,7 +66,7 @@ module Stash
 
         # update files
         file_change_list = FileChangeList.new(resource: @resource)
-        @file_collection = Stash::ZenodoSoftware::FileCollection.new(resource: @resource, file_change_list_obj: file_change_list)
+        @file_collection = Stash::ZenodoSoftware::FileCollection.new(file_change_list_obj: file_change_list)
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         # submit it, publishing will fail if there isn't at least one file
