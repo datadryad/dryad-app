@@ -866,7 +866,7 @@ module StashEngine
         target_curator = StashEngine::User.where(role: 'curator').first
       end
 
-      update(current_editor_id: target_curator.id)
+      update(current_editor_id: target_curator.id) if target_curator
     end
   end
 end
