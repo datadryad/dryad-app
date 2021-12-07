@@ -87,6 +87,28 @@ module StashEngine
         end
       end
 
+      describe '#most_recent_curator' do
+        it 'finds the most recent curator' do
+          user = create(:user, role: 'user')
+          cur1 = create(:user, role: 'curator')
+          cur2 = create(:user, role: 'curator')
+          @res3.update(current_editor_id: user.id)
+          @res2.update(current_editor_id: cur1.id)
+          @res1.update(current_editor_id: cur2.id)
+          @identifier.reload
+          expect(@identifier.most_recent_curator).to eq(cur1)
+        end
+
+        it 'returns nil when there is no curator' do
+          user = create(:user, role: 'user')
+          @res3.update(current_editor_id: user.id)
+          @res2.update(current_editor_id: user.id)
+          @res1.update(current_editor_id: user.id)
+          @identifier.reload
+          expect(@identifier.most_recent_curator).to be_nil
+        end
+      end
+
       describe '#in_progress_resource' do
         it 'returns the in-progress version' do
           ipv = @identifier.in_progress_resource
@@ -183,6 +205,44 @@ module StashEngine
           it 'gives no approval_date for unpublished items' do
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
             expect(@identifier.approval_date).to eq(nil)
+          end
+        end
+
+        describe '#date_last_curated' do
+          it 'selects the correct date_last_curated' do
+            target_date = DateTime.new(2010, 2, 3).utc
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: target_date)
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_curated).to eq(target_date)
+          end
+
+          it 'gives no date_last_curated for uncurated items' do
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: '2010-01-01')
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_curated).to eq(nil)
+          end
+        end
+
+        describe '#date_last_published' do
+          it 'selects the correct date_last_published' do
+            target_date = DateTime.new(2010, 2, 3).utc
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: target_date)
+            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_published).to eq(target_date)
+          end
+
+          it 'gives no date_last_published for unpublished items' do
+            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: '2010-01-01')
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2020-01-01')
+            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            expect(@identifier.date_last_published).to eq(nil)
           end
         end
 

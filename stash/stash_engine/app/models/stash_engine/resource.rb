@@ -410,12 +410,12 @@ module StashEngine
     # ------------------------------------------------------------
     # Calculated dates
 
-    # Date on which the user first submitted this dataset
+    # Date on which the user first submitted this resource
     def submitted_date
       curation_activities.order(:id).where("status = 'submitted' OR status = 'peer_review'")&.first&.created_at
     end
 
-    # Date on which the curators first received this dataset
+    # Date on which the curators first received this resource
     # (for peer_review datasets, the date at which it came out of peer_review)
     def curation_start_date
       curation_activities.order(:id).where("status = 'submitted' OR status = 'curation'")&.first&.created_at
@@ -807,10 +807,9 @@ module StashEngine
     private
 
     # -----------------------------------------------------------
-    # Handle the 'submitted' state (happens after successful Merritt submission)
+    # Handle the 'submitted' resource state (happens after successful Merritt submission)
     # rubocop:disable Metrics/AbcSize
     def prepare_for_curation
-      # gets last resource
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 
       # try to assign credit for the action to the same person as the immediately previous activity,
@@ -819,8 +818,7 @@ module StashEngine
         .order(id: :desc).first
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
 
-      # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
-      # version and the journal needs it)
+      # Determine which submission status to use, :submitted or :peer_review status
       target_status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
 
       # Generate the :submitted status
@@ -835,28 +833,40 @@ module StashEngine
                                                                     note: "System noticed possible duplicate dataset #{dup_id}")
       end
 
-      return if prior_version.blank? || prior_version.current_curation_status.blank? || prior_version.current_editor_id.blank?
-      return if %w[in_progress submitted].include?(prior_version.current_curation_status)
-      return unless identifier.resources.map(&:curation_activities).flatten.map(&:status).include?('curation')
+      # if it's the first version, or the prior version was in the submitter's control, we're done
+      return if prior_version.blank? || prior_version.current_curation_status.blank?
+      return unless identifier.date_last_curated.present?
 
       # If we get here, the previous status was *not* controlled by the submitter,
-      # so set the item back to curation and assign it to the previous curator, with a fallback process
-      revert_status_to_curation(prior_curator_id: prior_version.current_editor_id)
+      # meaning there was a curator
+      # so assign it to the previous curator, with a fallback process
+      auto_assign_curator(target_status: target_status)
+
+      # If it has never been published,
+      # OR it has been in curation more recently than the last published version,
+      # OR the last user to edit it was the current_editor
+      # return it to curation status
+      return unless identifier.date_last_published.blank? ||
+                    identifier.date_last_curated > identifier.date_last_published ||
+                    last_curation_activity.user_id == current_editor_id
+
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
+                                                                  note: 'System set back to curation')
     end
     # rubocop:enable Metrics/AbcSize
 
-    def revert_status_to_curation(prior_curator_id:)
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'System set back to curation and assigned curator')
+    def auto_assign_curator(target_status:)
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
+                                                                  note: 'System auto-assigned curator')
 
-      target_curator = StashEngine::User.find(prior_curator_id)
+      target_curator = identifier.most_recent_curator
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to the most experienced current curator (lowest ID number), but not a superuser
         target_curator = StashEngine::User.where(role: 'curator').first
       end
 
-      update(current_editor_id: target_curator.id)
+      update(current_editor_id: target_curator.id) if target_curator
     end
   end
 end
