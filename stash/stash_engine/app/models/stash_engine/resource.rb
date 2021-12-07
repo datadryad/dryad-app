@@ -833,29 +833,41 @@ module StashEngine
                                                                     note: "System noticed possible duplicate dataset #{dup_id}")
       end
 
+      puts 'xxx returns'
       # if it's the first version, or the prior version was in the submitter's control, we're done
-      return if prior_version.blank? || prior_version.current_curation_status.blank? || prior_version.current_editor_id.blank?
-      return if %w[in_progress submitted].include?(prior_version.current_curation_status)
+      return if prior_version.blank? || prior_version.current_curation_status.blank?
+
+      puts 'xxx returns a'
+      #      return if %w[in_progress submitted].include?(prior_version.current_curation_status)
+      puts 'xxx returns b'
       return unless identifier.date_last_curated.present?
 
-      # If we get here, the previous status was *not* controlled by the submitter,
-      # so assign it to the previous curator, with a fallback process
-      auto_assign_curator(prior_curator_id: prior_version.current_editor_id, target_status: target_status)
+      puts 'xxx returns c'
 
-      # If it has never been published, or it has been in curation more recently than
-      # the last published version, return it to curation status
-      return unless identifier.date_last_published.blank? || identifier.date_last_curated > identifier.date_last_published
+      # If we get here, the previous status was *not* controlled by the submitter,
+      # meaning there was a curator
+      # so assign it to the previous curator, with a fallback process
+      auto_assign_curator(target_status: target_status)
+
+      # If it has never been published,
+      # OR it has been in curation more recently than the last published version,
+      # OR the last user to edit it was the current_editor
+      # return it to curation status
+      puts "xxxxx lca #{last_curation_activity.user_id} -- #{current_editor_id}"
+      return unless identifier.date_last_published.blank? ||
+                    identifier.date_last_curated > identifier.date_last_published ||
+                    last_curation_activity.user_id == current_editor_id
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'System set back to curation')
     end
     # rubocop:enable Metrics/AbcSize
 
-    def auto_assign_curator(prior_curator_id:, target_status:)
+    def auto_assign_curator(target_status:)
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
                                                                   note: 'System auto-assigned curator')
 
-      target_curator = StashEngine::User.find(prior_curator_id)
+      target_curator = identifier.most_recent_curator
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to the most experienced current curator (lowest ID number), but not a superuser
