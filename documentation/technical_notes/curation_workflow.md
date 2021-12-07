@@ -27,6 +27,10 @@ will be in "curation" status. A submitted version that the curator wasn't
 expecting (e.g., author updates a dataset post-publication) results in
 "submitted" status, so the curator can pick it up when they have time.
 
+Major rules:
+- If it has been in curation since the last published version, return it to curation
+- If it has not been in curation since the last published version, leave it as submitted 
+
 Workflow sequences and their resultant status:
 - author submits, then updates themselves.... --> submitted
 - author submits, curator edits --> curation 
