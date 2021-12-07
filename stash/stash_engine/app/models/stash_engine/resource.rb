@@ -833,16 +833,9 @@ module StashEngine
                                                                     note: "System noticed possible duplicate dataset #{dup_id}")
       end
 
-      puts 'xxx returns'
       # if it's the first version, or the prior version was in the submitter's control, we're done
       return if prior_version.blank? || prior_version.current_curation_status.blank?
-
-      puts 'xxx returns a'
-      #      return if %w[in_progress submitted].include?(prior_version.current_curation_status)
-      puts 'xxx returns b'
       return unless identifier.date_last_curated.present?
-
-      puts 'xxx returns c'
 
       # If we get here, the previous status was *not* controlled by the submitter,
       # meaning there was a curator
@@ -853,7 +846,6 @@ module StashEngine
       # OR it has been in curation more recently than the last published version,
       # OR the last user to edit it was the current_editor
       # return it to curation status
-      puts "xxxxx lca #{last_curation_activity.user_id} -- #{current_editor_id}"
       return unless identifier.date_last_published.blank? ||
                     identifier.date_last_curated > identifier.date_last_published ||
                     last_curation_activity.user_id == current_editor_id
