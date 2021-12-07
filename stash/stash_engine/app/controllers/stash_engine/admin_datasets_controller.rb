@@ -133,18 +133,17 @@ module StashEngine
           decipher_curation_activity
           editor_id = params[:resource][:current_editor][:id]
           if editor_id&.to_i == 0
-            @resource.current_editor_id = nil
+            @resource.update(current_editor_id: nil)
             editor_name = 'unassigned'
-            @status = 'submitted'
+            @status = 'submitted' if @resource.current_curation_status == 'curation'
           else
-            @resource.current_editor_id = editor_id
+            @resource.update(current_editor_id: editor_id)
             editor_name = StashEngine::User.find(editor_id)&.name
           end
           @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
-          @resource.save
           @resource.reload
           # Refresh the page the same way we would for a change of curation activity
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first

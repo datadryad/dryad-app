@@ -157,6 +157,16 @@ module StashEngine
       submitted.by_version.first
     end
 
+    def most_recent_curator
+      resources.reverse.each do |r|
+        next unless r.current_editor_id
+
+        user = StashEngine::User.find(r.current_editor_id)
+        return user if user.curator?
+      end
+      nil
+    end
+
     # @return Resource the current 'processing' resource
     def processing_resource
       processing = resources.processing
@@ -476,7 +486,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Calculated dates
 
-    # returns the date on which this identifier was approved for publication
+    # returns the date on which this identifier was initially approved for publication
     # (i.e., the date on which it entered the status 'published' or 'embargoed'
     def approval_date
       return nil unless %w[published embargoed].include?(pub_state)
@@ -491,6 +501,22 @@ module StashEngine
         end
       end
       found_approval_date
+    end
+
+    def date_last_curated
+      cas = resources.map(&:curation_activities).flatten.reverse
+      cas.each do |ca|
+        return ca.created_at if ca.curation?
+      end
+      nil
+    end
+
+    def date_last_published
+      cas = resources.map(&:curation_activities).flatten.reverse
+      cas.each do |ca|
+        return ca.created_at if ca.published? || ca.embargoed?
+      end
+      nil
     end
 
     # ------------------------------------------------------------
