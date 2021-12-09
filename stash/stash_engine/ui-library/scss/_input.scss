@@ -110,6 +110,10 @@
 	display: flex;
 }
 
+.c-input__error-bg {
+	background-color: $design-pink-color;
+}
+
 .c-input__required-note {
 	margin: 0 0 $spacing-md;
 
