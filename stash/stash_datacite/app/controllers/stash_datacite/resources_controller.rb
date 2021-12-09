@@ -120,6 +120,8 @@ module StashDatacite
 
       @completions = completions
       @data = warnings
+
+      @error_items = Resource::DatasetValidations.new(resource: resource).errors
     end
 
     def resource_submitted_message(resource)

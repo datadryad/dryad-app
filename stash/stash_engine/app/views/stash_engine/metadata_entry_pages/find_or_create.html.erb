@@ -7,6 +7,6 @@
   }
 </script>
 <div id="find_or_create"
-    data-load="<%= metadata_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:resource_id], format: :js) %>">
+    data-load="<%= metadata_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:resource_id], display_validation: params[:display_validation], format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
