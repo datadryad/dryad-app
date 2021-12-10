@@ -51,6 +51,8 @@ module StashDatacite
       def errors
         err = []
         err << title
+        err << authors
+        err << abstract
 
         err.flatten
       end
@@ -63,6 +65,45 @@ module StashDatacite
         end
         []
       end
+
+      def authors
+        temp_err = []
+        @resource.authors.each_with_index do |author, idx|
+
+          if author.author_first_name.blank? || author.author_last_name.blank?
+            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first and last name}",
+                                    page: metadata_page(@resource),
+                                    ids: [ "author_first_name__#{author.id}", "author_last_name__#{author.id}"])
+          end
+
+          affil = author.affiliation || StashDatacite::Affiliation.new # there is always an affiliation this way
+          # below gets rid of the annoying asterisk that go into end of this string, too bad names aren't atomic
+          if (affil.long_name || '').gsub(/\*$/, '').blank?
+            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {institutional affiliation}",
+                                      page: metadata_page(@resource),
+                                      ids: [ "instit_affil__#{author.id}"])
+          end
+        end
+
+        unless @resource.authors&.first&.author_email&.present?
+          temp_err << ErrorItem.new(message: "Fill 1st {author email}",
+                                    page: metadata_page(@resource),
+                                    ids: [ "author_email__#{@resource.authors&.first&.id}"])
+        end
+
+        temp_err
+      end
+
+      def abstract
+        unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count.positive?
+          return ErrorItem.new(message: "Fill in the {abstract}",
+                               page: metadata_page(@resource),
+                               ids: [ 'abstract_label' ])
+        end
+        []
+      end
+
+
     end
   end
 end
