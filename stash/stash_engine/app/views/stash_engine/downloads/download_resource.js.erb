@@ -2,6 +2,7 @@ function delayedEnable() {
   // wait a bit so download starts before re-enabling so they don't machine gun click
   setTimeout(function(){
     $('.js-download').prop('disabled', false).removeClass('o-download__wait').addClass('o-download__files');
+    $('#accessible-dl-msg').text("Your download has started");
   }, 5000);
 }
 
