@@ -32,7 +32,7 @@
 
   const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
   for (var errorId of errorIds) {
-    if($(`#${errorId}`)[0].type === 'text') {
+    if( $(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ) {
       $(`#${errorId}`).addClass('c-input__error-bg');
     }
   }
