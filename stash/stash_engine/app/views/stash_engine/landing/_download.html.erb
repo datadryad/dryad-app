@@ -4,6 +4,8 @@
 
   <%= button_to "Download dataset", download_resource_path(resource.id), remote: true,
                 class: 'o-download__files js-download', id: "dl_res_#{resource.id}" %>
+
+  <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
 </div>
 
 <script>
