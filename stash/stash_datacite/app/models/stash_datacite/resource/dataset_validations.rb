@@ -1,4 +1,5 @@
 require 'addressable'
+require 'cgi'
 
 module StashDatacite
   module Resource
@@ -40,7 +41,7 @@ module StashDatacite
         url_help.upload_resource_path(id: resource.id)
       end
 
-      # the items being validated currently on the metadata page are:
+      # the metadata entry items are:
       # title, abstract, article_id/doi for journal article, full_author name, author affiliation for all,
       # author email for the first author
       #
@@ -50,9 +51,12 @@ module StashDatacite
 
       def errors
         err = []
+        err << article_id
         err << title
         err << authors
         err << abstract
+
+        err << s3_error_uploads
 
         err.flatten
       end
@@ -101,6 +105,36 @@ module StashDatacite
                                ids: [ 'abstract_label' ])
         end
         []
+      end
+
+      def article_id
+        return [] unless @resource.identifier.publication_name.present? &&
+          @resource.identifier.manuscript_number.blank? &&
+          @resource.identifier.publication_article_doi.blank?
+
+        return ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
+                             page: metadata_page(@resource),
+                             ids: ['msid', 'primary_article_doi'])
+      end
+
+      def s3_error_uploads
+        return [] if @resource.submitted?
+
+        files = @resource.generic_files.newly_created.file_submission
+        errored_uploads = []
+        files.each do |f|
+          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.exists?(s3_key: f.calc_s3_path)
+        end
+
+        return [] if errored_uploads.empty?
+
+        msg = "{Check that the following file(s) have uploaded}:<br/><br/>" +
+          errored_uploads.map{ |i| CGI::escapeHTML(i) }.join('<br/>') + '<br/><br/>' +
+          "If this state persists for more than a few minutes, please remove and upload the file(s) again."
+
+        return ErrorItem.new(message: msg,
+                             page: files_page(@resource),
+                             ids: ['filelist_id'])
       end
 
 
