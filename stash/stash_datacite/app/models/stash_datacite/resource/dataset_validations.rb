@@ -1,6 +1,11 @@
 require 'addressable'
 require 'cgi'
 
+# this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
+# to output digital storage sizes
+#
+include StashEngine::ApplicationHelper
+
 module StashDatacite
   module Resource
 
@@ -58,6 +63,9 @@ module StashDatacite
 
         err << s3_error_uploads
         err << url_error_validating
+        err << over_file_count
+        err << over_files_size
+
         err.flatten
       end
 
@@ -151,6 +159,42 @@ module StashDatacite
         return ErrorItem.new(message: msg,
                              page: files_page(@resource),
                              ids: ['filelist_id'])
+      end
+
+      def over_file_count
+        return [] unless @resource.generic_files.present_files.count > APP_CONFIG.maximums.files
+
+        return ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " +
+          'or package your files in a container such as a zip archive',
+                             page: files_page(@resource),
+                             ids: ['filelist_id'])
+      end
+
+      def over_files_size
+        errors = []
+
+        if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size
+          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}." +
+                                  ' {Remove some data files to proceed}.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
+        if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
+          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." +
+            ' {Remove some software files to proceed}.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
+        if @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
+          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." +
+            ' {Remove some supplemental files to proceed}.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
+        errors
       end
 
 
