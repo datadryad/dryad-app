@@ -57,7 +57,7 @@ module StashDatacite
         err << abstract
 
         err << s3_error_uploads
-
+        err << url_error_validating
         err.flatten
       end
 
@@ -131,6 +131,22 @@ module StashDatacite
         msg = "{Check that the following file(s) have uploaded}:<br/><br/>" +
           errored_uploads.map{ |i| CGI::escapeHTML(i) }.join('<br/>') + '<br/><br/>' +
           "If this state persists for more than a few minutes, please remove and upload the file(s) again."
+
+        return ErrorItem.new(message: msg,
+                             page: files_page(@resource),
+                             ids: ['filelist_id'])
+      end
+
+      def url_error_validating
+        # error if has url and not a 200 status code
+        files = @resource.generic_files.newly_created.errors.map(&:upload_file_name)
+
+        return [] if files.empty?
+
+        msg = "{Check that the URLs associated with the following files are available and publicly viewable}:<br/><br/>" +
+          files.map{ |i| CGI::escapeHTML(i) }.join('<br/>') + '<br/><br/>' +
+          "URLs for deposit need to be publicly accessible and self-contained objects.  For example, " +
+          "adding an HTML file will only retrieve the HTML and not all referenced images or other assets."
 
         return ErrorItem.new(message: msg,
                              page: files_page(@resource),
