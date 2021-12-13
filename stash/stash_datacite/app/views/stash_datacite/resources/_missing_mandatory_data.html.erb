@@ -1,39 +1,29 @@
 <%# 'error_items' must be passed in as a local variable %>
-<%# if data.present? # remove the section inside if statement, below after new validations are working %>
-<% if false %>
-  <div class="js-alert c-alert--error" role="alert">
-    <div class="c-alert__text">
-      Please edit the following in order to submit your dataset:
-      <br><br><strong><%= data.join("<br>").html_safe %></strong>
-    </div>
-    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
+
+<% if error_items.length.positive? %>
+  <div style="clear: both; width: 100%; border: 2px solid black; margin-bottom: 1em;">
+    <p>Please fix the following items in order to submit.</p>
+    <ul>
+      <% error_items.each do |e| %>
+        <li><%== e.display_message %></li>
+      <% end %>
+    </ul>
   </div>
-<% else %>
-  <%= '' %>
-<% end %>
 
-<div style="clear: both; width: 100%; border: 2px solid black; margin-bottom: 1em;">
-  <p>Please fix the following items in order to submit.</p>
-  <ul>
-    <% error_items.each do |e| %>
-      <li><%== e.display_message %></li>
-    <% end %>
-  </ul>
-</div>
-
-<script>
-  if(window.location.hash) {
-    $('html, body').animate(
-        {scrollTop: $(window.location.hash).offset().top}, 1000);
-    window.setTimeout(function(){
-      $(window.location.hash).focus();
-    }, 1000);
-  }
-
-  const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
-  for (var errorId of errorIds) {
-    if( $(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ) {
-      $(`#${errorId}`).addClass('c-input__error-bg');
+  <script>
+    if(window.location.hash) {
+      $('html, body').animate(
+          {scrollTop: $(window.location.hash).offset().top}, 1000);
+      window.setTimeout(function(){
+        $(window.location.hash).focus();
+      }, 1000);
     }
-  }
-</script>
+
+    const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
+    for (var errorId of errorIds) {
+      if( $(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ) {
+        $(`#${errorId}`).addClass('c-input__error-bg');
+      }
+    }
+  </script>
+<% end %>
