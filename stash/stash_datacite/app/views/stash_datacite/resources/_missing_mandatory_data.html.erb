@@ -21,8 +21,11 @@
 
     const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
     for (var errorId of errorIds) {
-      if( $(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ) {
+      if( $(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ){
         $(`#${errorId}`).addClass('c-input__error-bg');
+        if( ["text", "email"].includes($(`#${errorId}`)[0].type) ){
+          $(`#${errorId}`)[0].setAttribute('aria-invalid', 'true');
+        }
       }
     }
   </script>
