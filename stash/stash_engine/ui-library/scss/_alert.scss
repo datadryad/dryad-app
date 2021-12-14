@@ -77,3 +77,11 @@
 		background: transparent inline('../images/icon_close-blue.png') center / 15px no-repeat;
   }
 }
+
+.c-error-box {
+	width: 100%;
+	margin-bottom: 1em;
+	padding: 0 1em;
+	clear: both;
+	border: 2px solid black;
+}
