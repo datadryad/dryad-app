@@ -1,7 +1,7 @@
 <%# 'error_items' must be passed in as a local variable %>
 
 <% if error_items.length.positive? %>
-  <div style="clear: both; width: 100%; border: 2px solid black; margin-bottom: 1em;">
+  <div class="c-error-box">
     <p>Please fix the following items in order to submit.</p>
     <ul>
       <% error_items.each do |e| %>
