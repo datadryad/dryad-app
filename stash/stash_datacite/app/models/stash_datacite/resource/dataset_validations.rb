@@ -69,6 +69,16 @@ module StashDatacite
         err.flatten
       end
 
+      def loose_errors
+        err = []
+        err << title
+        err << authors
+        err << s3_error_uploads
+        err << url_error_validating
+
+        err.flatten
+      end
+
       def title
         if @resource.title.blank?
           return ErrorItem.new(message: 'Fill in a {dataset title}',

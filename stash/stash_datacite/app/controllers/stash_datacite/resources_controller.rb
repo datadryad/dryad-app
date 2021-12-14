@@ -116,10 +116,8 @@ module StashDatacite
 
     def check_required_fields(resource)
       completions = Resource::Completions.new(resource)
-      warnings = completions.all_warnings
 
       @completions = completions
-      @data = warnings
 
       @error_items = Resource::DatasetValidations.new(resource: resource).errors
     end
