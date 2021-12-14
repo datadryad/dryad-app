@@ -1,5 +1,6 @@
 require 'addressable'
 require 'cgi'
+require 'stash/aws/s3'
 
 # this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
 # to output digital storage sizes
