@@ -22,7 +22,7 @@ module StashDatacite
 
       def display_message
         url = Addressable::URI.parse(@page)
-        url.query_values = (url.query_values || {}).merge({display_validation: true})
+        url.query_values = (url.query_values || {}).merge({ display_validation: true })
         url_str = "#{url}##{@ids&.first}"
         @message.gsub('{', "<a href=\"#{url_str}\">").gsub('}', '</a>')
       end
@@ -31,7 +31,7 @@ module StashDatacite
     class DatasetValidations
       # this page displays specific validation information
       # contains a message for each, a link for the page to look at and an id for the field with a problem when possible
-      def initialize(resource: resource)
+      def initialize(resource:)
         @resource = resource
       end
 
@@ -53,7 +53,6 @@ module StashDatacite
       #
       # for the files page:
       # files that haven't validated, errors uploading, too many files, too big of size
-
 
       def errors
         err = []
@@ -83,8 +82,8 @@ module StashDatacite
       def title
         if @resource.title.blank?
           return ErrorItem.new(message: 'Fill in a {dataset title}',
-                    page: metadata_page(@resource),
-                    ids: [ "title__#{@resource.id}"])
+                               page: metadata_page(@resource),
+                               ids: ["title__#{@resource.id}"])
         end
         []
       end
@@ -95,23 +94,23 @@ module StashDatacite
 
           if author.author_first_name.blank? || author.author_last_name.blank?
             temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first and last name}",
-                                    page: metadata_page(@resource),
-                                    ids: [ "author_first_name__#{author.id}", "author_last_name__#{author.id}"])
+                                      page: metadata_page(@resource),
+                                      ids: ["author_first_name__#{author.id}", "author_last_name__#{author.id}"])
           end
 
           affil = author.affiliation || StashDatacite::Affiliation.new # there is always an affiliation this way
           # below gets rid of the annoying asterisk that go into end of this string, too bad names aren't atomic
-          if (affil.long_name || '').gsub(/\*$/, '').blank?
-            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {institutional affiliation}",
-                                      page: metadata_page(@resource),
-                                      ids: [ "instit_affil__#{author.id}"])
-          end
+          next unless (affil.long_name || '').gsub(/\*$/, '').blank?
+
+          temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {institutional affiliation}",
+                                    page: metadata_page(@resource),
+                                    ids: ["instit_affil__#{author.id}"])
         end
 
         unless @resource.authors&.first&.author_email&.present?
-          temp_err << ErrorItem.new(message: "Fill 1st {author email}",
+          temp_err << ErrorItem.new(message: 'Fill 1st {author email}',
                                     page: metadata_page(@resource),
-                                    ids: [ "author_email__#{@resource.authors&.first&.id}"])
+                                    ids: ["author_email__#{@resource.authors&.first&.id}"])
         end
 
         temp_err
@@ -119,9 +118,9 @@ module StashDatacite
 
       def abstract
         unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count.positive?
-          return ErrorItem.new(message: "Fill in the {abstract}",
+          return ErrorItem.new(message: 'Fill in the {abstract}',
                                page: metadata_page(@resource),
-                               ids: [ 'abstract_label' ])
+                               ids: ['abstract_label'])
         end
         []
       end
@@ -131,9 +130,9 @@ module StashDatacite
           @resource.identifier.manuscript_number.blank? &&
           @resource.identifier.publication_article_doi.blank?
 
-        return ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
-                             page: metadata_page(@resource),
-                             ids: ['msid', 'primary_article_doi'])
+        ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
+                      page: metadata_page(@resource),
+                      ids: %w[msid primary_article_doi])
       end
 
       def s3_error_uploads
@@ -147,13 +146,13 @@ module StashDatacite
 
         return [] if errored_uploads.empty?
 
-        msg = "{Check that the following file(s) have uploaded}:<br/><br/>" +
-          errored_uploads.map{ |i| CGI::escapeHTML(i) }.join('<br/>') + '<br/><br/>' +
-          "If this state persists for more than a few minutes, please remove and upload the file(s) again."
+        msg = '{Check that the following file(s) have uploaded}:<br/><br/>' \
+          "#{errored_uploads.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
+          'If this state persists for more than a few minutes, please remove and upload the file(s) again.'
 
-        return ErrorItem.new(message: msg,
-                             page: files_page(@resource),
-                             ids: ['filelist_id'])
+        ErrorItem.new(message: msg,
+                      page: files_page(@resource),
+                      ids: ['filelist_id'])
       end
 
       def url_error_validating
@@ -162,44 +161,44 @@ module StashDatacite
 
         return [] if files.empty?
 
-        msg = "{Check that the URLs associated with the following files are available and publicly viewable}:<br/><br/>" +
-          files.map{ |i| CGI::escapeHTML(i) }.join('<br/>') + '<br/><br/>' +
-          "URLs for deposit need to be publicly accessible and self-contained objects.  For example, " +
-          "adding an HTML file will only retrieve the HTML and not all referenced images or other assets."
+        msg = '{Check that the URLs associated with the following files are available and publicly viewable}:<br/><br/>' \
+          "#{files.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
+          'URLs for deposit need to be publicly accessible and self-contained objects.  For example, ' \
+          'adding an HTML file will only retrieve the HTML and not all referenced images or other assets.'
 
-        return ErrorItem.new(message: msg,
-                             page: files_page(@resource),
-                             ids: ['filelist_id'])
+        ErrorItem.new(message: msg,
+                      page: files_page(@resource),
+                      ids: ['filelist_id'])
       end
 
       def over_file_count
         return [] unless @resource.generic_files.present_files.count > APP_CONFIG.maximums.files
 
-        return ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " +
+        ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
           'or package your files in a container such as a zip archive',
-                             page: files_page(@resource),
-                             ids: ['filelist_id'])
+                      page: files_page(@resource),
+                      ids: ['filelist_id'])
       end
 
       def over_files_size
         errors = []
 
         if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size
-          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}." +
+          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}." \
                                   ' {Remove some data files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." +
+          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." \
             ' {Remove some software files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." +
+          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." \
             ' {Remove some supplemental files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
@@ -207,7 +206,6 @@ module StashDatacite
 
         errors
       end
-
 
     end
   end
