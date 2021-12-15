@@ -90,7 +90,7 @@ module StashDatacite
           error = validations.article_id
 
           expect(error.message).to include('manuscript number or DOI')
-          expect(error.ids).to eq(["msid", "primary_article_doi"])
+          expect(error.ids).to eq(%w[msid primary_article_doi])
         end
 
         it "doesn't give error if manuscript filled" do
@@ -111,8 +111,8 @@ module StashDatacite
           StashEngine::InternalDatum.create(data_type: 'publicationName',
                                             value: 'Barrel of Monkeys: the Primate Journal',
                                             identifier_id: @resource.identifier_id)
-          ri = create(:related_identifier, work_type: 'primary_article', resource_id: @resource.id,
-                      related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
+          create(:related_identifier, work_type: 'primary_article', resource_id: @resource.id,
+                                      related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.article_id
@@ -249,7 +249,7 @@ module StashDatacite
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.over_files_size
 
-          expect(errors.first.message).to include("Data uploads are limited")
+          expect(errors.first.message).to include('Data uploads are limited')
           expect(errors.first.ids.first).to eq('filelist_id')
         end
 
@@ -263,7 +263,7 @@ module StashDatacite
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.over_files_size
 
-          expect(errors.first.message).to include("Software uploads are limited")
+          expect(errors.first.message).to include('Software uploads are limited')
           expect(errors.first.ids.first).to eq('filelist_id')
         end
 
@@ -277,7 +277,7 @@ module StashDatacite
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.over_files_size
 
-          expect(errors.first.message).to include("Supplemental uploads are limited")
+          expect(errors.first.message).to include('Supplemental uploads are limited')
           expect(errors.first.ids.first).to eq('filelist_id')
         end
       end
