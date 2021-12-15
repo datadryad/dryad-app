@@ -1,12 +1,6 @@
 module StashDatacite
   module Resource
     describe Completions do
-      REQUIRED_FIELDS = ['title', 'author affiliation', 'author name', 'abstract', 'author email'].freeze
-      REQUIRED_COUNT = REQUIRED_FIELDS.size
-
-      OPTIONAL_FIELDS = ['date', 'keywords', 'methods', 'related identifiers'].freeze
-      OPTIONAL_COUNT = OPTIONAL_FIELDS.size
-
       attr_reader :resource
       attr_reader :completions
 
