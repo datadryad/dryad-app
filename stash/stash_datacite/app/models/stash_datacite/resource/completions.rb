@@ -1,28 +1,6 @@
 # frozen_string_literal: true
 
-require 'stash/aws/s3'
-
-# this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
-# to output digital storage sizes
-#
-include StashEngine::ApplicationHelper
-
-# ActionController::Base.helpers.number_to_human_size only returns results in MiB, not MB or similar
-
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
-
-# also
-# monkeypatch true and false to_i to be 0 and 1
-class FalseClass
-  def to_i
-    0
-  end
-end
-class TrueClass
-  def to_i
-    1
-  end
-end
 
 require 'stash_datacite/author_patch'
 module StashDatacite
@@ -33,77 +11,6 @@ module StashDatacite
 
         # After dev mode autoreloading, ensure Author-Affiliation relation & related methods
         StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
-      end
-
-      # these are the required ones and return true/false if completed
-      def title
-        !@resource.title.blank?
-      end
-
-      def institution
-        @resource.authors.joins(:affiliations).count > 0
-      end
-
-      def data_type
-        !@resource.resource_type.nil?
-      end
-
-      def author_name
-        num_authors = @resource.authors.count
-        return false if num_authors < 1
-
-        # the completely filled in authors must equal number of authors
-        @resource.authors.names_filled.count == num_authors
-      end
-
-      def author_email
-        num_authors = @resource.authors.count
-        return false if num_authors < 1
-
-        author = @resource.authors.first
-        author.author_email.present? ? true : false
-      end
-
-      def author_affiliation
-        num_authors = @resource.authors.count
-        return false if num_authors < 1
-
-        # the completely filled in authors must equal number of authors
-        @resource.authors.select { |a| a.affiliation.present? }.count == num_authors
-      end
-
-      def abstract
-        @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count > 0
-      end
-
-      # If the journal is filled in, either the manuscript_number or publication_article_doi must be present
-      def article_id
-        return true unless @resource.identifier.publication_name
-
-        @resource.identifier.manuscript_number || @resource.identifier.publication_article_doi
-      end
-
-      def required_completed
-        title.to_i + author_affiliation.to_i + author_name.to_i + abstract.to_i + author_email.to_i
-      end
-
-      def urls_validated?
-        if @resource.data_files.newly_created.errors.count > 0 || @resource.software_files.newly_created.errors.count > 0
-          false
-        else
-          true
-        end
-      end
-
-      def s3_error_uploads
-        return if @resource.submitted?
-
-        files = @resource.generic_files.newly_created.file_submission
-        errored_uploads = []
-        files.each do |f|
-          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.exists?(s3_key: f.calc_s3_path)
-        end
-        errored_uploads
       end
 
       # A submission is considered duplicate of another resource if it:
@@ -127,32 +34,6 @@ module StashDatacite
       # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       def contains_data?
         @resource.data_files.present_files.count.positive?
-      end
-
-      def over_size?(limit:, file_list:)
-        file_list.sum(:upload_file_size) > limit
-      end
-
-      def over_file_count?(file_list:)
-        file_list.count > APP_CONFIG.maximums.files
-      end
-
-      def required_total
-        5
-      end
-
-      # these are optional (recommended) ones
-      def date
-        @resource.datacite_dates.where.not(date: [nil, '']).count > 0
-      end
-
-      def keyword
-        @resource.subjects.non_fos.where.not(subject: [nil, '']).count > 0
-      end
-
-      def method
-        @resource.descriptions.where(description_type: 'methods').where
-          .not(description: [nil, '']).count > 0
       end
 
       # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
@@ -195,65 +76,6 @@ module StashDatacite
         true
       end
 
-      def temporal_coverage
-        TemporalCoverage.where(resource_id: @resource.id).count > 0
-      end
-
-      def optional_completed
-        date.to_i + keyword.to_i + method.to_i + has_related_works?.to_i
-      end
-
-      def optional_total
-        4
-      end
-
-      def all_warnings
-        messages = []
-
-        messages << 'Add a dataset title' unless title
-        messages << 'Add an abstract' unless abstract
-        messages << 'For data related to a journal article, you must supply a manuscript number or DOI' unless article_id
-        messages << 'You must have at least one author name and they need to be complete' unless author_name
-        messages << 'The first author must have an email supplied' unless author_email
-        messages << 'Authors must have affiliations' unless author_affiliation
-        messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
-
-        file_warnings(messages)
-
-        # do not require strict related works identifier checking right now
-        # messages << 'At least one of your Related Works DOIs are not formatted correctly' unless good_related_works_formatting?
-        # messages << 'At least one of your Related Works DOIs did not validate from https://doi.org' unless good_related_works_validation?
-      end
-
-      def file_warnings(messages)
-        error_uploads = s3_error_uploads
-        if error_uploads.present?
-          messages << 'Some files can not be submitted because they may have had errors uploading. ' \
-            'Please re-upload the following files if you still see this error in a few minutes.'
-          messages << "Files with upload errors: #{error_uploads.join(',')}"
-        end
-
-        { data_files: { name: 'data files', size_limit: APP_CONFIG.maximums.merritt_size },
-          software_files: { name: 'software files', size_limit: APP_CONFIG.maximums.zenodo_size },
-          supp_files: { name: 'supplemental files', size_limit: APP_CONFIG.maximums.zenodo_size } }.each_pair do |k, v|
-          if over_size?(limit: v[:size_limit], file_list: @resource.send(k).present_files)
-            messages << "Remove some #{v[:name]} until you have a smaller total size than #{filesize(v[:size_limit])}"
-          end
-          if over_file_count?(file_list: @resource.send(k).present_files)
-            messages << "Remove some files until you have #{APP_CONFIG.maximums.files} #{v[:name]} or fewer"
-          end
-        end
-
-        messages
-      end
-
-      def relaxed_warnings
-        messages = []
-        messages << 'Add a dataset title' unless title
-        messages << 'You must have at least one author name and they need to be complete' unless author_name
-        messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
-        messages
-      end
     end
   end
 end
