@@ -10,7 +10,6 @@ module StashDatacite
 
       def initialize(resource)
         @resource = resource
-        @completions = Resource::Completions.new(@resource)
       end
 
       def title
@@ -21,30 +20,6 @@ module StashDatacite
 
       def status
         @resource.current_state
-      end
-
-      # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
-      # required fields are Title, Institution, Data type, Data Author(s), Abstract
-      def required_filled
-        @completions.required_completed
-      end
-
-      def required_total
-        @completions.required_total
-      end
-
-      # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
-      # optional fields are Date, Keywords, Methods, Citations
-      def optional_filled
-        @completions.optional_completed
-      end
-
-      def optional_total
-        @completions.optional_total
-      end
-
-      def file_count
-        @resource.current_file_uploads.count
       end
 
       # size is the size of the whole dataset, all versions
@@ -75,12 +50,6 @@ module StashDatacite
 
       def publication_date
         @resource.publication_date
-      end
-
-      def edited_by_id
-        return @resource.user_id if @resource.current_editor_id.nil?
-
-        @resource.current_editor_id
       end
 
       def edited_by_name

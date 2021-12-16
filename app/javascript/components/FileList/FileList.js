@@ -6,7 +6,7 @@ import BadList from "./BadList/BadList"
 const file_list = (props) => {
     return (
         <div>
-            <h2 className="o-heading__level2">Files</h2>
+            <h2 className="o-heading__level2" id="filelist_id">Files</h2>
             <BadList chosenFiles={props.chosenFiles} />
             <table className="c-uploadtable">
                 <thead>

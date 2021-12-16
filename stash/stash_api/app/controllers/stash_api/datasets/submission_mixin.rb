@@ -35,11 +35,11 @@ module SubmissionMixin
   end
 
   def errors_for_completions
-    completions = StashDatacite::Resource::Completions.new(@resource)
+    validations = StashDatacite::Resource::DatasetValidations.new(resource: @resource)
     if @resource.loosen_validation && @user.curator?
-      completions.relaxed_warnings
+      validations.loose_errors.map { |err| err.message.gsub('{', '').gsub('}', '') }
     else
-      completions.all_warnings
+      validations.errors.map { |err| err.message.gsub('{', '').gsub('}', '') }
     end
   end
 
