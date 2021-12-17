@@ -118,7 +118,8 @@ module StashDatacite
       end
 
       def research_domain
-        if @resource.subjects.fos.blank?
+        domain_require_date = '2021-12-16'
+        if @resource.subjects.fos.blank? && @resource.identifier.created_at > domain_require_date
           return ErrorItem.new(message: 'Fill in a {research domain}',
                                page: metadata_page(@resource),
                                ids: ["fos_subjects__#{@resource.id}"])
