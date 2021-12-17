@@ -810,6 +810,8 @@ module StashApi
           @access_token = get_access_token(doorkeeper_application: @doorkeeper_application)
           @identifier = create(:identifier)
           @res = create(:resource, identifier: @identifier, user: @super_user)
+          @res.update(data_files: [create(:data_file, file_state: 'copied'),
+                                   create(:data_file, file_state: 'copied', upload_file_name: 'README.txt')])
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
         end
 
