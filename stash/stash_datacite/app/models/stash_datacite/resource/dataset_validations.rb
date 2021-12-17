@@ -59,6 +59,7 @@ module StashDatacite
         err << article_id
         err << title
         err << authors
+        err << research_domain
         err << abstract
 
         err << s3_error_uploads
@@ -114,6 +115,15 @@ module StashDatacite
         end
 
         temp_err
+      end
+
+      def research_domain
+        if @resource.subjects.fos.blank?
+          return ErrorItem.new(message: 'Fill in a {research domain}',
+                               page: metadata_page(@resource),
+                               ids: ["fos_subjects__#{@resource.id}"])
+        end
+        []
       end
 
       def abstract
