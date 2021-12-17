@@ -9,6 +9,7 @@ require 'cgi'
 module StashApi
   RSpec.describe DatasetsController, type: :request do
 
+    include Mocks::Aws
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
@@ -673,12 +674,17 @@ module StashApi
         # create a basic dataset to do updates to
         neuter_curation_callbacks!
         mock_ror!
+        mock_aws!
         # mock_repository!, currently this doesn't work right and submissions got put into threadpool background process anyway
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         @ds_info = response_body_hash
         expect(response_code).to eq(201)
+        my_id = StashEngine::Identifier.find(@ds_info['id'])
+        @res = my_id.in_progress_resource
+        @res.update(data_files: [create(:data_file, file_state: 'copied'),
+                                 create(:data_file, file_state: 'copied', upload_file_name: 'README.txt')])
         @patch_body = [{ "op": 'replace', "path": '/versionStatus', "value": 'submitted' }].to_json
       end
 
@@ -731,7 +737,6 @@ module StashApi
                                 headers: default_json_headers.merge(
                                   'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
-
           expect(response_code).to eq(202)
           expect(response_body_hash['abstract']).to eq(@ds_info['abstract'])
         end
