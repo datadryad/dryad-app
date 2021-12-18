@@ -169,12 +169,13 @@
     }
   }
 
- {
-     // make a skippable popup if there is something serious to warn the user about
-     let skippable_warning = '';
+  $(function() {
 
-     <% if @completions.duplicate_submission %>
-     skippable_warning += `
+    // make a skippable popup if there is something serious to warn the user about
+    let skippable_warning = '';
+
+    <% if @completions.duplicate_submission %>
+    skippable_warning += `
       <h1>Duplicate Submission Detected</h1>
       <p>
         This submission appears to be a duplicate of your previous submission  "<%= @completions.duplicate_submission.title %>".</p>
@@ -192,9 +193,9 @@
         If you <strong>did</strong> intend to create this dataset, please ensure that the title sufficiently distinguishes it from the
         other similar dataset(s).
        </p>`;
-     <% end %>
+    <% end %>
 
-     <% unless @completions.contains_data? %>
+    <% unless @completions.contains_data? %>
      skippable_warning += `
       <h1>Submitting Data Files to Dryad</h1>
       <p>
@@ -203,14 +204,14 @@
       <p>
         If you are only interested in uploading software or supplemental
         information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
-      </p>`;      
-     <% end %>
-     
-     if(skippable_warning.length > 0) {
-	 $('#genericModalContent').html(skippable_warning);
-	 $('#genericModalDialog')[0].showModal();
-     }
-}
+      </p>`;
+    <% end %>
+
+    if (skippable_warning.length > 0) {
+      $('#genericModalContent').html(skippable_warning);
+      $('#genericModalDialog')[0].showModal();
+    }
+  });
 
 </script>
 
