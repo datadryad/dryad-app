@@ -62,7 +62,7 @@ class UploadFiles extends React.Component {
         upload_type: [
             {
                 type: 'data', logo: '../../../images/logo_dryad.svg', alt: 'Dryad',
-                name: 'Data', description: 'e.g., csv, fasta',
+                name: 'Data', description: 'Required: README', description2: 'e.g., csv, fasta',
                 buttonFiles: 'Choose Files', buttonURLs: 'Enter URLs' },
             {
                 type: 'software', logo: '../../../images/logo_zenodo.svg', alt: 'Zenodo',
@@ -619,6 +619,7 @@ class UploadFiles extends React.Component {
                             alt={upload_type.alt}
                             name={upload_type.name}
                             description={upload_type.description}
+	     		    description2={upload_type.description2}
                             buttonFiles={upload_type.buttonFiles}
                             buttonURLs={upload_type.buttonURLs} />
                     })}

@@ -219,7 +219,7 @@ module StashDatacite
         end
 
         if readme_files.blank?
-          errors << ErrorItem.new(message: 'Include a README file along with the data files.' \
+          errors << ErrorItem.new(message: 'Add README.' \
                                            ' {Add some data files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
