@@ -218,15 +218,15 @@ module StashDatacite
                                   ids: ['filelist_id'])
         end
 
-        if readme_files.blank?
+        readme_require_date = '2021-12-20'
+        if readme_files.blank? && @resource.identifier.created_at > readme_require_date
           errors << ErrorItem.new(message: '{Include a README file} along with the data files.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if readme_files.present? && !readme_files.first.upload_file_name.start_with?('README')
-          errors << ErrorItem.new(message: "For the README file, please capitalize the 'README' portion of the filename." \
-                                           ' {Add some data files to proceed}.',
+          errors << ErrorItem.new(message: "For the {README file}, please capitalize the 'README' portion of the filename.",
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
