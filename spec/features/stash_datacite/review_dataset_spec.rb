@@ -33,8 +33,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
     before(:each) do
       start_new_dataset
-      fill_required_fields
       navigate_to_review
+      fill_required_fields
     end
 
     it 'submit button should be enabled', js: true do
@@ -44,7 +44,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'submits', js: true do
-      page.execute_script 'window.scrollBy(0,10000)'
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
       expect(page).to have_content(StashEngine::Resource.last.title)
