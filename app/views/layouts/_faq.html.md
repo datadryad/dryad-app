@@ -102,8 +102,11 @@
 
 <p>We require:</p>
 <ul>
-    <li>Journal: If associated with a manuscript, journal name and manuscript number is included.</li>
-    <li>Title: Title should be descriptive of the dataset and relatively unique, i.e. not ‘Data files for study 12’.</li>
+    <li>Journal Name: If associated with a manuscript, fields for journal name and manuscript number are required.</li>
+    <li>
+      Title:  The title should be a succinct summary of both the data and study subject or focus. A good title
+      typically contains 8 to 10 words that adequately describe the content of the dataset.
+    </li>
     <li>Author(s): Name, email address, institutional affiliation of main researcher(s) involved in producing the data.</li>
     <ul>
         <li>Affiliations are drawn from the <a href="http://ror.org">Research Organization Registry (ROR)</a></li>
@@ -112,43 +115,50 @@
             giving them the option to add their <a href="http://orcid.org">ORCID</a> to the Dryad record
         </li>
     </ul>
-    <li>Abstract: Short description of the dataset that would allow others to understand what the data is about.</li>
     <li>
-        Usage notes: Information that helps others understand how to use and interpret the data, e.g. column names,
-        units, explanations of missing data, context for the study. This information can be included in Usage Notes or as
-        a README file uploaded with the data files. See the <a href="https://data.research.cornell.edu/content/readme">
-        Cornell README template</a> as guidance.
+      Abstract: Brief summary of the dataset’s structure and concepts including information regarding
+      values, contents of the dataset, reuse potential and any legal or ethical considerations.
+      If this dataset is associated with an article, abstract language can be similar, but it should focus
+      on the information relevant to the data itself, rather than to the study.
+    </li>
+    <li>
+      Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology
+      classification.
     </li>
 </ul>
 
 <p>We recommend:</p>
 
 <ul>
-    <li>
-        Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology
-        classification.
-    </li>
-    <li>
-        Keyword(s):  Descriptive words that may help others discover your dataset. We recommend that you determine
-        whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please
-        enter as many keywords as applicable.
-    </li>
-    <li>
-        Methods: Any technical or methodological information that may help others to understand how the data were
-        generated (i.e. equipment/tools/reagents used, or procedures followed)
-    </li>
-    <li>
-        Usage Notes: Any technical or methodological information that may help others determine how the
-        data may be properly re-used, replicated, or re-analyzed.
-    </li>
-    <li>
-        Funding Information: Name of the funding organization that supported creation of the resource, including
-        applicable grant number(s).
-    </li>
-    <li>
-        Related works: Use this field to indicate other resources that are associated with the data. Examples include
-        publications, other datasets, code etc.
-    </li>
+  <li>
+    Funding Information: Name of the funding organization that supported the creation of the
+    resource, including applicable grant number(s). Each grant and associated award number
+    should be input separately. Options in the drop-down menu are populated by the Crossref Funder Registry.
+  </li>
+  <li>
+    Research facility: Where the research was conducted, if different from your current affiliation
+    (e.g., a field station).
+  </li>
+  <li>
+    Keyword(s): Descriptive words that may help others discover your dataset. We recommend
+    that you determine whether your discipline has an existing controlled vocabulary from which to
+    choose your keywords. Please enter as many keywords as applicable.
+  </li>
+  <li>
+    Methods: Any technical or methodological information that may help others to understand
+    how the data were generated (i.e. equipment/tools/reagents used, or procedures followed).
+  </li>
+  <li>
+    Usage Notes: Detailed and defined variables and allowable values or other information
+    which may help others determine how the data may be properly re-used, replicated, or re-analyzed.
+    If your data contains empty rows, insert "n/a" or “null” where applicable and provide a brief
+    explanation in the Usage Notes section so that any missing or hidden values are explained for
+    future users of the data.
+  </li>
+  <li>
+    Related Works: Use this field to indicate other resources that are associated with the data.
+    Examples include publications, related datasets, etc.
+  </li>
 </ul>
 
 <h2 id="upload-files">How do I upload my files?</h2>
