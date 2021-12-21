@@ -31,11 +31,6 @@ module StashDatacite
         found_dup
       end
 
-      # checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
-      def contains_data?
-        @resource.data_files.present_files.count.positive?
-      end
-
       # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
       # rubocop:disable Naming/PredicateName
       def has_related_works?

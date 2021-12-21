@@ -29,7 +29,7 @@ class UploadType extends React.Component {
             <img src={this.props.logo} alt={this.props.alt}/>
             <h2>{this.props.name}</h2>
           </header>
-          <b style={{textAlign: 'center'}}>{this.props.description}</b>
+            <b style={{textAlign: 'center'}}>{this.props.description}<br/>{this.props.description2}</b>
 
           <div className="c-choose">
             <label htmlFor={this.props.type} aria-label={`upload ${this.props.type} files`} className="c-choose__input-file-label">{this.props.buttonFiles}</label>
