@@ -20,6 +20,7 @@ module Fixtures
         add_title
         add_abstract
         add_author
+        add_research_domain
       end
 
       def add_field(field_name:, value: nil)
@@ -40,6 +41,12 @@ module Fixtures
                    "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
             affiliation: Faker::University.name }.with_indifferent_access
         )
+      end
+
+      def add_research_domain
+        fos = Faker::Science.science(:natural)
+        StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
+        @metadata.merge!(fieldOfScience: fos)
       end
 
       def add_related_work(work_type: 'article')

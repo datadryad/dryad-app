@@ -37,7 +37,7 @@ module Stash
           @dm.populate_keywords
           @resource.reload
           @manuscript.metadata['keywords'].each_with_index do |hash_kw, index|
-            expect(@resource.subjects[index].subject).to eql(hash_kw)
+            expect(@resource.subjects.non_fos[index].subject).to eql(hash_kw)
           end
         end
       end
