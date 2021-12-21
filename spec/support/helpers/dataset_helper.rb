@@ -33,15 +33,13 @@ module DatasetHelper
 
   def navigate_to_review
     click_link 'Review and Submit'
-    page.send_keys :escape if page.has_content?('We notice you do not have any data files in this submission.')
+    page.send_keys :escape if page.has_content?('Include at least one data file')
     expect(page).to have_content('Review Description')
   end
 
   def fill_required_fields
     only_fill_required_fields
-
-    # ##############################
-    # LICENSE/PAYMENT AGREEMENTS
+    add_required_data_files
     agree_to_everything
   end
 
@@ -49,20 +47,18 @@ module DatasetHelper
     # make sure we're on the right page
     navigate_to_metadata
 
-    # ##############################
-    # Title
     fill_in 'title', with: Faker::Lorem.sentence
-
-    # ##############################
-    # Author
     fill_in_author
-
-    # TODO: additional author(s)
-
-    # ##############################
-    # Abstract
     abstract = find_blank_ckeditor_id('description_abstract')
     fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
+  end
+
+  def add_required_data_files
+    navigate_to_upload
+    resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
+    @resource = StashEngine::Resource.find(resource_id)
+    create(:data_file, resource: @resource, file_state: 'copied')
+    create(:data_file, resource: @resource, file_state: 'copied', upload_file_name: 'README.txt')
   end
 
   def submit_form
