@@ -33,8 +33,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
     before(:each) do
       start_new_dataset
-      navigate_to_review
       fill_required_fields
+      navigate_to_review
     end
 
     it 'submit button should be enabled', js: true do
