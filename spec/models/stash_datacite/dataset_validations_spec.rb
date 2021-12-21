@@ -70,6 +70,16 @@ module StashDatacite
         end
       end
 
+      describe :research_domain do
+        it 'returns error an error object if research domain (FOS subject) not filled' do
+          @resource.update(subjects: [])
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.research_domain
+          expect(error.message).to include('research domain')
+          expect(error.ids.first).to eq("fos_subjects__#{@resource.id}")
+        end
+      end
+
       describe :abstract do
         it 'returns error for missing abstract' do
           abstract = @resource.descriptions.where(description_type: 'abstract').first
