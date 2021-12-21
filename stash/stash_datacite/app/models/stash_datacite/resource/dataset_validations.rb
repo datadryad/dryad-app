@@ -65,6 +65,7 @@ module StashDatacite
         err << url_error_validating
         err << over_file_count
         err << over_files_size
+        err << data_required
 
         err.flatten
       end
@@ -205,6 +206,43 @@ module StashDatacite
         end
 
         errors
+      end
+
+      def data_required
+        errors = []
+
+        unless contains_data?
+          errors << ErrorItem.new(message: 'Include at least one data file in your submission.' \
+                                           ' {Add some data files to proceed}.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
+        if readme_files.blank?
+          errors << ErrorItem.new(message: '{Include a README file} along with the data files.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
+        if readme_files.present? && !readme_files.first.upload_file_name.start_with?('README')
+          errors << ErrorItem.new(message: "For the README file, please capitalize the 'README' portion of the filename." \
+                                           ' {Add some data files to proceed}.',
+                                  page: files_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+        errors
+      end
+
+      private
+
+      # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
+      # There must be at least one file *other than* the README file.
+      def contains_data?
+        @resource.data_files.present_files.where("UPPER(upload_file_name) NOT LIKE 'README%'").count.positive?
+      end
+
+      def readme_files
+        @resource.data_files.present_files.where("UPPER(upload_file_name) LIKE 'README%'")
       end
 
     end

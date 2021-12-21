@@ -11,6 +11,7 @@ module StashDatacite
         @author2 = create(:author, resource: @resource)
         @author3 = create(:author, resource: @resource)
         create(:data_file, resource: @resource)
+        @readme = create(:data_file, resource: @resource, upload_file_name: 'README.txt')
         create(:data_file, resource: @resource)
         create(:data_file, resource: @resource)
         @resource.reload
@@ -150,8 +151,9 @@ module StashDatacite
 
         it 'only checks files that are new uploads and are not urls' do
           @resource.generic_files.first.update(file_state: 'copied')
-          @resource.generic_files.second.update(url: 'http://example.com')
-          @resource.generic_files[2].update(file_state: 'copied')
+          @resource.generic_files.second.update(file_state: 'copied')
+          @resource.generic_files.third.update(url: 'http://example.com')
+          @resource.generic_files.fourth.update(file_state: 'copied')
           @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
             allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
@@ -225,6 +227,44 @@ module StashDatacite
           expect(error.message).to include(@resource.software_files.first.upload_file_name)
         end
 
+      end
+
+      describe :required_data_files do
+        before(:each) do
+          @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
+        end
+
+        it 'requires at least one data file' do
+          @resource.data_files.destroy_all
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.data_required
+          expect(error[0].message).to include('one data file')
+        end
+
+        it 'requires a README file, in addition to at least one data file' do
+          @readme.update(upload_file_name: 'some-bogus-filename.txt')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.data_required
+          expect(error[0].message).to include('README')
+
+          @readme.update(upload_file_name: 'README.txt')
+          error = validations.data_required
+          expect(error).to be_empty
+        end
+
+        it 'does not care about the file extension of a README' do
+          @readme.update(upload_file_name: 'README.bogus-extension')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.data_required
+          expect(error).to be_empty
+        end
+
+        it 'warns about incorrectly capitalized README' do
+          @readme.update(upload_file_name: 'ReadMe.txt')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.data_required
+          expect(error[0].message).to include('capitalize')
+        end
       end
 
       describe :over_file_count do
