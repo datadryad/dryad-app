@@ -38,18 +38,18 @@ module DatasetHelper
   end
 
   def fill_required_fields
-    only_fill_required_fields
+    fill_required_metadata
     add_required_data_files
     agree_to_everything
   end
 
-  def only_fill_required_fields
+  def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
 
     fill_in 'title', with: Faker::Lorem.sentence
     fill_in_author
-    fill_in 'fos_subjects', with: 'Biological sciences'
+    fill_in_research_domain
     abstract = find_blank_ckeditor_id('description_abstract')
     fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
   end
@@ -95,6 +95,19 @@ module DatasetHelper
     first('.ui-menu-item-wrapper').click
     award_el = page.find('input.js-award_number', match: :first)
     award_el.fill_in(with: value)
+  end
+
+  def fill_in_research_domain
+    # Should work with:
+    #    fill_in 'fos_subjects', with: 'Biological sciences'
+    # Or at least:
+    #    fos_field = page.find('input.fos-subjects', match: :first)
+    #    fos_field.send_keys 'Bio', :down, :down, :tab
+    # But Capybara is not cooperating with the datalist, so we will fake it....
+    fos = 'Biological sciences'
+    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
+    res = StashEngine::Resource.last
+    res.subjects << create(:subject, subject: fos, subject_scheme: 'fos')
   end
 
   def agree_to_everything

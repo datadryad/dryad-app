@@ -123,7 +123,7 @@ RSpec.feature 'NewDataset', type: :feature do
     it 'waives the fee when funder has agreed to pay', js: true do
       # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
       stub_funder_name_lookup(name: 'Happy Clown School')
-      only_fill_required_fields
+      fill_required_metadata
       fill_in_funder(name: 'Happy Clown School', value: '12XU')
 
       navigate_to_review
@@ -132,7 +132,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it "doesn't waive the fee when funder isn't paying", js: true do
       # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
-      only_fill_required_fields
+      fill_required_metadata
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 
       navigate_to_review
@@ -156,7 +156,7 @@ RSpec.feature 'NewDataset', type: :feature do
     end
 
     it 'fills in a Field of Science subject', js: true do
-      only_fill_required_fields
+      fill_required_metadata
       fill_in 'fos_subjects', with: 'Agricultural biotechnology'
       navigate_to_review
       expect(page).to have_text('Agricultural biotechnology', wait: 5)
@@ -164,7 +164,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'fills in a Field of Science subject that is not official', js: true do
       name = Array.new(3) { Faker::Lorem.word }.join(' ')
-      only_fill_required_fields
+      fill_required_metadata
       fill_in 'fos_subjects', with: name
       navigate_to_review
       expect(page).to have_text(name, wait: 5)
@@ -172,7 +172,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'fills in a Field of Science subject and changes it and it keeps the latter', js: true do
       name = Array.new(3) { Faker::Lorem.word }.join(' ')
-      only_fill_required_fields
+      fill_required_metadata
       fill_in 'fos_subjects', with: name
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
       fill_in 'fos_subjects', with: 'Agricultural biotechnology'

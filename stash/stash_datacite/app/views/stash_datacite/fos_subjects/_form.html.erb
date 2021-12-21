@@ -5,7 +5,7 @@
   <% my_suffix = field_suffix(resource) %>
   <%= label_tag "fos_subjects_#{my_suffix}", "Research Domain", class: 'c-input__label required' %>
   <%= text_field_tag :fos_subjects, resource&.subjects&.permissive_fos&.first&.subject, id: "fos_subjects_#{my_suffix}",
-                     list: "fos_subject_#{my_suffix}", class: 'title c-input__text' %>
+                     list: "fos_subject_#{my_suffix}", class: 'fos-subjects title c-input__text' %>
   <%= hidden_field_tag :id, resource.id %>
   <%= hidden_field_tag(:form_id, form_id) %>
 
