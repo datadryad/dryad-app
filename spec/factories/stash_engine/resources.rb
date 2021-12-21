@@ -21,6 +21,7 @@ FactoryBot.define do
       create(:author, resource: resource)
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
+      resource.subjects << create(:subject, subject_scheme: 'fos')
     end
 
     trait :submitted do

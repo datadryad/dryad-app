@@ -85,7 +85,7 @@ module Stash
       it 'has keywords output' do
         s = create(:subject)
         @resource.subjects << s
-        expect(@mg.keywords.first).to eq(@resource.subjects.first.subject)
+        expect(@mg.keywords.first).to eq(@resource.subjects.non_fos.first.subject)
       end
 
       it 'has notes output' do
