@@ -193,20 +193,8 @@
         If you <strong>did</strong> intend to create this dataset, please ensure that the title sufficiently distinguishes it from the
         other similar dataset(s).
        </p>`;
-    <% end %>
-
-    <% unless @completions.contains_data? %>
-     skippable_warning += `
-      <h1>Submitting Data Files to Dryad</h1>
-      <p>
-        Dryad is a repository that focuses on research data.  We notice you do not have any data files in this submission.
-      </p>
-      <p>
-        If you are only interested in uploading software or supplemental
-        information, we suggest submitting directly to <a href="https://zenodo.org" target="_blank">https://zenodo.org</a>.
-      </p>`;
-    <% end %>
-
+     <% end %>
+    
     if (skippable_warning.length > 0) {
       $('#genericModalContent').html(skippable_warning);
       $('#genericModalDialog')[0].showModal();
