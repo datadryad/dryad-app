@@ -64,9 +64,12 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     end
 
     it 'warns that there are no data files' do
+      @resource = StashEngine::Resource.last
+      @resource.data_files = []
+      @resource.save
       click_link 'Review and Submit'
 
-      expect(page).to have_text('We notice you do not have any data files in this submission.')
+      expect(page).to have_text('Include at least one data file')
     end
   end
 
