@@ -10,7 +10,7 @@
 
 <p>Ready to get started? <a href="/stash/">Log in</a> and go to "My Datasets" to begin your data submission now!</p>
 
-<h2 id="login">Login</h3>
+<h2 id="login">Login</h2>
 
 <p>
     Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the
@@ -31,20 +31,67 @@
   submission now!
 </p>
 
-<h2 id="uploading">Uploading your data</h3>
+<h2 id="uploading">Uploading your data</h2>
+
+<h3>Describe Your Dataset</h3>
 <p>
     You will first be asked to enter metadata (information about your data). Check out our tips for complete and
     <a href="/stash/faq#metadata">comprehensive metadata</a>.  When you <a href="/stash/faq#upload-files">upload data files</a>,
     ensure that they meet our <a href="/stash/faq#files">file requirements</a> and are able to be opened, they do not
-    contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#cc0">CC0</a>. Please
-    upload a <a href="https://data.research.cornell.edu/content/readme">README</a> that describes your data as a .txt file.
+    contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#cc0">CC0</a>.
 </p>
 
 <p>
-    If you choose to upload Software which will be triaged and published at Zenodo, we recommend uploading a README specific
-    to the software on page three. For more information about our Zenodo integration check
+  Our duplicate submission detector will scan the first four words of the dataset title and, if those words match an
+  existing dataset linked to the same submitting author, a pop-up will appear on the final page of the submission
+  form to warn of a potential identical submission. If there is no risk of duplication, you can bypass the warning
+  and proceed to submit.
+</p>
+
+<h3>Upload Files</h3>
+
+<p>
+  Dryad is a repository for the raw, unprocessed data that were used to support the conclusions presented in your
+  article. We have partnered with <a href="https://zenodo.org/" target="_blank">Zenodo</a> to host
+  software files and supplemental information uploaded to our site.
+  Submitters will also have the opportunity to select the proper license for their software, as opposed to
+  Dryad’s CC0 license.
+</p>
+
+<img src="/images/dryad_upload.png" alt="Screenshot of image upload" />
+
+<p>
+  The “Data” category should include your primary, underlying data that has not been processed for use. Common file
+  types include .csv, .xlsx, .txt and compressed file archives: TAR.GZ, 7Z, ZIP. 
+</p>
+
+<p>
+  We require that a README file is uploaded to this category to clearly define all variables,
+  across all data files contained within the submission. The file name must contain and begin with "README" in all
+  caps (i.e. README_file.txt). For reference, Cornell University's Research Data Management Service Group has
+  created <a href="https://data.research.cornell.edu/content/readme" target="_blank">an excellent README template</a>. 
+</p>
+
+<p>
+  The “Software” category is reserved for code packages (.R files, Python scripts, etc.) that outline
+  all steps in processing and analyzing your data, ensuring reproducibility. Files uploaded to this
+  category will be evaluated and hosted by Zenodo. Because non-data files are not always compatible
+  with the CC0 license required by Dryad, you will have the opportunity to choose a separate license
+  for your code at the final stage of the submission process
+</p>
+
+<p>
+  The “Supplemental information” can include figures, supporting tables, appendices, etc. related
+  to your research article. Please do not upload supplementary material already present within the
+  manuscript that will appear in the published article.
+</p>
+
+<p>
+    For more information about our Zenodo integration check
     out <a href="/stash/faq#zenodo-integrate">our FAQ</a>.
 </p>
+
+<h3>Tabular Data Validator</h3>
 
 <p>
 For all data files uploaded to Dryad in CSV, XLS, XLSX formats (25MB or less), a
@@ -80,19 +127,36 @@ If you have questions or require assistance, contact <a href="mailto:help@datadr
 Foundation. 
 </p>
 
+<h3>Review and Submit</h3>
+
 <p>
-    You will have the opportunity for data to be curated and published immediately or if you prefer for data to be private
-    during your peer review process, select <a href="/stash/faq#ppr">Private for Peer Review</a> on the “Review and Submit”
-    page.
+  On the final page of the submission form, you’ll have the opportunity to review that your
+  metadata is correct and check the required acknowledgments to confirm payment of the data
+  publication charge.
 </p>
 
-<h2 id="curation">Dataset Curation</h3>
+<p>
+  If you are affiliated with a member institution or your related article is associated with a sponsoring
+  journal title, the option to select the acknowledgment will not be available and a statement
+  below will appear to confirm who is sponsoring the data publication charge.
+</p>
+
+<p>
+  If you prefer that your data remain private during the peer review process, select <a href="/stash/faq#ppr">Private for Peer Review</a>
+  on the final page of the submission form. While in this status, your submission will not enter
+  our curation process or publish until the checkbox for this option is deselected or you contact
+  us to update the status of your submission.
+</p>
+
+<p>If you have questions or require assistance, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
+
+<h2 id="curation">Dataset Curation</h2>
 <p>
     We will review your data ensuring it meets our <a href="/stash/faq#curation">curation requirements</a>. If we have
     questions we’ll get in touch with you. For more information check out <a href="/stash/faq">our FAQ</a>.
 </p>
 
-<h2 id="publication">Dataset Publication</h3>
+<h2 id="publication">Dataset Publication</h2>
 
 <p>
   Once your submission has been reviewed and approved by our team of curators, you will receive a notification of
