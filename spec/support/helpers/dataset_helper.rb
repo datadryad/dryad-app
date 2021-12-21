@@ -61,7 +61,7 @@ module DatasetHelper
 
     # ##############################
     # Abstract
-    fill_in 'fos_subjects', with 'Biological sciences'
+    fill_in 'fos_subjects', with: 'Biological sciences'
     abstract = find_blank_ckeditor_id('description_abstract')
     fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
   end
