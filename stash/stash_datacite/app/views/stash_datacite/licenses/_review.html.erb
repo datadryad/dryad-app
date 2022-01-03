@@ -96,7 +96,9 @@ $(document).ready(function(){
       // console.log( index + ": " + $( this ).text() );
     });
 
-    if (allChecked) {
+		let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
+
+    if (allChecked && !hasErrors) {
         $('.js-submission').attr('disabled', false); //enable input
     } else {
         $('.js-submission').attr('disabled', true); //disable input
