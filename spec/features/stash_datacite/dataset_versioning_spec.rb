@@ -38,31 +38,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       start_new_dataset
       fill_required_fields
       navigate_to_review
+      agree_to_everything
       submit_form
-      @resource = StashEngine::Resource.where(user: @author).last
     end
 
     describe :pre_submit do
-
       it 'should display the proper info on the My Datasets page', js: true do
         click_link 'My Datasets'
 
-        within(:css, '#user_in_progress tbody tr:first-child') do
-          expect(page).to have_text(@resource.title)
-          expect(page).to have_text('In Progress')
-          expect(page).to have_button('Resume')
-          expect(page).to have_button('Delete')
-        end
+        expect(page).to have_text(@resource.title)
+        expect(page).to have_text('In Progress')
       end
 
       it 'did not send out an email to the author', js: true do
         expect(ActionMailer::Base.deliveries.count).to eq(0)
       end
-
     end
 
     describe :merritt_submission_error do
-
       it 'displays the proper information on the My Datasets page', js: true do
         mock_unsuccessfull_merritt_submission!(@resource)
         click_link 'My Datasets'
@@ -73,11 +66,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).not_to have_link('Update')
         end
       end
-
     end
 
     describe :merritt_submission_success do
-
       before(:each) do
         ActionMailer::Base.deliveries = []
         mock_successfull_merritt_submission!(@resource)
@@ -101,7 +92,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       describe :when_viewed_by_curator do
-
         before(:each, js: true) do
           sign_in(@curator)
           find('summary', text: 'Admin').click
@@ -135,15 +125,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_text('Submitted')
           expect(page).to have_text(@author.name)
         end
-
       end
-
     end
-
   end
 
   describe :new_version do
-
     before(:each) do
       ActionMailer::Base.deliveries = []
       @identifier = create(:identifier)
@@ -152,12 +138,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     end
 
     context :by_curator do
-
       before(:each, js: true) do
         # needed to set the user to system user.  Not migrated as part of tests for some reason
         StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
 
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
+        create(:data_file, file_state: 'copied', resource: @resource, upload_file_name: 'README.txt')
+        create(:data_file, file_state: 'copied', resource: @resource)
         @resource.reload
 
         sign_in(@curator)
@@ -214,11 +201,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text('Dryad System')
         expect(page).to have_text('System set back to curation')
       end
-
     end
 
     context :by_author do
-
       before(:each, js: true) do
         ActionMailer::Base.deliveries = []
         sign_in(@author)
@@ -365,8 +350,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     doi = 'https://doi.org/10.5061/dryad.888gm50'
     mock_good_doi_resolution(doi: doi)
     fill_in 'related_identifier[related_identifier]', with: doi
+    add_required_data_files
     # Submit the changes
     navigate_to_review
+    agree_to_everything
     fill_in('user_comment', with: Faker::Lorem.sentence) if curator
     click_button 'Submit'
     @resource = StashEngine::Resource.last

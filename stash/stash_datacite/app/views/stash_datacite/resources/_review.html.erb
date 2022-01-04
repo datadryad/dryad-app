@@ -162,7 +162,6 @@
   }
 
   function updateSubmitCommentDisabled(){
-    alert('hello world!');
     let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
     if($('#all_filled').length && $('#user_comment').val().length > 0 && !hasErrors){
       $('#submit_dataset').prop('disabled', false);
