@@ -127,7 +127,7 @@
   <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
           class: 'o-button__icon-left', role: 'button' %>
 
-  <% if @data.blank? # valid data %>
+  <% if @error_items.blank? # valid data %>
     <%= form_with(url: stash_datacite.resources_submission_path, local: true) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
@@ -162,7 +162,8 @@
   }
 
   function updateSubmitCommentDisabled(){
-    if($('#all_filled').length && $('#user_comment').val().length > 0){
+    let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
+    if($('#all_filled').length && $('#user_comment').val().length > 0 && !hasErrors){
       $('#submit_dataset').prop('disabled', false);
     }else{
       $('#submit_dataset').prop('disabled', true);

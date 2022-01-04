@@ -33,14 +33,12 @@ module DatasetHelper
 
   def navigate_to_review
     click_link 'Review and Submit'
-    page.send_keys :escape if page.has_content?('Include at least one data file')
     expect(page).to have_content('Review Description')
   end
 
   def fill_required_fields
     fill_required_metadata
     add_required_data_files
-    agree_to_everything
   end
 
   def fill_required_metadata
@@ -63,8 +61,7 @@ module DatasetHelper
   end
 
   def submit_form
-    navigate_to_review
-    submit = find_button('submit_dataset', disabled: :all)
+    submit = find_button('submit_dataset')
     submit.click
   end
 
@@ -111,10 +108,8 @@ module DatasetHelper
   end
 
   def agree_to_everything
-    navigate_to_review
-    find('#agree_to_license').click
-    find('#agree_to_tos').click
-    find('#agree_to_payment').click
+    # navigate_to_review  # do we really have to re-navigate each time?
+    all(:css, '.js-agrees').each { |i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
   end
 
   def attach_files
