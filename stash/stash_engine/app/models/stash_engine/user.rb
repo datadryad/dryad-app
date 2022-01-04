@@ -37,7 +37,7 @@ module StashEngine
     end
 
     def curator?
-      role == 'superuser' || role == 'curator'
+      role == 'superuser' || role == 'curator' || role == 'tenant_curator'
     end
 
     def journals_as_admin
