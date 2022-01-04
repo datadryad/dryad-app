@@ -1,5 +1,6 @@
 RSpec.feature 'Admin', type: :feature do
 
+  include DatasetHelper
   include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::Ror
@@ -40,7 +41,9 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
       expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+      add_required_data_files
       click_link 'Review and Submit'
+      agree_to_everything
       expect(page).to have_css('input#user_comment')
     end
 
@@ -259,7 +262,9 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
       expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+      add_required_data_files
       click_link 'Review and Submit'
+      agree_to_everything
       expect(page).to have_css('input#user_comment')
     end
 
