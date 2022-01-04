@@ -336,6 +336,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(@resource.current_editor_id).to eql(curator2.id)
         end
 
+        it 'does not use the backup curator when the previous curator is a tenant_curator', js: true do
+          @curator.update(role: 'tenant_curator')
+          create(:user, role: 'curator') # backup curator
+          create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
+          @resource.reload
+
+          sign_in(@author)
+          click_link 'My Datasets'
+          within(:css, '#user_submitted') do
+            click_button 'Update'
+          end
+          update_dataset
+          @resource.reload
+
+          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_editor_id).to eql(@curator.id)
+        end
+
       end
 
     end
