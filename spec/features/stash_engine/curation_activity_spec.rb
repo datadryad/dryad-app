@@ -2,7 +2,6 @@ require 'rails_helper'
 # require 'pry-remote'
 
 RSpec.feature 'CurationActivity', type: :feature do
-
   include Mocks::Aws
   include Mocks::Stripe
   include Mocks::Ror
@@ -218,6 +217,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
         # the button to edit has this class on it
         find('.js-trap-curator-url').click
+        add_required_data_files
         navigate_to_review
         agree_to_everything
         fill_in 'user_comment', with: Faker::Lorem.sentence

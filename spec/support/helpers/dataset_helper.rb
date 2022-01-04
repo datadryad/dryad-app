@@ -109,7 +109,7 @@ module DatasetHelper
 
   def agree_to_everything
     # navigate_to_review  # do we really have to re-navigate each time?
-    all(:css, '.js-agrees').each {|i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
+    all(:css, '.js-agrees').each { |i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
   end
 
   def attach_files
