@@ -2,20 +2,20 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
-import sanitize from '../lib/sanitize_filename';
+import sanitize from '../../lib/sanitize_filename';
 
-import UploadType from '../components/UploadType/UploadType';
-import ModalUrl from '../components/Modal/ModalUrl';
-import ModalValidationReport from "../components/ModalValidationReport/ModalValidationReport";
-import FileList from '../components/FileList/FileList';
-import FailedUrlList from '../components/FailedUrlList/FailedUrlList';
-import ValidateFiles from "../components/ValidateFiles/ValidateFiles";
-import Instructions from '../components/Instructions/Instructions';
-import WarningMessage from '../components/WarningMessage/WarningMessage';
+import UploadType from '../../components/FileUpload/UploadType/UploadType';
+import ModalUrl from '../../components/FileUpload/Modal/ModalUrl';
+import ModalValidationReport from "../../components/FileUpload/ModalValidationReport/ModalValidationReport";
+import FileList from '../../components/FileUpload/FileList/FileList';
+import FailedUrlList from '../../components/FileUpload/FailedUrlList/FailedUrlList';
+import ValidateFiles from "../../components/FileUpload/ValidateFiles/ValidateFiles";
+import Instructions from '../../components/FileUpload/Instructions/Instructions';
+import WarningMessage from '../../components/FileUpload/WarningMessage/WarningMessage';
 import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
-import '../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
+import '../../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
 
 /**
