@@ -16,3 +16,57 @@
 <li>Contents are preserved for the long term to guarantee access to contents indefinitely.</li>
 <li>Open source, standards-compliant technology.</li>
 </ul>
+
+
+
+<h1>Shadow part styling for tabbed custom element</h1>
+
+<template id="tabbed-custom-element">
+<style type="text/css">
+*, ::before, ::after {
+box-sizing: border-box;
+padding: 1rem;
+}
+:host {
+display: flex;
+}
+</style>
+<div part="tab active">Tab 1</div>
+<div part="tab">Tab 2</div>
+<div part="tab">Tab 3</div>
+</template>
+
+<tabbed-custom-element></tabbed-custom-element>
+
+
+<h1>Word Count</h1>
+
+<article contenteditable="">
+  <p>1 2 3 4</p>
+  <word-count></word-count>
+</article>
+
+<h1>TurboStream example </h1>
+
+<div id="abc">
+<p>This is sample text to be replaced.</p>
+</div>
+
+<turbo-stream action="update" target="abc">
+<template>
+   hello world
+  </template>
+</turbo-stream>
+
+<%= javascript_pack_tag 'my_webcomponent_js' %>
+<h1>Test for CEDAR</h1>
+
+ <cedar-embeddable-editor
+ [config]="confService.appConfig.ceeConfig"></cedar-embeddable-editor>
+
+<!-- Even though the JavaScript file for CEDAR is fully versioned, webpack -->
+<!-- ignores portions of the name after the first dot, so we only include the -->
+<!-- major version. -->
+<%= javascript_pack_tag 'cedar-embeddable-editor-2' %>
+
+

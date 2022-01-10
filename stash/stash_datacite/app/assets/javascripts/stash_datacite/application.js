@@ -13,3 +13,6 @@
 
 //= require leaflet
 //= require_tree .
+
+
+console.log('Hello from datacite application.js')

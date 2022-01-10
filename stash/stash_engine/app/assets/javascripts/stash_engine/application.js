@@ -17,3 +17,6 @@
 //= require ckeditor/init
 //= require_tree .
 
+
+
+console.log('Hello from engine  application.js')
