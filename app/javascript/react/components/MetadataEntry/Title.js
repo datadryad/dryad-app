@@ -1,6 +1,9 @@
 import React from 'react';
 
 function Title() {
+  // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
+  const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
   // the title should ALWAYS be a patch request for sending data, since it's a field in the resource model
   // which should always be created before any metadata entry for title is performed
   return (
@@ -10,9 +13,9 @@ function Title() {
           data-remote="true" method="post" _lpchecked="1">
       <input name="utf8" type="hidden" value="✓" />
       <input type="hidden" name="_method" value="patch_REPLACE_ME" />
-      <input type="hidden" name="authenticity_token" value="patch_REPLACE_ME" />
+      <input type="hidden" name="authenticity_token" value={csrf} />
       <strong>
-        <label className="required c-input__label" htmlFor="title__REPLACE_ME">Dataset Title</label>
+        <label className="required c-input__label" htmlFor=`title__`>Dataset Title</label>
       </strong><br />
       <input type="text" name="title" id="title__REPLACE_ME" value="title REPLACE_ME" className="title c-input__text" size="130" />
       <input type="hidden" name="id" id="id" value="3511_REPLACE_ME" />
