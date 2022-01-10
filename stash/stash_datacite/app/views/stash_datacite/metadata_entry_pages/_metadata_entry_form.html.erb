@@ -17,7 +17,7 @@
 
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
-  <%= react_component('components/MetadataEntry/Title') %><br>
+  <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title) } ) %><br>
 
   <fieldset class="c-fieldset">
   <legend class="c-fieldset__legend">Author(s)</legend>
