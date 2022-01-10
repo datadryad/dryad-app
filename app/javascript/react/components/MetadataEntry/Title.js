@@ -15,7 +15,7 @@ function Title() {
       <input type="hidden" name="_method" value="patch_REPLACE_ME" />
       <input type="hidden" name="authenticity_token" value={csrf} />
       <strong>
-        <label className="required c-input__label" htmlFor=`title__`>Dataset Title</label>
+        <label className="required c-input__label" htmlFor="title__REPLACE_ME">Dataset Title</label>
       </strong><br />
       <input type="text" name="title" id="title__REPLACE_ME" value="title REPLACE_ME" className="title c-input__text" size="130" />
       <input type="hidden" name="id" id="id" value="3511_REPLACE_ME" />
