@@ -3,7 +3,6 @@ import React from 'react';
 const Title = ({ resource }) => {
   // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
   const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-  console.log(resource);
 
   // the title should ALWAYS be a patch request for sending data, since it's a field in the resource model
   // which should always be created before any metadata entry for title is performed
