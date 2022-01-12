@@ -1,10 +1,13 @@
 <p id="import-choices-label">My data is related to:</p>
-def
-<script type="text/javascript"
-	src="https://component.metadatacenter.org/cedar-embeddable-editor/cedar-embeddable-editor-2.5.38.js"></script>
 
 <cedar-embeddable-editor [config]="configurationObject"></cedar-embeddable-editor>
-abc
+
+<!-- Even though the JavaScript file for CEDAR is fully versioned, webpack -->
+<!-- ignores portions of the name after the first dot, so we only include the -->
+<!-- major version. -->
+<%= javascript_pack_tag 'cedar-embeddable-editor-2' %>
+
+
 <% form_id = "resource_publication_#{resource.id}" %> 
 <%= form_with(id: form_id, url: publications_update_path, method: :patch, remote: true,
 							authenticity_token: true) do |f| %>
