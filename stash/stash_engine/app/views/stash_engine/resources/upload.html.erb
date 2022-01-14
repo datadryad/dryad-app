@@ -22,6 +22,11 @@
   frictionless: APP_CONFIG[:frictionless].to_h
 }) %>
 
+<!-- Even though the JavaScript file for CEDAR is fully versioned, webpack -->
+<!-- ignores portions of the name after the first dot, so we only include the -->
+<!-- major version. -->
+<%= javascript_pack_tag 'cedar-embeddable-editor-2' %>
+
 <!-- display messages to let arias know what's happening -->
 <div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
 </div>

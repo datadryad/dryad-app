@@ -15,6 +15,11 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+// Make JS more stable??
+// Recommended for Angular
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 // Support component names relative to this directory:
 var componentRequireContext = require.context("containers", true);
 var ReactRailsUJS = require("react_ujs");
