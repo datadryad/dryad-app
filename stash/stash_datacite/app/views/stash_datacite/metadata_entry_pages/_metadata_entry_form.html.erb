@@ -95,8 +95,3 @@
     </div>
     <%= link_to "add another related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
     </fieldset>
-
-  <script>
-    // the react components need to be re-rendered after ajax load since they are not present when the page loads initially
-    ReactRailsUJS.mountComponents();
-  </script>
