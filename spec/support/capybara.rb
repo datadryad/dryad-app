@@ -11,12 +11,17 @@ require 'webdrivers'
 
 Webdrivers::Chromedriver.update
 
-Capybara.default_driver = :rack_test
-Capybara.javascript_driver = :selenium_chrome_headless
+# make CAPY_SHOW environment variable set to see the browser doing its thing
+if ENV['CAPY_SHOW']
+  Capybara.default_driver = :selenium_chrome
+  Capybara.javascript_driver = :selenium_chrome
+else
+  Capybara.default_driver = :rack_test
+  Capybara.javascript_driver = :selenium_chrome_headless
+end
 
 # uncomment following lines to see actions in browser
-# Capybara.default_driver = :selenium_chrome
-# Capybara.javascript_driver = :selenium_chrome
+
 
 # TODO: is it necessary :chrome if we already run with :selenium_chrome
 # Capybara.javascript_driver = :chrome
