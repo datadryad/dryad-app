@@ -2,6 +2,7 @@ $('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create
 loadAccordion();
 loadResourceTypes();
 // loadTitles(); // now loaded by ReactRailsUJS, will fail silently if method is missing
+loadFosSubjects();
 loadAuthors();
 hideRemoveLinkAuthors();
 hideRemoveRequiredLabelAuthors();
