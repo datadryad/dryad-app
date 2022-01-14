@@ -25,7 +25,7 @@ const Title = ({ resource, path }) => {
 
   return (
     <Formik
-      initialValues={{ title: resource.title, id: resource.id, authenticity_token: csrf }}
+      initialValues={{ title: (resource.title || ''), id: resource.id, authenticity_token: (csrf || '') }}
       innerRef={formRef}
       onSubmit={(values, { setSubmitting }) => {
         axios.patch(path, values, { headers: {'Content-Type': 'application/json; charset=utf-8', 'Accept': 'application/json'} })
@@ -38,9 +38,9 @@ const Title = ({ resource, path }) => {
     >
       <Form className="c-input">
         <strong>
-          <label className="required c-input__label" htmlFor="title">Dataset Title</label>
+          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
         </strong><br />
-        <Field name="title" type="text" className="title c-input__text" size="130"
+        <Field name="title" type="text" className="title c-input__text" size="130" id={`title__${resource.id}`}
                onBlur={(e) => { formRef.current.handleSubmit(); }} />
         <Field name="id" type="hidden" />
         <Field name="authenticity_token" type="hidden" />
