@@ -19,7 +19,7 @@ import axios from 'axios';
 
 const Title = ({ resource, path }) => {
   // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
-  const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
 
   const formRef = useRef();
 
