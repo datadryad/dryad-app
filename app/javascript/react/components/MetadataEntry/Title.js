@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
+import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
    verbose like the initial, "building Formik" ones at https://formik.org/docs/tutorial .  If you use the compact and less
@@ -28,11 +29,9 @@ const Title = ({ resource, path }) => {
       initialValues={{ title: (resource.title || ''), id: resource.id, authenticity_token: (csrf || '') }}
       innerRef={formRef}
       onSubmit={(values, { setSubmitting }) => {
+        showSavingMsg();
         axios.patch(path, values, { headers: {'Content-Type': 'application/json; charset=utf-8', 'Accept': 'application/json'} })
-          .then((data) =>
-            {
-              console.log(data);
-            }
+          .then((data) => { showSavedMsg() }
           )
       }}
     >
