@@ -22,7 +22,6 @@ end
 
 # uncomment following lines to see actions in browser
 
-
 # TODO: is it necessary :chrome if we already run with :selenium_chrome
 # Capybara.javascript_driver = :chrome
 
