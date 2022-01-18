@@ -94,7 +94,9 @@ module Stash
 
       def notes
         my_notes = @resource.descriptions.where(description_type: 'other')&.map(&:description)&.join("\n")
-        funder_info = @resource.contributors.where(contributor_type: 'funder').map { |contrib| funding_text(contrib) }.join('</p><p>')
+        funder_info = @resource.contributors.where(contributor_type: 'funder')
+          .where('dcs_contributors.contributor_name IS NOT NULL')
+          .map { |contrib| funding_text(contrib) }.join('</p><p>')
         funder_info = "<p>#{funder_info}</p>" unless funder_info.blank?
         "#{my_notes}#{funder_info}".strip
       end
@@ -179,7 +181,7 @@ module Stash
       end
 
       def funding_text(contributor)
-        ["Funding provided by: #{CGI.escapeHTML(contributor.contributor_name)}",
+        ["Funding provided by: #{CGI.escapeHTML(contributor.contributor_name.to_s)}",
          (contributor.name_identifier_id.nil? ? nil : "Crossref Funder Registry ID: #{CGI.escapeHTML(contributor.name_identifier_id)}"),
          (contributor.award_number.nil? ? nil : "Award Number: #{CGI.escapeHTML(contributor.award_number)}")].compact.join('<br/>')
       end
