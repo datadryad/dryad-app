@@ -1,4 +1,7 @@
-# Frictionless Integration
+# Frictionless Integration Install
+
+Some of these install instructions are specific to our installation.
+[We've also documented an overview of how we integrated Frictionless](./implementation_overview.md).
 
 For the frictionless integration, you'll need both the Frictionless
 Python and library and also to work with the `components` React/Typescript
@@ -12,9 +15,12 @@ library which is forked from `frictionlessdata/components`.
   - python-pip
     
 ### System wide installation
+Install python3 and pip for python version 3 according to your preferred way such as system package manager.
 1. Install frictionless framework (general and for the tabular files Dryad wish to analyse)
 - For the last update of this document, there are 4 types: csv, xls, xlsx, json.
 ```bash
+# note for below, pip for python version 3 might be pip3 and python3
+# depending on the server setup where pip and python might be for python2 instead
 $ pip install frictionless
 $ pip install frictionless[excel]
 $ pip install frictionless[json]
@@ -23,10 +29,6 @@ $ pip install frictionless[json]
 ```bash
 $ pip install frictionless --upgrade
 ```
-
-Obs.: it's common to have Python 2 and Python 3 installed in the same system.
-In this case, it's possible that you have to use `pip3` instead of `pip` in the
-command above.
 
 ### Project level installation and upgrading
 You can create a virtual environment to wrap a specific python environment for the project.
