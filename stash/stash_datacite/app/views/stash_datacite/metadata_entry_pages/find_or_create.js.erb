@@ -1,10 +1,11 @@
-$('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create')) %>");
+$('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create.html.erb')) %>");
 loadAccordion();
 loadResourceTypes();
-loadTitles();
+// loadTitles(); // now loaded by ReactRailsUJS, will fail silently if method is missing
+loadFosSubjects();
 loadAuthors();
 hideRemoveLinkAuthors();
-hideRemoveRequiredLabelAuthors()
+hideRemoveRequiredLabelAuthors();
 loadContributors();
 loadPublications();
 loadDescriptions();
@@ -13,5 +14,7 @@ loadRelatedIdentifiers();
 hideRemoveLinkRelatedIdentifiers();
 loadGeolocationBoxes();
 loadGeolocationPoints();
-loadMap();
+// loadMap(); // began failing silently as soon as react was added
 addSavingDisplay();
+ReactRailsUJS.mountComponents();
+console.log("loaded rails javascript for data entry and react components");

@@ -11,22 +11,28 @@
   </div>
 
   <script>
-    if(window.location.hash) {
-      $('html, body').animate(
-          {scrollTop: $(window.location.hash).offset().top}, 1000);
-      window.setTimeout(function(){
-        $(window.location.hash).focus();
-      }, 1000);
-    }
-
-    const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
-    for (let errorId of errorIds) {
-      if($(`#${errorId}`).length && ($(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type) ) ){
-        $(`#${errorId}`).addClass('c-input__error-bg');
-        if( ["text", "email"].includes($(`#${errorId}`)[0].type) ){
-          $(`#${errorId}`)[0].setAttribute('aria-invalid', 'true');
+    try {
+      window.setTimeout(function () {
+        if (window.location.hash) {
+          $('html, body').animate(
+              {scrollTop: $(window.location.hash).offset()?.top}, 1000);
+          window.setTimeout(function () {
+            $(window.location.hash).focus();
+          }, 1000);
         }
-      }
+
+        const errorIds = <%== error_items.map(&:ids).flatten.to_json %>;
+        for (let errorId of errorIds) {
+          if ($(`#${errorId}`).length && ($(`#${errorId}`)[0].localName === 'label' || ["text", "email"].includes($(`#${errorId}`)[0].type))) {
+            $(`#${errorId}`).addClass('c-input__error-bg');
+            if (["text", "email"].includes($(`#${errorId}`)[0].type)) {
+              $(`#${errorId}`)[0].setAttribute('aria-invalid', 'true');
+            }
+          }
+        }
+      }, 2000);
+    } catch(err) {
+      console.log(err);
     }
   </script>
 <% end %>
