@@ -23,19 +23,22 @@
     "@cdl-dryad/frictionless-components": "^0.3.14",
     "@rails/webpacker": "5.2.1",
     "aws-sdk": "^2.948.0",
-    "axios": "^0.21.1",
+    "axios": "^0.25.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "evaporate": "^2.1.4",
+    "formik": "^2.2.9",
     "identity-obj-proxy": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react_ujs": "^2.6.1",
-    "truncate-utf8-bytes": "^1.0.2"
+    "truncate-utf8-bytes": "^1.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^1.5.1",
     "jest": "^27.0.6",
+    "ndb": "^1.1.5",
     "react-test-renderer": "^17.0.2",
     "webpack-dev-server": "^3.11.2"
   },

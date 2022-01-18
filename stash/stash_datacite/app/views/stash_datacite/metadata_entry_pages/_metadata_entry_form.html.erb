@@ -15,7 +15,7 @@
 
 <h2 class="o-heading__page-span">Dataset: Basic Information</h2>
 
-  <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
+  <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path } ) %><br>
 
   <fieldset class="c-fieldset">
   <legend class="c-fieldset__legend">Author(s)</legend>

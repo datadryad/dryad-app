@@ -2,7 +2,7 @@ import React from 'react';
 
 import {TabularCheckStatus} from "../../../../containers/FileUpload/UploadFiles";
 
-import ellipsize from '../../../../lib/string_patch';
+import ellipsize from '../../../../../lib/string_patch';
 
 import classes from './File.module.css';
 

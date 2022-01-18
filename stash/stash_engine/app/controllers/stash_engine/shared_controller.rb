@@ -110,7 +110,9 @@ module StashEngine
     end
 
     def current_user
-      @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
+      # without the StashEngine namespace in the following line, Rails does something janky with dynamic reloading for
+      # development environments and it sometimes finds no users
+      @current_user ||= StashEngine::User.find_by_id(session[:user_id]) if session[:user_id]
     end
 
     def clear_user
