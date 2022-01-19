@@ -1,5 +1,4 @@
-<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
-    @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
+<% @page_title = "Upload Your Files -- Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -12,7 +11,7 @@
 <% end %>
 
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
-<%= react_component('FileUpload/UploadFiles', {
+<%= react_component('containers/FileUpload/UploadFiles', {
   resource_id: @resource.id,
   file_uploads: @resource.generic_files.validated_table.as_json(
     methods: :type, include: { frictionless_report: { only: [:report, :status] } }

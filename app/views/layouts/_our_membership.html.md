@@ -80,11 +80,12 @@ including universities, research institutions and academic libraries. See more a
         <li>Association for Tropical Biology and Conservation</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
-        <li>European Society for Evolutionary Biology</li>
+		<li>eLife</li>
     </ul>
   </td>
   <td>
     <ul>
+	    <li>European Society for Evolutionary Biology</li>
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
         <li>Society for the Study of Evolution</li>
