@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
    verbose like the initial, "building Formik" ones at https://formik.org/docs/tutorial .  If you use the compact and less
@@ -18,9 +18,9 @@ import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
   but the variables were then not accessible within my onBlur handler.
  */
 
-const Title = ({ resource, path }) => {
+function Title({ resource, path }) {
   // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const formRef = useRef();
 
@@ -30,22 +30,28 @@ const Title = ({ resource, path }) => {
       innerRef={formRef}
       onSubmit={(values, { setSubmitting }) => {
         showSavingMsg();
-        axios.patch(path, values, { headers: {'Content-Type': 'application/json; charset=utf-8', 'Accept': 'application/json'} })
-          .then((data) => { showSavedMsg() }
-          )
+        axios.patch(path, values, { headers: { 'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json' } })
+          .then((data) => { showSavedMsg(); });
       }}
     >
       <Form className="c-input">
         <strong>
           <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
-        </strong><br />
-        <Field name="title" type="text" className="title c-input__text" size="130" id={`title__${resource.id}`}
-               onBlur={(e) => { formRef.current.handleSubmit(); }} />
+        </strong>
+        <br />
+        <Field
+          name="title"
+          type="text"
+          className="title c-input__text"
+          size="130"
+          id={`title__${resource.id}`}
+          onBlur={(e) => { formRef.current.handleSubmit(); }}
+        />
         <Field name="id" type="hidden" />
         <Field name="authenticity_token" type="hidden" />
       </Form>
     </Formik>
   );
-};
+}
 
 export default Title;

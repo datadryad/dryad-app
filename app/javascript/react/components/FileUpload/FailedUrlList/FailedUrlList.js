@@ -1,3 +1,6 @@
+/* eslint-disable react/no-array-index-key */
+// This is a bad practice, but not sure if another key is available and this is temporary display I believe
+
 import React from 'react';
 
 import Url from './Url/Url';
