@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
-import sanitize from '../../lib/sanitize_filename';
+import sanitize from '../../../lib/sanitize_filename';
 
 import UploadType from '../../components/FileUpload/UploadType/UploadType';
 import ModalUrl from '../../components/FileUpload/Modal/ModalUrl';
@@ -15,8 +15,7 @@ import WarningMessage from '../../components/FileUpload/WarningMessage/WarningMe
 import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
-import '../../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
-
+import '../../../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
 
 /**
  * Constants

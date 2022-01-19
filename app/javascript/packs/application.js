@@ -16,6 +16,9 @@
 // const imagePath = (name) => images(name, true)
 
 // Support component names relative to this directory:
-var componentRequireContext = require.context("containers", true);
+var componentRequireContext = require.context("react", true);
 var ReactRailsUJS = require("react_ujs");
 ReactRailsUJS.useContext(componentRequireContext);
+
+// An example from Brian for a non-react-rails config: https://github.com/CDLUC3/dmptool/blob/main/app/javascript/packs/application.js
+
