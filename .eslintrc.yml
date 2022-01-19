@@ -1,1 +1,6 @@
 extends: airbnb
+rules:
+  "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+  camelcase: off # because of some variable names being the same as rails and transferring across, maybe can go back and fix
+
+
