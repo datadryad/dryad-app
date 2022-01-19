@@ -1,6 +1,6 @@
 import React from 'react';
 
-const instructions = (props) => (
+const instructions = () => (
   <div>
     <p>
       You may upload data via two mechanisms: directly from your computer, or from a URL
@@ -10,7 +10,7 @@ const instructions = (props) => (
     <p>
       We require that you include a README file to provide key information for understanding
       and reuse of your data. The file should be uploaded to the Data category and the file
-      name must contain and begin with "README" in all caps (i.e. README_file.txt).
+      name must contain and begin with &ldquo;README&rdquo; in all caps (i.e. README_file.txt).
     </p>
     <p>
       Software and Supplemental Information can be uploaded for publication at
