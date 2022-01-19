@@ -1,6 +1,9 @@
 extends: airbnb
+parserOptions:
+  ecmaVersion: 2020
 rules:
   "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
   camelcase: off # because of some variable names being the same as rails and transferring across, maybe can go back and fix
+  "max-len": [2, {"code": 150, "tabWidth": 2, "ignoreUrls": true}]
 
 
