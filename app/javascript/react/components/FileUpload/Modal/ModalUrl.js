@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// This may be erroring since the label is hard coded, I guess bad practice if used more than once on page, but this isn't.
+
 import React from 'react';
 import ValidateFiles from '../ValidateFiles/ValidateFiles';
 
@@ -18,7 +21,7 @@ const modal_url = (props) => (
     >
       <form method="dialog" onSubmit={(event) => props.submitted(event)}>
         <div className="c-uploadmodal__header">
-          <label className="c-uploadmodal__textarea-url-label" htmlFor="location_urls">
+          <label htmlFor="location_urls" className="c-uploadmodal__textarea-url-label">
             Enter
             URLs
           </label>

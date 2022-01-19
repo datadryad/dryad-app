@@ -1,3 +1,6 @@
+/* eslint-disable react/no-array-index-key */
+// TODO: We should revisit and try to replace the array index with the actual unique database id.  However I tried and it
+// breaks everything right now.
 import React from 'react';
 
 import File from './File/File';
