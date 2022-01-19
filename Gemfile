@@ -14,7 +14,6 @@ gem 'webpacker', '~> 5.4.0'
 # Local engines
 
 path 'stash' do
-  gem 'stash_api'
   gem 'stash_datacite'
   gem 'stash_discovery'
   gem 'stash_engine'
@@ -50,6 +49,7 @@ gem 'yui-compressor'
 # ############################################################
 # Misc
 gem 'bootsnap', require: false
+gem 'doorkeeper', '~> 5.5'
 gem 'exception_notification'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'jbuilder'
