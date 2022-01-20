@@ -5,8 +5,8 @@
 import React from 'react';
 
 import '@cdl-dryad/frictionless-components/lib/styles';
-import {render} from '@cdl-dryad/frictionless-components/lib/render';
-import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
+import { render } from '@cdl-dryad/frictionless-components/lib/render';
+import { Report } from '@cdl-dryad/frictionless-components/lib/components/Report';
 
 import classes from './ModalValidationReport.module.css';
 
