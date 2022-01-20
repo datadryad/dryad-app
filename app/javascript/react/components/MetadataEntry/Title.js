@@ -1,6 +1,10 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// above eslint is too stupid to realize that the label and control match
+
 import React, {useRef} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
@@ -31,7 +35,13 @@ function Title({ resource, path }) {
       onSubmit={(values, { setSubmitting }) => {
         showSavingMsg();
         axios.patch(path, values, { headers: { 'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json' } })
-          .then((data) => { showSavedMsg(); });
+          .then((data) => {
+            if (data.status !== 200) {
+              console.log('Response failure not a 200 response');
+            }
+            showSavedMsg();
+            setSubmitting(false);
+          });
       }}
     >
       <Form className="c-input">
@@ -45,7 +55,7 @@ function Title({ resource, path }) {
           className="title c-input__text"
           size="130"
           id={`title__${resource.id}`}
-          onBlur={(e) => { formRef.current.handleSubmit(); }}
+          onBlur={() => { formRef.current.handleSubmit(); }}
         />
         <Field name="id" type="hidden" />
         <Field name="authenticity_token" type="hidden" />
@@ -53,5 +63,11 @@ function Title({ resource, path }) {
     </Formik>
   );
 }
+
+// This has some info https://blog.logrocket.com/validating-react-component-props-with-prop-types-ef14b29963fc/
+Title.propTypes = {
+  resource: PropTypes.object.isRequired,
+  path: PropTypes.string.isRequired,
+};
 
 export default Title;

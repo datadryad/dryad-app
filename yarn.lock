@@ -1973,10 +1973,10 @@ autoprefixer@^9.6.1:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-aws-sdk@^2.948.0:
-  version "2.1058.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1058.0.tgz#77755516c6f678b98a1f29bd939f0d7ae42da90c"
-  integrity sha512-q6bTq1DBBeBaU6GKKoTHmJj16WOQHhOoK7jwV93IT8pO0P1XH99gesFofhew3eT0h8Ev7quVKutk4B1kfnIXPQ==
+aws-sdk@^2.1060.0:
+  version "2.1060.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1060.0.tgz#3b09be037571e4046d1076138e90e6184148cb81"
+  integrity sha512-c734/CZiVSsuVnEkx/7dodI8ndgOnxiCTwwlEFlMxdAZfLLJplteFwi6c/J2GZQktvz2ysV/HVtNKcJkasYJzw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -6902,6 +6902,11 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
+node-bin-setup@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-bin-setup/-/node-bin-setup-1.1.0.tgz#9df94c41335a8f41958a639b2736f860582a209c"
+  integrity sha512-pTeU6NgUrexiLNtd+AKwvg6cngHMvj5FZ5e2bbv2ogBSIc9yhkXSSaTScfSRZnwHIh5YFmYSYlemLWkiKD7rog==
+
 node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
@@ -6993,6 +6998,13 @@ node-sass@^4.14.1:
     sass-graph "2.2.5"
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
+
+node@^14.18.3:
+  version "14.18.3"
+  resolved "https://registry.yarnpkg.com/node/-/node-14.18.3.tgz#2e8ce936bb3f1e5d8aa5481444f8d5472e5a2503"
+  integrity sha512-ticSZ0dXO7h2Ffq0++XG7RLas3vCu0oioFJWmrFPooe4LRe0aS+PQCj3zbqV9eJzVKaqRJb4BegwkdGuMsgFHQ==
+  dependencies:
+    node-bin-setup "^1.0.0"
 
 "nopt@2 || 3":
   version "3.0.6"
@@ -8328,7 +8340,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.7.2:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==

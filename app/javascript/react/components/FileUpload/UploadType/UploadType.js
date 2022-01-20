@@ -1,3 +1,7 @@
+/* eslint-disable react/prop-types */
+// TODO: look into how important this is to set these.  Not mentioned in what I'd looked at so far and not sure why other files
+// don't give this error.
+
 import React from 'react';
 
 const highlightButton = (e) => {
@@ -10,43 +14,52 @@ const unHighlightButton = (e) => {
   lbl.classList.remove('pseudo-focus-button-label');
 };
 
-class UploadType extends React.Component {
-  render() {
-    return (
-      <section className="c-uploadwidget--data">
-        <header>
-          <img src={this.props.logo} alt={this.props.alt} />
-          <h2>{this.props.name}</h2>
-        </header>
-        <b style={{ textAlign: 'center' }}>
-          {this.props.description}
-          <br />
-          {this.props.description2}
-        </b>
+function UploadType(
+  {
+    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
+  },
+) {
+  /*
+  const {
+    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
+  } = props;
+   */
 
-        <div className="c-choose">
-          <label htmlFor={this.props.type} aria-label={`upload ${this.props.type} files`} className="c-choose__input-file-label">{this.props.buttonFiles}</label>
-          <input
-            id={this.props.type}
-            className="c-choose__input-file"
-            type="file"
-            onClick={this.props.clickedFiles}
-            onChange={this.props.changed}
-            onBlur={(e) => unHighlightButton(e)}
-            onFocus={(e) => highlightButton(e)}
-            multiple
-          />
-        </div>
-        <button
-          id={`${this.props.type}_manifest`}
-          className="js-uploadmodal__button-show-modal"
-          onClick={this.props.clickedModal}
-        >
-          {this.props.buttonURLs}
-        </button>
-      </section>
-    );
-  }
+  return (
+    <section className="c-uploadwidget--data">
+      <header>
+        <img src={logo} alt={alt} />
+        <h2>{name}</h2>
+      </header>
+      <b style={{ textAlign: 'center' }}>
+        {description}
+        <br />
+        {description2}
+      </b>
+
+      <div className="c-choose">
+        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>
+        <input
+          id={type}
+          className="c-choose__input-file"
+          type="file"
+          onClick={clickedFiles}
+          onChange={changed}
+          onBlur={(e) => unHighlightButton(e)}
+          onFocus={(e) => highlightButton(e)}
+          multiple
+        />
+      </div>
+      <button
+        type="button"
+        id={`${type}_manifest`}
+        className="js-uploadmodal__button-show-modal"
+        onClick={clickedModal}
+      >
+        {buttonURLs}
+      </button>
+    </section>
+  );
 }
 
 export default UploadType;
