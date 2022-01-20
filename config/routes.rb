@@ -103,13 +103,15 @@ Rails.application.routes.draw do
 
   ############################# API support ######################################
 
+  # StashApi::GeneralController#index
+  get '/api/v2', to: 'api#index'
   match '/api/v2/test', to: 'general#test', via: %i[get post]
   match '/api/v2/search', to: 'datasets#search', via: %i[get]
 
   # Support for the Editorial Manager API
   match '/api/v2/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
 
-  resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/ path: '/api/v2/datasets' do
+  resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/api/v2/datasets' do
     member do
       get 'download'
     end
