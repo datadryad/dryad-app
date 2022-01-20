@@ -17,5 +17,7 @@ jobs:
           yarn install --frozen-lockfile
       # - name: Install modules
       #   run: yarn
+      - name: run eslint
+        run: yarn run eslint app/javascript/react/**/*.js
       - name: Run tests
         run: yarn test
