@@ -5,8 +5,8 @@
 import React from 'react';
 
 import '@cdl-dryad/frictionless-components/lib/styles';
-import { render } from '@cdl-dryad/frictionless-components/lib/render';
-import { Report } from '@cdl-dryad/frictionless-components/lib/components/Report';
+import {render} from '@cdl-dryad/frictionless-components/lib/render';
+import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 
 import classes from './ModalValidationReport.module.css';
 
@@ -52,19 +52,11 @@ class ModalValidationReport extends React.Component {
               Manually correct the issues shown here in your local copy of the file.
             </li>
             <li>
-              Close this dialog and click
-              <em>Remove</em>
-              {' '}
-              in the Action column to delete the file.
+              Close this dialog and click <em>Remove</em> in the Action column to delete the file.
             </li>
             <li>
               Re-upload the corrected file using the
-              <em>Choose Files</em>
-              {' '}
-              or
-              <em>Enter URLs</em>
-              {' '}
-              button.
+              <em>Choose Files</em> or <em>Enter URLs</em> button.
             </li>
           </ol>
           <div id="validation_report" />
