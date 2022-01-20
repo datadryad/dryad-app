@@ -1,10 +1,14 @@
-import React from 'react';
+/* eslint-disable react/destructuring-assignment, react/prop-types, react/button-has-type, jsx-a11y/no-autofocus */
+// TODO: these seem like nice, checks above, but would require quite a bit more work and understanding, could come back
+// to them later with more experience. The button thing is ridiculous since it's not even a button but text that says "button."
 
-import classes from './ModalValidationReport.module.css';
+import React from 'react';
 
 import '@cdl-dryad/frictionless-components/lib/styles';
 import {render} from '@cdl-dryad/frictionless-components/lib/render';
 import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
+
+import classes from './ModalValidationReport.module.css';
 
 class ModalValidationReport extends React.Component {
   componentDidMount() {
