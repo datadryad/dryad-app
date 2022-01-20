@@ -22,8 +22,7 @@ const modal_url = (props) => (
       <form method="dialog" onSubmit={(event) => props.submitted(event)}>
         <div className="c-uploadmodal__header">
           <label htmlFor="location_urls" className="c-uploadmodal__textarea-url-label">
-            Enter
-            URLs
+            Enter URLs
           </label>
           <button
             className="c-uploadmodal__button-close-modal"

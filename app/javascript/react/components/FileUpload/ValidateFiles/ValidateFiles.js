@@ -8,9 +8,7 @@ const validate_files = (props) => {
         <input id={props.id} type="checkbox" name="confirm_to_upload" onChange={props.changed} checked={!props.disabled} />
         <strong style={{ color: 'red' }}> *</strong>
         <label htmlFor={props.id}>
-          {' '}
-          I confirm that no
-          Personal Health Information or Sensitive Data are being uploaded with this submission.
+          I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
         </label>
       </div>
     );

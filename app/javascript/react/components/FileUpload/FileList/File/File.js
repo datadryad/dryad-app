@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabularCheckStatus } from '../../../../containers/FileUpload/UploadFiles';
+import {TabularCheckStatus} from '../../../../containers/FileUpload/UploadFiles';
 
 import ellipsize from '../../../../../lib/string_patch';
 
@@ -54,11 +54,7 @@ const file = (props) => {
                 type="button"
                 style={{ padding: '10px' }}
               >
-                View
-                {' '}
-                {jsReport?.report?.stats?.errors}
-                {' '}
-                Issues
+                View {jsReport?.report?.stats?.errors} Issues
               </button>
             </div>
           </div>
