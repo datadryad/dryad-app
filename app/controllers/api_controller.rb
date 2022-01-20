@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'stash_api/application_controller'
+#require_dependency 'stash_api/application_controller'
 
-module StashApi
-  class GeneralController < ApplicationController
+class ApiController < ApiApplicationController
 
     before_action :require_json_headers
     before_action :force_json_content_type
@@ -56,5 +55,5 @@ module StashApi
       ]
     end
 
-  end
 end
+

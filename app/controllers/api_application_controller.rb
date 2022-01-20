@@ -3,9 +3,8 @@
 require 'url_pager'
 require 'cgi'
 
-module StashApi
   # class ApplicationController < ActionController::Base
-  class ApplicationController < ::StashEngine::ApplicationController
+  class ApiApplicationController < ::StashEngine::ApplicationController
 
     layout 'layouts/stash_engine/application'
 
@@ -121,4 +120,4 @@ module StashApi
       response.headers['Content-Type'] = 'application/json; charset=utf-8'
     end
   end
-end
+
