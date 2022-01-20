@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// once again, eslint doesn't detect properly
+
 import React from 'react';
 
 const validate_files = (props) => {
@@ -6,7 +9,7 @@ const validate_files = (props) => {
     checkConfirm = (
       <div>
         <input id={props.id} type="checkbox" name="confirm_to_upload" onChange={props.changed} checked={!props.disabled} />
-        <strong style={{ color: 'red' }}> *</strong>
+        <strong style={{color: 'red'}}> *</strong>
         <label htmlFor={props.id}>
           I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
         </label>

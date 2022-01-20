@@ -62,7 +62,7 @@ class ModalValidationReport extends React.Component {
           <div id="validation_report" />
           <button onClick={(event) => this.props.clickedClose(event)}>Close</button>
         </dialog>
-        <div className="backdrop" style={{ zIndex: '100148' }} />
+        <div className="backdrop" style={{zIndex: '100148'}} />
       </div>
     );
   }

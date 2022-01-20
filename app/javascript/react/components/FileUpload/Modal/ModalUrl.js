@@ -47,7 +47,7 @@ const modal_url = (props) => (
         />
       </form>
     </dialog>
-    <div className="backdrop" style={{ zIndex: '100148' }} />
+    <div className="backdrop" style={{zIndex: '100148'}} />
   </div>
 );
 
