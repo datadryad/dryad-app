@@ -33,7 +33,7 @@ const file = (props) => {
               className="c-upload__spinner js-tabular-checking"
               src="../../../images/spinner.gif"
               alt="Validating spinner"
-              style={{ padding: 0, width: '2rem' }}
+              style={{padding: 0, width: '2rem'}}
             />
           </div>
         );
@@ -46,13 +46,13 @@ const file = (props) => {
           console.log(e);
         }
         tabularInfo = (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{display: 'flex', alignItems: 'center'}}>
             <div className="c-alert--error-icon">
               <button
                 className="o-button__plain-text5"
                 onClick={props.clickValidationReport}
                 type="button"
-                style={{ padding: '10px' }}
+                style={{padding: '10px'}}
               >
                 View {jsReport?.report?.stats?.errors} Issues
               </button>
@@ -100,7 +100,7 @@ const file = (props) => {
           </td>
         )
         : (
-          <td style={{ padding: 0, width: '74px' }}>
+          <td style={{padding: 0, width: '74px'}}>
             <div>
               <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
             </div>

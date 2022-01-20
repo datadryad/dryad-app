@@ -31,7 +31,7 @@ function UploadType(
         <img src={logo} alt={alt} />
         <h2>{name}</h2>
       </header>
-      <b style={{ textAlign: 'center' }}>
+      <b style={{textAlign: 'center'}}>
         {description}
         <br />
         {description2}
