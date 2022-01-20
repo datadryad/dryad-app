@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // above eslint is too stupid to realize that the label and control match
 
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
-import {Field, Form, Formik} from 'formik';
+import { Field, Form, Formik } from 'formik';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import { showSavedMsg, showSavingMsg } from '../../../lib/utils';
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
    verbose like the initial, "building Formik" ones at https://formik.org/docs/tutorial .  If you use the compact and less
