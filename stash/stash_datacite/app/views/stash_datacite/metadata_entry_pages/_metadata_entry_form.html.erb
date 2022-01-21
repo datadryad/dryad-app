@@ -32,10 +32,6 @@
   </fieldset>
 
   <div class="c-input__inline">
-    <%= react_component('components/MetadataEntry/RichText') %>
-  </div>
-
-  <div class="c-input__inline">
     <div class="c-input">
       <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %>
     </div>
@@ -60,7 +56,11 @@
 
 
     <%= label_tag :description, "Abstract", class: 'c-input__label required', id: 'abstract_label', type: 'label', for: 'cke_description_abstract' %>
-    <%= render partial: "stash_datacite/descriptions/form", locals: {
+    <%= react_component('components/MetadataEntry/RichText',
+                        dcsDescription: @metadata_entry.abstract,
+                        path: stash_datacite.descriptions_update_path) %>
+
+    <%# render partial: "stash_datacite/descriptions/form", locals: {
         description: @metadata_entry.abstract, description_type: :abstract, description_name: "abstract" }  %>
 
   <p class="c-input__required-note">required fields</p>
