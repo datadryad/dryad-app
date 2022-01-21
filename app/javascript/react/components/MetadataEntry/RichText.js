@@ -52,7 +52,8 @@ export default function RichText({dcsDescription, path}) {
                   'table hr blockquote | superscript subscript charmap ltr rtl | help',
               table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
                   'tableinsertcolbefore tableinsertcolafter tabledeletecol',
-              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+              branding: false
             }}
             onBlur={ (e) => { submit(); } }
         />
