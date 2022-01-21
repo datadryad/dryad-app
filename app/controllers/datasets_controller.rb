@@ -2,7 +2,6 @@
 
 # rubocop:disable Metrics/ClassLength
 
-require_relative 'datasets/submission_mixin'
 require 'rsolr'
 
 class DatasetsController < ApiApplicationController

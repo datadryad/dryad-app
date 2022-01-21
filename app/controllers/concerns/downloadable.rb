@@ -1,6 +1,5 @@
 require 'stash/download/version_presigned'
 
-module StashApi
   module Concerns
     module Downloadable
       extend ActiveSupport::Concern
@@ -31,4 +30,4 @@ module StashApi
       end
     end
   end
-end
+
