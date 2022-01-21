@@ -46,10 +46,10 @@ export default function RichText({dcsDescription, path}) {
               plugins: [
                 'advlist anchor autolink charmap code directionality hr help lists link table textcolor'
               ],
-              toolbar: 'undo redo | formatselect | ' +
+              toolbar: 'help | formatselect | ' +
                   'bold italic strikethrough forecolor backcolor removeformat | alignleft aligncenter ' +
                   'alignright | bullist numlist outdent indent | ' +
-                  'table hr blockquote | superscript subscript charmap ltr rtl | help',
+                  'table link hr blockquote | superscript subscript charmap | undo redo | fontsizeselect | ltr rtl ',
               table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
                   'tableinsertcolbefore tableinsertcolafter tabledeletecol',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
