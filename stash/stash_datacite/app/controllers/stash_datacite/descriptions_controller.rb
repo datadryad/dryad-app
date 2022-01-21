@@ -18,6 +18,7 @@ module StashDatacite
       items[:description] = Loofah.fragment(items[:description]).scrub!(:strip).to_s
       respond_to do |format|
         if @description.update(items)
+          format.json { render json: @description.slice(:id, :resource_id, :description, :description_type)}
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
           format.html { render :edit }
