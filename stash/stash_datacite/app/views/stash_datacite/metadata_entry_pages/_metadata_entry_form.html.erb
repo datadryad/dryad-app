@@ -32,6 +32,10 @@
   </fieldset>
 
   <div class="c-input__inline">
+    <%= react_component('components/MetadataEntry/RichText') %>
+  </div>
+
+  <div class="c-input__inline">
     <div class="c-input">
       <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %>
     </div>
