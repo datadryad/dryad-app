@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-module StashApi
   class Version
     class Metadata
       class MetadataItem
@@ -12,4 +11,3 @@ module StashApi
       end
     end
   end
-end

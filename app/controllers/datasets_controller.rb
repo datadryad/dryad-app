@@ -7,7 +7,7 @@ require 'rsolr'
 class DatasetsController < ApiApplicationController
   include ActionView::Helpers::DateHelper
   include SubmissionMixin
-  include StashApi::Concerns::Downloadable
+  include Concerns::Downloadable
   
   before_action :require_json_headers, only: %i[show create index update]
   before_action :force_json_content_type, except: :download

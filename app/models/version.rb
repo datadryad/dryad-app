@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-module StashApi
   class Version
     include StashApi::Presenter
 
@@ -39,4 +38,3 @@ module StashApi
       }.merge(stash_curie)
     end
   end
-end
