@@ -5,7 +5,7 @@ import {Editor} from '@tinymce/tinymce-react';
 import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
 
-export default function RichText({dcsDescription, path}) {
+export default function RichText({dcsDescription, path, mceKey, mceLabel}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const editorRef = useRef(null);
@@ -36,8 +36,13 @@ export default function RichText({dcsDescription, path}) {
 
   return (
       <div style={{width: '100%'}}>
+        <label htmlFor="description" className="c-input__label required" id="abstract_label">
+          Abstract
+        </label>
+        <>{mceLabel.describe}</>
         <Editor
             onInit={(evt, editor) => editorRef.current = editor}
+            apiKey={mceKey}
             initialValue={dcsDescription.description}
             init={{
               height: 300,
@@ -57,6 +62,7 @@ export default function RichText({dcsDescription, path}) {
             }}
             onBlur={ (e) => { submit(); } }
         />
+        <br/>
       </div>
   );
 }
