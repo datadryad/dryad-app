@@ -3,7 +3,6 @@
 require 'securerandom'
 require_relative 'presenter'
 
-module StashApi
   class Dataset
     include StashApi::Presenter
 
@@ -119,4 +118,4 @@ module StashApi
     end
 
   end
-end
+

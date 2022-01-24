@@ -2,7 +2,6 @@
 
 require_relative 'metadata_item'
 
-module StashApi
   class Version
     class Metadata
       class Authors < MetadataItem
@@ -22,4 +21,3 @@ module StashApi
       end
     end
   end
-end
