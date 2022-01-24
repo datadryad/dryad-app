@@ -55,15 +55,15 @@
   </fieldset>
 
 
-    <%= label_tag :description, "Abstract", class: 'c-input__label required', id: 'abstract_label', type: 'label', for: 'cke_description_abstract' %>
+    <%# label_tag :description, "Abstract", class: 'c-input__label required', id: 'abstract_label', type: 'label', for: 'cke_description_abstract' %>
     <%= react_component('components/MetadataEntry/RichText',
                         dcsDescription: @metadata_entry.abstract,
-                        path: stash_datacite.descriptions_update_path) %>
+                        path: stash_datacite.descriptions_update_path,
+                        mceKey: APP_CONFIG[:mce_key],
+                        mceLabel: {label: 'Abstract', required: true, describe: ''}) %>
 
     <%# render partial: "stash_datacite/descriptions/form", locals: {
         description: @metadata_entry.abstract, description_type: :abstract, description_name: "abstract" }  %>
-
-  <p class="c-input__required-note">required fields</p>
 
     <h2 class="o-heading__page-span">Data Description</h2>
 
