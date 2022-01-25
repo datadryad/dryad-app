@@ -1,8 +1,7 @@
-require_dependency 'stash_api/application_controller'
-require_dependency 'stash_api/datasets_controller'
+require_dependency 'api_application_controller'
+require_dependency 'api_datasets_controller'
 
-module StashApi
-  class CurationActivityController < ApplicationController
+  class ApiCurationActivityController < ApiApplicationController
     before_action :require_json_headers
     before_action :doorkeeper_authorize!
     before_action :require_api_user
@@ -128,4 +127,4 @@ module StashApi
     end
 
   end
-end
+

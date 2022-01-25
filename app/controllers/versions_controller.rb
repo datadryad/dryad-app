@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'stash_api/application_controller'
+require_dependency 'api_application_controller'
 
-module StashApi
-  class VersionsController < ApplicationController
-    include StashApi::Concerns::Downloadable
+  class VersionsController < ApiApplicationController
+    include Concerns::Downloadable
 
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download
@@ -62,4 +61,3 @@ module StashApi
     end
 
   end
-end

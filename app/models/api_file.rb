@@ -2,9 +2,8 @@
 
 require_relative 'presenter'
 
-module StashApi
-  class File
-    include StashApi::Presenter
+  class ApiFile
+    include Presenter
 
     def initialize(file_id:)
       @se_data_file = StashEngine::DataFile.find(file_id)
@@ -50,4 +49,4 @@ module StashApi
     end
 
   end
-end
+
