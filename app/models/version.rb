@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
   class Version
-    include StashApi::Presenter
+    include Presenter
 
     attr_reader :resource
     def initialize(resource_id:)

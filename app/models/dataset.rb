@@ -4,7 +4,7 @@ require 'securerandom'
 require_relative 'presenter'
 
   class Dataset
-    include StashApi::Presenter
+    include Presenter
 
     def initialize(identifier:, user: nil)
       id_type, iden = identifier.split(':', 2)

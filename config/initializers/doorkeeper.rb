@@ -1,6 +1,3 @@
-# see https://stackoverflow.com/questions/21506831/using-doorkeeper-inside-rails-engine
-# what a pain in the butt to get this engine gem working inside the API
-# Doorkeeper::ApplicationController.send(:include, StashApi::Engine.routes.url_helpers)
 
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (needs plugins)
@@ -43,7 +40,7 @@ Doorkeeper.configure do
   # Defaults to ActionController::Base.
   # https://github.com/doorkeeper-gem/doorkeeper#custom-base-controller
   # base_controller 'ApplicationController'
-  base_controller 'StashApi::ApplicationController'
+  base_controller 'ApiApplicationController'
 
   # Reuse access token for the same resource owner within an application (disabled by default)
   # Rationale: https://github.com/doorkeeper-gem/doorkeeper/issues/383
