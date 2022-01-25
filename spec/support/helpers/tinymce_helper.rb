@@ -6,6 +6,7 @@ module TinymceHelper
   # myEditor.setContent('Meow meow meow');
 
   def fill_in_tinymce(field:, content:)
+    # this is tricky since it's an iframe and has custom controls that exist in js on the page but don't load immediately
     field = "editor_#{field}"
     content.gsub!('"', '\"')
 
