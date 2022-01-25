@@ -121,16 +121,24 @@ Rails.application.routes.draw do
     member do
       post 'add_internal_datum'
     end
-    resources :internal_data, shallow: true, path: '/api/v2/internal_data'
-    resources :curation_activity, shallow: false, path: '/api/v2/curation_activity'
-    resources :versions, shallow: true, path: '/api/v2/versions' do
+    resources :internal_data, shallow: true, path: '/internal_data'
+    resources :curation_activity, shallow: false, path: '/curation_activity'
+    resources :versions, shallow: true, path: '/versions' do
       get 'download', on: :member
       resources :files, shallow: true do
         get :download, on: :member
       end
     end
-    resources :urls, shallow: true, path: '/api/v2/urls', only: [:create]
+    resources :urls, shallow: true, path: '/urls', only: [:create]
   end
+
+  resources :versions, shallow: true, path: '/api/v2/versions' do
+    get 'download', on: :member
+    resources :files, shallow: true do
+      get :download, on: :member
+    end
+  end
+  
   # this one doesn't follow the pattern since it gloms filename on the end, so manual route
   # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
   put '/api/v2/datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false

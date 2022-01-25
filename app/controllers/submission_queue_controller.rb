@@ -1,8 +1,7 @@
-require_dependency 'stash_api/application_controller'
-require_dependency 'stash_api/datasets_controller'
+require_dependency 'api_application_controller'
+require_dependency 'datasets_controller'
 
-module StashApi
-  class SubmissionQueueController < ApplicationController
+  class SubmissionQueueController < ApiApplicationController
     before_action :require_json_headers
     before_action :force_json_content_type
     before_action :doorkeeper_authorize!
@@ -19,4 +18,4 @@ module StashApi
       end
     end
   end
-end
+
