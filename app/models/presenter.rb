@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-module StashApi
   module Presenter
 
     def self.included(base)
       def base.api_url_helper
-        StashApi::Engine.routes.url_helpers
+        Rails.application.routes.url_helpers
       end
     end
 
@@ -24,4 +23,4 @@ module StashApi
     end
 
   end
-end
+

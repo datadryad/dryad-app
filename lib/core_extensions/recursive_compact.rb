@@ -1,6 +1,5 @@
 module CoreExtensions
   module Hash
-    module RecursiveCompact
       # compacts a set of hashes/arrays recursively
       def recursive_compact
         helper_hash_compact(self)
@@ -44,6 +43,5 @@ module CoreExtensions
         new_arr.delete_if { |i| i.nil? || ([[].class, {}.class].include?(i.class) && i.empty?) }
       end
 
-    end
   end
 end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-module StashApi
-  class User
-    include StashApi::Presenter
+  class ApiUser
+    include Presenter
 
     def initialize(user_id:)
       @se_user = StashEngine::User.find(user_id)
