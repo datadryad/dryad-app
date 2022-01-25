@@ -1,11 +1,9 @@
 import React, {useRef} from 'react';
-// see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
-// import {Field, Form, Formik} from 'formik';
 import {Editor} from '@tinymce/tinymce-react';
 import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
 
-export default function RichText({dcsDescription, path, mceKey, mceLabel}) {
+export default function Description({dcsDescription, path, mceKey, mceLabel}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const editorRef = useRef(null);
@@ -36,11 +34,12 @@ export default function RichText({dcsDescription, path, mceKey, mceLabel}) {
 
   return (
       <div style={{width: '100%'}}>
-        <label htmlFor="description" className="c-input__label required" id="abstract_label">
-          Abstract
+        <label className={`c-input__label ${ ( mceLabel.required ? 'required' : '') }`} id={`${dcsDescription.description_type}_label`}>
+          {mceLabel.label}
         </label>
         <>{mceLabel.describe}</>
         <Editor
+            id={`editor_${dcsDescription.description_type}`}
             onInit={(evt, editor) => editorRef.current = editor}
             apiKey={mceKey}
             initialValue={dcsDescription.description}
@@ -62,7 +61,7 @@ export default function RichText({dcsDescription, path, mceKey, mceLabel}) {
             }}
             onBlur={ (e) => { submit(); } }
         />
-        <br/>
+        <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
       </div>
   );
 }
