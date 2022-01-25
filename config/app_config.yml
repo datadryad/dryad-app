@@ -186,6 +186,7 @@ defaults: &DEFAULTS
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_secret] %>
+  mce_key: <%= Rails.application.credentials[Rails.env.to_sym][:tiny_mce] %>
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
