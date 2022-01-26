@@ -2,6 +2,7 @@ require_dependency 'api_application_controller'
 require 'fileutils'
 require 'stash/url_translator'
 
+module StashApi
   class UrlsController < ApiApplicationController
 
     before_action :require_json_headers
@@ -102,4 +103,4 @@ require 'stash/url_translator'
     end
 
   end
-
+end

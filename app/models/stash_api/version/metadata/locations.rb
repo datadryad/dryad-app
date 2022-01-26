@@ -5,6 +5,7 @@ require_relative 'metadata_item'
 # bigdecimal is crappy and changes to strings https://github.com/rails/rails/issues/25017
 # if we want them to appear like numbers then we have to to_f them.
 
+module StashApi
   class Version
     class Metadata
       class Locations < MetadataItem
@@ -51,3 +52,4 @@ require_relative 'metadata_item'
       end
     end
   end
+end

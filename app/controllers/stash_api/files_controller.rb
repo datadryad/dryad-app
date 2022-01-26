@@ -6,6 +6,7 @@ require 'stash/aws/s3'
 require_dependency 'api_application_controller'
 require 'stash/download/file_presigned'
 
+module StashApi
   class FilesController < ApiApplicationController
 
     before_action :require_json_headers, only: %i[show index destroy]
@@ -210,4 +211,4 @@ require 'stash/download/file_presigned'
       render json: { error: 'not-found' }.to_json, status: 404 if f.nil? || !f.resource.may_view?(ui_user: @user)
     end
   end
-
+end
