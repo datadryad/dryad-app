@@ -2,12 +2,13 @@
 
 require_relative 'metadata_item'
 
+module StashApi
   class Version
     class Metadata
-      class Abstract < MetadataItem
+      class Methods < MetadataItem
 
         def value
-          items = @resource.descriptions.type_abstract.map(&:description)
+          items = @resource.descriptions.type_methods.map(&:description)
           return items.first unless items.blank?
 
           nil
@@ -15,4 +16,4 @@ require_relative 'metadata_item'
       end
     end
   end
-
+end

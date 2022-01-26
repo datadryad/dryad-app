@@ -107,35 +107,37 @@ Rails.application.routes.draw do
   get '/api/v2', to: 'api#index'
   match '/api/v2/test', to: 'general#test', via: %i[get post]
   match '/api/v2/search', to: 'datasets#search', via: %i[get]
-
+  
   # Support for the Editorial Manager API
   match '/api/v2/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
 
-  resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/api/v2/datasets' do
-    member do
-      get 'download'
+  scope module: 'stash_api' do
+    resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/api/v2/datasets' do
+      member do
+        get 'download'
+      end
+      member do
+        post 'set_internal_datum'
+      end
+      member do
+        post 'add_internal_datum'
+      end
+      resources :internal_data, shallow: true, path: '/internal_data'
+      resources :curation_activity, shallow: false, path: '/curation_activity'
+      resources :versions, shallow: true, path: '/versions' do
+        get 'download', on: :member
+        resources :files, shallow: true do
+          get :download, on: :member
+        end
+      end
+      resources :urls, shallow: true, path: '/urls', only: [:create]
     end
-    member do
-      post 'set_internal_datum'
-    end
-    member do
-      post 'add_internal_datum'
-    end
-    resources :internal_data, shallow: true, path: '/internal_data'
-    resources :curation_activity, shallow: false, path: '/curation_activity'
-    resources :versions, shallow: true, path: '/versions' do
+  
+    resources :versions, shallow: true, path: '/api/v2/versions' do
       get 'download', on: :member
       resources :files, shallow: true do
         get :download, on: :member
       end
-    end
-    resources :urls, shallow: true, path: '/urls', only: [:create]
-  end
-
-  resources :versions, shallow: true, path: '/api/v2/versions' do
-    get 'download', on: :member
-    resources :files, shallow: true do
-      get :download, on: :member
     end
   end
   

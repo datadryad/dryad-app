@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+module StashApi
   module Presenter
 
     def self.included(base)
@@ -23,4 +23,4 @@
     end
 
   end
-
+end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-
-  class ApiUser
+module StashApi
+  class User
     include Presenter
-
+    
     def initialize(user_id:)
       @se_user = StashEngine::User.find(user_id)
     end
-
+    
     def metadata
       afilliation = StashDatacite::Affiliation.find(@se_user.affiliation_id) if @se_user.affiliation_id
       { '_links': links }.merge(

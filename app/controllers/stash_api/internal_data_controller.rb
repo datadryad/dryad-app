@@ -1,6 +1,7 @@
 require_dependency 'api_application_controller'
-require_dependency 'datasets_controller'
+require_relative 'datasets_controller'
 
+module StashApi
   class InternalDataController < ApiApplicationController
     before_action :require_json_headers
     before_action :doorkeeper_authorize!
@@ -48,8 +49,9 @@ require_dependency 'datasets_controller'
     end
 
     def initialize_stash_identifier(id)
-      ds = DatasetsController.new
+      ds = StashApi::DatasetsController.new
       @stash_identifier = ds.get_stash_identifier(id)
       render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.nil?
     end
   end
+end

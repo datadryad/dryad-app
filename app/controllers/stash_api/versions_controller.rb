@@ -2,6 +2,7 @@
 
 require_dependency 'api_application_controller'
 
+module StashApi
   class VersionsController < ApiApplicationController
     include Concerns::Downloadable
 
@@ -61,3 +62,4 @@ require_dependency 'api_application_controller'
     end
 
   end
+end

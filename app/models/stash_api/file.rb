@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'presenter'
-
-  class ApiFile
+module StashApi
+  class File
     include Presenter
 
     def initialize(file_id:)
@@ -49,4 +49,4 @@ require_relative 'presenter'
     end
 
   end
-
+end

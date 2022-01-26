@@ -1,6 +1,7 @@
 require_dependency 'api_application_controller'
 require_dependency 'datasets_controller'
 
+module StashApi
   class SubmissionQueueController < ApiApplicationController
     before_action :require_json_headers
     before_action :force_json_content_type
@@ -18,4 +19,4 @@ require_dependency 'datasets_controller'
       end
     end
   end
-
+end
