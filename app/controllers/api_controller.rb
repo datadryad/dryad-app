@@ -1,59 +1,58 @@
 # frozen_string_literal: true
 
-#require_dependency 'stash_api/application_controller'
+# require_dependency 'stash_api/application_controller'
 
 class ApiController < ApiApplicationController
 
-    before_action :require_json_headers
-    before_action :force_json_content_type
-    before_action :doorkeeper_authorize!, only: :test
-    before_action :require_api_user, only: :test
+  before_action :require_json_headers
+  before_action :force_json_content_type
+  before_action :doorkeeper_authorize!, only: :test
+  before_action :require_api_user, only: :test
 
-    # get /
-    # All this really does is return the basic HATEOAS link to the base level dataset links
-    def index
-      respond_to do |format|
-        format.any { render json: output }
-      end
+  # get /
+  # All this really does is return the basic HATEOAS link to the base level dataset links
+  def index
+    respond_to do |format|
+      format.any { render json: output }
     end
+  end
 
-    # post /test
-    # see if you can do a post request and connect with the key you've obtained
-    def test
-      respond_to do |format|
-        format.any { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
-      end
+  # post /test
+  # see if you can do a post request and connect with the key you've obtained
+  def test
+    respond_to do |format|
+      format.any { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
     end
+  end
 
-    private
+  private
 
-    def output
-      {
-        '_links': {
-          'self': root_self,
-          'stash:datasets': {
-            href: datasets_path
-          },
-          curies: curies
-        }
+  def output
+    {
+      '_links': {
+        'self': root_self,
+        'stash:datasets': {
+          href: datasets_path
+        },
+        curies: curies
       }
-    end
+    }
+  end
 
-    def root_self
+  def root_self
+    {
+      href: root_path
+    }
+  end
+
+  def curies
+    [
       {
-        href: root_path
+        name: 'stash',
+        href: 'https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck
+        templated: 'true'
       }
-    end
-
-    def curies
-      [
-        {
-          name: 'stash',
-          href: 'https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck
-          templated: 'true'
-        }
-      ]
-    end
+    ]
+  end
 
 end
-
