@@ -1,0 +1,8 @@
+<% @page_title = 'test page' %>
+<%= javascript_pack_tag 'application' %>
+
+<h1>Hello world!</h1>
+
+<h2>Enter your favorite color</h2>
+<%= react_component('components/MetadataEntry/RorAutocomplete',
+                    {options: %w[Pink Purple Cyan Blue Green Yellow Orange Red Black White]}) %>
