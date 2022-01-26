@@ -113,6 +113,7 @@ StashEngine::Engine.routes.draw do
   get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
   get '404', to: 'pages#app_404', as: 'app_404'
   get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
+  get 'test', to: 'pages#test'
 
   patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
 
