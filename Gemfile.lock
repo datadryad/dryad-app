@@ -552,7 +552,7 @@ GEM
       omniauth (>= 1.0.0)
     orm_adapter (0.5.0)
     os (1.1.4)
-    ostruct (0.5.3)
+    ostruct (0.5.2)
     parallel (1.21.0)
     parser (3.1.0.0)
       ast (~> 2.4.1)
