@@ -9,7 +9,7 @@ module StashApi
       allow(generic_path).to receive(:user_path).and_return('user_path') # with id
       allow(generic_path).to receive(:users_path).and_return('users_path') # without id
 
-     # allow(User).to receive(:api_url_helper).and_return(generic_path)
+      # allow(User).to receive(:api_url_helper).and_return(generic_path)
 
       @user = create(:user)
 

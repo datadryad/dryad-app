@@ -52,7 +52,7 @@ module StashEngine
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
-    
+
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
       .map { |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
@@ -68,34 +68,33 @@ module StashEngine
       include_association :authors
       include_association :generic_files
       customize(->(_, new_resource) do
-        # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
-        # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
-        # let init_version do its job
-        new_resource.current_resource_state_id = nil
-        # do not mark these resources for public view until they've been re-curated and embargoed/published again
-        new_resource.meta_view = false
-        new_resource.file_view = false
+                  # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
+                  # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
+                  # let init_version do its job
+                  new_resource.current_resource_state_id = nil
+                  # do not mark these resources for public view until they've been re-curated and embargoed/published again
+                  new_resource.meta_view = false
+                  new_resource.file_view = false
 
-        new_resource.generic_files.each do |file|
-          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+                  new_resource.generic_files.each do |file|
+                    raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-          if file.file_state == 'created'
-            file.file_state = 'copied'
-            file.save
-          end
-        end
+                    if file.file_state == 'created'
+                      file.file_state = 'copied'
+                      file.save
+                    end
+                  end
 
-        # I think there was something weird about Amoeba that required this approach
-        deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+                  # I think there was something weird about Amoeba that required this approach
+                  deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+                  deleted_files.each(&:destroy)
                 end)
 
-           
       # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
       # see https://github.com/amoeba-rb/amoeba/issues/76
       %i[contributors datacite_dates descriptions geolocations temporal_coverages
-             publication_years publisher related_identifiers resource_type rights sizes
-             subjects].each do |assoc|
+         publication_years publisher related_identifiers resource_type rights sizes
+         subjects].each do |assoc|
         include_association assoc
       end
     end
