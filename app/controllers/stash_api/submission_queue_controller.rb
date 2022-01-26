@@ -1,5 +1,5 @@
 require_dependency 'api_application_controller'
-require_dependency 'datasets_controller'
+require_relative 'datasets_controller'
 
 module StashApi
   class SubmissionQueueController < ApiApplicationController

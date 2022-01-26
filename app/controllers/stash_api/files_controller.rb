@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# ATTENTION, we have both StashApi::File class (model) and the ruby File class, so be careful to namespace to avoid insanity
+
 require 'fileutils'
 require 'stash/aws/s3'
 
@@ -25,7 +27,7 @@ module StashApi
 
     # GET /files/<id>
     def show
-      file = ApiFile.new(file_id: params[:id])
+      file = StashApi::File.new(file_id: params[:id])
       respond_to do |format|
         format.any { render json: file.metadata }
       end
@@ -45,7 +47,7 @@ module StashApi
       pre_upload_checks { return }
       Stash::Aws::S3.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
-      file = ApiFile.new(file_id: @file.id)
+      file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
         format.any { render json: file.metadata, status: 201 }
       end
@@ -179,7 +181,7 @@ module StashApi
       visible = resource.data_files.present_files
       all_count = visible.count
       data_files = visible.limit(per_page).offset(per_page * (page - 1))
-      results = data_files.map { |i| ApiFile.new(file_id: i.id).metadata }
+      results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end
 
@@ -197,13 +199,13 @@ module StashApi
     def make_deleted(data_file:)
       case data_file.file_state
       when 'created' # delete from db since it's new in this version
-        my_hate = { '_links': ApiFile.new(file_id: data_file.id).links.except(:self) }
+        my_hate = { '_links': StashApi::File.new(file_id: data_file.id).links.except(:self) }
         data_file.destroy
         return my_hate
       when 'copied' # make 'deleted' which will remove in this version on next submission
         data_file.update!(file_state: 'deleted')
       end
-      ApiFile.new(file_id: data_file.id).metadata
+      StashApi::File.new(file_id: data_file.id).metadata
     end
 
     def require_viewable_file
