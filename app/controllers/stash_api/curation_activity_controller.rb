@@ -1,8 +1,8 @@
 require_dependency 'api_application_controller'
-require_relative 'stash_api/datasets_controller'
+require_relative 'datasets_controller'
 
 module StashApi
-  class ApiCurationActivityController < ApiApplicationController
+  class CurationActivityController < ApiApplicationController
     before_action :require_json_headers
     before_action :doorkeeper_authorize!
     before_action :require_api_user
