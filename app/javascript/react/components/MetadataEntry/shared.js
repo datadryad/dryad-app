@@ -45,6 +45,7 @@ const Item = styled('li')(
     },
 )
 const onAttention = '&:hover, &:focus'
+
 const Input = styled('input')(
     {
       width: '100%', // full width - icon width/2 - border
@@ -253,7 +254,7 @@ const selectedItemStyles = {
 
 const selectedItemIconStyles = {cursor: 'pointer'}
 
-const comboboxStyles = {display: 'inline-block', marginLeft: '5px'}
+const comboboxStyles = {display: 'inline-block', marginLeft: '5px', width: '70em'}
 
 const comboboxWrapperStyles = {
   display: 'inline-flex',
