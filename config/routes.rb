@@ -103,16 +103,16 @@ Rails.application.routes.draw do
 
   ############################# API support ######################################
 
-  scope module: 'stash_api' do
+  scope module: 'stash_api', path: '/api/v2' do
     # StashApi::GeneralController#index
-    get '/api/v2', to: 'api#index'
-    match '/api/v2/test', to: 'api#test', via: %i[get post]
-    match '/api/v2/search', to: 'datasets#search', via: %i[get]
+    get '/', to: 'api#index'
+    match '/test', to: 'api#test', via: %i[get post]
+    match '/search', to: 'datasets#search', via: %i[get]
     
     # Support for the Editorial Manager API
-    match '/api/v2/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
+    match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
 
-    resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/api/v2/datasets' do
+    resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/datasets' do
       member do
         get 'download'
       end
@@ -124,33 +124,35 @@ Rails.application.routes.draw do
       end
       resources :internal_data, shallow: true, path: '/internal_data'
       resources :curation_activity, shallow: false, path: '/curation_activity'
+
       resources :versions, shallow: true, path: '/versions' do
         get 'download', on: :member
         resources :files, shallow: true, path: '/files' do
           get :download, on: :member
         end
       end
+            
       resources :urls, shallow: true, path: '/urls', only: [:create]
     end
   
-    resources :versions, shallow: true, path: '/api/v2/versions' do
+    resources :versions, shallow: true, path: '/versions' do
       get 'download', on: :member
       resources :files, shallow: true, path: '/files' do
         get :download, on: :member
       end
     end
 
-    resources :files, shallow: true, path: '/api/v2/files' do
+    resources :files, shallow: true, path: '/files' do
       get 'download', on: :member
     end
   
     # this one doesn't follow the pattern since it gloms filename on the end, so manual route
     # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
-    put '/api/v2/datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false
+    put '/datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false
     
-    resources :users, path: '/api/v2/users', only: %i[index show]
+    resources :users, path: '/users', only: %i[index show]
     
-    get '/api/v2/queue_length', to: 'submission_queue#length'
+    get '/queue_length', to: 'submission_queue#length'
   end
 
   

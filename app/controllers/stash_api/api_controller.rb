@@ -40,7 +40,7 @@ module StashApi
 
     def root_self
       {
-        href: root_path
+        href: '/api/v2/'
       }
     end
 
