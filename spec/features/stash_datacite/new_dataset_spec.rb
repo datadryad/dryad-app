@@ -65,8 +65,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Abstract
-      abstract = find_blank_ckeditor_id('description_abstract')
-      fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
+      fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
 
       # ##############################
       # Optional fields
@@ -84,13 +83,11 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Methods
-      methods = find_blank_ckeditor_id('description_methods')
-      fill_in_ckeditor methods, with: Faker::Lorem.paragraph
+      fill_in_tinymce(field: 'methods', content: Faker::Lorem.paragraph)
 
       # ##############################
       # Usage
-      usage_notes = find_blank_ckeditor_id('description_other')
-      fill_in_ckeditor usage_notes, with: Faker::Lorem.paragraph
+      fill_in_tinymce(field: 'other', content: Faker::Lorem.paragraph)
 
       # ##############################
       # Related works
