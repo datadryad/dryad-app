@@ -18,9 +18,7 @@ export default function RorAutocomplete() {
           if (data.status !== 200) {
             console.log('Response failure not a 200 response');
           }else{
-            // const myList = data.data.items.map((item) => item.name);
             const myList = data.data.items;
-            console.log(myList);
             setInputItems(sortSimilarity(myList, stringItem, qt), );
           }
         });
@@ -58,6 +56,9 @@ export default function RorAutocomplete() {
         return;
       }
       debounceFN(inputValue);
+    },
+    onSelectedItemChange: ({selectedItem}) => {
+      console.log(selectedItem);
     },
     itemToString: (item) => stringItem(item),
   });
