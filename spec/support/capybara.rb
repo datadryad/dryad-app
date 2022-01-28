@@ -3,7 +3,7 @@
 require_relative 'solr'
 require_relative 'helpers/ajax_helper'
 require_relative 'helpers/capybara_helper'
-require_relative 'helpers/ckeditor_helper'
+require_relative 'helpers/tinymce_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
@@ -76,7 +76,7 @@ RSpec.configure do |config|
   config.include(CapybaraHelper, type: :feature)
 
   config.before(:all, type: :feature) do
-    config.include(CkeditorHelper, type: :feature)
+    config.include(TinymceHelper, type: :feature)
     config.include(RoutesHelper, type: :feature)
     config.include(SessionsHelper, type: :feature)
     config.include(WebmockHelper, type: :feature)
