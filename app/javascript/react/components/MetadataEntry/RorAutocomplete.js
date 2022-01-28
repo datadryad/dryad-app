@@ -1,9 +1,11 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {useCombobox} from 'downshift';
 import {comboboxStyles, menuStyles} from './shared';
 import axios from "axios";
 import _debounce from 'lodash/debounce';
 import stringSimilarity from 'string-similarity';
+import {Field, Form, Formik} from 'formik';
+
 
 export default function RorAutocomplete() {
   const [inputItems, setInputItems] = useState([]);
@@ -63,26 +65,38 @@ export default function RorAutocomplete() {
     itemToString: (item) => stringItem(item),
   });
 
+  // for formik
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const formRef = useRef();
+
   return (
-      <div>
-        <label {...getLabelProps()}>Choose an element:</label>
-        <div style={comboboxStyles} {...getComboboxProps()}>
-          <input className='c-input__text' {...getInputProps()} /> &#x2705; &#x2753;
-        </div>
-        <ul {...getMenuProps()} style={menuStyles}>
-          {isOpen &&
-          inputItems.map((item, index) => (
-              <li
-                  style={
-                    highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : { marginBottom: '0.5em' }
-                  }
-                  key={item.id}
-                  {...getItemProps({item, index})}
-              >
-                {item.name}
-              </li>
-          ))}
-        </ul>
-      </div>
+      <Formik
+          initialValues={{ id: '', authenticity_token: (csrf || '') }}
+          innerRef={formRef}>
+        <Form className="c-input">
+          <div>
+            <label {...getLabelProps()}>ROR:</label>
+            <div style={comboboxStyles} {...getComboboxProps()}>
+              <input className='c-input__text' {...getInputProps()} /> &#x2705; &#x2753;
+            </div>
+            <ul {...getMenuProps()} style={menuStyles}>
+              {isOpen &&
+              inputItems.map((item, index) => (
+                  <li
+                      style={
+                        highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : { marginBottom: '0.5em' }
+                      }
+                      key={item.id}
+                      {...getItemProps({item, index})}
+                  >
+                    {item.name}
+                  </li>
+              ))}
+            </ul>
+          </div>
+          <Field name="id" type="hidden" />
+          <Field name="authenticity_token" type="hidden" />
+        </Form>
+      </Formik>
   );
 };
