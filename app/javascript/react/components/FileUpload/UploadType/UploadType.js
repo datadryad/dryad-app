@@ -1,46 +1,65 @@
+/* eslint-disable react/prop-types */
+// TODO: look into how important this is to set these.  Not mentioned in what I'd looked at so far and not sure why other files
+// don't give this error.
+
 import React from 'react';
 
-class UploadType extends React.Component {
+const highlightButton = (e) => {
+  const lbl = e.target.closest('div').querySelector('.c-choose__input-file-label');
+  lbl.classList.add('pseudo-focus-button-label');
+};
 
-  componentDidMount() {
+const unHighlightButton = (e) => {
+  const lbl = e.target.closest('div').querySelector('.c-choose__input-file-label');
+  lbl.classList.remove('pseudo-focus-button-label');
+};
 
-    document.querySelectorAll('input.c-choose__input-file').forEach(item => {
-      item.removeEventListener('focus', this.lblEventFocus);
-      item.removeEventListener('blur', this.lblEventBlur);
-      item.addEventListener('focus', this.lblEventFocus);
-      item.addEventListener('blur', this.lblEventBlur);
-    });
-  }
+function UploadType(
+  {
+    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
+  },
+) {
+  /*
+  const {
+    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
+  } = props;
+   */
 
-  lblEventFocus = (e) => {
-    const lbl = $(e.currentTarget).closest('div').find('label.c-choose__input-file-label');
-    lbl.addClass('pseudo-focus-button-label');
-  }
+  return (
+    <section className="c-uploadwidget--data">
+      <header>
+        <img src={logo} alt={alt} />
+        <h2>{name}</h2>
+      </header>
+      <b style={{textAlign: 'center'}}>
+        {description}
+        <br />
+        {description2}
+      </b>
 
-  lblEventBlur = (e) => {
-    const lbl = $(e.currentTarget).closest('div').find('label.c-choose__input-file-label');
-    lbl.removeClass('pseudo-focus-button-label');
-  }
-
-  render() {
-    return (
-        <section className="c-uploadwidget--data">
-          <header>
-            <img src={this.props.logo} alt={this.props.alt}/>
-            <h2>{this.props.name}</h2>
-          </header>
-            <b style={{textAlign: 'center'}}>{this.props.description}<br/>{this.props.description2}</b>
-
-          <div className="c-choose">
-            <label htmlFor={this.props.type} aria-label={`upload ${this.props.type} files`} className="c-choose__input-file-label">{this.props.buttonFiles}</label>
-            <input id={this.props.type} className="c-choose__input-file" type='file' onClick={this.props.clickedFiles}
-                   onChange={this.props.changed} multiple={true}/>
-          </div>
-          <button id={this.props.type + '_manifest'} className="js-uploadmodal__button-show-modal"
-                  onClick={this.props.clickedModal}>{this.props.buttonURLs}</button>
-        </section>
-    );
-  }
+      <div className="c-choose">
+        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>
+        <input
+          id={type}
+          className="c-choose__input-file"
+          type="file"
+          onClick={clickedFiles}
+          onChange={changed}
+          onBlur={(e) => unHighlightButton(e)}
+          onFocus={(e) => highlightButton(e)}
+          multiple
+        />
+      </div>
+      <button
+        type="button"
+        id={`${type}_manifest`}
+        className="js-uploadmodal__button-show-modal"
+        onClick={clickedModal}
+      >
+        {buttonURLs}
+      </button>
+    </section>
+  );
 }
 
 export default UploadType;
