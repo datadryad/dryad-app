@@ -113,21 +113,6 @@ const Menu = React.forwardRef((props, ref) => (
     <BaseMenu innerRef={ref} {...props} />
 ))
 
-const ControllerButton = styled('button')({
-  backgroundColor: 'transparent',
-  border: 'none',
-  position: 'absolute',
-  right: 0,
-  top: 0,
-  cursor: 'pointer',
-  width: 47,
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-  justifyContent: 'center',
-  alignItems: 'center',
-})
-
 function ArrowIcon({isOpen}) {
   return (
       <svg
@@ -191,10 +176,13 @@ async function getItemsAsync(filter, {reject}) {
 const itemToString = (i) => (i ? i.name : '')
 
 const menuStyles = {
-  maxHeight: 80,
-  maxWidth: 300,
-  overflowY: 'scroll',
-  backgroundColor: '#eee',
+  maxHeight: '180px',
+  overflowY: 'auto',
+  maxWidth: '300px',
+  minWidth: '200px',
+  backgroundColor: 'white',
+  position: 'absolute',
+  zIndex: 1000,
   padding: 0,
   listStyle: 'none',
 }
@@ -236,7 +224,6 @@ export {
   selectedItemIconStyles,
   selectedItemStyles,
   Menu,
-  ControllerButton,
   Input,
   Item,
   ArrowIcon,
