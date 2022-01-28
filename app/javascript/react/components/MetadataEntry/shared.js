@@ -1,10 +1,7 @@
 import React from 'react';
 import {css as emoCSS} from '@emotion/css';
 import styled from '@emotion/styled';
-import starWarsNames from 'starwars-names';
 import matchSorter from 'match-sorter';
-
-const allItems = starWarsNames.all.map((s) => ({name: s, id: s.toLowerCase()}))
 
 const css = (...args) => ({className: emoCSS(...args)})
 
@@ -193,35 +190,6 @@ async function getItemsAsync(filter, {reject}) {
 
 const itemToString = (i) => (i ? i.name : '')
 
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson',
-]
-
 const menuStyles = {
   maxHeight: 80,
   maxWidth: 300,
@@ -229,7 +197,6 @@ const menuStyles = {
   backgroundColor: '#eee',
   padding: 0,
   listStyle: 'none',
-  position: 'relative',
 }
 
 const menuMultipleStyles = {
@@ -263,7 +230,6 @@ const comboboxWrapperStyles = {
 
 export {
   menuMultipleStyles,
-  items,
   menuStyles,
   comboboxStyles,
   comboboxWrapperStyles,

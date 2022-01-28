@@ -57,7 +57,6 @@ export default function RorAutocomplete() {
         setInputItems([],);
         return;
       }
-      // supplyLookupList(inputValue);
       debounceFN(inputValue);
     },
     itemToString: (item) => stringItem(item),
@@ -73,11 +72,11 @@ export default function RorAutocomplete() {
           {isOpen &&
           inputItems.map((item, index) => (
               <li
-                  {...getItemProps({item, index})}
                   style={
                     highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
                   }
                   key={item.id}
+                  {...getItemProps({item, index})}
               >
                 {item.name}
               </li>
