@@ -1,0 +1,3 @@
+# this ignores a file that Cassiano had and it causes huge linting issues we should fix later
+# TODO: come back and go through this file
+app/javascript/react/containers/FileUpload/UploadFiles.js

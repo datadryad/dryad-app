@@ -48,8 +48,7 @@ module DatasetHelper
     fill_in 'title', with: Faker::Lorem.sentence
     fill_in_author
     fill_in_research_domain
-    abstract = find_blank_ckeditor_id('description_abstract')
-    fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
+    fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
   end
 
   def add_required_data_files
