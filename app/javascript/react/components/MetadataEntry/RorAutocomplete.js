@@ -73,7 +73,7 @@ export default function RorAutocomplete() {
           inputItems.map((item, index) => (
               <li
                   style={
-                    highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
+                    highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : { marginBottom: '0.5em' }
                   }
                   key={item.id}
                   {...getItemProps({item, index})}

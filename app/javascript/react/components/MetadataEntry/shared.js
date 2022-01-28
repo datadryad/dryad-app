@@ -1,7 +1,6 @@
 import React from 'react';
 import {css as emoCSS} from '@emotion/css';
 import styled from '@emotion/styled';
-import matchSorter from 'match-sorter';
 
 const css = (...args) => ({className: emoCSS(...args)})
 
@@ -113,46 +112,6 @@ const Menu = React.forwardRef((props, ref) => (
     <BaseMenu innerRef={ref} {...props} />
 ))
 
-function ArrowIcon({isOpen}) {
-  return (
-      <svg
-          viewBox="0 0 20 20"
-          preserveAspectRatio="none"
-          width={16}
-          fill="transparent"
-          stroke="#979797"
-          strokeWidth="1.1px"
-          transform={isOpen ? 'rotate(180)' : undefined}
-      >
-        <path d="M1,6 L10,15 L19,6" />
-      </svg>
-  )
-}
-
-function XIcon() {
-  return (
-      <svg
-          viewBox="0 0 20 20"
-          preserveAspectRatio="none"
-          width={12}
-          fill="transparent"
-          stroke="#979797"
-          strokeWidth="1.1px"
-      >
-        <path d="M1,1 L19,19" />
-        <path d="M19,1 L1,19" />
-      </svg>
-  )
-}
-
-function getItems(filter) {
-  return filter
-      ? matchSorter(allItems, filter, {
-        keys: ['name'],
-      })
-      : allItems
-}
-
 function getStringItems(filter) {
   return getItems(filter).map(({name}) => name)
 }
@@ -187,20 +146,6 @@ const menuStyles = {
   listStyle: 'none',
 }
 
-const menuMultipleStyles = {
-  maxHeight: '180px',
-  overflowY: 'auto',
-  width: '135px',
-  margin: 0,
-  borderTop: 0,
-  background: 'white',
-  position: 'absolute',
-  zIndex: 1000,
-  listStyle: 'none',
-  padding: 0,
-  left: '340px',
-}
-
 const selectedItemStyles = {
   marginLeft: '5px',
   backgroundColor: 'aliceblue',
@@ -217,7 +162,6 @@ const comboboxWrapperStyles = {
 }
 
 export {
-  menuMultipleStyles,
   menuStyles,
   comboboxStyles,
   comboboxWrapperStyles,
@@ -226,12 +170,9 @@ export {
   Menu,
   Input,
   Item,
-  ArrowIcon,
-  XIcon,
   Label,
   css,
   itemToString,
-  getItems,
   getStringItems,
   getItemsAsync,
 }
