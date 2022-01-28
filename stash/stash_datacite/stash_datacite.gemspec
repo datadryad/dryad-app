@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sync', '~> 0.5.0'
   s.add_dependency 'tins', '~> 1.29.1'
 
-  s.add_dependency 'datacite-mapping', '~> 0.4.0'
+  s.add_dependency 'datacite-mapping', '~> 0.4.1'
   # s.add_dependency 'stash_discovery'
   # s.add_dependency 'stash_engine'
   # s.add_dependency 'stash-wrapper'
