@@ -67,7 +67,7 @@ export default function RorAutocomplete() {
       <div>
         <label {...getLabelProps()}>Choose an element:</label>
         <div style={comboboxStyles} {...getComboboxProps()}>
-          <input className='c-input__text' {...getInputProps()} />
+          <input className='c-input__text' {...getInputProps()} /> &#x2705; &#x2753;
         </div>
         <ul {...getMenuProps()} style={menuStyles}>
           {isOpen &&
