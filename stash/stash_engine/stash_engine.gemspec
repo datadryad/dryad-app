@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'concurrent-ruby', '~> 1.1.9'
   s.add_dependency 'daemons', '~> 1.4.1'
   s.add_dependency 'database_cleaner', '~> 2.0.1'
-  s.add_dependency 'datacite-mapping', '~> 0.4.0'
+  s.add_dependency 'datacite-mapping', '~> 0.4.1'
   s.add_dependency 'delayed_job_active_record', '~> 4.1.6'
   s.add_dependency 'ezid-client', '~> 1.9.1'
   s.add_dependency 'filesize', '~> 0.2.0'
