@@ -139,17 +139,12 @@ const menuStyles = {
   overflowY: 'auto',
   maxWidth: '300px',
   minWidth: '200px',
-  backgroundColor: 'white',
+  backgroundColor: '#fafafa',
   position: 'absolute',
   zIndex: 1000,
   padding: 0,
   listStyle: 'none',
-}
-
-const selectedItemStyles = {
-  marginLeft: '5px',
-  backgroundColor: 'aliceblue',
-  borderRadius: '10px',
+  // border: '1px solid gray',
 }
 
 const selectedItemIconStyles = {cursor: 'pointer'}
@@ -166,7 +161,6 @@ export {
   comboboxStyles,
   comboboxWrapperStyles,
   selectedItemIconStyles,
-  selectedItemStyles,
   Menu,
   Input,
   Item,
