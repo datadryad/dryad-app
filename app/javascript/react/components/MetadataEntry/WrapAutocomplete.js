@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import RorAutocomplete from "./RorAutocomplete";
 
 export default function WrapAutocomplete() {
@@ -11,11 +11,12 @@ export default function WrapAutocomplete() {
   const [autoBlurred, setAutoBlurred] = useState(false);
 
   // do something when blurring from the autocomplete, passed up here
-  /*
   useEffect(() => {
-        alert('blur changed!');
-      }, [blurred]);
-  )*/
+        if(autoBlurred) {
+          alert('blurred away from input!');
+        };
+        setAutoBlurred(false);
+      }, [autoBlurred]);
 
   return (
       <>
