@@ -17,13 +17,6 @@ describe StashDatacite do
     allow(app_config).to(receive(:to_prepare)) { |&block| block.call }
   end
 
-  describe '#config_resource_patch' do
-    it 'associates the resource patch' do
-      expect(StashDatacite::ResourcePatch).to receive(:associate_with_resource).with(StashEngine::Resource)
-      StashDatacite.config_resource_patch
-    end
-  end
-
   describe StashDatacite::Engine do
     it 'appends migrations in an initializer' do
       initializers = StashDatacite::Engine.initializers
