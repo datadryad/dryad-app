@@ -13,6 +13,9 @@ export default function RorAutocomplete() {
   // do something when blurring from the autocomplete, passed up here
   useEffect(() => {
         if(autoBlurred) {
+          if(!acText){
+            setAcID('');
+          }
           console.log('blurred away from input!');
         };
         setAutoBlurred(false);
@@ -20,11 +23,9 @@ export default function RorAutocomplete() {
 
   return (
       <>
-        <GenericAutocomplete acText={acText || ''} setAcText={setAcText} setAcID={setAcID} setAutoBlurred={setAutoBlurred} />
-        {acID
-            ? ''
-            : <span title="Institution not found. Select it from the auto-complete list if it's available.">&#x2753;</span>
-        }<br/>
+        <div className="c-input">
+          <GenericAutocomplete acText={acText || ''} setAcText={setAcText} acID={acID} setAcID={setAcID} setAutoBlurred={setAutoBlurred} />
+        </div>
         <p>Typed value is: {acText}</p>
         <p>Selected ID is: {acID}</p>
         <p>Blurred: {'' + autoBlurred}</p>

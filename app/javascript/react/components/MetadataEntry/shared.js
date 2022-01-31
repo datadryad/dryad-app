@@ -141,6 +141,7 @@ const menuStyles = {
   minWidth: '200px',
   backgroundColor: '#fafafa',
   position: 'absolute',
+  top: '1em',
   zIndex: 1000,
   padding: 0,
   listStyle: 'none',
