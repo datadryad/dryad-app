@@ -27,10 +27,6 @@ PATH
     stash-wrapper (0.1.12)
       typesafe_enum (~> 0.1.9)
       xml-mapping_extensions (~> 0.4.9)
-    stash_api (0.0.1)
-      doorkeeper (~> 5.5.2)
-      mysql2 (~> 0.5.3)
-      rails (~> 5.2.6)
     stash_datacite (0.0.5)
       amatch (~> 0.4.0)
       datacite-mapping (~> 0.4.1)
@@ -469,9 +465,8 @@ GEM
       addressable (~> 2.7)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
-    libv8 (3.16.14.19)
     libv8 (3.16.14.19-x86_64-darwin-17)
-    libv8 (3.16.14.19-x86_64-linux)
+    libv8 (3.16.14.19-x86_64-linux)	
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -855,6 +850,7 @@ DEPENDENCIES
   colorize
   database_cleaner
   diffy
+  doorkeeper (~> 5.5)
   down
   equivalent-xml
   exception_notification
@@ -895,7 +891,6 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   stash-merritt!
-  stash_api!
   stash_datacite!
   stash_discovery!
   stash_engine!
