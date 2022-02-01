@@ -222,7 +222,7 @@ module StashEngine
             expect(@identifier.curation_completed_date).to eq(nil)
           end
         end
-        
+
         describe '#date_last_curated' do
           it 'selects the correct date_last_curated' do
             target_date = DateTime.new(2010, 2, 3).utc
