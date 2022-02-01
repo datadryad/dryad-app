@@ -503,6 +503,43 @@ module StashEngine
       found_approval_date
     end
 
+    # returns the date on which this identifier was initially referred for author action
+    def aar_date
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          return ca.created_at if ca.status.action_required?
+        end        
+      end
+      nil
+    end
+    
+    # returns the date on which this identifier was returned to curators after action_required
+    def aar_end_date
+      found_aar = false
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          found_aar = true if ca.status.action_required?
+          return ca.created_at if (found_aar && !(ca.status.action_required?))
+        end        
+      end
+      nil
+    end
+    
+    def curation_completed_date
+      return nil unless %w[action_required published embargoed].include?(pub_state)
+
+      found_cc_date = nil
+      resources.reverse_each do |res|
+        res.curation_activities.each do |ca|
+          next unless %w[action_required published embargoed].include?(ca.status)
+
+          found_cc_date = ca.created_at
+          break
+        end
+      end
+      found_cc_date
+    end
+    
     def date_last_curated
       cas = resources.map(&:curation_activities).flatten.reverse
       cas.each do |ca|
