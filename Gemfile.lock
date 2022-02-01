@@ -465,8 +465,9 @@ GEM
       addressable (~> 2.7)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
+    libv8 (3.16.14.19)
     libv8 (3.16.14.19-x86_64-darwin-17)
-    libv8 (3.16.14.19-x86_64-linux)	
+    libv8 (3.16.14.19-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -864,6 +865,7 @@ DEPENDENCIES
   irb (~> 1.3.7)
   jbuilder
   jquery-rails
+  libv8 (~> 3.16.14)
   listen
   mocha
   mysql2 (~> 0.5.3)

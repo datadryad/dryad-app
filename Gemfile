@@ -40,6 +40,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
 gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails'
+gem 'libv8', '~> 3.16.14'
 gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
 gem 'turbolinks'
