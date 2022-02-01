@@ -551,6 +551,65 @@ namespace :curation_stats do
       stats.recalculate unless stats.created_at > 2.seconds.ago
     end
   end
+
+  desc 'Calculate milestones from v2 launch day'
+  task milestones: :environment do
+    launch_day = Date.new(2019, 9, 17)
+
+    CSV.open('curation_milestones.csv', 'w') do |csv|
+      csv << %w[DOI
+                CurationCompletedDate
+                ApprovalDate
+                TimeToCuration
+                TimeInCuration
+                TimeAARToNon
+                TimeAARToCuration
+                TimeToApproval]
+      # For each dataset, submitted after launch day...
+      StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day}'").each do |i|
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        curation_completed_date_str = i.curation_completed_date&.strftime('%Y-%m-%d')
+
+        r = i.first_submitted_resource
+        next unless r
+
+        # TimeToCuration = time from first availability (CurationStartDate) to first actual curation note
+        ttc_start = r.curation_activities.order(:id).where("status = 'submitted'")&.first&.created_at
+        ttc_end = r.curation_activities.order(:id).where("status = 'curation'")&.first&.created_at
+        time_to_curation = (ttc_end - ttc_start).to_i / 1.day if ttc_start && ttc_end
+
+        # TimeInCuration = time from first actual curation to approval
+        time_in_curation = (i.approval_date - ttc_end).to_i / 1.day if ttc_end && i.approval_date
+
+        # TimeAARToNon = time from first AAR to following non-AAR status (including in_progress)
+        time_aar_to_non = (i.aar_end_date - i.aar_date).to_i / 1.day if i.aar_date && i.aar_end_date
+
+        # TimeAARToCuration = time from first AAR to following curation status (author has actually returned it)
+        post_aar_curation_date = nil
+        i.resources.reverse_each do |res|
+          res.curation_activities.each do |ca|
+            if ca.curation? && i.aar_date && (ca.created_at >= i.aar_date)
+              post_aar_curation_date = ca.created_at
+              break
+            end
+          end
+        end
+        time_aar_to_curation = (post_aar_curation_date - i.aar_date).to_i / 1.day if i.aar_date && post_aar_curation_date
+
+        # TimeToApproval = time from submission to approval
+        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
+
+        csv << [i.identifier, # DOI
+                curation_completed_date_str, # CurationCompletedDate
+                approval_date_str, # ApprovalDate aka PublicationDate
+                time_to_curation,
+                time_in_curation,
+                time_aar_to_non,
+                time_aar_to_curation,
+                time_to_approval]
+      end
+    end
+  end
 end
 
 namespace :journals do

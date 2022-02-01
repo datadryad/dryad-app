@@ -208,6 +208,21 @@ module StashEngine
           end
         end
 
+        describe '#curation_completed_date' do
+          it 'selects the correct curation_completed_date' do
+            target_date = DateTime.new(2010, 2, 3).utc
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'action_required', user: @user, created_at: target_date)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: '2020-01-01')
+            expect(@identifier.curation_completed_date).to eq(target_date)
+          end
+
+          it 'gives no curation_completed_date for items still in curation' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            expect(@identifier.curation_completed_date).to eq(nil)
+          end
+        end
+
         describe '#date_last_curated' do
           it 'selects the correct date_last_curated' do
             target_date = DateTime.new(2010, 2, 3).utc
