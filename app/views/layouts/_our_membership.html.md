@@ -92,7 +92,7 @@ including universities, research institutions and academic libraries. See more a
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
         <li>The Royal Society</li>
-        <li>Wiley</li>
+        <li>John Wiley &amp; Sons, Inc</li>
       </ul>
     </td>
   </tr>
