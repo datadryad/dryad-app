@@ -127,7 +127,7 @@ module StashDatacite
 
       def distribution
         target_id = CGI.escape(@resource.identifier&.to_s)
-        download_url = StashApi::Engine.routes.url_helpers.download_dataset_url(target_id)
+        download_url = Rails.application.routes.url_helpers.download_dataset_url(target_id)
         return nil unless download_url
 
         {

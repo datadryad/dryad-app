@@ -6,7 +6,7 @@ module DatabaseHelper
     @user = create(:user, role: 'superuser')
     @identifier = create(:identifier)
     @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id,
-                                              authors: [create(:author)], descriptions: [create(:description)],
+                                              authors: [create(:author)],
                                               stash_version: create(:version, version: 1, merritt_version: 1),
                                               data_files: [create(:data_file)])
   end
