@@ -87,12 +87,12 @@ including universities, research institutions and academic libraries. See more a
   <td>
     <ul>
         <li>Hindawi</li>
+        <li>John Wiley &amp; Sons, Inc</li>
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
         <li>The Royal Society</li>
-        <li>John Wiley &amp; Sons, Inc</li>
       </ul>
     </td>
   </tr>
