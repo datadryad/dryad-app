@@ -73,7 +73,6 @@ Rails.application.routes.draw do
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
-  mount StashApi::Engine, at: '/api/v2'
 
   # we have to do this to make the geoblacklight routes come before catchall
   # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
@@ -102,6 +101,63 @@ Rails.application.routes.draw do
       constraints: {host: 'wiki.datadryad.org'},
       to: redirect('https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/v1_wiki_content.md')
 
+  ############################# API support ######################################
+
+  scope module: 'stash_api', path: '/api/v2' do
+    # StashApi::GeneralController#index
+    get '/', to: 'api#index'
+    match '/test', to: 'api#test', via: %i[get post]
+    match '/search', to: 'datasets#search', via: %i[get]
+    
+    # Support for the Editorial Manager API
+    match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
+
+    resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/datasets' do
+      member do
+        get 'download'
+      end
+      member do
+        post 'set_internal_datum'
+      end
+      member do
+        post 'add_internal_datum'
+      end
+      resources :internal_data, shallow: true, path: '/internal_data'
+      resources :curation_activity, shallow: false, path: '/curation_activity'
+
+      resources :versions, shallow: true, path: '/versions' do
+        get 'download', on: :member
+        resources :files, shallow: true, path: '/files' do
+          get :download, on: :member
+        end
+      end
+            
+      resources :urls, shallow: true, path: '/urls', only: [:create]
+    end
+  
+    resources :versions, shallow: true, path: '/versions' do
+      get 'download', on: :member
+      resources :files, shallow: true, path: '/files' do
+        get :download, on: :member
+      end
+    end
+
+    resources :files, shallow: true, path: '/files' do
+      get 'download', on: :member
+    end
+  
+    # this one doesn't follow the pattern since it gloms filename on the end, so manual route
+    # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
+    put '/datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false
+    
+    resources :users, path: '/users', only: %i[index show]
+    
+    get '/queue_length', to: 'submission_queue#length'
+  end
+
+  
+  ########################## Dryad v1 support ######################################
+  
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('stash/faq')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')

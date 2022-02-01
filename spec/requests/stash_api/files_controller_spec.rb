@@ -131,13 +131,13 @@ module StashApi
         resource = data_file.resource
         ident_obj = resource.identifier
         # the dataset path is messed up because rails either doesn't encode or double-encodes when you use the helper, so workaround
-        ds_path = stash_api.dataset_path('foobar').gsub('foobar', CGI.escape(ident_obj.to_s))
+        ds_path = dataset_path('foobar').gsub('foobar', CGI.escape(ident_obj.to_s))
 
-        expect(lnks['self']['href']).to eq(stash_api.file_path(@file_id))
+        expect(lnks['self']['href']).to eq(file_path(@file_id))
         expect(lnks['stash:dataset']['href']).to eq(ds_path)
-        expect(lnks['stash:version']['href']).to eq(stash_api.version_path(resource.id))
-        expect(lnks['stash:files']['href']).to eq(stash_api.version_files_path(resource.id))
-        expect(lnks['stash:file-download']['href']).to eq(stash_api.download_file_path(@file_id))
+        expect(lnks['stash:version']['href']).to eq(version_path(resource.id))
+        expect(lnks['stash:files']['href']).to eq(version_files_path(resource.id))
+        expect(lnks['stash:file-download']['href']).to eq(download_file_path(@file_id))
       end
     end
 
