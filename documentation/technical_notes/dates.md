@@ -15,6 +15,8 @@ in the system with CamelCase or snake_case, depending on the situation.
   never entered `peer_review`, this date will be blank. 
 - CurationStartDate -- The dataset first went either to `submitted` or
   `curation` status.
+- AARDate -- The dataset first went to `action_required` status.
+- AAREndDate -- The dataset first returned from `action_required` status.
 - CurationCompletedDate --  The status changed from `curation` to
   `action_required`, `embargoed` or `published`. 
 - ApprovalDate -- The dataset was approved for publication. It entered the
