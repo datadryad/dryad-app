@@ -321,7 +321,7 @@ namespace :identifiers do
     end
 
     p "Writing Shopping Cart Report for #{year_month} to file..."
-     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
+    CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID InstitutionName
                 JournalName JournalISSN SponsorName]
@@ -552,83 +552,63 @@ namespace :curation_stats do
     end
   end
 
-  desc 'Calculate milestones from v2 launch day until yesterday'
+  desc 'Calculate milestones from v2 launch day'
   task milestones: :environment do
     launch_day = Date.new(2019, 9, 17)
 
-    CSV.open("curation_milestones.csv", 'w') do |csv|
-      csv << %w[DOI 
+    CSV.open('curation_milestones.csv', 'w') do |csv|
+      csv << %w[DOI
                 CurationCompletedDate
-                ApprovalDate                
+                ApprovalDate
                 TimeToCuration
                 TimeInCuration
                 TimeAARToNon
                 TimeAARToCuration
-                TimeToApproval]    
+                TimeToApproval]
       # For each dataset, submitted after launch day...
       StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day}'").each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         curation_completed_date_str = i.curation_completed_date&.strftime('%Y-%m-%d')
 
         r = i.first_submitted_resource
-        if r
-          # TimeToCuration = time from first availability (CurationStartDate) to first actual curation note
-          ttc_start = r.curation_activities.order(:id).where("status = 'submitted'")&.first&.created_at
-          ttc_end = r.curation_activities.order(:id).where("status = 'curation'")&.first&.created_at
-          time_to_curation = (ttc_end - ttc_start).to_i / 1.day if ttc_start && ttc_end
-       
-          # TimeInCuration = time from first actual curation to approval
-          time_in_curation = (i.approval_date - ttc_end).to_i / 1.day if ttc_end && i.approval_date
+        next unless r
 
-          # TimeAARToNon = time from first AAR to following non-AAR status (including in_progress)
-          time_aar_to_non = (i.aar_end_date - i.aar_date).to_id / 1.day if i.aar_date && i.aar_end_date
+        # TimeToCuration = time from first availability (CurationStartDate) to first actual curation note
+        ttc_start = r.curation_activities.order(:id).where("status = 'submitted'")&.first&.created_at
+        ttc_end = r.curation_activities.order(:id).where("status = 'curation'")&.first&.created_at
+        time_to_curation = (ttc_end - ttc_start).to_i / 1.day if ttc_start && ttc_end
 
-          # TimeAARToCuration = time from first AAR to following curation status (author has actually returned it)
-          time_aar_to_curation = (i.aar_end_date - i.aar_date).to_id / 1.day if i.aar_date && i.aar_end_date
+        # TimeInCuration = time from first actual curation to approval
+        time_in_curation = (i.approval_date - ttc_end).to_i / 1.day if ttc_end && i.approval_date
 
+        # TimeAARToNon = time from first AAR to following non-AAR status (including in_progress)
+        time_aar_to_non = (i.aar_end_date - i.aar_date).to_i / 1.day if i.aar_date && i.aar_end_date
+
+        # TimeAARToCuration = time from first AAR to following curation status (author has actually returned it)
+        post_aar_curation_date = nil
+        i.resources.reverse_each do |res|
+          res.curation_activities.each do |ca|
+            if ca.curation? && i.aar_date && (ca.created_at >= i.aar_date)
+              post_aar_curation_date = ca.created_at
+              break
+            end
+          end
         end
-        
+        time_aar_to_curation = (post_aar_curation_date - i.aar_date).to_i / 1.day if i.aar_date && post_aar_curation_date
+
+        # TimeToApproval = time from submission to approval
+        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
+
         csv << [i.identifier, # DOI
                 curation_completed_date_str, # CurationCompletedDate
                 approval_date_str, # ApprovalDate aka PublicationDate
-                time_to_curation, 
-                time_in_curation, 
-                time_aar_to_non, 
-                nil, # TimeAARToCuration
-                nil  #TimeToApproval = time from submission to approval
-               ]    
+                time_to_curation,
+                time_in_curation,
+                time_aar_to_non,
+                time_aar_to_curation,
+                time_to_approval]
       end
     end
-    
-    ### old shopping cart section.... calculate per dataset
-    
-      # Limit the query to datasets that existed at the time of the target report,
-      # and have been updated the within the month of the target.
-#      limit_date = Date.parse("#{year_month}-01")
-#      limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
-#      StashEngine::Identifier.publicly_viewable.where(limit_date_filter).each do |i|
-#        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-#        next unless approval_date_str&.start_with?(year_month)
-#
-#        created_date_str = i.created_at&.strftime('%Y-%m-%d')
-#        curation_start_date = i.resources.submitted.each do |r|
-#          break r.curation_start_date if r.curation_start_date.present?
-#        end
-#        curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
-#        csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
-#                i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
-#                i.publication_name, i.publication_issn, i.journal&.sponsor&.name]
-#      end
-#    end
-
-    ### old stats section .... calculate stats for each day
-    
- #   (launch_day..Date.today - 1.day).each do |date|
- #     print '.'
- #     stats = StashEngine::CurationStats.find_or_create_by(date: date)
- #     stats.recalculate unless stats.created_at > 2.seconds.ago
- #   end
- # end  
   end
 end
 
