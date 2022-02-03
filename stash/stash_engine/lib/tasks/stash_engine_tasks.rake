@@ -574,8 +574,8 @@ namespace :curation_stats do
         next unless r
 
         # TimeToCuration = time from first availability (CurationStartDate) to first actual curation note
-        ttc_start = r.curation_activities.order(:id).where("status = 'submitted'")&.first&.created_at
-        ttc_end = r.curation_activities.order(:id).where("status = 'curation'")&.first&.created_at
+        ttc_start = i.date_available_for_curation
+        ttc_end = i.date_first_curated
         time_to_curation = (ttc_end - ttc_start).to_i / 1.day if ttc_start && ttc_end
 
         # TimeInCuration = time from first actual curation to approval
