@@ -521,6 +521,13 @@ module StashEngine
       nil
     end
 
+    def date_available_for_curation
+      resources.map(&:curation_activities).flatten.each do |ca|
+        return ca.created_at if ca.submitted?
+      end
+      nil
+    end
+
     def curation_completed_date
       return nil unless %w[action_required published embargoed].include?(pub_state)
 
@@ -532,6 +539,13 @@ module StashEngine
         break
       end
       found_cc_date
+    end
+
+    def date_first_curated
+      resources.map(&:curation_activities).flatten.each do |ca|
+        return ca.created_at if ca.curation?
+      end
+      nil
     end
 
     def date_last_curated
