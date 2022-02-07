@@ -22,7 +22,7 @@ Stopping Merritt Submissions
 
 To pause Merritt submissions, on each server:
 ```
-touch apps/ui/releases/hold-submissions.txt
+touch /apps/dryad/apps/ui/releases/hold-submissions.txt
 ```
 
 This will put any queued submissions into the
@@ -34,7 +34,7 @@ not be submitted right now, but you can restart them again afterward.
 
 To restart Merrit submissions, on each server:
 ```
-rm apps/ui/releases/hold-submissions.txt
+rm /apps/dryad/apps/ui/releases/hold-submissions.txt
 ```
 
 THEN, on one server, in the Rails console:
