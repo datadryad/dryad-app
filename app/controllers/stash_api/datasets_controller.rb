@@ -350,7 +350,7 @@ module StashApi
 
       if params['modifiedSince']
         # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
-        fq_array << "timestamp:[#{params['modifiedSince']} TO NOW]"
+        fq_array << "updated_at_dt:[#{params['modifiedSince']} TO NOW]"
       end
 
       fq_array
