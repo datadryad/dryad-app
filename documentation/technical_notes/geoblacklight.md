@@ -3,10 +3,10 @@
 ## Overview of config files
 
 `stash/stash_datacite/lib/stash_indexer/indexing_resource.rb`
-- Creates the actual document that will be sent to solr for indexing
+- Creates the actual document that will be sent to SOLR for indexing
 
 `config/solr_config/schema.xml`
-- Defines what is actually stored/indexed in SOLR
+- Defines the fields that will be stored/indexed in SOLR
 - Contains generic field names like "*_i", "*_sm", so fields can be added to the
   record without needing to change the schema or the SOLR server. Each of these
   field names has reasonable settings for stored/indexed/etc.
