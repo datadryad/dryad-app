@@ -12,7 +12,7 @@ module Mocks
       stub_request(:get, %r{solr/geoblacklight}).to_return(status: 200, body: default_results, headers: {})
       stub_request(:post, %r{solr/geoblacklight}).to_return(status: 200, body: [], headers: {})
       stub_request(:get, %r{solr/geoblacklight.*fq=dryad_author_affiliation}).to_return(status: 200, body: trivial_results, headers: {})
-      stub_request(:get, %r{solr/geoblacklight.*fq=timestamp}).to_return(status: 200, body: trivial_results, headers: {})
+      stub_request(:get, %r{solr/geoblacklight.*fq=updated_at_dt}).to_return(status: 200, body: trivial_results, headers: {})
 
       # The StashDiscovery::LatestController.index attempts to contact Solr and the Rails.cache for
       # the list of 'Recent Datasets' on the home page. We have to set one of the controller's instance
