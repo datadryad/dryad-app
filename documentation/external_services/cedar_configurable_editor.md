@@ -16,11 +16,10 @@ https://demo.cee.staging.metadatacenter.org/
 Installation
 ==============
 
-The old (Angular) version is at the following link:
-https://component.metadatacenter.org/cedar-embeddable-editor/cedar-embeddable-editor-2.6.17.js
-- This version depends on Angular to connect the config file with the editor.
+Non-Dryad tester
+------------------
 
-The non-Angular version is available at: 
+There is a version available at: 
 https://github.com/metadatacenter/cedar-cee-demo-generic/tree/develop
 with a JS file called `cedar-embeddable-editor-2.6.18-SNAPSHOT.js`
 
@@ -29,15 +28,38 @@ runs with
 - php -S localhost:8009
 - http://localhost:8009
 
+Dryad tester
+-------------
+
+Currently, Dryad has a demonstration of the editor running in these places to
+demonstrate different loading:
+- `our_misison` page (Full debugging/config info)
+- submission system description page (Minimal "normal" setup)
+- submission system upload page (using React)
+
+Before running within Dryad, we ran:
+`npm install @webcomponents/webcomponentsjs`
+It is unclear whether this is strictly required. The webcomponentsjs library
+mostly contains polyfills for backwards compatibility. The editor may work fine
+without it.
+
 
 Configuration
 ==============
 
-Config file: cee-config.json
+Config file: `public/cedar-embeddable-editor/cee-config.json`
 
-The demo page adds an event listener for the event WebComponentsReady. When this
-event is fired, the config file is injected into the cedar-embeddable-editor
-component using a method called loadConfigFromURL.
+- The config file is publicly available. The user's browser will
+  download it when initiating the editor.
+- We could move this config into a more protected location, but it doesn't seem
+  necessary, since every user would have access to it anyway.
+
+When the demo page triggers config loading, the config file is injected into the
+cedar-embeddable-editor component using a method called loadConfigFromURL.
+
+
+Templates
+---------
 
 Templates are stored at a URL specified by
 `sampleTemplateLocationPrefix`. Within this URL, every template has a number,
@@ -47,10 +69,6 @@ https://component.metadatacenter.org/cedar-embeddable-editor-sample-templates/53
 
 All the templates made public via the component server are available on GitHub
 https://github.com/metadatacenter/cedar-component-distribution/tree/master/cedar-embeddable-editor-sample-templates
-
-
-Templates
-==========
 
 The template controls the types of fields that are displayed and how/whether
 they are tied to an ontolgy.

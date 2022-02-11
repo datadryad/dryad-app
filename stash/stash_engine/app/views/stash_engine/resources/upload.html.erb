@@ -62,6 +62,16 @@
       $('#genericModalDialog')[0].showModal();
     }
   });
+
+ function configCedar() {
+     console.log("Loading CEDAR config");
+     var comp = document.querySelector('cedar-embeddable-editor');
+     comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config.json');
+ }
+ 
+ // Wait a second to ensure the page is loaded before initializing the Cedar config
+ // (we should base this one some better trigger in the future)
+ setTimeout(configCedar,1000);     
 </script>
 
 

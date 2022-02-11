@@ -22,11 +22,6 @@ import '../../../../stash/stash_engine/app/assets/javascripts/stash_engine/resou
  * Constants
  */
 
-const ceeConfig =  {
-    "sampleTemplateLocationPrefix":"https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/",
-    "loadSampleTemplateName":"04"
-}
-
 const RailsActiveRecordToUploadType = {
     'StashEngine::DataFile': 'data',
     'StashEngine::SoftwareFile': 'software',
@@ -610,7 +605,7 @@ class UploadFiles extends React.Component {
                 <h1 className="o-heading__level1">
                     Upload Your Files
             </h1>
-		<cedar-embeddable-editor config={ceeConfig}></cedar-embeddable-editor>  
+		<cedar-embeddable-editor></cedar-embeddable-editor>  
                 <Instructions />
                 <div className="c-uploadwidgets">
                     {this.state.upload_type.map((upload_type) => {

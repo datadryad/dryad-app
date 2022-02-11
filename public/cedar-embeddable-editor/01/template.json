@@ -26,7 +26,7 @@
       "NCBI BioProject for Human Tissue": "NCBI BioProject for Human Tissue"
     }
   },
-  "schema:name": "CEDAR-NCBI Human Tissue YYYY",
+  "schema:name": "CEDAR-NCBI Human Tissue",
   "oslc:modifiedBy": "https://metadatacenter.org/users/cd36dea6-9222-412b-99ab-bec50f6ecd00",
   "required": [
     "@context",
