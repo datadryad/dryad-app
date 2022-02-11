@@ -86,13 +86,24 @@ Styling
 There is a sample empty CSS template for the CEE (https://github.com/metadatacenter/cedar-cee-demo-generic/blob/develop/assets/css/styles.css).
 
 
+Output
+=======
+
+- There is a demo `cedar_controller.rb` that can receive data from the demo form
+  fields. It gets the info, but there is a CRXF token error
+- When users hit the "save" button, the form results are POSTed to the address
+  specified in the config file `dataSaverEndpointUrl`.
+- The results are JSON
+
+  
+
 How it works
 ==============
 
-webcomponents-loader.js determines whether the browser fully supports ES6, and
-adds polyfills if needed. When it is done, it fires the event
+webcomponents-loader.js (if used) determines whether the browser fully supports
+ES6, and adds polyfills if needed. When it is done, it fires the event
 WebComponentsReady.
 
+
 Retrieves controlled terms directly from CEDAR’s production terminology
-server. This is related to the question you asked in our last meeting. You
-currently don’t need any CEDAR apiKey to make those calls.
+server. 
