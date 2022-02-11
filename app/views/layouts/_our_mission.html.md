@@ -59,10 +59,31 @@ display: flex;
 </turbo-stream>
 
 <%= javascript_pack_tag 'my_webcomponent_js' %>
+
+<!-- ------------------------------------------------------------------ -->
+
+<script type="text/javascript">
+
+///document.addEventListener('WebComponentsReady', function () {
+//  console.log("AAAAAAAAAAAAAAAA Loading config");
+//  var comp = document.querySelector('cedar-embeddable-editor');
+//  comp.loadConfigFromURL('assets/data/cee-config.json');
+//  });
+
+function configCedar() {
+  console.log("Loading CEDAR config");
+  var comp = document.querySelector('cedar-embeddable-editor');
+  comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config.json');
+  }
+
+// Wait a second to ensure the page is loaded before initializing the Cedar config
+// (we should base this one some better trigger in the future)
+setTimeout(configCedar,1000);
+</script>
+
 <h1>Test for CEDAR</h1>
 
- <cedar-embeddable-editor
- [config]="confService.appConfig.ceeConfig"></cedar-embeddable-editor>
+ <cedar-embeddable-editor></cedar-embeddable-editor>
 
 <!-- Even though the JavaScript file for CEDAR is fully versioned, webpack -->
 <!-- ignores portions of the name after the first dot, so we only include the -->
