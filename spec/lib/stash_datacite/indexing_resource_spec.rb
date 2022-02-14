@@ -312,7 +312,8 @@ module Stash
                                                @affil2.long_name],
             dryad_related_publication_name_s: 'Journal of Testing Fun',
             dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123',
-            dryad_dataset_file_ext_sm: df
+            dryad_dataset_file_ext_sm: df,
+            updated_at_dt: @resource.updated_at.iso8601
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end
