@@ -1,5 +1,28 @@
 # Information about Geoblacklight and SOLR
 
+## Overview of config files
+
+`stash/stash_datacite/lib/stash_indexer/indexing_resource.rb`
+- Creates the actual document that will be sent to SOLR for indexing
+
+`config/solr_config/schema.xml`
+- Defines the fields that will be stored/indexed in SOLR
+- Contains generic field names like "*_i", "*_sm", so fields can be added to the
+  record without needing to change the schema or the SOLR server. Each of these
+  field names has reasonable settings for stored/indexed/etc.
+- Contains `copyField` declarations to copy fields into similar fields with
+  suffixes like "*_tmi", so they can have varying weights in query processing
+  (though it's unclear why we coudln't just use the original fields for this)
+- Contains `copyField` declarations to ensure all textual fields are available
+  for text searching
+
+`config/solr_config/solrconfig.xml`
+- Defines query handling.
+
+`config/settings.yml`
+- UI settings for GeoBlacklight
+
+
 ## How to add another facet to the data and search interface
 
 1. Set up the additional item(s) in the SOLR schema for Geoblacklight
