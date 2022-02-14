@@ -554,7 +554,7 @@ namespace :curation_stats do
 
   desc 'Report on first date for each status'
   task status_dates: :environment do
-    launch_day = Date.new(2019, 9, 17)
+    launch_day = Date.new(2019, 9, 18)
 
     CSV.open('curation_status_dates.csv', 'w') do |csv|
       csv << %w[DOI
