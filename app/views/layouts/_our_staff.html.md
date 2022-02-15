@@ -74,14 +74,6 @@
 </div>
 
 <div class="bio">
-    <img src="/images/MKenney.jpg" alt="Mariah Kenney" title="Mariah Kenney">
-  <p><strong>Mariah Kenney</strong>, M.Sc. in Ecology and Evolutionary
-    biology<br/>
-	Data Curator<br/>
-	Mariah has research and teaching background in ecology and evolutionary biology and graduated with a M.Sc. from the University of Michigan. Before joining Dryad, she worked as a Research Associate at the University of Connecticut. In her free time, Mariah enjoys playing music, taking care of her plants, and promoting a sustainable lifestyle.</p>
-</div>
-
-<div class="bio">
     <img src="/images/Iman.png" alt="Iman Nematollahi" title="Iman Nematollahi">
   <p><strong>Iman Nematollahi</strong><br/>
   Data Curator<br/>
