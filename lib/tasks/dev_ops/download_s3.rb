@@ -12,7 +12,7 @@ module DevOps
       dl_url = file_obj.direct_s3_presigned_url
       resp = @http.get(dl_url)
 
-      File.open(File.join(@path, file_obj.upload_file_name), "wb") do |dest|
+      File.open(File.join(@path, file_obj.upload_file_name), 'wb') do |dest|
         dest.write(resp.body) # slurp it all at once
 
         # below writes streaming chunk by chunk which may be better and reduce resource usage for large files
