@@ -24,13 +24,15 @@
   <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
   <p><strong>Daniella Lowenberg</strong><br/>
   Product Manager<br/>
-  Daniella has a background in Microbiology. After leaving the lab, she was a
-  Publications Manager at PLOS ONE where she implemented and oversaw the PLOS
-  Data Policy. Since 2017, Daniella has been a data publishing and data metrics
-  product manager at California Digital Library, within the University of
-  California. She is currently the Product Manager for Dryad, Principal
-  Investigator for the Sloan Foundation funded Make Data Count initiative, and
-  co-chair of the FORCE11 Research Data Publishing Ethics working group.
+  Daniella is a Senior Product Manager at the University of California Curation Center (UC3)
+  at the California Digital Library (CDL) and focuses on data publishing and data metrics. As part of the
+  <a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/"
+  target="_blank">CDL-Dryad partnership</a>, she also product manages the Dryad publishing platform.
+  Daniella has a background in Microbiology.
+  After leaving the lab, she was a Publications Manager at PLOS ONE where she implemented and oversaw the PLOS Data
+  Policy. Daniella has been at CDL since 2017 where, in addition to being the Product Manager for Dryad,
+  she also is the Principal Investigator for the Sloan Foundation funded Make Data Count initiative, and co-chair
+  of the FORCE11 Research Data Publishing Ethics working group.
   </p>
 </div>
 
@@ -47,10 +49,14 @@
   <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
   <p><strong>Scott Fisher</strong><br/>
   Software Developer<br/>
-  Scott has software development and UX design experience and graduated with a master's degree from the UC Berkeley School of
-  Information.  He has worked in the computer industry and more recently at The University
-  of California. He previously worked on projects to archive web pages, plan and preserve data
-  and make data metrics available. Scott is a lead developer at the California Digital Library.</p>
+  Scott is a lead developer at the University of California Curation Center (UC3) at the California Digital Library (CDL).
+  As part of the
+  <a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/"
+  target="_blank">CDL-Dryad partnership</a>, he is also the tech lead on the Dryad publishing platform.
+  Scott has many years of software development and UX design experience and graduated with a master's degree from the
+  UC Berkeley School of Information. He previously worked on software projects to archive web pages, plan and preserve
+  research data, and make data metrics available.
+  </p>
 </div>
 
 <h2 id="curation">Curation Team</h2>
