@@ -1,8 +1,10 @@
 require 'yaml'
 require_relative 'dev_ops/passenger'
 require_relative 'dev_ops/download_uri'
+require_relative 'dev_ops/download_s3'
 require 'rsolr'
 require 'ezid/client'
+require 'fileutils'
 
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
@@ -331,6 +333,39 @@ namespace :dev_ops do
     dep.update_metadata(manual_metadata: meta)
 
     dep.publish
+  end
+
+  # note this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
+  # that have been previously uploaded are in Merritt.
+  #
+  # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3
+  desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
+  task download_s3: :environment do
+    # rubocop:disable Style/BlockDelimiters
+    ARGV.each { |a| task a.to_sym do; end }
+    # rubocop:enable Style/BlockDelimiters
+
+    resource_id = ARGV[1].to_i
+
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    unless ARGV.length == 2
+      puts 'Add the following arguments after the rake command <resource_id>'
+      next
+    end
+
+    save_path = Rails.root.join(resource_id.to_s)
+    FileUtils.mkdir_p(save_path)
+
+    dl_s3 = DevOps::DownloadS3.new(path: save_path)
+
+    StashEngine::DataFile.where(resource_id: resource_id).where(file_state: 'created').each_with_index do |data_file, idx|
+      puts "#{idx}  #{data_file.upload_file_name}"
+      dl_s3.download(file_obj: data_file)
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength
