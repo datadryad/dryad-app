@@ -5524,6 +5524,11 @@ table.c-table_institutions ul li {
     margin: 0;
     font-size: 1.2em; } }
 
+strong {
+  font-size: 1.1em;
+  font-weight: bold;
+  text-shadow: 0 0; }
+
 blockquote.c-text_styles {
   line-height: 135%; }
   blockquote.c-text_styles strong {
