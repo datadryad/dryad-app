@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import GenericAutocomplete from "./GenericAutocomplete";
+import axios from "axios";
 
 export default function RorAutocomplete() {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -21,10 +22,31 @@ export default function RorAutocomplete() {
         setAutoBlurred(false);
       }, [autoBlurred]);
 
+  function supplyLookupList(qt) {
+    return axios.get('https://api.ror.org/organizations', { params: {query: qt},
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'} } )
+        .then((data) => {
+          if (data.status !== 200) {
+            console.log('Response failure not a 200 response');
+            // raise an error here
+          }else{
+            return data.data.items;
+            // setInputItems(sortSimilarity(myList, stringItem, qt), );
+          }
+        });
+  }
+
   return (
       <>
         <div className="c-input">
-          <GenericAutocomplete acText={acText || ''} setAcText={setAcText} acID={acID} setAcID={setAcID} setAutoBlurred={setAutoBlurred} />
+          <GenericAutocomplete
+              acText={acText || ''}
+              setAcText={setAcText}
+              acID={acID}
+              setAcID={setAcID}
+              setAutoBlurred={setAutoBlurred}
+              supplyLookupList={supplyLookupList}
+          />
         </div>
         <p>Typed value is: {acText}</p>
         <p>Selected ID is: {acID}</p>

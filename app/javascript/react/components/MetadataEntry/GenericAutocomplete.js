@@ -1,31 +1,17 @@
 import React, {useCallback, useState} from 'react';
 import {useCombobox} from 'downshift';
 import {menuStyles} from './shared';
-import axios from "axios";
 import _debounce from 'lodash/debounce';
 import stringSimilarity from 'string-similarity';
 
 
-export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred}) {
+export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList}) {
   const [inputItems, setInputItems] = useState([]);
 
   let lastItemText = '';
 
   // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
-  const debounceFN = useCallback(_debounce(supplyLookupList, 500), []);
-
-  function supplyLookupList(qt) {
-    axios.get('https://api.ror.org/organizations', { params: {query: qt},
-      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'} } )
-        .then((data) => {
-          if (data.status !== 200) {
-            console.log('Response failure not a 200 response');
-          }else{
-            const myList = data.data.items;
-            setInputItems(sortSimilarity(myList, stringItem, qt), );
-          }
-        });
-  }
+  const debounceFN = useCallback(_debounce(wrapLookupList, 500), []);
 
   function stringItem(item){
     return (item?.name || '');
@@ -39,6 +25,12 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
     list.sort((x, y) => (x.similarity < y.similarity) ? 1 : -1 );
 
     return list;
+  }
+
+  function wrapLookupList(qt) {
+    supplyLookupList(qt).then((items) => {
+      setInputItems(sortSimilarity(items, stringItem, qt), );
+    });
   }
 
   const {
