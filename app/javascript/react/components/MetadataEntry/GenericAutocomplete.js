@@ -2,10 +2,8 @@ import React, {useCallback, useState} from 'react';
 import {useCombobox} from 'downshift';
 import {menuStyles} from './shared';
 import _debounce from 'lodash/debounce';
-import stringSimilarity from 'string-similarity';
 
-
-export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList}) {
+export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc}) {
   const [inputItems, setInputItems] = useState([]);
 
   let lastItemText = '';
@@ -13,23 +11,9 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
   // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
   const debounceFN = useCallback(_debounce(wrapLookupList, 500), []);
 
-  function stringItem(item){
-    return (item?.name || '');
-  }
-
-  function sortSimilarity(list, itemToStringFN, typedValue){
-    for (const item of list) {
-      item.similarity = stringSimilarity.compareTwoStrings(itemToStringFN(item), typedValue);
-    }
-
-    list.sort((x, y) => (x.similarity < y.similarity) ? 1 : -1 );
-
-    return list;
-  }
-
   function wrapLookupList(qt) {
     supplyLookupList(qt).then((items) => {
-      setInputItems(sortSimilarity(items, stringItem, qt), );
+      setInputItems(items, );
     });
   }
 
@@ -58,11 +42,11 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
       debounceFN(inputValue);
     },
     onSelectedItemChange: ({selectedItem}) => {
-      setAcID(selectedItem.id);
-      lastItemText = stringItem(selectedItem);
+      setAcID(idFunc(selectedItem));
+      lastItemText = nameFunc(selectedItem);
       console.log(`lastItemText=${lastItemText}`);
     },
-    itemToString: (item) => stringItem(item),
+    itemToString: (item) => nameFunc(item),
   });
 
   return (
