@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {useCombobox} from 'downshift';
-import {menuStyles} from './shared';
+import {menuStyles} from './AcMenuStyles';
 import _debounce from 'lodash/debounce';
 
 export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc}) {
@@ -35,7 +35,7 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
         setAcID(''); // reset any identifiers if they've changed input text, but otherwise leave alone
       }
       // only autocomplete with 3 or more characters so as not to waste queries
-      if (!inputValue || inputValue.length < 4){
+      if (!inputValue || inputValue.length < 3){
         setInputItems([],);
         return;
       }
@@ -44,7 +44,7 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
     onSelectedItemChange: ({selectedItem}) => {
       setAcID(idFunc(selectedItem));
       lastItemText = nameFunc(selectedItem);
-      console.log(`lastItemText=${lastItemText}`);
+      setAutoBlurred(true); // this indicates a blur so that it can trigger save or whatever action blur takes
     },
     itemToString: (item) => nameFunc(item),
   });
