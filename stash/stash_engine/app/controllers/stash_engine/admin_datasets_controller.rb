@@ -45,7 +45,7 @@ module StashEngine
                                                                      funders: funder_limit,
                                                                      page: page.to_i,
                                                                      page_size: page_size.to_i)
-      @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
+      @publications = StashEngine::Journal.order(:title).map(&:title)
       @pub_name = params[:publication_name] || nil
 
       # paginate for display
