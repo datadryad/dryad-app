@@ -75,10 +75,10 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
                     style={
                       highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : { marginBottom: '0.5em' }
                     }
-                    key={item.id}
+                    key={idFunc(item)}
                     {...getItemProps({item, index})}
                 >
-                  {item.name}
+                  {nameFunc(item)}
                 </li>
             ))}
           </ul>
