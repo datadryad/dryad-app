@@ -507,10 +507,11 @@ namespace :curation_stats do
   desc 'Generate a report of the curation timeline for each dataset'
   task curation_timeline_report: :environment do
     launch_day = Date.new(2019, 9, 17)
-    datasets = StashEngine::Identifier.publicly_viewable.where(created_at: launch_day..Date.today)
+    datasets = StashEngine::Identifier.where(created_at: launch_day..Date.today)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
-      datasets.each do |i|
+      datasets.each_with_index do |i, idx|
+        puts("#{idx}/#{datasets.size}") if idx % 100 == 0
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         created_date_str = i.created_at&.strftime('%Y-%m-%d')
         next unless i.resources.submitted.present?
@@ -518,6 +519,7 @@ namespace :curation_stats do
         curation_start_date = i.resources.submitted.each do |r|
           break r.curation_start_date if r.curation_start_date.present?
         end
+        next if curation_start_date.is_a?(Array) # There really isn't a start date, loop returns the array of resources
         next unless curation_start_date > launch_day
 
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
