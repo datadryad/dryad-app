@@ -21,6 +21,10 @@ export default function RorAutocomplete({name, id}) {
           }
         };
         setAutoBlurred(false);
+        /* it seems like the current way is to add these hidden fields to the authors form and submit that form
+          author[affiliation][long_name]: Universidad de Congreso
+          author[affiliation][ror_id]: https://ror.org/01tnfvr41
+         */
       }, [autoBlurred]);
 
   /* supplyLookupList returns a promise that will supply a list of js objects that
@@ -37,7 +41,8 @@ export default function RorAutocomplete({name, id}) {
             const list = data.data.items;
             for (const item of list) {
               // add string similarity rating to each object in the list
-              item.similarity = stringSimilarity.compareTwoStrings(item.name, qt);
+              item.similarity = stringSimilarity.compareTwoStrings(item.name, qt) +
+                  ( item.name.startsWith(qt) ? 1 : 0 ); // add one point if starts with the same string
             }
             list.sort((x, y) => (x.similarity < y.similarity) ? 1 : -1 );
             return list;
@@ -57,7 +62,6 @@ export default function RorAutocomplete({name, id}) {
 
   return (
       <>
-        <div className="c-input">
           <GenericAutocomplete
               acText={acText || ''}
               setAcText={setAcText}
@@ -68,7 +72,6 @@ export default function RorAutocomplete({name, id}) {
               nameFunc={nameFunc}
               idFunc={idFunc}
           />
-        </div>
         { /* <p>Typed value is: {acText}</p>
         <p>Selected ID is: {acID}</p>
         <p>Blurred: {'' + autoBlurred}</p> */}

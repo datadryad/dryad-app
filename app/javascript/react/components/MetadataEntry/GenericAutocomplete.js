@@ -52,8 +52,8 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
   return (
       <>
         <label {...getLabelProps()} className="c-input__label required">Institutional Affiliation:</label>
-        <div {...getComboboxProps()} style={{position: 'relative'}}>
-          <input className='c-input__text' {...getInputProps()} value={acText}
+        <div {...getComboboxProps()} style={{position: 'relative', display: 'flex'}}>
+          <input className='c-input__text' {...getInputProps()} style={{flex: 1}} value={acText}
                  onBlur={ (e) => {
                    /* workaround: We don't want to set blur unless relatedTarget exists as a good element.
                     It is null when clicking on an autocomplete menu and we don't want to trigger the autoBlur flag for that
@@ -66,7 +66,7 @@ export default function GenericAutocomplete({acText, setAcText, acID, setAcID, s
           />
           {acID
               ? ''
-              : <span title="Institution not found. Select it from the auto-complete list if it's available.">&#x2753;</span>
+              : <span title="Item not found. Select from the auto-complete list if it's available.">&#x2753;</span>
           }
           <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
