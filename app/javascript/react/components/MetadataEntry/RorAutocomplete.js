@@ -19,7 +19,6 @@ export default function RorAutocomplete({name, id}) {
           if(!acText){
             setAcID('');
           }
-          console.log(`blurred away from input.  It has text: ${acText} and id: ${acID}`);
         };
         setAutoBlurred(false);
       }, [autoBlurred]);
