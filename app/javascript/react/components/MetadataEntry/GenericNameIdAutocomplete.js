@@ -3,7 +3,7 @@ import {useCombobox} from 'downshift';
 import {menuStyles} from './AcMenuStyles';
 import _debounce from 'lodash/debounce';
 
-export default function GenericAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc}) {
+export default function GenericNameIdAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc}) {
   const [inputItems, setInputItems] = useState([]);
 
   let lastItemText = '';

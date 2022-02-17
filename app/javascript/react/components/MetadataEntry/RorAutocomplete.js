@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import GenericAutocomplete from "./GenericAutocomplete";
+import GenericNameIdAutocomplete from "./GenericNameIdAutocomplete";
 import axios from "axios";
 import stringSimilarity from "string-similarity";
 
@@ -62,7 +62,7 @@ export default function RorAutocomplete({name, id}) {
 
   return (
       <>
-          <GenericAutocomplete
+          <GenericNameIdAutocomplete
               acText={acText || ''}
               setAcText={setAcText}
               acID={acID}
