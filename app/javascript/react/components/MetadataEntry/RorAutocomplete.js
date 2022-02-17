@@ -70,9 +70,9 @@ export default function RorAutocomplete({name, id}) {
               idFunc={idFunc}
           />
         </div>
-        <p>Typed value is: {acText}</p>
+        { /* <p>Typed value is: {acText}</p>
         <p>Selected ID is: {acID}</p>
-        <p>Blurred: {'' + autoBlurred}</p>
+        <p>Blurred: {'' + autoBlurred}</p> */}
       </>
   )
 }
