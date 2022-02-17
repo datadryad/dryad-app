@@ -3,13 +3,13 @@ import GenericAutocomplete from "./GenericAutocomplete";
 import axios from "axios";
 import stringSimilarity from "string-similarity";
 
-export default function RorAutocomplete() {
+export default function RorAutocomplete({name, id}) {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs
   // which show lifting state in class components.  It's also simpler and clearer.
 
-  const [acText, setAcText] = useState();
-  const [acID, setAcID] = useState();
+  const [acText, setAcText] = useState(name);
+  const [acID, setAcID] = useState(id);
   const [autoBlurred, setAutoBlurred] = useState(false);
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
