@@ -4,7 +4,13 @@ import axios from "axios";
 import stringSimilarity from "string-similarity";
 
 
-export default function RorAutocomplete({name, id}) {
+export default function RorAutocomplete({name, id, controlOptions}) {
+  // control options: htmlId, labelText, isRequired (t/f)
+
+  // label: id: downshift-0-label, for: downshift-0-input
+  // box id: downshift-0-input, aria-labelledby: downshift-0-label
+  // ul id: downshift-0-menu, aria-labeledby: downshift-0-label
+
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
@@ -82,6 +88,7 @@ export default function RorAutocomplete({name, id}) {
               supplyLookupList={supplyLookupList}
               nameFunc={nameFunc}
               idFunc={idFunc}
+              controlOptions={controlOptions}
           />
         <input ref={nameRef} type="hidden" value={acText} name="author[affiliation][long_name]" />
         <input type="hidden" value={acID} name="author[affiliation][ror_id]" />
