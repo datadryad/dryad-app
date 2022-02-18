@@ -76,9 +76,9 @@ export default function GenericNameIdAutocomplete(
                    }
                  } }
           />
-          {acID
-              ? ''
-              : <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list.`}>&#x2753;</span>
+          { !acID && isRequired
+              ? <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list.`}>&#x2753;</span>
+              : ''
           }
           <ul {...getMenuProps()}
               style={menuStyles}
