@@ -67,9 +67,11 @@ export default function GenericNameIdAutocomplete(
       >
         {labelText}:
       </label>
-      <div {...getComboboxProps()}
-           aria-owns={`menu_${htmlId}`}
-           style={{position: 'relative', display: 'flex'}}>
+      <div
+        {...getComboboxProps()}
+        aria-owns={`menu_${htmlId}`}
+        style={{position: 'relative', display: 'flex'}}
+      >
         <input
           className="c-input__text"
           {...getInputProps()}
