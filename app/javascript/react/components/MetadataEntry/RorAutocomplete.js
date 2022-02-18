@@ -102,7 +102,7 @@ export default function RorAutocomplete({name, id, controlOptions}) {
         idFunc={idFunc}
         controlOptions={controlOptions}
       />
-      <input ref={nameRef} type="hidden" value={acText} name="author[affiliation][long_name]" />
+      <input ref={nameRef} type="hidden" value={acText} class="js-affil-longname" name="author[affiliation][long_name]" />
       <input type="hidden" value={acID} name="author[affiliation][ror_id]" />
     </>
   );
