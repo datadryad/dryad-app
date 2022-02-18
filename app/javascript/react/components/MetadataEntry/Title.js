@@ -44,25 +44,25 @@ function Title({resource, path}) {
           });
       }}
     >
-      {formik => (
-      <Form className="c-input">
-        <strong>
-          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
-        </strong>
-        <br />
-        <Field
-          name="title"
-          type="text"
-          className="title c-input__text"
-          size="130"
-          id={`title__${resource.id}`}
-          onBlur={() => { // formRef.current.handleSubmit();
-            formik.handleSubmit();
-          }}
-        />
-        <Field name="id" type="hidden" />
-        <Field name="authenticity_token" type="hidden" />
-      </Form>
+      {(formik) => (
+        <Form className="c-input">
+          <strong>
+            <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
+          </strong>
+          <br />
+          <Field
+            name="title"
+            type="text"
+            className="title c-input__text"
+            size="130"
+            id={`title__${resource.id}`}
+            onBlur={() => { // formRef.current.handleSubmit();
+              formik.handleSubmit();
+            }}
+          />
+          <Field name="id" type="hidden" />
+          <Field name="authenticity_token" type="hidden" />
+        </Form>
       )}
     </Formik>
   );
