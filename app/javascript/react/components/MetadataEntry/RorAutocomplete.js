@@ -34,7 +34,10 @@ export default function RorAutocomplete({name, id, controlOptions}) {
            */
       if (prevText !== acText || prevID !== acID) {
         // only resubmit form when there are actual value changes
+        /* eslint-disable no-undef */
+        // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
         $(nameRef.current.form).trigger('submit.rails');
+        /* eslint-enable no-undef */
         // console.log(nameRef.current.attr('form'));
       }
       setPrevText(acText);
@@ -55,17 +58,17 @@ export default function RorAutocomplete({name, id, controlOptions}) {
     })
       .then((data) => {
         if (data.status !== 200) {
+          return [];
           // raise an error here if we want to catch it and display something to user or do something else
-        } else {
-          const list = data.data.items;
-          for (const item of list) {
-            // add string similarity rating to each object in the list
-            item.similarity = stringSimilarity.compareTwoStrings(item.name, qt)
-                  + (item.name.startsWith(qt) ? 1 : 0); // add one point if starts with the same string, send to top
-          }
-          list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
-          return list;
         }
+        const list = data.data.items;
+        for (const item of list) {
+          // add string similarity rating to each object in the list
+          item.similarity = stringSimilarity.compareTwoStrings(item.name, qt)
+                  + (item.name.startsWith(qt) ? 1 : 0); // add one point if starts with the same string, send to top
+        }
+        list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
+        return list;
       });
   }
 
