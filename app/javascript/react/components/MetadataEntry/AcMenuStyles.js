@@ -1,4 +1,4 @@
-const menuStyles = {
+export default {
   maxHeight: '180px',
   overflowY: 'auto',
   maxWidth: '300px',
@@ -11,5 +11,3 @@ const menuStyles = {
   listStyle: 'none',
   // border: '1px solid gray',
 };
-
-export {menuStyles};

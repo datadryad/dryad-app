@@ -27,19 +27,19 @@ export default function RorAutocomplete({name, id, controlOptions}) {
       if (!acText) {
         setAcID('');
       }
+      /* it seems like the current way for this to work within authors is to add elements named
+            "author[affiliation][long_name]" and "author[affiliation][ror_id]" that have correct values and resubmit
+            the form.
+           */
+      if (prevText !== acText || prevID !== acID) {
+        // only resubmit form when there are actual value changes
+        $(nameRef.current.form).trigger('submit.rails');
+        // console.log(nameRef.current.attr('form'));
+      }
+      setPrevText(acText);
+      setPrevID(acID);
+      setAutoBlurred(false);
     }
-    setAutoBlurred(false);
-    /* it seems like the current way for this to work within authors is to add elements named
-          "author[affiliation][long_name]" and "author[affiliation][ror_id]" that have correct values and resubmit
-          the form.
-         */
-    if (prevText !== acText || prevID !== acID) {
-      // only resubmit form when there are actual value changes
-      $(nameRef.current.form).trigger('submit.rails');
-      // console.log(nameRef.current.attr('form'));
-    }
-    setPrevText(acText);
-    setPrevID(acID);
   }, [autoBlurred]);
 
   /* supplyLookupList returns a promise that will supply a list of js objects that
