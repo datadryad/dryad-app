@@ -14,7 +14,10 @@
   </div>
   <div class="c-input">
 		<%= react_component('components/MetadataEntry/RorAutocomplete',
-												{name: (author&.affiliation&.long_name || ''), id: (author&.affiliation&.ror_id || '')}) %>
+												{name: (author&.affiliation&.long_name || ''),
+												 id: (author&.affiliation&.ror_id || ''),
+												 'controlOptions': { 'htmlId' => "instit_affil_#{my_suffix}", 'labelText' => 'Institutional Affiliation', 'isRequired' => true }
+												}) %>
     <%# render partial: 'stash_datacite/authors/affiliation', locals: { author: author, form: f, form_id: form_id } %>
   </div>
   <div class="c-input">

@@ -3,7 +3,9 @@ import {useCombobox} from 'downshift';
 import {menuStyles} from './AcMenuStyles';
 import _debounce from 'lodash/debounce';
 
-export default function GenericNameIdAutocomplete({acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc}) {
+export default function GenericNameIdAutocomplete(
+    {acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
+      controlOptions: {htmlId, labelText, isRequired}}) {
   const [inputItems, setInputItems] = useState([]);
 
   let lastItemText = '';
@@ -51,9 +53,19 @@ export default function GenericNameIdAutocomplete({acText, setAcText, acID, setA
 
   return (
       <>
-        <label {...getLabelProps()} className="c-input__label required">Institutional Affiliation:</label>
-        <div {...getComboboxProps()} style={{position: 'relative', display: 'flex'}}>
-          <input className='c-input__text' {...getInputProps()} style={{flex: 1}} value={acText}
+        <label {...getLabelProps()}
+               className={`c-input__label ${(isRequired ? 'required' : '')}`}
+               id={`label_${htmlId}`}
+               htmlFor={htmlId}>
+          {labelText}:
+        </label>
+        <div {...getComboboxProps()} aria-owns={`menu_${htmlId}`} style={{position: 'relative', display: 'flex'}}>
+          <input className='c-input__text' {...getInputProps()}
+                 id={htmlId}
+                 style={{flex: 1}}
+                 value={acText}
+                 aria-controls={`menu_${htmlId}`}
+                 aria-labelledby={`label_${htmlId}`}
                  onBlur={ (e) => {
                    /* workaround: We don't want to set blur unless relatedTarget exists as a good element.
                     It is null when clicking on an autocomplete menu and we don't want to trigger the autoBlur flag for that
@@ -66,9 +78,13 @@ export default function GenericNameIdAutocomplete({acText, setAcText, acID, setA
           />
           {acID
               ? ''
-              : <span title="Item not found. Select from the auto-complete list if it's available.">&#x2753;</span>
+              : <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list.`}>&#x2753;</span>
           }
-          <ul {...getMenuProps()} style={menuStyles}>
+          <ul {...getMenuProps()}
+              style={menuStyles}
+              id={`menu_${htmlId}`}
+              aria-labelledby={`label_${htmlId}`}
+          >
             {isOpen &&
             inputItems.map((item, index) => (
                 <li
