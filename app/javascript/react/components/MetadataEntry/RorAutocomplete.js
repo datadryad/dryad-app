@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import stringSimilarity from 'string-similarity';
+import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
 export default function RorAutocomplete({name, id, controlOptions}) {
@@ -96,3 +97,9 @@ export default function RorAutocomplete({name, id, controlOptions}) {
     </>
   );
 }
+
+RorAutocomplete.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  controlOptions: PropTypes.object.isRequired,
+};
