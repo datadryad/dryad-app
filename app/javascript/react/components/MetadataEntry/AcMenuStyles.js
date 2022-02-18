@@ -10,6 +10,6 @@ const menuStyles = {
   padding: 0,
   listStyle: 'none',
   // border: '1px solid gray',
-}
+};
 
-export { menuStyles, }
+export {menuStyles};
