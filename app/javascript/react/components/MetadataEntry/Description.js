@@ -28,7 +28,7 @@ export default function Description({
       axios.patch(path, subJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
         .then((data) => {
           if (data.status !== 200) {
-            console.log('Response failure not a 200 response');
+            // console.log('Response failure not a 200 response');
           }
           showSavedMsg();
         });
@@ -72,7 +72,7 @@ export default function Description({
 }
 
 Description.propTypes = {
-  dcsDescription: PropTypes.string.isRequired,
+  dcsDescription: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired,
   mceKey: PropTypes.string.isRequired,
   mceLabel: PropTypes.object.isRequired,

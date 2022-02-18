@@ -1,7 +1,10 @@
+// Spreading below is how downshift sets things up and is part of their "good" examples.  Annoying and hard to change
+/* eslint-disable react/jsx-props-no-spreading */
 import React, {useCallback, useState} from 'react';
 import {useCombobox} from 'downshift';
 import _debounce from 'lodash/debounce';
-import {menuStyles} from './AcMenuStyles';
+import PropTypes from 'prop-types';
+import menuStyles from './AcMenuStyles';
 
 export default function GenericNameIdAutocomplete(
   {
@@ -13,18 +16,18 @@ export default function GenericNameIdAutocomplete(
 
   let lastItemText = '';
 
-  // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
-  const debounceFN = useCallback(_debounce(wrapLookupList, 500), []);
-
   function wrapLookupList(qt) {
     supplyLookupList(qt).then((items) => {
       setInputItems(items);
     });
   }
 
+  // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
+  const debounceFN = useCallback(_debounce(wrapLookupList, 500), []);
+
   const {
     isOpen,
-    getToggleButtonProps,
+    // getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getInputProps,
@@ -64,7 +67,9 @@ export default function GenericNameIdAutocomplete(
       >
         {labelText}:
       </label>
-      <div {...getComboboxProps()} aria-owns={`menu_${htmlId}`} style={{position: 'relative', display: 'flex'}}>
+      <div {...getComboboxProps()}
+           aria-owns={`menu_${htmlId}`}
+           style={{position: 'relative', display: 'flex'}}>
         <input
           className="c-input__text"
           {...getInputProps()}
@@ -109,3 +114,15 @@ export default function GenericNameIdAutocomplete(
     </>
   );
 }
+
+GenericNameIdAutocomplete.propTypes = {
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
+  setAutoBlurred: PropTypes.func.isRequired,
+  supplyLookupList: PropTypes.func.isRequired,
+  nameFunc: PropTypes.func.isRequired,
+  idFunc: PropTypes.func.isRequired,
+  controlOptions: PropTypes.object.isRequired,
+};
