@@ -24,11 +24,14 @@ module StashApi
     # this is the basic required metadata
     def parse
       clear_previous_metadata
+      owning_user_id = establish_owning_user_id
+      owning_user = StashEngine::User.find(owning_user_id)
+      user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
       @resource.curation_activities << StashEngine::CurationActivity.create(status: @resource.current_curation_status || 'in_progress',
                                                                             user_id: @user.id,
                                                                             resource_id: @resource.id,
-                                                                            note: 'Created by API user')
-      owning_user_id = establish_owning_user_id
+                                                                            note: user_note)
+
       @resource.update(
         title: remove_html(@hash['title']),
         user_id: owning_user_id,
