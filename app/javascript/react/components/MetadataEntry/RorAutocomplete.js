@@ -102,8 +102,8 @@ export default function RorAutocomplete({name, id, controlOptions}) {
         idFunc={idFunc}
         controlOptions={controlOptions}
       />
-      <input ref={nameRef} type="hidden" value={acText} class="js-affil-longname" name="author[affiliation][long_name]" />
-      <input type="hidden" value={acID} class="js-affil-id" name="author[affiliation][ror_id]" />
+      <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
+      <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
     </>
   );
   /* eslint-enable react/jsx-no-bind */
