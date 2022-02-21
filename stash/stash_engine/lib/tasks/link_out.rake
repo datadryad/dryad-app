@@ -67,19 +67,23 @@ namespace :link_out do
     p 'Retrieving Pubmed IDs for existing datasets'
     pubmed_service = LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
-    resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids).pluck(:id)
+    resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids)
+      .where('stash_engine_resources.created_at > ?', 1.year.ago).pluck(:id)
     related_identifiers = StashDatacite::RelatedIdentifier.where(resource_id: resource_ids, related_identifier_type: 'doi',
                                                                  work_type: 'primary_article').order(created_at: :desc)
     related_identifiers.each do |data|
-      p "  looking for pmid for #{data.related_identifier}"
-      pmid = pubmed_service.lookup_pubmed_id(data.related_identifier.gsub('doi:', ''))
+      rel_id = data.related_identifier
+      rel_id = rel_id.gsub('https://doi.org/', '').gsub('doi:', '')
+      p "  looking for pmid for #{rel_id}"
+      pmid = pubmed_service.lookup_pubmed_id(rel_id)
       next unless pmid.present?
 
       internal_datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: data.resource.identifier_id, data_type: 'pubmedID')
       internal_datum.value = pmid.to_s
       next unless internal_datum.value_changed?
 
-      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' (identifier: #{data.resource.identifier_id})"
+      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' "\
+        "(identifier: #{data.resource.identifier_id})"
       internal_datum.save
     end
   end
