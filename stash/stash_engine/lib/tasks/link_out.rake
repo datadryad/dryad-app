@@ -61,7 +61,7 @@ namespace :link_out do
     labslink_service.publish_files! # if labslink_service.validate_files!
   end
 
-  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a cites DOI!'
+  desc 'Seed existing datasets with PubMed Ids - This will query the API for each dataset created in the last year that has a cites DOI'
   task seed_pmids: :environment do
     sleep(1) # The NCBI API has a threshold for how many times we can hit it
     p 'Retrieving Pubmed IDs for existing datasets'
@@ -88,12 +88,13 @@ namespace :link_out do
     end
   end
 
-  desc 'Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID!'
+  desc 'Seed existing datasets with GenBank Sequence Ids - this will query the API for each dataset created in the last year that has a pubmedID'
   task seed_genbank_ids: :environment do
     p 'Retrieving GenBank Sequence IDs for existing datasets'
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     existing_refs = StashEngine::ExternalReference.all.pluck(:identifier_id).uniq
-    existing_pmids = StashEngine::Identifier.cited_by_pubmed.where.not(id: existing_refs).pluck(:id)
+    existing_pmids = StashEngine::Identifier.cited_by_pubmed.where.not(id: existing_refs)
+      .where('stash_engine_identifiers.created_at > ?', 1.year.ago).pluck(:id)
     datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
     datum.each do |data|
       sleep(1) # The NCBI API has a threshold for how many times we can hit it
