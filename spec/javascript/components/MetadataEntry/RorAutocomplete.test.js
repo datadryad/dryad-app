@@ -33,4 +33,10 @@ describe('RorAutocomplete', () => {
     const input = container.querySelector('input#instit_affil_1234');
     expect(input).toBeDefined();
   });
+
+  it('should return list of institutions in dropdown', () => {
+  });
+
+  it('should select institution from dropdown and fill hidden fields', () => {
+  });
 });
