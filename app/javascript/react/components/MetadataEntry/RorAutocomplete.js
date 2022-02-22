@@ -7,10 +7,6 @@ import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 export default function RorAutocomplete({name, id, controlOptions}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
-  // label: id: downshift-0-label, for: downshift-0-input
-  // box id: downshift-0-input, aria-labelledby: downshift-0-label
-  // ul id: downshift-0-menu, aria-labeledby: downshift-0-label
-
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
@@ -38,7 +34,6 @@ export default function RorAutocomplete({name, id, controlOptions}) {
         // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
         $(nameRef.current.form).trigger('submit.rails');
         /* eslint-enable no-undef */
-        // console.log(nameRef.current.attr('form'));
       }
       setPrevText(acText);
       setPrevID(acID);
