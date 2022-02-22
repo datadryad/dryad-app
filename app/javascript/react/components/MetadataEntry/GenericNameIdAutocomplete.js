@@ -6,6 +6,24 @@ import _debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 import menuStyles from './AcMenuStyles';
 
+/* This is kind of ugly, but is based on the parent component (more specific autocomplete details) defining some things
+   and passing down details for it to work with.  The react docs I found suggested if something needed to be shared by
+   components, to define at the higher level and pass down.
+
+   passed in:
+   acText, setAcText -- get/set the text for the autocompleted value (useState in React functional components)
+   acID, setAcID -- get/set the Id that might go along with the text item
+   setAutoBlurred -- the set half of a useState.  Component sets to true when blurred and parent component is responsible to save then
+   supplyLookupList(query_terms) is a function passed in that will supply the autocomplete list when called as appropriate for parent
+   nameFunc(item) is a function that returns the name for an item from the list
+   idFunc(item) is a function that returns an id for an item from the list
+   controlOptions: {
+       htmlID -- the base unique ID used for this autocomplete component (should be unique on the page)
+       labelText -- The label for the lookup (like "Institutional Affiliation")
+       isRequired -- boolean.  Makes the * for required fields and also shows warning "?" if no id gets filled for an item
+
+       See the file RorAutocomplete.js for a real example.
+ */
 export default function GenericNameIdAutocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
