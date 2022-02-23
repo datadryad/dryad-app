@@ -12,10 +12,9 @@
 
     "showSampleTemplateLinks": false,
     "expandedSampleTemplateLinks": false,
-    "xxxsampleTemplateLocationPrefix": "https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/",
-    "yyysampleTemplateLocationPrefix": "https://kedric.org/cedar-embeddable-editor-sample-templates/",
-    "sampleTemplateLocationPrefix": "http://ryandash.datadryad.org/cedar-embeddable-editor/",
-    "loadSampleTemplateName": "01",
+    "sampleTemplateLocationPrefix": "https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/",
+    "xxxsampleTemplateLocationPrefix": "http://ryandash.datadryad.org/cedar-embeddable-editor/",
+    "loadSampleTemplateName": "45",
 
     "showFooter": false,
     "showHeader": false,
