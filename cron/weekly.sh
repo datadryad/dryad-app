@@ -8,7 +8,6 @@ PATH=$PATH:/apps/dryad/local/bin
 
 cd /apps/dryad/apps/ui/current/
 
-bundle exec rails link_out:publish >> /apps/dryad/apps/ui/shared/cron/logs/link_out_publish.log 2>&1
 bundle exec rails publication_updater:crossref >> /apps/dryad/apps/ui/shared/cron/logs/publication_updater_crossref.log 2>&1
 
 # putting this in background since I don't want to delay the counter processor starting
