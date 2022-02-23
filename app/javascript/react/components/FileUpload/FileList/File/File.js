@@ -43,7 +43,7 @@ const file = (props) => {
         try {
           jsReport = JSON.parse(props.file.frictionless_report.report);
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
         tabularInfo = (
           <div style={{display: 'flex', alignItems: 'center'}}>
