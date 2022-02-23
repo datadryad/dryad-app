@@ -13,7 +13,12 @@
     <%= f.text_field :author_last_name, id: "author_last_name_#{my_suffix}", class: "c-input__text js-author_last_name" %>
   </div>
   <div class="c-input">
-    <%= render partial: 'stash_datacite/authors/affiliation', locals: { author: author, form: f, form_id: form_id } %>
+		<%= react_component('components/MetadataEntry/RorAutocomplete',
+												{name: (author&.affiliation&.long_name || ''),
+												 id: (author&.affiliation&.ror_id || ''),
+												 'controlOptions': { 'htmlId' => "instit_affil_#{my_suffix}", 'labelText' => 'Institutional Affiliation', 'isRequired' => true }
+												}) %>
+    <%# render partial: 'stash_datacite/authors/affiliation', locals: { author: author, form: f, form_id: form_id } %>
   </div>
   <div class="c-input">
   <%= f.label "email_#{my_suffix}", "Author Email", class: 'c-input__label js-author_label' %>

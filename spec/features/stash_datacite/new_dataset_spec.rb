@@ -110,8 +110,10 @@ RSpec.feature 'NewDataset', type: :feature do
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
-      fill_in 'author[affiliation][long_name]', with: waiver_university
-      first('.ui-menu-item-wrapper').click
+      page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{waiver_university}'")
+      # a litlte big hacky, but the following fills in the ROR expected of a fee waiver institution's country
+      page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = 'https://ror.org/TEST'")
+      # first('.ui-menu-item-wrapper').click
 
       navigate_to_review
       expect(page).to have_text('Payment is not required')
@@ -145,8 +147,8 @@ RSpec.feature 'NewDataset', type: :feature do
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
-      fill_in 'author[affiliation][long_name]', with: non_waiver_university
-      first('.ui-menu-item-wrapper', wait: 5).click
+      page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{non_waiver_university}'")
+      # first('.ui-menu-item-wrapper', wait: 5).click
 
       navigate_to_review
       expect(page).to have_text('you will receive an invoice')

@@ -37,29 +37,33 @@ function Title({resource, path}) {
         axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
           .then((data) => {
             if (data.status !== 200) {
-              console.log('Response failure not a 200 response');
+              // console.log('Response failure not a 200 response');
             }
             showSavedMsg();
             setSubmitting(false);
           });
       }}
     >
-      <Form className="c-input">
-        <strong>
-          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
-        </strong>
-        <br />
-        <Field
-          name="title"
-          type="text"
-          className="title c-input__text"
-          size="130"
-          id={`title__${resource.id}`}
-          onBlur={() => { formRef.current.handleSubmit(); }}
-        />
-        <Field name="id" type="hidden" />
-        <Field name="authenticity_token" type="hidden" />
-      </Form>
+      {(formik) => (
+        <Form className="c-input">
+          <strong>
+            <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
+          </strong>
+          <br />
+          <Field
+            name="title"
+            type="text"
+            className="title c-input__text"
+            size="130"
+            id={`title__${resource.id}`}
+            onBlur={() => { // formRef.current.handleSubmit();
+              formik.handleSubmit();
+            }}
+          />
+          <Field name="id" type="hidden" />
+          <Field name="authenticity_token" type="hidden" />
+        </Form>
+      )}
     </Formik>
   );
 }
