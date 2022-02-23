@@ -15,7 +15,13 @@
     },
     "transform": {
       "\\.js$": "babel-jest"
-    }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/spec/javascript/setupTests.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "dependencies": {
     "@babel/plugin-proposal-private-methods": "^7.16.0",

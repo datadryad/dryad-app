@@ -5,7 +5,7 @@
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import RorAutocomplete from "../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete.js";
+import RorAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete.js";
 
 let container = null;
 beforeEach(() => {
