@@ -19,9 +19,7 @@
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
     ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ]
+    "testEnvironment": "jsdom"
   },
   "dependencies": {
     "@babel/plugin-proposal-private-methods": "^7.16.0",
@@ -51,10 +49,9 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.3",
     "@webpack-cli/serve": "^1.5.1",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.6",
-    "enzyme-to-json": "^3.6.2",
     "eslint": "^8.7.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",

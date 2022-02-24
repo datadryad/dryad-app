@@ -1,4 +1,2 @@
-import Enzyme from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-
-Enzyme.configure({ adapter: new Adapter() });
+// this may be useful in future for pre-setup of tests
+// once was used by enzyme setup, but enzyme is now obsolete and not maintained, even if very popular at one point

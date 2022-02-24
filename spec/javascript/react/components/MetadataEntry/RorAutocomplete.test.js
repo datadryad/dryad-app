@@ -2,9 +2,8 @@
  * @jest-environment jsdom
  */
 
-import {shallow} from "enzyme"; // mount vs shallow (for superficial test)
-import toJSON from "enzyme-to-json";
 import React from "react";
+import {act} from "react-dom/test-utils";
 import RorAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete.js";
 
 describe('RorAutocomplete', () => {
@@ -20,7 +19,18 @@ describe('RorAutocomplete', () => {
     expect(toJSON(wrapper)).toMatchSnapshot(); // this matches snapshot unless it's updated
   });
 
-  it('should return list of institutions in dropdown', () => {
+  it('should return list of institutions in dropdown', async () => {
+    const info = {name: '', id: '',
+      'controlOptions': { htmlId: "instit_affil_1234", labelText: 'Institutional Affiliation',
+        isRequired: true } }
+
+    let wrapper;
+
+    await act(async () => {
+      wrapper = mount(<RorAutocomplete {...info} />);
+    });
+
+    console.log(wrapper.html());
   });
 
   it('should select institution from dropdown and fill hidden fields', () => {
