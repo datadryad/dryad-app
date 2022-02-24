@@ -6,19 +6,6 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
-  #root :requirements => { :protocol => 'https' },
-  #     :to => redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
-
-  #get '/', :requirements => { :protocol => 'http' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'http' )
-
-  #get '/', :requirements => { :protocol => 'https' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
-  #     constraints: { protocol: 'https' }
-
-  # You can have the root of your site routed with "root"
-  #root 'host_pages#index'
-  # map.redirect '/', controller: '/stash/pages', action: 'home'
-  #match '/auth/:provider/callback', to: 'host_pages#test', via: [:get, :post]
-
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
@@ -73,12 +60,6 @@ Rails.application.routes.draw do
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
-
-  # we have to do this to make the geoblacklight routes come before catchall
-  # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
-  #instance_eval(File.read(StashDiscovery::Engine.root.join("config/routes.rb")))
-
-  # get 'xtf/search', to: 'catalog#index'
 
   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
@@ -154,6 +135,33 @@ Rails.application.routes.draw do
     
     get '/queue_length', to: 'submission_queue#length'
   end
+
+  ############################# Discovery support ######################################
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+  # blacklight_for :catalog
+
+  # Endpoint for LinkOut
+  get :discover, to: 'catalog#discover'
+
+  # the ones below coming from new routing for geoblacklight
+  #--------------------------------------------------------
+  mount Geoblacklight::Engine => 'geoblacklight'
+  mount Blacklight::Engine => '/'
+
+  get '/search', to: 'catalog#index'
+  # root to: "catalog#index" # this seems to be a required route for some layouts, at least the current header
+
+  concern :searchable, Blacklight::Routes::Searchable.new
+
+  resource :catalog, only: [:index], as: 'catalog', path: '/search', controller: 'catalog' do
+    concerns :searchable
+  end
+
+  devise_for :users
+
+  # this is kind of hacky, but it directs our search results to open links to the landing pages
+  resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
 
   
   ########################## Dryad v1 support ######################################
