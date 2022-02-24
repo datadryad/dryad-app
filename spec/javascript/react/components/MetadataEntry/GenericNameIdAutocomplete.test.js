@@ -1,11 +1,10 @@
 import React from "react";
 import {render, screen} from '@testing-library/react';
 
-
 import GenericNameIdAutocomplete
   from "../../../../../app/javascript/react/components/MetadataEntry/GenericNameIdAutocomplete";
 
-describe('RorAutocomplete', () => {
+describe('GenericNameIdAutocomplete', () => {
   it("renders an interior form", () => {
     // these ar simple replacements for useState that don't really produce functionality, just allow a static render
     const [acText, setAcText] = ['ralpheo', () => {}];
@@ -16,7 +15,7 @@ describe('RorAutocomplete', () => {
     const idFunc = (item) => item?.id;
     const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional Affiliation', "isRequired": true };
 
-    render(
+    const result = render(
       <GenericNameIdAutocomplete
           acText={acText || ''}
           setAcText={setAcText}
@@ -30,7 +29,9 @@ describe('RorAutocomplete', () => {
       />
     );
 
-    screen.debug();
-    // expect(toJSON(wrapper)).toMatchSnapshot(); // this takes a snapshot of output when functioning correctly 1st time and then matches it later
+    // screen.debug();
+    const labeledElements = screen.getAllByLabelText(controlOptions.labelText, { exact: false })
+    expect(labeledElements.length).toBe(2);
+    expect(labeledElements[0]).toHaveAttribute('value', 'ralpheo');
   })
 });
