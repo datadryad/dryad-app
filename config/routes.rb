@@ -150,7 +150,6 @@ Rails.application.routes.draw do
   mount Blacklight::Engine => '/'
 
   get '/search', to: 'catalog#index'
-  # root to: "catalog#index" # this seems to be a required route for some layouts, at least the current header
 
   concern :searchable, Blacklight::Routes::Searchable.new
 
@@ -158,7 +157,9 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users
+  # Probably not needed. I removed the stash_discovery User model,
+  # since it did not appear to have any associated code or DB content. (RS)
+  #devise_for :users
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'

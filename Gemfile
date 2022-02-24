@@ -38,7 +38,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 4.1'
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 4.4.0'
 gem 'libv8', '~> 3.16.14'
 gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
@@ -58,7 +58,6 @@ gem 'exception_notification'
 gem 'geoblacklight', '~> 3.4.0'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'jbuilder'
-gem 'jquery-rails', '~> 4.4.0'
 gem 'net-sftp'
 gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
