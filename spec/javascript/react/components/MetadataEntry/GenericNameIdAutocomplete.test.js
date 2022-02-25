@@ -15,7 +15,7 @@ describe('GenericNameIdAutocomplete', () => {
     const idFunc = (item) => item?.id;
     const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional Affiliation', "isRequired": true };
 
-    const result = render(
+    render(
       <GenericNameIdAutocomplete
           acText={acText || ''}
           setAcText={setAcText}
