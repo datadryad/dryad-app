@@ -29,7 +29,7 @@ describe('GenericNameIdAutocomplete', () => {
       />
     );
 
-    // screen.debug();
+    // screen.debug();  // shows the html output of the document
     const labeledElements = screen.getAllByLabelText(controlOptions.labelText, { exact: false })
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', 'ralpheo');
