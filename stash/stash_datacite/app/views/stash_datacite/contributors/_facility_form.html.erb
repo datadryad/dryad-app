@@ -2,30 +2,17 @@
 <% contributor = resource.contributors.where(contributor_type: 'sponsor').first ||
     StashDatacite::Contributor.new(contributor_type: 'sponsor', resource_id: resource.id)
 
-   path = ( contributor.new_record? ? stash_datacite.contributors_create_path : stash_datacite.contributors_update_path )
+   create_path, update_path = stash_datacite.contributors_create_path, stash_datacite.contributors_update_path
 %>
 
-<%= form_with(model: contributor, url: path, remote: true, authenticity_token: true, id: 'contributor_facility_form', class: 'c-input') do |f| %>
-  <%= f.label "research_facility", "Research Facility", class: 'c-input__label' %>
-  <%= f.text_field :contributor_name, id: "contributor_research_facility", class: "c-input__text js-facility",
-                   title: 'If you conducted your research at a facility other than your institutional affiliation' %>
-  <%# probably need contributor_type: 'sponsor' in here %>
-  <%= f.hidden_field :identifier_type, value: 'ror' %>
-  <%= f.hidden_field :name_identifier_id, id: "facility_name_identifier_id" %>
-  <%= f.hidden_field :contributor_type, value: 'sponsor' %>
-  <%= f.hidden_field :resource_id %>
-  <%= f.hidden_field :id %>
-<% end %>
-
-<script type="text/javascript">
-   const itemMapper = (item) => {
-      return {id: item.id, value: item.long_name};
-   }
-
-   // txtFieldId, idFieldId, autoURL, resultMapper
-   setupAutocomplete('contributor_research_facility',
-       'facility_name_identifier_id',
-       "<%= stash_datacite.affiliations_autocomplete_path %>",
-       itemMapper);
-</script>
-
+<div class="c-input">
+  <%= react_component('components/MetadataEntry/FacilityAutocomplete',
+                      {name: (contributor.contributor_name || ''),
+                       rorId: (contributor.name_identifier_id || ''),
+                       contribId: contributor.id,
+                       resourceId: resource.id,
+                       createPath: create_path,
+                       updatePath: update_path,
+                       'controlOptions': { 'htmlId' => "research_facility", 'labelText' => 'Research Facility', 'isRequired' => false }
+                      }) %>
+</div>
