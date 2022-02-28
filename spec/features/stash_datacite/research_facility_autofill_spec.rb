@@ -20,32 +20,22 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
       start_new_dataset
     end
 
-    it 'displays affiliation choices from the ROR API', js: true do
-      fill_in 'contributor_research_facility', with: 'Testing'
-      expect(page).to have_text('University of Testing')
-      expect(page).to have_text('University of Testing v2')
+    it 'saves a non-selected, typed item to the database', js: true do
+      fill_in 'research_facility', with: "Calling All Cats\t"
+      click_link "Review and Submit"
+      expect(page).to have_text('Research Facility: Calling All Cats')
     end
 
-    it 'sets the ROR id when user selects an option', js: true do
-      stub_ror_id_lookup(university: 'University of Testing v2')
-      fill_in 'contributor_research_facility', with: 'Testing'
-      first('.ui-menu-item-wrapper', wait: 1).click
-      expect(find('#facility_name_identifier_id', visible: false).value).to eql('https://ror.org/TEST2')
-    end
-
-    it 'allows entries that are not registered with ROR', js: true do
-      fill_in 'contributor_research_facility', with: 'Testing a non-ROR organization'
-      expect(find('#facility_name_identifier_id', visible: false).value).to eql('')
-    end
-
-    it 'allows changing from a ROR-based value to a non-ROR value', js: true do
-      stub_ror_id_lookup(university: 'University of Testing v2')
-      fill_in 'contributor_research_facility', with: 'Testing'
-      first('.ui-menu-item-wrapper', wait: 1).click
-      expect(find('#facility_name_identifier_id', visible: false).value).to eql('https://ror.org/TEST2')
-      fill_in 'contributor_research_facility', with: 'Testing a non-ROR organization'
-      find('.js-author_first_name').set('meow') # get out of this field
-      expect(find('#facility_name_identifier_id', visible: false).value).to eql('')
+    # this is hacky since it calls live api.  No easy way to mock it here since request is happening from Javascript now
+    # if this turns out to make our tests unreliable, we can comment it out
+    it 'completes name and saves it' do
+      item = fill_in 'research_facility', with: "University of California Sys"
+      sleep 3
+      item.native.send_keys :arrow_down
+      sleep 0.5
+      item.native.send_keys :enter
+      click_link "Review and Submit"
+      expect(page).to have_text('Research Facility: University of California System')
     end
   end
 end
