@@ -14,7 +14,7 @@ export default function FacilityAutocomplete({name, rorId, contribId, resourceId
   const [acText, setAcText] = useState(name);
   const [acID, setAcID] = useState(rorId);
   const [prevText, setPrevText] = useState(name);
-  const [prevID, setPrevID] = useState(id);
+  const [prevID, setPrevID] = useState(rorId);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const [contributorId, setContributorId] = useState(contribId);
   const nameRef = useRef(null);
@@ -146,8 +146,13 @@ export default function FacilityAutocomplete({name, rorId, contribId, resourceId
   /* eslint-enable react/jsx-no-bind */
 }
 
+// {name, rorId, contribId, resourceId, createPath, updatePath, controlOptions}
 FacilityAutocomplete.propTypes = {
   name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  rorId: PropTypes.string.isRequired,
+  contribId: PropTypes.string,
+  resourceId: PropTypes.number.isRequired,
+  createPath: PropTypes.string.isRequired,
+  updatePath: PropTypes.string.isRequired,
   controlOptions: PropTypes.object.isRequired,
 };
