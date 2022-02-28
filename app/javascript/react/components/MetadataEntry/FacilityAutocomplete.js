@@ -5,19 +5,6 @@ import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 
-/* fix these tests
-
-rspec ./spec/features/stash_engine/dataset_queuing_spec.rb:65 # DatasetQueuing submitting_quickly should pause transfers
-rspec ./spec/features/stash_engine/dataset_queuing_spec.rb:73 # DatasetQueuing submitting_quickly should re-enable transfers
-rspec ./spec/features/stash_engine/dataset_queuing_spec.rb:58 # DatasetQueuing submitting_quickly should show queuing
-rspec ./spec/features/stash_datacite/research_facility_autofill_spec.rb:23 # ResearchFacilityAutofill ror_api displays affiliation choices from the ROR API
-rspec ./spec/features/stash_datacite/research_facility_autofill_spec.rb:29 # ResearchFacilityAutofill ror_api sets the ROR id when user selects an option
-rspec ./spec/features/stash_datacite/research_facility_autofill_spec.rb:36 # ResearchFacilityAutofill ror_api allows entries that are not registered with ROR
-rspec ./spec/features/stash_datacite/research_facility_autofill_spec.rb:41 # ResearchFacilityAutofill ror_api allows changing from a ROR-based value to a non-ROR value
-rspec ./spec/features/stash_datacite/dataset_versioning_spec.rb:53 # DatasetVersioning initial_version pre_submit did not send out an email to the author
-
- */
-
 export default function FacilityAutocomplete({name, rorId, contribId, resourceId, createPath, updatePath, controlOptions}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
