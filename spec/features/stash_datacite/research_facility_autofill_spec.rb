@@ -26,9 +26,9 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
       expect(page).to have_text('Research Facility: Calling All Cats')
     end
 
-    # this is hacky since it calls live api.  No easy way to mock it here since request is happening from Javascript now
-    # if this turns out to make our tests unreliable, we can comment it out
-    it 'completes name and saves it' do
+    # this is hacky since it calls live api.  No easy way to mock it here since request is happening from Javascript now.
+    # It seems unreliable, so disabling it.
+    xit 'completes name and saves it' do
       item = fill_in 'research_facility', with: 'University of California Sys'
       sleep 3
       item.native.send_keys :arrow_down
