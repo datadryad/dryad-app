@@ -69,16 +69,6 @@ export default function FacilityAutocomplete({
         setAcID('');
       }
       if (prevText !== acText || prevID !== acID) {
-        const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-        console.log('TODO: submit by AJAX!');
-        console.log(`authenticity token = ${csrf}`);
-        console.log(`contributor[id] = ${contributorId}`);
-        console.log(`contributor[resource_id] = ${resourceId}`);
-        console.log('contributor[identifier_type] = ror');
-        console.log('contributor[contributor_type] = sponsor');
-        console.log(`contributor[contributor_name] = ${acText}`);
-        console.log(`contributor[name_identifier_id] = ${acID}`);
-
         submitData();
       }
       setPrevText(acText);
