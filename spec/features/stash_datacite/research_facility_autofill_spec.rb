@@ -22,19 +22,19 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
 
     it 'saves a non-selected, typed item to the database', js: true do
       fill_in 'research_facility', with: "Calling All Cats\t"
-      click_link "Review and Submit"
+      click_link 'Review and Submit'
       expect(page).to have_text('Research Facility: Calling All Cats')
     end
 
     # this is hacky since it calls live api.  No easy way to mock it here since request is happening from Javascript now
     # if this turns out to make our tests unreliable, we can comment it out
     it 'completes name and saves it' do
-      item = fill_in 'research_facility', with: "University of California Sys"
+      item = fill_in 'research_facility', with: 'University of California Sys'
       sleep 3
       item.native.send_keys :arrow_down
       sleep 0.5
       item.native.send_keys :enter
-      click_link "Review and Submit"
+      click_link 'Review and Submit'
       expect(page).to have_text('Research Facility: University of California System')
     end
   end
