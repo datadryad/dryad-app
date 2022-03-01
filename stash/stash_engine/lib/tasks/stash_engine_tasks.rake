@@ -261,6 +261,29 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of items associated with common preprint servers'
+  task preprints_report: :environment do
+    p 'Writing preprints_report.csv...'
+    CSV.open('preprints_report.csv', 'w') do |csv|
+      csv << %w[DOI Relation RelatedIdentifierType RelatedIdetifier]
+
+      related_identifiers = StashDatacite::RelatedIdentifier.where("related_identifier_type='arxiv' OR " \
+                                                                   "LOWER(related_identifier) LIKE '%arxiv%' OR " \
+                                                                   "related_identifier LIKE '%10.48550%' OR " \
+                                                                   "related_identifier LIKE '%10.1101%' OR " \
+                                                                   "related_identifier LIKE '%10.7287%' OR " \
+                                                                   "work_type=#{StashDatacite::RelatedIdentifier.work_types[:preprint]}")
+      visited_identifiers = []
+      related_identifiers.each do |ri|
+        i = ri.resource.identifier
+        next if visited_identifiers.include?(i.id)
+
+        visited_identifiers << i.id
+        csv << [i.identifier, ri.relation_type, ri.related_identifier_type, ri.related_identifier]
+      end
+    end
+  end
+
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
     # Get the year-month specified in YEAR_MONTH environment variable.
