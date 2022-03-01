@@ -74,7 +74,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Funding
-      find('input.js-funders').set(Faker::Company.name)
+      page.execute_script("document.getElementsByClassName('js-funders')[0].value = '#{Faker::Company.name}'")
+      # find('input.js-funders').set(Faker::Company.name)
       fill_in 'contributor[award_number]', with: Faker::Number.number(digits: 5)
 
       # ##############################

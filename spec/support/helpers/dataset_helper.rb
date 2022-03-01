@@ -87,11 +87,11 @@ module DatasetHelper
   end
 
   def fill_in_funder(name:, value:)
-    funder_el = page.find('input.js-funders', match: :first)
-    funder_el.fill_in(with: name)
-    first('.ui-menu-item-wrapper').click
-    award_el = page.find('input.js-award_number', match: :first)
-    award_el.fill_in(with: value)
+    page.execute_script("document.getElementsByClassName('js-funders')[0].value = '#{name}'")
+    # find('input.js-funders').set(Faker::Company.name)
+    fill_in 'contributor[award_number]', with: value
+    # award_el = page.find('input.js-award_number', match: :first)
+    # award_el.fill_in(with: value)
   end
 
   def fill_in_research_domain

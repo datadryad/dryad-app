@@ -93,7 +93,7 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
         idFunc={idFunc}
         controlOptions={controlOptions}
       />
-      <input ref={nameRef} type="hidden" value={acText} className="js-funders" name="contributor[contributor_name]" />
+      <input ref={nameRef} type="hidden" value={acText} className="js-funder-longname" name="contributor[contributor_name]" />
       <input type="hidden" value="crossref_funder_id" name="contributor[identifier_type]" />
       <input type="hidden" value={acID} className="js-funder-id" name="contributor[name_identifier_id]" />
     </>
