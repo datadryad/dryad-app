@@ -24,10 +24,6 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
       if (!acText) {
         setAcID('');
       }
-      /* it seems like the current way for this to work within authors is to add elements named
-            "author[affiliation][long_name]" and "author[affiliation][ror_id]" that have correct values and resubmit
-            the form.
-           */
       if (prevText !== acText || prevID !== acID) {
         // only resubmit form when there are actual value changes
         /* eslint-disable no-undef */
@@ -47,7 +43,7 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
      autocompletes for a generic case.
    */
   function supplyLookupList(qt) {
-    return axios.get('https://api.ror.org/organizations', {
+    return axios.get('https://api.crossref.org/funders', {
       params: {query: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
@@ -57,7 +53,7 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
           // raise an error here if we want to catch it and display something to user or do something else
         }
 
-        const list = data.data.items.map((item) => {
+        const list = data.data.message.items.map((item) => {
           // add one point if starts with the same string, sends to top
           const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
           return {...item, similarity};
@@ -74,7 +70,7 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
 
   // Given a js object from list (supplyLookupList above) it returns the unique identifier
   function idFunc(item) {
-    return item.id;
+    return item.uri;
   }
 
   /* eslint-disable react/jsx-no-bind */
@@ -97,14 +93,15 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
         idFunc={idFunc}
         controlOptions={controlOptions}
       />
-      <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
-      <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
+      <input ref={nameRef} type="hidden" value={acText} className="js-funders" name="contributor[contributor_name]" />
+      <input type="hidden" value="crossref_funder_id" name="contributor[identifier_type]" />
+      <input type="hidden" value={acID} className="js-funder-id" name="contributor[name_identifier_id]" />
     </>
   );
   /* eslint-enable react/jsx-no-bind */
 }
 
-RorAutocomplete.propTypes = {
+FunderAutocomplete.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   controlOptions: PropTypes.object.isRequired,
