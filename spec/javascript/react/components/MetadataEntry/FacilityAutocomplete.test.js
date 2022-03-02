@@ -7,18 +7,6 @@ import {acData} from "./rorTestData"
 
 jest.mock('axios');
 
-/*
-<%= react_component('components/MetadataEntry/FacilityAutocomplete',
-    {name: (contributor.contributor_name || ''),
-      rorId: (contributor.name_identifier_id || ''),
-      contribId: contributor.id,
-      resourceId: resource.id,
-      createPath: create_path,
-      updatePath: update_path,
-      'controlOptions': { 'htmlId' => "research_facility", 'labelText' => 'Research Facility', 'isRequired' => false }
-}) %>
-*/
-
 describe('FacilityAutocomplete', () => {
 
   it("renders the basic autocomplete form under facility", () => {

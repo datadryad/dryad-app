@@ -4,11 +4,13 @@
 <% my_suffix = field_suffix(contributor) %>
 <%#= render "datacite/shared/error_messages", target: @contributor %>
 	<div class="c-input">
-	    <%= f.label "name_#{my_suffix}", "Granting Organization", class: 'c-input__label' %>
-	    <%= f.text_field :contributor_name, id: "contributor_name_#{my_suffix}", class: "js-funders c-input__text" %>
-			<%= f.hidden_field :identifier_type, value: 'crossref_funder_id' %>
-	    <%= f.hidden_field :name_identifier_id, id: "contributor_name_identifier_id", class: "js-funder-id" %>
+		<%= react_component('components/MetadataEntry/FunderAutocomplete',
+												{name: (contributor&.contributor_name || ''),
+												 id: (contributor&.name_identifier_id || ''),
+												 'controlOptions': { 'htmlId' => "contrib_#{my_suffix}", 'labelText' => 'Granting Organization', 'isRequired' => false }
+												}) %>
 	</div>
+
 	<div class="c-input">
 		<%= f.label "award_number_#{my_suffix}", "Award Number", class: 'c-input__label' %>
 		<%= f.text_field :award_number, id: "contributor_award_number_#{my_suffix}", class: "js-award_number c-input__text" %>
