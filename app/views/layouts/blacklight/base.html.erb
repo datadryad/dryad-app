@@ -10,6 +10,7 @@
 
     <%# these are blacklight things from app/views/layouts/blacklight/base.html.erb, geoblacklight doesn't have different layout now %>
     <%# below stylesheet is called 'application', but should probably be geoblacklight specific name %>
+    <meta name="turbolinks-visit-control" content="reload">
     <%= stylesheet_link_tag "application", media: "all" %>
     <%#= WAS javascript_include_tag "application" %>
     <%= javascript_include_tag "geobl_application", 'data-turbolinks-track': 'reload' %>
