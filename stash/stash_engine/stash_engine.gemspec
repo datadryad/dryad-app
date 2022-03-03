@@ -52,7 +52,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'http', '~> 5.0.2'
   s.add_dependency 'httparty', '~> 0.19.0'
   s.add_dependency 'httpclient', '~> 2.8.3'
-  s.add_dependency 'jquery-rails', '~> 4.4.0'
   s.add_dependency 'jquery-turbolinks', '~> 2.1.0'
   s.add_dependency 'jquery-ui-rails', '~> 6.0.1'
   s.add_dependency 'jwt', '~> 2.2.3'
@@ -72,13 +71,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'stripe', '~> 5.38.0'
   s.add_dependency 'zaru', '~> 0.3.0'
 
-  # s.add_development_dependency 'colorize'
-  # s.add_development_dependency 'database_cleaner'
-  # s.add_development_dependency 'diffy'
-  # s.add_development_dependency 'equivalent-xml'
-  # s.add_development_dependency 'mysql2'
-  # s.add_development_dependency 'nokogiri'
-  # s.add_development_dependency 'simplecov'
-  # s.add_development_dependency 'simplecov-console'
-  # s.add_development_dependency 'webmock'
 end

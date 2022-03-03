@@ -15,7 +15,6 @@ gem 'webpacker', '~> 5.4.0'
 
 path 'stash' do
   gem 'stash_datacite'
-  gem 'stash_discovery'
   gem 'stash_engine'
   # needs engines to load first
   gem 'stash-merritt'
@@ -39,7 +38,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 4.1'
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 4.4.0'
 gem 'libv8', '~> 3.16.14'
 gem 'sass-rails', '~> 5.0'
 gem 'therubyracer', platforms: :ruby
@@ -49,15 +48,23 @@ gem 'yui-compressor'
 
 # ############################################################
 # Misc
+gem 'blacklight', '~> 7.19.2'
 gem 'bootsnap', require: false
+gem 'bootstrap', '~> 4.0'
+gem 'devise', '~> 4.8.0'
+gem 'devise-guests', '~> 0.6'
 gem 'doorkeeper', '~> 5.5'
 gem 'exception_notification'
+gem 'geoblacklight', '~> 3.4.0'
 gem 'google-apis-gmail_v1', '~> 0.3'
 gem 'jbuilder'
 gem 'net-sftp'
 gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
 gem 'rb-readline', require: false
+gem 'rsolr', '>= 1.0', '< 3'
+gem 'solr_wrapper', '~> 3.1.2'
+gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 

@@ -130,7 +130,8 @@ class CatalogController < ApplicationController
     # link_to_search: [Boolean] that can be passed to link to a facet search
     # helper_method: [Symbol] method that can be used to render the value
     config.add_show_field Settings.FIELDS.CREATOR, label: 'Author(s)', itemprop: 'author'
-    config.add_show_field Settings.FIELDS.DESCRIPTION, label: 'Description', itemprop: 'description', helper_method: :render_value_as_truncate_abstract
+    config.add_show_field Settings.FIELDS.DESCRIPTION, label: 'Description',
+                                                       itemprop: 'description', helper_method: :render_value_as_truncate_abstract
     # config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
     config.add_show_field Settings.FIELDS.PART_OF, label: 'Collection', itemprop: 'isPartOf'
     config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location(s)', itemprop: 'spatial', link_to_search: true
@@ -222,8 +223,16 @@ class CatalogController < ApplicationController
     config.spell_max = 5
 
     # Custom tools for GeoBlacklight
-    config.add_show_tools_partial :web_services, if: proc { |_context, _config, options| options[:document] && (Settings.WEBSERVICES_SHOWN & options[:document].references.refs.map(&:type).map(&:to_s)).any? }
-    config.add_show_tools_partial :metadata, if: proc { |_context, _config, options| options[:document] && (Settings.METADATA_SHOWN & options[:document].references.refs.map(&:type).map(&:to_s)).any? }
+    config.add_show_tools_partial :web_services,
+                                  if: proc { |_context, _config, options|
+                                        options[:document] &&
+                                             (Settings.WEBSERVICES_SHOWN & options[:document].references.refs.map(&:type).map(&:to_s)).any?
+                                      }
+    config.add_show_tools_partial :metadata,
+                                  if: proc { |_context, _config, options|
+                                        options[:document] &&
+                                             (Settings.METADATA_SHOWN & options[:document].references.refs.map(&:type).map(&:to_s)).any?
+                                      }
     config.add_show_tools_partial :exports, partial: 'exports', if: proc { |_context, _config, options| options[:document] }
     config.add_show_tools_partial :data_dictionary, partial: 'data_dictionary', if: proc { |_context, _config, options| options[:document] }
     config.add_show_tools_partial :downloads, partial: 'downloads', if: proc { |_context, _config, options| options[:document] }
@@ -246,9 +255,11 @@ class CatalogController < ApplicationController
   #
   # this has the effect of making a blank query (with a q=) show the results
   # list rather than the welcome page.
+  # rubocop:disable Naming/PredicateName
   def has_search_parameters?
     !params[:q].nil? || super
   end
+  # rubocop:enable Naming/PredicateName
 
   # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
   # based on the InternalDatum types defined below
