@@ -284,8 +284,27 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of PPR to Curation'
+  task ppr_to_curation_report: :environment do
+    puts 'Writing ppr_to_curation.csv'
+    CSV.open('ppr_to_curation.csv', 'w') do |csv|
+      csv << %w[DOI CreatedAt]
+      StashEngine::Identifier.all.each_with_index do |i, ind|
+        puts ind.to_s if (ind % 100) == 0
+        ppr_found = false
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          ppr_found = true if ca.peer_review?
+          if ca.curation? && ppr_found
+            csv << [i.identifier, i.created_at]
+            break
+          end
+        end
+      end
+    end
+  end
+
   desc 'Generate a report of datasets with associated rejection notices'
-  task rejected_datasets: :environment do
+  task rejected_datasets_report: :environment do
     puts 'Writing rejected_datasets.csv'
     CSV.open('rejected_datasets.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt MSID NumNotifications Published? CurrentStatus]
