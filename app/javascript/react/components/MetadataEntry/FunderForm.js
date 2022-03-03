@@ -7,7 +7,13 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
 
   return (
       <Formik
-          initialValues={{title: (resource.title || ''), id: resource.id, authenticity_token: (csrf || '')}}
+          initialValues={
+            {
+              awardNumber: (contributor.award_number || ''),
+              id: contributor.id,
+              authenticity_token: (csrf || '')
+            }
+          }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
             /*
@@ -27,6 +33,25 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
             <Form className="c-input__inline">
               <Field name="id" type="hidden" />
               <Field name="authenticity_token" type="hidden" />
+              <Field name="resource_id" type="hidden" />
+              {/*
+              react_component('components/MetadataEntry/FunderAutocomplete',
+              {name: (contributor&.contributor_name || ''),
+                id: (contributor&.name_identifier_id || ''),
+                'controlOptions': { 'htmlId' => "contrib_#{my_suffix}", 'labelText' => 'Granting Organization', 'isRequired' => false }
+              }) */}
+              <div className="c-input">
+                <label className="c-input__label" for={`contributor_award_number__${null}`}>Award Number</label>
+                <Field
+                  id={`contributor_award_number__${null}`}
+                  name="award_number"
+                  type="text"
+                  className="js-award_number c-input__text"
+                  onBlur={() => { // formRef.current.handleSubmit();
+                    formik.handleSubmit();
+                  }}
+                />
+              </div>
             </Form>
         )}
       </Formik>
