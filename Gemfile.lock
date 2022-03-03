@@ -41,16 +41,6 @@ PATH
       serrano (~> 1.0.0)
       sync (~> 0.5.0)
       tins (~> 1.29.1)
-    stash_discovery (0.0.2)
-      blacklight (~> 7.19.2)
-      bootstrap (~> 4.0)
-      devise (~> 4.8.0)
-      devise-guests (~> 0.6)
-      geoblacklight (~> 3.4.0)
-      jquery-rails (~> 4.4.0)
-      rsolr (>= 1.0, < 3)
-      solr_wrapper (~> 3.1.2)
-      twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
     stash_engine (0.0.17)
       amoeba (~> 3.2.0)
       aws-sdk-s3 (~> 1.87)
@@ -67,7 +57,6 @@ PATH
       http (~> 5.0.2)
       httparty (~> 0.19.0)
       httpclient (~> 2.8.3)
-      jquery-rails (~> 4.4.0)
       jquery-turbolinks (~> 2.1.0)
       jquery-ui-rails (~> 6.0.1)
       jwt (~> 2.2.3)
@@ -841,7 +830,9 @@ PLATFORMS
 
 DEPENDENCIES
   binding_of_caller
+  blacklight (~> 7.19.2)
   bootsnap
+  bootstrap (~> 4.0)
   byebug
   capistrano (~> 3.11)
   capistrano-rails (~> 1.4)
@@ -850,6 +841,8 @@ DEPENDENCIES
   coffee-rails (~> 4.1)
   colorize
   database_cleaner
+  devise (~> 4.8.0)
+  devise-guests (~> 0.6)
   diffy
   doorkeeper (~> 5.5)
   down
@@ -858,13 +851,14 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fuubar
+  geoblacklight (~> 3.4.0)
   google-apis-gmail_v1 (~> 0.3)
   guard
   guard-rspec
   http
   irb (~> 1.3.7)
   jbuilder
-  jquery-rails
+  jquery-rails (~> 4.4.0)
   libv8 (~> 3.16.14)
   listen
   mocha
@@ -879,6 +873,7 @@ DEPENDENCIES
   rails (~> 5.2.6)
   rb-readline
   react-rails (~> 2.6.1)
+  rsolr (>= 1.0, < 3)
   rspec-collection_matchers
   rspec-github
   rspec-html
@@ -890,14 +885,15 @@ DEPENDENCIES
   shoulda-matchers (~> 4.0)
   simplecov
   simplecov-console
+  solr_wrapper (~> 3.1.2)
   spring
   spring-commands-rspec
   stash-merritt!
   stash_datacite!
-  stash_discovery!
   stash_engine!
   therubyracer
   turbolinks
+  twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
   uc3-ssm!
   uglifier (~> 4.2.0)
   web-console
