@@ -68,7 +68,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
       >
         {(formik) => (
             <Form className="c-input__inline">
-              <Field name="id" type="hidden"/>>
+              <Field name="id" type="hidden"/>
               <div className="c-input">
                 <FunderAutocomplete id={contributor.name_identifier_id}
                                     name={contributor.contributor_name}
