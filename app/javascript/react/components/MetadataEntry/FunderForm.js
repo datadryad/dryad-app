@@ -15,6 +15,50 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
   const [acText, setAcText] = useState(name);
   const [acID, setAcID] = useState(id);
 
+  const submitForm = (values) => {
+    showSavingMsg();
+
+    // set up values
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+    const submitVals = {
+      authenticity_token: csrf,
+      contributor: {
+        id: (values.id || null),
+        contributor_name: acText,
+        contributor_type: 'funder',
+        identifier_type: (acID ? 'crossref_funder_id' : null),
+        name_identifier_id: acID,
+        resource_id: resourceId,
+        award_number: values.award_number
+      }
+    }
+
+    // set up path
+    let url;
+    let method;
+    if (values.id) {
+      url = updatePath;
+      method = 'patch';
+    } else {
+      url = createPath;
+      method = 'post';
+    }
+
+    // submit by json
+    axios({
+      method,
+      url,
+      data: submitVals,
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+    }).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from funders save');
+      }
+      formRef.current.setFieldValue('id', data.data.id);
+      showSavedMsg();
+    });
+  }
+
   return (
       <Formik
           initialValues={
@@ -25,45 +69,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            console.log('submitting form w/ formik values');
-
-            showSavingMsg();
-            const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-            const submitVals = {
-              authenticity_token: csrf,
-              contributor: {
-                id: (values.id || null),
-                contributor_name: acText,
-                contributor_type: 'funder',
-                identifier_type: (acID ? 'crossref_funder_id' : null),
-                name_identifier_id: acID,
-                resource_id: resourceId,
-                award_number: values.award_number
-              }
-            }
-
-            let url;
-            let method;
-            if (values.id) {
-              url = updatePath;
-              method = 'patch';
-            } else {
-              url = createPath;
-              method = 'post';
-            }
-
-            axios({
-              method,
-              url,
-              data: submitVals,
-              headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-            }).then((data) => {
-              if (data.status !== 200) {
-                console.log('Response failure not a 200 response from research facility save');
-              }
-              formRef.current.setFieldValue('id', data.data.id);
-              showSavedMsg();
-            });
+            submitForm(values);
           }}
       >
         {(formik) => (
