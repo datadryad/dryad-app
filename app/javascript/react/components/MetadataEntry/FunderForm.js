@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import {nanoid} from 'nanoid';
@@ -8,6 +8,22 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const formRef = useRef();
   const contribId = (contributor?.id || nanoid());
+
+  // flag to pass down to notify here to submit the form
+  const [shouldSubmit, setShouldSubmit] = useState(false);
+
+  function submitForm(){
+    console.log("The form should submit now");
+  }
+
+
+  // this catches bubbling up from autocomplete which isn't handled by formik
+  useEffect(() => {
+    if (shouldSubmit) {
+      submitForm();
+      setShouldSubmit(false);
+    }
+  }, [shouldSubmit]);
 
   return (
       <Formik
@@ -20,6 +36,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
+            submitForm();
             /*
             showSavingMsg();
             axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
@@ -41,6 +58,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
               <div className="c-input">
                 <FunderAutocomplete id={contributor.name_identifier_id}
                                     name={contributor.contributor_name}
+                                    setShouldSubmit={setShouldSubmit}
                                     controlOptions={
                                       {
                                         'htmlId': `contrib_${contribId}`,
@@ -50,12 +68,6 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
                                     }
                 />
               </div>
-              {/*
-                react_component('components/MetadataEntry/FunderAutocomplete',
-                {name: (contributor&.contributor_name || ''),
-                  id: (contributor&.name_identifier_id || ''),
-                  'controlOptions': { 'htmlId' => "contrib_#{my_suffix}", 'labelText' => 'Granting Organization', 'isRequired' => false }
-                }) */}
               <div className="c-input">
                 <label className="c-input__label" htmlFor={`contributor_award_number__${contribId}`}>Award
                   Number</label>
