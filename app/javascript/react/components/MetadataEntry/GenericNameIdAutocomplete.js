@@ -77,7 +77,6 @@ export default function GenericNameIdAutocomplete(
 
   return (
     <>
-      {console.log(`acID is ${acID}`)}
       <label
         {...getLabelProps()}
         className={`c-input__label ${(isRequired ? 'required' : '')}`}

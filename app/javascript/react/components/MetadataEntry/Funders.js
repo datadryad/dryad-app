@@ -11,13 +11,15 @@ function Funders({resourceId, contributors, createPath, updatePath}){
 
   return (
     <>
-      {contributors.map(contrib =>
-        <FunderForm
-          resourceId={resourceId}
-          contributor={contrib}
-          createPath={createPath}
-          updatePath={updatePath}
-        />)}
+      {contributors.map((contrib, i) => (
+          <FunderForm
+            key={i}
+            resourceId={resourceId}
+            contributor={contrib}
+            createPath={createPath}
+            updatePath={updatePath}
+          />
+        ))}
     </>
   );
 }
