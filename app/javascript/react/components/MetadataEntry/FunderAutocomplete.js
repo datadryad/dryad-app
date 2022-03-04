@@ -4,14 +4,12 @@ import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function FunderAutocomplete({name, id, setShouldSubmit, controlOptions}) {
+export default function FunderAutocomplete({name, id, formRef, acText, setAcText, acID, setAcID, controlOptions}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
-  const [acText, setAcText] = useState(name);
-  const [acID, setAcID] = useState(id);
   const [prevText, setPrevText] = useState(name);
   const [prevID, setPrevID] = useState(id);
   const [autoBlurred, setAutoBlurred] = useState(false);
@@ -25,12 +23,8 @@ export default function FunderAutocomplete({name, id, setShouldSubmit, controlOp
         setAcID('');
       }
       if (prevText !== acText || prevID !== acID) {
-        // only resubmit form when there are actual value changes
-        /* eslint-disable no-undef */
-        // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
-        // $(nameRef.current.form).trigger('submit.rails');
-        setShouldSubmit(true);
-        /* eslint-enable no-undef */
+        // from the ref, submit the Formik form above me
+        formRef.current.handleSubmit();
       }
       setPrevText(acText);
       setPrevID(acID);
@@ -82,24 +76,18 @@ export default function FunderAutocomplete({name, id, setShouldSubmit, controlOp
   // in fact some sources say to do it to avoid repeating components (like https://www.youtube.com/watch?v=yH5Z-lSeV9Y ).
   // So IDK what the real guidance is for this and it seems to work fine.
   return (
-    <>
-      <GenericNameIdAutocomplete
-        acText={acText || ''}
-        setAcText={setAcText}
-        acID={acID}
-        setAcID={setAcID}
-        setAutoBlurred={setAutoBlurred}
-        supplyLookupList={supplyLookupList}
-        nameFunc={nameFunc}
-        idFunc={idFunc}
-        controlOptions={controlOptions}
-      />
-      <input ref={nameRef} type="hidden" value={acText} className="js-funder-longname" name="contributor[contributor_name]" />
-      <input type="hidden" value="crossref_funder_id" name="contributor[identifier_type]" />
-      <input type="hidden" value={acID} className="js-funder-id" name="contributor[name_identifier_id]" />
-    </>
+    <GenericNameIdAutocomplete
+      acText={acText || ''}
+      setAcText={setAcText}
+      acID={acID}
+      setAcID={setAcID}
+      setAutoBlurred={setAutoBlurred}
+      supplyLookupList={supplyLookupList}
+      nameFunc={nameFunc}
+      idFunc={idFunc}
+      controlOptions={controlOptions}
+    />
   );
-  /* eslint-enable react/jsx-no-bind */
 }
 
 FunderAutocomplete.propTypes = {
