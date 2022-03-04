@@ -4,6 +4,9 @@ module StashEngine
   class Author < ApplicationRecord
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
+
+    accepts_nested_attributes_for :affiliations
 
     EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
 
@@ -28,6 +31,17 @@ module StashEngine
 
       other.author_last_name&.strip&.downcase == author_last_name&.strip&.downcase &&
         other.author_first_name&.strip&.downcase == author_first_name&.strip&.downcase
+    end
+
+    def affiliation
+      affiliations.first
+    end
+
+    def affiliation=(affil)
+      return unless affil.is_a?(StashDatacite::Affiliation)
+
+      affiliations.destroy_all
+      affiliations << affil
     end
 
     def author_full_name
