@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function FunderAutocomplete({name, id, controlOptions}) {
+export default function FunderAutocomplete({name, id, setShouldSubmit, controlOptions}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -28,7 +28,8 @@ export default function FunderAutocomplete({name, id, controlOptions}) {
         // only resubmit form when there are actual value changes
         /* eslint-disable no-undef */
         // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
-        $(nameRef.current.form).trigger('submit.rails');
+        // $(nameRef.current.form).trigger('submit.rails');
+        setShouldSubmit(true);
         /* eslint-enable no-undef */
       }
       setPrevText(acText);

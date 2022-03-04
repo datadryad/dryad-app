@@ -43,9 +43,9 @@
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Funding</legend>
     <div className="js-contributors_form">
-      <%= react_component('components/MetadataEntry/FunderForm',
+      <%= react_component('components/MetadataEntry/Funders',
                           resourceId: @resource.id,
-                          contributor: @metadata_entry.contributors.first,
+                          contributors: @metadata_entry.contributors,
                           createPath: stash_datacite.contributors_create_path,
                           updatePath: stash_datacite.contributors_update_path) %>
     </div>
