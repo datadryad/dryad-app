@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import {nanoid} from 'nanoid';
@@ -9,21 +9,9 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
   const formRef = useRef();
   const contribId = (contributor?.id || nanoid());
 
-  // flag to pass down to notify here to submit the form
-  const [shouldSubmit, setShouldSubmit] = useState(false);
-
-  function submitForm(){
-    console.log("The form should submit now");
-  }
-
-
-  // this catches bubbling up from autocomplete which isn't handled by formik
-  useEffect(() => {
-    if (shouldSubmit) {
-      submitForm();
-      setShouldSubmit(false);
-    }
-  }, [shouldSubmit]);
+  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik or read it
+  const [acText, setAcText] = useState(name);
+  const [acID, setAcID] = useState(id);
 
   return (
       <Formik
@@ -36,7 +24,17 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            submitForm();
+            console.log('submitting form w/ formik values');
+            const submitVals = {
+              id: values.id,
+              contributor_name: acText,
+              contributor_type: 'funder',
+              identifier_type: ( acID ? 'crossref_funder_id': null ),
+              name_identifier_id: acID,
+              resource_id: resourceId,
+              award_number: values.award_number
+            }
+            debugger;
             /*
             showSavingMsg();
             axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
@@ -58,7 +56,11 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
               <div className="c-input">
                 <FunderAutocomplete id={contributor.name_identifier_id}
                                     name={contributor.contributor_name}
-                                    setShouldSubmit={setShouldSubmit}
+                                    formRef={formRef}
+                                    acText={acText}
+                                    setAcText={setAcText}
+                                    acID={acID}
+                                    setAcID={setAcID}
                                     controlOptions={
                                       {
                                         'htmlId': `contrib_${contribId}`,
@@ -76,7 +78,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
                     name="award_number"
                     type="text"
                     className="js-award_number c-input__text"
-                    onBlur={() => { // formRef.current.handleSubmit();
+                    onBlur={() => {
                       formik.handleSubmit();
                     }}
                 />
