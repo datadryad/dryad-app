@@ -3,6 +3,8 @@ import React, {useRef, useState} from 'react';
 import {Field, Form, Formik} from 'formik';
 import {nanoid} from 'nanoid';
 import FunderAutocomplete from "./FunderAutocomplete";
+import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
+import axios from "axios";
 
 function FunderForm({resourceId, contributor, createPath, updatePath}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -18,41 +20,55 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
           initialValues={
             {
               award_number: (contributor.award_number || ''),
-              id: contributor.id,
-              authenticity_token: (csrf || '')
+              id: (contributor.id || '')
             }
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
             console.log('submitting form w/ formik values');
-            const submitVals = {
-              id: values.id,
-              contributor_name: acText,
-              contributor_type: 'funder',
-              identifier_type: ( acID ? 'crossref_funder_id': null ),
-              name_identifier_id: acID,
-              resource_id: resourceId,
-              award_number: values.award_number
-            }
-            debugger;
-            /*
+
             showSavingMsg();
-            axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-                .then((data) => {
-                  if (data.status !== 200) {
-                    console.log('Not a 200 response while saving Title form');
-                  }
-                  showSavedMsg();
-                  setSubmitting(false);
-                });
-             */
+            const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+            const submitVals = {
+              authenticity_token: csrf,
+              contributor: {
+                id: (values.id || null),
+                contributor_name: acText,
+                contributor_type: 'funder',
+                identifier_type: (acID ? 'crossref_funder_id' : null),
+                name_identifier_id: acID,
+                resource_id: resourceId,
+                award_number: values.award_number
+              }
+            }
+
+            let url;
+            let method;
+            if (values.id) {
+              url = updatePath;
+              method = 'patch';
+            } else {
+              url = createPath;
+              method = 'post';
+            }
+
+            axios({
+              method,
+              url,
+              data: submitVals,
+              headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+            }).then((data) => {
+              if (data.status !== 200) {
+                console.log('Response failure not a 200 response from research facility save');
+              }
+              formRef.current.setFieldValue('id', data.data.id);
+              showSavedMsg();
+            });
           }}
       >
         {(formik) => (
             <Form className="c-input__inline">
-              <Field name="id" type="hidden"/>
-              <Field name="authenticity_token" type="hidden"/>
-              <Field name="resource_id" type="hidden"/>
+              <Field name="id" type="hidden"/>>
               <div className="c-input">
                 <FunderAutocomplete id={contributor.name_identifier_id}
                                     name={contributor.contributor_name}
@@ -78,7 +94,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
                     name="award_number"
                     type="text"
                     className="js-award_number c-input__text"
-                    onBlur={() => {
+                    onBlur={() => { // defaults to formik.handleBlur
                       formik.handleSubmit();
                     }}
                 />
