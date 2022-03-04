@@ -59,7 +59,6 @@ Rails.application.routes.draw do
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
-  mount StashDatacite::Engine, at: '/stash_datacite'
 
   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
