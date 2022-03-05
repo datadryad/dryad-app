@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
-import {nanoid} from 'nanoid';
 import FunderAutocomplete from "./FunderAutocomplete";
 import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
@@ -9,7 +8,6 @@ import axios from "axios";
 function FunderForm({resourceId, contributor, createPath, updatePath, removeFunction}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const formRef = useRef();
-  const contribId = (contributor?.id || nanoid());
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik or read it
   const [acText, setAcText] = useState(contributor.contributor_name);
@@ -23,7 +21,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
     const submitVals = {
       authenticity_token: csrf,
       contributor: {
-        id: (values.id || null),
+        id: (`${values?.id}`.startsWith('new') ? null : values.id),
         contributor_name: acText,
         contributor_type: 'funder',
         identifier_type: (acID ? 'crossref_funder_id' : null),
@@ -36,7 +34,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
     // set up path
     let url;
     let method;
-    if (values.id) {
+    if (submitVals.contributor.id) {
       url = updatePath;
       method = 'patch';
     } else {
@@ -77,7 +75,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
               <Field name="id" type="hidden"/>
               <div className="c-input">
                 <FunderAutocomplete id={contributor.name_identifier_id}
-                                    name={contributor.contributor_name}
+                                    name={contributor.contributor_name || ''}
                                     formRef={formRef}
                                     acText={acText}
                                     setAcText={setAcText}
@@ -85,7 +83,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
                                     setAcID={setAcID}
                                     controlOptions={
                                       {
-                                        'htmlId': `contrib_${contribId}`,
+                                        'htmlId': `contrib_${contributor.id}`,
                                         'labelText': 'Granting Organization',
                                         'isRequired': false
                                       }
@@ -93,10 +91,10 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
                 />
               </div>
               <div className="c-input">
-                <label className="c-input__label" htmlFor={`contributor_award_number__${contribId}`}>Award
+                <label className="c-input__label" htmlFor={`contributor_award_number__${contributor.id}`}>Award
                   Number</label>
                 <Field
-                    id={`contributor_award_number__${contribId}`}
+                    id={`contributor_award_number__${contributor.id}`}
                     name="award_number"
                     type="text"
                     className="js-award_number c-input__text"
