@@ -50,7 +50,6 @@
                           updatePath: stash_datacite.contributors_update_path) %>
     </div>
 
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
   </fieldset>
 
     <%= react_component('components/MetadataEntry/Description',
