@@ -6,7 +6,7 @@ import FunderAutocomplete from "./FunderAutocomplete";
 import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
 
-function FunderForm({resourceId, contributor, createPath, updatePath}) {
+function FunderForm({resourceId, contributor, createPath, updatePath, removeFunction}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const formRef = useRef();
   const contribId = (contributor?.id || nanoid());
@@ -109,6 +109,10 @@ function FunderForm({resourceId, contributor, createPath, updatePath}) {
               <a role="button"
                  className="remove_record t-describe__remove-button o-button__remove"
                  rel="nofollow" href="#"
+                 onClick={(e) => {
+                   e.preventDefault();
+                   removeFunction();
+                 }}
               >remove</a>
             </Form>
         )}
