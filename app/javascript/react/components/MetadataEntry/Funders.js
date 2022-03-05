@@ -1,19 +1,22 @@
 import React, {useState} from 'react';
 import FunderForm from "./FunderForm";
+import {nanoid} from 'nanoid';
 
 function Funders({resourceId, contributors, createPath, updatePath}){
 
-  const blankFunder = {id: '', contributor_name: '', contributor_type: 'funder', identifier_type: '',  name_identifier_id: ''}
+  const blankFunder = () => {
+     return {id: `new${nanoid()}`, contributor_name: '', contributor_type: 'funder', identifier_type: '',  name_identifier_id: ''};
+  }
 
   const [funders, setFunders] = useState(contributors);
 
   if(funders.length < 1){
-    setFunders([ blankFunder ]);
+    setFunders([ blankFunder() ]);
   }
 
-  const removeItem = (i) => {
-    console.log(`removing ${i}`);
-    setFunders(funders.filter((item, idx) => (idx !== i)));
+  const removeItem = (id) => {
+    console.log(`removing ${id}`);
+    setFunders(funders.filter((item) => (item.id !== id)));
   }
 
   return (
@@ -21,12 +24,12 @@ function Funders({resourceId, contributors, createPath, updatePath}){
       { console.log(funders) }
       {funders.map((contrib, i) => (
           <FunderForm
-            key={i}
+            key={contrib.id}
             resourceId={resourceId}
             contributor={contrib}
             createPath={createPath}
             updatePath={updatePath}
-            removeFunction={ () => { removeItem(i) } } // hacky since I want to call this method with this value and not a closure
+            removeFunction={ () => { removeItem(contrib.id) } }
           />
         ))}
       <a href="#"
@@ -34,7 +37,7 @@ function Funders({resourceId, contributors, createPath, updatePath}){
          role="button"
          onClick={(e) => {
            e.preventDefault();
-           setFunders( prev => [...prev, blankFunder]);
+           setFunders( prev => [...prev, blankFunder() ]);
          }}
       >
         add another funder
