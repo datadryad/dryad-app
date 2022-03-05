@@ -47,7 +47,9 @@
                           resourceId: @resource.id,
                           contributors: @metadata_entry.contributors,
                           createPath: stash_datacite.contributors_create_path,
-                          updatePath: stash_datacite.contributors_update_path) %>
+                          updatePath: stash_datacite.contributors_update_path,
+                          deletePath: stash_datacite.contributors_delete_path('id_xox'))
+      %>
     </div>
 
   </fieldset>
