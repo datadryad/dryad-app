@@ -44,12 +44,10 @@ module TinymceHelper
       retries = 0
       page.execute_script script_text
     rescue Selenium::WebDriver::Error::JavascriptError => e
-      if e.message.include?('getRng')
-        sleep 0.5
-        retry if (retries += 1) < 20
-      else
-        raise e
-      end
+      raise e unless e.message.include?('getRng')
+
+      sleep 0.5
+      retry if (retries += 1) < 20
     end
   end
 end
