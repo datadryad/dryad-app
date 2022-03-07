@@ -16,13 +16,12 @@ function Funders({resourceId, contributors, createPath, updatePath, deletePath})
     setFunders([ blankFunder() ]);
   }
 
-  const removeItem = (id) => {
-    console.log(`removing ${id}`);
+  const removeItem = (id, origID) => {
     const trueDelPath = deletePath.replace('id_xox', id);
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     showSavingMsg();
 
-    // TODO: requiring the resource like this is weird in a controller for a model that isn't a resource
+    // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
     if (!`${id}`.startsWith('new')) {
       const submitVals = {
         authenticity_token: csrf,
@@ -45,20 +44,20 @@ function Funders({resourceId, contributors, createPath, updatePath, deletePath})
           });
     }
 
-    setFunders(funders.filter((item) => (item.id !== id)));
+    setFunders(funders.filter((item) => (item.id !== origID))); // this is ugly because the id may change, but key stays the same
   }
 
   return (
     <>
-      { console.log(funders) }
       {funders.map((contrib, i) => (
           <FunderForm
             key={contrib.id}
+            origID={contrib.id} // we have to do this because the keys change and start blank
             resourceId={resourceId}
             contributor={contrib}
             createPath={createPath}
             updatePath={updatePath}
-            removeFunction={ () => { removeItem(contrib.id) } }
+            removeFunction={removeItem}
           />
         ))}
       <a href="#"
