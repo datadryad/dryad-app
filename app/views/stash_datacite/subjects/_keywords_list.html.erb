@@ -31,7 +31,7 @@
      .autocomplete({
         source: function( request, response ) {
           $.ajax({
-            url: "<%= stash_datacite.subjects_autocomplete_path %>",
+            url: "<%= subjects_autocomplete_path %>",
             dataType: "json",
             data: {
               term: extractLast( request.term )

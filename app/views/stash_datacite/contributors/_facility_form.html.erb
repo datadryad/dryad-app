@@ -2,7 +2,7 @@
 <% contributor = resource.contributors.where(contributor_type: 'sponsor').first ||
     StashDatacite::Contributor.new(contributor_type: 'sponsor', resource_id: resource.id)
 
-   create_path, update_path = stash_datacite.contributors_create_path, stash_datacite.contributors_update_path
+   create_path, update_path = contributors_create_path, contributors_update_path
 %>
 
 <div class="c-input">
