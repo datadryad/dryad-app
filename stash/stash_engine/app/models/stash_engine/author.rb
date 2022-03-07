@@ -1,4 +1,4 @@
-require_relative '../../../../stash_datacite/app/models/stash_datacite/affiliation'
+require_relative '../../../../../app/models/stash_datacite/affiliation'
 
 module StashEngine
   class Author < ApplicationRecord
