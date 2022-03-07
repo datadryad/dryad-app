@@ -4,14 +4,15 @@ import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function FunderAutocomplete({name, id, formRef, acText, setAcText, acID, setAcID, controlOptions}) {
-  // control options: htmlId, labelText, isRequired (t/f)
+
+// the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
+export default function FunderAutocomplete({formRef, acText, setAcText, acID, setAcID, controlOptions}) {
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
-  const [prevText, setPrevText] = useState(name);
-  const [prevID, setPrevID] = useState(id);
+  const [prevText, setPrevText] = useState(acText);
+  const [prevID, setPrevID] = useState(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const nameRef = useRef(null);
 

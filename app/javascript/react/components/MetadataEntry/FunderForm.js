@@ -5,13 +5,13 @@ import FunderAutocomplete from "./FunderAutocomplete";
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
 
-function FunderForm({resourceId, contributor, createPath, updatePath, removeFunction}) {
+function FunderForm({resourceId, origID, contributor, createPath, updatePath, removeFunction}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const formRef = useRef();
 
-  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik or read it
+  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
   const [acText, setAcText] = useState(contributor.contributor_name);
-  const [acID, setAcID] = useState(contributor.id?.toString());
+  const [acID, setAcID] = useState(contributor.name_identifier_id);
 
   const submitForm = (values) => {
     showSavingMsg();
@@ -74,9 +74,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
             <Form className="c-input__inline">
               <Field name="id" type="hidden"/>
               <div className="c-input">
-                <FunderAutocomplete id={contributor.name_identifier_id}
-                                    name={contributor.contributor_name || ''}
-                                    formRef={formRef}
+                <FunderAutocomplete formRef={formRef}
                                     acText={acText}
                                     setAcText={setAcText}
                                     acID={acID}
@@ -110,7 +108,7 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
                  onClick={(e) => {
                    e.preventDefault();
                    showModalYNDialog("Are you sure you want to remove this funder?", () => {
-                     removeFunction();
+                     removeFunction(formRef.current?.values?.id, origID); // this sends the database id and the original id (key)
                    });
                  }}
               >remove</a>
