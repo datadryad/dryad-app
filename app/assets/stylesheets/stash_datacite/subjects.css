@@ -1,0 +1,13 @@
+.keywords_list {
+  border:0.5px solid black;
+  width:1080px;
+  height:60px;
+ }
+
+span.keywords {
+  background-color: #FF7F50;
+  border-radius: 15px;
+  padding: 4px 6px 4px 6px;
+  margin: 4px;
+}
+
