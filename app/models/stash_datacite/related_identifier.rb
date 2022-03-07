@@ -21,6 +21,7 @@ module StashDatacite
     RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
     RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map { |i| [i.downcase, i] }.to_h
 
+    # rubocop:disable Naming/ConstantName
     RelatedIdentifierTypesLimited = { DOI: 'doi', ARK: 'ark', ArXiv: 'arxiv',
                                       Handle: 'handle', ISBN: 'isbn', PMID: 'pmid',
                                       PURL: 'purl', URL: 'url', URN: 'urn' }.freeze
@@ -33,6 +34,7 @@ module StashDatacite
                              'is documented by': 'isdocumentedby',
                              'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom',
                              'is source of': 'issourceof' }.freeze
+    # rubocop:enable Naming/ConstantName
 
     enum work_type: %i[undefined article dataset preprint software supplemental_information primary_article data_management_plan]
 
