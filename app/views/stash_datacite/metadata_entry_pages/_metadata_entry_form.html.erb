@@ -22,13 +22,13 @@
     <div class="js-authors_form">
       <% if @metadata_entry.authors.exists? %>
         <% @metadata_entry.authors.each do |author| %>
-          <%= render partial: "stash_datacite/authors/form", locals: { author: author, path: stash_datacite.authors_update_path } %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: author, path: authors_update_path } %>
         <% end %>
       <% else %>
-          <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: stash_datacite.authors_create_path } %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: authors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
+    <%= link_to "Add Author", authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
 
   <div class="c-input__inline">
@@ -45,18 +45,18 @@
     <div class="js-contributors_form">
       <% if @metadata_entry.contributors.exists? %>
         <% @metadata_entry.contributors.each do |contributor| %>
-          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
+          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: contributors_update_path } %>
         <% end %>
       <% else %>
-        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
+        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: contributors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
+    <%= link_to "add another funder", contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
   </fieldset>
 
     <%= react_component('components/MetadataEntry/Description',
                         dcsDescription: @metadata_entry.abstract,
-                        path: stash_datacite.descriptions_update_path,
+                        path: descriptions_update_path,
                         mceKey: APP_CONFIG[:mce_key],
                         mceLabel: {label: 'Abstract', required: true, describe: ''}) %>
 
@@ -70,13 +70,13 @@
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.methods,
-                    path: stash_datacite.descriptions_update_path,
+                    path: descriptions_update_path,
                     mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'}) %>
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.other,
-                    path: stash_datacite.descriptions_update_path,
+                    path: descriptions_update_path,
                     mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Usage Notes:', required: false,
                                describe: ' What else would someone need to know to use this dataset?' +
@@ -92,11 +92,11 @@
     <div class="js-related_identifiers_form">
       <% if @metadata_entry.related_identifiers.exists? %>
         <% @metadata_entry.related_identifiers.each do |related_identifier| %>
-          <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: related_identifier, path: stash_datacite.related_identifiers_update_path } %>
+          <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: related_identifier, path: related_identifiers_update_path } %>
         <% end %>
       <% else %>
-        <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: stash_datacite.related_identifiers_create_path } %>
+        <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: related_identifiers_create_path } %>
       <% end %>
     </div>
-    <%= link_to "add another related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
+    <%= link_to "add another related work", related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
     </fieldset>
