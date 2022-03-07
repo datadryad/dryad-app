@@ -30,7 +30,7 @@ module StashEngine
 
     # generate a render path in the metadata engine
     def metadata_render_path(*args)
-      File.join("stash_datacite", args)
+      File.join('stash_datacite', args)
     end
 
     def stash_url_helpers
