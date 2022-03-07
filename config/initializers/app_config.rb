@@ -7,7 +7,7 @@ ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml
 ac[:app_version] = (File.exist?(Rails.root.join('.version')) ? File.read(Rails.root.join('.version')) : '' )
 ac[:app_revision] = (File.exist?(Rails.root.join('REVISION')) ? File.read(Rails.root.join('REVISION')) : '' )
 
-# this will make the config available under the APP_CONFIG constant and methods like APP_CONFIG.metadata_engines
+# this will make the config available under the APP_CONFIG constant and methods like APP_CONFIG.contact_email
 APP_CONFIG = ac.to_ostruct
 
 ENV['SSL_CERT_FILE'] = APP_CONFIG.ssl_cert_file if APP_CONFIG.ssl_cert_file

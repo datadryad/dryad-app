@@ -2,7 +2,6 @@
 
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
 
-require 'stash_datacite/author_patch'
 module StashDatacite
   module Resource
     class Completions

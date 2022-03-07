@@ -21,24 +21,16 @@ module StashEngine
     end
 
     # ----------------------
-    # Overall Configuration
-    # ----------------------
-
-    def metadata_engine
-      StashEngine.app.metadata_engine.constantize
-    end
-
-    # ----------------------
     # URL/Path generation
     # ----------------------
 
     def metadata_url_helpers
-      metadata_engine::Engine.routes.url_helpers
+      Rails.application.routes.url_helpers
     end
 
     # generate a render path in the metadata engine
     def metadata_render_path(*args)
-      File.join(metadata_engine::Engine.root.to_s.split(File::SEPARATOR).last, args)
+      File.join("stash_datacite", args)
     end
 
     def stash_url_helpers
