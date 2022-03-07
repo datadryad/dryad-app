@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import FunderAutocomplete from "./FunderAutocomplete";
-import {showSavedMsg, showSavingMsg} from "../../../lib/utils";
+import {showModalYNDialog, showSavedMsg, showSavingMsg} from "../../../lib/utils";
 import axios from "axios";
 
 function FunderForm({resourceId, contributor, createPath, updatePath, removeFunction}) {
@@ -109,7 +109,9 @@ function FunderForm({resourceId, contributor, createPath, updatePath, removeFunc
                  rel="nofollow" href="#"
                  onClick={(e) => {
                    e.preventDefault();
-                   removeFunction();
+                   showModalYNDialog("Are you sure you want to remove this funder?", () => {
+                     removeFunction();
+                   });
                  }}
               >remove</a>
             </Form>
