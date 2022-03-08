@@ -22,7 +22,7 @@ function Funders({resourceId, contributors, createPath, updatePath, deletePath})
     showSavingMsg();
 
     // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
-    if (!`${id}`.startsWith('new')) {
+    if (id && !`${id}`.startsWith('new') ) {
       const submitVals = {
         authenticity_token: csrf,
         contributor: {
