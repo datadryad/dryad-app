@@ -10,8 +10,8 @@ function FunderForm({resourceId, origID, contributor, createPath, updatePath, re
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState(contributor.contributor_name);
-  const [acID, setAcID] = useState(contributor.name_identifier_id);
+  const [acText, setAcText] = useState(contributor.contributor_name || '');
+  const [acID, setAcID] = useState(contributor.name_identifier_id || '');
 
   const submitForm = (values) => {
     showSavingMsg();
