@@ -92,7 +92,10 @@ export default function FunderAutocomplete({formRef, acText, setAcText, acID, se
 }
 
 FunderAutocomplete.propTypes = {
-  name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  controlOptions: PropTypes.object.isRequired,
+  formRef: PropTypes.object.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
+  controlOptions: PropTypes.object.isRequired
 };
