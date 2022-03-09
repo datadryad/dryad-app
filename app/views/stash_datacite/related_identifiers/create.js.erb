@@ -1,7 +1,7 @@
 <% form_id = unique_form_id(@related_identifier) %>
 var form = $('#<%= params[:form_id] %>');
 form.attr('id', '<%= form_id %>');
-form.attr('action', '<%= stash_datacite.related_identifiers_update_path %>');
+form.attr('action', '<%= related_identifiers_update_path %>');
 form.find(".js-related_identifier_id").attr('value', '<%= @related_identifier.id %>');
 form.find("#form_id").attr('value', '<%= form_id %>');
 

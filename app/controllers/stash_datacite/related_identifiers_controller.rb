@@ -70,8 +70,8 @@ module StashDatacite
 
     # these params are now being calculated based indirect information
     def calc_related_identifier_params
-      params.require(:related_identifier)
-      related = params[:related_identifier]
+      params.require(:stash_datacite_related_identifier)
+      related = params[:stash_datacite_related_identifier]
       std_fmt = RelatedIdentifier.standardize_format(related[:related_identifier])
       { related_identifier: std_fmt,
         related_identifier_type: RelatedIdentifier.identifier_type_from_str(std_fmt),
@@ -90,14 +90,14 @@ module StashDatacite
     end
 
     def resource
-      @resource ||= (params[:related_identifier] ? StashEngine::Resource.find(related_identifier_params[:resource_id]) : @related_identifier.resource)
+      @resource ||= (params[:stash_datacite_related_identifier] ? StashEngine::Resource.find(related_identifier_params[:resource_id]) : @related_identifier.resource)
     end
 
     # Only allow a trusted parameter "white list" through.
     def related_identifier_params
-      params.require(:related_identifier).permit(:id, :related_identifier, :related_identifier_type,
-                                                 :relation_type, :related_metadata_scheme, :scheme_URI, :scheme_type,
-                                                 :resource_id, :work_type, :verified)
+      params.require(:stash_datacite_related_identifier).permit(:id, :related_identifier, :related_identifier_type,
+                                                                :relation_type, :related_metadata_scheme, :scheme_URI, :scheme_type,
+                                                                :resource_id, :work_type, :verified)
     end
   end
 end
