@@ -61,10 +61,9 @@ describe('FunderForm', () => {
     userEvent.tab(); // tab out of element, should trigger save on blur
 
     await waitFor(() => expect(screen.getByText('remove')).toHaveFocus());
-    await waitFor(() => promise);
+    await waitFor(() => promise); // waits for the axios promise to fulfil
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
   })
-
 
 });
