@@ -51,7 +51,7 @@ function Funders({
 
   return (
     <>
-      {funders.map((contrib, i) => (
+      {funders.map((contrib) => (
         <FunderForm
           key={contrib.id}
           origID={contrib.id} // we have to do this because the keys change and start blank
@@ -62,6 +62,7 @@ function Funders({
           removeFunction={removeItem}
         />
       ))}
+      {/* eslint-disable jsx-a11y/anchor-is-valid */}
       <a
         href="#"
         className="t-describe__add-funder-button o-button__add"
@@ -73,6 +74,7 @@ function Funders({
       >
         add another funder
       </a>
+      {/* eslint-enable jsx-a11y/anchor-is-valid */}
     </>
   );
 }
