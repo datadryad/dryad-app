@@ -1,11 +1,11 @@
 import React from "react";
-import {render} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import FunderForm from "../../../../../app/javascript/react/components/MetadataEntry/FunderForm.js";
+import axios from 'axios';
 
-// import axios from 'axios';
-
-// jest.mock('axios');
+jest.mock('axios');
 
 describe('FunderForm', () => {
 
@@ -32,11 +32,39 @@ describe('FunderForm', () => {
   });
 
   it("renders the basic funders form", () => {
+    render(<FunderForm {...info} />);
 
-    const { container } = render(<FunderForm {...info} />);
-
-    /* const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false })
+    const labeledElements = screen.getAllByLabelText('Granting Organization', { exact: false });
     expect(labeledElements.length).toBe(2);
-    expect(labeledElements[0]).toHaveAttribute('value', acText); */
+    expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
+
+    expect(screen.getByLabelText('Award Number')).toHaveValue(info.contributor.award_number);
   });
+
+  // gives some pointers and info about act and async examples
+  // https://javascript.plainenglish.io/you-probably-dont-need-act-in-your-react-tests-2a0bcd2ad65c
+  it("checks that updating funder award number triggers the save event and does axios call", async () => {
+
+    const promise = Promise.resolve({
+      data: info.contributor
+    })
+
+    axios.mockImplementationOnce(() => promise);
+
+    render(<FunderForm {...info} />);
+
+    userEvent.clear(screen.getByLabelText('Award Number'));
+    userEvent.type(screen.getByLabelText('Award Number'), 'alf234');
+
+    await waitFor(() => expect(screen.getByLabelText('Award Number')).toHaveValue('alf234'));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => expect(screen.getByText('remove')).toHaveFocus());
+    await waitFor(() => promise);
+    // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
+    // but it doesn't fail and test passes.
+  })
+
+
 });
