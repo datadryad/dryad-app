@@ -108,6 +108,7 @@ function FunderForm({
           </div>
           {/* eslint-enable jsx-a11y/label-has-associated-control */}
 
+          {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <a
             role="button"
             className="remove_record t-describe__remove-button o-button__remove"
@@ -121,6 +122,7 @@ function FunderForm({
             }}
           >remove
           </a>
+          {/* eslint-enable jsx-a11y/anchor-is-valid */}
         </Form>
       )}
     </Formik>
