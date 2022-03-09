@@ -149,20 +149,20 @@ module StashDatacite
     # rubocop:enable Naming/AccessorMethodName
 
     def resource
-      @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
+      @resource ||= (params[:stash_datacite_contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
       return if params[:id] == 'new'
 
-      @contributor = Contributor.find((params[:contributor] ? contributor_params[:id] : params[:id]))
+      @contributor = Contributor.find((params[:stash_datacite_contributor] ? contributor_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @contributor.resource_id
     end
 
     # Only allow a trusted parameter "white list" through.
     def contributor_params
-      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
+      params.require(:stash_datacite_contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
                                           :affiliation_id, :award_number, :resource_id)
     end
 
