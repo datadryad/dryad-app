@@ -1,5 +1,6 @@
 import React from "react";
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import Funders from "../../../../../app/javascript/react/components/MetadataEntry/Funders.js";
 import axios from 'axios';
@@ -51,16 +52,37 @@ describe('Funders', () => {
   it("removes a funder from the document", async () => {
     const promise = Promise.resolve({
       data: contributors[2]
-    })
+    });
 
-    axios.mockImplementationOnce(() => promise);
+    axios.delete.mockImplementationOnce(() => promise);
 
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
                     deletePath={deletePath} />);
 
-    const removes = screen.getAllByText('remove');
+    let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
+    userEvent.click(removes[2]);
+
+    await waitFor(() => promise); // waits for the axios promise to fulfill
+
+    removes = screen.getAllByText('remove');
+    expect(removes.length).toBe(2);
+  });
+
+  it("adds a funder to the document", async () => {
+
+    render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
+                    deletePath={deletePath} />);
+
+    let removes = screen.getAllByText('remove');
+    expect(removes.length).toBe(3);
+
+    userEvent.click(screen.getByText('add another funder'))
+
+    await waitFor(() => {
+      expect(screen.getAllByText('remove').length).toBe(4)
+    });
   });
 
 });

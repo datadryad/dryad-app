@@ -1,18 +1,32 @@
 export function showSavingMsg(){
-  $('.saving_text').show();
-  $('.saved_text').hide();
+  // ignore jquery undefined in tests without page context
+  if (! typeof jQuery == 'undefined') {
+    $('.saving_text').show();
+    $('.saved_text').hide();
+  }
 }
 
 export function showSavedMsg(){
-  $('.saving_text').hide();
-  $('.saved_text').show();
+  // ignore jquery undefined in tests without page context
+  if (! typeof jQuery == 'undefined'){
+    $('.saving_text').hide();
+    $('.saved_text').show();
+  }
 }
 
 // a version of the modal confirm dialog from rails for react
 export function showModalYNDialog(message, functionIfYes){
-  if (!message) return false;
 
-  $('#railsConfMsg').text(message);
+  const msgPlace = document.getElementById('railsConfMsg');
+
+  // if no confirm message or no place to put it then just call the action, since no way to make meaningful dialog
+  if (!message || !msgPlace) {
+    functionIfYes();
+    return;
+  }
+
+  msgPlace.text(message);
+  // $('#railsConfMsg').text(message);
 
   document.getElementById('railsConfirmDialog').showModal();
 

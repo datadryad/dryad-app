@@ -63,6 +63,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "jest": "^27.0.6",
+    "jest-fail-on-console": "^2.2.3",
     "ndb": "^1.1.5",
     "node": "^14.18.3",
     "react-test-renderer": "^17.0.2",
