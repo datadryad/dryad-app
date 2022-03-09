@@ -1,20 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-
 // the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
-export default function FunderAutocomplete({formRef, acText, setAcText, acID, setAcID, controlOptions}) {
-
+export default function FunderAutocomplete({
+  formRef, acText, setAcText, acID, setAcID, controlOptions,
+}) {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
   const [prevText, setPrevText] = useState(acText);
   const [prevID, setPrevID] = useState(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
-  const nameRef = useRef(null);
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
@@ -97,5 +96,5 @@ FunderAutocomplete.propTypes = {
   setAcText: PropTypes.func.isRequired,
   acID: PropTypes.string.isRequired,
   setAcID: PropTypes.func.isRequired,
-  controlOptions: PropTypes.object.isRequired
+  controlOptions: PropTypes.object.isRequired,
 };
