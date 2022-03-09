@@ -25,7 +25,7 @@ export function showModalYNDialog(message, functionIfYes){
     return;
   }
 
-  msgPlace.text(message);
+  msgPlace.textContent = message;
   // $('#railsConfMsg').text(message);
 
   document.getElementById('railsConfirmDialog').showModal();
