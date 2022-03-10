@@ -22,7 +22,7 @@ function ResearchDomain({resourceId, subject, subjectList, updatePath}) {
 
   return (
       <Formik
-          initialValues={{fos_subjects: subject}}
+          initialValues={{subject: subject}}
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
             showSavingMsg();
@@ -31,12 +31,13 @@ function ResearchDomain({resourceId, subject, subjectList, updatePath}) {
       >{(formik) => (
         <Form className="c-input" id={`dc_fos_subjects_${frmSuffix}`}>
           <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>Research Domain</label>
-          <Field type="text" name="fos_subjects" id={`fos_subjects__${frmSuffix}`} value="" list={`fos_subject__${frmSuffix}`}
+          <Field type="text" name="subject" id={`fos_subjects__${frmSuffix}`} list={`fos_subject__${frmSuffix}`}
               className="fos-subjects js-change-submit c-input__text" />
+
           <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
             {subjectList.map((subj) => (
-              <option value={subj}>{subj}</option>
-              ))}
+                <option value={subj}>{subj}</option>
+            ))}
           </datalist>
         </Form>
       )}
