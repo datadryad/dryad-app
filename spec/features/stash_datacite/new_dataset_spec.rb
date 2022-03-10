@@ -74,8 +74,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Funding
-      page.execute_script("document.getElementsByClassName('js-funder-longname')[0].value = '#{Faker::Company.name}'")
-      fill_in 'stash_datacite_contributor[award_number]', with: Faker::Number.number(digits: 5)
+      find_field('Granting Organization').set(Faker::Company.name)
+      find_field('Award Number').set(Faker::Number.number(digits: 5))
 
       # ##############################
       # Keywords
