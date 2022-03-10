@@ -47,16 +47,16 @@
 
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Funding</legend>
-    <div class="js-contributors_form">
-      <% if @metadata_entry.contributors.exists? %>
-        <% @metadata_entry.contributors.each do |contributor| %>
-          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
-        <% end %>
-      <% else %>
-        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
-      <% end %>
+    <div className="js-contributors_form">
+      <%= react_component('components/MetadataEntry/Funders',
+                          resourceId: @resource.id,
+                          contributors: @metadata_entry.contributors,
+                          createPath: stash_datacite.contributors_create_path,
+                          updatePath: stash_datacite.contributors_update_path,
+                          deletePath: stash_datacite.contributors_delete_path('id_xox'))
+      %>
     </div>
-    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-funder-button o-button__add' %>
+
   </fieldset>
 
     <%= react_component('components/MetadataEntry/Description',
