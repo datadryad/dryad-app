@@ -10,17 +10,6 @@ function ResearchDomain({resourceId, subject, subjectList, updatePath}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const formRef = useRef();
 
-  /*
-  Submits a hash like this in rails
-  {
-    "utf8"=>"✓",
-    "authenticity_token"=>"fOwjAi3LKrxjnc+ziC5y56XtS2G0FMvpxiyCebdvwEl9YGD/DQY3b/Uv48tlf0dNkt10eVapY6ha4dKQ+z0wBg==",
-    "fos_subjects"=>"Agricultural biotechnology",
-    "id"=>"3589",
-    "form_id"=>"dc_fos_subjects_3589"
-    }
-   */
-
   return (
       <Formik
           initialValues={{fos_subjects: subject}}
@@ -53,9 +42,10 @@ function ResearchDomain({resourceId, subject, subjectList, updatePath}) {
                  }}
           />
 
+          {/* ok to use array index as key since list never changes */}
           <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
-            {subjectList.map((subj) => (
-                <option value={subj}>{subj}</option>
+            {subjectList.map((subj, idx) => (
+                <option value={subj} key={idx}>{subj}</option>
             ))}
           </datalist>
         </Form>
