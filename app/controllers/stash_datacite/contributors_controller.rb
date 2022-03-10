@@ -16,8 +16,6 @@ module StashDatacite
     # POST /contributors
     def create
       @contributor = find_or_initialize
-      puts '===create==='
-      puts "con #{@contributor}"
       process_contributor
       respond_to do |format|
         if @contributor.save
@@ -152,23 +150,14 @@ module StashDatacite
     # rubocop:enable Naming/AccessorMethodName
 
     def resource
-      puts '=== res ===='
-      puts "param #{params}"
-      puts "contr #{@contributor}"
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
-      puts '=== set_contrib ===='
-      puts "param #{params}"
-      puts "param1 #{params[:id]}"
-      puts "param2 #{params[:contributor]}"
-      puts "param3 #{contributor_params}"
-      puts "param4 #{contributor_params[:id]}"
       return if params[:id] == 'new'
 
-      @contributor = Contributor.find((params[:stash_datacite_contributor] ? params[:stash_datacite_contributor][:id] : params[:id]))
+      @contributor = Contributor.find((params[:contributor] ? params[:contributor][:id] : params[:id]))
       return ajax_blocked unless resource.id == @contributor.resource_id
     end
 

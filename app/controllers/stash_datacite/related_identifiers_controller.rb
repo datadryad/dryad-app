@@ -90,7 +90,13 @@ module StashDatacite
     end
 
     def resource
-      @resource ||= (params[:stash_datacite_related_identifier] ? StashEngine::Resource.find(related_identifier_params[:resource_id]) : @related_identifier.resource)
+      @resource ||= begin
+                      if params[:stash_datacite_related_identifier]
+                        StashEngine::Resource.find(related_identifier_params[:resource_id])
+                      else
+                        @related_identifier.resource
+                      end
+                    end
     end
 
     # Only allow a trusted parameter "white list" through.
