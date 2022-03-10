@@ -23,12 +23,12 @@ module TinymceHelper
     # page.evaluate_script("tinyMCE.get('#{field}') !== null")
     # page.evaluate_script("typeof tinyMCE.editors !== 'undefined'")
 
-    until page.evaluate_script('tinyMCE.editors.length > 0') || counter > 60
+    until page.evaluate_script('tinyMCE.editors.length > 2') || counter > 60
       sleep 0.5
       counter += 1
     end
 
-    until page.evaluate_script("(typeof tinyMCE.editors[0].getContent() === 'string')") || counter > 60
+    until page.evaluate_script("(typeof tinyMCE.editors[2].getContent() === 'string')") || counter > 60
       sleep 0.5
       counter += 1
     end
@@ -38,6 +38,16 @@ module TinymceHelper
         myEditor.setContent("#{content}");
         myEditor.focus();
     SCRIPT
-    page.execute_script script_text
+
+    # TinyMCE is consistent in having problems loading or loading slowly in testing, especially with other React components
+    begin
+      retries = 0
+      page.execute_script script_text
+    rescue Selenium::WebDriver::Error::JavascriptError => e
+      raise e unless e.message.include?('getRng')
+
+      sleep 0.5
+      retry if (retries += 1) < 20
+    end
   end
 end
