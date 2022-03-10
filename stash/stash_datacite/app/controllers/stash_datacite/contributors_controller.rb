@@ -48,6 +48,7 @@ module StashDatacite
       end
       respond_to do |format|
         format.js
+        format.json { render json: @contributor }
       end
     end
 

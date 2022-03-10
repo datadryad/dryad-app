@@ -37,8 +37,8 @@ export default function FacilityAutocomplete({
       },
     };
 
-    let url; let
-      method;
+    let url;
+    let method;
     if (contributorId) {
       url = updatePath;
       method = 'patch';

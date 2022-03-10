@@ -87,10 +87,8 @@ module DatasetHelper
   end
 
   def fill_in_funder(name:, value:)
-    page.execute_script("document.getElementsByClassName('js-funder-longname')[0].value = '#{name}'")
-    fill_in 'contributor[award_number]', with: value
-    # award_el = page.find('input.js-award_number', match: :first)
-    # award_el.fill_in(with: value)
+    find_field('Granting Organization').set(name)
+    find_field('Award Number').set(value)
   end
 
   def fill_in_research_domain
