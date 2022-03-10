@@ -1,5 +1,5 @@
 require 'rails_helper'
-require_relative '../../../stash/stash_datacite/lib/script/plos_keywords'
+require_relative '../../../lib/script/plos_keywords'
 
 module Script
   describe PlosKeywords do
