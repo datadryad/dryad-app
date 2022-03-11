@@ -10,8 +10,6 @@ function Keywords({resourceId, subjects, createPath, deletePath}) {
 
   function SubjDisplay({subj}){
 
-    console.log(subj);
-
     return (
         <span className="c-keywords__keyword">
           {subj.subject}
@@ -33,7 +31,7 @@ function Keywords({resourceId, subjects, createPath, deletePath}) {
         &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
 
         <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
-          {subjects.map(subj => <SubjDisplay subj={subj}/> )}
+          {subjects.map(subj => <SubjDisplay subj={subj} key={subj.id} /> )}
         </div>
       </div>
   );
