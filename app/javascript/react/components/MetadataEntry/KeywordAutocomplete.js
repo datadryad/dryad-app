@@ -42,8 +42,8 @@ export default function KeywordAutocomplete({name, id, controlOptions}) {
 
   // TODO: change to get data from our rails action for subjects
   function supplyLookupList(qt) {
-    return axios.get('https://api.ror.org/organizations', {
-      params: {query: qt},
+    return axios.get('/stash_datacite/subjects/autocomplete', {
+      params: {term: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
         .then((data) => {
@@ -52,7 +52,7 @@ export default function KeywordAutocomplete({name, id, controlOptions}) {
             // raise an error here if we want to catch it and display something to user or do something else
           }
 
-          const list = data.data.items.map((item) => {
+          const list = data.data.map((item) => {
             // add one point if starts with the same string, sends to top
             const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
             return {...item, similarity};
