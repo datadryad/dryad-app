@@ -5,11 +5,11 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import FunderAutocomplete from './FunderAutocomplete';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import KeywordAutocomplete from "./KeywordAutocomplete";
 
 function Keywords({resourceId, subjects, createPath, deletePath}) {
 
   function SubjDisplay({subj}){
-
     return (
         <span className="c-keywords__keyword">
           {subj.subject}
@@ -32,6 +32,14 @@ function Keywords({resourceId, subjects, createPath, deletePath}) {
 
         <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
           {subjects.map(subj => <SubjDisplay subj={subj} key={subj.id} /> )}
+          <KeywordAutocomplete id='' name='' controlOptions={
+            { htmlId: `keyword_ac`,
+              labelText: 'Keyword',
+              isRequired: false,
+            }
+          }
+           onBlur={(e) => { alert('hi'); }}
+          />
         </div>
       </div>
   );

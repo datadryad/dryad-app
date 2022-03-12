@@ -102,10 +102,10 @@ export default function GenericNameIdAutocomplete(
             /* workaround: We don't want to set blur unless relatedTarget exists as a good element.
                     It is null when clicking on an autocomplete menu and we don't want to trigger the autoBlur flag for that
                     */
-            if (e.relatedTarget) {
+            // if (e.relatedTarget) {
               setAutoBlurred(true);
               closeMenu(); // by default this library leaves the menu open all over the page if you tab out
-            }
+            // }
           }}
         />
         { !acID && isRequired
