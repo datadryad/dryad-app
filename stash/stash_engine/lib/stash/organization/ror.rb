@@ -143,7 +143,7 @@ module Stash
           # Otherwise, throw an error
           raise "Unexpected structure of ISNI: #{isni_id}; use either 16 digits or 4 sets of 4 digits with spaces between."
         end
-        
+
       end
     end
   end

@@ -1,4 +1,5 @@
 require 'csv'
+require 'stash/organization/ror_updater'
 
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Lint/UselessAssignment
@@ -13,6 +14,11 @@ namespace :affiliation_import do
       target_obj = Stash::Organization::Ror.find_by_ror_id(affil.ror_id)
       affil.update(long_name: target_obj.name) if target_obj
     end
+  end
+
+  desc 'Update ROR organizations in local database'
+  task update_ror_orgs: :environment do
+    Stash::Organization::RorUpdater.perform
   end
 
   desc 'Process all of the CSV files'
