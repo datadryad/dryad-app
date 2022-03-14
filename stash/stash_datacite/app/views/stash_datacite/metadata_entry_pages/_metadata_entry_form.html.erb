@@ -71,7 +71,7 @@
     <%= react_component('components/MetadataEntry/Keywords',
                         resourceId: @resource.id,
                         subjects: @metadata_entry.subjects.map{ |i| {id: i.id, subject: i.subject }  },
-                        updatePath: stash_datacite.subjects_create_path,
+                        createPath: stash_datacite.subjects_create_path,
                         deletePath: stash_datacite.subjects_delete_path('subj_xoxo', resource_id: @resource.id)) %>
 
     <%= react_component('components/MetadataEntry/Description',

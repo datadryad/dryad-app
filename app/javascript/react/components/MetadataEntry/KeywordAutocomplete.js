@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function KeywordAutocomplete({name, id, controlOptions}) {
+export default function KeywordAutocomplete({name, id, saveFunction, controlOptions}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -25,8 +25,7 @@ export default function KeywordAutocomplete({name, id, controlOptions}) {
         setAcID('');
       }
       if (prevText !== acText || prevID !== acID) {
-        // TODO: resubmit here
-        console.log('SUBMITTING KEYWORD NOW');
+        saveFunction(acText);
       }
       setPrevText(acText);
       setPrevID(acID);
@@ -63,13 +62,11 @@ export default function KeywordAutocomplete({name, id, controlOptions}) {
   }
 
   // Given a js object from list (supplyLookupList above) it returns the string name
-  // TODO change to give correct name
   function nameFunc(item) {
     return (item?.name || '');
   }
 
   // Given a js object from list (supplyLookupList above) it returns the unique identifier
-  // TODO change to give correct id
   function idFunc(item) {
     return item.id;
   }
