@@ -18,11 +18,15 @@ function Keywords({resourceId, subjects, createPath, deletePath}) {
           {subj.subject}
           <span className="delete_keyword">
             <a id={`sub_remove_${subj.id}`}
+               href='#'
                aria-label="Remove this keyword"
                role="button"
                className="c-keywords__keyword-remove"
                rel="nofollow"
-               onClick={() => deleteKeyword(subj.id)}
+               onClick={(e) => {
+                 e.preventDefault();
+                 deleteKeyword(subj.id)
+               }}
             ></a>
           </span>
         </span>
