@@ -77,14 +77,15 @@ export default function GenericNameIdAutocomplete(
 
   return (
     <>
-      <label
-        {...getLabelProps()}
-        className={`c-input__label ${(isRequired ? 'required' : '')}`}
-        id={`label_${htmlId}`}
-        htmlFor={htmlId}
-      >
-        {labelText}:
-      </label>
+      { labelText ?
+          ( <label
+            {...getLabelProps()}
+            className={`c-input__label ${(isRequired ? 'required' : '')}`}
+            id={`label_${htmlId}`}
+            htmlFor={htmlId}
+            >
+              {labelText}:
+            </label>) : '' }
       <div
         {...getComboboxProps()}
         aria-owns={`menu_${htmlId}`}

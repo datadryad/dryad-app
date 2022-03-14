@@ -71,7 +71,7 @@ function Keywords({resourceId, subjects, createPath, deletePath}) {
           {subjs.map(subj => <SubjDisplay subj={subj} key={subj.id} /> )}
           <KeywordAutocomplete id='' name='' saveFunction={saveKeyword} controlOptions={
             { htmlId: `keyword_ac`,
-              labelText: 'Keyword',
+              labelText: '',
               isRequired: false,
             }
           }
