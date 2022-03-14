@@ -11,28 +11,6 @@ function Keywords({
 
   const [subjs, setSubjs] = useState(subjects);
 
-  function SubjDisplay({subj}) {
-    return (
-      <span className="c-keywords__keyword">
-        {subj.subject}
-        <span className="delete_keyword">
-          <a
-            id={`sub_remove_${subj.id}`}
-            href="#"
-            aria-label="Remove this keyword"
-            role="button"
-            className="c-keywords__keyword-remove"
-            rel="nofollow"
-            onClick={(e) => {
-              e.preventDefault();
-              deleteKeyword(subj.id);
-            }}
-          />
-        </span>
-      </span>
-    );
-  }
-
   function saveKeyword(strKeyword) {
     // the controller for this is a bit weird since it may accept one keyword or multiple separated by commas and it returns
     // the full list of keywords again after adding one or more
@@ -72,7 +50,7 @@ function Keywords({
         &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
 
       <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
-        {subjs.map((subj) => <SubjDisplay subj={subj} key={subj.id} />)}
+        {subjs.map((subj) => <SubjDisplay subj={subj} deleteKeyword={deleteKeyword} key={subj.id} />)}
         <KeywordAutocomplete
           id=""
           name=""
@@ -87,6 +65,28 @@ function Keywords({
         />
       </div>
     </div>
+  );
+}
+
+function SubjDisplay({subj, deleteKeyword}) {
+  return (
+      <span className="c-keywords__keyword">
+        {subj.subject}
+        <span className="delete_keyword">
+          <a
+              id={`sub_remove_${subj.id}`}
+              href="#"
+              aria-label="Remove this keyword"
+              role="button"
+              className="c-keywords__keyword-remove"
+              rel="nofollow"
+              onClick={(e) => {
+                e.preventDefault();
+                deleteKeyword(subj.id);
+              }}
+          />
+        </span>
+      </span>
   );
 }
 
