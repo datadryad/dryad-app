@@ -30,6 +30,7 @@ module StashDatacite
       resource.subjects.non_fos.delete(@subject)
       respond_to do |format|
         format.js
+        format.json { render json: @subject }
       end
     end
 
