@@ -26,6 +26,7 @@ export default function KeywordAutocomplete({name, id, saveFunction, controlOpti
       }
       if (prevText !== acText || prevID !== acID) {
         saveFunction(acText);
+        setAcText('');
       }
       setPrevText(acText);
       setPrevID(acID);
