@@ -5,258 +5,212 @@
 #   https://github.com/CDLUC3/dmptool/blob/v3.4.0-beta/app/services/external_apis/ror_service.rb
 
 require 'digest'
+require 'zip'
 
 module Stash
   module Organization
     class RorUpdater
-      
+
+      FILE_DIR = File.join(Rails.root, 'ror')
+
+      def self.logger
+        Rails.logger
+      end
+
+      def self.download_url
+        'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
+      end
+
+      # rubocop:disable Metrics/MethodLength, Metrics/BlockNesting
       def self.perform(force: false)
+        ####### TODO -- move these into config
+        checksum_file = File.join(FILE_DIR, 'ror_checksum.txt')
+        zip_file = File.join(FILE_DIR, 'latest-ror-data.zip')
+        ##################
+
         # Fetch the Zenodo metadata for ROR to see if we have the latest data dump
         metadata = fetch_zenodo_metadata
 
-        # TODO -- move these into config
-        file_dir = File.join(Rails.root, '../../shared/ror')
-        checksum_file = File.join(file_dir, 'ror_checksum.txt')
-
         if metadata.present?
-          Dir.mkdir(file_dir) unless File.exist?(file_dir)
-          
+          Dir.mkdir(FILE_DIR) unless File.exist?(FILE_DIR)
+
           checksum = File.open(checksum_file, 'w+') unless File.exist?(checksum_file) && !force
           checksum = File.open(checksum_file, 'r+') unless checksum.present?
           old_checksum_val = checksum.read
 
-### worked through here
-          
-          if old_checksum_val == metadata[:checksum]
-            log('There is no new ROR file to process.')
+          if old_checksum_val == metadata['checksum']
+            logger.info('There is no new ROR file to process.')
           else
-            download_file = metadata.fetch(:links, {})[:download]
-            log_message(method: method, message: "New ROR file detected - checksum #{metadata[:checksum]}")
-            log_message(method: method, message: "Downloading #{download_file}")
-            
-            payload = download_ror_file(url: metadata.fetch(:links, {})[:download])
+            download_file = metadata['links']['self']
+            logger.info("New ROR file detected - checksum #{metadata['checksum']}")
+            logger.info("Downloading #{download_file}")
+
+            payload = download_ror_file(download_file)
+
             if payload.present?
               file = File.open(zip_file, 'wb')
               file.write(payload)
-              
-              if validate_downloaded_file(file_path: zip_file, checksum: metadata[:checksum])
+
+              if validate_downloaded_file(file_path: zip_file, checksum: metadata['checksum'])
                 json_file = download_file.split('/').last.gsub('.zip', '.json')
-                
+
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
                   checksum = File.open(checksum_file, 'w')
-                  checksum.write(metadata[:checksum])
+                  checksum.write(metadata['checksum'])
                 end
               else
-                log_error(method: method, error: StandardError.new('Downloaded ROR zip does not match checksum!'))
+                logger.error('Downloaded ROR zip does not match checksum!')
               end
-              
+
             else
-              log_error(method: method, error: StandardError.new('Unable to download ROR file!'))
+              logger.error('Unable to download ROR file!')
             end
           end
         else
-          log_error(method: method, error: StandardError.new('Unable to fetch ROR metadata from Zenodo!'))
+          logger.error('Unable to fetch ROR metadata from Zenodo!')
         end
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/BlockNesting
 
-      private
+      class << self
+        private
 
-      # Fetch the latest Zenodo metadata for ROR files
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      def fetch_zenodo_metadata
-        Rails.logger.error 'No :download_url defined for RorService!' unless download_url.present?
-        return nil unless download_url.present?
+        # Fetch the latest Zenodo metadata for ROR files
+        def fetch_zenodo_metadata
+          logger.error('No download_url defined for RorUpdater!') unless download_url.present?
+          return nil unless download_url.present?
 
-        # Fetch the latest ROR metadata from Zenodo (the query will place the most recent
-        # version 1st)
-        resp = http_get(uri: download_url, additional_headers: { host: 'zenodo.org' }, debug: false)
-        unless resp.present? && resp.code == 200
-          handle_http_failure(method: 'Fetching ROR metadata from Zenodo', http_response: resp)
-          notify_administrators(obj: 'RorService', response: resp)
-          return nil
+          # Fetch the latest ROR metadata from Zenodo (the query will place the most recent
+          # version 1st)
+          resp = HTTParty.get(download_url, headers: { host: 'zenodo.org' })
+          unless resp.present? && resp.code == 200
+            log.error("Unable to fetch ROR metadata from Zenodo #{resp}")
+            return nil
+          end
+          resp_hash = resp.parsed_response
+
+          # Extract the most recent file's metadata
+          file_metadata = resp_hash['hits']['hits'].first['files'].first
+          unless file_metadata.present? && file_metadata['links']['self'].present?
+            log.error('No file found in ROR metadata from Zenodo')
+            return nil
+          end
+
+          file_metadata
         end
-        json = JSON.parse(resp.body)
 
-        # Extract the most recent file's metadata
-        file_metadata = json.first.fetch('files', []).first&.with_indifferent_access
-        unless file_metadata.present? && file_metadata.fetch(:links, {})[:download].present?
-          handle_http_failure(method: 'No file found in ROR metadata from Zenodo', http_response: resp)
-          notify_administrators(obj: 'RorService', response: resp)
-          return nil
+        # Download the latest ROR data
+        def download_ror_file(url)
+          return nil unless url.present?
+
+          headers = {
+            host: 'zenodo.org',
+            Accept: 'application/zip'
+          }
+          resp = HTTParty.get(url, headers: headers)
+          unless resp.present? && resp.code == 200
+            logger.error("Unable to fetch ROR file from Zenodo -- #{url} -- #{resp}")
+            return nil
+          end
+          resp.parsed_response
         end
 
-        file_metadata
-      rescue JSON::ParserError => e
-        log_error(method: 'RorService', error: e)
-        nil
-      end
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # Determine if the downloaded file matches the expected checksum
+        def validate_downloaded_file(file_path:, checksum:)
+          puts 'Validating file against expected checksum...'
+          return false unless file_path.present? && checksum.present? && File.exist?(file_path)
 
-      # Download the latest ROR data
-      def download_ror_file(url:)
-        return nil unless url.present?
+          checksum = checksum[4..] if checksum.starts_with?('md5:')
 
-        headers = {
-          host: 'zenodo.org',
-          Accept: 'application/zip'
-        }
-        resp = http_get(uri: url, additional_headers: headers, debug: false)
-        unless resp.present? && resp.code == 200
-          handle_http_failure(method: "Fetching ROR file from Zenodo - #{url}", http_response: resp)
-          notify_administrators(obj: 'RorService', response: resp)
-          return nil
+          actual_checksum = Digest::MD5.file(file_path).to_s
+          actual_checksum == checksum
         end
-        resp.body
-      end
 
-      # Parse the JSON file and process each individual record
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      def process_ror_file(zip_file:, file:)
-        return false unless zip_file.present? && file.present?
+        # Parse the JSON file and process each individual record
+        def process_ror_file(zip_file:, file:)
+          puts 'Processing file contents into database...'
+          return false unless zip_file.present? && file.present?
 
-        if unzip_file(zip_file: zip_file, destination: file_dir)
-          method = 'ExternalApis::RorService.process_ror-file'
-          if File.exist?("#{file_dir}/#{file}")
-            json_file = File.open("#{file_dir}/#{file}", 'r')
-            json = JSON.parse(json_file.read)
-            cntr = 0
-            total = json.length
-            json.each do |hash|
-              cntr += 1
-              log_message(method: method, message: "Processed #{cntr} out of #{total} records") if (cntr % 1000).zero?
+          if unzip_file(zip_file: zip_file, destination: FILE_DIR)
+            if File.exist?("#{FILE_DIR}/#{file}")
+              json_file = File.open("#{FILE_DIR}/#{file}", 'r')
+              json = JSON.parse(json_file.read)
+              cntr = 0
+              total = json.length
+              json.each do |hash|
+                cntr += 1
+                puts "Processed #{cntr} out of #{total} records" if (cntr % 1000).zero?
 
-              hash = hash.with_indifferent_access if hash.is_a?(Hash)
+                hash = hash.with_indifferent_access if hash.is_a?(Hash)
 
-              next if process_ror_record(record: hash, time: json_file.mtime)
+                next if process_ror_record(record: hash, time: json_file.mtime)
 
-              log_message(
-                method: method,
-                message: "Unable to process record for: '#{hash&.fetch('name', 'unknown')}'",
-                info: false
-              )
+                logger.error("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
+              end
+              true
+            else
+              logger.error('Unable to find json in zip!')
+              false
             end
-            # Remove any old ROR records (their file_timestamps would not have been updated)
-            # Note this does not remove any associated Org records!
-            RegistryOrg.where('file_timestamp < ?', json_file.mtime.strftime('%Y-%m-%d %H:%M:%S')).destroy_all
-            true
           else
-            log_error(method: method, error: StandardError.new('Unable to find json in zip!'))
+            logger.error('Unable to unzip contents of ROR file')
             false
           end
-        else
-          log_error(method: method, error: StandardError.new('Unable to unzip contents of ROR file'))
+        rescue JSON::ParserError => e
+          logger.error(e)
           false
         end
-      rescue JSON::ParserError => e
-        log_error(method: method, error: e)
-        false
-      end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-      # Transfer the contents of the JSON record to the org_indices table
-      # rubocop:disable Metrics/AbcSize
-      def process_ror_record(record:, time:)
-        return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
+        def unzip_file(zip_file:, destination:)
+          return false unless zip_file.present? && File.exist?(zip_file)
 
-        registry_org = RegistryOrg.find_or_create_by(ror_id: record['id'])
-        registry_org.name = safe_string(value: org_name(item: record))
-        registry_org.acronyms = record['acronyms']
-        registry_org.aliases = record['aliases']
-        registry_org.country = record['country']
-        registry_org.types = record['types']
-        registry_org.language = org_language(item: record)
-        registry_org.file_timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        registry_org.fundref_id = fundref_id(item: record)
-        registry_org.home_page = safe_string(value: record.fetch('links', []).first)
+          Zip::File.open(zip_file) do |files|
+            files.each do |entry|
+              next if File.exist?(entry.name)
 
-        # Attempt to find a matching Org record
-        registry_org.org_id = check_for_org_association(registry_org: registry_org)
+              f_path = File.join(destination, entry.name)
+              FileUtils.mkdir_p(File.dirname(f_path))
+              files.extract(entry, f_path) unless File.exist?(f_path)
+            end
+          end
+          true
+        end
 
-        # TODO: We should create some sort of Super Admin page to highlight unmapped
-        #       RegistryOrg records so that they can be connected to their Org
-        registry_org.save
-        true
-      rescue StandardError => e
-        log_error(method: 'ExternalApis::RorService.process_ror_record', error: e)
-        log_message(method: 'ExternalApis::RorService.process_ror-record', message: record.to_s)
-        false
-      end
-      # rubocop:enable Metrics/AbcSize
+        # Transfer the contents of a single JSON record to the database
+        def process_ror_record(record:)
+          return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
 
-      def safe_string(value:)
-        return value if value.blank? || value.length < 255
+          ror_org = StashEngine::RorOrg.find_or_create_by(ror_id: record['id'])
+          ror_org.name = safe_string(value: record['name'])
+          ror_org.home_page = safe_string(value: record.fetch('links', []).first)
+          ror_org.country = record['country']['country_name']
+          ror_org.acronyms = record['acronyms']
+          ror_org.aliases = record['aliases']
+          ror_org.save
+          true
+        rescue StandardError => e
+          logger.error('Error processing record', e)
+          false
+        end
 
-        value[0..254]
-      end
+        def safe_string(value:)
+          return value if value.blank? || value.length < 190
 
-      # Determine if there is a matching Org record in the DB if so, attach it
-      def check_for_org_association(registry_org:)
-        return registry_org.org&.id if registry_org.org.present?
+          value[0..190]
+        end
 
-        ror = Identifier.by_scheme_name('ror', 'Org')
-                        .where(value: registry_org.ror_id)
-                        .first
-        return nil unless ror.present?
+        # Extracts the website domain from the item
+        def org_website(item:)
+          return nil unless item.present? && item.fetch('links', [])&.any?
+          return nil if item['links'].first.blank?
 
-        ror.present? ? ror.identifiable_id : nil
-      end
+          # A website was found, so extract just the domain without the www
+          domain_regex = %r{^(?:http://|www\.|https://)([^/]+)}
+          website = item['links'].first.scan(domain_regex).last.first
+          website.gsub('www.', '')
+        end
 
-      # Org names are not unique, so include the Org URL if available or
-      # the country. For example:
-      #    "Example College (example.edu)"
-      #    "Example College (Brazil)"
-      def org_name(item:)
-        return '' unless item.present? && item['name'].present?
-
-        country = item.fetch('country', {}).fetch('country_name', '')
-        website = org_website(item: item)
-        # If no website or country then just return the name
-        return item['name'] unless website.present? || country.present?
-
-        # Otherwise return the contextualized name
-        "#{item['name']} (#{website || country})"
-      end
-
-      # Extracts the org's ISO639 if available
-      def org_language(item:)
-        dflt = I18n.default_locale || 'en'
-        return dflt unless item.present?
-
-        country = item.fetch('country', {}).fetch('country_code', '')
-        labels = case country
-                 when 'US'
-                   [{ iso639: 'en' }]
-                 else
-                   item.fetch('labels', [{ iso639: dflt }])
-                 end
-        labels.first&.fetch('iso639', I18n.default_locale) || dflt
-      end
-
-      # Extracts the website domain from the item
-      def org_website(item:)
-        return nil unless item.present? && item.fetch('links', [])&.any?
-        return nil if item['links'].first.blank?
-
-        # A website was found, so extract just the domain without the www
-        domain_regex = %r{^(?:http://|www\.|https://)([^/]+)}
-        website = item['links'].first.scan(domain_regex).last.first
-        website.gsub('www.', '')
-      end
-
-      # Extracts the FundRef Id if available
-      def fundref_id(item:)
-        return '' unless item.present? && item['external_ids'].present?
-        return '' unless item['external_ids'].fetch('FundRef', {}).any?
-
-        # If a preferred Id was specified then use it
-        ret = item['external_ids'].fetch('FundRef', {}).fetch('preferred', '')
-        return ret if ret.present?
-
-        # Otherwise take the first one listed
-        item['external_ids'].fetch('FundRef', {}).fetch('all', []).first
       end
     end
   end

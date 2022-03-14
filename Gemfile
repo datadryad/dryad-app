@@ -63,6 +63,7 @@ gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
 gem 'rb-readline', require: false
 gem 'rsolr', '>= 1.0', '< 3'
+gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'solr_wrapper', '~> 3.1.2'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
