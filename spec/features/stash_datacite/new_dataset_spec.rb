@@ -81,7 +81,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Keywords
-      fill_in 'subject', with: Array.new(3) { Faker::Lorem.word }.join(' ')
+      fill_in 'keyword_ac', with: Array.new(3) { Faker::Lorem.word }.join(' ')
 
       # ##############################
       # Methods
