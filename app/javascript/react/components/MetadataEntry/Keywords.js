@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
-// see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
-import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import FunderAutocomplete from './FunderAutocomplete';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import KeywordAutocomplete from './KeywordAutocomplete';
 
 function Keywords({
@@ -39,6 +36,7 @@ function Keywords({
   function saveKeyword(strKeyword) {
     // the controller for this is a bit weird since it may accept one keyword or multiple separated by commas and it returns
     // the full list of keywords again after adding one or more
+    showSavingMsg();
     axios.post(
       createPath,
       {authenticity_token: csrf, subject: strKeyword, resource_id: resourceId},
@@ -49,6 +47,7 @@ function Keywords({
         // raise an error here if we want to catch it and display something to user or do something else
       }
       setSubjs(data.data);
+      showSavedMsg();
     });
   }
 
@@ -93,20 +92,11 @@ function Keywords({
 
 export default Keywords;
 
-/*
-<input type="text" name="subject" id="keyword"
-                   className="js-keywords__input c-keywords__input ui-autocomplete-input" autoComplete="off">
-*/
-
-// resourceId, origID, contributor, createPath, updatePath, removeFunction
+// resourceId, subjects, createPath, deletePath,
 
 Keywords.propTypes = {
-  /*
-  resourceId: PropTypes.string.isRequired,
-  origID: PropTypes.string.isRequired,
-  contributor: PropTypes.object.isRequired,
+  resourceId: PropTypes.number.isRequired,
+  subjects: PropTypes.array.isRequired,
   createPath: PropTypes.string.isRequired,
-  updatePath: PropTypes.string.isRequired,
-  removeFunction: PropTypes.func.isRequired,
-   */
+  deletePath: PropTypes.string.isRequired,
 };
