@@ -107,6 +107,12 @@ export default function GenericNameIdAutocomplete(
               closeMenu(); // by default this library leaves the menu open all over the page if you tab out
             // }
           }}
+          onKeyUp={(e) => {
+            // also submit changes if pressing enter (for keywords)
+            if (e.keyCode === 13) {
+              setAutoBlurred(true);
+            }
+          }}
         />
         { !acID && isRequired
           ? <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list.`}>&#x2753;</span>
