@@ -40,7 +40,7 @@ module StashDatacite
         render json: nil
       else
         @subjects = Subject.order(:subject).non_fos.where('subject LIKE ?', "%#{params[:term]}%").limit(40)
-        render json: @subjects.map{|i| {id: i.id, name: i.subject} }
+        render json: @subjects.map { |i| { id: i.id, name: i.subject } }
       end
     end
 
