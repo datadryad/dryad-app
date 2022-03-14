@@ -18,7 +18,10 @@ module StashDatacite
         .delete_if(&:blank?)
         .each { |s| ensure_subject(s) }
       @subjects = resource.subjects.non_fos
-      respond_to { |format| format.js }
+      respond_to do |format|
+        format.js
+        format.json { render json: @subjects }
+      end
     end
 
     # DELETE /subjects/1
