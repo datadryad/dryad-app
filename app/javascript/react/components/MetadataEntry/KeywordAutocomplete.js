@@ -40,7 +40,6 @@ export default function KeywordAutocomplete({name, id, saveFunction, controlOpti
      autocompletes for a generic case.
    */
 
-  // TODO: change to get data from our rails action for subjects
   function supplyLookupList(qt) {
     return axios.get('/stash_datacite/subjects/autocomplete', {
       params: {term: qt},
