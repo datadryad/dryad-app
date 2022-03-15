@@ -11,7 +11,10 @@ function Keywords({
 
   const [subjs, setSubjs] = useState(subjects);
 
-  function saveKeyword(strKeyword) {
+  // passing this in as a normal function below caused some eslint issues.  But probably not really a problem for it being used once.
+  // See https://dmitripavlutin.com/dont-overuse-react-usecallback/  .  Good to switch to "useCallback" for long lists
+  // of items where function may be recreated multiple times.  Probably not needed here.
+  const saveKeyword = (strKeyword) => {
     // the controller for this is a bit weird since it may accept one keyword or multiple separated by commas and it returns
     // the full list of keywords again after adding one or more
     showSavingMsg();
@@ -26,8 +29,9 @@ function Keywords({
       }
       setSubjs(data.data);
       showSavedMsg();
+      return data.data;
     });
-  }
+  };
 
   function deleteKeyword(id) {
     // takes the params id and deletes the subject, subj_xoxo
@@ -46,11 +50,33 @@ function Keywords({
 
   return (
     <div className="c-keywords">
-      <label className="c-input__label" htmlFor="keyword">Keywords:</label>
+      {/* eslint-disable jsx-a11y/label-has-associated-control */}
+      <label className="c-input__label" htmlFor="keyword_ac">Keywords:</label>
+      {/* eslinet-enable jsx-a11y/label-has-associated-control */}
         &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
 
       <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
-        {subjs.map((subj) => <SubjDisplay subj={subj} deleteKeyword={deleteKeyword} key={subj.id} />)}
+        {subjs.map((subj) => (
+          <span className="c-keywords__keyword">
+            {subj.subject}
+            <span className="delete_keyword">
+              {/* eslint-disable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
+              <a
+                id={`sub_remove_${subj.id}`}
+                href="#"
+                aria-label="Remove this keyword"
+                role="button"
+                className="c-keywords__keyword-remove"
+                rel="nofollow"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteKeyword(subj.id);
+                }}
+              />
+              {/* eslint-enable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
+            </span>
+          </span>
+        ))}
         <KeywordAutocomplete
           id=""
           name=""
@@ -68,31 +94,7 @@ function Keywords({
   );
 }
 
-function SubjDisplay({subj, deleteKeyword}) {
-  return (
-      <span className="c-keywords__keyword">
-        {subj.subject}
-        <span className="delete_keyword">
-          <a
-              id={`sub_remove_${subj.id}`}
-              href="#"
-              aria-label="Remove this keyword"
-              role="button"
-              className="c-keywords__keyword-remove"
-              rel="nofollow"
-              onClick={(e) => {
-                e.preventDefault();
-                deleteKeyword(subj.id);
-              }}
-          />
-        </span>
-      </span>
-  );
-}
-
 export default Keywords;
-
-// resourceId, subjects, createPath, deletePath,
 
 Keywords.propTypes = {
   resourceId: PropTypes.number.isRequired,
