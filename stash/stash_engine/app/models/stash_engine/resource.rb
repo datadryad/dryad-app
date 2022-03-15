@@ -585,8 +585,8 @@ module StashEngine
       resource_funders = contributors
       return unless user_funders.present? && resource_funders.present?
 
-      user_funder_ids = user_funders.map(&:funder_id).reject(&:empty?)
-      resource_funder_ids = resource_funders.map(&:name_identifier_id).reject(&:empty?)
+      user_funder_ids = user_funders.map(&:funder_id).compact.reject(&:empty?)
+      resource_funder_ids = resource_funders.map(&:name_identifier_id).compact.reject(&:empty?)
       user_funder_ids.&(resource_funder_ids).present?
     end
 
