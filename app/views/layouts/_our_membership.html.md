@@ -82,18 +82,19 @@ including universities, research institutions and academic libraries. See more a
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
         <li>eLife</li>
+		<li>European Society for Evolutionary Biology</li>
     </ul>
   </td>
   <td>
     <ul>
-	    <li>European Society for Evolutionary Biology</li>
         <li>Hindawi</li>
         <li>John Wiley &amp; Sons, Inc</li>
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
+		<li>The Paleontological Society</li>
+        <li>The Royal Society</li>
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
-        <li>The Royal Society</li>
       </ul>
     </td>
   </tr>
