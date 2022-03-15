@@ -9,6 +9,10 @@
 .raketasks
 *.iml
 
+# IntelliJ noise
+/out/
+*.iws
+
 # Temporary files
 public/assets/
 public/uploads/
@@ -143,7 +147,7 @@ bower.json
 # Ignore Byebug command history file.
 .byebug_history
 
-#####=== Emacs ===#####
+#####=== Emacs noise ===#####
 # -*- mode: gitignore; -*-
 *~
 \#*\#
