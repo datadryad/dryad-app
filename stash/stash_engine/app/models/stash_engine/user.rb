@@ -4,6 +4,7 @@ module StashEngine
     has_many :resources
     has_many :journal_roles
     has_many :journals, through: :journal_roles
+    belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
 
     scope :curators, -> do
       where(role: %w[superuser curator tenant_curator])
