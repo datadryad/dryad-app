@@ -18,6 +18,21 @@
   </p>
 </div>
 
+<div class="bio">
+    <img src="/images/mark.jpg" alt="Mark Kurtz" title="Mark Kurtz">
+  <p><strong>Mark Kurtz</strong><br/>
+  Business Operations Manager<br/>
+  
+  Mark has worked in academic publishing for over 20 years, with experience
+  ranging from editorial management to strategic development, in academic,
+  nonprofit, and commercial settings. He has held positions at the
+  Archaeological Institute of America, SAGE, and BioOne, where he was Senior
+  Director for Strategic Development. Long active in the development of
+  open-access models, he believes that sustainable models are essential to
+  meaningful innovation in scholarly communications.
+  </p>
+</div>
+
 <h2 id="dev">Product Development Team</h2>
 
 <div class="bio">
@@ -34,12 +49,11 @@
   she also is the Principal Investigator for the Sloan Foundation funded Make Data Count initiative, and co-chair
   of the FORCE11 Research Data Publishing Ethics working group.
   </p>
-</div>
+  </div>
 
 <div class="bio">
   <img src="/images/rscherle.jpg" alt="Ryan Scherle" title="Ryan Scherle">
-  <p><strong>Ryan Scherle</strong>, PhD Computer Science and Cognitive
-  Science<br/>
+  <p><strong>Ryan Scherle</strong><br/>
   Software Developer<br/>
   Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
 </p>
@@ -66,6 +80,33 @@
   <p><strong>Jess Herzog</strong><br/>
   Publishing Manager<br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
+</div>
+
+<div class="bio">
+    <img src="/images/arian.jpg" alt="Arian Abdulla" title="Arian Abdulla">
+  <p><strong>Arian Abdulla</strong><br/>
+  Data Curator<br/>
+  
+  Arian has a background in Biochemistry and Molecular Biology from Albert
+  Einstein College of Medicine studying epigenetics and aging research. He has
+  experience supporting researchers and healthcare providers in the different
+  stages of the research lifecycle and scientific publishing. Arian enjoys
+  traveling, trying out new cuisines, soccer, tennis and reading.
+  </p>
+</div>
+
+<div class="bio">
+    <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
+  <p><strong>Savannah Butler</strong><br/>
+  Data Curator<br/>
+  
+  Savannah holds a B.A. in Chemistry and an M.S. in Civil & Environmental
+  Engineering, with research interests in atmospheric and water pollution
+  mitigation. Savannah has spent the last two years working in the humanitarian
+  field supporting displaced people throughout Europe, and outside of Dryad she
+  supports NGOs in grant writing. In her spare time, Savannah enjoys swimming,
+  rock climbing, cooking, and learning new languages.
+  </p>
 </div>
 
 <div class="bio">
@@ -102,6 +143,19 @@
   <p><strong>Aadithya Sekar</strong><br/>
   Data Curator<br/>
   Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
+</div>
+
+<div class="bio">
+    <img src="/images/carolyn.png" alt="Carolyn Tarpey" title="Carolyn Tarpey">
+  <p><strong>Carolyn Tarpey</strong><br/>
+  Data Curator<br/>
+  
+  Carolyn has a B.S. in Marine Biology from the College of Charleston, and an
+  M.S. in Aquatic and Fishery Sciences from the University of Washington. She
+  also works as a Research Scientist at the University of Washington, using
+  genomic tools to investigate stock structure, diversity, and connectivity of
+  marine fish species. Carolyn loves gardening and all crafts.
+  </p>
 </div>
 
 <div class="bio">
