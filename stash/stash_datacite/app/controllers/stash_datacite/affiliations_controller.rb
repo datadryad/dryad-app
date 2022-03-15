@@ -7,7 +7,8 @@ module StashDatacite
 
     # GET /affiliations/autocomplete
     def autocomplete
-      partial_term = params['term']
+      logger.debug("XXXXXX autocomplete #{params['query']} a")
+      partial_term = params['query']
       if partial_term.blank?
         render json: nil
       else
@@ -15,6 +16,7 @@ module StashDatacite
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
         list = map_affiliation_for_autocomplete(bubble_up_exact_matches(affil_list: @affiliations, term: partial_term))
+        logger.debug("XXXXX returning #{list}")
         render json: list
       end
     end
@@ -26,7 +28,7 @@ module StashDatacite
       # however new user-entered items go into long name.
       return [] unless affiliations.is_a?(Array)
 
-      affiliations.map { |u| { id: u[:id], long_name: u[:name] } }
+      affiliations.map { |u| { id: u[:id], name: u[:name] } }
     end
 
     # Re-order the affiliations list to prioritize exact matches at the beginning of the string, then
