@@ -33,7 +33,11 @@
 
   <div class="c-input__inline">
     <div class="c-input">
-      <%= render partial: "stash_datacite/fos_subjects/form", locals: { resource: @resource} %>
+      <%= react_component('components/MetadataEntry/ResearchDomain',
+                         resourceId: @resource.id,
+                         subject: @resource&.subjects&.permissive_fos&.first&.subject,
+                         subjectList: StashDatacite::Subject.fos.pluck(:subject).uniq.sort,
+                         updatePath: fos_subjects_update_path) %>
     </div>
     <div class="c-input">
       <%= render partial: "stash_datacite/contributors/facility_form", locals: { resource: @resource } %>
