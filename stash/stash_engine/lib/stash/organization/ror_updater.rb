@@ -11,22 +11,17 @@ module Stash
   module Organization
     class RorUpdater
 
-      FILE_DIR = File.join(Rails.root, 'ror')
+      FILE_DIR = 'ror'
+      DOWNLOAD_URL = 'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
 
       def self.logger
         Rails.logger
       end
 
-      def self.download_url
-        'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
-      end
-
       # rubocop:disable Metrics/MethodLength, Metrics/BlockNesting
       def self.perform(force: false)
-        ####### TODO -- move these into config
         checksum_file = File.join(FILE_DIR, 'ror_checksum.txt')
         zip_file = File.join(FILE_DIR, 'latest-ror-data.zip')
-        ##################
 
         # Fetch the Zenodo metadata for ROR to see if we have the latest data dump
         metadata = fetch_zenodo_metadata
@@ -78,12 +73,9 @@ module Stash
 
         # Fetch the latest Zenodo metadata for ROR files
         def fetch_zenodo_metadata
-          logger.error('No download_url defined for RorUpdater!') unless download_url.present?
-          return nil unless download_url.present?
-
           # Fetch the latest ROR metadata from Zenodo (the query will place the most recent
           # version 1st)
-          resp = HTTParty.get(download_url, headers: { host: 'zenodo.org' })
+          resp = HTTParty.get(DOWNLOAD_URL, headers: { host: 'zenodo.org' })
           unless resp.present? && resp.code == 200
             log.error("Unable to fetch ROR metadata from Zenodo #{resp}")
             return nil
@@ -104,6 +96,8 @@ module Stash
         def download_ror_file(url)
           return nil unless url.present?
 
+          puts 'Downloading ROR data file...'
+
           headers = {
             host: 'zenodo.org',
             Accept: 'application/zip'
@@ -118,8 +112,9 @@ module Stash
 
         # Determine if the downloaded file matches the expected checksum
         def validate_downloaded_file(file_path:, checksum:)
-          puts 'Validating file against expected checksum...'
           return false unless file_path.present? && checksum.present? && File.exist?(file_path)
+
+          puts 'Validating file against expected checksum...'
 
           checksum = checksum[4..] if checksum.starts_with?('md5:')
 
@@ -144,7 +139,7 @@ module Stash
 
                 hash = hash.with_indifferent_access if hash.is_a?(Hash)
 
-                next if process_ror_record(record: hash, time: json_file.mtime)
+                next if process_ror_record(hash)
 
                 logger.error("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
               end
@@ -178,7 +173,7 @@ module Stash
         end
 
         # Transfer the contents of a single JSON record to the database
-        def process_ror_record(record:)
+        def process_ror_record(record)
           return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
 
           ror_org = StashEngine::RorOrg.find_or_create_by(ror_id: record['id'])
