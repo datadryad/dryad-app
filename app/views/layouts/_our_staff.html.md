@@ -19,7 +19,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/mark.jpeg" alt="Mark Kurtz" title="Mark Kurtz">
+    <img src="/images/mark.jpg" alt="Mark Kurtz" title="Mark Kurtz">
   <p><strong>Mark Kurtz</strong><br/>
   Business Operations Manager<br/>
   
@@ -83,7 +83,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/arian.jpeg" alt="Arian Abdulla" title="Arian Abdulla">
+    <img src="/images/arian.jpg" alt="Arian Abdulla" title="Arian Abdulla">
   <p><strong>Arian Abdulla</strong><br/>
   Data Curator<br/>
   
@@ -96,7 +96,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/savannah.jpeg" alt="Savannah Butler" title="Savannah Butler">
+    <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
   Data Curator<br/>
   
@@ -146,7 +146,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/carolyn.jpeg" alt="Carolyn Tarpey" title="Carolyn Tarpey">
+    <img src="/images/carolyn.png" alt="Carolyn Tarpey" title="Carolyn Tarpey">
   <p><strong>Carolyn Tarpey</strong><br/>
   Data Curator<br/>
   
