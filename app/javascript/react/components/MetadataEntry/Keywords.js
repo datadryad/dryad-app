@@ -57,7 +57,7 @@ function Keywords({
 
       <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
         {subjs.map((subj) => (
-          <span className="c-keywords__keyword">
+          <span className="c-keywords__keyword" key={subj.id}>
             {subj.subject}
             <span className="delete_keyword">
               {/* eslint-disable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
