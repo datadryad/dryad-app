@@ -7,31 +7,32 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 function Funders({
   resourceId, contributors, createPath, updatePath, deletePath,
 }) {
-
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const blankContrib = {contributor_name: '',
+  const blankContrib = {
+    contributor_name: '',
     contributor_type: 'funder',
     identifier_type: 'crossref_funder_id',
     name_identifier_id: '',
-    resource_id: resourceId};
+    resource_id: resourceId,
+  };
 
   const [funders, setFunders] = useState(contributors);
 
   const addNewFunder = () => {
     const contribJson = {
       authenticity_token: csrf,
-      contributor: blankContrib
+      contributor: blankContrib,
     };
 
     axios.post(createPath, contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-        .then((data) => {
-          if (data.status !== 200) {
-            console.log("couldn't add new funder from remote server");
-          }
-          setFunders([...funders, data.data]);
-        });
-  }
+      .then((data) => {
+        if (data.status !== 200) {
+          console.log("couldn't add new funder from remote server");
+        }
+        setFunders([...funders, data.data]);
+      });
+  };
 
   if (funders.length < 1) {
     addNewFunder();
@@ -80,7 +81,6 @@ function Funders({
           key={contrib.id}
           resourceId={resourceId}
           contributor={contrib}
-          createPath={createPath}
           updatePath={updatePath}
           removeFunction={removeItem}
           updateFunder={updateFunder}
@@ -108,7 +108,7 @@ export default Funders;
 // resourceId, contributors, createPath, updatePath, deletePath
 
 Funders.propTypes = {
-  resourceId: PropTypes.oneOfType([PropTypes.string,PropTypes.number]).isRequired,
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributors: PropTypes.array.isRequired,
   createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,

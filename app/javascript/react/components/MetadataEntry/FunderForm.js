@@ -7,7 +7,7 @@ import FunderAutocomplete from './FunderAutocomplete';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function FunderForm({
-  resourceId, contributor, createPath, updatePath, removeFunction, updateFunder,
+  resourceId, contributor, updatePath, removeFunction, updateFunder,
 }) {
   const formRef = useRef();
 
@@ -17,9 +17,6 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
-
-    // this might be a temporary id for unsaved or a real database id
-    const oldId = values.id;
 
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -37,8 +34,16 @@ function FunderForm({
     };
 
     // submit by json
-    return axios.patch(updatePath, submitVals, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}}
-      ).then((data) => {
+    return axios.patch(
+      updatePath,
+      submitVals,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
+        },
+      },
+    ).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
@@ -125,7 +130,6 @@ export default FunderForm;
 FunderForm.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
-  createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
   removeFunction: PropTypes.func.isRequired,
   updateFunder: PropTypes.func.isRequired,
