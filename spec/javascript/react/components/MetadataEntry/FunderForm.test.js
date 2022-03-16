@@ -27,7 +27,8 @@ describe('FunderForm', () => {
           },
       createPath: faker.system.directoryPath(),
       updatePath: faker.system.directoryPath(),
-      removeFunction: jest.fn()
+      removeFunction: jest.fn(),
+      updateFunder: jest.fn(),
     }
   });
 

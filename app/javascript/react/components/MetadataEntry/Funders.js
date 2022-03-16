@@ -18,7 +18,7 @@ function Funders({
     setFunders([blankFunder()]);
   }
 
-  const removeItem = (id, origID) => {
+  const removeItem = (id) => {
     const trueDelPath = deletePath.replace('id_xox', id);
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     showSavingMsg();
@@ -45,8 +45,12 @@ function Funders({
           showSavedMsg();
         });
     }
+    setFunders(funders.filter((item) => (item.id !== id)));
+  };
 
-    setFunders(funders.filter((item) => (item.id !== origID))); // this is ugly because the id may change, but key stays the same
+  const updateFunder = (id, newContributor) => {
+    // replace item in the funder list if it has changed
+    setFunders(funders.map((funder) => (id === funder.id ? newContributor : funder)));
   };
 
   return (
@@ -54,12 +58,12 @@ function Funders({
       {funders.map((contrib) => (
         <FunderForm
           key={contrib.id}
-          origID={contrib.id} // we have to do this because the keys change and start blank
           resourceId={resourceId}
           contributor={contrib}
           createPath={createPath}
           updatePath={updatePath}
           removeFunction={removeItem}
+          updateFunder={updateFunder}
         />
       ))}
       {/* eslint-disable jsx-a11y/anchor-is-valid */}
@@ -84,7 +88,7 @@ export default Funders;
 // resourceId, contributors, createPath, updatePath, deletePath
 
 Funders.propTypes = {
-  resourceId: PropTypes.string.isRequired,
+  resourceId: PropTypes.oneOfType([PropTypes.string,PropTypes.number]).isRequired,
   contributors: PropTypes.array.isRequired,
   createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
