@@ -14,8 +14,9 @@ gem 'webpacker', '~> 5.4.0'
 # Local engines
 
 path 'stash' do
-  gem 'stash_datacite'
   gem 'stash_engine'
+  gem 'stash-sword'
+  gem 'stash-wrapper'
   # needs engines to load first
   gem 'stash-merritt'
 end
@@ -48,22 +49,34 @@ gem 'yui-compressor'
 
 # ############################################################
 # Misc
+
+gem 'amatch', '~> 0.4.0'
 gem 'blacklight', '~> 7.19.2'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'
+gem 'datacite-mapping', '~> 0.4.1'
 gem 'devise', '~> 4.8.0'
 gem 'devise-guests', '~> 0.6'
 gem 'doorkeeper', '~> 5.5'
 gem 'exception_notification'
 gem 'geoblacklight', '~> 3.4.0'
 gem 'google-apis-gmail_v1', '~> 0.3'
+gem 'httparty', '~> 0.19.0'
 gem 'jbuilder'
+gem 'kaminari', '~> 1.2.1'
+gem 'leaflet-rails', '~> 1.7.0'
+gem 'loofah', '~> 2.12.0'
 gem 'net-sftp'
 gem 'oai', '~> 1.1.0'
 gem 'rack-attack'
 gem 'rb-readline', require: false
+gem 'responders', '~> 3.0.1'
 gem 'rsolr', '>= 1.0', '< 3'
+gem 'rubyzip', '~> 2.3.2'
+gem 'serrano', '~> 1.0.0'
 gem 'solr_wrapper', '~> 3.1.2'
+gem 'sync', '~> 0.5.0'
+gem 'tins', '~> 1.29.1'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
@@ -75,6 +88,8 @@ gem 'http'
 
 # ############################################################
 # Development and testing
+
+gem 'parallel_tests', group: %i[development test]
 
 group :development, :local_dev do
   gem 'colorize'

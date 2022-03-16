@@ -1,0 +1,4 @@
+$('.js-contributors_form').append("<%= escape_javascript(render partial: "stash_datacite/contributors/form",
+      locals: { contributor: @contributor, path: contributors_create_path }) %>");
+loadContributors();
+addSavingDisplay();
