@@ -7,7 +7,7 @@ import FunderAutocomplete from './FunderAutocomplete';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function FunderForm({
-  resourceId, origID, contributor, createPath, updatePath, removeFunction,
+  resourceId, contributor, createPath, updatePath, removeFunction, updateFunder,
 }) {
   const formRef = useRef();
 
@@ -17,6 +17,9 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
+
+    // this might be a temporary id for unsaved or a real database id
+    const oldId = values.id;
 
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -54,7 +57,9 @@ function FunderForm({
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
-      formRef.current.setFieldValue('id', data.data.id);
+      // forces data update in the collection containing me
+      updateFunder(oldId, data.data);
+      // formRef.current.setFieldValue('id', data.data.id);
       showSavedMsg();
     });
   };
@@ -117,7 +122,7 @@ function FunderForm({
             onClick={(e) => {
               e.preventDefault();
               showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                removeFunction(formRef.current?.values?.id, origID); // this sends the database id and the original id (key)
+                removeFunction(formRef.current?.values?.id);
               });
             }}
           >remove
@@ -131,13 +136,13 @@ function FunderForm({
 
 export default FunderForm;
 
-// resourceId, origID, contributor, createPath, updatePath, removeFunction
+// resourceId, contributor, createPath, updatePath, removeFunction, updateFunder
 
 FunderForm.propTypes = {
-  resourceId: PropTypes.string.isRequired,
-  origID: PropTypes.string.isRequired,
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
   createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
   removeFunction: PropTypes.func.isRequired,
+  updateFunder: PropTypes.func.isRequired,
 };
