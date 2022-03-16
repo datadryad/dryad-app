@@ -6,7 +6,6 @@
 
 defaults: &DEFAULTS
   google_analytics_id: null
-  metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
   repository: Stash::Merritt::Repository
   stash_mount: /stash

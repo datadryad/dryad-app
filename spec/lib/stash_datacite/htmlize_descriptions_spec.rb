@@ -1,5 +1,5 @@
 require 'rails_helper'
-require_relative '../../../stash/stash_datacite/lib/script/htmlize_descriptions'
+require_relative '../../../lib/script/htmlize_descriptions'
 
 module Script
   describe HtmlizeDescriptions do
