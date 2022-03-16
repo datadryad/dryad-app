@@ -44,7 +44,6 @@ function FunderForm({
       }
       // forces data update in the collection containing me
       updateFunder(data.data);
-      // formRef.current.setFieldValue('id', data.data.id);
       showSavedMsg();
     });
   };
@@ -107,7 +106,7 @@ function FunderForm({
             onClick={(e) => {
               e.preventDefault();
               showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                removeFunction(formRef.current?.values?.id);
+                removeFunction(contributor.id);
               });
             }}
           >remove
