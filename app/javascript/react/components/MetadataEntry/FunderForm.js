@@ -26,39 +26,24 @@ function FunderForm({
     const submitVals = {
       authenticity_token: csrf,
       contributor: {
-        id: (`${values?.id}`.startsWith('new') ? null : values.id),
+        id: values.id,
         contributor_name: acText,
         contributor_type: 'funder',
         identifier_type: (acID ? 'crossref_funder_id' : null),
         name_identifier_id: acID,
-        resource_id: resourceId,
         award_number: values.award_number,
+        resource_id: resourceId,
       },
     };
 
-    // set up path
-    let url;
-    let method;
-    if (submitVals.contributor.id) {
-      url = updatePath;
-      method = 'patch';
-    } else {
-      url = createPath;
-      method = 'post';
-    }
-
     // submit by json
-    return axios({
-      method,
-      url,
-      data: submitVals,
-      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-    }).then((data) => {
+    return axios.patch(updatePath, submitVals, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}}
+      ).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
       // forces data update in the collection containing me
-      updateFunder(oldId, data.data);
+      updateFunder(data.data);
       // formRef.current.setFieldValue('id', data.data.id);
       showSavedMsg();
     });
