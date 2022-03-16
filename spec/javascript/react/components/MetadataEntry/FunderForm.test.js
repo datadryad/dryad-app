@@ -47,10 +47,11 @@ describe('FunderForm', () => {
   it("checks that updating funder award number triggers the save event and does axios call", async () => {
 
     const promise = Promise.resolve({
+      status: 200,
       data: info.contributor
     })
 
-    axios.mockImplementationOnce(() => promise);
+    axios.patch.mockImplementationOnce(() => promise);
 
     render(<FunderForm {...info} />);
 
