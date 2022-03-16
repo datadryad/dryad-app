@@ -32,24 +32,21 @@ module Stash
       # By default, the local `ror_orgs` table is searched. Search can be directed to the
       # the ROR API by using the `use_api` parameter.
       # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
-      # The ROR limit appears to be 40 results (even with paging :/)
       def self.find_by_ror_name(query, use_api: false)
         return [] unless query.present?
         return [] if use_api && query.downcase == 'ne' # For some reason, ROR errors on this query string
-
-        puts "querying ROR: #{query}"
 
         query = query.downcase
         results = []
         if use_api
           resp = query_ror_api(URI, { 'query': query }, HEADERS)
           results = process_api_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
-          puts "API result #{results}"
         else
           # First, find matches at the beginning of the name string, or anywhere in the
           # acronyms/aliases
           resp = StashEngine::RorOrg.where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
                                            "#{query}%", "%#{query}%", "%#{query}%").limit(ROR_MAX_RESULTS)
+
           resp.each do |r|
             results << { id: r.ror_id, name: r.name }
           end
@@ -61,9 +58,8 @@ module Stash
               results << { id: r.ror_id, name: r.name }
             end
           end
-          puts "local result #{results}"
         end
-        results.present? ? results.flatten.uniq : []
+        results.flatten.uniq
       rescue HTTParty::Error, SocketError => e
         raise RorError, "Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}"
       end
@@ -112,6 +108,7 @@ module Stash
       class << self
         private
 
+        # The ROR API limit appears to be 40 results (even with paging :/)
         def process_api_pages(resp, query)
           results = ror_results_to_hash(resp)
           num_of_results = resp.parsed_response['number_of_results'].to_i

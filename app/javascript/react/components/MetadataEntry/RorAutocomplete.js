@@ -52,20 +52,11 @@ export default function RorAutocomplete({name, id, controlOptions}) {
 	  headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
       })
 	  .then((data) => {
-	      console.log("received data");
-	      console.log(data);
-              if (data.status !== 200) {
+              if (data.status !== 200) {		  
 		  return [];
 		  // raise an error here if we want to catch it and display something to user or do something else
               }
-
-	      const list = data.data.map((item) => {
-		  // add one point if starts with the same string, sends to top
-		  const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
-		  return {...item, similarity};
-              });
-              list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
-              return list;
+              return data.data;
 	  });
   }
 
