@@ -1,0 +1,207 @@
+<h1 class="o-heading__level1">Finalize Submission</h1>
+
+    <!-- If a curator is viewing this page, highlight the changed fields -->
+    <% highlight_fields = current_user.curator? ? @resource.changed_from_previous_curated : [] %>
+
+    <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
+    <h2 class="o-heading__page-span">Review Description</h2>
+    <%= link_to "Edit Description",
+                stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
+    <div class="o-metadata__group2">
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
+      <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
+    </div>
+
+    <section class="o-section">
+    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
+                         resource_type: @review.resource_type,
+                         identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
+                         publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) } %>
+    </section>
+
+    <%= render partial: "stash_datacite/descriptions/show", locals:
+        { abstract: @review.abstract, methods: @review.methods, other: @review.other, highlight_fields: highlight_fields } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight: highlight_fields.include?('subjects') } %>
+
+    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
+      <section class="t-review__funding-section o-section">
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('funders') } %>
+        <%= render partial: "stash_datacite/related_identifiers/show", locals:
+            { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
+        <%= link_to "Edit Description",
+                    stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                    class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
+      </section>
+    <% end %>
+
+    <% if @resource.geolocations.count.positive? %>
+      <h3 class="o-heading__level2">Location</h3>
+      <%
+        has_map_meta = @resource.geolocations.where("point_id IS NOT NULL OR box_id IS NOT NULL").count.positive?
+        if has_map_meta %>
+        <div id="map_review" class="o-map"></div>
+      <% end %>
+        <div class="c-locations">
+          <% if has_map_meta %>
+            <%= render partial: "stash_datacite/geolocation_points/show",
+                     locals: { geolocation_points: @review.geolocation_points } %>
+            <%= render partial: "stash_datacite/geolocation_boxes/show",
+                     locals: { geolocation_boxes: @review.geolocation_boxes } %>
+          <% end %>
+        <%= render partial: "stash_datacite/geolocation_places/show",
+                   locals: { geolocation_places: @review.geolocation_places } %>
+      </div>
+    <% end %>
+
+    <h2 class="o-heading__page-span">Review Files</h2>
+
+    <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
+
+    <h3 class="o-heading__level2">Data Files Hosted by Dryad</h3>
+
+    <div class="c-review-files">
+	<% if highlight_fields.include?('data_files') %>
+            <%= render partial: "stash_engine/data_files/show_merritt",
+		       locals: { resource: @resource,
+			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
+									  association: 'data_files') } %>
+	<% else %>
+	    <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: [] } %>
+	<% end %>
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
+                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+    </div>
+
+    <% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>
+      <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
+    <% end %>
+
+    <% if @review.software_files.count.positive? %>
+    <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
+	<div class="c-review-files">
+    	  <% if highlight_fields.include?('software_files') %>
+            <%= render partial: "stash_engine/data_files/show_zenodo",
+		       locals: { resource: @resource,
+			   zenodo_type: 'software',
+			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
+									  association: 'software_files') } %>
+	<% else %>
+          <%= render partial: "stash_engine/data_files/show_zenodo",
+		     locals: { resource: @resource, zenodo_type: 'software', highlight_files: [] } %>
+	<% end %>
+      </div>
+    <% end %>
+
+    <% if @review.supp_files.count.positive? %>
+      <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
+
+      <div class="c-review-files">
+    	  <% if highlight_fields.include?('supp_files') %>
+            <%= render partial: "stash_engine/data_files/show_zenodo",
+		       locals: { resource: @resource,
+			   zenodo_type: 'supp',
+			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
+									  association: 'supp_files') } %>
+	<% else %>
+          <%= render partial: "stash_engine/data_files/show_zenodo",
+		     locals: { resource: @resource, zenodo_type: 'supp', highlight_files: [] } %>
+	<% end %>
+      </div>
+    <% end %>
+
+  <% if !@resource.submitted? && @resource.identifier.allow_review? %>
+    <!-- This is only available if the version has not yet been submitted to the repository AND
+    	 the associated journal allows a review workflow -->
+    <h2 class="o-heading__page-span">Enable Private for Peer Review</h2>
+      <div id="peer_review_section">
+        <%= render partial: "stash_datacite/peer_review/review" %>
+      </div>
+  <% end %>
+
+  <h2 class="o-heading__page-span">Agree to Terms</h2>
+    <%= render partial: "stash_datacite/licenses/review" %>
+
+<div class="o-dataset-nav">
+  <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
+          class: 'o-button__icon-left', role: 'button' %>
+
+  <% if @error_items.blank? # valid data %>
+    <%= form_with(url: resources_submission_path, local: true) do -%>
+      <%= hidden_field_tag :resource_id, @resource.id %>
+      <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
+      <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
+      <div>
+        <% if current_user&.id != @resource.user_id # only show to admins %>
+          <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
+              placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
+        <% end %>
+        <%= button_tag("Submit", disabled: (@resource.version_number < 2),
+                    class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+      </div>
+    <% end -%>
+  <% else %>
+    <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
+    <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  // display some flash messages, (why do we need this?, ajax?)
+  <% flash.each do |type, message| %>
+    $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
+  <% end %>
+
+  // handle the events for user_comment box & submit if it is present
+  if($('#user_comment').length){
+    updateSubmitCommentDisabled();
+    $('#user_comment').on('input propertychange paste', function() {
+      updateSubmitCommentDisabled();
+    });
+  }
+
+  function updateSubmitCommentDisabled(){
+    let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
+    if($('#all_filled').length && $('#user_comment').val().length > 0 && !hasErrors){
+      $('#submit_dataset').prop('disabled', false);
+    }else{
+      $('#submit_dataset').prop('disabled', true);
+    }
+  }
+
+  $(function() {
+
+    // make a skippable popup if there is something serious to warn the user about
+    let skippable_warning = '';
+
+    <% if @completions.duplicate_submission %>
+    skippable_warning += `
+      <h1>Duplicate Submission Detected</h1>
+      <p>
+        This submission appears to be a duplicate of your previous submission  "<%= @completions.duplicate_submission.title %>".</p>
+      <p>
+        Only one submission should be created for each dataset, unless your data files are too large to fit 
+        into a single submission.
+      </p>
+
+      <p>
+        If you <strong>did not</strong> intend to create a duplicate dataset, return to your <strong>"My Datasets"</strong> page and delete this dataset. 
+        It will be the one nearest the top of the page. Then you may <strong>"Resume"</strong> or <strong>"Update"</strong> the other dataset.
+      </p>
+
+      <p>
+        If you <strong>did</strong> intend to create this dataset, please ensure that the title sufficiently distinguishes it from the
+        other similar dataset(s).
+       </p>`;
+     <% end %>
+    
+    if (skippable_warning.length > 0) {
+      $('#genericModalContent').html(skippable_warning);
+      $('#genericModalDialog')[0].showModal();
+    }
+  });
+
+</script>
+
+

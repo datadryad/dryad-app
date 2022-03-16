@@ -1,3 +1,5 @@
+import {nanoid} from 'nanoid';
+
 export function showSavingMsg(){
   // ignore jquery undefined in tests without page context
   if (! typeof jQuery == 'undefined') {
@@ -12,6 +14,11 @@ export function showSavedMsg(){
     $('.saving_text').hide();
     $('.saved_text').show();
   }
+}
+
+// if an id is null then make one for a form, etc
+export function makeId(id){
+  return id || nanoid();
 }
 
 // a version of the modal confirm dialog from rails for react

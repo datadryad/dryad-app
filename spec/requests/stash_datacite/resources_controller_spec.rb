@@ -28,7 +28,7 @@ module StashDatacite
 
     describe 'Review AJAX' do
       it 'creates basic dataset metadata for review' do
-        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        get resources_review_path(id: @resource.id, format: 'js'), xhr: true
         expect(response.body).to include(@resource.title)
       end
 
@@ -39,7 +39,7 @@ module StashDatacite
                          url: 'http://example.com',
                          status_code: 200)
 
-        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        get resources_review_path(id: @resource.id, format: 'js'), xhr: true
         expect(response.body).to include(@upload.upload_file_name)
       end
 
@@ -50,7 +50,7 @@ module StashDatacite
                          url: 'http://example.com',
                          status_code: 200)
 
-        get StashDatacite::Engine.routes.url_helpers.resources_review_path(id: @resource.id, format: 'js'), xhr: true
+        get resources_review_path(id: @resource.id, format: 'js'), xhr: true
         expect(response.body).to include(@upload.upload_file_name)
       end
 
