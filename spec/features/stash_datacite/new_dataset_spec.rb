@@ -74,10 +74,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Funding
-      # page.execute_script("document.getElementsByClassName('js-funder-longname')[0].value = '#{Faker::Company.name}'")
       find_field('Granting Organization').set(Faker::Company.name)
       find_field('Award Number').set(Faker::Number.number(digits: 5))
-      # fill_in 'contributor[award_number]', with: Faker::Number.number(digits: 5)
 
       # ##############################
       # Keywords
@@ -93,8 +91,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Related works
-      select 'Dataset', from: 'related_identifier[work_type]'
-      fill_in 'related_identifier[related_identifier]', with: Faker::Pid.doi
+      select 'Dataset', from: 'stash_datacite_related_identifier[work_type]'
+      fill_in 'stash_datacite_related_identifier[related_identifier]', with: Faker::Pid.doi
     end
 
     it 'charges user by default', js: true do

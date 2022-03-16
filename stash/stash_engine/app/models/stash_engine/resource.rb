@@ -2,7 +2,7 @@ require 'stash/aws/s3'
 # require 'stash/indexer/indexing_resource'
 require 'stash/indexer/solr_indexer'
 # the following is required to make our wonky tests work and may break if we move stuff around
-require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'
+require_relative '../../../../../lib/stash/indexer/indexing_resource'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
@@ -585,8 +585,8 @@ module StashEngine
       resource_funders = contributors
       return unless user_funders.present? && resource_funders.present?
 
-      user_funder_ids = user_funders.map(&:funder_id).reject(&:empty?)
-      resource_funder_ids = resource_funders.map(&:name_identifier_id).reject(&:empty?)
+      user_funder_ids = user_funders.map(&:funder_id).compact.reject(&:empty?)
+      resource_funder_ids = resource_funders.map(&:name_identifier_id).compact.reject(&:empty?)
       user_funder_ids.&(resource_funder_ids).present?
     end
 

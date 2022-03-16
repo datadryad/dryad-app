@@ -5,7 +5,7 @@ module StashEngine
   class LandingController < ApplicationController
     # LandingMixin should provide:
     # - has_geolocation?
-    include StashEngine.app.metadata_engine.constantize::LandingMixin
+    include StashDatacite::LandingMixin
 
     before_action :require_identifier_and_resource, only: %i[show]
     protect_from_forgery(except: [:update])
