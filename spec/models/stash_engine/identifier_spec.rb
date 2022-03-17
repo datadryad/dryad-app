@@ -41,7 +41,6 @@ module StashEngine
       @fake_manuscript_number = 'bogus-manuscript-number'
       int_datum_manu = InternalDatum.new(identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: @fake_manuscript_number)
       int_datum_manu.save!
-      @identifier.reload
 
       @res1.current_state = 'submitted'
       Version.create(resource_id: @res1.id, version: 1)
@@ -50,6 +49,7 @@ module StashEngine
       @res3.current_state = 'in_progress'
       Version.create(resource_id: @res3.id, version: 3)
 
+      @identifier.reload
       WebMock.disable_net_connect!(allow_localhost: true)
     end
 
@@ -81,6 +81,9 @@ module StashEngine
 
       describe '#latest_resource' do
         it 'returns the latest resource' do
+          puts "XXXX il #{@identifier} |  #{@identifier.id} | #{@identifier.latest_resource_id}"
+          puts "XXXX il #{@identifier.resources.size}"
+          puts "XXXX ir #{@res3.id}"
           expect(@identifier.latest_resource_id).to eq(@res3.id)
         end
       end
