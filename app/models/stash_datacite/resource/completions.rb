@@ -5,11 +5,9 @@
 module StashDatacite
   module Resource
     class Completions
+
       def initialize(resource)
         @resource = resource
-
-        # After dev mode autoreloading, ensure Author-Affiliation relation & related methods
-        StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
       end
 
       # A submission is considered duplicate of another resource if it:
