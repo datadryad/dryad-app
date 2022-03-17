@@ -11,7 +11,7 @@ namespace :affiliation_import do
   desc 'Clean the long_names for all ROR affiliations'
   task clean_ror_names: :environment do
     StashDatacite::Affiliation.where.not(ror_id: nil).each do |affil|
-      target_obj = Stash::Organization::Ror.find_by_ror_id(affil.ror_id)
+      target_obj = StashEngine::RorOrg.find_by_ror_id(affil.ror_id)
       affil.update(long_name: target_obj.name) if target_obj
     end
   end

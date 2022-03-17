@@ -2,8 +2,6 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    include Stash::Organization
-
     TO_PARSE = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages].freeze
     INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
 

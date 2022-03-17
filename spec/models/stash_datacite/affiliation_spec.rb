@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'stash/organization/ror'
 
 module StashDatacite
   describe Affiliation do
@@ -38,8 +37,7 @@ module StashDatacite
     describe :fee_waivered? do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = StashEngine::RorOrg.new(name: 'Bertelsmann Music Group', ror_id: '12345')
         allow(@affil).to receive(:fee_waiver_countries).and_return(['East Timor'])
       end
 
@@ -49,7 +47,7 @@ module StashDatacite
       end
 
       it 'returns false if the associated ROR record could not be found' do
-        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
+        @affil.ror_id = 'non_existing_id'
         expect(@affil.fee_waivered?).to eql(false)
       end
 
@@ -63,7 +61,7 @@ module StashDatacite
       end
 
       it 'returns true if the associated ROR record\'s country is in the fee waiver list' do
-        @ror_org.country = { 'country_code' => 'TL', 'country_name' => 'East Timor' }
+        @ror_org.country = 'East Timor'
         expect(@affil.fee_waivered?).to eql(true)
       end
     end
@@ -71,12 +69,12 @@ module StashDatacite
     describe :country_name do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = StashEngine::RorOrg.new(ror_id: '12345', name: 'Bertelsmann Music Group')
+        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return(@ror_org)
       end
 
       it 'returns the correct country_name when given a country object' do
-        @ror_org.country = { 'country_code' => 'TL', 'country_name' => 'East Timor' }
+        @ror_org.country = 'East Timor'
         expect(@affil.country_name).to eql('East Timor')
       end
     end
@@ -112,7 +110,7 @@ module StashDatacite
 
     describe 'self.find_by_ror_long_name(long_name:)' do
       before(:each) do
-        allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).with('cats').and_raise(Stash::Organization::RorError)
+        allow(StashEngine::RorOrg).to receive(:find_first_by_ror_name).with('cats').and_raise(RuntimeError)
       end
 
       it 'handles bad responses from ROR with empty results instead of barfing' do

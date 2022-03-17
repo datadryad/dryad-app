@@ -96,15 +96,6 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'ror',
-      name: 'ROR',
-      description: 'Dryad uses the Research Organization Registry (ROR) to perform an autocomplete of the author affiliation on the dataset entry page',
-      documentation: 'Dryad uses the Research Organization Registry (ROR) API to populate the autocomplete list of author affiliations on the dataset entry screen. We also call the API when a dataset is created/updated via the API.<br/><br/>User selections are stored in the `dcs_affiliations` table with a ROR id. The API is not called if the user selection is already in the table.',
-      internally_managed: false,
-      status: 1
-    },
-
-    {
       abbreviation: 'crossref',
       name: 'Crossref',
       description: 'Dryad uses the Crossref API to retrieve additional dataset information',

@@ -130,8 +130,8 @@ module StashApi
       end
 
       it 'creates the author with a ROR id, matching to an existing affiliation in the ROR system' do
-        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc123',
-                                                                                 name: 'Test Ror Organization' }.to_ostruct)
+        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc123',
+                                                                            name: 'Test Ror Organization' }.to_ostruct)
         @basic_metadata = {
           'authors' => [
             {
@@ -150,10 +150,10 @@ module StashApi
       end
 
       it 'creates the author with an ISNI id, matching to an existing affiliation in the ROR system' do
-        allow(Stash::Organization::Ror).to receive(:find_by_isni_id).and_return({ id: 'https://ror.org/abc1234',
-                                                                                  name: 'Test Ror ISNI Organization' }.to_ostruct)
-        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc1234',
-                                                                                 name: 'Test Ror ISNI Organization' }.to_ostruct)
+        allow(StashEngine::RorOrg).to receive(:find_by_isni_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                             name: 'Test Ror ISNI Organization' }.to_ostruct)
+        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                            name: 'Test Ror ISNI Organization' }.to_ostruct)
         @basic_metadata = {
           'authors' => [
             {
