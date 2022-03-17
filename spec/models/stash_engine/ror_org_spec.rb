@@ -67,7 +67,7 @@ module StashEngine
 
     describe 'find_by_isni_id' do
       it 'errors with incorrectly-formatted ISNI' do
-        expect { RorOrg.find_by_isni_id('NOT an ISNI') }.to raise_error
+        expect { RorOrg.find_by_isni_id('NOT an ISNI') }.to raise_error(RuntimeError)
       end
 
       it 'returns none when the ISNIs do not match' do
