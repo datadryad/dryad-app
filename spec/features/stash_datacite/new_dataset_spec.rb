@@ -3,13 +3,11 @@ RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
   include Mocks::RSolr
-  include Mocks::Ror
   include Mocks::CrossrefFunder
   include Mocks::Tenant
 
   before(:each) do
     mock_solr!
-    mock_ror!
     mock_funders!
     mock_tenant!
     @user = create(:user)
@@ -44,7 +42,6 @@ RSpec.feature 'NewDataset', type: :feature do
   context :form_submission do
 
     before(:each) do
-      mock_ror!
       start_new_dataset
     end
 

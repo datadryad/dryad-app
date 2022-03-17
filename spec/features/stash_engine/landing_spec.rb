@@ -10,7 +10,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
-  include Mocks::Ror
   include Mocks::Stripe
   include Mocks::Tenant
   include Mocks::Counter
@@ -19,7 +18,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
     # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
     mock_repository!
     mock_solr!
-    mock_ror!
     mock_datacite!
     mock_stripe!
     mock_tenant!

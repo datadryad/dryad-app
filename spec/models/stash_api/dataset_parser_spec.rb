@@ -3,12 +3,10 @@ require 'byebug'
 module StashApi
   RSpec.describe DatasetParser do
     include Mocks::Datacite
-    include Mocks::Ror
     include Mocks::Tenant
 
     before(:each) do
       mock_datacite!
-      mock_ror!
       allow(Stash::Doi::IdGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
       @user = StashEngine::User.create(
