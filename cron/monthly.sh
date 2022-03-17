@@ -24,3 +24,6 @@ bundle exec rails identifiers:remove_old_versions >> /apps/dryad/apps/ui/shared/
 bundle exec rails link_out:seed_pmids >> /apps/dryad/apps/ui/shared/cron/logs/link_out_seed_pmids.log 2>&1
 bundle exec rails link_out:seed_genbank_ids >> /apps/dryad/apps/ui/shared/cron/logs/link_out_seed_pmids.log 2>&1
 bundle exec rails link_out:publish >> /apps/dryad/apps/ui/shared/cron/logs/link_out_publish.log 2>&1
+
+# Update ROR organizations
+bundle exec rails affiliation_import:update_ror_orgs >>/apps/dryad/apps/ui/shared/cron/logs/ror_update.log 2>&1
