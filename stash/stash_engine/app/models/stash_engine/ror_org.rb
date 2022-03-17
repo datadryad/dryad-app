@@ -16,7 +16,6 @@ module StashEngine
       # acronyms/aliases
       resp = where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
                    "#{query}%", "%#{query}%", "%#{query}%").limit(ROR_MAX_RESULTS)
-
       resp.each do |r|
         results << { id: r.ror_id, name: r.name }
       end
