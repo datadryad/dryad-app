@@ -6,14 +6,12 @@ module StashEngine
     include Mocks::Aws
     include Mocks::CurationActivity
     include Mocks::Datacite
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::Tenant
 
     before(:each) do
       mock_aws!
-      mock_ror!
       mock_solr!
       mock_datacite!
       mock_stripe!
