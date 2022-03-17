@@ -7,6 +7,7 @@ class CreateStashEngineRorOrgs < ActiveRecord::Migration[5.2]
       t.string :country
       t.json :acronyms
       t.json :aliases
+      t.json :isni_ids
       t.timestamps  
     end
   end

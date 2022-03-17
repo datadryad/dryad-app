@@ -10,7 +10,6 @@ module Stash
       HEARTBEAT_URI = 'https://api.ror.org/heartbeat'.freeze
       URI = 'https://api.ror.org/organizations'.freeze
       HEADERS = { 'Content-Type': 'application/json' }.freeze
-      ROR_MAX_RESULTS = 20.0
       MAX_PAGES = 5
 
       attr_reader :id, :name, :acronyms
@@ -26,69 +25,6 @@ module Stash
       # Ping the ROR API to determine if it is online
       def self.ping
         HTTParty.get(HEARTBEAT_URI).code == 200
-      end
-
-      # Search ROR for the given string. This will search name, acronyms, aliases, etc.
-      # By default, the local `ror_orgs` table is searched. Search can be directed to the
-      # the ROR API by using the `use_api` parameter.
-      # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
-      def self.find_by_ror_name(query, use_api: false)
-        return [] unless query.present?
-        return [] if use_api && query.downcase == 'ne' # For some reason, ROR errors on this query string
-
-        query = query.downcase
-        results = []
-        if use_api
-          resp = query_ror_api(URI, { 'query': query }, HEADERS)
-          results = process_api_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
-        else
-          # First, find matches at the beginning of the name string, or anywhere in the
-          # acronyms/aliases
-          resp = StashEngine::RorOrg.where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
-                                           "#{query}%", "%#{query}%", "%#{query}%").limit(ROR_MAX_RESULTS)
-
-          resp.each do |r|
-            results << { id: r.ror_id, name: r.name }
-          end
-
-          # If we don't have enough results, find matches elsewhere in the name string
-          if results.size < ROR_MAX_RESULTS
-            resp = StashEngine::RorOrg.where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS)
-            resp.each do |r|
-              results << { id: r.ror_id, name: r.name }
-            end
-          end
-        end
-        results.flatten.uniq
-      rescue HTTParty::Error, SocketError => e
-        raise RorError, "Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}"
-      end
-
-      # Search ROR and return the first match for the given name
-      # @return a Stash::Organization::Ror::Organization object or nil
-      def self.find_first_by_ror_name(ror_name)
-        resp = query_ror_api(URI, { 'query': ror_name }, HEADERS)
-        return nil if resp.parsed_response.blank? || resp.parsed_response['items'].blank?
-
-        result = resp.parsed_response['items'].first
-        return nil if result['id'].blank? || result['name'].blank?
-
-        new(result)
-      rescue HTTParty::Error, SocketError => e
-        raise RorError, "Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}"
-      end
-
-      # Search the ROR API for a specific organization.
-      # @return a Stash::Organization::Ror::Organization object or nil
-      def self.find_by_ror_id(ror_id)
-        resp = HTTParty.get("#{URI}/#{ror_id}", headers: HEADERS)
-        return nil if resp.parsed_response.blank? ||
-                      resp.parsed_response['id'].blank? ||
-                      resp.parsed_response['name'].blank?
-
-        new(resp.parsed_response)
-      rescue HTTParty::Error, SocketError => e
-        raise "Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}"
       end
 
       # Search the ROR API for a specific organization.
@@ -146,25 +82,6 @@ module Stash
             results << { id: item['id'], name: item['name'] }
           end
           results
-        end
-
-        def standardize_isni_format(isni_id)
-          # Remove standardized prefix if it exists
-          isni_id.match(%r{http://www.isni.org/isni/(.*)/}) do |m|
-            isni_id = m[1]
-          end
-          isni_id.match(/ISNI?:(.*)/) do |m|
-            isni_id = m[1]
-          end
-          # If it has the digits with embedded spaces, keep it
-          return isni_id if isni_id =~ /\d{4} \d{4} \d{4} \d{3,4}X?/
-
-          # If it has no spaces, add them
-          isni_id.match(/(\d{4})(\d{4})(\d{4})(\d{3,4}X?)/) do |m|
-            return "#{m[1]} #{m[2]} #{m[3]} #{m[4]}"
-          end
-          # Otherwise, throw an error
-          raise "Unexpected structure of ISNI: #{isni_id}; use either 16 digits or 4 sets of 4 digits with spaces between."
         end
 
       end

@@ -11,7 +11,7 @@ module Stash
   module Organization
     class RorUpdater
 
-      FILE_DIR = 'ror'
+      FILE_DIR = '/apps/dryad/apps/ui/shared/ror'
       DOWNLOAD_URL = 'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
 
       def self.logger
@@ -179,9 +179,10 @@ module Stash
           ror_org = StashEngine::RorOrg.find_or_create_by(ror_id: record['id'])
           ror_org.name = safe_string(value: record['name'])
           ror_org.home_page = safe_string(value: record.fetch('links', []).first)
-          ror_org.country = record['country']['country_name']
+          ror_org.country = record.dig('country', 'country_name')
           ror_org.acronyms = record['acronyms']
           ror_org.aliases = record['aliases']
+          ror_org.isni_ids = record.dig('external_ids', 'ISNI', 'all')
           ror_org.save
           true
         rescue StandardError => e
