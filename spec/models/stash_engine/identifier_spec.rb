@@ -81,9 +81,6 @@ module StashEngine
 
       describe '#latest_resource' do
         it 'returns the latest resource' do
-          puts "XXXX il #{@identifier} |  #{@identifier.id} | #{@identifier.latest_resource_id}"
-          puts "XXXX il #{@identifier.resources.size}"
-          puts "XXXX ir #{@res3.id}"
           expect(@identifier.latest_resource_id).to eq(@res3.id)
         end
       end

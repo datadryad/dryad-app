@@ -73,7 +73,6 @@ RSpec.feature 'Session', type: :feature do
     before(:each) do
       user = create(:user, tenant_id: nil)
       mock_orcid!(user)
-      mock_ror!
       OmniAuth.config.test_mode = true
       visit root_path
       click_link 'Login'
