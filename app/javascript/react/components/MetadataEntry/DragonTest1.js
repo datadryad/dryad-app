@@ -12,23 +12,23 @@ export default function DragonTest1(){
 
   useEffect(() => {
     // do this after first render
-    const demo1 = document.getElementById('draggable-div');
-    const dragonDrop = new DragonDrop(demo1, {
+    const ddAuthors = document.getElementById('dd-authors');
+    const dragonDrop = new DragonDrop(ddAuthors, {
       handle: '.handle',
       announcement: {
         grabbed: (el) => {
-          console.log('grabbed');
+          console.log(`${el.querySelector('span').innerText} grabbed`);
           return `${el.querySelector('span').innerText} grabbed`;
         },
         dropped: (el) => {
-          console.log('dropped');
+          console.log(`${el.querySelector('span').innerText} dropped`);
           return `${el.querySelector('span').innerText} dropped`;
         },
         reorder: (el, items) => {
           console.log('reordered');
           const pos = items.indexOf(el) + 1;
           const text = el.querySelector('span').innerText;
-          console.log('The rankings have been updated');
+          console.log(`The rankings have been updated, ${text} is now ranked #${pos} out of ${items.length}`);
           return `The rankings have been updated, ${text} is now ranked #${pos} out of ${items.length}`;
         },
         cancel: () => {
@@ -40,27 +40,27 @@ export default function DragonTest1(){
   }, []);
 
   return (
-    <>
-      <h2>Dragon Drop test component here</h2>
+    <section>
+      <h2 id="authors-head">Dragon Drop test component here</h2>
       <p id="global-help">
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to
         drag/reorder. Press escape to cancel the reordering.
         <span className="offscreen">Ensure screen reader is in focus mode.</span>
       </p>
-      <div id="draggable-div" className="demo">
+      <ul class="dragon-drop-list" id="dd-authors" aria-labelledby="authors-head">
         {nameArr.map((name) => (
-          <div style={{padding: '5px'}} key={name.id}>
+          <li key={name.id} className="dd-list-item">
             <button aria-describedby="global-help"
                     type="button"
                     className="fa fa-bars handle"
-                    aria-labelledby={`name-item-${name.id}`}
-                    id={`name-button-${name.id}`}>
+                    aria-labelledby={`author-button-${name.id} author-text-${name.id}`}
+                    id={`author-button-${name.id}`}>
               <div className="offscreen">Reorder</div>
             </button>
-            <span id={`name-item-${name.id}`}>&nbsp;{name.name}</span>
-          </div>
+            <span id={`author-text-${name.id}`}>{name.name}</span>
+          </li>
         ))}
-      </div>
-    </>
+      </ul>
+    </section>
   );
 }
