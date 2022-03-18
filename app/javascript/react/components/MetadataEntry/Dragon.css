@@ -9,7 +9,6 @@
   color: #000;
 }
 
-/*
 section {
   text-align: center;
 }
@@ -17,23 +16,22 @@ section {
 label {
   vertical-align: middle;
 }
- */
 
 button[aria-pressed="true"] {
   box-shadow: inset 0 0 7px #000 !important;
 }
 
-div[aria-pressed="true"] {
+li[aria-pressed="true"] {
   background: #7654C4;
   color: #fff;
 }
 
-.demo > div.dragon-inactive {
+.dragon-drop-list > li.dragon-inactive {
   box-shadow: 0 0 1px #000;
   border-color: transparent;
 }
 
-.demo {
+.dragon-drop-list {
   text-align: center;
   padding: 0 20px;
   margin: 0 auto;
@@ -41,7 +39,7 @@ div[aria-pressed="true"] {
   margin-bottom: 20px;
 }
 
-.demo > div {
+.dragon-drop-list > li {
   margin: 15px auto;
   padding: 5px;
   box-shadow: 0 0 2px #000;
