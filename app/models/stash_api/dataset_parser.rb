@@ -144,7 +144,6 @@ module StashApi
         author_orcid: json_author[:orcid] || @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
-
       # If the affiliation was provided, prefer the ROR id over a textual name.
       if json_author[:affiliationROR].present?
         a.affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: json_author[:affiliationROR])

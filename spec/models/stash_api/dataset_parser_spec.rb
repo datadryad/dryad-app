@@ -128,14 +128,13 @@ module StashApi
       end
 
       it 'creates the author with a ROR id, matching to an existing affiliation in the ROR system' do
-        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc123',
-                                                                            name: 'Test Ror Organization' }.to_ostruct)
+        ror_org = create(:ror_org)
         @basic_metadata = {
           'authors' => [
             {
               'firstName' => 'Wanda',
               'lastName' => 'Jackson',
-              'affiliationROR' => 'https://ror.org/abc123'
+              'affiliationROR' => ror_org.ror_id
             }
           ]
         }.with_indifferent_access
@@ -144,21 +143,21 @@ module StashApi
         resource = @stash_identifier.resources.first
         author = resource.authors.first
 
-        expect(author.affiliation.long_name).to eq('Test Ror Organization')
+        expect(author.affiliation.long_name).to eq(ror_org.name)
       end
 
       it 'creates the author with an ISNI id, matching to an existing affiliation in the ROR system' do
-        allow(StashEngine::RorOrg).to receive(:find_by_isni_id).and_return({ id: 'https://ror.org/abc1234',
-                                                                             name: 'Test Ror ISNI Organization' }.to_ostruct)
-        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc1234',
-                                                                            name: 'Test Ror ISNI Organization' }.to_ostruct)
+        ror_org = create(:ror_org)
+        isni = "1234 #{Faker::Number.number(digits: 4)} #{Faker::Number.number(digits: 4)} #{Faker::Number.number(digits: 4)}"
+        ror_org.update(isni_ids: [isni])
+
         @basic_metadata = {
           'authors' => [
             {
               'firstName' => 'Wanda',
               'lastName' => 'Jackson',
-              'affiliationISNI' => '0000 0001 1957 5136',
-              'affiliation' => 'abcaaaaa'
+              'affiliationISNI' => isni.to_s,
+              'affiliation' => 'Some Non-matching Name'
             }
           ]
         }.with_indifferent_access
@@ -166,7 +165,7 @@ module StashApi
         @stash_identifier = dp.parse
         resource = @stash_identifier.resources.first
         author = resource.authors.first
-        expect(author.affiliation.long_name).to eq('Test Ror ISNI Organization')
+        expect(author.affiliation.long_name).to eq(ror_org.name)
       end
 
       it 'creates the author with an affiliation whose name matches an existing affiliation in the database' do
