@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
-import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
@@ -47,17 +46,17 @@ export default function RorAutocomplete({name, id, controlOptions}) {
      autocompletes for a generic case.
    */
   function supplyLookupList(qt) {
-      return axios.get('/stash_datacite/affiliations/autocomplete', {
-	  params: {query: qt},
-	  headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-      })
-	  .then((data) => {
-              if (data.status !== 200) {		  
-		  return [];
-		  // raise an error here if we want to catch it and display something to user or do something else
-              }
-              return data.data;
-	  });
+    return axios.get('/stash_datacite/affiliations/autocomplete', {
+      params: {query: qt},
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+    })
+      .then((data) => {
+        if (data.status !== 200) {
+          return [];
+          // raise an error here if we want to catch it and display something to user or do something else
+        }
+        return data.data;
+      });
   }
 
   // Given a js object from list (supplyLookupList above) it returns the string name
