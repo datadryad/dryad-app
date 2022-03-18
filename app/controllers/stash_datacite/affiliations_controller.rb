@@ -9,8 +9,6 @@ module StashDatacite
       if partial_term.blank?
         render json: nil
       else
-        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
-        partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         @affiliations = StashEngine::RorOrg.find_by_ror_name(partial_term)
         render json: @affiliations
       end
