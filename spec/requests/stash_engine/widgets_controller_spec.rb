@@ -4,6 +4,7 @@ module StashEngine
 
     include MerrittHelper
     include DatasetHelper
+    include Mocks::CurationActivity
     include Mocks::Datacite
     include Mocks::Repository
     include Mocks::RSolr
