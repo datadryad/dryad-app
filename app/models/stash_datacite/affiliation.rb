@@ -78,7 +78,7 @@ module StashDatacite
       return nil if isni_id.blank?
 
       ror_org = StashEngine::RorOrg.find_by_isni_id(isni_id)
-      from_ror_id(ror_id: ror_org.id) if ror_org.present?
+      from_ror_id(ror_id: ror_org.ror_id) if ror_org.present?
     end
 
     def self.find_by_ror_long_name(long_name:)
