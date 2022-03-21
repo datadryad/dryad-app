@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
 import {faker} from '@faker-js/faker';
@@ -6,12 +6,14 @@ import './Dragon.css';
 
 export default function DragonTest1(){
 
+  const dragonRef = useRef(null);
+
   const nameArr = new Array(10).fill( true ).map((item, idx) => {
     return { id: idx + 1000, name: faker.name.findName(), order: idx }
   });
 
   const [authors, setAuthors] = useState(nameArr);
-  // const [dragonDrop, setDragonDrop] = useState(null);
+  const [dragonDrop, setDragonDrop] = useState(null);
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(container) {
@@ -43,31 +45,37 @@ export default function DragonTest1(){
 
   useEffect(() => {
     // do this after first render
-    const ddAuthors = document.getElementById('dd-authors');
+    // const ddAuthors = document.getElementById('dd-authors');
 
     // the "announcement section below is to announce changes to screen readers
-    const dragon = new DragonDrop(ddAuthors, {
-      handle: '.handle',
-      announcement: {
-        grabbed: el => `${el.querySelector('span').innerText} grabbed`,
-        dropped: el => `${el.querySelector('span').innerText} dropped`,
-        reorder: (el, items) => {
-          console.log('reordered');
-          const pos = items.indexOf(el) + 1;
-          const text = el.querySelector('span').innerText;
-          return `The rankings have been updated, ${text} is now ranked #${pos} out of ${items.length}`;
-        },
-        cancel: 'Reranking cancelled.'
-      }
-    });
+    if(dragonDrop === null) {
+      const dragon = new DragonDrop(dragonRef.current, {
+        handle: '.handle',
+        announcement: {
+          grabbed: el => `${el.querySelector('span').innerText} grabbed`,
+          dropped: el => `${el.querySelector('span').innerText} dropped`,
+          reorder: (el, items) => {
+            const pos = items.indexOf(el) + 1;
+            const text = el.querySelector('span').innerText;
+            return `The rankings have been updated, ${text} is now ranked #${pos} out of ${items.length}`;
+          },
+          cancel: 'Reranking cancelled.'
+        }
+      });
 
-    dragon.on('dropped', function (container, item) {
-      // console.log('dropped: ', item);
-      // console.log('container: ', container);
-      updateOrderFromDom(container);
-    });
+      dragon.on('dropped', function (container, item) {
+        // console.log('dropped: ', item);
+        // console.log('container: ', container);
+        updateOrderFromDom(container);
+      });
 
-  }, []);
+      setDragonDrop(dragon);
+    }else{
+      console.log('reinitialized elements with useEffect');
+      debugger
+      dragonDrop.initElements(dragonRef.current);
+    }
+  }, [authors]);
 
   useEffect(() => {
     console.log('author list:', authors);
@@ -81,7 +89,8 @@ export default function DragonTest1(){
         drag/reorder. Press escape to cancel the reordering.
         <span className="offscreen">Ensure screen reader is in focus mode.</span>
       </p>
-      <ul className="dragon-drop-list" id="dd-authors" aria-labelledby="authors-head">
+      <ul className="dragon-drop-list" id="dd-authors" aria-labelledby="authors-head" ref={dragonRef}>
+        {console.log('author count within list', authors.length)}
         {authors
             .sort((a, b) => {
               // sorts by id if order not present and gets around 0 being falsey in javascript
