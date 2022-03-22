@@ -14,8 +14,19 @@ export default function DragonTest1(){
 
   const [authors, setAuthors] = useState(nameArr);
   const [dragonDrop, setDragonDrop] = useState(null);
-  // const [savedCallback] = useRef( callback );
 
+  /* need to set a ref so it doesn't reset to initial values and keep updating this wrapping function that is used in the
+     callback from the other library every time the authors change. the savedWrapper.current = wrappingFunction below.
+
+     This is especially annoying and has to do with closures maintaining old state and mismatch between react and standard
+     javascript object models.
+
+     See https://overreacted.io/making-setinterval-declarative-with-react-hooks/ or
+     https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback but it
+     will make your head hurt.
+   */
+
+  const savedWrapper = useRef();
   const wrappingFunction = () => {
     updateOrderFromDom(authors);
   }
@@ -23,9 +34,6 @@ export default function DragonTest1(){
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {
     const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
-    // const items = Array.from(container.querySelectorAll('li.dd-list-item'));
-    console.log("array items in update order", items);
-    console.log("localAuthors", localAuthors);
 
     const newOrder = items.map((item, idx) => {
       return { id: parseInt(item.getAttribute('data-id')), order: idx }
@@ -36,7 +44,6 @@ export default function DragonTest1(){
       obj[item.id] = item.order;
       return obj;
     }, {});
-    // console.log("new order object:", newOrderObj);
 
     // duplicate authors list with updated order values reflecting new order
     const newAuth = localAuthors.map((item) => {
@@ -69,12 +76,16 @@ export default function DragonTest1(){
           cancel: 'Reranking cancelled.'
         }
       });
-      dragon.on('dropped', () => wrappingFunction() );
+      savedWrapper.current = wrappingFunction;
+      dragon.on('dropped', () => {
+        savedWrapper.current()
+      } );
       setDragonDrop(dragon);
 
       // dragon.on('dropped', function (container, item) {updateOrderFromDom(dragonRef.current); });
     }else{
-      console.log('reinitialized elements with useEffect', authors);
+      console.log("reinitializing dragon drop with author updates");
+      savedWrapper.current = wrappingFunction;
       dragonDrop.initElements(dragonRef.current);
     }
   }, [authors]);
@@ -88,7 +99,7 @@ export default function DragonTest1(){
         <span className="offscreen">Ensure screen reader is in focus mode.</span>
       </p>
       <ul className="dragon-drop-list" aria-labelledby="authors-head" ref={dragonRef}>
-        {console.log('author count within list', authors.length)}
+        {console.log('current authors in list from internal author data in react', authors)}
         {authors
             .sort((a, b) => {
               // sorts by id if order not present and gets around 0 being falsey in javascript
