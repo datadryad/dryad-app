@@ -58,6 +58,13 @@ export default function DragonTest1(){
     setAuthors(authors.filter((item) => (item.id !== id)));
   }
 
+  function addItem(){
+    const newId = (authors.length ? Math.max(...authors.map((auth) => auth.id)) + 1 : 1000);
+    const lastOrder = (authors.length ? Math.max(...authors.map((auth) => auth.order)) + 1 : 0);
+    const newAuthor = { id: newId, name: faker.name.findName(), order: lastOrder };
+    setAuthors([...authors, newAuthor]);
+  }
+
   // to set up dragon drop or reinit on changes
   useEffect(() => {
     if(!dragonDrop) {
@@ -78,7 +85,7 @@ export default function DragonTest1(){
       });
       savedWrapper.current = wrappingFunction;
       dragon.on('dropped', () => {
-        savedWrapper.current()
+        savedWrapper.current();
       } );
       setDragonDrop(dragon);
 
@@ -123,6 +130,8 @@ export default function DragonTest1(){
           </li>
         ))}
       </ul>
+      <div><a href="#" onClick={() => addItem() }>Add another author</a></div>
+      <br/>
       <div>{authors.length} authors</div>
     </section>
   );
