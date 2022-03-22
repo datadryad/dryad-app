@@ -126,11 +126,17 @@ export default function DragonTest1(){
               <div className="offscreen">Reorder</div>
             </button>
             <span id={`author-text-${name.id}`}>{name.name}</span>&nbsp;
-            <a href="#" onClick={() => deleteItem(name.id)}>delete</a>
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
+              deleteItem(name.id);
+            }}>delete</a>
           </li>
         ))}
       </ul>
-      <div><a href="#" onClick={() => addItem() }>Add another author</a></div>
+      <div><a href="#" onClick={(e) => {
+        e.preventDefault();
+        addItem();
+      } }>Add another author</a></div>
       <br/>
       <div>{authors.length} authors</div>
     </section>
