@@ -4,20 +4,24 @@ import DragonDrop from 'drag-on-drop';
 import {faker} from '@faker-js/faker';
 import './Dragon.css';
 
+const nameArr = new Array(10).fill( true ).map((item, idx) => {
+  return { id: idx + 1000, name: faker.name.findName(), order: idx }
+});
+
 export default function DragonTest1(){
 
   const dragonRef = useRef(null);
 
-  const nameArr = new Array(10).fill( true ).map((item, idx) => {
-    return { id: idx + 1000, name: faker.name.findName(), order: idx }
-  });
-
   const [authors, setAuthors] = useState(nameArr);
   const [dragonDrop, setDragonDrop] = useState(null);
+  // const [savedCallback] = useRef( callback );
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
-  function updateOrderFromDom(container) {
-    const items = Array.from(container.querySelectorAll('li.dd-list-item'));
+  function updateOrderFromDom(localAuthors) {
+    const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
+    // const items = Array.from(container.querySelectorAll('li.dd-list-item'));
+    console.log("array items in update order", items);
+    console.log("localAuthors", localAuthors);
 
     const newOrder = items.map((item, idx) => {
       return { id: parseInt(item.getAttribute('data-id')), order: idx }
@@ -31,7 +35,7 @@ export default function DragonTest1(){
     // console.log("new order object:", newOrderObj);
 
     // duplicate authors list with updated order values reflecting new order
-    const newAuth = authors.map((item) => {
+    const newAuth = localAuthors.map((item) => {
       return {...item, order: newOrderObj[item.id]}
     });
 
@@ -43,12 +47,11 @@ export default function DragonTest1(){
     setAuthors(authors.filter((item) => (item.id !== id)));
   }
 
+  // to set up dragon drop or reinit on changes
   useEffect(() => {
-    // do this after first render
-    // const ddAuthors = document.getElementById('dd-authors');
-
-    // the "announcement section below is to announce changes to screen readers
-    if(dragonDrop === null) {
+    if(!dragonDrop) {
+      console.log('initializing DragonDrop for first time');
+      // the "announcement section below is to announce changes to screen readers
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
         announcement: {
@@ -62,24 +65,15 @@ export default function DragonTest1(){
           cancel: 'Reranking cancelled.'
         }
       });
-
-      dragon.on('dropped', function (container, item) {
-        // console.log('dropped: ', item);
-        // console.log('container: ', container);
-        updateOrderFromDom(container);
-      });
-
+      dragon.on('dropped', () => updateOrderFromDom(authors));
       setDragonDrop(dragon);
+
+      // dragon.on('dropped', function (container, item) {updateOrderFromDom(dragonRef.current); });
     }else{
-      console.log('reinitialized elements with useEffect');
-      debugger
+      console.log('reinitialized elements with useEffect', authors);
       dragonDrop.initElements(dragonRef.current);
     }
   }, [authors]);
-
-  useEffect(() => {
-    console.log('author list:', authors);
-  }, [authors])
 
   return (
     <section>
@@ -89,7 +83,7 @@ export default function DragonTest1(){
         drag/reorder. Press escape to cancel the reordering.
         <span className="offscreen">Ensure screen reader is in focus mode.</span>
       </p>
-      <ul className="dragon-drop-list" id="dd-authors" aria-labelledby="authors-head" ref={dragonRef}>
+      <ul className="dragon-drop-list" aria-labelledby="authors-head" ref={dragonRef}>
         {console.log('author count within list', authors.length)}
         {authors
             .sort((a, b) => {
