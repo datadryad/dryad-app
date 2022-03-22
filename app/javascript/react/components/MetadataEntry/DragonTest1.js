@@ -15,15 +15,15 @@ export default function DragonTest1(){
   const [authors, setAuthors] = useState(nameArr);
   const [dragonDrop, setDragonDrop] = useState(null);
 
-  /* need to set a ref so it doesn't reset to initial values and keep updating this wrapping function that is used in the
+  /* need to set a ref so it doesn't reset to initial values and also keep updating this wrapping function that is used in the
      callback from the other library every time the authors change. the savedWrapper.current = wrappingFunction below.
 
-     This is especially annoying and has to do with closures maintaining old state and mismatch between react and standard
-     javascript object models.
+     This is especially annoying and has to do with closures maintaining old state from inital load and mismatch between
+     react and standard javascript code.
 
      See https://overreacted.io/making-setinterval-declarative-with-react-hooks/ or
-     https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback but it
-     will make your head hurt.
+     https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback
+     It will make your head hurt.
    */
 
   const savedWrapper = useRef();
