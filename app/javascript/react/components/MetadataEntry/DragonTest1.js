@@ -16,6 +16,10 @@ export default function DragonTest1(){
   const [dragonDrop, setDragonDrop] = useState(null);
   // const [savedCallback] = useRef( callback );
 
+  const wrappingFunction = () => {
+    updateOrderFromDom(authors);
+  }
+
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {
     const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
@@ -65,7 +69,7 @@ export default function DragonTest1(){
           cancel: 'Reranking cancelled.'
         }
       });
-      dragon.on('dropped', () => updateOrderFromDom(authors));
+      dragon.on('dropped', () => wrappingFunction() );
       setDragonDrop(dragon);
 
       // dragon.on('dropped', function (container, item) {updateOrderFromDom(dragonRef.current); });
