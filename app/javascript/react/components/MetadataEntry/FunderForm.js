@@ -26,7 +26,7 @@ function FunderForm({
         id: (`${values?.id}`.startsWith('new') ? null : values.id),
         contributor_name: acText,
         contributor_type: 'funder',
-        identifier_type: (acID ? 'crossref_funder_id' : null),
+        identifier_type: 'crossref_funder_id', // need to set this, otherwise the datacite mapping barfs, even if no id
         name_identifier_id: acID,
         resource_id: resourceId,
         award_number: values.award_number,
