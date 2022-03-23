@@ -48,6 +48,7 @@ function FunderForm({
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
+
       // forces data update in the collection containing me
       updateFunder(data.data);
       showSavedMsg();
