@@ -36,15 +36,18 @@ export function showModalYNDialog(message, functionIfYes){
   // $('#railsConfMsg').text(message);
 
   document.getElementById('railsConfirmDialog').showModal();
+  dlgRemoveHandlers();
 
   const yBtn = document.getElementById('railsConfirmDialogYes');
   const nBtn = document.getElementById('railsConfirmDialogNo');
   const cBtn = document.getElementById('railsConfirmDialogClose');
 
-  const dlgRemoveHandlers = function() {
-    yBtn.removeEventListener('click', yHandler, false);
-    nBtn.removeEventListener('click', nHandler, false);
-    cBtn.removeEventListener('click', cHandler, false);
+  function dlgRemoveHandlers() {
+    ['railsConfirmDialogYes', 'railsConfirmDialogNo', 'railsConfirmDialogClose'].forEach((el) => {
+      var old_element = document.getElementById(el);
+      var new_element = old_element.cloneNode(true);
+      old_element.parentNode.replaceChild(new_element, old_element);
+    });
   }
 
   const yHandler = yBtn.addEventListener("click", () => {

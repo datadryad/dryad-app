@@ -16,6 +16,7 @@ function FunderForm({
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
 
   const submitForm = (values) => {
+    console.log(`${(new Date()).toISOString()}: Saving`);
     showSavingMsg();
 
     // set up values
@@ -105,7 +106,7 @@ function FunderForm({
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <a
             role="button"
-            className="remove_record t-describe__remove-button o-button__remove"
+            className="t-describe__remove-button o-button__remove"
             rel="nofollow"
             href="#"
             onClick={(e) => {
