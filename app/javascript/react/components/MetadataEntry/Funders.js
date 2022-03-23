@@ -20,7 +20,7 @@ function Funders({
   const [funders, setFunders] = useState(contributors);
 
   const addNewFunder = () => {
-    console.log(`${(new Date()).toISOString()}: Adding`);
+    console.log(`${(new Date()).toISOString()}: Adding funder`);
     const contribJson = {
       authenticity_token: csrf,
       contributor: blankContrib,
@@ -41,7 +41,7 @@ function Funders({
 
   // delete a funder from the list
   const removeItem = (id) => {
-    console.log(`${(new Date()).toISOString()}: deleting`);
+    console.log(`${(new Date()).toISOString()}: deleting funder`);
     const trueDelPath = deletePath.replace('id_xox', id);
     showSavingMsg();
 
