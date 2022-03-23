@@ -2,8 +2,9 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
+    before_action :check_reorder_valid, only: %i[reorder]
     before_action :set_author, only: %i[update delete]
-    before_action :ajax_require_modifiable, only: %i[update create delete]
+    before_action :ajax_require_modifiable, only: %i[update create delete reorder]
 
     respond_to :json
 
@@ -44,6 +45,17 @@ module StashDatacite
       respond_to do |format|
         format.js
       end
+    end
+
+    # takes a list of author ids and their new orders like [{id: 3323, order: 0},{id:3324, order: 1}] etc
+    def reorder
+      respond_to do |format|
+        format.json {
+          byebug
+          # author.where()
+        }
+      end
+
     end
 
     private
@@ -89,6 +101,15 @@ module StashDatacite
 
       @author.affiliation = affil
       @author.save
+    end
+
+    def check_reorder_valid
+      @authors = StashEngine::Author.where(id: params["_json"].map{|i| i["id"] })
+
+      # you can only order things belonging to one resource
+      render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
+
+      @resource = StashEngine::Resource.find(@authors.first.resource_id) # set resource to check permission to modify
     end
 
   end
