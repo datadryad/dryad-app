@@ -29,9 +29,9 @@ module StashEngine
       describe :ordering do
         before(:each) do
           @resource.authors.destroy_all
-          temp_auths = Array.new(7) { |_i| create(:author, resource_id: @resource.id)}
+          temp_auths = Array.new(7) { |_i| create(:author, resource_id: @resource.id) }
           @authors = temp_auths.shuffle
-          @authors.each_with_index {|auth, idx| auth.update(author_order: idx)}
+          @authors.each_with_index { |auth, idx| auth.update(author_order: idx) }
         end
 
         it 'orders by the author_order instead of id if it is set' do
