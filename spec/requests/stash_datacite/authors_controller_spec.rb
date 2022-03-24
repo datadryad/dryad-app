@@ -17,35 +17,35 @@ module StashDatacite
       it 'detects if not all author ids are for same resource' do
         @resource2 = create(:resource, user_id: @user.id)
         @bad_author = create(:author, resource: @resource2)
-        update_info = (@authors + [@bad_author]).map{|author| {id: author.id, order: author.author_order} }
+        update_info = (@authors + [@bad_author]).map { |author| {id: author.id, order: author.author_order} }
 
-        response_code = patch "/stash_datacite/authors/reorder",
-                             params: update_info.to_json,
-                             headers: default_json_headers
+        response_code = patch '/stash_datacite/authors/reorder',
+                              params: update_info.to_json,
+                              headers: default_json_headers
 
         expect(response_code).to eq(400) # gives 400, bad request
       end
 
-      it "detects if user not authorized to modify this resource" do
+      it 'detects if user not authorized to modify this resource' do
         @user2 = create(:user, role: 'user')
         @resource2 = create(:resource, user_id: @user2.id)
         @authors2 = Array.new(7) { |_i| create(:author, resource: @resource2) }
-        update_info = @authors2.map{|author| {id: author.id, order: author.author_order} }
+        update_info = @authors2.map { |author| {id: author.id, order: author.author_order} }
 
-        response_code = patch "/stash_datacite/authors/reorder",
+        response_code = patch '/stash_datacite/authors/reorder',
                               params: update_info.to_json,
                               headers: default_json_headers
 
         expect(response_code).to eq(403) # no permission to modify these
       end
 
-      it "updates the author order to the order given" do
-        update_info = @authors.map{|author| {id: author.id, order: author.author_order} }.shuffle
+      it 'updates the author order to the order given' do
+        update_info = @authors.map { |author| {id: author.id, order: author.author_order} }.shuffle
         update_info = update_info.each_with_index.map do |author, idx|
           {id: author[:id], order: idx}
         end
 
-        response_code = patch "/stash_datacite/authors/reorder",
+        response_code = patch '/stash_datacite/authors/reorder',
                               params: update_info.to_json,
                               headers: default_json_headers
 
