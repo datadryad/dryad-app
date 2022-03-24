@@ -43,7 +43,8 @@ module Stash
               file.write(payload)
 
               if validate_downloaded_file(file_path: zip_file, checksum: metadata['checksum'])
-                json_file = download_file.split('/').last.gsub('.zip', '.json')
+                # Hopefully, parse the correct filename out...though ROR hasn't been consistent with their names
+                json_file = download_file.split('/').last.gsub('.zip', '.json').gsub('.json.json', '.json')
 
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
