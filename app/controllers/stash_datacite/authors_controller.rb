@@ -51,8 +51,10 @@ module StashDatacite
     def reorder
       respond_to do |format|
         format.json {
-          byebug
-          # author.where()
+          js = params['_json'].map{|i| {id: i[:id], author_order: i[:order]} } # convert weird params objs to hashes
+          grouped_authors = js.index_by{|author| author[:id] }
+          resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
+          render json: resp, status: :ok
         }
       end
 

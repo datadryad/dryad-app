@@ -41,13 +41,22 @@ module StashDatacite
 
       it "updates the author order to the order given" do
         update_info = @authors.map{|author| {id: author.id, order: author.author_order} }.shuffle
-        update_info.map!{|author, idx| {id: author[:id], order: idx} }
+        update_info = update_info.each_with_index.map do |author, idx|
+          {id: author[:id], order: idx}
+        end
 
         response_code = patch "/stash_datacite/authors/reorder",
                               params: update_info.to_json,
                               headers: default_json_headers
 
-        byebug
+        expect(response_code).to eq(200)
+
+        ret_json = JSON.parse(body)
+
+        update_info.each_with_index do |item, idx|
+          expect(item[:id]).to eq(ret_json[idx]['id'])
+          expect(item[:order]).to eq(ret_json[idx]['author_order'])
+        end
       end
     end
   end
