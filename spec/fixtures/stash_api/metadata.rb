@@ -50,8 +50,7 @@ module Fixtures
             orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
                    "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
             affiliation: Faker::University.name,
-            order: order
-          }.with_indifferent_access
+            order: order }.with_indifferent_access
         )
       end
 
