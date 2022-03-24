@@ -57,6 +57,23 @@ module StashApi
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
       end
 
+      it 'creates a new dataset from minimal metadata and ordered authors (title, author info, abstract)' do
+        @meta.make_minimal_ordered_authors
+        # the following works for post with headers
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(/doi:10./).to match(output[:identifier])
+        hsh = @meta.hash
+        expect(hsh[:title]).to eq(output[:title])
+        expect(hsh[:abstract]).to eq(output[:abstract])
+        # should be swapped because we put reverse order
+        in_author = hsh[:authors].first
+        out_author = output[:authors].last
+        expect(out_author[:email]).to eq(in_author[:email])
+        expect(out_author[:affiliation]).to eq(in_author[:affiliation])
+      end
+
       it 'creates a new dataset from minimal metadata with funder' do
         # the following works for post with headers
         funder = @meta.add_funder
