@@ -73,7 +73,7 @@ module Stash
           # version 1st)
           resp = HTTParty.get(DOWNLOAD_URL, headers: { host: 'zenodo.org' })
           unless resp.present? && resp.code == 200
-            log.error("Unable to fetch ROR metadata from Zenodo #{resp}")
+            puts("Unable to fetch ROR metadata from Zenodo #{resp}")
             return nil
           end
           resp_hash = resp.parsed_response
@@ -81,7 +81,7 @@ module Stash
           # Extract the most recent file's metadata
           file_metadata = resp_hash['hits']['hits'].first['files'].first
           unless file_metadata.present? && file_metadata['links']['self'].present?
-            log.error('No file found in ROR metadata from Zenodo')
+            puts('No file found in ROR metadata from Zenodo')
             return nil
           end
 
