@@ -14,10 +14,6 @@ module Stash
       FILE_DIR = '/apps/dryad/apps/ui/shared/ror'
       DOWNLOAD_URL = 'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
 
-      def self.logger
-        Rails.logger
-      end
-
       # rubocop:disable Metrics/MethodLength, Metrics/BlockNesting
       def self.perform(force: false)
         checksum_file = File.join(FILE_DIR, 'ror_checksum.txt')
@@ -34,11 +30,11 @@ module Stash
           old_checksum_val = checksum.read
 
           if old_checksum_val == metadata['checksum']
-            logger.info('There is no new ROR file to process.')
+            puts('There is no new ROR file to process.')
           else
             download_file = metadata['links']['self']
-            logger.info("New ROR file detected - checksum #{metadata['checksum']}")
-            logger.info("Downloading #{download_file}")
+            puts("New ROR file detected - checksum #{metadata['checksum']}")
+            puts("Downloading #{download_file}")
 
             payload = download_ror_file(download_file)
 
@@ -55,15 +51,15 @@ module Stash
                   checksum.write(metadata['checksum'])
                 end
               else
-                logger.error('Downloaded ROR zip does not match checksum!')
+                puts('Downloaded ROR zip does not match checksum!')
               end
 
             else
-              logger.error('Unable to download ROR file!')
+              puts('Unable to download ROR file!')
             end
           end
         else
-          logger.error('Unable to fetch ROR metadata from Zenodo!')
+          puts('Unable to fetch ROR metadata from Zenodo!')
         end
       end
       # rubocop:enable Metrics/MethodLength, Metrics/BlockNesting
@@ -104,7 +100,7 @@ module Stash
           }
           resp = HTTParty.get(url, headers: headers)
           unless resp.present? && resp.code == 200
-            logger.error("Unable to fetch ROR file from Zenodo -- #{url} -- #{resp}")
+            puts("Unable to fetch ROR file from Zenodo -- #{url} -- #{resp}")
             return nil
           end
           resp.parsed_response
@@ -141,19 +137,19 @@ module Stash
 
                 next if process_ror_record(hash)
 
-                logger.error("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
+                puts("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
               end
               true
             else
-              logger.error('Unable to find json in zip!')
+              puts('Unable to find json in zip!')
               false
             end
           else
-            logger.error('Unable to unzip contents of ROR file')
+            puts('Unable to unzip contents of ROR file')
             false
           end
         rescue JSON::ParserError => e
-          logger.error(e)
+          puts(e)
           false
         end
 
@@ -186,7 +182,7 @@ module Stash
           ror_org.save
           true
         rescue StandardError => e
-          logger.error('Error processing record', e)
+          puts('Error processing record', e)
           false
         end
 
