@@ -3,7 +3,6 @@ require "#{stash_engine_path}/db/migrate/20170329190235_fix_in_progress_resource
 
 describe FixInProgressResources do
   include Mocks::Datacite
-  include Mocks::Ror
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Tenant
@@ -11,7 +10,6 @@ describe FixInProgressResources do
   attr_reader :in_progress_resources
 
   before(:each) do
-    mock_ror!
     mock_solr!
     mock_datacite!
     mock_stripe!

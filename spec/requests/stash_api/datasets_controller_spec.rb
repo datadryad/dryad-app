@@ -10,7 +10,6 @@ module StashApi
   RSpec.describe DatasetsController, type: :request do
 
     include Mocks::Aws
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
@@ -20,7 +19,6 @@ module StashApi
 
     before(:each) do
       neuter_curation_callbacks!
-      mock_ror!
       mock_tenant!
       mock_datacite_and_idgen!
       @user = create(:user, role: 'superuser', tenant_id: 'dryad')
@@ -340,7 +338,6 @@ module StashApi
     # list of datasets
     describe '#index' do
       before(:each) do
-        mock_ror!
         neuter_curation_callbacks!
         # these tests are very similar to tests in the model controller for identifier for querying this scope
 
@@ -600,7 +597,6 @@ module StashApi
     # view single dataset
     describe '#show' do
       before(:each) do
-        mock_ror!
         neuter_curation_callbacks!
 
         @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
@@ -673,7 +669,6 @@ module StashApi
       before(:each) do
         # create a basic dataset to do updates to
         neuter_curation_callbacks!
-        mock_ror!
         mock_aws!
         # mock_repository!, currently this doesn't work right and submissions got put into threadpool background process anyway
         @meta = Fixtures::StashApi::Metadata.new
