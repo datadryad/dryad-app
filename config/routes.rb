@@ -180,6 +180,7 @@ Rails.application.routes.draw do
     post 'authors/create', to: 'authors#create'
     patch 'authors/update', to: 'authors#update'
     delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
+    patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
     
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
