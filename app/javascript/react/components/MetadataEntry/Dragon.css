@@ -9,9 +9,11 @@
   color: #000;
 }
 
+/*
 section {
   text-align: center;
 }
+ */
 
 label {
   vertical-align: middle;
@@ -32,11 +34,13 @@ li[aria-pressed="true"] {
 }
 
 .dragon-drop-list {
-  text-align: center;
+  /* text-align: center;
   padding: 0 20px;
   margin: 0 auto;
   max-width: 600px;
-  margin-bottom: 20px;
+  margin-bottom: 20px; */
+  margin: 0;
+  padding: 0;
 }
 
 .dragon-drop-list > li {
@@ -44,7 +48,7 @@ li[aria-pressed="true"] {
   padding: 5px;
   box-shadow: 0 0 2px #000;
   text-align: left;
-  list-style: inherit;
+  list-style: none;
 }
 
 .handle {

@@ -31,6 +31,11 @@
     <%= link_to "Add Author", authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
 
+  <div>
+    <p>Test Authors</p>
+    <%= react_component('components/MetadataEntry/Authors', { resource: @resource, dryadAuthors: @resource.authors } ) %>
+  </div>
+
   <div class="c-input__inline">
     <div class="c-input">
       <%= react_component('components/MetadataEntry/ResearchDomain',
