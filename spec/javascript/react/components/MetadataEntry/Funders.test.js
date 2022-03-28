@@ -72,6 +72,20 @@ describe('Funders', () => {
 
   it("adds a funder to the document", async () => {
 
+    const promise = Promise.resolve({
+      status: 200,
+      data: {
+        id: faker.datatype.number(),
+        contributor_name: '',
+        contributor_type: 'funder',
+        identifier_type: 'crossref_funder_id',
+        name_identifier_id: '',
+        resource_id: resourceId,
+      }
+    });
+
+    axios.post.mockImplementationOnce(() => promise);
+
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
                     deletePath={deletePath} />);
 

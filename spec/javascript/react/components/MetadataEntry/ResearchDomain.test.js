@@ -43,7 +43,7 @@ describe('ResearchDomain', () => {
       data: subjectList[20]
     });
 
-    axios.mockImplementationOnce(() => promise);
+    axios.patch.mockImplementationOnce(() => promise);
 
     render(<ResearchDomain
         resourceId={resourceId}
