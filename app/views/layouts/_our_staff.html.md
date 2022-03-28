@@ -21,7 +21,7 @@
 <div class="bio">
     <img src="/images/mark.jpg" alt="Mark Kurtz" title="Mark Kurtz">
   <p><strong>Mark Kurtz</strong><br/>
-  Business Operations Manager<br/>
+  Head of Business Operations<br/>
   
   Mark has worked in academic publishing for over 20 years, with experience
   ranging from editorial management to strategic development, in academic,
