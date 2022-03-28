@@ -6,6 +6,9 @@ module StashEngine
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
 
+    # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
+    default_scope { order(author_order: :asc, id: :asc) }
+
     accepts_nested_attributes_for :affiliations
 
     EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze

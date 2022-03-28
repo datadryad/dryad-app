@@ -4,7 +4,6 @@ require 'rails_helper'
 RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Aws
   include Mocks::Stripe
-  include Mocks::Ror
   include Mocks::Tenant
   include DatasetHelper
   include Mocks::Repository
@@ -50,7 +49,6 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_stripe!
-        mock_ror!
         mock_tenant!
 
         # Create a user, identifier and 2 resources for each tenant
@@ -128,7 +126,6 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_stripe!
-        mock_ror!
         mock_solr!
         mock_repository!
         mock_datacite_and_idgen!
@@ -158,7 +155,6 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_aws!
         mock_salesforce!
         mock_stripe!
-        mock_ror!
         mock_repository!
         mock_datacite_and_idgen!
         @user = create(:user, tenant_id: 'ucop')

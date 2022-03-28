@@ -3,12 +3,10 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
 
   include DatasetHelper
   include Mocks::RSolr
-  include Mocks::Ror
   include Mocks::Tenant
 
   before(:each) do
     mock_solr!
-    mock_ror!
     mock_tenant!
     @user = create(:user)
     sign_in(@user)

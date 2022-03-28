@@ -26,6 +26,22 @@ module StashEngine
         expect(author.author_html_email_string).to eq('<a href="mailto:lmeitner@example.edu">Lise Meitner</a>')
       end
 
+      describe :ordering do
+        before(:each) do
+          @resource.authors.destroy_all
+          temp_auths = Array.new(7) { |_i| create(:author, resource_id: @resource.id) }
+          @authors = temp_auths.shuffle
+          @authors.each_with_index { |auth, idx| auth.update(author_order: idx) }
+        end
+
+        it 'orders by the author_order instead of id if it is set' do
+          @retrieved_authors = Author.where(resource_id: @resource.id)
+          @retrieved_authors.each_with_index do |ret, idx|
+            expect(ret.id).to eq(@authors[idx].id)
+          end
+        end
+      end
+
       describe :author_email do
         it 'is optional' do
           author = Author.create(

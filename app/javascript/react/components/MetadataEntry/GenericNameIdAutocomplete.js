@@ -77,14 +77,17 @@ export default function GenericNameIdAutocomplete(
 
   return (
     <>
-      <label
-        {...getLabelProps()}
-        className={`c-input__label ${(isRequired ? 'required' : '')}`}
-        id={`label_${htmlId}`}
-        htmlFor={htmlId}
-      >
-        {labelText}:
-      </label>
+      { labelText
+        ? (
+          <label
+            {...getLabelProps()}
+            className={`c-input__label ${(isRequired ? 'required' : '')}`}
+            id={`label_${htmlId}`}
+            htmlFor={htmlId}
+          >
+            {labelText}:
+          </label>
+        ) : '' }
       <div
         {...getComboboxProps()}
         aria-owns={`menu_${htmlId}`}
@@ -98,13 +101,19 @@ export default function GenericNameIdAutocomplete(
           value={acText}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
-          onBlur={(e) => {
+          onBlur={() => {
             /* workaround: We don't want to set blur unless relatedTarget exists as a good element.
                     It is null when clicking on an autocomplete menu and we don't want to trigger the autoBlur flag for that
                     */
-            if (e.relatedTarget) {
+            // if (e.relatedTarget) {
+            setAutoBlurred(true);
+            closeMenu(); // by default this library leaves the menu open all over the page if you tab out
+            // }
+          }}
+          onKeyUp={(e) => {
+            // also submit changes if pressing enter (for keywords)
+            if (e.keyCode === 13) {
               setAutoBlurred(true);
-              closeMenu(); // by default this library leaves the menu open all over the page if you tab out
             }
           }}
         />

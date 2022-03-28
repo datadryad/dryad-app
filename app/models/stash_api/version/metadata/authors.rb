@@ -15,7 +15,8 @@ module StashApi
               email: a.author_email,
               affiliation: a.try(:affiliation).try(:smart_name),
               affiliationROR: a.try(:affiliation).try(:ror_id),
-              orcid: a.author_orcid
+              orcid: a.author_orcid,
+              order: a.author_order
             }
           end
         end

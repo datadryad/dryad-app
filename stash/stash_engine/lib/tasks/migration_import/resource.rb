@@ -293,7 +293,7 @@ module MigrationImport
     end
 
     def make_affil_with_ror(name:)
-      ror_affil = Stash::Organization::Ror.find_first_by_ror_name(name)
+      ror_affil = StashEngine::RorOrg.find_first_by_ror_name(name)
       return nil if ror_affil.nil?
 
       if name.downcase == ror_affil.name.downcase.strip

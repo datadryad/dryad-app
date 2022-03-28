@@ -1,9 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
+import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function RorAutocomplete({name, id, controlOptions}) {
+export default function KeywordAutocomplete({
+  name, id, saveFunction, controlOptions,
+}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -23,16 +26,9 @@ export default function RorAutocomplete({name, id, controlOptions}) {
       if (!acText) {
         setAcID('');
       }
-      /* it seems like the current way for this to work within authors is to add elements named
-            "author[affiliation][long_name]" and "author[affiliation][ror_id]" that have correct values and resubmit
-            the form.
-           */
       if (prevText !== acText || prevID !== acID) {
-        // only resubmit form when there are actual value changes
-        /* eslint-disable no-undef */
-        // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
-        $(nameRef.current.form).trigger('submit.rails');
-        /* eslint-enable no-undef */
+        saveFunction(acText);
+        setAcText('');
       }
       setPrevText(acText);
       setPrevID(acID);
@@ -45,9 +41,10 @@ export default function RorAutocomplete({name, id, controlOptions}) {
      It is required to be passed in so we can get lists from various data sources which may vary across different
      autocompletes for a generic case.
    */
+
   function supplyLookupList(qt) {
-    return axios.get('/stash_datacite/affiliations/autocomplete', {
-      params: {query: qt},
+    return axios.get('/stash_datacite/subjects/autocomplete', {
+      params: {term: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
       .then((data) => {
@@ -55,7 +52,14 @@ export default function RorAutocomplete({name, id, controlOptions}) {
           return [];
           // raise an error here if we want to catch it and display something to user or do something else
         }
-        return data.data;
+
+        const list = data.data.map((item) => {
+          // add one point if starts with the same string, sends to top
+          const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
+          return {...item, similarity};
+        });
+        list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
+        return list;
       });
   }
 
@@ -96,8 +100,9 @@ export default function RorAutocomplete({name, id, controlOptions}) {
   /* eslint-enable react/jsx-no-bind */
 }
 
-RorAutocomplete.propTypes = {
+KeywordAutocomplete.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  saveFunction: PropTypes.func.isRequired,
   controlOptions: PropTypes.object.isRequired,
 };

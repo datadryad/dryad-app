@@ -72,7 +72,7 @@ gem 'rack-attack'
 gem 'rb-readline', require: false
 gem 'responders', '~> 3.0.1'
 gem 'rsolr', '>= 1.0', '< 3'
-gem 'rubyzip', '~> 2.3.2'
+gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0.0'
 gem 'solr_wrapper', '~> 3.1.2'
 gem 'sync', '~> 0.5.0'
