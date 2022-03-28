@@ -23,6 +23,16 @@ module Fixtures
         add_research_domain
       end
 
+      def make_minimal_ordered_authors
+        add_title
+        add_abstract
+        @metadata[:authors] = [] # reset to 0 authors
+        add_author(order: 2)
+        add_author(order: 1)
+        add_author(order: 0)
+        add_research_domain
+      end
+
       def add_field(field_name:, value: nil)
         @metadata[field_name.to_sym] = value
       end
@@ -31,7 +41,7 @@ module Fixtures
         @metadata.merge!(title: Faker::Book.title)
       end
 
-      def add_author
+      def add_author(order: nil)
         create_key_and_array(key: :authors)
         @metadata[:authors].push(
           { "firstName": Faker::Name.first_name,
@@ -39,7 +49,8 @@ module Fixtures
             email: Faker::Internet.email,
             orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
                    "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
-            affiliation: Faker::University.name }.with_indifferent_access
+            affiliation: Faker::University.name,
+            order: order }.with_indifferent_access
         )
       end
 

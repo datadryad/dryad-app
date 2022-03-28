@@ -8,7 +8,6 @@ require 'cgi'
 module StashApi
   RSpec.describe VersionsController, type: :request do
 
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
@@ -29,7 +28,6 @@ module StashApi
     # set up some versions with different curation statuses (visibility)
     before(:each) do
       neuter_curation_callbacks!
-      mock_ror!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
 

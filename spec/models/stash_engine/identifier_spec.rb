@@ -6,14 +6,12 @@ module StashEngine
     include Mocks::Aws
     include Mocks::CurationActivity
     include Mocks::Datacite
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::Tenant
 
     before(:each) do
       mock_aws!
-      mock_ror!
       mock_solr!
       mock_datacite!
       mock_stripe!
@@ -43,7 +41,6 @@ module StashEngine
       @fake_manuscript_number = 'bogus-manuscript-number'
       int_datum_manu = InternalDatum.new(identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: @fake_manuscript_number)
       int_datum_manu.save!
-      @identifier.reload
 
       @res1.current_state = 'submitted'
       Version.create(resource_id: @res1.id, version: 1)
@@ -52,6 +49,7 @@ module StashEngine
       @res3.current_state = 'in_progress'
       Version.create(resource_id: @res3.id, version: 3)
 
+      @identifier.reload
       WebMock.disable_net_connect!(allow_localhost: true)
     end
 

@@ -3,13 +3,11 @@ RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
   include Mocks::RSolr
-  include Mocks::Ror
   include Mocks::CrossrefFunder
   include Mocks::Tenant
 
   before(:each) do
     mock_solr!
-    mock_ror!
     mock_funders!
     mock_tenant!
     @user = create(:user)
@@ -44,7 +42,6 @@ RSpec.feature 'NewDataset', type: :feature do
   context :form_submission do
 
     before(:each) do
-      mock_ror!
       start_new_dataset
     end
 
@@ -79,7 +76,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Keywords
-      fill_in 'subject', with: Array.new(3) { Faker::Lorem.word }.join(' ')
+      fill_in 'keyword_ac', with: Array.new(3) { Faker::Lorem.word }.join(' ')
 
       # ##############################
       # Methods
@@ -103,8 +100,7 @@ RSpec.feature 'NewDataset', type: :feature do
     it 'waives the fee when institution is in a fee-waiver country', js: true do
       waiver_country = Faker::Address.country
       waiver_university = Faker::Educator.university
-      stub_ror_id_lookup(university: waiver_university, country: waiver_country)
-      stub_ror_name_lookup(name: waiver_university)
+      ror_org = create(:ror_org, name: waiver_university, country: waiver_country)
       allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return([waiver_country])
 
       # ##############################
@@ -112,8 +108,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_author
       page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{waiver_university}'")
       # a litlte big hacky, but the following fills in the ROR expected of a fee waiver institution's country
-      page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = 'https://ror.org/TEST'")
-      # first('.ui-menu-item-wrapper').click
+      page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = '#{ror_org.ror_id}'")
 
       navigate_to_review
       expect(page).to have_text('Payment is not required')
@@ -141,14 +136,15 @@ RSpec.feature 'NewDataset', type: :feature do
     it 'charges user when institution is not in a fee-waiver country', js: true do
       non_waiver_country = Faker::Address.country
       non_waiver_university = Faker::Educator.university
-      stub_ror_id_lookup(university: non_waiver_university, country: non_waiver_country)
+      ror_org = create(:ror_org, name: non_waiver_university, country: non_waiver_country)
       allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return(['Waiverlandia'])
 
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
       page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{non_waiver_university}'")
-      # first('.ui-menu-item-wrapper', wait: 5).click
+      # a litlte big hacky, but the following fills in the ROR expected of a fee waiver institution's country
+      page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = '#{ror_org.ror_id}'")
 
       navigate_to_review
       expect(page).to have_text('you will receive an invoice')

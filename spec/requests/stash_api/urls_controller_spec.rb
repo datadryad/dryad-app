@@ -10,7 +10,6 @@ module StashApi
   RSpec.describe UrlsController, type: :request do
 
     include Mocks::CurationActivity
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::Repository
@@ -43,7 +42,6 @@ module StashApi
     # set up some versions with different curation statuses (visibility)
     before(:each) do
       neuter_curation_callbacks!
-      mock_ror!
       mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
