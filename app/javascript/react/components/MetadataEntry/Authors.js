@@ -12,13 +12,13 @@ export default function Authors({resource, dryadAuthors}){
 
   const dragonRef = useRef(null);
 
-  const [authors, setAuthors] = useState(nameArr);
+  const [authors, setAuthors] = useState(dryadAuthors);
   const [dragonDrop, setDragonDrop] = useState(null);
 
   /* need to set a ref so it doesn't reset to initial values and also keep updating this wrapping function that is used in the
      callback from the other library every time the authors change. the savedWrapper.current = wrappingFunction below.
 
-     This is especially annoying and has to do with closures maintaining old state from inital load and mismatch between
+     This is especially annoying and has to do with closures maintaining old state from initial load and mismatch between
      react and standard javascript code.
 
      See https://overreacted.io/making-setinterval-declarative-with-react-hooks/ or
@@ -109,25 +109,25 @@ export default function Authors({resource, dryadAuthors}){
           {authors
               .sort((a, b) => {
                 // sorts by id if order not present and gets around 0 being falsey in javascript
-                if (a.order === undefined || a.order === null || b.order === undefined || b.order === null) {
-                  return a.order - b.order;
+                if (a.author_order === undefined || a.author_order === null || b.author_order === undefined || b.author_order === null) {
+                  return a.author_order - b.author_order;
                 }else{
                   return a.id - b.id;
                 }
               })
-              .map((name) => (
-                  <li key={name.id} className="dd-list-item" data-id={name.id}>
+              .map((auth) => (
+                  <li key={auth.id} className="dd-list-item" data-id={auth.id}>
                     <button aria-describedby="global-help"
                             type="button"
                             className="fa fa-bars handle"
-                            aria-labelledby={`author-button-${name.id} author-text-${name.id}`}
-                            id={`author-button-${name.id}`}>
+                            aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
+                            id={`author-button-${auth.id}`}>
                       <div className="offscreen">Reorder</div>
                     </button>
-                    <span id={`author-text-${name.id}`}>{name.name}</span>&nbsp;
+                    <span id={`author-text-${auth.id}`}>{auth.author_first_name} {auth.author_last_name}</span>&nbsp;
                     <a href="#" onClick={(e) => {
                       e.preventDefault();
-                      deleteItem(name.id);
+                      deleteItem(auth.id);
                     }}>delete</a>
                   </li>
               ))}
