@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require 'stash/organization/ror'
-
 module StashDatacite
   class Affiliation < ApplicationRecord
-
-    include Stash::Organization
 
     self.table_name = 'dcs_affiliations'
     has_and_belongs_to_many :authors, class_name: 'StashEngine::Author', join_table: 'dcs_affiliations_authors'
@@ -30,10 +26,10 @@ module StashDatacite
     def country_name
       return nil if ror_id.blank?
 
-      ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
+      ror_org = StashEngine::RorOrg.find_by_ror_id(ror_id)
       return nil if ror_org.nil? || ror_org.country.nil?
 
-      ror_org.country['country_name']
+      ror_org.country
     end
 
     def fee_waivered?
@@ -74,27 +70,21 @@ module StashDatacite
       db_affils = Affiliation.where('LOWER(ror_id) = LOWER(?)', ror_id)
       return db_affils.first if db_affils.any?
 
-      ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
-      Affiliation.new(long_name: ror_org&.name, ror_id: ror_id)
-    rescue Stash::Organization::RorError
-      nil
+      ror_org = StashEngine::RorOrg.find_by_ror_id(ror_id)
+      Affiliation.new(long_name: ror_org&.name, ror_id: ror_id) if ror_org.present?
     end
 
     def self.from_isni_id(isni_id:)
       return nil if isni_id.blank?
 
-      ror_org = Stash::Organization::Ror.find_by_isni_id(isni_id)
-      return nil if ror_org.blank?
-
-      from_ror_id(ror_id: ror_org.id)
+      ror_org = StashEngine::RorOrg.find_by_isni_id(isni_id)
+      from_ror_id(ror_id: ror_org.ror_id) if ror_org.present?
     end
 
     def self.find_by_ror_long_name(long_name:)
-      # Do a Stash::Organization::Ror lookup for the long_name
-      ror_org = Stash::Organization::Ror.find_first_by_ror_name(long_name)
+      # Do a lookup for the long_name
+      ror_org = StashEngine::RorOrg.find_first_by_ror_name(long_name)
       Affiliation.new(long_name: ror_org.name, ror_id: ror_org.id) if ror_org.present?
-    rescue Stash::Organization::RorError
-      []
     end
 
     private

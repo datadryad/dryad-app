@@ -1,7 +1,7 @@
 module SessionsHelper
 
   include Mocks::Omniauth
-  include Mocks::Ror
+  include Mocks::CurationActivity
 
   # rubocop:disable Style/OptionalBooleanParameter
   def sign_in(user = create(:user), with_shib = false)
@@ -23,7 +23,7 @@ module SessionsHelper
 
   def sign_in_as_user(user, with_shib)
     mock_orcid!(user)
-    mock_ror!
+    ignore_zenodo!
     OmniAuth.config.test_mode = true
     visit root_path
     click_link 'Login'

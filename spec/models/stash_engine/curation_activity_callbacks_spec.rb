@@ -4,13 +4,11 @@ module StashEngine
   describe CurationActivity, type: :model do
 
     include Mocks::Datacite
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
 
     before(:each) do
-      mock_ror!
       mock_solr!
       mock_datacite!
       mock_stripe!

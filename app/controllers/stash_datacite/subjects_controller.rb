@@ -18,7 +18,10 @@ module StashDatacite
         .delete_if(&:blank?)
         .each { |s| ensure_subject(s) }
       @subjects = resource.subjects.non_fos
-      respond_to { |format| format.js }
+      respond_to do |format|
+        format.js
+        format.json { render json: @subjects }
+      end
     end
 
     # DELETE /subjects/1
@@ -27,6 +30,7 @@ module StashDatacite
       resource.subjects.non_fos.delete(@subject)
       respond_to do |format|
         format.js
+        format.json { render json: @subject }
       end
     end
 
@@ -35,8 +39,8 @@ module StashDatacite
       if params[:term].blank?
         render json: nil
       else
-        @subjects = Subject.order(:subject).non_fos.where('subject LIKE ?', "%#{params[:term]}%")
-        render json: @subjects.map(&:subject)
+        @subjects = Subject.order(:subject).non_fos.where('subject LIKE ?', "%#{params[:term]}%").limit(40)
+        render json: @subjects.map { |i| { id: i.id, name: i.subject } }
       end
     end
 

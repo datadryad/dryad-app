@@ -65,11 +65,17 @@
 
     <h2 class="o-heading__page-span">Data Description</h2>
 
-    <% if @metadata_entry.subjects.empty? %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
-    <% else %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
-    <% end %>
+    <%# if @metadata_entry.subjects.empty? %>
+      <%# render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
+    <%# else %>
+      <%# render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
+    <%# end %>
+
+    <%= react_component('components/MetadataEntry/Keywords',
+                        resourceId: @resource.id,
+                        subjects: @metadata_entry.subjects.map{ |i| {id: i.id, subject: i.subject }  },
+                        createPath: subjects_create_path,
+                        deletePath: subjects_delete_path('subj_xoxo', resource_id: @resource.id)) %>
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.methods,

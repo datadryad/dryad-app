@@ -3,7 +3,6 @@ RSpec.feature 'SolrSanitization', type: :feature do
 
   include Mocks::Datacite
   include Mocks::Repository
-  include Mocks::Ror
   include Mocks::Stripe
 
   xit 'added the record' do
@@ -21,7 +20,6 @@ RSpec.feature 'SolrSanitization', type: :feature do
     before(:each) do
       mock_datacite!
       mock_repository!
-      mock_ror!
       mock_stripe!
 
       3.times do
