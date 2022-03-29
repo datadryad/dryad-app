@@ -3,7 +3,6 @@ RSpec.feature 'Admin', type: :feature do
   include DatasetHelper
   include Mocks::CurationActivity
   include Mocks::Datacite
-  include Mocks::Ror
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
@@ -15,7 +14,6 @@ RSpec.feature 'Admin', type: :feature do
       mock_salesforce!
       mock_solr!
       mock_stripe!
-      mock_ror!
       mock_datacite_and_idgen!
       mock_tenant!
       neuter_curation_callbacks!

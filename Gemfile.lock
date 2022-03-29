@@ -874,7 +874,7 @@ DEPENDENCIES
   rspec-html
   rspec-rails
   rubocop (~> 0.90.0)
-  rubyzip (~> 2.3.2)
+  rubyzip (~> 2.3, >= 2.3.2)
   sass-rails (~> 5.0)
   selenium-webdriver
   serrano (~> 1.0.0)

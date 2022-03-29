@@ -35,6 +35,8 @@ Options for processing in `StashEngine::Journal`
   "hide" a dataset until the associated article was published. Now
   controls whether an automatic 1-year blackout/embargo is added to
   the dataset.
+- *default_to_ppr* -- Whether the Peer Review checkbox should be checked by
+  default when a new dataset is associated with this journal.
 
 Adding journal administrators
 -------------------------------
