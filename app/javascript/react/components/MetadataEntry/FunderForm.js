@@ -7,7 +7,7 @@ import FunderAutocomplete from './FunderAutocomplete';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function FunderForm({
-  resourceId, origID, contributor, createPath, updatePath, removeFunction,
+  resourceId, contributor, updatePath, removeFunction, updateFunder,
 }) {
   const formRef = useRef();
 
@@ -16,6 +16,7 @@ function FunderForm({
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
 
   const submitForm = (values) => {
+    console.log(`${(new Date()).toISOString()}: Saving funder`);
     showSavingMsg();
 
     // set up values
@@ -23,38 +24,33 @@ function FunderForm({
     const submitVals = {
       authenticity_token: csrf,
       contributor: {
-        id: (`${values?.id}`.startsWith('new') ? null : values.id),
+        id: values.id,
         contributor_name: acText,
         contributor_type: 'funder',
         identifier_type: (acID ? 'crossref_funder_id' : null),
         name_identifier_id: acID,
-        resource_id: resourceId,
         award_number: values.award_number,
+        resource_id: resourceId,
       },
     };
 
-    // set up path
-    let url;
-    let method;
-    if (submitVals.contributor.id) {
-      url = updatePath;
-      method = 'patch';
-    } else {
-      url = createPath;
-      method = 'post';
-    }
-
     // submit by json
-    return axios({
-      method,
-      url,
-      data: submitVals,
-      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-    }).then((data) => {
+    return axios.patch(
+      updatePath,
+      submitVals,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
+        },
+      },
+    ).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
-      formRef.current.setFieldValue('id', data.data.id);
+
+      // forces data update in the collection containing me
+      updateFunder(data.data);
       showSavedMsg();
     });
   };
@@ -111,13 +107,13 @@ function FunderForm({
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <a
             role="button"
-            className="remove_record t-describe__remove-button o-button__remove"
+            className="t-describe__remove-button o-button__remove"
             rel="nofollow"
             href="#"
             onClick={(e) => {
               e.preventDefault();
               showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                removeFunction(formRef.current?.values?.id, origID); // this sends the database id and the original id (key)
+                removeFunction(contributor.id);
               });
             }}
           >remove
@@ -131,13 +127,12 @@ function FunderForm({
 
 export default FunderForm;
 
-// resourceId, origID, contributor, createPath, updatePath, removeFunction
+// resourceId, contributor, createPath, updatePath, removeFunction, updateFunder
 
 FunderForm.propTypes = {
-  resourceId: PropTypes.string.isRequired,
-  origID: PropTypes.string.isRequired,
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
-  createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
   removeFunction: PropTypes.func.isRequired,
+  updateFunder: PropTypes.func.isRequired,
 };
