@@ -12,11 +12,6 @@ module StashEngine
       query = query.downcase
       results = []
 
-      x = []
-      all.each do |r|
-        x << { id: r.ror_id, name: r.name }
-      end
-
       # First, find matches at the beginning of the name string, or anywhere in the
       # acronyms/aliases
       resp = where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
