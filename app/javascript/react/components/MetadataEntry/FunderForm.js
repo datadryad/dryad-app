@@ -27,7 +27,7 @@ function FunderForm({
         id: values.id,
         contributor_name: acText,
         contributor_type: 'funder',
-        identifier_type: (acID ? 'crossref_funder_id' : null),
+        identifier_type: 'crossref_funder_id', // needs to be set for datacite mapping, even if no id gotten from crossref
         name_identifier_id: acID,
         award_number: values.award_number,
         resource_id: resourceId,
