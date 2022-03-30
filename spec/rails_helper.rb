@@ -86,6 +86,23 @@ RSpec.configure do |config|
   config.before(:suite) do
     output = `rake db:migrate`
     puts output
+    require Rails.root.join('stash/stash_engine/db/migrate/20211021173621_add_triggers_for_last_curation_activity.rb').to_s
+    require Rails.root.join('stash/stash_engine/db/migrate/20211020221956_add_triggers_for_latest_resource.rb').to_s
+
+    %w[trigger_curation_insert trigger_curation_update trigger_curation_delete].each do |i|
+      # result = ActiveRecord::Base.connection.execute("show triggers like '%#{i}%'")
+      ActiveRecord::Base.connection.execute("AddTriggersForLastCurationActivity::#{i.upcase}".constantize)
+    rescue ActiveRecord::StatementInvalid => e
+      raise e unless e.to_s.include?('Trigger already exists')
+    end
+
+    %w[trigger_resource_insert trigger_resource_update trigger_resource_delete].each do |i|
+      ActiveRecord::Base.connection.execute("AddTriggersForLatestResource::#{i.upcase}".constantize)
+    rescue ActiveRecord::StatementInvalid => e
+      raise e unless e.to_s.include?('Trigger already exists')
+    end
+
+    # result = ActiveRecord::Base.connection.execute("show triggers like '%curation%'") and result.to_a.length shows number
   end
 
   config.include React::Rails::TestHelper
