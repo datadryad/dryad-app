@@ -1,3 +1,9 @@
+.modalDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .modalDialog button, .modalDialog input[type=submit], {
   @extend %o-button__plain-text;

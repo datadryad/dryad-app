@@ -20,6 +20,7 @@ function Funders({
   const [funders, setFunders] = useState(contributors);
 
   const addNewFunder = () => {
+    console.log(`${(new Date()).toISOString()}: Adding funder`);
     const contribJson = {
       authenticity_token: csrf,
       contributor: blankContrib,
@@ -30,7 +31,7 @@ function Funders({
         if (data.status !== 200) {
           console.log("couldn't add new funder from remote server");
         }
-        setFunders([...funders, data.data]);
+        setFunders((prevState) => [...prevState, data.data]);
       });
   };
 
@@ -40,6 +41,7 @@ function Funders({
 
   // delete a funder from the list
   const removeItem = (id) => {
+    console.log(`${(new Date()).toISOString()}: deleting funder`);
     const trueDelPath = deletePath.replace('id_xox', id);
     showSavingMsg();
 
@@ -65,13 +67,13 @@ function Funders({
           showSavedMsg();
         });
     }
-    setFunders(funders.filter((item) => (item.id !== id)));
+    setFunders((prevState) => prevState.filter((item) => (item.id !== id)));
   };
 
   // update the funder in the list from old id to new
   const updateFunder = (updatedContributor) => {
     // replace item in the funder list if it has changed
-    setFunders(funders.map((funder) => (updatedContributor.id === funder.id ? updatedContributor : funder)));
+    setFunders((prevState) => prevState.map((funder) => (updatedContributor.id === funder.id ? updatedContributor : funder)));
   };
 
   return (

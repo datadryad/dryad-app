@@ -16,6 +16,7 @@ function FunderForm({
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
 
   const submitForm = (values) => {
+    console.log(`${(new Date()).toISOString()}: Saving funder`);
     showSavingMsg();
 
     // set up values
@@ -47,6 +48,7 @@ function FunderForm({
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
+
       // forces data update in the collection containing me
       updateFunder(data.data);
       showSavedMsg();
@@ -105,7 +107,7 @@ function FunderForm({
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <a
             role="button"
-            className="remove_record t-describe__remove-button o-button__remove"
+            className="t-describe__remove-button o-button__remove"
             rel="nofollow"
             href="#"
             onClick={(e) => {

@@ -1,4 +1,5 @@
 require 'csv'
+require 'stash/organization/ror_updater'
 
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Lint/UselessAssignment
@@ -10,9 +11,14 @@ namespace :affiliation_import do
   desc 'Clean the long_names for all ROR affiliations'
   task clean_ror_names: :environment do
     StashDatacite::Affiliation.where.not(ror_id: nil).each do |affil|
-      target_obj = Stash::Organization::Ror.find_by_ror_id(affil.ror_id)
+      target_obj = StashEngine::RorOrg.find_by_ror_id(affil.ror_id)
       affil.update(long_name: target_obj.name) if target_obj
     end
+  end
+
+  desc 'Update ROR organizations in local database'
+  task update_ror_orgs: :environment do
+    Stash::Organization::RorUpdater.perform
   end
 
   desc 'Process all of the CSV files'

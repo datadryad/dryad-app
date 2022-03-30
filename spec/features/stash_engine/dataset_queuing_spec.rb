@@ -10,7 +10,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include Mocks::CurationActivity
   include Mocks::SubmissionJob
   include Mocks::RSolr
-  include Mocks::Ror
   include Mocks::Stripe
   include Mocks::Tenant
   include AjaxHelper
@@ -21,7 +20,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     # the queue, Stash::Merritt::SubmissionJob.do_submit!
     mock_submission_job!
     mock_solr!
-    mock_ror!
     mock_datacite_and_idgen!
     mock_stripe!
     mock_tenant!
