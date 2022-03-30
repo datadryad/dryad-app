@@ -11,8 +11,8 @@ export default function RorAutocomplete({name, id, controlOptions}) {
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
   const [acText, setAcText] = useState(name);
   const [acID, setAcID] = useState(id);
-  const [prevText, setPrevText] = useState(name);
-  const [prevID, setPrevID] = useState(id);
+  const prevText = useRef(name);
+  const prevID = useRef(id);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const nameRef = useRef(null);
 
@@ -27,15 +27,16 @@ export default function RorAutocomplete({name, id, controlOptions}) {
             "author[affiliation][long_name]" and "author[affiliation][ror_id]" that have correct values and resubmit
             the form.
            */
-      if (prevText !== acText || prevID !== acID) {
+      if (prevText.current !== acText || prevID.current !== acID) {
         // only resubmit form when there are actual value changes
         /* eslint-disable no-undef */
         // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
+        console.log('triggering form submit', nameRef.current.value);
         $(nameRef.current.form).trigger('submit.rails');
         /* eslint-enable no-undef */
       }
-      setPrevText(acText);
-      setPrevID(acID);
+      prevText.current = acText;
+      prevID.current = acID;
       setAutoBlurred(false);
     }
   }, [autoBlurred]);
