@@ -51,13 +51,13 @@ export default function RorAutocomplete({name, id, controlOptions}) {
       params: {query: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
-        .then((data) => {
-          if (data.status !== 200) {
-            return [];
-            // raise an error here if we want to catch it and display something to user or do something else
-          }
-          return data.data;
-        });
+      .then((data) => {
+        if (data.status !== 200) {
+          return [];
+          // raise an error here if we want to catch it and display something to user or do something else
+        }
+        return data.data;
+      });
   }
 
   // Given a js object from list (supplyLookupList above) it returns the string name
@@ -78,21 +78,21 @@ export default function RorAutocomplete({name, id, controlOptions}) {
   // in fact some sources say to do it to avoid repeating components (like https://www.youtube.com/watch?v=yH5Z-lSeV9Y ).
   // So IDK what the real guidance is for this and it seems to work fine.
   return (
-      <>
-        <GenericNameIdAutocomplete
-            acText={acText || ''}
-            setAcText={setAcText}
-            acID={acID}
-            setAcID={setAcID}
-            setAutoBlurred={setAutoBlurred}
-            supplyLookupList={supplyLookupList}
-            nameFunc={nameFunc}
-            idFunc={idFunc}
-            controlOptions={controlOptions}
-        />
-        <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
-        <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
-      </>
+    <>
+      <GenericNameIdAutocomplete
+        acText={acText || ''}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        setAutoBlurred={setAutoBlurred}
+        supplyLookupList={supplyLookupList}
+        nameFunc={nameFunc}
+        idFunc={idFunc}
+        controlOptions={controlOptions}
+      />
+      <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
+      <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
+    </>
   );
   /* eslint-enable react/jsx-no-bind */
 }
