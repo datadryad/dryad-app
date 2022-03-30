@@ -379,3 +379,13 @@ charged to the user, the payment_type will be `stripe`. In this case,
 you can still change the payment_type to the desired value, but let
 the curation team know that the associated Stripe invoice needs to be
 voided.
+
+Issues with testing
+=====================
+
+Many failures with `latest_resource` and `current_status`
+---------------------------------------------------------
+
+This can be caused by the database triggers being dropped. To reinstantiate the
+complete database setup:
+`bin/rails db:migrate:reset RAILS_ENV=test`

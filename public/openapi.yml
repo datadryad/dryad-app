@@ -757,6 +757,8 @@ components:
           type: string
         orcid:
           type: string
+        order:
+          type: integer
     simple_author:
       properties:
         firstName:

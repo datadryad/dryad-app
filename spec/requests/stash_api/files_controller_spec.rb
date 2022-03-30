@@ -10,7 +10,6 @@ module StashApi
 
     include Mocks::Aws
     include Mocks::CurationActivity
-    include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::Repository
@@ -26,7 +25,6 @@ module StashApi
 
       neuter_curation_callbacks!
       mock_aws!
-      mock_ror!
       mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)

@@ -33,13 +33,18 @@ Creating users
   "Remote Desktop Users"
 - By default, only 2 simultaneous users are allowed. If you want more
   - Install Remote Desktop Services
+    - Install via Windows Admin Center; the Server Manager does not work correctly
   - Purchase “RDS User” Client Access Licenses (CALs)
+  - Install them through the Remote Desktop Licensing Manager
 
 To connect to Windows Server
 - PC users connect with Remote Desktop Connection
 - Mac users download the app Microsoft Remote Desktop
 - Connect using the IP and the assigned user/passwoord
 - A user account may only be logged in from one place at a time
+- The first time you connect, you will see an error about a Security
+  Certificate. Choose to View the certificate and Accept it, then you will no
+  longer receive the message.
 
 Downloads
 - File downloads will continue while your local machine sleeps

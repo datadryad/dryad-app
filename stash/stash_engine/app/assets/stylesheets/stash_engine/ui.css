@@ -3578,6 +3578,13 @@ datalist {
   float: left;
   font-size: 1.3em; }
 
+.modalDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); }
+
 .modalDialog button, .modalDialog input[type=submit] {
   background-color: #9fc7d8; }
 

@@ -2,8 +2,6 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    include Stash::Organization
-
     TO_PARSE = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages].freeze
     INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
 
@@ -144,9 +142,9 @@ module StashApi
         author_last_name: json_author[:lastName],
         author_email: json_author[:email],
         author_orcid: json_author[:orcid] || @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
-        resource_id: @resource.id
+        resource_id: @resource.id,
+        author_order: json_author[:order] || nil
       )
-
       # If the affiliation was provided, prefer the ROR id over a textual name.
       if json_author[:affiliationROR].present?
         a.affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: json_author[:affiliationROR])
