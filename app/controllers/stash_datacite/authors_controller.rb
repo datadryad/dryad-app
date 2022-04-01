@@ -51,7 +51,8 @@ module StashDatacite
     def reorder
       respond_to do |format|
         format.json do
-          js = params['_json'].map { |i| { id: i[:id], author_order: i[:order] } } # convert weird params objs to hashes
+          js = params[:author].to_h.to_a.map { |i| {id: i[0], author_order: i[1] } }
+          # js = params['_json'].map { |i| { id: i[:id], author_order: i[:order] } } # convert weird params objs to hashes
           grouped_authors = js.index_by { |author| author[:id] }
           resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
           render json: resp, status: :ok
@@ -105,7 +106,8 @@ module StashDatacite
     end
 
     def check_reorder_valid
-      @authors = StashEngine::Author.where(id: params['_json'].map { |i| i['id'] })
+      params.require(:author).permit!
+      @authors = StashEngine::Author.where(id: params[:author].keys)
 
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
