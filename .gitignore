@@ -35,6 +35,7 @@ package-lock.json
 # UI library files
 ui-library/css/main.css
 ui-library/css/vendor/
+ui-library/css/sourcemaps/
 ui-library/js/vendor/
 ui-library/bower_components
 ui-library/css/vendor/
