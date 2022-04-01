@@ -32,9 +32,14 @@ public/packs-test
 # we are using yarn and get warnings about having two different package locks, so ignore npm's package-lock.json
 package-lock.json
 
-stash/stash_engine/ui-library/css/vendor
-stash/stash_engine/ui-library/js/vendor
-
+# UI library files
+ui-library/css/main.css
+ui-library/css/vendor/
+ui-library/js/vendor/
+ui-library/bower_components
+ui-library/css/vendor/
+ui-library/js/vendor/
+*.css.map                
 
 # ######################################################
 
@@ -199,7 +204,6 @@ flycheck_*.el
 
 /public/packs
 /public/packs-test
-/node_modules
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity

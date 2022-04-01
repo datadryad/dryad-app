@@ -80,6 +80,7 @@ gem 'tins', '~> 1.29.1'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
+gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 # #########################
 # Testing download examples
