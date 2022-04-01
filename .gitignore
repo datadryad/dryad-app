@@ -40,6 +40,7 @@ ui-library/js/vendor/
 ui-library/bower_components
 ui-library/css/vendor/
 ui-library/js/vendor/
+stash/stash_engine/ui-library/
 *.css.map                
 
 # ######################################################

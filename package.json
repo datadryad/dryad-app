@@ -21,6 +21,11 @@
     ],
     "testEnvironment": "jsdom"
   },
+  "scripts": {
+        "copy-pkg-files": "copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.css ui-library/css/vendor && copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.js ui-library/js/vendor",
+	"publish": "gh-pages --dist dist",
+	"test": "echo \"Error: no test specified\" && exit 1"
+  },          
   "dependencies": {
     "@babel/plugin-proposal-private-methods": "^7.16.0",
     "@babel/preset-react": "^7.14.5",
