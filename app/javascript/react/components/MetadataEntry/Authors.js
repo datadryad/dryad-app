@@ -3,10 +3,12 @@ import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
 import {faker} from '@faker-js/faker';
 import './Dragon.css';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 const nameArr = new Array(5).fill(true).map((item, idx) => ({id: idx + 1000, name: faker.name.findName(), order: idx}));
 
 export default function Authors({resource, dryadAuthors}) {
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
 
   const [authors, setAuthors] = useState(dryadAuthors);
@@ -39,6 +41,25 @@ export default function Authors({resource, dryadAuthors}) {
       obj[item.id] = item.order;
       return obj;
     }, {});
+
+    showSavingMsg();
+    // update order in the database
+    axios.patch(
+        '/stash_datacite/authors/reorder',
+        {...newOrderObj, authenticity_token: csrf},
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json',
+          },
+        },
+    ).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from funders save');
+      }
+
+      showSavedMsg();
+    });
 
     // duplicate authors list with updated order values reflecting new order
     const newAuth = localAuthors.map((item) => ({...item, order: newOrderObj[item.id]}));
@@ -103,9 +124,9 @@ export default function Authors({resource, dryadAuthors}) {
           .sort((a, b) => {
             // sorts by id if order not present and gets around 0 being falsey in javascript
             if (a.author_order === undefined || a.author_order === null || b.author_order === undefined || b.author_order === null) {
-              return a.author_order - b.author_order;
+              return a.id - b.id;
             }
-            return a.id - b.id;
+            return a.author_order - b.author_order;
           })
           .map((auth) => (
             <li key={auth.id} className="dd-list-item" data-id={auth.id}>
