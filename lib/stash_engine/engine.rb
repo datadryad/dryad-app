@@ -1,5 +1,4 @@
 require 'kaminari'
-require 'ckeditor'
 require_relative('counter_log')
 
 module StashEngine
