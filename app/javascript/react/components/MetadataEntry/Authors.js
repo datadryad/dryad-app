@@ -1,11 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
-import {faker} from '@faker-js/faker';
 import './Dragon.css';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
-
-const nameArr = new Array(5).fill(true).map((item, idx) => ({id: idx + 1000, name: faker.name.findName(), order: idx}));
+import AuthorForm from './AuthorForm'
 
 export default function Authors({resource, dryadAuthors}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -87,11 +85,11 @@ export default function Authors({resource, dryadAuthors}) {
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
         announcement: {
-          grabbed: (el) => `${el.querySelector('span').innerText} grabbed`,
-          dropped: (el) => `${el.querySelector('span').innerText} dropped`,
+          grabbed: (el) => `${el.querySelector('input').value} grabbed`,
+          dropped: (el) => `${el.querySelector('input').value} dropped`,
           reorder: (el, items) => {
             const pos = items.indexOf(el) + 1;
-            const text = el.querySelector('span').innerText;
+            const text = el.querySelector('input').value;
             return `The rankings have been updated, ${text} is now ranked #${pos} out of ${items.length}`;
           },
           cancel: 'Reranking cancelled.',
@@ -139,7 +137,7 @@ export default function Authors({resource, dryadAuthors}) {
               >
                 <div className="offscreen">Reorder</div>
               </button>
-              <span id={`author-text-${auth.id}`}>{auth.author_first_name} {auth.author_last_name}</span>&nbsp;
+              <AuthorForm dryadAuthor={auth} />
               <a
                 href="#"
                 onClick={(e) => {
