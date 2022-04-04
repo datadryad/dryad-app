@@ -138,18 +138,12 @@ export default function Authors({resource, dryadAuthors}) {
                 <div className="offscreen">Reorder</div>
               </button>
               <AuthorForm dryadAuthor={auth} />
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteItem(auth.id);
-                }}
-              >delete
-              </a>
             </li>
           ))}
       </ul>
-      <div><a
+      <div>
+
+        <a
         href="#"
         onClick={(e) => {
           e.preventDefault();

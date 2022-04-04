@@ -73,6 +73,20 @@ export default function AuthorForm({dryadAuthor}) {
                     }}
                 />
               </div>
+              <a
+                  role="button"
+                  className="t-describe__remove-button o-button__remove remove_record"
+                  rel="nofollow"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showModalYNDialog('Are you sure you want to remove this author?', () => {
+                      // removeFunction(contributor.id);
+                      // deleteItem(auth.id);
+                    });
+                  }}
+              >remove
+              </a>
             </Form>
         )}
       </Formik>
