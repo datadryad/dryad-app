@@ -2,7 +2,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
            callback_path: '/stash/auth/shibboleth/callback',
            request_type: :header,
-           host: StashEngine.app.shib_sp_host,
+           host: APP_CONFIG.shib_sp_host,
            uid_field: 'eppn',
            path_prefix: '/stash/auth',
            info_fields: {
@@ -10,18 +10,18 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              identity_provider: 'shib_identity_provider'
            }
 
-  provider :orcid, StashEngine.app.orcid.key, StashEngine.app.orcid.secret,
-           member: StashEngine.app.orcid.member,
-           sandbox: StashEngine.app.orcid.sandbox,
+  provider :orcid, APP_CONFIG.orcid.key, APP_CONFIG.orcid.secret,
+           member: APP_CONFIG.orcid.member,
+           sandbox: APP_CONFIG.orcid.sandbox,
            callback_path: '/stash/auth/orcid/callback',
            path_prefix: '/stash/auth',
            authorize_params: {
              scope: '/read-limited'
            },
            client_options: {
-             site: StashEngine.app.orcid_site,
-             authorize_url: StashEngine.app.orcid.authorize_url,
-             token_url: StashEngine.app.orcid.token_url
+             site: APP_CONFIG.orcid_site,
+             authorize_url: APP_CONFIG.orcid.authorize_url,
+             token_url: APP_CONFIG.orcid.token_url
            }
 
   # patch to help prevent CSRF for CVE-2015-9284

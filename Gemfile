@@ -14,11 +14,9 @@ gem 'webpacker', '~> 5.4.0'
 # Local engines
 
 path 'stash' do
-  gem 'stash_engine'
+  gem 'stash-merritt'
   gem 'stash-sword'
   gem 'stash-wrapper'
-  # needs engines to load first
-  gem 'stash-merritt'
 end
 
 # ############################################################
@@ -51,27 +49,52 @@ gem 'yui-compressor'
 # Misc
 
 gem 'amatch', '~> 0.4.0'
+gem 'amoeba', '~> 3.2.0'
+gem 'aws-sdk-s3', '~> 1.111'
 gem 'blacklight', '~> 7.19.2'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'
+gem 'concurrent-ruby', '~> 1.1.9'
+gem 'daemons', '~> 1.4.1'
+gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', '~> 0.4.1'
+gem 'delayed_job_active_record', '~> 4.1.6'
 gem 'devise', '~> 4.8.0'
 gem 'devise-guests', '~> 0.6'
 gem 'doorkeeper', '~> 5.5'
+gem 'down'
 gem 'exception_notification'
+gem 'ezid-client', '~> 1.9.1'
+gem 'filesize', '~> 0.2.0'
+gem 'font-awesome-rails', '~> 4.7.0.7'
 gem 'geoblacklight', '~> 3.4.0'
 gem 'google-apis-gmail_v1', '~> 0.3'
+gem 'http', '~> 5.0.2'
 gem 'httparty', '~> 0.19.0'
+gem 'httpclient', '~> 2.8.3'
 gem 'jbuilder'
+gem 'jquery-turbolinks', '~> 2.1.0'
+gem 'jquery-ui-rails', '~> 6.0.1'
+gem 'jwt', '~> 2.2.3'
 gem 'kaminari', '~> 1.2.1'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.12.0'
 gem 'net-sftp'
+gem 'noid', '~> 0.9.0'
 gem 'oai', '~> 1.1.0'
+gem 'omniauth', '~> 1.8', '>= 1.8.1'
+gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
+gem 'omniauth-rails_csrf_protection', '~> 0.1', '>= 0.1.2'
+gem 'omniauth-shibboleth', '~> 1.2', '>= 1.2.1'
+gem 'posix-spawn', '~> 0.3.15'
 gem 'rack-attack'
 gem 'rb-readline', require: false
+gem 'redcarpet', '~> 3.5.1'
 gem 'responders', '~> 3.0.1'
-gem 'rsolr', '>= 1.0', '< 3'
+gem 'rest-client', '~> 2.1.0'
+gem 'restforce', '~>5.1.0'
+gem 'rinku', '~> 2.0.6'
+gem 'rsolr', '~> 2.3.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0.0'
 gem 'solr_wrapper', '~> 3.1.2'
@@ -81,11 +104,6 @@ gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a genera
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
-
-# #########################
-# Testing download examples
-gem 'down'
-gem 'http'
 
 # ############################################################
 # Development and testing
@@ -105,8 +123,6 @@ group :test do
   gem 'capybara-screenshot'
   # chromedriver-helper is now deprecated, use webdrivers instead
   gem 'webdrivers'
-  # Strategies for cleaning databases.  Can be used to ensure a clean state for testing. (http://github.com/DatabaseCleaner/database_cleaner)
-  gem 'database_cleaner', require: false
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'diffy'
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
