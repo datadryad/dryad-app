@@ -33,7 +33,8 @@
 
   <div>
     <p>Test Authors</p>
-    <%= react_component('components/MetadataEntry/Authors', { resource: @resource, dryadAuthors: @resource.authors } ) %>
+    <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
+        dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(affiliation: auth.affiliation.as_json) } } ) %>
   </div>
 
   <div class="c-input__inline">

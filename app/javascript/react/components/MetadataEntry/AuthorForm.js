@@ -2,8 +2,10 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import RorAutocomplete from "./RorAutocomplete"
 
-export default function AuthorForm({dryadAuthor, affiliation}) {
+// dryadAuthor below has nested affiliation
+export default function AuthorForm({dryadAuthor}) {
 
   const formRef = useRef();
   return (
@@ -46,6 +48,24 @@ export default function AuthorForm({dryadAuthor, affiliation}) {
                 <Field
                     id={`author_last_name__${dryadAuthor.id}`}
                     name="author_last_name"
+                    type="text"
+                    className="c-input__text"
+                    onBlur={() => { // defaults to formik.handleBlur
+                      formik.handleSubmit();
+                    }}
+                />
+              </div>
+              <div className="c-input">
+                <RorAutocomplete name={dryadAuthor.affiliation.long_name}  id={dryadAuthor.affiliation.ror_id}
+                  controlOptions={{ 'htmlId': `instit_affil_${dryadAuthor.id}`, 'labelText': 'Institutional Affiliation', 'isRequired': true }} />
+              </div>
+              <div className="c-input">
+                <label className="c-input__label required" htmlFor={`author_email__${dryadAuthor.id}`}>
+                  Author Email
+                </label>
+                <Field
+                    id={`author_email__${dryadAuthor.id}`}
+                    name="author_email"
                     type="text"
                     className="c-input__text"
                     onBlur={() => { // defaults to formik.handleBlur
