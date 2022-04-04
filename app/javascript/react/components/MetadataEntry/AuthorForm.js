@@ -6,8 +6,54 @@ import RorAutocomplete from "./RorAutocomplete"
 
 // dryadAuthor below has nested affiliation
 export default function AuthorForm({dryadAuthor}) {
-
   const formRef = useRef();
+
+  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
+  const [acText, setAcText] = useState(dryadAuthor?.affiliation?.long_name || '');
+  const [acID, setAcID] = useState(dryadAuthor?.affiliation?.ror_id || '');
+
+  const submitForm = (values) => {
+    console.log(`${(new Date()).toISOString()}: Saving funder`);
+    showSavingMsg();
+
+    // set up values
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+    const submitVals = {
+      authenticity_token: csrf,
+      author: {
+        id: values.id,
+        author_first_name: values.author_first_name,
+        author_last_name: values.author_last_name,
+        author_email: values.author_email,
+        resource_id: dryadAuthor.resource_id,
+        affiliation: { long_name: acText, ror_id: acID }
+      },
+    };
+
+    // submit by json
+    return axios.patch(
+        '/stash_datacite/authors/update',
+        submitVals,
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json',
+          },
+        },
+    ).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from author save');
+      }
+
+      // forces data update in the collection containing me
+      // updateFunder(data.data);
+      showSavedMsg();
+    });
+  };
+
+
+
   return (
       <Formik
           initialValues={
@@ -20,7 +66,7 @@ export default function AuthorForm({dryadAuthor}) {
           }
           innerRef={formRef}
           onSubmit={(values) => { // {setSubmitting}
-            // submitForm(values).then(() => { setSubmitting(false); });
+            submitForm(values).then(() => { setSubmitting(false); });
             console.log(values);
           }}
       >
@@ -56,8 +102,15 @@ export default function AuthorForm({dryadAuthor}) {
                 />
               </div>
               <div className="c-input">
-                <RorAutocomplete name={dryadAuthor.affiliation.long_name}  id={dryadAuthor.affiliation.ror_id}
-                  controlOptions={{ 'htmlId': `instit_affil_${dryadAuthor.id}`, 'labelText': 'Institutional Affiliation', 'isRequired': true }} />
+                <RorAutocomplete
+                    formRef={formRef}
+                    acText={acText}
+                    setAcText={setAcText}
+                    acID={acID}
+                    setAcID={setAcID}
+                    // name={dryadAuthor.affiliation.long_name}
+                    // id={dryadAuthor.affiliation.ror_id}
+                    controlOptions={{ 'htmlId': `instit_affil_${dryadAuthor.id}`, 'labelText': 'Institutional Affiliation', 'isRequired': true }} />
               </div>
               <div className="c-input">
                 <label className="c-input__label required" htmlFor={`author_email__${dryadAuthor.id}`}>

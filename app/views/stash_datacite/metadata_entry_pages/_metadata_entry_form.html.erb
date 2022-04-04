@@ -18,24 +18,12 @@
   <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path } ) %><br>
 
   <fieldset class="c-fieldset">
-  <legend class="c-fieldset__legend">Author(s)</legend>
+    <legend class="c-fieldset__legend">Author(s)</legend>
     <div class="js-authors_form">
-      <% if @metadata_entry.authors.exists? %>
-        <% @metadata_entry.authors.each do |author| %>
-          <%= render partial: "stash_datacite/authors/form", locals: { author: author, path: authors_update_path } %>
-        <% end %>
-      <% else %>
-          <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: authors_create_path } %>
-      <% end %>
+      <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
+          dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(affiliation: auth.affiliation.as_json) } } ) %>
     </div>
-    <%= link_to "Add Author", authors_new_path( resource_id: @resource.id ), role: 'button', remote: :true, class: 't-describe__add-button o-button__add' %>
   </fieldset>
-
-  <div>
-    <p>Author(s)</p>
-    <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
-        dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(affiliation: auth.affiliation.as_json) } } ) %>
-  </div>
 
   <div class="c-input__inline">
     <div class="c-input">
