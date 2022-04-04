@@ -131,9 +131,10 @@ export default function Authors({resource, dryadAuthors}) {
               <button
                 aria-describedby="global-help"
                 type="button"
-                className="fa fa-bars handle"
+                className="fa fa-bars handle c-input"
                 aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
                 id={`author-button-${auth.id}`}
+                style={{display: 'block', float: 'left', transform: 'translateY(80%)'}}
               >
                 <div className="offscreen">Reorder</div>
               </button>
@@ -144,17 +145,17 @@ export default function Authors({resource, dryadAuthors}) {
       <div>
 
         <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          addItem();
-        }}
-      >Add another author
-      </a>
+            href="#"
+            className="t-describe__add-button o-button__add"
+            role="button"
+            onClick={(e) => {
+              e.preventDefault();
+              // addItem();
+            }}
+        >
+          Add Author
+        </a>
       </div>
-      <br />
-      <div>{authors.length} authors</div>
-      <br />
     </section>
   );
 }
