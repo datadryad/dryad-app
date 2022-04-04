@@ -15,7 +15,7 @@ module StashEngine
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
+      TENANT_CONFIG.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
     end
 
     def self.partner_list
@@ -88,13 +88,13 @@ module StashEngine
     end
 
     def self.exists?(tenant_id)
-      StashEngine.tenants.key?(tenant_id)
+      TENANT_CONFIG.key?(tenant_id)
     end
 
     def self.find(tenant_id)
-      return nil unless StashEngine.tenants[tenant_id]
+      return nil unless TENANT_CONFIG[tenant_id]
 
-      new(StashEngine.tenants[tenant_id])
+      new(TENANT_CONFIG[tenant_id])
     end
 
     def self.find_by_long_name(tenant_name)

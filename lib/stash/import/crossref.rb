@@ -1,7 +1,7 @@
 require 'amatch'
 require 'byebug'
 
-require_relative '../../../stash/stash_engine/app/models/stash_engine/proposed_change'
+require_relative '../../../app/models/stash_engine/proposed_change'
 
 module Stash
   module Import

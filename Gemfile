@@ -98,6 +98,7 @@ gem 'rsolr', '~> 2.3.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0.0'
 gem 'solr_wrapper', '~> 3.1.2'
+gem 'stripe', '~> 5.38.0'
 gem 'sync', '~> 0.5.0'
 gem 'tins', '~> 1.29.1'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
