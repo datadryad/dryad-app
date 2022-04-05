@@ -10,7 +10,7 @@ module StashEngine
       def ping_dependency
         super
         # Check the status of the ORCID API
-        target = StashEngine.app.orcid.token_url
+        target = APP_CONFIG.orcid.token_url
         resp = HTTParty.get(target)
         # We are pinging one of the ORCID auth endpoints so expect a 401
         online = resp.code == 401

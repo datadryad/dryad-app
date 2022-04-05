@@ -304,7 +304,7 @@ module StashEngine
 
     def ready_for_payment?
       resource&.identifier&.reload
-      StashEngine.app&.payments&.service == 'stripe' &&
+      APP_CONFIG.payments&.service == 'stripe' &&
         (resource&.identifier&.payment_type.nil? || resource&.identifier&.payment_type == 'unknown') &&
         (status == 'published' || status == 'embargoed')
     end

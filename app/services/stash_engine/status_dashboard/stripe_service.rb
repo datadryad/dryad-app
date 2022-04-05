@@ -10,7 +10,7 @@ module StashEngine
       def ping_dependency
         super
         # Check the status of the Stripe API via the stripe-ruby gem
-        Stripe.api_key = StashEngine.app.payments.key
+        Stripe.api_key = APP_CONFIG.payments.key
 
         obj = Stripe::Charge.list
         online = obj.is_a?(Stripe::ListObject)

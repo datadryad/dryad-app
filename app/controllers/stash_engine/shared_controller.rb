@@ -188,7 +188,7 @@ module StashEngine
 
     # Pretty orcids based on sandbox or not?
     def display_author_orcid(author)
-      if StashEngine.app.orcid.site == 'https://sandbox.orcid.org/'
+      if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
         view_context.link_to("https://sandbox.orcid.org/#{author.author_orcid}",
                              "https://sandbox.orcid.org/#{author.author_orcid}",
                              target: '_blank', class: 'c-orcid__id').html_safe

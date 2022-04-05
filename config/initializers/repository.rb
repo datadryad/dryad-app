@@ -4,7 +4,7 @@ module StashEngine
   def self.repository
     @repository ||= begin
       repository_class_name = APP_CONFIG.repository
-      Rails.logger.debug("StashEngine.app.repository = #{repository_class_name}")
+      Rails.logger.debug("APP_CONFIG.repository = #{repository_class_name}")
 
       repository_class = repository_class_name.constantize
       url_helpers = Rails.application.routes.url_helpers
