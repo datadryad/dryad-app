@@ -1,5 +1,5 @@
 require 'ostruct'
-require 'stash/download'
+require_relative '../download'
 
 module Stash
   module Doi
