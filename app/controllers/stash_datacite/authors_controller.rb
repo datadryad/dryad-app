@@ -32,7 +32,7 @@ module StashDatacite
         @author.update(author_params)
         process_affiliation
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        format.json { render json: @author }
+        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
       end
     end
 
