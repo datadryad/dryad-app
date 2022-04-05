@@ -66,9 +66,39 @@ export default function Authors({resource, dryadAuthors}) {
     setAuthors(newAuth);
   }
 
+  const removeItem = (id, resource_id) => {
+    console.log(`${(new Date()).toISOString()}: deleting author`);
+    const trueDelPath = `/stash_datacite/authors/${id}/delete`
+    showSavingMsg();
+
+    // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
+
+    const submitVals = {
+      authenticity_token: csrf,
+      author: {
+        id,
+        resource_id: resource_id,
+      },
+    };
+    axios.delete(trueDelPath, {
+      data: submitVals,
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+    }).then((data) => {
+        if (data.status !== 200) {
+          console.log('Response failure not a 200 response from authors delete');
+        } else {
+          console.log('deleted from authors');
+        }
+        showSavedMsg();
+    });
+    setAuthors((prevState) => prevState.filter((item) => (item.id !== id)));
+  };
+
+  /*
   function deleteItem(id) {
     setAuthors(authors.filter((item) => (item.id !== id)));
   }
+   */
 
   function addItem() {
     const newId = (authors.length ? Math.max(...authors.map((auth) => auth.id)) + 1 : 1000);
@@ -138,7 +168,7 @@ export default function Authors({resource, dryadAuthors}) {
               >
                 <div className="offscreen">Reorder</div>
               </button>
-              <AuthorForm dryadAuthor={auth} />
+              <AuthorForm dryadAuthor={auth} removeFunction={removeItem} />
             </li>
           ))}
       </ul>

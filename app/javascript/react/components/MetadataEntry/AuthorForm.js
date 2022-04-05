@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import RorAutocomplete from "./RorAutocomplete"
 
 // dryadAuthor below has nested affiliation
-export default function AuthorForm({dryadAuthor}) {
+export default function AuthorForm({dryadAuthor, removeFunction}) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
@@ -135,7 +135,7 @@ export default function AuthorForm({dryadAuthor}) {
                   onClick={(e) => {
                     e.preventDefault();
                     showModalYNDialog('Are you sure you want to remove this author?', () => {
-                      // removeFunction(contributor.id);
+                      removeFunction(dryadAuthor.id, dryadAuthor.resource_id);
                       // deleteItem(auth.id);
                     });
                   }}
