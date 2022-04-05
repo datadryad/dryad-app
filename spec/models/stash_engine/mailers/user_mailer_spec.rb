@@ -7,9 +7,7 @@ module StashEngine
       # TODO: this is completely ridiculous for number of mocks and we should be using factorybot instead and only disbling some callbacks
 
       @delivery_method = ActionMailer::Base.delivery_method
-      stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
       ActionMailer::Base.delivery_method = :test
-      ActionMailer::Base._view_paths.push("#{stash_engine_path}/app/views")
 
       @request_host = 'stash.example.org'
       @request_port = 80

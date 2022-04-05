@@ -7,7 +7,7 @@ module StashEngine
     before_create :generate_secret_id
 
     def sharing_link
-      StashEngine::Engine.routes.url_helpers.share_url(protocol: 'https', id: secret_id)
+      Rails.application.routes.url_helpers.share_url(protocol: 'https', id: secret_id)
     end
 
     def generate_secret_id
