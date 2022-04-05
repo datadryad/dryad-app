@@ -46,8 +46,9 @@ export default function AuthorForm({dryadAuthor}) {
         console.log('Response failure not a 200 response from author save');
       }
 
-      // forces data update in the collection containing me
-      // updateFunder(data.data);
+      // The funders have a method to update the parent collection (updateFunder(data.data)) but doesn't seem necessary
+      // for this item and state is already in sync
+      // console.log('saved data returned from server', data.data); // can also check acID and acText
       showSavedMsg();
     });
   };
@@ -65,7 +66,7 @@ export default function AuthorForm({dryadAuthor}) {
             }
           }
           innerRef={formRef}
-          onSubmit={(values) => { // {setSubmitting}
+          onSubmit={(values, {setSubmitting}) => {
             submitForm(values).then(() => { setSubmitting(false); });
             console.log(values);
           }}
