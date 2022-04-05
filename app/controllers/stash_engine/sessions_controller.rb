@@ -142,7 +142,7 @@ module StashEngine
 
     # get orcid emails as returned by API
     def orcid_api_emails(orcid:, bearer_token:)
-      resp = RestClient.get "#{StashEngine.app.orcid.api}/v2.1/#{orcid}/email",
+      resp = RestClient.get "#{APP_CONFIG.orcid.api}/v2.1/#{orcid}/email",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       my_info['email'].map { |item| (item['email'].blank? ? nil : item['email']) }.compact
@@ -152,7 +152,7 @@ module StashEngine
     end
 
     def handle_orcid_employments(orcid:, bearer_token:)
-      resp = RestClient.get "#{StashEngine.app.orcid.api}/v2.1/#{orcid}/employments",
+      resp = RestClient.get "#{APP_CONFIG.orcid.api}/v2.1/#{orcid}/employments",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact

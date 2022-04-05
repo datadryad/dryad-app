@@ -64,7 +64,7 @@ module StashEngine
     end
 
     def google_login_path(params = nil)
-      # note that StashEngine.app.stash_mount includes a leading slash
+      # note that APP_CONFIG.stash_mount includes a leading slash
       # you must add extra params in state param https://stackoverflow.com/questions/7722062/google-oauth2-redirect-uri-with-several-parameters
       state_param_val = CGI.escape((params ? params.to_param : ''))
       qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")
@@ -75,7 +75,7 @@ module StashEngine
     end
 
     def callback_path_begin
-      "https://#{Rails.application.default_url_options[:host]}#{StashEngine.app.stash_mount}/auth/"
+      "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/auth/"
     end
 
     def sword_params

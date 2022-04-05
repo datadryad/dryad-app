@@ -70,11 +70,11 @@ module Stash
       end
 
       def ezid_host
-        StashEngine.app.ezid.host
+        APP_CONFIG.ezid.host
       end
 
       def ezid_port
-        StashEngine.app.ezid.port
+        APP_CONFIG.ezid.port
       end
 
     end
