@@ -36,7 +36,7 @@ module StashDatacite
       end
 
       def url_help
-        StashEngine::Engine.routes.url_helpers
+        Rails.application.routes.url_helpers
       end
 
       def metadata_page(resource)

@@ -67,7 +67,7 @@ module StashEngine
           xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9') do
             datasets.each do |i|
               xml.url do
-                xml.loc StashEngine::Engine.routes.url_helpers.show_url("doi:#{i.identifier}")
+                xml.loc Rails.application.routes.url_helpers.show_url("doi:#{i.identifier}")
                 xml.lastmod i.updated_at.utc.iso8601
                 # changefreq and crawling priority are not really known
               end
