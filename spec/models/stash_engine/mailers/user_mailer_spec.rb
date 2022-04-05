@@ -71,7 +71,6 @@ module StashEngine
       # this rails_root stuff is required when faking Rails like david did and using the mailer since it seems to call it
       rails_root = Dir.mktmpdir('rails_root')
       allow(Rails).to receive(:root).and_return(rails_root)
-      allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
     end
 
     after(:each) do
@@ -175,12 +174,6 @@ module StashEngine
       allow(@invite).to receive(:email).and_return(@user.email)
       allow(@invite).to receive(:first_name).and_return(@user.email)
       allow(@invite).to receive(:last_name).and_return(@user.email)
-
-      url_helpers = double(Module)
-      routes = double(Module)
-      allow(url_helpers).to receive(:show_path).and_return(@resource.identifier_uri)
-      allow(routes).to receive(:url_helpers).and_return(url_helpers)
-      allow(StashEngine::Engine).to receive(:routes).and_return(routes)
 
       UserMailer.orcid_invitation(@invite).deliver_now
       delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")

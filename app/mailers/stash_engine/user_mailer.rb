@@ -3,8 +3,6 @@ module StashEngine
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
-    # include ::StashDatacite::LandingMixin
-
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
     def status_change(resource, status)
       return unless %w[submitted peer_review published embargoed].include?(status)
