@@ -10,7 +10,7 @@ module StashEngine
       def ping_dependency
         super
         # Check the status of the solr port
-        target = ENV['SOLR_URL'] || StashEngine::Engine.routes.url_helpers.search_url
+        target = ENV['SOLR_URL'] || Rails.application.routes.url_helpers.search_url
         resp = HTTParty.get(target)
         online = resp.code == 200
         msg = resp.body unless online

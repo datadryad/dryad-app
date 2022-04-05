@@ -34,7 +34,7 @@ module StashEngine
     end
 
     def stash_url_helpers
-      StashEngine::Engine.routes.url_helpers
+      Rails.application.routes.url_helpers
     end
 
     # helper to generate URL for landing page for an identifier with currently logged-in tenant

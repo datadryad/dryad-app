@@ -45,7 +45,7 @@ module StashEngine
     # Called from the LandingController when an update happens
     def orcid_invitation(orcid_invite)
       # need to calculate url here because url helpers work erratically in the mailer template itself
-      path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
+      path = Rails.application.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       @url = orcid_invite.landing(path)
       @resource = orcid_invite.resource
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'

@@ -215,7 +215,7 @@ module StashEngine
 
       r = resources.by_version_desc.first
       tenant = r.tenant
-      @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
+      @target = tenant.full_url(Rails.application.routes.url_helpers.show_path(to_s))
     end
 
     # the search words is a special MySQL search field that concatenates the following fields required to be searched over

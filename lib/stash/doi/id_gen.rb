@@ -53,7 +53,7 @@ module Stash
       end
 
       def landing_page_url
-        @landing_page_url ||= StashEngine::Engine.routes.url_helpers.show_url(resource.identifier_str)
+        @landing_page_url ||= Rails.application.routes.url_helpers.show_url(resource.identifier_str)
       end
 
       def initialize(resource:)

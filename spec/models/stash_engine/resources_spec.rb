@@ -1056,7 +1056,7 @@ module StashEngine
 
       describe :version_zipfile= do
         it 'creates the first version' do
-          zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
+          zipfile = '/apps/uploads/17-archive.zip'
           resource.version_zipfile = zipfile
           version = StashEngine::Version.find_by(resource_id: resource.id)
           expect(version).not_to be_nil
@@ -1466,7 +1466,7 @@ module StashEngine
         # This is all horribly hacky because of the way these tests don't load Rails correctly, we need move tests to
         # a real Rails environment.
 
-        require_relative '../../../stash/stash_engine/app/jobs/stash_engine/zenodo_copy_job'
+        require_relative '../../../app/jobs/stash_engine/zenodo_copy_job'
 
         @resource = create(:resource)
         create(:data_file, resource_id: @resource.id)
