@@ -41,7 +41,7 @@ module Stash
 
       # takes a size and returns overage charges in cents
       def overage_charges
-        overage_chunks * StashEngine.app.payments.additional_storage_chunk_cost
+        overage_chunks * APP_CONFIG.payments.additional_storage_chunk_cost
       end
 
       def ds_size
@@ -52,24 +52,24 @@ module Stash
 
       def overage_bytes
         size_in_bytes = ds_size
-        return 0 if size_in_bytes <= StashEngine.app.payments.large_file_size
+        return 0 if size_in_bytes <= APP_CONFIG.payments.large_file_size
 
-        size_in_bytes - StashEngine.app.payments.large_file_size
+        size_in_bytes - APP_CONFIG.payments.large_file_size
       end
 
       def overage_chunks
         over_bytes = overage_bytes
         return 0 if over_bytes == 0
 
-        (over_bytes / StashEngine.app.payments.additional_storage_chunk_size).ceil
+        (over_bytes / APP_CONFIG.payments.additional_storage_chunk_size).ceil
       end
 
       def overage_message
         msg = <<~MESSAGE
           Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(overage_bytes)} @
-          #{ActionController::Base.helpers.number_to_currency(StashEngine.app.payments.additional_storage_chunk_cost / 100)}
-          per #{filesize(StashEngine.app.payments.additional_storage_chunk_size)} or part thereof
-          over #{filesize(StashEngine.app.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
+          #{ActionController::Base.helpers.number_to_currency(APP_CONFIG.payments.additional_storage_chunk_cost / 100)}
+          per #{filesize(APP_CONFIG.payments.additional_storage_chunk_size)} or part thereof
+          over #{filesize(APP_CONFIG.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
         MESSAGE
         msg.strip.gsub(/\s+/, ' ')
       end
@@ -79,14 +79,14 @@ module Stash
       private
 
       def set_api_key
-        Stripe.api_key = StashEngine.app.payments.key
+        Stripe.api_key = APP_CONFIG.payments.key
       end
 
       # this is mostly just long because of long text & formatting text
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
-          amount: StashEngine.app.payments.data_processing_charge,
+          amount: APP_CONFIG.payments.data_processing_charge,
           currency: 'usd',
           description: "Data Processing Charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
@@ -94,7 +94,7 @@ module Stash
         if over_chunks.positive?
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,
-                       unit_amount: StashEngine.app.payments.additional_storage_chunk_cost,
+                       unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
                        currency: 'usd',
                        quantity: over_chunks,
                        description: overage_message
