@@ -1,4 +1,3 @@
-require 'stash/repo/submission_job'
 require 'fileutils'
 require 'concurrent'
 module Stash

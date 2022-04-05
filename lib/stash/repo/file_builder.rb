@@ -1,6 +1,6 @@
 require 'fileutils'
 require 'mime-types'
-require 'stash/aws/s3'
+require_relative '../aws/s3'
 
 module Stash
   module Repo

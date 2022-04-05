@@ -1,6 +1,6 @@
 require 'datacite/mapping/datacite_xml_factory'
-require 'stash/repo/file_builder'
-require 'stash/repo/validating_xml_builder'
+require_relative '../../../../../../lib/stash/repo/file_builder'
+require_relative '../../../../../../lib/stash/repo/validating_xml_builder'
 
 module Stash
   module Merritt
