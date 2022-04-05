@@ -20,9 +20,10 @@ module StashDatacite
     def create
       respond_to do |format|
         @author = StashEngine::Author.create(author_params)
-        process_affiliation
+        process_affiliation unless params[:affiliation].nil?
         @author.reload
         format.js
+        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
       end
     end
 
@@ -79,7 +80,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def author_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
-                                     :author_email, :resource_id, :author_orcid,
+                                     :author_email, :resource_id, :author_orcid, :author_order,
                                      affiliation: %i[id ror_id long_name])
     end
 
