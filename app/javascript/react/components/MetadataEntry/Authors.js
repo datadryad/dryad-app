@@ -66,6 +66,34 @@ export default function Authors({resource, dryadAuthors}) {
     setAuthors(newAuth);
   }
 
+  const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
+
+  const blankAuthor = {
+    author_first_name: '',
+    author_last_name: '',
+    author_email: '',
+    author_orcid: null,
+    resource_id: resource.id
+  };
+
+  const addNewAuthor = () => {
+    console.log(`${(new Date()).toISOString()}: Adding author`);
+
+    const authorJson = {
+      authenticity_token: csrf,
+      author: { ...blankAuthor, author_order: lastOrder() }
+    };
+
+    axios.post('/stash_datacite/authors/create', authorJson,
+        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+        .then((data) => {
+          if (data.status !== 200) {
+            console.log("couldn't add new author from remote server");
+          }
+          setAuthors((prevState) => [...prevState, data.data]);
+        });
+  };
+
   const removeItem = (id, resource_id) => {
     console.log(`${(new Date()).toISOString()}: deleting author`);
     const trueDelPath = `/stash_datacite/authors/${id}/delete`
@@ -180,7 +208,7 @@ export default function Authors({resource, dryadAuthors}) {
             role="button"
             onClick={(e) => {
               e.preventDefault();
-              // addItem();
+              addNewAuthor();
             }}
         >
           Add Author
