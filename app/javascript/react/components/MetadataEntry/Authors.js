@@ -4,8 +4,9 @@ import DragonDrop from 'drag-on-drop';
 import './Dragon.css';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import AuthorForm from './AuthorForm';
+import OrcidInfo from './OrcidInfo'
 
-export default function Authors({resource, dryadAuthors}) {
+export default function Authors({resource, dryadAuthors, curator}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
   const oldOrderRef = useRef(null);
@@ -219,6 +220,7 @@ export default function Authors({resource, dryadAuthors}) {
                 <div className="offscreen">Reorder</div>
               </button>
               <AuthorForm dryadAuthor={auth} removeFunction={removeItem} />
+              <OrcidInfo dryadAuthor={auth} curator={curator} />
             </li>
           ))}
       </ul>
