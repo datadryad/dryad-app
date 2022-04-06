@@ -8,6 +8,7 @@ import AuthorForm from './AuthorForm'
 export default function Authors({resource, dryadAuthors}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
+  const oldOrderRef = useRef(null);
 
   const [authors, setAuthors] = useState(dryadAuthors);
   const [dragonDrop, setDragonDrop] = useState(null);
@@ -30,13 +31,14 @@ export default function Authors({resource, dryadAuthors}) {
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {
+    oldOrderRef.current = authors.map(item => [item.id, item.author_order]);
     const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
 
-    const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id')), order: idx}));
+    const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id')), author_order: idx}));
 
     // make into key/values with object id as key and order as value for fast lookup
     const newOrderObj = newOrder.reduce((obj, item) => {
-      obj[item.id] = item.order;
+      obj[item.id] = item.author_order;
       return obj;
     }, {});
 
@@ -60,7 +62,7 @@ export default function Authors({resource, dryadAuthors}) {
     });
 
     // duplicate authors list with updated order values reflecting new order
-    const newAuth = localAuthors.map((item) => ({...item, order: newOrderObj[item.id]}));
+    const newAuth = localAuthors.map((item) => ({...item, author_order: newOrderObj[item.id]}));
 
     // replace
     setAuthors(newAuth);
@@ -122,19 +124,6 @@ export default function Authors({resource, dryadAuthors}) {
     setAuthors((prevState) => prevState.filter((item) => (item.id !== id)));
   };
 
-  /*
-  function deleteItem(id) {
-    setAuthors(authors.filter((item) => (item.id !== id)));
-  }
-   */
-
-  function addItem() {
-    const newId = (authors.length ? Math.max(...authors.map((auth) => auth.id)) + 1 : 1000);
-    const lastOrder = (authors.length ? Math.max(...authors.map((auth) => auth.order)) + 1 : 0);
-    const newAuthor = {id: newId, name: faker.name.findName(), order: lastOrder};
-    setAuthors([...authors, newAuthor]);
-  }
-
   // to set up dragon drop or reinit on changes
   useEffect(() => {
     if (!dragonDrop) {
@@ -157,6 +146,42 @@ export default function Authors({resource, dryadAuthors}) {
       dragon.on('dropped', () => {
         savedWrapper.current();
       });
+      dragon.on('cancel', () => {
+        // Dragon Drop has a three year old bug that still isn't fixed https://github.com/schne324/dragon-drop/issues/34
+        // So this is an extremely ugly workaround to re-submit the old values again since it fires both dropped and cancel
+        // for a cancel, so we can't really prevent the drop from happening to begin with so we just have to delay and revert it.
+        // Sorry, this is really hacky, but I don't have time to rewrite their library.
+        setTimeout(() => {
+          console.log('old order--revert', oldOrderRef.current);
+          const newOrderObj = oldOrderRef.current.reduce((obj, item) => {
+            obj[item[0]] = item[1];
+            return obj;
+          }, {});
+
+          axios.patch(
+              '/stash_datacite/authors/reorder',
+              {...newOrderObj, authenticity_token: csrf},
+              {
+                headers: {
+                  'Content-Type': 'application/json; charset=utf-8',
+                  Accept: 'application/json',
+                },
+              },
+          ).then((data) => {
+            if (data.status !== 200) {
+              console.log('Response failure not a 200 response from funders reversion save for canceling drag and drop');
+            }
+          });
+
+          // duplicate authors list with updated order values reflecting new (old) order
+          const newAuth = localAuthors.map((item) => ({...item, author_order: newOrderObj[item.id]}));
+
+          // replace the list
+          setAuthors(newAuth);
+
+        }, 500);
+      });
+
       setDragonDrop(dragon);
 
       // dragon.on('dropped', function (container, item) {updateOrderFromDom(dragonRef.current); });
@@ -175,7 +200,6 @@ export default function Authors({resource, dryadAuthors}) {
         <span className="offscreen">Ensure screen reader is in focus mode.</span>
       </p>
       <ul className="dragon-drop-list" aria-labelledby="authors-head" ref={dragonRef}>
-        {console.log('current authors in list from internal author data in react', authors)}
         {authors
           .sort((a, b) => {
             // sorts by id if order not present and gets around 0 being falsey in javascript
