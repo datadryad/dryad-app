@@ -21,7 +21,12 @@
     <legend class="c-fieldset__legend">Author(s)</legend>
     <div class="js-authors_form">
       <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
-          dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(affiliation: auth.affiliation.as_json) } } ) %>
+          dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
+              affiliation: auth.affiliation.as_json,
+              orcid_invite_path:
+                  (auth.author_orcid.blank? && auth.author_email.present? && auth.resource.identifier.pub_state == 'published' ?
+                       auth.orcid_invite_path : nil ))},
+              curator: current_user&.curator? } ) %>
     </div>
   </fieldset>
 
