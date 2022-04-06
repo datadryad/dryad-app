@@ -4,6 +4,7 @@ module StashEngine
   module ApplicationHelper
     # displays log in/out based on session state, temporary for now
     # :nocov:
+
     def log_in_out
       if session[:user_id].blank?
         link_to 'log in', stash_url_helpers.tenants_path

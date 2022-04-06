@@ -34,7 +34,7 @@ $(function() {
                 type: "GET",
                 dataType: "json",
                 cache: false,
-                url: "<%= download_assembly_status_path(id: @resource.id, share: params[:share]) %>",
+                url: "<%= Rails.application.routes.url_helpers.download_assembly_status_path(id: @resource.id, share: params[:share]) %>",
                 async: true,
                 success: function(data) {
                     console.log("Polling Data: " + JSON.stringify(data));

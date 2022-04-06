@@ -45,7 +45,7 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
 * [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
-* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  https://github.com/CDL-Dryad/dryad-app/blob/main/stash/stash_engine/ui-library/README.md
+* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  https://github.com/CDL-Dryad/dryad-app/blob/main/ui-library/README.md
 
 * Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 
