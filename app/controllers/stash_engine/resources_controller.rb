@@ -57,11 +57,11 @@ module StashEngine
       resource.identifier_id = db_id_obj.id
       resource.save
       resource.fill_blank_author!
-      redirect_to metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
       logger.error("Unable to create new resource: #{e.full_message}")
-      redirect_to dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
+      redirect_to stash_url_helpers.dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
 
     # PATCH/PUT /resources/1

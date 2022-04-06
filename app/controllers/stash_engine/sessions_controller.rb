@@ -11,7 +11,7 @@ module StashEngine
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
       current_user.update(tenant_id: params[:tenant_id])
-      redirect_to dashboard_path
+      redirect_to stash_url_helpers.dashboard_path
     end
 
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
@@ -23,9 +23,9 @@ module StashEngine
       session[:user_id] = user.id
       user.set_migration_token
       if user.tenant_id.present?
-        redirect_to dashboard_path
+        redirect_to stash_url_helpers.dashboard_path
       else
-        redirect_to choose_sso_path
+        redirect_to stash_url_helpers.choose_sso_path
       end
     end
 
@@ -33,7 +33,7 @@ module StashEngine
     def destroy
       reset_session
       clear_user
-      redirect_to root_path
+      redirect_to Rails.application.routes.url_helpers.root_path
     end
 
     def choose_login; end
@@ -79,7 +79,7 @@ module StashEngine
         current_user.tenant_id = APP_CONFIG.default_tenant
         current_user.save!
       end
-      redirect_to dashboard_path
+      redirect_to stash_url_helpers.dashboard_path
     end
 
     # send the user to the tenant's SSO url
@@ -88,7 +88,7 @@ module StashEngine
       if tenant.present?
         if tenant&.authentication&.strategy == 'author_match' # requires authors to be from institution later on
           current_user.update(tenant_id: tenant.tenant_id)
-          redirect_to dashboard_path, status: :found
+          redirect_to stash_url_helpers.dashboard_path, status: :found
           return
         end
         redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
@@ -137,7 +137,7 @@ module StashEngine
       user = @users.first
       session[:user_id] = user.id
       # tenant = Tenant.find(user.tenant_id) # this was used to redirect to correct tenant, now not needed
-      redirect_to dashboard_path
+      redirect_to stash_url_helpers.dashboard_path
     end
 
     # get orcid emails as returned by API

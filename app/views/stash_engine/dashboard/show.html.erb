@@ -14,7 +14,8 @@
 
 <div class="c-datasets-heading">
 	<h1 class="c-datasets-heading__heading o-heading__level1">My Datasets</h1>
-	<%= button_to 'Start New Dataset', new_resource_path, class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
+	<%= button_to 'Start New Dataset', stash_url_helpers.new_resource_path,
+            class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
 </div>
 
 <div class="c-table-heading">

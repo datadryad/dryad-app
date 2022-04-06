@@ -11,7 +11,7 @@
 
     <% if !Rails.env.include?('prod') && ENV['TEST_LOGIN'].present? %>
       <p>
-        <%= link_to 'Use test login', test_login_path %>
+        <%= link_to 'Use test login', Rails.application.routes.url_helpers.test_login_path %>
       </p>
     <% end %>
   </div>
