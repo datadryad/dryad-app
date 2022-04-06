@@ -3,7 +3,7 @@ import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
 import './Dragon.css';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
-import AuthorForm from './AuthorForm'
+import AuthorForm from './AuthorForm';
 
 export default function Authors({resource, dryadAuthors}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -174,12 +174,10 @@ export default function Authors({resource, dryadAuthors}) {
           });
 
           // duplicate authors list with updated order values reflecting new (old) order
-          const newAuth = localAuthors.map((item) => ({...item, author_order: newOrderObj[item.id]}));
+          // const newAuth = localAuthors.map((item) => ({...item, author_order: newOrderObj[item.id]}));
 
-          // replace the list
-          setAuthors(newAuth);
-
-        }, 500);
+          setAuthors((prevState) => prevState.map((item) => ({...item, author_order: newOrderObj[item.id]}) ));
+        }, 1000);
       });
 
       setDragonDrop(dragon);
