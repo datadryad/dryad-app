@@ -1,4 +1,4 @@
-require_relative '../../../stash/stash_engine/lib/stash/datacite_metadata'
+require_relative '../../../lib/stash/datacite_metadata'
 require 'byebug'
 
 require 'rails_helper'

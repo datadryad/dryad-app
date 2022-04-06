@@ -44,7 +44,7 @@ Allowable values:
 - submitted = submitted to Merritt successfully
 - error = some error occurred while submitting to Merritt
 
-stash/stash_engine/app/controllers/stash_engine/landing_controller.rb
+app/controllers/stash_engine/landing_controller.rb
 - See the update method. This gets called back by the notifier service
   which is reading an OAI-PMH feed from Merritt which lists things that
   have gone in successfully.  
