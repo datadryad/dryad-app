@@ -147,7 +147,7 @@ export default function Authors({resource, dryadAuthors}) {
         savedWrapper.current();
       });
       dragon.on('cancel', () => {
-        // Dragon Drop has a three year old bug that still isn't fixed https://github.com/schne324/dragon-drop/issues/34
+        // Dragon Drop has an old bug that still isn't fixed https://github.com/schne324/dragon-drop/issues/34
         // So this is an extremely ugly workaround to re-submit the old values again since it fires both dropped and cancel
         // for a cancel, so we can't really prevent the drop from happening to begin with so we just have to delay and revert it.
         // Sorry, this is really hacky, but I don't have time to rewrite their library.
