@@ -6,7 +6,7 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import AuthorForm from './AuthorForm';
 import OrcidInfo from './OrcidInfo'
 
-export default function Authors({resource, dryadAuthors, curator}) {
+export default function Authors({resource, dryadAuthors, curator, icon}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
   const oldOrderRef = useRef(null);
@@ -212,10 +212,19 @@ export default function Authors({resource, dryadAuthors, curator}) {
               <button
                 aria-describedby="global-help"
                 type="button"
-                className="fa fa-bars handle c-input"
+                className="handle c-input"
                 aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
                 id={`author-button-${auth.id}`}
-                style={{display: 'block', float: 'left', transform: 'translateY(80%)'}}
+                style={
+                  {
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    display: 'block',
+                    float: 'left',
+                    transform: 'translateY(1.4em)',
+                    border: 'none',
+                    background: `url('${icon}') no-repeat`
+                  }}
               >
                 <div className="offscreen">Reorder</div>
               </button>
