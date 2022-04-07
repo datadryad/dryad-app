@@ -1,20 +1,3 @@
-.fa-github {
-  color: #fff;
-  font-size: 55px;
-  text-decoration: none;
-}
-
-.fa-github:hover {
-  transition: color 700ms;
-  color: #000;
-}
-
-/*
-section {
-  text-align: center;
-}
- */
-
 label {
   vertical-align: middle;
 }
