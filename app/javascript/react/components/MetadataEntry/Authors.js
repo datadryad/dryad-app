@@ -30,18 +30,16 @@ export default function Authors({
 
   const savedWrapper = useRef();
 
-  const toOrderObj = (orderArr) => {
-    /* eslint-disable no-param-reassign */
-     return orderArr.reduce((obj, item) => {
-      obj[item.id] = item.author_order;
-      return obj;
-    }, {});
-    /* eslint-enable no-param-reassign */
-  }
+  /* eslint-disable no-param-reassign */
+  const toOrderObj = (orderArr) => orderArr.reduce((obj, item) => {
+    obj[item.id] = item.author_order;
+    return obj;
+  }, {});
+  /* eslint-enable no-param-reassign */
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {
-    oldOrderRef.current = authors.map((item) => ({id: item.id, author_order: item.author_order}) );
+    oldOrderRef.current = authors.map((item) => ({id: item.id, author_order: item.author_order}));
     const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
 
     const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id'), 10), author_order: idx}));
@@ -237,6 +235,7 @@ export default function Authors({
       </ul>
       <div>
 
+        {/* eslint-disable jsx-a11y/anchor-is-valid */}
         <a
           href="#"
           className="t-describe__add-button o-button__add"
@@ -248,6 +247,7 @@ export default function Authors({
         >
           Add Author
         </a>
+        {/* eslint-enable jsx-a11y/anchor-is-valid */}
       </div>
     </section>
   );
