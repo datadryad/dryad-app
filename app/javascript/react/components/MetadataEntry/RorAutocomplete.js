@@ -14,7 +14,6 @@ export default function RorAutocomplete({
   const prevText = useRef(acText);
   const prevID = useRef(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
-  const nameRef = useRef(null);
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
@@ -90,5 +89,10 @@ export default function RorAutocomplete({
 }
 
 RorAutocomplete.propTypes = {
+  formRef: PropTypes.element.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
   controlOptions: PropTypes.object.isRequired,
 };
