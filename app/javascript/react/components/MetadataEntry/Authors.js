@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
 import './Dragon.css';
+import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import AuthorForm from './AuthorForm';
 import OrcidInfo from './OrcidInfo';
@@ -28,22 +29,26 @@ export default function Authors({
    */
 
   const savedWrapper = useRef();
-  const wrappingFunction = () => {
-    updateOrderFromDom(authors);
-  };
 
-  // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
-  function updateOrderFromDom(localAuthors) {
-    oldOrderRef.current = authors.map((item) => [item.id, item.author_order]);
-    const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
-
-    const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id')), author_order: idx}));
-
-    // make into key/values with object id as key and order as value for fast lookup
-    const newOrderObj = newOrder.reduce((obj, item) => {
+  const toOrderObj = (orderArr) => {
+    /* eslint-disable no-param-reassign */
+     return orderArr.reduce((obj, item) => {
       obj[item.id] = item.author_order;
       return obj;
     }, {});
+    /* eslint-enable no-param-reassign */
+  }
+
+  // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
+  function updateOrderFromDom(localAuthors) {
+    oldOrderRef.current = authors.map((item) => ({id: item.id, author_order: item.author_order}) );
+    const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
+
+    const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id'), 10), author_order: idx}));
+
+    // make into key/values with object id as key and order as value for fast lookup
+
+    const newOrderObj = toOrderObj(newOrder);
 
     showSavingMsg();
     // update order in the database
@@ -70,6 +75,10 @@ export default function Authors({
     // replace
     setAuthors(newAuth);
   }
+
+  const wrappingFunction = () => {
+    updateOrderFromDom(authors);
+  };
 
   const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
 
@@ -159,10 +168,7 @@ export default function Authors({
         // Sorry, this is really hacky, but I don't have time to rewrite their library.
         setTimeout(() => {
           console.log('old order--revert', oldOrderRef.current);
-          const newOrderObj = oldOrderRef.current.reduce((obj, item) => {
-            obj[item[0]] = item[1];
-            return obj;
-          }, {});
+          const newOrderObj = toOrderObj(oldOrderRef.current);
 
           axios.patch(
             '/stash_datacite/authors/reorder',
@@ -246,3 +252,10 @@ export default function Authors({
     </section>
   );
 }
+
+Authors.propTypes = {
+  resource: PropTypes.object.isRequired,
+  dryadAuthors: PropTypes.array.isRequired,
+  curator: PropTypes.bool.isRequired,
+  icon: PropTypes.string.isRequired,
+};
