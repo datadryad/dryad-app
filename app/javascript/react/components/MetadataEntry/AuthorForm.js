@@ -1,6 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/anchor-is-valid */
+// The eslint doesn't recognize the dynamically named label for a control
+import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import RorAutocomplete from './RorAutocomplete';
 
@@ -145,3 +148,8 @@ export default function AuthorForm({dryadAuthor, removeFunction}) {
     </Formik>
   );
 }
+
+AuthorForm.propTypes = {
+  dryadAuthor: PropTypes.object.isRequired,
+  removeFunction: PropTypes.func.isRequired,
+};
