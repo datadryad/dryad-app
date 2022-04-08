@@ -92,6 +92,37 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in 'stash_datacite_related_identifier[related_identifier]', with: Faker::Pid.doi
     end
 
+    it 'reorders authors with keyboard', js: true do
+      fill_in 'title', with: Faker::Lorem.sentence
+      first_author = {first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.safe_email}
+      second_author = {first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.safe_email}
+
+      # fill first
+      fill_in 'author_first_name', with: first_author[:first]
+      fill_in 'author_last_name', with: first_author[:last]
+      fill_in 'author_email', with: first_author[:email]
+
+      # fill second
+      click_on "Add Author"
+      expect(page).to have_css('input[name=author_first_name]', count: 2)
+      all(:css, 'input[name=author_first_name]')[1].set(second_author[:first])
+      all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
+      all(:css, 'input[name=author_email]')[1].set(second_author[:email])
+
+      fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+      el = all(:css, 'button.fa-workaround').first
+      el.send_keys(:enter)
+      el.send_keys(:arrow_down)
+      el.send_keys(:enter)
+
+      sleep 1
+      expect(all(:css, 'input[name=author_first_name]').first.value).to eq(second_author[:first])
+
+      navigate_to_review
+      the_html = page.html
+      expect(the_html.index(second_author[:last])).to be < the_html.index(first_author[:last]) # because we switched these authors
+    end
+
     it 'charges user by default', js: true do
       navigate_to_review
       expect(page).to have_text('you will receive an invoice')
