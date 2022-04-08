@@ -106,11 +106,24 @@ RSpec.feature 'NewDataset', type: :feature do
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
-      page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{waiver_university}'")
-      # a litlte big hacky, but the following fills in the ROR expected of a fee waiver institution's country
-      page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = '#{ror_org.ror_id}'")
+
+      fill_in_research_domain
+
+      # have to do this directly since the fields are no longer directly exposed and rors come from list
+      # affil = StashDatacite::Affiliation.create(long_name: waiver_university, ror_id: ror_org.ror_id)
+      author = StashEngine::Author.first
+      # author.affiliations.destroy_all
+      #  author.affiliations << affil
+      author.affiliation.update(long_name: waiver_university, ror_id: ror_org.ror_id)
+
+      # page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{waiver_university}'")
+      # a little bit hacky, but the following fills in the ROR expected of a fee waiver institution's country
+      # page.execute_script("document.getElementsByClassName('js-affil-id')[0].value = '#{ror_org.ror_id}'")
 
       navigate_to_review
+      author.affiliation.update(long_name: waiver_university, ror_id: ror_org.ror_id)
+      navigate_to_review
+
       expect(page).to have_text('Payment is not required')
     end
 
