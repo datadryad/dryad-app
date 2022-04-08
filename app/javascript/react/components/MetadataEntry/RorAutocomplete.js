@@ -89,7 +89,7 @@ export default function RorAutocomplete({
 }
 
 RorAutocomplete.propTypes = {
-  formRef: PropTypes.element.isRequired,
+  formRef: PropTypes.object.isRequired,
   acText: PropTypes.string.isRequired,
   setAcText: PropTypes.func.isRequired,
   acID: PropTypes.string.isRequired,
