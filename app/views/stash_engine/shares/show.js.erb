@@ -1,2 +1,2 @@
 $(".sharing_form").html("<%= escape_javascript(render partial: 'stash_engine/shares/form',
-  locals: { share: @share, resource_id: @share.identifier.last_submitted_resource, path: stash_engine.shares_update_path}) %>")
+  locals: { share: @share, resource_id: @share.identifier.last_submitted_resource, path: stash_url_helpers.shares_update_path}) %>")

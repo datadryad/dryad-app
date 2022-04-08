@@ -111,7 +111,7 @@ module StashDatacite
     end
 
     def add_se_title(dcs_title)
-      # now throwing away datacite info on title and only using one main title in stash_engine.resource
+      # now throwing away datacite info on title and only using one main title in resource
       return if dcs_title.type
 
       se_resource.title = dcs_title && dcs_title.value.strip

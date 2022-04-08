@@ -28,7 +28,7 @@ module StashEngine
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource.user_id || 'nil'} but " \
                         "current user is #{current_user.id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
-      redirect_to stash_engine.dashboard_path
+      redirect_to stash_url_helpers.dashboard_path
     end
 
     def redirect_url_for(original_url, host, port)
