@@ -2,6 +2,15 @@ label {
   vertical-align: middle;
 }
 
+button.fa-workaround {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  float: left;
+  transform: translateY(1.4em);
+  border: none;
+}
+
 button[aria-pressed="true"] {
   box-shadow: inset 0 0 7px #000 !important;
 }
