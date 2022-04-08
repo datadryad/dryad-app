@@ -4,9 +4,11 @@ import DragonDrop from 'drag-on-drop';
 import './Dragon.css';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import AuthorForm from './AuthorForm';
-import OrcidInfo from './OrcidInfo'
+import OrcidInfo from './OrcidInfo';
 
-export default function Authors({resource, dryadAuthors, curator, icon}) {
+export default function Authors({
+  resource, dryadAuthors, curator, icon,
+}) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
   const oldOrderRef = useRef(null);
@@ -32,7 +34,7 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {
-    oldOrderRef.current = authors.map(item => [item.id, item.author_order]);
+    oldOrderRef.current = authors.map((item) => [item.id, item.author_order]);
     const items = Array.from(dragonRef.current.querySelectorAll('li.dd-list-item'));
 
     const newOrder = items.map((item, idx) => ({id: parseInt(item.getAttribute('data-id')), author_order: idx}));
@@ -46,14 +48,14 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
     showSavingMsg();
     // update order in the database
     axios.patch(
-        '/stash_datacite/authors/reorder',
-        {...newOrderObj, authenticity_token: csrf},
-        {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            Accept: 'application/json',
-          },
+      '/stash_datacite/authors/reorder',
+      {...newOrderObj, authenticity_token: csrf},
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
         },
+      },
     ).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
@@ -76,7 +78,7 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
     author_last_name: '',
     author_email: '',
     author_orcid: null,
-    resource_id: resource.id
+    resource_id: resource.id,
   };
 
   const addNewAuthor = () => {
@@ -84,22 +86,25 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
 
     const authorJson = {
       authenticity_token: csrf,
-      author: { ...blankAuthor, author_order: lastOrder() }
+      author: {...blankAuthor, author_order: lastOrder()},
     };
 
-    axios.post('/stash_datacite/authors/create', authorJson,
-        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-        .then((data) => {
-          if (data.status !== 200) {
-            console.log("couldn't add new author from remote server");
-          }
-          setAuthors((prevState) => [...prevState, data.data]);
-        });
+    axios.post(
+      '/stash_datacite/authors/create',
+      authorJson,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        if (data.status !== 200) {
+          console.log("couldn't add new author from remote server");
+        }
+        setAuthors((prevState) => [...prevState, data.data]);
+      });
   };
 
   const removeItem = (id, resource_id) => {
     console.log(`${(new Date()).toISOString()}: deleting author`);
-    const trueDelPath = `/stash_datacite/authors/${id}/delete`
+    const trueDelPath = `/stash_datacite/authors/${id}/delete`;
     showSavingMsg();
 
     // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
@@ -108,19 +113,19 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
       authenticity_token: csrf,
       author: {
         id,
-        resource_id: resource_id,
+        resource_id,
       },
     };
     axios.delete(trueDelPath, {
       data: submitVals,
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     }).then((data) => {
-        if (data.status !== 200) {
-          console.log('Response failure not a 200 response from authors delete');
-        } else {
-          console.log('deleted from authors');
-        }
-        showSavedMsg();
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from authors delete');
+      } else {
+        console.log('deleted from authors');
+      }
+      showSavedMsg();
     });
     setAuthors((prevState) => prevState.filter((item) => (item.id !== id)));
   };
@@ -160,14 +165,14 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
           }, {});
 
           axios.patch(
-              '/stash_datacite/authors/reorder',
-              {...newOrderObj, authenticity_token: csrf},
-              {
-                headers: {
-                  'Content-Type': 'application/json; charset=utf-8',
-                  Accept: 'application/json',
-                },
+            '/stash_datacite/authors/reorder',
+            {...newOrderObj, authenticity_token: csrf},
+            {
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                Accept: 'application/json',
               },
+            },
           ).then((data) => {
             if (data.status !== 200) {
               console.log('Response failure not a 200 response from funders reversion save for canceling drag and drop');
@@ -177,7 +182,7 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
           // duplicate authors list with updated order values reflecting new (old) order
           // const newAuth = localAuthors.map((item) => ({...item, author_order: newOrderObj[item.id]}));
 
-          setAuthors((prevState) => prevState.map((item) => ({...item, author_order: newOrderObj[item.id]}) ));
+          setAuthors((prevState) => prevState.map((item) => ({...item, author_order: newOrderObj[item.id]})));
         }, 1000);
       });
 
@@ -215,7 +220,7 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
                 className="fa-workaround handle c-input"
                 aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
                 id={`author-button-${auth.id}`}
-                style={{ background: `url('${icon}') no-repeat`}}
+                style={{background: `url('${icon}') no-repeat`}}
               >
                 <div className="offscreen">Reorder</div>
               </button>
@@ -227,13 +232,13 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
       <div>
 
         <a
-            href="#"
-            className="t-describe__add-button o-button__add"
-            role="button"
-            onClick={(e) => {
-              e.preventDefault();
-              addNewAuthor();
-            }}
+          href="#"
+          className="t-describe__add-button o-button__add"
+          role="button"
+          onClick={(e) => {
+            e.preventDefault();
+            addNewAuthor();
+          }}
         >
           Add Author
         </a>
