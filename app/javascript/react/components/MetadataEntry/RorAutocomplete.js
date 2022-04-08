@@ -3,7 +3,9 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function RorAutocomplete({formRef, acText, setAcText, acID, setAcID, controlOptions}) {
+export default function RorAutocomplete({
+  formRef, acText, setAcText, acID, setAcID, controlOptions,
+}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -72,17 +74,17 @@ export default function RorAutocomplete({formRef, acText, setAcText, acID, setAc
   // in fact some sources say to do it to avoid repeating components (like https://www.youtube.com/watch?v=yH5Z-lSeV9Y ).
   // So IDK what the real guidance is for this and it seems to work fine.
   return (
-      <GenericNameIdAutocomplete
-        acText={acText || ''}
-        setAcText={setAcText}
-        acID={acID}
-        setAcID={setAcID}
-        setAutoBlurred={setAutoBlurred}
-        supplyLookupList={supplyLookupList}
-        nameFunc={nameFunc}
-        idFunc={idFunc}
-        controlOptions={controlOptions}
-      />
+    <GenericNameIdAutocomplete
+      acText={acText || ''}
+      setAcText={setAcText}
+      acID={acID}
+      setAcID={setAcID}
+      setAutoBlurred={setAutoBlurred}
+      supplyLookupList={supplyLookupList}
+      nameFunc={nameFunc}
+      idFunc={idFunc}
+      controlOptions={controlOptions}
+    />
   );
   /* eslint-enable react/jsx-no-bind */
 }
