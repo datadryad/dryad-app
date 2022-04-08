@@ -212,19 +212,10 @@ export default function Authors({resource, dryadAuthors, curator, icon}) {
               <button
                 aria-describedby="global-help"
                 type="button"
-                className="handle c-input"
+                className="fa-workaround handle c-input"
                 aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
                 id={`author-button-${auth.id}`}
-                style={
-                  {
-                    width: '1.5rem',
-                    height: '1.5rem',
-                    display: 'block',
-                    float: 'left',
-                    transform: 'translateY(1.4em)',
-                    border: 'none',
-                    background: `url('${icon}') no-repeat`
-                  }}
+                style={{ background: `url('${icon}') no-repeat`}}
               >
                 <div className="offscreen">Reorder</div>
               </button>
