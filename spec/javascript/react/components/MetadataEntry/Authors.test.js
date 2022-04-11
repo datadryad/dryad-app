@@ -53,16 +53,14 @@ describe('Authors', () => {
     expect(screen.getByText('Add Author')).toBeInTheDocument();
   });
 
-  /*
-  it("removes a funder from the document", async () => {
+  it("removes an author from the document", async () => {
     const promise = Promise.resolve({
-      data: contributors[2]
+      data: dryadAuthors[2]
     });
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
-                    deletePath={deletePath} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -75,34 +73,35 @@ describe('Authors', () => {
     expect(removes.length).toBe(2);
   });
 
-  it("adds a funder to the document", async () => {
+  it("adds an author to the document", async () => {
 
     const promise = Promise.resolve({
       status: 200,
       data: {
-        id: faker.datatype.number(),
-        contributor_name: '',
-        contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id',
-        name_identifier_id: '',
-        resource_id: resourceId,
+        id: faker.datatype.number({min: 1, max: 32767}),
+        author_first_name: '',
+        author_last_name: '',
+        author_email: '',
+        author_orcid: null,
+        resource_id: resource.id,
+        author_order: 33333,
+        orcid_invite_path: '',
+        affiliation: null
       }
     });
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
-                    deletePath={deletePath} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('add another funder'))
+    userEvent.click(screen.getByText('Add Author'));
 
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4)
     });
   });
-   */
 
 });
