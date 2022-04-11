@@ -56,7 +56,7 @@ module StashEngine
       existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
                       tenant_id: params[:tenant_id], role: params[:role], migration_token: User::NO_MIGRATE_STRING)
       session[:user_id] = existing.id
-      redirect_to dashboard_path, status: :found
+      redirect_to stash_url_helpers.dashboard_path, status: :found
     end
 
     def choose_sso
