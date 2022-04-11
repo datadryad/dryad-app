@@ -20,7 +20,7 @@ module StashEngine
     def find_or_create
       return unless @resource.submitted? # create a new version if this is a submitted version
 
-      redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
+      redirect_to(stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -59,7 +59,7 @@ module StashEngine
       unless current_user
         session[:user_id] = resource.user_id
         if current_user.tenant_id.blank?
-          session[:target_page] = metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+          session[:target_page] = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
           redirect_to choose_sso_path and return
         end
       end
@@ -67,7 +67,7 @@ module StashEngine
       if @resource&.current_resource_state&.resource_state != 'in_progress'
         new_version
       else
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: resource.id))
+        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id))
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -79,7 +79,7 @@ module StashEngine
       duplicate_resource
 
       # redirect to find or create path
-      redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
     end
 
     def reject_agreement
@@ -137,7 +137,7 @@ module StashEngine
 
       if @identifier.in_progress_only?
         @identifier.in_progress_resource.update(current_editor_id: current_user&.id)
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
+        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?
         redirect_to dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'

@@ -21,13 +21,14 @@
       <% if ps == current_ps %>
         <%= ps %>
       <% else %>
-        <%= link_to ps, request.parameters.merge(page_size: ps, page: 1) %>
+          <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.merge(page_size: ps, page: 1))) %>
       <% end %>
     <% end %>
   </div>
 
   <div>
-    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', sortable_table_params.merge(format: :csv) %>
+      <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+       stash_url_helpers.ds_admin_path(sortable_table_params.merge(format: :csv)) %>
   </div>
 
   <p>
