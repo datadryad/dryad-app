@@ -115,7 +115,7 @@ export default function GenericNameIdAutocomplete(
           aria-labelledby={`label_${htmlId}`}
         />
         { !acID && isRequired
-          ? <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list.`}>&#x2753;</span>
+          ? <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list. If no $labelText} is not applicable, enter N/A.`}>&#x2753;</span>
           : ''}
         <ul
           {...getMenuProps()}
