@@ -27,7 +27,7 @@ describe('AuthorForm', () => {
   });
 
   it("renders the basic author form", () => {
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={null} />);
+    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional Affiliation', { exact: false });
     expect(labeledElements.length).toBe(2);
@@ -48,7 +48,7 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={null} />);
+    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} />);
 
     userEvent.clear(screen.getByLabelText('First Name'));
     userEvent.type(screen.getByLabelText('First Name'), 'Alphred');
