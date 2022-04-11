@@ -209,6 +209,7 @@ export default function Authors({
       </p>
       <ul className="dragon-drop-list" aria-labelledby="authors-head" ref={dragonRef}>
         {authors
+          .slice(0) // because, WTF, sort mutates the original array in place, slice(0) creates copy
           .sort((a, b) => {
             // sorts by id if order not present and gets around 0 being falsey in javascript
             if (a.author_order === undefined || a.author_order === null || b.author_order === undefined || b.author_order === null) {

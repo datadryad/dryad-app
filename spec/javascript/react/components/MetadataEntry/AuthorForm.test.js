@@ -21,7 +21,7 @@ const makeAuthor = (resource_id = null, author_order = null) => {
 }
 
 describe('AuthorForm', () => {
-  let dryadAuthor, removeFunction;
+  let dryadAuthor;
   beforeEach(() => {
     dryadAuthor = makeAuthor();
   });
