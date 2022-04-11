@@ -116,7 +116,7 @@ export default function AuthorForm({dryadAuthor, removeFunction}) {
             />
           </div>
           <div className="c-input">
-            <label className="c-input__label required" htmlFor={`author_email__${dryadAuthor.id}`}>
+            <label className={`c-input__label ${(dryadAuthor.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${dryadAuthor.id}`}>
               Author Email
             </label>
             <Field
