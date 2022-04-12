@@ -117,6 +117,7 @@ module StashDatacite
       # ensures that one author has the orcid of the currently logged in user
       def ensure_author_orcid
         return if @resource.owner_author # the owner is already represented by an author with their orcid
+
         user = @resource.user
 
         this_author = @resource.authors.where(author_first_name: user.first_name, author_last_name: user.last_name).first
@@ -131,7 +132,8 @@ module StashDatacite
           author_last_name: user.last_name,
           author_orcid: user.orcid,
           author_email: user.email,
-          resource_id: @resource.id)
+          resource_id: @resource.id
+        )
       end
     end
   end
