@@ -199,6 +199,8 @@ module StashEngine
     end
 
     def remove_placeholder_funders
+      return unless resource.present?
+
       resource.update(contributors: resource.contributors.reject { |funder| funder.contributor_name&.upcase == 'N/A' })
     end
 
