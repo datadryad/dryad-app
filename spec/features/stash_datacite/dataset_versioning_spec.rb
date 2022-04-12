@@ -179,7 +179,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Curation')
-          expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
+          @resource.authors.each do |author|
+            expect(page).to have_text(author.author_last_name)
+          end
           expect(page).to have_text(@curator.name.to_s)
           expect(page).to have_text(@resource.identifier.identifier)
         end
@@ -241,7 +243,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Submitted')
-          expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
+          @resource.authors.each do |author|
+            expect(page).to have_text(author.author_last_name)
+          end
           expect(page).not_to have_text(@curator.name_last_first)
           expect(page).to have_text(@resource.identifier.identifier)
         end
@@ -361,6 +365,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
+    all('[id^=instit_affil_]').last.set('test institution')
     description_divider = find('h2', text: 'Data Description')
     description_divider.click
     doi = 'https://doi.org/10.5061/dryad.888gm50'
