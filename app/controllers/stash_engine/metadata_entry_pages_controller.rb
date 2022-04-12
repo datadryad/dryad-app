@@ -26,7 +26,9 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     # GET /stash/edit/{doi}/{edit_code}
     def edit_by_doi
-      redirect_to root_path, alert: 'The target dataset is being processed. Please try again later.' and return if resource.processing?
+      if resource.processing?
+        redirect_to stash_url_helpers.root_path, alert: 'The target dataset is being processed. Please try again later.' and return
+      end
 
       # if this call was made with a returnURL, save it that URL in the session for the end of the submission process
       session[:returnURL] = params[:returnURL] if params[:returnURL]
@@ -60,7 +62,7 @@ module StashEngine
         session[:user_id] = resource.user_id
         if current_user.tenant_id.blank?
           session[:target_page] = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
-          redirect_to choose_sso_path and return
+          redirect_to stash_url_helpers.choose_sso_path and return
         end
       end
 
@@ -108,7 +110,7 @@ module StashEngine
     def resource_exist
       resource = Resource.find(params[:resource_id]) if params[:resource_id]
       resource = resource_from_doi if resource.nil?
-      redirect_to root_path, alert: 'The dataset you are looking for does not exist.' if resource.nil?
+      redirect_to stash_url_helpers.root_path, alert: 'The dataset you are looking for does not exist.' if resource.nil?
     end
 
     def resource_from_doi
@@ -140,7 +142,7 @@ module StashEngine
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?
-        redirect_to dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
+        redirect_to stash_url_helpers.dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
         false
       end
     end
