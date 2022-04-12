@@ -3,7 +3,7 @@
 .c-orcid {
 	display: flex;
 	align-items: center;
-	margin: 0 0 20px;
+	margin: 0;
 }
 
 .c-orcid__icon {
@@ -17,4 +17,8 @@
 .c-orcid__id {
 	@extend %o-link__primary;
 	color: $design-dark-blue-color;
+}
+
+.c-orcid__div {
+	margin-bottom: 0.75em;
 }

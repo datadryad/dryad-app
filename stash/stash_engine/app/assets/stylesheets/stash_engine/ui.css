@@ -5104,7 +5104,7 @@ html.no-details .o-showhide__summary {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin: 0 0 20px; }
+  margin: 0; }
 
 .c-orcid__icon {
   display: inline-block;
@@ -5115,6 +5115,9 @@ html.no-details .o-showhide__summary {
 
 .c-orcid__id {
   color: #005581; }
+
+.c-orcid__div {
+  margin-bottom: 0.75em; }
 
 .c-pagination {
   display: -webkit-box;

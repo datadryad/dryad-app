@@ -26,7 +26,9 @@
               orcid_invite_path:
                   (auth.author_orcid.blank? && auth.author_email.present? && auth.resource.identifier.pub_state == 'published' ?
                        auth.orcid_invite_path : nil ))},
-              curator: current_user&.curator?, icon: asset_path('fa-bars')} ) %>
+              curator: current_user&.curator?, icon: asset_path('fa-bars'),
+              userOrcid: @resource&.user&.orcid
+      } ) %>
     </div>
   </fieldset>
 
