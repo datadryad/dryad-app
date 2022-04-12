@@ -16,7 +16,7 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
   const [acID, setAcID] = useState(dryadAuthor?.affiliation?.ror_id || '');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving funder`);
+    console.log(`${(new Date()).toISOString()}: Saving author`);
     showSavingMsg();
 
     // set up values
