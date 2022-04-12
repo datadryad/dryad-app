@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function OrcidInfo({dryadAuthor, curator, userOrcid}){
+export default function OrcidInfo({dryadAuthor, curator, userOrcid, correspondingAuthorId}){
   let orcidInfo = null;
   if (dryadAuthor.author_orcid) {
     /* eslint-disable no-restricted-globals */
@@ -21,7 +21,7 @@ export default function OrcidInfo({dryadAuthor, curator, userOrcid}){
                 <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
               </div>
             )}
-        {orcidInfo && dryadAuthor.author_orcid === userOrcid && (
+        {correspondingAuthorId === dryadAuthor.id && (
             <div className="c-orcid__div" style={{marginLeft: '2em'}}><i className="fa fa-address-card-o" aria-hidden="true"></i>&nbsp;&nbsp;Corresponding Author</div>
         )}
         {(curator && dryadAuthor.orcid_invite_path
@@ -38,5 +38,6 @@ export default function OrcidInfo({dryadAuthor, curator, userOrcid}){
 OrcidInfo.propTypes = {
   dryadAuthor: PropTypes.object.isRequired,
   curator: PropTypes.bool.isRequired,
-  userOrcid: PropTypes.string
+  userOrcid: PropTypes.string,
+  correspondingAuthorId: PropTypes.number.isRequired
 };
