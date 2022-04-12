@@ -33,10 +33,10 @@ function helloTask(cb) {
 }
 
 function copyPackageFilesTask() {
-  return spawn('npm run copy-pkg-files --silent', {
-    stdio: 'inherit',
-    shell: true,
-  });
+//  return spawn('copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.css ui-library/css/vendor && copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.js ui-library/js/vendor', {
+//    stdio: 'inherit',
+//    shell: true,
+//  });
 };
 
 // copy font-awesome into fonts

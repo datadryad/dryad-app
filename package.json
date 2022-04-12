@@ -22,10 +22,10 @@
     "testEnvironment": "jsdom"
   },
   "scripts": {
-        "copy-pkg-files": "copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.css ui-library/css/vendor && copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.js ui-library/js/vendor",
-	"publish": "gh-pages --dist dist",
-	"test": "echo \"Error: no test specified\" && exit 1"
-  },          
+    "start": "bin/webpack serve --mode development",
+    "build": "webpack",
+    "test": "jest"
+  },
   "dependencies": {
     "@babel/plugin-proposal-private-methods": "^7.16.0",
     "@babel/preset-react": "^7.14.5",
@@ -40,6 +40,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",
+    "copyfiles": "^2.4.1",
     "downshift": "^6.1.7",
     "draft-js": "^0.11.7",
     "evaporate": "^2.1.4",
@@ -91,10 +92,5 @@
     "node": "^14.18.3",
     "react-test-renderer": "^17.0.2",
     "webpack-dev-server": "^3.11.2"
-  },
-  "scripts": {
-    "start": "bin/webpack serve --mode development",
-    "build": "webpack",
-    "test": "jest"
   }
 }
