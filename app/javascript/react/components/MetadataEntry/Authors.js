@@ -8,7 +8,7 @@ import AuthorForm from './AuthorForm';
 import OrcidInfo from './OrcidInfo';
 
 export default function Authors({
-  resource, dryadAuthors, curator, icon, userOrcid
+  resource, dryadAuthors, curator, icon, userOrcid, correspondingAuthorId
 }) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
@@ -229,8 +229,8 @@ export default function Authors({
               >
                 <div className="offscreen">Reorder</div>
               </button>
-              <AuthorForm dryadAuthor={auth} removeFunction={removeItem} />
-              <OrcidInfo dryadAuthor={auth} curator={curator} userOrcid={userOrcid} />
+              <AuthorForm dryadAuthor={auth} removeFunction={removeItem} correspondingAuthorId={correspondingAuthorId} />
+              <OrcidInfo dryadAuthor={auth} curator={curator} userOrcid={userOrcid} correspondingAuthorId={correspondingAuthorId} />
             </li>
           ))}
       </ul>
@@ -259,4 +259,5 @@ Authors.propTypes = {
   dryadAuthors: PropTypes.array.isRequired,
   curator: PropTypes.bool.isRequired,
   icon: PropTypes.string.isRequired,
+  correspondingAuthorId: PropTypes.number.isRequired
 };
