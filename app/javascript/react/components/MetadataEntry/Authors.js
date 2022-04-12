@@ -8,7 +8,7 @@ import AuthorForm from './AuthorForm';
 import OrcidInfo from './OrcidInfo';
 
 export default function Authors({
-  resource, dryadAuthors, curator, icon,
+  resource, dryadAuthors, curator, icon, userOrcid
 }) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const dragonRef = useRef(null);
@@ -230,7 +230,7 @@ export default function Authors({
                 <div className="offscreen">Reorder</div>
               </button>
               <AuthorForm dryadAuthor={auth} removeFunction={removeItem} />
-              <OrcidInfo dryadAuthor={auth} curator={curator} />
+              <OrcidInfo dryadAuthor={auth} curator={curator} userOrcid={userOrcid} />
             </li>
           ))}
       </ul>

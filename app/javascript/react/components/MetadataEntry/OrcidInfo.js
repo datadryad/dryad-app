@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function OrcidInfo({dryadAuthor, curator}) {
+export default function OrcidInfo({dryadAuthor, curator, userOrcid})
   let orcidInfo = null;
   if (dryadAuthor.author_orcid) {
     /* eslint-disable no-restricted-globals */
@@ -13,18 +13,24 @@ export default function OrcidInfo({dryadAuthor, curator}) {
 
   return (
     <>
-      {orcidInfo
-          && (
-          <div className="c-orcid">
-            <span className="c-orcid__icon" /><a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
-          </div>
-          )}
-      {(curator && dryadAuthor.orcid_invite_path
-        ? (
-          <div className="c-orcid">
-            Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
-          </div>
-        ) : '')}
+      <div className="c-orcid">
+        {orcidInfo
+            && (
+              <div className="c-orcid__div" style={{marginRight: '2em'}}>
+                <span className="c-orcid__icon" />
+                <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
+              </div>
+            )}
+        {orcidInfo && dryadAuthor.author_orcid === userOrcid && (
+            <div className="c-orcid__div" style={{marginLeft: '2em'}}><i className="fa fa-address-card-o" aria-hidden="true"></i>&nbsp;&nbsp;Corresponding Author</div>
+        )}
+        {(curator && dryadAuthor.orcid_invite_path
+          ? (
+            <div className="c-orcid__div">
+              Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
+            </div>
+          ) : '')}
+      </div>
     </>
   );
 }
@@ -32,4 +38,5 @@ export default function OrcidInfo({dryadAuthor, curator}) {
 OrcidInfo.propTypes = {
   dryadAuthor: PropTypes.object.isRequired,
   curator: PropTypes.bool.isRequired,
+  userOrcid: PropTypes.string
 };
