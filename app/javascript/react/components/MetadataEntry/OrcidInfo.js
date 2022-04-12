@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function OrcidInfo({dryadAuthor, curator, userOrcid})
+export default function OrcidInfo({dryadAuthor, curator, userOrcid}){
   let orcidInfo = null;
   if (dryadAuthor.author_orcid) {
     /* eslint-disable no-restricted-globals */
