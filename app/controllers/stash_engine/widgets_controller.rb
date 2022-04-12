@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def data_package_for_pub
-      redirect_to show_path(id: @stash_id.to_s)
+      redirect_to stash_url_helpers.show_path(id: @stash_id.to_s)
     end
 
     private

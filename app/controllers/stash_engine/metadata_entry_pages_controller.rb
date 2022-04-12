@@ -23,7 +23,7 @@ module StashEngine
       redirect_to(stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # GET /stash/edit/{doi}/{edit_code}
     def edit_by_doi
       if resource.processing?
@@ -72,7 +72,7 @@ module StashEngine
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id))
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # create a new version of this resource before editing with find or create
     def new_version
@@ -142,7 +142,8 @@ module StashEngine
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?
-        redirect_to stash_url_helpers.dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
+        redirect_to stash_url_helpers.dashboard_path,
+                    alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
         false
       end
     end
