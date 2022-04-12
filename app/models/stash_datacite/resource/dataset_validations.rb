@@ -130,7 +130,7 @@ module StashDatacite
       end
 
       def funder
-        funder_require_date = '2022-04-13'
+        funder_require_date = '2022-04-14'
         if (@resource.contributors.blank? || @resource.contributors.first.contributor_name.blank?) &&
            @resource.identifier.created_at > funder_require_date &&
            @resource.identifer.pub_state == 'unpublished'
