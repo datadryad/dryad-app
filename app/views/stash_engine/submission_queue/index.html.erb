@@ -1,8 +1,6 @@
 <h2>Information about the current submission queue for Merritt</h2>
 
-
-
-<div id="status_table" data-load="<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params) %>">
+<div id="status_table" data-load="<%= stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params, only_path: true) %>">
   <%# render partial: 'status_table' %>
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
@@ -20,7 +18,9 @@
     will want to monitor the state above before actually shutting down a server and wait for active <em>processing</em> submissions to clear.</p>
 
 <p>
-  <%= button_to 'Do a graceful shutdown of submissions', { action: 'graceful_shutdown' }, { method: 'get', id: 'graceful_shutdown' } %>
+    <%= button_to 'Do a graceful shutdown of submissions',
+                  stash_url_helpers.graceful_shutdown_path, 
+                  { method: 'get', id: 'graceful_shutdown' } %>
 </p>
 
 <h3>Restart gracefully</h3>
@@ -31,7 +31,9 @@
 </p>
 
 <p>
-  <%= button_to 'Restart submissions which were shutdown gracefully', { action: 'graceful_start' }, { method: 'get', id: 'graceful_start'} %>
+    <%= button_to 'Restart submissions which were shutdown gracefully',
+                  stash_url_helpers.graceful_start_path, 
+                  { method: 'get', id: 'graceful_start'} %>
 </p>
 
 
@@ -47,7 +49,9 @@
 </p>
 
 <p>
-  <%= button_to 'Restart submissions which were NOT shutdown gracefully', { action: 'ungraceful_start' }, { method: 'get', id: 'ungraceful_start' } %>
+    <%= button_to 'Restart submissions which were NOT shutdown gracefully',
+                  stash_url_helpers.ungraceful_start_path, 
+                  { method: 'get', id: 'ungraceful_start' } %>
 </p>
 
 <script>
@@ -58,7 +62,7 @@
     // calls action refreshing the partial
     function refreshPartial() {
         $.ajax({
-            url: '<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params) %>'
+            url: '<%= stash_url_helpers.url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table', params: sortable_table_params) %>'
         })
     }
 </script>

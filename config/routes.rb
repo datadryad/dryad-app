@@ -304,9 +304,9 @@ Rails.application.routes.draw do
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
     get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
-    get 'submission_queue/graceful_shutdown', to: 'submission_queue#graceful_shutdown'
-    get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start'
-    get 'submission_queue/ungraceful_start', to: 'submission_queue#ungraceful_start'
+    get 'submission_queue/graceful_shutdown', to: 'submission_queue#graceful_shutdown', as: 'graceful_shutdown'
+    get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start', as: 'graceful_start'
+    get 'submission_queue/ungraceful_start', to: 'submission_queue#ungraceful_start', as: 'ungraceful_start'
     
     # routing for zenodo_queue
     get 'zenodo_queue', to: 'zenodo_queue#index', as: 'zenodo_queue'

@@ -79,7 +79,7 @@ module StashEngine
       it 'returns json when request with html format to destroy manifest file ' do
         @resource.update(supp_files: [create(:supp_file)])
         @file = @resource.supp_files.first
-        @url = StashEngine::Engine.routes.url_helpers.destroy_manifest_supp_file_path(id: @file.id)
+        @url = Rails.application.routes.url_helpers.destroy_manifest_supp_file_path(id: @file.id)
         generic_destroy_expects(@url)
       end
 
