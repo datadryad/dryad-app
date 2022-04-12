@@ -114,7 +114,7 @@ module StashDatacite
         @publisher = publisher.present? ? publisher : Publisher.create(publisher: 'Dryad', resource_id: @resource.id)
       end
 
-      # ensures that one author has the orcid of the currently logged in user
+      # ensures that one author has the orcid of the owner of this dataset
       def ensure_author_orcid
         return if @resource.owner_author # the owner is already represented by an author with their orcid
 
