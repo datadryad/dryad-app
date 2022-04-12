@@ -129,8 +129,8 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
               }}
             />
           </div>
-          { correspondingAuthorId != dryadAuthor.id &&
-            (
+          { correspondingAuthorId !== dryadAuthor.id
+            && (
               <a
                 role="button"
                 className="t-describe__remove-button o-button__remove remove_record"
@@ -142,11 +142,11 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
                     removeFunction(dryadAuthor.id, dryadAuthor.resource_id);
                     // deleteItem(auth.id);
                   });
-                }}>
+                }}
+              >
                 remove
               </a>
-            )
-          }
+            )}
         </Form>
       )}
     </Formik>
@@ -156,5 +156,5 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
 AuthorForm.propTypes = {
   dryadAuthor: PropTypes.object.isRequired,
   removeFunction: PropTypes.func.isRequired,
-  correspondingAuthorId: PropTypes.number.isRequired
+  correspondingAuthorId: PropTypes.number.isRequired,
 };
