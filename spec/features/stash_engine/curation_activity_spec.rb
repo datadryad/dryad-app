@@ -213,6 +213,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
         # the button to edit has this class on it
         find('.js-trap-curator-url').click
+        all('[id^=instit_affil_]').last.set('test institution')
         add_required_data_files
         navigate_to_review
         agree_to_everything
