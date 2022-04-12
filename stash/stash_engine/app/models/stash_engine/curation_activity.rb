@@ -66,11 +66,18 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
 
+    # Once we are certain that we will be publishing this dataset,
+    # remove any "N/A" placeholders
+    # Note tht this uses "after_validation" to ensure it runs before all of the "after_create"
+    after_validation :remove_placeholder_funders, if: proc { |ca|
+      (ca.published? || ca.embargoed?) && latest_curation_status_changed?
+    }
+
     # When the status is published/embargoed send to Stripe and DataCite
     after_create do
       if !resource.skip_datacite_update &&
-          (published? || embargoed?) &&
-          latest_curation_status_changed?
+         (published? || embargoed?) &&
+         latest_curation_status_changed?
         submit_to_datacite
         update_solr
         process_payment
@@ -189,6 +196,10 @@ module StashEngine
       resource.send_to_zenodo
       resource.send_software_to_zenodo(publish: true)
       resource.send_supp_to_zenodo(publish: true)
+    end
+
+    def remove_placeholder_funders
+      resource.update(contributors: resource.contributors.reject { |funder| funder.contributor_name&.upcase == 'N/A' })
     end
 
     def remove_peer_review
