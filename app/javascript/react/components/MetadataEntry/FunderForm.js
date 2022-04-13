@@ -82,7 +82,7 @@ function FunderForm({
                                       {
                                         htmlId: `contrib_${contributor.id}`,
                                         labelText: 'Granting Organization',
-                                        isRequired: false,
+                                        isRequired: true,
                                       }
                                     }
             />
