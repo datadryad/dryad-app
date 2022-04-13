@@ -8,6 +8,7 @@ module StashDatacite
         create_publisher
         ensure_license
         @resource.fill_blank_author!
+        ensure_author_orcid
       end
 
       def resource_type
@@ -111,6 +112,28 @@ module StashDatacite
       def create_publisher
         publisher = Publisher.where(resource_id: @resource.id).first
         @publisher = publisher.present? ? publisher : Publisher.create(publisher: 'Dryad', resource_id: @resource.id)
+      end
+
+      # ensures that one author has the orcid of the owner of this dataset
+      def ensure_author_orcid
+        return if @resource.owner_author # the owner is already represented by an author with their orcid
+
+        user = @resource.user
+
+        this_author = @resource.authors.where(author_first_name: user.first_name, author_last_name: user.last_name).first
+
+        if this_author.present?
+          this_author.update(author_orcid: user.orcid)
+          return
+        end
+
+        StashEngine::Author.create(
+          author_first_name: user.first_name,
+          author_last_name: user.last_name,
+          author_orcid: user.orcid,
+          author_email: user.email,
+          resource_id: @resource.id
+        )
       end
     end
   end

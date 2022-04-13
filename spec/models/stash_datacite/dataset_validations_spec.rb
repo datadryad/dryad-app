@@ -9,7 +9,12 @@ module StashDatacite
         create(:resource_type, resource: @resource)
         @author1 = @resource.authors.first
         @author2 = create(:author, resource: @resource)
-        @author3 = create(:author, resource: @resource)
+        @author3 = create(:author,
+                          author_first_name: @user.first_name,
+                          author_last_name: @user.last_name,
+                          author_email: @user.email,
+                          author_orcid: @user.orcid,
+                          resource_id: @resource.id)
         create(:data_file, resource: @resource)
         @readme = create(:data_file, resource: @resource, upload_file_name: 'README.txt')
         create(:data_file, resource: @resource)
@@ -58,14 +63,13 @@ module StashDatacite
           expect(error.ids.first).to include('instit_affil__')
         end
 
-        it 'returns error for missing first author email' do
-          @author1.update(author_email: '')
+        it 'returns error for missing corresponding author email' do
+          @author3.update(author_email: '')
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.authors
           error = errors.first
           expect(errors.count).to eq(1)
-          expect(error.message).to include('1st')
-          expect(error.message).to include('author email')
+          expect(error.message).to include("submitting author's email")
           expect(error.ids.first).to include('author_email__')
         end
       end

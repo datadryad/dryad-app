@@ -60,6 +60,7 @@ module StashDatacite
         err << title
         err << authors
         err << research_domain
+        err << funder
         err << abstract
 
         err << s3_error_uploads
@@ -109,10 +110,10 @@ module StashDatacite
                                     ids: ["instit_affil__#{author.id}"])
         end
 
-        unless @resource.authors&.first&.author_email&.present?
-          temp_err << ErrorItem.new(message: 'Fill 1st {author email}',
+        unless @resource&.owner_author&.author_email.present?
+          temp_err << ErrorItem.new(message: "Fill in {submitting author's email}",
                                     page: metadata_page(@resource),
-                                    ids: ["author_email__#{@resource.authors&.first&.id}"])
+                                    ids: ["author_email__#{@resource&.owner_author&.id}"])
         end
 
         temp_err
@@ -124,6 +125,18 @@ module StashDatacite
           return ErrorItem.new(message: 'Fill in a {research domain}',
                                page: metadata_page(@resource),
                                ids: ["fos_subjects__#{@resource.id}"])
+        end
+        []
+      end
+
+      def funder
+        funder_require_date = '2022-04-14'
+        if (@resource.contributors.blank? || @resource.contributors.first.contributor_name.blank?) &&
+           @resource.identifier.created_at > funder_require_date &&
+           @resource.identifer.pub_state == 'unpublished'
+          return ErrorItem.new(message: 'Fill in a {funder}. Use "N/A" if there is no funder associated with the dataset.',
+                               page: metadata_page(@resource),
+                               ids: ['funder_fieldset'])
         end
         []
       end
