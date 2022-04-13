@@ -202,10 +202,10 @@ export default function Authors({
 
   return (
     <section>
-      <p id="global-help">
+      <p id="global-help" className="offscreen">
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to
         drag/reorder. Press escape to cancel the reordering.
-        <span className="offscreen">Ensure screen reader is in focus mode.</span>
+        <span>Ensure screen reader is in focus mode.</span>
       </p>
       <ul className="dragon-drop-list" aria-labelledby="authors-head" ref={dragonRef}>
         {authors
