@@ -8,7 +8,7 @@ import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils
 import RorAutocomplete from './RorAutocomplete';
 
 // dryadAuthor below has nested affiliation
-export default function AuthorForm({dryadAuthor, removeFunction}) {
+export default function AuthorForm({dryadAuthor, removeFunction, correspondingAuthorId}) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
@@ -16,7 +16,7 @@ export default function AuthorForm({dryadAuthor, removeFunction}) {
   const [acID, setAcID] = useState(dryadAuthor?.affiliation?.ror_id || '');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving funder`);
+    console.log(`${(new Date()).toISOString()}: Saving author`);
     showSavingMsg();
 
     // set up values
@@ -129,20 +129,24 @@ export default function AuthorForm({dryadAuthor, removeFunction}) {
               }}
             />
           </div>
-          <a
-            role="button"
-            className="t-describe__remove-button o-button__remove remove_record"
-            rel="nofollow"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              showModalYNDialog('Are you sure you want to remove this author?', () => {
-                removeFunction(dryadAuthor.id, dryadAuthor.resource_id);
-                // deleteItem(auth.id);
-              });
-            }}
-          >remove
-          </a>
+          { correspondingAuthorId !== dryadAuthor.id
+            && (
+              <a
+                role="button"
+                className="t-describe__remove-button o-button__remove remove_record"
+                rel="nofollow"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  showModalYNDialog('Are you sure you want to remove this author?', () => {
+                    removeFunction(dryadAuthor.id, dryadAuthor.resource_id);
+                    // deleteItem(auth.id);
+                  });
+                }}
+              >
+                remove
+              </a>
+            )}
         </Form>
       )}
     </Formik>
@@ -152,4 +156,5 @@ export default function AuthorForm({dryadAuthor, removeFunction}) {
 AuthorForm.propTypes = {
   dryadAuthor: PropTypes.object.isRequired,
   removeFunction: PropTypes.func.isRequired,
+  correspondingAuthorId: PropTypes.number.isRequired,
 };

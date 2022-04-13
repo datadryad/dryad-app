@@ -39,6 +39,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
       expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+      all('[id^=instit_affil_]').last.set('test institution')
       add_required_data_files
       click_link 'Review and Submit'
       agree_to_everything
@@ -260,6 +261,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
       expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+      all('[id^=instit_affil_]').last.set('test institution')
       add_required_data_files
       click_link 'Review and Submit'
       agree_to_everything

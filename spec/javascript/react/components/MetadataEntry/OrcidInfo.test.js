@@ -10,6 +10,7 @@ describe('OrcidInfo', () => {
   const makeAuthor = (resource_id = null, author_order = null) => {
     const sect = () => faker.datatype.number({min:1000, max:9999});
     return {
+      id: faker.datatype.number({min: 1, max: 32767}),
       author_first_name: faker.name.firstName(),
       author_last_name: faker.name.lastName(),
       author_email: faker.internet.email(),
@@ -26,14 +27,13 @@ describe('OrcidInfo', () => {
 
   it("renders orcid info if present", () => {
     const auth = makeAuthor();
-    render(<OrcidInfo dryadAuthor={auth} curator={false}/>);
+    render(<OrcidInfo dryadAuthor={auth} curator={false} correspondingAuthorId={auth.id} />);
     expect(screen.getByRole('link')).toHaveTextContent(auth.author_orcid);
   });
 
   it("renders orcid link if curator and no orcid", () => {
     const auth = {...makeAuthor(), author_orcid: null};
-    render(<OrcidInfo dryadAuthor={auth} curator={true}/>);
-    screen.debug();
+    render(<OrcidInfo dryadAuthor={auth} curator={true} correspondingAuthorId={27} />);
     expect(screen.getByText(auth.orcid_invite_path, { exact: false })).toBeInTheDocument();
   });
 });
