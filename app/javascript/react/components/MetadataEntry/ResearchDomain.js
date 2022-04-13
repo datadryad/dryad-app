@@ -14,7 +14,7 @@ function ResearchDomain({
 
   return (
     <Formik
-      initialValues={{fos_subjects: subject}}
+      initialValues={{fos_subjects: (subject || '')}}
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         showSavingMsg();
@@ -71,7 +71,7 @@ export default ResearchDomain;
 
 ResearchDomain.propTypes = {
   resourceId: PropTypes.number.isRequired,
-  subject: PropTypes.string.isRequired,
+  subject: PropTypes.string,
   subjectList: PropTypes.array.isRequired,
   updatePath: PropTypes.string.isRequired,
 };

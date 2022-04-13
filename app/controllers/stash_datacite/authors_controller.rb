@@ -20,9 +20,10 @@ module StashDatacite
     def create
       respond_to do |format|
         @author = StashEngine::Author.create(author_params)
-        process_affiliation
+        process_affiliation unless params[:affiliation].nil?
         @author.reload
         format.js
+        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
       end
     end
 
@@ -32,6 +33,7 @@ module StashDatacite
         @author.update(author_params)
         process_affiliation
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
+        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
       end
     end
 
@@ -44,6 +46,7 @@ module StashDatacite
       end
       respond_to do |format|
         format.js
+        format.json { render json: @author }
       end
     end
 
@@ -51,7 +54,8 @@ module StashDatacite
     def reorder
       respond_to do |format|
         format.json do
-          js = params['_json'].map { |i| { id: i[:id], author_order: i[:order] } } # convert weird params objs to hashes
+          js = params[:author].to_h.to_a.map { |i| { id: i[0], author_order: i[1] } }
+          # js = params['_json'].map { |i| { id: i[:id], author_order: i[:order] } } # convert weird params objs to hashes
           grouped_authors = js.index_by { |author| author[:id] }
           resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
           render json: resp, status: :ok
@@ -76,7 +80,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def author_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
-                                     :author_email, :resource_id, :author_orcid,
+                                     :author_email, :resource_id, :author_orcid, :author_order,
                                      affiliation: %i[id ror_id long_name])
     end
 
@@ -105,7 +109,8 @@ module StashDatacite
     end
 
     def check_reorder_valid
-      @authors = StashEngine::Author.where(id: params['_json'].map { |i| i['id'] })
+      params.require(:author).permit!
+      @authors = StashEngine::Author.where(id: params[:author].keys)
 
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
