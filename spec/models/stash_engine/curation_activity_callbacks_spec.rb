@@ -177,6 +177,50 @@ module StashEngine
 
         end
       end
+
+      context :clean_placeholders do
+        before(:each) do
+          @user = create(:user)
+        end
+
+        it 'does nothing when there are no funders' do
+          @resource.update(publication_date: Date.today.to_s)
+          ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
+          ca.save
+          @resource.reload
+          expect(@resource.contributors).to be_blank
+        end
+
+        it 'does nothing when there is a single non-placeholder funder' do
+          funder = create(:contributor)
+          @resource.contributors << funder
+          @resource.update(publication_date: Date.today.to_s)
+          ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
+          ca.save
+          @resource.reload
+          expect(@resource.contributors).to be_present
+          expect(@resource.contributors.first.contributor_name).to eq(funder.contributor_name)
+        end
+
+        it 'removes a placeholder funder' do
+          @resource.contributors << StashDatacite::Contributor.new(contributor_name: 'N/A', contributor_type: 'funder', name_identifier_id: '0')
+          @resource.update(publication_date: Date.today.to_s)
+          ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
+          ca.save
+          @resource.reload
+          expect(@resource.contributors).to be_blank
+        end
+
+        it 'removes a differently-capitalized placeholder funder' do
+          @resource.contributors << StashDatacite::Contributor.new(contributor_name: 'N/a', contributor_type: 'funder', name_identifier_id: '0')
+          @resource.update(publication_date: Date.today.to_s)
+          ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
+          ca.save
+          @resource.reload
+          expect(@resource.contributors).to be_blank
+        end
+      end
+
       context :email_orcid_invitations do
 
         before(:each) do
