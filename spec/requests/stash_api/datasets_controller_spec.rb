@@ -735,7 +735,7 @@ module StashApi
 
         it 'allows submission if done by owner of the dataset (resource)' do
           @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user', orcid: @ds_info['authors'].first['orcid'])
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: @user2.id, owner_type: 'StashEngine::User')
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -824,6 +824,7 @@ module StashApi
           @res = create(:resource, identifier: @identifier, user: @super_user)
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                    create(:data_file, file_state: 'copied', upload_file_name: 'README.txt')])
+          @res.authors.first.update(author_orcid: @super_user.orcid)
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
         end
 

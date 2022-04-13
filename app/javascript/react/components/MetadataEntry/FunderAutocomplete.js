@@ -54,6 +54,9 @@ export default function FunderAutocomplete({
           return {...item, similarity};
         });
         list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
+        // Add 'N/A' to the top of the list in case there is no funder
+        const na_item = {id: 0, name: 'N/A', uri: '0'};
+        list.unshift(na_item);
         return list;
       });
   }

@@ -3,18 +3,17 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
-export default function RorAutocomplete({name, id, controlOptions}) {
+export default function RorAutocomplete({
+  formRef, acText, setAcText, acID, setAcID, controlOptions,
+}) {
   // control options: htmlId, labelText, isRequired (t/f)
 
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
-  const [acText, setAcText] = useState(name);
-  const [acID, setAcID] = useState(id);
-  const prevText = useRef(name);
-  const prevID = useRef(id);
+  const prevText = useRef(acText);
+  const prevID = useRef(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
-  const nameRef = useRef(null);
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
@@ -28,12 +27,8 @@ export default function RorAutocomplete({name, id, controlOptions}) {
             the form.
            */
       if (prevText.current !== acText || prevID.current !== acID) {
-        // only resubmit form when there are actual value changes
-        /* eslint-disable no-undef */
-        // react/eslint doesn't know this variable since it's integrated weirdly into rails ujs form using jQuery global ($)
-        console.log('triggering form submit', nameRef.current.value);
-        $(nameRef.current.form).trigger('submit.rails');
-        /* eslint-enable no-undef */
+        // from the ref, submit the Formik form above me
+        formRef.current.handleSubmit();
       }
       prevText.current = acText;
       prevID.current = acID;
@@ -78,27 +73,26 @@ export default function RorAutocomplete({name, id, controlOptions}) {
   // in fact some sources say to do it to avoid repeating components (like https://www.youtube.com/watch?v=yH5Z-lSeV9Y ).
   // So IDK what the real guidance is for this and it seems to work fine.
   return (
-    <>
-      <GenericNameIdAutocomplete
-        acText={acText || ''}
-        setAcText={setAcText}
-        acID={acID}
-        setAcID={setAcID}
-        setAutoBlurred={setAutoBlurred}
-        supplyLookupList={supplyLookupList}
-        nameFunc={nameFunc}
-        idFunc={idFunc}
-        controlOptions={controlOptions}
-      />
-      <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
-      <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
-    </>
+    <GenericNameIdAutocomplete
+      acText={acText || ''}
+      setAcText={setAcText}
+      acID={acID}
+      setAcID={setAcID}
+      setAutoBlurred={setAutoBlurred}
+      supplyLookupList={supplyLookupList}
+      nameFunc={nameFunc}
+      idFunc={idFunc}
+      controlOptions={controlOptions}
+    />
   );
   /* eslint-enable react/jsx-no-bind */
 }
 
 RorAutocomplete.propTypes = {
-  name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  formRef: PropTypes.object.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
   controlOptions: PropTypes.object.isRequired,
 };

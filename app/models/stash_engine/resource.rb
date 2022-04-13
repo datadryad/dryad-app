@@ -636,6 +636,12 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Authors
+
+    # may not be able to match one up
+    def owner_author
+      user&.orcid.present? && authors.where(author_orcid: user.orcid).first
+    end
+
     def fill_blank_author!
       return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
 
