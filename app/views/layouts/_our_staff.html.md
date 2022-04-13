@@ -83,19 +83,6 @@
 </div>
 
 <div class="bio">
-    <img src="/images/arian.jpg" alt="Arian Abdulla" title="Arian Abdulla">
-  <p><strong>Arian Abdulla</strong><br/>
-  Data Curator<br/>
-  
-  Arian has a background in Biochemistry and Molecular Biology from Albert
-  Einstein College of Medicine studying epigenetics and aging research. He has
-  experience supporting researchers and healthcare providers in the different
-  stages of the research lifecycle and scientific publishing. Arian enjoys
-  traveling, trying out new cuisines, soccer, tennis and reading.
-  </p>
-</div>
-
-<div class="bio">
     <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
   Data Curator<br/>
@@ -106,6 +93,18 @@
   field supporting displaced people throughout Europe, and outside of Dryad she
   supports NGOs in grant writing. In her spare time, Savannah enjoys swimming,
   rock climbing, cooking, and learning new languages.
+  </p>
+</div>
+
+<div class="bio">
+    <img src="/images/amelia.jpg" alt="Amelia Culp" title="Amelia Culp">
+  <p><strong>Amelia Culp</strong><br/>
+  Data Curator<br/>
+
+  Amelia has a B.S. in Physics and a background in physics and neuroscience
+  research. In addition to data curation, she is a PhD candidate studying neural
+  connectomics. Outside of work, Amelia enjoys rock climbing, backpacking, and
+  taking care of her plants.
   </p>
 </div>
 
