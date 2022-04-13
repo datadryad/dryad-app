@@ -680,6 +680,13 @@ module StashEngine
         expect(resource.authors).to include(author1, author2)
       end
 
+      it 'checks owner_author by matching orcid' do
+        expect(@resource.owner_author).to eq(@resource.authors.first)
+
+        @resource.authors.first.update(author_orcid: '1234-1234-1234-1234')
+        expect(@resource.owner_author).to be_nil
+      end
+
       describe 'amoeba duplication' do
         attr_reader :authors
 

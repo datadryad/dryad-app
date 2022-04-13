@@ -144,7 +144,7 @@ export default function FacilityAutocomplete({
 FacilityAutocomplete.propTypes = {
   name: PropTypes.string.isRequired,
   rorId: PropTypes.string.isRequired,
-  contribId: PropTypes.string,
+  contribId: PropTypes.number,
   resourceId: PropTypes.number.isRequired,
   createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
