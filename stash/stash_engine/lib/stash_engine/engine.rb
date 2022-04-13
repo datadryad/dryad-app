@@ -1,5 +1,4 @@
 require 'kaminari'
-require 'ckeditor'
 require 'font-awesome-rails'
 require_relative('counter_log')
 

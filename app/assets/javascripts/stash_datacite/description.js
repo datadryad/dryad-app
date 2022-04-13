@@ -2,7 +2,6 @@
 // All this logic will automatically be available in application.js.
 
 function loadDescriptions() {
-  // the js-description is a text-area for text, only, but turns hidden with ckeditor, so really not used except maybe fallback(?)
   /*
   $( '.js-description' ).on('focus', function () {
     previous_value = this.value;
