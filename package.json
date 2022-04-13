@@ -28,7 +28,7 @@
     "@emotion/css": "^11.7.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@rails/webpacker": "5.2.1",
+    "@rails/webpacker": "^5.4.3",
     "@tinymce/tinymce-react": "^3.13.0",
     "aws-sdk": "^2.1060.0",
     "axios": "^0.25.0",
