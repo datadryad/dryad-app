@@ -134,6 +134,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       create(:data_file, file_state: 'copied', resource: @res)
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      all('[id^=instit_affil_]').last.set('test institution')
       navigate_to_review
       agree_to_everything
       fill_in 'user_comment', with: Faker::Lorem.sentence

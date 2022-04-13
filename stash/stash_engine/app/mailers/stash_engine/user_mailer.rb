@@ -123,7 +123,7 @@ module StashEngine
 
     def assign_variables(resource)
       @resource = resource
-      @user = resource.authors.first || resource.user
+      @user = resource.owner_author || resource.user
       @user_name = user_name(@user)
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
