@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+# do we need this still?
 require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 # ############################################################
