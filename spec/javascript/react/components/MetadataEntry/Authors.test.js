@@ -41,7 +41,7 @@ describe('Authors', () => {
 
   it("renders multiple authors in authors section", () => {
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional Affiliation', { exact: false });
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
@@ -60,7 +60,7 @@ describe('Authors', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -92,7 +92,7 @@ describe('Authors', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -100,7 +100,7 @@ describe('Authors', () => {
     userEvent.click(screen.getByText('Add Author'));
 
     await waitFor(() => {
-      expect(screen.getAllByText('remove').length).toBe(4)
+      expect(screen.getAllByText('remove').length).toBe(4);
     });
   });
 

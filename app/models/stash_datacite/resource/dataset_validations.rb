@@ -109,10 +109,10 @@ module StashDatacite
                                     ids: ["instit_affil__#{author.id}"])
         end
 
-        unless @resource.authors&.first&.author_email&.present?
-          temp_err << ErrorItem.new(message: 'Fill 1st {author email}',
+        unless @resource&.owner_author&.author_email.present?
+          temp_err << ErrorItem.new(message: "Fill in {submitting author's email}",
                                     page: metadata_page(@resource),
-                                    ids: ["author_email__#{@resource.authors&.first&.id}"])
+                                    ids: ["author_email__#{@resource&.owner_author&.id}"])
         end
 
         temp_err

@@ -14,50 +14,24 @@ module StashEngine
       @request_host = 'stash.example.org'
       @request_port = 80
 
-      @identifier = double(Identifier)
-      allow(@identifier).to receive(:identifier).and_return('10.1098/rstl.1665.0007')
-      allow(@identifier).to receive(:identifier_type).and_return('DOI')
-      allow(@identifier).to receive(:publication_issn).and_return(nil)
-      allow(@identifier).to receive(:citations).and_return(["https://doi.org/#{@identifier.identifier}"])
-      allow(@identifier).to receive(:embargoed_until_article_appears?).and_return(false)
+      @user = create(:user)
+      @resource = create(:resource, user: @user, identifier: create(:identifier))
+      @identifier = @resource.identifier
 
       @tenant = double(Tenant)
       allow(@tenant).to receive(:campus_contacts).and_return(%w[gorgath@example.edu lajuana@example.edu])
 
-      @user = double(User)
-      allow(@user).to receive(:first_name).and_return('Jane')
-      allow(@user).to receive(:last_name).and_return('Doe')
-      allow(@user).to receive(:name).and_return('Jane Doe')
-      allow(@user).to receive(:email).and_return('jane.doe@example.edu')
-      allow(@user).to receive(:tenant).and_return(@tenant)
+      @author1 = @resource.authors.first
 
-      @author1 = double(Author)
-      allow(@author1).to receive(:author_first_name).and_return(@user.first_name)
-      allow(@author1).to receive(:author_last_name).and_return(@user.last_name)
-      allow(@author1).to receive(:author_email).and_return(@user.email)
-      allow(@author1).to receive(:author_standard_name).and_return(@user.name)
-
-      @author2 = double(Author)
-      allow(@author2).to receive(:author_first_name).and_return('Foo')
-      allow(@author2).to receive(:author_last_name).and_return('Bar')
-      allow(@author2).to receive(:author_email).and_return('foo.bar@example.edu')
+      @author2 = create(:author,
+                        author_first_name: @user.first_name,
+                        author_last_name: @user.last_name,
+                        author_email: @user.email,
+                        author_orcid: @user.orcid,
+                        resource_id: @resource.id)
 
       @share = double(Share)
       allow(@share).to receive(:sharing_link).and_return("https://#{@request_host}/my_amazing_sharing_link")
-
-      @resource = double(Resource)
-      allow(@resource).to receive(:user).and_return(@user)
-      allow(@resource).to receive(:identifier).and_return(@identifier)
-      allow(@resource).to receive(:identifier_str).and_return(@identifier.identifier)
-      allow(@resource).to receive(:identifier_uri).and_return("https://#{@request_host}/#{@identifier}")
-      allow(@resource).to receive(:title).and_return('An Account of a Very Odd Monstrous Calf')
-      allow(@resource).to receive(:tenant).and_return(@tenant)
-      allow(@resource).to receive(:files_published?).and_return(true)
-      allow(@resource).to receive(:authors).and_return([@author1, @author2])
-      allow(@resource).to receive(:identifier_value).and_return('10.1098/rstl.1665.0007')
-      allow(@resource).to receive(:related_identifiers).and_return(nil)
-
-      allow(@identifier).to receive(:shares).and_return([@share])
 
       allow_any_instance_of(ActionView::Helpers::UrlHelper)
         .to receive(:url_for)
