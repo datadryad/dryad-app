@@ -1,4 +1,5 @@
 $('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create.html.erb')) %>");
+
 loadAccordion();
 loadResourceTypes();
 // loadTitles(); // now loaded by ReactRailsUJS, will fail silently if method is missing
@@ -8,7 +9,7 @@ hideRemoveLinkAuthors();
 hideRemoveRequiredLabelAuthors();
 loadContributors();
 loadPublications();
-loadDescriptions();
+// loadDescriptions();
 loadSubjects();
 loadRelatedIdentifiers();
 hideRemoveLinkRelatedIdentifiers();
