@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'amoeba', '~> 3.2.0'
   s.add_dependency 'aws-sdk-s3', '~> 1.87'
-  s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '~> 1.1.9'
   s.add_dependency 'daemons', '~> 1.4.1'
   s.add_dependency 'database_cleaner', '~> 2.0.1'
