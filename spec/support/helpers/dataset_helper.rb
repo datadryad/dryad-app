@@ -87,9 +87,9 @@ module DatasetHelper
     page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
   end
 
-  def fill_in_funder
+  def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
     res = StashEngine::Resource.last
-    res.update(contributors: [create(:contributor, resource: res)])
+    res.update(contributors: [create(:contributor, contributor_name: name, award_number: value, resource: res)])
   end
 
   def fill_in_research_domain
