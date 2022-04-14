@@ -31,6 +31,7 @@ module Stash
         create(:description, description_type: 'other', resource_id: @resource.id)
         create(:description, description_type: 'methods', resource_id: @resource.id)
 
+        @resource.update(contributors: []) # erase the default funder
         @funder1 = create(:contributor, resource_id: @resource.id)
         @funder2 = create(:contributor, resource_id: @resource.id, award_number: nil)
 

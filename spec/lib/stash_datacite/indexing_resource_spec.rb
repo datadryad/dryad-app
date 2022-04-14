@@ -65,6 +65,7 @@ module Stash
         @author2 = create(:author, author_first_name: 'Horace', author_last_name: 'Liu', author_email: 'holyu@example.org',
                                    author_orcid: nil, resource_id: @resource.id)
         @author2.update(affiliations: [@affil2])
+        @resource.contributors = [] # erase the default funder
         @contributor = create(:contributor, resource_id: @resource.id)
         @datacite_date = create(:datacite_date, resource_id: @resource.id)
         @description1 = create(:description, resource_id: @resource.id)
