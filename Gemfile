@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 # do we need this still?
-require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
+# require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 # ############################################################
 # Rails
 
-gem 'irb', '~> 1.3.7'
+gem 'irb', '~> 1.4.1'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.2.6'
+gem 'rails', '~> 5.2.7'
 gem 'react-rails', '~> 2.6.1'
 gem 'webpacker', '~> 5.4.0'
 
