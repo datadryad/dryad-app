@@ -367,5 +367,23 @@ namespace :dev_ops do
       dl_s3.download(file_obj: data_file)
     end
   end
+
+  desc 'hack resubmit'
+  task hack_resubmit: :environment do
+    0.upto(200) do
+      puts "attempting resubmitting recent errors #{Time.new}"
+      resource_ids = StashEngine::RepoQueueState.where(state: 'errored').where("updated_at > '2022-04-13'").map(&:resource_id)
+
+      res = resource_ids.first
+
+      resource_ids.each do |res|
+        states = StashEngine::RepoQueueState.where(resource_id: res)
+        states[1..-1].each{|i| i.destroy}
+        states.first.update(state: 'rejected_shutting_down', hostname: 'uc3-dryadui01x2-prd')
+        StashEngine.repository.submit(resource_id: res)
+      end
+      sleep 300
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength
