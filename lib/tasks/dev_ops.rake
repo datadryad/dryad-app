@@ -386,8 +386,7 @@ namespace :dev_ops do
       # note: if you don't leave some time after running the resubmissions, then they don't go through since the request
       # processes that the StashEngine.repository class creates get killed if this task exits immediately.
       #
-      # The StashEngine.repository class it uses is a different instance instance than the one that runs inside
-      # the UI processes.
+      # The StashEngine.repository class it uses is a different instance than the one that runs inside the UI processes.
       #
       # We really probably would be better off moving the submissions outside the UI processes. Maybe when we rework to
       # use a Merritt API instead of sword for submissions.
