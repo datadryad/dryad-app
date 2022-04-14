@@ -52,6 +52,9 @@ module Stash
           allow(::Ezid::Client).to receive(:new)
             .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
             .and_return(@ezid_client)
+          allow(::Ezid::Client).to receive(:new)
+            .with(host: 'ezid.cdlib.org', port: 443, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
+            .and_return(@ezid_client)
 
           @identifier = instance_double(::Ezid::MintIdentifierResponse)
           allow(@identifier).to receive(:id).and_return(@identifier_str)
@@ -82,6 +85,9 @@ module Stash
 
           allow(::Ezid::Client).to receive(:new)
             .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
+            .and_return(@ezid_client)
+          allow(::Ezid::Client).to receive(:new)
+            .with(host: 'ezid.cdlib.org', port: 443, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
             .and_return(@ezid_client)
         end
 

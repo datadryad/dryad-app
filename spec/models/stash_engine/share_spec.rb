@@ -15,14 +15,9 @@ module StashEngine
     describe :sharing_link do
       it 'returns the sharing link' do
         @share = Share.create(identifier_id: @identifier.id)
-        url_helpers = double(Module)
-        routes = double(Module)
-        allow(routes).to receive(:url_helpers).and_return(url_helpers)
-        allow(StashEngine::Engine).to receive(:routes).and_return(routes)
-
-        sharing_url = 'https://example.org/1234'
-        expect(url_helpers).to receive(:share_url).with(protocol: 'https', id: @share.secret_id).and_return(sharing_url)
-        expect(@share.sharing_link).to eq(sharing_url)
+        expect(@share.sharing_link).to start_with('http')
+        expect(@share.sharing_link).to include('/stash/share/')
+        expect(@share.sharing_link).to include('http')
       end
 
       it 'creates a share if an identifier is created' do

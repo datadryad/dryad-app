@@ -45,7 +45,7 @@
     <% end %>
     <% unless author.blank? || author.author_orcid.blank? %>
       <span class="c-orcid__icon"></span>
-      <% if StashEngine.app.orcid.site == "https://sandbox.orcid.org/" %>
+      <% if APP_CONFIG.orcid.site == "https://sandbox.orcid.org/" %>
         <%= link_to "https://sandbox.orcid.org/#{author.author_orcid}", "https://sandbox.orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% else %>
         <%= link_to "https://orcid.org/#{author.author_orcid}", "https://orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>

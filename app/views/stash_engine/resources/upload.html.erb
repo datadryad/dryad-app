@@ -1,0 +1,61 @@
+<% @page_title = "Upload Your Files -- Publish and Preserve your Data" %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
+<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<%= javascript_pack_tag 'application' %>
+<%= stylesheet_pack_tag 'application' %>
+
+<% if params[:display_validation] %>
+  <%= render partial: "stash_datacite/resources/missing_mandatory_data",
+             locals: { error_items: StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors } %>
+<% end %>
+
+<!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
+<%= react_component('containers/FileUpload/UploadFiles', {
+  resource_id: @resource.id,
+  file_uploads: @resource.generic_files.validated_table.as_json(
+    methods: :type, include: { frictionless_report: { only: [:report, :status] } }
+  ),
+  app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
+  s3_dir_name: @resource.s3_dir_name(type: 'base'),
+  frictionless: APP_CONFIG[:frictionless].to_h
+}) %>
+
+<!-- display messages to let arias know what's happening -->
+<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
+</div>
+
+<div class="o-dataset-nav">
+  <%= link_to 'Back to Describe Dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
+  <%= link_to 'Proceed to Review', stash_url_helpers.review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
+</div>
+
+<script>
+  $('.js-nav-out').on('click', function(e) {
+    if( $("td.c-uploadtable__status:contains('Pending')").length > 0 || $("td.c-uploadtable__status>progress").length > 0){
+      e.preventDefault();
+      let txt = `
+        <h1>Finish upload before proceeding</h1>
+        <p>
+          Your files have not yet finished uploading, please click <strong>"Upload pending files"</strong> or
+          allow your uploads to finish before proceeding.
+        </p>`;
+      $('#genericModalContent').html(txt);
+      $('#genericModalDialog')[0].showModal();
+    }
+
+    if( $(".js-tabular-checking").length > 0){
+      e.preventDefault();
+      let txt = `
+        <h1>Allow tabular consistency checks to complete</h1>
+        <p>
+          Your tabular files are currently being checked for formatting and consistency issues. Please wait for the checks
+          to complete before navigating away from this page.
+        </p>`;
+      $('#genericModalContent').html(txt);
+      $('#genericModalDialog')[0].showModal();
+    }
+  });
+</script>
+
+
