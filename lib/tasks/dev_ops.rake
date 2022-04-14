@@ -372,13 +372,11 @@ namespace :dev_ops do
   task hack_resubmit: :environment do
     0.upto(200) do
       puts "attempting resubmitting recent errors #{Time.new}"
-      resource_ids = StashEngine::RepoQueueState.where(state: 'errored').where(["updated_at > ?", 1.day.ago]).map(&:resource_id)
-
-      res = resource_ids.first
+      resource_ids = StashEngine::RepoQueueState.where(state: 'errored').where(['updated_at > ?', 1.day.ago]).map(&:resource_id)
 
       resource_ids.each do |res|
         states = StashEngine::RepoQueueState.where(resource_id: res)
-        states[1..-1].each{|i| i.destroy} # destroy all but the first state in the series
+        states[1..].each(&:destroy) # destroy all but the first state in the series
         states.first.update(state: 'rejected_shutting_down', hostname: 'uc3-dryadui01x2-prd') # change info on 1st state
         StashEngine.repository.submit(resource_id: res) # resubmit it
       end
