@@ -8,8 +8,8 @@ source 'https://rubygems.org'
 gem 'irb', '~> 1.4.1'
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2.7'
-gem 'react-rails', '~> 2.6.1'
-gem 'webpacker', '~> 5.4.0'
+gem 'react-rails', '~> 2.6.2'
+gem 'webpacker', '~> 5.4.3'
 
 # ############################################################
 # Local engines
@@ -23,8 +23,8 @@ end
 # ############################################################
 # Deployment
 
-gem 'capistrano', '~> 3.11'
-gem 'capistrano-rails', '~> 1.4'
+gem 'capistrano', '~> 3.17'
+gem 'capistrano-rails', '~> 1.6.2'
 gem 'rubocop', '~> 0.90.0'
 # Use Puma as the app server
 gem 'puma', group: :puma, require: false
@@ -37,14 +37,15 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 # TODO: why do we have uglifier AND yui-compressor?
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
-gem 'coffee-rails', '~> 4.1'
+gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.4.0'
-gem 'libv8', '~> 3.16.14'
+# gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
 gem 'sass-rails', '~> 5.0'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
+# gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
 gem 'uglifier', '~> 4.2.0'
-gem 'yui-compressor'
+# gem 'yui-compressor' # I think no longer used
 
 # ############################################################
 # Misc
