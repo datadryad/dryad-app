@@ -1,5 +1,5 @@
-require 'stash/repo'
-require 'stash/doi/id_gen'
+require_relative '../../../../../lib/stash/repo'
+require_relative '../../../../../lib/stash/doi/id_gen'
 require 'stash/merritt/submission_package'
 require 'stash/merritt/sword_helper'
 

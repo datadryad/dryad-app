@@ -22,10 +22,10 @@ just validates URLs live on the internet.  A lot of code is shared between the p
   - up_code_manifest_resource_path
   - stash_engine/resources#up_code_manifest
 
-See `stash/stash_engine/app/controllers/stash_engine/resources_controller.rb` for the controller and it sets up basics like the
+See `app/controllers/stash_engine/resources_controller.rb` for the controller and it sets up basics like the
 @resource and information about the file model being used.
 
-Page rendering is at `stash/stash_engine/app/views/stash_engine/resources/` and with the name of the controller action as the
+Page rendering is at `app/views/stash_engine/resources/` and with the name of the controller action as the
 template (this is the Rails default to name views after the action).
 
 ## Shared component for rendering file uploads
@@ -57,7 +57,7 @@ Notice the bottom where it renders some dynamic javascript files into the page a
 - Needed for large uploads and splitting into multiple parts
 - It is an NPM library that was difficult to load into a normal page in the current Rails system, but will likely be easier
   to include dependent libraries in React and with NPM.
-- Using a Javascript library called *Browserify* to put the needed Javascript libraries into our environment.  See `stash/stash_engine/evaporate_init.js`
+- Using a Javascript library called *Browserify* to put the needed Javascript libraries into our environment.  See `evaporate_init.js`
   - Also includes some code to sanitize bad filenames that we don't want to send to S3 in that file
   - package.json includes the following script line.  `"build": "browserify evaporate_init.js -o app/assets/javascripts/stash_engine/evaporate_bundle.js"`
   - That allows `npm run build` to install the browserify componants.
@@ -78,7 +78,7 @@ Notice the bottom where it renders some dynamic javascript files into the page a
 - *evaporate.js* creates and initializes a new instance of evaporate.js
   - In order to work, evaporate.js requires a server URL that signs uploads.  This is at a "presign_url_path" which is
     polymorphic and depends on which upload type.  The code is common and included in both controllers.  See the file
-    stash/stash_engine/app/controllers/stash_engine/concerns/uploadable.rb  .  By including this file in both different
+    `app/controllers/stash_engine/concerns/uploadable.rb`.  By including this file in both different
     controllers, they share the same methods.
   - The "presign_upload" method in the `uploadable.rb` creates the signing for evaporate.js
   - `complete_path` is what AJAX gets called when a file is complete.
@@ -87,7 +87,7 @@ Notice the bottom where it renders some dynamic javascript files into the page a
     be exposed in the client side javascript, but only used inside of the Rails controller where it generates presigned
     urls since the secret should always be kept secret from the client.
 - Other javascript.  Other javascripts can be loaded as part of the application for every page and most live under
-  `stash/stash_engine/app/assets/javascripts/stash_engine` .  These files are combined and minified and cached forever
+  `app/assets/javascripts/stash_engine` .  These files are combined and minified and cached forever
   and loaded for every page in our current config, I think.  `resources.js` and `file_uploads.js` may be relevant for some
   other events on the page.
   

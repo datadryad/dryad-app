@@ -1,4 +1,4 @@
-require_relative '../../../stash/stash_engine/lib/stash_engine/counter_log'
+require_relative '../../../lib/stash_engine/counter_log'
 require 'active_support' # needed for blank? when not loaded in the rails environment
 require 'active_support/core_ext/object/blank'
 require 'byebug'
