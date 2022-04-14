@@ -1,4 +1,4 @@
-require_relative '../../../stash/stash_engine/lib/stash/aws/s3'
+require_relative '../../../lib/stash/aws/s3'
 require 'rails_helper'
 require 'pry-remote'
 require 'fileutils'

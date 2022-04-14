@@ -7,8 +7,8 @@ are required for Dryad to run, both internal and external. The status dashboard
 is only viewable to curators.
 
 To add a new checker:
-- add a checker to `stash/stash_engine/app/services/stash_engine/status_dashboard/`
-- add an entry to `stash/stash_engine/lib/tasks/status_dashboard.rake`
+- add a checker to `app/services/stash_engine/status_dashboard/`
+- add an entry to `lib/tasks/status_dashboard.rake`
 - on any server where the checker needs to run, re-seed the database
   with the list of checkers: `rails status_dashboard:seed`
   (database entries are stored in `stash_engine_external_dependencies`)

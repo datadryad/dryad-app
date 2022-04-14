@@ -4,8 +4,8 @@ require 'fileutils'
 module StashEngine
   describe Tenant do
     before(:each) do
-      @tenants = StashEngine.tenants
-      StashEngine.tenants = begin
+      @tenants = TENANT_CONFIG
+      TENANT_CONFIG = begin
         tenants = ActiveSupport::HashWithIndifferentAccess.new
         tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
         tenants['exemplia'] = ActiveSupport::HashWithIndifferentAccess.new(tenant_hash)
@@ -23,7 +23,7 @@ module StashEngine
     end
 
     after(:each) do
-      StashEngine.tenants = @tenants
+      TENANT_CONFIG = @tenants
     end
 
     def expect_exemplia(tenant) # rubocop:disable Metrics/AbcSize
@@ -52,7 +52,7 @@ module StashEngine
 
     describe :initialize do
       it 'creates a tenant' do
-        tenant_hash = StashEngine.tenants['exemplia']
+        tenant_hash = TENANT_CONFIG['exemplia']
         tenant = Tenant.new(tenant_hash)
         expect_exemplia(tenant)
       end

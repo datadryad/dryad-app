@@ -49,11 +49,9 @@ within an engine or in the main app for overall testing through the UI.
 Each component has a *testing_prep.sh* script for setting up the database for testing that component and it only needs to be run once
 if you continue to use the same test database.
 
-For example, to set up and run the tests in the stash_engine:
+For example, to set up and run the tests:
 
 ```
-cd stash/stash_engine
-
 # testing_prep only needs to be done the first time you use a database and sets it up for testing this component
 ./testing_prep.sh
 

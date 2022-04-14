@@ -84,7 +84,7 @@ module StashDatacite
 
       def landing_url
         target_id = CGI.escape(@resource.identifier&.to_s)
-        StashEngine::Engine.routes.url_helpers.show_url(target_id)
+        Rails.application.routes.url_helpers.show_url(target_id)
       end
 
       def doi_url

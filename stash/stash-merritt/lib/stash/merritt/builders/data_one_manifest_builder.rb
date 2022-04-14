@@ -1,5 +1,5 @@
 require 'ostruct'
-require 'stash/repo/file_builder'
+require_relative '../../../../../../lib/stash/repo/file_builder'
 require 'merritt'
 
 module Stash

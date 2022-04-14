@@ -1,0 +1,19 @@
+<% # takes dataset_identifier as local %>
+<div class="o-download">
+  <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
+
+  <%= button_to "Download dataset", Rails.application.routes.url_helpers.download_resource_path(resource.id), remote: true,
+                class: 'o-download__files js-download', id: "dl_res_#{resource.id}" %>
+
+  <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
+</div>
+
+<script>
+  $('#<%= "dl_res_#{resource.id}" %>').click(function(event) {
+    var item = $(this);
+    item.removeClass('o-download__files').addClass('o-download__wait');
+    event.preventDefault();
+    $(this).closest('form').submit();
+    item.prop('disabled', true);
+  });
+</script>

@@ -47,6 +47,7 @@ module StashDatacite
       end
 
       it 'saves an exact match for a funder with the crossref funder id' do
+        @resource.contributors = [] # erase the default funder
         post '/stash_datacite/contributors/create', params: @params_hash, xhr: true
         contrib = StashDatacite::Contributor.where(resource_id: @resource.id).first
         expect(contrib.contributor_name).to eq('Sorbonne Université')
@@ -55,6 +56,7 @@ module StashDatacite
       end
 
       it "doesn't save an identifier and puts an asterisk if that one doesn't match up" do
+        @resource.contributors = [] # erase the default funder
         @params_hash['contributor']['contributor_name'] = 'crap'
         post '/stash_datacite/contributors/create', params: @params_hash, xhr: true
         contrib = StashDatacite::Contributor.where(resource_id: @resource.id).first

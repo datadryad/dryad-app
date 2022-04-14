@@ -19,7 +19,7 @@ module StashEngine
 
     describe '#presign_upload' do
       before(:each) do
-        @url = StashEngine::Engine.routes.url_helpers.generic_file_presign_url_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.generic_file_presign_url_path(resource_id: @resource.id)
         @json_hash = { 'to_sign' => "AWS4-HMAC-SHA256\n20210213T001147Z\n20210213/us-west-2/s3/aws4_request\n" \
                                   '98fd9689d64ec7d84eb289ba859a122f07f7944e802edc4d5666d3e2df6ce7d6',
                        'datetime' => '20210213T001147Z' }
@@ -36,7 +36,7 @@ module StashEngine
 
     describe '#upload_complete' do
       before(:each) do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_complete_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.data_file_complete_path(resource_id: @resource.id)
         @json_hash = {
           'name' => 'lkhe_hg.jpg', 'size' => 1_843_444,
           'type' => 'image/jpeg', 'original' => 'lkhe*hg.jpg'
@@ -63,12 +63,12 @@ module StashEngine
       end
 
       it 'returns json when request with format html' do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_validate_urls_expects(@url)
       end
 
       it 'returns json with bad urls when request with html format' do
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_bad_urls_expects(@url)
       end
 
@@ -77,7 +77,7 @@ module StashEngine
         @manifest_deleted.update(
           url: 'http://example.org/example_data_file.csv', file_state: 'deleted'
         )
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         post @url, params: { 'url' => @valid_manifest_url }
 
         body = JSON.parse(response.body)
@@ -88,7 +88,7 @@ module StashEngine
         @manifest = create_software_file(@resource.id)
         @manifest.update(url: @valid_manifest_url)
 
-        @url = StashEngine::Engine.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         post @url, params: { 'url' => @valid_manifest_url }
 
         body = JSON.parse(response.body)
@@ -103,7 +103,7 @@ module StashEngine
       it 'returns json when request with html format' do
         @resource.update(data_files: [create(:data_file)])
         @file = @resource.data_files.first
-        @url = StashEngine::Engine.routes.url_helpers.destroy_manifest_data_file_path(id: @file.id)
+        @url = Rails.application.routes.url_helpers.destroy_manifest_data_file_path(id: @file.id)
         generic_destroy_expects(@url)
       end
     end
@@ -111,7 +111,7 @@ module StashEngine
     describe '#validate_frictionless' do
       before(:each) do
         @file = create(:generic_file)
-        @url = StashEngine::Engine.routes.url_helpers.generic_file_validate_frictionless_path(
+        @url = Rails.application.routes.url_helpers.generic_file_validate_frictionless_path(
           resource_id: @resource.id
         )
       end
