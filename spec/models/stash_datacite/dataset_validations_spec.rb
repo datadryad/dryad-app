@@ -91,7 +91,7 @@ module StashDatacite
           validations = DatasetValidations.new(resource: @resource)
           error = validations.abstract
           expect(error.message).to include('abstract')
-          expect(error.ids.first).to eq('abstract_label') # because the abstract uses an editor, can't highlight box, but label
+          expect(error.ids.first).to eq('abstract_label')
         end
       end
 
