@@ -133,7 +133,7 @@ module StashDatacite
         funder_require_date = '2022-04-14'
         if (@resource.contributors.blank? || @resource.contributors.first.contributor_name.blank?) &&
            @resource.identifier.created_at > funder_require_date &&
-           @resource.identifer.pub_state == 'unpublished'
+           @resource.identifier.pub_state == 'unpublished'
           return ErrorItem.new(message: 'Fill in a {funder}. Use "N/A" if there is no funder associated with the dataset.',
                                page: metadata_page(@resource),
                                ids: ['funder_fieldset'])
