@@ -46,10 +46,7 @@ function Title({resource, path}) {
     >
       {(formik) => (
         <Form className="c-input">
-          <strong>
-            <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
-          </strong>
-          <br />
+          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset Title</label>
           <Field
             name="title"
             type="text"
