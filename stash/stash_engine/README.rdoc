@@ -1,5 +1,0 @@
-= StashEngine
-
-This is the main application that provides Dashv2 functionality.
-
-This project rocks and uses MIT-LICENSE.

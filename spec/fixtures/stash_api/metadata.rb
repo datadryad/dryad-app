@@ -21,6 +21,7 @@ module Fixtures
         add_abstract
         add_author
         add_research_domain
+        add_funder
       end
 
       def make_minimal_ordered_authors
