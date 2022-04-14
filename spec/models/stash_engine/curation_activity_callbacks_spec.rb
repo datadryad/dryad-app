@@ -181,6 +181,7 @@ module StashEngine
       context :clean_placeholders do
         before(:each) do
           @user = create(:user)
+          @resource.contributors = [] # erase the default funder
         end
 
         it 'does nothing when there are no funders' do

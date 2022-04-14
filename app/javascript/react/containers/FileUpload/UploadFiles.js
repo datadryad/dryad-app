@@ -21,7 +21,7 @@ import WarningMessage from '../../components/FileUpload/WarningMessage/WarningMe
 import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
-import '../../../../../stash/stash_engine/app/assets/javascripts/stash_engine/resources.js';
+import '../../../../../app/assets/javascripts/stash_engine/resources.js';
 
 /**
  * Constants

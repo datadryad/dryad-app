@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'ostruct'
 require 'tmpdir'
-require 'stash_engine'
 require 'datacite/mapping/datacite_xml_factory'
 require 'stash/merritt/submission_package'
 

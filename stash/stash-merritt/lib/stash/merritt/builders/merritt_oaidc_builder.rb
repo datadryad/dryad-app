@@ -1,4 +1,4 @@
-require 'stash/repo/file_builder'
+require_relative '../../../../../../lib/stash/repo/file_builder'
 require 'action_controller'
 
 module Stash

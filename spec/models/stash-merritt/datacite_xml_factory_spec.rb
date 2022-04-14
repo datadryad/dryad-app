@@ -76,6 +76,7 @@ module Datacite
       end
 
       it 'generates funders with funderIdentifiers if contributor has name_identifier_id' do
+        @resource.contributors = [] # erase the default funder
         contributor = create(:contributor, resource_id: @resource.id)
         dc_xml_string = @xml_factory.build_datacite_xml
         doc = Nokogiri::XML(dc_xml_string)
@@ -89,6 +90,7 @@ module Datacite
       end
 
       it 'leaves out funderIdentifier if contributor has blank name_identifier_id' do
+        @resource.contributors = [] # erase the default funder
         contributor = create(:contributor, resource_id: @resource.id, name_identifier_id: nil)
         dc_xml_string = @xml_factory.build_datacite_xml
         doc = Nokogiri::XML(dc_xml_string)

@@ -151,6 +151,8 @@ module StashDatacite
 
     def resource
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
+    rescue ActiveRecord::RecordNotFound
+      nil
     end
 
     # Use callbacks to share common setup or constraints between actions.
