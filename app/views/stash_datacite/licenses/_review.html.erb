@@ -62,14 +62,14 @@
 		<p>
 			Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
 			publication of your dataset, you will receive an invoice for
-			&dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %>. If you have any questions,
+			&dollar;<%=  APP_CONFIG.payments.data_processing_charge / 100 %>. If you have any questions,
 			please <a href="mailto:help@datadryad.org">contact us</a>.
 		</p>
 
 		<% if @resource.identifier.large_files? %>
 			<p>
 				This submission contains large files.
-				For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size).gsub(' ', '') %>,
+				For data packages in excess of <%= filesize(APP_CONFIG.payments.large_file_size).gsub(' ', '') %>,
 				submitters will be charged $50 USD for each additional 10GB,
 				or part thereof. Submissions between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on.
 			</p>

@@ -6,8 +6,8 @@
 
 The core service code lives in the
 [Dryad-app repo](https://github.com/CDL-Dryad/dryad-app/tree/main) in
-the `stash/stash_engine/lib/stash/link_out/` directory. The rake taks
-live in `stash/stash_engine/lib/tasks/link_out.rake`. The XML ERB
+the `lib/stash/link_out/` directory. The rake taks
+live in `lib/tasks/link_out.rake`. The XML ERB
 templates however reside within the higher-level `app/views/link_out/`
 directory due to an issue with the Rails engine having trouble
 locating views in an engine when executing within the context of a

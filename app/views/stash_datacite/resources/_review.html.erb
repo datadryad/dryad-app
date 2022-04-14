@@ -70,7 +70,7 @@
 	<% else %>
 	    <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: [] } %>
 	<% end %>
-        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource),
+        <%= link_to 'Edit Files', stash_url_helpers.upload_resource_path(@resource),
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 

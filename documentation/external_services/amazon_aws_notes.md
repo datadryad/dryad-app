@@ -94,7 +94,7 @@ The evaporate JS library isn't automatically updated and to do updates for it,
 do the following.
 
 ```bash
-cd dryad-app/stash/stash_engine
+cd dryad-app
 npm update # if you want to update node package manager
 npm run build
 ```

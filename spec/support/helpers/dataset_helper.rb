@@ -48,6 +48,7 @@ module DatasetHelper
     fill_in 'title', with: Faker::Lorem.sentence
     fill_in_author
     fill_in_research_domain
+    fill_in_funder
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
   end
 
@@ -67,8 +68,8 @@ module DatasetHelper
   def fill_manuscript_info(name:, issn:, msid:)
     choose('choose_manuscript')
     page.execute_script("$('#publication').val('#{name}')")
-    page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field for issn
-    page.execute_script("$('#publication_name').val('#{name}')") # must do to fill hidden field for issn
+    page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field
+    page.execute_script("$('#publication_name').val('#{name}')") # must do to fill hidden field
     fill_in 'msid', with: msid
   end
 
@@ -86,9 +87,9 @@ module DatasetHelper
     page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
   end
 
-  def fill_in_funder(name:, value:)
-    find_field('Granting Organization').set(name)
-    find_field('Award Number').set(value)
+  def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
+    res = StashEngine::Resource.last
+    res.update(contributors: [create(:contributor, contributor_name: name, award_number: value, resource: res)])
   end
 
   def fill_in_research_domain

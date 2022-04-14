@@ -1,5 +1,5 @@
 require 'ostruct'
-require_relative '../../../../stash/stash_engine/lib/stash/payments/invoicer'
+require_relative '../../../../lib/stash/payments/invoicer'
 require 'action_controller'
 
 module Stash

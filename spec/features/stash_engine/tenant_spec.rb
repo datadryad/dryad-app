@@ -4,7 +4,7 @@ RSpec.feature 'Tenant', type: :feature do
 
   context :logos do
 
-    StashEngine.tenants.each_value do |hash|
+    TENANT_CONFIG.each_value do |hash|
       it "displays the correct logo for #{hash[:short_name]}" do
         sign_in(create(:user, tenant_id: hash[:tenant_id]))
         visit root_path
