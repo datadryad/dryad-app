@@ -105,6 +105,7 @@ gem 'tins', '~> 1.29.1'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
+gem 'yaml', '~> 0.1.1' # version 0.2 breaks Gmail, see https://github.com/CDL-Dryad/dryad-app/pull/771
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 # ############################################################

@@ -765,7 +765,7 @@ GEM
       xml-mapping (~> 0.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yaml (0.2.0)
+    yaml (0.1.1)
     yui-compressor (0.12.0)
     zaru (0.3.0)
 
@@ -883,6 +883,7 @@ DEPENDENCIES
   webpacker (~> 5.4.0)
   wicked_pdf (~> 1.4.0)
   wkhtmltopdf-binary
+  yaml (~> 0.1.1)
   yui-compressor
   zaru (~> 0.3.0)
 
