@@ -80,30 +80,30 @@ gem 'jquery-ui-rails', '~> 6.0.1'
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
-gem 'loofah', '~> 2.12.0'
+gem 'loofah', '~> 2.16.0'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
 gem 'oai', '~> 1.1.0'
-gem 'omniauth', '~> 1.8', '>= 1.8.1'
+gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
-gem 'omniauth-rails_csrf_protection', '~> 0.1', '>= 0.1.2'
-gem 'omniauth-shibboleth', '~> 1.2', '>= 1.2.1'
+gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
+gem 'omniauth-shibboleth', '~> 1.3.0'
 gem 'posix-spawn', '~> 0.3.15'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'redcarpet', '~> 3.5.1'
-gem 'responders', '~> 3.0.1'
-gem 'rest-client', '~> 2.1.0'
-gem 'restforce', '~>5.1.0'
-gem 'rinku', '~> 2.0.6'
-gem 'rsolr', '~> 2.3.0'
+gem 'redcarpet', '~> 3.5.1'  # I'm not sure we're still using markdown for others to create documents
+gem 'responders', '~> 3.0.1' # do we use this?
+gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
+gem 'restforce', '~> 5.2.4'
+gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
+gem 'rsolr', '~> 2.5.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'serrano', '~> 1.0.0'
-gem 'solr_wrapper', '~> 3.1.2'
-gem 'stripe', '~> 5.38.0'
-gem 'sync', '~> 0.5.0'
-gem 'tins', '~> 1.29.1'
-gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
+gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
+gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
+gem 'stripe', '~> 5.50.0'
+gem 'sync', '~> 0.5.0' # not sure where this is used
+gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
+gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 1.4.0'
 gem 'wkhtmltopdf-binary'
 gem 'yaml', '~> 0.1.1' # version 0.2 breaks Gmail, see https://github.com/CDL-Dryad/dryad-app/pull/771
