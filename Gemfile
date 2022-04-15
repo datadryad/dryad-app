@@ -23,6 +23,7 @@ end
 # ############################################################
 # Deployment
 
+gem 'rdoc', '~> 6.1.1'
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6.2'
 gem 'rubocop', '~> 0.90.0'
