@@ -533,6 +533,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
+    rdoc (6.1.2.1)
     react-rails (2.6.2)
       babel-transpiler (>= 0.7.0)
       connection_pool
@@ -824,6 +825,7 @@ DEPENDENCIES
   rack-attack
   rails (~> 5.2.7)
   rb-readline
+  rdoc (~> 6.1.1)
   react-rails (~> 2.6.2)
   redcarpet (~> 3.5.1)
   responders (~> 3.0.1)
