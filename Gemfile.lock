@@ -740,7 +740,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wicked_pdf (1.4.0)
+    wicked_pdf (2.1.0)
       activesupport
     wkhtmltopdf-binary (0.12.6.5)
     xml-mapping (0.10.1)
@@ -861,7 +861,7 @@ DEPENDENCIES
   webdrivers
   webmock
   webpacker (~> 5.4.3)
-  wicked_pdf (~> 1.4.0)
+  wicked_pdf (~> 2.1.0)
   wkhtmltopdf-binary
   yaml (~> 0.1.1)
   zaru (~> 0.3.0)
