@@ -1,15 +1,15 @@
 source 'https://rubygems.org'
 # do we need this still?
-require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
+# require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 # ############################################################
 # Rails
 
-gem 'irb', '~> 1.3.7'
+gem 'irb', '~> 1.4.1'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.2.6'
-gem 'react-rails', '~> 2.6.1'
-gem 'webpacker', '~> 5.4.0'
+gem 'rails', '~> 5.2.7'
+gem 'react-rails', '~> 2.6.2'
+gem 'webpacker', '~> 5.4.3'
 
 # ############################################################
 # Local engines
@@ -23,8 +23,9 @@ end
 # ############################################################
 # Deployment
 
-gem 'capistrano', '~> 3.11'
-gem 'capistrano-rails', '~> 1.4'
+gem 'capistrano', '~> 3.17'
+gem 'capistrano-rails', '~> 1.6.2'
+gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 0.90.0'
 # Use Puma as the app server
 gem 'puma', group: :puma, require: false
@@ -37,73 +38,74 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 # TODO: why do we have uglifier AND yui-compressor?
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
-gem 'coffee-rails', '~> 4.1'
+gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.4.0'
-gem 'libv8', '~> 3.16.14'
+# gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
+gem 'mini_racer'
 gem 'sass-rails', '~> 5.0'
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
 gem 'uglifier', '~> 4.2.0'
-gem 'yui-compressor'
+# gem 'yui-compressor' # I think no longer used
 
 # ############################################################
 # Misc
 
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
-gem 'aws-sdk-s3', '~> 1.111'
-gem 'blacklight', '~> 7.19.2'
+gem 'aws-sdk-s3', '~> 1.113'
+# gem 'blacklight', '~> 7.19.2' # do we really need this should be required by geoblacklight
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'
-gem 'concurrent-ruby', '~> 1.1.9'
+gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', '~> 0.4.1'
-gem 'delayed_job_active_record', '~> 4.1.6'
-gem 'devise', '~> 4.8.0'
-gem 'devise-guests', '~> 0.6'
+gem 'delayed_job_active_record', '~> 4.1.7'
+gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
+gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
 gem 'doorkeeper', '~> 5.5'
-gem 'down'
+gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification'
 gem 'ezid-client', '~> 1.9.1'
 gem 'filesize', '~> 0.2.0'
-gem 'font-awesome-rails', '~> 4.7.0.7'
-gem 'geoblacklight', '~> 3.4.0'
-gem 'google-apis-gmail_v1', '~> 0.3'
-gem 'http', '~> 5.0.2'
-gem 'httparty', '~> 0.19.0'
+gem 'font-awesome-rails', '~> 4.7'
+gem 'geoblacklight', '~> 3.6.0'
+gem 'google-apis-gmail_v1', '~> 0.14.0' # will this break the emails ryan set up?
+gem 'http', '~> 5.0.4'
+gem 'httparty', '~> 0.20.0'
 gem 'httpclient', '~> 2.8.3'
-gem 'jbuilder'
+gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 6.0.1'
-gem 'jwt', '~> 2.2.3'
-gem 'kaminari', '~> 1.2.1'
+gem 'jwt', '~> 2.3.0'
+gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
-gem 'loofah', '~> 2.12.0'
+gem 'loofah', '~> 2.16.0'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
 gem 'oai', '~> 1.1.0'
-gem 'omniauth', '~> 1.8', '>= 1.8.1'
+gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
-gem 'omniauth-rails_csrf_protection', '~> 0.1', '>= 0.1.2'
-gem 'omniauth-shibboleth', '~> 1.2', '>= 1.2.1'
+gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
+gem 'omniauth-shibboleth', '~> 1.3.0'
 gem 'posix-spawn', '~> 0.3.15'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'redcarpet', '~> 3.5.1'
-gem 'responders', '~> 3.0.1'
-gem 'rest-client', '~> 2.1.0'
-gem 'restforce', '~>5.1.0'
-gem 'rinku', '~> 2.0.6'
-gem 'rsolr', '~> 2.3.0'
+gem 'redcarpet', '~> 3.5.1'  # I'm not sure we're still using markdown for others to create documents
+gem 'responders', '~> 3.0.1' # do we use this?
+gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
+gem 'restforce', '~> 5.2.4'
+gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
+gem 'rsolr', '~> 2.5.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'serrano', '~> 1.0.0'
-gem 'solr_wrapper', '~> 3.1.2'
-gem 'stripe', '~> 5.38.0'
-gem 'sync', '~> 0.5.0'
-gem 'tins', '~> 1.29.1'
-gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript' # this is in a generator to install blacklight
-gem 'wicked_pdf', '~> 1.4.0'
+gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
+gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
+gem 'stripe', '~> 5.50.0'
+gem 'sync', '~> 0.5.0' # not sure where this is used
+gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
+gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
+gem 'wicked_pdf', '~> 2.1.0'
 gem 'wkhtmltopdf-binary'
 gem 'yaml', '~> 0.1.1' # version 0.2 breaks Gmail, see https://github.com/CDL-Dryad/dryad-app/pull/771
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
@@ -120,6 +122,7 @@ group :development, :local_dev do
 end
 
 group :test do
+  # I'm not sure we're really using every one of these libraries like fuubar?, guard?, mocha?, rspec-html?, shoulda?
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb (https://github.com/teamcapybara/capybara)
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
