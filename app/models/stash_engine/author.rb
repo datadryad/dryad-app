@@ -11,9 +11,7 @@ module StashEngine
 
     accepts_nested_attributes_for :affiliations
 
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
-
-    validates :author_email, format: EMAIL_REGEX, allow_blank: true
+    validates :author_email, format: URI::MailTo::EMAIL_REGEXP, allow_blank: true
 
     before_save :strip_whitespace
 
