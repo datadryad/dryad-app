@@ -95,6 +95,10 @@
 
     <h2 class="o-heading__page-span">Related Works</h2>
 
+    <%= react_component('components/MetadataEntry/RelatedWorks',
+                        relatedIdentifiers: @metadata_entry.related_identifiers,
+                        workTypes: StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a ) %>
+
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">
       <span class="c-input__hint">Are there any preprints, articles, datasets, software packages, or supplemental
