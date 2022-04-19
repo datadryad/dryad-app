@@ -16,6 +16,7 @@ module StashEngine
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def index
+      puts "ZZZZZ params #{params}"
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
       journal_limit = (if current_user.role != 'superuser' &&
@@ -52,7 +53,8 @@ module StashEngine
       blank_results = (page.to_i - 1) * page_size.to_i
       @datasets = Array.new(blank_results, nil) + @datasets # pad out an array with empty results for earlier pages for kaminari
       @datasets = Kaminari.paginate_array(@datasets, total_count: @datasets.length).page(page).per(page_size)
-
+      puts "XXXXX @datasets is now #{@datasets}"
+      
       respond_to do |format|
         format.html
         format.csv do
@@ -187,7 +189,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
-    def activity_log
+    def activity_log      
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
