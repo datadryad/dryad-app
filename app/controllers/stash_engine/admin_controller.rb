@@ -1,23 +1,58 @@
 require_dependency 'stash_engine/application_controller'
 
-# TODO: maybe should move this around and move the index into a user's controller since it's mostly (but not all) about users.
 module StashEngine
   class AdminController < ApplicationController
 
     include SharedSecurityController
     helper SortableTableHelper
 
+    before_action :require_superuser
     before_action :load_user, only: %i[popup set_role user_dashboard]
-    before_action :require_admin
-    before_action :set_admin_page_info, only: %i[index user_dashboard]
-
-    # the admin main page showing users and stats
+    before_action :setup_paging, only: %i[index]
+    
+    # the admin_users main page showing users and stats
     def index
+      puts "ZZZZZ params #{params}"
       setup_stats
       setup_superuser_facets
-      @users = User.all
+
+      # Default to recently-created users
+      if params[:sort].blank? && params[:q].blank?
+        params[:sort] = 'created_at'
+        params[:direction] = 'desc'
+      end
+      
+      if params[:q]
+        q = params[:q]
+        # search the query in any searchable field
+        @users = User.where(first_name: q)
+                 .or(User.where(last_name: q))
+                 .or(User.where(orcid: q))
+                 .or(User.where(email: q))
+
+        if q.include?(' ')
+          # add any matches for "firstname lastname"
+          splitname = q.split
+          @users = @users.or(User.where(first_name: splitname.first, last_name: splitname.second))
+        end
+
+        @users = @users.order(helpers.sortable_table_order)
+      else
+        @users = User.all.order(helpers.sortable_table_order)
+      end
+
+      puts "XXXXX"
+      puts "XXXXX found #{@users.size} users"
+      puts "XXXXX found #{helpers.sortable_table_order} order"
+      
       add_institution_filter! # if they chose a facet or are only an admin
-      @users = @users.order(helpers.sortable_table_order).page(@page).per(@page_size)
+      
+      # paginate for display
+      #blank_results = (@page.to_i - 1) * @page_size.to_i
+      #@users = Array.new(blank_results, nil) + @users # pad out an array with empty results for earlier pages for kaminari
+      #@users = Kaminari.paginate_array(@users, total_count: @users.length).page(@page).per(@page_size)
+      @users = @users.page(@page).per(@page_size)
+      puts "XXXXX @uses is now #{@users} -- size #{@users.size}"
     end
 
     # popup a dialog with the user's admin info for changing
@@ -52,10 +87,14 @@ module StashEngine
 
     private
 
-    # this sets up the page variables for use with kaminari paging
-    def set_admin_page_info
+
+    def setup_paging
       @page = params[:page] || '1'
-      @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+      @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
+                     10
+                   else
+                     params[:page_size].to_i
+                   end
     end
 
     def load_user
@@ -75,11 +114,9 @@ module StashEngine
 
     def setup_stats
       setup_superuser_stats
-      limit_to_tenant! if current_user.role == 'admin'
       @stats.each { |k, v| @stats[k] = v.count }
     end
 
-    # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
     def setup_superuser_stats
       @stats =
         {
@@ -93,28 +130,12 @@ module StashEngine
         }
     end
 
-    # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
-    def limit_to_tenant!
-      @stats[:user_count] = @stats[:user_count].where(tenant_id: current_user.tenant_id)
-      @stats[:dataset_count] = @stats[:dataset_count].joins(resources: :user)
-        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct
-      @stats[:user_7days] = @stats[:user_7days].where(tenant_id: current_user.tenant_id)
-      @stats[:dataset_started_7days] = @stats[:dataset_started_7days].joins(:user)
-        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id])
-      @stats[:dataset_submitted_7days] = @stats[:dataset_submitted_7days].joins(resources: :user)
-        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct
-    end
-
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)
     end
 
     def add_institution_filter!
-      if current_user.role == 'admin'
-        @users = @users.where(tenant_id: current_user.tenant_id)
-      elsif params[:institution]
-        @users = @users.where(tenant_id: params[:institution])
-      end
+      @users = @users.where(tenant_id: params[:institution]) if params[:institution]
     end
   end
 end

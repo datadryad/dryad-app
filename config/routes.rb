@@ -156,10 +156,6 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  # Probably not needed. I removed the stash_discovery User model,
-  # since it did not appear to have any associated code or DB content. (RS)
-  #devise_for :users
-
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
 
@@ -280,13 +276,14 @@ Rails.application.routes.draw do
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
-    # admin area
-    get 'admin', to: 'admin#index'
+    # admin user management
+    get 'admin', to: 'admin#index' # main page for administering users ### TODO: user_admin
+    get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard' # page for viewing a single user ####TODO: user_admin/user_profile
     get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
     post 'admin/set_role/:id', to: 'admin#set_role', as: 'admin_set_role'
-    get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard'
-    
-    # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
+
+    # admin_datasets, aka "Curator Dashboard"
+    # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
     get 'ds_admin/index', to: 'admin_datasets#index'
     get 'ds_admin/index/:id', to: 'admin_datasets#index'
