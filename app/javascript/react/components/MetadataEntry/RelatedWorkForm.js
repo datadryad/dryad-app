@@ -11,7 +11,6 @@ function RelatedWorkForm(
 ) {
   const formRef = useRef();
 
-
   return (
       <Formik
           initialValues={
@@ -34,12 +33,18 @@ function RelatedWorkForm(
                 <Field
                     id={`work_type__${relatedIdentifier.id}`}
                     name="work_type"
-                    type="text"
+                    as="select"
                     className="c-input__select"
                     onBlur={() => { // defaults to formik.handleBlur
                       formik.handleSubmit();
                     }}
-                />
+                >
+                  {workTypes.map((opt) => (
+                      <option value={opt[1]}>
+                        {opt[0]}
+                      </option>
+                      ))}
+                </Field>
               </div>
             </Form>
         )}
