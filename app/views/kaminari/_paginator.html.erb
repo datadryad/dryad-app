@@ -10,21 +10,47 @@
   <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
 <% end %>
 <%= paginator.render do -%>
+  <% puts "PPPPPP #{params}" %>
   <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
     <% unless params[:show_all] == false %>
       <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
     <% end %>
 
-    <%= first_page_tag unless current_page.first? %>
-    <%= prev_page_tag unless current_page.first? %>
-    <% each_page do |page| -%>
-      <% if page.left_outer? || page.right_outer? || page.inside_window? -%>
-        <%= page_tag page %>
-      <% elsif !page.was_truncated? -%>
-        <%= gap_tag %>
-      <% end -%>
-    <% end -%>
-    <%= next_page_tag unless current_page.last? %>
-    <%= last_page_tag unless current_page.last? || params[:show_last_page] == false %>
+    <% unless current_page.first? %>
+      <span class="first">
+	<%= link_to t('views.pagination.first').html_safe, stash_url_helpers.admin_path(page: 1), 'aria-label': "Go to first page", :remote => remote %>
+      </span>
+      <span class="prev">
+	<%= link_to t('views.pagination.previous').html_safe, stash_url_helpers.admin_path(page: current_page.number - 1), :rel => 'prev', 'aria-label': "Go to previous page", :remote => remote %>
+      </span>
+    <% end %>
+
+    <%#
+    *page_tag are not working, but they only get triggered in certain cases
+    see .orig file for previous details
+    -%>
+    <% puts "-- #{current_page.number}" %>
+    <% each_page do |page| %>
+      <% puts "-- #{page.number}" %>
+      <% puts "-- lo #{page.left_outer?} ro #{page.right_outer?} iw #{page.inside_window?} tr #{page.was_truncated?}" %>
+      <% if page.left_outer? || page.right_outer? || page.inside_window? %>
+        <span class="page<%= ' current' if page.current? %>">
+	  <% if page.current? %>
+	    <span aria-label="Current page, page <%= page %>" aria-current="true"><%= page %></span>
+	  <% else %>
+	    <% puts "-- PAR #{params}" %>
+	    <%= link_to page, stash_url_helpers.admin_path(page: page.number, page_size: 5), :remote => remote, :rel => (page.next? ? 'next' : page.prev? ? 'prev' : nil), 'aria-label': "Go to page #{page}" %>
+	  <% end %>
+	</span>
+      <% elsif !page.was_truncated? %>
+	<span class="page gap"><%= t('views.pagination.truncate').html_safe %></span>
+      <% end %>     
+    <% end %>    
+
+    <% unless current_page.last? %>
+      <span class="next">	
+	<%= link_to t('views.pagination.next').html_safe, stash_url_helpers.admin_path(page: current_page.number + 1), :rel => 'next', 'aria-label': "Go to next page", :remote => remote %>
+      </span>
+    <% end %>    
   </nav>
 <% end -%>
