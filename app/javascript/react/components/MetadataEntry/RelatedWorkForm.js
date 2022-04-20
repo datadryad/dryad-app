@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function RelatedWorkForm(
-    {relatedIdentifier,
-    workTypes}
+    {relatedIdentifier, workTypes, removeFunction}
 ) {
   const formRef = useRef();
 
@@ -16,7 +15,7 @@ function RelatedWorkForm(
           initialValues={
             {
               work_type: (relatedIdentifier.work_type || ''),
-              related_id: (relatedIdentifier.related_identifier || ''),
+              related_identifier: (relatedIdentifier.related_identifier || ''),
             }
           }
           innerRef={formRef}
@@ -40,12 +39,42 @@ function RelatedWorkForm(
                     }}
                 >
                   {workTypes.map((opt) => (
-                      <option value={opt[1]}>
+                      <option key={opt[1]} value={opt[1]}>
                         {opt[0]}
                       </option>
                       ))}
                 </Field>
               </div>
+              <div className="c-input">
+                <label className="c-input__label" htmlFor={`related_identifier__${relatedIdentifier.id}`}>
+                  Identifier or external url
+                </label>
+                <Field
+                    id={`related_identifier__${relatedIdentifier.id}`}
+                    name="related_identifier"
+                    type="text"
+                    size="40"
+                    placeholder="example: https://doi.org/10.1594/PANGAEA.726855"
+                    className="c-input__text"
+                    onBlur={() => { // defaults to formik.handleBlur
+                      formik.handleSubmit();
+                    }}
+                />
+              </div>
+
+              <a
+                  role="button"
+                  className="t-describe__remove-button o-button__remove"
+                  rel="nofollow"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showModalYNDialog('Are you sure you want to remove this related work?', () => {
+                      removeFunction(relatedIdentifier.id);
+                    });
+                  }}
+              >remove
+              </a>
             </Form>
         )}
       </Formik>

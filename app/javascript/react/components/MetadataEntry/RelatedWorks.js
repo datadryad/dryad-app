@@ -8,6 +8,40 @@ function RelatedWorks(
     {relatedIdentifiers,
     workTypes}
 ) {
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const removeItem = (id) => {
+    console.log(`${(new Date()).toISOString()}: deleting relatedWork`);
+    const trueDelPath = 'some_url'
+    showSavingMsg();
+
+    // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
+    if (id && !`${id}`.startsWith('new')) {
+      const submitVals = {
+        authenticity_token: csrf,
+        contributor: {
+          id,
+          resource_id: 'resourceId',
+        },
+      };
+      axios.delete(trueDelPath, {
+        data: submitVals,
+        headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+      })
+          .then((data) => {
+            if (data.status !== 200) {
+              console.log('Response failure not a 200 response related works deletion');
+            } else {
+              console.log('deleted from related works');
+            }
+            showSavedMsg();
+          });
+    }
+    // setFunders((prevState) => prevState.filter((item) => (item.id !== id)));
+  };
+
+
+
   return (
       <fieldset className="c-fieldset">
         <legend className="c-fieldset__legend">
@@ -22,6 +56,7 @@ function RelatedWorks(
                   key={relatedIdentifier.id}
                   relatedIdentifier={relatedIdentifier}
                   workTypes={workTypes}
+                  removeFunction={removeItem}
               />
           ))}
         </div>
