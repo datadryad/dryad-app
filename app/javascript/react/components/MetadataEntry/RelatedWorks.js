@@ -5,10 +5,41 @@ import RelatedWorkForm from './RelatedWorkForm';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function RelatedWorks(
-    {relatedIdentifiers,
-    workTypes}
+    {resourceId,
+      relatedIdentifiers,
+      workTypes}
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const blankRelated = {
+    related_identifier: '',
+    related_identifier_type: 'doi',
+    relation_type: 'iscitedby',
+    resource_id: resourceId,
+    work_type: 'supplemental_information'
+  };
+
+  const [works, setWorks] = useState(relatedIdentifiers);
+
+  const addNewWork = () => {
+    console.log(`${(new Date()).toISOString()}: Adding Related Works`);
+    const contribJson = {
+      authenticity_token: csrf,
+      realedWork: blankRelated,
+    };
+
+    axios.post('ldkeh', contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+        .then((data) => {
+          if (data.status !== 200) {
+            console.log("couldn't add new relatedWork from remote server");
+          }
+          setWorks((prevState) => [...prevState, data.data]);
+        });
+  };
+
+  if (works.length < 1) {
+    addNewWork();
+  }
 
   const removeItem = (id) => {
     console.log(`${(new Date()).toISOString()}: deleting relatedWork`);
@@ -60,6 +91,17 @@ function RelatedWorks(
               />
           ))}
         </div>
+        <a
+            href="#"
+            className="o-button__add"
+            role="button"
+            onClick={(e) => {
+              e.preventDefault();
+              addNewRelatedWork();
+            }}
+        >
+          add another related work
+        </a>
       </fieldset>
   );
 }
