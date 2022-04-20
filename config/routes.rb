@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
+
   use_doorkeeper
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rails routes".
