@@ -1,3 +1,4 @@
+require 'kaminari'
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
@@ -13,6 +14,7 @@ module StashEngine
     # the admin_users main page showing users and stats
     def index
       puts "ZZZZZ params #{params}"
+#      params.permit!
       setup_stats
       setup_superuser_facets
 
@@ -25,15 +27,12 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @users = User.where(first_name: q)
-                 .or(User.where(last_name: q))
-                 .or(User.where(orcid: q))
-                 .or(User.where(email: q))
-
+        @users = User.where("first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?",
+                            "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
         if q.include?(' ')
           # add any matches for "firstname lastname"
           splitname = q.split
-          @users = @users.or(User.where(first_name: splitname.first, last_name: splitname.second))
+          @users = @users.or(User.where("first_name LIKE ? and last_name LIKE ?", "%#{splitname.first}%", "%#{splitname.second}%"))
         end
 
         @users = @users.order(helpers.sortable_table_order)

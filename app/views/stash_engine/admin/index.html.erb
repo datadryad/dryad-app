@@ -3,36 +3,26 @@
 
 <%= render partial: 'admin_head', locals: { stats: @stats} %>
 
-<div class="o-admin-container">
-  <div class="o-admin-left">
-    <% if current_user.role == 'superuser' %>
-      <h2>Filters</h2>
-      <%= render partial: 'tenant_facet', locals: { facets: @tenant_facets } %>
+<div>
+  <h2>User Administration</h2>
+  
+  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin', action: 'index', only_path: true),
+                method: 'get', id: 'search_form', local: true ) do %>
+    <label for="search-terms">User Search:</label>
+    <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
+    <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
+    
+    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
+      <%= hidden_field_tag k, v, id: "search_#{k}" %>
     <% end %>
-  </div>
-  <div class="o-admin-right">
-    <h2>User Administration</h2>
+  <% end %>         
 
-    <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin', action: 'index', only_path: true),
-                  method: 'get', id: 'search_form', local: true ) do %>
-      <label for="search-terms">User Search:</label>
-      <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
-      <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
+  <!-- table and paging here -->
+  <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
 
-      <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
-	<%= hidden_field_tag k, v, id: "search_#{k}" %>
-      <% end %>
-    <% end %>         
-    
-    <!-- table and paging here -->
-    <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
-    
-    <div class="c-space-paginator">
-      <% # TODO -- fix kaminari errors so the paging renders
-       # paginate @users, params: { page_size: @page_size, show_all: false, show_last_page: false } %>
-    </div>
+  <% puts "PPPPPPa #{params}" %>
+  <div class="c-space-paginator">
+    <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
   </div>
 </div>
 
-<div id="change_user_dialog" style="display:none;">
-</div>
