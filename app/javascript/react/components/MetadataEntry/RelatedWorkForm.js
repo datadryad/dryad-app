@@ -18,19 +18,6 @@ function RelatedWorkForm(
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-    // PATCH /stash_datacite/related_identifiers/update
-    //
-    /* <ActionController::Parameters
-    {"utf8"=>"✓",
-    "_method"=>"patch",
-    "authenticity_token"=>"ehuyHj2y2EhyJ45oOz4eD5Mm7/4ndcVjZsHcWn+U3I3jmfdJyLK3RxOgdDSkUT+8xxTwJDBpusVRxqdY/F+bUw==",
-    "stash_datacite_related_identifier"=>
-        <ActionController::Parameters
-        {"work_type"=>"supplemental_information",
-        "related_identifier"=>"dlkhedk",
-        "resource_id"=>"3611", "id"=>"3353"} permitted: false>, "form_id"=>"edit_relatedidentifier_3353", "controller"=>"stash_datacite/related_identifiers", "action"=>"update"}
-     */
-
     const submitVals = {
       authenticity_token: csrf,
       stash_datacite_related_identifier: {
