@@ -87,7 +87,7 @@ function RelatedWorks(
           </span>
         </legend>
         <div className="replaceme-related-works">
-          {relatedIdentifiers.map((relatedIdentifier) => (
+          {works.map((relatedIdentifier) => (
               <RelatedWorkForm
                   key={relatedIdentifier.id}
                   relatedIdentifier={relatedIdentifier}
