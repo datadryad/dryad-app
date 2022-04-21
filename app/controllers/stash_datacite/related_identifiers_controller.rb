@@ -20,6 +20,9 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.save
           format.js
+          format.json {
+            render json: @related_identifier.as_json.merge( valid_url_format: @related_identifier.valid_url_format?)
+          }
         else
           format.html { render :new }
         end

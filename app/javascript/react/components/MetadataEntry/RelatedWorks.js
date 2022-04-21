@@ -25,13 +25,13 @@ function RelatedWorks(
     console.log(`${(new Date()).toISOString()}: Adding Related Works`);
     const contribJson = {
       authenticity_token: csrf,
-      realedWork: blankRelated,
+      stash_datacite_related_identifier: blankRelated,
     };
 
-    axios.post('ldkeh', contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+    axios.post('/stash_datacite/related_identifiers/create', contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
         .then((data) => {
           if (data.status !== 200) {
-            console.log("couldn't add new relatedWork from remote server");
+            console.log("couldn't add new relatedWork to the remote server");
           }
           setWorks((prevState) => [...prevState, data.data]);
         });
