@@ -16,7 +16,7 @@ function RelatedWorks(
     related_identifier_type: 'doi',
     relation_type: 'iscitedby',
     resource_id: resourceId,
-    work_type: 'supplemental_information'
+    work_type: 'article'
   };
 
   const [works, setWorks] = useState(relatedIdentifiers);
@@ -36,10 +36,6 @@ function RelatedWorks(
           setWorks((prevState) => [...prevState, data.data]);
         });
   };
-
-  if (works.length < 1) {
-    addNewWork();
-  }
 
   const removeItem = (id) => {
     console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
