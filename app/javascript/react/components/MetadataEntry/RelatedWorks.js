@@ -42,33 +42,26 @@ function RelatedWorks(
   }
 
   const removeItem = (id) => {
-    console.log(`${(new Date()).toISOString()}: deleting relatedWork`);
-    const trueDelPath = 'some_url'
+    console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
+    const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`
     showSavingMsg();
 
-    // requiring the resource like this is weird in a controller for a model that isn't a resource, but it's how it is set up
-    if (id && !`${id}`.startsWith('new')) {
-      const submitVals = {
-        authenticity_token: csrf,
-        contributor: {
-          id,
-          resource_id: 'resourceId',
-        },
-      };
-      axios.delete(trueDelPath, {
-        data: submitVals,
-        headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-      })
-          .then((data) => {
-            if (data.status !== 200) {
-              console.log('Response failure not a 200 response related works deletion');
-            } else {
-              console.log('deleted from related works');
-            }
-            showSavedMsg();
-          });
-    }
-    // setFunders((prevState) => prevState.filter((item) => (item.id !== id)));
+    const submitVals = {
+      authenticity_token: csrf
+    };
+    axios.delete(trueDelPath, {
+      data: submitVals,
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+    })
+    .then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from related works deletion');
+      } else {
+        console.log('deleted from related works');
+      }
+      showSavedMsg();
+    });
+    setWorks((prevState) => prevState.filter((item) => (item.id !== id)));
   };
 
 

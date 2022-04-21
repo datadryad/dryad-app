@@ -46,6 +46,7 @@ module StashDatacite
       @related_identifier.destroy unless params[:id] == 'new'
       respond_to do |format|
         format.js
+        format.json { render json: @related_identifier }
       end
     end
 
