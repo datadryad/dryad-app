@@ -28,6 +28,7 @@ module StashDatacite
 
     # PATCH/PUT /related_identifiers/1
     def update
+      byebug
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?)

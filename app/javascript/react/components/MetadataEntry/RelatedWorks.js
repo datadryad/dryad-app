@@ -72,6 +72,11 @@ function RelatedWorks(
   };
 
 
+  // update the work in the list from old to new values
+  const updateWork = (updatedRelatedId) => {
+    // replace item in the funder list if it has changed
+    setWorks((prevState) => prevState.map((tempRel) => (updatedRelatedId.id === tempRel.id ? updatedRelatedId : tempRel)));
+  };
 
   return (
       <fieldset className="c-fieldset">
@@ -88,6 +93,7 @@ function RelatedWorks(
                   relatedIdentifier={relatedIdentifier}
                   workTypes={workTypes}
                   removeFunction={removeItem}
+                  updateWork={updateWork}
               />
           ))}
         </div>
