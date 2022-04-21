@@ -97,7 +97,7 @@ function RelatedWorks(
             role="button"
             onClick={(e) => {
               e.preventDefault();
-              addNewRelatedWork();
+              addNewWork();
             }}
         >
           add another related work
