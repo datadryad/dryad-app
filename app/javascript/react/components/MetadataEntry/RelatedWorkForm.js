@@ -7,26 +7,79 @@ import RelatedWorksErrors from "./RelatedWorksErrors";
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function RelatedWorkForm(
-    {relatedIdentifier, workTypes, removeFunction}
+    {relatedIdentifier, workTypes, removeFunction, updateWork}
 ) {
   const formRef = useRef();
+
+  const submitForm = (values) => {
+    console.log(`${(new Date()).toISOString()}: Saving related work`);
+    showSavingMsg();
+
+    // set up values
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+    // PATCH /stash_datacite/related_identifiers/update
+    //
+    /* <ActionController::Parameters
+    {"utf8"=>"✓",
+    "_method"=>"patch",
+    "authenticity_token"=>"ehuyHj2y2EhyJ45oOz4eD5Mm7/4ndcVjZsHcWn+U3I3jmfdJyLK3RxOgdDSkUT+8xxTwJDBpusVRxqdY/F+bUw==",
+    "stash_datacite_related_identifier"=>
+        <ActionController::Parameters
+        {"work_type"=>"supplemental_information",
+        "related_identifier"=>"dlkhedk",
+        "resource_id"=>"3611", "id"=>"3353"} permitted: false>, "form_id"=>"edit_relatedidentifier_3353", "controller"=>"stash_datacite/related_identifiers", "action"=>"update"}
+     */
+
+    const submitVals = {
+      authenticity_token: csrf,
+      stash_datacite_related_identifier: {
+        id: values.id,
+        resource_id: relatedIdentifier.resource_id,
+        work_type: values.work_type,
+        related_identifier: values.related_identifier
+      },
+    };
+
+    // submit by json
+    return axios.patch(
+        '/stash_datacite/related_identifiers/update',
+        submitVals,
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json',
+          },
+        },
+    ).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from funders save');
+      }
+
+      // forces data update in the collection containing me
+      updateWork(data.data);
+      showSavedMsg();
+    });
+  };
 
   return (
       <>
       <Formik
           initialValues={
             {
+              id: relatedIdentifier.id,
               work_type: (relatedIdentifier.work_type || ''),
               related_identifier: (relatedIdentifier.related_identifier || ''),
             }
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            // submitForm(values).then(() => { setSubmitting(false);
-            }}
+            submitForm(values).then(() => { setSubmitting(false); });
+          }}
       >
         {(formik) => (
             <Form className="c-input__inline">
+              <Field name="id" type="hidden" />
               <div className="c-input">
                 <label className="c-input__label" htmlFor={`work_type__${relatedIdentifier.id}`}>
                   Work Type
