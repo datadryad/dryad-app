@@ -5,9 +5,11 @@ import RelatedWorkForm from './RelatedWorkForm';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function RelatedWorks(
-    {resourceId,
-      relatedIdentifiers,
-      workTypes}
+  {
+    resourceId,
+    relatedIdentifiers,
+    workTypes,
+  },
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -16,7 +18,7 @@ function RelatedWorks(
     related_identifier_type: 'doi',
     relation_type: 'iscitedby',
     resource_id: resourceId,
-    work_type: 'article'
+    work_type: 'article',
   };
 
   const [works, setWorks] = useState(relatedIdentifiers);
@@ -29,12 +31,12 @@ function RelatedWorks(
     };
 
     axios.post('/stash_datacite/related_identifiers/create', contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-        .then((data) => {
-          if (data.status !== 200) {
-            console.log("couldn't add new relatedWork to the remote server");
-          }
-          setWorks((prevState) => [...prevState, data.data]);
-        });
+      .then((data) => {
+        if (data.status !== 200) {
+          console.log("couldn't add new relatedWork to the remote server");
+        }
+        setWorks((prevState) => [...prevState, data.data]);
+      });
   };
 
   if (works.length < 1) {
@@ -43,27 +45,26 @@ function RelatedWorks(
 
   const removeItem = (id) => {
     console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
-    const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`
+    const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`;
     showSavingMsg();
 
     const submitVals = {
-      authenticity_token: csrf
+      authenticity_token: csrf,
     };
     axios.delete(trueDelPath, {
       data: submitVals,
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
-    .then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure not a 200 response from related works deletion');
-      } else {
-        console.log('deleted from related works');
-      }
-      showSavedMsg();
-    });
+      .then((data) => {
+        if (data.status !== 200) {
+          console.log('Response failure not a 200 response from related works deletion');
+        } else {
+          console.log('deleted from related works');
+        }
+        showSavedMsg();
+      });
     setWorks((prevState) => prevState.filter((item) => (item.id !== id)));
   };
-
 
   // update the work in the list from old to new values
   const updateWork = (updatedRelatedId) => {
@@ -72,36 +73,36 @@ function RelatedWorks(
   };
 
   return (
-      <fieldset className="c-fieldset">
-        <legend className="c-fieldset__legend">
-          <span className="c-input__hint">
-            Are there any preprints, articles, datasets, software packages, or supplemental
-            information that have resulted from or are related to this Data Publication?
-          </span>
-        </legend>
-        <div className="replaceme-related-works">
-          {works.map((relatedIdentifier) => (
-              <RelatedWorkForm
-                  key={relatedIdentifier.id}
-                  relatedIdentifier={relatedIdentifier}
-                  workTypes={workTypes}
-                  removeFunction={removeItem}
-                  updateWork={updateWork}
-              />
-          ))}
-        </div>
-        <a
-            href="#"
-            className="o-button__add"
-            role="button"
-            onClick={(e) => {
-              e.preventDefault();
-              addNewWork();
-            }}
-        >
-          add another related work
-        </a>
-      </fieldset>
+    <fieldset className="c-fieldset">
+      <legend className="c-fieldset__legend">
+        <span className="c-input__hint">
+          Are there any preprints, articles, datasets, software packages, or supplemental
+          information that have resulted from or are related to this Data Publication?
+        </span>
+      </legend>
+      <div className="replaceme-related-works">
+        {works.map((relatedIdentifier) => (
+          <RelatedWorkForm
+            key={relatedIdentifier.id}
+            relatedIdentifier={relatedIdentifier}
+            workTypes={workTypes}
+            removeFunction={removeItem}
+            updateWork={updateWork}
+          />
+        ))}
+      </div>
+      <a
+        href="#"
+        className="o-button__add"
+        role="button"
+        onClick={(e) => {
+          e.preventDefault();
+          addNewWork();
+        }}
+      >
+        add another related work
+      </a>
+    </fieldset>
   );
 }
 
