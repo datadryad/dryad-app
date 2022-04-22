@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
@@ -66,6 +66,7 @@ function RelatedWorkForm(
           submitForm(values).then(() => { setSubmitting(false); });
         }}
       >
+        {/* eslint-disable jsx-a11y/label-has-associated-control */}
         {(formik) => (
           <Form className="c-input__inline">
             <Field name="id" type="hidden" />
@@ -106,6 +107,7 @@ function RelatedWorkForm(
               />
             </div>
 
+            {/* eslint-disable jsx-a11y/anchor-is-valid */}
             <a
               role="button"
               className="t-describe__remove-button o-button__remove"
@@ -119,12 +121,22 @@ function RelatedWorkForm(
               }}
             >remove
             </a>
+            {/* eslint-enable jsx-a11y/anchor-is-valid */}
           </Form>
         )}
       </Formik>
+      {/* eslint-enable jsx-a11y/label-has-associated-control */}
       <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
     </>
   );
 }
 
 export default RelatedWorkForm;
+
+// relatedIdentifier, workTypes, removeFunction, updateWork,
+RelatedWorkForm.propTypes = {
+  relatedIdentifier: PropTypes.object.isRequired,
+  workTypes: PropTypes.array.isRequired,
+  removeFunction: PropTypes.func.isRequired,
+  updateWork: PropTypes.func.isRequired,
+};
