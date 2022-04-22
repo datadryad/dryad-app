@@ -20,9 +20,9 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.save
           format.js
-          format.json {
-            render json: @related_identifier.as_json.merge( valid_url_format: @related_identifier.valid_url_format?)
-          }
+          format.json do
+            render json: @related_identifier.as_json.merge(valid_url_format: @related_identifier.valid_url_format?)
+          end
         else
           format.html { render :new }
         end
@@ -35,9 +35,9 @@ module StashDatacite
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?)
           format.js
-          format.json {
-            render json: @related_identifier.as_json.merge( valid_url_format: @related_identifier.valid_url_format?)
-          }
+          format.json do
+            render json: @related_identifier.as_json.merge(valid_url_format: @related_identifier.valid_url_format?)
+          end
         else
           format.html { render :edit }
         end
