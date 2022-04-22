@@ -37,6 +37,10 @@ function RelatedWorks(
         });
   };
 
+  if (works.length < 1) {
+    addNewWork();
+  }
+
   const removeItem = (id) => {
     console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
     const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`
