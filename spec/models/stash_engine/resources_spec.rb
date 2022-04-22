@@ -33,8 +33,8 @@ module StashEngine
       end
 
       it 'removes unwanted related identifiers that have no identifier' do
-        rel1 = create(:related_identifier, resource: @resource, related_identifier: '')
-        rel2 = create(:related_identifier, resource: @resource)
+        create(:related_identifier, resource: @resource, related_identifier: '')
+        create(:related_identifier, resource: @resource)
         expect(@resource.related_identifiers.count).to eq(2)
         @resource.cleanup_blank_models!
         @resource.reload
