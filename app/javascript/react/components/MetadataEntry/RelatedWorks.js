@@ -30,7 +30,11 @@ function RelatedWorks(
       stash_datacite_related_identifier: blankRelated,
     };
 
-    axios.post('/stash_datacite/related_identifiers/create', contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+    axios.post(
+      '/stash_datacite/related_identifiers/create',
+      contribJson,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
       .then((data) => {
         if (data.status !== 200) {
           console.log("couldn't add new relatedWork to the remote server");
@@ -91,6 +95,7 @@ function RelatedWorks(
           />
         ))}
       </div>
+      {/* eslint-disable jsx-a11y/anchor-is-valid */}
       <a
         href="#"
         className="o-button__add"
@@ -102,8 +107,15 @@ function RelatedWorks(
       >
         add another related work
       </a>
+      {/* eslint-enable jsx-a11y/anchor-is-valid */}
     </fieldset>
   );
 }
 
 export default RelatedWorks;
+
+RelatedWorks.propTypes = {
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  relatedIdentifiers: PropTypes.array.isRequired,
+  workTypes: PropTypes.array.isRequired,
+};
