@@ -26,6 +26,23 @@ module StashEngine
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
     end
 
+    context 'cleanup_blank_models!' do
+      before(:each) do
+        @identifier = create(:identifier)
+        @resource = Resource.create(user_id: @user.id, identifier: @identifier)
+      end
+
+      it 'removes unwanted related identifiers that have no identifier' do
+        rel1 = create(:related_identifier, resource: @resource, related_identifier: '')
+        rel2 = create(:related_identifier, resource: @resource)
+        expect(@resource.related_identifiers.count).to eq(2)
+        @resource.cleanup_blank_models!
+        @resource.reload
+        expect(@resource.related_identifiers.count).to eq(1)
+      end
+
+    end
+
     context 'peer_review' do
 
       describe :requires_peer_review? do
