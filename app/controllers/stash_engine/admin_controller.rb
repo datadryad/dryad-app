@@ -10,11 +10,11 @@ module StashEngine
     before_action :require_superuser
     before_action :load_user, only: %i[popup set_role user_dashboard]
     before_action :setup_paging, only: %i[index]
-    
+
     # the admin_users main page showing users and stats
     def index
       puts "ZZZZZ params #{params}"
-#      params.permit!
+      #      params.permit!
       setup_stats
       setup_superuser_facets
 
@@ -23,16 +23,16 @@ module StashEngine
         params[:sort] = 'created_at'
         params[:direction] = 'desc'
       end
-      
+
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @users = User.where("first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?",
+        @users = User.where('first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?',
                             "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
         if q.include?(' ')
           # add any matches for "firstname lastname"
           splitname = q.split
-          @users = @users.or(User.where("first_name LIKE ? and last_name LIKE ?", "%#{splitname.first}%", "%#{splitname.second}%"))
+          @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
         end
 
         @users = @users.order(helpers.sortable_table_order)
@@ -40,16 +40,16 @@ module StashEngine
         @users = User.all.order(helpers.sortable_table_order)
       end
 
-      puts "XXXXX"
+      puts 'XXXXX'
       puts "XXXXX found #{@users.size} users"
       puts "XXXXX found #{helpers.sortable_table_order} order"
-      
+
       add_institution_filter! # if they chose a facet or are only an admin
-      
+
       # paginate for display
-      #blank_results = (@page.to_i - 1) * @page_size.to_i
-      #@users = Array.new(blank_results, nil) + @users # pad out an array with empty results for earlier pages for kaminari
-      #@users = Kaminari.paginate_array(@users, total_count: @users.length).page(@page).per(@page_size)
+      # blank_results = (@page.to_i - 1) * @page_size.to_i
+      # @users = Array.new(blank_results, nil) + @users # pad out an array with empty results for earlier pages for kaminari
+      # @users = Kaminari.paginate_array(@users, total_count: @users.length).page(@page).per(@page_size)
       @users = @users.page(@page).per(@page_size)
       puts "XXXXX @uses is now #{@users} -- size #{@users.size}"
     end
@@ -85,7 +85,6 @@ module StashEngine
     end
 
     private
-
 
     def setup_paging
       @page = params[:page] || '1'
