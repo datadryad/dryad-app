@@ -54,7 +54,7 @@ module StashEngine
       @datasets = Array.new(blank_results, nil) + @datasets # pad out an array with empty results for earlier pages for kaminari
       @datasets = Kaminari.paginate_array(@datasets, total_count: @datasets.length).page(page).per(page_size)
       puts "XXXXX @datasets is now #{@datasets}"
-      
+
       respond_to do |format|
         format.html
         format.csv do
@@ -189,7 +189,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
-    def activity_log      
+    def activity_log
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(helpers.sortable_table_order, id: :asc)
