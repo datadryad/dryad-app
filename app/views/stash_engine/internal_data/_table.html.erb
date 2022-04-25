@@ -26,11 +26,6 @@
             <%= hidden_field_tag :internal_datum_id, item.id %>
             <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
           <% end %>
-          <!--
-          <%= form_with(model: item, method: :put, remote: true, class: 'o-button__inline-form' ) do -%>
-            <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-          -->
         </td>
         <td><%= item.value %></td>
       </tr>

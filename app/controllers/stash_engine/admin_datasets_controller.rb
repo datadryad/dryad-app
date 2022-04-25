@@ -133,7 +133,7 @@ module StashEngine
           @identifier = Identifier.find(params[:identifier_id])
           @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
           decipher_curation_activity
-          editor_id = params[:resource][:current_editor][:id]
+          editor_id = params[:stash_engine_resource][:current_editor][:id]
           if editor_id&.to_i == 0
             @resource.update(current_editor_id: nil)
             editor_name = 'unassigned'
@@ -142,7 +142,7 @@ module StashEngine
             @resource.update(current_editor_id: editor_id)
             editor_name = StashEngine::User.find(editor_id)&.name
           end
-          @note = "Changing current editor to #{editor_name}. " + params[:resource][:curation_activity][:note]
+          @note = "Changing current editor to #{editor_name}. " + params[:stash_engine_resource][:curation_activity][:note]
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
@@ -162,16 +162,20 @@ module StashEngine
           @resource = @identifier.last_submitted_resource
           @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
 
-          if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:resource][:curation_activity][:status])
+          if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:stash_engine_resource][:curation_activity][:status])
             return publishing_error
           end
 
           @last_state = @resource&.curation_activities&.last&.status
-          @this_state = (params[:resource][:curation_activity][:status].blank? ? @last_state : params[:resource][:curation_activity][:status])
+          @this_state = (if params[:stash_engine_resource][:curation_activity][:status].blank?
+                           @last_state
+                         else
+                           params[:stash_engine_resource][:curation_activity][:status]
+                         end)
 
           return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
 
-          @note = params[:resource][:curation_activity][:note]
+          @note = params[:stash_engine_resource][:curation_activity][:note]
           @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
@@ -248,8 +252,8 @@ module StashEngine
     end
 
     def decipher_curation_activity
-      @status = params[:resource][:curation_activity][:status]
-      @pub_date = params[:resource][:publication_date]
+      @status = params[:stash_engine_resource][:curation_activity][:status]
+      @pub_date = params[:stash_engine_resource][:publication_date]
       # If the status was nil then we are just adding a note so get the prior status
       @status = @resource.current_curation_status unless @status.present?
       case @status

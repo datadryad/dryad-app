@@ -34,18 +34,6 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_text('1 (Submitted)')
     end
 
-    it 'allows editing a dataset', js: true do
-      visit stash_url_helpers.admin_user_dashboard_path(@user)
-      expect(page).to have_css('button[title="Edit Dataset"]')
-      find('button[title="Edit Dataset"]').click
-      expect(page).to have_text("You are editing #{@user.name}'s dataset.")
-      all('[id^=instit_affil_]').last.set('test institution')
-      add_required_data_files
-      click_link 'Review and Submit'
-      agree_to_everything
-      expect(page).to have_css('input#user_comment')
-    end
-
     it 'does not allow editing a dataset from the curation page', js: true do
       visit root_path
       click_link('Admin')
@@ -131,6 +119,21 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_link('Submission Queue')
       end
 
+      it 'allows editing a dataset', js: true do
+        @user = create(:user, tenant_id: @admin.tenant_id)
+        @identifier = create(:identifier)
+        @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
+        visit stash_url_helpers.admin_user_dashboard_path(@user)
+        expect(page).to have_css('button[title="Edit Dataset"]')
+        find('button[title="Edit Dataset"]').click
+        expect(page).to have_text("You are editing #{@user.name}'s dataset.")
+        all('[id^=instit_affil_]').last.set('test institution')
+        add_required_data_files
+        click_link 'Review and Submit'
+        agree_to_everything
+        expect(page).to have_css('input#user_comment')
+      end
+
       it 'allows assigning a curator', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
 
@@ -139,7 +142,7 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_text('Admin Dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
-        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
@@ -158,10 +161,10 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_text('Admin Dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
-        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
         click_button('Submit')
         find('button[title="Update curator"]').click
-        find("#resource_current_editor_id option[value='0']").select_option
+        find("#stash_engine_resource_current_editor_id option[value='0']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name_last_first)
@@ -182,10 +185,10 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_text('Admin Dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
-        find("#resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
         click_button('Submit')
         find('button[title="Update curator"]').click
-        find("#resource_current_editor_id option[value='0']").select_option
+        find("#stash_engine_resource_current_editor_id option[value='0']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name_last_first)
@@ -254,18 +257,6 @@ RSpec.feature 'Admin', type: :feature do
         visit root_path
         expect(page).to have_link('Admin')
       end
-    end
-
-    it 'allows editing a dataset', js: true do
-      visit stash_url_helpers.admin_user_dashboard_path(@user)
-      expect(page).to have_css('button[title="Edit Dataset"]')
-      find('button[title="Edit Dataset"]').click
-      expect(page).to have_text("You are editing #{@user.name}'s dataset.")
-      all('[id^=instit_affil_]').last.set('test institution')
-      add_required_data_files
-      click_link 'Review and Submit'
-      agree_to_everything
-      expect(page).to have_css('input#user_comment')
     end
 
     it 'allows adding notes to the curation activity log', js: true do
