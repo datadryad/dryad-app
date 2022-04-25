@@ -26,7 +26,7 @@ module StashEngine
 
     def self.log_line(request:, resource:, filename: nil, size: nil)
       line = log_array(request: request, resource: resource, filename: filename, size: size)
-      StashEngine.counter_log(line) if required_data?(line: line)
+      StashEngine::CounterLog.log(line) if required_data?(line: line)
     end
 
     def self.log_array(request:, resource:, filename:, size:)
