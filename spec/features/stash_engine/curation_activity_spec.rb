@@ -171,10 +171,11 @@ RSpec.feature 'CurationActivity', type: :feature do
         end
 
         # select the author action required
-        find("#resource_curation_activity_status option[value='action_required']").select_option
+
+        find("#stash_engine_resource_curation_activity_status option[value='action_required']").select_option
 
         # fill in a note
-        fill_in(id: 'resource_curation_activity_note', with: 'My cat says hi')
+        fill_in(id: 'stash_engine_resource_curation_activity_note', with: 'My cat says hi')
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
