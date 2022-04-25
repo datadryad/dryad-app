@@ -34,9 +34,9 @@ module StashEngine
 
         # returns the argument that was passed in (I think) for easier tests
         @line = nil
-#        allow(StashEngine).to receive(:counter_log) do |line|
-#          @line = line
-#        end
+        allow(StashEngine::CounterLog).to receive(:log) do |line|
+          @line = line
+        end
 
         # @line should be 18 long array (the timestamp not added yet) and it has these fields
         # 0:ip_address, 1:session_cookie (never set), 2:session_id, 3:user_id, 4:original_url, 5:identifier,
