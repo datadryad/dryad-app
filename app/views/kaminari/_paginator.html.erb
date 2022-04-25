@@ -21,21 +21,24 @@
   <% puts "PPPP7 #{Addressable::URI.parse(request.path).query_values}" %>
   <% puts "PPPP8 #{request.path}?#{params.to_query}" %>
   <% puts "PPPP9 #{request.path}?#{params.merge(page: 3).to_query}" %>
+
+  <% local_params = params.with_indifferent_access.merge!(request.query_parameters) %>
+  <% puts "PPPP10 #{local_params}" %>
   
   <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
     <% unless params[:show_all] == false %>
-      <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
+      <%= link_to 'Show all', local_params.merge!(page_size: '1000000', page: 1), remote: remote %>
     <% end %>
 
     <% unless current_page.first? %>
       <span class="first">
 	<%= link_to t('views.pagination.first').html_safe,
-	 "#{request.path}?#{params.merge(page: 1).to_query}",
+	 "#{request.path}?#{local_params.merge!(page: 1).to_query}",
 	 'aria-label': "Go to first page", :remote => remote %>
       </span>
       <span class="prev">
 	<%= link_to t('views.pagination.previous').html_safe,
-	 "#{request.path}?#{params.merge(page: current_page.number - 1).to_query}",
+	 "#{request.path}?#{local_params.merge!(page: current_page.number - 1).to_query}",
 	 :rel => 'prev', 'aria-label': "Go to previous page", :remote => remote %>
       </span>
     <% end %>
@@ -53,10 +56,10 @@
 	  <% if page.current? %>
 	    <span aria-label="Current page, page <%= page %>" aria-current="true"><%= page %></span>
 	  <% else %>
-	    <% puts "-- PAR #{params.merge(page: page.number)}" %>
-	    <% puts "   #{request.path}?#{params.merge(page: page.number).to_query}" %>
+	    <% puts "-- PAR #{local_params.merge!(page: page.number)}" %>
+	    <% puts "   #{request.path}?#{local_params.merge!(page: page.number).to_query}" %>
 	    <%= link_to page,
-		"#{request.path}?#{params.merge(page: page.number).to_query}" %>
+		"#{request.path}?#{local_params.merge!(page: page.number).to_query}" %>
 	  <% end %>
 	</span>
       <% elsif !page.was_truncated? %>
@@ -67,7 +70,7 @@
     <% unless current_page.last? %>
       <span class="next">	
 	<%= link_to t('views.pagination.next').html_safe,
-	 "#{request.path}?#{params.merge(page: current_page.number + 1).to_query}",
+	 "#{request.path}?#{local_params.merge!(page: current_page.number + 1).to_query}",
 	 :rel => 'next', 'aria-label': "Go to next page", :remote => remote %>
       </span>
     <% end %>    
