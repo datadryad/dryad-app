@@ -1,5 +1,6 @@
 module StashEngine
   class RepoQueueState < ApplicationRecord
+    self.table_name = 'stash_engine_repo_queue_states'
     include StashEngine::Concerns::StringEnum
 
     belongs_to :resource

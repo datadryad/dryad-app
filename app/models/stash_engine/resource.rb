@@ -6,6 +6,7 @@ require_relative '../../../lib/stash/indexer/indexing_resource'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
+    self.table_name = 'stash_engine_resources'
     # ------------------------------------------------------------
     # Relations
 
