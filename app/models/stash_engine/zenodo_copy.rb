@@ -3,7 +3,7 @@ module StashEngine
   # however there should only be one per resource (update the status and we'll have updated timestamps which is really all we need)
   # since this set of states is very simple
   class ZenodoCopy < ApplicationRecord
-
+    self.table_name = 'stash_engine_zenodo_copies'
     include StashEngine::Concerns::StringEnum
 
     belongs_to :identifier, class_name: 'StashEngine::Identifier'

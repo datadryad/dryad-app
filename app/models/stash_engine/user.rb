@@ -1,6 +1,6 @@
 module StashEngine
   class User < ApplicationRecord
-
+    self.table_name = 'stash_engine_users'
     has_many :resources
     has_many :journal_roles
     has_many :journals, through: :journal_roles
@@ -22,7 +22,7 @@ module StashEngine
     def self.find_by_orcid_or_emails(orcid:, emails:)
       emails = Array.wrap(emails)
       emails.delete_if(&:blank?)
-      User.where(['orcid = ? or email IN ( ? )', orcid, emails])
+      StashEngine::User.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 
     def name

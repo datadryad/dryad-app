@@ -3,7 +3,7 @@ require 'stash/payments/invoicer'
 module StashEngine
 
   class CurationActivity < ApplicationRecord # rubocop:disable Metrics/ClassLength
-
+    self.table_name = 'stash_engine_curation_activities'
     include StashEngine::Concerns::StringEnum
 
     # Associations
