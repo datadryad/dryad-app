@@ -13,7 +13,6 @@ module StashEngine
 
     # the admin_users main page showing users and stats
     def index
-      puts "ZZZZZ params #{params}"
       #      params.permit!
       setup_stats
       setup_superuser_facets
@@ -40,10 +39,6 @@ module StashEngine
         @users = User.all.order(helpers.sortable_table_order)
       end
 
-      puts 'XXXXX'
-      puts "XXXXX found #{@users.size} users"
-      puts "XXXXX found #{helpers.sortable_table_order} order"
-
       add_institution_filter! # if they chose a facet or are only an admin
 
       # paginate for display
@@ -51,7 +46,6 @@ module StashEngine
       # @users = Array.new(blank_results, nil) + @users # pad out an array with empty results for earlier pages for kaminari
       # @users = Kaminari.paginate_array(@users, total_count: @users.length).page(@page).per(@page_size)
       @users = @users.page(@page).per(@page_size)
-      puts "XXXXX @uses is now #{@users} -- size #{@users.size}"
     end
 
     # popup a dialog with the user's admin info for changing

@@ -45,10 +45,7 @@
 	<div style="float: right">
 	    <br/>
 	    <%= button_to "Create Salesforce Case",
-	     stash_url_helpers.url_for(action: 'create_salesforce_case',
-				       controller: 'stash_engine/admin_datasets',
-				       id: @identifier&.id,
-				       only_path: false),
+	     stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
 	     method: :get,
 	     class: 'o-button__submit',
 	     form: {target: '_blank'}
