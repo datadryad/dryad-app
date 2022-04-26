@@ -178,8 +178,10 @@ Rails.application.routes.draw do
     end
 
     resources :identifiers do
-      resources :internal_data, shallow: true
+      resources :internal_data, shallow: true, as: 'identifier_internal_data'
     end
+    match 'identifier_internal_data/:identifier_id', to: 'internal_data#create', as: 'internal_data_create', via: %i[get post put]
+    resources :internal_data, shallow: true, as: 'stash_engine_internal_data'
     
     resources :tenants, only: %i[index show]
     resources :data_files, :software_files, :supp_files do
