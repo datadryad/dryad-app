@@ -20,7 +20,6 @@
   <!-- table and paging here -->
   <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
 
-  <% puts "PPPPPPa #{params}" %>
   <div class="c-space-paginator">
     <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
   </div>
