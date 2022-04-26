@@ -1,5 +1,6 @@
 module StashEngine
   class OrcidInvitation < ApplicationRecord
+    self.table_name = 'stash_engine_orcid_invitations'
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     def resource

@@ -2,7 +2,7 @@ require_relative '../../../app/models/stash_datacite/affiliation'
 
 module StashEngine
   class Author < ApplicationRecord
-
+    self.table_name = 'stash_engine_authors'
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
 

@@ -60,9 +60,7 @@ Rails.application.routes.draw do
   # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
 
-  mount StashEngine::Engine, at: APP_CONFIG.stash_mount
-
-  get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
+   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
   # This will route an item at the root of the site into the namespaced engine.
   # However it is currently broken, so commented out until we fix it.
@@ -158,10 +156,6 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  # Probably not needed. I removed the stash_discovery User model,
-  # since it did not appear to have any associated code or DB content. (RS)
-  #devise_for :users
-
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
 
@@ -184,8 +178,10 @@ Rails.application.routes.draw do
     end
 
     resources :identifiers do
-      resources :internal_data, shallow: true
+      resources :internal_data, shallow: true, as: 'identifier_internal_data'
     end
+    match 'identifier_internal_data/:identifier_id', to: 'internal_data#create', as: 'internal_data_create', via: %i[get post put]
+    resources :internal_data, shallow: true, as: 'stash_engine_internal_data'
     
     resources :tenants, only: %i[index show]
     resources :data_files, :software_files, :supp_files do
@@ -282,19 +278,20 @@ Rails.application.routes.draw do
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
-    # admin area
-    get 'admin', to: 'admin#index'
+    # admin user management
+    get 'admin', to: 'admin#index' # main page for administering users ### TODO: user_admin
+    get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard' # page for viewing a single user ####TODO: user_admin/user_profile
     get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
     post 'admin/set_role/:id', to: 'admin#set_role', as: 'admin_set_role'
-    get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard'
-    
-    # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
+
+    # admin_datasets, aka "Curator Dashboard"
+    # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
     get 'ds_admin/index', to: 'admin_datasets#index'
     get 'ds_admin/index/:id', to: 'admin_datasets#index'
     get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
     get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
-    get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case'
+    get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
     get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
     get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'

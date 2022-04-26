@@ -12,10 +12,6 @@ module StashEngine
         tenants
       end
 
-      app = double(Rails::Application)
-      allow(app).to receive(:stash_mount).and_return('/stash')
-      allow(StashEngine).to receive(:app).and_return(app)
-
       # this rails_root stuff is required when faking Rails like david did and using the mailer since it seems to call it
       rails_root = Dir.mktmpdir('rails_root')
       allow(Rails).to receive(:root).and_return(rails_root)

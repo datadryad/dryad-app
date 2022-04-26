@@ -2,6 +2,7 @@ require 'stash/import/crossref'
 
 module StashEngine
   class ProposedChange < ApplicationRecord
+    self.table_name = 'stash_engine_proposed_changes'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
 

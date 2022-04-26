@@ -25,14 +25,14 @@ module StashEngine
       @resource = Identifier.find_by_id(params[:id]).latest_resource
       @curation_activity = CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
                                                    status: @resource.last_curation_activity&.status,
-                                                   note: params[:curation_activity][:note])
+                                                   note: params[:stash_engine_curation_activity][:note])
       @resource.reload
     end
 
     private
 
     def curation_activity_params
-      params.require(:curation_activity).permit(:resource_id, :status, :note)
+      params.require(:stash_engine_curation_activity).permit(:resource_id, :status, :note)
     end
 
   end

@@ -1,5 +1,6 @@
 module StashEngine
   class ResourceState < ApplicationRecord
+    self.table_name = 'stash_engine_resource_states'
     belongs_to :user
     belongs_to :resource
 
