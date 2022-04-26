@@ -2,6 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
+
     before_action :require_login
     before_action :require_modify_permission, except: %i[index new]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]

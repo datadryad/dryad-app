@@ -10,24 +10,11 @@
   <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
 <% end %>
 <%= paginator.render do -%>
-  <% puts "PPPP0 #{params}" %>
-  <% puts "PPPP1 #{@params}" %>
-  <% puts "PPPP2 #{@template}" %>
-  <% puts "PPPP3 #{request.query_parameters}" %>
-  <% puts "PPPP3.5 #{params.merge(request.query_parameters)}" %>
-  <% puts "PPPP4 #{request.params}" %>
-  <% puts "PPPP5 #{request.path}" %>
-  <% puts "PPPP6 #{Addressable::URI.parse(request.path).merge(bogus: 'aaa')}" %>
-  <% puts "PPPP7 #{Addressable::URI.parse(request.path).query_values}" %>
-  <% puts "PPPP8 #{request.path}?#{params.to_query}" %>
-  <% puts "PPPP9 #{request.path}?#{params.merge(page: 3).to_query}" %>
-
   <% local_params = params.with_indifferent_access.merge!(request.query_parameters) %>
-  <% puts "PPPP10 #{local_params}" %>
   
   <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
     <% unless params[:show_all] == false %>
-      <%= link_to 'Show all', local_params.merge!(page_size: '1000000', page: 1), remote: remote %>
+      <%= link_to 'Show all', local_params.merge(page_size: '1000000', page: 1), remote: remote %>
     <% end %>
 
     <% unless current_page.first? %>
@@ -47,19 +34,15 @@
     *page_tag are not working, but they only get triggered in certain cases
     see .orig file for previous details
     -%>
-    <% puts "-- #{current_page.number}" %>
     <% each_page do |page| %>
-      <% puts "-- #{page.number}" %>
-      <% puts "-- lo #{page.left_outer?} ro #{page.right_outer?} iw #{page.inside_window?} tr #{page.was_truncated?}" %>
       <% if page.left_outer? || page.right_outer? || page.inside_window? %>
         <span class="page<%= ' current' if page.current? %>">
 	  <% if page.current? %>
 	    <span aria-label="Current page, page <%= page %>" aria-current="true"><%= page %></span>
 	  <% else %>
-	    <% puts "-- PAR #{local_params.merge!(page: page.number)}" %>
-	    <% puts "   #{request.path}?#{local_params.merge!(page: page.number).to_query}" %>
 	    <%= link_to page,
-		"#{request.path}?#{local_params.merge!(page: page.number).to_query}" %>
+		"#{request.path}?#{local_params.merge!(page: page.number).to_query}",
+	     	:remote => remote %>
 	  <% end %>
 	</span>
       <% elsif !page.was_truncated? %>
