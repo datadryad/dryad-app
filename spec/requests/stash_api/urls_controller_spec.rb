@@ -17,6 +17,7 @@ module StashApi
     include Mocks::UrlUpload
 
     before(:all) do
+      host! 'my.example.org'
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')

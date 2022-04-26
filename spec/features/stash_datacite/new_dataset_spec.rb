@@ -88,8 +88,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Related works
-      select 'Dataset', from: 'stash_datacite_related_identifier[work_type]'
-      fill_in 'stash_datacite_related_identifier[related_identifier]', with: Faker::Pid.doi
+      select 'Dataset', from: 'Work Type'
+      fill_in 'Identifier or external url', with: Faker::Pid.doi
     end
 
     it 'reorders authors with keyboard', js: true do

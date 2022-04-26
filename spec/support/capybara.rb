@@ -54,7 +54,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     opts.args << '--disable-extensions'
     opts.args << '--disable-popup-blocking'
   end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
 end
 
 RSpec.configure do |config|

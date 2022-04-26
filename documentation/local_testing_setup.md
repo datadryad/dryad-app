@@ -85,6 +85,18 @@ COVERAGE=true RAILS_ENV=test bundle exec rspec
 
 # Run rubocop
 bundle exec rubocop -a
+
+# run eslint to check the React javascript
+yarn run eslint app/javascript/react/**/*.js
+
+# run eslint and autofix the React javascript
+yarn run eslint app/javascript/react/**/*.js --fix
+
+# run the jest javascript test manually
+yarn test
+
+# run specific tests example.  It will do a substring or regex match for tests to run
+yarn test Funder
 ```
 
 ## Configuration files
