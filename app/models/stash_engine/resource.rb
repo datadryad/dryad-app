@@ -645,7 +645,9 @@ module StashEngine
 
     # may not be able to match one up
     def owner_author
-      user&.orcid.present? && authors.where(author_orcid: user.orcid).first
+      return nil unless user&.orcid.present? # apparently there are cases where user doesn't have an orcid
+
+      authors.where(author_orcid: user.orcid).first
     end
 
     def fill_blank_author!
