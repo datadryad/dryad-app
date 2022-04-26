@@ -10,7 +10,9 @@
 
 <h2 class="o-heading__page-span">Preliminary Information</h2>
 
-  <%= react_component('components/MetadataEntry/PrelimInfo') %>
+  <%= react_component('components/MetadataEntry/PrelimInfo',
+                      { importInfo: @resource&.identifier&.import_info,
+                        resourceId: @resource.id }) %>
 
   <div class="js-contributors_form_top">
     <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
