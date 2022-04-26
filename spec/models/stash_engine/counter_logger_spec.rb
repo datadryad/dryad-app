@@ -34,7 +34,7 @@ module StashEngine
 
         # returns the argument that was passed in (I think) for easier tests
         @line = nil
-        allow(StashEngine).to receive(:counter_log) do |line|
+        allow(StashEngine::CounterLog).to receive(:log) do |line|
           @line = line
         end
 

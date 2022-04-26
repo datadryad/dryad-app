@@ -13,5 +13,4 @@
   <% else %>
     <%= link_to page, url, {:remote => remote, :rel => (page.next? ? 'next' : page.prev? ? 'prev' : nil), 'aria-label': "Go to page #{page}"} %>
   <% end %>
-
 </span>

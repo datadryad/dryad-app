@@ -3,6 +3,8 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
+    protect_from_forgery except: %i[user_in_progress user_submitted]
+
     include StashEngine::ApplicationHelper
     include ActionView::Helpers::NumberHelper
 

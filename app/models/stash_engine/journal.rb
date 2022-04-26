@@ -1,5 +1,6 @@
 module StashEngine
   class Journal < ApplicationRecord
+    self.table_name = 'stash_engine_journals'
     validates :issn, uniqueness: true
     has_many :alternate_titles, class_name: 'JournalTitle', dependent: :destroy
     has_many :journal_roles
