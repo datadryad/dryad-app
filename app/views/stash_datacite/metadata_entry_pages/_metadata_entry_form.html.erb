@@ -95,18 +95,10 @@
 
     <h2 class="o-heading__page-span">Related Works</h2>
 
-    <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">
-      <span class="c-input__hint">Are there any preprints, articles, datasets, software packages, or supplemental
-        information that have resulted from or are related to this Data Publication?</span></legend>
-    <div class="js-related_identifiers_form">
-      <% if @metadata_entry.related_identifiers.exists? %>
-        <% @metadata_entry.related_identifiers.each do |related_identifier| %>
-          <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: related_identifier, path: related_identifiers_update_path } %>
-        <% end %>
-      <% else %>
-        <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: related_identifiers_create_path } %>
-      <% end %>
-    </div>
-    <%= link_to "add another related work", related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
-    </fieldset>
+    <%= react_component('components/MetadataEntry/RelatedWorks',
+                        resourceId: @resource.id,
+                        relatedIdentifiers: @metadata_entry.related_identifiers
+                            .map{|i|
+                              i.as_json.merge( valid_url_format: i.valid_url_format?)
+                            }, # result of this method into data
+                        workTypes: StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a ) %>
