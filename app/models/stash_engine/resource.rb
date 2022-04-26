@@ -357,6 +357,12 @@ module StashEngine
       result.flatten
     end
 
+    # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank
+    # item and then never fill anything in.  This cleans up those items.  Probably useful in the review page.
+    def cleanup_blank_models!
+      related_identifiers.where("related_identifier is NULL or related_identifier = ''").destroy_all # no id? this related item is blank
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
@@ -640,7 +646,9 @@ module StashEngine
 
     # may not be able to match one up
     def owner_author
-      user&.orcid.present? && authors.where(author_orcid: user.orcid).first
+      return nil unless user&.orcid.present? # apparently there are cases where user doesn't have an orcid
+
+      authors.where(author_orcid: user.orcid).first
     end
 
     def fill_blank_author!

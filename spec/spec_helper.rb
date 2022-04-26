@@ -37,6 +37,11 @@ RSpec.configure do |config|
 
   config.example_status_persistence_file_path = './tmp/rspec'
 
+  # because otherwise it uses www.example.com which triggers our redirect from www to not
+  config.before(:each, type: :request) do
+    host! 'my.example.org'
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

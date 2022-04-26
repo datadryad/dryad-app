@@ -43,11 +43,12 @@ module StashDatacite
       end
     end
 
-    # Review responds as a get request to review the resource before saving
+    # Review responds as a get request to review the resource before saving -- ajaxes into page when we thought multi schemas
     def review
       respond_to do |format|
         format.js do
           @resource = StashEngine::Resource.find(params[:id])
+          @resource.cleanup_blank_models!
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
           @resource.has_geolocation = @review.geolocation_data?

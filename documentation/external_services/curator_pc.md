@@ -1,6 +1,6 @@
 
-Curator PC
-==============
+Curator PC (aka Curator Virtual Environment)
+=============================================
 
 AWS allows running servers that you can connect with a virtual desktop. We are
 using this feature for the curator PC.
@@ -31,11 +31,8 @@ Creating users
   their account when the password expires, and they won't be able to change it.
 - In the same tool that you create the users, add them to the group
   "Remote Desktop Users"
-- By default, only 2 simultaneous users are allowed. If you want more
-  - Install Remote Desktop Services
-    - Install via Windows Admin Center; the Server Manager does not work correctly
-  - Purchase “RDS User” Client Access Licenses (CALs)
-  - Install them through the Remote Desktop Licensing Manager
+- By default, only 2 simultaneous users are allowed. Dryad has installed "RDS
+  User" Client Access Licenses (CALs) to allow more users.
 
 To connect to Windows Server
 - PC users connect with Remote Desktop Connection
@@ -66,16 +63,18 @@ Special accounts:
 Instructions for new users
 ===========================
 
-Your account on the curator PC is all set.
+Your account on the Curator Virtual Environment is all set.
 
-If you are connecting from a PC, use Remote Desktop Connection.
-If you are connecting from a Mac, use Microsoft Remote Desktop.
+If you are connecting from a PC, use the program "Remote Desktop Connection".
+If you are connecting from a Mac, use the program "Microsoft Remote Desktop".
 
 Machine name: 
 Your username:
 Temporary password:
 
-You will receive a warning about security certificates, which you can ignore.
+When you login, you will receive a warning about security certificates. You can
+ignore this warning. However, if you choose the option to "accept" the
+certificate, you will not see the warning again.
 
 Once you have logged in, please change your password using this process:
 1. In the PC, open Settings
@@ -92,7 +91,8 @@ General usage tips:
 - You may store personal files in your account, but this should rarely be
   needed.
 - Shortcuts to run useful software are in `C:\DryadData\SoftwareShortcuts`
-- Some software is only available to the `Curator` account.
+- Some software is only available via the `Curator` account. The most notable
+  software like this is Matlab.
 
 
 Installing other software

@@ -70,7 +70,7 @@ function Funders({
     setFunders((prevState) => prevState.filter((item) => (item.id !== id)));
   };
 
-  // update the funder in the list from old id to new
+  // update the funder in the list from old to new values
   const updateFunder = (updatedContributor) => {
     // replace item in the funder list if it has changed
     setFunders((prevState) => prevState.map((funder) => (updatedContributor.id === funder.id ? updatedContributor : funder)));
