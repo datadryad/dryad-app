@@ -10,52 +10,23 @@
   <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
 <% end %>
 <%= paginator.render do -%>
-  <% local_params = params.with_indifferent_access.merge!(request.query_parameters) %>
-  
   <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
     <% unless params[:show_all] == false %>
-      <%= link_to 'Show all', local_params.merge(page_size: '1000000', page: 1), remote: remote %>
+      <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
     <% end %>
 
-    <% unless current_page.first? %>
-      <span class="first">
-	<%= link_to t('views.pagination.first').html_safe,
-	 "#{request.path}?#{local_params.merge!(page: 1).to_query}",
-	 'aria-label': "Go to first page", :remote => remote %>
-      </span>
-      <span class="prev">
-	<%= link_to t('views.pagination.previous').html_safe,
-	 "#{request.path}?#{local_params.merge!(page: current_page.number - 1).to_query}",
-	 :rel => 'prev', 'aria-label': "Go to previous page", :remote => remote %>
-      </span>
-    <% end %>
+    <%= first_page_tag unless current_page.first? %>
+    <%= prev_page_tag unless current_page.first? %>
 
-    <%#
-    *page_tag are not working, but they only get triggered in certain cases
-    see .orig file for previous details
-    -%>
-    <% each_page do |page| %>
-      <% if page.left_outer? || page.right_outer? || page.inside_window? %>
-        <span class="page<%= ' current' if page.current? %>">
-	  <% if page.current? %>
-	    <span aria-label="Current page, page <%= page %>" aria-current="true"><%= page %></span>
-	  <% else %>
-	    <%= link_to page,
-		"#{request.path}?#{local_params.merge!(page: page.number).to_query}",
-	     	:remote => remote %>
-	  <% end %>
-	</span>
-      <% elsif !page.was_truncated? %>
-	<span class="page gap"><%= t('views.pagination.truncate').html_safe %></span>
-      <% end %>     
-    <% end %>    
-
-    <% unless current_page.last? %>
-      <span class="next">	
-	<%= link_to t('views.pagination.next').html_safe,
-	 "#{request.path}?#{local_params.merge!(page: current_page.number + 1).to_query}",
-	 :rel => 'next', 'aria-label': "Go to next page", :remote => remote %>
-      </span>
-    <% end %>    
+    <% each_page do |page| -%>
+      <% if page.left_outer? || page.right_outer? || page.inside_window? -%>
+        <%= page_tag page %>
+      <% elsif !page.was_truncated? -%>
+        <%= gap_tag %>
+      <% end -%>
+    <% end -%>
+    
+    <%= next_page_tag unless current_page.last? %>
+    <%= last_page_tag unless current_page.last? || params[:show_last_page] == false %>
   </nav>
 <% end -%>
