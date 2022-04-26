@@ -13,7 +13,6 @@ module StashEngine
 
     # the admin_users main page showing users and stats
     def index
-      #      params.permit!
       setup_stats
       setup_superuser_facets
 
