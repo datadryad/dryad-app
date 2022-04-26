@@ -41,9 +41,6 @@ module StashEngine
       add_institution_filter! # if they chose a facet or are only an admin
 
       # paginate for display
-      # blank_results = (@page.to_i - 1) * @page_size.to_i
-      # @users = Array.new(blank_results, nil) + @users # pad out an array with empty results for earlier pages for kaminari
-      # @users = Kaminari.paginate_array(@users, total_count: @users.length).page(@page).per(@page_size)
       @users = @users.page(@page).per(@page_size)
     end
 
