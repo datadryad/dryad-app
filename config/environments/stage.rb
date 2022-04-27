@@ -27,11 +27,10 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   config.require_master_key = true
 
-  config.public_file_server.enabled = true					
+  config.public_file_server.enabled = true
 
-  # Compress JavaScripts and CSS.
+  # Compress JavaScripts and CSS, default is sassc without being specified for css
   config.assets.js_compressor = Uglifier.new(harmony: true)
-  config.assets.css_compressor = :terser
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
