@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
 
-   get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
+  get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
   # This will route an item at the root of the site into the namespaced engine.
   # However it is currently broken, so commented out until we fix it.
