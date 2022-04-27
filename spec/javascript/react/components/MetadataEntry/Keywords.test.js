@@ -57,7 +57,7 @@ describe('Keywords', () => {
     });
   })
 
-  xit("adds a keyword to the document", async () => {
+  it("adds a keyword to the document", async () => {
 
     const extraSubj = {
       id: faker.datatype.number(),
