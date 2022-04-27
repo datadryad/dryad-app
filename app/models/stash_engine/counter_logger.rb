@@ -1,3 +1,5 @@
+require_relative '../../../lib/stash_engine/counter_log.rb'
+
 module StashEngine
   class CounterLogger
 
