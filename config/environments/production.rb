@@ -32,9 +32,8 @@ Rails.application.configure do
   # Allow serving files from the /public directory
   config.public_file_server.enabled = true
 
-  # Compress JavaScripts and CSS.
+  # Compress JavaScripts and CSS, default is sassc without being specified for css
   config.assets.js_compressor = Uglifier.new(harmony: true)
-  config.assets.css_compressor = :yui
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false

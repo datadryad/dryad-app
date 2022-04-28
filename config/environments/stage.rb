@@ -24,14 +24,13 @@ Rails.application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
-  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files). x
   config.require_master_key = true
 
-  config.public_file_server.enabled = true					
+  config.public_file_server.enabled = true
 
-  # Compress JavaScripts and CSS.
+  # Compress JavaScripts and CSS, default is sassc without being specified for css
   config.assets.js_compressor = Uglifier.new(harmony: true)
-  config.assets.css_compressor = :yui
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false

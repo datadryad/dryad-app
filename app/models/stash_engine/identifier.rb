@@ -3,6 +3,7 @@ require 'httparty'
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ApplicationRecord
+    self.table_name = 'stash_engine_identifiers'
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy

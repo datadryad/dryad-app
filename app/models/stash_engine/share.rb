@@ -2,6 +2,7 @@ require 'securerandom'
 
 module StashEngine
   class Share < ApplicationRecord
+    self.table_name = 'stash_engine_shares'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
 
     before_create :generate_secret_id

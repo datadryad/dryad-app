@@ -10,7 +10,7 @@ module StashEngine
     before_action :require_publicly_viewable
 
     def banner_for_pub
-      send_file File.join(Engine.root, 'public', 'data_in_dryad.jpg'), type: 'image/jpeg', disposition: 'inline'
+      send_file File.join(Rails.root, 'public', 'data_in_dryad.jpg'), type: 'image/jpeg', disposition: 'inline'
     end
 
     def data_package_for_pub
@@ -57,7 +57,7 @@ module StashEngine
         # redirect_to show_path(id: @stash_id&.to_s || 'not_available')
       else
         # show the 1x1 transparent gif
-        send_file File.join(Engine.root, 'public', 'transparent.gif'), type: 'image/gif', disposition: 'inline', status: 404
+        send_file File.join(Rails.root, 'public', 'transparent.gif'), type: 'image/gif', disposition: 'inline', status: 404
       end
     end
   end

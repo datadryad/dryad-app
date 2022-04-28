@@ -72,8 +72,8 @@ module StashEngine
                                    params[:direction] || 'asc'
                                  end
 
-      base_url = stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index',
-                                           sort: query_params[:sort], direction: query_params[:direction])
+      local_params = sortable_table_params.to_unsafe_h.with_indifferent_access.merge!(request.query_parameters)
+      base_url = "#{request.path}?#{local_params.merge!(sort: query_params[:sort], direction: query_params[:direction]).to_query}"
       sort_url = URI(base_url)
       sort_url.to_s
     end

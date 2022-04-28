@@ -40,8 +40,6 @@ module Stash
         allow(tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)
 
-        allow(StashEngine).to receive(:app).and_return({ ezid: { host: 'ezid.cdlib.org', port: 80 } }.to_ostruct)
-
         @helper = EzidGen.new(resource: resource)
       end
 

@@ -1,5 +1,6 @@
 module StashEngine
   class DownloadToken < ApplicationRecord
+    self.table_name = 'stash_engine_download_tokens'
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
     def availability_delay_seconds
