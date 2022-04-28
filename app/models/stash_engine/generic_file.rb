@@ -6,6 +6,7 @@ require 'http'
 
 module StashEngine
   class GenericFile < ApplicationRecord
+    self.table_name = 'stash_engine_generic_files'
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
     amoeba do

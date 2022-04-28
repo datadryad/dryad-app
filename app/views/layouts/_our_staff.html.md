@@ -168,15 +168,4 @@
   Ecosystem.</p>
 </div>
 
-<div class="bio">
-  <img src="/images/ewang.png" alt="Eric Wang" title="Eric Wang">
-  <p><strong>Eric Wang</strong><br/>
-  Data Curator<br/>
-  Eric is currently pursuing a B.S. in Data Science at UC San Diego and is
-  exploring interests in supply chain management and business analytics. Before
-  joining Dryad, he worked as a contact tracer throughout the COVID-19 pandemic
-  and helped investigate trends in contact behaviors. During time off, Eric
-  spends time bouldering or reading webtoons.</p>
-</div>
-
 

@@ -610,12 +610,6 @@ module StashEngine
     end
 
     describe '#large_files?' do
-      before(:each) do
-        app = double(Rails::Application)
-        allow(app).to receive(:payments).and_return(OpenStruct.new(large_file_size: 100))
-        allow(StashEngine).to receive(:app).and_return(app)
-      end
-
       it 'returns false when large files are not present' do
         expect(@identifier.large_files?).to eq(false)
       end

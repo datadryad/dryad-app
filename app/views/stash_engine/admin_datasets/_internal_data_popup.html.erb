@@ -2,9 +2,9 @@
 <div class="o-admin-dialog">
   <h1><%= title %></h1>
   <% if params[:sub_method] != 'put'
-    my_path = identifier_internal_data_path(@identifier)
+    my_path = internal_data_create_path(@identifier)
   else
-    my_path = internal_datum_path(@internal_datum)
+    my_path = stash_engine_internal_datum_path(@internal_datum)
   end %>
   <%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], remote: true ) do |f| -%>
     <div class="c-input">

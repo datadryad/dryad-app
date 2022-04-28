@@ -1,5 +1,6 @@
 module StashEngine
   class JournalRole < ApplicationRecord
+    self.table_name = 'stash_engine_journal_roles'
     belongs_to :user
     # must contain either a journal or a journal_organization
     belongs_to :journal, optional: true

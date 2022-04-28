@@ -24,8 +24,8 @@ module StashEngine
       respond_to do |format|
         format.js do
           # right now, the only way to add is by ajax, UJS, so Javascript from the dataset admin area
-          InternalDatum.create(identifier_id: @identifier.id, data_type: params[:internal_datum][:data_type],
-                               value: params[:internal_datum][:value])
+          InternalDatum.create(identifier_id: @identifier.id, data_type: params[:stash_engine_internal_datum][:data_type],
+                               value: params[:stash_engine_internal_datum][:value])
           @internal_data = InternalDatum.where(identifier_id: @identifier.id)
         end
       end
@@ -38,7 +38,8 @@ module StashEngine
       respond_to do |format|
         format.js do
           # right now, the only way to add is by ajax, UJS, so Javascript from the dataset admin area
-          @internal_datum.update(value: params[:internal_datum][:value]) # can not change type or identifier, just the value after creating
+          # can not change type or identifier, just the value after creating
+          @internal_datum.update(value: params[:stash_engine_internal_datum][:value])
           @internal_data = InternalDatum.where(identifier_id: @identifier.id)
         end
       end
