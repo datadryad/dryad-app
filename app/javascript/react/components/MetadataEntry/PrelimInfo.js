@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import PrelimManu from "./PrelimManu";
+import PrelimArticle from "./PrelimArticle";
+import PrelimOther from "./PrelimOther";
 import PropTypes from 'prop-types';
-import FunderForm from './FunderForm';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function PrelimInfo(
@@ -22,7 +24,6 @@ function PrelimInfo(
             console.log("couldn't change import_type on remote server");
           }
         });
-    console.log(choice);
   }
 
   return (
@@ -62,6 +63,21 @@ function PrelimInfo(
           </div>
         </div>
       </div>
+
+      {(() => {
+          switch (importType) {
+            case 'manuscript':
+              return (<PrelimManu />);
+              break;
+            case 'published':
+              return (<PrelimArticle />);
+              break;
+            default:
+              return (<PrelimOther />);
+          }
+        }
+      )()}
+
     </>
   )
 }
