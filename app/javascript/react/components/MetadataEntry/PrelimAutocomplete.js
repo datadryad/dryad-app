@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
 // the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
-export default function PrelimManuAuto({
+export default function PrelimAutocomplete({
                                              formRef, acText, setAcText, acID, setAcID, controlOptions,
                                            }) {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
@@ -90,7 +90,7 @@ export default function PrelimManuAuto({
   );
 }
 
-PrelimManuAuto.propTypes = {
+PrelimAutocomplete.propTypes = {
   formRef: PropTypes.object.isRequired,
   acText: PropTypes.string.isRequired,
   setAcText: PropTypes.func.isRequired,

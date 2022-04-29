@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
-import PrelimManuAuto from "./PrelimManuAuto";
+import PrelimAutocomplete from "./PrelimAutocomplete";
 
 function PrelimManu() {
   const formRef = useRef();
@@ -76,7 +76,7 @@ function PrelimManu() {
 
                 <div className="c-input__inline">
                   <div className="c-input">
-                    <PrelimManuAuto
+                    <PrelimAutocomplete
                         formRef={formRef}
                         acText={acText}
                         setAcText={setAcText}
