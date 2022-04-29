@@ -30,7 +30,7 @@ function PrelimArticle() {
                 <div className="c-input__inline">
                   <div className="c-input">
                     <label className="c-input__label required" htmlFor="publication">Journal Name</label>
-                    <input className="c-input__text" type="text" name="publication" id="publication"/>>
+                    <input className="c-input__text" type="text" name="publication" id="publication"/>
                     <input type="hidden" name="publication_issn" id="publication_issn"/>
                     <input type="hidden" name="publication_name" id="publication_name"/>
                   </div>
