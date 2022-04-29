@@ -38,8 +38,8 @@ export default function PrelimAutocomplete({
      autocompletes for a generic case.
    */
   function supplyLookupList(qt) {
-    return axios.get('https://api.crossref.org/funders', {
-      params: {query: qt},
+    return axios.get('/stash_datacite/publications/autocomplete', {
+      params: {term: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
         .then((data) => {
@@ -48,9 +48,18 @@ export default function PrelimAutocomplete({
             // raise an error here if we want to catch it and display something to user or do something else
           }
 
-          const list = data.data.message.items.map((item) => {
+          // remove duplicates of the same name since no good way to choose which one for users, if our data is ugly
+          const deduped = {};
+          data.data.forEach((item) => {
+            // only add to the deduped key/value if the key doesn't exist
+            if(!deduped[item.title]) {
+              deduped[item.title] = item;
+            }
+          });
+
+          const list = Object.values(deduped).map((item) => {
             // add one point if starts with the same string, sends to top
-            const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
+            const similarity = stringSimilarity.compareTwoStrings(item.title, qt) + (item.title.startsWith(qt) ? 1 : 0);
             return {...item, similarity};
           });
           list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
@@ -60,12 +69,12 @@ export default function PrelimAutocomplete({
 
   // Given a js object from list (supplyLookupList above) it returns the string name
   function nameFunc(item) {
-    return (item?.name || '');
+    return (item?.title || '');
   }
 
   // Given a js object from list (supplyLookupList above) it returns the unique identifier
   function idFunc(item) {
-    return item.uri;
+    return item.issn;
   }
 
   /* eslint-disable react/jsx-no-bind */
