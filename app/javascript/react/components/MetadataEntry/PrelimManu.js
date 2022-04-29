@@ -1,10 +1,27 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import axios from 'axios';
+import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function PrelimManu(){
+  const formRef = useRef();
+
   return (
+      <Formik
+          initialValues={
+            {
+              publication: 'test',
+              msid: '12837',
+            }
+          }
+          innerRef={formRef}
+          onSubmit={(values, {setSubmitting}) => {
+            // submitForm(values).then(() => { setSubmitting(false); });
+          }}
+      >
+    {(formik) => (
+    <Form className="c-input__inline">
       <div className="c-import__form-section">
         <p>Please provide the following information. You may either enter the information and leave it or choose to
           autofill your dataset based on the information you supply below.</p>
@@ -35,6 +52,9 @@ function PrelimManu(){
           Some warnings here.
         </div>
       </div>
+    </Form>
+    )}
+      </Formik>
   );
 }
 
