@@ -6,7 +6,7 @@
 <div>
   <h2>User Administration</h2>
   
-  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin', action: 'index', only_path: true),
+  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
                 method: 'get', id: 'search_form', local: true ) do %>
     <label for="search-terms">User Search:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>

@@ -279,10 +279,10 @@ Rails.application.routes.draw do
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
     # admin user management
-    get 'admin', to: 'admin#index' # main page for administering users ### TODO: user_admin
-    get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard' # page for viewing a single user ####TODO: user_admin/user_profile
-    get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
-    post 'admin/set_role/:id', to: 'admin#set_role', as: 'admin_set_role'
+    get 'user_admin', to: 'user_admin#index' # main page for administering users
+    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
+    get 'user_admin/popup/:id', to: 'user_admin#popup', as: 'user_admin_popup'
+    post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index

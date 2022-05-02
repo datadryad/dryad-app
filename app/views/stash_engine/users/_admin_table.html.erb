@@ -24,7 +24,7 @@
   <% users.each do |u| %>
     <% if StashEngine::Tenant.exists?(u.tenant_id) %>
       <tr class="c-lined-table__row">
-	<td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.admin_user_dashboard_path(u) %></td>
+	<td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
 	<td><%= u.email %></td>
 	<td><nobr><%= u.orcid %><nobr></td>
 	<td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
@@ -33,7 +33,7 @@
 	</td>
 	<td class="c-admin-hide-border-left">
 	  <% if current_user.role == 'superuser' %>
-	    <%= form_with(url: stash_url_helpers.popup_admin_path(u.id), method: :get, remote: true) do -%>
+	    <%= form_with(url: stash_url_helpers.user_admin_popup_path(u.id), method: :get, remote: true) do -%>
 	      <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
 		<i class="fa fa-pencil" aria-hidden="true"></i>
 	      </button>

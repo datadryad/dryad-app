@@ -2,13 +2,13 @@ require 'kaminari'
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  class AdminController < ApplicationController
+  class UserAdminController < ApplicationController
 
     include SharedSecurityController
     helper SortableTableHelper
 
     before_action :require_superuser
-    before_action :load_user, only: %i[popup set_role user_dashboard]
+    before_action :load_user, only: %i[popup set_role user_profile]
     before_action :setup_paging, only: %i[index]
 
     # the admin_users main page showing users and stats
@@ -64,8 +64,8 @@ module StashEngine
       end
     end
 
-    # dashboard for a user showing stats and datasets
-    def user_dashboard
+    # profile for a user showing stats and datasets
+    def user_profile
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
