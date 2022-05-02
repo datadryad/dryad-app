@@ -123,7 +123,7 @@ RSpec.feature 'Admin', type: :feature do
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
         @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
-        visit stash_url_helpers.admin_user_dashboard_path(@user)
+        visit stash_url_helpers.admin_user_profile_path(@user)
         expect(page).to have_css('button[title="Edit Dataset"]')
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@user.name}'s dataset.")
@@ -199,18 +199,18 @@ RSpec.feature 'Admin', type: :feature do
         expect(@resource.current_curation_status).to eq('submitted')
       end
 
-      # Skipping this test that fails intermittently, for a feature we're not actually using
-      xit 'allows changing user role as a superuser', js: true do
-        visit stash_url_helpers.admin_path
-        expect(page).to have_link(@user.name)
-        within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
+      it 'allows changing user role as a superuser', js: true do
+        user = create(:user)
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_admin_popup_path(user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        within(:css, 'div.o-admin-dialog') do
+        within(:css, '#genericModalDialog') do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
-        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
+        expect(page.find("#user_role_#{user.id}")).to have_text('Admin')
       end
 
     end

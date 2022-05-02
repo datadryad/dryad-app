@@ -6,13 +6,13 @@
       <li>
         <% if params[:status] == f %>
           <span class="c-facet-li__selected"><%= f.gsub('_', ' ') %></span>
-          <%= link_to stash_url_helpers.admin_user_dashboard_path(sortable_table_params.merge(status: nil, page: 1), id: params[:id]),
+          <%= link_to stash_url_helpers.user_admin_profile_path(sortable_table_params.merge(status: nil, page: 1), id: params[:id]),
 								  class: 'c-facet-remove-link' do %>
             <i class="fa fa-times c-facet-remove" title="Remove filter"></i>
           <% end %>
         <% else %>
           <%= link_to f.gsub('_', ' '),
-	   stash_url_helpers.admin_user_dashboard_path(sortable_table_params.merge(status: f, page: 1), id: params[:id]) %>
+	   stash_url_helpers.user_admin_profile_path(sortable_table_params.merge(status: f, page: 1), id: params[:id]) %>
         <% end %>
       </li>
     <% end %>
