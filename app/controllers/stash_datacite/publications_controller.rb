@@ -20,7 +20,7 @@ module StashDatacite
             manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
               params[:import_type] == 'published'
             params[:import_type] == 'published'
-            render json: { error: @error, reloadPage: (@rror.blank? ? false : true) }
+            render json: { error: @error, reloadPage: @error.blank? }
           else
             render json: { error: @error, reloadPage: false }
           end

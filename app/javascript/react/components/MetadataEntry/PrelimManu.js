@@ -15,8 +15,8 @@ function PrelimManu({
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState( publication_name.value);
-  const [acID, setAcID] = useState( publication_issn.value);
+  const [acText, setAcText] = useState( publication_name?.value || '');
+  const [acID, setAcID] = useState( publication_issn?.value || '');
   const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
@@ -57,6 +57,7 @@ function PrelimManu({
       showSavedMsg();
 
       if(data.data['reloadPage']){
+        setImportError('Just a moment . . . Reloading imported data');
         location.reload(true);
       }
     });
@@ -66,7 +67,7 @@ function PrelimManu({
       <Formik
           initialValues={
             {
-              msid: msid.value,
+              msid: msid.value || '',
               isImport: false
             }
           }
@@ -119,7 +120,6 @@ function PrelimManu({
                 <div>
                   <button type="button" name="commit" className="o-button__import-manuscript"
                           onClick={() => {
-                            console.log('clicked button');
                             formRef.current.values['isImport'] = true;
                             formik.handleSubmit();
                           }}
