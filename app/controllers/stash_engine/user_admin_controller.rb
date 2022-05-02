@@ -8,7 +8,7 @@ module StashEngine
     helper SortableTableHelper
 
     before_action :require_superuser
-    before_action :load_user, only: %i[popup set_role user_profile]
+    before_action :load_user, only: %i[role_popup tenant_popup set_role set_tenant user_profile]
     before_action :setup_paging, only: %i[index]
 
     # the admin_users main page showing users and stats
@@ -44,8 +44,7 @@ module StashEngine
       @users = @users.page(@page).per(@page_size)
     end
 
-    # popup a dialog with the user's admin info for changing
-    def popup
+    def role_popup
       respond_to do |format|
         format.js
       end
@@ -64,6 +63,27 @@ module StashEngine
       end
     end
 
+    def tenant_popup
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def set_tenant
+      @user.update(tenant_id: params[:tenant])
+
+      respond_to do |format|
+        format.js
+      end
+    end
+    
+    def merge_popup
+      puts "XXX merge_popup -- need users!" 
+      respond_to do |format|
+        format.js
+      end
+    end
+    
     # profile for a user showing stats and datasets
     def user_profile
       @progress_count = Resource.in_progress.where(user_id: @user.id).count

@@ -1,7 +1,7 @@
 // now open a modal dialog
 $(function() {
   $('#genericModalContent').html("<%= escape_javascript(
-          render partial: 'stash_engine/user_admin/admin_level_form', locals: { user: @user }) %>");
+          render partial: 'stash_engine/user_admin/admin_tenant_form', locals: { user: @user }) %>");
 
   $('#genericModalDialog')[0].showModal();
 

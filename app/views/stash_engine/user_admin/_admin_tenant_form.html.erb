@@ -1,0 +1,22 @@
+<% # local: user %>
+<h1>Choose <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s Tenant</h1>
+
+Info:
+<ul>
+  <li>user <%= user.id %></li>
+  <li>tenant <%= user.tenant_id %></li>
+</ul>
+
+<%= form_with(url: user_admin_set_tenant_path(user.id), method: :post, remote: true) do |f| -%>  
+  <p>
+  <% StashEngine::Tenant.all.each do |tenant| %>
+      <%= radio_button_tag('tenant', tenant.tenant_id, user.tenant_id == tenant.tenant_id) %> <label for="<%= "tenant_#{tenant.tenant_id}" %>"><%= tenant.short_name %></label></br>
+  <% end %>
+  </p
+  
+  <br/>
+  <%= submit_tag 'Submit' %>
+  <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+<% end %>
+
