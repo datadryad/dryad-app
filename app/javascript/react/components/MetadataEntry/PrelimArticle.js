@@ -5,12 +5,18 @@ import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import PrelimAutocomplete from "./PrelimAutocomplete";
 
-function PrelimArticle() {
+function PrelimArticle({
+                         resourceId,
+                         identifierId,
+                         publication_name,
+                         publication_issn,
+                         related_identifier
+                       }) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState( '');
-  const [acID, setAcID] = useState('');
+  const [acText, setAcText] = useState( publication_name.value);
+  const [acID, setAcID] = useState(publication_issn.value);
 
   const submitForm = (values) => {
     console.log(`${(new Date()).toISOString()}: Saving Preliminary Article info`);
@@ -58,13 +64,12 @@ function PrelimArticle() {
       <Formik
           initialValues={
             {
-              publication: 'great journal of testing',
-              primary_article_doi: 'test'
+              primary_article_doi: related_identifier
             }
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            // submitForm(values).then(() => { setSubmitting(false); });
+            submitForm(values).then(() => { setSubmitting(false); });
           }}
       >
         {(formik) => (
@@ -100,7 +105,11 @@ function PrelimArticle() {
                         placeholder="5702.125/qlm.1266rr"
                         type="text"
                         name="primary_article_doi"
-                        id="primary_article_doi"/>
+                        id="primary_article_doi"
+                        onBlur={() => { // defaults to formik.handleBlur
+                          formik.handleSubmit();
+                        }}
+                    />
                   </div>
                 </div>
                 <div>

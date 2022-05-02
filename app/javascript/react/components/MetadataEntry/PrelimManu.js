@@ -5,37 +5,42 @@ import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import PrelimAutocomplete from "./PrelimAutocomplete";
 
-function PrelimManu() {
+function PrelimManu({
+    resourceId,
+    identifierId,
+    publication_name,
+    publication_issn,
+    msid,
+                    }) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState( '');
-  const [acID, setAcID] = useState('');
+  const [acText, setAcText] = useState( publication_name.value);
+  const [acID, setAcID] = useState( publication_issn.value);
 
   const submitForm = (values) => {
     console.log(`${(new Date()).toISOString()}: Saving Preliminaries -- manuscript in progress`);
-    // showSavingMsg();
+    showSavingMsg();
 
-    /*
+
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     // these need fixing
+    debugger
     const submitVals = {
       authenticity_token: csrf,
-      contributor: {
-        id: values.id,
-        contributor_name: acText,
-        contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id', // needs to be set for datacite mapping, even if no id gotten from crossref
-        name_identifier_id: acID,
-        award_number: values.award_number,
-        resource_id: resourceId,
-      },
+      import_type: 'manuscript',
+      publication_name: acText,
+      identifier_id: '', // get this passed in
+      resource_id: '', // get this passed in
+      publication_issn: acID,
+      msid: values.msid,
+      do_import: false,
     };
 
     // submit by json
     return axios.patch(
-        updatePath,
+        '/stash_datacite/publications/update',
         submitVals,
         {
           headers: {
@@ -45,27 +50,25 @@ function PrelimManu() {
         },
     ).then((data) => {
       if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
+        console.log('Response failure not a 200 response from manuscript information save');
       }
 
       // forces data update in the collection containing me
-      updateFunder(data.data);
+      // updateFunder(data.data);
       showSavedMsg();
     });
-     */
   };
 
   return (
       <Formik
           initialValues={
             {
-              publication: 'test',
-              msid: '12837',
+              msid: msid.value,
             }
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            // submitForm(values).then(() => { setSubmitting(false); });
+            submitForm(values); //.then(() => { setSubmitting(false); });
           }}
       >
         {(formik) => (
@@ -90,9 +93,6 @@ function PrelimManu() {
                           }
                         }
                     />
-
-                    <input type="hidden" name="publication_issn" id="publication_issn"/>
-                    <input type="hidden" name="publication_name" id="publication_name"/>
                   </div>
                   <div className="c-input">
                     <label className="c-input__label required" htmlFor="msid">
@@ -103,7 +103,11 @@ function PrelimManu() {
                         placeholder="APPS-D-17-00113"
                         type="text"
                         name="msid"
-                        id="msid"/>
+                        id="msid"
+                        onBlur={() => { // defaults to formik.handleBlur
+                          formik.handleSubmit();
+                        }}
+                    />
                   </div>
                 </div>
                 <div>
