@@ -76,14 +76,14 @@ module StashEngine
         format.js
       end
     end
-    
+
     def merge_popup
-      puts "XXX merge_popup -- need users!" 
+      puts 'XXX merge_popup -- need users!'
       respond_to do |format|
         format.js
       end
     end
-    
+
     # profile for a user showing stats and datasets
     def user_profile
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
