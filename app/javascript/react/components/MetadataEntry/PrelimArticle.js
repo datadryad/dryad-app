@@ -107,13 +107,15 @@ function PrelimArticle({
                         name="primary_article_doi"
                         id="primary_article_doi"
                         onBlur={() => { // defaults to formik.handleBlur
+                          formRef.current.values['isImport'] = false;
                           formik.handleSubmit();
                         }}
                     />
+                    <Field name="isImport" type="hidden" />
                   </div>
                 </div>
                 <div>
-                  <button type="submit" name="commit" className="o-button__import-manuscript">
+                  <button type="submit" name="commit" className="o-button__import-manuscript" onClick={() => console.log('clicked button')}>
                     Import Article Metadata
                   </button>
                 </div>
