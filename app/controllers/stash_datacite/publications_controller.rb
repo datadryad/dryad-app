@@ -13,15 +13,16 @@ module StashDatacite
       save_form_to_internal_data
       respond_to do |format|
         format.json do
-          if params[:do_import] == 'true'
-            @error = 'Please fill in the form completely' if params[:msid].blank? && params[:primary_article_doi].blank?
+          if params[:do_import] == 'true' || params[:do_import] == true
+            @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] == 'published'
             manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
               params[:import_type] == 'published'
             params[:import_type] == 'published'
+            render json: { error: @error, reloadPage: (@rror.blank? ? false : true) }
           else
-            render template: 'stash_datacite/shared/update.js.erb'
+            render json: { error: @error, reloadPage: false }
           end
         end
       end
@@ -137,7 +138,7 @@ module StashDatacite
       end
       manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid.value).first
       if manu.blank?
-        @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
+        @error = 'We could not find metadata to import for this manuscript.'
         return
       end
 
@@ -145,7 +146,7 @@ module StashDatacite
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{e}")
-      @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
+      @error = 'We could not find metadata to import for this manuscript.'
     end
 
     def update_doi_metadata
