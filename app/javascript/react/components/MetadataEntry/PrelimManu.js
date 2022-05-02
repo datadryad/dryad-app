@@ -52,9 +52,13 @@ function PrelimManu({
         console.log('Response failure not a 200 response from manuscript information save');
       }
 
-      // forces data update in the collection containing me
-      // updateFunder(data.data);
+      setImportError(data.data['error'] || '');
+
       showSavedMsg();
+
+      if(data.data['reloadPage']){
+        location.reload(true);
+      }
     });
   };
 
@@ -113,7 +117,7 @@ function PrelimManu({
                   </div>
                 </div>
                 <div>
-                  <button type="submit" name="commit" className="o-button__import-manuscript"
+                  <button type="button" name="commit" className="o-button__import-manuscript"
                           onClick={() => {
                             console.log('clicked button');
                             formRef.current.values['isImport'] = true;
