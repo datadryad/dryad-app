@@ -12,7 +12,7 @@ module StashDatacite
       @resource = StashEngine::Resource.find(params[:resource_id])
       save_form_to_internal_data
       respond_to do |format|
-        format.js do
+        format.json do
           if params[:do_import] == 'true'
             @error = 'Please fill in the form completely' if params[:msid].blank? && params[:primary_article_doi].blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'

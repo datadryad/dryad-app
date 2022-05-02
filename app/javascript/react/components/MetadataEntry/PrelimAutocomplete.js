@@ -24,6 +24,7 @@ export default function PrelimAutocomplete({
       }
       if (prevText !== acText || prevID !== acID) {
         // from the ref, submit the Formik form above me
+        formRef.current.values['isImport'] = false;
         formRef.current.handleSubmit();
       }
       setPrevText(acText);

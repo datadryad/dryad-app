@@ -17,25 +17,24 @@ function PrelimManu({
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
   const [acText, setAcText] = useState( publication_name.value);
   const [acID, setAcID] = useState( publication_issn.value);
+  const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
     console.log(`${(new Date()).toISOString()}: Saving Preliminaries -- manuscript in progress`);
     showSavingMsg();
 
-
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    // these need fixing
-    debugger
+
     const submitVals = {
       authenticity_token: csrf,
       import_type: 'manuscript',
       publication_name: acText,
-      identifier_id: '', // get this passed in
-      resource_id: '', // get this passed in
+      identifier_id: identifierId,
+      resource_id: resourceId,
       publication_issn: acID,
       msid: values.msid,
-      do_import: false,
+      do_import: values.isImport,
     };
 
     // submit by json
@@ -64,11 +63,12 @@ function PrelimManu({
           initialValues={
             {
               msid: msid.value,
+              isImport: false
             }
           }
           innerRef={formRef}
           onSubmit={(values, {setSubmitting}) => {
-            submitForm(values); //.then(() => { setSubmitting(false); });
+            submitForm(values).then(() => { setSubmitting(false); });
           }}
       >
         {(formik) => (
@@ -105,18 +105,26 @@ function PrelimManu({
                         name="msid"
                         id="msid"
                         onBlur={() => { // defaults to formik.handleBlur
+                          formRef.current.values['isImport'] = false;
                           formik.handleSubmit();
                         }}
                     />
+                    <Field name="isImport" type="hidden" />
                   </div>
                 </div>
                 <div>
-                  <button type="submit" name="commit" className="o-button__import-manuscript">
+                  <button type="submit" name="commit" className="o-button__import-manuscript"
+                          onClick={() => {
+                            console.log('clicked button');
+                            formRef.current.values['isImport'] = true;
+                            formik.handleSubmit();
+                          }}
+                          disabled={(acText === '' || acID === '' || formRef?.current?.values['msid'] === '' )}>
                     Import Manuscript Metadata
                   </button>
                 </div>
                 <div id="population-warnings" className="o-metadata__autopopulate-message">
-                  Some warnings here.
+                  {importError}
                 </div>
               </div>
             </Form>
