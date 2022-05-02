@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function PrelimInfo(
-    {importInfo, resourceId}
+    {importInfo, resourceId, identifierId, publication_name, publication_issn, msid, related_identifier}
 ){
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -67,10 +67,22 @@ function PrelimInfo(
       {(() => {
           switch (importType) {
             case 'manuscript':
-              return (<PrelimManu />);
+              return (<PrelimManu
+                  resourceId={resourceId}
+                  identifierId={identifierId}
+                  publication_name={publication_name}
+                  publication_issn={publication_issn}
+                  msid={msid}
+              />);
               break;
             case 'published':
-              return (<PrelimArticle />);
+              return (<PrelimArticle
+                  resourceId={resourceId}
+                  identifierId={identifierId}
+                  publication_name={publication_name}
+                  publication_issn={publication_issn}
+                  related_identifier={related_identifier}
+              />);
               break;
             default:
               return (<PrelimOther />);
