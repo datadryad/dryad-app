@@ -1,0 +1,2 @@
+$('#user_tenant_<%= @user.id %>').html("<nobr><%= escape_javascript(@user.tenant.short_name) %></nobr>");
+$('#genericModalDialog')[0].close();

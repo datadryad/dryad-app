@@ -17,8 +17,16 @@
     <% end %>
   <% end %>         
 
+  
+  <%= form_with(url: stash_url_helpers.user_merge_popup_path(1, 2), method: :get, remote: true) do %>
+    <button>
+      Merge Selected
+    </button>
+  <% end %>
+
+  
   <!-- table and paging here -->
-  <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
+  <%= render partial: 'admin_user_table', locals: { users: @users } %>
 
   <div class="c-space-paginator">
     <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>

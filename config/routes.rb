@@ -281,8 +281,11 @@ Rails.application.routes.draw do
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
-    get 'user_admin/popup/:id', to: 'user_admin#popup', as: 'user_admin_popup'
+    get 'user_admin/role_popup/:id', to: 'user_admin#role_popup', as: 'user_role_popup'
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
+    get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
+    post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
+    get 'user_admin/merge_popup/:id/:id2', to: 'user_admin#merge_popup', as: 'user_merge_popup'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
