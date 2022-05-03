@@ -58,7 +58,9 @@ function PrelimManu({
 
       if (data.data.reloadPage) {
         setImportError('Just a moment . . . Reloading imported data');
+        /* eslint-disable no-restricted-globals */
         location.reload(true);
+        /* eslint-enable no-restricted-globals */
       }
     });
   };
@@ -101,6 +103,7 @@ function PrelimManu({
                 />
               </div>
               <div className="c-input">
+                {/* eslint-disable jsx-a11y/label-has-associated-control */}
                 <label className="c-input__label required" htmlFor="msid">
                   Manuscript Number
                 </label>
@@ -115,6 +118,7 @@ function PrelimManu({
                     formik.handleSubmit();
                   }}
                 />
+                {/* eslint-enable jsx-a11y/label-has-associated-control */}
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
@@ -143,3 +147,11 @@ function PrelimManu({
 }
 
 export default PrelimManu;
+
+PrelimManu.propTypes = {
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  publication_name: PropTypes.object.isRequired,
+  publication_issn: PropTypes.object.isRequired,
+  msid: PropTypes.object.isRequired,
+};
