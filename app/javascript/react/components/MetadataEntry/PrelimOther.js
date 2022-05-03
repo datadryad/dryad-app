@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-function PrelimOther(){
+function PrelimOther() {
   return (
-      <div className="c-import__info-section">
-        <p>In the &quot;related works&quot; section below you will have the opportunity to relate preprints, articles, other
-          datasets, etc, to this one.</p>
-      </div>
+    <div className="c-import__info-section">
+      <p>In the &quot;related works&quot; section below you will have the opportunity to relate preprints, articles, other
+        datasets, etc, to this one.
+      </p>
+    </div>
   );
 }
 

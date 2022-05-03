@@ -6,8 +6,8 @@ import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
 // the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
 export default function PrelimAutocomplete({
-                                             formRef, acText, setAcText, acID, setAcID, controlOptions,
-                                           }) {
+  formRef, acText, setAcText, acID, setAcID, controlOptions,
+}) {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
@@ -24,8 +24,12 @@ export default function PrelimAutocomplete({
       }
       if (prevText !== acText || prevID !== acID) {
         // from the ref, submit the Formik form above me
-        formRef.current.values['isImport'] = false;
+
+        // yes, I want to change a property of the object reference that is passed in
+        /* eslint-disable no-param-reassign */
+        formRef.current.values.isImport = false;
         formRef.current.handleSubmit();
+        /* eslint-enable no-param-reassign */
       }
       setPrevText(acText);
       setPrevID(acID);
@@ -43,29 +47,29 @@ export default function PrelimAutocomplete({
       params: {term: qt},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
-        .then((data) => {
-          if (data.status !== 200) {
-            return [];
-            // raise an error here if we want to catch it and display something to user or do something else
+      .then((data) => {
+        if (data.status !== 200) {
+          return [];
+          // raise an error here if we want to catch it and display something to user or do something else
+        }
+
+        // remove duplicates of the same name since no good way to choose which one for users, if our data is ugly
+        const deduped = {};
+        data.data.forEach((item) => {
+          // only add to the deduped key/value if the key doesn't exist
+          if (!deduped[item.title]) {
+            deduped[item.title] = item;
           }
-
-          // remove duplicates of the same name since no good way to choose which one for users, if our data is ugly
-          const deduped = {};
-          data.data.forEach((item) => {
-            // only add to the deduped key/value if the key doesn't exist
-            if(!deduped[item.title]) {
-              deduped[item.title] = item;
-            }
-          });
-
-          const list = Object.values(deduped).map((item) => {
-            // add one point if starts with the same string, sends to top
-            const similarity = stringSimilarity.compareTwoStrings(item.title, qt) + (item.title.startsWith(qt) ? 1 : 0);
-            return {...item, similarity};
-          });
-          list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
-          return list;
         });
+
+        const list = Object.values(deduped).map((item) => {
+          // add one point if starts with the same string, sends to top
+          const similarity = stringSimilarity.compareTwoStrings(item.title, qt) + (item.title.startsWith(qt) ? 1 : 0);
+          return {...item, similarity};
+        });
+        list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
+        return list;
+      });
   }
 
   // Given a js object from list (supplyLookupList above) it returns the string name
@@ -86,17 +90,17 @@ export default function PrelimAutocomplete({
   // in fact some sources say to do it to avoid repeating components (like https://www.youtube.com/watch?v=yH5Z-lSeV9Y ).
   // So IDK what the real guidance is for this and it seems to work fine.
   return (
-      <GenericNameIdAutocomplete
-          acText={acText || ''}
-          setAcText={setAcText}
-          acID={acID}
-          setAcID={setAcID}
-          setAutoBlurred={setAutoBlurred}
-          supplyLookupList={supplyLookupList}
-          nameFunc={nameFunc}
-          idFunc={idFunc}
-          controlOptions={controlOptions}
-      />
+    <GenericNameIdAutocomplete
+      acText={acText || ''}
+      setAcText={setAcText}
+      acID={acID}
+      setAcID={setAcID}
+      setAutoBlurred={setAutoBlurred}
+      supplyLookupList={supplyLookupList}
+      nameFunc={nameFunc}
+      idFunc={idFunc}
+      controlOptions={controlOptions}
+    />
   );
 }
 
