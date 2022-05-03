@@ -49,7 +49,7 @@ function PrelimManu({
         },
     ).then((data) => {
       if (data.status !== 200) {
-        console.log('Response failure not a 200 response from manuscript information save');
+        console.log('Response failure not a 200 response from manuscript information save/import');
       }
 
       setImportError(data.data['error'] || '');
