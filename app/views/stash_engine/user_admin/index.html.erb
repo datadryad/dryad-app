@@ -18,7 +18,9 @@
   <% end %>         
 
   
-  <%= form_with(url: stash_url_helpers.user_merge_popup_path(1, 2), method: :get, remote: true) do %>
+  <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, remote: true) do %>
+    <%= hidden_field_tag 'merge_id1', 19201, id: "merge_id1" %>
+    <%= hidden_field_tag 'merge_id2', 16137, id: "merge_id2" %>
     <button>
       Merge Selected
     </button>

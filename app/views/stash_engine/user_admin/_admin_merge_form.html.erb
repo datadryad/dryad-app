@@ -1,0 +1,13 @@
+<% # local: user %>
+<h1>Merge Users</h1>
+
+<p>User new: <%= @user1.first_name %></p>
+<p>User old: <%= @user2.first_name %></p>
+
+<%= form_with(url: user_admin_merge_path, method: :post, remote: true) do -%>
+  <br/>
+  <%= submit_tag 'Submit' %>
+  <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+<% end %>
+

@@ -1,6 +1,7 @@
 <%# locals: users %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
+    <th class="c-admin-table__user-selection" />
     <th class="c-admin-table__user-name <%= sort_display('last_name') %>">
       <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
     </th>
@@ -22,37 +23,36 @@
   </tr>
   
   <% users.each do |u| %>
-    <% if StashEngine::Tenant.exists?(u.tenant_id) %>
-      <tr class="c-lined-table__row">
-	<td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
-	<td><%= u.email %></td>
-	<td><nobr><%= u.orcid %><nobr></td>
-	  <td class="c-admin-hide-border-right" id="user_tenant_<%= u.id %>">
-	    <nobr><%= StashEngine::Tenant.find(u.tenant_id).short_name %></nobr>
-	  </td>
-	  <td class="c-admin-hide-border-left">
-	    <% if current_user.role == 'superuser' %>
-	      <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, remote: true) do %>
-		<button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
-		  <i class="fa fa-pencil" aria-hidden="true"></i>
-		</button>
-	      <% end %>
-	    <% end %>
-	</td>
-	<td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
-	  <%= u.role.capitalize %>
-	</td>
-	<td class="c-admin-hide-border-left">
-	  <% if current_user.role == 'superuser' %>
-	    <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, remote: true) do %>
-	      <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
-		<i class="fa fa-pencil" aria-hidden="true"></i>
-	      </button>
-	    <% end %>
+    <tr class="c-lined-table__row">
+      <td><%= check_box("user_ids", "selections", {:multiple => true}, u.id, nil) %></td>
+      <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
+      <td><%= u.email %></td>
+      <td><nobr><%= u.orcid %></nobr></td>
+      <td class="c-admin-hide-border-right" id="user_tenant_<%= u.id %>">
+	<nobr><%= StashEngine::Tenant.find(u.tenant_id).short_name %></nobr>
+      </td>
+      <td class="c-admin-hide-border-left">
+	<% if current_user.role == 'superuser' %>
+	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, remote: true) do %>
+	    <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
+	      <i class="fa fa-pencil" aria-hidden="true"></i>
+	    </button>
 	  <% end %>
-	</td>
-	<td><%= formatted_datetime(u.last_login) %></td>
-      </tr>
-    <% end %>
+	<% end %>
+      </td>
+      <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
+	<%= u.role.capitalize %>
+      </td>
+      <td class="c-admin-hide-border-left">
+	<% if current_user.role == 'superuser' %>
+	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, remote: true) do %>
+	    <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+	      <i class="fa fa-pencil" aria-hidden="true"></i>
+	    </button>
+	  <% end %>
+	<% end %>
+      </td>
+      <td><%= formatted_datetime(u.last_login) %></td>
+    </tr>
   <% end %>
 </table>

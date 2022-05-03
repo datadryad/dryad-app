@@ -78,12 +78,23 @@ module StashEngine
     end
 
     def merge_popup
-      puts 'XXX merge_popup -- need users!'
+      puts 'XXX merge_popup'
+      puts "pp #{params}"
+
+      @user1 = StashEngine::User.find(params['merge_id1'])
+      @user2 = StashEngine::User.find(params['merge_id2'])
       respond_to do |format|
         format.js
       end
     end
 
+    def merge
+      puts "XXX executing merge"
+      respond_to do |format|
+        format.js
+      end
+    end
+    
     # profile for a user showing stats and datasets
     def user_profile
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
