@@ -155,10 +155,10 @@ module StashEngine
     # here because we already have the resource controller, including permission checking and no identifier controller.
     def import_type
       respond_to do |format|
-        format.json {
+        format.json do
           @resource.identifier.update(import_info: params[:import_info])
-          render json: { import_info: params[:import_info]}, status: :ok
-        }
+          render json: { import_info: params[:import_info] }, status: :ok
+        end
       end
     end
 
