@@ -94,7 +94,7 @@ function PrelimArticle({
                           {
                             htmlId: `publication`,
                             labelText: 'Journal Name',
-                            isRequired: true,
+                            isRequired: false,
                           }
                         }
                     />
@@ -123,7 +123,7 @@ function PrelimArticle({
                             formRef.current.values['isImport'] = true;
                             formik.handleSubmit();
                           }}
-                          disabled={(acText === '' || acID === '' || formRef?.current?.values['primary_article_doi'] === '' )}>
+                          disabled={(acText === '' || formRef?.current?.values['primary_article_doi'] === '' )}>
                     Import Article Metadata
                   </button>
                 </div>
