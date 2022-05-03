@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import PrelimManu from './PrelimManu';
 import PrelimArticle from './PrelimArticle';
 import PrelimOther from './PrelimOther';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
+// IDK why eslint gets these wrong all the time
+/* eslint-disable jsx-a11y/label-has-associated-control */
 function PrelimInfo(
   {
     importInfo, resourceId, identifierId, publication_name, publication_issn, msid, related_identifier,
@@ -95,7 +96,6 @@ function PrelimInfo(
                 msid={msid}
               />
             );
-            break;
           case 'published':
             return (
               <PrelimArticle
@@ -106,7 +106,6 @@ function PrelimInfo(
                 related_identifier={related_identifier}
               />
             );
-            break;
           default:
             return (<PrelimOther />);
         }
@@ -116,5 +115,16 @@ function PrelimInfo(
     </>
   );
 }
+/* eslint-enable jsx-a11y/label-has-associated-control */
 
 export default PrelimInfo;
+
+PrelimInfo.propTypes = {
+  importInfo: PropTypes.string.isRequired, // the type of import it is doing
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  publication_name: PropTypes.object.isRequired,
+  publication_issn: PropTypes.object.isRequired,
+  msid: PropTypes.object.isRequired,
+  related_identifier: PropTypes.string.isRequired,
+};
