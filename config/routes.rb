@@ -285,7 +285,8 @@ Rails.application.routes.draw do
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
     get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
     post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
-    get 'user_admin/merge_popup/:id/:id2', to: 'user_admin#merge_popup', as: 'user_merge_popup'
+    get 'user_admin/merge_popup', to: 'user_admin#merge_popup', as: 'user_merge_popup'
+    get 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index

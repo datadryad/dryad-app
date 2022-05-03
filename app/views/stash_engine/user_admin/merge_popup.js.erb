@@ -1,0 +1,12 @@
+// now open a modal dialog
+$(function() {
+  $('#genericModalContent').html("<%= escape_javascript(
+          render partial: 'stash_engine/user_admin/admin_merge_form', locals: { user: @user, user2: @user2 }) %>");
+
+  $('#genericModalDialog')[0].showModal();
+
+  $("#cancel_dialog").click(function (e) {
+    e.preventDefault();
+    $('#genericModalDialog')[0].close();
+  });
+});
