@@ -15,8 +15,10 @@ module StashDatacite
       # the following used a "find_or_initialize" originally, but it doesn't always load the existing record
       # some dois not identified as such, but as URLs probably from the live-checking code and crossRef and DataCite fight
       @doi = @resource.related_identifiers.where(work_type: 'primary_article').first
-      @doi = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id, related_identifier_type: 'doi',
-                                                          work_type: 'primary_article') if @doi.blank?
+      if @doi.blank?
+        @doi = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id, related_identifier_type: 'doi',
+                                                    work_type: 'primary_article')
+      end
       @resource.update(updated_at: Time.current)
       respond_to do |format|
         format.js

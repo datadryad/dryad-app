@@ -17,9 +17,9 @@ module StashDatacite
             @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] == 'published'
-            manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
-              params[:import_type] == 'published'
-            params[:import_type] == 'published'
+            if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
+              manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
+            end
             render json: { error: @error, reloadPage: @error.blank? }
           else
             render json: { error: @error, reloadPage: false }
