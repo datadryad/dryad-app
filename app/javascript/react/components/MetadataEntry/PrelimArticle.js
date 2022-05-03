@@ -17,30 +17,29 @@ function PrelimArticle({
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
   const [acText, setAcText] = useState( publication_name.value);
   const [acID, setAcID] = useState(publication_issn.value);
+  const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving Preliminary Article info`);
-    /*
+    console.log(`${(new Date()).toISOString()}: Saving Preliminary DOI Article info`);
     showSavingMsg();
 
     // set up values
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
     const submitVals = {
       authenticity_token: csrf,
-      contributor: {
-        id: values.id,
-        contributor_name: acText,
-        contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id', // needs to be set for datacite mapping, even if no id gotten from crossref
-        name_identifier_id: acID,
-        award_number: values.award_number,
-        resource_id: resourceId,
-      },
+      import_type: 'published',
+      publication_name: acText,
+      identifier_id: identifierId,
+      resource_id: resourceId,
+      publication_issn: acID,
+      primary_article_doi: values.primary_article_doi,
+      do_import: values.isImport,
     };
 
     // submit by json
     return axios.patch(
-        updatePath,
+        '/stash_datacite/publications/update',
         submitVals,
         {
           headers: {
@@ -50,21 +49,26 @@ function PrelimArticle({
         },
     ).then((data) => {
       if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
+        console.log('Response failure not a 200 response from doi article information save/import');
       }
 
-      // forces data update in the collection containing me
-      updateFunder(data.data);
+      setImportError(data.data['error'] || '');
+
       showSavedMsg();
+
+      if(data.data['reloadPage']){
+        setImportError('Just a moment . . . Reloading imported data');
+        location.reload(true);
+      }
     });
-    */
   };
 
   return (
       <Formik
           initialValues={
             {
-              primary_article_doi: related_identifier
+              primary_article_doi: related_identifier,
+              isImport: false
             }
           }
           innerRef={formRef}
@@ -94,12 +98,11 @@ function PrelimArticle({
                           }
                         }
                     />
-
-                    <input type="hidden" name="publication_issn" id="publication_issn"/>
-                    <input type="hidden" name="publication_name" id="publication_name"/>
                   </div>
-                  <div className="c-input" style={{display: 'flex'}}>
-                    <label className="c-input__label required" htmlFor="primary_article_doi">DOI</label>
+                  <div className="c-input">
+                    <label className="c-input__label required" htmlFor="primary_article_doi">
+                      DOI
+                    </label>
                     <Field
                         className="c-input__text"
                         placeholder="5702.125/qlm.1266rr"
@@ -115,12 +118,17 @@ function PrelimArticle({
                   </div>
                 </div>
                 <div>
-                  <button type="submit" name="commit" className="o-button__import-manuscript" onClick={() => console.log('clicked button')}>
+                  <button type="button" name="commit" className="o-button__import-manuscript"
+                          onClick={() => {
+                            formRef.current.values['isImport'] = true;
+                            formik.handleSubmit();
+                          }}
+                          disabled={(acText === '' || acID === '' || formRef?.current?.values['primary_article_doi'] === '' )}>
                     Import Article Metadata
                   </button>
                 </div>
                 <div id="population-warnings" className="o-metadata__autopopulate-message">
-                  Sample warning here.
+                  {importError}
                 </div>
               </div>
             </Form>

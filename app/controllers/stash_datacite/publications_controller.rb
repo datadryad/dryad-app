@@ -63,8 +63,10 @@ module StashDatacite
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
 
-      parsed_msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
-      @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+      if params[:msid].present?
+        parsed_msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
+        @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+      end
 
       # if the newly-set journal wants PPR by default, set the PPR value for this resource
       @resource.update(hold_for_peer_review: @se_id.journal&.default_to_ppr)
