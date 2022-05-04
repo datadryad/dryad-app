@@ -6,8 +6,6 @@ import PrelimOther from "../../../../../app/javascript/react/components/Metadata
 
 describe('PrelimOther', () => {
 
-  // very similar to the rest of the autocompletes
-
   it("renders the information for Preliminaries: Other", () => {
     /* mocks for use/set state, these don't really do the functionality, but just give dummy objects */
 
