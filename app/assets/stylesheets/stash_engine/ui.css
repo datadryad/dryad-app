@@ -3921,7 +3921,7 @@ html.no-multiplebgs .o-banner {
 }
 .o-button__import-manuscript[disabled] {
   color: rgb(78, 80, 80);
-  background-color: rgb(157, 159, 162);
+  background-color: rgb(211, 211, 211);
 }
 
 .o-button__remove {
