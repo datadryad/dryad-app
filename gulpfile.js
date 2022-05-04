@@ -33,10 +33,10 @@ function helloTask(cb) {
 }
 
 function copyPackageFilesTask() {
-//  return spawn('copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.css ui-library/css/vendor && copyfiles -f --error node_modules/dialog-polyfill/dist/dialog-polyfill.js ui-library/js/vendor', {
-//    stdio: 'inherit',
-//    shell: true,
-//  });
+  return spawn('copyfiles -f --error ./dialog-polyfill.css ./ui-library/css/vendor && copyfiles -f --error ./app/assets/javascripts/stash_engine/dialog-polyfill.js ./ui-library/js/vendor', {
+    stdio: 'inherit',
+    shell: true,
+  });
 };
 
 // copy font-awesome into fonts
@@ -151,11 +151,12 @@ function copyToAssetsTask(cb) {
 // Lint Sass:
 function scssLintTask(cb) {
   return src(['ui-library/scss/**/*.scss', '!ui-library/scss/vendor/**/*.scss'])
-    .pipe(stylelint({
-    reporters: [
-      {formatter: 'string', console: true}
-    ]
-  }));
+      .pipe(dest('./node_modules/.bin/'))
+      .pipe(stylelint({
+        reporters: [
+        {formatter: 'string', console: true}
+      ]
+    }));
 };
 
 // Lint JavaScript:
