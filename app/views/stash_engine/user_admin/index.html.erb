@@ -24,14 +24,14 @@
     <button>
       Merge Selected
     </button>
-  <% end %>
+  <% end %>  
+    <!-- table and paging here -->
+    <%= render partial: 'admin_user_table', locals: { users: @users } %>
+    
+    <div class="c-space-paginator">
+      <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
+    </div>
 
-  
-  <!-- table and paging here -->
-  <%= render partial: 'admin_user_table', locals: { users: @users } %>
 
-  <div class="c-space-paginator">
-    <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
-  </div>
 </div>
 
