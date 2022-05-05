@@ -26,8 +26,8 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list')
     end
 
-    it "gives disable submit manuscript not filled" do
-      choose("a manuscript in progress", allow_label_click: true)
+    it 'gives disable submit manuscript not filled' do
+      choose('a manuscript in progress', allow_label_click: true)
       expect(page).to have_button('Import Manuscript Metadata', disabled: true)
     end
 
