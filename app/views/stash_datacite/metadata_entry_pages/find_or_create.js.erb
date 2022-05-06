@@ -2,20 +2,10 @@ $('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create
 
 // TODO: Clean the ones of these no longer needed
 loadAccordion();
-loadResourceTypes();
-// loadTitles(); // now loaded by ReactRailsUJS, will fail silently if method is missing
-loadFosSubjects();
-loadAuthors();
-hideRemoveLinkAuthors();
-hideRemoveRequiredLabelAuthors();
-loadContributors();
-loadPublications();
-loadSubjects();
-loadRelatedIdentifiers();
-hideRemoveLinkRelatedIdentifiers();
-loadGeolocationBoxes();
-loadGeolocationPoints();
+// the geolocation stuff isn't currently used
+// loadGeolocationBoxes();
+// loadGeolocationPoints();
 // loadMap(); // began failing silently as soon as react was added
-addSavingDisplay();
+// addSavingDisplay();
 ReactRailsUJS.mountComponents();
 console.log("loaded rails javascript for data entry and react components");
