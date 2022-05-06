@@ -17,14 +17,18 @@
     <% end %>
   <% end %>         
 
-  
+  <script>
+    const selected_users = new Set()
+  </script>
   <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, remote: true) do %>
-    <%= hidden_field_tag 'merge_id1', 19201, id: "merge_id1" %>
-    <%= hidden_field_tag 'merge_id2', 16137, id: "merge_id2" %>
+    <%= hidden_field_tag 'selected_users', '', id: "selected_users" %>
     <button>
       Merge Selected
     </button>
-  <% end %>  
+  <% end %>
+
+
+  
     <!-- table and paging here -->
     <%= render partial: 'admin_user_table', locals: { users: @users } %>
     
@@ -32,6 +36,20 @@
       <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
     </div>
 
+    <!-- Catch selections from the admin_user_table and populate the selected_users for the merge form above -->
+    <script>
+     $('input[type=checkbox]').change(
+       function(){
+	 // for every change, collect the values of all checked items and store them in the selected_users field
+	 var checkedBoxes = document.querySelectorAll('input:checked');
+	 checkedValues = Array.from(checkedBoxes).map(x => x['value']);
+	 
+	 // find selected_users
+	 var su = document.getElementById("selected_users");
+	 su.value = checkedValues;
+	 console.log('selected_users ', su);
+       });
+    </script>
 
 </div>
 

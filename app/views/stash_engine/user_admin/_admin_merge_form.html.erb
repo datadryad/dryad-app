@@ -1,12 +1,18 @@
 <% # local: user %>
 <h1>Merge Users</h1>
 
-<p>User new: <%= @user1.first_name %></p>
-<p>User old: <%= @user2.first_name %></p>
-
 <%= form_with(url: user_admin_merge_path, method: :post, remote: true) do -%>
-  <br/>
-  <%= submit_tag 'Submit' %>
+  <% if @user1 && @user2 %>
+    <p>User new: <%= @user1.first_name %></p>
+    <p>User old: <%= @user2.first_name %></p>
+
+    <br/>
+    <%= submit_tag 'Submit' %>
+  <% else %>
+    <p>
+      <strong>Error: Exactly 2 users must be selected for merging.</strong>
+    </p>
+  <% end %>
   <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
 
 <% end %>
