@@ -1,9 +1,0 @@
-<%# the local variable 'resource' should be passed in to this partial %>
-<% form_id = "resource_title_#{resource.id}" %>
-<%= form_with(url: titles_update_path, method: :patch, remote: true, authenticity_token: true, id: form_id, class: 'c-input' ) do %>
-  <% my_suffix = field_suffix(resource) %>
-  <strong><%= label_tag "title_#{my_suffix}", "Dataset Title", class: 'required c-input__label' %></strong><br/>
-  <%= text_field_tag :title, resource.title, id: "title_#{my_suffix}", class: 'title c-input__text', size: 130 %>
-  <%= hidden_field_tag :id, resource.id %>
-  <%= hidden_field_tag(:form_id, form_id) %>
-<% end %>
