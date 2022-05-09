@@ -153,6 +153,7 @@ to change to a corporate author, do the following:
   - Remove the ORCID from the record
 - Most will likely want the affiliation gone, also.  Remove the linking record in `dcs_affiliations_authors`
 - Check the landing page to be sure it appears correctly.
+- There may be additional things someone wants done such as waiving payment or other things.
 
 Setting embargo on a dataset that was accidentally published
 =============================================================
