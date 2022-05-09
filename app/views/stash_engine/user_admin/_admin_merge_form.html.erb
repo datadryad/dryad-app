@@ -1,4 +1,3 @@
-<% # local: user %>
 <h1>Merge Users</h1>
 
 <%= form_with(url: user_admin_merge_path, method: :post, remote: false) do -%>
@@ -9,8 +8,8 @@
     <p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets.
       Once these users are merged, the operation cannot be reversed.</p>
     
-    <table border="1">
-      <tr>
+    <table class="c-lined-table">
+      <tr class="c-lined-table__head">
 	<th>Name</th>
 	<th>Email</th>
 	<th>ORCID</th>
@@ -18,7 +17,7 @@
 	<th>Last Login</th>
 	<th>Num Datasets</th>
       </tr>
-      <tr>
+      <tr class="c-lined-table__row">
 	<td><nobr><%= "#{@user1.first_name} #{@user1.last_name}" %></nobr></td>
 	<td><nobr><%= @user1.email %></nobr></td>
 	<td><nobr><%= @user1.orcid %></nobr></td>
@@ -26,7 +25,7 @@
 	<td><nobr><%= @user1.last_login %></nobr></td>
 	<td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
       </tr>
-      <tr>
+      <tr class="c-lined-table__row">
 	<td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
 	<td><nobr><%= @user2.email %></nobr></td>
 	<td><nobr><%= @user2.orcid %></nobr></td>
@@ -36,7 +35,7 @@
       </tr>
     </table>
     <br/>
-    <%= submit_tag 'Submit' %>
+    <%= submit_tag 'Merge' %>
   <% else %>
     <p>
       <strong>Error: Exactly 2 users must be selected for merging.</strong>
