@@ -29,7 +29,7 @@
       <td><%= u.email %></td>
       <td><nobr><%= u.orcid %></nobr></td>
       <td class="c-admin-hide-border-right" id="user_tenant_<%= u.id %>">
-	<nobr><%= StashEngine::Tenant.find(u.tenant_id).short_name %></nobr>
+	<nobr><%= StashEngine::Tenant.find(u.tenant_id)&.short_name %></nobr>
       </td>
       <td class="c-admin-hide-border-left">
 	<% if current_user.role == 'superuser' %>
