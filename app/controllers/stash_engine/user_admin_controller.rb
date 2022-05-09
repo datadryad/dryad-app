@@ -95,7 +95,7 @@ module StashEngine
       user2 = StashEngine::User.find(params['user2'])
       user1.merge_user!(other_user: user2)
       user2.destroy
-           
+
       respond_to do |format|
         format.js
       end
