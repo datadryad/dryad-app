@@ -282,6 +282,7 @@ Rails.application.routes.draw do
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
     get 'user_admin/role_popup/:id', to: 'user_admin#role_popup', as: 'user_role_popup'
+    get 'user_admin/journals_popup/:id', to: 'user_admin#journals_popup', as: 'user_journals_popup'
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
     get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
     post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
