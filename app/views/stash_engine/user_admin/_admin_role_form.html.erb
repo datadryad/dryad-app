@@ -18,7 +18,7 @@ role_radios = [ ['superuser', 'Superuser -- Has full access.'],
   </p>
   <br/>
   <%= submit_tag 'Submit' %>
-  <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
-
+  <!-- default focus to the cancel button so it is not confusingly on the first role option -->
+  <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', autofocus: true %>
 <% end %>
 
