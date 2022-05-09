@@ -51,6 +51,13 @@
 	    </button>
 	  <% end %>
 	<% end %>
+	<%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, remote: true) do %>
+	  <% if u.journals_as_admin.present? %>
+	    <button class="c-admin-edit-icon" title="Journal Administrator" aria-label="Journal Administrator" alt="Journal Administrator">
+	      <i class="fa fa-file-text" aria-hidden="true"></i>
+	    </button>
+	  <% end %>
+	<% end %>
       </td>
       <td><%= formatted_datetime(u.last_login) %></td>
     </tr>
