@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 export default function Description({
-  dcsDescription, path, mceKey, mceLabel, isCurator
+  dcsDescription, path, mceKey, mceLabel, isCurator,
 }) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -77,5 +77,5 @@ Description.propTypes = {
   path: PropTypes.string.isRequired,
   mceKey: PropTypes.string.isRequired,
   mceLabel: PropTypes.object.isRequired,
-  isCurator: PropTypes.bool.isRequired
+  isCurator: PropTypes.bool.isRequired,
 };
