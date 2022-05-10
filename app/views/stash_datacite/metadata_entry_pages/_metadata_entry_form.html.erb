@@ -69,7 +69,8 @@
                         dcsDescription: @metadata_entry.abstract,
                         path: descriptions_update_path,
                         mceKey: APP_CONFIG[:mce_key],
-                        mceLabel: {label: 'Abstract', required: true, describe: ''}) %>
+                        mceLabel: {label: 'Abstract', required: true, describe: ''},
+                        isCurator: current_user&.curator?) %>
 
     <h2 class="o-heading__page-span">Data Description</h2>
 
@@ -89,7 +90,8 @@
                     dcsDescription: @metadata_entry.methods,
                     path: descriptions_update_path,
                     mceKey: APP_CONFIG[:mce_key],
-                    mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'}) %>
+                    mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'},
+                    isCurator: current_user&.curator?) %>
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.other,
@@ -98,7 +100,8 @@
                     mceLabel: {label: 'Usage Notes:', required: false,
                                describe: ' What else would someone need to know to use this dataset?' +
                                    ' Are there any missing values? Please upload any files necessary for re-use ' +
-                                   '(i.e. ReadMe files) and note them.'}) %>
+                                   '(i.e. ReadMe files) and note them.'},
+                    isCurator: current_user&.curator?) %>
 
     <h2 class="o-heading__page-span">Related Works</h2>
 
