@@ -1,0 +1,19 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+    "stylelint-config-recommended-scss",
+    "stylelint-config-property-sort-order-smacss"
+  ],
+  "rules": {
+    "max-nesting-depth": [
+      4,
+      {
+        "ignore": [
+          "blockless-at-rules",
+          "pseudo-classes"
+        ]
+      }
+    ],
+    "no-descending-specificity": null
+  }
+}
