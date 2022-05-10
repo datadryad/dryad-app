@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 export default function Description({
-  dcsDescription, path, mceKey, mceLabel,
+  dcsDescription, path, mceKey, mceLabel, isCurator,
 }) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -58,7 +58,8 @@ export default function Description({
           toolbar: 'help | formatselect | '
                   + 'bold italic strikethrough forecolor backcolor removeformat | alignleft aligncenter '
                   + 'alignright | bullist numlist outdent indent | '
-                  + 'table link hr blockquote | superscript subscript charmap | undo redo | fontsizeselect | ltr rtl ',
+                  + 'table link hr blockquote | superscript subscript charmap | undo redo | fontsizeselect | ltr rtl '
+                  + `${(isCurator ? 'code' : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -76,4 +77,5 @@ Description.propTypes = {
   path: PropTypes.string.isRequired,
   mceKey: PropTypes.string.isRequired,
   mceLabel: PropTypes.object.isRequired,
+  isCurator: PropTypes.bool.isRequired,
 };
