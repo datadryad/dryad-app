@@ -23,7 +23,7 @@
   </script>
   <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, remote: true) do %>
     <%= hidden_field_tag 'selected_users', '', id: "selected_users" %>
-    <button>
+    <button title="Merge Selected" aria-label="Merge Selected" alt="Merge Selected">
       Merge Selected
     </button>
   <% end %>
