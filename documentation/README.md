@@ -10,7 +10,7 @@ visibility:
 4. Private working documents -- Documents that are edited frequently. Stored in Dryad's Google Dive.
 
 
-# Dryad Technical Introductory Notes
+# Dryad Technical Introductory Notes  
 
 ## Demo Instance of Dryad
 
