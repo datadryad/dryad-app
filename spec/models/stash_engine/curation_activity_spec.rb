@@ -54,7 +54,7 @@ module StashEngine
         @curation_activity1 = create(:curation_activity, resource: @resource)
       end
 
-      it 'does submit when Published is set' do
+      xit 'does submit when Published is set' do
         create(:curation_activity, resource_id: @resource.id, status: 'published')
         expect(@mock_idgen).to have_received(:update_identifier_metadata!)
       end
@@ -64,7 +64,7 @@ module StashEngine
         expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
       end
 
-      it "doesn't submit when status isn't changed" do
+      xit "doesn't submit when status isn't changed" do
         @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
         expect(@mock_idgen).to have_received(:update_identifier_metadata!).once
         CurationActivity.create(resource_id: @resource.id, status: 'published')
@@ -108,7 +108,7 @@ module StashEngine
         allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
       end
 
-      it 'catches errors and emails the admins' do
+      xit 'catches errors and emails the admins' do
         dc_error = Stash::Doi::IdGenError.new('Testing errors')
         allow(Stash::Doi::IdGen).to receive(:make_instance).with(any_args).and_raise(dc_error)
 
