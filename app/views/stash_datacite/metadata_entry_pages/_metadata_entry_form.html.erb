@@ -9,9 +9,16 @@
 </div>
 
 <h2 class="o-heading__page-span">Preliminary Information</h2>
-  <div class="js-contributors_form_top">
-    <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
-  </div>
+
+  <%= react_component('components/MetadataEntry/PrelimInfo',
+                      { importInfo: @resource&.identifier&.import_info,
+                        resourceId: @resource.id,
+                        identifierId: @resource.identifier_id,
+                        publication_name: @publication_name,
+                        publication_issn: @publication_issn,
+                        msid: @msid,
+                        related_identifier: @doi.related_identifier || ''
+                      }) %>
 
 <h2 class="o-heading__page-span">Dataset: Basic Information</h2>
 

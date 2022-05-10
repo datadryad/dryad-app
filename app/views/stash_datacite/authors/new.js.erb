@@ -1,7 +1,0 @@
-$('.js-authors_form').append('<%= escape_javascript(render partial: "stash_datacite/authors/form",
-      locals: { author: @author, path: authors_create_path }) %>');
-loadAuthors();
-hideRemoveLinkAuthors();
-hideRemoveRequiredLabelAuthors()
-addSavingDisplay();
-ReactRailsUJS.mountComponents('.js-authors_form'); // need to mount the react component manually since doesn't happen after page load

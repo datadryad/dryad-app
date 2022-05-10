@@ -21,6 +21,14 @@ module StashEngine
 
     after_create :create_share
 
+    # This makes the setting of the "preliminary information" and how something was imported explicit.  Default is other.
+    # There is only one import per dataset and it overwrites info after getting valid information.
+    enum import_info: {
+      other: 0,
+      manuscript: 1,
+      published: 2
+    }
+
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
     scope :with_visibility, ->(states:, journal_issns: nil, funder_ids: nil, user_id: nil, tenant_id: nil) do

@@ -150,6 +150,18 @@ module StashEngine
       render 'upload_manifest'
     end
 
+    # patch request
+    # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
+    # here because we already have the resource controller, including permission checking and no identifier controller.
+    def import_type
+      respond_to do |format|
+        format.json do
+          @resource.identifier.update(import_info: params[:import_info])
+          render json: { import_info: params[:import_info] }, status: :ok
+        end
+      end
+    end
+
     private
 
     # Never trust parameters from the scary internet, only allow the white list through.
