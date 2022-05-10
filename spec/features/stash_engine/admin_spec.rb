@@ -103,7 +103,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page.current_path).to eq('/stash/sessions/choose_login')
     end
 
-    context :superuser do
+    context :dataset_admin do
 
       before(:each) do
         @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
@@ -123,7 +123,7 @@ RSpec.feature 'Admin', type: :feature do
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
         @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
-        visit stash_url_helpers.admin_user_dashboard_path(@user)
+        visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit Dataset"]')
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@user.name}'s dataset.")
@@ -134,7 +134,7 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_css('input#user_comment')
       end
 
-      it 'allows assigning a curator', js: true do
+      it 'allows assigning a curator to a dataset', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
 
         visit stash_url_helpers.ds_admin_path
@@ -198,21 +198,82 @@ RSpec.feature 'Admin', type: :feature do
         expect(@resource.current_editor_id).to eq(nil)
         expect(@resource.current_curation_status).to eq('submitted')
       end
+    end
 
-      # Skipping this test that fails intermittently, for a feature we're not actually using
-      xit 'allows changing user role as a superuser', js: true do
-        visit stash_url_helpers.admin_path
-        expect(page).to have_link(@user.name)
-        within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
+    context :user_admin do
+      before(:each) do
+        @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
+        sign_in(@superuser, false)
+      end
+
+      it 'allows changing user role as a superuser', js: true do
+        user = create(:user)
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_role_popup_path(user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        within(:css, 'div.o-admin-dialog') do
+        within(:css, '#genericModalDialog') do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
-        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
+        expect(page.find("#user_role_#{user.id}")).to have_text('Admin')
+        user_changed = StashEngine::User.find(user.id)
+        expect(user_changed.role).to eq('admin')
       end
 
+      it 'allows changing user tenant as a superuser', js: true do
+        user = create(:user)
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(user.id)}\"]") do
+          find('.c-admin-edit-icon').click
+        end
+        within(:css, '#genericModalDialog') do
+          find('#tenant').click
+          find("option[value='localhost']").select_option
+          find('input[name=commit]').click
+        end
+
+        # Note: Although this tests the process of changing a tenant, it doesn't actually test the result,
+        # since the Mock Tenant makes everything look like the same tenant. Doing this "right" would require
+        # even more contortions than the ones in `tenant_spec.rb`, and it's not really worthwhile.
+      end
+
+      it 'allows merging users as a superuser', js: true do
+        user = create(:user)
+        user2 = create(:user)
+        user_id = user.id
+        user2_id = user2.id
+
+        # Set some fields nil so we can test that the merge result contains the non-nil fields
+        user.update(email: nil)
+        user2.update(orcid: nil)
+        target_email = user2.email
+        target_orcid = user.orcid
+
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(user.name)
+        expect(page).to have_link(user2.name)
+
+        # Click each select box
+        find("#user_ids_selections_#{user.id}").click
+        find("#user_ids_selections_#{user2.id}").click
+
+        # Do the merge dialog
+        find('button[title="Merge Selected"]').click
+        expect(page).to have_text('Merge Users')
+        click_button('Merge')
+        expect(page).to have_text('Manage Users')
+
+        # user_2 should be removed
+        expect(StashEngine::User.where(id: user2_id).size).to eq(0)
+
+        # user should be updated with new values
+        user_after = StashEngine::User.find(user_id)
+        expect(user_after.email).to eq(target_email)
+        expect(user_after.orcid).to eq(target_orcid)
+      end
     end
 
     context :journal_admin do

@@ -1,0 +1,10 @@
+<% # local: user %>
+
+<h1>Journal Administration for <%= "#{user.first_name} #{user.last_name}"%></h1>
+
+<p>This user is an administrator for the following journals:</p>
+<ul>
+<% user.journals_as_admin.each do |journal| %>
+  <li><%= journal.title %></li>
+<% end %>
+</ul>

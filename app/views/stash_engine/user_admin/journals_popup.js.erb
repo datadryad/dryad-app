@@ -1,0 +1,13 @@
+// now open a modal dialog
+console.log("journals popup");
+$(function() {
+  $('#genericModalContent').html("<%= escape_javascript(
+          render partial: 'stash_engine/user_admin/admin_journals_form', locals: { user: @user }) %>");
+
+  $('#genericModalDialog')[0].showModal();
+
+  $("#cancel_dialog").click(function (e) {
+    e.preventDefault();
+    $('#genericModalDialog')[0].close();
+  });
+});
