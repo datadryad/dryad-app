@@ -141,6 +141,19 @@ If the user needs to change a data problem that caused a submission error (rare)
 Changing the latest queue state doesn't matter since it will enqueue
 when it's submitted by them again.
 
+#We need a corporate author instead of an accountable individual author
+
+In rare cases, we've allowed this, though, rarely.  Have a user submit the dataset like normal and when it is time
+to change to a corporate author, do the following:
+
+- Find the author in the `stash_engine_authors` table for the dataset.
+  - Remove first name
+  - Change last name to the corporate author
+  - Change or fill the desired email
+  - Remove the ORCID from the record
+- Most will likely want the affiliation gone, also.  Remove the linking record in `dcs_affiliations_authors`
+- Check the landing page to be sure it appears correctly.
+- There may be additional things someone wants done such as waiving payment or other things.
 
 Setting embargo on a dataset that was accidentally published
 =============================================================
