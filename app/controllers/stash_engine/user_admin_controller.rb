@@ -2,13 +2,13 @@ require 'kaminari'
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  class AdminController < ApplicationController
+  class UserAdminController < ApplicationController
 
     include SharedSecurityController
     helper SortableTableHelper
 
     before_action :require_superuser
-    before_action :load_user, only: %i[popup set_role user_dashboard]
+    before_action :load_user, only: %i[role_popup tenant_popup journals_popup set_role set_tenant user_profile]
     before_action :setup_paging, only: %i[index]
 
     # the admin_users main page showing users and stats
@@ -44,8 +44,7 @@ module StashEngine
       @users = @users.page(@page).per(@page_size)
     end
 
-    # popup a dialog with the user's admin info for changing
-    def popup
+    def role_popup
       respond_to do |format|
         format.js
       end
@@ -64,8 +63,52 @@ module StashEngine
       end
     end
 
-    # dashboard for a user showing stats and datasets
-    def user_dashboard
+    def journals_popup
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def tenant_popup
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def set_tenant
+      @user.update(tenant_id: params[:tenant])
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def merge_popup
+      selected_users = params['selected_users'].split(',')
+
+      if selected_users.size == 2
+        @user1 = StashEngine::User.find(selected_users[0])
+        @user2 = StashEngine::User.find(selected_users[1])
+      end
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def merge
+      user1 = StashEngine::User.find(params['user1'])
+      user2 = StashEngine::User.find(params['user2'])
+      user1.merge_user!(other_user: user2)
+      user2.destroy
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    # profile for a user showing stats and datasets
+    def user_profile
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
