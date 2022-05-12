@@ -7,6 +7,10 @@ module StashEngine
       StashEngine::Tenant.all.map { |item| [item.short_name, item.tenant_id] }
     end
 
+    def sponsor_select
+      StashEngine::JournalOrganization.all.map { |item| [item.name, item.id] }
+    end
+
     def status_select(statuses = [])
       statuses = StashEngine::CurationActivity.statuses if statuses.empty?
       statuses.sort { |a, b| a <=> b }.map do |status|
