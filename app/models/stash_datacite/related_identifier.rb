@@ -36,7 +36,8 @@ module StashDatacite
                              'is source of': 'issourceof' }.freeze
     # rubocop:enable Naming/ConstantName
 
-    enum work_type: %i[undefined article dataset preprint software supplemental_information primary_article data_management_plan]
+    enum work_type: { undefined: 0, article: 1, dataset: 2, preprint:3, software: 4, supplemental_information: 5,
+                      primary_article: 6, data_management_plan: 7 } # changing to make the enum index more explicit
 
     enum added_by: { default: 0, zenodo: 1 }
 
@@ -48,8 +49,12 @@ module StashDatacite
     WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
                                  supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
-    WORK_TYPES_TO_RELATION_TYPE = { article: 'cites', dataset: 'issupplementto', preprint: 'cites', software: 'isderivedfrom',
-                                    supplemental_information: 'ispartof', primary_article: 'cites',
+    WORK_TYPES_TO_RELATION_TYPE = { article: 'iscitedby',
+                                    dataset: 'issupplementto',
+                                    preprint: 'iscitedby',
+                                    software: 'isderivedfrom',
+                                    supplemental_information: 'ispartof',
+                                    primary_article: 'iscitedby',
                                     data_management_plan: 'isdocumentedby' }.with_indifferent_access
 
     # these keys will be case-insensitive matches
