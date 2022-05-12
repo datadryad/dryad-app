@@ -122,6 +122,7 @@ module StashEngine
                                  status_filter: params.fetch(:curation_status, ''),
                                  editor_filter: params.fetch(:editor_id, ''),
                                  publication_filter: params.fetch(:publication_name, ''),
+                                 sponsor_filter: params.fetch(:sponsor_org, ''),
                                  admin_tenant: tenant,
                                  admin_journals: journals,
                                  admin_funders: funders,
@@ -141,7 +142,8 @@ module StashEngine
         # Create the WHERE portion of the query based on the filters set by the user (if any)
         # rubocop:disable Metrics/ParameterLists
         def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:, editor_filter:,
-                               publication_filter:, admin_tenant:, admin_journals:, admin_funders:, identifier_id: nil)
+                               publication_filter:, sponsor_filter:, admin_tenant:, admin_journals:, admin_funders:,
+                               identifier_id: nil)
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
@@ -151,6 +153,7 @@ module StashEngine
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
             create_tenant_limit(admin_tenant),
             create_journals_limit(admin_journals),
+            create_sponsor_limit(sponsor_filter),
             create_funders_limit(admin_funders)
           ].compact
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
@@ -219,6 +222,14 @@ module StashEngine
         def create_journals_limit(admin_journals)
           return nil if admin_journals.blank?
 
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( seid.value IN (?) )', admin_journals])
+        end
+
+        def create_sponsor_limit(sponsor_filter)
+          return nil if sponsor_filter.blank?
+
+          sponsor_org = StashEngine::JournalOrganization.find(sponsor_filter)
+          admin_journals = sponsor_org.journals_sponsored.map(&:title)
           ActiveRecord::Base.send(:sanitize_sql_array, ['( seid.value IN (?) )', admin_journals])
         end
 

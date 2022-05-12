@@ -21,10 +21,18 @@
       <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', id: 'publication_name') %>
   <% end %>
   </p>
+  <p>
+  <% if current_user.curator? %>
+    <label for="sponsor_org">Sponsoring Org:</label>
+    <%= select_tag(:sponsor_org, options_for_select( [['Sponsoring Org', '']] + sponsor_select, params[:sponsor_org]),
+                   class: 'c-horizontal-form__input', onchange: "this.form.submit();") %>
+
+  <% end %>
+  </p>
  
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
-  <% params.except(:controller, :action, :tenant, :curation_status, :editor_id,
+  <% params.except(:controller, :action, :tenant, :curation_status, :sponsor_org, :editor_id,
 		   :commit, :page, :page_size, :show_all, :publication_name).each_pair do |k,v| %>
     <%= hidden_field_tag k, v, id: "filter_#{k}" %>
   <% end %>
@@ -38,6 +46,7 @@
     $("#editor_id option[value='']").prop('selected',true);
     $("#curation_status option[value='']").prop('selected',true);
     $('#publication_name[type="text"]').val('');
+    $("#sponsor_org option[value='']").prop('selected',true);
     $("#filter_form").submit();
   });
 
