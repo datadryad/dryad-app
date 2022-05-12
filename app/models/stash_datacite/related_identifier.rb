@@ -50,10 +50,10 @@ module StashDatacite
                                  supplemental_information: 'Supplemental Information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'iscitedby',
-                                    dataset: 'issupplementto',
+                                    dataset: 'issupplementedby',
                                     preprint: 'iscitedby',
                                     software: 'isderivedfrom',
-                                    supplemental_information: 'ispartof',
+                                    supplemental_information: 'issourceof',
                                     primary_article: 'iscitedby',
                                     data_management_plan: 'isdocumentedby' }.with_indifferent_access
 
