@@ -112,29 +112,34 @@ module Stash
         end
       end
 
+      # this only gets called for data deposits and is basically the same metadata as our dataset
       def related_data
         @resource.related_identifiers.where(verified: true).where(hidden: false).map do |ri|
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end || []
       end
 
+      # this only gets called for zenodo software deposits, we have to add link back to our dataset from their software
       def related_software
         related = @resource.related_identifiers.where(verified: true).where(hidden: false).where.not(added_by: 'zenodo').map do |ri|
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
+        # their software is source of our data
         related.push(relation: 'isSourceOf',
                      identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
                      scheme: 'doi')
         related || []
       end
 
+      # this only gets called for zenodo supplemental deposits,  we have to add link back to our dataset from their supplemental
       def related_supp
         related = @resource.related_identifiers.where(verified: true).where(hidden: false).where.not(added_by: 'zenodo').map do |ri|
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
-        related.push(relation: 'isSupplementTo',
+        # their supplemental information isDerivedFrom our dataset
+        related.push(relation: 'isDerivedFrom',
                      identifier: StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier),
                      scheme: 'doi')
         related || []

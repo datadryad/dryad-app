@@ -153,7 +153,7 @@ module Stash
           expect(ids).not_to include(@related_id.related_identifier) # zenodo id for this shouldn't exist
         end
 
-        it 'adds isSupplementTo to the Zenodo software to reference the Dryad dataset' do
+        it 'adds isSourceOf to the Zenodo software to reference the Dryad dataset' do
           ids = @mg.related_identifiers.map { |i| i[:identifier] }
           expect(ids).to include(StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier))
         end
@@ -165,7 +165,7 @@ module Stash
 
           test_doi = "https://doi.org/#{rand.to_s[2..3]}.#{rand.to_s[2..5]}/zenodo.#{rand.to_s[2..11]}"
           @related_id = create(:related_identifier, related_identifier: test_doi, related_identifier_type: 'doi',
-                                                    relation_type: 'issupplementto', resource_id: @resource.id,
+                                                    relation_type: 'issourceof', resource_id: @resource.id,
                                                     verified: true, hidden: false, added_by: 'zenodo')
 
           @related_id2 = create(:related_identifier, resource_id: @resource.id, verified: true, hidden: false)
@@ -183,7 +183,8 @@ module Stash
           expect(ids).not_to include(@related_id.related_identifier) # zenodo id for this shouldn't exist
         end
 
-        it 'adds isSupplementTo to the Zenodo software to reference the Dryad dataset' do
+        # the software is the source of the data
+        it 'adds isSourceOf to the Zenodo software to reference the Dryad dataset' do
           ids = @mg.related_identifiers.map { |i| i[:identifier] }
           expect(ids).to include(StashDatacite::RelatedIdentifier.standardize_doi(@resource.identifier.identifier))
         end
