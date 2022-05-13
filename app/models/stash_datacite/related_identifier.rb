@@ -162,7 +162,7 @@ module StashDatacite
       doi = standardize_doi(supp_copy.software_doi)
       create(related_identifier: doi,
              related_identifier_type: 'doi',
-             relation_type: 'issupplementto',
+             relation_type: 'issourceof',
              work_type: 'supplemental_information',
              verified: true,
              resource_id: resource.id,
