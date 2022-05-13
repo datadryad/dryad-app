@@ -277,7 +277,7 @@ module Stash
         related.assign_attributes({
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                                     related_identifier_type: 'doi',
-                                    relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
+                                    relation_type: 'iscitedby',
                                     work_type: 'primary_article',
                                     verified: true,
                                     hidden: false
