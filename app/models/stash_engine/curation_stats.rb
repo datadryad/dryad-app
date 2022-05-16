@@ -18,6 +18,7 @@ module StashEngine
         datasets_to_aar.present? &&
         datasets_to_published.present? &&
         datasets_to_embargoed.present? &&
+        datasets_to_withdrawn.present? &&
         author_revised.present? &&
         author_versioned.present?
     end
@@ -32,6 +33,7 @@ module StashEngine
       populate_datasets_to_aar
       populate_datasets_to_published
       populate_datasets_to_embargoed
+      populate_datasets_to_withdrawn
       populate_author_revised
       populate_author_versioned
     end
@@ -44,6 +46,8 @@ module StashEngine
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[action_required embargoed published])
       cas.each do |ca|
+        next unless ca.resource
+
         # if the previous ca was `curation`, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
         datasets_found.add(ca.resource.identifier) if prev_ca&.curation?
@@ -60,7 +64,7 @@ module StashEngine
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted curation])
       cas.each do |ca|
-        found_dataset = ca.resource.identifier
+        found_dataset = ca.resource&.identifier
         next unless found_dataset
 
         orig_submitter_id = found_dataset.resources.first.user_id
@@ -98,7 +102,7 @@ module StashEngine
       cas.each do |ca|
         # include this this dataset unless it has a previous resource that had been submitted
         this_resource = ca.resource
-        found_dataset = this_resource.identifier
+        found_dataset = this_resource&.identifier
         next unless found_dataset
 
         prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
@@ -119,6 +123,8 @@ module StashEngine
       cas.each do |ca|
         # include this this dataset unless it has a previous resource that had been submitted
         this_resource = ca.resource
+        next unless this_resource
+
         found_dataset = this_resource.identifier
         prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
         prev_resources.each do |pr|
@@ -138,6 +144,8 @@ module StashEngine
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: to_status)
       cas.each do |ca|
+        next unless ca.resource
+
         # if the previous ca was from_status, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
         datasets_found.add(ca.resource.identifier) if prev_ca&.status == from_status
@@ -160,6 +168,11 @@ module StashEngine
       update(datasets_to_embargoed: datasets_transitioned(from_status: 'curation', to_status: 'embargoed'))
     end
 
+    # The number withdrawn that day (status change from 'curation' to 'action_required')
+    def populate_datasets_to_withdrawn
+      update(datasets_to_withdrawn: datasets_transitioned(from_status: 'curation', to_status: 'withdrawn'))
+    end
+
     # The number that come back to us after an Author Action Required
     # (so they change status from 'action_required' to 'curation')
     def populate_author_revised
@@ -169,7 +182,7 @@ module StashEngine
       cas.each do |ca|
         # action_required is either a previous status in this version, or the last status of the previous version
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
-        ident = ca.resource.identifier
+        ident = ca.resource&.identifier
         next unless ident
 
         prev_resource = ident.resources.where(id: 0..ca.resource_id - 1).last
@@ -188,7 +201,7 @@ module StashEngine
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
       cas.each do |ca|
         # if this dataset has been published or embargoed, count it
-        ident = ca.resource.identifier
+        ident = ca.resource&.identifier
         next unless ident
 
         datasets_found.add(ident) if %w[published embargoed].include?(ident.pub_state)
