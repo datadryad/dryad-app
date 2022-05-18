@@ -857,7 +857,7 @@ module StashEngine
       prior_cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
         .order(id: :desc).first
 
-      create_post_submission_status(prior_cur_act)
+      target_status = create_post_submission_status(prior_cur_act)
 
       # Warn curators if this is potentially a duplicate
       completions = StashDatacite::Resource::Completions.new(self)
@@ -910,6 +910,7 @@ module StashEngine
       # Generate the :submitted or :peer_review status
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+      target_status
     end
 
     def auto_assign_curator(target_status:)
