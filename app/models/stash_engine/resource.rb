@@ -856,14 +856,8 @@ module StashEngine
       # otherwise prefer editor_id and then user_id from resource
       prior_cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
         .order(id: :desc).first
-      attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
 
-      # Determine which submission status to use, :submitted or :peer_review status
-      target_status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
-
-      # Generate the :submitted status
-      # This will usually have the side effect of sending out notification emails to the author/journal
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status)
+      create_post_submission_status(prior_cur_act)
 
       # Warn curators if this is potentially a duplicate
       completions = StashDatacite::Resource::Completions.new(self)
@@ -894,6 +888,29 @@ module StashEngine
                                                                   note: 'System set back to curation')
     end
     # rubocop:enable Metrics/AbcSize
+
+    def create_post_submission_status(prior_cur_act)
+      attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
+      # Determine which submission status to use, :submitted or :peer_review status
+      publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
+      if hold_for_peer_review?
+        if publication_accepted
+          curation_note = 'Private for Peer Review was requested, but associated manuscript has ' \
+                          'already been accepted, so automatically moving to Submitted status'
+          target_status = 'submitted'
+        else
+          curation_note = "Set to Private for Peer Review at author's request"
+          target_status = 'peer_review'
+        end
+      else
+        curation_note = ''
+        target_status = 'submitted'
+      end
+
+      # Generate the :submitted or :peer_review status
+      # This will usually have the side effect of sending out notification emails to the author/journal
+      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+    end
 
     def auto_assign_curator(target_status:)
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
