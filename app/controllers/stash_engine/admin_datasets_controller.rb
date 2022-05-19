@@ -16,6 +16,8 @@ module StashEngine
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def index
+      # These limits are imposed by the user's permissions
+      # Limits due to the current search/filter settings are handled within CurationTableRow
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
       journal_limit = (if current_user.role != 'superuser' &&
