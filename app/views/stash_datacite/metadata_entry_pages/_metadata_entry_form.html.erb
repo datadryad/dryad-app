@@ -98,9 +98,8 @@
                     path: descriptions_update_path,
                     mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Usage Notes:', required: false,
-                               describe: ' What else would someone need to know to use this dataset?' +
-                                   ' Are there any missing values? Please upload any files necessary for re-use ' +
-                                   '(i.e. ReadMe files) and note them.'},
+                               describe: ' What programs and/or software are required to open the data files included with your submission? ' +
+			       'If proprietary, include open-source alternatives.'},
                     isCurator: current_user&.curator?) %>
 
     <h2 class="o-heading__page-span">Related Works</h2>
