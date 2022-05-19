@@ -507,6 +507,22 @@ module StashEngine
       end
     end
 
+    describe '#has_accepted_manuscript?' do
+      it 'is false when no matching manuscript exists' do
+        expect(@identifier.has_accepted_manuscript?).to be(false)
+      end
+
+      it 'is true when matching manuscript is accepted' do
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted')
+        expect(@identifier.has_accepted_manuscript?).to be(true)
+      end
+
+      it 'is false when matching manuscript is submitted' do
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted')
+        expect(@identifier.has_accepted_manuscript?).to be(false)
+      end
+    end
+
     describe '#publication_article_doi' do
       it 'gets publication_article_doi through convenience method' do
         @fake_article_doi = 'http://doi.org/10.1234/bogus-doi'

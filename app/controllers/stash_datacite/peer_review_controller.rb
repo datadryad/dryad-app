@@ -25,7 +25,7 @@ module StashDatacite
     private
 
     def peer_review_params
-      params.require(:resource).permit(:id, :hold_for_peer_review)
+      params.require(:stash_engine_resource).permit(:id, :hold_for_peer_review)
     end
 
   end

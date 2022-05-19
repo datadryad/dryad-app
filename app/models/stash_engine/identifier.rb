@@ -313,6 +313,15 @@ module StashEngine
       internal_data.find_by(data_type: 'manuscriptNumber')&.value&.strip
     end
 
+    # rubocop:disable Naming/PredicateName
+    def has_accepted_manuscript?
+      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+      return false unless manu
+
+      manu.accepted?
+    end
+    # rubocop:enable Naming/PredicateName
+
     def publication_article_doi
       doi = nil
       resources.each do |res|
