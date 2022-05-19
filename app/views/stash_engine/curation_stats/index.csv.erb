@@ -1,4 +1,4 @@
-<%= "Date, DatasetsCurated, DatasetsToBeCurated, NewSubmissions, NewDatasetsToSubmitted, NewDatasetsToPeerReview, DatasetsToAAR, DatasetsToPublished, DatasetsToEmbargoed, AuthorRevised, AuthorVersioned" %>
+<%= "Date, DatasetsCurated, DatasetsToBeCurated, NewSubmissions, NewDatasetsToSubmitted, NewDatasetsToPeerReview, DatasetsToAAR, DatasetsToPublished, DatasetsToEmbargoed, DatasetsToWithdrawn, AuthorRevised, AuthorVersioned" %>
 <% @all_stats.each do |stat|
     row = [
 	formatted_date(stat.date),
@@ -8,8 +8,9 @@
 	stat.new_datasets_to_submitted,
 	stat.new_datasets_to_peer_review,
 	stat.datasets_to_aar,
-	stat.datasets_to_published,
-	stat.datasets_to_embargoed,
+        stat.datasets_to_published,
+        stat.datasets_to_embargoed,
+      	stat.datasets_to_withdrawn,
 	stat.author_revised,
 	stat.author_versioned 
     ]

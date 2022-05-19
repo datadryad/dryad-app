@@ -34,6 +34,8 @@
 	  class="c-admin-table">Datasets to Published</th>
       <th title="The number embargoed that day (status change from 'curation' to 'embargoed' per day)"
 	  class="c-admin-table">Datasets to Embargoed</th>
+      <th title="The number withdrawn that day (status change from 'curation' to 'withdrawn' per day)"
+	  class="c-admin-table">Datasets to Withdrawn</th>
       <th title="The number that come back to us after an Author Action Required that day (so they change status from 'action_required' to 'curation')"
 	  class="c-admin-table">Author Revised</th>
       <th title="The number resubmitted that day (were 'published' or 'embargoed' before, and change status to 'submitted')"
@@ -50,6 +52,7 @@
       <td><%= stat.datasets_to_aar %></td>
       <td><%= stat.datasets_to_published %></td>
       <td><%= stat.datasets_to_embargoed %></td>
+      <td><%= stat.datasets_to_withdrawn %></td>
       <td><%= stat.author_revised %></td>
       <td><%= stat.author_versioned %></td>
   </tr>
