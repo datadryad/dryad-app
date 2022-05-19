@@ -580,6 +580,28 @@ module StashEngine
       end
     end
 
+    describe '#previously_public?' do
+      before(:each) do
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+      end
+
+      it 'returns true if a previous resource had metadata view set to true' do
+        @resource1 = Resource.create(user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: true, file_view: false)
+        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
+        # resource for different identifier, below
+        Resource.create(user_id: user.id, meta_view: true, created_at: '2020-01-03', file_view: false)
+        expect(@resource2.previously_public?).to eq(true)
+      end
+
+      it 'returns false if a previous resource had no metadata view exposed' do
+        @resource1 = Resource.create(user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: false, file_view: false)
+        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
+        # resource for different identifier, below
+        Resource.create(user_id: user.id, created_at: '2020-01-03', meta_view: true, file_view: false)
+        expect(@resource2.previously_public?).to eq(false)
+      end
+    end
+
     describe '#zenodo_published?' do
       before(:each) do
         @resource = create(:resource, identifier: create(:identifier))
