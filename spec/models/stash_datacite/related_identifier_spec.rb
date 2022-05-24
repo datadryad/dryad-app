@@ -116,7 +116,7 @@ module StashDatacite
         expect(@resource.related_identifiers.count).to eq(1)
         re = @resource.related_identifiers.first
         expect(re.related_identifier).to eq(@test_doi)
-        expect(re.relation_type).to eq('issupplementto')
+        expect(re.relation_type).to eq('issourceof') # our dataset is the source of the supplemental files
         expect(re.work_type).to eq('supplemental_information')
         expect(re.verified).to be(true)
         expect(re.added_by).to eq('zenodo')

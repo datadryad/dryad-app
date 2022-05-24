@@ -99,7 +99,7 @@ module StashDatacite
       ri = RelatedIdentifier.create(resource_id: @resource.id,
                                     related_identifier: standard_doi,
                                     related_identifier_type: 'doi',
-                                    relation_type: 'cites', # based on what Daniella defined for auto-added articles from elsewhere
+                                    relation_type: 'iscitedby',
                                     work_type: 'primary_article',
                                     hidden: false)
       ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
