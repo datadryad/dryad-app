@@ -110,6 +110,35 @@ not be used ever again, you can install it yourself.
      for installing software (you can’t use it to login).
 
 
+Connecting from a Chromebook
+============================
+
+Chromebooks cannot use the Microsoft Remote Desktop protocol; they use the
+Chrome Remote Desktop.
+
+*Important note: the Chrome Remote Desktop can only be installed for one user at
+ a time. It cannot be shared.*
+
+First, set up the Remote Desktop on the Curator VE:
+1. Log into the Curator VE in the target account, using Microsoft Remote Desktop.
+2. Open chrome.
+3. Open GMail, and ensure that you are using the same account that will be used on the chromebook
+4. Go to https://remotedesktop.google.com
+5. Choose "Access My Computer"
+6. If asked, agree to install the Chrome Remote Desktop as an application.
+7. Choose "Setup Remote Access"
+8. Install everything and complete the setup
+
+Then access the Remote Desktop on the Chromebook:
+1. Login to the Chromebook using the same Google account as above.
+2. Go to https://remotedesktop.google.com
+3. Choose the machine from the list
+4. When you first connect, you will see a screen that asks for
+   "Ctrl+Alt+Delete". You cannot input this from the keyboard; you must use the
+   pop-up window on the right side to send it.
+5. When you get to the windows login screen, login with the windows account info
+
+
 Dryad and Linux
 =================
 
