@@ -60,7 +60,7 @@ module Datacite
         add_contributors(dcs_resource, datacite_3: datacite_3)
         add_dates(dcs_resource)
         add_alt_ids(dcs_resource)
-        # add_related_ids(dcs_resource)
+        add_related_ids(dcs_resource)
         add_rights(dcs_resource)
         add_descriptions(dcs_resource)
         add_locations(dcs_resource)

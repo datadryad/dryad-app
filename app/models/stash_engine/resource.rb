@@ -694,6 +694,12 @@ module StashEngine
       all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
     end
 
+    # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)
+    def previously_public?
+      prev = self.class.where(identifier_id: identifier_id).where('created_at < ?', created_at).where(meta_view: true)
+      prev.count.positive?
+    end
+
     # -----------------------------------------------------------
     # editor
 

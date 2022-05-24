@@ -12,6 +12,9 @@ module TinymceHelper
     # binding.remote_pry
 
     # https://github.com/tinymce/tinymce/issues/3782
+    #
+    # Also see this page in case it helps.  TinyMCE seems unreliable to load in any specific time especially with multiple
+    # on the page.
 
     counter = 0
 
@@ -32,9 +35,10 @@ module TinymceHelper
       sleep 0.5
       counter += 1
     end
+    sleep 0.5
 
     script_text = <<-SCRIPT
-        var myEditor = tinyMCE.editors.filter(x => x.id === '#{field}')[0]
+        var myEditor = tinyMCE.editors.filter(x => x.id === '#{field}')[0];
         myEditor.setContent("#{content}");
         myEditor.focus();
     SCRIPT
