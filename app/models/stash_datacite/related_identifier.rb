@@ -213,6 +213,10 @@ module StashDatacite
         resp = http.get(related_identifier)
         return true if resp.status.code > 199 && resp.status.code < 300 # 200 range status code
 
+        # If we hit a CloudFlare server that wants to use complex JS to verify we are a "real" browser,
+        # just assume the URL redirected to a valid location
+        return true if (resp.status.code == 503) && resp.to_s.include?('Checking your browser before accessing')
+
         raise StashDatacite::ExternalServerError, "Status code: #{resp.status.code}" if resp.status.code > 499
 
         return false
