@@ -382,7 +382,6 @@ module Stash
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
           doi = @resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'iscitedby' }
           expect(doi.first&.related_identifier).to end_with(DOI)
-          expect(@resource.publication_date.strftime('%Y-%m-%d')).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE).to_s)
         end
       end
 
