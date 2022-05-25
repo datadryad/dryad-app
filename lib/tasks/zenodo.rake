@@ -1,4 +1,5 @@
 require_relative 'zenodo/stats'
+require_relative 'zenodo/metadata'
 
 namespace :zenodo do
   desc 'Queue feeder that keeps migration items going to the delayed job queue with sleep in between'
@@ -63,4 +64,10 @@ namespace :zenodo do
 
     puts "Optimistic completion date: #{(Time.new + time_remaining).strftime('%Y-%m-%d')}"
   end
+
+  # additional rake task will look something like this for each to update
+  # require_relative 'lib/tasks/zenodo/metadata'
+  # @zenodo_copy = StashEngine::ZenodoCopy.find(112)
+  # zm = Zenodo::Metadata.new(zenodo_copy: @zenodo_copy)
+  # zm.update_metadata
 end
