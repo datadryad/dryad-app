@@ -81,7 +81,6 @@ module Stash
         populate_authors
         populate_related_doi
         populate_funders
-        populate_publication_date
         populate_publication_issn
         populate_publication_name
         populate_title
