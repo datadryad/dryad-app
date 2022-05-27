@@ -628,17 +628,14 @@ namespace :curation_stats do
     ids_seen = 0
     total_curation_count = 0
     datasets.each do |i|
-      next unless ['published', 'embargoed'].include?(i.pub_state)
+      next unless %w[published embargoed].include?(i.pub_state) # only count datasets that reached a final state
+
       curation_count = 0
-      # get its CAs
-      cas = i.resources.map(&:curation_activities).flatten
-      # go through the CAs in order
       in_curation = false
+      cas = i.resources.map(&:curation_activities).flatten
       cas.each do |ca|
-        # if it's non-curation, set out_of_curation
         if ca.peer_review? || ca.action_required? || ca.published? || ca.withdrawn?
           in_curation = false
-          # if it's curation (curator or system action), set in_curation and add one
         elsif ca.curation? && !in_curation
           in_curation = true
           curation_count += 1
@@ -646,10 +643,10 @@ namespace :curation_stats do
       end
       ids_seen += 1
       total_curation_count += curation_count
-      puts "#{i.id} -- #{curation_count} -- average #{total_curation_count.to_f / ids_seen.to_f}"
+      puts "#{i.id} -- #{curation_count} -- average #{total_curation_count.to_f / ids_seen}"
     end
-  end  
-  
+  end
+
   desc 'Report on first date for each status'
   task status_dates: :environment do
     launch_day = Date.new(2019, 9, 18)
