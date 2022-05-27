@@ -18,6 +18,7 @@ module Zenodo
       :software
     end
 
+    # this may be a different doi than the main one for software/supplemental (zenodo generated one we save)
     def smart_doi
       return nil if @zc.software_doi.blank?
 
