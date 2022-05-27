@@ -88,11 +88,11 @@ namespace :zenodo do
     ActiveRecord::Base.logger.silence do
       identifiers.each_with_index do |identifier, idx|
         data = identifier.zenodo_copies.where(state: 'finished').where('deposition_id IS NOT NULL')
-                         .where("copy_type like 'data%'").order(id: :desc).first
+          .where("copy_type like 'data%'").order(id: :desc).first
         supp = identifier.zenodo_copies.where(state: 'finished').where('deposition_id IS NOT NULL')
-                         .where("copy_type like 'supp%'").order(id: :desc).first
+          .where("copy_type like 'supp%'").order(id: :desc).first
         sfw = identifier.zenodo_copies.where(state: 'finished').where('deposition_id IS NOT NULL')
-                         .where("copy_type like 'software%'").order(id: :desc).first
+          .where("copy_type like 'software%'").order(id: :desc).first
 
         # Was going to output every 50th item so we can see it's still going without spamming every item to the output.
         # However the updates to zenodo are slow enough that it probably makes sense to see each and write log to
@@ -104,7 +104,7 @@ namespace :zenodo do
           Zenodo::Metadata.new(zenodo_copy: supp).update_metadata if supp.present?
           Zenodo::Metadata.new(zenodo_copy: sfw).update_metadata if sfw.present?
         rescue Stash::ZenodoReplicate::ZenodoError => e
-          puts "Error updating metadata:\n#{e.to_s}\n\n"
+          puts "Error updating metadata:\n#{e}\n\n"
         end
         sleep 1
       end
