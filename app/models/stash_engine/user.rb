@@ -54,12 +54,6 @@ module StashEngine
       StashEngine::FunderRole.where(user_id: id, role: 'admin')
     end
 
-    NO_MIGRATE_STRING = 'xxxxxx'.freeze
-
-    def migration_complete?
-      migration_token == NO_MIGRATE_STRING
-    end
-
     # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.
     # Also overwrites some selected fields from this user with other user's info which should be more current.
     # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
@@ -77,32 +71,7 @@ module StashEngine
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
         out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
       end
-      out_hash[:migration_token] = NO_MIGRATE_STRING
       update(out_hash)
-
-      migration_complete!
-    end
-
-    def migration_complete!
-      self.migration_token = NO_MIGRATE_STRING
-      save
-    end
-
-    def set_migration_token
-      return unless migration_token.nil?
-
-      i = generate_migration_token
-      i = generate_migration_token while User.find_by(migration_token: i)
-      self.migration_token = i
-      save
-    end
-
-    def generate_migration_token
-      i = ''
-      6.times do
-        i += format('%d', rand(10))
-      end
-      i
     end
 
     def self.split_name(name)

@@ -29,9 +29,6 @@ namespace :users do
     # this is what the UI does when they merge accounts
     old_user.merge_user!(other_user: new_user)
 
-    # make the newer user inaccessible from the database (rather than deleting for now in case anything goes awry)
-    new_user.update(orcid: "#{new_user.orcid}-migrated", migration_token: StashEngine::User::NO_MIGRATE_STRING)
-    new_user.update(email: "#{new_user.email}.migrated") unless new_user.email.blank?
     exit
   end
 

@@ -21,7 +21,6 @@ module StashEngine
       employment = handle_orcid_employments(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
       user.update(affiliation_id: employment&.id) unless employment.blank?
       session[:user_id] = user.id
-      user.set_migration_token
       if user.tenant_id.present?
         redirect_to stash_url_helpers.dashboard_path
       else
@@ -55,7 +54,7 @@ module StashEngine
 
       existing = User.where(orcid: params[:orcid].strip).first || User.create(orcid: params[:orcid].strip)
       existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
-                      tenant_id: params[:tenant_id], role: params[:role], migration_token: User::NO_MIGRATE_STRING)
+                      tenant_id: params[:tenant_id], role: params[:role])
       session[:user_id] = existing.id
       redirect_to stash_url_helpers.dashboard_path, status: :found
     end
