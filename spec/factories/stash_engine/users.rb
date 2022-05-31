@@ -8,7 +8,6 @@ FactoryBot.define do
     tenant_id { 'localhost' }
     role { 'user' }
     orcid { SecureRandom.hex }
-    migration_token { SecureRandom.hex }
     old_dryad_email { Faker::Internet.unique.safe_email }
     eperson_id { rand(10_000) }
     validation_tries { 0 }

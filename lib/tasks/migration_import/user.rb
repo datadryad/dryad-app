@@ -13,7 +13,6 @@ module MigrationImport
 
       # leaving out doorkeeper application and we can ask two people to re-set up their API access
       save_hash = @hash.slice('first_name', 'last_name', 'email', 'created_at', 'updated_at', 'tenant_id', 'last_login', 'role', 'orcid')
-      save_hash[:migration_token] = 'xxxxxx'
       @user_obj = StashEngine::User.create(save_hash)
       @user_obj.id
     end
