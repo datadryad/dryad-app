@@ -98,11 +98,27 @@ module StashDatacite
         return
       end
 
-      ror_val = (args['affiliation']['ror_id'].present? ? args['affiliation']['ror_id'] : nil)
-      name = "#{args['affiliation']['long_name']}#{ror_val.blank? ? '*' : ''}" # add that star to pollute our names and make non-atomic
-      # find the affiliation with this name and ror_id
-      affil = StashDatacite::Affiliation.where(long_name: name, ror_id: ror_val).first
-      affil = StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val) if affil.nil?
+      # find a matching pre-existing affiliation
+      affil = nil
+      name = args['affiliation']['long_name']
+      ror_val = args['affiliation']['ror_id']
+      if ror_val.present?
+        # - find by ror_id if avaialable
+        affil = StashDatacite::Affiliation.where(ror_id: ror_val).first
+      else
+        # - find by name otherwise
+        affil = StashDatacite::Affiliation.where(long_name: name).first
+        affil = StashDatacite::Affiliation.where(long_name: "#{name}*").first unless affil.present?
+      end
+
+      # if no matching affils found, make a new affil
+      if affil.blank?
+        affil = if ror_val.present?
+                  StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val)
+                else
+                  StashDatacite::Affiliation.create(long_name: "#{name}*", ror_id: nil)
+                end
+      end
 
       @author.affiliation = affil
       @author.save
