@@ -66,8 +66,8 @@ Rack::Attack.throttle('v1_resource_requests', limit: APP_CONFIG[:rate_limit][:ap
 end
 
 # When a client is throttled, return useful information in the response
-Rack::Attack.throttled_response = ->(env) do
-  match_data = env['rack.attack.match_data']
+Rack::Attack.throttled_responder = lambda do |req|
+  match_data = req.env['rack.attack.match_data']
   now = match_data[:epoch_time]
 
   headers = {

@@ -44,9 +44,7 @@ const badList = (props) => {
   if (issueFiles.length > 0) {
     issueMsg = (
       <div className="c-alert__text-lite">
-        Our tabular format checker found formatting issues in
-        {makeAndString(issueFiles)}
-        .
+        Our tabular format checker found formatting issues in {makeAndString(issueFiles)}.
         Please view the issues from the links below and correct them.
         <ol>
           <li>
