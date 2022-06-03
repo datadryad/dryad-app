@@ -20,7 +20,8 @@ module StashEngine
 
     it 'returns 481 (our own status) for text/html files and not success' do
       stub_request(:head, 'http://www.blahstackfood.com').to_return(
-        headers: { 'Content-Length' => 3, 'content-type' => 'text/html; charset=us-ascii' })
+        headers: { 'Content-Length' => 3, 'content-type' => 'text/html; charset=us-ascii' }
+      )
       resp = uv.validate
       # [ uv.mime_type, uv.size, uv.url, uv.status_code, uv.redirected_to, uv.timed_out?, uv.redirected?, uv.correctly_formatted_url? ]
       expect(resp).to eq(false)
