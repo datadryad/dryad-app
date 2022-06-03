@@ -145,6 +145,11 @@ module StashEngine
                        response.status_code
                      end
       @mime_type = mime_type_from(response)
+
+      # Following is a made-up status code for our own use.  We're not a web crawler and don't accept URLs for HTML pages
+      # since we're not going to crawl them and they are usually an error on the user's part or will be missing components
+      # such as CSS or images. If they go in then they are probably not doing what the user hopes and they should be warned.
+      @status_code = 481 if @mime_type == 'text/html'
       @redirected = !response.previous.nil?
       @redirected_to = response.previous.header['Location'].first if @redirected
       @filename = filename_from(response, @redirected_to, @url)
