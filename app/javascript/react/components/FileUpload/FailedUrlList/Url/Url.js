@@ -1,7 +1,6 @@
 import React from 'react';
 import parse from 'html-react-parser';
 
-
 const url = (props) => (
   <div className="c-manifest__item">
     <div className="c-manifest__url">{props.url.url}</div>
