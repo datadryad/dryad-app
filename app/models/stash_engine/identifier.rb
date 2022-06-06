@@ -547,11 +547,11 @@ module StashEngine
     end
 
     def curation_completed_date
-      return nil unless %w[action_required published embargoed].include?(pub_state)
+      return nil unless %w[action_required published embargoed withdrawn].include?(pub_state)
 
       found_cc_date = nil
       resources.map(&:curation_activities).flatten.each do |ca|
-        next unless %w[action_required published embargoed].include?(ca.status)
+        next unless %w[action_required published embargoed withdrawn].include?(ca.status)
 
         found_cc_date = ca.created_at
         break

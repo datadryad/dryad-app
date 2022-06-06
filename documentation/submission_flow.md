@@ -67,7 +67,8 @@ Allowable values:
 - peer_review = the resource is availble for reviewers to view, but curators will ignore it
 - curation = a curator is working on the resource
 - action_required = a curator has returned the resource to submitter for revision
-- withdrawn = a previously-published resource has been removed from public view
+- withdrawn = a resource has been removed from public view, either manually by
+  the curator or automatically based on the journal's notification of a rejected article
 - embargoed = metadata for the resource is published, but data files are not publicly available
 - published = the resource is fully available to the public
 
