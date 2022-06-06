@@ -63,7 +63,7 @@ namespace :link_out do
 
   desc 'Seed existing datasets with PubMed Ids - This will query the API for each dataset created in the last year that has a cites DOI'
   task seed_pmids: :environment do
-    sleep(1) # The NCBI API has a threshold for how many times we can hit it
+    sleep(5) # The NCBI API has a threshold for how many times we can hit it
     p 'Retrieving Pubmed IDs for existing datasets'
     pubmed_service = LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
@@ -97,7 +97,7 @@ namespace :link_out do
       .where('stash_engine_identifiers.created_at > ?', 1.year.ago).pluck(:id)
     datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
     datum.each do |data|
-      sleep(1) # The NCBI API has a threshold for how many times we can hit it
+      sleep(5) # The NCBI API has a threshold for how many times we can hit it
       p "  looking for genbank sequences for PubmedID #{data.value}"
       sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
       next unless sequences.any?
