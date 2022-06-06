@@ -244,6 +244,7 @@ module StashEngine
         expect(stats.datasets_to_aar).to eq(0)
         expect(stats.datasets_to_embargoed).to eq(0)
         expect(stats.datasets_to_published).to eq(0)
+        expect(stats.datasets_to_withdrawn).to eq(0)
       end
 
       it 'counts correctly when there are some' do
@@ -290,6 +291,14 @@ module StashEngine
         stats.recalculate
         expect(stats.datasets_to_aar).to eq(2)
         expect(stats.datasets_to_published).to eq(1)
+
+        # YES, two withdrawn, from different statuses
+        @res[0].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day - 1.day)
+        @res[0].curation_activities << CurationActivity.create(status: 'withdrawn', user: @curator, created_at: @day)
+        @res[1].curation_activities << CurationActivity.create(status: 'peer_review', user: @curator, created_at: @day - 1.day)
+        @res[1].curation_activities << CurationActivity.create(status: 'withdrawn', user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.datasets_to_withdrawn).to eq(2)
       end
     end
 
