@@ -99,7 +99,13 @@ namespace :link_out do
     datum.each do |data|
       sleep(5) # The NCBI API has a threshold for how many times we can hit it
       p "  looking for genbank sequences for PubmedID #{data.value}"
-      sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      begin
+        sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      rescue StandardError => e
+        p "    ERROR: #{e.message} ... skipping update for #{data.identifier_id}, and pausing in case we hit a rate limiter"
+        sleep(60)
+        next
+      end
       next unless sequences.any?
 
       sequences.each do |k, v|
