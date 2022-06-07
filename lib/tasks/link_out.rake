@@ -63,7 +63,6 @@ namespace :link_out do
 
   desc 'Seed existing datasets with PubMed Ids - This will query the API for each dataset created in the last year that has a cites DOI'
   task seed_pmids: :environment do
-    sleep(1) # The NCBI API has a threshold for how many times we can hit it
     p 'Retrieving Pubmed IDs for existing datasets'
     pubmed_service = LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
@@ -72,6 +71,7 @@ namespace :link_out do
     related_identifiers = StashDatacite::RelatedIdentifier.where(resource_id: resource_ids, related_identifier_type: 'doi',
                                                                  work_type: 'primary_article').order(created_at: :desc)
     related_identifiers.each do |data|
+      sleep(5) # The NCBI API has a threshold for how many times we can hit it
       rel_id = data.related_identifier
       rel_id = rel_id.gsub('https://doi.org/', '').gsub('doi:', '')
       p "  looking for pmid for #{rel_id}"
@@ -97,9 +97,15 @@ namespace :link_out do
       .where('stash_engine_identifiers.created_at > ?', 1.year.ago).pluck(:id)
     datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
     datum.each do |data|
-      sleep(1) # The NCBI API has a threshold for how many times we can hit it
+      sleep(5) # The NCBI API has a threshold for how many times we can hit it
       p "  looking for genbank sequences for PubmedID #{data.value}"
-      sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      begin
+        sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      rescue StandardError => e
+        p "    ERROR: #{e.message} ... skipping update for #{data.identifier_id}, and pausing in case we hit a rate limiter"
+        sleep(60)
+        next
+      end
       next unless sequences.any?
 
       sequences.each do |k, v|
