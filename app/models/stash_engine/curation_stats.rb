@@ -137,8 +137,10 @@ module StashEngine
     end
 
     # Number that were transitioned directly from one status to another on the target day
+    # If from_status is present, only transitions from the given status are counted
+    # If from_status is nil, transitions from *any* status are counted
     def datasets_transitioned(from_status: nil, to_status: nil)
-      return 0 unless from_status && to_status
+      return 0 unless to_status
 
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
@@ -148,7 +150,13 @@ module StashEngine
 
         # if the previous ca was from_status, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
-        datasets_found.add(ca.resource.identifier) if prev_ca&.status == from_status
+
+        # add to datasets_found if it's transition we want to count
+        if from_status.blank? && (prev_ca&.status != ca&.status)
+          datasets_found.add(ca.resource.identifier)
+        elsif prev_ca&.status == from_status
+          datasets_found.add(ca.resource.identifier)
+        end
       end
       datasets_found.size
     end
@@ -168,9 +176,9 @@ module StashEngine
       update(datasets_to_embargoed: datasets_transitioned(from_status: 'curation', to_status: 'embargoed'))
     end
 
-    # The number withdrawn that day (status change from 'curation' to 'action_required')
+    # The number withdrawn that day (status change from any status to 'withdrawn')
     def populate_datasets_to_withdrawn
-      update(datasets_to_withdrawn: datasets_transitioned(from_status: 'curation', to_status: 'withdrawn'))
+      update(datasets_to_withdrawn: datasets_transitioned(from_status: nil, to_status: 'withdrawn'))
     end
 
     # The number that come back to us after an Author Action Required
