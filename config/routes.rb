@@ -265,13 +265,14 @@ Rails.application.routes.draw do
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
     get 'user_admin/role_popup/:id', to: 'user_admin#role_popup', as: 'user_role_popup'
+    get 'user_admin/email_popup/:id', to: 'user_admin#email_popup', as: 'user_email_popup'
     get 'user_admin/journals_popup/:id', to: 'user_admin#journals_popup', as: 'user_journals_popup'
-    post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
     get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
-    post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
     get 'user_admin/merge_popup', to: 'user_admin#merge_popup', as: 'user_merge_popup'
+    post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
+    post 'user_admin/set_email/:id', to: 'user_admin#set_email', as: 'user_admin_set_email'
+    post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
-    post 'user_admin/aaa', to: 'user_admin#aaa', as: 'user_admin_aaa'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
