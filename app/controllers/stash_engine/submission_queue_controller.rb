@@ -40,24 +40,20 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize
 
-    # it is a little weird that these are GET instead of POST requests, but we may want to make it simple to use these URLs from curl or elsewhere
-    def graceful_shutdown
-      FileUtils.touch(HOLD_SUBMISSIONS_PATH)
-      render 'action_taken'
-    end
-
     def graceful_start
-      FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
-      resource_ids = RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down')
-        .where(hostname: StashEngine.repository.class.hostname).order(:updated_at).map(&:resource_id)
-      enqueue_submissions(resource_ids: resource_ids)
-      render 'action_taken'
-    end
+      resource_ids = params[:ids].split(',')
 
-    def ungraceful_start
-      FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
-      resource_ids = RepoQueueState.latest_per_resource.where(state: %w[rejected_shutting_down enqueued])
-        .where(hostname: StashEngine.repository.class.hostname).order(:updated_at).map(&:resource_id)
+      resource_ids.each do |res_id|
+        # clear out all the previous queue states and start with just the first set to 'rejected_shutting_down'
+        RepoQueueState.where(resource_id: res_id).each_with_index do |rqs, idx|
+          if idx == 0
+            rqs.update(state: 'rejected_shutting_down', hostname: StashEngine.repository.class.hostname) # set up for a re-starting state
+          else
+            rqs.destroy
+          end
+        end
+      end
+
       enqueue_submissions(resource_ids: resource_ids)
       render 'action_taken'
     end
