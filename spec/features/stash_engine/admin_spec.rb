@@ -206,6 +206,22 @@ RSpec.feature 'Admin', type: :feature do
         sign_in(@superuser, false)
       end
 
+      it 'allows changing user email as a superuser', js: true do
+        user = create(:user)
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(user.id)}\"]") do
+          find('.c-admin-edit-icon').click
+        end
+        within(:css, '#genericModalDialog') do
+          find('#email').set('new-email@example.org')
+          find('input[name=commit]').click
+        end
+        expect(page.find("#user_email_#{user.id}")).to have_text('new-email@example.org')
+        user_changed = StashEngine::User.find(user.id)
+        expect(user_changed.email).to eq('new-email@example.org')
+      end
+
       it 'allows changing user role as a superuser', js: true do
         user = create(:user)
         visit stash_url_helpers.user_admin_path
