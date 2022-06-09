@@ -21,7 +21,6 @@
     <%= button_to 'Resend checked submissions',
                   stash_url_helpers.graceful_start_path,
                   { method: 'get',
-                    id: 'graceful_start',
                     params: { ids: '' },
                     onclick: "gatherChecked();",
                     form_class: 'button_form'
