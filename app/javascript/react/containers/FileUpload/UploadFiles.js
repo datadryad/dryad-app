@@ -612,6 +612,7 @@ class UploadFiles extends React.Component {
                     Upload Your Files
                 </h1>
                 <Instructions />
+		<cedar-embeddable-editor />
                 <div className="c-uploadwidgets">
                     {this.state.upload_type.map((upload_type) => {
                         return <UploadType
