@@ -431,6 +431,10 @@ Rails.application.routes.draw do
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
   end
+
+  ########################## CEDAR Embeddable Editor ###############################
+
+  post '/cedar-save', to: 'cedar#save'
   
   ########################## Dryad v1 support ######################################
   

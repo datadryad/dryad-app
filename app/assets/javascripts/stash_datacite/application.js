@@ -13,3 +13,4 @@
 
 //= require leaflet
 //= require_tree .
+console.log('Loaded stash_datacite/application.js')
