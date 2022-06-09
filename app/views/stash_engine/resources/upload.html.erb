@@ -5,8 +5,6 @@
 <%= javascript_pack_tag 'application' %>
 <%= stylesheet_pack_tag 'application' %>
 
-<script src="/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"></script>
-
 <% if params[:display_validation] %>
   <%= render partial: "stash_datacite/resources/missing_mandatory_data",
              locals: { error_items: StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors } %>
@@ -23,12 +21,16 @@
   frictionless: APP_CONFIG[:frictionless].to_h
 }) %>
 
+<!-- Load the CEDAR embeddable editor from the public directory.   -->
+<!-- Normally, we would rather handle it through webpack, but this -->
+<!-- makes the "assets:precompile" step take forever, so we won't compile it for now. -->
+<script src="/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"></script>
+<!-- If we do reinstate the webpack version, store the file in app/javascript/packs/ -->
+<!-- and reference with a line like.... -->
+<!-- javascript_pack_tag 'cedar-embeddable-editor-2' -->
 <!-- Even though the JavaScript file for CEDAR is fully versioned, webpack -->
 <!-- ignores portions of the name after the first dot, so we only include the -->
 <!-- major version. -->
-
-<!-- %= javascript_pack_tag 'cedar-embeddable-editor-2' %>
--->
      
 <!-- display messages to let arias know what's happening -->
 <div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
