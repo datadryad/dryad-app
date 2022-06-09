@@ -81,7 +81,7 @@ module StashDatacite
 
         @resource.descriptions.map do |d|
           str = ActionView::Base.full_sanitizer.sanitize(d.description || '')
-          ((str&.length || 0) > 1000 ? "#{str[0..1000]}..." : str )
+          ((str&.length || 0) > 1000 ? "#{str[0..1000]}..." : str)
         end.compact
       end
 
