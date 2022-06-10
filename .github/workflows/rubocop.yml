@@ -4,7 +4,8 @@ on: [pull_request]
 
 jobs:
   rubocop:
-    runs-on: ubuntu-latest
+    name: Rubocop test
+    runs-on: ubuntu-18.04
 
     steps:
     - name: 'Checkout the repo'
