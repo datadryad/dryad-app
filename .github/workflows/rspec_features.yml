@@ -28,7 +28,6 @@ jobs:
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
         bundler-cache: true
-    - run: bundle exec rake
 
     - name: 'setup node for node-sass'
       uses: actions/setup-node@v2
