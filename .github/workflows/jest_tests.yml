@@ -1,0 +1,23 @@
+name: Jest Javascript/React tests
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install yarn
+        run: |
+          yarn policies set-version 1.22.10
+          yarn install --frozen-lockfile
+      # - name: Install modules
+      #   run: yarn
+      - name: run eslint
+        run: yarn run eslint app/javascript/react/**/*.js
+      - name: Run tests
+        run: yarn test
