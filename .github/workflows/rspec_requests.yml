@@ -68,8 +68,27 @@ jobs:
     - name: 'Install frictionless python package for json'
       run: pip install frictionless[json]==4.38.0
 
-    - name: 'Compile Assets'
-      run: bin/rails assets:precompile
+        # I found this https://tech.hey.jp/entry/2021/05/21/134001
+        - name: asset cache
+          uses: actions/cache@v3
+          with:
+            path: |
+              public/assets
+              tmp/cache/assets/sprockets
+            key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+            restore-keys: |
+              asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+              asset-cache-${{ runner.os }}-${{ github.ref }}-
+              asset-cache-${{ runner.os }}-
+
+        - name: 'assets precompile'
+          run: bin/rails assets:precompile --trace
+
+        - name: cache bundle.js
+          uses: actions/cache@v3
+          with:
+            path: ./public/packs
+            key: bundle-js-${{ github.sha }}
 
     - name: 'Compile webpacker assets'
       run: RAILS_ENV=test bundle exec rails webpacker:compile
