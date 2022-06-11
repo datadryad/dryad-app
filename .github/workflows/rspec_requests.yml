@@ -1,0 +1,76 @@
+name: RSpec Response Tests
+
+on: [pull_request]
+
+jobs:
+  rspec-resonse:
+    name: RSpec Request Tests
+    runs-on: ubuntu-18.04
+
+    env:
+      DB_ADAPTER: mysql2
+      MYSQL_PWD: root
+      RAILS_ENV: test
+
+    steps:
+    - name: 'Checkout the repo'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+
+    - name: 'Set Ruby and Bundler Versions'
+      run: |
+        echo "RUBY_VERSION=2.6.6" >> $GITHUB_ENV
+        echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
+
+    - name: 'Install Ruby and gems'
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true
+
+    - name: 'setup node for node-sass'
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: 'Install MySQL Packages'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mysql-client libmysqlclient-dev
+
+    - name: 'Start MySQL'
+      run: sudo systemctl start mysql
+
+    - name: 'Setup Test DB'
+      run: |
+        mysql -u root -e 'CREATE DATABASE IF NOT EXISTS dashv2_test' 
+        mysql -u root -e 'CREATE USER IF NOT EXISTS travis@localhost'
+        mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'  
+        bin/rails db:migrate:reset RAILS_ENV=test
+
+    - name: 'Set up Python 3.x'
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: 'Display Python version'
+      run: python -c "import sys; print(sys.version)"
+
+    - name: 'Install frictionless python package'
+      run: pip install frictionless==4.38.0
+
+    - name: 'Install frictionless python package for excel'
+      run: pip install frictionless[excel]==4.38.0
+
+    - name: 'Install frictionless python package for json'
+      run: pip install frictionless[json]==4.38.0
+
+    - name: 'Compile Assets'
+      run: bin/rails assets:precompile
+
+    - name: 'Compile webpacker assets'
+      run: RAILS_ENV=test bundle exec rails webpacker:compile
+
+    - name: 'Run RSpec Request Tests'
+      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/requests
