@@ -11,7 +11,7 @@ module StashDatacite
         @resource.download_uri = "https://repo.example.edu/#{@resource.identifier_str}.zip"
         @resource.save
 
-        @data_files = [ create(:data_file, resource: @resource), create(:data_file, resource: @resource) ]
+        @data_files = [create(:data_file, resource: @resource), create(:data_file, resource: @resource)]
 
         schema_dataset = SchemaDataset.new(resource: @resource)
 
