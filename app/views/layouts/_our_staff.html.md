@@ -120,17 +120,6 @@
 </div>
 
 <div class="bio">
-    <img src="/images/Iman.png" alt="Iman Nematollahi" title="Iman Nematollahi">
-  <p><strong>Iman Nematollahi</strong><br/>
-  Data Curator<br/>
-  Iman recently graduated with a B.S. in Data Science from the University of
-    California, San Diego, with a background in Machine Learning. Prior to this
-    role, he worked as a Data Science tutor where he taught the fundamentals of
-    coding to new programmers. In his free time he loves to keep up with the
-    latest in sports, streetwear, and technology.</p>
-</div>
-
-<div class="bio">
     <img src="/images/AOrona.jpg" alt="Ari Orona" title="Ari Orona">
   <p><strong>Ari Orona</strong><br/>
   Data Curator<br/>
