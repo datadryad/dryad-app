@@ -7,9 +7,11 @@ module StashDatacite
                        email: 'lmuckenhaupt@example.edu',
                        tenant_id: 'dataone')
 
-        @resource = create(:resource, user: @user)
+        @resource = create(:resource, user: @user, file_view: 1)
         @resource.download_uri = "https://repo.example.edu/#{@resource.identifier_str}.zip"
         @resource.save
+
+        @data_files = [ create(:data_file, resource: @resource), create(:data_file, resource: @resource) ]
 
         schema_dataset = SchemaDataset.new(resource: @resource)
 
@@ -50,6 +52,11 @@ module StashDatacite
 
       it 'has the correct download link' do
         expect(@actual['distribution']['contentUrl']).to include('api/v2/datasets/doi')
+      end
+
+      it 'has URLs for file downloads (include the file id)' do
+        expect(@actual['contentUrl'].first).to include(@data_files.first.id.to_s)
+        expect(@actual['contentUrl'].second).to include(@data_files.second.id.to_s)
       end
     end
   end
