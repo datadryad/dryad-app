@@ -99,7 +99,7 @@ module StashDatacite
       def content_urls
         return [] unless @resource.file_view
 
-        @resource.data_files.present_files.map {|f| Rails.application.routes.url_helpers.download_stream_url(f.id)}
+        @resource.data_files.present_files.map { |f| Rails.application.routes.url_helpers.download_stream_url(f.id) }
       end
 
       def doi_url
