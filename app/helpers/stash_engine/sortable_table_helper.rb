@@ -58,6 +58,7 @@ module StashEngine
     def sortable_table_order
       params[:sort] = 'created_at' if params[:sort].blank?
       params[:direction] = 'asc' if params[:direction].blank?
+      params[:direction] = 'asc' unless %w[asc desc].include?(params[:direction]) # limit to only these two values
       "#{params[:sort]} #{params[:direction]}"
     end
 
