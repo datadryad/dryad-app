@@ -19,7 +19,8 @@ module StashEngine
       sponsoring_journals = Journal.where.not(payment_plan_type: [nil, '']).map(&:id)
       display_journals = metadata_journals | sponsoring_journals
 
-      @journals = Journal.joins(:sponsor).where(id: display_journals).order(helpers.sortable_table_order, title: :asc)
+      ord = helpers.sortable_table_order(whitelist: %w[title issn allow_blackout payment_plan_type name])
+      @journals = Journal.joins(:sponsor).where(id: display_journals).order(ord, title: :asc)
 
       respond_to do |format|
         format.html
