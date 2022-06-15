@@ -7,11 +7,12 @@ module StashApi
   class Dataset
     include Presenter
 
-    def initialize(identifier:, user: nil)
+    def initialize(identifier:, user: nil, item_view: false) # item view means not in list and may show more info for individual record
       id_type, iden = identifier.split(':', 2)
       @identifier_s = identifier
       @se_identifier = StashEngine::Identifier.where(identifier_type: id_type, identifier: iden).first
       @user = user
+      @item_view = item_view
     end
 
     def last_se_resource
@@ -22,7 +23,7 @@ module StashApi
       res = last_se_resource
       return nil unless res
 
-      Version.new(resource_id: res.id)
+      Version.new(resource_id: res.id, item_view: @item_view)
     end
 
     def metadata
