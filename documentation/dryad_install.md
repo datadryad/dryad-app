@@ -54,6 +54,8 @@ Most of the configuration can be left as default. Items to check before first la
 
 ### MySQL
 
+*MySQL must be at least version 5.7*
+
 The procedure to install MySQL and Solr vary from one operating system to another, but this guide shows a way to configure it in Ubuntu linux:
 
 ```
@@ -70,7 +72,6 @@ mysql -u <username> -p
 sudo mysql -u root
 
 
-
 # create the dash database
 CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -81,16 +82,19 @@ CREATE USER 'travis'@'%';
 GRANT ALL PRIVILEGES ON dryad . * TO 'travis'@'%';
 FLUSH PRIVILEGES;
 
+# ensure all rails migrations can be applied
+set global log_bin_trust_function_creators=1;
+
 # To exit the MySQL client, type *exit* or press ctrl-d
 
 ```
 
-Now edit the dryad-config/config/database.yml file to fill in the *dashuser* and password you set above in the development environment for that configuration file.
+Now edit the config/database.yml file to fill in the user and password you set above in the development environment for that configuration file. (For a local database install, you should not need to change anything.)
 
 ### Solr
 Solr requires a Java runtime.  Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
-[This readme contains updated information](../config/solr_config/README.md)
+[See the SOLR cofiguration README for detailed SOLR install information](../config/solr_config/README.md)
 
 
 <br>Make sure Solr is working by going to  [http://localhost:8983](http://localhost:8983). You should see a Solr admin page.
@@ -105,20 +109,20 @@ Verify Solr is set up correctly from the Admin UI:
 
 ## Getting the Rails application running
 
-I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
+I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development environment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
 
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
 sudo apt-get install libxml2 libxml2-dev patch curl build-essential libreadline-dev
 
-cd dryad
+cd dryad-app
 rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-version file
 
 # update your rubygems version
 gem update --system
 
 # install bundler to handle gem dependencies
-gem install bundler:2.1.4
+gem install bundler:2.2.27
 ```
 
 **If you are running on OSX, ensure some gems are compatible with the system:**
@@ -130,10 +134,28 @@ gem install therubyracer -v '0.12.3' -- --with-v8-dir=/usr/local/opt/v8@3.15
 gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include
 ```
 
-For all operating systems, continue:
+For all operating systems, continue...
+In a system startup script such as `.bash_profile`, add the
+environment variable `RAILS_ENV`. This specifies the Rails "environment" or set
+of configuration values. For most installations, the value will be `local`.
+
+Encrypted credentials: Many of Dryad's configuration files read
+credentials from the Rails credentials file. Before Rails will run, you must do
+one of two steps:
+- (for Dryad development team) Obtain the credentials encryption key from a Dryad developer and place it in `config/master.key`
+- (for non-Dryad users of the code) In all files `config/*.yml`, replace the `Rails.application.credentials`
+  statements with your own credentials.
+
+
+```
+export RAILS_ENV=local
+```
+
 ```
 # now install the gem libraries needed for the application
 bundle install
+
+# exit the shell and re-enter, so the environment can pick up the latest changes
 
 # run the migrations to set up the database tables
 rails db:migrate
@@ -142,34 +164,21 @@ rails db:migrate
 rails s
 ```
 
-Rails environment: In a system startup script such as `.bash_profile`, add the
-environment variable `RAILS_ENV`. This specifies the Rails "environment" or set
-of configuration values. For most installations, the value will be `local`.
-```
-export RAILS_ENV=local
-```
+## User interface components
 
-Encrypted credentials: Many of Dryad's configuration files read
-credentials from the Rails credentials file. Before Rails will run, you must do
-one of two steps:
-- In all files `config/*.yml`, replace the `Rails.application.credentials`
-  statements with your own credentials.
-- Obtain the credentials encryption key from a Dryad developer and place it in `config/master.key`
+Some portions of Dryad's interface rely on Node and React. See the [Node Installation](node_npm_server_install.md) instructions.
 
-Final search configuration: To configure where the search interface draws its
+Dryad's submission system validates files with the Frictionless Data
+toolkit. See the [Frictionless
+Installation](frictionless_integration/INSTALL.md) instructions.
+
+## Final search configuration
+
+To configure where the search interface draws its
 data from, modify the `config/blacklight.yml` to change the endpoint for the
 development server.  When running locally, the default server is the Dryad
 development server, but it can be overridden with the `SOLR_URL` environment
 variable.
-
-## Creating the System user
-
-Go into Rails console, and create the default user.
-
-```
-bundle exec rails console
-u=StashEngine::User.create(first_name: 'Dryad', last_name: 'System', id: 0)
-```
 
 ## Testing basic functionality
 
