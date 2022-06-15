@@ -60,21 +60,5 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       expect(page).to have_content(/[23] queued on this server/)
     end
 
-    it 'should pause transfers', js: true do
-      visit '/stash/submission_queue'
-      click_button 'graceful_shutdown'
-      click_link 'go back to viewing queue updates'
-      wait_for_ajax(15)
-      expect(page).to have_text('Submissions are being held for shutdown on this server')
-    end
-
-    it 'should re-enable transfers', js: true do
-      FileUtils.touch(HOLD_SUBMISSIONS_PATH)
-      visit '/stash/submission_queue'
-      click_button 'graceful_start'
-      click_link 'go back to viewing queue updates'
-      wait_for_ajax(15)
-      expect(page).to have_text('Normal submissions in effect on this server')
-    end
   end
 end
