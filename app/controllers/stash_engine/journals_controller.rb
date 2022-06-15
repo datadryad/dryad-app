@@ -6,8 +6,6 @@ module StashEngine
     include SharedSecurityController
     helper SortableTableHelper
 
-    before_action :require_curator
-
     def index
       params.permit(:q)
       params[:sort] = 'title' if params[:sort].blank?
