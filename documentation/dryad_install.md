@@ -180,6 +180,23 @@ development server.  When running locally, the default server is the Dryad
 development server, but it can be overridden with the `SOLR_URL` environment
 variable.
 
+
+## Upload configuration
+
+When users upload files, they are sent to a temporary holding location in Amazon
+S3. Dryad maintains S3 buckets for each Rails environment setting. If you are
+using `RAILS_ENV=local`, the bucket will be the "dev" bucket.
+
+In order to upload files, login to S3 and ensure that the bucket's Permissions
+allow uploads from the server you are using. 
+
+## Merritt connection
+
+If your server is outside the UC environment, you will need to use a proxy to
+communicate with the Merritt servers that are inside the UC environment.
+
+Set up [SSHuttle](technical_notes/sshuttle_README.md) to connect with Merritt.
+
 ## Testing basic functionality
 
 ### Explore the datasets
