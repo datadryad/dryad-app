@@ -1,39 +1,28 @@
 name: Rubocop
 
-on: [pull_request]
+on: pull_request
 
 jobs:
   rubocop:
-    runs-on: ubuntu-latest
+    name: Rubocop test
+    runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
+    - name: 'Checkout the repo'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
 
-    - name: 'Determine Ruby and Bundler Versions from Gemfile.lock'
+    - name: 'Set Ruby and Bundler Versions'
       run: |
         echo "RUBY_VERSION=2.6.6" >> $GITHUB_ENV
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
-    # Install Ruby - using the version found in the Gemfile.lock
-    - name: 'Install Ruby'
-      uses: ruby/setup-ruby@v1.68.0
+    - name: 'Install Ruby and gems'
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
-
-    - name: 'Retrieve Cached Gems'
-      uses: actions/cache@v2.1.5
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-gem-
-
-    - name: 'Bundle Install'
-      run: |
-        gem install bundler -v ${{ env.BUNDLER_VERSION }}
-        bundle config path vendor/bundle
-        bundle config set without 'pgsql rollbar aws'
-        bundle install --jobs 4 --retry 3
+        bundler-cache: true
 
     - name: 'Run Rubocop'
       run: bin/rubocop
