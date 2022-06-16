@@ -10,7 +10,9 @@ module StashDatacite
       respond_to do |format|
         format.json do
           # this removes the current associated fos subjects, but doesn't delete subject entries from subjects table
-          resource.subjects.permissive_fos.each { |subj| resource.subjects.delete(subj) }
+          resource.subjects.permissive_fos.each do |subj|
+            ResourcesSubjects.where(resource_id: resource, subject_id: subj).destroy_all
+          end
           resource.subjects << make_or_get_subject(params[:fos_subjects]) unless params[:fos_subjects].blank?
           render json: resource.subjects.permissive_fos
         end
