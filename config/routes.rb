@@ -273,6 +273,9 @@ Rails.application.routes.draw do
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
     post 'user_admin/aaa', to: 'user_admin#aaa', as: 'user_admin_aaa'
 
+    # CEDAR metadata editor
+    get 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
+    
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
