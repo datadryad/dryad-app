@@ -4,14 +4,15 @@ module StashApi
   class Version
     class Metadata
 
-      def initialize(resource:)
+      def initialize(resource:, item_view: false) # item view may present additional information not shown in list view
         @resource = resource
+        @item_view = item_view
       end
 
       def value
         # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
         # use by others besides ourselves because we don't want others to use them.
-        {
+        vals = {
           title: @resource.title,
           authors: Authors.new(resource: @resource).value,
           abstract: Abstract.new(resource: @resource).value,
@@ -37,6 +38,8 @@ module StashApi
           preserveCurationStatus: @resource.preserve_curation_status || nil,
           loosenValidation: @resource.loosen_validation || nil
         }
+        vals[:changedFields] = changed_fields if @item_view
+        vals
       end
       # rubocop:enable
 
@@ -47,6 +50,14 @@ module StashApi
         return 'files_changed' if file_states && (file_states - ['copied']).present?
 
         'metadata_changed'
+      end
+
+      # gives a list of the fields that have changed
+      def changed_fields
+        items = @resource.changed_from_previous_curated
+        return ['none'] unless items.present?
+
+        items
       end
 
       def visibility

@@ -204,6 +204,21 @@ module StashApi
         expect(h['sharingLink']).to match(/http/)
       end
 
+      it 'shows what fields changed for v2 when both have been published' do
+        create(:curation_activity, resource: @resources[1], status: 'published', user_id: @user1.id)
+        response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers
+        expect(response_code).to eq(200)
+        h = response_body_hash
+        expect(h[:changedFields]).to eq(%w[title authors abstract subjects funders])
+      end
+
+      it "wouldn't show changed fields for a first version" do
+        response_code = get "/api/v2/versions/#{@resources[0].id}", headers: default_json_headers
+        expect(response_code).to eq(200)
+        h = response_body_hash
+        expect(h[:changedFields]).to eq(%w[none])
+      end
+
       it 'shows stuff to admin from the same tenant' do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
