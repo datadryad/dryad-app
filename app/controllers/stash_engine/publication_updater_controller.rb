@@ -15,7 +15,11 @@ module StashEngine
         .joins(identifier: :resources).where(approved: false, rejected: false)
       params[:sort] = 'score' if params[:sort].blank?
       params[:direction] = 'desc' if params[:direction].blank?
-      @proposed_changes = proposed_changes.order(helpers.sortable_table_order).page(@page).per(@page_size)
+
+      ord = helpers.sortable_table_order(whitelist:
+         %w[stash_engine_proposed_changes.title publication_name publication_issn publication_doi
+            stash_engine_proposed_changes.publication_date authors score])
+      @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
       return unless @proposed_changes.present?
 
       @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes&.map(&:identifier_id))

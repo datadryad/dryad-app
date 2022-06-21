@@ -55,9 +55,15 @@ module StashEngine
 
     # Generate a string for ordering ActiveRecord selections. If no sort order
     # has been set, defaults to sorting records by the `created_at` date.
-    def sortable_table_order
+    # ONLY allow the whitelist of fields and the two orders to prevent SQL injection
+    def sortable_table_order(whitelist: [])
       params[:sort] = 'created_at' if params[:sort].blank?
       params[:direction] = 'asc' if params[:direction].blank?
+      params[:direction] = 'asc' unless %w[asc desc].include?(params[:direction]) # limit to only these two sort orders
+      params[:sort] = whitelist.first unless whitelist.include?(params[:sort]) # limit to whitelisted field names
+
+      return '' if params[:sort].blank? || params[:direction].blank?
+
       "#{params[:sort]} #{params[:direction]}"
     end
 

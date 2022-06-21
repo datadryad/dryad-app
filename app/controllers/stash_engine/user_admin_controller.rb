@@ -33,9 +33,11 @@ module StashEngine
           @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
         end
 
-        @users = @users.order(helpers.sortable_table_order)
+        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+        @users = @users.order(ord)
       else
-        @users = User.all.order(helpers.sortable_table_order)
+        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+        @users = User.all.order(ord)
       end
 
       add_institution_filter! # if they chose a facet or are only an admin
