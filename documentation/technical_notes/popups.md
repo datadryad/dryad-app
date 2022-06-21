@@ -1,4 +1,4 @@
-How popups dialogs work
+How popup dialogs work
 =========================
 
 An overview of the steps in a popup dialog, using the user_role popup as an example:

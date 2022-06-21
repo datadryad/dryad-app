@@ -15,7 +15,7 @@ module StashApi
 
     # get /versions/<id>
     def show
-      v = Version.new(resource_id: params[:id])
+      v = Version.new(resource_id: params[:id], item_view: true)
       respond_to do |format|
         format.any { render json: v.metadata_with_links }
         res = @stash_resources.first

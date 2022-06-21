@@ -5,7 +5,7 @@
     <th class="c-admin-table__user-name <%= sort_display('last_name') %>">
       <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
     </th>
-    <th class="c-admin-table__user-email <%= sort_display('email') %>">
+    <th class="c-admin-table__user-email <%= sort_display('email') %>" colspan="2">
       <%= sortable_column_head sort_field: 'email', title: 'Email' %>
     </th>
     <th class="c-admin-table__user-orcid">
@@ -26,7 +26,18 @@
     <tr class="c-lined-table__row">
       <td><%= check_box("user_ids", "selections", {:multiple => true}, u.id, nil) %></td>
       <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
-      <td><%= u.email %></td>
+      <td class="c-admin-hide-border-right" id="user_email_<%= u.id %>" >
+	<%= u.email %>
+      </td>
+      <td class="c-admin-hide-border-left">
+	<% if current_user.role == 'superuser' %>
+	  <%= form_with(url: stash_url_helpers.user_email_popup_path(u.id), method: :get, remote: true) do %>
+	    <button class="c-admin-edit-icon" aria-label="Edit user email" alt="Edit user email">
+	      <i class="fa fa-pencil" aria-hidden="true"></i>
+	    </button>
+	  <% end %>
+	<% end %>
+      </td>
       <td><nobr><%= u.orcid %></nobr></td>
       <td class="c-admin-hide-border-right" id="user_tenant_<%= u.id %>">
 	<nobr><%= StashEngine::Tenant.find(u.tenant_id)&.short_name %></nobr>

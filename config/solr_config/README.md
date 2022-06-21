@@ -22,7 +22,7 @@ bin/solr create -c geoblacklight
 ```
 # get access to our github files like
 git clone git@github.com:CDL-Dryad/dryad-app.git
-cp dryad-app/config/solr-config/* ~/apps/solr/server/solr/geoblacklight/conf
+cp dryad-app/config/solr_config/* ~/apps/solr/server/solr/geoblacklight/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 
 # not sure this is needed, but those were permissions the solr script made when creating original schema.xml

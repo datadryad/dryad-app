@@ -488,6 +488,14 @@ module StashApi
         end
       end
 
+      describe 'list display is different than single item display' do
+        it "doesn't show changedFields for every item in long list with expensive operation to compare versions" do
+          get '/api/v2/datasets', headers: default_authenticated_headers
+          output = response_body_hash
+          expect(output['_embedded']['stash:datasets'][0]['changedFields']).to be_nil
+        end
+      end
+
       describe 'shows appropriate latest resource metadata under identifier based on user' do
         before(:each) do
           # versions not getting set correctly for these two resources for some reason

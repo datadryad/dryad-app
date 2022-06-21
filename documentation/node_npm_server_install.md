@@ -22,14 +22,15 @@ wget https://nodejs.org/dist/v14.16.1/node-v14.16.1-linux-x64.tar.xz
 ```
 2. Extract Node.
 ```shell
+mkdir ~/local
 cd ~/local
 tar -xf ~/tmp/node-v14.16.1-linux-x64.tar.xz
 ```
 3. Symlink Node and NPM.
 ```shell
-cd bin
-ln -s /apps/dryad/local/node-v14.16.1-linux-x64/bin/node node
-ln -s /apps/dryad/local/node-v14.16.1-linux-x64/bin/npm npm
+cd ~bin
+ln -s ~/local/node-v14.16.1-linux-x64/bin/node node
+ln -s ~/local/node-v14.16.1-linux-x64/bin/npm npm
 ```
 4. Install Yarn, it will tell you where it installs and symlinks
 ```shell
@@ -37,8 +38,14 @@ npm install --global yarn
 ```
 5. Symlink Yarn and yarnpkg.
 ```shell
-cd ~/local/bin
+cd ~/bin
 
-ln -s /apps/dryad/local/node-v14.16.1-linux-x64/bin/yarn yarn
-ln -s /apps/dryad/local/node-v14.16.1-linux-x64/bin/yarnpkg yarnpkg
+ln -s ~/local/node-v14.16.1-linux-x64/bin/yarn yarn
+ln -s ~/local/node-v14.16.1-linux-x64/bin/yarnpkg yarnpkg
+```
+6. Initialize the UI components
+```shell
+cd ~/dryad-app
+npm install
+bin/webpack
 ```
