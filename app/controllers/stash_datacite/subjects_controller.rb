@@ -26,8 +26,10 @@ module StashDatacite
 
     # DELETE /subjects/1
     def delete
-      @subjects = resource.subjects.non_fos
-      resource.subjects.non_fos.delete(@subject)
+      # the following is the correct way to remove the join association between resource and subject
+      # without deleting the other items entirely.  Deleting the subject will leave orphans in the join table.
+      # If you have dependent destroy, it might destroy other associations to the same subject.
+      ResourcesSubjects.where(resource_id: @resource, subject_id: @subject).destroy_all
       respond_to do |format|
         format.js
         format.json { render json: @subject }
@@ -61,7 +63,7 @@ module StashDatacite
     end
 
     def find_or_create_subject(subject)
-      existing = Subject.where('subject LIKE ?', subject).first
+      existing = Subject.where('subject LIKE ?', subject).non_fos.first
       return existing if existing
 
       Subject.create(subject: subject)
