@@ -73,14 +73,13 @@
                         isCurator: current_user&.curator?) %>
 
     <h2 class="o-heading__page-span">Data Description</h2>
-
-    <%= react_component('components/MetadataEntry/Cedar',
-	resourceId: @resource.id,
-	) %>
+    
+    <!--  Cedar with React -->
+    <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title), path: titles_update_path } ) %>
 
     <!-- This is how Cedar would be done without React -->
     <div class="cedar-container">
-      <h3 class="o-heading__level3">Standardized Metadata</h3>  
+      <h3 class="o-heading__level3">Non-React Standardized Metadata</h3>  
       <%# form_with(url: stash_url_helpers.cedar_popup_path(u.id), method: :get, remote: true) do %>
       <button type="button" class="js-uploadmodal__button-show-modal" aria-label="Add Metadata Form" alt="Add Metadata Form">
 	Add Metadata Form
