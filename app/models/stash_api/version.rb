@@ -5,12 +5,13 @@ module StashApi
     include Presenter
 
     attr_reader :resource
-    def initialize(resource_id:)
+    def initialize(resource_id:, item_view: false) # the item_view may present additional information if it's not generating a list
       @resource = StashEngine::Resource.find(resource_id)
+      @item_view = item_view
     end
 
     def metadata
-      m = Metadata.new(resource: @resource)
+      m = Metadata.new(resource: @resource, item_view: @item_view)
       m.value.delete_if { |_k, v| v.blank? && v != false }
     end
 

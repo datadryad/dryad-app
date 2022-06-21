@@ -8,7 +8,7 @@ module StashEngine
     helper SortableTableHelper
 
     before_action :require_superuser
-    before_action :load_user, only: %i[role_popup tenant_popup journals_popup set_role set_tenant user_profile]
+    before_action :load_user, only: %i[email_popup role_popup tenant_popup journals_popup set_role set_tenant set_email user_profile]
     before_action :setup_paging, only: %i[index]
 
     # the admin_users main page showing users and stats
@@ -33,9 +33,11 @@ module StashEngine
           @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
         end
 
-        @users = @users.order(helpers.sortable_table_order)
+        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+        @users = @users.order(ord)
       else
-        @users = User.all.order(helpers.sortable_table_order)
+        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+        @users = User.all.order(ord)
       end
 
       add_institution_filter! # if they chose a facet or are only an admin
@@ -57,6 +59,24 @@ module StashEngine
 
       @user.role = new_role
       @user.save!
+
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    def email_popup
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    # sets the user email
+    def set_email
+      new_email = params[:email]
+      return render(nothing: true, status: :unauthorized) if current_user.role != 'superuser'
+
+      @user.update(email: new_email)
 
       respond_to do |format|
         format.js
