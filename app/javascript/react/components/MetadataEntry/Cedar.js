@@ -29,7 +29,43 @@ function Cedar({resource, path}) {
     const formRef = useRef();
     
     return (
-	<h3 className="o-heading__level3">Standardized Metadata</h3>
+	<div>
+	<h3 className="o-heading__level3">React Standardized Metadata</h3>
+
+	<Formik
+	    initialValues={{ id: resource.id, authenticity_token: (csrf || '') }}
+	    innerRef={formRef}
+	    onSubmit={(values, {setSubmitting}) => {
+		showSavingMsg();
+		axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+		    .then((data) => {
+			if (data.status !== 200) {
+			    console.log('Not a 200 response while saving CEDAR form');
+			}
+			showSavedMsg();
+			setSubmitting(false);
+		    });
+	    }}
+	>	   
+	    {(formik) => (
+		<Form className="c-input">
+		    <label className="c-input__label" htmlFor={`title__${resource.id}`}>Standardized Metadata</label>
+		    <Field
+			name="title"
+			type="text"
+			className="title c-input__text"
+			size="130"
+			id={`title__${resource.id}`}
+			onBlur={() => { // formRef.current.handleSubmit();
+			    formik.handleSubmit();
+			}}
+		    />
+		    <Field name="id" type="hidden" />
+		    <Field name="authenticity_token" type="hidden" />
+		</Form>
+	    )}
+	</Formik>
+	</div>
     );
 }
 
