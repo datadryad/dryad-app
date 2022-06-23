@@ -109,7 +109,7 @@
   Working Group at <a href="mailto:conduct@datadryad.org">conduct@datadryad.org</a>.
 </p>
 
-<h3 class="o-heading__level3"><strong>Dryad Code of Conduct Working Group</strong></h3>
+<h2 class="o-heading__level2">Dryad Code of Conduct Working Group</h2>
 
 <p><em>The composition of this group rotates &amp; will be updated here. Last updated 2020-02-03</em></p>
 
@@ -145,7 +145,7 @@
   </li>
 </ul>
 
-<h3 class="o-heading__level3"><strong>What happens after you file a report?</strong></h3>
+<h2 class="o-heading__level2">What happens after you file a report?</h2>
 
 <p>
   You will receive an email from the Dryad Code of Conduct working group acknowledging receipt. We promise to 
@@ -210,9 +210,9 @@
   vendors, violation of these guidelines may affect continuation or renewal of contract.
 </p>
 
-<h3 class="o-heading__level3">
-  <strong>What if your report concerns a possible violation by a working group member?</strong>
-</h3>
+<h2 class="o-heading__level2">
+  What if your report concerns a possible violation by a working group member?
+</h2>
 
 <p>
   If your report concerns a current member of the Code of Conduct working group, you may not feel comfortable sending 
@@ -225,7 +225,7 @@
   the report concerns from any discussion or decision making.
 </p>
 
-<h3 class="o-heading__level3"><strong>Conflicts of Interest</strong></h3>
+<h2 class="o-heading__level2">Conflicts of Interest</h2>
 
 <p>
   In the event of any conflict of interest a committee member must immediately notify the other members, and recuse 
@@ -234,7 +234,7 @@
   committee chairs, as documented in the reporting guidelines.
 </p>
 
-<h3 class="o-heading__level3"><strong>Reconsideration</strong></h3>
+<h2 class="o-heading__level2">Reconsideration</h2>
 
 <p>
   Any of the parties directly involved or affected can request reconsideration of the committee’s decision. To make 
