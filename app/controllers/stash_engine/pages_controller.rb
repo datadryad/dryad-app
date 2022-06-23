@@ -35,6 +35,8 @@ module StashEngine
 
     def why_use; end
 
+    def code_of_conduct; end
+
     # The faq controller uses the standard app layout, so the default is here.
     # Perhaps specific views would override it in the base application.
     def faq; end
