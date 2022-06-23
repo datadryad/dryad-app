@@ -114,7 +114,7 @@
 <p><em>The composition of this group rotates &amp; will be updated here. Last updated 2020-02-03</em></p>
 
 <ul>
-  <li>Tracy Teal &#8211; tkteal@datadryad.org</li>
+  <li>Jennifer Gibson &#8211; jgibson@datadryad.org</li>
   <li>Jason Williams &#8211; williams@cshl.edu</li>
   <li>Lou Woodley &#8211; louwoodley@cscce.org</li>
 </ul>
