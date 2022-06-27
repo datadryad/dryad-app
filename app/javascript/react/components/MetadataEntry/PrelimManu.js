@@ -154,7 +154,10 @@ export default PrelimManu;
 PrelimManu.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  publication_name: PropTypes.object.isRequired,
-  publication_issn: PropTypes.object.isRequired,
-  msid: PropTypes.object.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
+  msId: PropTypes.string.isRequired,
+  setMsId: PropTypes.func.isRequired,
 };
