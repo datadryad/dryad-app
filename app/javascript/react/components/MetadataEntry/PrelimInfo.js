@@ -14,7 +14,12 @@ function PrelimInfo(
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
+  const [acText, setAcText] = useState(publication_name?.value || '');
+  const [acID, setAcID] = useState(publication_issn?.value || '');
+  const [msId, setMsId] = useState(msid?.value || '');
   const [importType, setImportType] = useState(importInfo);
+  const [relatedIdentifier, setRelatedIdentifier] = related_identifier;
+  console.log('related_identifier', related_identifier);
 
   const optionChange = (choice) => {
     setImportType(choice);
@@ -91,9 +96,12 @@ function PrelimInfo(
               <PrelimManu
                 resourceId={resourceId}
                 identifierId={identifierId}
-                publication_name={publication_name}
-                publication_issn={publication_issn}
-                msid={msid}
+                acText={acText}
+                setAcText={setAcText}
+                acID={acID}
+                setAcID={setAcID}
+                msId={msId}
+                setMsId={setMsId}
               />
             );
           case 'published':
