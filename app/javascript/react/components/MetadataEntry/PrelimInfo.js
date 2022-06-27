@@ -18,7 +18,7 @@ function PrelimInfo(
   const [acID, setAcID] = useState(publication_issn?.value || '');
   const [msId, setMsId] = useState(msid?.value || '');
   const [importType, setImportType] = useState(importInfo);
-  const [relatedIdentifier, setRelatedIdentifier] = related_identifier;
+  const [relatedIdentifier, setRelatedIdentifier] = useState(related_identifier);
   console.log('related_identifier', related_identifier);
 
   const optionChange = (choice) => {
@@ -109,9 +109,12 @@ function PrelimInfo(
               <PrelimArticle
                 resourceId={resourceId}
                 identifierId={identifierId}
-                publication_name={publication_name}
-                publication_issn={publication_issn}
-                related_identifier={related_identifier}
+                acText={acText}
+                setAcText={setAcText}
+                acID={acID}
+                setAcID={setAcID}
+                relatedIdentifier={relatedIdentifier}
+                setRelatedIdentifier={setRelatedIdentifier}
               />
             );
           default:
