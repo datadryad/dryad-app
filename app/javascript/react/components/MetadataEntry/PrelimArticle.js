@@ -159,5 +159,5 @@ PrelimArticle.propTypes = {
   acID: PropTypes.string.isRequired,
   setAcID: PropTypes.func.isRequired,
   relatedIdentifier: PropTypes.string.isRequired,
-  setRelatedIdentifier: PropTypes.func.isRequired
+  setRelatedIdentifier: PropTypes.func.isRequired,
 };
