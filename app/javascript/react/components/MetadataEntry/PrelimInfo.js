@@ -14,10 +14,20 @@ function PrelimInfo(
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
+  let tempVal;
+  if (msid?.value){
+    tempVal = 'manuscript';
+  }else if (related_identifier){
+    tempVal = 'published';
+  }else{
+    tempVal = importInfo;
+  }
+
+
   const [acText, setAcText] = useState(publication_name?.value || '');
   const [acID, setAcID] = useState(publication_issn?.value || '');
   const [msId, setMsId] = useState(msid?.value || '');
-  const [importType, setImportType] = useState(importInfo);
+  const [importType, setImportType] = useState(tempVal);
   const [relatedIdentifier, setRelatedIdentifier] = useState(related_identifier);
 
   const optionChange = (choice) => {
