@@ -19,7 +19,6 @@ function PrelimInfo(
   const [msId, setMsId] = useState(msid?.value || '');
   const [importType, setImportType] = useState(importInfo);
   const [relatedIdentifier, setRelatedIdentifier] = useState(related_identifier);
-  console.log('related_identifier', related_identifier);
 
   const optionChange = (choice) => {
     setImportType(choice);
