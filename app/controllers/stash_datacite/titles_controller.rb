@@ -9,6 +9,7 @@ module StashDatacite
 
     # PATCH/PUT /titles/1
     def update
+      puts 'XXXXXXXXXXXXXX title'
       respond_to do |format|
         if resource.update(title: params[:title])
           format.json { render json: @resource.slice(:id, :title) }
