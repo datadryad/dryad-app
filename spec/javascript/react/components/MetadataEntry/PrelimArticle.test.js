@@ -9,7 +9,8 @@ jest.mock('axios');
 
 describe('PrelimArticle', () => {
 
-  let resourceId, identifierId, publication_name, publication_issn, related_identifier;
+  let resourceId, identifierId, publication_name, publication_issn, related_identifier, acText, setAcText,
+      acID, setAcID, relatedIdentifier, setRelatedIdentifier;
 
   beforeEach(() => {
     resourceId = faker.datatype.number();
@@ -27,6 +28,15 @@ describe('PrelimArticle', () => {
       "value": `${faker.datatype.number({min:1000, max:9999})}-${faker.datatype.number({min:1000, max:9999})}`
     };
     related_identifier = faker.internet.url();
+
+    acText = publication_name.value;
+    setAcText = jest.fn();
+
+    acID = publication_issn.value;
+    setAcID = jest.fn();
+
+    relatedIdentifier = related_identifier;
+    setRelatedIdentifier = jest.fn();
   });
 
 
@@ -34,9 +44,12 @@ describe('PrelimArticle', () => {
     render(<PrelimArticle
         resourceId={resourceId}
         identifierId={identifierId}
-        publication_name={publication_name}
-        publication_issn={publication_issn}
-        related_identifier={related_identifier} />);
+        acText={acText}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        relatedIdentifier={relatedIdentifier}
+        setRelatedIdentifier={setRelatedIdentifier} />);
 
     const labeledElements = screen.getAllByLabelText('Journal Name', { exact: false });
     expect(labeledElements.length).toBe(2);
@@ -56,9 +69,12 @@ describe('PrelimArticle', () => {
     render(<PrelimArticle
         resourceId={resourceId}
         identifierId={identifierId}
-        publication_name={publication_name}
-        publication_issn={publication_issn}
-        related_identifier={related_identifier} />);
+        acText={acText}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        relatedIdentifier={relatedIdentifier}
+        setRelatedIdentifier={setRelatedIdentifier} />);
 
     userEvent.clear(screen.getByLabelText('DOI'));
     userEvent.type(screen.getByLabelText('DOI'), '12345.dryad/fa387gek');
