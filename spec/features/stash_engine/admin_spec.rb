@@ -282,8 +282,9 @@ RSpec.feature 'Admin', type: :feature do
         click_button('Merge')
         expect(page).to have_text('Manage Users')
 
-        # user_2 should be removed
-        expect(StashEngine::User.where(id: user2_id).size).to eq(0)
+        sleep 1 # since it takes some time for async action to reflect in db
+        # user_2 should be removed, modified check because of some weird caching or something
+        expect(StashEngine::User.all.map(&:id)).not_to include(user2_id)
 
         # user should be updated with new values
         user_after = StashEngine::User.find(user_id)

@@ -64,7 +64,11 @@ module StashDatacite
       resource = StashEngine::Resource.find(resource_id)
       resource.identifier.update_search_words!
 
-      return if processing?(resource)
+      return if processing?(resource) # return here if it already has resource_state of processing in any version
+
+      # set current merritt state to processing right away to prevent another submission while something might be
+      # waiting in the queue.  The repo_queue_states are more fine grained for queueing and used in Merritt class.
+      resource.current_state = 'processing'
 
       update_submission_resource_info(resource)
 
