@@ -234,3 +234,17 @@ Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/
 minutes</a> for all of its meetings.
 
 <a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad Board Conflict of Interest Forms</a>
+
+<h2>Past Board Members</h2>
+
+<p>
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of 
+  Directors for at least one term from 2012 to 2021:
+</p>
+
+<p>
+  Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, 
+  Brian Hole, Marcel Holyoak, Brian Lavoie, Jennifer Lin, Paolo Mangiafico, Bill Michener, Allen Moore, Allen Rodrigo,
+  Susanna Assunta Sansone, Eefke Smit, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision 
+  (Dryad’s founding PI and long-serving Board member).
+</p>
