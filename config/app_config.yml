@@ -7,7 +7,6 @@
 defaults: &DEFAULTS
   google_analytics_id: null
   shared_resource_model: StashEngine::Resource
-  repository: Stash::Merritt::Repository
   stash_mount: /stash
   ezid:
     host: ezid.cdlib.org
