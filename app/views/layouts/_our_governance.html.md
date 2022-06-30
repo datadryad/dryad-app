@@ -243,7 +243,7 @@ minutes</a> for all of its meetings.
 </p>
 
 <p>
-  Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Alf Eaton, Martin Fenner, Liz Ferguson Chuck Fox, Simon Hodson, 
+  Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, 
   Brian Hole, Marcel Holyoak, Brian Lavoie, Jennifer Lin, Paolo Mangiafico, Bill Michener, Allen Moore, Allen Rodrigo,
   Susanna Assunta Sansone, Eefke Smit, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision 
   (Dryad’s founding PI and long-serving Board member).
