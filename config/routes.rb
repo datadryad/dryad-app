@@ -243,6 +243,7 @@ Rails.application.routes.draw do
     get 'our_membership', to: 'pages#our_membership'
     get 'join_us', to: 'pages#join_us'
     get 'our_platform', to: 'pages#our_platform'
+    get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'our_staff', to: 'pages#our_staff'
     get 'our_advisors', to: 'pages#our_advisors'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
