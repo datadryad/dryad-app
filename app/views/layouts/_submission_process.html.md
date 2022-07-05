@@ -159,19 +159,18 @@ Foundation.
 <h2 id="publication">Dataset Publication</h2>
 
 <p>
-  Once your submission has been reviewed and approved by our team of curators, you will receive a notification of
-  publication via email and your dataset will be made publicly available. The
-  <a href="/stash/faq#cite">DOI provided to you</a> upon submission will remain unchanged.
+  Once your submission has been reviewed and approved by our team of curators, you will receive a notification of 
+  publication via email and your dataset will be made publicly available. The DOI <a href="/stash/faq#cite">provided 
+  to you</a> upon submission will remain unchanged.
 </p>
 
 <p>
-  If the data publication charge is not covered by a journal, your institution, or if you are not eligible for a fee
-  waiver, <a href="/stash/faq#cost">an invoice</a> will be generated and sent upon publication.
+  If the data publication charge is not covered by a journal, your institution, or if you are not eligible for a 
+  fee waiver, <a href="/stash/faq#cost">an invoice</a> will be generated and sent upon publication.
 </p>
 
 <p>
-  Datasets can be updated via your Dryad dashboard. Please note, any edits made will create a new version of your
-  submission. Only the most recent version of your dataset will be packaged and available for download via the
-  ‘Download Dataset’ button. Versioning applies only to changes made to the data files uploaded, any edits to the
-  metadata will not create a new version.
+  Datasets can be updated via your Dryad dashboard. Please note, any edits made will create a new version of your 
+  submission. Only the most recent version of your dataset will be packaged and available for download via the 
+  ‘Download Dataset’ button.
 </p>
