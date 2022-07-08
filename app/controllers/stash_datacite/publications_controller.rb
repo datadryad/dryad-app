@@ -59,6 +59,10 @@ module StashDatacite
     def save_form_to_internal_data
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
+      if @pub_issn.blank?
+        exact_matches = StashEngine::Journal.where(title: @pub_name)
+        @pub_issn = exact_matches.first.issn if exact_matches.count == 1
+      end
       fix_removable_asterisk
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
