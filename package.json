@@ -96,7 +96,7 @@
     "jest-fail-on-console": "^2.2.3",
     "jquery-ui": "^1.13.1",
     "jshint": "^2.13.4",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "ndb": "^1.1.5",
     "node": "^14.18.3",
     "normalize-scss": "^7.0.1",
