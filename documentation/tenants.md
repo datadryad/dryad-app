@@ -101,6 +101,12 @@ authentication:
 - A strategy of `author_match` allows login by that institution without
   shibboleth validation, but requires an author to be from the same tenant
   (an author ROR institution should match).
+- A strategy of `ip_address` allows validating membership by requiring that
+  the user logs in from their organization network the first time.  The organization
+  supplies the network ranges that are allowed and we put in an array under the
+  key `ranges`.  The format is those accepted by ipaddr.rb which could be in
+  CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
+  (see their docs).  It also supports IPv6 (which we're not currently using).
 
 `default_license` is either cc0 or cc_by right now but might be set to
 other licenses configured at the application-level with some text and
