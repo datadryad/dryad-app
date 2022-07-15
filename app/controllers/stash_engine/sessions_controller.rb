@@ -88,15 +88,15 @@ module StashEngine
     def sso
       tenant = StashEngine::Tenant.find(params[:tenant_id])
       if tenant.present?
-        if tenant&.authentication&.strategy == 'author_match' # requires authors to be from institution later on
+        case tenant&.authentication&.strategy
+        when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
           redirect_to stash_url_helpers.dashboard_path, status: :found
-          return
-        elsif tenant&.authentication&.strategy == 'ip_address' # must log in first time from org's network
-          validate_ip(tenant: tenant)
-          return
+        when 'ip_address'
+          validate_ip(tenant: tenant) # this redirects internally
+        else
+          redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
         end
-        redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
       end
@@ -234,13 +234,13 @@ module StashEngine
     end
 
     def validate_ip(tenant:)
-      tenant&.authentication&.ranges.each do |range|
+      tenant.authentication.ranges.each do |range|
         net = IPAddr.new(range)
-        if net === IPAddr.new(request.remote_ip)
-          current_user.update(tenant_id: tenant.tenant_id)
-          redirect_to stash_url_helpers.dashboard_path, status: :found
-          return
-        end
+        next unless net.include?(IPAddr.new(request.remote_ip))
+
+        current_user.update(tenant_id: tenant.tenant_id)
+        redirect_to stash_url_helpers.dashboard_path, status: :found
+        return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
 
       # else log out and redirect to a page explaining why they can't log in
