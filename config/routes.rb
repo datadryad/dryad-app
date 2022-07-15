@@ -259,6 +259,7 @@ Rails.application.routes.draw do
     get '404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
+    get 'ip_error', to: 'pages#ip_error'
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
