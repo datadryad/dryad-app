@@ -5,6 +5,8 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
+
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
@@ -259,3 +261,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength

@@ -9,6 +9,7 @@ gem 'irb', '~> 1.4.1'
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 5.2.7'
 gem 'react-rails', '~> 2.6.2'
+gem 'sprockets', '~> 3.0' # going to 4 breaks lots of things unless doing manual upgrade of files
 gem 'webpacker', '~> 5.4.3'
 
 # ############################################################
