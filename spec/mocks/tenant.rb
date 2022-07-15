@@ -1,7 +1,6 @@
+# rubocop:disable Metrics/AbcSize
 module Mocks
   module Tenant
-
-    # rubocop:disable Metrics/AbcSize
     def mock_tenant!(covers_dpc: false)
       tenant = double(StashEngine::Tenant)
 
@@ -25,7 +24,6 @@ module Mocks
       setup_submocks(tenant: tenant, auth_params: auth_params, id_params: id_params, repo_params: repo_params,
                      covers_dpc: covers_dpc)
     end
-    # rubocop:enable Metrics/AbcSize
 
     def mock_ip_tenant!(ip_string:, covers_dpc: true)
       tenant = double(StashEngine::Tenant)
@@ -77,5 +75,5 @@ module Mocks
       allow(StashEngine::Tenant).to receive(:find).and_return(tenant)
     end
   end
-
 end
+# rubocop:enable Metrics/AbcSize
