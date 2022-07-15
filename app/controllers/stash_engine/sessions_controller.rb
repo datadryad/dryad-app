@@ -1,4 +1,5 @@
 require_dependency 'stash_engine/application_controller'
+require 'ipaddr'
 
 module StashEngine
   class SessionsController < ApplicationController
@@ -90,6 +91,9 @@ module StashEngine
         if tenant&.authentication&.strategy == 'author_match' # requires authors to be from institution later on
           current_user.update(tenant_id: tenant.tenant_id)
           redirect_to stash_url_helpers.dashboard_path, status: :found
+          return
+        elsif tenant&.authentication&.strategy == 'ip_address' # must log in first time from org's network
+          validate_ip(tenant: tenant)
           return
         end
         redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
@@ -227,6 +231,23 @@ module StashEngine
     def update_identifier_metadata(invitation)
       id_svc = Stash::Doi::IdGen.make_instance(resource: invitation.resource)
       id_svc.update_identifier_metadata!
+    end
+
+    def validate_ip(tenant:)
+      tenant&.authentication&.ranges.each do |range|
+        net = IPAddr.new(range)
+        if net === IPAddr.new(request.remote_ip)
+          current_user.update(tenant_id: tenant.tenant_id)
+          redirect_to stash_url_helpers.dashboard_path, status: :found
+          return
+        end
+      end
+
+      # else log out and redirect to a page explaining why they can't log in
+      logger.error("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
+      reset_session
+      clear_user
+      redirect_to stash_url_helpers.ip_error_path
     end
 
   end
