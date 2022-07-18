@@ -12,6 +12,7 @@ including universities, research institutions and academic libraries. See more a
   <tr>
     <td>
       <ul>
+        <li>Australian Wine Research Institute</li>
         <li>California State University, East Bay</li>
         <li>Chan Zuckerberg Initiative</li>
         <li>Claremont Graduate University</li>
