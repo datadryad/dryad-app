@@ -34,6 +34,7 @@ including universities, research institutions and academic libraries. See more a
         <li>The Ohio State University</li>
         <li>Pitzer College</li>
         <li>Pomona College</li>
+        <li>The Rockefeller University</li>
         <li>Scripps College</li>
       </ul>
     </td>
