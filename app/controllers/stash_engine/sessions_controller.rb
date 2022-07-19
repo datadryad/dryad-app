@@ -4,7 +4,8 @@ require 'ipaddr'
 module StashEngine
   class SessionsController < ApplicationController
 
-    before_action :require_login, only: %i[callback]
+    before_action :bust_cache
+    before_action :require_login, only: %i[callback choose_sso no_partner sso]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
@@ -244,7 +245,7 @@ module StashEngine
       end
 
       # else log out and redirect to a page explaining why they can't log in
-      logger.error("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
+      logger.warn("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
       reset_session
       clear_user
       redirect_to stash_url_helpers.ip_error_path
