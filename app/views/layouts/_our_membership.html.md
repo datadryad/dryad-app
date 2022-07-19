@@ -12,6 +12,7 @@ including universities, research institutions and academic libraries. See more a
   <tr>
     <td>
       <ul>
+        <li>Australian Wine Research Institute</li>
         <li>California State University, East Bay</li>
         <li>Chan Zuckerberg Initiative</li>
         <li>Claremont Graduate University</li>
@@ -33,6 +34,7 @@ including universities, research institutions and academic libraries. See more a
         <li>The Ohio State University</li>
         <li>Pitzer College</li>
         <li>Pomona College</li>
+        <li>The Rockefeller University</li>
         <li>Scripps College</li>
       </ul>
     </td>
