@@ -145,12 +145,9 @@ Selector pattern using above mixin:
  *  `em` units.
  */
 html {
-  font-family: sans-serif;
-  /* 1 */
-  -ms-text-size-adjust: 100%;
-  /* 2 */
-  -webkit-text-size-adjust: 100%;
-  /* 2 */
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /**
@@ -192,10 +189,8 @@ audio,
 canvas,
 progress,
 video {
-  display: inline-block;
-  /* 1 */
-  vertical-align: baseline;
-  /* 2 */
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
 }
 
 /**
@@ -372,12 +367,9 @@ input,
 optgroup,
 select,
 textarea {
-  color: inherit;
-  /* 1 */
-  font: inherit;
-  /* 2 */
-  margin: 0;
-  /* 3 */
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
 }
 
 /**
@@ -411,10 +403,8 @@ button,
 html input[type=button],
 input[type=reset],
 input[type=submit] {
-  -webkit-appearance: button;
-  /* 2 */
-  cursor: pointer;
-  /* 3 */
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
 }
 
 /**
@@ -450,10 +440,8 @@ input {
 input[type=checkbox],
 input[type=radio] {
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  /* 1 */
-  padding: 0;
-  /* 2 */
+          box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -471,11 +459,9 @@ input[type=number]::-webkit-outer-spin-button {
  * 2. Address `box-sizing` set to `border-box` in Safari and Chrome.
  */
 input[type=search] {
-  -webkit-appearance: textfield;
-  /* 1 */
+  -webkit-appearance: textfield; /* 1 */
   -webkit-box-sizing: content-box;
-          box-sizing: content-box;
-  /* 2 */
+          box-sizing: content-box; /* 2 */
 }
 
 /**
@@ -504,10 +490,8 @@ fieldset {
  * 4. Corrects alignment displayed oddly in IE 6/7.
  */
 legend {
-  border: 0;
-  /* 1 */
-  padding: 0;
-  /* 2 */
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -4056,28 +4040,19 @@ datalist {
   color: #3c763d;
 }
 .o-dependency-group__list__item .dialog {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  /* Stay in place */
-  z-index: 1;
-  /* Sit on top */
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
   top: 0;
   left: 0;
-  width: 100%;
-  /* Full width */
-  height: 100%;
-  /* Full height */
-  overflow: auto;
-  /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4);
-  /* Black w/ opacity */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 .o-dependency-group__list__item .dialog-content {
-  width: 80%;
-  /* Could be more or less, depending on screen size */
-  margin: 15% auto;
-  /* 15% from the top and centered */
+  width: 80%; /* Could be more or less, depending on screen size */
+  margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid rgb(78, 80, 80);
   background-color: rgb(235, 235, 235);
@@ -4790,11 +4765,9 @@ html.no-details .o-showhide__summary {
     width: 100%;
     margin: 0 -20px 20px;
   }
-
   .o-table tr {
     border-bottom: 1px solid rgb(157, 159, 162);
   }
-
   .o-table th,
 .o-table td {
     padding: 20px;
@@ -4811,23 +4784,19 @@ html.no-details .o-showhide__summary {
 .o-table tr {
     display: block;
   }
-
   .o-table {
     width: 100%;
   }
-
   .o-table thead tr {
     position: absolute;
     left: -9999px;
   }
-
   .o-table tbody tr {
     padding: 10px 0;
   }
   .o-table tbody tr:not(:first-child) {
     border-top: 1px solid rgb(157, 159, 162);
   }
-
   .o-table td {
     position: relative;
     margin: 0 0 0 110px;
@@ -5387,8 +5356,7 @@ html.no-details .o-showhide__summary {
     display: -ms-flexbox;
     display: flex;
     position: relative;
-    z-index: 1;
-    /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
+    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
@@ -6325,33 +6293,6 @@ html.no-details .o-showhide__summary {
   text-decoration: none;
 }
 
-.c-migrate-banner__button {
-  display: block;
-  -ms-flex-item-align: center;
-      align-self: center;
-  height: 35px;
-  margin-left: 1em;
-  padding: 0 40px;
-  float: right;
-  border: none;
-  border-radius: 15px;
-  background: rgb(0, 85, 129);
-  color: rgb(255, 255, 255);
-  font-size: 1.1em;
-}
-
-.c-migrate-banner__text {
-  display: block;
-  -ms-flex-item-align: center;
-      align-self: center;
-  min-height: 35px;
-  padding: 0 40px;
-  float: left;
-  color: design-dark-blue-color;
-  font-size: 1.1em;
-  line-height: 35px;
-}
-
 .c-orcid {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -6789,7 +6730,6 @@ table.c-table_institutions ul li {
   .c-table-progress td:nth-of-type(1) {
     font-size: 1.1em;
   }
-
   .c-table-progress td:nth-of-type(2) {
     white-space: nowrap;
   }
@@ -6800,14 +6740,12 @@ table.c-table_institutions ul li {
 .c-table-progress td:nth-of-type(4) {
     display: none;
   }
-
   .c-table-progress td:nth-of-type(1),
 .c-table-progress--details td:nth-of-type(1) {
     margin: 0;
     font-size: 1.3em;
     font-weight: normal;
   }
-
   .c-table-progress td:nth-of-type(2),
 .c-table-progress--details td:nth-of-type(2) {
     line-height: 1.8;
@@ -6816,25 +6754,20 @@ table.c-table_institutions ul li {
 .c-table-progress--details td:nth-of-type(2):before {
     content: "Description:";
   }
-
   .c-table-progress td:nth-of-type(3):before,
 .c-table-progress--details td:nth-of-type(3):before {
     content: "Files:";
   }
-
   .c-table-progress td:nth-of-type(4):before,
 .c-table-progress--details td:nth-of-type(4):before {
     content: "Created:";
   }
-
   .c-table-progress td:nth-of-type(5) {
     margin: 0;
   }
-
   .c-table-progress--details td:nth-of-type(5):before {
     content: "Modified:";
   }
-
   .c-table-progress td:nth-of-type(6),
 .c-table-progress--details td:nth-of-type(6) {
     margin: 0;
@@ -6845,7 +6778,6 @@ table.c-table_institutions ul li {
   .c-table-submitted td:nth-of-type(1) {
     font-size: 1.1em;
   }
-
   .c-table-submitted td:nth-of-type(2) {
     white-space: nowrap;
   }
@@ -6855,14 +6787,12 @@ table.c-table_institutions ul li {
 .c-table-submitted td:nth-of-type(3) {
     display: none;
   }
-
   .c-table-submitted td:nth-of-type(1),
 .c-table-submitted--details td:nth-of-type(1) {
     margin: 0;
     font-size: 1.3em;
     font-weight: normal;
   }
-
   .c-table-submitted td:nth-of-type(2),
 .c-table-submitted--details td:nth-of-type(2) {
     line-height: 1.8;
@@ -6871,28 +6801,22 @@ table.c-table_institutions ul li {
 .c-table-submitted--details td:nth-of-type(2):before {
     content: "Description:";
   }
-
   .c-table-submitted td:nth-of-type(3):before,
 .c-table-submitted--details td:nth-of-type(3):before {
     content: "Files:";
   }
-
   .c-table-submitted td:nth-of-type(4) {
     margin: 0;
   }
-
   .c-table-submitted--details td:nth-of-type(4):before {
     content: "Status:";
   }
-
   .c-table-submitted td:nth-of-type(5) {
     margin: 0;
   }
-
   .c-table-submitted--details td:nth-of-type(5):before {
     content: "Modified:";
   }
-
   .c-table-submitted td:nth-of-type(6),
 .c-table-submitted--details td:nth-of-type(6) {
     margin: 0;
@@ -7371,8 +7295,7 @@ th.c-admin-table {
   display: block;
   clear: both;
   -webkit-transform: scale(1, 0.3);
-          transform: scale(1, 0.3);
-  /* W3C */
+          transform: scale(1, 0.3); /* W3C */
 }
 
 .c-why-share__info {
