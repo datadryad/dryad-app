@@ -244,6 +244,7 @@ Rails.application.routes.draw do
     get 'join_us', to: 'pages#join_us'
     get 'our_platform', to: 'pages#our_platform'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
+    get 'ethics', to: 'pages#ethics'
     get 'our_staff', to: 'pages#our_staff'
     get 'our_advisors', to: 'pages#our_advisors'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
