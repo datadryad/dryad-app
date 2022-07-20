@@ -926,8 +926,9 @@ module StashEngine
       target_curator = identifier.most_recent_curator
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
-        # set it to the most experienced current curator (lowest ID number), but not a superuser
-        target_curator = StashEngine::User.where(role: 'curator').first
+        # set it to a random current curator , but not a superuser
+        cur_list = StashEngine::User.where(role: 'curator').to_a
+        target_curator = cur_list[rand(cur_list.length)]
       end
 
       update(current_editor_id: target_curator.id) if target_curator
