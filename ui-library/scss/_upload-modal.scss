@@ -46,3 +46,13 @@
   display: block;
   margin-top: $spacing-md;
 }
+
+.c-modal-content__normal {
+  width: 40rem;
+  float: left;
+}
+
+.c-modal-content__wide {
+  width: 95%;
+  float: left;
+}

@@ -1,0 +1,9 @@
+<%# locals: file, preview %>
+
+<h1>CSV preview of <%= file.upload_file_name %></h1>
+
+<% if preview %>
+  <pre><%= preview.strip -%> ...</pre>
+<% else %>
+  <p>Preview is not available right now.</p>
+<% end %>

@@ -125,6 +125,15 @@ module StashEngine
       end
     end
 
+    def preview_csv
+      @data_file = DataFile.find(params[:file_id])
+      if @data_file&.resource&.may_download?(ui_user: current_user)
+        @preview = @data_file.preview_file
+      else
+        @preview = nil
+      end
+    end
+
     private
 
     def non_ajax_response_for_download
