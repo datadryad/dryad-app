@@ -86,7 +86,7 @@ module StashEngine
       begin
         s3_url = merritt_s3_presigned_url
       rescue HTTP::Error, Stash::Download::MerrittError => e
-        logger.info("Couldn't get presigned for #{inspect}")
+        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
 
       return nil if s3_url.nil?
