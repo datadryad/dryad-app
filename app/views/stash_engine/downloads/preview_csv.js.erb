@@ -1,5 +1,5 @@
 $('#genericModalContent').html("<%= escape_javascript(render partial: 'stash_engine/downloads/preview_csv', locals:
-      { file: @data_file, preview: @preview }) %>");
+      { file: @data_file, preview: (@preview || 'No preview available') }) %>");
 
 // now open a jquery ui modal dialog
 $(function() {
