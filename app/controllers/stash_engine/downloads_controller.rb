@@ -127,11 +127,7 @@ module StashEngine
 
     def preview_csv
       @data_file = DataFile.find(params[:file_id])
-      if @data_file&.resource&.may_download?(ui_user: current_user)
-        @preview = @data_file.preview_file
-      else
-        @preview = nil
-      end
+      @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
     end
 
     private
