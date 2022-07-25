@@ -3,7 +3,7 @@
   <!-- Title -->
   <td class="c-admin-hide-border-right">
     <% if dataset&.qualified_identifier %>
-      <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.qualified_identifier), target: :blank %>
+      <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.qualified_identifier), target: '_blank' %>
     <% else %>
       <%= dataset.title %>
     <% end %>
