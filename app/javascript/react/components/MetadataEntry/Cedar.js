@@ -17,11 +17,15 @@ function Cedar({resource, path}) {
     const formRef = useRef();
     const [showModal, setShowModal] = useState(false);
 
-    setShowModal(true);
+    console.log("Cedar.js, path is ", path);
+
+    const openModal = () => {
+	setShowModal(true);
+    };
     
     return (
 	<div className="cedar-container">
-	    <h3 className="o-heading__level3">React Standardized Metadata</h3>
+	    <h3 className="o-heading__level3">Standardized Metadata</h3>
 	    
 	    <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
 	    
@@ -69,7 +73,7 @@ function Cedar({resource, path}) {
 			    Add Metadata Form
 			</button>
 			<button onClick={openModal}>Open Modal</button>
-			{showModal ? <Modal setShowModal={setShowModal} /> : null}
+			{showModal ? <CedarModal setShowModal={setShowModal} /> : null}
 		    </Form>
 		)}
 	    </Formik>
