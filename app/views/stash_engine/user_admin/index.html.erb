@@ -10,9 +10,14 @@
                 method: 'get', id: 'search_form', local: true ) do %>
     <label for="search-terms">User Search:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
+    &nbsp;&nbsp;
+    <label for="tenant_id">Institution</label>
+    <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]) %>
     <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
-    
-    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
+
+    <%# not sure what the following is really doing since I don't think anything needs rewriting %>
+    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction,
+                     :all_advanced, :tenant_id).each_pair do |k,v| %>
       <%= hidden_field_tag k, v, id: "search_#{k}" %>
     <% end %>
   <% end %>         
