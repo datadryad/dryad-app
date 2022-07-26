@@ -206,6 +206,16 @@ RSpec.feature 'Admin', type: :feature do
         sign_in(@superuser, false)
       end
 
+      it 'allows filtering by institution', js: true do
+        user1 = create(:user, tenant_id: 'dataone')
+        user2 = create(:user, tenant_id: 'ucop')
+        visit stash_url_helpers.user_admin_path
+        select 'DataONE', from: 'tenant_id'
+        click_on 'Search'
+        expect(page).to have_link(user1.name)
+        expect(page).not_to have_link(user2.name)
+      end
+
       it 'allows changing user email as a superuser', js: true do
         user = create(:user)
         visit stash_url_helpers.user_admin_path
