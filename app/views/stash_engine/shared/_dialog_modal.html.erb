@@ -1,12 +1,15 @@
 <dialog id="genericModalDialog" class="modalDialog">
   <div>
+
+    <button id="genericModalClose" class="" style="float: right;" aria-label="close" type="button">
+      <i class="fa fa-window-close fa-lg" aria-hidden="true"></i>
+    </button>
     <!-- to display anything in the dialog, replace content within the genericModalContent (using Javascript) and attach any events
       you need for what you add.  The dialog comes with an event for closing and taking no action for the close button.
 
       Open modal with <item>.showModal(); and close with <item>.close();
       -->
-    <div id="genericModalContent" class="c-modal-content__normal">&nbsp;</div>
-    <button id="genericModalClose" class="c-uploadmodal__button-close-modal" style="float: right;" aria-label="close" type="button"></button>
+    <div id="genericModalContent" class="c-modal-content__normal" style="display: inline;">&nbsp;</div>
   </div>
 </dialog>
 
