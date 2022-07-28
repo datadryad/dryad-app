@@ -3,7 +3,25 @@
 <h1 class="c-modal-h1">CSV preview of <%= file.upload_file_name %></h1>
 
 <% if preview %>
-  <pre><%= preview.strip -%> ...</pre>
+  <pre id='preview_csv'><%= preview.strip -%> ...</pre><br/>
+  <button id='copy_csv' class="o-banner__button">
+    <i class="fa fa-clipboard"></i> Copy preview text to clipboard
+  </button>
+  <span id='copied_csv' style="display: none">&nbsp;&nbsp;<em>Copied</em></span>
 <% else %>
   <p>Preview is not available right now.</p>
 <% end %>
+
+<script>
+  $("#copy_csv").click(function() {
+    var range = document.createRange();
+    range.selectNode(document.getElementById("preview_csv"));
+    window.getSelection().removeAllRanges(); // clear current selection
+    window.getSelection().addRange(range); // to select text
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();// to deselect
+    $('#copied_csv').show().fadeOut(2000);
+  });
+</script>
+
+
