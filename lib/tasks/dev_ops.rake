@@ -228,6 +228,26 @@ namespace :dev_ops do
     new_res.data_files.deleted_from_version.each(&:destroy!)
   end
 
+  desc 'Clean datasets not in repo'
+  task clean_datasets: :environment do
+
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+
+    next if ENV['RAILS_ENV'] == 'production' # should never be run on production
+
+    StashEngine::Identifier.all.each do |ident|
+      resource = ident.resources.submitted_only.by_version_desc.first # get last submitted
+
+      test_file = resource.data_files.present_files.first
+
+      if test_file.nil? ||  
+
+    end
+  end
+
   desc 'Takes a DOI (bare, without doi on front) and destroys it'
   task destroy_dataset: :environment do
     # apparently I have to do this, at least in some cases because arguments to rake are ugly
