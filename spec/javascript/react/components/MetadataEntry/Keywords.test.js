@@ -37,7 +37,7 @@ describe('Keywords', () => {
     render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
 
     subjects.forEach((subj) => {
-      expect(screen.getByText(subj.subject)).toBeInTheDocument();
+      expect(screen.getAllByText(subj.subject).length).toBeGreaterThanOrEqual(1);
     })
   });
 
