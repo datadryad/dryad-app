@@ -27,7 +27,7 @@ export default function OrcidInfo({
           &nbsp;&nbsp;Corresponding Author
         </div>
       )}
-      {(curator && dryadAuthor.orcid_invite_path
+      {(curator && !orcidInfo && dryadAuthor.orcid_invite_path
         ? (
           <div className="c-orcid__div">
             Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
