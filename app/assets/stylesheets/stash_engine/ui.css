@@ -4156,7 +4156,7 @@ datalist {
   background: rgb(72, 145, 175) url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2217.812%22%20height%3D%2218.12%22%20viewBox%3D%220%200%2017.812%2018.12%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23FFF%22%20stroke-miterlimit%3D%2210%22%3E%3Ccircle%20cx%3D%226.823%22%20cy%3D%228.318%22%20r%3D%226.073%22%2F%3E%3Cpath%20d%3D%22M11.393%2012.509l6.074%205.314%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E') top 4px center no-repeat;
 }
 
-.o-heading__level1-getting-started, .modalDialog h1, .o-heading__level1-home, .o-heading__level1 {
+.o-heading__level1-getting-started, .c-modal-h1, .o-heading__level1-home, .o-heading__level1 {
   margin: 0 0 20px;
   color: #cf4817;
   font-size: 2em;
@@ -4169,7 +4169,7 @@ datalist {
 
 .o-heading__level2-why-side, .o-heading__level2-sharing-steps, .o-heading__level2-why-share, .c-uploadwidget--data header h2,
 .c-uploadwidget--software header h2,
-.c-uploadwidget--supplemental header h2, .c-uploadmodal__textarea-url-label, .o-heading__level2-login-with, .modalDialog h2, .o-heading__level2 {
+.c-uploadwidget--supplemental header h2, .c-uploadmodal__textarea-url-label, .o-heading__level2-login-with, .c-modal-h2, .o-heading__level2 {
   margin: 12px 0 20px;
   color: rgb(0, 85, 129);
   font-size: 1.3em;
@@ -4180,7 +4180,7 @@ datalist {
   text-align: center;
 }
 
-.modalDialog h3, .o-heading__level3-related-works, .o-heading__level3-file-title, .o-heading__level3 {
+.c-modal-h3, .o-heading__level3-related-works, .o-heading__level3-file-title, .o-heading__level3 {
   margin: 0 0 20px;
   color: rgb(0, 0, 0);
   font-size: 1.1em;
@@ -4498,7 +4498,12 @@ datalist {
 }
 
 .modalDialog button, .modalDialog input[type=submit] {
-  background-color: #9fc7d8;
+  /* background-color: $design-lighter-blue-color; */
+  background-color: white;
+}
+
+.c-modal-h1 {
+  font-size: 1.5em;
 }
 
 .modalDialog .c-uploadmodal__button-close-modal {
@@ -5252,6 +5257,11 @@ html.no-details .o-showhide__summary {
 }
 .c-file-group__list li {
   margin: 0 0 0.3em;
+}
+.c-file-group__list .c-file-group__preview {
+  margin: 0 0 10px 0;
+  border: none;
+  background: none;
 }
 
 .c-footer {
@@ -7125,6 +7135,16 @@ th.c-admin-table {
   margin-top: 20px;
 }
 
+.c-modal-content__normal {
+  width: 40rem;
+  float: left;
+}
+
+.c-modal-content__wide {
+  width: 95%;
+  float: left;
+}
+
 .c-uploadtable {
   margin-bottom: 30px;
 }
@@ -7957,6 +7977,10 @@ ol li,
 ul li {
   margin-bottom: 1em;
   line-height: 125%;
+}
+
+dialog {
+  border: 1px solid black;
 }
 
 body, body#yes-really {
