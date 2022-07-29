@@ -78,6 +78,31 @@ module StashEngine
       merritt_s3_presigned_url
     end
 
+    # gets the S3 presigned and loads in only the first few kilobytes of the file rather than all of it and returns
+    # the bytes
+    def preview_file
+      # get the presigned URL
+      s3_url = nil
+      begin
+        s3_url = merritt_s3_presigned_url
+      rescue HTTP::Error, Stash::Download::MerrittError => e
+        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+      end
+
+      return nil if s3_url.nil?
+
+      # now try to get actual file by range and return it
+      begin
+        resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => 'bytes=0-2048').get(s3_url)
+        return nil if resp.code > 299
+
+        return resp.to_s
+      rescue HTTP::Error
+        logger.info("Couldn't get S3 request for preview range for #{inspect}")
+      end
+      nil
+    end
+
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar

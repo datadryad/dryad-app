@@ -1,0 +1,8 @@
+$('#genericModalContent').html("<%= escape_javascript(render partial: 'stash_engine/downloads/preview_csv', locals:
+      { file: @data_file, preview: (@preview || 'No preview available') }) %>");
+
+// now open a jquery ui modal dialog
+$(function() {
+  document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__wide');
+  $('#genericModalDialog')[0].showModal();
+});
