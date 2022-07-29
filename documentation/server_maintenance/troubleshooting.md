@@ -181,8 +181,51 @@ embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies 
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31
 ```
 
-Please unpublish dataset (but it will likely be published again later)
-======================================================================
+Setting "Private For Peer Review" (PPR) on datasets published out of turn
+=========================================================================
+```
+select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
+select id, file_view, meta_view from stash_engine_resources where identifier_id=;
+select * from stash_engine_curation_activities where resource_id=;
+update stash_engine_curation_activities set status='submitted' where id=;
+update stash_engine_resources set file_view=false, meta_view=false, solr_indexed=false where identifier_id=;
+update stash_engine_resources set peer_review_end_date='2023-07-25', publication_date=NULL where id=;
+update stash_engine_identifiers set pub_state='unpublished' where id=;
+INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `keywords`, `created_at`, `updated_at`, `resource_id`)
+  VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, '2022-07-27', '2022-07-27', 
+  <resource-id>);
+
+select * from stash_engine_zenodo_copies where resource_id=;
+```
+
+Now run a command like the one one below if it has been published to Zenodo.  It will
+re-open the published record, set embargo and publish it again with the
+embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies table.
+```
+# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25
+```
+
+Remove from our SOLR search:
+```
+bundle exec rails c -e production # console for production environment
+solr = RSolr.connect url: Blacklight.connection_config[:url]
+solr.delete_by_query("uuid:\"doi:<doi>\"")  # replace the <doi> in that string
+solr.commit
+exit
+```
+
+What to do at datacite?
+- doi.datacite.org, login and search for doi under dois tab
+- Click `update doi (form)`
+- You cannot change this back to a draft now because it was published
+- Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
+- Click `Update DOI`
+- (if it's EZID, you may have to do this a different way, but most are datacite dois)
+
+
+Please unpublish dataset (but it will likely be published again later at some indefinite time)
+==============================================================================================
 
 This isn't the same as removing, but involves many systems because publication triggers many events
 with external systems.  It has some similarities to un-embargoing, or deleting but we need to remove metadata where we can
@@ -194,7 +237,7 @@ select id,identifier,pub_state from stash_engine_identifiers where identifier li
 select id, file_view, meta_view from stash_engine_resources where identifier_id=;
 select * from stash_engine_curation_activities where resource_id=;
 update stash_engine_curation_activities set status='submitted' where id=;
-update stash_engine_resources set file_view=false, meta_view=false where identifier_id=;
+update stash_engine_resources set file_view=false, meta_view=false, solr_indexed=false where identifier_id=;
 update stash_engine_resources set publication_date=NULL where id=;
 update stash_engine_identifiers set pub_state='unpublished' where id=;
 select deposition_id from stash_engine_zenodo_copies WHERE resource_id=;
