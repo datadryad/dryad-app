@@ -228,6 +228,8 @@ namespace :dev_ops do
     new_res.data_files.deleted_from_version.each(&:destroy!)
   end
 
+  # We have a lot of junk identifiers without files that actually work since metadata was imported for testing without
+  # the files.  This should clean up stuff where a file doesn't load from Merritt.
   desc 'Clean datasets not in repo'
   task clean_datasets: :environment do
 
@@ -240,11 +242,25 @@ namespace :dev_ops do
 
     StashEngine::Identifier.all.each do |ident|
       resource = ident.resources.submitted_only.by_version_desc.first # get last submitted
+      next unless resource.present?
 
       test_file = resource.data_files.present_files.first
 
-      if test_file.nil? ||  
+      # the preview_file will attempt a download of the first 2k of the file from Merritt and returns nil if not able
+      if test_file.nil? || test_file.preview_file.nil?
+        puts "Removing identifier #{ident}"
+        # delete this dataset with no useful files
+        puts '  Deleting from SOLR'
+        solr = RSolr.connect url: Blacklight.connection_config[:url]
+        solr.delete_by_query("uuid:\"#{ident.to_s}\"")
+        solr.commit
 
+        puts '  Removing from the database'
+        ident.destroy!
+      else
+        puts "Identifer #{ident} seems ok"
+      end
+      sleep 0.5
     end
   end
 
