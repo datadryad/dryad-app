@@ -252,7 +252,7 @@ namespace :dev_ops do
         # delete this dataset with no useful files
         puts '  Deleting from SOLR'
         solr = RSolr.connect url: Blacklight.connection_config[:url]
-        solr.delete_by_query("uuid:\"#{ident.to_s}\"")
+        solr.delete_by_query("uuid:\"#{ident}\"")
         solr.commit
 
         puts '  Removing from the database'
