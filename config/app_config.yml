@@ -257,7 +257,7 @@ production:
   google_analytics_id: UA-145629338-1
   shib_sp_host: datadryad.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
-  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
+  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, Maria.Praetzellis@ucop.edu]
   zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
