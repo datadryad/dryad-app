@@ -3,7 +3,8 @@
 <h1 class="c-modal-h1">CSV preview of <%= file.upload_file_name %></h1>
 
 <% if preview %>
-  <pre id='preview_csv'><%= preview.strip -%> ...</pre><br/>
+  <pre id='preview_csv'><%= preview.strip %>
+...</pre><br/>
   <button id='copy_csv' class="o-banner__button">
     <i class="fa fa-clipboard"></i> Copy preview text to clipboard
   </button>
