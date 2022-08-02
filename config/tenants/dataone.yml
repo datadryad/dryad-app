@@ -42,7 +42,7 @@ demo:
 
 production:
   <<: *default
-  manager_email: ["Daniella.Lowenberg@ucop.edu"]
+  manager_email: [""]
   repository:
     domain: https://merritt.cdlib.org
     endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/dataone_dash"
@@ -54,7 +54,7 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: ["Daniella.Lowenberg@ucop.edu"]
+  campus_contacts: [""]
 
 test:
   <<: *default
