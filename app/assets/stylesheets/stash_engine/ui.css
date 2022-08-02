@@ -4498,8 +4498,9 @@ datalist {
 }
 
 .modalDialog button, .modalDialog input[type=submit] {
-  /* background-color: $design-lighter-blue-color; */
-  background-color: white;
+  border: 1px solid rgb(157, 159, 162);
+  border-radius: 0;
+  background-color: rgb(255, 255, 255);
 }
 
 .c-modal-h1 {

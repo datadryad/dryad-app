@@ -7,8 +7,9 @@
 
 .modalDialog button, .modalDialog input[type=submit], {
   @extend %o-button__plain-text;
-  /* background-color: $design-lighter-blue-color; */
-  background-color: white;
+  border: 1px solid $design-light-gray-color;
+  border-radius: 0;
+  background-color: $design-white-color;
 }
 
 .c-modal-h1 {
