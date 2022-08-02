@@ -10,7 +10,7 @@ module Stash
 
       def initialize(solr_url:)
         # rsolr gives lots of other config options, but this is probably all we need for now
-        @solr = RSolr.connect(url: solr_url, retry_503: 3, retry_after_limit: 1, read_timeout: 20, open_timeout: 20)
+        @solr = RSolr.connect(url: solr_url, retry_503: 3, retry_after_limit: 1, timeout: 20)
       end
 
       def index_document(solr_hash:)
