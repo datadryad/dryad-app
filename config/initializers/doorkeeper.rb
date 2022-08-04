@@ -5,9 +5,12 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    current_user || redirect_to(stash_url_helpers.choose_login_path)
-    # the above works for an already logged in user and creates a key in the oauth_access_grants table w/
-    # resource_owner_id = the user id
+    if current_user.present? # && current_user.tenant_id.present? # both required for good info about user
+      current_user
+    else
+      session[:target_page] = request.original_url # set this to be redirected back to after full login
+      redirect_to(stash_url_helpers.choose_login_path)
+    end
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
