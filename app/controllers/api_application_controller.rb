@@ -68,6 +68,7 @@ class ApiApplicationController < ::StashEngine::ApplicationController
     @user = nil
     # the user we're operating for varies depending on the grant type.
     return unless doorkeeper_token
+
     @user = if doorkeeper_token.resource_owner_id.present?
               # Authorization Code Grant type
               StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
