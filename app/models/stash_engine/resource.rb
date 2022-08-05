@@ -920,9 +920,6 @@ module StashEngine
     end
 
     def auto_assign_curator(target_status:)
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                  note: 'System auto-assigned curator')
-
       target_curator = identifier.most_recent_curator
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
@@ -931,7 +928,11 @@ module StashEngine
         target_curator = cur_list[rand(cur_list.length)]
       end
 
-      update(current_editor_id: target_curator.id) if target_curator
+      return unless target_curator
+
+      update(current_editor_id: target_curator.id)
+      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
+                                                                  note: "System auto-assigned curator #{target_curator&.name}")
     end
   end
 end
