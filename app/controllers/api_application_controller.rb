@@ -70,8 +70,14 @@ class ApiApplicationController < ::StashEngine::ApplicationController
     return unless doorkeeper_token
 
     @user = if doorkeeper_token.resource_owner_id.present?
-              # Authorization Code Grant type
-              StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
+              # Authorization Code Grant
+              user = StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
+              # set user role to 'user' for this request (without saving to db) since people doing proxy edits for a
+              # user's data don't get special curator/admin/superuser permissions
+              if user.present?
+                user.role = 'user'
+                user
+              end
             else
               # Client Credentials Grant type
               doorkeeper_token.application.owner
@@ -110,8 +116,10 @@ class ApiApplicationController < ::StashEngine::ApplicationController
   end
 
   def require_admin
-    return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
-              @user.journals_as_admin.present?
+    # if there is a doorkeeper resource_owner_id, someone else is doing operations to the user's datasets and they
+    # shouldn't have advanced user permissions
+    return if (%w[superuser curator admin tenant_curator].include?(@user.role) ||
+              @user.journals_as_admin.present?) && doorkeeper_token.resource_owner_id.blank?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
