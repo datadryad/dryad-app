@@ -247,10 +247,9 @@ To get RDS licenses to work when something went wrong:
 - On a license server, install RDS licenses
 - Configure the server to use the licenses
   - (running on a secondary server doesn't seem to work well)
-Go to Run and type gpedit.msc to open the Group Policy Editor.
-Navigate to Computer Configuration -> Administrative Templates -> Windows Components -> Remote Desktop Services -> Remote Desktop Session Host -> Licensing.
+- Go to Run and type gpedit.msc to open the Group Policy Editor.
+- Navigate to Computer Configuration -> Administrative Templates -> Windows Components -> Remote Desktop Services -> Remote Desktop Session Host -> Licensing.
 - Setup the machine people login to use the license server
 - Ensure proper ports are open
 - Must test to ensure its working in the RD Licensing Diagnoser
   - open Server Manager, and select Tools > Remote Desktop Services > RD Licensing Diagnoser.
-- enable 
