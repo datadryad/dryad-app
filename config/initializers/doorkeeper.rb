@@ -72,7 +72,8 @@ Doorkeeper.configure do
   default_scopes :all
   # optional_scopes :write, :update
 
-  enforce_configured_scopes
+  # I'm afraid enabling this may break things since it doesn't seem like most applications are requesting any scopes
+  # enforce_configured_scopes
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
