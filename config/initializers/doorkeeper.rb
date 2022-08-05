@@ -69,8 +69,8 @@ Doorkeeper.configure do
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  default_scopes :read
-  optional_scopes :write
+  default_scopes :all
+  # optional_scopes :write, :update
 
   enforce_configured_scopes
 
