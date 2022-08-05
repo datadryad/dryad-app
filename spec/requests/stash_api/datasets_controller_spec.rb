@@ -669,6 +669,17 @@ module StashApi
         expect(hsh['editLink']).to include(@identifier.edit_code)
       end
 
+      it "doesn't show the private record for superusers when using Authorzation Code Grant (3rd party user proxy)" do
+        # set access_token to proxy for user
+        @doorkeeper_application.access_tokens.first.update(resource_owner_id: @doorkeeper_application.owner_id)
+        # reset to different grant type where it's not owned by api user
+        @doorkeeper_application.update(owner_id: nil, owner_type: nil)
+        get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
+        hsh = response_body_hash
+        expect(hsh['versionNumber']).to eq(1) #only shows published one, not later one that isn't
+        expect(hsh['title']).to eq(@resources[0].title)
+      end
+
       it 'shows the private record for the owner' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
