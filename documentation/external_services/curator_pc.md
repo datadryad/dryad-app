@@ -1,16 +1,38 @@
 
-Curator PC (aka Curator Virtual Environment)
-=============================================
+Curator Virtual Environment
+===================================
 
-AWS allows running servers that you can connect with a virtual desktop. We are
-using this feature for the curator PC.
+Rationale:
+- Dryad curators need a standard baseline of computing capabilities to perform
+  their jobs. This includes both hardware and software.
+- Dryad curators are scattered geographically. It is impractical for each
+  curator to receive a Dryad-issued computer and for Dryad to maintain that
+  computer. It is much easier for us to provide a centralized platform that
+  curators can use to supplement their personal computing equipment.
+- Installing and managing a large variety of software can be a burden. It is
+  better for this to be performed once on a central system than for each curator
+  to manage this on their indiviual machines. 
 
-How the machine runs:
-- We use EC2. There is also an option via Lightsail, but the Lightsail servers
-  are far less configurable, and server specs cannot be changed without
-  completely rebuilding the server.
-- To minimize lag, we run on Amazon's datacenter in Ohio.
-  
+Implementation:
+- There is a machine in the Amazon AWS EC2 system that runs Windows.
+- The machine is physically located in Ohio, which is relatively centered in the
+  country. This minimizes lag as users work with the graphical environment.
+- This machine allows users to login with a remote desktop.
+- The machine is equipped with a large amount of storage space and a collection
+  of software packages that are useful for curation.
+- The directory `C:\DryadData` is accessible to all users. It is a place where
+  curators can download data files and discus them with each other.
+- `C:\DryadData\SoftwareShortcuts` contains links to the installed software packages.
+
+
+Setup
+=========
+
+Initializing the machine
+----------------------------
+
+Normally, a machine should be initialized from an existing snapshot. In EC2,
+select the snapshot and choose "create instance".
 
 To properly configure a Windows Server
 - Login with the password you obtain from EC2
@@ -18,10 +40,8 @@ To properly configure a Windows Server
   - Actions, Security, Get Windows Password.
 - Reset the password for the Administrator, and save the new password
   - net user Administrator "new_password"
-- Older versions of Windows Server (pre-2022) default to having
-  only IE installed. IE is not compatible with modern websites, and should be
-  removed
-  
+
+
 Creating users
 ---------------
 
@@ -46,6 +66,7 @@ To connect to Windows Server
 Downloads
 - File downloads will continue while your local machine sleeps
 - Users must update their browser settings so files download into the Data drive
+
 
 Accounts
 --------------------
@@ -202,3 +223,33 @@ Download the [Ruby+Devkit 2.6.8-1](https://rubyinstaller.org/downloads/)
 it's needed for compiling some ruby gems that might have native-ish code.
 
 The "bundle install" command works from the script\file-download subdirectory.
+
+
+System Management
+==================
+
+What is taking up space on the machine?
+- Run the app WinDirStat
+- You can delete files directly from this app, so it's great for cleaning up junk
+
+To reset the Administrator password if it is lost:
+- Use the AWS Systems Manager
+  - Don't try the convoluted setup documents, just use the "Quick Setup" from
+    the main menus and select the machine you want.
+- Once SSM has been initialized on the machine, you should be able to obtain
+  console access using the EC2 "Connect" feature.
+- When you are on the machine use "net user Administrator Password@123" to set
+  the password
+
+To get RDS licenses to work when something went wrong:
+- see
+  https://techgenix.com/remote-desktop-licensing-mode-is-not-configured-error/
+- On a license server, install RDS licenses
+- Configure the server to use the licenses
+  - (running on a secondary server doesn't seem to work well)
+- Go to Run and type gpedit.msc to open the Group Policy Editor.
+- Navigate to Computer Configuration -> Administrative Templates -> Windows Components -> Remote Desktop Services -> Remote Desktop Session Host -> Licensing.
+- Setup the machine people login to use the license server
+- Ensure proper ports are open
+- Must test to ensure its working in the RD Licensing Diagnoser
+  - open Server Manager, and select Tools > Remote Desktop Services > RD Licensing Diagnoser.
