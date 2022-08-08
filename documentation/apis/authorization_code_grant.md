@@ -23,12 +23,15 @@ Dryad authenticates the user and authorizes access by OAuth2.
 
 ## Example setup for a sample external application
 
-This application is in Ruby and Rails, but the concepts will be very similar in many frameworks and
-languages.  
+If you do not want to enter all this manually, you may [download the code](https://github.com/CDL-Dryad/api_test)
+from our git repository (and fill in items such as your API keys in the code).
 
-1. Add `http.rb` to the Gemfile and run `bundle install` to make the gem (library) available.
-2. Create a controller called `test_controller.rb` to the appropriate place.
-3. Add these two routes to the `routes.rb` so that we can use two paths with that controller.
+This is an application in Ruby and Rails, but the concepts will be very similar in many frameworks and
+languages.  
+1. Create an application in Rails.
+2. Add `http.rb` to the Gemfile and run `bundle install` to make the gem (library) available.
+3. Create a controller called `test_controller.rb` to the appropriate place.
+4. Add these two routes to the `routes.rb` so that we can use two paths with that controller.
 ```ruby
   get 'test', to: 'test#index'
   match '/oauth/callback', to: 'test#callback', via: [:get, :post]
