@@ -5,7 +5,7 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    if current_user.present? # && current_user.tenant_id.present? # both required for good info about user
+    if current_user.present? && current_user.tenant_id.present? # both required for good info about user
       current_user
     else
       session[:target_page] = request.original_url # set this to be redirected back to after full login
