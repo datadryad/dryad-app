@@ -149,11 +149,10 @@
     how the data were generated (i.e. equipment/tools/reagents used, or procedures followed).
   </li>
   <li>
-    Usage Notes: Detailed and defined variables and allowable values or other information
-    which may help others determine how the data may be properly re-used, replicated, or re-analyzed.
-    If your data contains empty rows, insert "n/a" or “null” where applicable and provide a brief
-    explanation in the Usage Notes section so that any missing or hidden values are explained for
-    future users of the data.
+    Usage Notes: Guidance on the programs and/or software that are required to open the data files included with your 
+    submission will be helpful to include for future users of your dataset. This information will ensure ease of 
+    accessibility, especially for the less common file types. If proprietary software is required, include open-source 
+    alternatives.
   </li>
   <li>
     Related Works: Use this field to indicate other resources that are associated with the data.

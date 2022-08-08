@@ -7,7 +7,6 @@
 defaults: &DEFAULTS
   google_analytics_id: null
   shared_resource_model: StashEngine::Resource
-  repository: Stash::Merritt::Repository
   stash_mount: /stash
   ezid:
     host: ezid.cdlib.org
@@ -258,7 +257,7 @@ production:
   google_analytics_id: UA-145629338-1
   shib_sp_host: datadryad.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org]
-  submission_error_email: [sfisher@ucop.edu, Daniella.Lowenberg@ucop.edu, ryan@datadryad.org]
+  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, Maria.Praetzellis@ucop.edu]
   zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
@@ -272,7 +271,7 @@ production:
     member: true
     sandbox: false
     api: https://api.orcid.org
-  submission_bc_emails: ["daniella.lowenberg@ucop.edu"]
+  submission_bc_emails: [""]
   send_journal_published_notices: true
   old_dryad_access_token: <%= Rails.application.credentials[Rails.env.to_sym][:old_dryad_access_token] %>
   zenodo:

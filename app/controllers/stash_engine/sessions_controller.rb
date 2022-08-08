@@ -1,9 +1,11 @@
 require_dependency 'stash_engine/application_controller'
+require 'ipaddr'
 
 module StashEngine
   class SessionsController < ApplicationController
 
-    before_action :require_login, only: %i[callback]
+    before_action :bust_cache
+    before_action :require_login, only: %i[callback choose_sso no_partner sso]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
@@ -87,12 +89,15 @@ module StashEngine
     def sso
       tenant = StashEngine::Tenant.find(params[:tenant_id])
       if tenant.present?
-        if tenant&.authentication&.strategy == 'author_match' # requires authors to be from institution later on
+        case tenant&.authentication&.strategy
+        when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
           redirect_to stash_url_helpers.dashboard_path, status: :found
-          return
+        when 'ip_address'
+          validate_ip(tenant: tenant) # this redirects internally
+        else
+          redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
         end
-        redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
       end
@@ -227,6 +232,23 @@ module StashEngine
     def update_identifier_metadata(invitation)
       id_svc = Stash::Doi::IdGen.make_instance(resource: invitation.resource)
       id_svc.update_identifier_metadata!
+    end
+
+    def validate_ip(tenant:)
+      tenant.authentication.ranges.each do |range|
+        net = IPAddr.new(range)
+        next unless net.include?(IPAddr.new(request.remote_ip))
+
+        current_user.update(tenant_id: tenant.tenant_id)
+        redirect_to stash_url_helpers.dashboard_path, status: :found
+        return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
+      end
+
+      # else log out and redirect to a page explaining why they can't log in
+      logger.warn("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
+      reset_session
+      clear_user
+      redirect_to stash_url_helpers.ip_error_path
     end
 
   end

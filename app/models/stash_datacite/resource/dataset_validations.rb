@@ -155,9 +155,16 @@ module StashDatacite
           @resource.identifier.manuscript_number.blank? &&
           @resource.identifier.publication_article_doi.blank?
 
-        ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
-                      page: metadata_page(@resource),
-                      ids: %w[msid primary_article_doi])
+        if @resource.related_identifiers.where(work_type: 'primary_article').count.positive? # has primary, but not doi
+          ErrorItem.new(message: "Fill in {a correctly formatted DOI} for your article from #{@resource.identifier
+                                                                                          .publication_name}",
+                        page: metadata_page(@resource),
+                        ids: %w[primary_article_doi])
+        else
+          ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
+                        page: metadata_page(@resource),
+                        ids: %w[msid primary_article_doi])
+        end
       end
 
       def s3_error_uploads

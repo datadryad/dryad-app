@@ -1,6 +1,5 @@
 defaults: &DEFAULTS
   shared_resource_model: StashEngine::Resource
-  repository: Stash::Merritt::Repository
   stash_mount: /stash
   max_review_days: 180
   ezid:

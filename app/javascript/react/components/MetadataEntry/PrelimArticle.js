@@ -8,15 +8,16 @@ import PrelimAutocomplete from './PrelimAutocomplete';
 function PrelimArticle({
   resourceId,
   identifierId,
-  publication_name,
-  publication_issn,
-  related_identifier,
+  acText,
+  setAcText,
+  acID,
+  setAcID,
+  relatedIdentifier,
+  setRelatedIdentifier,
 }) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState(publication_name.value);
-  const [acID, setAcID] = useState(publication_issn.value);
   const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
@@ -36,6 +37,8 @@ function PrelimArticle({
       primary_article_doi: values.primary_article_doi,
       do_import: values.isImport,
     };
+
+    setRelatedIdentifier(values.primary_article_doi);
 
     // submit by json
     return axios.patch(
@@ -69,7 +72,7 @@ function PrelimArticle({
     <Formik
       initialValues={
             {
-              primary_article_doi: related_identifier,
+              primary_article_doi: relatedIdentifier,
               isImport: false,
             }
           }
@@ -151,7 +154,10 @@ export default PrelimArticle;
 PrelimArticle.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  publication_name: PropTypes.object.isRequired,
-  publication_issn: PropTypes.object.isRequired,
-  related_identifier: PropTypes.string.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
+  relatedIdentifier: PropTypes.string.isRequired,
+  setRelatedIdentifier: PropTypes.func.isRequired,
 };

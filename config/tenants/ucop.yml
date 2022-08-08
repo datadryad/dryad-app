@@ -65,4 +65,4 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
     id_scheme: doi
     owner: null
-  campus_contacts: ["daniella.lowenberg@ucop.edu"]
+  campus_contacts: [""]

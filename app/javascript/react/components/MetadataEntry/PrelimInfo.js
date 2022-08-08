@@ -14,7 +14,20 @@ function PrelimInfo(
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const [importType, setImportType] = useState(importInfo);
+  let tempVal;
+  if (msid?.value) {
+    tempVal = 'manuscript';
+  } else if (related_identifier) {
+    tempVal = 'published';
+  } else {
+    tempVal = importInfo;
+  }
+
+  const [acText, setAcText] = useState(publication_name?.value || '');
+  const [acID, setAcID] = useState(publication_issn?.value || '');
+  const [msId, setMsId] = useState(msid?.value || '');
+  const [importType, setImportType] = useState(tempVal);
+  const [relatedIdentifier, setRelatedIdentifier] = useState(related_identifier);
 
   const optionChange = (choice) => {
     setImportType(choice);
@@ -91,9 +104,12 @@ function PrelimInfo(
               <PrelimManu
                 resourceId={resourceId}
                 identifierId={identifierId}
-                publication_name={publication_name}
-                publication_issn={publication_issn}
-                msid={msid}
+                acText={acText}
+                setAcText={setAcText}
+                acID={acID}
+                setAcID={setAcID}
+                msId={msId}
+                setMsId={setMsId}
               />
             );
           case 'published':
@@ -101,9 +117,12 @@ function PrelimInfo(
               <PrelimArticle
                 resourceId={resourceId}
                 identifierId={identifierId}
-                publication_name={publication_name}
-                publication_issn={publication_issn}
-                related_identifier={related_identifier}
+                acText={acText}
+                setAcText={setAcText}
+                acID={acID}
+                setAcID={setAcID}
+                relatedIdentifier={relatedIdentifier}
+                setRelatedIdentifier={setRelatedIdentifier}
               />
             );
           default:

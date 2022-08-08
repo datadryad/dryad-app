@@ -15,6 +15,7 @@ module StashEngine
     def index
       setup_stats
       setup_superuser_facets
+      setup_tenants
 
       # Default to recently-created users
       if params[:sort].blank? && params[:q].blank?
@@ -22,23 +23,24 @@ module StashEngine
         params[:direction] = 'desc'
       end
 
+      @users = User.all
+
+      @users = @users.where('tenant_id = ?', params[:tenant_id]) if params[:tenant_id].present?
+
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @users = User.where('first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?',
-                            "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
+        @users = @users.where('first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?',
+                              "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
         if q.include?(' ')
           # add any matches for "firstname lastname"
           splitname = q.split
           @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
         end
-
-        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
-        @users = @users.order(ord)
-      else
-        ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
-        @users = User.all.order(ord)
       end
+
+      ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+      @users = @users.order(ord)
 
       add_institution_filter! # if they chose a facet or are only an admin
 
@@ -183,6 +185,14 @@ module StashEngine
 
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)
+    end
+
+    def setup_tenants
+      @tenants = [OpenStruct.new(id: '', name: '* Select Institution *')]
+      @tenants << StashEngine::Tenant.all.map do |t|
+        OpenStruct.new(id: t.tenant_id, name: t.short_name)
+      end
+      @tenants.flatten!
     end
 
     def add_institution_filter!

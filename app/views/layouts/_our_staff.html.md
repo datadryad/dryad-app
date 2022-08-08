@@ -36,22 +36,6 @@
 <h2 id="dev">Product Development Team</h2>
 
 <div class="bio">
-  <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
-  <p><strong>Daniella Lowenberg</strong><br/>
-  Product Manager<br/>
-  Daniella is a Senior Product Manager at the University of California Curation Center (UC3)
-  at the California Digital Library (CDL) and focuses on data publishing and data metrics. As part of the
-  <a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/"
-  target="_blank">CDL-Dryad partnership</a>, she also product manages the Dryad publishing platform.
-  Daniella has a background in Microbiology.
-  After leaving the lab, she was a Publications Manager at PLOS ONE where she implemented and oversaw the PLOS Data
-  Policy. Daniella has been at CDL since 2017 where, in addition to being the Product Manager for Dryad,
-  she also is the Principal Investigator for the Sloan Foundation funded Make Data Count initiative, and co-chair
-  of the FORCE11 Research Data Publishing Ethics working group.
-  </p>
-  </div>
-
-<div class="bio">
   <img src="/images/rscherle.jpg" alt="Ryan Scherle" title="Ryan Scherle">
   <p><strong>Ryan Scherle</strong><br/>
   Software Developer<br/>
@@ -116,6 +100,17 @@
   Riverside, and has a background in medicine, research, and biotechnology. He
   has aspirations to go into Genetic Engineering in the future. For fun Joseph
   loves working out, going to the beach, and keeping up with the latest fashion trends.
+  </p>
+</div>
+
+<div class="bio">
+    <img src="/images/bryan.jpg" alt="Bryan Gee" title="Bryan Gee">
+  <p><strong>Bryan Gee</strong><br/>
+  Data Curator<br/>
+  Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
+  of Toronto. His academic background is in vertebrate paleontology, with research interests in the early evolution 
+  of amphibians. In his free time, Bryan enjoys hiking and camping with his dog, playing Pokemon Go, and watching 
+  sports.
   </p>
 </div>
 

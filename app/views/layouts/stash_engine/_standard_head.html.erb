@@ -11,11 +11,6 @@
 
 <%= render 'layouts/stash_engine/google_analytics' %>
 
-<% if Rails.env == 'production' %>
-  <!-- for experimental tracking of Counter Code of Practice stats on production -->
-  <script async defer data-domain="datadryad.org" src="https://plausible.io/js/plausible.js"></script>
-<% end %>
-
 <%= csrf_meta_tags %>
 
 <%= favicon_link_tag 'favicon.ico' %>

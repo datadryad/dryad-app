@@ -9,7 +9,8 @@ jest.mock('axios');
 
 describe('PrelimManu', () => {
 
-  let resourceId, identifierId, publication_name, publication_issn, msid;
+  let resourceId, identifierId, publication_name, publication_issn, msid, acText, setAcText,
+      acID, setAcID, msId, setMsId;
 
   beforeEach(() => {
     resourceId = faker.datatype.number();
@@ -32,15 +33,27 @@ describe('PrelimManu', () => {
       "data_type": "manuscriptNumber",
       "value": `CROM-${faker.datatype.number({min:1000, max:9999})}-${faker.datatype.number({min:1000, max:9999})}`
     }
+
+    acText = publication_name.value;
+    setAcText = jest.fn();
+
+    acID = publication_issn.value;
+    setAcID = jest.fn();
+
+    msId = msid.value;
+    setMsId = jest.fn();
   });
 
   it("renders the basic article and manuscript id form", () => {
     render(<PrelimManu
         resourceId={resourceId}
         identifierId={identifierId}
-        publication_name={publication_name}
-        publication_issn={publication_issn}
-        msid={msid} />);
+        acText={acText}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        msId={msId}
+        setMsId={setMsId} />);
 
     const labeledElements = screen.getAllByLabelText('Journal Name', { exact: false });
     expect(labeledElements.length).toBe(2);
@@ -60,9 +73,12 @@ describe('PrelimManu', () => {
     render(<PrelimManu
         resourceId={resourceId}
         identifierId={identifierId}
-        publication_name={publication_name}
-        publication_issn={publication_issn}
-        msid={msid} />);
+        acText={acText}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        msId={msId}
+        setMsId={setMsId} />);
 
     userEvent.clear(screen.getByLabelText('Manuscript Number'));
     userEvent.type(screen.getByLabelText('Manuscript Number'), 'GUD-MS-387-555');
