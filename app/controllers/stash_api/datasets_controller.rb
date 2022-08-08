@@ -475,8 +475,13 @@ module StashApi
       note = 'status updated via API call'
 
       # DON'T go backwards in workflow,
-      # that is, don't change a status other than submitted or peer_review
+      # don't change a status other than submitted or peer_review
       unless %w[submitted peer_review].include?(@resource.current_curation_status)
+        note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
+        new_status = @resource.current_curation_status
+      end
+      # and certainly don't withdraw something that was previously published
+      if (new_status == 'withdrawn') && @resource.previously_public?
         note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
         new_status = @resource.current_curation_status
       end
