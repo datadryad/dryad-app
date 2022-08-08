@@ -680,7 +680,7 @@ module StashApi
         @doorkeeper_application.update(owner_id: nil, owner_type: nil)
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
-        expect(hsh['versionNumber']).to eq(1) #only shows published one, not later one that isn't
+        expect(hsh['versionNumber']).to eq(1) # only shows published one, not later one that isn't
         expect(hsh['title']).to eq(@resources[0].title)
       end
 
