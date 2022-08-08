@@ -116,10 +116,8 @@ class ApiApplicationController < ::StashEngine::ApplicationController
   end
 
   def require_admin
-    # if there is a doorkeeper resource_owner_id, someone else is doing operations to the user's datasets and they
-    # shouldn't have advanced user permissions
-    return if (%w[superuser curator admin tenant_curator].include?(@user.role) ||
-              @user.journals_as_admin.present?) && doorkeeper_token.resource_owner_id.blank?
+    return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
+              @user.journals_as_admin.present?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
