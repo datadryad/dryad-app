@@ -31,9 +31,9 @@ describe('PrelimInfo', () => {
       "id": faker.datatype.number(),
       "identifier_id": identifierId,
       "data_type": "manuscriptNumber",
-      "value": `CROM-${faker.datatype.number({min:1000, max:9999})}-${faker.datatype.number({min:1000, max:9999})}`
+      "value": ''
     }
-    related_identifier = faker.internet.url();
+    related_identifier = '';
   });
 
   it("renders the preliminary information section", () => {

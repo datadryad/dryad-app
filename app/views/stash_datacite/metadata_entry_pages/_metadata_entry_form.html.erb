@@ -30,9 +30,7 @@
       <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
               affiliation: auth.affiliation.as_json,
-              orcid_invite_path:
-                  (auth.author_orcid.blank? && auth.author_email.present? && auth.resource.identifier.pub_state == 'published' ?
-                       auth.orcid_invite_path : nil ))},
+              orcid_invite_path: auth&.orcid_invite_path)},
               curator: current_user&.curator?, icon: '/images/fa-barfs.svg', # because the asset pipeline not working right on stage
               correspondingAuthorId: @resource.owner_author&.id
       } ) %>

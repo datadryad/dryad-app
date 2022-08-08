@@ -108,6 +108,19 @@ module StashDatacite
           expect(error.ids).to eq(%w[msid primary_article_doi])
         end
 
+        it 'gives a formatting error when someone puts in a URL instead of a DOI' do
+          StashEngine::InternalDatum.create(data_type: 'publicationName',
+                                            value: 'Barrel of Monkeys: the Primate Journal',
+                                            identifier_id: @resource.identifier_id)
+          create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', work_type:
+            'primary_article')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.article_id
+
+          expect(error.message).to include('formatted DOI')
+          expect(error.ids).to eq(%w[primary_article_doi])
+        end
+
         it "doesn't give error if manuscript filled" do
           StashEngine::InternalDatum.create(data_type: 'publicationName',
                                             value: 'Barrel of Monkeys: the Primate Journal',

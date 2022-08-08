@@ -125,6 +125,14 @@ module StashEngine
       end
     end
 
+    def preview_csv
+      @data_file = DataFile.find(params[:file_id])
+      @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
+
+      # limit to only 5 lines at most and make unix line endings
+      @preview = @preview.split(/$/).map(&:strip)[0..5].join("\n") if @preview.class == String
+    end
+
     private
 
     def non_ajax_response_for_download

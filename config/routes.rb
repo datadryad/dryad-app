@@ -208,6 +208,7 @@ Rails.application.routes.draw do
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
+    get 'downloads/preview_csv/:file_id', to: 'downloads#preview_csv', as: 'preview_csv'
     get 'share/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
     
@@ -243,6 +244,8 @@ Rails.application.routes.draw do
     get 'our_membership', to: 'pages#our_membership'
     get 'join_us', to: 'pages#join_us'
     get 'our_platform', to: 'pages#our_platform'
+    get 'code_of_conduct', to: 'pages#code_of_conduct'
+    get 'ethics', to: 'pages#ethics'
     get 'our_staff', to: 'pages#our_staff'
     get 'our_advisors', to: 'pages#our_advisors'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
@@ -258,6 +261,7 @@ Rails.application.routes.draw do
     get '404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
+    get 'ip_error', to: 'pages#ip_error'
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     

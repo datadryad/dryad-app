@@ -8,15 +8,16 @@ import PrelimAutocomplete from './PrelimAutocomplete';
 function PrelimManu({
   resourceId,
   identifierId,
-  publication_name,
-  publication_issn,
-  msid,
+  acText,
+  setAcText,
+  acID,
+  setAcID,
+  msId,
+  setMsId,
 }) {
   const formRef = useRef();
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState(publication_name?.value || '');
-  const [acID, setAcID] = useState(publication_issn?.value || '');
   const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
@@ -33,9 +34,11 @@ function PrelimManu({
       identifier_id: identifierId,
       resource_id: resourceId,
       publication_issn: acID,
-      msid: values.msid,
+      msid: values.msId,
       do_import: values.isImport,
     };
+
+    setMsId(values.msId);
 
     // submit by json
     return axios.patch(
@@ -69,7 +72,7 @@ function PrelimManu({
     <Formik
       initialValues={
             {
-              msid: msid.value || '',
+              msId: msId || '',
               isImport: false,
             }
           }
@@ -104,15 +107,15 @@ function PrelimManu({
               </div>
               <div className="c-input">
                 {/* eslint-disable jsx-a11y/label-has-associated-control */}
-                <label className="c-input__label required" htmlFor="msid">
+                <label className="c-input__label required" htmlFor="msId">
                   Manuscript Number
                 </label>
                 <Field
                   className="c-input__text"
                   placeholder="APPS-D-17-00113"
                   type="text"
-                  name="msid"
-                  id="msid"
+                  name="msId"
+                  id="msId"
                   onBlur={() => { // defaults to formik.handleBlur
                     formRef.current.values.isImport = false;
                     formik.handleSubmit();
@@ -131,7 +134,7 @@ function PrelimManu({
                   formRef.current.values.isImport = true;
                   formik.handleSubmit();
                 }}
-                disabled={(acText === '' || acID === '' || formRef?.current?.values.msid === '')}
+                disabled={(acText === '' || acID === '' || formRef?.current?.values.msId === '')}
               >
                 Import Manuscript Metadata
               </button>
@@ -151,7 +154,10 @@ export default PrelimManu;
 PrelimManu.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  publication_name: PropTypes.object.isRequired,
-  publication_issn: PropTypes.object.isRequired,
-  msid: PropTypes.object.isRequired,
+  acText: PropTypes.string.isRequired,
+  setAcText: PropTypes.func.isRequired,
+  acID: PropTypes.string.isRequired,
+  setAcID: PropTypes.func.isRequired,
+  msId: PropTypes.string.isRequired,
+  setMsId: PropTypes.func.isRequired,
 };

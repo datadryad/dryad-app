@@ -5,6 +5,8 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
+
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
@@ -59,6 +61,10 @@ module StashDatacite
     def save_form_to_internal_data
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
+      if @pub_issn.blank?
+        exact_matches = StashEngine::Journal.where(title: @pub_name)
+        @pub_issn = exact_matches.first.issn if exact_matches.count == 1
+      end
       fix_removable_asterisk
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
@@ -89,7 +95,8 @@ module StashDatacite
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
 
         # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
-        rd.update(related_identifier: standard_doi, work_type: 'primary_article', hidden: false)
+        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: 'primary_article',
+                  hidden: false)
         rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
         return nil
       end
@@ -254,3 +261,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength

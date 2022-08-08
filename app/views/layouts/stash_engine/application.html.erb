@@ -3,6 +3,9 @@
 <head>
   <%= render 'layouts/stash_engine/standard_head' %>
   <%= render 'layouts/stash_engine/stash_head' %>
+  <% if controller_name == 'landing' && action_name == 'show' %>
+    <%= render 'layouts/stash_engine/landing_head' %>
+  <% end %>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
   <%= render 'layouts/stash_engine/top_area' %>
