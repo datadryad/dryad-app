@@ -1,4 +1,4 @@
-#Authorization Code Grant
+# Authorization Code Grant
 
 Before starting, please read the about the OAuth Authorization Code Grant at
 https://alexbilbie.com/guide-to-oauth-2-grants/#authorisation-code-grant-section-41 .
@@ -21,7 +21,7 @@ Before beginning, please obtain your client ID and secret for the dryad reposito
 be asked for a redirect URL for your application which is a URL that is *called back* after an
 Dryad authenticates the user and authorizes access by OAuth2.
 
-##Example setup for a sample external application
+## Example setup for a sample external application
 
 This application is in Ruby and Rails, but the concepts will be very similar in many frameworks and
 languages.  
@@ -88,7 +88,7 @@ class TestController < ApplicationController
 end
 ```
 
-##Walkthrough of the example
+## Walkthrough of the example
 
 1. Start the server so you have your web site running (in example, on `localhost:3000`).
 2. Go to `http://localhost:3000/test`
@@ -101,7 +101,7 @@ end
 7. A test API call is made to Dryad using the `bearer token` that retrieves your user_id and
    name and displays the information on the page.
 
-##Additional work for a real appplication
+## Additional work for a real appplication
 
 1. Add a `state` CSRF token when directing someone to the Dryad authorization server as explained
    at https://alexbilbie.com/guide-to-oauth-2-grants/#authorisation-code-grant-section-41 .
