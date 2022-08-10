@@ -20,6 +20,7 @@ function Cedar({resource, path}) {
     console.log("Cedar.js, path is ", path);
 
     const openModal = () => {
+	console.log("openModal");
 	setShowModal(true);
     };
 
