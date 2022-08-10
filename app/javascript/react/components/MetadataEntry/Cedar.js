@@ -22,7 +22,7 @@ function Cedar({resource, path}) {
     const openModal = () => {
 	setShowModal(true);
     };
-    
+
     return (
 	<div className="cedar-container">
 	    <h3 className="o-heading__level3">Standardized Metadata</h3>
