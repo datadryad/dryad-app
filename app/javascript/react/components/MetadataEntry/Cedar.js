@@ -69,10 +69,7 @@ function Cedar({resource, path}) {
 			</select>
 			<Field name="id" type="hidden" />
 			<Field name="authenticity_token" type="hidden" />
-			<button type="submit" disabled={false} className="js-uploadmodal__button-show-modal">
-			    Add Metadata Form
-			</button>
-			<button onClick={openModal}>Open Modal</button>
+			<button onClick={openModal}>Add Metadata Form</button>
 			{showModal ? <CedarModal setShowModal={setShowModal} /> : null}
 		    </Form>
 		)}

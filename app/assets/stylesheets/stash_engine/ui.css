@@ -7146,6 +7146,10 @@ th.c-admin-table {
   float: left;
 }
 
+.c-modal-content__cedar {
+  border: 10px solid red;
+}
+
 .c-uploadtable {
   margin-bottom: 30px;
 }
