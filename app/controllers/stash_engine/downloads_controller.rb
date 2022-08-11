@@ -131,11 +131,10 @@ module StashEngine
       @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
 
       # limit to only 5 lines at most and make unix line endings
-      if @preview.class == String
-        @preview = @preview.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?") # replace bad chars
-        @preview = @preview.split(/[\r\n|\r|\n]+/).map(&:strip)[0..5].join("\n") # only 5 lines, please
-      end
+      return unless @preview.class == String
 
+      @preview = @preview.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?') # replace bad chars
+      @preview = @preview.split(/[\r\n|\r|\n]+/).map(&:strip)[0..5].join("\n") # only 5 lines, please
     end
 
     private
