@@ -31,15 +31,16 @@ including universities, research institutions and academic libraries. See more a
         <li>Netherlands Institute of Ecology (NIOO-KNAW)</li>
         <li>New Mexico State University</li>
         <li>North Carolina State University</li>
+        <li>Northwestern University</li>
         <li>The Ohio State University</li>
         <li>Pitzer College</li>
         <li>Pomona College</li>
         <li>The Rockefeller University</li>
-        <li>Scripps College</li>
       </ul>
     </td>
     <td>
       <ul>
+        <li>Scripps College</li>
         <li>Stanford University</li> 
         <li>Texas Tech University</li>
         <li>University of California, California Digital Library</li>
