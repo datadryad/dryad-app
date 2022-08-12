@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import ReactDom from "react-dom";
 
-export const CedarModal = ({ setShowModal }) => {
+export const CedarModal = ({ setShowModal, template }) => {
     console.log("CedarModal ssm");
     
     // close the modal when clicking outside the modal.
@@ -22,10 +22,10 @@ export const CedarModal = ({ setShowModal }) => {
     }
 
     function initCedar() {
-	console.log("CedarModal. init the modal");
+	console.log("CedarModal. init the modal for template", template);
 	
 	document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
-	$('#genericModalContent').html("<script src=\"/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js\"></script> <cedar-embeddable-editor />");
+	$('#genericModalContent').html("<h1>Metadata Template " + template + "</h1><script src=\"/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js\"></script> <cedar-embeddable-editor />");
 
 	$('#genericModalDialog')[0].showModal();
     
@@ -39,6 +39,7 @@ export const CedarModal = ({ setShowModal }) => {
 	initCedar();
     }
 
+    console.log('Finding form val', document.querySelector('#cedarTemplate'))
     // return null because the CEDAR editor fits in the #genericModalDialog, not
     // in the space on the page where this component lives
     return null;
