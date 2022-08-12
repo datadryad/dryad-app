@@ -15,8 +15,10 @@ function Cedar({resource, path}) {
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     
     const formRef = useRef();
+    const templateSelectRef = useRef();
     const [showModal, setShowModal] = useState(false);
-
+    const [cedarTemplate, setCedarTemplate] = useState(0);
+    
     console.log("Cedar.js, path is ", path);
 
     const openModal = () => {
@@ -29,7 +31,7 @@ function Cedar({resource, path}) {
 	    <h3 className="o-heading__level3">Standardized Metadata</h3>
 	    
 	    <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
-	    
+
 	    <Formik
 		initialValues={{ resource_id: resource.id, authenticity_token: (csrf || '') }}
 		innerRef={formRef}
@@ -37,9 +39,9 @@ function Cedar({resource, path}) {
 		    showSavingMsg();
 		    axios.post(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'text/javascript'}})
 			.then((data) => {
-			    if (data.status !== 200) {
-				console.log('Not a 200 response while saving CEDAR form');
-			    }
+			     if (data.status !== 200) {
+				 console.log('Received ' + data.status + ' response from CEDAR form');
+			     }
 			    showSavedMsg();
 			    setSubmitting(false);
 			});
@@ -55,6 +57,7 @@ function Cedar({resource, path}) {
 			    onChange={formik.handleChange}
 			    onBlur={formik.handleBlur}
 			    style={{ display: "block" }}
+			    ref={templateSelectRef}
 			>
 			    <option value="" label=" - Select one - ">
 				- Select one -{" "}
@@ -71,7 +74,7 @@ function Cedar({resource, path}) {
 			<Field name="id" type="hidden" />
 			<Field name="authenticity_token" type="hidden" />
 			<button onClick={openModal}>Add Metadata Form</button>
-			{showModal ? <CedarModal setShowModal={setShowModal} /> : null}
+			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} /> : null}
 		    </Form>
 		)}
 	    </Formik>
