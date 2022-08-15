@@ -53,26 +53,16 @@ function Cedar({resource, path}) {
 			<select
 			    className="c-input__text"
 			    name="cedarTemplate"
-			    value={formik.values.cedarTemplate}
 			    onChange={formik.handleChange}
 			    onBlur={formik.handleBlur}
 			    style={{ display: "block" }}
 			    ref={templateSelectRef}
 			>
-			    <option value="" label=" - Select one - ">
-				- Select one -{" "}
-			    </option>
-			    <option value="1" label="Form 1">
-				{" "}
-				Form 1
-			    </option>
-			    <option value="2" label="Form 2">
-				{" "}
-				Form 2
-			    </option>
+			    <option value="" label=" - Select one - " />
+			    <option value="1" label="Form 1" />
+			    <option value="2" label="Form 2" />
+			    <option value="3" label="Form 3" />
 			</select>
-			<Field name="id" type="hidden" />
-			<Field name="authenticity_token" type="hidden" />
 			<button onClick={openModal}>Add Metadata Form</button>
 			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} /> : null}
 		    </Form>
