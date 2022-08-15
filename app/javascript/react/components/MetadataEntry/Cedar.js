@@ -9,7 +9,15 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import { CedarModal } from "./CedarModal";
 
-function Cedar({resource, path}) {
+function Cedar({resource, path, config}) {
+
+    // do not display anything unless there is a template defined
+    if (!config || !config.table || !config.table.templates) {
+	return null;
+    }
+    
+    const templates = config.table.templates;
+    console.log("templates", templates);    
 
     // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -20,12 +28,22 @@ function Cedar({resource, path}) {
     const [cedarTemplate, setCedarTemplate] = useState(0);
     
     console.log("Cedar.js, path is ", path);
-
+    
     const openModal = () => {
 	console.log("openModal");
 	setShowModal(true);
     };
 
+
+    const templateOptions = () => {
+	templates.map((template, index) => (
+	    <option value="{template}" label="Form {template}" />
+	));
+    };
+
+
+    console.log("templateOptions", templateOptions);
+    
     return (
 	<div className="cedar-container">
 	    <h3 className="o-heading__level3">Standardized Metadata</h3>
@@ -58,13 +76,12 @@ function Cedar({resource, path}) {
 			    style={{ display: "block" }}
 			    ref={templateSelectRef}
 			>
-			    <option value="" label=" - Select one - " />
-			    <option value="1" label="Form 1" />
-			    <option value="2" label="Form 2" />
-			    <option value="3" label="Form 3" />
+			    { templates.map((templ) => {
+				return(<option key={ templ[0] } value={ templ[0] } label={ templ[1] } />);
+			    })}
 			</select>
 			<button onClick={openModal}>Add Metadata Form</button>
-			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} /> : null}
+			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} config={config} /> : null}
 		    </Form>
 		)}
 	    </Formik>

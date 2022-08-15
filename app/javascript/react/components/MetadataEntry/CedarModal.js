@@ -2,9 +2,9 @@
 import React, { useRef } from "react";
 import ReactDom from "react-dom";
 
-export const CedarModal = ({ setShowModal, template }) => {
+export const CedarModal = ({ setShowModal, template, config }) => {
     console.log("CedarModal ssm");
-    
+   
     // close the modal when clicking outside the modal.
     const modalRef = useRef();
     const closeModal = (e) => {
@@ -25,8 +25,9 @@ export const CedarModal = ({ setShowModal, template }) => {
 	console.log("CedarModal. init the modal for template", template);
 	
 	document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
-	$('#genericModalContent').html("<h1>Metadata Template " + template + "</h1><script src=\"/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js\"></script> <cedar-embeddable-editor />");
-
+	$('#genericModalContent').html("<h1>Metadata Template " + template + "</h1>" +
+				       "<script src=\"" + config.table.editor_url + "\"></script>" +
+				       "<cedar-embeddable-editor />");
 	$('#genericModalDialog')[0].showModal();
     
 	// Wait to ensure the page is loaded before initializing the Cedar config

@@ -7151,6 +7151,10 @@ th.c-admin-table {
   border: 10px solid red;
 }
 
+.mat-card-title {
+    color: red;
+}
+
 .c-uploadtable {
   margin-bottom: 30px;
 }
