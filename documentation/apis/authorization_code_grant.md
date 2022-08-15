@@ -5,6 +5,20 @@ https://alexbilbie.com/guide-to-oauth-2-grants/#authorisation-code-grant-section
 That page gives a very clear and practical explanation of the flow along with the details
 needed to set it up.
 
+Please contact Dryad to obtain API access to the Dryad repository. Please let us know the
+following:
+
+- That you've logged into the UI systems you'd like to use (dryad-stg.cdlib.org and/or datadryad.org).
+  Note that the stage system uses an ORCID sandbox account which is a different login and ORCID than
+  the production ORCID system.
+- The email address or ORCID of the user(s) you logged into the UI(s) with.
+- Please let us know the `redirect_uri` that is allowed to be called back after a successful login
+  (you can give more than one). Because of OAuth security requirements, wildcards are not accepted and the full URL(s) 
+  (including domain names) are required.
+
+Note that the `REDIRECT_URI` used in the example below must match one that is configured for your Dryad API
+access. If the redirect uri doesn't match one that is configured for API use, then access will be denied by OAUTH2.
+
 The Authorization Code grant type should only be used in applications where you can
 keep your *secret* private and you have an agent or web browser that can request permissions
 for access to the Dryad web application from the user. You should *never* expose your
@@ -17,9 +31,7 @@ The basic flow the user sees:
    account if they haven't approved the access yet.
 4. They are redirected back to a callback URL at the external application once completing these steps.
 
-Before beginning, please obtain your client ID and secret for the dryad repository.  You will also
-be asked for a redirect URL for your application which is a URL that is *called back* after an
-Dryad authenticates the user and authorizes access by OAuth2.
+
 
 ## Example setup for a sample external application
 
@@ -113,6 +125,5 @@ end
 2. Handle the case when a user rejects the authorization request and no `code` is returned
    to your callback URL.
 3. If you need to add additional keys and values to be passed through the authorization process
-   then you can add them to your REDIRECT_URI, though storing in the session is easier and more
-   secure if you're ok with the values being available to all tabs or browser windows the
-   user may have open for your site.
+   then you can add them to the querystring of your REDIRECT_URI, though storing in your application's session is 
+   easier and more secure unless you have a specific need to maintain a value that gets passed outside the session.
