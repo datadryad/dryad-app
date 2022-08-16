@@ -7,6 +7,8 @@ Documentation
 =============
 
 Documentation available here:
+https://github.com/metadatacenter/cedar-embeddable-editor/tree/develop
+https://github.com/metadatacenter/cedar-cee-demo-generic/tree/develop
 https://docs.cee.staging.metadatacenter.org/
 
 And a demo interactive deployment of the editor can be found here:
@@ -21,10 +23,11 @@ https://github.com/metadatacenter/cedar-cee-demo-generic/tree/develop
 with a JS file called `cedar-embeddable-editor-2.6.18-SNAPSHOT.js`
 
 runs with
-- cd ~/lib/cedar-cee-demo-generic
-- php -S localhost:8009
-- http://localhost:8009
-
+```
+cd ~/lib/cedar-cee-demo-generic
+php -S localhost:8009
+http://localhost:8009
+```
 (The Dryad version should just work directly within our environment.)
 
 
