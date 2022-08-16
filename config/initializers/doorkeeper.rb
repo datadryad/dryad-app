@@ -5,11 +5,12 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
-    # Put your resource owner authentication logic here.
-    # Example implementation:
-    #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
-    # We don't need this because we are not enabling UI app authentication for outside apps (resource credentials grant?)
+    if current_user.present? && current_user.tenant_id.present? # both required for good info about user
+      current_user
+    else
+      session[:target_page] = request.original_url # set this to be redirected back to after full login
+      redirect_to(stash_url_helpers.choose_login_path)
+    end
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
@@ -71,6 +72,9 @@ Doorkeeper.configure do
   default_scopes :all
   # optional_scopes :write, :update
 
+  # I'm afraid enabling this may break things since it doesn't seem like most applications are requesting any scopes
+  # enforce_configured_scopes
+
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
   # falls back to the `:client_id` and `:client_secret` params from the `params` object.
@@ -129,7 +133,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  grant_flows %w[client_credentials] # authorization_code
+  grant_flows %w[client_credentials authorization_code]
 
   # Hook into the strategies' request & response life-cycle in case your
   # application needs advanced customization or logging:
