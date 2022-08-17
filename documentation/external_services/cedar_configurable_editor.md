@@ -47,7 +47,11 @@ Config file: `public/cedar-embeddable-editor/cee-config.json`
 Templates
 ---------
 
-Templates are stored at a URL specified by
+In Dryad, templates are configured in `app_config.yml`. The numbers in the
+templates reference the numbered config files in
+`public/cedar-embeddable-editor/`. 
+
+For the CEDAR editor, templates are stored at a URL specified by
 `sampleTemplateLocationPrefix`. Within this URL, every template has a number,
 then the template itself is called `template.json`, so the full URL will be
 something like

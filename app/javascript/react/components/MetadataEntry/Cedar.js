@@ -46,7 +46,7 @@ function Cedar({resource, path, config}) {
     
     return (
 	<div className="cedar-container">
-	    <h3 className="o-heading__level3">Standardized Metadata</h3>
+	    <h3 className="cedar-heading__level3">Standardized Metadata</h3>
 	    
 	    <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
 
@@ -73,14 +73,12 @@ function Cedar({resource, path, config}) {
 			    name="cedarTemplate"
 			    onChange={formik.handleChange}
 			    onBlur={formik.handleBlur}
-			    style={{ display: "block" }}
 			    ref={templateSelectRef}
 			>
 			    { templates.map((templ) => {
 				return(<option key={ templ[0] } value={ templ[0] } label={ templ[1] } />);
 			    })}
-			</select>
-			<button onClick={openModal}>Add Metadata Form</button>
+			</select><button className="o-button__add" onClick={openModal}>Add Metadata Form</button>
 			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} config={config} /> : null}
 		    </Form>
 		)}
