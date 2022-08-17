@@ -3890,6 +3890,7 @@ html.no-multiplebgs .o-banner {
   background-color: #9fc7d8;
   color: rgb(0, 0, 0);
 }
+
 .o-button__add::before {
   content: "+";
 }
@@ -7147,13 +7148,76 @@ th.c-admin-table {
   float: left;
 }
 
-.c-modal-content__cedar {
-  border: 10px solid red;
+
+/* ******************* CEDAR *************** */
+
+.cedar-container {
+    background-color: rgba(233, 236, 239, 1);
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.mat-card-title {
-    color: red;
+.cedar-container label {
+    display: block;
 }
+
+.cedar-container select {
+    margin-right: 10px;
+}
+
+.cedar-container o-button__add {
+  padding: 5px 8px;
+  border: 1px solid #9fc7d8;
+  background-color: #9fc7d8;
+  color: rgb(0, 0, 0);
+}
+
+.cedar-heading__level3 {
+    margin: 0 0 20px;
+    color: rgb(0, 85, 129);
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.c-modal-content__cedar {
+
+}
+
+
+.mat-card {
+    /* TODO: remove background, indents? */
+}
+
+.mat-card-avatar {
+    display: none;
+}
+
+/* should be h1 */
+.mat-card .mat-card-title {
+    margin: 0 0 20px;
+    color: #cf4817;
+    font-size: 2em;
+    font-weight: normal;
+}
+
+/* should be h2 */
+.mat-card .mat-card .mat-card-title {
+    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: rgb(0, 85, 129);
+    color: rgb(255, 255, 255);
+    font-size: 1.3em;
+    font-weight: normal;    
+}
+
+/* should be h3 */
+.mat-card .mat-card .mat-card .mat-card-title {
+    color: green;
+}
+
+
+/* ********************************************** */
 
 .c-uploadtable {
   margin-bottom: 30px;

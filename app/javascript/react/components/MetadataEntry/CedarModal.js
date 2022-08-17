@@ -18,15 +18,14 @@ export const CedarModal = ({ setShowModal, template, config }) => {
     function configCedar() {
 	console.log("Loading CEDAR config");
 	var comp = document.querySelector('cedar-embeddable-editor');
-	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config.json');
+	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + template + '.json');
     }
 
     function initCedar() {
 	console.log("CedarModal. init the modal for template", template);
 	
 	document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
-	$('#genericModalContent').html("<h1>Metadata Template " + template + "</h1>" +
-				       "<script src=\"" + config.table.editor_url + "\"></script>" +
+	$('#genericModalContent').html("<script src=\"" + config.table.editor_url + "\"></script>" +
 				       "<cedar-embeddable-editor />");
 	$('#genericModalDialog')[0].showModal();
     

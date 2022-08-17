@@ -212,9 +212,9 @@ development: &DEVELOPMENT
   cedar:
     editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
     templates:
-      - [1, "Mega Large Metadata"]
-      - [2, "Highly-specific Metadata"]
-      - [4, "Messy Metadata"]
+      - [40, "Mega Large Metadata"]
+      - [43, "Highly-specific Metadata"]
+      - [45, "Messy Metadata"]
     
 aws_db:
   <<: *DEVELOPMENT
