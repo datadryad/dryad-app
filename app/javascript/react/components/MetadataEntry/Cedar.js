@@ -30,6 +30,10 @@ function Cedar({resource, path, config}) {
     console.log("Cedar.js, path is ", path);
     
     const openModal = () => {
+	if (templateSelectRef.current.value == 0) {
+	    console.log("Cannot open modal unless a template is selected.");
+	    return;
+	}
 	console.log("openModal");
 	setShowModal(true);
     };
@@ -75,6 +79,7 @@ function Cedar({resource, path, config}) {
 			    onBlur={formik.handleBlur}
 			    ref={templateSelectRef}
 			>
+			    <option key="0" value="0" label="- Select One -" />
 			    { templates.map((templ) => {
 				return(<option key={ templ[0] } value={ templ[0] } label={ templ[1] } />);
 			    })}
