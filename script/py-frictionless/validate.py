@@ -65,6 +65,9 @@
 #           "rows": 1
 #         }
 
+# this would get the latest access token for application in rails
+# Doorkeeper.config.application_model.where(id: 1).first.access_tokens.order(created_at: desc).first
+
 from pprint import pprint
 from frictionless import Detector, validate, validate_resource
 import requests
