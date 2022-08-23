@@ -11,10 +11,10 @@ module StashEngine
     self.table_name = 'stash_engine_api_tokens'
 
     def self.token
-      tok = self.all.first
+      tok = all.first
       return tok.token if tok.expires_at > (Time.new + 30.minutes)
 
-      tok.get_new_token
+      tok.new_token
       tok.reload
       tok.token
     end
@@ -28,25 +28,28 @@ module StashEngine
       resp.parse
     end
 
-    def get_new_token
-      begin
-        attempts ||= 1
-        url = Rails.application.routes.url_helpers.oauth_token_url # url on current server to get token
+    def new_token
+      attempts ||= 1
+      url = Rails.application.routes.url_helpers.oauth_token_url # url on current server to get token
 
-        resp = HTTP.post(url,
-                 json: { client_id: app_id,
-                         client_secret: secret,
-                         grant_type: 'client_credentials' })
+      resp = HTTP.post(url,
+                       json: { client_id: app_id,
+                               client_secret: secret,
+                               grant_type: 'client_credentials' })
 
-        json = resp.parse
-        self.update(token: json['access_token'], expires_at: Time.new + json['expires_in'].seconds)
-      rescue HTTP::Error, HTTP::TimeoutError => e
-        logger('Http error getting API key: #{e.full_message}')
+      if resp.status > 399
         sleep 3
         retry if (attempts += 1) < 10
-
-        raise e
       end
+
+      json = resp.parse
+      update(token: json['access_token'], expires_at: Time.new + json['expires_in'].seconds)
+    rescue HTTP::Error, HTTP::TimeoutError => e
+      logger.warn("Http error getting API key: #{e.full_message}")
+      sleep 3
+      retry if (attempts += 1) < 10
+
+      raise e
     end
   end
 end
