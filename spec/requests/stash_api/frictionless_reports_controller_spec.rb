@@ -16,7 +16,7 @@ module StashApi
     before(:each) do
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                       owner_id: @user.id, owner_type: 'StashEngine::User')
+                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
@@ -56,7 +56,7 @@ module StashApi
         @user.update(role: 'user')
         response_code = get @path, headers: default_authenticated_headers
         expect(response_code).to eq(404)
-        expect(response_body_hash).to eq({"error"=>"not-found"})
+        expect(response_body_hash).to eq({ 'error' => 'not-found' })
       end
 
       it "returns 404 if report doesn't exist" do
@@ -75,7 +75,7 @@ module StashApi
 
       it "adds a report that doesn't exist yet" do
         response_code = put @path,
-                            params: {status: 'noissues', report: @frict_report2.report}.to_json, # same as report2 json
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
                             headers: default_authenticated_headers
         expect(response_code).to eq(200)
         hsh = response_body_hash
@@ -83,11 +83,11 @@ module StashApi
         expect(hsh['report']).to eq(@frict_report2.report)
       end
 
-      it "updates a report that does exist" do
+      it 'updates a report that does exist' do
         @frict_report = create(:frictionless_report, generic_file: @generic_file)
         report_id = @frict_report.id
         response_code = put @path,
-                            params: {status: 'noissues', report: @frict_report2.report}.to_json, # same as report2 json
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
                             headers: default_authenticated_headers
         expect(response_code).to eq(200)
         hsh = response_body_hash
@@ -99,7 +99,7 @@ module StashApi
       it "doesn't allow updating without the correct permissions" do
         @user.update(role: 'user')
         response_code = put @path,
-                            params: {status: 'noissues', report: @frict_report2.report}.to_json, # same as report2 json
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
                             headers: default_authenticated_headers
         expect(response_code).to eq(401)
         hsh = response_body_hash
@@ -108,14 +108,14 @@ module StashApi
 
       it "doesn't allow updating unless logged in" do
         response_code = put @path,
-                            params: {status: 'noissues', report: @frict_report2.report}.to_json, # same as report2 json
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
                             headers: default_json_headers
         expect(response_code).to eq(401)
       end
 
       it "doesn't allow updating unless a status is correct from the list" do
         response_code = put @path,
-                            params: {status: 'squid_cats', report: @frict_report2.report}.to_json,
+                            params: { status: 'squid_cats', report: @frict_report2.report }.to_json,
                             headers: default_authenticated_headers
         expect(response_code).to eq(400)
         hsh = response_body_hash
