@@ -58,6 +58,12 @@ module StashApi
         expect(response_code).to eq(404)
         expect(response_body_hash).to eq({"error"=>"not-found"})
       end
+
+      it "returns 404 if report doesn't exist" do
+        @frict_report.destroy!
+        response_code = get @path, headers: default_authenticated_headers
+        expect(response_code).to eq(404)
+      end
     end
 
     describe '#update' do
