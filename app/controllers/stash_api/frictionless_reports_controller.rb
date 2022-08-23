@@ -1,4 +1,3 @@
-
 # This class is only for internal use and is not exposed to the public since it may include reports for
 # files that we don't own (at Zenodo) and would only be used by our Frictionless checker or perhas a view
 # and limited to roles that can access
@@ -51,9 +50,9 @@ module StashApi
     end
 
     def require_correct_status
-      unless StashEngine::FrictionlessReport.statuses.keys.include?(params[:status])
-        render json: { error: 'incorrect status set' }.to_json, status: 400
-      end
+      return if StashEngine::FrictionlessReport.statuses.keys.include?(params[:status])
+
+      render json: { error: 'incorrect status set' }.to_json, status: 400
     end
 
   end
