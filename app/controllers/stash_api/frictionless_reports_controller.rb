@@ -16,6 +16,7 @@ module StashApi
     before_action :optional_api_user, only: %i[show]
     before_action :require_viewable_report, only: %i[show]
     before_action :require_permission, only: %i[update]
+    before_action :require_correct_status, only: %i[update]
 
     # GET
     def show
@@ -28,7 +29,13 @@ module StashApi
     # PUT
     def update
       # only json for report and status will be updated, the rest is automatically updated
-      byebug
+      fr = @stash_file.frictionless_report
+      fr = StashEngine::FrictionlessReport.new(generic_file_id: @stash_file.id) if fr.nil?
+      fr.update(report: params[:report], status: params[:status])
+      @api_report = StashApi::FrictionlessReport.new(file_obj: @stash_file, fric_obj: fr)
+      respond_to do |format|
+        format.any { render json: @api_report.metadata }
+      end
     end
 
     def require_file
@@ -43,6 +50,11 @@ module StashApi
         !@stash_file.resource.may_view?(ui_user: @user)
     end
 
+    def require_correct_status
+      unless StashEngine::FrictionlessReport.statuses.keys.include?(params[:status])
+        render json: { error: 'incorrect status set' }.to_json, status: 400
+      end
+    end
 
   end
 end
