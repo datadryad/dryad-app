@@ -7187,11 +7187,14 @@ th.c-admin-table {
 .c-modal-content__cedar .mat-card {
     padding: 0;
     margin: 0;
+    box-shadow: none !important;
+    background-color: white !important;
 }
 
 .template-card {
     padding: 0;
     margin: 0;
+    background-color: white !important;
 }
 
 .mat-card {
@@ -7253,7 +7256,8 @@ th.c-admin-table {
 
 /* should be h3 */
 .mat-card .mat-card .mat-card .mat-card-title {
-    color: green;
+    background-color: white;
+    color: black;
 }
 
 

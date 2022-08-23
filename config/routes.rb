@@ -278,9 +278,6 @@ Rails.application.routes.draw do
     post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
 
-    # CEDAR metadata editor
-    post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
-    
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
@@ -440,6 +437,13 @@ Rails.application.routes.draw do
 
   ########################## CEDAR Embeddable Editor ###############################
 
+  post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
+
+  # Redirect the calls for MaterialUI icons, since the embeddable editor doesn't know what path it was loaded from
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff', to: redirect('/MaterialIcons-Regular.woff')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
+  
   post '/cedar-save', to: 'cedar#save'
   
   ########################## Dryad v1 support ######################################
