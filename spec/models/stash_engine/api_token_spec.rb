@@ -7,15 +7,16 @@ module StashEngine
       @api_token = create(:api_token)
 
       @new_token = Faker::Internet.uuid
-      stub_request(:post, "http://localhost:3000/oauth/token").
-        with(
+      stub_request(:post, 'http://localhost:3000/oauth/token')
+        .with(
           body: "{\"client_id\":\"#{@api_token.app_id}\",\"client_secret\":\"#{@api_token.secret}\"," \
-        "\"grant_type\":\"client_credentials\"}",
-          headers: {'Content-Type'=>'application/json; charset=UTF-8' })
-                                                              .to_return(status: 200,
-                                                                         body: {'access_token' => @new_token,
-                                                                                'expires_in' => 6000}.to_json,
-                                                                         headers: { 'Content-Type' => 'application/json' })
+        '"grant_type":"client_credentials"}',
+          headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
+        )
+        .to_return(status: 200,
+                   body: { 'access_token' => @new_token,
+                           'expires_in' => 6000 }.to_json,
+                   headers: { 'Content-Type' => 'application/json' })
     end
 
     describe '#new_token' do
@@ -30,7 +31,7 @@ module StashEngine
       end
     end
 
-    describe ".token" do
+    describe '.token' do
       it 'creates a new token for a soon expiring one' do
         expect(ApiToken.token).to eq(@new_token)
       end
