@@ -25,6 +25,15 @@ module Stash
       def self.standard_request(method, url, **args)
         retries = 0
 
+        # the zenodo copy so we can log all the requests to the database
+        zen_copy = if args[:zc_id]
+                     StashEngine::ZenodoCopy.where(id: args[:zc_id]).first
+                   else
+                     nil
+                   end
+        args.delete(:zc_id)
+
+
         # if the caller wants to give a retry_limit, they can.  Useful for file uploads where there is streaming
         retry_limit = args[:retries] || RETRY_LIMIT
         args.delete(:retries)
@@ -38,7 +47,9 @@ module Stash
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
           my_args = args.merge(params: my_params, headers: my_headers)
 
+          log_to_database(item: "REQUEST: #{method}, #{url}\n   #{my_args}", zen_copy: zen_copy)
           r = http.send(method, url, my_args)
+          log_to_database(item: "RESPONSE: #{r.inspect}", zen_copy: zen_copy)
 
           # zenodo returns application/json even with a 204 and no content to parse as application/json
           resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
@@ -58,6 +69,7 @@ module Stash
           # stupid rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
           # rubocop:disable Style/GuardClause
           if (retries += 1) <= retry_limit
+            log_to_database(item: "Error at zenodo, retrying in #{SLEEP_TIME} seconds", zen_copy: zen_copy)
             sleep SLEEP_TIME
             retry
           else
@@ -65,6 +77,12 @@ module Stash
           end
           # rubocop:enable Style/GuardClause
         end
+      end
+
+      def self.log_to_database(item:, zen_copy:)
+        return unless zen_copy
+
+        zen_copy.update(error_info: "#{zen_copy.error_info}\n#{Time.new.utc.iso8601} #{item}\n")
       end
 
       # NOTE: Alex suggested we use a URL like https://sandbox.zenodo.org/api/deposit/depositions?q=doi:%2210.7959/dryad.bzkh1894f%22

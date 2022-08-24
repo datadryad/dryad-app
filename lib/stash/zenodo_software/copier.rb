@@ -72,9 +72,9 @@ module Stash
         @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
         file_change_list = FileChangeList.new(resource: @resource, resource_method: @resource_method)
-        @file_collection = FileCollection.new(file_change_list_obj: file_change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: file_change_list, zc_id: @copy.id)
         # I was creating this later, but it can be created earlier and eases testing to do it earlier
-        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @copy.id)
       end
 
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

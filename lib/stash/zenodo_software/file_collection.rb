@@ -12,7 +12,8 @@ module Stash
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      def initialize(file_change_list_obj:)
+      def initialize(file_change_list_obj:, zc_id:)
+        @zc_id = zc_id
         @file_change_list = file_change_list_obj
       end
 
@@ -25,7 +26,7 @@ module Stash
       def remove_files(zenodo_bucket_url:)
         @file_change_list.delete_list.each do |del_file|
           url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(del_file)}"
-          ZC.standard_request(:delete, url)
+          ZC.standard_request(:delete, url, zc_id: @zc_id)
         end
       end
 
@@ -33,7 +34,7 @@ module Stash
         @file_change_list.upload_list.each do |upload|
           next if upload.upload_file_size.nil? || upload.upload_file_size == 0
 
-          streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
+          streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url, zc_id: @zc_id)
           digests = ['md5']
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
           digests.uniq!

@@ -55,7 +55,7 @@ module Stash
         @copy.increment!(:retries)
 
         # a zenodo deposit class for working with deposits
-        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @copy.id)
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition
@@ -65,8 +65,8 @@ module Stash
         @resp = @deposit.update_metadata
 
         # update files
-        file_change_list = FileChangeList.new(resource: @resource)
-        @file_collection = Stash::ZenodoSoftware::FileCollection.new(file_change_list_obj: file_change_list)
+        file_change_list = FileChangeList.new(resource: @resource, zc_id: @copy.id)
+        @file_collection = Stash::ZenodoSoftware::FileCollection.new(file_change_list_obj: file_change_list, zc_id: @copy.id)
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         # submit it, publishing will fail if there isn't at least one file
