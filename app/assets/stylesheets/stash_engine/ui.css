@@ -7198,7 +7198,6 @@ th.c-admin-table {
 }
 
 .mat-card {
-    /* TODO: remove background, indents? */
     padding: 0;
     margin: 0;
 }
@@ -7240,7 +7239,7 @@ th.c-admin-table {
     margin-block-start: 0.83em;
     margin-block-end: 0.83em;
     margin-inline-start: 0px;
-    margin-inline-end: 0px;    
+    margin-inline-end: 0px;
 }
 
 .mat-card .mat-card .mat-card-title {
@@ -7260,6 +7259,14 @@ th.c-admin-table {
     color: black;
 }
 
+/* tooltips */
+.mat-tooltip {
+    /* this background-color is just to prove that the selector is getting the correct element; 
+       remove it when we get the positioning to work properly */
+    background-color: rgb(20,20,0) !important;
+    z-index: 100000 !important;
+    position: relative;
+}
 
 /* ********************************************** */
 
