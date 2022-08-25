@@ -43,7 +43,7 @@ module Stash
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
           my_args = args.merge(params: my_params, headers: my_headers)
 
-          log_to_database(item: "REQUEST: #{method}, #{url}\n   #{my_args.merge(:params => { :access_token => 'hidden'})}",
+          log_to_database(item: "REQUEST: #{method}, #{url}\n   #{my_args&.merge(:params => { :access_token => 'hidden'})}",
                           zen_copy: zen_copy)
           r = http.send(method, url, my_args)
           log_to_database(item: "RESPONSE: #{r.inspect}", zen_copy: zen_copy)
