@@ -38,7 +38,7 @@ module Stash
         end
         manual_metadata[:doi] = doi unless doi.nil?
         ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}",
-                            json: { metadata: manual_metadata }, zd_id: @zc_id)
+                            json: { metadata: manual_metadata }, zc_id: @zc_id)
       end
 
       def self.get_by_deposition(deposition_id:)
