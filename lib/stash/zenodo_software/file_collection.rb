@@ -76,8 +76,8 @@ module Stash
       end
 
       # resource method is :software_files or :supp_files, the method from resource to get the right type of files
-      def self.check_uploaded_list(resource:, resource_method:, deposition_id:)
-        response = Stash::ZenodoReplicate::Deposit.get_by_deposition(deposition_id: deposition_id)
+      def self.check_uploaded_list(resource:, resource_method:, deposition_id:, zc_id:)
+        response = Stash::ZenodoReplicate::Deposit.get_by_deposition(deposition_id: deposition_id, zc_id: zc_id)
         resource.reload # just in case it's out of date
         dry_files = resource.public_send(resource_method).present_files
         zen_files = response[:files]

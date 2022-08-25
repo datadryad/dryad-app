@@ -133,7 +133,8 @@ module Stash
 
         # resources method is the method off resource to call to get file list for that type of file like software or supplemental
         # will raise exception if there are problems between file lists both places
-        Stash::ZenodoSoftware::FileCollection.check_uploaded_list(resource: @resource, resource_method: @resource_method, deposition_id: @resp[:id])
+        Stash::ZenodoSoftware::FileCollection.check_uploaded_list(resource: @resource, resource_method:
+          @resource_method, deposition_id: @resp[:id], zc_id: @copy.id)
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
