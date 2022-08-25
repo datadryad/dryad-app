@@ -17,9 +17,10 @@ module Stash
         @software_http_upload = create(:software_file, upload_file_size: 1000,
                                                        url: 'http://example.org/example', resource: @resource)
 
+        @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
 
-        @file_collection = FileCollection.new(file_change_list_obj: @change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: @zenodo_copy.id)
         @bucket_url = 'https://example.org/my/great/test/bucket'
       end
 
@@ -36,7 +37,8 @@ module Stash
         it 'calls to remove any files in the list supplied by the change list class' do
           filenames = [Faker::File.file_name, Faker::File.file_name]
           allow(@change_list).to receive(:delete_list).and_return(filenames)
-          expect(Stash::ZenodoReplicate::ZenodoConnection).to receive(:standard_request).with(:delete, anything).twice
+          expect(Stash::ZenodoReplicate::ZenodoConnection).to receive(:standard_request).with(:delete, anything,
+                                                                                              anything).twice
           @file_collection.remove_files(zenodo_bucket_url: @bucket_url)
         end
       end
@@ -60,8 +62,9 @@ module Stash
           @resource = create(:resource)
           @software_http_upload = create(:software_file, upload_file_size: 0,
                                                          url: 'http://example.org/example', resource: @resource)
+          zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
           @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
-          @file_collection = FileCollection.new(file_change_list_obj: @change_list)
+          @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: zc.id)
           @bucket_url = 'https://example.org/my/great/test/bucket'
 
           allow(@change_list).to receive(:upload_list).and_return(@resource.software_files)
