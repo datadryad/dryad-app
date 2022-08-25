@@ -133,7 +133,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.not_to raise_error
         end
 
@@ -147,7 +148,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /The number of Dryad files \(9\) does not match/)
         end
 
@@ -160,7 +162,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
         end
 
@@ -175,7 +178,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
         end
       end

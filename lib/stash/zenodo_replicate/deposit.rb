@@ -41,13 +41,13 @@ module Stash
                             json: { metadata: manual_metadata }, zc_id: @zc_id)
       end
 
-      def self.get_by_deposition(deposition_id:)
-        ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+      def self.get_by_deposition(deposition_id:, zc_id:)
+        ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: zc_id)
       end
 
       # GET /api/deposit/depositions/123
       def get_by_deposition(deposition_id:)
-        resp = Deposit.get_by_deposition(deposition_id: deposition_id)
+        resp = Deposit.get_by_deposition(deposition_id: deposition_id, zc_id: @zc_id)
 
         @deposition_id = resp[:id]
         @links = resp[:links]
