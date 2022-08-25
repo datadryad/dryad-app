@@ -51,6 +51,7 @@ module Stash
         error_if_replicating
         error_if_out_of_order
 
+        @copy.reload
         @copy.update(state: 'replicating')
         @copy.increment!(:retries)
 
@@ -59,6 +60,7 @@ module Stash
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition
+        @copy.reload
         @copy.update(deposition_id: @deposit.deposition_id)
 
         # update metadata and get response which has info links in it
@@ -71,9 +73,11 @@ module Stash
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
+        @copy.reload
         @copy.update(state: 'finished', error_info: nil)
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
+        @copy.reload
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
       end
