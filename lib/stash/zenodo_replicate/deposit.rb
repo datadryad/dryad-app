@@ -20,7 +20,7 @@ module Stash
         # mg = MetadataGenerator.new(resource: @resource)
         json = (pre_reserve_doi ? { metadata: { prereserve_doi: true } } : {})
         resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json,
-                                   zc_id: @zc_id)
+                                                                                    zc_id: @zc_id)
 
         @deposition_id = resp[:id]
         @links = resp[:links]

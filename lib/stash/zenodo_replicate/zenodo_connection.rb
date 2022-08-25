@@ -22,17 +22,13 @@ module Stash
         false
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def self.standard_request(method, url, **args)
         retries = 0
 
         # the zenodo copy so we can log all the requests to the database
-        zen_copy = if args[:zc_id]
-                     StashEngine::ZenodoCopy.where(id: args[:zc_id]).first
-                   else
-                     nil
-                   end
+        zen_copy = (StashEngine::ZenodoCopy.where(id: args[:zc_id]).first if args[:zc_id])
         args.delete(:zc_id)
-
 
         # if the caller wants to give a retry_limit, they can.  Useful for file uploads where there is streaming
         retry_limit = args[:retries] || RETRY_LIMIT
@@ -78,6 +74,7 @@ module Stash
           # rubocop:enable Style/GuardClause
         end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def self.log_to_database(item:, zen_copy:)
         return unless zen_copy
