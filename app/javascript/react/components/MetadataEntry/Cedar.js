@@ -7,7 +7,7 @@ import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
-import { CedarModal } from "./CedarModal";
+
 
 function Cedar({resource, config}) {
 
@@ -24,8 +24,6 @@ function Cedar({resource, config}) {
     
     const formRef = useRef();
     const templateSelectRef = useRef();
-    const [showModal, setShowModal] = useState(false);
-    const [cedarTemplate, setCedarTemplate] = useState(0);
     
     console.log("Rendering Cedar.js");
 
@@ -35,19 +33,6 @@ function Cedar({resource, config}) {
 	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
     }
 
-    function initCedar() {
-	console.log("CedarModal.init the modal for template", templateSelectRef.current.value);
-
-	// Inject the cedar editor into the modal and open it
-	document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
-	$('#genericModalContent').html("<script src=\"" + config.table.editor_url + "\"></script>" +
-				       "<cedar-embeddable-editor />");
-	$('#genericModalDialog')[0].showModal();
-    
-	// Wait to ensure the page is loaded before initializing the Cedar config
-	setTimeout(configCedar, 500);
-    }
-    
     const openModal = () => {
 	if (templateSelectRef.current.value == 0) {
 	    console.log("Cannot open modal unless a template is selected.");
@@ -56,7 +41,16 @@ function Cedar({resource, config}) {
 	// only initialize if it hasn't been initialized yet
 	let currModalClass = document.querySelector('#genericModalContent').classList[0];
 	if(currModalClass == 'c-modal-content__normal') {
-	    initCedar();
+	    console.log("Cedar init the modal for template", templateSelectRef.current.value);
+	    
+	    // Inject the cedar editor into the modal and open it
+	    document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
+	    $('#genericModalContent').html("<script src=\"" + config.table.editor_url + "\"></script>" +
+					   "<cedar-embeddable-editor />");
+	    $('#genericModalDialog')[0].showModal();
+	    
+	    // Wait to ensure the page is loaded before initializing the Cedar config
+	    setTimeout(configCedar, 250);
 	}	
     };
 

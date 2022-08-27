@@ -26,6 +26,7 @@
 								       'c-modal-content__normal');
       document.querySelector('#genericModalContent').classList.replace('c-modal-content__cedar',
 								       'c-modal-content__normal');
-    $('#genericModalDialog')[0].close(); // uses [0] to get native object rather than jQuery object (I think)
+      $('#genericModalDialog')[0].close(); // uses [0] to get native object rather than jQuery object (I think)
+      $('#genericModalContent').html("");
   });
 </script>
