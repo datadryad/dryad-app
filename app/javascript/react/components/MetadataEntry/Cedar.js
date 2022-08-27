@@ -28,20 +28,38 @@ function Cedar({resource, config}) {
     const [cedarTemplate, setCedarTemplate] = useState(0);
     
     console.log("Rendering Cedar.js");
+
+    function configCedar() {
+	console.log("Loading CEDAR config");
+	var comp = document.querySelector('cedar-embeddable-editor');
+	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
+    }
+
+    function initCedar() {
+	console.log("CedarModal.init the modal for template", templateSelectRef.current.value);
+
+	// Inject the cedar editor into the modal and open it
+	document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
+	$('#genericModalContent').html("<script src=\"" + config.table.editor_url + "\"></script>" +
+				       "<cedar-embeddable-editor />");
+	$('#genericModalDialog')[0].showModal();
+    
+	// Wait to ensure the page is loaded before initializing the Cedar config
+	setTimeout(configCedar, 500);
+    }
     
     const openModal = () => {
 	if (templateSelectRef.current.value == 0) {
 	    console.log("Cannot open modal unless a template is selected.");
 	    return;
 	}
-	console.log("openModal");
-	setShowModal(true);
+	// only initialize if it hasn't been initialized yet
+	let currModalClass = document.querySelector('#genericModalContent').classList[0];
+	if(currModalClass == 'c-modal-content__normal') {
+	    initCedar();
+	}	
     };
 
-    const clearModalSettings = () => {
-
-    };
-    
     const templateOptions = () => {
 	templates.map((template, index) => (
 	    <option value="{template}" label="Form {template}" />
@@ -81,13 +99,6 @@ function Cedar({resource, config}) {
 			    })}
 			</select>
 			<button type="submit" className="o-button__add" onClick={openModal}>Add Metadata Form</button>
-			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} config={config} /> : null}
-			{
-			    // if the modal was opened, clear the flag that opened it, so it doesn't reopen when other state changes
-			    setShowModal(false)
-			}
-			{ //clearModalSettings()
-			}
 		    </Form>		    
 		)}
 	    </Formik>
