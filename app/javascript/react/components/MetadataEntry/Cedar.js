@@ -9,7 +9,7 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import { CedarModal } from "./CedarModal";
 
-function Cedar({resource, path, config}) {
+function Cedar({resource, config}) {
 
     // do not display anything unless there is a template defined
     if (!config || !config.table || !config.table.templates) {
@@ -27,7 +27,7 @@ function Cedar({resource, path, config}) {
     const [showModal, setShowModal] = useState(false);
     const [cedarTemplate, setCedarTemplate] = useState(0);
     
-    console.log("Cedar.js, path is ", path);
+    console.log("Rendering Cedar.js");
     
     const openModal = () => {
 	if (templateSelectRef.current.value == 0) {
@@ -38,7 +38,10 @@ function Cedar({resource, path, config}) {
 	setShowModal(true);
     };
 
+    const clearModalSettings = () => {
 
+    };
+    
     const templateOptions = () => {
 	templates.map((template, index) => (
 	    <option value="{template}" label="Form {template}" />
@@ -59,14 +62,7 @@ function Cedar({resource, path, config}) {
 		innerRef={formRef}
 		onSubmit={(values, {setSubmitting}) => {
 		    showSavingMsg();
-		    axios.post(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'text/javascript'}})
-			.then((data) => {
-			     if (data.status !== 200) {
-				 console.log('Received ' + data.status + ' response from CEDAR form');
-			     }
-			    showSavedMsg();
-			    setSubmitting(false);
-			});
+		    console.log("submitting Cedar selection form");
 		}}
 	    >	   
 		{(formik) => (
@@ -83,11 +79,19 @@ function Cedar({resource, path, config}) {
 			    { templates.map((templ) => {
 				return(<option key={ templ[0] } value={ templ[0] } label={ templ[1] } />);
 			    })}
-			</select><button className="o-button__add" onClick={openModal}>Add Metadata Form</button>
+			</select>
+			<button type="submit" className="o-button__add" onClick={openModal}>Add Metadata Form</button>
 			{showModal ? <CedarModal setShowModal={setShowModal} template={templateSelectRef.current.value} config={config} /> : null}
-		    </Form>
+			{
+			    // if the modal was opened, clear the flag that opened it, so it doesn't reopen when other state changes
+			    setShowModal(false)
+			}
+			{ //clearModalSettings()
+			}
+		    </Form>		    
 		)}
 	    </Formik>
+
 	</div>
     );
 }
