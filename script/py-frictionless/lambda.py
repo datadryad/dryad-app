@@ -12,7 +12,9 @@ def lambda_handler(event, context):
     print(exception)
 
   headers = {'Authorization': f'Bearer {event["token"]}'}
-  r = requests.put(event['callback_url'], headers=headers)
+
+  update = { 'status': 'noissues', 'report': report }
+  r = requests.put(event['callback_url'], headers=headers, json=update)
   pprint(r)
 
   return json.dumps({'status': r.status_code})
