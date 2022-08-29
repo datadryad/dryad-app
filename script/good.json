@@ -1,0 +1,268 @@
+{
+  "report": {
+    "version": "4.38.0",
+    "time": 0.314,
+    "errors": [],
+    "tasks": [
+      {
+        "resource": {
+          "path": "/Users/sfisher/workspace/direct-to-cdl-dryad/dryad-app/tmp/sampledatasafety.xlsx20220829-8506-rpcjxk.xlsx",
+          "name": "sampledatasafety.xlsx20220829-8506-rpcjxk",
+          "profile": "tabular-data-resource",
+          "scheme": "file",
+          "format": "xlsx",
+          "hashing": "md5",
+          "stats": {
+            "hash": "38b2736fcd7e7850466b3f5103532aed",
+            "bytes": 99199,
+            "fields": 3,
+            "rows": 17
+          },
+          "encoding": "utf-8",
+          "schema": {
+            "missingValues": [
+              "na",
+              "n/a",
+              ".",
+              "none",
+              "NA",
+              "N/A",
+              "N.A.",
+              "n.a.",
+              "-",
+              "empty",
+              "blank"
+            ],
+            "fields": [
+              {
+                "type": "yearmonth",
+                "name": "field1"
+              },
+              {
+                "type": "yearmonth",
+                "name": "field2"
+              },
+              {
+                "type": "string",
+                "name": "field3"
+              }
+            ]
+          }
+        },
+        "time": 0.314,
+        "scope": [
+          "hash-count-error",
+          "byte-count-error",
+          "field-count-error",
+          "row-count-error",
+          "blank-header",
+          "extra-label",
+          "missing-label",
+          "blank-label",
+          "duplicate-label",
+          "incorrect-label",
+          "blank-row",
+          "primary-key-error",
+          "foreign-key-error",
+          "extra-cell",
+          "missing-cell",
+          "type-error",
+          "constraint-error",
+          "unique-error"
+        ],
+        "partial": false,
+        "errors": [
+          {
+            "label": "",
+            "fieldName": "field1",
+            "fieldNumber": 1,
+            "fieldPosition": 1,
+            "labels": [
+              "",
+              "",
+              ""
+            ],
+            "rowPositions": [
+              1
+            ],
+            "code": "blank-label",
+            "name": "Blank Label",
+            "tags": [
+              "#table",
+              "#header",
+              "#label"
+            ],
+            "note": "",
+            "message": "Label in the header in field at position \"1\" is blank",
+            "description": "A label in the header row is missing a value. Label should be provided and not be blank."
+          },
+          {
+            "label": "",
+            "fieldName": "field2",
+            "fieldNumber": 2,
+            "fieldPosition": 2,
+            "labels": [
+              "",
+              "",
+              ""
+            ],
+            "rowPositions": [
+              1
+            ],
+            "code": "blank-label",
+            "name": "Blank Label",
+            "tags": [
+              "#table",
+              "#header",
+              "#label"
+            ],
+            "note": "",
+            "message": "Label in the header in field at position \"2\" is blank",
+            "description": "A label in the header row is missing a value. Label should be provided and not be blank."
+          },
+          {
+            "label": "",
+            "fieldName": "field3",
+            "fieldNumber": 3,
+            "fieldPosition": 3,
+            "labels": [
+              "",
+              "",
+              ""
+            ],
+            "rowPositions": [
+              1
+            ],
+            "code": "blank-label",
+            "name": "Blank Label",
+            "tags": [
+              "#table",
+              "#header",
+              "#label"
+            ],
+            "note": "",
+            "message": "Label in the header in field at position \"3\" is blank",
+            "description": "A label in the header row is missing a value. Label should be provided and not be blank."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 1,
+            "rowPosition": 2,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"2\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 2,
+            "rowPosition": 3,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"3\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 3,
+            "rowPosition": 4,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"4\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 6,
+            "rowPosition": 7,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"7\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 11,
+            "rowPosition": 12,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"12\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          },
+          {
+            "cells": [
+              "",
+              "",
+              ""
+            ],
+            "rowNumber": 15,
+            "rowPosition": 16,
+            "code": "blank-row",
+            "name": "Blank Row",
+            "tags": [
+              "#table",
+              "#row"
+            ],
+            "note": "",
+            "message": "Row at position \"16\" is completely blank",
+            "description": "This row is empty. A row should contain at least one value."
+          }
+        ],
+        "stats": {
+          "errors": 9
+        },
+        "valid": false
+      }
+    ],
+    "stats": {
+      "errors": 9,
+      "tasks": 1
+    },
+    "valid": false
+  }
+}
