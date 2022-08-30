@@ -9,23 +9,29 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 
-function Cedar({resource, config}) {
-
+function Cedar({resource, appConfig}) {
+    console.log("Rendering Cedar.js");
+    
     // do not display anything unless there is a template defined
-    if (!config || !config.table || !config.table.templates) {
+    if (!appConfig || !appConfig.table || !appConfig.table.templates) {
 	return null;
     }
-    
-    const templates = config.table.templates;
-    console.log("templates", templates);    
 
-    // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
-    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    
     const formRef = useRef();
     const templateSelectRef = useRef();
     
-    console.log("Rendering Cedar.js");
+    const templates = appConfig.table.templates;
+    console.log("templates", templates);    
+    const templateOptions = () => {
+	templates.map((template, index) => (
+	    <option value="{template}" label="Form {template}" />
+	));
+    };
+    console.log("templateOptions", templateOptions);
+
+    // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');    
+
 
     function configCedar() {
 	console.log("Loading CEDAR config");
@@ -33,7 +39,7 @@ function Cedar({resource, config}) {
 	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
     }
 
-    const openModal = () => {
+    function openModal() {
 	if (templateSelectRef.current.value == 0) {
 	    console.log("Cannot open modal unless a template is selected.");
 	    return;
@@ -45,7 +51,7 @@ function Cedar({resource, config}) {
 	    
 	    // Inject the cedar editor into the modal and open it
 	    document.querySelector('#genericModalContent').classList.replace('c-modal-content__normal', 'c-modal-content__cedar');
-	    $('#genericModalContent').html("<script src=\"" + config.table.editor_url + "\"></script>" +
+	    $('#genericModalContent').html("<script src=\"" + appConfig.table.editor_url + "\"></script>" +
 					   "<cedar-embeddable-editor />");
 	    $('#genericModalDialog')[0].showModal();
 	    
@@ -54,14 +60,6 @@ function Cedar({resource, config}) {
 	}	
     };
 
-    const templateOptions = () => {
-	templates.map((template, index) => (
-	    <option value="{template}" label="Form {template}" />
-	));
-    };
-
-
-    console.log("templateOptions", templateOptions);
     
     return (
 	<div className="cedar-container">
