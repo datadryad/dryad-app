@@ -17,6 +17,7 @@ including universities, research institutions and academic libraries. See more a
         <li>Chan Zuckerberg Initiative</li>
         <li>Claremont Graduate University</li>
         <li>Claremont McKenna College</li>
+        <li>Colorado State University</li>
         <li>Columbia University</li>
         <li>Desert Research Institute</li>
         <li>Harvey Mudd College</li>
@@ -43,7 +44,6 @@ including universities, research institutions and academic libraries. See more a
         <li>Scripps College</li>
         <li>Stanford University</li> 
         <li>Texas Tech University</li>
-        <li>University of California, California Digital Library</li>
         <li>UC Berkeley</li>
         <li>UC Davis</li>
         <li>UC Irvine</li>
@@ -55,13 +55,16 @@ including universities, research institutions and academic libraries. See more a
         <li>UC Santa Barbara</li>
         <li>UC Santa Cruz</li>
         <li>The University of British Columbia</li>
+        <li>University of California, California Digital Library</li>
         <li>University of Illinois, Urbana-Champagne</li>
         <li>University of Minnesota</li>
         <li>University of New Mexico</li>
         <li>University of New South Wales, Sydney</li>
         <li>The University of Rhode Island</li>
+        <li>University of Rochester</li>
         <li>The University of Sheffield</li>
 		    <li>University of Wisconsin, Madison</li>
+        <li>US Fish and Wildlife Service</li>
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
@@ -77,24 +80,29 @@ including universities, research institutions and academic libraries. See more a
   <tr>
     <td>
       <ul>
-	    <li>American Academy for the Advancement of Science</li>
+	      <li>American Academy for the Advancement of Science</li>
         <li>American Genetic Association</li>
+        <li>American Geophysical Union</li>
+        <li>American Medical Informatics Association</li>
         <li>American Society of Naturalists</li>
         <li>American Society of Plant Taxonomists</li>
         <li>Association for Tropical Biology and Conservation</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
         <li>eLife</li>
-		<li>European Society for Evolutionary Biology</li>
-    </ul>
-  </td>
-  <td>
-    <ul>
+		    <li>European Society for Evolutionary Biology</li>
         <li>Hindawi</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Institute of Botany, Chinese Academy of Sciences</li>
+        <li>International Society for Behavioral Ecology</li>
         <li>John Wiley &amp; Sons, Inc</li>
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
-		<li>The Paleontological Society</li>
+        <li>The Paleontological Association</li>
+		    <li>The Paleontological Society</li>
         <li>The Royal Society</li>
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
@@ -102,5 +110,5 @@ including universities, research institutions and academic libraries. See more a
       </ul>
     </td>
   </tr>
-  </tbody>
+</tbody>
 </table>
