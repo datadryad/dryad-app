@@ -131,6 +131,21 @@ not be used ever again, you can install it yourself.
      for installing software (you can’t use it to login).
 
 
+Web access to data files
+========================
+
+To transfer files off of the VE, copy the files you want into
+`C:\DryadData\PublicWebfiles`, and they will then be available from other
+computers at via a web browser. For example, the file
+`C:\DryadData\PublicWebfiles\myfile.txt` will be available at
+`http://curator.datadryad.org/myfile.txt`. Please delete files from
+PublicWebfiles after they are no longer needed.
+
+This file availability is handled through the default installation of
+Microsoft's IIS server. The configuration has been changed to make the
+`PublicWebfiles` directory the home directory.
+
+
 Connecting from a Chromebook
 ============================
 
