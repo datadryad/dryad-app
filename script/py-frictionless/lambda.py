@@ -7,14 +7,17 @@ import sys
 def lambda_handler(event, context):
   detector = Detector(field_missing_values="na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank".split(","))
   try:
-    report = validate(event['download_url'], "resource", detector=detector)
+    report = validate(event["download_url"], "resource", detector=detector)
   except Exception as exception:
-    print(exception)
+    update(token=event["token"], status='error', report='something', callback=event["callback_url"] )
 
-  headers = {'Authorization': f'Bearer {event["token"]}'}
+  s = update(token=event["token"], status='issues', \
+    report=json.dumps({'report': report}), callback=event['callback_url'])
+  return json.dumps({'status': s})
 
-  update = { 'status': 'noissues', 'report': report }
-  r = requests.put(event['callback_url'], headers=headers, json=update)
-  pprint(r)
-
-  return json.dumps({'status': r.status_code})
+# tries to upload it to our API
+def update(token, status, report, callback):
+  headers = {'Authorization': f'Bearer {token}'}
+  update = { 'status': status, 'report': report }
+  r = requests.put(callback, headers=headers, json=update)
+  return r.status_code
