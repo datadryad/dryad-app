@@ -72,9 +72,9 @@ module Stash
         @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
         file_change_list = FileChangeList.new(resource: @resource, resource_method: @resource_method)
-        @file_collection = FileCollection.new(file_change_list_obj: file_change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: file_change_list, zc_id: @copy.id)
         # I was creating this later, but it can be created earlier and eases testing to do it earlier
-        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @copy.id)
       end
 
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -92,6 +92,7 @@ module Stash
 
         return if nothing_to_submit?
 
+        @copy.reload
         @copy.update(state: 'replicating')
         @copy.increment!(:retries)
 
@@ -103,6 +104,7 @@ module Stash
                 end
 
         # update the database with current information on this dataset from Zenodo
+        @copy.reload
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                      conceptrecid: @resp[:conceptrecid])
 
@@ -118,6 +120,7 @@ module Stash
         if @resp[:state] == 'done' # then create new version
           @resp = @deposit.new_version(deposition_id: @previous_copy.deposition_id)
           # the doi and deposition id have changed, so update
+          @copy.reload
           @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
                        conceptrecid: @resp[:conceptrecid])
         end
@@ -130,16 +133,19 @@ module Stash
 
         # resources method is the method off resource to call to get file list for that type of file like software or supplemental
         # will raise exception if there are problems between file lists both places
-        Stash::ZenodoSoftware::FileCollection.check_uploaded_list(resource: @resource, resource_method: @resource_method, deposition_id: @resp[:id])
+        Stash::ZenodoSoftware::FileCollection.check_uploaded_list(resource: @resource, resource_method:
+          @resource_method, deposition_id: @resp[:id], zc_id: @copy.id)
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
         Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
 
+        @copy.reload
         @copy.update(state: 'finished', error_info: nil)
 
         # make sure the dataset has the relationships for these things sent to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
+        @copy.reload
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
         @copy.reload

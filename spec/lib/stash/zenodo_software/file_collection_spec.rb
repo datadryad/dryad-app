@@ -17,9 +17,10 @@ module Stash
         @software_http_upload = create(:software_file, upload_file_size: 1000,
                                                        url: 'http://example.org/example', resource: @resource)
 
+        @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
 
-        @file_collection = FileCollection.new(file_change_list_obj: @change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: @zenodo_copy.id)
         @bucket_url = 'https://example.org/my/great/test/bucket'
       end
 
@@ -36,7 +37,8 @@ module Stash
         it 'calls to remove any files in the list supplied by the change list class' do
           filenames = [Faker::File.file_name, Faker::File.file_name]
           allow(@change_list).to receive(:delete_list).and_return(filenames)
-          expect(Stash::ZenodoReplicate::ZenodoConnection).to receive(:standard_request).with(:delete, anything).twice
+          expect(Stash::ZenodoReplicate::ZenodoConnection).to receive(:standard_request).with(:delete, anything,
+                                                                                              anything).twice
           @file_collection.remove_files(zenodo_bucket_url: @bucket_url)
         end
       end
@@ -60,8 +62,9 @@ module Stash
           @resource = create(:resource)
           @software_http_upload = create(:software_file, upload_file_size: 0,
                                                          url: 'http://example.org/example', resource: @resource)
+          zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
           @change_list = FileChangeList.new(resource: @resource, resource_method: :software_files)
-          @file_collection = FileCollection.new(file_change_list_obj: @change_list)
+          @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: zc.id)
           @bucket_url = 'https://example.org/my/great/test/bucket'
 
           allow(@change_list).to receive(:upload_list).and_return(@resource.software_files)
@@ -130,7 +133,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.not_to raise_error
         end
 
@@ -144,7 +148,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /The number of Dryad files \(9\) does not match/)
         end
 
@@ -157,7 +162,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
         end
 
@@ -172,7 +178,8 @@ module Stash
           expect do
             FileCollection.check_uploaded_list(resource: @resource,
                                                resource_method: :software_files,
-                                               deposition_id: @zenodo_copy.deposition_id)
+                                               deposition_id: @zenodo_copy.deposition_id,
+                                               zc_id: @zenodo_copy.id)
           end.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
         end
       end
