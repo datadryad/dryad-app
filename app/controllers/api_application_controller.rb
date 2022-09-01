@@ -66,7 +66,22 @@ class ApiApplicationController < ::StashEngine::ApplicationController
 
   def optional_api_user
     @user = nil
-    @user = doorkeeper_token.application.owner if doorkeeper_token
+    # the user we're operating for varies depending on the grant type.
+    return unless doorkeeper_token
+
+    @user = if doorkeeper_token.resource_owner_id.present?
+              # Authorization Code Grant
+              user = StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
+              # set user role to 'user' for this request (without saving to db) since people doing proxy edits for a
+              # user's data don't get special curator/admin/superuser permissions
+              if user.present?
+                user.role = 'user'
+                user
+              end
+            else
+              # Client Credentials Grant type
+              doorkeeper_token.application.owner
+            end
   end
 
   def require_in_progress_resource

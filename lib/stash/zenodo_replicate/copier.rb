@@ -51,29 +51,33 @@ module Stash
         error_if_replicating
         error_if_out_of_order
 
+        @copy.reload
         @copy.update(state: 'replicating')
         @copy.increment!(:retries)
 
         # a zenodo deposit class for working with deposits
-        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @copy.id)
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition
+        @copy.reload
         @copy.update(deposition_id: @deposit.deposition_id)
 
         # update metadata and get response which has info links in it
         @resp = @deposit.update_metadata
 
         # update files
-        file_change_list = FileChangeList.new(resource: @resource)
-        @file_collection = Stash::ZenodoSoftware::FileCollection.new(file_change_list_obj: file_change_list)
+        file_change_list = FileChangeList.new(resource: @resource, zc_id: @copy.id)
+        @file_collection = Stash::ZenodoSoftware::FileCollection.new(file_change_list_obj: file_change_list, zc_id: @copy.id)
         @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
+        @copy.reload
         @copy.update(state: 'finished', error_info: nil)
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
+        @copy.reload
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
         @copy.update(state: 'error', error_info: error_info)
       end

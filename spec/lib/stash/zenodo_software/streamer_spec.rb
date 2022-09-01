@@ -15,15 +15,18 @@ module Stash
         @resource = create(:resource)
         @resource.software_files << create(:software_file)
 
+        @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
+
         # @software_http_upload = create(:software_file, upload_file_size: 1000,
         #                               url: 'http://example.org/example', resource: @resource)
 
-        @file_collection = FileCollection.new(file_change_list_obj: @change_list)
+        @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: @zenodo_copy.id)
         @bucket_url = 'https://example.org/my/great/test/bucket'
 
         @random_body = Random.new.bytes(rand(1000)).b
 
-        @streamer = Streamer.new(file_model: @resource.software_files.first, zenodo_bucket_url: @bucket_url)
+        @streamer = Streamer.new(file_model: @resource.software_files.first, zenodo_bucket_url: @bucket_url,
+                                 zc_id: @zenodo_copy.id)
       end
 
       describe '#stream' do
@@ -97,7 +100,7 @@ module Stash
           data_file = @resource.data_files.first
 
           # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::MerrittError, "can't create presigned url")
-          @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url)
+          @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url, zc_id: @zenodo_copy.id)
 
           expect do
             @streamer.stream(digest_types: ['md5'])

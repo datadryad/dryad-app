@@ -33,10 +33,10 @@ module Stash
         it 'finds previously published resource' do
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # the first version should be submitted because it has that special published curation activity last
           expect(@fcl.previous_published_resource).to eq(@resources.first)
@@ -48,10 +48,10 @@ module Stash
 
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # the first version should be submitted because it has that special published curation activity last
           expect(@fcl.previous_published_resource).to be_nil
@@ -63,11 +63,11 @@ module Stash
 
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # existing files for the resource already at zenodo from both submissions
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # the first version should be submitted because it has that special published curation activity last
           expect(@fcl.previous_published_resource).to be_nil
@@ -77,14 +77,14 @@ module Stash
       describe '#published_previously?' do
         it 'shows not published if no results for last published' do
           stub_existing_files(deposition_id: @resources.first.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: @zenodo_copy.id)
           allow(@fcl).to receive(:previous_published_resource).and_return([])
           expect(@fcl.published_previously?).to be(false)
         end
 
         it 'shows published if results for last published' do
           stub_existing_files(deposition_id: @resources.first.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: @zenodo_copy.id)
           allow(@fcl).to receive(:previous_published_resource).and_return([])
           expect(@fcl.published_previously?).to be(false)
         end
@@ -98,7 +98,7 @@ module Stash
           ]
           @resources.last.data_files << files
           stub_existing_files(deposition_id: @resources.first.zenodo_copies.first.deposition_id, filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: @zenodo_copy.id)
           allow(@fcl).to receive(:previous_published_resource).and_return([])
           expect([]).to eq(@fcl.delete_list)
         end
@@ -106,7 +106,7 @@ module Stash
         it 'gives list of files to delete from items not present in this version but at zenodo' do
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
           @resources.first.data_files << [create(:data_file), create(:data_file)]
@@ -115,7 +115,7 @@ module Stash
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: @resources.first.data_files.map(&:upload_file_name) +
                                 @resources.last.data_files.map(&:upload_file_name))
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # because the first files show as present in zenodo (from stub), but they are not part of the current files
           expect(@fcl.delete_list).to eq(@resources.first.data_files.map(&:upload_file_name))
@@ -126,7 +126,7 @@ module Stash
         it 'uploads only things that have changed since last submission' do
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
           first_files = [create(:data_file), create(:data_file)]
@@ -139,7 +139,7 @@ module Stash
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: first_files.map(&:upload_file_name))
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # only new files since last submission need to be sent
           expect(@fcl.upload_list).to eq(new_files)
@@ -148,7 +148,7 @@ module Stash
         it "uploads everything that isn't at zenodo if the previous submissions don't seem to have uploaded files" do
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res
-          create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
 
           # add some files
           first_files = [create(:data_file), create(:data_file)]
@@ -161,7 +161,7 @@ module Stash
 
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: [])
-          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last)
+          @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # sends all 4 files present in this version, even though two were supposedly uploaded before, but they're not
           # present at zenodo right now, so need to send them, anyway

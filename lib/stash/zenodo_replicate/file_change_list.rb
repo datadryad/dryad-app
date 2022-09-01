@@ -24,11 +24,12 @@ module Stash
       # slower and use more upload time and bandwidth.  Ideally, we should just update any files that have changed
       # since our last publication, add any files that don't exist at Zenodo and remove any files that no longer exist
       # in our data and leave the rest of the files that stayed the same alone.
-      def initialize(resource:)
+      def initialize(resource:, zc_id:)
         # gets filenames for items already in Zenodo
-        resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{resource.zenodo_copies.data.first.deposition_id}")
+        @zc_id = zc_id
+        resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{resource.zenodo_copies.data.first.deposition_id}",
+                                   zc_id: @zc_id)
         @existing_zenodo_filenames = resp[:files].map { |f| f[:filename] }
-
         @resource = resource
       end
 

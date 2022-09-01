@@ -5,7 +5,7 @@ module StashEngine
   class SessionsController < ApplicationController
 
     before_action :bust_cache
-    before_action :require_login, only: %i[callback choose_sso no_partner sso]
+    before_action :require_login_wo_tenant, only: %i[choose_sso no_partner callback sso]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
