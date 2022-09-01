@@ -105,10 +105,11 @@ module StashEngine
     # triggers lambda validation
     def trigger_frictionless
       client = Aws::Lambda::Client.new(region: 'us-west-2')
+      f = StashEngine::GenericFile.where(id: params[:id]).first
       payload = {
-        "download_url": '' || f.direct_s3_presigned_url,
-        "callback_url": "https://dryad-dev.cdlib.org/api/v2/files/13301/frictionlessReport",
-        "token": ""
+        "download_url": f.url || f.direct_s3_presigned_url,
+        "callback_url": api_url_helper.file_frictionless_report_path(f.id),
+        "token": StashEngine::ApiToken.token
       }
       byebug
 
