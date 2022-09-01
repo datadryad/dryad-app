@@ -47,21 +47,27 @@ module StashEngine
       end
     end
 
+    # this runs validation on all the files passed in as params['file_ids'] and returns a json representation of the
+    # file along with dependent frictionless report with only the fields 'report' and 'status'.
+    # generic_file_validate_frictionless_path or generic_file/validate_frictionless/:resource_id?file_ids .
+
+    # looks like this is called from within UploadFile.js and validateFrictionless
     def validate_frictionless
+      # get scope of ALL tabular files from entire table of files
       tabular_files = StashEngine::GenericFile.tabular_files
       begin
-        files = tabular_files.find(params['file_ids'])
+        files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
       rescue ActiveRecord::RecordNotFound => e
         puts "Record not found: #{e.inspect}" # only for rubocop
         render json: { status: 'found non-csv file(s)' }
         return
       end
 
-      files.each(&:set_checking_status)
-      files.each(&:validate_frictionless)
+      files.each(&:set_checking_status) # set to checking status
+      files.each(&:validate_frictionless) # this validates each and sets report info in database
       render json: files.as_json(
         methods: :type, include: { frictionless_report: { only: %w[report status] } }
-      )
+      ) # this returns a list of all files and report
     end
 
     # quick start guide for setup because the bucket needs to be set a certain way for CORS, also
