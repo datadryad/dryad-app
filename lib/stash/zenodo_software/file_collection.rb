@@ -12,7 +12,8 @@ module Stash
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      def initialize(file_change_list_obj:)
+      def initialize(file_change_list_obj:, zc_id:)
+        @zc_id = zc_id
         @file_change_list = file_change_list_obj
       end
 
@@ -25,7 +26,7 @@ module Stash
       def remove_files(zenodo_bucket_url:)
         @file_change_list.delete_list.each do |del_file|
           url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(del_file)}"
-          ZC.standard_request(:delete, url)
+          ZC.standard_request(:delete, url, zc_id: @zc_id)
         end
       end
 
@@ -33,7 +34,7 @@ module Stash
         @file_change_list.upload_list.each do |upload|
           next if upload.upload_file_size.nil? || upload.upload_file_size == 0
 
-          streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url)
+          streamer = Streamer.new(file_model: upload, zenodo_bucket_url: zenodo_bucket_url, zc_id: @zc_id)
           digests = ['md5']
           digests.push(upload.digest_type) if upload.digest_type.present? && upload.digest.present?
           digests.uniq!
@@ -75,8 +76,8 @@ module Stash
       end
 
       # resource method is :software_files or :supp_files, the method from resource to get the right type of files
-      def self.check_uploaded_list(resource:, resource_method:, deposition_id:)
-        response = Stash::ZenodoReplicate::Deposit.get_by_deposition(deposition_id: deposition_id)
+      def self.check_uploaded_list(resource:, resource_method:, deposition_id:, zc_id:)
+        response = Stash::ZenodoReplicate::Deposit.get_by_deposition(deposition_id: deposition_id, zc_id: zc_id)
         resource.reload # just in case it's out of date
         dry_files = resource.public_send(resource_method).present_files
         zen_files = response[:files]
