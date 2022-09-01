@@ -1,4 +1,6 @@
 require 'stash/aws/s3'
+require 'aws-sdk-lambda'
+
 module StashEngine
   class GenericFilesController < ApplicationController
 
@@ -98,6 +100,18 @@ module StashEngine
           render json: { new_file: db_file }
         end
       end
+    end
+
+    # triggers lambda validation
+    def trigger_frictionless
+      client = Aws::Lambda::Client.new(region: 'us-west-2')
+      payload = {
+        "download_url": '' || f.direct_s3_presigned_url,
+        "callback_url": "https://dryad-dev.cdlib.org/api/v2/files/13301/frictionlessReport",
+        "token": ""
+      }
+      byebug
+
     end
 
     # everything below this in the file is protected (accessible by the class and those that inherit from it)

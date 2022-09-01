@@ -55,6 +55,7 @@ gem 'uglifier', '~> 4.2.0'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
 gem 'aws-sdk-s3', '~> 1.113'
+gem 'aws-sdk-lambda'
 # gem 'blacklight', '~> 7.19.2' # do we really need this should be required by geoblacklight
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'

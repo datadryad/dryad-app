@@ -195,6 +195,10 @@ Rails.application.routes.draw do
     post 'generic_file/validate_frictionless/:resource_id',
          to: 'generic_files#validate_frictionless',
          as: 'generic_file_validate_frictionless'
+
+    post 'generic_file/trigger_frictionless/:id',
+         to: 'generic_files#trigger_frictionless',
+         as: 'generic_file_trigger_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
@@ -262,6 +266,7 @@ Rails.application.routes.draw do
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
+    get 'testy', to: 'pages#testy'
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
