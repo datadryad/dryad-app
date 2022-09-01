@@ -1,4 +1,5 @@
 import json
+import time
 from pprint import pprint
 from frictionless import Detector, validate, validate_resource
 import requests
@@ -12,20 +13,35 @@ def lambda_handler(event, context):
     update(token=event["token"], status='error', report=str(e), callback=event["callback_url"] )
     return {"status": 200, "message": "Error parsing file with Frictionless"}
 
-  s = update(token=event["token"], status='issues', \
-    report=json.dumps({'report': report}), callback=event['callback_url'])
-  return {'status': s, 'Updated report in Dryad API'}
+  # these errors indicate a failure by Frictionless to operate on file and are not linting results
+  if report["errors"]:
+    update(token=event["token"], status='error', report=report, callback=event["callback_url"] )
+    return {"status": 200, "message": "Error parsing file with Frictionless"}
+
+  lint_status = "issues" if report["tasks"][0]["errors"] else 'noissues'
+  poss_error_msg = report["tasks"][0]["errors"][0].get("description", "")
+
+  if poss_error_msg.startswith("Data reading error"):
+    lint_status = "error"
+  update(token=event["token"], status=lint_status, report=json.dumps({'report': report}), callback=event['callback_url'])
+
+  return report
 
 # tries to upload it to our API
 def update(token, status, report, callback):
   headers = {'Authorization': f'Bearer {token}'}
   update = { 'status': status, 'report': report }
-  r = requests.put(callback, headers=headers, json=update)
+  for i in range(0,5):
+    r = requests.put(callback, headers=headers, json=update)
+    if r.status_code < 400:
+      break
+    else:
+      time.sleep(5)
+
   return r.status_code
 
-# handle these HTTP::Error for downloading file
 
-# !result['errors'].empty? means there was an error while validating -->  @report.update(report: result_hash
-# .to_json, status:  'error') -- it's an error parsing or doing the frictionless
+# see terry's info about invoking a lambda
+# https://github.com/CDLUC3/mrt-cron/blob/main/consistency-driver/action_caller.rb
 
-# result[:report]['tasks'].first['errors'].empty? then 'noissues' else 'issues' -- this is the actual result
+
