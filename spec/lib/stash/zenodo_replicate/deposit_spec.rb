@@ -14,7 +14,8 @@ module Stash
 
       before(:each) do
         @resource = create(:resource)
-        @szd = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
+        @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
+        @szd = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @zenodo_copy.id)
       end
 
       describe '#new_deposition' do

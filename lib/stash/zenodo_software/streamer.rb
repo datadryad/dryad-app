@@ -7,11 +7,12 @@ module Stash
   module ZenodoSoftware
     class Streamer
 
-      def initialize(file_model:, zenodo_bucket_url:)
+      def initialize(file_model:, zenodo_bucket_url:, zc_id:)
         # on one end we'll have S3 or an HTTP URL and on the other end of the pipe the zenodo put request that looks like
         # PUT "#{@bucket_url}/#{ERB::Util.url_encode(file_model.upload_file_name)}"
         # ZC.standard_request(:put, upload_url, body: File.open(upload_file, 'rb'), headers: { 'Content-Type': nil })
 
+        @zc_id = zc_id
         @file_model = file_model
         @upload_url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(file_model.upload_file_name)}"
       end
@@ -54,7 +55,8 @@ module Stash
             .standard_request(:put, @upload_url,
                               body: read_pipe,
                               headers: { 'Content-Type': nil, 'Content-Length': response.headers['Content-Length'] },
-                              retries: 0)
+                              retries: 0,
+                              zc_id: @zc_id)
           # rescue HTTP::Error, Stash::ZenodoReplicate::ZenodoError  => e
           # puts 'caught error in thread'
         end

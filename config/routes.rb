@@ -109,6 +109,7 @@ Rails.application.routes.draw do
         get 'download', on: :member
         resources :files, shallow: true, path: '/files' do
           get :download, on: :member
+          resource :frictionless_report, path: '/frictionlessReport'
         end
       end
             

@@ -8,8 +8,15 @@ module StashEngine
         ]
     end
 
+    def require_login_wo_tenant
+      return if current_user.present?
+
+      flash[:alert] = 'You must be logged in.'
+      redirect_to stash_url_helpers.choose_login_path
+    end
+
     def require_login
-      if current_user
+      if current_user.present? && current_user.tenant_id.present?
         target_page = session[:target_page]
         if target_page.present?
           # This session had originally been navigating to a specific target_page and was redirected
