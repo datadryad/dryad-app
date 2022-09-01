@@ -155,6 +155,55 @@ to change to a corporate author, do the following:
 - Check the landing page to be sure it appears correctly.
 - There may be additional things someone wants done such as waiving payment or other things.
 
+Transfer Ownership / Change "Corresponding Author"
+==================================================
+
+The curators should give the dataset and ORCID information for who ownership goes to.  If you
+discover that this user has never logged in then you cannot transfer ownership until
+that user has logged in and has a record in the users table.
+
+Look up the dataset to see what you're dealing with and the resources involved.
+
+```
+SELECT res.* FROM stash_engine_resources res
+JOIN stash_engine_identifiers ids
+ON res.identifier_id = ids.id
+WHERE ids.identifier = '<bare-doi>'
+```
+
+Make a note of the user_id that owns the dataset and also note the last couple of resource.ids.
+
+Lookup the desired user_id to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
+```
+SELECT * FROM `stash_engine_users` WHERE `orcid` = '<new-owner-orcid>';
+```
+
+Lookup the current user_id and note the ORCID, name (you already have their user.id).
+```
+SELECT * FROM `stash_engine_users` WHERE `id` = '<old-owner-id>'
+```
+
+Update both the user_id and current_editor_id for the last couple versions to match the new owner.
+```
+UPDATE stash_engine_resources SET user_id=<new-id>, current_editor_id=<new-id> WHERE id IN (<id1, id2>);
+```
+
+Often, a user or curator has completely destroyed the correct association between the
+author and their ORCID by retyping someone else's name for the author that
+had a verified ORCID.  Check to see.
+
+```
+SELECT * FROM `stash_engine_authors` WHERE `resource_id` IN (<id1, id2>);
+```
+
+If necessary, change the two authors so they have the same
+ORCIDs associated with the names as in the user accounts 
+(which will have names and ORCIDS correct).
+
+If you don't update the authors to be sure authors/orcids are correct then the
+"corresponding author" may not appear correctly and it also plays havok with data consistency
+with ORCIDs for wrong people.
+
 Setting embargo on a dataset that was accidentally published
 =============================================================
 
