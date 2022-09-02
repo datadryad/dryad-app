@@ -31,24 +31,28 @@ module StashEngine
     end
 
     def new_token
-      attempts ||= 1
-      url = Rails.application.routes.url_helpers.oauth_token_url # url on current server to get token
+      # this works around issue with rails in development mode and simultaneous requests
+      # https://github.com/puma/puma/issues/2352
+      ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+        attempts ||= 1
+        url = Rails.application.routes.url_helpers.oauth_token_url # url on current server to get token
 
-      resp = HTTP.post(url,
-                       json: { client_id: app_id,
-                               client_secret: secret,
-                               grant_type: 'client_credentials' })
+        resp = HTTP.post(url,
+                         json: { client_id: app_id,
+                                 client_secret: secret,
+                                 grant_type: 'client_credentials' })
 
-      raise StashEngine::ApiTokenStatusError, "Received #{resp.status} code from API" if resp.status > 399
+        raise StashEngine::ApiTokenStatusError, "Received #{resp.status} code from API" if resp.status > 399
 
-      json = resp.parse
-      update(token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds))
-    rescue HTTP::Error, HTTP::TimeoutError, StashEngine::ApiTokenStatusError => e
-      logger.warn("Http error getting API key: #{e.full_message}")
-      sleep 3
-      retry if (attempts += 1) < 10
+        json = resp.parse
+        update(token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds))
+      rescue HTTP::Error, HTTP::TimeoutError, StashEngine::ApiTokenStatusError => e
+        logger.warn("Http error getting API key: #{e.full_message}")
+        sleep 3
+        retry if (attempts += 1) < 10
 
-      raise e
+        raise e
+      end
     end
   end
 end
