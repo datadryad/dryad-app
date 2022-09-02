@@ -104,15 +104,25 @@ module StashEngine
 
     # triggers lambda validation
     def trigger_frictionless
-      client = Aws::Lambda::Client.new(region: 'us-west-2')
+      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+      client = Aws::Lambda::Client.new(region: 'us-west-2', credentials: credentials)
       f = StashEngine::GenericFile.where(id: params[:id]).first
-      payload = {
-        "download_url": f.url || f.direct_s3_presigned_url,
-        "callback_url": api_url_helper.file_frictionless_report_path(f.id),
-        "token": StashEngine::ApiToken.token
-      }
-      byebug
 
+      payload = JSON.generate({
+        download_url: f.url || f.direct_s3_presigned_url,
+        callback_url: stash_url_helpers.file_frictionless_report_url(f.id)
+                                       .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org'),
+        token: StashEngine::ApiToken.token
+      })
+
+      resp = client.invoke(
+        { function_name: 'frictionless',
+          invocation_type: 'Event',
+          log_type: 'None',
+          payload: payload })
+
+      # expect resp.status_code == 202
+      render plain: "triggered -- wait for it to appear in database"
     end
 
     # everything below this in the file is protected (accessible by the class and those that inherit from it)
