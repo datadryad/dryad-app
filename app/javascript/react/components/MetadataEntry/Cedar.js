@@ -46,13 +46,9 @@ function Cedar({resource, appConfig}) {
 	};
     }
 
-    function setMetadata() {
+    
+    function restoreMetadata() {
 	var comp = document.querySelector('cedar-embeddable-editor');
-	console.log("loading resource", resource.id);
-	console.log("metadata is", resource.cedar_json);
-	console.log("type is", typeof resource.cedar_json);
-	console.log("metadata is", JSON.parse(resource.cedar_json));
-	console.log("type is", typeof JSON.parse(resource.cedar_json));
 		
 	// metadata that previously existed in this resource
 	if(resource.cedar_json !== 'undefined') {
@@ -61,15 +57,6 @@ function Cedar({resource, appConfig}) {
 	}
     }
 
-    function setResourceInfo() {
-	var comp = document.querySelector('cedar-embeddable-editor');
-	// extra metadata we want to pass into the CEDAR editor
-	comp.templateInfo = {
-	    resource_id: resource.id,
-	    csrf: csrf
-	};
-
-    }
 
     function openModal() {
 	if (templateSelectRef.current.value == 0) {
@@ -87,14 +74,13 @@ function Cedar({resource, appConfig}) {
 					   "<cedar-embeddable-editor />");
 	    $('#genericModalDialog')[0].showModal();
 	    
-	    // Wait to ensure the page is loaded before initializing the Cedar config
+	    // Wait to ensure the page is loaded before initializing the Cedar config,
+	    // and wait a little longer before restoring any metadata that was in the form
 	    setTimeout(configCedar, 250);
-	    setTimeout(setMetadata, 1000);
-//	    setTimeout(setResourceInfo, 2000);
+	    setTimeout(restoreMetadata, 1000);
 	}	
     };
 
-    
     return (
 	<div className="cedar-container">
 	    <h3 className="cedar-heading__level3">Standardized Metadata</h3>
