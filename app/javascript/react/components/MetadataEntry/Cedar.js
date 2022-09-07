@@ -39,6 +39,11 @@ function Cedar({resource, appConfig}) {
 
 	// config for the metadata template and layout of the CEDAR editor
 	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
+
+	comp.templateInfo = {
+	    resource_id: resource.id,
+	    csrf: csrf
+	};
     }
 
     function setMetadata() {
@@ -85,7 +90,7 @@ function Cedar({resource, appConfig}) {
 	    // Wait to ensure the page is loaded before initializing the Cedar config
 	    setTimeout(configCedar, 250);
 	    setTimeout(setMetadata, 1000);
-	    setTimeout(setResourceInfo, 2000);
+//	    setTimeout(setResourceInfo, 2000);
 	}	
     };
 
