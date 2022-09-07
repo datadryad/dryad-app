@@ -3,6 +3,7 @@ require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
 require 'http'
+require 'aws-sdk-lambda'
 
 module StashEngine
   class GenericFile < ApplicationRecord
@@ -149,6 +150,30 @@ module StashEngine
 
     def set_checking_status
       @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
+    end
+
+    # triggers frictionless validation but results are async and may not appear in database until lambda completes
+    # and calls back with results
+    def trigger_frictionless
+      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+      client = Aws::Lambda::Client.new(region: 'us-west-2', credentials: credentials)
+
+      h = Rails.application.routes.url_helpers
+
+      payload = JSON.generate({
+                                download_url: url || direct_s3_presigned_url,
+                                callback_url: h.file_frictionless_report_url(id).gsub('http://localhost:3000',
+                                                                                      'https://dryad-dev.cdlib.org'),
+                                token: StashEngine::ApiToken.token
+                              })
+
+      resp = client.invoke(
+        { function_name: 'frictionless',
+          invocation_type: 'Event',
+          log_type: 'None',
+          payload: payload })
+
+      resp.status_code == 202
     end
 
     def validate_frictionless
