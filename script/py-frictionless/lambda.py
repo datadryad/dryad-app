@@ -18,11 +18,14 @@ def lambda_handler(event, context):
     update(token=event["token"], status='error', report=report, callback=event["callback_url"] )
     return {"status": 200, "message": "Error parsing file with Frictionless"}
 
-  lint_status = "issues" if report["tasks"][0]["errors"] else 'noissues'
-  poss_error_msg = report["tasks"][0]["errors"][0].get("description", "")
+  lint_status = "issues" if report["tasks"][0].get("errors") else 'noissues'
+  poss_error_msg = ''
+  if lint_status == 'issues':
+    poss_error_msg = report["tasks"][0]["errors"][0].get("description", "")
 
   if poss_error_msg.startswith("Data reading error"):
     lint_status = "error"
+
   update(token=event["token"], status=lint_status, report=json.dumps({'report': report}), callback=event['callback_url'])
 
   return report
