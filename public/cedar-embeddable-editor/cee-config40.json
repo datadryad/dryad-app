@@ -8,7 +8,7 @@
 
     "showDataSaver": true,
     "xxxdataSaverEndpointUrl": "http://localhost:8000/datasave.php",
-    "dataSaverEndpointUrl": "http://ryandash.datadryad.org/cedar-save",
+    "dataSaverEndpointUrl": "http://secundus.datadryad.org/cedar-save",
 
     "showSampleTemplateLinks": false,
     "expandedSampleTemplateLinks": false,
