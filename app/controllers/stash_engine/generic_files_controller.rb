@@ -102,27 +102,26 @@ module StashEngine
       end
     end
 
-    # triggers lambda validation
+    # this runs validation on all the files passed in as params['file_ids'], by calling lambda(s)
+    # Not sure the reason for passing an array of ids since it's only one at a time, but maybe because of data
+    # structures in the React code which seems a bit opaque
     def trigger_frictionless
-      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
-      client = Aws::Lambda::Client.new(region: 'us-west-2', credentials: credentials)
-      f = StashEngine::GenericFile.where(id: params[:id]).first
 
-      payload = JSON.generate({
-        download_url: f.url || f.direct_s3_presigned_url,
-        callback_url: stash_url_helpers.file_frictionless_report_url(f.id)
-                                       .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org'),
-        token: StashEngine::ApiToken.token
-      })
+      # get scope of ALL tabular files from entire table of files
+      tabular_files = StashEngine::GenericFile.tabular_files
+      begin
+        files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
+      rescue ActiveRecord::RecordNotFound => e
+        puts "Record not found: #{e.inspect}" # only for rubocop
+        render json: { status: 'found non-csv file(s)' }
+        return
+      end
 
-      resp = client.invoke(
-        { function_name: 'frictionless',
-          invocation_type: 'Event',
-          log_type: 'None',
-          payload: payload })
+      files.each(&:set_checking_status) # set to checking status
+      result = files.map{|f| {file_id: f, triggered: f.trigger_frictionless} }
 
       # expect resp.status_code == 202
-      render plain: "triggered -- wait for it to appear in database"
+      render json: result
     end
 
     # everything below this in the file is protected (accessible by the class and those that inherit from it)

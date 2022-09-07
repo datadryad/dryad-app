@@ -197,7 +197,7 @@ Rails.application.routes.draw do
          to: 'generic_files#validate_frictionless',
          as: 'generic_file_validate_frictionless'
 
-    post 'generic_file/trigger_frictionless/:id',
+    post 'generic_file/trigger_frictionless/:resource_id',
          to: 'generic_files#trigger_frictionless',
          as: 'generic_file_trigger_frictionless'
     
