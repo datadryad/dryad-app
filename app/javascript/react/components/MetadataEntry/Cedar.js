@@ -36,7 +36,34 @@ function Cedar({resource, appConfig}) {
     function configCedar() {
 	console.log("Loading CEDAR config");
 	var comp = document.querySelector('cedar-embeddable-editor');
+
+	// config for the metadata template and layout of the CEDAR editor
 	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
+    }
+
+    function setMetadata() {
+	var comp = document.querySelector('cedar-embeddable-editor');
+	console.log("loading resource", resource.id);
+	console.log("metadata is", resource.cedar_json);
+	console.log("type is", typeof resource.cedar_json);
+	console.log("metadata is", JSON.parse(resource.cedar_json));
+	console.log("type is", typeof JSON.parse(resource.cedar_json));
+		
+	// metadata that previously existed in this resource
+	if(resource.cedar_json !== 'undefined') {
+	    console.log("loading metadata", resource.cedar_json);
+	    comp.metadata = JSON.parse(resource.cedar_json);
+	}
+    }
+
+    function setResourceInfo() {
+	var comp = document.querySelector('cedar-embeddable-editor');
+	// extra metadata we want to pass into the CEDAR editor
+	comp.templateInfo = {
+	    resource_id: resource.id,
+	    csrf: csrf
+	};
+
     }
 
     function openModal() {
@@ -57,6 +84,8 @@ function Cedar({resource, appConfig}) {
 	    
 	    // Wait to ensure the page is loaded before initializing the Cedar config
 	    setTimeout(configCedar, 250);
+	    setTimeout(setMetadata, 1000);
+	    setTimeout(setResourceInfo, 2000);
 	}	
     };
 
