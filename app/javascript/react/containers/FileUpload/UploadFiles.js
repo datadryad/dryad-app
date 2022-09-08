@@ -134,14 +134,19 @@ class UploadFiles extends React.Component {
             pollingCount: this.state.pollingCount + 1
         });
         console.log("polling for updates", this.state.pollingCount);
-        if(this.state.pollingCount > 500){
-            clearInterval(this.interval);
-            this.interval = null;
-        }
+
         // these are files with remaining checks
         const toCheck = this.state.chosenFiles.filter((f) =>
             (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
+
         console.log(toCheck);
+
+        if(this.state.pollingCount > 500 || toCheck.length < 1 || this.state.validating == false){
+            clearInterval(this.interval);
+            this.interval = null;
+            this.setState({validating: false});
+            return;
+        }
 
         axios.get(
             `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
