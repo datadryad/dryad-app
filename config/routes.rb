@@ -200,6 +200,10 @@ Rails.application.routes.draw do
     post 'generic_file/trigger_frictionless/:resource_id',
          to: 'generic_files#trigger_frictionless',
          as: 'generic_file_trigger_frictionless'
+
+    get 'generic_file/check_frictionless/:resource_id',
+        to: 'generic_files#check_frictionless',
+        as: 'generic_file_check_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'

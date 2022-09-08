@@ -124,6 +124,26 @@ module StashEngine
       render json: result
     end
 
+    # takes a list of file IDs to check for frictionless reports, and returns only information on the completed
+    # ones with non "checking" status
+    def check_frictionless
+      # get scope of ALL tabular files from entire table of files
+      tabular_files = StashEngine::GenericFile.tabular_files
+      begin
+        files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
+      rescue ActiveRecord::RecordNotFound => e
+        puts "Record not found: #{e.inspect}" # only for rubocop
+        render json: { status: 'found non-csv file(s)' }
+        return
+      end
+
+      files = files.select {|f| f&.frictionless_report&.report.present? &&  f&.frictionless_report&.status != 'checking' }
+
+      render json: files.as_json(
+        methods: :type, include: { frictionless_report: { only: %w[report status] } }
+      )
+    end
+
     # everything below this in the file is protected (accessible by the class and those that inherit from it)
     protected
 
