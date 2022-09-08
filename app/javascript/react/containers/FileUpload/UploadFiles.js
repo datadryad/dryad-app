@@ -149,7 +149,7 @@ class UploadFiles extends React.Component {
         ).then(response => {
             // this.setState({validating: false});
             const transformed = this.transformData(response.data);
-            const files = this.updateTabularCheckStatus(transformed);
+            const files = this.simpleTabularCheckStatus(transformed);
             this.updateAlreadyChosenById(files);
             // now need to possibly turn validating to false and turn off timer if all are validated
         }).catch(error => console.log(error));
@@ -165,15 +165,20 @@ class UploadFiles extends React.Component {
         }))
     }
 
+    // updates only based on the state of the actual report and not this.state.validating
+    simpleTabularCheckStatus = (files) => {
+        return files.map(file => ({
+            ...file,
+            tabularCheckStatus: this.setTabularCheckStatus(file)
+        }));
+    }
+
     // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
     updateTabularCheckStatus = (files) => {
         if (this.state.validating) {
             return files.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
         } else {
-            return files.map(file => ({
-                ...file,
-                tabularCheckStatus: this.setTabularCheckStatus(file)
-            }));
+            return this.simpleTabularCheckStatus(files);
         }
     }
 
