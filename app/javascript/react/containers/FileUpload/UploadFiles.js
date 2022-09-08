@@ -41,10 +41,9 @@ const Messages = {
     'filesAlreadySelected': 'Some files of the same type are already in the table, and were not added.'
 }
 const ValidTabular = {
-    'extensions': ['csv', 'xls', 'xlsx', 'json'],
+    'extensions': ['csv', 'xls', 'xlsx'],
     'mime_types': ['text/csv', 'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/json'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ]
 }
 export const TabularCheckStatus = {
@@ -129,10 +128,31 @@ class UploadFiles extends React.Component {
         }
     }
 
+    // this is a tick for polling of frictionless reports had results put into database
     tick = () => {
         this.setState({
             pollingCount: this.state.pollingCount + 1
         });
+        console.log("polling for updates", this.state.pollingCount);
+        if(this.state.pollingCount > 500){
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+        // these are files with remaining checks
+        const toCheck = this.state.chosenFiles.filter((f) =>
+            (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
+        console.log(toCheck);
+
+        axios.get(
+            `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
+            { params: { file_ids: toCheck.map(file => file.id) } }
+        ).then(response => {
+            // this.setState({validating: false});
+            const transformed = this.transformData(response.data);
+            const files = this.updateTabularCheckStatus(transformed);
+            this.updateAlreadyChosenById(files);
+            // now need to possibly turn validating to false and turn off timer if all are validated
+        }).catch(error => console.log(error));
     }
 
     transformData = (files) => {
@@ -355,6 +375,10 @@ class UploadFiles extends React.Component {
             {file_ids: files.map(file => file.id)}
         ).then(response => {
             console.log("validateFrictionlessLambda RESPONSE", response);
+            if (!this.interval){
+                // start polling for report updates if not polling already
+                this.interval = setInterval(this.tick, this.state.pollingDelay);
+            }
         }).catch(error => console.log(error));
     }
 
