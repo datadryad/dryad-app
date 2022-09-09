@@ -173,7 +173,7 @@ defaults: &DEFAULTS
     files: 1000
   frictionless:
     # 150 MB and below
-    size_limit: 150_000_000
+    size_limit: 500_000_000
     missing_values: "na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank"
   rate_limit:
     # number of requests allowed per minute

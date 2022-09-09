@@ -100,7 +100,6 @@ class UploadFiles extends React.Component {
         // https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
         pollingCount: 0,
         pollingDelay: 10000,
-        pollingFileIds: []
     };
 
     componentDidMount() {
@@ -145,6 +144,7 @@ class UploadFiles extends React.Component {
             clearInterval(this.interval);
             this.interval = null;
             this.setState({validating: false});
+            this.setState({pollingCount: 0});
             return;
         }
 
