@@ -171,7 +171,8 @@ module StashEngine
         { function_name: 'frictionless',
           invocation_type: 'Event',
           log_type: 'None',
-          payload: payload })
+          payload: payload }
+      )
 
       resp.status_code == 202
     end

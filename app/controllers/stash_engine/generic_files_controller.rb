@@ -83,7 +83,6 @@ module StashEngine
     # Not sure the reason for passing an array of ids since it's only one at a time, but maybe because of data
     # structures in the React code which seems a bit opaque
     def trigger_frictionless
-
       # get scope of ALL tabular files from entire table of files
       tabular_files = StashEngine::GenericFile.tabular_files
       begin
@@ -95,7 +94,7 @@ module StashEngine
       end
 
       files.each(&:set_checking_status) # set to checking status
-      result = files.map{|f| {file_id: f, triggered: f.trigger_frictionless} }
+      result = files.map { |f| { file_id: f, triggered: f.trigger_frictionless } }
 
       # expect resp.status_code == 202
       render json: result
@@ -114,7 +113,7 @@ module StashEngine
         return
       end
 
-      files = files.select {|f| f&.frictionless_report&.report.present? &&  f&.frictionless_report&.status != 'checking' }
+      files = files.select { |f| f&.frictionless_report&.report.present? && f&.frictionless_report&.status != 'checking' }
 
       render json: files.as_json(
         methods: :type, include: { frictionless_report: { only: %w[report status] } }
