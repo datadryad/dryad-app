@@ -111,8 +111,6 @@ class UploadFiles extends React.Component {
         this.interval = null; // may be set interval later
     }
 
-    // I don't think this is needed and is only good for detecing changes between refreshes, I don't think we're
-    // changing the interval, but might be useful if we are
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.interval && prevState.pollingDelay !== this.state.pollingDelay) {
             clearInterval( this.interval );
@@ -132,7 +130,7 @@ class UploadFiles extends React.Component {
         this.setState({
             pollingCount: this.state.pollingCount + 1
         });
-        console.log("polling for updates", this.state.pollingCount);
+        console.log("polling for Frictionless report updates", this.state.pollingCount);
 
         // these are files with remaining checks
         const toCheck = this.state.chosenFiles.filter((f) =>
@@ -359,22 +357,7 @@ class UploadFiles extends React.Component {
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
         const tabularFiles = newManifestFiles.filter(file => this.isValidTabular(file));
-        this.validateFrictionless(tabularFiles);
-    }
-
-    validateFrictionless = (files) => {
-        this.setState({validating: true});
-        files = this.updateTabularCheckStatus(files);
-        this.updateAlreadyChosenById(files);
-        axios.post(
-            `/stash/generic_file/validate_frictionless/${this.props.resource_id}`,
-            {file_ids: files.map(file => file.id)}
-        ).then(response => {
-            this.setState({validating: false});
-            const transformed = this.transformData(response.data);
-            files = this.updateTabularCheckStatus(transformed);
-            this.updateAlreadyChosenById(files);
-        }).catch(error => console.log(error));
+        this.validateFrictionlessLambda(tabularFiles);
     }
 
     // I'm not sure why this is plural since only one file at a time is passed in, maybe because of some of the
