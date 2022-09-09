@@ -138,26 +138,32 @@ class UploadFiles extends React.Component {
         const toCheck = this.state.chosenFiles.filter((f) =>
             (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
 
-        console.log(toCheck);
+        if (this.checkPollingDone(toCheck)) return;
 
-        if(this.state.pollingCount > 500 || toCheck.length < 1 || this.state.validating == false){
-            clearInterval(this.interval);
-            this.interval = null;
-            this.setState({validating: false});
-            this.setState({pollingCount: 0});
-            return;
-        }
+        console.log(toCheck);
 
         axios.get(
             `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
             { params: { file_ids: toCheck.map(file => file.id) } }
         ).then(response => {
-            // this.setState({validating: false});
             const transformed = this.transformData(response.data);
             const files = this.simpleTabularCheckStatus(transformed);
             this.updateAlreadyChosenById(files);
-            // now need to possibly turn validating to false and turn off timer if all are validated
+            const updatedFiles = this.state.chosenFiles.filter((f) =>
+                (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
+            this.checkPollingDone(updatedFiles);
         }).catch(error => console.log(error));
+    }
+
+    checkPollingDone = (filteredFiles) => {
+        if(this.state.pollingCount > 500 || filteredFiles.length < 1 || this.state.validating == false){
+            clearInterval(this.interval);
+            this.interval = null;
+            this.setState({validating: false});
+            this.setState({pollingCount: 0});
+            return true;
+        }
+        return false;
     }
 
     transformData = (files) => {
