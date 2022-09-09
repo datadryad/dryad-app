@@ -192,10 +192,6 @@ Rails.application.routes.draw do
     post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
     post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
     post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
-    
-    post 'generic_file/validate_frictionless/:resource_id',
-         to: 'generic_files#validate_frictionless',
-         as: 'generic_file_validate_frictionless'
 
     post 'generic_file/trigger_frictionless/:resource_id',
          to: 'generic_files#trigger_frictionless',
