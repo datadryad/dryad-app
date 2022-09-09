@@ -271,7 +271,6 @@ Rails.application.routes.draw do
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
-    get 'testy', to: 'pages#testy'
     
     patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
