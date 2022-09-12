@@ -107,5 +107,111 @@ module StashEngine
         generic_destroy_expects(@url)
       end
     end
+
+    describe '#trigger_frictionless' do
+      before(:each) do
+        @file = create(:generic_file, resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.generic_file_trigger_frictionless_path(
+          resource_id: @resource.id
+        )
+      end
+
+      it 'calls trigger_frictionless in the controller to send off a (mocked) frictionless validation' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+
+        allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
+          ( instance.id == @file.id ? true : false )
+        end
+
+        response_code = post @url, params: { file_ids: [@file.id] }
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body.first['triggered']).to eq(true)
+        expect(@file.frictionless_report.status).to eq('checking')
+      end
+
+      it "doesn't trigger frictionless since the file isn't for the resource" do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @resource2 = create(:resource)
+        @file2 = create(:generic_file, upload_file_name: 'bad.csv', url: 'http://example.com/bad.csv')
+
+        allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
+          ( instance.id == @file.id ? true : false )
+        end
+
+        response_code = post @url, params: { file_ids: [@file2.id] }
+
+        expect(response_code).to eql(404)
+      end
+
+    end
+
+    describe '#check_frictionless' do
+
+      before(:each) do
+        @file = create(:generic_file, resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.generic_file_check_frictionless_path(resource_id: @resource.id)
+      end
+
+      it 'calls check_frictionless in the controller for no completed reports' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
+
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body).to eq([])
+      end
+
+      it 'calls check_frictionless in the controller with a completed report' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
+        @file.frictionless_report.update(status: 'noissues', report: "[\"my cat has fleas\"]")
+
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body.first['id']).to eq(@file.id)
+        expect(body.first['frictionless_report']['status']).to eq('noissues')
+      end
+
+      it 'calls check_frictionless in the controller with an in-progress report' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
+
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body).to eq([])
+      end
+
+      it 'calls check_frictionless in the controller with no report started' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        # haven't created a frictionless report for this file
+
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body).to eq([])
+      end
+
+
+
+
+    end
   end
 end

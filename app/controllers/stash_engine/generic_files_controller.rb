@@ -82,34 +82,34 @@ module StashEngine
     # this runs validation on all the files passed in as params['file_ids'], by calling lambda(s)
     # Not sure the reason for passing an array of ids since it's only one at a time, but maybe because of data
     # structures in the React code which seems a bit opaque
+    # This is a POST request for multiple files and returns an array with triggered status (true/false)
     def trigger_frictionless
-      # get scope of ALL tabular files from entire table of files
-      tabular_files = StashEngine::GenericFile.tabular_files
+      # get scope of ALL tabular files from this resource
+      tabular_files = resource.generic_files.tabular_files
       begin
         files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
       rescue ActiveRecord::RecordNotFound => e
         puts "Record not found: #{e.inspect}" # only for rubocop
-        render json: { status: 'found non-csv file(s)' }
+        render json: { status: "Couldn't find tabular file for this resource" }, status: :not_found
         return
       end
 
       files.each(&:set_checking_status) # set to checking status
       result = files.map { |f| { file_id: f, triggered: f.trigger_frictionless } }
 
-      # expect resp.status_code == 202
       render json: result
     end
 
     # takes a list of file IDs to check for frictionless reports, and returns only information on the completed
     # ones with non "checking" status
+    # GET request
     def check_frictionless
-      # get scope of ALL tabular files from entire table of files
-      tabular_files = StashEngine::GenericFile.tabular_files
+      # get scope of ALL tabular files for the resource
+      tabular_files = resource.generic_files.tabular_files
       begin
         files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
       rescue ActiveRecord::RecordNotFound => e
-        puts "Record not found: #{e.inspect}" # only for rubocop
-        render json: { status: 'found non-csv file(s)' }
+        render json: { status: "Couldn't find some tabular files for this resource" }, status: :not_found
         return
       end
 
