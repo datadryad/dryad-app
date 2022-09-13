@@ -156,7 +156,7 @@ module StashEngine
     # and calls back with results
     def trigger_frictionless
       credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
-      client = Aws::Lambda::Client.new(region: 'us-west-2', credentials: credentials)
+      client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
 
       h = Rails.application.routes.url_helpers
 
