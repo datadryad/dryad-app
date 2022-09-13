@@ -108,7 +108,7 @@ module StashEngine
       tabular_files = resource.generic_files.tabular_files
       begin
         files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
-      rescue ActiveRecord::RecordNotFound => e
+      rescue ActiveRecord::RecordNotFound
         render json: { status: "Couldn't find some tabular files for this resource" }, status: :not_found
         return
       end
