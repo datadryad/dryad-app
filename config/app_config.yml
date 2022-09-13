@@ -168,7 +168,7 @@ defaults: &DEFAULTS
     journal_error_label: dev-journal-submit-error
   maximums:
     # 300 GB and 50 GB below but expressed in bytes
-    merritt_size: 300_000_000_000
+    merritt_size: 360_000_000_000
     zenodo_size: 50_000_000_000
     files: 1000
   frictionless:
