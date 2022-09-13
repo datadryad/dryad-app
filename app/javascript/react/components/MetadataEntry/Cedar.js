@@ -33,27 +33,57 @@ function Cedar({resource, appConfig}) {
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');    
 
 
+    ///////////////////////
+    
     function configCedar() {
 	console.log("Loading CEDAR config");
-	var comp = document.querySelector('cedar-embeddable-editor');
+	var cee = document.querySelector('cedar-embeddable-editor');
 
 	// config for the metadata template and layout of the CEDAR editor
-	comp.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
+	cee.loadConfigFromURL('/cedar-embeddable-editor/cee-config' + templateSelectRef.current.value + '.json');
 
-	comp.templateInfo = {
+	cee.templateInfo = getCustomTemplateInfo();
+    }
+
+    function getCustomTemplateInfo() {
+	return {
 	    resource_id: resource.id,
 	    csrf: csrf
 	};
     }
 
+    function setAutoSave() {
+	var cee = document.querySelector('cedar-embeddable-editor');
+	const saveTime = 3000; // 3 seconds
+	setInterval(() => {
+	    const meta = cee.currentMetadata;
+
+	    console.log("-- meta ", meta);
+	    console.log("-- TemplateInfo ", cee.templateInfo);
+	    console.log("-- meta2 ", meta);
+	    var meta3 = { "metadata" : meta };
+	    meta3['info'] = getCustomTemplateInfo();
+	    console.log("-- meta3 ", meta3);
+	    
+	    const xhr = new XMLHttpRequest();
+	    xhr.open("POST", "http://secundus.datadryad.org/cedar-save");
+	    xhr.setRequestHeader("Accept", "application/json");
+	    xhr.setRequestHeader("Content-Type", "application/json");
+	    xhr.send(JSON.stringify(meta3, null, 2));
+	    console.log('Saved metadata after ' + saveTime / 1000 + ' seconds');
+	    console.log(meta);
+	}, saveTime);
+
+    }
     
     function restoreMetadata() {
 	var comp = document.querySelector('cedar-embeddable-editor');
 		
 	// metadata that previously existed in this resource
-	if(resource.cedar_json !== 'undefined') {
-	    console.log("loading metadata", resource.cedar_json);
-	    comp.metadata = JSON.parse(resource.cedar_json);
+	var cjson = resource.cedar_json
+	if(cjson !== null && cjson !== 'undefined') {
+	    console.log("loading metadata", cjson);
+	    comp.metadata = JSON.parse(cjson);
 	}
     }
 
@@ -78,6 +108,7 @@ function Cedar({resource, appConfig}) {
 	    // and wait a little longer before restoring any metadata that was in the form
 	    setTimeout(configCedar, 250);
 	    setTimeout(restoreMetadata, 1000);
+	    setTimeout(setAutoSave, 3000);
 	}	
     };
 
