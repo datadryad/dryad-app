@@ -120,7 +120,7 @@ module StashEngine
         @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
 
         allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
-          (instance.id == @file.id ? {triggered: true, msg: ''} : {triggered: false, msg: 'bad trigger'})
+          (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
         end
 
         response_code = post @url, params: { file_ids: [@file.id] }
@@ -138,7 +138,7 @@ module StashEngine
         @file2 = create(:generic_file, upload_file_name: 'bad.csv', url: 'http://example.com/bad.csv')
 
         allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
-          (instance.id == @file.id ? {triggered: true, msg: ''} : {triggered: false, msg: 'bad trigger'})
+          (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
         end
 
         response_code = post @url, params: { file_ids: [@file2.id] }
