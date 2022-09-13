@@ -164,7 +164,7 @@ module StashEngine
                                 download_url: url || direct_s3_presigned_url,
                                 callback_url: h.file_frictionless_report_url(id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
-                                               .gsub(/^http:/, 'https:' ),
+                                               .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token
                               })
 
