@@ -120,7 +120,7 @@ module StashEngine
         @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
 
         allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
-          ( instance.id == @file.id ? true : false )
+          (instance.id == @file.id)
         end
 
         response_code = post @url, params: { file_ids: [@file.id] }
@@ -138,7 +138,7 @@ module StashEngine
         @file2 = create(:generic_file, upload_file_name: 'bad.csv', url: 'http://example.com/bad.csv')
 
         allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
-          ( instance.id == @file.id ? true : false )
+          (instance.id == @file.id)
         end
 
         response_code = post @url, params: { file_ids: [@file2.id] }
@@ -171,7 +171,7 @@ module StashEngine
       it 'calls check_frictionless in the controller with a completed report' do
         @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
         @file.set_checking_status # creates report with checking status
-        @file.frictionless_report.update(status: 'noissues', report: "[\"my cat has fleas\"]")
+        @file.frictionless_report.update(status: 'noissues', report: '["my cat has fleas"]')
 
         response_code = get @url, params: { file_ids: [@file.id] }
 
@@ -208,9 +208,6 @@ module StashEngine
 
         expect(body).to eq([])
       end
-
-
-
 
     end
   end
