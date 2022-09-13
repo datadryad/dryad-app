@@ -95,7 +95,11 @@ module StashEngine
       end
 
       files.each(&:set_checking_status) # set to checking status
-      result = files.map { |f| { file_id: f, triggered: f.trigger_frictionless } }
+      result = files.map do |f|
+        result = f.trigger_frictionless
+        f.frictionless_report.update(status: 'error', report: result[:msg]) if result[:triggered] == false
+        { file_id: f.id, triggered: result[:triggered] }
+      end
 
       render json: result
     end
