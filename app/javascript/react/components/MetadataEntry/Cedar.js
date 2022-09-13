@@ -57,21 +57,16 @@ function Cedar({resource, appConfig}) {
 	const saveTime = 3000; // 3 seconds
 	setInterval(() => {
 	    const meta = cee.currentMetadata;
-
-	    console.log("-- meta ", meta);
-	    console.log("-- TemplateInfo ", cee.templateInfo);
-	    console.log("-- meta2 ", meta);
-	    var meta3 = { "metadata" : meta };
-	    meta3['info'] = getCustomTemplateInfo();
-	    console.log("-- meta3 ", meta3);
+	    var wrappedMeta = { "metadata" : meta };
+	    wrappedMeta['info'] = getCustomTemplateInfo();
 	    
 	    const xhr = new XMLHttpRequest();
 	    xhr.open("POST", "http://secundus.datadryad.org/cedar-save");
 	    xhr.setRequestHeader("Accept", "application/json");
 	    xhr.setRequestHeader("Content-Type", "application/json");
-	    xhr.send(JSON.stringify(meta3, null, 2));
+	    xhr.send(JSON.stringify(wrappedMeta, null, 2));
 	    console.log('Saved metadata after ' + saveTime / 1000 + ' seconds');
-	    console.log(meta);
+	    console.log(wrappedMeta);
 	}, saveTime);
 
     }
@@ -80,7 +75,7 @@ function Cedar({resource, appConfig}) {
 	var comp = document.querySelector('cedar-embeddable-editor');
 		
 	// metadata that previously existed in this resource
-	var cjson = resource.cedar_json
+	var cjson = resource.cedar_json;
 	if(cjson !== null && cjson !== 'undefined') {
 	    console.log("loading metadata", cjson);
 	    comp.metadata = JSON.parse(cjson);
