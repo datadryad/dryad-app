@@ -168,8 +168,6 @@ module StashEngine
                                 token: StashEngine::ApiToken.token
                               })
 
-      logger.info("\nfrictionless invoke: #{payload}\n")
-
       resp = client.invoke(
         { function_name: 'frictionless',
           invocation_type: 'Event',
@@ -177,7 +175,18 @@ module StashEngine
           payload: payload }
       )
 
-      resp.status_code == 202
+      return { triggered: true, msg: '' } if resp.status_code == 202 # true with no msg
+
+      item = { triggered: false, msg: "Error invoking lambda for file: #{id}" \
+          "\nstatus code: #{resp.status_code}" \
+          "\nfunction error: #{resp.function_error}" \
+          "\nlog_result: #{resp.log_result}" \
+          "\npayload: #{resp.payload}" \
+          "\nexecuted version: #{resp.executed_version}" }
+
+      logger.error(item)
+
+      { triggered: false, msg: item }
     end
 
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
