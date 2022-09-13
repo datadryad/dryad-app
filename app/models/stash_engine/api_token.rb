@@ -37,6 +37,8 @@ module StashEngine
         attempts ||= 1
         url = Rails.application.routes.url_helpers.oauth_token_url # url on current server to get token
 
+        url.gsub!(/^http:/, 'https:') unless url.include?('localhost')
+
         resp = HTTP.post(url,
                          json: { client_id: app_id,
                                  client_secret: secret,
