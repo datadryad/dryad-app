@@ -162,10 +162,13 @@ module StashEngine
 
       payload = JSON.generate({
                                 download_url: url || direct_s3_presigned_url,
-                                callback_url: h.file_frictionless_report_url(id).gsub('http://localhost:3000',
-                                                                                      'https://dryad-dev.cdlib.org'),
+                                callback_url: h.file_frictionless_report_url(id)
+                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub(/^http:/, 'https:' ),
                                 token: StashEngine::ApiToken.token
                               })
+
+      logger.info("\nfrictionless invoke: #{payload}\n")
 
       resp = client.invoke(
         { function_name: 'frictionless',
