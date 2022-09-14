@@ -12,7 +12,7 @@
     <li>
         Dryad does <strong>not</strong> accept submissions that contain personally identifiable human subject information.
         Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please
-        see additional guidance on human subjects data.
+        see additional guidance on <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">Hhuman subjects data</a>.
     </li>
     <li>
         Dryad does <strong>not</strong> accept any files with licensing terms that are incompatible with the
