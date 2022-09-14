@@ -57,6 +57,14 @@
   </p>
 </div>
 
+<div class="bio">
+  <img src="/images/audrey.jpg" alt="Audrey Hamelers" title="Audrey Hamelers">
+  <p><strong>Audrey Hamelers</strong><br/>
+  Software Developer<br/>
+  Audrey has many years of experience developing websites and digital repositories, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University.
+  </p>
+</div>
+
 <h2 id="curation">Curation Team</h2>
 
 <div class="bio">
