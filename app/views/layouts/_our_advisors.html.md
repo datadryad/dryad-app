@@ -231,7 +231,7 @@ community.</p>
     Columbia. She runs the Temporal Ecology Lab, which focuses on
     understanding how climate change shapes plants and plant communities,
     with a focus on shifts in the timing of seasonal development (e.g.,
-      budburst, flowering and fruit maturity)---known as phenology. Her lab
+      budburst, flowering and fruit maturity)&mdash;known as phenology. Her lab
       both collects new data on forest trees and winegrapes and collates
       existing data to provide global estimates of shifts in phenology with
       warming from plants to birds and other animals, and to understand how
