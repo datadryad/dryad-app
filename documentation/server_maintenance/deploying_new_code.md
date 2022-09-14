@@ -93,14 +93,14 @@ a dataset is not in the process of being transferred when the code is
 changed out.
 
 Briefly, a little while ahead:
-- On 2c, run `~/bin/long_jobs.dryad drain`.  It touches the defer_jobs.txt and hold-submissions.txt files in `~/app/ui/releases`.
-- On 2a, touch `~/app/ui/releases/hold-submissions.txt`
+- On 2c, run `~/bin/long_jobs.dryad drain`.  It touches the defer_jobs.txt and hold-submissions.txt files in `~/apps/ui/releases`.
+- On 2a, touch `~/apps/ui/releases/hold-submissions.txt`
 
 Deploy
 
 After
 - Run `~/bin/long_jobs.dryad restart` on 2c.
-- Remove `~/app/ui/releases/hold-submissions.txt` on 2a.
+- Remove `~/apps/ui/releases/hold-submissions.txt` on 2a.
 - Reset the servername in the repo_queue_state table for any jobs being held to match the server name you're looking at in the UI.
 - Click "Restart submissions which were shut down gracefully."  It'll send them through again.
 
