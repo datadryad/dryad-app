@@ -94,7 +94,7 @@
 
 <h3>File naming</h3>
 
-<p>Name files and directories in a consistent and descriptive manner. Avoid vague and ambiguous filenames. Filenames should be concise, informative, and unique (see Stanford's <a href="https://library.stanford.edu/research/data-management-services/data-best-practices/best-practices-file-naming">best practices for file naming</a>).</p>
+<p>Name files and directories in a consistent and descriptive manner. Avoid vague and ambiguous filenames. Filenames should be concise, informative, and unique (see Stanford's <a href="https://guides.library.stanford.edu/data-best-practices">best practices for file naming</a>).</p>
 
 <p>Avoid blank spaces and special characters (<code>' '!@#$%^&amp;"</code>) in filenames because they can be problematic for computers to interpret. Use a common letter case pattern because they are easily read by both machines and people:</p>
 
