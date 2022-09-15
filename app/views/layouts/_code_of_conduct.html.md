@@ -1,6 +1,6 @@
 <h1 class="o-heading__level1">Code of Conduct</h1>
 
-<em>Last modified: 2020-07-13</em>
+<em>Last modified: 2022-09-15</em>
 
 <p>
   We value the participation of each member of the Dryad community. Accordingly, all community members are expected to
@@ -116,7 +116,6 @@
 <ul>
   <li>Jennifer Gibson &#8211; jgibson@datadryad.org</li>
   <li>Jason Williams &#8211; williams@cshl.edu</li>
-  <li>Lou Woodley &#8211; louwoodley@cscce.org</li>
 </ul>
 
 <p>
