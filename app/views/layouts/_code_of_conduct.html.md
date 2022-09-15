@@ -1,6 +1,6 @@
 <h1 class="o-heading__level1">Code of Conduct</h1>
 
-<em>Last modified: 2022-09-15</em>
+<em>Last modified: 2020-07-13</em>
 
 <p>
   We value the participation of each member of the Dryad community. Accordingly, all community members are expected to
@@ -111,7 +111,7 @@
 
 <h2 class="o-heading__level2">Dryad Code of Conduct Working Group</h2>
 
-<p><em>The composition of this group rotates &amp; will be updated here. Last updated 2020-02-03</em></p>
+<p><em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em></p>
 
 <ul>
   <li>Jennifer Gibson &#8211; jgibson@datadryad.org</li>
