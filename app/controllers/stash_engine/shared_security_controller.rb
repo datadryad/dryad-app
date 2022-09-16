@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module StashEngine
   module SharedSecurityController
 
@@ -152,3 +153,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ModuleLength
