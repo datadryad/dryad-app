@@ -31,8 +31,7 @@
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
               affiliation: auth.affiliation.as_json,
               orcid_invite_path: auth&.orcid_invite_path)},
-              curator: current_user&.limited_curator?, icon: '/images/fa-barfs.svg', # because the asset pipeline not
-                                                                working right on stage
+              curator: current_user&.limited_curator?, icon: '/images/fa-barfs.svg', # asset pipeline not working right on stage
               correspondingAuthorId: @resource.owner_author&.id
       } ) %>
     </div>
