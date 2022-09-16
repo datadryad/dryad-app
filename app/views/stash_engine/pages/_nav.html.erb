@@ -10,7 +10,7 @@
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
       <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant&.tenant_id %>]</span>
     <% end %>
-    <% if current_user && current_user.curator? && !(current_user.role == 'tenant_curator') %>
+    <% if current_user && current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>
       <div class="c-header__nav-item">
         <div class="o-sites">
           <details class="o-showhide o-sites__details" role="group">

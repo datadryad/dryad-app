@@ -222,7 +222,7 @@ module StashEngine
     scope :visible_to_user, ->(user:) do
       if user.nil?
         with_visibility(states: %w[published embargoed])
-      elsif user.curator?
+      elsif user.limited_curator?
         all
       else
         tenant_admin = (user.tenant_id if user.role == 'admin')
@@ -578,7 +578,7 @@ module StashEngine
     def admin_for_this_item?(user: nil)
       return false if user.nil?
 
-      user.curator? ||
+      user.limited_curator? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
@@ -924,7 +924,7 @@ module StashEngine
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
-        cur_list = StashEngine::User.where(role: 'curator').to_a
+        cur_list = StashEngine::User.curators.to_a
         target_curator = cur_list[rand(cur_list.length)]
       end
 
