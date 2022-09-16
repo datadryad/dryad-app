@@ -3,7 +3,7 @@
 
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
-  <% if current_user.limited_curator? %>
+  <% if current_user.limited_curator? || current_user.role == 'admin' %>
     <div style="float: right;">
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
                     method: :get, remote: true) do -%>
