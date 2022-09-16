@@ -43,7 +43,7 @@ module StashEngine
     scope :user_viewable, ->(user: nil) do
       if user.nil?
         publicly_viewable
-      elsif user.curator?
+      elsif user.limited_curator?
         all
       else
         tenant_admin = (user.tenant_id if user.role == 'admin')
