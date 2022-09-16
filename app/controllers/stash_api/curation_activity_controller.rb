@@ -6,7 +6,7 @@ module StashApi
     before_action :require_json_headers
     before_action :doorkeeper_authorize!
     before_action :require_api_user
-    before_action :require_limited_curator
+    before_action :require_curator
     before_action -> { initialize_stash_identifier(params[:dataset_id]) }, only: %i[index create]
 
     # In the API, the output will include the user and dataset, but you can't actually set those via the API
