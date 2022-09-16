@@ -115,7 +115,6 @@ class ApiApplicationController < ::StashEngine::ApplicationController
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
-
   def require_admin
     return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
               @user.journals_as_admin.present?
