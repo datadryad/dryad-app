@@ -572,6 +572,7 @@ module StashEngine
 
     # can edit means they are not locked out because edits in progress and have permission
     def can_edit?(user:)
+      # only curators and above (not limited curators) have permission to edit
       permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.curator?)
     end
 
@@ -580,7 +581,6 @@ module StashEngine
 
       user.limited_curator? ||
         user_id == user.id ||
-        (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
         funders_match?(user: user) ||
         user.journals_as_admin.include?(identifier&.journal) ||
@@ -924,7 +924,7 @@ module StashEngine
       if target_curator.nil? || !target_curator.curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
-        cur_list = StashEngine::User.curators.to_a
+        cur_list = StashEngine::User.where(role: 'curator').to_a
         target_curator = cur_list[rand(cur_list.length)]
       end
 

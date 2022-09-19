@@ -39,7 +39,7 @@
   </table>
 </div>
 
-<% if current_user.limited_curator? %>
+<% if current_user.limited_curator? || current_user.role == 'admin' %>
     <div id="salesforce_links" style="clear: both">	
 	<div style="float: left"><h2>Salesforce Cases</h2></div>
 	<div style="float: right">
@@ -89,7 +89,7 @@
 
 <div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal Data</h2></div>
-  <% if current_user.limited_curator? %>
+  <% if current_user.curator? || current_user.role == 'admin' %>
     <div style="float: right">
       <br/>
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,

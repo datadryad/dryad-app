@@ -80,7 +80,7 @@ module StashEngine
     end
 
     def require_admin
-      return if current_user && (%w[admin superuser curator tenant_curator].include?(current_user.role) ||
+      return if current_user && (current_user.limited_curator? || current_user.role == 'admin' ||
                                  current_user.journals_as_admin.present? ||
                                  current_user.funders_as_admin.present?)
 
