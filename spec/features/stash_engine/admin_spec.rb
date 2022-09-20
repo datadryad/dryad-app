@@ -1,3 +1,5 @@
+require 'pry-remote'
+
 RSpec.feature 'Admin', type: :feature do
 
   include DatasetHelper
@@ -301,6 +303,35 @@ RSpec.feature 'Admin', type: :feature do
         user_after = StashEngine::User.find(user_id)
         expect(user_after.email).to eq(target_email)
         expect(user_after.orcid).to eq(target_orcid)
+      end
+    end
+
+    context :limited_curator do
+
+      before(:each) do
+        @user.update(role: 'limited_curator')
+        sign_in(@user, false)
+      end
+
+      it "shows limited menus to an administrative curator" do
+        menu = first('summary.o-showhide__summary')
+        menu.click
+        within menu.find(:xpath, '..') do
+          expect(page).to have_content("Dataset Curation")
+          expect(page).to have_content('Curation Stats')
+          expect(page).to have_content('Journals')
+          expect(page).not_to have_content('User Management')
+          expect(page).not_to have_content('Submission Queue')
+        end
+      end
+
+      it 'Limits options in the curation page' do
+        menu = first('summary.o-showhide__summary')
+        menu.click
+        click_on("Dataset Curation")
+        select "Status", :from => "curation_status"
+        expect(page).to have_content(@resource.title)
+        expect(page).not_to have_css('.fa-pencil') # no pencil editing icons for you
       end
     end
 
