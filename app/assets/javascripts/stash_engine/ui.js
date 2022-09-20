@@ -1660,4 +1660,13 @@ function joelsReady(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
+  var emails = document.getElementsByClassName('emailr')
+
+  for (var i=0; i < emails.length; i++) {
+      emails[i].onclick = e => {
+        var email = e.currentTarget.textContent.split('').reverse().join('')
+        e.currentTarget.href='mailto:'+email
+      }
+  };
+
 }// close joelsReady()
