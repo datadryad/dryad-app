@@ -7609,6 +7609,11 @@ progress::-webkit-progress-value {
   background-color: rgb(235, 235, 235);
 }
 
+.emailr {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
 .t-describe__remove-button {
   -ms-flex-item-align: center;
       align-self: center;
