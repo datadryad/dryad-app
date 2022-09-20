@@ -176,17 +176,17 @@ module StashEngine
         user2 = User.create(role: 'curator')
         expect(user2.superuser?).to be_falsey
         expect(user2.curator?).to be_truthy
-        expect(user.limited_curator?).to be_truthy
+        expect(user2.limited_curator?).to be_truthy
 
         user3 = User.create(role: 'user')
         expect(user3.superuser?).to be_falsey
         expect(user3.curator?).to be_falsey
-        expect(user.limited_curator?).to be_falsey
+        expect(user3.limited_curator?).to be_falsey
 
         user4 = User.create(role: 'limited_curator')
-        expect(user2.superuser?).to be_falsey
-        expect(user2.curator?).to be_falsey
-        expect(user.limited_curator?).to be_truthy
+        expect(user4.superuser?).to be_falsey
+        expect(user4.curator?).to be_falsey
+        expect(user4.limited_curator?).to be_truthy
       end
     end
 
