@@ -306,18 +306,18 @@ RSpec.feature 'Admin', type: :feature do
       end
     end
 
-    context :limited_curator do
+    context :limited_curator, js: true do
 
       before(:each) do
         @user.update(role: 'limited_curator')
         sign_in(@user, false)
       end
 
-      it "shows limited menus to an administrative curator" do
+      it 'shows limited menus to an administrative curator' do
         menu = first('summary.o-showhide__summary')
         menu.click
         within menu.find(:xpath, '..') do
-          expect(page).to have_content("Dataset Curation")
+          expect(page).to have_content('Dataset Curation')
           expect(page).to have_content('Curation Stats')
           expect(page).to have_content('Journals')
           expect(page).not_to have_content('User Management')
@@ -328,8 +328,11 @@ RSpec.feature 'Admin', type: :feature do
       it 'Limits options in the curation page' do
         menu = first('summary.o-showhide__summary')
         menu.click
-        click_on("Dataset Curation")
-        select "Status", :from => "curation_status"
+        click_on('Dataset Curation')
+        select 'Status', from: 'curation_status'
+        find('#curation_status').set("Status\n") # trying to get headless to work reliably
+
+        expect(page).to have_selector('#js-curation-state-1')
         expect(page).to have_content(@resource.title)
         expect(page).not_to have_css('.fa-pencil') # no pencil editing icons for you
       end
