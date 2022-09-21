@@ -20,6 +20,10 @@ module StashEngine
       where(role: %w[superuser curator tenant_curator])
     end
 
+    scope :limited_curators, -> do
+      where(role: %w[superuser curator tenant_curator limited_curator])
+    end
+
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
       raise "More than one user matches the ID or email returned by ORCID, user_ids: #{users.map(&:id).join(', ')}" if users.count > 1
@@ -47,8 +51,14 @@ module StashEngine
       role == 'superuser'
     end
 
+    # this role and higher permission
     def curator?
       role == 'superuser' || role == 'curator' || role == 'tenant_curator'
+    end
+
+    # this role and higher permission
+    def limited_curator?
+      %w[superuser curator tenant_curator limited_curator].include?(role)
     end
 
     def journals_as_admin

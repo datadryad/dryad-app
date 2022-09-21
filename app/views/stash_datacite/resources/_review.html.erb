@@ -1,7 +1,7 @@
 <h1 class="o-heading__level1">Finalize Submission</h1>
 
     <!-- If a curator is viewing this page, highlight the changed fields -->
-    <% highlight_fields = current_user.curator? ? @resource.changed_from_previous_curated : [] %>
+    <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
 
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
     <h2 class="o-heading__page-span">Review Description</h2>
