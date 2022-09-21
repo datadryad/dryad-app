@@ -70,15 +70,21 @@
 <div class="bio">
     <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
   <p><strong>Jess Herzog</strong><br/>
-  Publishing Manager<br/>
+  Head of Publishing Services<br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 
 <div class="bio">
-    <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
+  <img src="/images/AOrona.jpg" alt="Ari Orona" title="Ari Orona">
+  <p><strong>Ariana Orona</strong><br/>
+  Senior Curator & Salesforce Administrator<br/>
+  Ari graduated with a B.S. in Biochemistry from Arizona State University, with a diverse background in clinical research. In addition to her Data Curator role at Dryad, she works as a Data Analyst at the University of Virginia. In her spare time, Ari enjoys baking, reading, and conquering her latest favorite video game.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
-  Data Curator<br/>
-  
+  Data Curator<br/>  
   Savannah holds a B.A. in Chemistry and an M.S. in Civil & Environmental
   Engineering, with research interests in atmospheric and water pollution
   mitigation. Savannah has spent the last two years working in the humanitarian
@@ -89,10 +95,9 @@
 </div>
 
 <div class="bio">
-    <img src="/images/amelia.jpg" alt="Amelia Culp" title="Amelia Culp">
+  <img src="/images/amelia.jpg" alt="Amelia Culp" title="Amelia Culp">
   <p><strong>Amelia Culp</strong><br/>
   Data Curator<br/>
-
   Amelia has a B.S. in Physics and a background in physics and neuroscience
   research. In addition to data curation, she is a PhD candidate studying neural
   connectomics. Outside of work, Amelia enjoys rock climbing, backpacking, and
@@ -101,7 +106,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/jdafesh.jpeg" alt="Joseph Dafesh" title="Joseph Dafesh">
+  <img src="/images/jdafesh.jpeg" alt="Joseph Dafesh" title="Joseph Dafesh">
   <p><strong>Joseph Dafesh</strong><br/>
   Data Curator<br/>
   Joseph studied Molecular, Cellular, and Developmental Biology at UC
@@ -112,7 +117,7 @@
 </div>
 
 <div class="bio">
-    <img src="/images/bryan.jpg" alt="Bryan Gee" title="Bryan Gee">
+  <img src="/images/bryan.jpg" alt="Bryan Gee" title="Bryan Gee">
   <p><strong>Bryan Gee</strong><br/>
   Data Curator<br/>
   Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
@@ -123,13 +128,6 @@
 </div>
 
 <div class="bio">
-    <img src="/images/AOrona.jpg" alt="Ari Orona" title="Ari Orona">
-  <p><strong>Ari Orona</strong><br/>
-  Data Curator<br/>
-  Ari graduated with a B.S. in Biochemistry from Arizona State University, with a diverse background in clinical research. In addition to her Data Curator role at Dryad, she works as a Data Analyst at the University of Virginia. In her spare time, Ari enjoys baking, reading, and conquering her latest favorite video game.</p>
-</div>
-
-<div class="bio">
   <img src="/images/Aadithya_Sekar_Profile.jpeg" alt="Aadithya Sekar" title="Aadithya Sekar">
   <p><strong>Aadithya Sekar</strong><br/>
   Data Curator<br/>
@@ -137,10 +135,9 @@
 </div>
 
 <div class="bio">
-    <img src="/images/carolyn.png" alt="Carolyn Tarpey" title="Carolyn Tarpey">
+  <img src="/images/carolyn.png" alt="Carolyn Tarpey" title="Carolyn Tarpey">
   <p><strong>Carolyn Tarpey</strong><br/>
-  Data Curator<br/>
-  
+  Data Curator<br/>  
   Carolyn has a B.S. in Marine Biology from the College of Charleston, and an
   M.S. in Aquatic and Fishery Sciences from the University of Washington. She
   also works as a Research Scientist at the University of Washington, using
