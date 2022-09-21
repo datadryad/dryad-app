@@ -94,6 +94,9 @@ GEM
     aws-sdk-kms (1.57.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-lambda (1.85.0)
+      aws-sdk-core (~> 3, >= 3.127.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.114.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sdk-kms (~> 1)
@@ -768,6 +771,7 @@ PLATFORMS
 DEPENDENCIES
   amatch (~> 0.4.0)
   amoeba (~> 3.2.0)
+  aws-sdk-lambda
   aws-sdk-s3 (~> 1.113)
   binding_of_caller
   bootsnap
