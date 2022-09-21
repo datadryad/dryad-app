@@ -242,6 +242,7 @@ Rails.application.routes.draw do
     
     get 'close_page', to: 'pages#close_page'
     get 'faq', to: 'pages#faq'
+    get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'our_community', to: 'pages#our_membership'
     get 'our_governance', to: 'pages#our_governance'
