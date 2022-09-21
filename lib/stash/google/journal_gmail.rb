@@ -154,10 +154,15 @@ module Stash
           client_id = ::Google::Auth::ClientId.new(APP_CONFIG[:google][:gmail_client_id],
                                                    APP_CONFIG[:google][:gmail_client_secret])
           token_store = ::Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
-          authorizer = ::Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
+          #authorizer = ::Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
+          authorizer = ::Google::Auth::WebUserAuthorizer.new(client_id, SCOPE, token_store)
+          user_id = session[:user_id]
+          puts "user_id: #{user_id}"
+          
           credentials = authorizer.get_credentials('default')
 
           if credentials.nil?
+            
             url = authorizer.get_authorization_url(base_url: OOB_URI)
             puts "\nThis application is not yet authorized to read from GMail. To complete authorization:"
             puts '- Open the URL displayed below in a web browser'
