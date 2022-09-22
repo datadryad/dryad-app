@@ -22,12 +22,6 @@ function Cedar({resource, appConfig}) {
     
     const templates = appConfig.table.templates;
     console.log("templates", templates);    
-    const templateOptions = () => {
-	templates.map((template, index) => (
-	    <option value="{template}" label="Form {template}" />
-	));
-    };
-    console.log("templateOptions", templateOptions);
 
     // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');    
@@ -70,6 +64,18 @@ function Cedar({resource, appConfig}) {
 	}, saveTime);
 
     }
+
+    /**
+       Move the cdk-overlay-container into the modal, so it renders above the modal and not under it.
+     */
+    function fixPopups() {
+        waitForElementToLoad(".cdk-overlay-container", 0).then(function() {
+	    const cee = document.querySelector('cedar-embeddable-editor');
+	    const dialog = document.getElementById("genericModalDialog");
+            const collection = document.getElementsByClassName("cdk-overlay-container");
+            dialog.append(collection[0]);
+        });
+    }
     
     function restoreMetadata() {
 	var comp = document.querySelector('cedar-embeddable-editor');
@@ -82,7 +88,28 @@ function Cedar({resource, appConfig}) {
 	}
     }
 
-
+    /**
+     * Wait for an element before resolving a promise
+     * Need this to detect when the element "cdk-overlay-container" 
+     * has been loaded
+     */
+    function waitForElementToLoad(querySelector, timeout=0) {
+        console.log("1");
+        const startTime = new Date().getTime();
+        return new Promise((resolve, reject) => {
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                if (document.querySelector(querySelector)) {
+                    clearInterval(timer);
+                    resolve();
+                } else if (timeout && now - startTime >= timeout){
+                    clearInterval(timer);
+                    reject();
+                }
+            }, 100);
+        });
+    }
+    
     function openModal() {
 	if (templateSelectRef.current.value == 0) {
 	    console.log("Cannot open modal unless a template is selected.");
@@ -102,6 +129,7 @@ function Cedar({resource, appConfig}) {
 	    // Wait to ensure the page is loaded before initializing the Cedar config,
 	    // and wait a little longer before restoring any metadata that was in the form
 	    setTimeout(configCedar, 250);
+	    setTimeout(fixPopups, 250);
 	    setTimeout(restoreMetadata, 1000);
 	    setTimeout(setAutoSave, 3000);
 	}	
@@ -133,7 +161,7 @@ function Cedar({resource, appConfig}) {
 			>
 			    <option key="0" value="0" label="- Select One -" />
 			    { templates.map((templ) => {
-				return(<option key={ templ[0] } value={ templ[0] } label={ templ[1] } />);
+				return(<option key={ templ[0] } value={ templ[0] } label={ templ[2] } />);
 			    })}
 			</select>
 			<button type="submit" className="o-button__add" onClick={openModal}>Add Metadata Form</button>
