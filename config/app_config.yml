@@ -212,9 +212,9 @@ development: &DEVELOPMENT
   cedar:
     editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
     templates:
-      - [40, "Small Youtube Sample"]
-      - [43, "MiAIRR V1.1.0"]
-      - [45, "Messy CEDAR-NCBI Human Tissue"]
+      - [40, "YOUTUBE",  "Youtube"]
+      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
     
 aws_db:
   <<: *DEVELOPMENT
