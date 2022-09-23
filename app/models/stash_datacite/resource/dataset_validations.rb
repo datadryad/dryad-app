@@ -72,6 +72,7 @@ module StashDatacite
         err.flatten
       end
 
+      # this is a shorter list used by curators
       def loose_errors
         err = []
         err << title
@@ -249,18 +250,28 @@ module StashDatacite
                                   ids: ['filelist_id'])
         end
 
+        # readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
+
+        # This will come in useful when we require readme.md files for real
+        #
+        # if readme_md_files.blank? && @resource.identifier.created_at > readme_md_require_date
+        #   errors << ErrorItem.new(message: '{Include a README.md file} along with the data files.',
+        #                           page: files_page(@resource),
+        #                           ids: ['filelist_id'])
+        # elsif
         if readme_files.blank? && @resource.identifier.created_at > readme_require_date
           errors << ErrorItem.new(message: '{Include a README file} along with the data files.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
-        if readme_files.present? && !readme_files.first.upload_file_name.start_with?('README')
+        if !readme_files.present? && !readme_files&.first&.upload_file_name&.start_with?('README')
           errors << ErrorItem.new(message: "For the {README file}, please capitalize the 'README' portion of the filename.",
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
+
         errors
       end
 
@@ -274,6 +285,10 @@ module StashDatacite
 
       def readme_files
         @resource.data_files.present_files.where("UPPER(upload_file_name) LIKE 'README%'")
+      end
+
+      def readme_md_files
+        @resource.data_files.present_files.where(upload_file_name: 'README.md')
       end
 
     end
