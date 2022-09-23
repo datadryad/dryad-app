@@ -71,4 +71,26 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     end
   end
 
+  describe 'Warn for README in wrong format' do
+    before(:each) do
+      ActionMailer::Base.deliveries = []
+      # Sign in and create a new dataset
+      sign_in(@author)
+      visit root_path
+      click_link 'My Datasets'
+      start_new_dataset
+      fill_required_fields
+      @resource = @resource = StashEngine::Resource.last
+      @resource.identifier.update(created_at: '2022-10-31')
+      @df = create(:data_file, resource_id: @resource.id, upload_file_name: 'README.txt')
+    end
+
+    it 'Warns for README.txt instead of Markdown' do
+      navigate_to_review
+
+      expect(page).to have_text('README.md missing')
+    end
+  end
+
+
 end
