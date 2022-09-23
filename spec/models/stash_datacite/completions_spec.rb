@@ -47,12 +47,12 @@ module StashDatacite
           @resource.data_files.first.update(upload_file_name: 'README.txt', upload_content_type: 'text/plain')
         end
 
-        it "returns true if there is no README.md and other warning criteria are met (after date, at least one readme)" do
+        it 'returns true if there is no README.md and other warning criteria are met (after date, at least one readme)' do
           @resource.identifier.update(created_at: '2022-10-31')
           expect(@completions.no_readme_md).to be(true)
         end
 
-        it "returns false if before cutoff date" do
+        it 'returns false if before cutoff date' do
           @resource.identifier.update(created_at: '2022-07-31')
           expect(@completions.no_readme_md).to be(false)
         end
