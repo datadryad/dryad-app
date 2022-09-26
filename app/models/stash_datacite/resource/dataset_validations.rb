@@ -266,7 +266,7 @@ module StashDatacite
                                   ids: ['filelist_id'])
         end
 
-        if !readme_files.present? && !readme_files&.first&.upload_file_name&.start_with?('README')
+        if readme_files.present? && !readme_files&.first&.upload_file_name&.start_with?('README')
           errors << ErrorItem.new(message: "For the {README file}, please capitalize the 'README' portion of the filename.",
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
