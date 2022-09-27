@@ -1,7 +1,7 @@
 // ##### Facet Component ##### //
 
 .c-facet {
-  border: 1px solid $design-dark-blue-color;
+  border: thin solid $design-dark-blue-color;
 }
 
 .c-facet__header {
@@ -122,7 +122,7 @@
   min-height: 25px;
   margin: 10px;
   padding: 0 35px 0 5px;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
   background: inline('../images/icon_magnifying-glass-blue.svg') right 5px center no-repeat;
 }
 
@@ -163,7 +163,7 @@ html.svg .c-facet__check-input {
   cursor: pointer;
 
   &:not(:first-of-type) {
-    border-top: 1px solid $design-dark-blue-color;
+    border-top: thin solid $design-dark-blue-color;
   }
 
 }

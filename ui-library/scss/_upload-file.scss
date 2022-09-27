@@ -12,8 +12,8 @@
 	justify-content: space-between;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	border-top: 1px solid $design-light-gray-color;
-	border-bottom: 1px solid $design-light-gray-color;
+	border-top: thin solid $design-light-gray-color;
+	border-bottom: thin solid $design-light-gray-color;
 
 	&:not(:first-child) {
 		border-top: none;

@@ -20,7 +20,7 @@
 
 .o-button__plain-text3 {
   @extend %o-button__plain-text;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
   border-radius: 0;
   background-color: $design-white-color;
 }
@@ -35,7 +35,7 @@
 
 .o-button__plain-text5 {
   padding: 4px 10px;
-  border: 1px solid $design-white-color;
+  border: thin solid $design-white-color;
   border-radius: 0;
   background-color: $design-dark-blue-color;
   color: $design-white-color;
@@ -93,7 +93,7 @@
   display: inline-block;
   padding-top: 8px;
   padding-bottom: 8px;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
   border-radius: 0;
   color: $design-black-color;
   text-decoration: none;
@@ -120,7 +120,7 @@
 
 .o-button__icon-left--active {
   @extend %o-button__icon-left;
-  border: 1px solid $design-lighter-blue-color;
+  border: thin solid $design-lighter-blue-color;
   background-color: $design-lighter-blue-color;
 }
 
@@ -137,7 +137,7 @@
 
 .o-button__icon-right--active {
   @extend %o-button__icon-right;
-  border: 1px solid $design-lighter-blue-color;
+  border: thin solid $design-lighter-blue-color;
   background-color: $design-lighter-blue-color;
 }
 
@@ -249,7 +249,7 @@
 .o-button__add {
   @extend %o-button__add-remove;
   padding: 5px 8px;
-  border: 1px solid $design-lighter-blue-color;
+  border: thin solid $design-lighter-blue-color;
   background-color: $design-lighter-blue-color;
   color: $design-black-color;
 
@@ -265,7 +265,7 @@
   margin: 0 0 20px;
   padding: 5px 8px;
   clear: both;
-  border: 1px solid $design-lighter-blue-color;
+  border: thin solid $design-lighter-blue-color;
   background-color: $design-lighter-blue-color;
   color: $design-black-color;
 
@@ -286,7 +286,7 @@
 .o-button__connect-orcid {
   display: inline-block;
   padding: 5px 5px 5px 25px;
-  border: 1px solid $design-extra-light-gray-color;
+  border: thin solid $design-extra-light-gray-color;
   border-radius: 8px;
   outline: none;
   background: $design-white-color inline('../images/icon_orcid.png') left 5px center no-repeat;
@@ -302,7 +302,7 @@
 }
 
 .o-button__connect-orcid:hover {
-  border: 1px solid $bhavis-random-color;
+  border: thin solid $bhavis-random-color;
   color: $bhavis-random-color;
 }
 

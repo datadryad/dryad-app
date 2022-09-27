@@ -10,7 +10,7 @@
 
 .modalDialog button, .modalDialog input[type=submit], {
   @extend %o-button__plain-text;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
   border-radius: 0;
   background-color: $design-white-color;
 }

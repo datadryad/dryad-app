@@ -12,8 +12,8 @@
 	justify-content: space-between;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	border-top: 1px solid $design-light-gray-color;
-	border-bottom: 1px solid $design-light-gray-color;
+	border-top: thin solid $design-light-gray-color;
+	border-bottom: thin solid $design-light-gray-color;
 
 	&:not(:first-child) {
 		border-top: none;
@@ -58,14 +58,14 @@
   width: 100%;
   margin: 1em 0;
   border-collapse: collapse;
-  border: 1px solid $design-dark-gray-color;
+  border: thin solid $design-dark-gray-color;
 }
 
 /* .c-lined-table__head>th */
 th.c-admin-table {
   padding: 8px;
   border-collapse: collapse;
-  border: 1px solid $design-dark-gray-color;
+  border: thin solid $design-dark-gray-color;
   font-weight: bold;
   text-align: left;
 }
@@ -73,7 +73,7 @@ th.c-admin-table {
 .c-lined-table__row>td {
   padding: 8px;
   border-collapse: collapse;
-  border: 1px solid $design-dark-gray-color;
+  border: thin solid $design-dark-gray-color;
   font-weight: normal;
 }
 
