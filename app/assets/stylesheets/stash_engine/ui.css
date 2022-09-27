@@ -3890,7 +3890,6 @@ html.no-multiplebgs .o-banner {
   background-color: #9fc7d8;
   color: rgb(0, 0, 0);
 }
-
 .o-button__add::before {
   content: "+";
 }
@@ -4488,6 +4487,11 @@ datalist {
   margin: 7px 0 0 8px;
   float: left;
   font-size: 1.3em;
+}
+
+.modalDialog {
+  position: fixed;
+  max-width: 45rem;
 }
 
 .modalClose {
@@ -7144,23 +7148,18 @@ th.c-admin-table {
   float: left;
 }
 
-
 /* ******************* CEDAR *************** */
-
 .cedar-container {
-    background-color: rgba(233, 236, 239, 1);
-    padding: 20px;
-    margin-bottom: 20px;
+  background-color: rgb(233, 236, 239);
+  padding: 20px;
+  margin-bottom: 20px;
 }
-
 .cedar-container label {
-    display: block;
+  display: block;
 }
-
 .cedar-container select {
-    margin-right: 10px;
+  margin-right: 10px;
 }
-
 .cedar-container o-button__add {
   padding: 5px 8px;
   border: 1px solid #9fc7d8;
@@ -7169,103 +7168,99 @@ th.c-admin-table {
 }
 
 .cedar-heading__level3 {
-    margin: 0 0 20px;
-    color: rgb(0, 85, 129);
-    font-size: 1.1em;
-    font-weight: bold;
+  margin: 0 0 20px;
+  color: rgb(0, 85, 129);
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
 .c-modal-content__cedar {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
-
 .c-modal-content__cedar .mat-card {
-    padding: 0;
-    margin: 0;
-    box-shadow: none !important;
-    background-color: white !important;
+  padding: 0;
+  margin: 0;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  background-color: white !important;
 }
 
 .template-card {
-    padding: 0;
-    margin: 0;
-    background-color: white !important;
-}
-
-.mat-card {
-    padding: 0;
-    margin: 0;
-}
-
-.mat-card .mat-card {
-    padding: 0;
-    margin: 0;
-}
-
-.mat-card .mat-card-header-text {
-    padding: 0;
-    margin: 0;
-}
-
-.mat-card .mat-card .mat-card-header-text {
-    margin: 0;
-}
-
-.mat-card-avatar {
-    display: none;
+  padding: 0;
+  margin: 0;
+  background-color: white !important;
 }
 
 .mat-card-header .mat-card-title {
-    fond-size: inherit;
+  fond-size: inherit;
 }
 
-/* should be h1 */
+.mat-card {
+  padding: 0;
+  margin: 0;
+  /* should be h1 */
+}
 .mat-card .mat-card-title {
-    margin: 0 0 20px;
-    color: #cf4817;
-    font-size: 1.8em;
-    font-weight: normal;
+  margin: 0 0 20px;
+  color: #cf4817;
+  font-size: 1.8em;
+  font-weight: normal;
 }
-
-/* should be h2 */
+.mat-card .mat-card-header-text {
+  padding: 0;
+  margin: 0;
+}
+.mat-card .mat-card {
+  padding: 0;
+  margin: 0;
+  /* should be h2 */
+  /* should be h3 */
+}
 .mat-card .mat-card .mat-card-header {
-    display: block;
-    margin: 0;
-    margin-block-start: 0.83em;
-    margin-block-end: 0.83em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
+  display: block;
+  margin: 0;
+  -webkit-margin-before: 0.83em;
+          margin-block-start: 0.83em;
+  -webkit-margin-after: 0.83em;
+          margin-block-end: 0.83em;
+  -webkit-margin-start: 0px;
+          margin-inline-start: 0px;
+  -webkit-margin-end: 0px;
+          margin-inline-end: 0px;
 }
-
 .mat-card .mat-card .mat-card-title {
-    margin-bottom: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    background-color: rgb(0, 85, 129);
-    color: rgb(255, 255, 255);
-    font-size: 1.3em;
-    font-weight: normal;    
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  background-color: rgb(0, 85, 129);
+  color: rgb(255, 255, 255);
+  font-size: 1.3em;
+  font-weight: normal;
+}
+.mat-card .mat-card .mat-card-header-text {
+  margin: 0;
+}
+.mat-card .mat-card .mat-card .mat-card-title {
+  background-color: white;
+  color: black;
 }
 
-/* should be h3 */
-.mat-card .mat-card .mat-card .mat-card-title {
-    background-color: white;
-    color: black;
+.mat-card-avatar {
+  display: none;
 }
 
 /* tooltips */
 .mat-tooltip {
-    /* this background-color is just to prove that the selector is getting the correct element; 
-       remove it when we get the positioning to work properly */
-    background-color: rgb(20,20,0) !important;
-    z-index: 100000 !important;
-    position: relative;
+  /* this background-color is just to prove that the selector is getting the correct element; 
+  remove it when we get the positioning to work properly */
+  background-color: rgb(20, 20, 0) !important;
+  z-index: 100000 !important;
+  position: relative;
 }
 
 /* ********************************************** */
-
 .c-uploadtable {
   margin-bottom: 30px;
 }
