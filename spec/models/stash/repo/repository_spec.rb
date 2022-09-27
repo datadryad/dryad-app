@@ -137,6 +137,26 @@ module Stash
             submit_resource
           end
 
+          describe 'when result.deferred? = true' do
+            it "doesn't update repo queue states with success" do
+              result = SubmissionResult.new(resource_id: resource_id, request_desc: 'test', message: 'whee!')
+              result.deferred = true
+              allow(job).to receive(:submit!).and_return(result)
+
+              expect(StashEngine::RepoQueueState).to receive(:create).with(
+                resource_id: resource_id,
+                hostname: repo.class.hostname,
+                state: 'enqueued'
+              )
+              expect(StashEngine::RepoQueueState).not_to receive(:create).with(
+                resource_id: resource_id,
+                hostname: repo.class.hostname,
+                state: 'completed'
+              )
+              submit_resource
+            end
+          end
+
           describe 'unexpected errors' do
             before(:each) do
               allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError)
