@@ -10,7 +10,7 @@
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
       <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant&.tenant_id %>]</span>
     <% end %>
-    <% if current_user && current_user.curator? && !(current_user.role == 'tenant_curator') %>
+    <% if current_user && current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>
       <div class="c-header__nav-item">
         <div class="o-sites">
           <details class="o-showhide o-sites__details" role="group">
@@ -20,7 +20,9 @@
                                                               editor_id: current_user.id, curation_status: 'submitted', only_path: true), class: 'o-sites__group-item' %>
 		<%= link_to 'Curation Stats', stash_url_helpers.curation_stats_path, class: 'o-sites__group-item' %>
 		<%= link_to 'Journals', stash_url_helpers.journals_path, class: 'o-sites__group-item' %>
-		<%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
+    <% if current_user.curator? %>
+		  <%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
+    <% end %>
 		<% if current_user.superuser? %>
 		    <%= link_to 'User Management', stash_url_helpers.user_admin_path, class: 'o-sites__group-item' %>
 		    <%= link_to 'Status Dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
@@ -66,6 +68,7 @@
               <%= link_to 'Submission Process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
               <%= link_to 'Good Data Practices', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
               <%= link_to 'Frequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Contact Us', stash_url_helpers.contact_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>

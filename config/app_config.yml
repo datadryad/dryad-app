@@ -172,8 +172,8 @@ defaults: &DEFAULTS
     zenodo_size: 50_000_000_000
     files: 1000
   frictionless:
-    # 5 MB and below
-    size_limit: 5_000_000
+    # 150 MB and below
+    size_limit: 10_000_000
     missing_values: "na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank"
   rate_limit:
     # number of requests allowed per minute

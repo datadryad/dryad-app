@@ -20,7 +20,7 @@
 <% end %>
 
 <%# If curator, show all changed files from prev versionse %>
-<% if current_user.curator? && highlight_files.present? %>
+<% if current_user.limited_curator? && highlight_files.present? %>
     <li class="highlight"><b>=== Changed since previous curated version ===</b></li>
     <% highlight_files.each do |fu| %>
 	<div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> highlight">

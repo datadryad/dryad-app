@@ -4,7 +4,7 @@
 	<ul class="o-list">
 	    <% related_identifiers.each do |r| %>
 		<% if r.work_type == 'undefined' %>
-		    <% bad_asterisk = ( (current_user&.curator? && !r.verified?) ? ' *' : '') %>
+		    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
 		    <li>This dataset <%= r.relation_name_english %>
 			<%= display_id(type: r.related_identifier_type,
 				       my_id: r.related_identifier) %><%= bad_asterisk %></li>

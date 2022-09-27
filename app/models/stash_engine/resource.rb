@@ -222,7 +222,7 @@ module StashEngine
     scope :visible_to_user, ->(user:) do
       if user.nil?
         with_visibility(states: %w[published embargoed])
-      elsif user.curator?
+      elsif user.limited_curator?
         all
       else
         tenant_admin = (user.tenant_id if user.role == 'admin')
@@ -572,15 +572,15 @@ module StashEngine
 
     # can edit means they are not locked out because edits in progress and have permission
     def can_edit?(user:)
+      # only curators and above (not limited curators) have permission to edit
       permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.curator?)
     end
 
     def admin_for_this_item?(user: nil)
       return false if user.nil?
 
-      user.curator? ||
+      user.limited_curator? ||
         user_id == user.id ||
-        (user.tenant_id == tenant_id && user.role == 'tenant_curator') ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
         funders_match?(user: user) ||
         user.journals_as_admin.include?(identifier&.journal) ||

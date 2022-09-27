@@ -4,7 +4,7 @@ module StashEngine
   class InternalDataController < ApplicationController
     include SharedSecurityController
 
-    before_action :require_curator
+    before_action :require_limited_curator
 
     # I don't believe the following is used except as a test, internal data list is currently in the admin datasets
     # controller with some other things on the same page.

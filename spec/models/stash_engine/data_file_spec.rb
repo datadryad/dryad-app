@@ -299,5 +299,13 @@ module StashEngine
       end
     end
 
+    describe :trigger_frictionless do
+      it 'calls client.invoke for an AWS lambda function and returns a 202' do
+        allow(StashEngine::ApiToken).to receive(:token).and_return('123456789ABCDEF')
+        expect_any_instance_of(Aws::Lambda::Client).to receive(:invoke).and_return({ status_code: 202 }.to_ostruct)
+        expect(@upload.trigger_frictionless[:triggered]).to eql(true)
+      end
+    end
+
   end
 end
