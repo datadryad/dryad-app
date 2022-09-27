@@ -10,7 +10,7 @@ module StashEngine
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
 
-    # this is the place omniauth calls back for shibboleth/google logins
+    # this is the place omniauth calls back for shibboleth logins
     def callback
       current_user.update(tenant_id: params[:tenant_id])
       redirect_to stash_url_helpers.dashboard_path
@@ -30,6 +30,25 @@ module StashEngine
       end
     end
 
+    def google_callback
+      puts "###### GOOGLE CALLBACK"
+
+      # Get access tokens from the google server
+      access_token = request.env["omniauth.auth"]
+      puts "TOKEN: #{access_token}"
+      user = User.from_omniauth(access_token)
+      log_in(user)
+      # Access_token is used to authenticate request made from the rails application to the google server
+      user.google_token = access_token.credentials.token
+      # Refresh_token to request new access_token
+      # Note: Refresh_token is only sent once during the first request
+      refresh_token = access_token.credentials.refresh_token
+      user.google_refresh_token = refresh_token if refresh_token.present?
+      user.save
+
+      redirect_to root_path
+    end
+    
     # destroy the session (ie, log out)
     def destroy
       reset_session
