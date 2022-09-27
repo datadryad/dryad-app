@@ -49,7 +49,9 @@ module StashEngine
 
       File.write(APP_CONFIG[:google][:token_path], JSON.dump(credentials))
 
-      redirect_to root_path
+      flash[:notice] = 'Authorized to connect with GMail.'
+
+      redirect_to Rails.application.routes.url_helpers.gmail_auth_path
     end
 
     # destroy the session (ie, log out)
