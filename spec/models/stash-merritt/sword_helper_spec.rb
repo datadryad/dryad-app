@@ -137,7 +137,6 @@ module Stash
             end
           end
 
-
           describe 'update' do
 
             before(:each) do
