@@ -7252,6 +7252,20 @@ th.c-admin-table {
   width: 22px !important;
 }
 
+.modalDialog button.mat-icon-button {
+  padding: 0;
+}
+.modalDialog button.mat-button-base {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
 .mat-card-avatar {
   display: none;
 }
