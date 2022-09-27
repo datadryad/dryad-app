@@ -1,5 +1,8 @@
 require_dependency 'stash_engine/application_controller'
 require 'ipaddr'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
 
 module StashEngine
   class SessionsController < ApplicationController
@@ -31,21 +34,21 @@ module StashEngine
     end
 
     def google_callback
-      puts "###### GOOGLE CALLBACK"
-
       # Get access tokens from the google server
-      access_token = request.env["omniauth.auth"]
-      puts "TOKEN: #{access_token}"
-      user = User.from_omniauth(access_token)
-      log_in(user)
-      # Access_token is used to authenticate request made from the rails application to the google server
-      user.google_token = access_token.credentials.token
-      # Refresh_token to request new access_token
-      # Note: Refresh_token is only sent once during the first request
-      refresh_token = access_token.credentials.refresh_token
-      user.google_refresh_token = refresh_token if refresh_token.present?
-      user.save
+      auth_info = request.env["omniauth.auth"].credentials
+      
+      # Unlike the other callbacks in this controller, we're not going to login a user,
+      # we're only going to save the credentials in a file.
+      # The Google authentication is currently only used to obtain access to the account
+      # that receives metadata emails from journals.       
+      
+      credentials = { client_id: APP_CONFIG[:google][:gmail_client_id],
+                      client_secret: "", # Don't store the secret; it's in our config already
+                      token: auth_info.token,
+                      refresh_token: auth_info.refresh_token }
 
+      File.write(APP_CONFIG[:google][:token_path], JSON.dump(credentials))
+      
       redirect_to root_path
     end
     

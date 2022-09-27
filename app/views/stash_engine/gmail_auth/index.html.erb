@@ -2,6 +2,8 @@
 
 <h1 class="o-heading__level1">GMail Authorization</h1>
 
-<p>Authorize for GMail here.</p>
+<p>To authorize Dryad's connection to GMail, click the button below, and login to Google as the user
+  <code><%= APP_CONFIG[:google][:journal_account_name] %></code>
+</p>
 
 <%= button_to "Log in with Google", '/auth/google_oauth2'  %>
