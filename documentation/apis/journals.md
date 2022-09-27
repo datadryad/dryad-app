@@ -248,24 +248,24 @@ Configuring/updating the Rails connection with GMail
 Several settings need to be in the server's settings to connect with GMail.
 
 Rails reads the GMail credentials from the credentials file, but it also needs a token that
-will allow it to read from a specific GMail account. The toke is stored in a
-file called `token.yaml`, one directory above the codebase, so it is not
+will allow it to read from a specific GMail account. The token is stored in a
+file called `google_token.json`, one directory above the codebase, so it is not
 affected by updates to the codebase. You can test whether the
 token is valid and/or reset the token by running:
 `rails journal_email:validate_gmail_connection`
 
 If something is wrong with the authorization, you can delete the `token.yaml`
-file and generate it again.
+file and generate it again. To generate it, login to Dryad as a superuser and navigate to
+`/stash/gmail_auth`. Follow the instructions there.
 
 Rarely, if the validation process above produces an error, you may need to regenerate
 the application-level GMail credentials:
 - must be logged in to GMail as journal-submit-app@datadryad.org
 - go to https://console.cloud.google.com/apis/credentials
 - select project "Dryad v2 Gmail API" (if needed)
-- see the download icon for the entry "OAuth client"
+- see the download icon for the entry "Rails OAuth"
 - copy the client_id and client_secret out of the downloaded file and put them
   into the Rails credentials file
-
 
 Configuring the Gmail labels
 ----------------------------

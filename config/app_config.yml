@@ -163,6 +163,7 @@ defaults: &DEFAULTS
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
+    token_path: '../google_token.json'
     journal_account_name: journal-submit-app@datadryad.org
     journal_processing_label: dev-journal-submit
     journal_error_label: dev-journal-submit-error
@@ -295,6 +296,7 @@ production:
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
+    token_path: '../google_token.json'
     journal_account_name: journal-submit-app@datadryad.org
     journal_processing_label: journal-submit-v2
     journal_error_label: journal-submit-error-v2
