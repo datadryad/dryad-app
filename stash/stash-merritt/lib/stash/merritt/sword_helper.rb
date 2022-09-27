@@ -20,7 +20,7 @@ module Stash
         else
           do_create
         end
-      rescue RestClient::Exceptions::ReadTimeout => e
+      rescue RestClient::Exceptions::ReadTimeout
         raise GoneAsynchronous
       ensure
         resource.version_zipfile = File.basename(package.payload)
