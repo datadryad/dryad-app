@@ -3,7 +3,7 @@ require 'ipaddr'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 
-
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class SessionsController < ApplicationController
 
@@ -35,23 +35,23 @@ module StashEngine
 
     def google_callback
       # Get access tokens from the google server
-      auth_info = request.env["omniauth.auth"].credentials
-      
+      auth_info = request.env['omniauth.auth'].credentials
+
       # Unlike the other callbacks in this controller, we're not going to login a user,
       # we're only going to save the credentials in a file.
       # The Google authentication is currently only used to obtain access to the account
-      # that receives metadata emails from journals.       
-      
+      # that receives metadata emails from journals.
+
       credentials = { client_id: APP_CONFIG[:google][:gmail_client_id],
-                      client_secret: "", # Don't store the secret; it's in our config already
+                      client_secret: '', # Don't store the secret; it's in our config already
                       token: auth_info.token,
                       refresh_token: auth_info.refresh_token }
 
       File.write(APP_CONFIG[:google][:token_path], JSON.dump(credentials))
-      
+
       redirect_to root_path
     end
-    
+
     # destroy the session (ie, log out)
     def destroy
       reset_session
@@ -275,3 +275,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength
