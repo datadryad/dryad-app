@@ -27,7 +27,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
-  context :requirements_met do
+  context :requirements_met, js: true do
 
     before(:each) do
       start_new_dataset

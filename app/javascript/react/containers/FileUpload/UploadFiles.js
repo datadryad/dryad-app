@@ -41,10 +41,9 @@ const Messages = {
     'filesAlreadySelected': 'Some files of the same type are already in the table, and were not added.'
 }
 const ValidTabular = {
-    'extensions': ['csv', 'xls', 'xlsx', 'json'],
+    'extensions': ['csv', 'xls', 'xlsx'],
     'mime_types': ['text/csv', 'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/json'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ]
 }
 export const TabularCheckStatus = {
@@ -95,7 +94,12 @@ class UploadFiles extends React.Component {
         loading: false,
         removingIndex: null,
         warningMessage: null,
-        validating: null
+        validating: null,
+        // This is for polling for completion for Frictionless being validated
+        // Since this is not a hooks component, use the old way as demonstrated at
+        // https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
+        pollingCount: 0,
+        pollingDelay: 10000,
     };
 
     componentDidMount() {
@@ -104,6 +108,60 @@ class UploadFiles extends React.Component {
         const withTabularCheckStatus = this.updateTabularCheckStatus(transformed);
         this.setState({chosenFiles: withTabularCheckStatus});
         this.addCsrfToken();
+        this.interval = null; // may be set interval later
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.interval && prevState.pollingDelay !== this.state.pollingDelay) {
+            clearInterval( this.interval );
+            this.interval = setInterval(this.tick, this.state.pollingDelay);
+        }
+    }
+
+    // clear interval before navigating away
+    componentWillUnmount() {
+        if (this.interval){
+            clearInterval(this.interval);
+        }
+    }
+
+    // this is a tick for polling of frictionless reports had results put into database
+    tick = () => {
+        this.setState({
+            pollingCount: this.state.pollingCount + 1
+        });
+        console.log("polling for Frictionless report updates", this.state.pollingCount);
+
+        // these are files with remaining checks
+        const toCheck = this.state.chosenFiles.filter((f) =>
+            (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
+
+        if (this.checkPollingDone(toCheck)) return;
+
+        console.log(toCheck);
+
+        axios.get(
+            `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
+            { params: { file_ids: toCheck.map(file => file.id) } }
+        ).then(response => {
+            const transformed = this.transformData(response.data);
+            const files = this.simpleTabularCheckStatus(transformed);
+            this.updateAlreadyChosenById(files);
+            const updatedFiles = this.state.chosenFiles.filter((f) =>
+                (f?.id && f?.status == 'Uploaded' && f?.tabularCheckStatus == TabularCheckStatus['checking'] ) );
+            this.checkPollingDone(updatedFiles);
+        }).catch(error => console.log(error));
+    }
+
+    checkPollingDone = (filteredFiles) => {
+        if(this.state.pollingCount > 500 || filteredFiles.length < 1 || this.state.validating == false){
+            clearInterval(this.interval);
+            this.interval = null;
+            this.setState({validating: false});
+            this.setState({pollingCount: 0});
+            return true;
+        }
+        return false;
     }
 
     transformData = (files) => {
@@ -116,17 +174,24 @@ class UploadFiles extends React.Component {
         }))
     }
 
+    // updates only based on the state of the actual report and not this.state.validating
+    simpleTabularCheckStatus = (files) => {
+        return files.map(file => ({
+            ...file,
+            tabularCheckStatus: this.setTabularCheckStatus(file)
+        }));
+    }
+
+    // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
     updateTabularCheckStatus = (files) => {
         if (this.state.validating) {
             return files.map(file => ({...file, tabularCheckStatus: TabularCheckStatus['checking']}));
         } else {
-            return files.map(file => ({
-                ...file,
-                tabularCheckStatus: this.setTabularCheckStatus(file)
-            }));
+            return this.simpleTabularCheckStatus(files);
         }
     }
 
+    // set status based on contents of frictionless report
     setTabularCheckStatus = (file) => {
         if (!this.isValidTabular(file)) {
             return TabularCheckStatus['na'];
@@ -238,7 +303,7 @@ class UploadFiles extends React.Component {
                                 console.log(response);
                                 this.updateFileData(response.data.new_file, index);
                                 this.isValidTabular(this.state.chosenFiles[index]) ?
-                                    this.validateFrictionless([this.state.chosenFiles[index]]) :
+                                    this.validateFrictionlessLambda([this.state.chosenFiles[index]]) :
                                     null;
                             }).catch(error => console.log(error));
                     }
@@ -292,21 +357,27 @@ class UploadFiles extends React.Component {
         const newManifestFiles = this.transformData(successfulUrls);
         this.updateFileList(newManifestFiles);
         const tabularFiles = newManifestFiles.filter(file => this.isValidTabular(file));
-        this.validateFrictionless(tabularFiles);
+        this.validateFrictionlessLambda(tabularFiles);
     }
 
-    validateFrictionless = (files) => {
+    // I'm not sure why this is plural since only one file at a time is passed in, maybe because of some of the
+    // other methods it uses which rely on a collection
+    validateFrictionlessLambda = (files) => {
         this.setState({validating: true});
+        // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
         files = this.updateTabularCheckStatus(files);
+        // I think these are files that are being uploaded now????  IDK what it means.
         this.updateAlreadyChosenById(files);
+        // post to the method to trigger frictionless validation in AWS Lambda
         axios.post(
-            `/stash/generic_file/validate_frictionless/${this.props.resource_id}`,
+            `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
             {file_ids: files.map(file => file.id)}
         ).then(response => {
-            this.setState({validating: false});
-            const transformed = this.transformData(response.data);
-            files = this.updateTabularCheckStatus(transformed);
-            this.updateAlreadyChosenById(files);
+            console.log("validateFrictionlessLambda RESPONSE", response);
+            if (!this.interval){
+                // start polling for report updates if not polling already
+                this.interval = setInterval(this.tick, this.state.pollingDelay);
+            }
         }).catch(error => console.log(error));
     }
 

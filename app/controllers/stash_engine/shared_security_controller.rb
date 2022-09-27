@@ -1,10 +1,11 @@
+# rubocop:disable Metrics/ModuleLength
 module StashEngine
   module SharedSecurityController
 
     def self.included(c)
       c.helper_method \
         %i[
-          owner? admin? curator? superuser?
+          owner? admin? curator? limited_curator? superuser?
         ]
     end
 
@@ -50,25 +51,36 @@ module StashEngine
     end
 
     def require_superuser
-      return if current_user && %w[superuser].include?(current_user.role)
+      return if current_user && current_user.superuser?
 
       flash[:alert] = 'You must be a superuser to view this information.'
       redirect_to stash_url_helpers.dashboard_path
     end
 
     def require_curator
-      return if current_user && %w[superuser curator tenant_curator].include?(current_user.role)
+      return if current_user && current_user.curator?
 
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_url_helpers.dashboard_path
     end
 
     def ajax_require_curator
-      return false unless current_user && %w[superuser curator tenant_curator].include?(current_user.role)
+      return false unless current_user && current_user.curator?
+    end
+
+    def require_limited_curator
+      return if current_user && current_user.limited_curator?
+
+      flash[:alert] = 'You must be a curator to view this information.'
+      redirect_to stash_url_helpers.dashboard_path
+    end
+
+    def ajax_require_limited_curator
+      return false unless current_user && current_user.limited_curator?
     end
 
     def require_admin
-      return if current_user && (%w[admin superuser curator tenant_curator].include?(current_user.role) ||
+      return if current_user && (current_user.limited_curator? || current_user.role == 'admin' ||
                                  current_user.journals_as_admin.present? ||
                                  current_user.funders_as_admin.present?)
 
@@ -116,6 +128,10 @@ module StashEngine
       current_user.present? && current_user.curator?
     end
 
+    def limited_curator?
+      current_user.present? && current_user.limited_curator?
+    end
+
     def superuser?
       current_user.present? && current_user.superuser?
     end
@@ -137,3 +153,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ModuleLength

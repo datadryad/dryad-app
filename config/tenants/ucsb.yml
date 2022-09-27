@@ -68,7 +68,7 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
     id_scheme: doi
     owner: null
-  campus_contacts: ["Greg.Janee@ucsb.edu", "rcurty@ucsb.edu"]
+  campus_contacts: ["rds@library.ucsb.edu"]
 
 test:
   <<: *default

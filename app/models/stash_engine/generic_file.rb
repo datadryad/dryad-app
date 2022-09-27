@@ -3,6 +3,7 @@ require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
 require 'http'
+require 'aws-sdk-lambda'
 
 module StashEngine
   class GenericFile < ApplicationRecord
@@ -151,39 +152,41 @@ module StashEngine
       @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
     end
 
-    def validate_frictionless
-      result = download_file
-      if result.instance_of?(HTTP::Error)
-        @report.update(status: 'error')
-        return
-      end
-      result = write_tempfile(result)
-      if result.instance_of?(Errno::ENOENT)
-        @report.update(status: 'error')
-        return
-      end
-      result = call_frictionless(result)
-      # Add 'report' top level key that is required for calling
-      # React frictionless-components
-      result = clean_frictionless_json(result)
+    # triggers frictionless validation but results are async and may not appear in database until AWS Lambda completes
+    # and calls back with results
+    def trigger_frictionless
+      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+      client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
 
-      begin
-        result_hash = { report: JSON.parse(result) }
-        if validation_error(result_hash[:report])
-          @report.update(report: result_hash.to_json, status: 'error')
-          logger.error("Some error occurred calling frictionless. See database for report_id #{@report.id}")
-          return
-        end
-        status = if validation_issues_not_found(result_hash)
-                   'noissues'
-                 else
-                   'issues'
-                 end
-        @report.update(report: result_hash.to_json, status: status)
-      rescue JSON::ParserError => e
-        @report.update(report: '{}', status: 'error')
-        logger.error("Unknown error calling frictionless on generic file #{id} for resource #{resource.id} -- #{e}")
-      end
+      h = Rails.application.routes.url_helpers
+
+      payload = JSON.generate({
+                                download_url: url || direct_s3_presigned_url,
+                                callback_url: h.file_frictionless_report_url(id)
+                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub(/^http:/, 'https:'),
+                                token: StashEngine::ApiToken.token
+                              })
+
+      resp = client.invoke(
+        { function_name: 'frictionless',
+          invocation_type: 'Event',
+          log_type: 'None',
+          payload: payload }
+      )
+
+      return { triggered: true, msg: '' } if resp.status_code == 202 # true with no msg
+
+      item = { triggered: false, msg: "Error invoking lambda for file: #{id}" \
+          "\nstatus code: #{resp.status_code}" \
+          "\nfunction error: #{resp.function_error}" \
+          "\nlog_result: #{resp.log_result}" \
+          "\npayload: #{resp.payload}" \
+          "\nexecuted version: #{resp.executed_version}" }
+
+      logger.error(item)
+
+      { triggered: false, msg: item }
     end
 
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
@@ -210,18 +213,6 @@ module StashEngine
       end
     end
 
-    def write_tempfile(result)
-      # It's required file to have valid tabular extension for frictionless to return
-      # correct validation report
-      tempfile = Tempfile.new([upload_file_name, set_extension], Rails.root.join('tmp'), binmode: true)
-      tempfile.write(result.body.to_s)
-      tempfile.rewind
-      tempfile
-    rescue Errno::ENOENT => e
-      logger.error("Error writing to file: #{e.message}")
-      e
-    end
-
     def set_extension
       return '.csv' if (upload_file_name.last(4) == '.csv') || (upload_content_type == 'text/csv')
       return '.xls' if (upload_file_name.last(4) == '.xls') || (upload_content_type == 'application/vnd.ms-excel')
@@ -229,20 +220,6 @@ module StashEngine
         (upload_content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
       '.json' if (upload_file_name.last(5) == '.json') || (upload_content_type == 'application/json')
-    end
-
-    def call_frictionless(file)
-      # this captures output from the second command on errors, but not the first which gets ignored if it doesn't work
-      # in some of our environments that aren't Ashley's Amazon setup.  May change if she can find other way to set environment.
-      cmd = 'eval "$(pyenv init -)" 2>/dev/null; ' \
-        "frictionless validate --path #{file.path} --json --field-missing-values '#{APP_CONFIG.frictionless.missing_values}' 2>&1"
-      starting = Time.new
-      result = `#{cmd}`
-      logger.debug("Frictionless validation:\n  #{cmd}\n  #{result}")
-      ending = Time.new
-      logger.debug("generic_file.id = #{id}, #{File.basename(file.path)}: Frictionless validation took #{ending - starting} seconds")
-      file.close!
-      result
     end
 
     def validation_issues_not_found(result)

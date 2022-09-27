@@ -108,413 +108,107 @@ module StashEngine
       end
     end
 
-    describe '#validate_frictionless' do
+    describe '#trigger_frictionless' do
       before(:each) do
-        @file = create(:generic_file)
-        @url = Rails.application.routes.url_helpers.generic_file_validate_frictionless_path(
+        @file = create(:generic_file, resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.generic_file_trigger_frictionless_path(
           resource_id: @resource.id
         )
       end
 
-      it 'calls validate frictionless' do
+      it 'calls trigger_frictionless in the controller to send off a (mocked) frictionless validation' do
         @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
-        body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
-        # The request for downloading the file
-        stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+
+        allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
+          (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
+        end
 
         response_code = post @url, params: { file_ids: [@file.id] }
         expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body.first['triggered']).to eq(true)
+        expect(@file.frictionless_report.status).to eq('checking')
       end
 
-      describe 'non-tabular files with allowed tabular files' do
-        before(:each) do
-          @file.update(upload_file_name: 'irmao_do_jorel.jpg', upload_content_type: 'image/jpg')
+      it "doesn't trigger frictionless since the file isn't for the resource" do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @resource2 = create(:resource)
+        @file2 = create(:generic_file, upload_file_name: 'bad.csv', url: 'http://example.com/bad.csv')
+
+        allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
+          (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
         end
 
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by csv extension' do
-          csv = create(:generic_file)
-          csv.update(upload_file_name: 'vovo_juju.csv')
-          response_code = post @url, params: { file_ids: [@file.id, csv.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
+        response_code = post @url, params: { file_ids: [@file2.id] }
 
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by xls extension' do
-          xls = create(:generic_file)
-          xls.update(upload_file_name: 'vovo_juju.xls')
-          response_code = post @url, params: { file_ids: [@file.id, xls.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by xlsx extension' do
-          xlsx = create(:generic_file)
-          xlsx.update(upload_file_name: 'vovo_juju.xlsx')
-          response_code = post @url, params: { file_ids: [@file.id, xlsx.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by json extension' do
-          json = create(:generic_file)
-          json.update(upload_file_name: 'vovo_juju.json')
-          response_code = post @url, params: { file_ids: [@file.id, json.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by csv MIME type' do
-          csv = create(:generic_file)
-          csv.update(upload_file_name: 'vovo_juju', upload_content_type: 'text/csv')
-          response_code = post @url, params: { file_ids: [@file.id, csv.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by xls MIME type' do
-          xls = create(:generic_file)
-          xls.update(upload_file_name: 'vovo_juju', upload_content_type: 'application/vnd.ms-excel')
-          response_code = post @url, params: { file_ids: [@file.id, xls.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by xlsx MIME type' do
-          xlsx = create(:generic_file)
-          xlsx.update(upload_file_name: 'vovo_juju',
-                      upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-          response_code = post @url, params: { file_ids: [@file.id, xlsx.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
-
-        it 'returns status message if posted other than allowed tabular files -- valid inferred by json MIME type' do
-          json = create(:generic_file)
-          json.update(upload_file_name: 'vovo_juju', upload_content_type: 'application/json')
-          response_code = post @url, params: { file_ids: [@file.id, json.id] }
-          expect(response_code).to eql(200)
-          body = JSON.parse(response.body)
-          expect(body).to eql({ 'status' => 'found non-csv file(s)' })
-        end
+        expect(response_code).to eql(404)
       end
 
-      describe 'allowed tabular files' do
-        it 'returns report when called with csv file -- inferred by extension' do
-          @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
+    end
 
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
+    describe '#check_frictionless' do
 
-        it 'returns report when called with csv file -- inferred by MIME type' do
-          @file.update(upload_content_type: 'text/csv', url: 'http://example.com/invalid.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with xls file -- inferred by extension' do
-          @file.update(upload_file_name: 'invalid.xls', url: 'http://example.com/invalid.xls')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with xls file -- inferred by MIME type' do
-          @file.update(upload_content_type: 'application/vnd.ms-excel', url: 'http://example.com/invalid.xls')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xls'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with xlsx file -- inferred by extension' do
-          @file.update(upload_file_name: 'invalid.xlsx', url: 'http://example.com/invalid.xlsx')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          sleep 1 # sometimes fails probably due to the request
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with xlsx file -- inferred by MIME type' do
-          @file.update(
-            upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            url: 'http://example.com/invalid.xlsx'
-          )
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.xlsx'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          sleep 1 # sometimes fails probably due to the request
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with json file -- inferred by extension' do
-          @file.update(upload_file_name: 'invalid.json', url: 'http://example.com/invalid.json')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.json'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
-
-        it 'returns report when called with json file -- inferred by MIME type' do
-          @file.update(upload_content_type: 'application/json', url: 'http://example.com/invalid.json')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.json'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect_right_response(response)
-        end
+      before(:each) do
+        @file = create(:generic_file, resource_id: @resource.id)
+        @url = Rails.application.routes.url_helpers.generic_file_check_frictionless_path(resource_id: @resource.id)
       end
 
-      describe 'invalid manifest files' do
-        before(:each) do
-          @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-        end
+      it 'calls check_frictionless in the controller for no completed reports' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
 
-        it 'downloads file successfully' do
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, @file.url, times: 1
-        end
+        response_code = get @url, params: { file_ids: [@file.id] }
 
-        it 'downloads more than one file successfully' do
-          file2 = create(:generic_file)
-          file2.update(upload_file_name: 'invalid2.csv', url: 'http://example.com/invalid2.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid2.csv'))
-          stub_request(:get, file2.url)
-            .to_return(body: body_file, status: 200)
+        expect(response_code).to eql(200)
 
-          response_code = post @url, params: { file_ids: [@file.id, file2.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, @file.url, times: 1
-          assert_requested :get, file2.url, times: 1
-        end
+        body = JSON.parse(response.body)
 
-        # TODO: this needs to be fixed using mock
-        xit 'calls frictionless validation on the downloaded file' do
-          generic_file = instance_double(GenericFile)
-          allow_any_instance_of(GenericFile).to receive(:validate_frictionless)
-
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-
-          expect(generic_file).to receive(:validate_frictionless)
-        end
-
-        it 'saves first status as checking before call validation' do
-          model_instance = instance_double(FrictionlessReport)
-          allow(FrictionlessReport).to receive(:create).with(
-            generic_file_id: @file.id, status: 'checking'
-          ).and_return(model_instance)
-          allow(model_instance).to receive(:update).and_return(true)
-
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-
-          expect(FrictionlessReport).to have_received(:create).with(
-            generic_file_id: @file.id, status: 'checking'
-          )
-        end
-
-        it 'saves frictionless report with top level "report" key' do
-          # util for when calling React frictionless-components in front-end
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-
-          report_hash = JSON.parse(@file.frictionless_report.report)
-          expect(report_hash.keys).to eq(['report'])
-        end
-
-        it 'saves frictionless report with status "issues" when file is invalid' do
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-
-          report = @file.frictionless_report
-          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
-          expect(report.report).to include('errors":[{')
-          expect(report.status).to eq('issues')
-        end
-
-        it 'returns status when called with csv file and the file has issues' do
-          @file.update(upload_file_name: 'invalid.csv', url: 'http://example.com/invalid.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          # The request for downloading the file
-          stub_request(:get, @file.url).to_return(body: body_file, status: 200)
-
-          post @url, params: { file_ids: [@file.id] }
-          expect(response.status).to eql(200)
-          response_body = JSON.parse(response.body)
-          expect(response_body[0]['frictionless_report']['status']).to eq('issues')
-        end
-
-        it 'saves frictionless report for more than one file' do
-          file2 = create(:generic_file)
-          file2.update(upload_file_name: 'invalid2.csv', url: 'http://example.com/invalid2.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid2.csv'))
-          stub_request(:get, file2.url)
-            .to_return(body: body_file, status: 200)
-
-          response_code = post @url, params: { file_ids: [@file.id, file2.id] }
-          expect(response_code).to eql(200)
-
-          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
-          report = @file.frictionless_report
-          expect(report.report).to include('"errors":[{')
-          report2 = file2.frictionless_report
-          expect(report2.report).to include('"errors":[{')
-        end
+        expect(body).to eq([])
       end
 
-      describe 'valid manifest files' do
-        it 'saves frictionless report with status "noissues"' do
-          @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
-          stub_request(:get, 'http://example.com/valid.csv')
-            .to_return(body: body_file, status: 200)
+      it 'calls check_frictionless in the controller with a completed report' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
+        @file.frictionless_report.update(status: 'noissues', report: '["my cat has fleas"]')
 
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          report = @file.frictionless_report
-          expect(report.report).to include('"errors":[]')
-          expect(report.status).to eq('noissues')
-        end
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body.first['id']).to eq(@file.id)
+        expect(body.first['frictionless_report']['status']).to eq('noissues')
       end
 
-      describe 'invalid S3 files' do
-        before(:each) do
-          @file.update(upload_file_name: 'invalid.csv')
-          @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
-          @body_file = File.open(File.expand_path('spec/fixtures/stash_engine/invalid.csv'))
-          stub_request(:get, /#{@s3_domain}.*/)
-            .with(
-              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
-            ).to_return(status: 200, body: @body_file, headers: {})
-        end
+      it 'calls check_frictionless in the controller with an in-progress report' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        @file.set_checking_status # creates report with checking status
 
-        it 'downloads file from S3 successfully' do
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
-        end
+        response_code = get @url, params: { file_ids: [@file.id] }
 
-        it 'saves frictionless report if downloads successfully, with status' do
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
+        expect(response_code).to eql(200)
 
-          report = @file.frictionless_report
-          # there's '"errors":[{...}]' for valid files, and only '"errors":[]' for invalid ones
-          expect(report.report).to include('"errors":[{')
-          expect(report.status).to eq('issues')
-        end
+        body = JSON.parse(response.body)
 
-        it 'downloads file from S3 unsuccessfully, so the report is created with status "error"' do
-          stub_request(:get, /#{@s3_domain}.*/)
-            .with(
-              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
-            ).to_raise(HTTP::Error)
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, /#{@s3_domain}.*/, body: '', times: 1
-
-          report = @file.frictionless_report
-          expect(report.report).to be(nil)
-          expect(report.status).to eq('error')
-        end
-
-        it 'could not write to tempfile, so the report is created with status "error"' do
-          allow(Tempfile).to receive(:new).and_raise Errno::ENOENT
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
-
-          report = @file.frictionless_report
-          expect(report.report).to be(nil)
-          expect(report.status).to eq('error')
-        end
-
-        it 'creates report with status "error", because the file does not exist when calling validation' do
-          # When calling frictionless there're various error that can happen, besides
-          # the errors for the validation per se. This test is just an example showing
-          # the "errors" key with possible error. And the 'scheme-error'.
-          allow_any_instance_of(GenericFile).to receive(:call_frictionless).and_return(
-            '{
-  "version": "4.10.0",
-  "time": 0.003,
-  "errors": [
-    {
-      "code": "scheme-error",
-      "name": "Scheme Error",
-      "tags": [],
-      "note": "[Errno 2] No such file or directory: \'/tmp/invalid.csv\'",
-      "message": "The data source could not be successfully loaded: [Errno 2] No such file or directory: \'/tmp/invalid.csv\'",
-      "description": "Data reading error because of incorrect scheme."
-    }
-  ],
-  "tasks": [],
-  "stats": {
-    "errors": 1,
-    "tasks": 0
-  },
-  "valid": false
-}
-'
-          )
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          assert_requested :get, /#{@s3_domain}.*/, body: @body, times: 1
-
-          report = @file.frictionless_report
-          expect(report.report).to include('scheme-error')
-          expect(report.status).to eq('error')
-        end
+        expect(body).to eq([])
       end
 
-      describe 'valid S3 files' do
-        it 'saves frictionless report with status "noissues"' do
-          @file.update(upload_file_name: 'valid.csv')
-          @s3_domain = 'https://a-test-bucket.s3.us-west-2.amazonaws.com'
-          body_file = File.open(File.expand_path('spec/fixtures/stash_engine/valid.csv'))
-          stub_request(:get, /#{@s3_domain}.*/)
-            .with(
-              headers: { 'Host' => 'a-test-bucket.s3.us-west-2.amazonaws.com' }
-            ).to_return(status: 200, body: body_file, headers: {})
+      it 'calls check_frictionless in the controller with no report started' do
+        @file.update(upload_file_name: 'valid.csv', url: 'http://example.com/valid.csv')
+        # haven't created a frictionless report for this file
 
-          response_code = post @url, params: { file_ids: [@file.id] }
-          expect(response_code).to eql(200)
-          report = @file.frictionless_report
-          expect(report.report).to include('"errors":[]')
-          expect(report.status).to eq('noissues')
-        end
+        response_code = get @url, params: { file_ids: [@file.id] }
+
+        expect(response_code).to eql(200)
+
+        body = JSON.parse(response.body)
+
+        expect(body).to eq([])
       end
+
     end
   end
 end

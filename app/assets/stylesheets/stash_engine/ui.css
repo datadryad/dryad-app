@@ -4490,13 +4490,9 @@ datalist {
   font-size: 1.3em;
 }
 
-.modalDialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin: 0;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+.modalClose {
+  text-align: right;
+  margin-bottom: -1em;
 }
 
 .modalDialog button, .modalDialog input[type=submit] {
@@ -7731,6 +7727,11 @@ progress::-webkit-progress-value {
 }
 .about-page table tr:nth-child(even) {
   background-color: rgb(235, 235, 235);
+}
+
+.emailr {
+  unicode-bidi: bidi-override;
+  direction: rtl;
 }
 
 .t-describe__remove-button {

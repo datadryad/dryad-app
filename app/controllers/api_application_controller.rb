@@ -104,13 +104,13 @@ class ApiApplicationController < ::StashEngine::ApplicationController
   end
 
   def require_superuser
-    return if @user.role == 'superuser'
+    return if @user.superuser?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_curator
-    return if %w[superuser curator tenant_curator].include?(@user.role)
+    return if @user.curator?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
