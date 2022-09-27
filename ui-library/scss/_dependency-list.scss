@@ -10,7 +10,7 @@
   margin-top: 5px;
   margin-right: 10px;
   padding: 25px;
-  border: 1px solid $design-black-color;
+  border: thin solid $design-black-color;
   list-style: none;
 }
 
@@ -45,7 +45,7 @@
     width: 80%; /* Could be more or less, depending on screen size */
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
-    border: 1px solid $design-dark-gray-color;
+    border: thin solid $design-dark-gray-color;
     background-color: $design-super-extra-light-gray-color;
   }
   /* The Close Button */
