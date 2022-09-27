@@ -115,6 +115,17 @@
   width: 22px !important;
 }
 
+.modalDialog button {
+  &.mat-icon-button {
+    padding: 0;
+  }
+  &.mat-button-base {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: space-around;
+  }
+}
+
 .mat-card-avatar {
   display: none;
 }
