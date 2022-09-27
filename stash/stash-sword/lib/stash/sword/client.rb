@@ -46,9 +46,6 @@ module Stash
         response = do_post(uri, payload, create_request_headers(payload, doi, packaging))
         receipt_from(response)
       rescue StandardError => e
-        # do something different if RestClient::Exceptions::ReadTimeout
-        # don't return DepositReceipt but need to be sure whoever calls this doesn't freak out since we'll get
-        # an update from the OAI-PMH feed
         log_error(e)
         raise
       end
