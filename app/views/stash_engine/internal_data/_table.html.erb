@@ -16,15 +16,17 @@
         <td><%= formatted_datetime(item.updated_at) %></td>
         <td class="c-admin-hide-border-right"><%= item.data_type %></td>
         <td class="c-admin-hide-border-left">
-          <%= button_to stash_engine_internal_datum_path(item), method: :delete, remote: true, data: { confirm: 'Are you sure?' },
-                        form_class: 'o-button__inline-form', class: 'c-admin-edit-icon', title: 'Delete internal data item' do %>
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          <% end %>	 
-          <%= form_with(url: url_for( controller: '/stash_engine/admin_datasets', action: 'data_popup',
-                                      id: item.identifier_id, sub_method: 'put', only_path: true),
-                  method: :get, remote: true) do -%>
-            <%= hidden_field_tag :internal_datum_id, item.id %>
-            <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <% if current_user.curator? %>
+            <%= button_to stash_engine_internal_datum_path(item), method: :delete, remote: true, data: { confirm: 'Are you sure?' },
+                          form_class: 'o-button__inline-form', class: 'c-admin-edit-icon', title: 'Delete internal data item' do %>
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            <% end %>
+            <%= form_with(url: url_for( controller: '/stash_engine/admin_datasets', action: 'data_popup',
+                                        id: item.identifier_id, sub_method: 'put', only_path: true),
+                    method: :get, remote: true) do -%>
+              <%= hidden_field_tag :internal_datum_id, item.id %>
+              <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <% end %>
           <% end %>
         </td>
         <td><%= item.value %></td>
