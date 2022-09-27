@@ -130,7 +130,13 @@ module Stash
               expect(@sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
               expect { @helper.submit! }.to raise_error(RestClient::RequestFailed)
             end
+
+            it 'handles RestClient::Exceptions::ReadTimeout and returns and raises GoneAsynchronous exception' do
+              expect(@sword_client).to receive(:create).and_raise(RestClient::Exceptions::ReadTimeout)
+              expect { @helper.submit! }.to raise_error(Stash::Merritt::SwordHelper::GoneAsynchronous)
+            end
           end
+
 
           describe 'update' do
 
