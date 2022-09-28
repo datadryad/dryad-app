@@ -251,8 +251,8 @@ Now run a command like the one one below if it has been published to Zenodo.  It
 re-open the published record, set embargo and publish it again with the
 embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies table.
 ```
-# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25
+# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
 ```
 
 Remove from our SOLR search:
