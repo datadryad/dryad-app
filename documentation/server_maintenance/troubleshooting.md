@@ -204,6 +204,7 @@ If you don't update the authors to be sure authors/orcids are correct then the
 "corresponding author" may not appear correctly and it also plays havok with data consistency
 with ORCIDs for wrong people.
 
+
 Setting embargo on a dataset that was accidentally published
 =============================================================
 
@@ -226,12 +227,12 @@ Now run a command like the one one below if it has been published to Zenodo.  It
 re-open the published record, set embargo and publish it again with the
 embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies table.
 ```
-# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31
+# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
 ```
 
-Setting "Private For Peer Review" (PPR) on datasets published out of turn
-=========================================================================
+Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
+==================================================================================
 ```
 select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
 select id, file_view, meta_view from stash_engine_resources where identifier_id=;
@@ -273,52 +274,8 @@ What to do at datacite?
 - (if it's EZID, you may have to do this a different way, but most are datacite dois)
 
 
-Please unpublish dataset (but it will likely be published again later at some indefinite time)
-==============================================================================================
-
-This isn't the same as removing, but involves many systems because publication triggers many events
-with external systems.  It has some similarities to un-embargoing, or deleting but we need to remove metadata where we can
-without actually deleting.
-
-Do these SQL statements, filling in the appropriate info:
-```
-select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
-select id, file_view, meta_view from stash_engine_resources where identifier_id=;
-select * from stash_engine_curation_activities where resource_id=;
-update stash_engine_curation_activities set status='submitted' where id=;
-update stash_engine_resources set file_view=false, meta_view=false, solr_indexed=false where identifier_id=;
-update stash_engine_resources set publication_date=NULL where id=;
-update stash_engine_identifiers set pub_state='unpublished' where id=;
-select deposition_id from stash_engine_zenodo_copies WHERE resource_id=;
-```
-
-It's pretty impossible to remove from Zenodo without contacting them and waiting a while, so an embargo for a century
-or two might serve the purpose.  Do this for each of the unique deposition_ids listed in the query above. 
-````
-# the parameters are 1) resource_id, 2) deposition_id (see last sql above), 3) date far in the future
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo <resource-id> <deposition-id> 2200-12-31
-````
-
-Remove from our SOLR search:
-```
-bundle exec rails c -e production # console for production environment
-solr = RSolr.connect url: Blacklight.connection_config[:url]
-solr.delete_by_query("uuid:\"doi:<doi>\"")  # replace the <doi> in that string
-solr.commit
-exit
-```
-
-What to do at datacite?
-- doi.datacite.org, login and search for doi under dois tab
-- Click `update doi (form)`
-- You cannot change this back to a draft now because it was published
-- Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
-- Click `Update DOI`
-- (if it's EZID, you may have to do this a different way, but most are datacite dois)
-
-
-Removing data that was accidentally published
-===================================================
+Permanently removing data that was accidentally published (and should never be)
+===============================================================================
 
 Delete Dataset / Removing an entire dataset
 --------------------------
