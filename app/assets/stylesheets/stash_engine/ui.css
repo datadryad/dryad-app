@@ -3696,7 +3696,7 @@ html.no-multiplebgs .o-banner {
 .o-button__plain-text4 {
   padding: 5px 0;
   border: none;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   color: rgb(0, 85, 129);
   font-size: 0.9em;
 }
@@ -3739,7 +3739,7 @@ html.no-multiplebgs .o-banner {
 .o-button__plain-text7 {
   padding: 0;
   border: none;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   color: rgb(0, 85, 129);
   font-weight: bold;
   text-align: left;
@@ -3810,7 +3810,7 @@ html.no-multiplebgs .o-banner {
 .o-button__undo-disabled, .o-button__undo, .o-button__no-bg-icon-left2, .o-button__no-bg-icon-left1 {
   padding: 3px 0 3px 25px;
   border: none;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   color: rgb(0, 85, 129);
   font-size: 0.9em;
 }
@@ -3911,7 +3911,7 @@ html.no-multiplebgs .o-banner {
 .o-button__remove {
   padding: 2px 0;
   border: none;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   color: rgb(0, 85, 129);
 }
 
