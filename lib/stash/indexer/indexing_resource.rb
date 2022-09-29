@@ -88,6 +88,7 @@ module Stash
           dryad_author_affiliation_name_sm: author_affiliations,
           dryad_author_affiliation_id_sm: author_affiliation_ids,
           dryad_dataset_file_ext_sm: dataset_file_exts,
+          dcs_funder_sm: dataset_funders,
           updated_at_dt: updated_at_str
         }
       end
@@ -248,6 +249,16 @@ module Stash
       def dataset_file_exts
         @resource.data_files.present_files.map do |df|
           File.extname(df.upload_file_name.to_s).gsub(/^./, '').downcase
+        end.flatten.reject(&:blank?).uniq
+      end
+
+      def dataset_funders
+        # TODO:  We need more special handling for NIH institutes and main entry for NIH since all specific
+        # subdivisions of NIH should also insert into top-level of NIH for broad (or narrower) discovery
+        #
+        # Also do we only want to add items with valid FundRef entries?
+        @resource.contributors.funder.completed.map do |funder|
+          funder.contributor_name
         end.flatten.reject(&:blank?).uniq
       end
 
