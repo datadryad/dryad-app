@@ -16,7 +16,7 @@ module StashDatacite
                           author_orcid: @user.orcid,
                           resource_id: @resource.id)
         create(:data_file, resource: @resource)
-        @readme = create(:data_file, resource: @resource, upload_file_name: 'README.txt')
+        @readme = create(:data_file, resource: @resource, upload_file_name: 'README.md')
         create(:data_file, resource: @resource)
         create(:data_file, resource: @resource)
         @resource.reload
@@ -274,7 +274,7 @@ module StashDatacite
           error = validations.data_required
           expect(error[0].message).to include('README')
 
-          @readme.update(upload_file_name: 'README.txt')
+          @readme.update(upload_file_name: 'README.md')
           error = validations.data_required
           expect(error).to be_empty
         end
