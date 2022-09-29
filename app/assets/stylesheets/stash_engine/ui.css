@@ -3671,7 +3671,7 @@ html.no-multiplebgs .o-banner {
   }
 }
 
-.modalDialog button, .modalDialog input[type=submit], .o-button__plain-text3, .o-button__plain-text2, .o-button__plain-text1 {
+.modalDialog .modalClose button, .modalDialog input[type=submit], .modalDialog button[type=submit], .o-button__plain-text3, .o-button__plain-text2, .o-button__plain-text1 {
   display: inline-block;
   padding: 8px 12px;
   border: none;
@@ -4493,16 +4493,15 @@ datalist {
   position: fixed;
   max-width: 45rem;
 }
+.modalDialog .modalClose button, .modalDialog input[type=submit], .modalDialog button[type=submit] {
+  border: thin solid rgb(157, 159, 162);
+  border-radius: 0;
+  background-color: rgb(255, 255, 255);
+}
 
 .modalClose {
   text-align: right;
   margin-bottom: -1em;
-}
-
-.modalDialog button, .modalDialog input[type=submit] {
-  border: thin solid rgb(157, 159, 162);
-  border-radius: 0;
-  background-color: rgb(255, 255, 255);
 }
 
 .c-modal-h1 {
