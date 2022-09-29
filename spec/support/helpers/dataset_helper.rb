@@ -57,7 +57,7 @@ module DatasetHelper
     resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
     @resource = StashEngine::Resource.find(resource_id)
     create(:data_file, resource: @resource, file_state: 'copied')
-    create(:data_file, resource: @resource, file_state: 'copied', upload_file_name: 'README.txt')
+    create(:data_file, resource: @resource, file_state: 'copied', upload_file_name: 'README.md')
   end
 
   def submit_form

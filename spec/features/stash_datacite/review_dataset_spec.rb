@@ -130,7 +130,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       @identifier.edit_code = Faker::Number.number(digits: 5)
       @identifier.save
       @res = create(:resource, identifier: @identifier)
-      create(:data_file, file_state: 'copied', resource: @res, upload_file_name: 'README.txt')
+      create(:data_file, file_state: 'copied', resource: @res, upload_file_name: 'README.md')
       create(:data_file, file_state: 'copied', resource: @res)
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
