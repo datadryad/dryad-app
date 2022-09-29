@@ -1,6 +1,9 @@
 require_dependency 'stash_engine/application_controller'
 require 'ipaddr'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class SessionsController < ApplicationController
 
@@ -10,7 +13,7 @@ module StashEngine
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
 
-    # this is the place omniauth calls back for shibboleth/google logins
+    # this is the place omniauth calls back for shibboleth logins
     def callback
       current_user.update(tenant_id: params[:tenant_id])
       redirect_to stash_url_helpers.dashboard_path
@@ -28,6 +31,27 @@ module StashEngine
       else
         redirect_to stash_url_helpers.choose_sso_path
       end
+    end
+
+    def google_callback
+      # Get access tokens from the google server
+      auth_info = request.env['omniauth.auth'].credentials
+
+      # Unlike the other callbacks in this controller, we're not going to login a user,
+      # we're only going to save the credentials in a file.
+      # The Google authentication is currently only used to obtain access to the account
+      # that receives metadata emails from journals.
+
+      credentials = { client_id: APP_CONFIG[:google][:gmail_client_id],
+                      client_secret: '', # Don't store the secret; it's in our config already
+                      token: auth_info.token,
+                      refresh_token: auth_info.refresh_token }
+
+      File.write(APP_CONFIG[:google][:token_path], JSON.dump(credentials))
+
+      flash[:notice] = 'Authorized to connect with GMail.'
+
+      redirect_to Rails.application.routes.url_helpers.gmail_auth_path
     end
 
     # destroy the session (ie, log out)
@@ -253,3 +277,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength

@@ -5,13 +5,13 @@ default: &default
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
-  abbreviation: "NCSU"
-  short_name: "North Carolina State University"
-  long_name: "North Carolina State University"
-  publisher_id: grid.40803.3f
+  abbreviation: "fws"
+  short_name: "U.S. Fish & Wildlife Service"
+  long_name: "U.S. Fish & Wildlife Service"
+  publisher_id: grid.462979.7
   ror_ids:
-    - https://ror.org/04tj63d06
-  tenant_id: ncsu
+    - https://ror.org/04k7dar27
+  tenant_id: fws
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -19,11 +19,10 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: shibboleth
-    entity_id: urn:mace:incommon:ncsu.edu
-    entity_domain: ncsu.edu
+    strategy: ip_address
+    ranges: [ "164.159.1.1/16", "132.174.248.186" ] # large network space and also the EZProxy server
   default_license: cc0
-  campus_contacts: []
+  campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -62,4 +61,4 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: ["slivey@ncsu.edu", "hmdavis4@ncsu.edu", "mcdowney@ncsu.edu"]
+  campus_contacts: [""]
