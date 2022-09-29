@@ -68,8 +68,7 @@
 <p>
   We require that a README file is uploaded to this category to clearly define all variables,
   across all data files contained within the submission. The file name must contain and begin with "README" in all
-  caps (i.e. README_file.txt). For reference, Cornell University's Research Data Management Service Group has
-  created <a href="https://data.research.cornell.edu/content/readme" target="_blank">an excellent README template</a>. 
+  caps (i.e. README_file.txt). For guidance, please see our <a href="https://datadryad.org/docs/README.md" target="_blank"> README template</a>. 
 </p>
 
 <p>
