@@ -15,19 +15,13 @@ module Stash
   module Google
     class JournalGMail
 
-      OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'.freeze
       APPLICATION_NAME = 'Dryad JournalGmail library'.freeze
-
-      # The TOKEN_PATH file stores the user's access and refresh tokens, and is
-      # created automatically when the authorization completes for the first
-      # time. It is stored outside the main code directory, so we
-      TOKEN_PATH = '../token.yaml'.freeze
       SCOPE = ::Google::Apis::GmailV1::AUTH_GMAIL_MODIFY
 
       # Verify we can connect to GMail, we can read the user's labels, and the target label exists
       def self.validate_gmail_connection
         if user_labels.empty?
-          puts 'Error: Unable to read user labels found'
+          puts 'Error: Unable to read user labels'
         else
           message = "Error: Authorization to #{APP_CONFIG[:google][:journal_account_name]} is working, " \
                     "but unable to locate the target label `#{processing_label_name}`"
@@ -38,6 +32,8 @@ module Stash
           end
           puts "\n#{message}"
         end
+      rescue Signet::AuthorizationError => e
+        puts "Error: Unable to authorize connection to GMail -- #{e}"
       end
 
       def self.user_labels
@@ -146,32 +142,30 @@ module Stash
         end
 
         # Ensure valid credentials, either by restoring from a saved token
-        # or intitiating a (command-line) OAuth2 authorization.
+        # or intitiating a (web-based) OAuth2 authorization.
         def initialize_gmail_service
-          @gmail = ::Google::Apis::GmailV1::GmailService.new
-          @gmail.client_options.application_name = APPLICATION_NAME
-
-          client_id = ::Google::Auth::ClientId.new(APP_CONFIG[:google][:gmail_client_id],
-                                                   APP_CONFIG[:google][:gmail_client_secret])
-          token_store = ::Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
-          authorizer = ::Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
-          credentials = authorizer.get_credentials('default')
+          credentials = ::Google::Auth::UserRefreshCredentials.make_creds(json_key_io: File.new(APP_CONFIG[:google][:token_path], 'r'),
+                                                                          scope: SCOPE)
 
           if credentials.nil?
-            url = authorizer.get_authorization_url(base_url: OOB_URI)
             puts "\nThis application is not yet authorized to read from GMail. To complete authorization:"
             puts '- Open the URL displayed below in a web browser'
             puts "- Choose the account #{APP_CONFIG[:google][:journal_account_name]}"
             puts '- Accept access for this service'
-            puts '- Copy the resulting auth code and paste it below'
-            puts "\n#{url}\n\n"
-            print 'AUTH CODE: '
-            code = $stdin.gets
-            # [Google::Auth::UserRefreshCredentials] OAuth2 credentials
-            credentials = authorizer.get_and_store_credentials_from_code(user_id: 'default',
-                                                                         code: code,
-                                                                         base_url: OOB_URI)
+            puts "\n#{Rails.application.routes.url_helpers.gmail_auth_url}\n\n"
+            return
           end
+
+          if credentials.refresh_token.blank?
+            puts 'Error: Credentials do not contain a refresh_token. Please reset this account and re-authenticate.'
+            return
+          end
+
+          # The saved token file does not have the secret, so insert it
+          credentials.client_secret = APP_CONFIG[:google][:gmail_client_secret]
+
+          @gmail = ::Google::Apis::GmailV1::GmailService.new
+          @gmail.client_options.application_name = APPLICATION_NAME
           @gmail.authorization = credentials
           @gmail
         end

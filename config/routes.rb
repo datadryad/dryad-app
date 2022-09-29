@@ -227,6 +227,7 @@ Rails.application.routes.draw do
     root 'pages#home'
     
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
+    match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]
     match 'auth/developer/callback', to: 'sessions#developer_callback', via: %i[get post]
     match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
     match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
@@ -325,7 +326,9 @@ Rails.application.routes.draw do
     
     # Journals
     get 'journals', to: 'journals#index'
-    
+
+    # GMail authentication page for journals
+    get 'gmail_auth', to: 'gmail_auth#index'
   end
 
   # the ones below coming from new routing for geoblacklight

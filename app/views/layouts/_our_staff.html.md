@@ -33,6 +33,21 @@
   </p>
 </div>
 
+<div class="bio">
+    <img src="/images/sarah.jpg" alt="Sarah Lippincott" title="Sarah Lippincott">
+  <p><strong>Sarah Lippincott</strong><br/>
+  Head of Community Engagement<br/>
+  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Head of Community Engagement at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.
+</p>
+</div>
+
+<div class="bio">
+    <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
+  <p><strong>Jess Herzog</strong><br/>
+  Head of Publishing Services<br/>
+  Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
+</div>
+
 <h2 id="dev">Product Development Team</h2>
 
 <div class="bio">
@@ -66,21 +81,6 @@
 </div>
 
 <h2 id="curation">Curation Team</h2>
-
-<div class="bio">
-    <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
-  <p><strong>Jess Herzog</strong><br/>
-  Head of Publishing Services<br/>
-  Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
-</div>
-
-<div class="bio">
-  <img src="/images/AOrona.jpg" alt="Ari Orona" title="Ari Orona">
-  <p><strong>Ariana Orona</strong><br/>
-  Senior Curator & Salesforce Administrator<br/>
-  Ari graduated with a B.S. in Biochemistry from Arizona State University, with a diverse background in clinical research. In addition to her Data Curator role at Dryad, she works as a Data Analyst at the University of Virginia. In her spare time, Ari enjoys baking, reading, and conquering her latest favorite video game.</p>
-</div>
-
 <div class="bio">
   <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>

@@ -1,8 +1,12 @@
 require 'stash/sword'
+require 'rest-client' # so we have access to its exception classes
 
 module Stash
   module Merritt
     class SwordHelper
+
+      class GoneAsynchronous < StandardError; end
+
       attr_reader :logger, :package
 
       def initialize(package:, logger: nil)
@@ -16,6 +20,9 @@ module Stash
         else
           do_create
         end
+      rescue RestClient::Exceptions::ReadTimeout
+        raise GoneAsynchronous
+      ensure
         resource.version_zipfile = File.basename(package.payload)
         resource.save!
       end
