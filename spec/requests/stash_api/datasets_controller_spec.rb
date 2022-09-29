@@ -719,7 +719,7 @@ module StashApi
         my_id = StashEngine::Identifier.find(@ds_info['id'])
         @res = my_id.in_progress_resource
         @res.update(data_files: [create(:data_file, file_state: 'copied'),
-                                 create(:data_file, file_state: 'copied', upload_file_name: 'README.txt')])
+                                 create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
         @patch_body = [{ "op": 'replace', "path": '/versionStatus', "value": 'submitted' }].to_json
       end
 
@@ -846,7 +846,7 @@ module StashApi
           @identifier = create(:identifier)
           @res = create(:resource, identifier: @identifier, user: @super_user)
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
-                                   create(:data_file, file_state: 'copied', upload_file_name: 'README.txt')])
+                                   create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
           @res.authors.first.update(author_orcid: @super_user.orcid)
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
         end

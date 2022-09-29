@@ -23,7 +23,7 @@ default: &default
     entity_id: urn:mace:incommon:ncsu.edu
     entity_domain: ncsu.edu
   default_license: cc0
-  campus_contacts: [""]
+  campus_contacts: []
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -62,4 +62,4 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: ["slivey@ncsu.edu", "hmdavis4@ncsu.edu"]
+  campus_contacts: ["slivey@ncsu.edu", "hmdavis4@ncsu.edu", "mcdowney@ncsu.edu"]
