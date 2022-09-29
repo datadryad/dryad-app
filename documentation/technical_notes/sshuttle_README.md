@@ -51,7 +51,9 @@ This will vary based on your OS type.  Use something like apt, yum or homebrew t
 
 ## Run the sshuttle.sh script
 
-Example of starting it.
+Go into the location of your dryad-app directory and go to `dryad-app/config/script`
+
+Example of starting the script from this directory:
 ```bash
 $ ./sshuttle.sh start
 Starting sshuttle and tunneling these IPs: 35.164.191.195 52.89.224.42 35.164.191.208 52.35.63.255 52.35.63.251 54.148.81.93 52.35.63.226 54.244.52.80 54.244.52.79 44.229.33.203 54.244.52.78
