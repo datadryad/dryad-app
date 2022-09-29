@@ -330,7 +330,7 @@ RSpec.feature 'Admin', type: :feature do
         menu.click
         click_on('Dataset Curation')
         select 'Status', from: 'curation_status'
-        find('#curation_status').set("Status\n") # trying to get headless to work reliably
+        # find('#curation_status').set("Status\n") # trying to get headless to work reliably
 
         expect(page).to have_selector('#js-curation-state-1')
         expect(page).to have_content(@resource.title)
