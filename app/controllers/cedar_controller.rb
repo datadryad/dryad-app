@@ -18,7 +18,7 @@ class CedarController < ApplicationController
 
     puts "Found resource #{resource.id}"
     merged = params['info'].merge(metadata: params['metadata'])
-    cedar_json = merged.to_json(:except => [:resource_id, :csrf])
+    cedar_json = merged.to_json(except: [:resource_id, :csrf])
 
     resource.update(cedar_json: cedar_json)
 
