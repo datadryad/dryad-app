@@ -3,8 +3,8 @@
 // breaks everything right now.
 import React from 'react';
 
-import File from './File/File';
-import BadList from './BadList/BadList';
+import File from './File';
+import BadList from './BadList';
 
 const file_list = (props) => (
   <div>
