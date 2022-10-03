@@ -27,7 +27,7 @@
     "test": "jest",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint --ext .jsx app/ --fix",
-    "lint:style": "stylelint app/**/*.scss app/**/*.css"
+    "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",
