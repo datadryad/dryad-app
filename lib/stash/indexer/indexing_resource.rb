@@ -253,13 +253,24 @@ module Stash
       end
 
       def dataset_funders
-        # TODO:  We need more special handling for NIH institutes and main entry for NIH since all specific
-        # subdivisions of NIH should also insert into top-level of NIH for broad (or narrower) discovery
-        #
         # Also do we only want to add items with valid FundRef entries?
-        @resource.contributors.funder.completed.map do |funder|
+        contrib_names = @resource.contributors.funder.completed.map do |funder|
           funder.contributor_name
-        end.flatten.reject(&:blank?).uniq
+        end
+        contrib_names << group_funders
+        contrib_names.flatten.reject(&:blank?).uniq
+      end
+
+      # see how many group funders belong to each relevant group in the ContributorGrouping table and return additional
+      # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
+      def group_funders
+        extra_funders = []
+        StashDatacite::ContributorGrouping.where(contributor_type: 'funder').each do |group|
+          identifier_ids = group.json_contains.map{|i| i["name_identifier_id"]}
+          count = @resource.contributors.funder.completed.where(name_identifier_id: identifier_ids).count
+          extra_funders.push(group.contributor_name) if count.positive?
+        end
+        extra_funders
       end
 
       def updated_at_str
