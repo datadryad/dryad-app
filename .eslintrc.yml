@@ -11,6 +11,8 @@ rules:
   "object-curly-spacing": [2, "never"]
   "max-len": [2, {"code": 150, "tabWidth": 2, "ignoreUrls": true}]
   "no-console": off
+  "react/destructuring-assignment": [0]
+  "react/prop-types": [0]
 env:
   "browser": true # includes browser variables like document, window, etc
 
