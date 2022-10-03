@@ -9674,7 +9674,7 @@ button.close {
 /* line 19, /apps/dash2/local/lib/ruby/gems/2.2.0/gems/font-awesome-rails-4.6.3.1/app/assets/stylesheets/font-awesome.css.erb */
 .fa, .geoblacklight-public, .geoblacklight-restricted, .geoblacklight-citation, .geoblacklight-data-dictionary, .geoblacklight-sms, .geoblacklight-email, .geoblacklight-web_services, .geoblacklight-metadata, .geoblacklight-carto, .caret-toggle, .caret-toggle.open {
   display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1 FontAwesome, sans-serif;
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
