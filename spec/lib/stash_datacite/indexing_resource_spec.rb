@@ -134,6 +134,41 @@ module Stash
         end
       end
 
+      describe '#dataset_funders' do
+        it 'should return a list of funders as facet values' do
+          expect(@ir.dataset_funders).to eq([@contributor.contributor_name])
+        end
+
+        it 'should call group_funders from dataset_funders to attempt adding additional funders' do
+          expect(@ir).to receive(:group_funders)
+          @ir.dataset_funders
+        end
+      end
+
+      describe '#group_funders' do
+        before(:each) do
+          @contrib_grouping = create(:contributor_grouping)
+        end
+
+        it "doesn't add any facet for grouping if value isn't in sub-institutions" do
+          expect(@ir.group_funders).to eq([])
+        end
+
+        it "adds the main funder entry if any sub-entries are found" do
+          @contrib2 = create(:contributor, contributor_name: 'National Cancer Institute',
+                              contributor_type: 'funder',
+                              identifier_type: 'crossref_funder_id',
+                              name_identifier_id: 'http://dx.doi.org/10.13039/100000054',
+                              resource_id: @resource.id)
+          @contrib3 = create(:contributor, contributor_name: 'National Institute of Allergy and Infectious Diseases',
+                             contributor_type: 'funder',
+                             identifier_type: 'crossref_funder_id',
+                             name_identifier_id: 'http://dx.doi.org/10.13039/100000060',
+                             resource_id: @resource.id)
+          expect(@ir.group_funders).to eq(["National Institutes of Health"])
+        end
+      end
+
       describe '#publication_year' do
         it 'returns correct publication year' do
           expect(@ir.publication_year).to eql(2019)
