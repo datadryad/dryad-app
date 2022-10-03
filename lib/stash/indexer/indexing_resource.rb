@@ -254,9 +254,7 @@ module Stash
 
       def dataset_funders
         # Also do we only want to add items with valid FundRef entries?
-        contrib_names = @resource.contributors.funder.completed.map do |funder|
-          funder.contributor_name
-        end
+        contrib_names = @resource.contributors.funder.completed.map(&:contributor_name)
         contrib_names << group_funders
         contrib_names.flatten.reject(&:blank?).uniq
       end
@@ -266,7 +264,7 @@ module Stash
       def group_funders
         extra_funders = []
         StashDatacite::ContributorGrouping.where(contributor_type: 'funder').each do |group|
-          identifier_ids = group.json_contains.map{|i| i["name_identifier_id"]}
+          identifier_ids = group.json_contains.map { |i| i['name_identifier_id'] }
           count = @resource.contributors.funder.completed.where(name_identifier_id: identifier_ids).count
           extra_funders.push(group.contributor_name) if count.positive?
         end
