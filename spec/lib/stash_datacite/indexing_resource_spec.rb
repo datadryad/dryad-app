@@ -333,6 +333,7 @@ module Stash
             dc_creator_sm: [@author1.author_full_name,
                             @author2.author_full_name],
             dc_type_s: 'Dataset',
+            dcs_funder_sm: [@contributor.contributor_name],
             dc_description_s: @resource.descriptions.where(description_type: 'abstract').map(&:description).join("\r"),
             dc_subject_sm: [@subject1.subject, @subject2.subject],
             dct_spatial_sm: [],
