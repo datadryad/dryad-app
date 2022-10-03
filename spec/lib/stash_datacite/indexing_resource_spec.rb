@@ -154,18 +154,18 @@ module Stash
           expect(@ir.group_funders).to eq([])
         end
 
-        it "adds the main funder entry if any sub-entries are found" do
+        it 'adds the main funder entry if any sub-entries are found' do
           @contrib2 = create(:contributor, contributor_name: 'National Cancer Institute',
-                              contributor_type: 'funder',
-                              identifier_type: 'crossref_funder_id',
-                              name_identifier_id: 'http://dx.doi.org/10.13039/100000054',
-                              resource_id: @resource.id)
+                                           contributor_type: 'funder',
+                                           identifier_type: 'crossref_funder_id',
+                                           name_identifier_id: 'http://dx.doi.org/10.13039/100000054',
+                                           resource_id: @resource.id)
           @contrib3 = create(:contributor, contributor_name: 'National Institute of Allergy and Infectious Diseases',
-                             contributor_type: 'funder',
-                             identifier_type: 'crossref_funder_id',
-                             name_identifier_id: 'http://dx.doi.org/10.13039/100000060',
-                             resource_id: @resource.id)
-          expect(@ir.group_funders).to eq(["National Institutes of Health"])
+                                           contributor_type: 'funder',
+                                           identifier_type: 'crossref_funder_id',
+                                           name_identifier_id: 'http://dx.doi.org/10.13039/100000060',
+                                           resource_id: @resource.id)
+          expect(@ir.group_funders).to eq(['National Institutes of Health'])
         end
       end
 
