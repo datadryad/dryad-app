@@ -14,8 +14,10 @@ class Cedar extends React.Component {
     currentMetadata: null,
   }
   formRef = React.createRef()
-  delRef = React.createRef()
-  dialog = document.getElementById('genericModalDialog')
+  delete = null
+  dialog = null
+  editor = null
+  script = null
   componentDidMount(){
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
     const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {}
@@ -48,6 +50,11 @@ class Cedar extends React.Component {
       this.editorLoaded.disconnect()
       this.editorLoaded = null
     }
+  }
+  setRef = (el) => {
+    if (el.id === 'cedarDialog') this.dialog = el
+    if (el.id === 'deleteCedarDialog') this.delete = el
+    if (el.id === 'cedarEditor') this.editor = el
   }
   // Save form content when changed
   checkSave = () => {
@@ -100,35 +107,17 @@ class Cedar extends React.Component {
       console.log("Cannot open modal unless a template is selected.")
       return
     }
-    console.log("Cedar init the modal for template " + template.id)
-    if (this.dialog) {
+    if(this.dialog.dataset.template !== template.id) {
+      console.log("Cedar init the modal for template " + template.id)
       const {table: {editor_url}} = this.props.appConfig
-      const modal = document.getElementById('genericModalContent')
-      const [currModalClass] = modal.classList
-      // only initialize if it hasn't been initialized yet
-      if(currModalClass === 'c-modal-content__normal') { 
-        // Inject the cedar editor into the modal and open it
-        const script = document.createElement('script')
-        this.editor = document.createElement('cedar-embeddable-editor')
-        script.src = editor_url
-        script.async = true
-        script.onload = () => this.modalSetup()
-        modal.classList.replace('c-modal-content__normal', 'c-modal-content__cedar')
-        modal.appendChild(script)
-        modal.appendChild(this.editor)
-        this.dialog.showModal()        
-      }
+      const script = document.createElement('script')
+      script.src = editor_url
+      script.async = true
+      script.onload = () => this.modalSetup()
+      this.dialog.appendChild(script)
+      this.dialog.dataset.template = template.id
     }
-  }
-  showDelete = () => {
-    if (this.delRef) {
-      const m = this.delRef.current
-      if (m.open) {
-        m.close()
-      } else {
-        m.showModal()
-      }
-    }
+    this.dialog.showModal()
   }
   render() {
     if (!this.props.appConfig) return null
@@ -157,10 +146,10 @@ class Cedar extends React.Component {
                     <strong>{template.title}</strong><br/>
                     {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
                   </p>
-                  <button type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
+                  <button disabled={!template} type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
                     Edit Form
                   </button>
-                  <button type="button" className="o-button__remove" onClick={this.showDelete}>
+                  <button type="button" className="o-button__remove" onClick={() => this.delete.showModal()}>
                     Delete Form
                   </button>
                 </div>
@@ -185,7 +174,7 @@ class Cedar extends React.Component {
                       return(<option key={templ[0]} value={templ[0]} label={templ[2]} />);
                     })}
                   </select>
-                  <button type="submit" className="o-button__add">
+                  <button disabled={!template} type="submit" className="o-button__add">
                     Add Metadata Form
                   </button>
                 </React.Fragment>
@@ -193,13 +182,23 @@ class Cedar extends React.Component {
             </Form>       
           )}
         </Formik>
-        <dialog className="modalDialog" id="deleteCedarDialog" ref={this.delRef}>
+        <dialog className="modalDialog" id="cedarDialog" ref={this.setRef}>
           <div className="modalClose">
-            <button aria-label="close" type="button" onClick={this.showDelete}>
+            <button aria-label="close" type="button" onClick={() => this.dialog.close()}>
               <i className="fa fa-window-close fa-lg" aria-hidden="true"></i>
             </button>
           </div>
-          <div className="c-modal-content__normal mat-card">
+          <div className="c-modal-content__cedar">
+            <cedar-embeddable-editor id="cedarEditor" ref={this.setRef}></cedar-embeddable-editor>
+          </div>
+        </dialog>
+        <dialog className="modalDialog" id="deleteCedarDialog" ref={this.setRef}>
+          <div className="modalClose">
+            <button aria-label="close" type="button" onClick={() => this.delete.close()}>
+              <i className="fa fa-window-close fa-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div className="c-modal-content__normal">
             <h1 className="mat-card-title">Confirm Deletion</h1>
             <p>Are you sure you want to delete this form? All answers will be lost.</p>
             <button
@@ -207,12 +206,12 @@ class Cedar extends React.Component {
               style={{marginRight: '16px'}}
               onClick={() => {
                 this.deleteContent()
-                this.showDelete()
+                this.delete.close()
               }}
             >
               Delete Form
             </button>
-            <button className="o-button__remove" onClick={this.showDelete}>Cancel</button>
+            <button className="o-button__remove" onClick={() => this.delete.close()}>Cancel</button>
           </div>
         </dialog>
       </div>
