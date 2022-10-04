@@ -87,7 +87,6 @@ function FunderForm({
               }
             />
           </div>
-          {/* eslint-disable jsx-a11y/label-has-associated-control */}
           <div className="c-input">
             <label className="c-input__label" htmlFor={`contributor_award_number__${contributor.id}`}>Award
               Number
@@ -102,7 +101,6 @@ function FunderForm({
               }}
             />
           </div>
-          {/* eslint-enable jsx-a11y/label-has-associated-control */}
 
           {/* eslint-disable jsx-a11y/anchor-is-valid */}
           <a

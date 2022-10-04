@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/anchor-is-valid */
-// The eslint doesn't recognize the dynamically named label for a control
 import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
@@ -131,13 +129,10 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
           </div>
           { correspondingAuthorId !== dryadAuthor.id
             && (
-              <a
-                role="button"
+              <button
+                type="button"
                 className="t-describe__remove-button o-button__remove remove_record"
-                rel="nofollow"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={() => {
                   showModalYNDialog('Are you sure you want to remove this author?', () => {
                     removeFunction(dryadAuthor.id, dryadAuthor.resource_id);
                     // deleteItem(auth.id);
@@ -145,7 +140,7 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
                 }}
               >
                 remove
-              </a>
+              </button>
             )}
         </Form>
       )}

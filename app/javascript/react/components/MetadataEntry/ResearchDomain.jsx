@@ -39,10 +39,9 @@ function ResearchDomain({
     >
       {(formik) => (
         <Form className="c-input" id={`dc_fos_subjects_${frmSuffix}`}>
-          {/* IDK why eslint is freaking out since this label is correct and works in the tests */}
-          {/* eslint-disable jsx-a11y/label-has-associated-control */}
-          <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>Research Domain</label>
-          {/* eslint-enable jsx-a11y/label-has-associated-control */}
+          <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>
+            Research Domain
+          </label>
           <Field
             type="text"
             name="fos_subjects"

@@ -106,7 +106,6 @@ function PrelimManu({
                 />
               </div>
               <div className="c-input">
-                {/* eslint-disable jsx-a11y/label-has-associated-control */}
                 <label className="c-input__label required" htmlFor="msId">
                   Manuscript Number
                 </label>
@@ -121,7 +120,6 @@ function PrelimManu({
                     formik.handleSubmit();
                   }}
                 />
-                {/* eslint-enable jsx-a11y/label-has-associated-control */}
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
