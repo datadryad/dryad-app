@@ -58,11 +58,11 @@ function FunderForm({
   return (
     <Formik
       initialValues={
-            {
-              award_number: (contributor.award_number || ''),
-              id: (contributor.id || ''),
-            }
-          }
+        {
+          award_number: (contributor.award_number || ''),
+          id: (contributor.id || ''),
+        }
+      }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         submitForm(values).then(() => { setSubmitting(false); });
@@ -79,12 +79,12 @@ function FunderForm({
               acID={acID}
               setAcID={setAcID}
               controlOptions={
-                                      {
-                                        htmlId: `contrib_${contributor.id}`,
-                                        labelText: 'Granting Organization',
-                                        isRequired: true,
-                                      }
-                                    }
+                {
+                  htmlId: `contrib_${contributor.id}`,
+                  labelText: 'Granting Organization',
+                  isRequired: true,
+                }
+              }
             />
           </div>
           {/* eslint-disable jsx-a11y/label-has-associated-control */}

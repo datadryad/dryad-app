@@ -36,33 +36,34 @@ function ResearchDomain({
             setSubmitting(false);
           });
       }}
-    >{(formik) => (
-      <Form className="c-input" id={`dc_fos_subjects_${frmSuffix}`}>
-        {/* IDK why eslint is freaking out since this label is correct and works in the tests */}
-        {/* eslint-disable jsx-a11y/label-has-associated-control */}
-        <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>Research Domain</label>
-        {/* eslint-enable jsx-a11y/label-has-associated-control */}
-        <Field
-          type="text"
-          name="fos_subjects"
-          id={`fos_subjects__${frmSuffix}`}
-          list={`fos_subject__${frmSuffix}`}
-          className="fos-subjects js-change-submit c-input__text"
-          onBlur={() => { // formRef.current.handleSubmit();
-            formik.handleSubmit();
-          }}
-        />
+    >
+      {(formik) => (
+        <Form className="c-input" id={`dc_fos_subjects_${frmSuffix}`}>
+          {/* IDK why eslint is freaking out since this label is correct and works in the tests */}
+          {/* eslint-disable jsx-a11y/label-has-associated-control */}
+          <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>Research Domain</label>
+          {/* eslint-enable jsx-a11y/label-has-associated-control */}
+          <Field
+            type="text"
+            name="fos_subjects"
+            id={`fos_subjects__${frmSuffix}`}
+            list={`fos_subject__${frmSuffix}`}
+            className="fos-subjects js-change-submit c-input__text"
+            onBlur={() => { // formRef.current.handleSubmit();
+              formik.handleSubmit();
+            }}
+          />
 
-        {/* ok to use array index as key since list never changes */}
-        {/* eslint-disable react/no-array-index-key */}
-        <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
-          {subjectList.map((subj, idx) => (
-            <option value={subj} key={idx}>{subj}</option>
-          ))}
-        </datalist>
-        {/* eslint-enable react/no-array-index-key */}
-      </Form>
-    )}
+          {/* ok to use array index as key since list never changes */}
+          {/* eslint-disable react/no-array-index-key */}
+          <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
+            {subjectList.map((subj, idx) => (
+              <option value={subj} key={idx}>{subj}</option>
+            ))}
+          </datalist>
+          {/* eslint-enable react/no-array-index-key */}
+        </Form>
+      )}
     </Formik>
   );
 }
