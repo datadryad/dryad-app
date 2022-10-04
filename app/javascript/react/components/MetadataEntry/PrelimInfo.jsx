@@ -99,34 +99,34 @@ function PrelimInfo(
 
       {(() => {
         switch (importType) {
-          case 'manuscript':
-            return (
-              <PrelimManu
-                resourceId={resourceId}
-                identifierId={identifierId}
-                acText={acText}
-                setAcText={setAcText}
-                acID={acID}
-                setAcID={setAcID}
-                msId={msId}
-                setMsId={setMsId}
-              />
-            );
-          case 'published':
-            return (
-              <PrelimArticle
-                resourceId={resourceId}
-                identifierId={identifierId}
-                acText={acText}
-                setAcText={setAcText}
-                acID={acID}
-                setAcID={setAcID}
-                relatedIdentifier={relatedIdentifier}
-                setRelatedIdentifier={setRelatedIdentifier}
-              />
-            );
-          default:
-            return (<PrelimOther />);
+        case 'manuscript':
+          return (
+            <PrelimManu
+              resourceId={resourceId}
+              identifierId={identifierId}
+              acText={acText}
+              setAcText={setAcText}
+              acID={acID}
+              setAcID={setAcID}
+              msId={msId}
+              setMsId={setMsId}
+            />
+          );
+        case 'published':
+          return (
+            <PrelimArticle
+              resourceId={resourceId}
+              identifierId={identifierId}
+              acText={acText}
+              setAcText={setAcText}
+              acID={acID}
+              setAcID={setAcID}
+              relatedIdentifier={relatedIdentifier}
+              setRelatedIdentifier={setRelatedIdentifier}
+            />
+          );
+        default:
+          return (<PrelimOther />);
         }
       }
       )()}

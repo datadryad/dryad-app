@@ -71,11 +71,11 @@ function PrelimManu({
   return (
     <Formik
       initialValues={
-            {
-              msId: msId || '',
-              isImport: false,
-            }
-          }
+        {
+          msId: msId || '',
+          isImport: false,
+        }
+      }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         submitForm(values).then(() => { setSubmitting(false); });
@@ -97,12 +97,12 @@ function PrelimManu({
                   acID={acID}
                   setAcID={setAcID}
                   controlOptions={
-                          {
-                            htmlId: 'publication',
-                            labelText: 'Journal Name',
-                            isRequired: true,
-                          }
-                        }
+                    {
+                      htmlId: 'publication',
+                      labelText: 'Journal Name',
+                      isRequired: true,
+                    }
+                  }
                 />
               </div>
               <div className="c-input">
