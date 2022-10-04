@@ -31,7 +31,7 @@
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
               affiliation: auth.affiliation.as_json,
               orcid_invite_path: auth&.orcid_invite_path)},
-              curator: current_user&.curator?, icon: '/images/fa-barfs.svg', # because the asset pipeline not working right on stage
+              curator: current_user&.limited_curator?, icon: '/images/fa-barfs.svg', # asset pipeline not working right on stage
               correspondingAuthorId: @resource.owner_author&.id
       } ) %>
     </div>
@@ -68,7 +68,7 @@
                         path: descriptions_update_path,
                         mceKey: APP_CONFIG[:mce_key],
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
-                        isCurator: current_user&.curator?) %>
+                        isCurator: current_user&.limited_curator?) %>
 
     <h2 class="o-heading__page-span">Data Description</h2>
     
@@ -92,7 +92,7 @@
                     path: descriptions_update_path,
                     mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'},
-                    isCurator: current_user&.curator?) %>
+                    isCurator: current_user&.limited_curator?) %>
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.other,
@@ -101,7 +101,7 @@
                     mceLabel: {label: 'Usage Notes:', required: false,
                                describe: ' What programs and/or software are required to open the data files included with your submission? ' +
 			       'If proprietary, include open-source alternatives.'},
-                    isCurator: current_user&.curator?) %>
+                    isCurator: current_user&.limited_curator?) %>
 
     <h2 class="o-heading__page-span">Related Works</h2>
 

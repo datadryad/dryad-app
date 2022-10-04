@@ -192,10 +192,14 @@ Rails.application.routes.draw do
     post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
     post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
     post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
-    
-    post 'generic_file/validate_frictionless/:resource_id',
-         to: 'generic_files#validate_frictionless',
-         as: 'generic_file_validate_frictionless'
+
+    post 'generic_file/trigger_frictionless/:resource_id',
+         to: 'generic_files#trigger_frictionless',
+         as: 'generic_file_trigger_frictionless'
+
+    get 'generic_file/check_frictionless/:resource_id',
+        to: 'generic_files#check_frictionless',
+        as: 'generic_file_check_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
@@ -223,6 +227,7 @@ Rails.application.routes.draw do
     root 'pages#home'
     
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
+    match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]
     match 'auth/developer/callback', to: 'sessions#developer_callback', via: %i[get post]
     match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
     match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
@@ -238,6 +243,7 @@ Rails.application.routes.draw do
     
     get 'close_page', to: 'pages#close_page'
     get 'faq', to: 'pages#faq'
+    get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'our_community', to: 'pages#our_membership'
     get 'our_governance', to: 'pages#our_governance'
@@ -320,7 +326,9 @@ Rails.application.routes.draw do
     
     # Journals
     get 'journals', to: 'journals#index'
-    
+
+    # GMail authentication page for journals
+    get 'gmail_auth', to: 'gmail_auth#index'
   end
 
   # the ones below coming from new routing for geoblacklight

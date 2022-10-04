@@ -5,6 +5,7 @@ module Stash
     # Encapsulates a submission result
     class SubmissionResult
       attr_reader :resource_id, :request_desc, :message, :error
+      attr_accessor :deferred
 
       # @param resource_id [Integer] the ID of the submitted resource
       # @param request_desc [String, nil] a description of the request that produced this result
@@ -15,10 +16,20 @@ module Stash
         @request_desc = request_desc
         @message = message
         @error = error
+
+        # for asyncronous processing, gets set if the request has gone asynchronous and not really
+        # success or failure until Merritt finishes in a state that we don't have access to until showing in the
+        # OAI-PMH feed as a separate process.  Deferred is hoped a success, but shouldn't be setting finished states
+        # in the database until done so by OAI feed and not by our own process.
+        @deferred = false
       end
 
       def success?
         error.nil?
+      end
+
+      def deferred?
+        @deferred
       end
 
       def log_to(logger)

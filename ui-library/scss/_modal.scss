@@ -1,16 +1,18 @@
 .modalDialog {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  margin: 0;
-  transform: translate(-50%, -50%);
+  max-width: 45rem;
+
+  .modalClose button, input[type=submit], button[type=submit] {
+    @extend %o-button__plain-text;
+    border: thin solid $design-light-gray-color;
+    border-radius: 0;
+    background-color: $design-white-color;
+  }
 }
 
-.modalDialog button, .modalDialog input[type=submit], {
-  @extend %o-button__plain-text;
-  border: 1px solid $design-light-gray-color;
-  border-radius: 0;
-  background-color: $design-white-color;
+.modalClose {
+  text-align: right;
+  margin-bottom: -1em;
 }
 
 .c-modal-h1 {

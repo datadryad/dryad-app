@@ -28,7 +28,11 @@
 
   <p>
     <%= label_tag(:role, 'Role') %><br/>
-    <%= select_tag :role, options_for_select([ ['User', 'user'], ['Admin', 'admin'], ['Curator', 'curator'], ['Superuser', 'superuser'] ]), class: '.o-select' %>
+    <%= select_tag :role, options_for_select([ ['User', 'user'],
+                                               ['Admin', 'admin'],
+                                               ['Limited Curator', 'limited_curator'],
+                                               ['Curator', 'curator'],
+                                               ['Superuser', 'superuser'] ]), class: '.o-select' %>
   </p>
 
   <p>

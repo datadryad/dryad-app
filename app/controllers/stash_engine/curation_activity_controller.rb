@@ -5,8 +5,8 @@ module StashEngine
     include SharedSecurityController
     helper AdminDatasetsHelper
 
-    before_action :require_curator, only: :index
-    before_action :ajax_require_curator, only: :status_change
+    before_action :require_limited_curator, only: :index
+    before_action :ajax_require_limited_curator, only: :status_change
 
     # GET /resources/{id}/curation_activities
     def index
