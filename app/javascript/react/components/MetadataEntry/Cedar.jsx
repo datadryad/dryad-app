@@ -48,6 +48,10 @@ class Cedar extends React.Component {
       this.formObserver.disconnect()
       this.formObserver = null
     }
+    if (this.editorLoaded) {
+      this.editorLoaded.disconnect()
+      this.editorLoaded = null
+    }
   }
   // Save form content when changed
   checkSave = () => {
@@ -84,10 +88,16 @@ class Cedar extends React.Component {
     this.editor.templateInfo = {template, resource_id, csrf}
     this.editor.dataset.template = template.id
     // restore metadata
-    if(!!metadata) {
-      console.log("loading metadata", metadata)
-      this.editor.metadata = metadata
-    }
+    this.editorLoaded = new MutationObserver(() => {
+      const app = document.querySelector('app-cedar-embeddable-metadata-editor')
+      if (app && !!metadata) {
+        console.log("loading metadata", metadata)
+        this.editor.metadata = metadata
+        this.editorLoaded.disconnect()
+        this.editorLoaded = null
+      }
+    })
+    this.editorLoaded.observe(this.editor, {childList: true})
   }
   openModal = () => {
     const { template } = this.state
