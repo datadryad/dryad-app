@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Field, Form, Formik } from 'formik'
+import {Field, Form, Formik} from 'formik'
 import moment from 'moment'
 import {isEqual} from 'lodash'
-import { showSavedMsg, showSavingMsg } from '../../../lib/utils'
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils'
 
 class Cedar extends React.Component {
   state = {
@@ -23,18 +23,14 @@ class Cedar extends React.Component {
     // Move the cdk-overlay-container into the modal for rendering above dialog
     this.popupWatcher = new MutationObserver(() => {
       const popups = document.querySelector('body > .cdk-overlay-container')
-      if (popups) {
-        this.dialog.append(popups)
-      }
+      if (popups) this.dialog.append(popups)
     })
     this.popupWatcher.observe(document.body, {childList: true})
     // Check form content when touched
     this.formObserver = new MutationObserver((changes) => {
       changes.forEach((change) => {
         const {target: {classList}} = change
-        if (classList.contains('ng-touched')) {
-          this.checkSave()
-        }
+        if (classList.contains('ng-touched')) this.checkSave()
       })
     })
     this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']})
@@ -64,13 +60,11 @@ class Cedar extends React.Component {
     this.setState({currentMetadata: null, template: null}, this.saveContent)
   }
   saveContent = () => {
-    const { id: resource_id } = this.props.resource
-    const { template, csrf, currentMetadata: metadata } = this.state
+    const {id: resource_id} = this.props.resource
+    const {template, csrf, currentMetadata: metadata} = this.state
     const updated = new Date().toISOString()
-    const wrappedMeta = {
-      info: { template, resource_id, csrf, updated }, 
-      metadata
-    }
+    const info = {template, resource_id, csrf, updated}
+    const wrappedMeta = {info, metadata}
     const xhr = new XMLHttpRequest()
     xhr.open("POST", "http://localhost:3000/cedar-save")
     xhr.setRequestHeader("Accept", "application/json")
@@ -78,12 +72,12 @@ class Cedar extends React.Component {
     xhr.send(JSON.stringify(wrappedMeta, null, 2))
     console.log('Saved metadata')
     console.log(wrappedMeta)
-    this.setState({ metadata, updated })
+    this.setState({metadata, updated})
   }
   modalSetup = () => {
     console.log("Loading CEDAR config")
-    const { template, csrf, metadata } = this.state
-    const { id: resource_id } = this.props.resource
+    const {template, csrf, metadata} = this.state
+    const {id: resource_id} = this.props.resource
     this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`)
     this.editor.templateInfo = {template, resource_id, csrf}
     this.editor.dataset.template = template.id
@@ -100,14 +94,14 @@ class Cedar extends React.Component {
     this.editorLoaded.observe(this.editor, {childList: true})
   }
   openModal = () => {
-    const { template } = this.state
+    const {template} = this.state
     if (!template && !template.id) {
       console.log("Cannot open modal unless a template is selected.")
       return
     }
     console.log("Cedar init the modal for template " + template.id)
     if (this.dialog) {
-      const { table: { editor_url } } = this.props.appConfig
+      const {table: {editor_url}} = this.props.appConfig
       const modal = document.getElementById('genericModalContent')
       const [currModalClass] = modal.classList
       // only initialize if it hasn't been initialized yet
@@ -137,16 +131,16 @@ class Cedar extends React.Component {
   }
   render() {
     if (!this.props.appConfig) return null
-    const { table: { templates } } = this.props.appConfig
+    const {table: {templates}} = this.props.appConfig
     if (!templates) return null
-    const { id: resource_id, cedar_json } = this.props.resource
-    const { csrf, metadata, template, updated, deleteModal } = this.state
+    const {id: resource_id, cedar_json} = this.props.resource
+    const {csrf, metadata, template, updated, deleteModal} = this.state
     return (
       <div className="cedar-container">
         <h3 className="cedar-heading__level3">Standardized Metadata</h3>
         <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
         <Formik
-          initialValues={{ resource_id, authenticity_token: (csrf || '') }}
+          initialValues={{resource_id, authenticity_token: (csrf || '')}}
           innerRef={this.formRef}
           onSubmit={(values, {setSubmitting}) => {
             showSavingMsg()
@@ -157,7 +151,7 @@ class Cedar extends React.Component {
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
               {metadata && template ? (
-                <div style={{display: 'flex', alignItems: 'center' }}>
+                <div style={{display: 'flex', alignItems: 'center'}}>
                   <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
                     <strong>{template.title}</strong><br/>
                     {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
@@ -187,7 +181,7 @@ class Cedar extends React.Component {
                   >
                     <option key="0" value="" label="- Select One -" />
                     {templates.map((templ) => {
-                      return(<option key={ templ[0] } value={ templ[0] } label={ templ[2] } />);
+                      return(<option key={templ[0]} value={templ[0]} label={templ[2]} />);
                     })}
                   </select>
                   <button type="submit" className="o-button__add">
