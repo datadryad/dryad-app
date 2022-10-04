@@ -24,6 +24,12 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              token_url: APP_CONFIG.orcid.token_url
            }
 
+  provider :google_oauth2, APP_CONFIG.google&.gmail_client_id, APP_CONFIG.google&.gmail_client_secret,
+           {
+             scope: 'email, profile, gmail.modify',
+             callback_path: '/stash/auth/google_oauth2/callback'
+           }
+  
   # patch to help prevent CSRF for CVE-2015-9284
   OmniAuth.config.allowed_request_methods = [:post]
 

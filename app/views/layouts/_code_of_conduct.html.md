@@ -111,12 +111,11 @@
 
 <h2 class="o-heading__level2">Dryad Code of Conduct Working Group</h2>
 
-<p><em>The composition of this group rotates &amp; will be updated here. Last updated 2020-02-03</em></p>
+<p><em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em></p>
 
 <ul>
   <li>Jennifer Gibson &#8211; jgibson@datadryad.org</li>
   <li>Jason Williams &#8211; williams@cshl.edu</li>
-  <li>Lou Woodley &#8211; louwoodley@cscce.org</li>
 </ul>
 
 <p>

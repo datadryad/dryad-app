@@ -26,7 +26,7 @@
 <ul>
   <li>
     <strong>Consider all of the information necessary for one to reuse your dataset and replicate the analyses in
-    your publication</strong>. Gather and organize everything--this may include experimental method details, raw data files,
+    your publication</strong>. Gather and organize everything&mdash;this may include experimental method details, raw data files,
     organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data
     processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit
     out superfluous or ambiguous content that would confuse others.<br/><br/>
@@ -54,11 +54,11 @@
 <h2>Make sure your data are shareable<a name="shareable"></a></h2>
 
 <ul>
-<li><strong>All files submitted to Dryad must abide by the terms of the <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0 1.0)</a></strong>. Under these terms, the author releases the data to the public domain.
+<li><strong>All files submitted to Dryad must abide by the terms of the <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0 1.0)</a> waiver</strong>. Under these terms, the author releases the data to the public domain.
 <ul><li>Review all files and ensure they conform to <code>CC0</code> terms and are not covered by copyright claims or other terms-of-use. We cannot archive any files that contain licenses incompatible with <code>CC0</code> (<code>GNU GPL, MIT, CC-BY,</code> etc.), but we can link to content in a dedicated software repository (Github, Zenodo, Bitbucket, or CRAN, etc.). </li>
-<li>For more information on <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">why Dryad uses <code>CC0</code></a>, and <a href="https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/">some dos and don'ts for <code>CC0</code></a></li></ul></li>
-<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see tips for <a href="/docs/HumanSubjectsData.pdf">human subjects data</a>)</li>
-<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species. (see tips <a href="/docs/EndangeredSpeciesData.pdf">endangered species data</a> ).</li>
+<li>For more information see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use <code>CC0</code></a>, and <a href="https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/">Some dos and don'ts for <code>CC0</code></a>.</li></ul></li>
+<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see tips for <a href="/docs/HumanSubjectsData.pdf">human subjects data</a>).</li>
+<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species (see tips for <a href="/docs/EndangeredSpeciesData.pdf">endangered species data</a>).</li>
 </ul>
 
 
@@ -94,7 +94,7 @@
 
 <h3>File naming</h3>
 
-<p>Name files and directories in a consistent and descriptive manner. Avoid vague and ambiguous filenames. Filenames should be concise, informative, and unique (see Stanford's <a href="https://library.stanford.edu/research/data-management-services/data-best-practices/best-practices-file-naming">best practices for file naming</a>).</p>
+<p>Name files and directories in a consistent and descriptive manner. Avoid vague and ambiguous filenames. Filenames should be concise, informative, and unique (see Stanford's <a href="https://guides.library.stanford.edu/data-best-practices">best practices for file naming</a>).</p>
 
 <p>Avoid blank spaces and special characters (<code>' '!@#$%^&amp;"</code>) in filenames because they can be problematic for computers to interpret. Use a common letter case pattern because they are easily read by both machines and people:</p>
 
@@ -111,7 +111,7 @@
 <li>Date of study</li>
 <li>Project name</li>
 <li>Type of data or analysis</li>
-<li>File extension (<code>.csv, .txt, .R, .xls, .tar.gz, etc.</code>)</li>
+<li>File extension (<code>.csv, .txt, .R, .xls, .tar.gz</code>, etc.)</li>
 </ul>
 
 
@@ -142,7 +142,7 @@
 <li>Methods of data processing and analysis</li>
 <li>Describe details that may influence reuse or replication efforts</li>
 <li>De-identification procedures for sensitive human subjects or endangered species data</li>
-<li>Specialized software (include version and developer's web address) used for analyses and file compression. If proprietary, include open source alternatives.</li>
+<li>Specialized software (include version and developer's web address) used for analyses and file compression. If proprietary, include open source alternatives</li>
 <li>Description of file(s):
 <ul><li>file/directory structure</li>
 <li>type(s) of data included (categorical, time-series, human subjects, etc.)</li>

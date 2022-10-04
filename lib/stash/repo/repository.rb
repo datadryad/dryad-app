@@ -77,6 +77,8 @@ module Stash
         self.class.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
         promise = submission_job.submit_async(executor: @executor)
         promise.on_success do |result|
+          # deferred submissions are considered a success for our purposes (ie, qualified/probable success) and have
+          # deferred? set on the submission_result object to indicate their odd status
           result.success? ? handle_success(result) : handle_failure(result)
         end
         promise.rescue do |reason|
@@ -133,7 +135,10 @@ module Stash
       def handle_success(result)
         result.log_to(logger)
         update_submission_log(result)
-        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
+
+        # don't set new queue state on deferred submission results until the OAI-PMH feed does it for us, it's still
+        # in progress until that happens.
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed') unless result.deferred?
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)

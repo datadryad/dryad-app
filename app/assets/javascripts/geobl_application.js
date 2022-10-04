@@ -10,12 +10,12 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-// require jquery
-// require jquery_ujs
+//= require jquery
+//= require jquery_ujs
 // these following two are supposed to be right
-// require turbolinks // had to disable turbolinks since otherwise map turns blank and doesn't load correctly
-//= require jquery3
-//= require rails-ujs
+//= require turbolinks
+// require jquery3
+// require rails-ujs
 // require activestorage -- this doesn't work for some reason
 
 //

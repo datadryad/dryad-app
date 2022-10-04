@@ -23,6 +23,15 @@ module StashDatacite
       respond_to do |format|
         format.js
       end
+
+      # If the most recent Curation Activity was from the "Dryad System", add an entry for the
+      # current_user so the history makes more sense.
+      # rubocop:disable Style/GuardClause
+      last_activity = @resource.curation_activities.last
+      if last_activity&.user_id == 0
+        @resource.curation_activities << StashEngine::CurationActivity.create(status: last_activity.status, user_id: current_user.id, note: 'Editing')
+      end
+      # rubocop:enable Style/GuardClause
     end
 
     private

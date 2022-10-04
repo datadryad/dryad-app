@@ -40,7 +40,7 @@
 
 .c-alert--error-lite {
 	@extend %c-alert;
-	border: 1px solid $design-red-color;
+	border: thin solid $design-red-color;
 	background-color: $design-white-color;
 	background-image: inline('../images/icon_warning.svg');
 }

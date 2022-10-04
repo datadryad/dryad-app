@@ -6,7 +6,7 @@ module StashEngine
     include SharedSecurityController
     helper SortableTableHelper
 
-    before_action :require_curator
+    before_action :require_limited_curator
     before_action :setup_paging, only: [:index]
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
