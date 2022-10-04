@@ -106,7 +106,6 @@ function PrelimArticle({
                 />
               </div>
               <div className="c-input">
-                {/* eslint-disable jsx-a11y/label-has-associated-control */}
                 <label className="c-input__label required" htmlFor="primary_article_doi">
                   DOI
                 </label>
@@ -121,7 +120,6 @@ function PrelimArticle({
                     formik.handleSubmit();
                   }}
                 />
-                {/* eslint-enable jsx-a11y/label-has-associated-control */}
                 <Field name="isImport" type="hidden" />
               </div>
             </div>

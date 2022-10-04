@@ -50,9 +50,7 @@ function Keywords({
 
   return (
     <div className="c-keywords">
-      {/* eslint-disable jsx-a11y/label-has-associated-control */}
       <label className="c-input__label" htmlFor="keyword_ac">Keywords:</label>
-      {/* eslinet-enable jsx-a11y/label-has-associated-control */}
         &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
 
       <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">

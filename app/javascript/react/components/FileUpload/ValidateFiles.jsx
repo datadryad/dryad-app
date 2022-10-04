@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-// once again, eslint doesn't detect properly
-
 import React from 'react';
 
 const validate_files = (props) => {
