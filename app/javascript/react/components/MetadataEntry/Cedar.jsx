@@ -10,7 +10,7 @@ class Cedar extends React.Component {
     template: null, 
     csrf: null, 
     metadata: null,
-    updated: null,
+    updated: new Date().toISOString(),
     currentMetadata: null,
   }
   formRef = React.createRef()
@@ -73,13 +73,14 @@ class Cedar extends React.Component {
     console.log('Saved metadata')
     console.log(wrappedMeta)
     this.setState({metadata, updated})
+    if (this.editor) this.editor.templateInfo = info
   }
   modalSetup = () => {
     console.log("Loading CEDAR config")
-    const {template, csrf, metadata} = this.state
+    const {template, csrf, metadata, updated} = this.state
     const {id: resource_id} = this.props.resource
     this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`)
-    this.editor.templateInfo = {template, resource_id, csrf}
+    this.editor.templateInfo = {template, resource_id, csrf, updated}
     this.editor.dataset.template = template.id
     // restore metadata
     this.editorLoaded = new MutationObserver(() => {
