@@ -18,8 +18,8 @@ class Cedar extends React.Component {
   dialog = document.getElementById('genericModalDialog')
   componentDidMount(){
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
-    const {template, metadata, updated} = JSON.parse(this.props.resource.cedar_json)
-    this.setState({ csrf, template, metadata, updated })
+    const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {}
+    this.setState({csrf, template, metadata, updated})
     // Move the cdk-overlay-container into the modal for rendering above dialog
     this.popupWatcher = new MutationObserver(() => {
       const popups = document.querySelector('body > .cdk-overlay-container')
