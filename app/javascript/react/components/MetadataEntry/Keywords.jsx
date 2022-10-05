@@ -58,20 +58,13 @@ function Keywords({
           <span className="c-keywords__keyword" key={subj.id}>
             {subj.subject}
             <span className="delete_keyword">
-              {/* eslint-disable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
-              <a
+              <button
                 id={`sub_remove_${subj.id}`}
-                href="#"
                 aria-label="Remove this keyword"
-                role="button"
+                type="button"
                 className="c-keywords__keyword-remove"
-                rel="nofollow"
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteKeyword(subj.id);
-                }}
+                onClick={() => deleteKeyword(subj.id)}
               />
-              {/* eslint-enable jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
             </span>
           </span>
         ))}

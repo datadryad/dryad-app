@@ -101,22 +101,16 @@ function FunderForm({
               }}
             />
           </div>
-
-          {/* eslint-disable jsx-a11y/anchor-is-valid */}
-          <a
-            role="button"
+          <button
+            type="button"
             className="t-describe__remove-button o-button__remove"
-            rel="nofollow"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               showModalYNDialog('Are you sure you want to remove this funder?', () => {
                 removeFunction(contributor.id);
               });
             }}
           >remove
-          </a>
-          {/* eslint-enable jsx-a11y/anchor-is-valid */}
+          </button>
         </Form>
       )}
     </Formik>

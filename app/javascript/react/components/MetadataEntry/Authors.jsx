@@ -235,20 +235,13 @@ export default function Authors({
           ))}
       </ul>
       <div>
-
-        {/* eslint-disable jsx-a11y/anchor-is-valid */}
-        <a
-          href="#"
+        <button
           className="t-describe__add-button o-button__add"
-          role="button"
-          onClick={(e) => {
-            e.preventDefault();
-            addNewAuthor();
-          }}
+          type="button"
+          onClick={addNewAuthor}
         >
-          Add Author
-        </a>
-        {/* eslint-enable jsx-a11y/anchor-is-valid */}
+          Add author
+        </button>
       </div>
     </section>
   );
