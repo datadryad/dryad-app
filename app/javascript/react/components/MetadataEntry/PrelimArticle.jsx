@@ -61,9 +61,7 @@ function PrelimArticle({
 
       if (data.data.reloadPage) {
         setImportError('Just a moment . . . Reloading imported data');
-        /* eslint-disable no-restricted-globals */
-        location.reload(true);
-        /* eslint-enable no-restricted-globals */
+        window.location.reload(true);
       }
     });
   };

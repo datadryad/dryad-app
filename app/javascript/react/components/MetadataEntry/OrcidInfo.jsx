@@ -6,33 +6,29 @@ export default function OrcidInfo({
 }) {
   let orcidInfo = null;
   if (dryadAuthor.author_orcid) {
-    /* eslint-disable no-restricted-globals */
-    orcidInfo = (location.hostname.includes('datadryad.org')
+    orcidInfo = (window.location.hostname.includes('datadryad.org')
       ? `https://orcid.org/${dryadAuthor.author_orcid}`
       : `https://sandbox.orcid.org/${dryadAuthor.author_orcid}`);
-    /* eslint-enable no-restricted-globals */
   }
 
   return (
     <div className="c-orcid">
-      {orcidInfo
-            && (
-              <div className="c-orcid__div" style={{marginRight: '2em'}}>
-                <span className="c-orcid__icon" />
-                <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
-              </div>
-            )}
+      {orcidInfo && (
+        <div className="c-orcid__div" style={{marginRight: '2em'}}>
+          <span className="c-orcid__icon" />
+          <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
+        </div>
+      )}
       {correspondingAuthorId === dryadAuthor.id && (
         <div className="c-orcid__div" style={{marginLeft: '2em'}}><i className="fa fa-address-card-o" aria-hidden="true" />
           &nbsp;&nbsp;Corresponding Author
         </div>
       )}
-      {(curator && !orcidInfo && dryadAuthor.orcid_invite_path
-        ? (
-          <div className="c-orcid__div">
-            Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
-          </div>
-        ) : '')}
+      {(curator && !orcidInfo && dryadAuthor.orcid_invite_path) ? (
+        <div className="c-orcid__div">
+          Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
+        </div>
+      ) : ''}
     </div>
   );
 }

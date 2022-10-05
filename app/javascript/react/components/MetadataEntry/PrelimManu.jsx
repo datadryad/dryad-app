@@ -54,16 +54,12 @@ function PrelimManu({
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from manuscript information save/import');
       }
-
       setImportError(data.data.error || '');
-
       showSavedMsg();
 
       if (data.data.reloadPage) {
         setImportError('Just a moment . . . Reloading imported data');
-        /* eslint-disable no-restricted-globals */
-        location.reload(true);
-        /* eslint-enable no-restricted-globals */
+        window.location.reload(true);
       }
     });
   };
