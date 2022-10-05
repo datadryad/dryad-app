@@ -13,13 +13,15 @@
     <meta name="turbolinks-visit-control" content="reload">
     <%= stylesheet_link_tag "application", media: "all" %>
     <%#= WAS javascript_include_tag "application" %>
-`    <%# javascript_include_tag "application", media: 'all' %>
-    <%= javascript_include_tag "geobl_application", 'data-turbolinks-track': 'reload' %>
+    <%# javascript_include_tag "application", media: 'all' %>
+    <meta name="turbolinks-cache-control" content="no-cache">
+    <%= javascript_include_tag "geobl_application" %>
 
     <%= content_for(:head) %>
 
   </head>
-  <body id="yes-really" class='<%= render_body_class %> <%= "#{controller_name}_#{action_name}" %>'>
+  <body id="yes-really" class="<%= render_body_class %> <%= "#{controller_name}_#{action_name}" %>"
+        data-turbolinks="false">
   <!-- had to add the id yes-really to force our body styles rather than the nasty bootstrap crap -->
     <%# the geoblacklight extras used to be just below the "skip to main content in the top area" %>
     <%#= render partial: 'layouts/geoblacklight_extras' %>
