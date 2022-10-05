@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 // these following two are supposed to be right
-//= require turbolinks
+// require turbolinks
 // require jquery3
 // require rails-ujs
 // require activestorage -- this doesn't work for some reason
