@@ -129,8 +129,6 @@ class UploadFiles extends React.Component {
   state = {
     chosenFiles: [],
     submitButtonFilesDisabled: true,
-    showModal: false,
-    showValidationReportModal: false,
     urls: null,
     // TODO: workaround to deal with manifest file types when making request.
     //  See better way: maybe when clicking in URL button for an Upload Type,
@@ -149,6 +147,10 @@ class UploadFiles extends React.Component {
     pollingCount: 0,
     pollingDelay: 10000,
   };
+
+  modalRef = React.createRef();
+
+  modalValidationRef = React.createRef();
 
   componentDidMount() {
     const files = this.props.file_uploads;
@@ -233,9 +235,6 @@ class UploadFiles extends React.Component {
     return true;
   };
 
-  // checks the file list if any files are pending and if so returns true (or false)
-  hasPendingFiles = () => this.getPendingFiles().length > 0;
-
   addFilesHandler = (event, uploadType) => {
     displayAriaMsg('Your files were added and are pending upload.');
     this.setState({warningMessage: null, submitButtonFilesDisabled: true});
@@ -319,8 +318,6 @@ class UploadFiles extends React.Component {
       return true;
     });
   };
-
-  getPendingFiles = () => this.state.chosenFiles.filter((file) => file.status === 'Pending');
 
   updateFileData = (file, index) => {
     const {chosenFiles} = this.state;
@@ -448,26 +445,31 @@ class UploadFiles extends React.Component {
   }; */
 
   showModalHandler = (uploadType) => {
-    this.setState({showModal: true, currentManifestFileType: uploadType});
+    this.setState({currentManifestFileType: uploadType});
+    this.modalRef.current.showModal();
+    document.addEventListener('keydown', this.hideModal);
   };
 
   hideModal = (event) => {
-    if (event.type === 'submit' || event.type === 'click'
-            || (event.type === 'keydown' && event.keyCode === 27)) {
+    if (this.modalRef.current && (event.type === 'submit' || event.type === 'click'
+            || (event.type === 'keydown' && event.keyCode === 27))) {
+      this.modalRef.current.close();
       this.setState({
         // submitButtonUrlsDisabled: true,
-        showModal: false,
         currentManifestFileType: null,
       });
+      document.removeEventListener('keydown', this.hideModal);
     }
   };
 
   hideModalValidationReport = () => {
-    this.setState({showValidationReportModal: false, validationReportIndex: null});
+    this.modalValidationRef.current.close();
+    this.setState({validationReportIndex: null});
   };
 
   showModalValidationReportHandler = (index) => {
-    this.setState({showValidationReportModal: true, validationReportIndex: index});
+    this.setState({validationReportIndex: index});
+    this.modalRef.current.showModal();
   };
 
   submitUrlsHandler = (event) => {
@@ -553,104 +555,19 @@ class UploadFiles extends React.Component {
     this.setState({urls: event.target.value});
   };
 
-  buildFailedUrlList = () => {
-    if (this.state.failedUrls.length) {
-      return (
-        <FailedUrlList failedUrls={this.state.failedUrls} clicked={this.removeFailedUrlHandler} />
-      );
-    }
-    return null;
-  };
-
   removeFailedUrlHandler = (index) => {
     let {failedUrls} = this.state;
     failedUrls = failedUrls.filter((url, urlIndex) => urlIndex !== index);
     this.setState({failedUrls});
   };
 
-  buildFileList = (removingIndex) => {
-    if (this.state.chosenFiles.length) {
-      return (
-        <div>
-          <FileList
-            chosenFiles={this.state.chosenFiles}
-            clickedRemove={this.removeFileHandler}
-            clickedValidationReport={this.showModalValidationReportHandler}
-            removingIndex={removingIndex}
-          />
-          { this.state.loading
-            ? (
-              <div className="c-upload__loading-spinner">
-                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-              </div>
-            ) : null }
-          {this.state.warningMessage ? <WarningMessage message={this.state.warningMessage} /> : null}
-          {this.hasPendingFiles()
-            ? (
-              <ValidateFiles
-                id="confirm_to_validate_files"
-                buttonLabel="Upload pending files"
-                checkConfirmed
-                disabled={this.state.submitButtonFilesDisabled}
-                changed={this.toggleCheckedFiles}
-                clicked={this.uploadFilesHandler}
-              />
-            )
-            : null}
-        </div>
-      );
-    }
-    return (
-      <div>
-        <h2 className="o-heading__level2">Files</h2>
-        { this.state.loading
-          ? (
-            <div className="c-upload__loading-spinner">
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          ) : <p>No files have been selected.</p> }
-      </div>
-    );
-  };
-
-  buildModal = () => {
-    if (this.state.showModal) {
-      document.addEventListener('keydown', this.hideModal);
-      return (
-        <ModalUrl
-          submitted={this.submitUrlsHandler}
-          changedUrls={this.onChangeUrls}
-          clickedClose={this.hideModal}
-        />
-      );
-    }
-    document.removeEventListener('keydown', this.hideModal);
-    return null;
-  };
-
-  buildValidationReportModal = () => {
-    if (this.state.showValidationReportModal) {
-      return (
-        <ModalValidationReport
-          file={this.state.chosenFiles[this.state.validationReportIndex]}
-          report={this.state.chosenFiles[this.state.validationReportIndex].frictionless_report.report}
-          clickedClose={this.hideModalValidationReport}
-        />
-      );
-    }
-    return null;
-  };
-
   render() {
-    const failedUrls = this.buildFailedUrlList();
-    const chosenFiles = this.buildFileList(this.state.removingIndex);
-    const modalURL = this.buildModal();
-    const modalValidationReport = this.buildValidationReportModal();
+    const {
+      failedUrls, removingIndex, chosenFiles, loading, warningMessage, validationReportIndex,
+    } = this.state;
 
     return (
       <div className="c-upload">
-        {modalURL}
-        {modalValidationReport}
         <h1 className="o-heading__level1">
           Upload Your Files
         </h1>
@@ -674,8 +591,56 @@ class UploadFiles extends React.Component {
             />
           ))}
         </div>
-        {failedUrls}
-        {chosenFiles}
+        {failedUrls.length && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
+        {chosenFiles.length ? (
+          <div>
+            <FileList
+              chosenFiles={chosenFiles}
+              clickedRemove={this.removeFileHandler}
+              clickedValidationReport={this.showModalValidationReportHandler}
+              removingIndex={removingIndex}
+            />
+            {loading && (
+              <div className="c-upload__loading-spinner">
+                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+              </div>
+            )}
+            {warningMessage && <WarningMessage message={warningMessage} />}
+            {// checks the file list if any files are pending and if so returns true (or false)
+              chosenFiles.filter((file) => file.status === 'Pending') && (
+                <ValidateFiles
+                  id="confirm_to_validate_files"
+                  buttonLabel="Upload pending files"
+                  checkConfirmed
+                  disabled={this.state.submitButtonFilesDisabled}
+                  changed={this.toggleCheckedFiles}
+                  clicked={this.uploadFilesHandler}
+                />
+              )
+            }
+          </div>
+        ) : (
+          <div>
+            <h2 className="o-heading__level2">Files</h2>
+            {loading ? (
+              <div className="c-upload__loading-spinner">
+                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+              </div>
+            ) : <p>No files have been selected.</p> }
+          </div>
+        )}
+        <ModalUrl
+          ref={this.modalRef}
+          submitted={this.submitUrlsHandler}
+          changedUrls={this.onChangeUrls}
+          clickedClose={this.hideModal}
+        />
+        <ModalValidationReport
+          file={chosenFiles[validationReportIndex]}
+          ref={this.modalValidationRef}
+          report={chosenFiles[validationReportIndex].frictionless_report.report}
+          clickedClose={this.hideModalValidationReport}
+        />
       </div>
     );
   }
