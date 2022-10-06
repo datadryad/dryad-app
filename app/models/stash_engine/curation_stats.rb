@@ -1,4 +1,4 @@
-# CurationStats stores some statistics about the submission/curation process
+# CurationStats stores statistics about the submission/curation process
 # that rarely change and take a little time to calculate. This class may only be
 # instantiated once for each date. Rather than instantiating with `new` or `create`,
 # it is preferred to use `find_or_create_by(date: <somedate>)`.
@@ -15,6 +15,7 @@ module StashEngine
         datasets_to_be_curated.present? &&
         new_datasets_to_submitted.present? &&
         new_datasets_to_peer_review.present? &&
+        ppr_to_curation.present? &&
         datasets_to_aar.present? &&
         datasets_to_published.present? &&
         datasets_to_embargoed.present? &&
@@ -30,6 +31,7 @@ module StashEngine
       populate_datasets_to_be_curated
       populate_new_datasets_to_submitted
       populate_new_datasets_to_peer_review
+      populate_ppr_to_curation
       populate_datasets_to_aar
       populate_datasets_to_published
       populate_datasets_to_embargoed
@@ -159,6 +161,11 @@ module StashEngine
         end
       end
       datasets_found.size
+    end
+
+    # The number PPR to Curation that day
+    def populate_ppr_to_curation
+      update(ppr_to_curation: datasets_transitioned(from_status: 'peer_review', to_status: 'curation'))
     end
 
     # The number AAR'd that day (status change from 'curation' to 'action_required')
