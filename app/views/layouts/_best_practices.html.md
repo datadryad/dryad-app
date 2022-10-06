@@ -114,10 +114,38 @@
 <li>File extension (<code>.csv, .txt, .R, .xls, .tar.gz</code>, etc.)</li>
 </ul>
 
-
-<img src="/images/dataset-structure.png" alt="Dataset organization">
-
-
+<h3>Examples</h3>
+<div style="display: flex; align-items: flex-start; justify-content: flex-start;">
+<div style="margin-right: 4em;">
+<h4 style="margin-top: 0;">A) Organized by File type</h4>
+<pre>
+DatasetA.tar.gz
+|- Data/
+|  |- Processed/
+|  |- Raw/
+|- Results/
+|  |- Figure1.tif
+|  |- Figure2.tif
+|  |- Models/
+|- README.md
+</pre>
+</div>
+<div>
+<h4 style="margin-top: 0;">B) Organized by Analysis</h4>
+<pre>
+DatasetB.tar.gz
+|- Figure1/
+|  |- Data/
+|  |- Results
+|  |  |- Figure1.tif
+|- Figure2/
+|  |- Data/
+|  |- Results/
+|  |  |- Figure2.tif
+|- README.md
+</pre>
+</div>
+</div>
 
 <h2 id="describe">Describe your dataset in a README file</h2>
 
