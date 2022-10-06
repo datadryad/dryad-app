@@ -26,7 +26,7 @@
     "build": "webpack",
     "test": "jest",
     "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint app/javascript/react --fix",
+    "lint:js": "eslint --ext .jsx --ext .js app/javascript/react --fix",
     "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
