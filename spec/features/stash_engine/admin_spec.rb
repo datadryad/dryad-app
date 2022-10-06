@@ -290,10 +290,10 @@ RSpec.feature 'Admin', type: :feature do
         find("#user_ids_selections_#{user2.id}").click
 
         # Do the merge dialog
-        find('button[title="Merge Selected"]').click
-        expect(page).to have_text('Merge Users')
+        find('button[title="Merge selected"]').click
+        expect(page).to have_text('Merge users')
         click_button('Merge')
-        expect(page).to have_text('Manage Users')
+        expect(page).to have_text('Manage users')
 
         sleep 1 # since it takes some time for async action to reflect in db
         # user_2 should be removed, modified check because of some weird caching or something
