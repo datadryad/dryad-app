@@ -9,9 +9,6 @@ import {
 } from '../../components/FileUpload';
 import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 
-// TODO: check if this is the best way to refer to stash_engine files.
-import {formatSizeUnits} from '../../../../assets/javascripts/stash_engine/resources';
-
 /**
  * Constants
  */
@@ -71,6 +68,22 @@ export const displayAriaMsg = (msg) => {
   const content = document.createTextNode(msg);
   el.innerHTML = '';
   el.appendChild(content);
+};
+
+const formatSizeUnits = (bytes) => {
+  if (bytes === 1) {
+    return '1 byte';
+  } if (bytes < 1000) {
+    return `${bytes} bytes`;
+  }
+
+  const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  for (let i = 0; i < units.length; i += 1) {
+    if (bytes / 10 ** (3 * (i + 1)) < 1) {
+      return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
+    }
+  }
+  return true;
 };
 
 const transformData = (files) => files.map((file) => ({
@@ -561,6 +574,9 @@ class UploadFiles extends React.Component {
     this.setState({failedUrls});
   };
 
+  // checks the file list if any files are pending and if so returns true (or false)
+  hasPendingFiles = () => this.state.chosenFiles.filter((file) => file.status === 'Pending').length > 0;
+
   render() {
     const {
       failedUrls, removingIndex, chosenFiles, loading, warningMessage, validationReportIndex,
@@ -606,18 +622,16 @@ class UploadFiles extends React.Component {
               </div>
             )}
             {warningMessage && <WarningMessage message={warningMessage} />}
-            {// checks the file list if any files are pending and if so returns true (or false)
-              chosenFiles.filter((file) => file.status === 'Pending') && (
-                <ValidateFiles
-                  id="confirm_to_validate_files"
-                  buttonLabel="Upload pending files"
-                  checkConfirmed
-                  disabled={this.state.submitButtonFilesDisabled}
-                  changed={this.toggleCheckedFiles}
-                  clicked={this.uploadFilesHandler}
-                />
-              )
-            }
+            {this.hasPendingFiles && (
+              <ValidateFiles
+                id="confirm_to_validate_files"
+                buttonLabel="Upload pending files"
+                checkConfirmed
+                disabled={this.state.submitButtonFilesDisabled}
+                changed={this.toggleCheckedFiles}
+                clicked={this.uploadFilesHandler}
+              />
+            )}
           </div>
         ) : (
           <div>
