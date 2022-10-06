@@ -42,6 +42,7 @@ FIELDS:
   :RELATED_PUBLICATION_NAME: 'dryad_related_publication_name_s'
   :AUTHOR_AFFILIATION_NAME: 'dryad_author_affiliation_name_sm'
   :DATASET_FILE_EXT: 'dryad_dataset_file_ext_sm'
+  :FUNDER: 'dcs_funder_sm'
 
 # Institution deployed at
 INSTITUTION: 'Dryad'
