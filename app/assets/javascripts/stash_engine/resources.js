@@ -10,7 +10,7 @@ function generateQuickId() {
       Math.random().toString(36).substring(2, 15);
 }
 
-export function formatSizeUnits(bytes) {
+function formatSizeUnits(bytes) {
   if (bytes == 1){
     return '1 byte';
   }else if (bytes < 1000){
