@@ -149,33 +149,25 @@ DatasetB.tar.gz
 
 <h2 id="describe">Describe your dataset in a README file</h2>
 
-<p>Provide a clear and concise description of all relevant details about data collection, processing, and analysis in a README document. This will help others interpret and reanalyze your dataset.</p>
+<p>Provide a clear and concise description of all components of your dataset in a README document. This will help others interpret and reanalyze your data.</p>
 
-<p>Plain text README files are recommended, however, PDF is acceptable when formatting is important.</p>
+<p>We provide a <a href="https://datadryad.org/docs/README.md"> README template</a> in <a href="https://www.markdownguide.org/"> Markdown format</a>
+  to guide you through the creation of your README documentation.</p>
 
 <p>
-  If you include a README in a compressed archive of files, please also upload it externally in the README section
-  so that users are aware of the contents before downloading.
+  If your dataset includes compressed archives, please upload your README externally as a stand-alone file in the 'Data' category
+  so that users can view its contents before downloading the full dataset.
 </p>
-
-<p>Cornell University's Research Data Management Service Group has created an excellent <a href="https://data.research.cornell.edu/content/readme">README template</a></p>
 
 <h3>Details to include:</h3>
 
 <ul>
-<li>Citation(s) of your published research derived from these data</li>
-<li>Citation(s) of associated datasets stored elsewhere (include URLs)</li>
-<li>Project name and executive summary</li>
-<li>Contact information regarding analyses</li>
-<li>Methods of data processing and analysis</li>
-<li>Describe details that may influence reuse or replication efforts</li>
-<li>De-identification procedures for sensitive human subjects or endangered species data</li>
-<li>Specialized software (include version and developer's web address) used for analyses and file compression. If proprietary, include open source alternatives</li>
-<li>Description of file(s):
-<ul><li>file/directory structure</li>
-<li>type(s) of data included (categorical, time-series, human subjects, etc.)</li>
-<li>relationship to the tables, figures, or sections within associated publication</li>
-<li>key of definitions of variable names, column headings and row labels, data codes (including missing data), and measurement units</li></ul></li>
+<li>Summary of experimental efforts underlying this dataset</li>
+<li>Description of file structure and contents</li>
+<li>Definitions of all variables, abbreviations, missing data codes, and units</li>
+<li>Links to other publicly accessible locations of the data</li>
+<li>Other sources, if any, that the data was derived from</li>
+<li>Any other details that may influence reuse or replication efforts</li>
 </ul>
 
 <p>

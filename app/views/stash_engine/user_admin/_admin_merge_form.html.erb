@@ -1,47 +1,60 @@
-<h1>Merge Users</h1>
+<h1>Merge users</h1>
 
-<%= form_with(url: user_admin_merge_path, method: :post, remote: false) do -%>
-  <% if @user1 && @user2 %>
-    <%= hidden_field_tag 'user1', @user1.id, id: "selected_users" %>
-    <%= hidden_field_tag 'user2', @user2.id, id: "selected_users" %>
+<%= form_with(url: user_admin_merge_path, method: :post, remote: false, id: 'merge_user_form') do -%>
+<% if @user1 && @user2 %>
+<%= hidden_field_tag 'user1', @user1.id, id: "selected_users" %>
+<%= hidden_field_tag 'user2', @user2.id, id: "selected_users" %>
 
-    <p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets.
-      Once these users are merged, the operation cannot be reversed.</p>
-    
-    <table class="c-lined-table">
-      <tr class="c-lined-table__head">
-	<th>Name</th>
-	<th>Email</th>
-	<th>ORCID</th>
-	<th>Institution</th>
-	<th>Last Login</th>
-	<th>Num Datasets</th>
-      </tr>
-      <tr class="c-lined-table__row">
-	<td><nobr><%= "#{@user1.first_name} #{@user1.last_name}" %></nobr></td>
-	<td><nobr><%= @user1.email %></nobr></td>
-	<td><nobr><%= @user1.orcid %></nobr></td>
-	<td><nobr><%= @user1.tenant&.short_name %></nobr></td>
-	<td><nobr><%= @user1.last_login %></nobr></td>
-	<td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
-      </tr>
-      <tr class="c-lined-table__row">
-	<td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
-	<td><nobr><%= @user2.email %></nobr></td>
-	<td><nobr><%= @user2.orcid %></nobr></td>
-	<td><nobr><%= @user2.tenant&.short_name %></nobr></td>
-	<td><nobr><%= @user2.last_login %></nobr></td>
-	<td><%= StashEngine::Resource.where(user_id: @user2.id).map(&:identifier).uniq.size %></td>
-      </tr>
-    </table>
-    <br/>
-    <%= submit_tag 'Merge', title: 'Merge' %>
-  <% else %>
-    <p>
-      <strong>Error: Exactly 2 users must be selected for merging.</strong>
-    </p>
-  <% end %>
-  <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+<p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets.
+Once these users are merged, the operation cannot be reversed.</p>
+
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th>Name</th>
+    <th>Email</th>
+    <th>ORCID</th>
+    <th>Institution</th>
+    <th>Last login</th>
+    <th>Num datasets</th>
+  </tr>
+  <tr class="c-lined-table__row">
+    <td><nobr><%= "#{@user1.first_name} #{@user1.last_name}" %></nobr></td>
+    <td><nobr><%= @user1.email %></nobr></td>
+    <td><nobr><%= @user1.orcid %></nobr></td>
+    <td><nobr><%= @user1.tenant&.short_name %></nobr></td>
+    <td><nobr><%= @user1.last_login %></nobr></td>
+    <td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
+  </tr>
+  <tr class="c-lined-table__row">
+    <td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
+    <td><nobr><%= @user2.email %></nobr></td>
+    <td><nobr><%= @user2.orcid %></nobr></td>
+    <td><nobr><%= @user2.tenant&.short_name %></nobr></td>
+    <td><nobr><%= @user2.last_login %></nobr></td>
+    <td><%= StashEngine::Resource.where(user_id: @user2.id).map(&:identifier).uniq.size %></td>
+  </tr>
+</table>
+<br/>
+<%= button_tag 'Merge', type: 'button', id: 'submit_merge' %>
+<% else %>
+<p>
+  <strong>Error: Exactly 2 users must be selected for merging.</strong>
+</p>
+<% end %>
+<%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+<script>
+  $('#submit_merge').click(function(){
+    var checkedBoxes = document.querySelectorAll('input:checked');
+    for (const box of checkedBoxes) {
+      box.checked = false;
+    }
+    var su = document.getElementById("selected_users");
+    su.value = null;
+    console.log('selected_users ', su);
+    $('#merge_user_form').submit();
+  });
+</script>
 
 <% end %>
 
