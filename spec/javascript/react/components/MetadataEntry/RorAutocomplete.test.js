@@ -1,7 +1,7 @@
 import React from "react";
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import RorAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete.js";
+import RorAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete";
 import axios from 'axios';
 import {acData} from "./rorTestData"
 

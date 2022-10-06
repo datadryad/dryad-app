@@ -5,7 +5,7 @@
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import BadList from "../../../../../../app/javascript/react/components/FileUpload/FileList/BadList/BadList";
+import BadList from "../../../../../app/javascript/react/components/FileUpload/FileList/BadList";
 
 let container = null;
 beforeEach(() => {

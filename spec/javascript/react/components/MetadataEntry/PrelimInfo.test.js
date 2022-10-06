@@ -2,7 +2,7 @@ import React from "react";
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import PrelimInfo from "../../../../../app/javascript/react/components/MetadataEntry/PrelimInfo.js";
+import PrelimInfo from "../../../../../app/javascript/react/components/MetadataEntry/PrelimInfo";
 import axios from 'axios';
 
 jest.mock('axios');
