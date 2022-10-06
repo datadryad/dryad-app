@@ -1,130 +1,151 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {Field, Form, Formik} from 'formik'
-import moment from 'moment'
-import {isEqual} from 'lodash'
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils'
+import React from 'react';
+import {Form, Formik} from 'formik';
+import moment from 'moment';
+import {isEqual} from 'lodash';
+import {showSavingMsg} from '../../../lib/utils';
 
 class Cedar extends React.Component {
   state = {
-    template: null, 
-    csrf: null, 
+    template: null,
+    csrf: null,
     metadata: null,
     updated: new Date().toISOString(),
     currentMetadata: null,
-  }
-  formRef = React.createRef()
-  delete = null
-  dialog = null
-  editor = null
-  script = null
-  componentDidMount(){
-    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content')
-    const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {}
-    this.setState({csrf, template, metadata, updated})
+  };
+
+  formRef = React.createRef();
+
+  delete = null;
+
+  dialog = null;
+
+  editor = null;
+
+  componentDidMount() {
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content');
+    const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {};
+    this.setState({
+      csrf, template, metadata, updated,
+    });
     // Move the cdk-overlay-container into the modal for rendering above dialog
     this.popupWatcher = new MutationObserver(() => {
-      const popups = document.querySelector('body > .cdk-overlay-container')
-      if (popups) this.dialog.append(popups)
-    })
-    this.popupWatcher.observe(document.body, {childList: true})
+      const popups = document.querySelector('body > .cdk-overlay-container');
+      if (popups) this.dialog.append(popups);
+    });
+    this.popupWatcher.observe(document.body, {childList: true});
     // Check form content when touched
     this.formObserver = new MutationObserver((changes) => {
       changes.forEach((change) => {
-        const {target: {classList}} = change
-        if (classList.contains('ng-touched')) this.checkSave()
-      })
-    })
-    this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']})
+        const {target: {classList}} = change;
+        if (classList.contains('ng-touched')) this.checkSave();
+      });
+    });
+    this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
   }
-  componentWillUnMount() {
+
+  componentWillUnmount() {
     if (this.popupWatcher) {
-      this.popupWatcher.disconnect()
-      this.popupWatcher = null
+      this.popupWatcher.disconnect();
+      this.popupWatcher = null;
     }
     if (this.formObserver) {
-      this.formObserver.disconnect()
-      this.formObserver = null
+      this.formObserver.disconnect();
+      this.formObserver = null;
     }
     if (this.editorLoaded) {
-      this.editorLoaded.disconnect()
-      this.editorLoaded = null
+      this.editorLoaded.disconnect();
+      this.editorLoaded = null;
     }
   }
+
   setRef = (el) => {
-    if (el.id === 'cedarDialog') this.dialog = el
-    if (el.id === 'deleteCedarDialog') this.delete = el
-    if (el.id === 'cedarEditor') this.editor = el
-  }
+    if (el.id === 'cedarDialog') this.dialog = el;
+    if (el.id === 'deleteCedarDialog') this.delete = el;
+    if (el.id === 'cedarEditor') this.editor = el;
+  };
+
   // Save form content when changed
   checkSave = () => {
-    const currentMetadata = JSON.parse(JSON.stringify(this.editor.currentMetadata))
-    if(!isEqual(currentMetadata, this.state.currentMetadata)) {
-      this.setState({currentMetadata}, this.saveContent)
+    const currentMetadata = JSON.parse(JSON.stringify(this.editor.currentMetadata));
+    if (!isEqual(currentMetadata, this.state.currentMetadata)) {
+      this.setState({currentMetadata}, this.saveContent);
     }
-  }
+  };
+
   deleteContent = () => {
-    this.setState({currentMetadata: null, template: null}, this.saveContent)
-  }
+    this.setState({currentMetadata: null, template: null}, this.saveContent);
+  };
+
   saveContent = () => {
-    const {id: resource_id} = this.props.resource
-    const {template, csrf, currentMetadata: metadata} = this.state
-    const updated = new Date().toISOString()
-    const info = {template, resource_id, csrf, updated}
-    const wrappedMeta = {info, metadata}
-    const xhr = new XMLHttpRequest()
-    xhr.open("POST", "http://localhost:3000/cedar-save")
-    xhr.setRequestHeader("Accept", "application/json")
-    xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.send(JSON.stringify(wrappedMeta, null, 2))
-    console.log('Saved metadata')
-    console.log(wrappedMeta)
-    this.setState({metadata, updated})
-    if (this.editor) this.editor.templateInfo = info
-  }
+    const {id: resource_id} = this.props.resource;
+    const {template, csrf, currentMetadata: metadata} = this.state;
+    const updated = new Date().toISOString();
+    const info = {
+      template, resource_id, csrf, updated,
+    };
+    const wrappedMeta = {info, metadata};
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:3000/cedar-save');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(wrappedMeta, null, 2));
+    console.log('Saved metadata');
+    console.log(wrappedMeta);
+    this.setState({metadata, updated});
+    if (this.editor) this.editor.templateInfo = info;
+  };
+
   modalSetup = () => {
-    console.log("Loading CEDAR config")
-    const {template, csrf, metadata, updated} = this.state
-    const {id: resource_id} = this.props.resource
-    this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`)
-    this.editor.templateInfo = {template, resource_id, csrf, updated}
-    this.editor.dataset.template = template.id
+    console.log('Loading CEDAR config');
+    const {
+      template, csrf, metadata, updated,
+    } = this.state;
+    const {id: resource_id} = this.props.resource;
+    this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`);
+    this.editor.templateInfo = {
+      template, resource_id, csrf, updated,
+    };
+    this.editor.dataset.template = template.id;
     // restore metadata
     this.editorLoaded = new MutationObserver(() => {
-      const app = document.querySelector('app-cedar-embeddable-metadata-editor')
+      const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
-        console.log("loading metadata", metadata)
-        this.editor.metadata = metadata
-        this.editorLoaded.disconnect()
-        this.editorLoaded = null
+        console.log('loading metadata', metadata);
+        this.editor.metadata = metadata;
+        this.editorLoaded.disconnect();
+        this.editorLoaded = null;
       }
-    })
-    this.editorLoaded.observe(this.editor, {childList: true})
-  }
+    });
+    this.editorLoaded.observe(this.editor, {childList: true});
+  };
+
   openModal = () => {
-    const {template} = this.state
+    const {template} = this.state;
     if (!template && !template.id) {
-      console.log("Cannot open modal unless a template is selected.")
-      return
+      console.log('Cannot open modal unless a template is selected.');
+      return;
     }
-    if(this.dialog.dataset.template !== template.id) {
-      console.log("Cedar init the modal for template " + template.id)
-      const {table: {editor_url}} = this.props.appConfig
-      const script = document.createElement('script')
-      script.src = editor_url
-      script.async = true
-      script.onload = () => this.modalSetup()
-      this.dialog.appendChild(script)
-      this.dialog.dataset.template = template.id
+    if (this.dialog.dataset.template !== template.id) {
+      console.log(`Cedar init the modal for template ${template.id}`);
+      const {table: {editor_url}} = this.props.appConfig;
+      const script = document.createElement('script');
+      script.src = editor_url;
+      script.async = true;
+      script.onload = () => this.modalSetup();
+      this.dialog.appendChild(script);
+      this.dialog.dataset.template = template.id;
     }
-    this.dialog.showModal()
-  }
+    this.dialog.showModal();
+  };
+
   render() {
-    if (!this.props.appConfig) return null
-    const {table: {templates}} = this.props.appConfig
-    if (!templates) return null
-    const {id: resource_id, cedar_json} = this.props.resource
-    const {csrf, metadata, template, updated, deleteModal} = this.state
+    if (!this.props.appConfig) return null;
+    const {table: {templates}} = this.props.appConfig;
+    if (!templates) return null;
+    const {id: resource_id} = this.props.resource;
+    const {
+      csrf, metadata, template, updated,
+    } = this.state;
     return (
       <div className="cedar-container">
         <h3 className="cedar-heading__level3">Standardized Metadata</h3>
@@ -132,18 +153,18 @@ class Cedar extends React.Component {
         <Formik
           initialValues={{resource_id, authenticity_token: (csrf || '')}}
           innerRef={this.formRef}
-          onSubmit={(values, {setSubmitting}) => {
-            showSavingMsg()
-            console.log("submitting Cedar selection form")
-            this.openModal()
+          onSubmit={() => {
+            showSavingMsg();
+            console.log('submitting Cedar selection form');
+            this.openModal();
           }}
-        >    
+        >
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
               {metadata && template ? (
                 <div style={{display: 'flex', alignItems: 'center'}}>
                   <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
-                    <strong>{template.title}</strong><br/>
+                    <strong>{template.title}</strong><br />
                     {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
                   </p>
                   <button disabled={!template} type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
@@ -154,7 +175,7 @@ class Cedar extends React.Component {
                   </button>
                 </div>
               ) : (
-                <React.Fragment>
+                <>
                   <label className="c-input__label" htmlFor={`cedar__${resource_id}`}>Choose a metadata form
                   </label>
                   <select
@@ -162,61 +183,60 @@ class Cedar extends React.Component {
                     className="c-input__text"
                     name="cedarTemplate"
                     onChange={(e) => {
-                      const t = e.currentTarget
+                      const t = e.currentTarget;
                       this.setState({
-                        template: {id: t.value, title: t.options[t.selectedIndex].label} 
-                      })
+                        template: {id: t.value, title: t.options[t.selectedIndex].label},
+                      });
                     }}
                     onBlur={formik.handleBlur}
                   >
                     <option key="0" value="" label="- Select One -" />
-                    {templates.map((templ) => {
-                      return(<option key={templ[0]} value={templ[0]} label={templ[2]} />);
-                    })}
+                    {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
                   </select>
                   <button disabled={!template} type="submit" className="o-button__add">
                     Add Metadata Form
                   </button>
-                </React.Fragment>
+                </>
               )}
-            </Form>       
+            </Form>
           )}
         </Formik>
         <dialog className="modalDialog" id="cedarDialog" ref={this.setRef}>
           <div className="modalClose">
             <button aria-label="close" type="button" onClick={() => this.dialog.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true"></i>
+              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
             </button>
           </div>
           <div className="c-modal-content__cedar">
-            <cedar-embeddable-editor id="cedarEditor" ref={this.setRef}></cedar-embeddable-editor>
+            <cedar-embeddable-editor id="cedarEditor" ref={this.setRef} />
           </div>
         </dialog>
         <dialog className="modalDialog" id="deleteCedarDialog" ref={this.setRef}>
           <div className="modalClose">
             <button aria-label="close" type="button" onClick={() => this.delete.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true"></i>
+              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
             </button>
           </div>
           <div className="c-modal-content__normal">
             <h1 className="mat-card-title">Confirm Deletion</h1>
             <p>Are you sure you want to delete this form? All answers will be lost.</p>
             <button
+              type="button"
               className="o-button__plain-text2"
               style={{marginRight: '16px'}}
               onClick={() => {
-                this.deleteContent()
-                this.delete.close()
+                this.deleteContent();
+                this.delete.close();
               }}
             >
               Delete Form
             </button>
-            <button className="o-button__remove" onClick={() => this.delete.close()}>Cancel</button>
+            <button type="button" className="o-button__remove" onClick={() => this.delete.close()}>Cancel</button>
           </div>
         </dialog>
       </div>
-    )
+    );
   }
 }
 
-export default Cedar
+export default Cedar;
