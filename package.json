@@ -24,9 +24,13 @@
   "scripts": {
     "start": "bin/webpack serve --mode development",
     "build": "webpack",
-    "test": "jest"
+    "test": "jest",
+    "lint": "npm run lint:js && npm run lint:style",
+    "lint:js": "eslint --ext .jsx app/ --fix",
+    "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-proposal-private-methods": "^7.16.0",
     "@babel/preset-react": "^7.14.5",
     "@cdl-dryad/frictionless-components": "^1.2.0",
