@@ -11,6 +11,7 @@ class Cedar extends React.Component {
     metadata: null,
     updated: new Date().toISOString(),
     currentMetadata: null,
+    startData: null,
   };
 
   formRef = React.createRef();
@@ -24,8 +25,9 @@ class Cedar extends React.Component {
   componentDidMount() {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content');
     const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {};
+    const startData = this.props.resource.cedar_json ? this.props.resource.cedar_json.slice() : null;
     this.setState({
-      csrf, template, metadata, updated,
+      csrf, template, metadata, updated, startData,
     });
     // Move the cdk-overlay-container into the modal for rendering above dialog
     this.popupWatcher = new MutationObserver(() => {
@@ -33,6 +35,7 @@ class Cedar extends React.Component {
       if (popups) this.dialog.append(popups);
     });
     this.popupWatcher.observe(document.body, {childList: true});
+
     // Check form content when touched
     this.formObserver = new MutationObserver((changes) => {
       changes.forEach((change) => {
@@ -64,11 +67,18 @@ class Cedar extends React.Component {
     if (el.id === 'cedarEditor') this.editor = el;
   };
 
+  cancelChanges = () => {
+    const {metadata, updated, template} = JSON.parse(this.state.startData);
+    this.setState({currentMetadata: metadata, updated, template}, this.saveContent);
+    this.editor.metadata = metadata;
+  };
+
   // Save form content when changed
   checkSave = () => {
     const currentMetadata = JSON.parse(JSON.stringify(this.editor.currentMetadata));
     if (!isEqual(currentMetadata, this.state.currentMetadata)) {
-      this.setState({currentMetadata}, this.saveContent);
+      const updated = new Date().toISOString();
+      this.setState({currentMetadata, updated}, this.saveContent);
     }
   };
 
@@ -78,8 +88,9 @@ class Cedar extends React.Component {
 
   saveContent = () => {
     const {id: resource_id} = this.props.resource;
-    const {template, csrf, currentMetadata: metadata} = this.state;
-    const updated = new Date().toISOString();
+    const {
+      template, csrf, updated, currentMetadata: metadata,
+    } = this.state;
     const info = {
       template, resource_id, csrf, updated,
     };
@@ -117,6 +128,24 @@ class Cedar extends React.Component {
       }
     });
     this.editorLoaded.observe(this.editor, {childList: true});
+    // add cancel button
+    this.saveButton = new MutationObserver(() => {
+      const button = document.querySelector('app-cedar-data-saver button');
+      if (button) {
+        const cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.onclick = this.cancelChanges;
+        cancel.classList.add('mat-raised-button', 'mat-button-base');
+        cancel.innerText = 'CANCEL';
+        cancel.style = 'font-size: 16px; padding: 8px 10px !important; background-color: #ddd;';
+        button.style = 'padding: 8px 24px !important; margin-right: 8px;';
+        button.parentElement.style = 'min-width: 200px !important;';
+        button.parentElement.appendChild(cancel);
+        this.saveButton.disconnect();
+        this.saveButton = null;
+      }
+    });
+    this.saveButton.observe(this.editor, {childList: true, subtree: true});
   };
 
   openModal = () => {
