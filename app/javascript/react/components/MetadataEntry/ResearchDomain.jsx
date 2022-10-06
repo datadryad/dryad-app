@@ -52,15 +52,11 @@ function ResearchDomain({
               formik.handleSubmit();
             }}
           />
-
-          {/* ok to use array index as key since list never changes */}
-          {/* eslint-disable react/no-array-index-key */}
           <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
-            {subjectList.map((subj, idx) => (
-              <option value={subj} key={idx}>{subj}</option>
+            {subjectList.map((subj) => (
+              <option value={subj} key={subj}>{subj}</option>
             ))}
           </datalist>
-          {/* eslint-enable react/no-array-index-key */}
         </Form>
       )}
     </Formik>

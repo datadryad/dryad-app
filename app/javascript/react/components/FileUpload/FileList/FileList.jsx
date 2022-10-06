@@ -1,15 +1,14 @@
-/* eslint-disable react/no-array-index-key */
-// TODO: We should revisit and try to replace the array index with the actual unique database id.  However I tried and it
-// breaks everything right now.
 import React from 'react';
 
 import File from './File';
 import BadList from './BadList';
 
-const file_list = (props) => (
+const file_list = ({
+  chosenFiles, clickedRemove, clickedValidationReport, removingIndex,
+}) => (
   <div>
     <h2 className="o-heading__level2" id="filelist_id">Files</h2>
-    <BadList chosenFiles={props.chosenFiles} />
+    <BadList chosenFiles={chosenFiles} />
     <table className="c-uploadtable">
       <thead>
         <tr>
@@ -23,14 +22,14 @@ const file_list = (props) => (
         </tr>
       </thead>
       <tbody>
-        {props.chosenFiles.map((file, index) => (
+        {chosenFiles.map((file, index) => (
           <File
-            key={index}
-            clickRemove={() => props.clickedRemove(index)}
-            clickValidationReport={() => props.clickedValidationReport(index)}
+            key={JSON.stringify(file)}
+            clickRemove={() => clickedRemove(index)}
+            clickValidationReport={() => clickedValidationReport(index)}
             file={file}
             index={index}
-            removingIndex={props.removingIndex}
+            removingIndex={removingIndex}
           />
         ))}
       </tbody>
