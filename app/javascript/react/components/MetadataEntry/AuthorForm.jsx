@@ -7,7 +7,7 @@ import RorAutocomplete from './RorAutocomplete';
 
 // dryadAuthor below has nested affiliation
 export default function AuthorForm({dryadAuthor, removeFunction, correspondingAuthorId}) {
-  const formRef = useRef();
+  const formRef = useRef(0);
 
   // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
   const [acText, setAcText] = useState(dryadAuthor?.affiliation?.long_name || '');

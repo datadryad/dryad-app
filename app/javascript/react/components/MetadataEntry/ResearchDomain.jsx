@@ -53,9 +53,11 @@ function ResearchDomain({
             }}
           />
           <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
-            {subjectList.map((subj) => (
-              <option value={subj} key={subj}>{subj}</option>
-            ))}
+            {subjectList.map((subj, index) => {
+              // key made from subj + count of preceding duplicates
+              const key = subj + subjectList.slice(0, index).filter((s) => s === subj).length;
+              return <option value={subj} key={key}>{subj}</option>;
+            })}
           </datalist>
         </Form>
       )}
