@@ -10,6 +10,8 @@ module StashDatacite
     scope :completed, -> { where("TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
     # scope :completed, ->  { where("TRIM(IFNULL(award_number, '')) > '' AND TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
 
+    scope :funder, -> { where(contributor_type: 'funder') }
+
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
     ContributorTypesEnum = ContributorTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h

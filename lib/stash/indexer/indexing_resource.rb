@@ -88,6 +88,7 @@ module Stash
           dryad_author_affiliation_name_sm: author_affiliations,
           dryad_author_affiliation_id_sm: author_affiliation_ids,
           dryad_dataset_file_ext_sm: dataset_file_exts,
+          dcs_funder_sm: dataset_funders,
           updated_at_dt: updated_at_str
         }
       end
@@ -249,6 +250,25 @@ module Stash
         @resource.data_files.present_files.map do |df|
           File.extname(df.upload_file_name.to_s).gsub(/^./, '').downcase
         end.flatten.reject(&:blank?).uniq
+      end
+
+      def dataset_funders
+        # Also do we only want to add items with valid FundRef entries?
+        contrib_names = @resource.contributors.funder.completed.map(&:contributor_name)
+        contrib_names << group_funders
+        contrib_names.flatten.reject(&:blank?).uniq
+      end
+
+      # see how many group funders belong to each relevant group in the ContributorGrouping table and return additional
+      # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
+      def group_funders
+        extra_funders = []
+        StashDatacite::ContributorGrouping.where(contributor_type: 'funder').each do |group|
+          identifier_ids = group.json_contains.map { |i| i['name_identifier_id'] }
+          count = @resource.contributors.funder.completed.where(name_identifier_id: identifier_ids).count
+          extra_funders.push(group.contributor_name) if count.positive?
+        end
+        extra_funders
       end
 
       def updated_at_str
