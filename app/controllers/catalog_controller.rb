@@ -89,6 +89,7 @@ class CatalogController < ApplicationController
     config.add_facet_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', limit: 8
     config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', limit: 8
     config.add_facet_field Settings.FIELDS.DATASET_FILE_EXT, label: 'File Extension', limit: 8
+    config.add_facet_field Settings.FIELDS.FUNDER, label: 'Funder', limit: 8
 
     # config.add_facet_field Settings.FIELDS.RIGHTS, label: 'Access', limit: 8, partial: "icon_facet"
     # config.add_facet_field Settings.FIELDS.GEOM_TYPE, label: 'Data type', limit: 8, partial: "icon_facet"
@@ -122,6 +123,7 @@ class CatalogController < ApplicationController
     config.add_index_field Settings.FIELDS.RELATED_PUBLICATION_NAME
     config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
     config.add_index_field Settings.FIELDS.DATASET_FILE_EXT
+    config.add_index_field Settings.FIELDS.FUNDER
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display

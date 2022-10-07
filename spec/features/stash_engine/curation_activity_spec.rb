@@ -227,6 +227,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows curation editing and aborting editing of user dataset and return to list in same state afterward' do
         # the button to edit has this class on it
         find('.js-trap-curator-url').click
+
+        expect(page).to have_field('Dataset Title') # so it waits for actual ajax doc to load before doing anything else
+
         click_on('Cancel and Discard Changes')
         find('#railsConfirmDialogYes').click
         expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
