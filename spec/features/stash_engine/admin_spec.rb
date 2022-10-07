@@ -329,8 +329,9 @@ RSpec.feature 'Admin', type: :feature do
         menu = first('summary.o-showhide__summary')
         menu.click
         click_on('Dataset Curation')
-        select 'Status', from: 'curation_status'
-        find('#curation_status').set("Status\n") # trying to get headless to work reliably
+        # select 'Status', from: 'curation_status'
+        # find('#curation_status').set("Status\n") # trying to get headless to work reliably
+        visit('/stash/ds_admin?utf8=✓') # remove the filter and load page which the JS action doesn't seem to be reliable on github
         page.find('#js-curation-state-1', wait: 5) # might this make intermittent weirdness better on github servers?
 
         expect(page).to have_selector('#js-curation-state-1')
