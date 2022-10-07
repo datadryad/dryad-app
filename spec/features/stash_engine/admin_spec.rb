@@ -332,9 +332,9 @@ RSpec.feature 'Admin', type: :feature do
         # select 'Status', from: 'curation_status'
         # find('#curation_status').set("Status\n") # trying to get headless to work reliably
         visit('/stash/ds_admin?utf8=✓') # remove the filter and load page which the JS action doesn't seem to be reliable on github
-        page.find('#js-curation-state-1', wait: 5) # might this make intermittent weirdness better on github servers?
+        # page.find('#js-curation-state-1', wait: 5) # might this make intermittent weirdness better on github servers?
 
-        expect(page).to have_selector('#js-curation-state-1')
+        # expect(page).to have_selector('#js-curation-state-1')
         expect(page).to have_content(@resource.title)
         expect(page).not_to have_css('.fa-pencil') # no pencil editing icons for you
       end
