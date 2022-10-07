@@ -14,6 +14,20 @@
 <h2>Current Board Members</h2>
 
 <div class="bio">
+  <img src="/images/beckerman.jpg" alt="Andrew Beckerman" title="Andrew Beckerman">
+  <p>
+    <strong>Andrew Beckerman (Class of 2023)</strong> is a Professor of Evolutionary Ecology at the University of Sheffield where he collaborates with his team on questions about the impacts of climate and environmental change on biodiversity. They are passionate and curious about the landscape of open science. He is on the University of Sheffield School of Bioscience Executive Board and has recently been appointed to the University Council Finance Committee. Andrew has been co- Editor-in-Chief for the Wiley Open Access journal Ecology and Evolution for over 10 years. He has provided strategic contributions to the British Ecological Society for more than a decade as former Chair of Meetings and member of the Management Board and more recently via the Publications committee. Andew is also currently the Chair of Governors for a local primary school providing strategic support to the senior leadership team on finance, infrastructure and curriculum.
+  </p>  
+</div>
+
+<div class="bio">
+  <img src="/images/ebert.jpg" alt="Barbara Ebert" title="Barbara Ebert">
+  <p>
+    <strong>Barbara Ebert (Class of 2023)</strong> is Executive Secretary, German Federation for Biological Data e.V. (GFBio). GFBio e.V. is a non-profit association founded in 2016 as the legal entity for the sustainable operation of data services in Biodiversity research. It is active in the recently founded National Research Data Infrastructure (NFDI) in Germany. Starting October 2020 we are building a coordination team for the NFDI4BioDiversity consortium, and a pool of IT developers to mobilise data available at the partner organisations and feed them into a common data infrastructure.
+  </p>  
+</div>
+
+<div class="bio">
   <img src="/images/edmunds.jpg" alt="Scott Edmunds" title="Scott Edmunds">
   <p>
     <strong>Scott Edmunds (Class of 2023)</strong> is Editor-in-Chief for <a href="https://academic.oup.com/gigascience">
@@ -47,6 +61,13 @@
 </div>
 
 <div class="bio">
+  <img src="/images/holmes.jpg" alt="Kristi Holmes" title="Kristi Holmes">
+  <p>
+    <strong>Kristi Holmes (Class of 2023)</strong> is the Director of Galter Health Sciences Library & Learning Center and Professor of Preventive Medicine (Health & Biomedical Informatics) at Northwestern University. Her research is focused on the development and application of information standards to support interoperability and data exchange to enhance discovery across basic science, clinical, and community-based research and ultimately, develop new methods for understanding translational impact. Operationalized workflows for the library and beyond have been developed, including a robust evaluation infrastructure for the campus in NUCATS. Holmes is especially enthusiastic about new roles and opportunities for modern biomedical research libraries in an increasingly informatics and data-driven environment.
+  </p>  
+</div>
+
+<div class="bio">
   <img src="/images/horstmann.jpg" alt="Wolfram Horstmann" title="Wolfram Horstmann">
   <p>
     <strong>Wolfram Horstmann (Class of 2021)</strong> has been Director of Göttingen State and University Library since
@@ -57,6 +78,13 @@
     <a href="https://www.sub.uni-goettingen.de/en/contact/staff-a-z/staff-details/person/wolfram-horstmann/" target="_blank"
     title="Read more about Wolfram (opens in a new window)">Read more details.</a>
   </p>
+</div>
+
+<div class="bio">
+  <img src="/images/madalli.jpg" alt="Devika Madalli" title="Devika Madalli">
+  <p>
+    <strong>Devika Madalli (Class of 2023)</strong> is a Professor of the Documentation Research and Training Centre, Indian Statistical Institute (faculty since 1996), India and Adjunct faculty, DISI, University of Trento, Italy. Her interest lies in the area of OERs and Educational resources repositories, Open Data Repositories and Data Management, Knowledge Organization and application of facetization in Information Systems, Information Infrastructures, Digital Libraries, Semantic Web technologies, Faceted Ontologies, Content Management System, Agrisemantics, multilingual information services. She is a member of the Karnataka Evaluation Authority(KEA). Dr.Madalli has extensive experience in capacity building, training on e-learning, MOOCs (moodle) and digital repositories. Dr. Madalli is a member of the Technical Advisory Board of Research Data Alliance and Prof.Madalli is a founding member of and served as the co-chair of the Agriculture Data Interest Group [IGAD], Research Data Alliance [RDA][2013-2016] and present co-chair of the Global Research Commons and RDA for UNSDGs Interest groups.
+  </p>  
 </div>
 
 <div class="bio">
