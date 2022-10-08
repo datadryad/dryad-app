@@ -2,7 +2,6 @@ class CedarController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def get_config
-    puts "CEDAR get_configa"
     json_output = {
                    "showTemplateUpload": false,
                    "templateUploadBaseUrl": "https://api-php.cee.metadatacenter.org",
