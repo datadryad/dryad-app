@@ -5,7 +5,7 @@
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import Title from "../../../../../app/javascript/react/components/MetadataEntry/Title.js";
+import Title from "../../../../../app/javascript/react/components/MetadataEntry/Title";
 
 let container = null;
 beforeEach(() => {

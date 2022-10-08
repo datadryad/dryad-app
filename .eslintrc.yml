@@ -1,15 +1,24 @@
 extends: airbnb
+parser: "@babel/eslint-parser"
 parserOptions:
   ecmaVersion: 2020
 rules:
-  "react/forbid-prop-types": [2, { "forbid": [], "checkContextTypes": false, "checkChildContextTypes": false}]
-  "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
-  "react/jsx-one-expression-per-line": [0, { "allow": "single-child" }] # does bad things to our code like see https://github.com/yannickcr/eslint-plugin-react/issues/1855
-  "react/require-default-props": [1, { forbidDefaultForRequired: true, ignoreFunctionalComponents: true }] # causes havok with functional components
   camelcase: off # because of some variable names being the same as rails and transferring across, maybe can go back and fix
-  "object-curly-spacing": [2, "never"]
-  "max-len": [2, {"code": 150, "tabWidth": 2, "ignoreUrls": true}]
+  indent: ["error", 2]
+  "jsx-a11y/label-has-associated-control": [2, {assert: "either"}]
+  "max-len": [2, {code: 150, tabWidth: 2, ignoreUrls: true}]
   "no-console": off
+  "no-param-reassign": [2, { "props": false }]
+  "object-curly-spacing": [2, "never"]
+  "react/destructuring-assignment": [0]
+  "react/forbid-prop-types": [2, { forbid: [], checkContextTypes: false, checkChildContextTypes: false}]
+  "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }]
+  "react/jsx-one-expression-per-line": [0, { allow: "single-child" }] # does bad things to our code like see https://github.com/yannickcr/eslint-plugin-react/issues/1855
+  "react/jsx-props-no-spreading": [0]
+  "react/prop-types": [0]
+  "react/require-default-props": [1, { forbidDefaultForRequired: true, ignoreFunctionalComponents: true }] # causes havok with functional components
+  "react/state-in-constructor": [0]
+  #"semi": ["error", "always"] need to decide about this one
 env:
   "browser": true # includes browser variables like document, window, etc
 

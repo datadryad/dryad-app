@@ -351,11 +351,12 @@ namespace :dev_ops do
     res_id = ARGV[1].to_s
     dep_id = ARGV[2].to_s
     emb_date = ARGV[3].to_s
+    zc_id = ARGV[4].to_s
 
     require 'stash/zenodo_replicate/deposit'
     res = StashEngine::Resource.find(res_id)
 
-    dep = Stash::ZenodoReplicate::Deposit.new(resource: res)
+    dep = Stash::ZenodoReplicate::Deposit.new(resource: res, zc_id: zc_id)
 
     resp = dep.get_by_deposition(deposition_id: dep_id)
 

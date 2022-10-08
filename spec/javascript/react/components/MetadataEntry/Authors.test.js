@@ -2,7 +2,7 @@ import React from "react";
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import Authors from "../../../../../app/javascript/react/components/MetadataEntry/Authors.js";
+import Authors from "../../../../../app/javascript/react/components/MetadataEntry/Authors";
 import axios from 'axios';
 
 jest.mock('axios');
@@ -50,7 +50,7 @@ describe('Authors', () => {
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);
 
-    expect(screen.getByText('Add Author')).toBeInTheDocument();
+    expect(screen.getByText('Add author')).toBeInTheDocument();
   });
 
   it("removes an author from the document", async () => {
@@ -97,7 +97,7 @@ describe('Authors', () => {
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add Author'));
+    userEvent.click(screen.getByText('Add author'));
 
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4);

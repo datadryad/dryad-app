@@ -1,14 +1,15 @@
 <% # header bar for doc items in index view -%>
 <% # this partial is updated from blacklight 3.4 and we also need to replace icky chars in all the document ids, otherwise the accordion doesn't work %>
-<%= content_tag :div, class: 'documentHeader index-split row', data: { layer_id: document.id, geom: document.geometry.geojson } do %>
-  <h3 class="index_title col">
+<%= content_tag :div, class: 'documentHeader index-split row', data: { layer_id: document.id, geom: document.geometry
+    .geojson, turbolinks: false } do %>
+  <h3 class="index_title col" data-turbolinks="false">
     <% counter = document_counter_with_offset(document_counter) %>
     <span class="document-counter">
       <%= t('blacklight.search.documents.counter', :counter => counter) if counter %>
     </span>
     <%= link_to_document document, counter: counter %>
   </h3>
-  <span class='status-icons'>
+  <span class='status-icons' data-turbolinks="false">
     <%= render partial: 'header_icons', locals: { document: document } %>
 
     <button
@@ -22,7 +23,7 @@
   </span>
 <% end %>
 
-<div class='more-info-area'>
+<div class='more-info-area' data-turbolinks="false">
   <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse" class='collapse'>
     <small>
       <%= geoblacklight_present(:index_fields_display, document) %>
