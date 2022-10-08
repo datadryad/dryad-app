@@ -107,12 +107,11 @@ class Cedar extends React.Component {
   };
 
   modalSetup = () => {
-    console.log('Loading CEDAR config');
     const {
       template, csrf, metadata, updated,
     } = this.state;
     const {id: resource_id} = this.props.resource;
-    this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`);
+    this.editor.loadConfigFromURL(`/cedar-config?template=${template.id}`)    
     this.editor.templateInfo = {
       template, resource_id, csrf, updated,
     };
@@ -268,4 +267,6 @@ class Cedar extends React.Component {
   }
 }
 
-export default Cedar;
+export default Cedar
+
+
