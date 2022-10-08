@@ -1,9 +1,48 @@
 class CedarController < ApplicationController
   skip_before_action :verify_authenticity_token
-  
-  def save
-    puts "I'M IN THE CEDAR SAVE CONTROLLER"
 
+  def get_config
+    puts "CEDAR get_configa"
+    json_output = {
+                   "showTemplateUpload": false,
+                   "templateUploadBaseUrl": "https://api-php.cee.metadatacenter.org",
+                   "templateUploadEndpoint": "/upload_not_used",
+                   "templateDownloadEndpoint": "/download_not_used",
+                   
+                   "showDataSaver": true,
+                   "dataSaverEndpointUrl": "/cedar-save", #Rails.application.routes.url_helpers.root_url + 
+                   
+                   "showSampleTemplateLinks": false,
+                   "expandedSampleTemplateLinks": false,
+                   "sampleTemplateLocationPrefix": "https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/",
+                   "xxxsampleTemplateLocationPrefix": "http://ryandash.datadryad.org/cedar-embeddable-editor/",
+                   "loadSampleTemplateName": params[:template],
+                   
+                   "showFooter": false,
+                   "showHeader": false,
+                   
+                   "terminologyProxyUrl": "https://terminology.metadatacenter.org/bioportal/integrated-search",
+                   
+                   "showTemplateRenderingRepresentation": false,
+                   "showMultiInstanceInfo": false,
+                   "showTemplateSourceData": false,
+                   "showInstanceDataCore": false,
+                   "showInstanceDataFull": true,
+                   
+                   "expandedInstanceDataCore": false,
+                   "expandedInstanceDataFull": false,
+                   "expandedTemplateSourceData": false,
+                   "expandedTemplateRenderingRepresentation": false,
+                   "expandedMultiInstanceInfo": false
+    }
+
+    respond_to do |format|
+      format.any { render json: json_output }
+    end
+  end
+  
+  # Save data from the Cedar editor into the database
+  def save
     csrf = params['info']['csrf']
     resource = StashEngine::Resource.find(params['info']['resource_id']&.to_i)
 
