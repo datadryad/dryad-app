@@ -453,7 +453,7 @@ Rails.application.routes.draw do
   get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/stash/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
 
-  get '/cedar-config', to: 'cedar#get_config'
+  get '/cedar-config', to: 'cedar#json_config'
   post '/cedar-save', to: 'cedar#save'
   
   ########################## Dryad v1 support ######################################
