@@ -7,19 +7,19 @@
   margin: auto;
 }
 .review_headers {
-  margin: 10px 0px 10px 0px;
-  border: 1px solid;
-  padding: 6px 6px 6px 6px;
   width: 1090px;
-  background-repeat: no-repeat;
+  margin: 10px 0px 10px 0px;
+  padding: 6px 6px 6px 6px;
+  border: 1px solid;
   background-color: #336699;
+  background-repeat: no-repeat;
   color: #ffffff;
 }
 
 #map_review
 {
-  height: 400px;
   width: 450px;
+  height: 400px;
   margin: 0 auto auto auto;
   padding-bottom: 30px;
 }
@@ -30,20 +30,20 @@
 
 .error
 {
-  border: 1px solid;
   margin: 10px 0px;
   padding:15px 10px 15px 50px;
+  border: 1px solid;
+  background-color: #FFBABA;
   background-repeat: no-repeat;
   background-position: 10px center;
   color: #D8000C;
-  background-color: #FFBABA;
 }
 
 .error_close img {
     display: block;
-    float:right;
     position:relative;
     top:-12px;
     right: -10px;
     height: 20px;
+    float:right;
 }

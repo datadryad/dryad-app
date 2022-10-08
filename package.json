@@ -14,7 +14,7 @@
       "\\.css$": "identity-obj-proxy"
     },
     "transform": {
-      "\\.js$": "babel-jest"
+      "\\.jsx?$": "babel-jest"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
@@ -24,9 +24,13 @@
   "scripts": {
     "start": "bin/webpack serve --mode development",
     "build": "webpack",
-    "test": "jest"
+    "test": "jest",
+    "lint": "npm run lint:js && npm run lint:style",
+    "lint:js": "eslint --ext .jsx,.js app/javascript/react --fix",
+    "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-proposal-private-methods": "^7.16.0",
     "@babel/preset-react": "^7.14.5",
     "@cdl-dryad/frictionless-components": "^1.2.0",
@@ -63,6 +67,7 @@
     "identity-obj-proxy": "^3.0.0",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
+    "moment": "^2.29.4",
     "nanoid": "^3.3.1",
     "postcss-assets": "^6.0.0",
     "prop-types": "^15.8.1",
@@ -96,7 +101,6 @@
     "jest-fail-on-console": "^2.2.3",
     "jquery-ui": "^1.13.1",
     "jshint": "^2.13.4",
-    "moment": "^2.29.4",
     "ndb": "^1.1.5",
     "node": "^14.18.3",
     "normalize-scss": "^7.0.1",
