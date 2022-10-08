@@ -80,7 +80,7 @@ class Cedar extends React.Component {
     console.log("Loading CEDAR config")
     const { template, csrf, metadata } = this.state
     const { id: resource_id } = this.props.resource
-    this.editor.loadConfigFromURL(`/cedar-embeddable-editor/cee-config${template.id}.json`)
+    this.editor.loadConfigFromURL(`/cedar-config?template=${template.id}`)
     this.editor.templateInfo = {template, resource_id, csrf}
     this.editor.dataset.template = template.id
     // restore metadata
