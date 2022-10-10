@@ -12,6 +12,7 @@ import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 /**
  * Constants
  */
+const maxFiles = 1000;
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
   'StashEngine::SoftwareFile': 'software',
@@ -25,6 +26,7 @@ const AllowedUploadFileTypes = {
 const Messages = {
   fileAlreadySelected: 'A file of the same type is already in the table, and was not added.',
   filesAlreadySelected: 'Some files of the same type are already in the table, and were not added.',
+  tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
 };
 const ValidTabular = {
   extensions: ['csv', 'xls', 'xlsx'],
@@ -249,21 +251,26 @@ class UploadFiles extends React.Component {
   };
 
   addFilesHandler = (event, uploadType) => {
-    displayAriaMsg('Your files were added and are pending upload.');
-    this.setState({warningMessage: null, submitButtonFilesDisabled: true});
     const files = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
-    // TODO: make a function?; future: unify adding file attributes
-    const newFiles = files.map((file) => {
-      file.sanitized_name = sanitize(file.name);
-      file.status = 'Pending';
-      file.url = null;
-      file.uploadType = uploadType;
-      file.manifest = false;
-      file.upload_file_size = file.size;
-      file.sizeKb = formatSizeUnits(file.size);
-      return file;
-    });
-    this.updateFileList(newFiles);
+    const fileCount = this.state.chosenFiles.length + files.length;
+    if (fileCount > maxFiles) {
+      this.setState({warningMessage: Messages.tooManyFiles});
+    } else {
+      displayAriaMsg('Your files were added and are pending upload.');
+      this.setState({warningMessage: null, submitButtonFilesDisabled: true});
+      // TODO: make a function?; future: unify adding file attributes
+      const newFiles = files.map((file) => {
+        file.sanitized_name = sanitize(file.name);
+        file.status = 'Pending';
+        file.url = null;
+        file.uploadType = uploadType;
+        file.manifest = false;
+        file.upload_file_size = file.size;
+        file.sizeKb = formatSizeUnits(file.size);
+        return file;
+      });
+      this.updateFileList(newFiles);
+    }
   };
 
   uploadFilesHandler = () => {
