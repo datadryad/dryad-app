@@ -131,12 +131,12 @@ const addCsrfToken = () => {
   }
 };
 
-const changeStatusToProgressBar = (chosenFilesIndex) => {
-  const statusCel = document.getElementById(`status_${chosenFilesIndex}`);
+const changeStatusToProgressBar = (chosenFileId) => {
+  const statusCel = document.getElementById(`status_${chosenFileId}`);
   statusCel.innerText = '';
   const node = document.createElement('progress');
   const progressBar = statusCel.appendChild(node);
-  progressBar.setAttribute('id', `progressbar_${chosenFilesIndex}`);
+  progressBar.setAttribute('id', `progressbar_${chosenFileId}`);
   progressBar.setAttribute('value', '0');
 };
 
@@ -150,10 +150,9 @@ class UploadFiles extends React.Component {
     //  send the type information to the modal somehow. And when submitting carry on
     //  that information and add to request URL.
     currentManifestFileType: null,
-    validationReportIndex: null,
+    validationReportFile: null,
     failedUrls: [],
     loading: false,
-    removingIndex: null,
     warningMessage: null,
     validating: null,
     // This is for polling for completion for Frictionless being validated
@@ -260,7 +259,8 @@ class UploadFiles extends React.Component {
     } else {
       displayAriaMsg('Your files were added and are pending upload.');
       // TODO: make a function?; future: unify adding file attributes
-      const newFiles = files.map((file) => {
+      const newFiles = files.map((file, index) => {
+        file.id = `pending${this.state.chosenFiles.length + index}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
@@ -301,7 +301,7 @@ class UploadFiles extends React.Component {
           contentType: file.type,
           progress: (progressValue) => {
             document.getElementById(
-              `progressbar_${index}`,
+              `progressbar_${file.id}`,
             ).setAttribute('value', progressValue);
           },
           error(msg) {
@@ -327,7 +327,7 @@ class UploadFiles extends React.Component {
           },
         };
         // Before start uploading, change file status cell to a progress bar
-        changeStatusToProgressBar(index);
+        changeStatusToProgressBar(file.id);
 
         const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
         evaporate.add(addConfig, {signerUrl})
@@ -429,32 +429,26 @@ class UploadFiles extends React.Component {
             || ValidTabular.mime_types.includes(file.upload_content_type))
             && (file.upload_file_size <= this.props.frictionless.size_limit);
 
-  removeFileHandler = (index) => {
+  removeFileHandler = (id) => {
     this.setState({warningMessage: null});
-    const file = this.state.chosenFiles[index];
+    const file = this.state.chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
-      this.setState({removingIndex: index});
-      axios.patch(`/stash/${file.uploadType}_files/${file.id}/destroy_manifest`)
+      axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
         .then((response) => {
           console.log(response.data);
-          this.setState({removingIndex: null});
-          this.removeFileLine(index);
+          this.removeFileLine(id);
         })
         .catch((error) => console.log(error));
     } else {
-      this.removeFileLine(index);
+      this.removeFileLine(id);
     }
     displayAriaMsg(`${file.sanitized_name} removed`);
   };
 
-  removeFileLine = (index) => {
-    const chosenFiles = [...this.state.chosenFiles];
-    chosenFiles.splice(index, 1);
-    if (!chosenFiles.length) {
-      this.setState({chosenFiles: []});
-    } else {
-      this.setState({chosenFiles});
-    }
+  removeFileLine = (id) => {
+    const {chosenFiles} = this.state;
+    const removed = chosenFiles.filter((f) => f.id !== id);
+    this.setState({chosenFiles: removed});
   };
 
   toggleCheckedFiles = (event) => {
@@ -483,13 +477,13 @@ class UploadFiles extends React.Component {
     }
   };
 
-  hideModalValidationReport = () => {
+  hideValidationReport = () => {
     this.modalValidationRef.current.close();
-    this.setState({validationReportIndex: null});
+    this.setState({validationReportFile: null});
   };
 
-  showModalValidationReportHandler = (index) => {
-    this.setState({validationReportIndex: index});
+  showValidationReportHandler = (id) => {
+    this.setState((prevState) => ({validationReportFile: prevState.chosenFiles.find((f) => f.id === id)}));
     this.modalRef.current.showModal();
   };
 
@@ -587,9 +581,8 @@ class UploadFiles extends React.Component {
 
   render() {
     const {
-      failedUrls, removingIndex, chosenFiles, loading, warningMessage, validationReportIndex,
+      failedUrls, chosenFiles, loading, warningMessage, validationReportFile,
     } = this.state;
-
     return (
       <div className="c-upload">
         <h1 className="o-heading__level1">
@@ -621,8 +614,7 @@ class UploadFiles extends React.Component {
             <FileList
               chosenFiles={chosenFiles}
               clickedRemove={this.removeFileHandler}
-              clickedValidationReport={this.showModalValidationReportHandler}
-              removingIndex={removingIndex}
+              clickedValidationReport={this.showValidationReportHandler}
             />
             {loading && (
               <div className="c-upload__loading-spinner">
@@ -630,7 +622,7 @@ class UploadFiles extends React.Component {
               </div>
             )}
             {warningMessage && <WarningMessage message={warningMessage} />}
-            {this.hasPendingFiles && (
+            {this.hasPendingFiles() && (
               <ValidateFiles
                 id="confirm_to_validate_files"
                 buttonLabel="Upload pending files"
@@ -658,10 +650,10 @@ class UploadFiles extends React.Component {
           clickedClose={this.hideModal}
         />
         <ModalValidationReport
-          file={chosenFiles[validationReportIndex]}
+          file={validationReportFile}
           ref={this.modalValidationRef}
-          report={chosenFiles[validationReportIndex]?.frictionless_report.report}
-          clickedClose={this.hideModalValidationReport}
+          report={validationReportFile?.frictionless_report.report}
+          clickedClose={this.hideValidationReport}
         />
       </div>
     );
