@@ -14,6 +14,20 @@
 <h2>Current Board Members</h2>
 
 <div class="bio">
+  <img src="/images/beckerman.jpg" alt="Andrew Beckerman" title="Andrew Beckerman">
+  <p>
+    <strong>Andrew Beckerman (Class of 2023)</strong> is a Professor of Evolutionary Ecology at the University of Sheffield where he collaborates with his team on questions about the impacts of climate and environmental change on biodiversity. They are passionate and curious about the landscape of open science. He is on the University of Sheffield School of Bioscience Executive Board and has recently been appointed to the University Council Finance Committee. Andrew has been co- Editor-in-Chief for the Wiley Open Access journal Ecology and Evolution for over 10 years. He has provided strategic contributions to the British Ecological Society for more than a decade as former Chair of Meetings and member of the Management Board and more recently via the Publications committee. Andew is also currently the Chair of Governors for a local primary school providing strategic support to the senior leadership team on finance, infrastructure and curriculum.
+  </p>  
+</div>
+
+<div class="bio">
+  <img src="/images/ebert.jpg" alt="Barbara Ebert" title="Barbara Ebert">
+  <p>
+    <strong>Barbara Ebert (Class of 2023)</strong> is Executive Secretary, German Federation for Biological Data e.V. (GFBio). GFBio e.V. is a non-profit association founded in 2016 as the legal entity for the sustainable operation of data services in Biodiversity research. It is active in the recently founded National Research Data Infrastructure (NFDI) in Germany. Starting October 2020 we are building a coordination team for the NFDI4BioDiversity consortium, and a pool of IT developers to mobilise data available at the partner organisations and feed them into a common data infrastructure.
+  </p>  
+</div>
+
+<div class="bio">
   <img src="/images/edmunds.jpg" alt="Scott Edmunds" title="Scott Edmunds">
   <p>
     <strong>Scott Edmunds (Class of 2023)</strong> is Editor-in-Chief for <a href="https://academic.oup.com/gigascience">
@@ -47,30 +61,17 @@
 </div>
 
 <div class="bio">
-  <img src="/images/horstmann.jpg" alt="Wolfram Horstmann" title="Wolfram Horstmann">
+  <img src="/images/holmes.jpg" alt="Kristi Holmes" title="Kristi Holmes">
   <p>
-    <strong>Wolfram Horstmann (Class of 2021)</strong> has been Director of Göttingen State and University Library since
-    2014. Prior to that, he was Associate Director at the Bodleian Libraries of the University of Oxford, UK and CIO at
-    Bielefeld University, Germany. He is Professor at the Information School of the Humboldt University in Berlin, teaching
-    Electronic Publishing, Open Access and Open Science. He is biologist by training and worked on the epistemology of
-    simulations for his doctoral thesis.
-    <a href="https://www.sub.uni-goettingen.de/en/contact/staff-a-z/staff-details/person/wolfram-horstmann/" target="_blank"
-    title="Read more about Wolfram (opens in a new window)">Read more details.</a>
-  </p>
+    <strong>Kristi Holmes (Class of 2023)</strong> is the Director of Galter Health Sciences Library & Learning Center and Professor of Preventive Medicine (Health & Biomedical Informatics) at Northwestern University. Her research is focused on the development and application of information standards to support interoperability and data exchange to enhance discovery across basic science, clinical, and community-based research and ultimately, develop new methods for understanding translational impact. Operationalized workflows for the library and beyond have been developed, including a robust evaluation infrastructure for the campus in NUCATS. Holmes is especially enthusiastic about new roles and opportunities for modern biomedical research libraries in an increasingly informatics and data-driven environment.
+  </p>  
 </div>
 
 <div class="bio">
-  <img src="/images/maccallum.png" alt="Catriona MacCallum" title="Catriona MacCallum">
+  <img src="/images/madalli.jpg" alt="Devika Madalli" title="Devika Madalli">
   <p>
-    <strong>Catriona MacCallum (Class of 2022)</strong> is Director of Open Science at Hindawi Ltd, London, UK. She has
-    almost 20 years experience in scholarly publishing and 15 years in Open Access Publishing. She initially worked as
-    Editor of Trends in Ecology & Evolution for Elsevier before joining the Open-Access publisher PLOS in 2003 to launch
-    PLOS Biology as one of the Senior Editors. She also acted as a Consulting Editor on PLOS ONE, leaving PLOS as Advocacy
-    Director in 2017. She is currently a member of the European Commission’s Open Science Policy Platform and the UKRI
-    Open Access Practitioners Group. She also serves on the Advisory Boards of OpenAire and the Royal Society (Publishing),
-    and is on the newly launched steering committee of DORA. She is a founding individual of I4OC (the Initiative for Open
-    Citations) campaign. She has a PhD (on speciation) from the University of Edinburgh.
-  </p>
+    <strong>Devika Madalli (Class of 2023)</strong> is a Professor of the Documentation Research and Training Centre, Indian Statistical Institute (faculty since 1996), India and Adjunct faculty, DISI, University of Trento, Italy. Her interest lies in the area of OERs and Educational resources repositories, Open Data Repositories and Data Management, Knowledge Organization and application of facetization in Information Systems, Information Infrastructures, Digital Libraries, Semantic Web technologies, Faceted Ontologies, Content Management System, Agrisemantics, multilingual information services. She is a member of the Karnataka Evaluation Authority(KEA). Dr.Madalli has extensive experience in capacity building, training on e-learning, MOOCs (moodle) and digital repositories. Dr. Madalli is a member of the Technical Advisory Board of Research Data Alliance and Prof.Madalli is a founding member of and served as the co-chair of the Agriculture Data Interest Group [IGAD], Research Data Alliance [RDA][2013-2016] and present co-chair of the Global Research Commons and RDA for UNSDGs Interest groups.
+  </p>  
 </div>
 
 <div class="bio">
@@ -122,18 +123,6 @@
     engaged in research in this field. He has a strong passion for scientific communication and social media engagement
     and is particularly interested in how the benefits of open science (and open data in particular) can be better
     communicated to researchers.
-  </p>
-</div>
-
-<div class="bio">
-  <img src="/images/naomipenfold.png" alt="Naomi Penfold" title="Naomi Penfold">
-  <p>
-    <strong>Naomi Penfold (Class of 2022)</strong> is Funding Programme Designer, Science Practice, where she works with
-    funders to design more inclusive, transparent, and strategic grantmaking and philanthropy. She brings to the Board
-    experience as a life scientist (PhD, 2017, University of Cambridge), supporting the early-career researcher community
-    and promoting open science and transparency in research communication (eLife, 2016-2018, 2020; ASAPbio, 2018-2020;
-    mentor, Open Life Science, 2020; advisor, PREreview, 2018-2020; fellow, CSCCE Community Engagement Fellowship Program
-    (CEFP 2019)). Read <a href="https://npscience.github.io/about-me.html">more about Naomi</a>.
   </p>
 </div>
 
@@ -243,8 +232,5 @@ minutes</a> for all of its meetings.
 </p>
 
 <p>
-  Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, 
-  Brian Hole, Marcel Holyoak, Brian Lavoie, Jennifer Lin, Paolo Mangiafico, Bill Michener, Allen Moore, Allen Rodrigo,
-  Susanna Assunta Sansone, Eefke Smit, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision 
-  (Dryad’s founding PI and long-serving Board member).
+  Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Naomi Penfold, Allen Rodrigo, Susanna Assunta Sansone, Eefke Smit, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).
 </p>
