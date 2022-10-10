@@ -222,24 +222,3 @@ community.</p>
 	
     </p>
 </div>
-
-<div class="bio">
-    <img src="/images/Wolkovich_Elizabeth.jpg" alt="Elizabeth Wolkovich" title="Elizabeth Wolkovich" />
-    <p>
-    <strong>Elizabeth Wolkovich</strong> is an Associate Professor in Forest and Conservation
-    Sciences and Canada Research Chair at the University of British
-    Columbia. She runs the Temporal Ecology Lab, which focuses on
-    understanding how climate change shapes plants and plant communities,
-    with a focus on shifts in the timing of seasonal development (e.g.,
-      budburst, flowering and fruit maturity)&mdash;known as phenology. Her lab
-      both collects new data on forest trees and winegrapes and collates
-      existing data to provide global estimates of shifts in phenology with
-      warming from plants to birds and other animals, and to understand how
-      human choices will impact future winegrowing regions. Her research
-      benefits from an interdisciplinary team of collaborators from
-      agriculture, biodiversity science, climatology, evolution and
-      viticulture, as well as from shared long-term datasets from across North
-      America and Europe. See <a href="https://biodiversity.ubc.ca/people/faculty/elizabeth-m-wolkovich">
-      Elizabeth's Profile</a>
-    </p>
-</div>
