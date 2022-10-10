@@ -3,9 +3,7 @@ import React from 'react';
 import File from './File';
 import BadList from './BadList';
 
-const file_list = ({
-  chosenFiles, clickedRemove, clickedValidationReport, removingIndex,
-}) => (
+const file_list = ({chosenFiles, clickedRemove, clickedValidationReport}) => (
   <div>
     <h2 className="o-heading__level2" id="filelist_id">Files</h2>
     <BadList chosenFiles={chosenFiles} />
@@ -22,14 +20,12 @@ const file_list = ({
         </tr>
       </thead>
       <tbody>
-        {chosenFiles.map((file, index) => (
+        {chosenFiles.map((file) => (
           <File
-            key={JSON.stringify(file)}
-            clickRemove={() => clickedRemove(index)}
-            clickValidationReport={() => clickedValidationReport(index)}
+            key={file.id}
+            clickRemove={clickedRemove}
+            clickValidationReport={() => clickedValidationReport(file.id)}
             file={file}
-            index={index}
-            removingIndex={removingIndex}
           />
         ))}
       </tbody>
