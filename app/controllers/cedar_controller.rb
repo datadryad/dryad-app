@@ -1,7 +1,6 @@
 class CedarController < ApplicationController
   skip_before_action :verify_authenticity_token
 
- 
   def json_config
     json_output = {
       "showTemplateUpload": false,
