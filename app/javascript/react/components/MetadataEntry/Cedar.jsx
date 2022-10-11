@@ -29,19 +29,6 @@ class Cedar extends React.Component {
     this.setState({
       csrf, template, metadata, updated, startData,
     });
-    // Move the cdk-overlay-container into the modal for rendering above dialog
-    this.popupWatcher = new MutationObserver(() => {
-      const popups = document.querySelector('body > .cdk-overlay-container');
-      if (popups) this.dialog.append(popups);
-    });
-
-    // Check form content when touched
-    this.formObserver = new MutationObserver((changes) => {
-      changes.forEach((change) => {
-        const {target: {classList}} = change;
-        if (classList.contains('ng-touched')) this.checkSave();
-      });
-    });
   }
 
   componentWillUnmount() {
@@ -62,6 +49,21 @@ class Cedar extends React.Component {
   setRef = (el) => {
     if (el.id === 'cedarDialog') {
       this.dialog = el;
+
+      // Move the cdk-overlay-container into the modal for rendering above dialog
+      this.popupWatcher = new MutationObserver(() => {
+	const popups = document.querySelector('body > .cdk-overlay-container');
+	if (popups) this.dialog.append(popups);
+      });
+      
+      // Check form content when touched
+      this.formObserver = new MutationObserver((changes) => {
+	changes.forEach((change) => {
+          const {target: {classList}} = change;
+          if (classList.contains('ng-touched')) this.checkSave();
+	});
+      });
+      
       this.popupWatcher.observe(document.body, {childList: true});
       this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
     }
