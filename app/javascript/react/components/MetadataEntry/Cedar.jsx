@@ -52,18 +52,18 @@ class Cedar extends React.Component {
 
       // Move the cdk-overlay-container into the modal for rendering above dialog
       this.popupWatcher = new MutationObserver(() => {
-	const popups = document.querySelector('body > .cdk-overlay-container');
-	if (popups) this.dialog.append(popups);
+        const popups = document.querySelector('body > .cdk-overlay-container');
+        if (popups) this.dialog.append(popups);
       });
-      
+
       // Check form content when touched
       this.formObserver = new MutationObserver((changes) => {
-	changes.forEach((change) => {
+        changes.forEach((change) => {
           const {target: {classList}} = change;
           if (classList.contains('ng-touched')) this.checkSave();
-	});
+        });
       });
-      
+
       this.popupWatcher.observe(document.body, {childList: true});
       this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
     }
@@ -115,7 +115,7 @@ class Cedar extends React.Component {
       template, csrf, metadata, updated,
     } = this.state;
     const {id: resource_id} = this.props.resource;
-    this.editor.loadConfigFromURL(`/cedar-config?template=${template.id}`)    
+    this.editor.loadConfigFromURL(`/cedar-config?template=${template.id}`);
     this.editor.templateInfo = {
       template, resource_id, csrf, updated,
     };
@@ -271,6 +271,4 @@ class Cedar extends React.Component {
   }
 }
 
-export default Cedar
-
-
+export default Cedar;
