@@ -34,7 +34,6 @@ class Cedar extends React.Component {
       const popups = document.querySelector('body > .cdk-overlay-container');
       if (popups) this.dialog.append(popups);
     });
-    //this.popupWatcher.observe(document.body, {childList: true});
 
     // Check form content when touched
     this.formObserver = new MutationObserver((changes) => {
@@ -43,7 +42,6 @@ class Cedar extends React.Component {
         if (classList.contains('ng-touched')) this.checkSave();
       });
     });
-    //this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
   }
 
   componentWillUnmount() {
@@ -62,7 +60,11 @@ class Cedar extends React.Component {
   }
 
   setRef = (el) => {
-    if (el.id === 'cedarDialog') this.dialog = el;
+    if (el.id === 'cedarDialog') {
+      this.dialog = el;
+      this.popupWatcher.observe(document.body, {childList: true});
+      this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
+    }
     if (el.id === 'deleteCedarDialog') this.delete = el;
     if (el.id === 'cedarEditor') this.editor = el;
   };
