@@ -61,4 +61,4 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: [""]
+  campus_contacts: ["john_wenburg@fws.gov"]
