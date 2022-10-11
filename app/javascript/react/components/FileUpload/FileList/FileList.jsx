@@ -24,7 +24,7 @@ const file_list = ({chosenFiles, clickedRemove, clickedValidationReport}) => (
           <File
             key={file.id}
             clickRemove={clickedRemove}
-            clickValidationReport={() => clickedValidationReport(file.id)}
+            clickValidationReport={() => clickedValidationReport(file)}
             file={file}
           />
         ))}

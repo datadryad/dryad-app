@@ -482,8 +482,8 @@ class UploadFiles extends React.Component {
     this.setState({validationReportFile: null});
   };
 
-  showValidationReportHandler = (id) => {
-    this.setState((prevState) => ({validationReportFile: prevState.chosenFiles.find((f) => f.id === id)}));
+  showValidationReportHandler = (file) => {
+    this.setState({validationReportFile: file});
     this.modalRef.current.showModal();
   };
 
