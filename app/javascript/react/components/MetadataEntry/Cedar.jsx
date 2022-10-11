@@ -23,7 +23,7 @@ class Cedar extends React.Component {
   editor = null;
 
   componentDidMount() {
-    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute('content');
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {};
     const startData = this.props.resource.cedar_json ? this.props.resource.cedar_json.slice() : null;
     this.setState({
