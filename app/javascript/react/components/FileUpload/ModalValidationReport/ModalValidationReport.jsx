@@ -6,8 +6,9 @@ import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 
 import classes from './ModalValidationReport.module.css';
 
-const ModalValidationReport = React.forwardRef(({file, clickedClose, report}, ref) => {
+const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const element = document.getElementById('validation_report');
+  const {report} = file?.frictionless_report;
   if (report) render(Report, JSON.parse(report), element);
   return (
     <dialog

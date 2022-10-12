@@ -652,7 +652,6 @@ class UploadFiles extends React.Component {
         <ModalValidationReport
           file={validationReportFile}
           ref={this.modalValidationRef}
-          report={validationReportFile?.frictionless_report.report}
           clickedClose={this.hideValidationReport}
         />
       </div>
