@@ -370,7 +370,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     description_divider.click
     doi = 'https://doi.org/10.5061/dryad.888gm50'
     mock_good_doi_resolution(doi: doi)
-
     fill_in 'Identifier or external url', with: doi
     add_required_data_files
     # Submit the changes
