@@ -47,7 +47,7 @@ class Cedar extends React.Component {
   }
 
   setRef = (el) => {
-    if (el.id === 'cedarDialog') {
+    if (el?.id === 'cedarDialog') {
       this.dialog = el;
 
       // Move the cdk-overlay-container into the modal for rendering above dialog
@@ -67,8 +67,8 @@ class Cedar extends React.Component {
       this.popupWatcher.observe(document.body, {childList: true});
       this.formObserver.observe(this.dialog, {subtree: true, attributeFilter: ['class']});
     }
-    if (el.id === 'deleteCedarDialog') this.delete = el;
-    if (el.id === 'cedarEditor') this.editor = el;
+    if (el?.id === 'deleteCedarDialog') this.delete = el;
+    if (el?.id === 'cedarEditor') this.editor = el;
   };
 
   cancelChanges = () => {
@@ -180,7 +180,7 @@ class Cedar extends React.Component {
     } = this.state;
     return (
       <div className="cedar-container">
-        <h3 className="cedar-heading__level3">Standardized Metadata</h3>
+        <h3 className="cedar-heading__level3">Standardized metadata</h3>
         <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
         <Formik
           initialValues={{resource_id, authenticity_token: (csrf || '')}}
@@ -200,10 +200,10 @@ class Cedar extends React.Component {
                     {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
                   </p>
                   <button disabled={!template} type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
-                    Edit Form
+                    Edit form
                   </button>
                   <button type="button" className="o-button__remove" onClick={() => this.delete.showModal()}>
-                    Delete Form
+                    Delete form
                   </button>
                 </div>
               ) : (
@@ -222,7 +222,7 @@ class Cedar extends React.Component {
                     }}
                     onBlur={formik.handleBlur}
                   >
-                    <option key="0" value="" label="- Select One -" />
+                    <option key="0" value="" label="- Select one -" />
                     {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
                   </select>
                   <button disabled={!template} type="submit" className="o-button__add">
