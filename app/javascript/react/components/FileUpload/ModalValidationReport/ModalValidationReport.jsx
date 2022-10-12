@@ -7,9 +7,8 @@ import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import classes from './ModalValidationReport.module.css';
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose, report}, ref) => {
-  if (!file) return null;
   const element = document.getElementById('validation_report');
-  render(Report, JSON.parse(report), element);
+  if (report) render(Report, JSON.parse(report), element);
   return (
     <dialog
       className="c-uploadmodal"
@@ -23,8 +22,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose, report}, re
     >
       <div className="c-uploadmodal__header">
         <h2 className="c-datasets-heading__heading o-heading__level1">
-          Formatting Report:
-          {file.sanitized_name}
+          Formatting Report: {file?.sanitized_name}
         </h2>
         <button
           className={classes.CloseButton}
