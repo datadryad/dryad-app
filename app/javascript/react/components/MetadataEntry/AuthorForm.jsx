@@ -59,13 +59,13 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
   return (
     <Formik
       initialValues={
-        {
-          author_first_name: (dryadAuthor.author_first_name || ''),
-          author_last_name: (dryadAuthor.author_last_name || ''),
-          author_email: (dryadAuthor.author_email || ''),
-          id: (dryadAuthor.id),
-        }
-      }
+            {
+              author_first_name: (dryadAuthor.author_first_name || ''),
+              author_last_name: (dryadAuthor.author_last_name || ''),
+              author_email: (dryadAuthor.author_email || ''),
+              id: (dryadAuthor.id),
+            }
+          }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         submitForm(values).then(() => { setSubmitting(false); });
@@ -110,8 +110,8 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
               setAcText={setAcText}
               acID={acID}
               setAcID={setAcID}
-              // name={dryadAuthor.affiliation.long_name}
-              // id={dryadAuthor.affiliation.ror_id}
+                    // name={dryadAuthor.affiliation.long_name}
+                    // id={dryadAuthor.affiliation.ror_id}
               controlOptions={{htmlId: `instit_affil_${dryadAuthor.id}`, labelText: 'Institutional Affiliation', isRequired: true}}
             />
           </div>

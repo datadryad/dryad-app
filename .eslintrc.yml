@@ -13,8 +13,6 @@ rules:
   "no-console": off
   "react/destructuring-assignment": [0]
   "react/prop-types": [0]
-  "indent": ["error", 2]
-  #"semi": ["error", "always"] need to decide about this one
 env:
   "browser": true # includes browser variables like document, window, etc
 

@@ -55,12 +55,12 @@ function RelatedWorkForm(
     <>
       <Formik
         initialValues={
-          {
-            id: relatedIdentifier.id,
-            work_type: (relatedIdentifier.work_type || ''),
-            related_identifier: (relatedIdentifier.related_identifier || ''),
+            {
+              id: relatedIdentifier.id,
+              work_type: (relatedIdentifier.work_type || ''),
+              related_identifier: (relatedIdentifier.related_identifier || ''),
+            }
           }
-        }
         innerRef={formRef}
         onSubmit={(values, {setSubmitting}) => {
           submitForm(values).then(() => { setSubmitting(false); });

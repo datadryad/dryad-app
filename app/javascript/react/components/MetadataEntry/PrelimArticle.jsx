@@ -71,11 +71,11 @@ function PrelimArticle({
   return (
     <Formik
       initialValues={
-        {
-          primary_article_doi: relatedIdentifier,
-          isImport: false,
-        }
-      }
+            {
+              primary_article_doi: relatedIdentifier,
+              isImport: false,
+            }
+          }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         submitForm(values).then(() => { setSubmitting(false); });
@@ -97,12 +97,12 @@ function PrelimArticle({
                   acID={acID}
                   setAcID={setAcID}
                   controlOptions={
-                    {
-                      htmlId: 'publication',
-                      labelText: 'Journal Name',
-                      isRequired: false,
-                    }
-                  }
+                          {
+                            htmlId: 'publication',
+                            labelText: 'Journal Name',
+                            isRequired: false,
+                          }
+                        }
                 />
               </div>
               <div className="c-input">

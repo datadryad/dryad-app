@@ -132,8 +132,8 @@ export default function GenericNameIdAutocomplete(
             && inputItems.map((item, index) => (
               <li
                 style={
-                  highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : {marginBottom: '0.5em'}
-                }
+                      highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : {marginBottom: '0.5em'}
+                    }
                 key={idFunc(item)}
                 {...getItemProps({
                   item,
