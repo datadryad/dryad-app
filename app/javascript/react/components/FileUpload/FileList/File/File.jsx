@@ -1,16 +1,10 @@
 import React from 'react';
 
-import ellipsize from '../../../../lib/string_patch';
+import {TabularCheckStatus} from '../../../../containers/FileUpload/UploadFiles';
+
+import ellipsize from '../../../../../lib/string_patch';
 
 import classes from './File.module.css';
-
-export const TabularCheckStatus = {
-  checking: 'Checking...',
-  issues: 'View Issues',
-  noissues: 'Passed',
-  na: 'Too Large For Validation',
-  error: "Couldn't Read Tabular Data",
-};
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -27,7 +21,7 @@ const statusCss = (status) => {
   }
 };
 
-function File(props) {
+const file = (props) => {
   let tabularInfo;
 
   if (props.removingIndex !== props.index) {
@@ -114,6 +108,6 @@ function File(props) {
         ) }
     </tr>
   );
-}
+};
 
-export default File;
+export default file;

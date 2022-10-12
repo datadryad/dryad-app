@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-import Url from './Url';
+import Url from './Url/Url';
 
 const failed_url_list = (props) => (
   <div>

@@ -10,7 +10,14 @@ import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
 
-import {UploadType, ModalUrl, ModalValidationReport, FileList, TabularCheckStatus,FailedUrlList, ValidateFiles, Instructions, WarningMessage} from '../../components/FileUpload';
+import UploadType from '../../components/FileUpload/UploadType/UploadType';
+import ModalUrl from '../../components/FileUpload/Modal/ModalUrl';
+import ModalValidationReport from "../../components/FileUpload/ModalValidationReport/ModalValidationReport";
+import FileList from '../../components/FileUpload/FileList/FileList';
+import FailedUrlList from '../../components/FileUpload/FailedUrlList/FailedUrlList';
+import ValidateFiles from "../../components/FileUpload/ValidateFiles/ValidateFiles";
+import Instructions from '../../components/FileUpload/Instructions/Instructions';
+import WarningMessage from '../../components/FileUpload/WarningMessage/WarningMessage';
 import "@cdl-dryad/frictionless-components/dist/frictionless-components.css"
 
 // TODO: check if this is the best way to refer to stash_engine files.
@@ -38,6 +45,13 @@ const ValidTabular = {
     'mime_types': ['text/csv', 'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ]
+}
+export const TabularCheckStatus = {
+    'checking': 'Checking...',
+    'issues': 'View Issues',
+    'noissues': 'Passed',
+    'na': 'Too Large For Validation',
+    'error': "Couldn't Read Tabular Data"
 }
 
 export const displayAriaMsg = (msg) => {
