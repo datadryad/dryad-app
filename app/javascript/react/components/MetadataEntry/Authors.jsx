@@ -30,10 +30,12 @@ export default function Authors({
 
   const savedWrapper = useRef();
 
+  /* eslint-disable no-param-reassign */
   const toOrderObj = (orderArr) => orderArr.reduce((obj, item) => {
     obj[item.id] = item.author_order;
     return obj;
   }, {});
+  /* eslint-enable no-param-reassign */
 
   // function relies on css class dd-list-item and data-id items in the dom for info, so render should make those
   function updateOrderFromDom(localAuthors) {

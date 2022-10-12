@@ -23,8 +23,13 @@ export default function PrelimAutocomplete({
         setAcID('');
       }
       if (prevText !== acText || prevID !== acID) {
+        // from the ref, submit the Formik form above me
+
+        // yes, I want to change a property of the object reference that is passed in
+        /* eslint-disable no-param-reassign */
         formRef.current.values.isImport = false;
         formRef.current.handleSubmit();
+        /* eslint-enable no-param-reassign */
       }
       setPrevText(acText);
       setPrevID(acID);
