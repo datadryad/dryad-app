@@ -10,12 +10,11 @@ import {
 import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 
 // TODO: check if this is the best way to refer to stash_engine files.
-import * as resources from '../../../../assets/javascripts/stash_engine/resources';
+import {formatSizeUnits} from '../../../../assets/javascripts/stash_engine/resources';
 
 /**
  * Constants
  */
-const {formatSizeUnits} = resources;
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
   'StashEngine::SoftwareFile': 'software',
