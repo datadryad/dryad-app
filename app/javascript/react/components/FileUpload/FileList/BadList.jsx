@@ -33,9 +33,8 @@ const badList = (props) => {
   if (errorFiles.length > 0) {
     errorMsg = (
       <div className="c-alert__text-lite">
-        Our tabular format checker couldn&apos;t read tabular data from ${
-          makeAndString(errorFiles)
-        }. If you expect them to have consistent tabular data, check they are readable and formatted correctly.
+        Our tabular format checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
+        If you expect them to have consistent tabular data, check they are readable and formatted correctly.
       </div>
     );
   }
@@ -48,13 +47,24 @@ const badList = (props) => {
         <ol>
           <li>
             Manually correct the issues shown in your local copy of the file. Click the error report in the
-            {' '}<em>Tabular Data Check</em>{' '}column to get detailed information about the issues found.
+            <em>Tabular Data Check</em>
+            {' '}
+            column to get detailed information about the issues found.
           </li>
           <li>
-            Click <em>Remove</em> in the Action column to delete the file.
+            Click
+            <em>Remove</em>
+            {' '}
+            in the Action column to delete the file.
           </li>
           <li>
-            Re-upload the corrected file using the <em>Choose Files</em> or <em>Enter URLs</em> button above.
+            Re-upload the corrected file using the
+            <em>Choose Files</em>
+            {' '}
+            or
+            <em>Enter URLs</em>
+            {' '}
+            button above.
           </li>
         </ol>
       </div>
@@ -67,6 +77,7 @@ const badList = (props) => {
         {errorMsg}
         {issueMsg}
       </div>
+      <button type="button" aria-label="close" className="js-alert__close o-button__close-lite c-alert__close-lite" />
     </div>
   );
 };
