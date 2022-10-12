@@ -34,8 +34,8 @@ div.geobl-search-spacing {
 
 // make search button match our colors
 #search, a.catalog_startOverLink {
-  z-index: 0; // needed for crazy thing where menu goes behind it
   background-color: #4891af;
+  z-index: 0; // needed for crazy thing where menu goes behind it
 }
 
 #map {

@@ -3,9 +3,9 @@ label {
 }
 
 button.fa-workaround {
-  display: block;
   width: 1.5rem;
   height: 1.5rem;
+  display: block;
   float: left;
   transform: translateY(1.4em);
   border: none;
@@ -21,8 +21,8 @@ li[aria-pressed="true"] {
 }
 
 .dragon-drop-list > li.dragon-inactive {
-  border-color: transparent;
   box-shadow: 0 0 1px #000;
+  border-color: transparent;
 }
 
 .dragon-drop-list {
@@ -39,34 +39,34 @@ li[aria-pressed="true"] {
   margin: 15px auto;
   padding: 5px;
   box-shadow: 0 0 2px #000;
-  list-style: none;
   text-align: left;
+  list-style: none;
 }
 
 .handle {
   margin-right: 10px;
-  padding: 5px;
   border: 0;
-  border-radius: 2px;
   background: #fff;
+  border-radius: 2px;
   box-shadow: 0 0 1px #000;
+  padding: 5px;
   cursor: ns-resize;
 }
 
 .live-log {
-  display: none;
   position: fixed;
-  right: 0;
   bottom: 0;
   left: 0;
-  box-sizing: border-box;
+  right: 0;
   height: 70px;
-  padding: 7px 5px;
+  line-height: 18px;
   overflow: auto;
-  opacity: .94;
+  padding: 7px 5px;
+  box-sizing: border-box;
   background: #141414;
   color: #fff;
-  line-height: 18px;
+  opacity: .94;
+  display: none;
 }
 
 .live-log.active { display: block; }
@@ -97,18 +97,18 @@ li {
  * Below are styles for the dragula elements
  */
 .gu-mirror {
-  position: fixed !important;
-  z-index: 9999 !important;
   box-sizing: border-box;
-  margin: 0 !important;
   padding: 5px;
   border: 1px solid;
-  opacity: 0.8;
-  background: #fff;
   text-align: left;
-  cursor: -webkit-grabbing;
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
   filter: alpha(opacity=80);
+  background: #fff;
+  cursor: -webkit-grabbing;
 }
 
 .gu-hide {

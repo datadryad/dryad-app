@@ -7,14 +7,14 @@ body, p, ol, ul, td {
 }
 
 pre {
-  padding: 10px;
   background-color: #eee;
+  padding: 10px;
   font-size: 11px;
 }
 
 a { color: #000; }
 a:visited { color: #666; }
-a:hover { background-color:#000; color: #fff; }
+a:hover { color: #fff; background-color:#000; }
 
 div.field, div.actions {
   margin-bottom: 10px;
@@ -25,29 +25,29 @@ div.field, div.actions {
 }
 
 .field_with_errors {
-  display: table;
   padding: 2px;
   background-color: red;
+  display: table;
 }
 
 #error_explanation {
   width: 450px;
-  margin-bottom: 20px;
+  border: 2px solid red;
   padding: 7px;
   padding-bottom: 0;
-  border: 2px solid red;
+  margin-bottom: 20px;
   background-color: #f0f0f0;
 }
 
 #error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
   margin: -7px;
   margin-bottom: 0px;
-  padding: 5px 5px 5px 15px;
   background-color: #c00;
   color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: left;
 }
 
 #error_explanation ul li {

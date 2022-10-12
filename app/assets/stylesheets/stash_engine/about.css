@@ -25,8 +25,8 @@
   color: #e65722;
 }
 .pages_about h3 {
-  color: #e65722;
   font-size: 1.19em;
+  color: #e65722;
 }
 .pages_about h2 {
   color: #005581;
@@ -39,28 +39,28 @@
   padding: 10px;
 }
 .pages_about table tr {
-  margin: 10px;
-  padding: 10px;
   border-top: 0.5px solid #cccccc;
   background-color: white;
+  margin: 10px;
+  padding: 10px;
 }
 .pages_about table tr:nth-child(2n) {
   background-color: #f8f8f8;
 }
 .pages_about table tr th {
+  font-weight: bold;
+  border: 0.5px solid #cccccc;
+  text-align: left;
   margin: 10px;
   padding: 10px 18px;
-  border: 0.5px solid #cccccc;
-  font-weight: bold;
   line-height: 1.8;
-  text-align: left;
 }
 .pages_about table tr td {
+  border: 0.5px solid #cccccc;
+  text-align: left;
   margin: 10px;
   padding: 10px 18px;
-  border: 0.5px solid #cccccc;
   line-height: 1.8;
-  text-align: left;
 }
 .pages_about table tr th :first-child {
   margin-top: 20;

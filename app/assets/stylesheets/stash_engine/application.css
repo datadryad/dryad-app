@@ -19,16 +19,16 @@
 /* I think  require font-awesome is not longer needed */
 
 div.head_box {
-    padding: 10px;
-    border-width: 1px;
     border-style: solid;
+    border-width: 1px;
+    padding: 10px;
 }
 
 div.logo {
     width: 200px;
     height: 50px;
-    float: left;
     clear: left;
+    float: left;
 }
 
 div.dash_logo {
@@ -46,33 +46,34 @@ div.search_and_login {
 }
 
 nav.menu_bar {
+    clear:left;
     width: 60%;
     float: left;
-    clear:left;
 }
 
 div.log_in_out {
+    float: right;
     width: 40%;
     float: right;
     text-align: right;
 }
 
 div.spaced_text {
-    margin-right: 2em;
     float: left;
+    margin-right: 2em;
 }
 
 div.progress {
-    width: 100px;
     height: 18px;
+    width: 100px;
+    background-color: #EEEEEE;
     border-width: 2px;
     border-style: inset;
-    background-color: #EEEEEE;
 }
 
 div.bar {
-    height: 18px;
     background-color: #0086b3;
+    height: 18px;
 }
 
 div.bad_upload {

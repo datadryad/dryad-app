@@ -15,9 +15,9 @@
  *= require_self
  */
 .success{
-    position: top;
     margin: 10px 0px;
     padding:15px 10px 15px 50px;
-    float: right;
+    position: top;
     color: #006400;
+    float: right;
 }
