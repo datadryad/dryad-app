@@ -591,8 +591,8 @@ class UploadFiles extends React.Component {
             />
           ))}
         </div>
-        {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
-        {chosenFiles.length > 0 ? (
+        {failedUrls.length && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
+        {chosenFiles.length ? (
           <div>
             <FileList
               chosenFiles={chosenFiles}

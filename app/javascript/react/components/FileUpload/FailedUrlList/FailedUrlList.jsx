@@ -1,21 +1,20 @@
+/* eslint-disable react/no-array-index-key */
+// This is a bad practice, but not sure if another key is available and this is temporary display I believe
+
 import React from 'react';
 
 import Url from './Url';
 
-const failed_url_list = ({failedUrls, clicked}) => (
+const failed_url_list = (props) => (
   <div>
     <h1 className="o-heading__level2">Validation Status</h1>
-    {failedUrls.map((url, index) => {
-      // key made from URL + count of preceding duplicates
-      const key = url + failedUrls.slice(0, index).filter((u) => u === url).length;
-      return (
-        <Url
-          key={key}
-          click={() => clicked(index)}
-          url={url}
-        />
-      );
-    })}
+    {props.failedUrls.map((url, index) => (
+      <Url
+        key={index}
+        click={() => props.clicked(index)}
+        url={url}
+      />
+    ))}
   </div>
 );
 
