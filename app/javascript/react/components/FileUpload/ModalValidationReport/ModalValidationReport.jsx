@@ -37,7 +37,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => (
         Close this dialog and click <em>Remove</em> in the Action column to delete the file.
       </li>
       <li>
-        Re-upload the corrected file using the <em>Choose Files</em> or <em>Enter URLs</em> button.
+        Re-upload the corrected file using the <em>Choose files</em> or <em>Enter URLs</em> button.
       </li>
     </ol>
     <div id="validation_report" />
