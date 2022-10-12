@@ -47,7 +47,7 @@ const badList = (props) => {
         <ol>
           <li>
             Manually correct the issues shown in your local copy of the file. Click the error report in the
-            {' '}<em>Tabular Data Check</em>{' '}
+            {' '}<em>Tabular data check</em>{' '}
             column to get detailed information about the issues found.
           </li>
           <li>
@@ -57,7 +57,7 @@ const badList = (props) => {
           </li>
           <li>
             Re-upload the corrected file using the
-            {' '}<em>Choose Files</em>{' '}
+            {' '}<em>Choose files</em>{' '}
             or
             {' '}<em>Enter URLs</em>{' '}
             button above.
