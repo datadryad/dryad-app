@@ -28,6 +28,8 @@
 	  class="c-admin-table">New Datasets to Submitted</th>
       <th title="The number of new PPR that day (so the first time we see them as 'peer_review' in the system)"
 	  class="c-admin-table">New Datasets to Peer Review</th>
+      <th title="The number released from PPR into Curation (status change from 'peer_review' to 'curation')"
+	  class="c-admin-table">PPR to Curation</th>
       <th title="The number AAR'd that day (status change from 'curation' to 'action_required')"
 	  class="c-admin-table">Datasets to AAR</th>
       <th title="The number published by a curator that day (status change from 'curation' to 'published' by a curator and not the system)"
@@ -49,6 +51,7 @@
       <td><%= stat.new_datasets_to_submitted.to_i + stat.new_datasets_to_peer_review.to_i %></td>
       <td><%= stat.new_datasets_to_submitted %></td>
       <td><%= stat.new_datasets_to_peer_review %></td>
+      <td><%= stat.ppr_to_curation %></td>
       <td><%= stat.datasets_to_aar %></td>
       <td><%= stat.datasets_to_published %></td>
       <td><%= stat.datasets_to_embargoed %></td>

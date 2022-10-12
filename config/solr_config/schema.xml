@@ -192,6 +192,7 @@
   <copyField source="dryad_author_affiliation_name_sm" dest="dryad_author_affiliation_name_tmi" maxChars="1000"/>
   <copyField source="dryad_author_affiliation_id_sm" dest="dryad_author_affiliation_id_tmi" maxChars="100"/>
   <copyField source="dryad_dataset_file_ext_sm" dest="dryad_dataset_file_ext_tmi" maxChars="100"/>
+  <copyField source="dcs_funder_sm" dest="dcs_funder_tmi" maxChars="1000"/>
 
   <!-- core text search -->
   <copyField source="*_ti"               dest="text" />
@@ -215,6 +216,7 @@
   <copyField source="dct_spatial_sm" dest="spell"/>
   <!-- briley 06/03/2019 - fields to store the publication that cites the dataset -->
   <copyField source="dryad_related_publication_name_s" dest="spell"/>
+  <copyField source="dcs_funder_sm" dest="spell"/>
 
   <!-- for suggestions -->
   <copyField source="dc_title_s" dest="suggest"/>
@@ -225,6 +227,7 @@
   <copyField source="dct_spatial_sm" dest="suggest"/>
   <!-- briley 06/03/2019 - fields to store the publication that cites the dataset -->
   <copyField source="dryad_related_publication_name_s" dest="suggest"/>
+  <copyField source="dcs_funder_sm" dest="suggest"/>
 
   <!-- for bbox value -->
   <copyField source="solr_geom" dest="solr_bboxtype"/>

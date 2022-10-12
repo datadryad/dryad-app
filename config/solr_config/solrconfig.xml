@@ -133,6 +133,7 @@
         dryad_related_publication_id_ti^11
         dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
+        dcs_funder_tmi^14
       </str>
       <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
@@ -153,6 +154,7 @@
         dryad_related_publication_id_ti^11
         dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
+        dcs_funder_tmi^14
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
@@ -173,6 +175,7 @@
       <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
       <str name="facet.field">dryad_author_affiliation_name_sm</str>
       <str name="facet.field">dryad_dataset_file_ext_sm</str>
+      <str name="facet.field">dcs_funder_sm</str>
 
       <str name="spellcheck">true</str>
     </lst>

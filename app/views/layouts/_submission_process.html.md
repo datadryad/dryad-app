@@ -54,8 +54,9 @@
   Dryad is a repository for the raw, unprocessed data that were used to support the conclusions presented in your
   article. We have partnered with <a href="https://zenodo.org/" target="_blank">Zenodo</a> to host
   software files and supplemental information uploaded to our site.
-  Submitters will also have the opportunity to select the proper license for their software, as opposed to
-  Dryad’s CC0 license.
+  Because non-data files are not always compatible with the CC0 license required by Dryad, submitters will have 
+  the opportunity to choose a  separate license for their code at the final stage of the submission process. 
+  All files uploaded as "Supplemental Information" will be licensed under CCBY. 
 </p>
 
 <img src="/images/dryad_upload.png" alt="Screenshot of image upload" />
@@ -66,10 +67,10 @@
 </p>
 
 <p>
-  We require that a README file is uploaded to this category to clearly define all variables,
-  across all data files contained within the submission. The file name must contain and begin with "README" in all
-  caps (i.e. README_file.txt). For reference, Cornell University's Research Data Management Service Group has
-  created <a href="https://data.research.cornell.edu/content/readme" target="_blank">an excellent README template</a>. 
+  We require that a README file is uploaded to this category to clearly define all variables, across all data files 
+  contained within the submission. The file name must begin with “README” in all caps (i.e. README_file.md). 
+  For guidance, please use our <a href="https://datadryad.org/docs/README.md"> README template</a>
+  to ensure all necessary information is included. 
 </p>
 
 <p>
@@ -119,8 +120,8 @@ If you have questions or require assistance, contact <a href="mailto:help@datadr
 </p>
 
 <p>
-<a href="https://frictionlessdata.io/">Learn more about the Frictionless Data project</a> at the Open Knowledge
-Foundation. 
+Learn more about the Frictionless Data project at the <a href="https://frictionlessdata.io/">Open Knowledge
+Foundation</a>. 
 </p>
 
 <h3>Review and Submit</h3>
