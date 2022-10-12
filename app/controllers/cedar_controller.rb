@@ -14,7 +14,6 @@ class CedarController < ApplicationController
       "showSampleTemplateLinks": false,
       "expandedSampleTemplateLinks": false,
       "sampleTemplateLocationPrefix": 'https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/',
-      "xxxsampleTemplateLocationPrefix": 'http://ryandash.datadryad.org/cedar-embeddable-editor/',
       "loadSampleTemplateName": params[:template],
 
       "showFooter": false,
@@ -42,31 +41,14 @@ class CedarController < ApplicationController
 
   # Save data from the Cedar editor into the database
   def save
-    csrf = params['info']['csrf']
+    # csrf = params['info']['csrf']
     resource = StashEngine::Resource.find(params['info']['resource_id']&.to_i)
+    render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
 
-    # testing csrf token
-    puts "csrf #{csrf}"
-    puts "session #{session}"
-
-    unless resource
-      # TODO: actual return of http error
-      return 'ERROR'
-    end
-
-    puts "Found resource #{resource.id}"
     merged = params['info'].merge(metadata: params['metadata'])
     cedar_json = merged.to_json(except: %i[resource_id csrf])
-
     resource.update(cedar_json: cedar_json)
-
     resource.reload
-    puts "json #{resource.cedar_json}"
-    puts "json input #{resource.cedar_json['Input Field']}"
-    # TODO
-    # close modal on successful save
-    # - add some kind of listener for it?
-    # fix the handling of the CSRF token
 
     respond_to do |format|
       format.any { render json: { message: 'Save value received in the Cedar Save method' } }

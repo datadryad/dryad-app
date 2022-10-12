@@ -100,7 +100,7 @@ class Cedar extends React.Component {
     };
     const wrappedMeta = {info, metadata};
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:3000/cedar-save');
+    xhr.open('POST', '/cedar-save');
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(wrappedMeta, null, 2));
@@ -124,7 +124,7 @@ class Cedar extends React.Component {
     this.editorLoaded = new MutationObserver(() => {
       const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
-        console.log('loading metadata', metadata);
+        console.log('Loading metadata', metadata);
         this.editor.metadata = metadata;
         this.editorLoaded.disconnect();
         this.editorLoaded = null;
@@ -187,7 +187,7 @@ class Cedar extends React.Component {
           innerRef={this.formRef}
           onSubmit={() => {
             showSavingMsg();
-            console.log('submitting Cedar selection form');
+            console.log('Submitting Cedar selection form');
             this.openModal();
           }}
         >

@@ -371,13 +371,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     doi = 'https://doi.org/10.5061/dryad.888gm50'
     mock_good_doi_resolution(doi: doi)
 
-    puts '########## logs ##########'
-    c_logs = page.driver.browser.manage.logs.get(:browser)
-    c_logs = c_logs.select { |le| le.level == 'SEVERE' }.map(&:message)
-    c_logs.each do |c|
-      puts c
-    end
-
     fill_in 'Identifier or external url', with: doi
     add_required_data_files
     # Submit the changes
