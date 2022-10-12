@@ -9,7 +9,7 @@ the firewall. Identify the machine’s security group, go to EC2
 settings for that security group, and ensure they allow the activity
 you’re trying.
 
-AWS Client Setup
+AWS client setup
 ==================
 
 How to install the AWS client on a local computer. The client is already installed on EC2 when
@@ -97,13 +97,13 @@ can handle large (> 5GB) uploads which are not supported by single s3 requests.
 
 The library is set up using npm modules.
 
-## Updating node and Evaporate js libraries
+## Updating Node and Evaporate js libraries
 
 The evaporate JS library is updated using yarn as a NPM library. (No longer browserify since we
 transitioned it to React code.)
 
 
-Working With S3
+Working with S3
 =================
 
 Listing bucket contents
@@ -148,7 +148,7 @@ INPUT json example:
 - This automatically has correct API info filled into the database and callback URLs are directed to our
   standard development server which will then make updates to the same database that your environment uses.
 
-## I want to test the lambda the harder way with a web accessible server
+## Lambda from a new web-accessible server
 - Set up a server that is publicly accessible on the internet.
 - Go to *app/config/environments* and add a new file for your new environment
   - Change the settings for `config.action_mailer.default_url_options` and 
@@ -171,7 +171,7 @@ INPUT json example:
   changes and using internal methods in the doorkeeper library.
 
 
-Working With EC2
+Working with EC2
 ==================
 
 Spinning up an EC2 machine
