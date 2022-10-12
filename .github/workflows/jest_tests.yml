@@ -18,6 +18,6 @@ jobs:
       # - name: Install modules
       #   run: yarn
       - name: run eslint
-        run: yarn run eslint --ext .jsx --ext .js app/javascript/react
+        run: yarn run eslint app/javascript/react/**/*.js
       - name: Run tests
         run: yarn test
