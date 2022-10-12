@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// above eslint is too stupid to realize that the label and control match
+
 import React, {useRef} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';

@@ -66,6 +66,7 @@ function RelatedWorkForm(
           submitForm(values).then(() => { setSubmitting(false); });
         }}
       >
+        {/* eslint-disable jsx-a11y/label-has-associated-control */}
         {(formik) => (
           <Form className="c-input__inline">
             <Field name="id" type="hidden" />
@@ -124,6 +125,7 @@ function RelatedWorkForm(
           </Form>
         )}
       </Formik>
+      {/* eslint-enable jsx-a11y/label-has-associated-control */}
       <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
     </>
   );

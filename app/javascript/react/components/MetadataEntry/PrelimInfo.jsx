@@ -5,6 +5,8 @@ import PrelimManu from './PrelimManu';
 import PrelimArticle from './PrelimArticle';
 import PrelimOther from './PrelimOther';
 
+// IDK why eslint gets these wrong all the time
+/* eslint-disable jsx-a11y/label-has-associated-control */
 function PrelimInfo(
   {
     importInfo, resourceId, identifierId, publication_name, publication_issn, msid, related_identifier,
@@ -132,6 +134,7 @@ function PrelimInfo(
     </>
   );
 }
+/* eslint-enable jsx-a11y/label-has-associated-control */
 
 export default PrelimInfo;
 

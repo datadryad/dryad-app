@@ -1,3 +1,7 @@
+/* eslint-disable react/prop-types */
+// TODO: look into how important this is to set these.  Not mentioned in what I'd looked at so far and not sure why other files
+// don't give this error.
+
 import React from 'react';
 
 const highlightButton = (e) => {

@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// above eslint is too stupid to realize that the label and control match
+
 import React, {useRef} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';

@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// This may be erroring since the label is hard coded, I guess bad practice if used more than once on page, but this isn't.
+
 import React from 'react';
 import ValidateFiles from './ValidateFiles';
 
