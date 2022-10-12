@@ -484,7 +484,7 @@ class UploadFiles extends React.Component {
 
   showValidationReportHandler = (file) => {
     this.setState({validationReportFile: file});
-    this.modalRef.current.showModal();
+    this.modalValidationRef.current.showModal();
   };
 
   submitUrlsHandler = (event) => {
