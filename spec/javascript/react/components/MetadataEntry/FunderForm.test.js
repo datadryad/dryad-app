@@ -2,7 +2,7 @@ import React from "react";
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import FunderForm from "../../../../../app/javascript/react/components/MetadataEntry/FunderForm";
+import FunderForm from "../../../../../app/javascript/react/components/MetadataEntry/FunderForm.js";
 import axios from 'axios';
 
 jest.mock('axios');

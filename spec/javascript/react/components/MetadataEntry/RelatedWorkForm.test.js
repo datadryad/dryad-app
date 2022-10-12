@@ -2,7 +2,7 @@ import React from "react";
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import RelatedWorkForm from "../../../../../app/javascript/react/components/MetadataEntry/RelatedWorkForm";
+import RelatedWorkForm from "../../../../../app/javascript/react/components/MetadataEntry/RelatedWorkForm.js";
 import axios from 'axios';
 
 jest.mock('axios');

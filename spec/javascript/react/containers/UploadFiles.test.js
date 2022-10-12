@@ -22,7 +22,7 @@ import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import React from 'react';
 import {act} from 'react-dom/test-utils';
 import {create} from "react-test-renderer";
-import UploadFiles from '../../../../app/javascript/react/containers/FileUpload/UploadFiles';
+import UploadFiles from '../../../../app/javascript/react/containers/FileUpload/UploadFiles.js';
 
 let container = null;
 beforeEach(() => {

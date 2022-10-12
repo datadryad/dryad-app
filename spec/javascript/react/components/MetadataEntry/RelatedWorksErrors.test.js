@@ -1,6 +1,6 @@
 import React from "react";
 import {render} from '@testing-library/react';
-import RelatedWorksErrors from "../../../../../app/javascript/react/components/MetadataEntry/RelatedWorksErrors";
+import RelatedWorksErrors from "../../../../../app/javascript/react/components/MetadataEntry/RelatedWorksErrors.js";
 
 describe('RelatedWorksErrors', () => {
 

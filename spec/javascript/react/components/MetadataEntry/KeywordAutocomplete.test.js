@@ -1,7 +1,7 @@
 import React from "react";
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import KeywordAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete";
+import KeywordAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete.js";
 import axios from 'axios';
 import {acData} from "./rorTestData"
 

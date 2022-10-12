@@ -1,6 +1,6 @@
 import React from "react";
 import {render, screen} from '@testing-library/react';
-import FunderAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/FunderAutocomplete";
+import FunderAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/FunderAutocomplete.js";
 // import axios from 'axios';
 
 // jest.mock('axios');

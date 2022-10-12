@@ -2,7 +2,7 @@ import React from "react";
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import Keywords from "../../../../../app/javascript/react/components/MetadataEntry/Keywords";
+import Keywords from "../../../../../app/javascript/react/components/MetadataEntry/Keywords.js";
 import axios from 'axios';
 import KeywordAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete";
 

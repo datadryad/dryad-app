@@ -2,7 +2,7 @@ import React from "react";
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import OrcidInfo from "../../../../../app/javascript/react/components/MetadataEntry/OrcidInfo";
+import OrcidInfo from "../../../../../app/javascript/react/components/MetadataEntry/OrcidInfo.js";
 import axios from 'axios';
 
 describe('OrcidInfo', () => {
