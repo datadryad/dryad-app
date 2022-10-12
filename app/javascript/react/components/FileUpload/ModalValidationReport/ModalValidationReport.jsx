@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import '@cdl-dryad/frictionless-components/lib/styles';
 import {render} from '@cdl-dryad/frictionless-components/lib/render';
@@ -10,6 +11,11 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const element = document.getElementById('validation_report');
   const {report} = file ? file.frictionless_report : {};
   if (report) render(Report, JSON.parse(report), element);
+
+  const closeReport = () => {
+    ReactDOM.unmountComponentAtNode(element);
+    clickedClose();
+  };
   return (
     <dialog
       className="c-uploadmodal"
@@ -29,7 +35,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
           className={classes.CloseButton}
           aria-label="close"
           type="button"
-          onClick={clickedClose}
+          onClick={closeReport}
         />
       </div>
       <div>
@@ -49,7 +55,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
         </li>
       </ol>
       <div id="validation_report" />
-      <button type="button" onClick={clickedClose}>Close</button>
+      <button type="button" onClick={closeReport}>Close</button>
     </dialog>
   );
 });
