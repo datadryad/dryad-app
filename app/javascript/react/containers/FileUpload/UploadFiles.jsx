@@ -45,7 +45,7 @@ const upload_types = [
     name: 'Data',
     description: 'Required: README.md',
     description2: 'e.g., csv, fasta',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
   {
@@ -54,16 +54,16 @@ const upload_types = [
     alt: 'Zenodo',
     name: 'Software',
     description: 'e.g., code packages, scripts',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
   {
     type: 'supp',
     logo: '../../../images/logo_zenodo.svg',
     alt: 'Zenodo',
-    name: 'Supplemental Information',
+    name: 'Supplemental information',
     description: 'e.g., figures, supporting tables',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
 ];
@@ -595,7 +595,7 @@ class UploadFiles extends React.Component {
     return (
       <div className="c-upload">
         <h1 className="o-heading__level1">
-          Upload Your Files
+          Upload your files
         </h1>
         <Instructions />
         <div className="c-uploadwidgets">
