@@ -1,3 +1,5 @@
+// Spreading below is how downshift sets things up and is part of their "good" examples.  Annoying and hard to change
+/* eslint-disable react/jsx-props-no-spreading */
 import React, {useCallback, useState, useRef} from 'react';
 import {useCombobox} from 'downshift';
 import _debounce from 'lodash/debounce';
