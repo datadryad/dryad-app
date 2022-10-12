@@ -146,20 +146,20 @@ INPUT json example:
 - Connect to the VPN or use sshuttle so you have access to our standard development database.
 - Start your development environment with `rails s -e local_dev` (add `bundle exec` before this command if needed).
 - This automatically has correct API info filled into the database and callback URLs are directed to our
-  standard development server which will then make updates to the same database that this environment uses.
+  standard development server which will then make updates to the same database that your environment uses.
 
 ## I want to test the lambda the harder way with a web accessible server
 - Set up a server that is publicly accessible on the internet.
 - Go to *app/config/environments* and add a new file for your new environment
   - Change the settings for `config.action_mailer.default_url_options` and 
     `Rails.application.default_url_options` so it has the correct hostname (and port if needed) to
-    create correct URLs for your environment.  See the other environment files for examples
+    create correct URLs in your environment.  See the other environment files for examples
     (especially the development environment).
 - Add the environment to other config files (it might inherit most settings from development).
   - `app_config.yml`
   - `database.yml`
   - `tenants/*.yml` (You may only need to add your special environment to a few tenants you intend to use,
-    but I haven't tested this.)
+    but I haven't tested this yet.)
 - Add an API account with permission to write information. (see `documentation/apis/adding_api_accounts.md`
   and `documentation/apis/choosing_authentication_type.md` and the grant type will be Client Credentials
   Grant in this case and based on a user with appropriate permissions to write for all datasets.)
