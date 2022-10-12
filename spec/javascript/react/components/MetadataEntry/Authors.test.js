@@ -50,7 +50,7 @@ describe('Authors', () => {
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);
 
-    expect(screen.getByText('Add author')).toBeInTheDocument();
+    expect(screen.getByText('Add Author')).toBeInTheDocument();
   });
 
   it("removes an author from the document", async () => {
@@ -97,7 +97,7 @@ describe('Authors', () => {
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add author'));
+    userEvent.click(screen.getByText('Add Author'));
 
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4);

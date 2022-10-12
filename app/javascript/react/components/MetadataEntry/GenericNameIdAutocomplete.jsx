@@ -108,7 +108,7 @@ export default function GenericNameIdAutocomplete(
           )}
           id={htmlId}
           style={{flex: 1}}
-          value={acText || ''}
+          value={acText}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
         />

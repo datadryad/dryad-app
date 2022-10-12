@@ -46,7 +46,7 @@ describe('Funders', () => {
     expect(awardNums[0]).toHaveValue(contributors[0].award_number);
     expect(awardNums[2]).toHaveValue(contributors[2].award_number);
 
-    expect(screen.getByText('Add another funder')).toBeInTheDocument();
+    expect(screen.getByText('add another funder')).toBeInTheDocument();
   });
 
   it("removes a funder from the document", async () => {
@@ -92,7 +92,7 @@ describe('Funders', () => {
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add another funder'))
+    userEvent.click(screen.getByText('add another funder'))
 
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4)

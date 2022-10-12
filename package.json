@@ -14,7 +14,7 @@
       "\\.css$": "identity-obj-proxy"
     },
     "transform": {
-      "\\.jsx?$": "babel-jest"
+      "\\.js$": "babel-jest"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"

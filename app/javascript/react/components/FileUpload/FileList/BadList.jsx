@@ -3,7 +3,7 @@ import React from 'react';
 // checks files to see if they have validation and also status
 const filterForStatus = (status, files) => {
   const fns = files.map((file) => {
-    if (!Object.prototype.hasOwnProperty.call(file, 'frictionless_report')) return null;
+    if (!Object.hasOwn(file, 'frictionless_report')) return null;
 
     if (file.frictionless_report?.status === status) return file.upload_file_name;
 

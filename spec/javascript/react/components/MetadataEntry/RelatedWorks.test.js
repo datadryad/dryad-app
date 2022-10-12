@@ -7,7 +7,7 @@ import axios from 'axios';
 
 jest.mock('axios');
 
-describe('RelatedWorks', () => {
+describe('RelatedWorkds', () => {
 
   let works, resourceId;
 
@@ -50,7 +50,7 @@ describe('RelatedWorks', () => {
     expect(relIds[0]).toHaveValue(works[0].related_identifier);
     expect(relIds[2]).toHaveValue(works[2].related_identifier);
 
-    expect(screen.getByText('Add another related work')).toBeInTheDocument();
+    expect(screen.getByText('add another related work')).toBeInTheDocument();
   });
 
   it("removes a related work from the document", async () => {
@@ -91,7 +91,7 @@ describe('RelatedWorks', () => {
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add another related work'))
+    userEvent.click(screen.getByText('add another related work'))
 
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4)
