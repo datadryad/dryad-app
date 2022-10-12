@@ -95,13 +95,19 @@ function RelatedWorks(
           />
         ))}
       </div>
-      <button
+      {/* eslint-disable jsx-a11y/anchor-is-valid */}
+      <a
+        href="#"
         className="o-button__add"
-        type="button"
-        onClick={addNewWork}
+        role="button"
+        onClick={(e) => {
+          e.preventDefault();
+          addNewWork();
+        }}
       >
-        Add another related work
-      </button>
+        add another related work
+      </a>
+      {/* eslint-enable jsx-a11y/anchor-is-valid */}
     </fieldset>
   );
 }

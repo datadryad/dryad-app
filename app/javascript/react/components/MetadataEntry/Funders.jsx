@@ -88,13 +88,19 @@ function Funders({
           updateFunder={updateFunder}
         />
       ))}
-      <button
+      {/* eslint-disable jsx-a11y/anchor-is-valid */}
+      <a
+        href="#"
         className="t-describe__add-funder-button o-button__add"
-        type="button"
-        onClick={addNewFunder}
+        role="button"
+        onClick={(e) => {
+          e.preventDefault();
+          addNewFunder();
+        }}
       >
-        Add another funder
-      </button>
+        add another funder
+      </a>
+      {/* eslint-enable jsx-a11y/anchor-is-valid */}
     </>
   );
 }
