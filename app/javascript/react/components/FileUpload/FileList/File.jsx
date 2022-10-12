@@ -1,5 +1,7 @@
 import React from 'react';
+
 import ellipsize from '../../../../lib/string_patch';
+
 import classes from './File.module.css';
 
 export const TabularCheckStatus = {
