@@ -76,6 +76,17 @@ bottom of that page).
 ]
 ```
 
+The buckets for local-server development environments have an additional hash added based
+on the machine or server name.  This keeps multiple developers from interfering with the
+storage (and possibly duplicate resource IDs in different local databases and collisions).
+These look like 2c6f1ccc-25 (the first part is a shortened hash/digest and the part after the dash
+is the resource id).
+
+See the method `resource.s3_dir_name` to understand how this works.  You can also run a rails console
+and use this method to see what the hash is for your machine and a resource
+`StashEngine::Resource.find(<id>).s3_dir_name`.
+
+
 EvaporateJS works by making signing requests against an AJAX URL inside the Rails
 application, and so the
 [:s3][:secret] is never exposed in any client side code, but only the results
@@ -84,32 +95,12 @@ to upload directly to S3 from the user's browser rather than going through
 an intermediary server.  It also splits uploads into multiple parts so it
 can handle large (> 5GB) uploads which are not supported by single s3 requests.
 
-The library is set up using npm modules and a library called *browserify* since
-node 'require' statements do not work in plain Javascript outside of a framework
-like React or Angular.
+The library is set up using npm modules.
 
 ## Updating node and Evaporate js libraries
 
-The evaporate JS library isn't automatically updated and to do updates for it,
-do the following.
-
-```bash
-cd dryad-app
-npm update # if you want to update node package manager
-npm run build
-```
-
-The `build` task is in `package.json` and runs `browserify` which resolves the
-contents and require statements in the `evaporate_init.js` file and compiles all
-the javascript into into one file that it outputs to
-`app/assets/javascripts/stash_engine/evaporate_bundle.js` where it can be used
-in a web page without having to resolve npm dependencies. This gets the Javascript
-working inside the Rails asset pipeline without resorting installing WebPack which
-I was advised to wait for Rails 6 to configure and install.
-
-Anytime you make changes to `evaporate_init.js` or you update the EvaporateJS
-npm libraries you should run `npm run build` again so it recompiles those changes
-into one file for inclusion.
+The evaporate JS library is updated using yarn as a NPM library. (No longer browserify since we
+transitioned it to React code.)
 
 
 Working With S3
@@ -123,6 +114,62 @@ Copying to a bucket
 
 Copying contents of a bucket
 `aws s3 sync s3://mybucket s3://mybucket2`
+
+(or look in the aws UI console if you have access)
+
+The AWS Frictionless Lambda
+===========================
+
+The lambda for frictionless uses a very simple model that doesn't maintain any internal
+state from one run to another and doesn't access other AWS internal APIs except for
+the default logging.
+All specific state information it needs per processing request
+is passed into the Lambda and results are returned to the callback URL that is passed in.
+
+INPUT json example:
+
+```json
+{
+  "download_url": "https://dryad-s3-prd.s3.us-west-2.amazonaws.com/196263/data/sampleckey.xlsx?X-Amz-Algo...",
+  "callback_url": "https://datadryad.org/api/v2/files/1814997/frictionlessReport",
+  "token": "trQDojaI2qSZegJIUBEONSu69WREIFUuFNDtmECGM1I"
+}
+```
+
+- Although the **download\_url** in this example looks like an S3 url, it is a *presigned url*
+  which works the same as any HTTP url on the internet that responds to a GET request (during the time it is valid).
+- The **callback\_url** is calculated and then passed in for the current environment to access our own API for updates.
+- The **token** is also pre-calculated by our ruby code and passed in and will be valid for writing to our own API.
+
+## The easy way to test the lambda using a non-public server
+
+- Connect to the VPN or use sshuttle so you have access to our standard development database.
+- Start your development environment with `rails s -e local_dev` (add `bundle exec` before this command if needed).
+- This automatically has correct API info filled into the database and callback URLs are directed to our
+  standard development server which will then make updates to the same database that this environment uses.
+
+## I want to test the lambda the harder way with a web accessible server
+- Set up a server that is publicly accessible on the internet.
+- Go to *app/config/environments* and add a new file for your new environment
+  - Change the settings for `config.action_mailer.default_url_options` and 
+    `Rails.application.default_url_options` so it has the correct hostname (and port if needed) to
+    create correct URLs for your environment.  See the other environment files for examples
+    (especially the development environment).
+- Add the environment to other config files (it might inherit most settings from development).
+  - `app_config.yml`
+  - `database.yml`
+  - `tenants/*.yml` (You may only need to add your special environment to a few tenants you intend to use,
+    but I haven't tested this.)
+- Add an API account with permission to write information. (see `documentation/apis/adding_api_accounts.md`
+  and `documentation/apis/choosing_authentication_type.md` and the grant type will be Client Credentials
+  Grant in this case and based on a user with appropriate permissions to write for all datasets.)
+- In the table `stash_engine_api_tokens` add a row and add the `app_id` and `secret` for the user account above.
+  For the `expires_at`, `created_at` and `updated_at` dates, type in a date at least a few days old.
+  Save the row.  This will be used to generate the tokens for our API that will be used with the
+  callback and our code will keep them up to date and create new tokens when one is about to expire.
+  Our code uses the public doorkeeper (http) API to obtain/update tokens to avoid against internal
+  changes and using internal methods in the doorkeeper library.
+
 
 Working With EC2
 ==================
