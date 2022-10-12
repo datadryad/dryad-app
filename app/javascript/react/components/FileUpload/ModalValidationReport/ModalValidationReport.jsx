@@ -8,7 +8,7 @@ import classes from './ModalValidationReport.module.css';
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const element = document.getElementById('validation_report');
-  const {report} = file?.frictionless_report;
+  const {report} = file ? file.frictionless_report : {};
   if (report) render(Report, JSON.parse(report), element);
   return (
     <dialog
