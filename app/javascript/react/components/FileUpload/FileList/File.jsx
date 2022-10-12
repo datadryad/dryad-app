@@ -25,13 +25,22 @@ const statusCss = (status) => {
   }
 };
 
-function File(props) {
-  let tabularInfo;
+class File extends React.Component {
+  state = {removing: false};
 
-  if (props.removingIndex !== props.index) {
-    switch (props.file.tabularCheckStatus) {
+  clickRemove = () => {
+    this.setState({removing: true});
+    this.props.clickRemove(this.props.file.id);
+  };
+
+  getTabularInfo = () => {
+    const {removing} = this.state;
+    if (removing) return 'Removing...';
+
+    const {file, clickValidationReport} = this.props;
+    switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
-      tabularInfo = (
+      return (
         <div>
           <img
             className="c-upload__spinner js-tabular-checking"
@@ -41,20 +50,19 @@ function File(props) {
           />
         </div>
       );
-      break;
     case TabularCheckStatus.issues: {
       let jsReport = '';
       try {
-        jsReport = JSON.parse(props.file.frictionless_report.report);
+        jsReport = JSON.parse(file.frictionless_report.report);
       } catch (e) {
         // console.log(e);
       }
-      tabularInfo = (
+      return (
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div className="c-alert--error-icon">
             <button
               className="o-button__plain-text5"
-              onClick={props.clickValidationReport}
+              onClick={clickValidationReport}
               type="button"
               style={{padding: '10px'}}
             >
@@ -63,55 +71,55 @@ function File(props) {
           </div>
         </div>
       );
-      break;
     }
     case TabularCheckStatus.na:
-      if (props.file.sanitized_name?.match(/csv$|xls$|xlsx$|json$/)) {
-        tabularInfo = props.file.tabularCheckStatus;
-      } else {
-        tabularInfo = '';
+      if (file.sanitized_name?.match(/csv$|xls$|xlsx$|json$/)) {
+        return file.tabularCheckStatus;
       }
-      break;
+      return '';
     default:
-      tabularInfo = props.file.tabularCheckStatus;
+      return file.tabularCheckStatus;
     }
-  } else {
-    tabularInfo = props.file.tabularCheckStatus;
-  }
+  };
 
-  return (
-    <tr>
-      <th scope="row">{props.file.sanitized_name}</th>
-      <td id={`status_${props.index}`} className="c-uploadtable__status">{props.file.status}</td>
-      <td>
-        <span className={statusCss(props.file.tabularCheckStatus)}>
-          {tabularInfo}
-        </span>
-      </td>
-      <td>
-        <a href={props.file.url} title={props.file.url}>
-          {props.file.url ? ellipsize(props.file.url) : props.file.url}
-        </a>
-      </td>
-      <td>{capitalize(props.file.uploadType)}</td>
-      <td>{props.file.sizeKb}</td>
-      { props.removingIndex !== props.index
-        ? (
-          <td>
-            <button onClick={props.clickRemove} type="button" className="c-upload__button">
-              Remove
-            </button>
-          </td>
-        )
-        : (
+  render() {
+    const tabularInfo = this.getTabularInfo();
+    const {removing} = this.state;
+    const {file} = this.props;
+    return (
+      <tr>
+        <th scope="row">{file.sanitized_name}</th>
+        <td id={`status_${file.id}`} className="c-uploadtable__status">{file.status}</td>
+        <td>
+          <span className={statusCss(file.tabularCheckStatus)}>
+            {tabularInfo}
+          </span>
+        </td>
+        <td>
+          {file.url && (
+            <a href={file.url} title={file.url}>
+              {ellipsize(file.url)}
+            </a>
+          )}
+        </td>
+        <td>{capitalize(file.uploadType)}</td>
+        <td>{file.sizeKb}</td>
+        {removing ? (
           <td style={{padding: 0, width: '74px'}}>
             <div>
               <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
             </div>
           </td>
-        ) }
-    </tr>
-  );
+        ) : (
+          <td>
+            <button onClick={this.clickRemove} type="button" className="c-upload__button">
+              Remove
+            </button>
+          </td>
+        )}
+      </tr>
+    );
+  }
 }
 
 export default File;

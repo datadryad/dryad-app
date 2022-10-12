@@ -5,7 +5,10 @@ module SessionsHelper
 
   # rubocop:disable Style/OptionalBooleanParameter
   def sign_in(user = create(:user), with_shib = false)
+    visit root_path
+    expect(page).to have_css('div.o-banner__tagline', text: 'Make the most of your research data')
     sign_out if have_text('Logout')
+    expect(page).to have_css('div.o-banner__tagline', text: 'Make the most of your research data')
     case user
     when StashEngine::User
       sign_in_as_user(user, with_shib)

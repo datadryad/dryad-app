@@ -342,8 +342,8 @@ namespace :dev_ops do
       next
     end
 
-    unless ARGV.length == 4
-      puts 'Add the following arguments after the rake command <resource_id> <deposition_id> <yyyy-mm-dd>'
+    unless ARGV.length == 5
+      puts 'Add the following arguments after the rake command <resource_id> <deposition_id> <yyyy-mm-dd> <zenodo_copy_id>'
       puts 'The deposition id can be found in the stash_engine_zenodo_copies table'
       next
     end
