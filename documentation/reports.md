@@ -1,11 +1,15 @@
-
-Reporting
-==============
-
 Dryad's reports contain a number of dates. For details on the meaning of the
 dates, see the [dates technical note](technical_notes/dates.md).
 
-Shopping Cart Report
+"Shopping cart" reporting
+=======================
+
+Long ago, Dryad users put their data files into an electronic "shopping cart",
+and at the end of the uploading process, they would "check out" their cart. The
+monthly reports of data publications became known as reports of the shopping
+cart system, and we still use that terminology.
+
+Shopping cart report
 -----------------------
 
 The "Shopping Cart Report" is a report of how/when we collected
@@ -61,8 +65,8 @@ RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports SC_R
 ```
 
 
-Dataset Info Report
----------------------
+Dataset info report
+===================
 
 The "Dataset Info Report" is a summary report of the most important
 information for individual datasets. It is primarily used to provide a
@@ -83,8 +87,8 @@ Fields in the dataset info report
 - Journal Name
 
 
-Make Data Count / Counter Report
----------------------------------
+Make Data Count / Counter report
+================================
 
 The "Make Data Count" report runs automatically from the production
 server. It uses a mix of python scripts and rake tasks to gather usage
@@ -96,7 +100,7 @@ See the counter_stats.md for more further notes.
 
 
 Administrative screen report
------------------------------
+============================
 
 In the Dryad user interface, administrators may export lists of
 datasets from the Admin screen. These reports respect the query
@@ -117,8 +121,9 @@ Fields in the admin screen CSV report
 - downloads
 - citations
 
-Curation Stats Reports
-----------------------
+
+Curation stats reports
+======================
 
 Curation stats depend on the history of each dataset. Calculating them from
 scratch would require touching every dataset in Dryad, so we cache the results
@@ -131,8 +136,21 @@ processed. For stats without the word 'new', the stat applies to each version of
 the dataset, typically for the purpose of monitoring throughput of the curation
 workflow.
 
-Datasets Affiliated with an Institution
----------------------------------------
+
+Statistics for the annual report
+================================
+
+For the annual report, we rely on these high-level numbers:
+- data publications: go to the search page and see how many publications we
+  currently have
+- authors: `select count(distinct author_first_name, author_last_name) from stash_engine_authors;`
+- institutions: `select count(distinct long_name) from dcs_affiliations;`
+- journals: `select distinct value from stash_engine_internal_data where data_type='publicationISSN';`
+
+
+Datasets affiliated with an institution
+=======================================
+
 When talking to institutions, we may want to give them information about datasets with some
 connection to their institution.  This takes into account both author affiliations and funding
 related to the institution.  It takes a string and returns any that have that as a substring.
@@ -147,8 +165,9 @@ bundle exec rails reports:from_text_institution name="Planck" RAILS_ENV=producti
 Put the string you want to detect in the `name` variable.  It shows the matches in `author_affiliations`
 and `contributor_affiliations` in the tabular data output.
 
-Authors at an Institution Report (from SQL)
--------------------------------------------
+
+Authors at an institution report (from SQL)
+===========================================
 
 This SQL may be more complicated than it needs to be, but it seems to work.  It gives information about
 published and embargoed items with authors at an institution based on the ROR ids you put into the query
@@ -203,8 +222,8 @@ ORDER BY se_res3.publication_date, se_id3.identifier, se_res3.title;
 </pre>
 
 
-Unique Authors from ROR institutions (from SQL)
------------------------------------------------
+Unique authors from ROR institutions (from SQL)
+===============================================
 
 This is an example of a query getting unique author last, first and institution names.  This is an example of UCs and Lawrence Berkeley Lab.
 
@@ -223,8 +242,9 @@ WHERE affils.`ror_id` IN ('https://ror.org/01an7q238', 'https://ror.org/03djjyk4
 ORDER BY auths.author_last_name, auths.author_first_name;
 ```
 
-Published Datasets and Published by Year
-----------------------------------------
+Published datasets and published by year
+========================================
+
 List of published
 ```
 /* get all datasets and their publication date */
@@ -253,8 +273,8 @@ WHERE ids.pub_state IN ('published', 'embargoed')
 GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 ```
 
-Lists of Objects in non-Dryad collections for Merritt Migration
----------------------------------------------------------------
+Lists of objects in non-Dryad collections for Merritt migration
+===============================================================
 ```
 SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id, res_count.versions
 FROM stash_engine_identifiers ids
@@ -273,8 +293,8 @@ ON ids.id = res_count.identifier_id
 ORDER BY res.tenant_id, ids.identifier;
 ```
 
-Lists of items sent to zenodo and then embargoed afterward (need hiding in zenodo)
-----------------------------------------------------------
+Lists of items sent to Zenodo and then embargoed afterward (need hiding in Zenodo)
+==================================================================================
 ```
 SELECT cur_published.identifier_id, cur_published.curation_id as last_publication_id, cur_embargoed.curation_id as last_embargo_id,
 ids.*
