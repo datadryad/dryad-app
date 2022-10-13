@@ -1,5 +1,3 @@
-require 'byebug'
-
 namespace :mysql do
   desc 'update utf8 to utf8mb4 for existing tables'
   task update_utf8mb4: :environment do
@@ -7,7 +5,6 @@ namespace :mysql do
     puts "Are you sure you want to update all tables to utf8mb4 for #{Rails.env}?  (Type 'yes' to proceed.)"
     response = $stdin.gets
     exit 1 unless response.strip.casecmp('YES').zero?
-
 
     tables = ActiveRecord::Base.connection.tables
     tables.each do |table|
