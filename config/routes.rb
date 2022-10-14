@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  namespace :stash_engine do
+    get 'admin_funders/index'
+  end
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
 
   use_doorkeeper
