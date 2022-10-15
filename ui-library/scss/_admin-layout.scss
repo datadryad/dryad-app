@@ -38,3 +38,27 @@
 .o-admin-dialog {
   padding: 5px 15px 25px;
 }
+
+.o-admin-columns {
+  display: flex;
+}
+
+.o-admin-25-column {
+  flex: 25;
+}
+
+.o-admin-40-column {
+  flex: 40;
+}
+
+.o-admin-50-column {
+  flex: 50;
+}
+
+.o-admin-60-column {
+  flex: 60;
+}
+
+.o-admin-75-column {
+  flex: 75;
+}

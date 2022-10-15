@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-
-  namespace :stash_engine do
-    get 'admin_funders/index'
-  end
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
 
   use_doorkeeper
@@ -303,6 +299,9 @@ Rails.application.routes.draw do
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
+
+    # admin for funders
+    get 'admin_funders', to: 'admin_funders#index'
     
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
