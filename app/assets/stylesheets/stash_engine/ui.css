@@ -4871,6 +4871,7 @@ html.no-details .o-showhide__summary {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  gap: 2rem;
 }
 
 .o-admin-25-column {
@@ -4901,6 +4902,33 @@ html.no-details .o-showhide__summary {
   -webkit-box-flex: 75;
       -ms-flex: 75;
           flex: 75;
+}
+
+.o-admin-form-pair {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 1rem 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.o-admin-label-left {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 30%;
+          flex: 0 0 30%;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.o-admin-field-right {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 70%;
+          flex: 0 0 70%;
 }
 
 .c-admin-editing-banner {
