@@ -460,6 +460,26 @@ namespace :identifiers do
   end
   # rubocop:enable Metrics/MethodLength
 
+  desc 'Generate a report of Dryad authors and their countries'
+  task geographic_authors_report: :environment do
+    CSV.open('geographic_authors_report.csv', 'w') do |csv|
+      csv << ['Dataset DOI', 'Author First', 'Author Last', 'Institution', 'Country']
+      StashEngine::Identifier.publicly_viewable.each do |i|
+        res = i.latest_viewable_resource
+        res.authors.each do |a|
+          affil = a.affiliation
+          csv << [i.identifier,
+                  a&.author_first_name,
+                  a&.author_last_name,
+                  affil&.long_name,
+                  affil&.country_name]
+        end
+      end
+    end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report: :environment do
     # Get the year-month specified in YEAR_MONTH environment variable.
