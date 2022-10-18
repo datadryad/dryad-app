@@ -3,10 +3,6 @@ require 'stash/salesforce'
 module StashEngine
   module AdminDatasetsHelper
 
-    def institution_select
-      StashEngine::Tenant.all.map { |item| [item.short_name, item.tenant_id] }
-    end
-
     def sponsor_select
       StashEngine::JournalOrganization.all.map { |item| [item.name, item.id] }
     end

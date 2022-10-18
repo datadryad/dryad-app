@@ -1,0 +1,29 @@
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table <%= sort_display('title') %>">
+      <%= sortable_column_head sort_field: 'title', title: 'Title' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('authors') %>">
+      <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('identifier') %>">
+      <%= sortable_column_head sort_field: 'identifier', title: 'DOI' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('funder') %>">
+      <%= sortable_column_head sort_field: 'funder', title: 'Funder' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('award_number') %>">
+      <%= sortable_column_head sort_field: 'award_number', title: 'Award' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('first_submitted') %>">
+      <%= sortable_column_head sort_field: 'first_submitted', title: 'First submitted' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('embargoed') %>">
+      <%= sortable_column_head sort_field: 'embargoed', title: 'Embargoed' %>
+    </th>
+    <th class="c-admin-table <%= sort_display('published') %>">
+      <%= sortable_column_head sort_field: 'published', title: 'Published' %>
+    </th>
+
+  </tr>
+</table>
