@@ -70,7 +70,12 @@
         console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
         document.getElementById('funder_id').value = ui.item.id;
       }
-    });
+    })._renderItem = function( ul, item ) {
+      ul.attr('role', 'listbox');
+      return $( "<li>" )
+          .append( "<a role=\"option\">" + item.label + "</a>" )
+          .appendTo(ul);
+    };
 
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
