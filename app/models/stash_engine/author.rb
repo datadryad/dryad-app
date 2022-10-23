@@ -24,7 +24,8 @@ module StashEngine
     end
 
     def self.primary(resource_id)
-      where(resource_id: resource_id).where.not(author_email: nil).order(:id)&.first
+      r = StashEngine::Resource.find(resource_id)
+      r&.owner_author
     end
 
     def ==(other)
