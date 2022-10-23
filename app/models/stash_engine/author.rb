@@ -23,11 +23,6 @@ module StashEngine
       enable
     end
 
-    def self.primary(resource_id)
-      r = StashEngine::Resource.find(resource_id)
-      r&.owner_author
-    end
-
     def ==(other)
       return false unless other.present?
       return true if author_orcid.present? && other.author_orcid == author_orcid
