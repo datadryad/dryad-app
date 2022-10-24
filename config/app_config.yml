@@ -5,13 +5,11 @@
 <% else %>
 
 defaults: &DEFAULTS
-  google_analytics_id: null
   shared_resource_model: StashEngine::Resource
   stash_mount: /stash
   ezid:
     host: ezid.cdlib.org
     port: 443
-  google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
   contact_us_uri: help@datadryad.org
   # sandbox orcid credentials
   orcid:
@@ -160,6 +158,9 @@ defaults: &DEFAULTS
     bucket: dryad-s3-dev
     key: AKIAIQ5XWADKJZ556SBQ
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  google_analytics_id: null
+  google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
+  google_recaptcha_sitekey: 6Lfhn5kiAAAAAIzZPQEGRa43cDJz-rNVxRcQIkU4
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
@@ -255,7 +256,6 @@ demo:
 
 production:
   <<: *DEFAULTS
-  google_analytics_id: UA-145629338-1
   shib_sp_host: datadryad.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, Maria.Praetzellis@ucop.edu, audrey@datadryad.org]
@@ -293,6 +293,7 @@ production:
     bucket: dryad-s3-prd
     key: AKIAIQ5XWADKJZ556SBQ
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  google_analytics_id: UA-145629338-1
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
