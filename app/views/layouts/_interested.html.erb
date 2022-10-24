@@ -8,6 +8,10 @@
 <!--  ----------------------------------------------------------------------  -->
 
 <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+ function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500); 
+</script>
 
 <!--  ----------------------------------------------------------------------  -->
 <!--  NOTE: Please add the following <FORM> element to your page.             -->
@@ -15,30 +19,32 @@
 
 <form action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
 
-<input type=hidden name="oid" value="00D17000000edjf">
-<input type=hidden name="retURL" value="https://datadryad.org/stash/contact_thanks">
+<input type=hidden name='captcha_settings' value='{"keyname":"Dryad_v2","fallback":"true","orgId":"00D54000000YogL","ts":""}'>
+<input type=hidden name="oid" value="00D54000000YogL">
+<input type=hidden name="retURL" value="<%= Rails.application.routes.url_helpers.contact_thanks_url %>">
 
 <!--  ----------------------------------------------------------------------  -->
 <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
 <!--  these lines if you wish to test in debug mode.                          -->
-<!--  <input type="hidden" name="debug" value=1>                              -->
-<!--  <input type="hidden" name="debugEmail"                                  -->
-<!--  value="dimitra@cloudmasonry.com.invalid">                               -->
+<!--  <input type="hidden" name="debug" value=1>                             
+ <input type="hidden" name="debugEmail"                                 
+  value="ryan@datadryad.org">                               -->
 <!--  ----------------------------------------------------------------------  -->
 
-<label for="first_name">First Name</label><input  id="first_name" maxlength="40" name="first_name" size="20" type="text" /><br>
+ <label for="first_name" class="c-input__label">First Name</label>
+ <input id="first_name" class="c-input__text" maxlength="40" name="first_name" type="text" /><br>
 
 <label for="last_name">Last Name</label><input  id="last_name" maxlength="80" name="last_name" size="20" type="text" /><br>
 
 <label for="email">Email</label><input  id="email" maxlength="80" name="email" size="20" type="text" /><br>
 
-Institution:<select  id="00N1700000ij4IQ" name="00N1700000ij4IQ" title="Institution"><option value="">--None--</option><option value="No service">No service</option>
+Institution:<select  id="00N5400000ifBP6" name="00N5400000ifBP6" title="Institution"><option value="">--None--</option><option value="No service">No service</option>
 <option value="Planning">Planning</option>
 <option value="Implementing">Implementing</option>
 <option value="Mature">Mature</option>
 </select><br>
 
-Current Status:<select  id="00N1700000ij4IV" name="00N1700000ij4IV" title="Current Status"><option value="">--None--</option><option value="Faculty member">Faculty member</option>
+Current Status:<select  id="00N5400000ifBP5" name="00N5400000ifBP5" title="Current Status"><option value="">--None--</option><option value="Faculty member">Faculty member</option>
 <option value="Postdoc">Postdoc</option>
 <option value="Graduate student">Graduate student</option>
 <option value="Undergraduate student">Undergraduate student</option>
@@ -48,14 +54,16 @@ Current Status:<select  id="00N1700000ij4IV" name="00N1700000ij4IV" title="Curre
 <option value="Government Professional">Government Professional</option>
 </select><br>
 
-Participation:<select  id="00N1700000ij4Ia" multiple="multiple" name="00N1700000ij4Ia" title="Participation"><option value="Join our mailing list">Join our mailing list</option>
+Participation:<select  id="00N5400000ifBPB" multiple="multiple" name="00N5400000ifBPB" title="Participation"><option value="Join our mailing list">Join our mailing list</option>
 <option value="Set up a demo or meeting">Set up a demo or meeting</option>
 <option value="Get help with an issue">Get help with an issue</option>
 </select><br>
 
-Comments:<textarea  id="00N1700000ij4If" name="00N1700000ij4If" rows="3" type="text" wrap="soft"></textarea><br>
+Comments:<textarea  id="00N5400000ifBP4" name="00N5400000ifBP4" rows="3" type="text" wrap="soft"></textarea><br>
 
+<div class="g-recaptcha" data-sitekey="<%= APP_CONFIG.google_recaptcha_sitekey %>"></div><br>
 <input type="submit" name="submit">
 
 </form>
+
 
