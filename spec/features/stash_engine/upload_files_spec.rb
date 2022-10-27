@@ -48,7 +48,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows correct introductory text' do
-      expect(page).to have_content('Upload Your Files')
+      expect(page).to have_content('Upload your files')
       expect(page.text).to have_content(
         'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server'
       )

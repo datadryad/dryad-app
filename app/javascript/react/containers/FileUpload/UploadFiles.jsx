@@ -2,6 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
+import ReactDOM from 'react-dom';
+import {render} from '@cdl-dryad/frictionless-components/lib/render';
+import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import sanitize from '../../../lib/sanitize_filename';
 
 import {
@@ -42,7 +45,7 @@ const upload_types = [
     name: 'Data',
     description: 'Required: README.md',
     description2: 'e.g., csv, fasta',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
   {
@@ -51,16 +54,16 @@ const upload_types = [
     alt: 'Zenodo',
     name: 'Software',
     description: 'e.g., code packages, scripts',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
   {
     type: 'supp',
     logo: '../../../images/logo_zenodo.svg',
     alt: 'Zenodo',
-    name: 'Supplemental Information',
+    name: 'Supplemental information',
     description: 'e.g., figures, supporting tables',
-    buttonFiles: 'Choose Files',
+    buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
 ];
@@ -479,12 +482,18 @@ class UploadFiles extends React.Component {
 
   hideValidationReport = () => {
     this.modalValidationRef.current.close();
+    const element = document.getElementById('validation_report');
+    ReactDOM.unmountComponentAtNode(element);
     this.setState({validationReportFile: null});
   };
 
   showValidationReportHandler = (file) => {
-    this.setState({validationReportFile: file});
-    this.modalValidationRef.current.showModal();
+    this.setState({validationReportFile: file}, () => {
+      const element = document.getElementById('validation_report');
+      const {report} = file ? file.frictionless_report : {};
+      if (report) render(Report, JSON.parse(report), element);
+      this.modalValidationRef.current.showModal();
+    });
   };
 
   submitUrlsHandler = (event) => {
@@ -586,7 +595,7 @@ class UploadFiles extends React.Component {
     return (
       <div className="c-upload">
         <h1 className="o-heading__level1">
-          Upload Your Files
+          Upload your files
         </h1>
         <Instructions />
         <div className="c-uploadwidgets">
@@ -652,7 +661,6 @@ class UploadFiles extends React.Component {
         <ModalValidationReport
           file={validationReportFile}
           ref={this.modalValidationRef}
-          report={validationReportFile?.frictionless_report.report}
           clickedClose={this.hideValidationReport}
         />
       </div>

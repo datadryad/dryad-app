@@ -1478,23 +1478,6 @@ function joelsReady(){
 
   // ***** Upload Modal Component ***** //
 
-  if (document.querySelector('#js-uploadmodal')) {
-    var uploadModal = document.querySelector('#js-uploadmodal');
-    var checkboxValidateFiles = document.querySelector('#js-uploadmodal__checkbox-confirm');
-    var buttonValidateFiles = document.querySelector('#js-uploadmodal__button-validate');
-
-    // register dialog polyfill for upload modal:
-    dialogPolyfill.registerDialog(uploadModal);
-
-    checkboxValidateFiles.addEventListener('change', function() {
-      if (checkboxValidateFiles.checked) {
-        buttonValidateFiles.disabled = false;
-      } else {
-        buttonValidateFiles.disabled = true;
-      }
-    });
-  }
-
   if (document.querySelector('.js-uploadmodal__button-show-modal')) {
     var buttonShowModal = document.querySelectorAll('.js-uploadmodal__button-show-modal');
     var buttonCloseModal = document.querySelectorAll('.js-uploadmodal__button-close-modal');
