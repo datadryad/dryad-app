@@ -122,7 +122,7 @@ module Stash
       end
 
       def stripe_user_customer_id
-        author = StashEngine::Author.primary(resource.id)
+        author = resource.owner_author
         return if author.blank?
         return if author.author_email.blank?
         return author.stripe_customer_id if author.stripe_customer_id.present?

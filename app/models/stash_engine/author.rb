@@ -23,10 +23,6 @@ module StashEngine
       enable
     end
 
-    def self.primary(resource_id)
-      where(resource_id: resource_id).where.not(author_email: nil).order(:id)&.first
-    end
-
     def ==(other)
       return false unless other.present?
       return true if author_orcid.present? && other.author_orcid == author_orcid
