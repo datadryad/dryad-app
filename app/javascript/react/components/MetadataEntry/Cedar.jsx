@@ -9,9 +9,8 @@ class Cedar extends React.Component {
     template: null,
     csrf: null,
     metadata: null,
-    updated: new Date().toISOString(),
+    updated: undefined,
     currentMetadata: null,
-    startData: null,
   };
 
   formRef = React.createRef();
@@ -25,9 +24,8 @@ class Cedar extends React.Component {
   componentDidMount() {
     const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     const {template, metadata, updated} = this.props.resource.cedar_json ? JSON.parse(this.props.resource.cedar_json) : {};
-    const startData = this.props.resource.cedar_json ? this.props.resource.cedar_json.slice() : null;
     this.setState({
-      csrf, template, metadata, updated, startData,
+      csrf, template, metadata, updated,
     });
   }
 
@@ -71,12 +69,6 @@ class Cedar extends React.Component {
     if (el?.id === 'cedarEditor') this.editor = el;
   };
 
-  cancelChanges = () => {
-    const {metadata, updated, template} = JSON.parse(this.state.startData);
-    this.setState({currentMetadata: metadata, updated, template}, this.saveContent);
-    this.editor.metadata = metadata;
-  };
-
   // Save form content when changed
   checkSave = () => {
     const currentMetadata = JSON.parse(JSON.stringify(this.editor.currentMetadata));
@@ -112,7 +104,7 @@ class Cedar extends React.Component {
 
   modalSetup = () => {
     const {
-      template, csrf, metadata, updated,
+      template, csrf, metadata, updated = new Date().toISOString(),
     } = this.state;
     const {id: resource_id} = this.props.resource;
     this.editor.loadConfigFromURL(`/cedar-config?template=${template.id}`);
@@ -131,24 +123,6 @@ class Cedar extends React.Component {
       }
     });
     this.editorLoaded.observe(this.editor, {childList: true});
-    // add cancel button
-    this.saveButton = new MutationObserver(() => {
-      const button = document.querySelector('app-cedar-data-saver button');
-      if (button) {
-        const cancel = document.createElement('button');
-        cancel.type = 'button';
-        cancel.onclick = this.cancelChanges;
-        cancel.classList.add('mat-raised-button', 'mat-button-base');
-        cancel.innerText = 'CANCEL';
-        cancel.style = 'font-size: 16px; padding: 8px 10px !important; background-color: #ddd;';
-        button.style = 'padding: 8px 24px !important; margin-right: 8px;';
-        button.parentElement.style = 'min-width: 200px !important;';
-        button.parentElement.appendChild(cancel);
-        this.saveButton.disconnect();
-        this.saveButton = null;
-      }
-    });
-    this.saveButton.observe(this.editor, {childList: true, subtree: true});
   };
 
   openModal = () => {
