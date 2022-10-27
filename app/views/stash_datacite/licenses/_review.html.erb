@@ -55,10 +55,10 @@
 	<% elsif @resource.identifier.institution_will_pay? %>
 		<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
 	<% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
-		<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
+		<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>. Upon publication of your dataset, you will receive an invoice showing that the fee for this submission has been waived. If you have any questions, please <a href="mailto:help@datadryad.org">contact us</a></p>
 	<% elsif @resource.identifier.funder_will_pay? %>
 		<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.funder_payment_info.contributor_name %></b></p>
-	<% elsif @resource.identifier.user_must_pay? && !@resource.identifier.fee_waivered? %>
+	<% elsif @resource.identifier.user_must_pay? %>
 		<p>
 			Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
 			publication of your dataset, you will receive an invoice for
@@ -78,7 +78,7 @@
 		<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
 		<label for="agree_to_payment">I agree to Dryad's payment terms</label>
     <% else %>
-      <p>This submission does not require a payment. Upon publication of your dataset, you will receive an invoice showing that the fee for this submission has been waived. If you have any questions, please <a href="mailto:help@datadryad.org">contact us</a></p>
+      <p>This submission does not require a payment.</p>
     <% end %>
 </div>
 
