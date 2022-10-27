@@ -38,12 +38,17 @@ module StashEngine
 
       def initialize
         @where_conditions = ''
+        @where_params = []
         @limit = ''
         @order_by = ''
       end
 
-      def add_where(str:)
-        @where_conditions << ' AND ' << str
+      # this takes a typical Rails-style conditional array with first condition the SQL w/ question marks and the
+      # rest of the arguments are the arguments that get escaped
+      def add_where(arr:)
+        @where_conditions << " AND (#{arr.first}) " # put in parenthesis for good measure
+        @where_params << arr[1..-1]
+        @where_params.flatten!
       end
 
       def add_limit(offset:, rows:)
@@ -69,8 +74,9 @@ module StashEngine
       #  "authors"=>"Account"}                                              -- author last names
       def do_query
         # this needs to be expanded
-        query = "#{BASE_QUERY} #{@order_by} #{@limit}"
-        ActiveRecord::Base.connection.select_all(query)
+        query = "#{BASE_QUERY} #{@where_conditions} #{@order_by} #{@limit}"
+        # ActiveRecord::Base.connection.select_all([query, @where_params].flatten)
+        StashEngine::Identifier.find_by_sql([query, @where_params].flatten)
       end
     end
   end
