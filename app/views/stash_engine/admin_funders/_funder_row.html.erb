@@ -1,0 +1,31 @@
+<% ds_row = funder_row.to_ostruct %>
+<tr class="c-lined-table__row" id="js-dataset-row-id-<%= ds_row.id %>">
+  <td>
+    <%= ds_row.title %>
+  </td>
+  <td>
+    <%= ds_row.authors %>
+  </td>
+  <td>
+    <%= ds_row.identifier %>
+  </td>
+  <td>
+    <%= ds_row.contributor_name %>
+  </td>
+  <td>
+    <%= ds_row.award_number %>
+  </td>
+  <td>
+    <%= ds_row.init_sub_date %>
+  </td>
+  <td>
+    <% if ds_row.pub_state == 'embargoed' && ds_row.publication_date && ds_row.publication_date > Time.new %>
+      <%= ds_row.publication_date %>
+    <% end %>
+  </td>
+  <td>
+    <% if ds_row.pub_state == 'published' && ds_row.publication_date && ds_row.publication_date < Time.new %>
+      <%= ds_row.publication_date %>
+    <% end %>
+  </td>
+</tr>

@@ -12,8 +12,6 @@ module StashEngine
       rep = Report.new
       rep.add_limit(offset: 0, rows: 100)
       @funder_table = rep.do_query
-      byebug
-      # :-(  it's not working right for dates
     end
 
   end
