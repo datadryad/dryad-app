@@ -77,9 +77,9 @@
 
 		<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
 		<label for="agree_to_payment">I agree to Dryad's payment terms</label>
-	<% else %>
-		<p>This submission does not require a payment.</p>
-	<% end %>
+    <% else %>
+      <p>This submission does not require a payment. Upon publication of your dataset, you will receive an invoice showing that the fee for this submission has been waived. If you have any questions, please <a href="mailto:help@datadryad.org">contact us</a></p>
+    <% end %>
 </div>
 
 <br>

@@ -23,11 +23,7 @@ module Stash
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
 
-        if stripe_user_waiver?
-          create_waived_invoice_for_dpc(customer_id)
-        else
-          create_invoice_items_for_dpc(customer_id)
-        end
+        create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
         resource.identifier.payment_id = invoice.id
         resource.identifier.payment_type = 'stripe'
@@ -86,24 +82,6 @@ module Stash
         Stripe.api_key = APP_CONFIG.payments.key
       end
 
-      # Version of invoice with line immediately waiving invoice
-      def create_waived_invoice_for_dpc(customer_id)
-        [
-          Stripe::InvoiceItem.create(
-            customer: customer_id,
-            amount: APP_CONFIG.payments.data_processing_charge,
-            currency: 'usd',
-            description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
-          ),
-          Stripe::InvoiceItem.create(
-            customer: customer_id,
-            amount: -APP_CONFIG.payments.data_processing_charge,
-            currency: 'usd',
-            description: "Waiver of charge for #{resource.identifier} (#{filesize(ds_size)})"
-          )
-        ]
-      end
-
       # this is mostly just long because of long text & formatting text
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
@@ -120,6 +98,16 @@ module Stash
                        currency: 'usd',
                        quantity: over_chunks,
                        description: overage_message
+                     ))
+        end
+        # For users with a waiver, add line waiving invoice amount
+        if stripe_user_waiver?
+          overcharge = over_chunks.positive? ? APP_CONFIG.payments.additional_storage_chunk_cost * over_chunks : 0
+          items.push(Stripe::InvoiceItem.create(
+                       customer: customer_id,
+                       amount: -(APP_CONFIG.payments.data_processing_charge + overcharge),
+                       currency: 'usd',
+                       description: "Waiver of charges for #{resource.identifier} (#{filesize(ds_size)})"
                      ))
         end
         items
