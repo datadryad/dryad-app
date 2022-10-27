@@ -23,7 +23,11 @@ module Stash
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
 
-        create_invoice_items_for_dpc(customer_id)
+        if stripe_user_waiver?
+          create_waived_invoice_for_dpc(customer_id)
+        else
+          create_invoice_items_for_dpc(customer_id)
+        end
         invoice = create_invoice(customer_id)
         resource.identifier.payment_id = invoice.id
         resource.identifier.payment_type = 'stripe'
@@ -82,13 +86,31 @@ module Stash
         Stripe.api_key = APP_CONFIG.payments.key
       end
 
+      # Version of invoice with line immediately waiving invoice
+      def create_waived_invoice_for_dpc(customer_id)
+        [
+          Stripe::InvoiceItem.create(
+            customer: customer_id,
+            amount: APP_CONFIG.payments.data_processing_charge,
+            currency: 'usd',
+            description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
+          ),
+          Stripe::InvoiceItem.create(
+            customer: customer_id,
+            amount: -APP_CONFIG.payments.data_processing_charge,
+            currency: 'usd',
+            description: "Waiver of charge for #{resource.identifier} (#{filesize(ds_size)})"
+          )
+        ]
+      end
+
       # this is mostly just long because of long text & formatting text
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
           amount: APP_CONFIG.payments.data_processing_charge,
           currency: 'usd',
-          description: "Data Processing Charge for #{resource.identifier} (#{filesize(ds_size)})"
+          description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
         over_chunks = overage_chunks
         if over_chunks.positive?
@@ -119,6 +141,10 @@ module Stash
           name: author.author_standard_name,
           email: author.author_email
         )
+      end
+
+      def stripe_user_waiver?
+        resource.identifier&.fee_waivered?
       end
 
       def stripe_user_customer_id
