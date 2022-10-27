@@ -25,5 +25,7 @@
       <%= sortable_column_head sort_field: 'published', title: 'Published' %>
     </th>
 
+    <%= render partial: 'funder_row', collection: @funder_table  %>
+
   </tr>
 </table>
