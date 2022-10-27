@@ -50,6 +50,11 @@ module StashEngine
         @limit = " LIMIT #{offset.to_i}, #{rows.to_i}" # this should only have ints, but may be 0 for non-int strings
       end
 
+      # eliminate all SQL injection before passing this string in with helper
+      def order(order_str:)
+        @order_by = "ORDER BY #{order_str}"
+      end
+
       # returns a hash like this:
       # {"id"=>2997,                                                        -- The identifier_id
       #  "title"=>"Big Amazing S3 upload test",                             -- Title
@@ -64,8 +69,8 @@ module StashEngine
       #  "authors"=>"Account"}                                              -- author last names
       def do_query
         # this needs to be expanded
-        query = "#{BASE_QUERY} #{@limit}"
-        ActiveRecord::Base.connection.select_all(query) # this returns correct hashes, but the dates are all nil
+        query = "#{BASE_QUERY} #{@order_by} #{@limit}"
+        ActiveRecord::Base.connection.select_all(query)
       end
     end
   end
