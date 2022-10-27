@@ -12,7 +12,7 @@ const file_list = ({chosenFiles, clickedRemove, clickedValidationReport}) => (
         <tr>
           <th scope="col">Filename</th>
           <th scope="col">Status</th>
-          <th scope="col">Tabular Data Check</th>
+          <th scope="col">Tabular data check</th>
           <th scope="col">URL</th>
           <th scope="col">Type</th>
           <th scope="col">Size</th>

@@ -22,12 +22,12 @@ module DatasetHelper
 
     click_link 'Upload Software'
     click_link 'Upload directly'
-    expect(page).to have_content('Choose Files')
+    expect(page).to have_content('Choose files')
   end
 
   def navigate_to_upload
     click_link 'Upload Files'
-    expect(page).to have_content('Choose Files', count: 3)
+    expect(page).to have_content('Choose files', count: 3)
     expect(page).to have_content('Enter URLs', count: 3)
   end
 

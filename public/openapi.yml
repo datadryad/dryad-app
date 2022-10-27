@@ -10,7 +10,7 @@ info:
     particularly the [API Submission Examples](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete
     examples of submission through the Dryad API.
 
-    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/main/documentation) will also be expanded further in the future as more
+    Our [Github documentation directory](https://github.com/CDL-Dryad/dryad-app/tree/main/documentation) will also be expanded further in the future as more
     documentation is created (though not all of it may be relevant to API users).
 
     Rate limits:
