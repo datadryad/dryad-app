@@ -186,14 +186,6 @@ module StashEngine
           end
         end
 
-        it 'primary returns correct author' do
-          @resource.authors = []
-          create(:author, resource: @resource, author_first_name: 'Wrong', author_email: nil)
-          right_author = create(:author, resource: @resource, author_first_name: 'Right', author_email: 'right@one.org')
-          create(:author, resource: @resource, author_first_name: 'Wrong2', author_email: nil)
-          expect(Author.primary(@resource)).to eql(right_author)
-        end
-
       end
     end
   end
