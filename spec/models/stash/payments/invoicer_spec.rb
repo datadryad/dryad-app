@@ -22,13 +22,13 @@ module Stash
         allow(@resource).to receive(:identifier).and_return(@identifier)
 
         @author = double(StashEngine::Author)
-        allow(StashEngine::Author).to receive(:primary).with(@resource_id).and_return(@author)
         allow(StashEngine::Author).to receive(:where).and_return(nil)
         allow(@author).to receive(:update).and_return(true)
         allow(@author).to receive(:id).and_return(9)
         allow(@author).to receive(:author_email).and_return('jane.doe@example.org')
         allow(@author).to receive(:author_standard_name).and_return('Jane Doe')
         allow(@author).to receive(:stripe_customer_id).and_return(nil)
+        allow(@resource).to receive(:owner_author).and_return(@author)
 
         @cust_id = '9999'
         fake_invoice_item = OpenStruct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
@@ -58,7 +58,7 @@ module Stash
       end
 
       it 'does not create an invoice when the resource has no primary author' do
-        allow(StashEngine::Author).to receive(:primary).with(@resource_id).and_return(nil)
+        allow(@resource).to receive(:owner_author).and_return(nil)
         expect(@invoicer.charge_user_via_invoice).to eql(nil)
       end
 
