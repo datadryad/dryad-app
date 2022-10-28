@@ -1,7 +1,11 @@
 <% ds_row = funder_row %>
 <tr class="c-lined-table__row" id="js-dataset-row-id-<%= ds_row.id %>">
   <td>
-    <%= ds_row.title %>
+    <% if ds_row.title.blank? %>
+      <%= ds_row.title %>
+    <% else %>
+      <%= link_to ds_row.title, stash_url_helpers.show_path(id: "doi:#{ds_row.identifier}"), target: '_blank' %>
+    <% end %>
   </td>
   <td>
     <%= ds_row.authors %>

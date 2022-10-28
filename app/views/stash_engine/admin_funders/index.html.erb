@@ -3,4 +3,8 @@
 
 <%= render partial: 'filter_panel' %>
 
-<%= render partial: 'funder_table' %>
+<% if @funder_table.empty? %>
+  <p>There are no results to show, please modify your filtering criteria to show results.</p>
+<% else %>
+  <%= render partial: 'funder_table' %>
+<% end %>

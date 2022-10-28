@@ -29,7 +29,7 @@
         <div class="o-admin-form-pair">
           <label class="o-admin-label-left" for="tenant">Date type</label>
           <%= select_tag(:date_type, options_for_select(
-              [ ['Initial submission','initial'], ['Published', 'published'] ], params[:date_type]),
+              [ ['Initial submission','initial'], ['Embargo/publication', 'published'] ], params[:date_type]),
                          class: 'o-admin-field-right' ) %>
         </div>
 
