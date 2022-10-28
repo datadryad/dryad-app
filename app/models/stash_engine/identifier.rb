@@ -251,7 +251,7 @@ module StashEngine
     end
 
     def fee_waivered?
-      submitter_affiliation.fee_waivered?
+      submitter_affiliation.present? && submitter_affiliation.fee_waivered?
     end
 
     def journal
