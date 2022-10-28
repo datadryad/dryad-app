@@ -22,4 +22,9 @@
       <% end %>
     <% end %>
   </div>
+
+  <div>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+                stash_url_helpers.admin_funders_path(request.params.merge(format: :csv)) %>
+  </div>
 <% end %>

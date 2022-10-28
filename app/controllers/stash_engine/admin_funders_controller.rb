@@ -6,12 +6,11 @@ module StashEngine
     helper SortableTableHelper
 
     before_action :require_admin
-    # before_action :setup_paging, only: [:index]
 
     def index
       setup_paging
 
-      @rep = Report.new
+      @rep = Report.new # the AdminFundersController::Report is where most of the complicated SQL is for this
       @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
 
       # WHERE conditions
@@ -19,11 +18,16 @@ module StashEngine
       @rep.add_where(arr: ['contrib.contributor_name = ?', params[:funder_name]]) if params[:funder_name].present?
       add_date_range
       add_sort_order
-      # add_pagination
-
 
       @funder_table = @rep.do_query
       @funder_table = kaminari_pad(results_arr: @funder_table) # pads out results so kaminari displays paging correctly
+
+      respond_to do |format|
+        format.html
+        format.csv do
+          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_funder_report.csv"
+        end
+      end
     end
 
     private def setup_paging

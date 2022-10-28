@@ -1,0 +1,17 @@
+<%= "Title,Authors,DOI,Funder,Funder id,Award,First submitted,Embargoed,Published" %>
+<% @funder_table.each do |i| -%>
+<%
+    row = [ i&.title || '[no title set]',
+            i&.authors,
+            i&.identifier,
+            i&.contributor_name,
+            i&.name_identifier_id,
+            i&.award_number,
+            (i&.init_sub_date.present? ? formatted_datetime(i&.init_sub_date) : ''),
+            ( i.pub_state == 'embargoed' && i.publication_date && i.publication_date > Time.new ?
+                formatted_datetime(i.publication_date) : ''),
+            ( i.pub_state == 'published' && i.publication_date && i.publication_date < Time.new ?
+                formatted_datetime(i.publication_date) : '')
+    ]
+-%><%= row.to_csv(row_sep: nil).html_safe %>
+<% end -%>
