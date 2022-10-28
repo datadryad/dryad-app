@@ -55,11 +55,11 @@ All member levels include the benefits listed above. The level selected should r
 </p>
 
 <p>
-We offer several levels of memberships. All fees listed are annual and in USD.
+We offer three levels of membership. All fees listed are annual and in USD.
 <ul class="c-text_styles">
-<li><strong>Level I Membership:</strong> 	$3,000  –  Primarily teaching institutions or small research output</li>
-<li><strong>Level II Membership:</strong> 	$7,500 – Medium, research-intensive institutions</li>
-<li><strong>Level III Membership:</strong> $13,000  – Large, research-intensive institutions</li>
+<li><strong>Level 1:</strong> $13,000 – Large, research-intensive institutions</li>
+<li><strong>Level 2:</strong> $7,500 – Medium, research-intensive institutions</li>
+<li><strong>Level 3:</strong> $3,000 – Primarily teaching institutions or small research output</li>
 </ul>
 </p>
 <p>
