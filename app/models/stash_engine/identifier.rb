@@ -250,10 +250,6 @@ module StashEngine
       !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
     end
 
-    def fee_waivered?
-      submitter_affiliation.present? && submitter_affiliation.fee_waivered?
-    end
-
     def journal
       return nil if publication_issn.nil?
 
@@ -275,7 +271,7 @@ module StashEngine
         self.payment_id = latest_resource&.tenant&.tenant_id
       elsif submitter_affiliation&.fee_waivered?
         self.payment_type = 'waiver'
-        self.payment_id = submitter_affiliation.country_name
+        self.payment_id = nil
       elsif funder_will_pay?
         contrib = funder_payment_info
         self.payment_type = 'funder'
