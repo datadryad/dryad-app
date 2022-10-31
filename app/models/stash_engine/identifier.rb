@@ -271,7 +271,7 @@ module StashEngine
         self.payment_id = latest_resource&.tenant&.tenant_id
       elsif submitter_affiliation&.fee_waivered?
         self.payment_type = 'waiver'
-        self.payment_id = nil
+        self.payment_id = submitter_affiliation.country_name
       elsif funder_will_pay?
         contrib = funder_payment_info
         self.payment_type = 'funder'
