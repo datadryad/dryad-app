@@ -24,7 +24,7 @@
               <% if current_user.curator? %>
                 <%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
               <% end %>
-              <%= link_to 'Dataset Funders', stash_url_helpers.admin_dataset_funders_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Dataset Funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
               <% if current_user.superuser? %>
                 <%= link_to 'User Management', stash_url_helpers.user_admin_path, class: 'o-sites__group-item' %>
                 <%= link_to 'Status Dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
