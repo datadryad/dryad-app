@@ -35,9 +35,21 @@
           </details>
         </div>
       </div>
-    <% elsif current_user && (current_user.role == 'admin' || current_user.role == 'tenant_curator' ||
-        current_user.journals_as_admin.present? || current_user.funders_as_admin.present?) %>
+    <% elsif current_user && (current_user.journals_as_admin.present? || current_user.funders_as_admin.present?) %>
       <%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'c-header__nav-item' %>
+    <% elsif current_user && (current_user.role == 'admin' || current_user.role == 'tenant_curator') %>
+      <div class="c-header__nav-item">
+        <div class="o-sites">
+          <details class="o-showhide o-sites__details" role="group">
+            <summary class="o-showhide__summary o-sites__summary">Admin</summary>
+            <div class="o-sites__group">
+              <%= link_to 'Datasets', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
+                                                                        editor_id: current_user.id, curation_status: 'submitted', only_path: true), class: 'o-sites__group-item' %>
+              <%= link_to 'Dataset Funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
+            </div>
+          </details>
+        </div>
+      </div>
     <% end %>
     <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
     <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item js-nav-out' %>
