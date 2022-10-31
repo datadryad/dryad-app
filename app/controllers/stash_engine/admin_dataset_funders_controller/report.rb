@@ -1,5 +1,5 @@
 module StashEngine
-  class AdminFundersController
+  class AdminDatasetFundersController
     class Report
 
       # this base query is complicated but gets all the stuff we need for filtering and sorting into one query

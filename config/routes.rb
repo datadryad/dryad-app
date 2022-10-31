@@ -300,8 +300,8 @@ Rails.application.routes.draw do
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
 
-    # admin for funders
-    get 'admin_funders', to: 'admin_funders#index'
+    # admin report for dataset funders
+    get 'admin_dataset_funders', to: 'admin_dataset_funders#index'
     
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'

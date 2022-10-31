@@ -1,7 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  class AdminFundersController < ApplicationController
+  class AdminDatasetFundersController < ApplicationController
     include SharedSecurityController
     helper SortableTableHelper
 

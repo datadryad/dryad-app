@@ -1,4 +1,4 @@
-<% @page_title = "Funder dashboard" %>
+<% @page_title = "Dataset funder dashboard" %>
 <h1 class="o-heading__level1">Funder dashboard</h1>
 
 <%= render partial: 'filter_panel' %>
@@ -18,13 +18,13 @@
       <% if ps == current_ps %>
         <%= ps %>
       <% else %>
-        <%= link_to(ps, stash_url_helpers.admin_funders_path(request.parameters.merge(page_size: ps, page: 1))) %>
+        <%= link_to(ps, stash_url_helpers.admin_dataset_funders_path(request.parameters.merge(page_size: ps, page: 1))) %>
       <% end %>
     <% end %>
   </div>
 
   <div>
     <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
-                stash_url_helpers.admin_funders_path(request.params.merge(format: :csv)) %>
+                stash_url_helpers.admin_dataset_funders_path(request.params.merge(format: :csv)) %>
   </div>
 <% end %>
