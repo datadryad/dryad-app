@@ -14,8 +14,12 @@ module StashEngine
       @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
 
       # WHERE conditions
-      @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]]) if params[:tenant].present?
-      @rep.add_where(arr: ['contrib.contributor_name = ?', params[:funder_name]]) if params[:funder_name].present?
+      # Limit to tenant by either role or selected limit
+      @role_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
+      tenant_limit = @role_limit || params[:tenant]
+      @rep.add_where(arr: ['last_res.tenant_id = ?', tenant_limit]) if tenant_limit.present?
+
+      add_funder_limit
       add_date_range
       add_sort_order
 
@@ -28,6 +32,21 @@ module StashEngine
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_funder_report.csv"
         end
       end
+    end
+
+    # this may add a special aggregate funder like NIH that has many sub-funders or may be no hierarchy
+    private def add_funder_limit
+      return unless params[:funder_name].present?
+
+      group_record = StashDatacite::ContributorGrouping.where(name_identifier_id: params[:funder_id]).first
+      if group_record.present?
+        names = group_record.json_contains.map{|i| i['contributor_name']} + [params[:funder_name]]
+        sql = "contrib.contributor_name IN (#{names.map{|i| '?'}.join(', ')})"
+        @rep.add_where(arr: ([sql] + names).flatten) # should already be flat, but just in case
+        return
+      end
+
+      @rep.add_where(arr: ['contrib.contributor_name = ?', params[:funder_name]]) # simple funder
     end
 
     private def setup_paging

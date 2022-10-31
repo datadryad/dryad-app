@@ -7,6 +7,7 @@
         <h2 class="o-heading__level2">Limit to</h2>
 
         <% if current_user.limited_curator? %>
+          <!-- only show tenant select for limited curators and above, not admins or tenant curators -->
           <div class="o-admin-form-pair">
             <label class="o-admin-label-left" for="tenant">Partner institution</label>
             <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
