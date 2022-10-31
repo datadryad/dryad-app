@@ -132,7 +132,7 @@ module Stash
       end
 
       def stripe_user_waiver?
-        resource.identifier&.fee_waivered?
+        resource.identifier.payment_type == 'waiver'
       end
 
       def stripe_user_customer_id
