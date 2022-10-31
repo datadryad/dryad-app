@@ -7663,6 +7663,7 @@ progress::-webkit-progress-value {
 
 .t-home__banner {
   margin-bottom: 10px;
+  background-position: center;
 }
 
 .t-home__quote-search-group {
