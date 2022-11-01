@@ -249,6 +249,8 @@ Rails.application.routes.draw do
     get 'our_governance', to: 'pages#our_governance'
     get 'our_mission', to: 'pages#our_mission'
     get 'our_membership', to: 'pages#our_membership'
+    get 'interested', to: 'pages#interested'
+    get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
     get 'our_platform', to: 'pages#our_platform'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
