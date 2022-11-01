@@ -1,0 +1,30 @@
+<% @page_title = "Dataset funder dashboard" %>
+<h1 class="o-heading__level1">Dataset funder dashboard</h1>
+
+<%= render partial: 'filter_panel' %>
+
+<% if @funder_table.empty? %>
+  <p>There are no results to show, please modify your filtering criteria to show results.</p>
+<% else %>
+  <%= render partial: 'funder_table' %>
+
+  <div class="c-space-paginator">
+    <%= paginate @funder_table, params: { page_size: @page_size, show_all: false, show_last_page: false } %><br/>
+    Page Size:
+    <%
+      current_ps = params[:page_size].to_i
+      current_ps = 10 if current_ps == 0
+      [10, 50, 100].each do |ps| %>
+      <% if ps == current_ps %>
+        <%= ps %>
+      <% else %>
+        <%= link_to(ps, stash_url_helpers.ds_admin_funders_path(request.parameters.merge(page_size: ps, page: 1))) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+                stash_url_helpers.ds_admin_funders_path(request.params.merge(format: :csv)) %>
+  </div>
+<% end %>

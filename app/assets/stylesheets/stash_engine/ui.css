@@ -4867,6 +4867,70 @@ html.no-details .o-showhide__summary {
   padding: 5px 15px 25px;
 }
 
+.o-admin-columns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2rem;
+}
+
+.o-admin-25-column {
+  -webkit-box-flex: 25;
+      -ms-flex: 25;
+          flex: 25;
+}
+
+.o-admin-40-column {
+  -webkit-box-flex: 40;
+      -ms-flex: 40;
+          flex: 40;
+}
+
+.o-admin-50-column {
+  -webkit-box-flex: 50;
+      -ms-flex: 50;
+          flex: 50;
+}
+
+.o-admin-60-column {
+  -webkit-box-flex: 60;
+      -ms-flex: 60;
+          flex: 60;
+}
+
+.o-admin-75-column {
+  -webkit-box-flex: 75;
+      -ms-flex: 75;
+          flex: 75;
+}
+
+.o-admin-form-pair {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 1rem 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.o-admin-label-left {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 30%;
+          flex: 0 0 30%;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.o-admin-field-right {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 70%;
+          flex: 0 0 70%;
+}
+
 .c-admin-editing-banner {
   display: -webkit-box;
   display: -ms-flexbox;
