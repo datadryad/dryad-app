@@ -1,38 +1,37 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     byebug (11.1.3)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    ffi (1.13.1)
+    ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    http (4.4.1)
-      addressable (~> 2.3)
+    http (5.1.0)
+      addressable (~> 2.8)
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
-      http-parser (~> 1.2.0)
-    http-cookie (1.0.3)
+      llhttp-ffi (~> 0.4.0)
+    http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    http-parser (1.2.1)
-      ffi-compiler (>= 1.0, < 2.0)
-    mini_portile2 (2.8.0)
-    nokogiri (1.13.9)
-      mini_portile2 (~> 2.8.0)
+    llhttp-ffi (0.4.0)
+      ffi-compiler (~> 1.0)
+      rake (~> 13.0)
+    nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
-    public_suffix (4.0.6)
+    public_suffix (5.0.0)
     racc (1.6.0)
-    rake (13.0.1)
+    rake (13.0.6)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8.2)
 
 PLATFORMS
-  ruby
+  arm64-darwin-21
 
 DEPENDENCIES
   byebug
@@ -40,4 +39,4 @@ DEPENDENCIES
   nokogiri
 
 BUNDLED WITH
-   1.17.3
+   2.3.22
