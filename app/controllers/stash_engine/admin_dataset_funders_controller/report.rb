@@ -47,7 +47,7 @@ module StashEngine
       # rest of the arguments are the arguments that get escaped
       def add_where(arr:)
         @where_conditions << " AND (#{arr.first}) " # put in parenthesis for good measure
-        @where_params << arr[1..-1]
+        @where_params << arr[1..]
         @where_params.flatten!
       end
 
@@ -60,18 +60,6 @@ module StashEngine
         @order_by = "ORDER BY #{order_str}"
       end
 
-      # returns a hash like this:
-      # {"id"=>2997,                                                        -- The identifier_id
-      #  "title"=>"Big Amazing S3 upload test",                             -- Title
-      #  "identifier"=>"10.7959/dryad.jsxksn32",                            -- Bare doi
-      #  "contributor_name"=>"Raymond F. Baker Center for Plant Breeding",  -- contributor (funder) name
-      #  "name_identifier_id"=>"http://dx.doi.org/10.13039/100015830",      -- crossref funder ID
-      #  "award_number"=>"plant387",                                        -- The award number user put in for funder
-      #  "pub_state"=>"unpublished",                                        -- identifier.pub_state (unpublished, withdrawn, published, embargoed)
-      #  "init_sub_date"=>2022-02-02 02:29:12 UTC,                          -- Earliest submitted state from stash_engine_resource_states
-      #  "last_viewable_resource_id"=>2997,                                 -- last resource with view flag set (embargoed or published)
-      #  "publication_date"=>2020-08-10 00:00:00 UTC,                       -- pub date for last view resource, may be embargoed (future) or published (past)
-      #  "authors"=>"Account"}                                              -- author last names
       def do_query
         # this needs to be expanded
         query = "#{BASE_QUERY} #{@where_conditions} #{@order_by} #{@limit}"
