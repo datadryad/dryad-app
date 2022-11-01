@@ -40,8 +40,8 @@ module StashEngine
 
       group_record = StashDatacite::ContributorGrouping.where(name_identifier_id: params[:funder_id]).first
       if group_record.present?
-        names = group_record.json_contains.map{|i| i['contributor_name']} + [params[:funder_name]]
-        sql = "contrib.contributor_name IN (#{names.map{|i| '?'}.join(', ')})"
+        names = group_record.json_contains.map { |i| i['contributor_name'] } + [params[:funder_name]]
+        sql = "contrib.contributor_name IN (#{names.map { |_i| '?' }.join(', ')})"
         @rep.add_where(arr: ([sql] + names).flatten) # should already be flat, but just in case
         return
       end
@@ -65,21 +65,22 @@ module StashEngine
 
     private def add_date_range
       # has a date type and at least one date in a range
-      if params[:date_type].present? && (params[:start_date].present? || params[:end_date].present?)
-        start_time = (params[:start_date].present? ? Time.parse(params[:start_date]) : Time.new(-1000, 1, 1) )
-        end_time = (params[:end_date].present? ? Time.parse(params[:end_date]) : Time.new(3000, 1, 1) )
-        if params[:date_type] == 'initial'
-          @rep.add_where(arr: ['init_sub_date BETWEEN ? and ?', start_time, end_time])
-        elsif params[:date_type] == 'published'
-          @rep.add_where(arr: ['viewable_resource.publication_date BETWEEN ? and ?', start_time, end_time])
-        end
+      return unless params[:date_type].present? && (params[:start_date].present? || params[:end_date].present?)
+
+      start_time = (params[:start_date].present? ? Time.parse(params[:start_date]) : Time.new(-1000, 1, 1))
+      end_time = (params[:end_date].present? ? Time.parse(params[:end_date]) : Time.new(3000, 1, 1))
+      case params[:date_type]
+      when 'initial'
+        @rep.add_where(arr: ['init_sub_date BETWEEN ? and ?', start_time, end_time])
+      when 'published'
+        @rep.add_where(arr: ['viewable_resource.publication_date BETWEEN ? and ?', start_time, end_time])
       end
     end
 
     private def add_sort_order
       # order the list only by the whitelist, which creates partial SQL and eliminates injection
       ord = helpers.sortable_table_order(whitelist: %w[title authors identifier contributor_name award_number
-                init_sub_date publication_date1 publication_date2])
+                                                       init_sub_date publication_date1 publication_date2])
       ord.gsub!(/publication_date\d/, 'publication_date')
       @rep.order(order_str: ord)
     end
@@ -91,7 +92,6 @@ module StashEngine
       items = Array.new(blank_results, nil) + results_arr # pad out an array with empty results for earlier pages for kaminari
       Kaminari.paginate_array(items, total_count: items.length).page(@page).per(@page_size)
     end
-
 
   end
 end

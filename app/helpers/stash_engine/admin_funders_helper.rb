@@ -1,2 +1,0 @@
-module StashEngine::AdminFundersHelper
-end
