@@ -44,7 +44,7 @@
             <summary class="o-showhide__summary o-sites__summary">Admin</summary>
             <div class="o-sites__group">
               <%= link_to 'Datasets', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
-                                                                        editor_id: current_user.id, curation_status: 'submitted', only_path: true), class: 'o-sites__group-item' %>
+                                                                         only_path: true), class: 'o-sites__group-item' %>
               <%= link_to 'Dataset Funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
             </div>
           </details>
