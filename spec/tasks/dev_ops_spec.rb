@@ -85,7 +85,7 @@ describe 'dev_ops:download_uri', type: :task do
 
     it 'loads the file and calls updates' do
       # testing one specific value from the file
-      expect(DevOps::DownloadUri).to receive(:update)\
+      expect(DevOps::DownloadUri).to receive(:update) \
         .with(doi: 'doi:10.5072/FK20R9S858', old_ark: 'ark:/99999/fk4np2b23p', new_ark: 'ark:/99999/fk4cv5xm2w').once
       # testing that it is called for the other 11
       expect(DevOps::DownloadUri).to receive(:update).at_least(11).times

@@ -23,7 +23,6 @@ module StashEngine
     end
 
     # gets the Tenant class to respond to the keys so you can call hash like methods
-    # rubocop:disable Lint/MissingSuper
     def method_missing(m)
       @ostruct.send(m)
     end
@@ -31,7 +30,6 @@ module StashEngine
     def respond_to_missing?(*args)
       @ostruct.respond_to?(*args)
     end
-    # rubocop:enable Lint/MissingSuper
 
     def logo_file
       @logo_file ||= begin
@@ -59,12 +57,12 @@ module StashEngine
     def shibboleth_login_path(params = nil)
       extra_params = (params ? "?#{params.to_param}" : '')
       "https://#{Rails.application.default_url_options[:host]}/Shibboleth.sso/Login?" \
-          "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
-          "&entityID=#{CGI.escape(authentication.entity_id)}"
+        "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
+        "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
     def google_login_path(params = nil)
-      # note that APP_CONFIG.stash_mount includes a leading slash
+      # NOTE: that APP_CONFIG.stash_mount includes a leading slash
       # you must add extra params in state param https://stackoverflow.com/questions/7722062/google-oauth2-redirect-uri-with-several-parameters
       state_param_val = CGI.escape((params ? params.to_param : ''))
       qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")

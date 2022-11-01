@@ -720,7 +720,7 @@ module StashApi
         @res = my_id.in_progress_resource
         @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                  create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
-        @patch_body = [{ "op": 'replace', "path": '/versionStatus', "value": 'submitted' }].to_json
+        @patch_body = [{ op: 'replace', path: '/versionStatus', value: 'submitted' }].to_json
       end
 
       describe 'PATCH to submit dataset' do
@@ -854,7 +854,7 @@ module StashApi
         it 'allows curationStatus to be updated' do
           expect(@res.current_curation_status).to eq('peer_review')
 
-          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
@@ -868,7 +868,7 @@ module StashApi
           @ca = create(:curation_activity, resource: @res, status: 'published')
           expect(@res.current_curation_status).to eq('published')
 
-          @patch_body = [{ "op": 'replace', "path": '/curationStatus', "value": 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
@@ -882,7 +882,7 @@ module StashApi
           expect(@identifier.publication_issn).to eq(nil)
           new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
 
-          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": new_issn }].to_json
+          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: new_issn }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
@@ -898,7 +898,7 @@ module StashApi
                                             data_type: 'publicationISSN',
                                             value: new_issn)
           expect(@identifier.publication_issn).to eq(new_issn)
-          @patch_body = [{ "op": 'replace', "path": '/publicationISSN', "value": '' }].to_json
+          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: '' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(

@@ -50,7 +50,7 @@ module Stash
 
           # zenodo returns application/json even with a 204 and no content to parse as application/json
           resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
-          resp = resp.with_indifferent_access if resp.class == Hash
+          resp = resp.with_indifferent_access if resp.instance_of?(Hash)
 
           # zenodo's servers seem to give 504s sometimes
           raise RetryError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" if r.status.code >= 500

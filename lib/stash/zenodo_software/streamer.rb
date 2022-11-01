@@ -73,17 +73,17 @@ module Stash
 
         if size != response.headers['Content-Length'].to_i
           raise Stash::ZenodoReplicate::ZenodoError, "Size of http body doesn't match Content-Length for file:\n #{@file_model.class}," \
-            "\n cumulative_size: #{size}, Content-Length from server: #{response.headers['Content-Length']}" \
-            "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
+                                                     "\n cumulative_size: #{size}, Content-Length from server: #{response.headers['Content-Length']}" \
+                                                     "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
         end
 
         { response: put_response, digests: digests_obj.hex_digests }
       rescue Stash::Download::MerrittError => e
         raise Stash::ZenodoReplicate::ZenodoError, "Couldn't create presigned URL for id: #{@file_model.id}, fn: #{@file_model.upload_file_name}\n" \
-            "Original error: #{e}\n#{e.full_message}"
+                                                   "Original error: #{e}\n#{e.full_message}"
       rescue HTTP::Error => e
         raise Stash::ZenodoReplicate::ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \
-            "Original error: #{e}\n#{e.full_message}"
+                                                   "Original error: #{e}\n#{e.full_message}"
       end
       # rubocop:enable Metrics/MethodLength
     end

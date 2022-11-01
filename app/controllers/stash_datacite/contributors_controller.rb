@@ -63,7 +63,7 @@ module StashDatacite
         # clean the partial_term of unwanted characters so it doesn't cause errors when calling the CrossRef API
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         response = HTTParty.get('https://api.crossref.org/funders',
-                                query: { 'query': partial_term },
+                                query: { query: partial_term },
                                 headers: { 'Content-Type' => 'application/json' })
         return if response.parsed_response.blank?
         return if response.parsed_response['message'].blank?
@@ -115,7 +115,6 @@ module StashDatacite
     end
 
     # tries to set an exact match for the contributor name, returns true/false if it was successfully set
-    # rubocop:disable Naming/AccessorMethodName
     def set_exact_match(contributor_name:)
       return false if contributor_name.blank?
 
@@ -147,7 +146,6 @@ module StashDatacite
     rescue HTTP::Error
       false # no exact match if http error, we won't wait around for FundRef to start working again
     end
-    # rubocop:enable Naming/AccessorMethodName
 
     def resource
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)

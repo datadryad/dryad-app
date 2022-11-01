@@ -124,9 +124,9 @@ class ApiApplicationController < ::StashEngine::ApplicationController
 
   # call this like return_error(messages: 'blah', status: 400) { yield }
   def return_error(messages:, status:)
-    if messages.class == String
+    if messages.instance_of?(String)
       (render json: { error: messages }.to_json, status: status) && yield
-    elsif messages.class == Array
+    elsif messages.instance_of?(Array)
       (render json: messages.map { |e| { error: e } }.to_json, status: status) && yield
     end
   end

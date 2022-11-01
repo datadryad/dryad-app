@@ -42,7 +42,7 @@ module Stash
         end
       rescue Ezid::Error => e
         err = EzidError.new("Ezid failed to reserver an id for resource #{resource&.identifier_str}" \
-                                " (#{e.message}) with doi: #{doi}")
+                            " (#{e.message}) with doi: #{doi}")
         err.set_backtrace(e.backtrace) if e.backtrace.present?
         raise err
       end

@@ -12,9 +12,9 @@ class DatasetRecord
     end_time = end_time.utc.iso8601
 
     # retrieve oai records
-    opts = { 'metadata_prefix': 'stash_wrapper', from: start_time, until: end_time, set: set }.compact
+    opts = { metadata_prefix: 'stash_wrapper', from: start_time, until: end_time, set: set }.compact
     oai_record_response = get_oai_response(opts)
-    return [] unless oai_record_response.class == OAI::ListRecordsResponse
+    return [] unless oai_record_response.instance_of?(OAI::ListRecordsResponse)
 
     # convert to datset record objects for things we care about
     make_ds_record_array(oai_record_response)

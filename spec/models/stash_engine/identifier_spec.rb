@@ -417,7 +417,7 @@ module StashEngine
           @identifier2.update_search_words!
           @identifier2.reload
           expect(@identifier2.search_words.strip).to eq('doi:10.123/450 Frolicks with the seahorses ' \
-            'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
+                                                        'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
         end
       end
     end
@@ -483,8 +483,8 @@ module StashEngine
       it 'records a funder-based payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         @identifier.record_payment
@@ -589,13 +589,13 @@ module StashEngine
     describe '#funder_will_pay?' do
       it 'does not make user pay when funder pays' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
-          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': true)])
+          .and_return([OpenStruct.new(payment_exempted?: false), OpenStruct.new(payment_exempted?: true)])
         expect(@identifier.funder_will_pay?).to be_truthy
       end
 
       it 'makes the user pay when funder will not' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
-          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': false)])
+          .and_return([OpenStruct.new(payment_exempted?: false), OpenStruct.new(payment_exempted?: false)])
         expect(@identifier.funder_will_pay?).to be_falsey
       end
     end
@@ -604,20 +604,20 @@ module StashEngine
       it 'returns payment information if funder is paying' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': true,  contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: true,  contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         expect(@identifier.funder_payment_info).to eql(
-          OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+          OpenStruct.new(payment_exempted?: true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
         )
       end
 
       it 'returns nil if no funder payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         expect(@identifier.funder_payment_info).to eql(nil)

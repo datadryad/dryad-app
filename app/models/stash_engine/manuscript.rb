@@ -23,7 +23,9 @@ module StashEngine
       parser = EmailParser.new(content: content)
       parsing_error = check_parsing_errors(parser)
 
-      if !parsing_error
+      if parsing_error
+        result[:error] = parsing_error
+      else
         manu = Manuscript.create(journal: parser.journal,
                                  identifier: parser.identifier,
                                  manuscript_number: parser.manuscript_number,
@@ -36,8 +38,6 @@ module StashEngine
           result[:success?] = true
           result[:payload] = manu
         end
-      else
-        result[:error] = parsing_error
       end
 
       result

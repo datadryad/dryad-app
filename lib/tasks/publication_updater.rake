@@ -6,7 +6,7 @@ namespace :publication_updater do
   QUERY = <<-SQL.freeze
     SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
     FROM stash_engine_identifiers sei
-      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id 
+      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id#{' '}
       LEFT OUTER JOIN dcs_related_identifiers dri ON ser.id = dri.resource_id
         AND dri.work_type = 'primary_article' AND dri.related_identifier_type = 'doi'
       INNER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id

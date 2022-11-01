@@ -12,7 +12,7 @@ RSpec.describe 'main' do
 
     WebMock.disable_net_connect!(allow_localhost: true)
 
-    file_contents = File.open(File.join(__dir__, '..', 'data', 'oai-example.xml')).read
+    file_contents = File.read(File.join(__dir__, '..', 'data', 'oai-example.xml'))
 
     allow(State).to receive(:statefile_path).and_return(File.join(__dir__, '..', '..', 'state', 'test.json'))
     # stub the request for the oai-pmh feed

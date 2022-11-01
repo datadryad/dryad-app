@@ -36,7 +36,7 @@ module RorAuthorDatasets
 	          AND se_rs.resource_state = 'submitted') as unique_ids
         JOIN stash_engine_resources res2
           ON unique_ids.identifier_id = res2.identifier_id
-        GROUP BY unique_ids.identifier_id) as ident_and_res	
+        GROUP BY unique_ids.identifier_id) as ident_and_res#{'	'}
       JOIN stash_engine_identifiers se_id3
         ON se_id3.id = ident_and_res.identifier_id
       JOIN stash_engine_resources se_res3

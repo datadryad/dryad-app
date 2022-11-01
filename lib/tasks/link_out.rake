@@ -82,7 +82,7 @@ namespace :link_out do
       internal_datum.value = pmid.to_s
       next unless internal_datum.value_changed?
 
-      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' "\
+      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' " \
         "(identifier: #{data.resource.identifier_id})"
       internal_datum.save
     end

@@ -40,7 +40,7 @@ module Stash
           @ztc.reload
           expect(@ztc.state).to eq('error')
           expect(@ztc.error_info).to include('unless starting from an enqueued state')
-          # note error logging is also tested in here
+          # NOTE: error logging is also tested in here
         end
 
         it "rejects later submission for one that has previous errored that hasn't been corrected" do
@@ -53,7 +53,7 @@ module Stash
           @ztc2.reload
           expect(@ztc2.state).to eq('error')
           expect(@ztc2.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
-          # note error logging is also tested in here
+          # NOTE: error logging is also tested in here
         end
 
         it "doesn't reject earlier submission if later one has errored (but earlier is done)" do
@@ -76,7 +76,7 @@ module Stash
           @ztc.reload
           expect(@ztc.state).to eq('error')
           expect(@ztc.error_info).to include('Cannot replicate a version while a previous version is replicating or has an error')
-          # note error logging is also tested in here
+          # NOTE: error logging is also tested in here
         end
 
         it 'rejects an out-of-order replication for the same identifier with one deferred' do

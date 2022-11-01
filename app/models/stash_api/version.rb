@@ -16,7 +16,7 @@ module StashApi
     end
 
     def metadata_with_links
-      { '_links': links }.merge(metadata)
+      { _links: links }.merge(metadata)
     end
 
     def parent_dataset

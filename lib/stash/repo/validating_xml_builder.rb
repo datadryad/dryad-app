@@ -6,7 +6,7 @@ module Stash
     class ValidatingXMLBuilder < FileBuilder
 
       def do_validate?
-        (rails_env = ENV['RAILS_ENV']) && %w[development test].include?(rails_env)
+        (rails_env = ENV.fetch('RAILS_ENV', nil)) && %w[development test].include?(rails_env)
       end
 
       def mime_type

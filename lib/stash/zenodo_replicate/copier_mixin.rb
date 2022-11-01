@@ -17,7 +17,7 @@ module Stash
         # rubocop:disable Style/GuardClause
         if repli_count.positive?
           raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version while a previous version " \
-              'is replicating or has an error'
+                             'is replicating or has an error'
         end
         # rubocop:enable Style/GuardClause
       end
@@ -29,7 +29,7 @@ module Stash
         return if prev_unfinished_count == 0
 
         raise ZenodoError, "identifier_id #{@copy.identifier_id}: Cannot replicate when a previous replication for the " \
-              'identifier has not finished yet. Items must replicate in order.'
+                           'identifier has not finished yet. Items must replicate in order.'
       end
     end
   end

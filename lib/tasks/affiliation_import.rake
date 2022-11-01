@@ -28,14 +28,14 @@ namespace :affiliation_import do
     @live_mode = false
     @last_resource = nil
 
-    case ENV['AFFILIATION_MODE']
+    case ENV.fetch('AFFILIATION_MODE', nil)
     when nil
       puts 'Environment variable AFFILIATION_MODE is blank, assuming test mode.'
     when 'live'
       puts 'Starting live processing due to environment variable AFFILIATION_MODE.'
       @live_mode = true
     else
-      puts "Environment variable AFFILIATION_MODE is #{ENV['AFFILIATION_MODE']}, entering test mode."
+      puts "Environment variable AFFILIATION_MODE is #{ENV.fetch('AFFILIATION_MODE', nil)}, entering test mode."
     end
 
     puts 'Loading affiliation info from CSV files in /tmp/dryad_affiliations*'
@@ -56,14 +56,14 @@ namespace :affiliation_import do
     start_time = Time.now
     @live_mode = false
 
-    case ENV['AUTHOR_MERGE_MODE']
+    case ENV.fetch('AUTHOR_MERGE_MODE', nil)
     when nil
       puts 'Environment variable AUTHOR_MERGE_MODE is blank, assuming test mode.'
     when 'live'
       puts 'Starting live processing due to environment variable AUTHOR_MERGE_MODE.'
       @live_mode = true
     else
-      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV['AUTHOR_MERGE_MODE']}, entering test mode."
+      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV.fetch('AUTHOR_MERGE_MODE', nil)}, entering test mode."
     end
 
     start_from = 0
@@ -256,7 +256,7 @@ namespace :affiliation_import do
 
     resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                          note: 'Duplicate authors combined by ' \
-                                                                         'affiliation_import:merge_duplicate_authors',
+                                                                               'affiliation_import:merge_duplicate_authors',
                                                                          status: resource.curation_activities.last.status)
     @last_resource = resource
   end

@@ -59,7 +59,7 @@ namespace :zenodo do
     puts "#{format('%.2f', (count_migrated.to_f / (count_migrated + count_remaining) * 100))}% by number of old datasets have been replicated"
 
     puts "#{StashEngine::ApplicationController.helpers.filesize(size_migrated)} of " \
-        "#{StashEngine::ApplicationController.helpers.filesize(size_remaining + size_migrated)} of the old datasets have been replicated"
+         "#{StashEngine::ApplicationController.helpers.filesize(size_remaining + size_migrated)} of the old datasets have been replicated"
 
     puts "#{format('%.2f', (size_migrated.to_f / (size_remaining + size_migrated) * 100))}% complete by size"
 

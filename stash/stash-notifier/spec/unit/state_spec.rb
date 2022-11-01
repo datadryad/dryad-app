@@ -48,7 +48,7 @@ class StateSpec
 
     describe '#save_state_hash' do
       it 'saves whatever hash to pretty json' do
-        State.save_state_hash(hash: { cat: 'meow', 'dog': 'ruff' })
+        State.save_state_hash(hash: { cat: 'meow', dog: 'ruff' })
         my_val = "{\n  \"cat\": \"meow\",\n  \"dog\": \"ruff\"\n}"
         data = File.read(State.statefile_path)
         expect(data).to eql(my_val)

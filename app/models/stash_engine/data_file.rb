@@ -28,10 +28,10 @@ module StashEngine
       if upload_file_name.include?('#')
         # Merritt needs the components double-encoded when there is a '#' in the filename
         "#{domain}/api/presign-file/#{ERB::Util.url_encode(local_id)}/#{resource.stash_version.merritt_version}/" \
-        "producer%252F#{ERB::Util.url_encode(ERB::Util.url_encode(upload_file_name))}?no_redirect=true"
+          "producer%252F#{ERB::Util.url_encode(ERB::Util.url_encode(upload_file_name))}?no_redirect=true"
       else
         "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-        "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+          "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
       end
     end
 
@@ -63,7 +63,7 @@ module StashEngine
 
       # the slash is being double-encoded and normally shouldn't be present, except in a couple of one-off datasets that we regret.
       "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
-          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
+        "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
     # the presigned URL for a file that was "directly" uploaded to Dryad,

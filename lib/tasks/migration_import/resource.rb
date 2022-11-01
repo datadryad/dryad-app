@@ -234,7 +234,7 @@ module MigrationImport
       @hash[:subjects].each do |json_subject|
         existing_subjects = StashDatacite::Subject.where(subject: json_subject[:subject],
                                                          subject_scheme: json_subject[:subject_scheme],
-                                                         'scheme_URI': json_subject['scheme_URI'])
+                                                         scheme_URI: json_subject['scheme_URI'])
         if existing_subjects.empty?
           # Create & link subject
           my_hash = json_subject.slice('subject', 'subject_scheme', 'scheme_URI', 'created_at', 'updated_at')

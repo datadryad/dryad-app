@@ -355,7 +355,7 @@ module Stash
           expect(mega_hash).to eql(expected_mega_hash)
         end
       end
-      # Note: private methods in this class end up being tested through other methods
+      # NOTE: private methods in this class end up being tested through other methods
     end
   end
 end

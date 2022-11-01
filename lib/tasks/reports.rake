@@ -21,8 +21,8 @@ namespace :reports do
       puts 'example: bundle exec rails reports:from_text_institution name="Max Planck" RAILS_ENV=production'
       next
     end
-    puts "Creating dataset report for items with author or contributor affiliation like \"#{ENV['name']}\""
-    InstitutionDatasets.datasets_by_name(name: ENV['name'])
-    puts "Done, see #{ENV['name']}-#{Time.now.strftime('%Y-%m-%d')}.tsv"
+    puts "Creating dataset report for items with author or contributor affiliation like \"#{ENV.fetch('name', nil)}\""
+    InstitutionDatasets.datasets_by_name(name: ENV.fetch('name', nil))
+    puts "Done, see #{ENV.fetch('name', nil)}-#{Time.now.strftime('%Y-%m-%d')}.tsv"
   end
 end

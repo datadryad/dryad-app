@@ -6,14 +6,16 @@ namespace :counter do
 
   desc 'get and combine files from the other servers'
   task :combine_files do
-    lc = Counter::LogCombiner.new(log_directory: ENV['LOG_DIRECTORY'], scp_hosts: ENV['SCP_HOSTS'].split(' '), scp_path: ENV['LOG_DIRECTORY'])
+    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split(' '),
+                                  scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.copy_missing_files
     lc.combine_logs
   end
 
   desc 'remove log files we are not keeping because of our privacy policy'
   task :remove_old_logs do
-    lc = Counter::LogCombiner.new(log_directory: ENV['LOG_DIRECTORY'], scp_hosts: ENV['SCP_HOSTS'].split(' '), scp_path: ENV['LOG_DIRECTORY'])
+    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split(' '),
+                                  scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.remove_old_logs(days_old: 60)
     lc.remove_old_logs_remote(days_old: 60)
   end
@@ -40,10 +42,10 @@ namespace :counter do
   task cop_manual: :environment do
     # this keeps the output from buffering forever until a chunk fills so that output is timely
     $stdout.sync = true
-    puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"
+    puts "JSON_DIRECTORY is #{ENV.fetch('JSON_DIRECTORY', nil)}"
 
     js = JsonStats.new
-    Dir.glob(File.join(ENV['JSON_DIRECTORY'], '????-??.json')).sort.each do |f|
+    Dir.glob(File.join(ENV.fetch('JSON_DIRECTORY', nil), '????-??.json')).sort.each do |f|
       puts f
       js.update_stats(f)
     end
@@ -108,7 +110,7 @@ namespace :counter do
     end
 
     # setup variables needed
-    report_directory = ENV['REPORT_DIR']
+    report_directory = ENV.fetch('REPORT_DIR', nil)
     # if ENV['REPORT_IDS'] is set then just report the IDs for our reports
     # if ENV['FORCE_SUBMISSION'] is set with comma separated yyyy-mm values then those reports will be
     # submitted again, even if they already appear to have been submitted

@@ -70,7 +70,7 @@ class CollectionSet
 
   # cleans any retry items older than n days
   def clean_retry_items!(days:)
-    time_ago_cutoff = (Time.new - 24 * 60 * 60 * days).utc
+    time_ago_cutoff = (Time.new - (24 * 60 * 60 * days)).utc
     @retry_hash.delete_if { |_, v| v[:time] < time_ago_cutoff }
   end
 

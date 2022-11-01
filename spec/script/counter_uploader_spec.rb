@@ -44,8 +44,8 @@ RSpec.describe SubmittedReports do
       stub_request(:get, %r{api\.datacite\.org/events\?source-id=datacite-usage&subj-id=https://api\.datacite\.org/reports/.+})
         .with(headers: { 'Host' => 'api.datacite.org' })
         .to_return(status: 200,
-                   body: { "data": [], "meta": { "total": 15, "total-pages": 2, "page": 1 },
-                           "links": { "self": 'fill' } }.to_json,
+                   body: { data: [], meta: { total: 15, 'total-pages': 2, page: 1 },
+                           links: { self: 'fill' } }.to_json,
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
     end
 
