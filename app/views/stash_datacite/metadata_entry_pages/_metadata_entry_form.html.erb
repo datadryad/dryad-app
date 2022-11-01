@@ -71,7 +71,10 @@
                         isCurator: current_user&.limited_curator?) %>
 
     <h2 class="o-heading__page-span">Data Description</h2>
-
+    
+    <!--  CEDAR Metadata Editor -->
+    <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), appConfig: APP_CONFIG[:cedar] } ) %>
+    
     <%# if @metadata_entry.subjects.empty? %>
       <%# render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
     <%# else %>

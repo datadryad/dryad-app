@@ -22,8 +22,12 @@
   dialogPolyfill.registerDialog(modal2);
 
   $('#genericModalClose').click(function(){
-    document.querySelector('#genericModalContent').classList.replace('c-modal-content__wide',
-        'c-modal-content__normal');
-    $('#genericModalDialog')[0].close(); // uses [0] to get native object rather than jQuery object (I think)
+      console.log("closing genericModal");
+      document.querySelector('#genericModalContent').classList.replace('c-modal-content__wide',
+								       'c-modal-content__normal');
+      document.querySelector('#genericModalContent').classList.replace('c-modal-content__cedar',
+								       'c-modal-content__normal');
+      $('#genericModalDialog')[0].close(); // uses [0] to get native object rather than jQuery object (I think)
+      $('#genericModalContent').html("");
   });
 </script>

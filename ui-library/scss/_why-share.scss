@@ -79,7 +79,7 @@
     margin-bottom: 40px;
 
     &:not(:last-child) {
-      border-right: 1px solid $design-orange-color;
+      border-right: thin solid $design-orange-color;
     }
   }
 }

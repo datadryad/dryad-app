@@ -110,9 +110,9 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
-    border-right: 1px solid $design-light-gray-color;
-    border-bottom: 1px solid $design-light-gray-color;
-    border-left: 1px solid $design-light-gray-color;
+    border-right: thin solid $design-light-gray-color;
+    border-bottom: thin solid $design-light-gray-color;
+    border-left: thin solid $design-light-gray-color;
 
     &:hover,
     &:focus {
@@ -127,8 +127,8 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
-    border-right: 1px solid $design-light-gray-color;
-    border-left: 1px solid $design-light-gray-color;
+    border-right: thin solid $design-light-gray-color;
+    border-left: thin solid $design-light-gray-color;
 
     &:hover,
     &:focus {
@@ -144,8 +144,8 @@
 
   @include bp(screen3) {
     padding: 10px 10px 10px 30px;
-    border-right: 1px solid $design-light-gray-color;
-    border-left: 1px solid $design-light-gray-color;
+    border-right: thin solid $design-light-gray-color;
+    border-left: thin solid $design-light-gray-color;
 
     &:hover,
     &:focus {
@@ -161,9 +161,9 @@
 
   @include bp(screen3) {
     padding: 10px 10px 10px 30px;
-    border-right: 1px solid $design-light-gray-color;
-    border-bottom: 1px solid $design-light-gray-color;
-    border-left: 1px solid $design-light-gray-color;
+    border-right: thin solid $design-light-gray-color;
+    border-bottom: thin solid $design-light-gray-color;
+    border-left: thin solid $design-light-gray-color;
 
     &:hover,
     &:focus {

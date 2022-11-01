@@ -14,7 +14,7 @@
   grid-template-columns: 1fr 3fr 1fr;
   gap: $spacing-md;
   padding: $spacing-md;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
 
   header {
     grid-column: 1 / -1;
