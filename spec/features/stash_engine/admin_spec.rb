@@ -389,7 +389,7 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'allows adding notes to the curation activity log', js: true do
       visit root_path
-      section = first('summary').text
+      first('summary').click
       click_link('Datasets')
 
       expect(page).to have_text('Admin dashboard')
