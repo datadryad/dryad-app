@@ -33,8 +33,8 @@ module Stash
           # creation function should still be working as long as they don't change anything.
           jwt = @rat.make_jwt(deposition_id: @deposition_id, filename: @filename)
           expected_jwt = 'eyJraWQiOiIxMjM0IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOnsiZGVwb3NpdF9pZCI6IjYzODA5M' \
-            'iIsImZpbGUiOiJTY3JlZW5fU2hvdF8yMDIwLTA2LTEwX2F0XzguMDAuMTJfUE0ucG5nIiwiYWNjZXNzIjoicmVhZCJ9' \
-            'LCJpYXQiOjE2MDAwMDE2MDJ9.Cy5rxpvKXZ9-QPqtKN3iRAUlWdumMnrVhtlk-Q6eu04'
+                         'iIsImZpbGUiOiJTY3JlZW5fU2hvdF8yMDIwLTA2LTEwX2F0XzguMDAuMTJfUE0ucG5nIiwiYWNjZXNzIjoicmVhZCJ9' \
+                         'LCJpYXQiOjE2MDAwMDE2MDJ9.Cy5rxpvKXZ9-QPqtKN3iRAUlWdumMnrVhtlk-Q6eu04'
           expect(jwt).to eq(expected_jwt)
         end
       end

@@ -254,7 +254,7 @@ module StashEngine
         @resource_state3 = create(:resource_state, user_id: @user3.id, resource_state: 'submitted', resource_id: @resource3.id)
 
         @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
+        allow(@mock_idgen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
       end
 

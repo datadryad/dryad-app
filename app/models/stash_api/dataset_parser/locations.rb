@@ -59,7 +59,7 @@ module StashApi
       end
 
       def valid_place?(item)
-        ''.class == item.class # string
+        ''.instance_of?(item.class) # string
       end
 
       def valid_point?(item)

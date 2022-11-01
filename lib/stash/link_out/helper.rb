@@ -17,7 +17,7 @@ module LinkOut
     def request_headers
       {
         'User-Agent': 'datadryad.org (contact: help@datadryad.org)',
-        'Accept': 'text/xml'
+        Accept: 'text/xml'
       }
     end
 

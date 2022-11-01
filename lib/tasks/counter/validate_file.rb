@@ -58,10 +58,10 @@ module Counter
     # must have an IP address of some kind
     def validate_ip_address(item)
       error(msg: 'Invalid IP address string', item: __method__.to_s) if (begin
-                                                                           IPAddr.new(item)
-                                                                         rescue StandardError
-                                                                           nil
-                                                                         end).nil?
+        IPAddr.new(item)
+      rescue StandardError
+        nil
+      end).nil?
     end
 
     # don't know what these exactly look like, make stricter later if needed
@@ -172,7 +172,7 @@ module Counter
 
     def output_badinfo
       VALIDATION_METHODS.each_with_index do |v, i|
-        puts "#{v.rjust(LONGEST_METHOD)}: #{(i >= @pieces.length ? 'MISSING FIELD' : @pieces[i])}"
+        puts "#{v.rjust(LONGEST_METHOD)}: #{i >= @pieces.length ? 'MISSING FIELD' : @pieces[i]}"
       end
       puts ''
     end

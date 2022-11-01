@@ -53,7 +53,7 @@ class DatasetRecordSpec
 
         @oai_record = double('oai-record-mock')
         allow(@oai_record).to receive(:metadata).and_return(@noko_raw)
-        allow(@oai_record).to receive(:'deleted?').and_return(nil)
+        allow(@oai_record).to receive(:deleted?).and_return(nil)
         allow(@oai_record).to receive(:header).and_return(OpenStruct.new(datestamp: @noko_time, identifier: @noko_merritt_id))
         @my_record = DatasetRecord.new(@oai_record)
       end

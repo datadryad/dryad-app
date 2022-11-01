@@ -531,11 +531,11 @@ module StashApi
     def check_superuser_restricted_params
       %w[skipDataciteUpdate skipEmails preserveCurationStatus loosenValidation].each do |attr|
         item_value = params[attr]
-        unless item_value.nil? || item_value.class == TrueClass || item_value.class == FalseClass
+        unless item_value.nil? || item_value.instance_of?(TrueClass) || item_value.instance_of?(FalseClass)
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
           return false
         end
-        if item_value.class == TrueClass && @user.role != 'superuser'
+        if item_value.instance_of?(TrueClass) && @user.role != 'superuser'
           render json: { error: "Unauthorized: only superusers may set #{attr} to true" }.to_json, status: 401
           return false
         end

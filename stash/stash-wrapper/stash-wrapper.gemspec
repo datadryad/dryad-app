@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
-  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
   s.add_dependency 'typesafe_enum', '~> 0.1.9'
@@ -54,4 +53,5 @@ Gem::Specification.new do |s|
   # s.add_development_dependency 'simplecov-console'
   # s.add_development_dependency 'yard'
 
+  s.metadata['rubygems_mfa_required'] = 'true'
 end

@@ -26,7 +26,7 @@ module Stash
 
         unless s3_resp.status.success?
           return { success: false, error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
-              "for resource #{@resource.id}" }
+                                          "for resource #{@resource.id}" }
         end
 
         md5 = Digest::MD5.new

@@ -111,7 +111,7 @@ module StashEngine
     # the content disposition filename is ugly and there are some variations for ascii vs other encodings such
     # as utf8 and percent encoding of content
     def filename_from_content_disposition(disposition)
-      disposition = disposition.first if disposition.class == Array
+      disposition = disposition.first if disposition.instance_of?(Array)
       return nil if disposition.blank?
 
       if (match = disposition.match(/filename=([^;$]+)/)) # simple filenames
@@ -157,7 +157,7 @@ module StashEngine
 
     def size_from(response)
       content_length = response.header['Content-Length']
-      content_length = content_length.first if content_length.class == Array && !content_length.blank?
+      content_length = content_length.first if content_length.instance_of?(Array) && !content_length.blank?
       if content_length.blank?
         0
       else
@@ -169,7 +169,7 @@ module StashEngine
       content_type = response.header['Content-Type']
       return 'application/octet-stream' if content_type.blank?
 
-      mime_type = (content_type.class == Array ? content_type.first : content_type)
+      mime_type = (content_type.instance_of?(Array) ? content_type.first : content_type)
       return mime_type unless mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
 
       mime_type[/^\S*;/][0..-2]

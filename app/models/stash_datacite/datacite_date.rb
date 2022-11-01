@@ -43,7 +43,7 @@ module StashDatacite
       DataciteDate.date_type_mapping_obj(date_type_friendly)
     end
 
-    def self.set_date_available(resource_id:) # rubocop:disable Naming/AccessorMethodName
+    def self.set_date_available(resource_id:)
       resource = StashEngine::Resource.find(resource_id)
       publication_date = resource.publication_date
       return unless publication_date

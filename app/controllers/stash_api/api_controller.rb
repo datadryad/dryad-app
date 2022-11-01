@@ -28,8 +28,8 @@ module StashApi
 
     def output
       {
-        '_links': {
-          'self': root_self,
+        _links: {
+          self: root_self,
           'stash:datasets': {
             href: datasets_path
           },

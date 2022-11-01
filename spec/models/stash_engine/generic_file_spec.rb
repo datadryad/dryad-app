@@ -88,7 +88,7 @@ module StashEngine
       describe :sanitize_file_name do
         # Ensure that non-printable ACII control characters < 32 are sanitized
         it 'removes ASCII Control characters (0-31)' do
-          (0..31).each do |i|
+          32.times do |i|
             expect(StashEngine::GenericFile.sanitize_file_name("#{i.chr}abc123")).to eql('abc123')
             expect(StashEngine::GenericFile.sanitize_file_name("abc123#{i.chr}")).to eql('abc123')
 

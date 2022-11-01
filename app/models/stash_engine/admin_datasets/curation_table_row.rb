@@ -115,7 +115,7 @@ module StashEngine
           query = " \
             #{SELECT_CLAUSE}
             #{relevance}
-            #{(tenant ? FROM_CLAUSE_ADMIN : FROM_CLAUSE)}
+            #{tenant ? FROM_CLAUSE_ADMIN : FROM_CLAUSE}
             #{build_where_clause(search_term: params.fetch(:q, ''),
                                  all_advanced: params.fetch(:all_advanced, false),
                                  tenant_filter: params.fetch(:tenant, ''),

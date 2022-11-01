@@ -1,7 +1,7 @@
 module IdentifierRakeFunctions
   def self.update_identifiers
     resources = StashEngine::Resource.joins('LEFT JOIN stash_engine_identifiers ON ' \
-      'stash_engine_resources.identifier_id = stash_engine_identifiers.id')
+                                            'stash_engine_resources.identifier_id = stash_engine_identifiers.id')
       .where('stash_engine_identifiers.id IS NULL OR stash_engine_identifiers.identifier IS NULL')
 
     puts "There are #{resources.count} stash_engine_resources without stash_engine_identifiers"

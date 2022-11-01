@@ -372,7 +372,7 @@ namespace :dev_ops do
     dep.publish
   end
 
-  # note this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
+  # NOTE: this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
   # that have been previously uploaded are in Merritt.
   #
   # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3

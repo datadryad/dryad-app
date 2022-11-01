@@ -18,7 +18,7 @@ module Concerns
           redirect_to @status_hash[:url]
         when 202
           render status: 202, plain: 'The version of the dataset is being assembled. ' \
-            "Check back in around #{time_ago_in_words(resource.download_token.available + 30.seconds)} and it should be ready to download."
+                                     "Check back in around #{time_ago_in_words(resource.download_token.available + 30.seconds)} and it should be ready to download."
         when 408
           render status: 503, plain: 'Download Service Unavailable for this request'
         else

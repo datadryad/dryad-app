@@ -120,7 +120,7 @@ namespace :identifiers do
         note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
       )
     rescue StandardError => e
-      # note we get errors with test data updating DOI and some of the other callbacks on publishing
+      # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       p "    Exception! #{e.message}"
 
     end

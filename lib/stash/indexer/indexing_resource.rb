@@ -51,6 +51,7 @@ module Datacite
     end
   end
 end
+
 module Stash
   module Indexer
     class IndexingResource

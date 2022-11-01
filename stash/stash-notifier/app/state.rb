@@ -29,7 +29,7 @@ module State
   end
 
   def self.save_state_hash(hash:)
-    File.open(statefile_path, 'w') { |f| f.write(JSON.pretty_generate(hash)) }
+    File.write(statefile_path, JSON.pretty_generate(hash))
   end
 
   def self.load_state_as_hash
@@ -67,7 +67,7 @@ module State
       Config.logger.error("Couldn't run notifier -- already in progress or state/<environment>.pid file not removed")
       abort("Exiting: pid file already exists #{@@pid_file}")
     end
-    File.open(@@pid_file, 'w') { |f| f.write(Process.pid) }
+    File.write(@@pid_file, Process.pid)
   end
 
   def self.remove_pid
