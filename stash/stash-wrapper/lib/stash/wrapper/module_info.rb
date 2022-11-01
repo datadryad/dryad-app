@@ -5,7 +5,7 @@ module Stash
     NAME = 'stash-wrapper'.freeze
 
     # The version of this gem
-    VERSION = '0.1.12'.freeze
+    VERSION = '0.1.16'.freeze
 
     # The copyright notice for this gem
     COPYRIGHT = 'Copyright (c) 2016 The Regents of the University of California'.freeze

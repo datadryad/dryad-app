@@ -1,4 +1,24 @@
-## 0.1.6 (next)
+## 0.1.11 (1 November 2022)
+
+- Upgrade to ruby 2.7.6
+
+## 0.1.10 (27 September 2022)
+
+- Add async support, cleanup, use logger instead of logs, rubocop fixes
+
+## 0.1.9 (27 January 2021)
+
+- Updates to ruby, database, rubocop, warning fixes
+
+## 0.1.8 (14 September 2020)
+
+- Update to ruby 2.4.10, rubocop changes, moving tests, bundler upgrade, rubocop upgrade
+
+## 0.1.7 (14 November 2019)
+
+- Update to ruby 2.4.4, rubocop fixes
+
+## 0.1.6 (23 February 2017)
 
 - Support choosing binary packaging instead of zip.
 

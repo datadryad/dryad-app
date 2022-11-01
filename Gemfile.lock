@@ -11,18 +11,18 @@ GIT
 PATH
   remote: stash
   specs:
-    stash-merritt (0.2.1)
+    stash-merritt (0.2.5)
       datacite-mapping (~> 0.4.1)
       merritt-manifest (~> 0.1.3)
       rest-client (~> 2.1.0)
       rubyzip (~> 2.3.2)
       stash-sword
       stash-wrapper
-    stash-sword (0.1.7)
+    stash-sword (0.1.11)
       rest-client (~> 2.1.0)
       typesafe_enum (~> 0.1.9)
       xml-mapping_extensions (~> 0.4.9)
-    stash-wrapper (0.1.12)
+    stash-wrapper (0.1.16)
       typesafe_enum (~> 0.1.9)
       xml-mapping_extensions (~> 0.4.9)
 
