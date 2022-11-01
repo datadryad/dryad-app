@@ -28,19 +28,19 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'is accessible by admins' do
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
       it 'is accessible by curators' do
         sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
       it 'is accessible by super users' do
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
     end
