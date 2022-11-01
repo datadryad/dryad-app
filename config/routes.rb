@@ -301,7 +301,7 @@ Rails.application.routes.draw do
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
 
     # admin report for dataset funders
-    get 'ds_admin_funders', to: 'admin_dataset_funders#index'
+    get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
     
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
