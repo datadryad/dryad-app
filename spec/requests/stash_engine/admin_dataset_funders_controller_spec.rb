@@ -11,7 +11,7 @@ module StashEngine
       # HACK: in session because requests specs don't allow session in rails 4
       allow_any_instance_of(AdminDatasetFundersController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
-      @resources = 5.times.map do |i|
+      @resources = 5.times.map do |_i|
         create(:resource)
       end
     end
@@ -81,10 +81,12 @@ module StashEngine
 
       it 'limits to a compound funder with sub-units' do
         create(:contributor_grouping) # sets up example NIH sub-units
-        @resources.first.contributors.first.update(contributor_name: "National Institute on Minority Health and Health Disparities",
-                                                   name_identifier_id: "http://dx.doi.org/10.13039/100006545")
-        @resources.second.contributors.first.update(contributor_name: "Eunice Kennedy Shriver National Institute of Child Health and Human Development",
-                                                   name_identifier_id: "http://dx.doi.org/10.13039/100009633")
+        @resources.first.contributors.first.update(contributor_name: 'National Institute on Minority Health and Health Disparities',
+                                                   name_identifier_id: 'http://dx.doi.org/10.13039/100006545')
+        @resources.second.contributors.first.update(
+          contributor_name: 'Eunice Kennedy Shriver National Institute of Child Health and Human Development',
+          name_identifier_id: 'http://dx.doi.org/10.13039/100009633'
+        )
 
         cg = StashDatacite::ContributorGrouping.first
         response_code = get '/stash/ds_admin_funders', params: { funder_name: cg.contributor_name, funder_id: cg.name_identifier_id }
@@ -115,6 +117,7 @@ module StashEngine
         response_code = get '/stash/ds_admin_funders', params: { date_type: 'published',
                                                                  start_date: '2016-08-01',
                                                                  end_date: '2016-09-01' }
+        expect(response_code).to eq(200)
         expect(body).to include('08/22/2016')
         expect(body).to include(@resources[0].title)
         expect(body).not_to include(@resources[1].title)
