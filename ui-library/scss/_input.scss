@@ -49,7 +49,7 @@
 %c-input__element {
 	@extend %fcontrol-focus;
     box-sizing: border-box;
-	border: 1px solid $design-dark-gray-color;
+	border: thin solid $design-dark-gray-color;
 }
 
 .c-input__text {

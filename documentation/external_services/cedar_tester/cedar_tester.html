@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>CEDAR Standalone Modal Tester</title>
+
+<link rel="stylesheet" media="all" href="main.css" />
+<script src="cedar_utils.js"></script>
+
+</head>
+<body>
+
+<h1>CEDAR Standalone Modal Tester</h1>
+
+<!-- button to launch modal -->
+<button id="cedarOpen" type="submit" onClick="openModal()">Open CEDAR editor</button>
+
+<!-- modal dialog -->
+<dialog id="genericModalDialog" class="modalDialog">
+  <div>
+
+    <button id="genericModalClose" onClick="closeModal()" class="" style="float: right;" aria-label="close" type="button">
+     Close
+    </button>
+
+    <div id="genericModalContent" class="c-modal-content__cedar" style="display: inline;">
+      <script src="https://dryad-ryan-devbucket.s3.amazonaws.com/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"></script>
+      <cedar-embeddable-editor />
+    </div>
+  </div>
+</dialog>
+
+
+</body> </html>
