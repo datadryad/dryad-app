@@ -17,11 +17,13 @@ module StashDatacite
     ContributorTypesEnum = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
     ContributorTypesStrToFull = ContributorTypes.to_h { |i| [i.downcase, i] }
 
+    # rubocop:disable Style/MapToHash
     # maps DB value to the DataciteMapping class of fun from that gem
     IdentifierTypesToMapping = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i] }.to_h
 
     # maps from enum to the special full name/abbreviation like Crossref Funder ID or ROR
     IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i.value] }.to_h
+    # rubocop:enable Style/MapToHash
 
     enum contributor_type: ContributorTypesEnum
 

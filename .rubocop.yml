@@ -129,6 +129,10 @@ Style/SafeNavigation:
 Style/SingleLineBlockParams:
   Enabled: false
 
+# TEMP IGNORE for ruby 2.7 upgrade
+Style/OpenStructUse:
+  Enabled: false
+
 # Allow some special handling for engines
 Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true

@@ -51,6 +51,7 @@ module StashApi
     end
 
     # working with files
+    # rubocop:disable Security/IoMethods
     describe '#update' do
       it 'will add a file upload to the server and add metadata' do
         response_code = put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
@@ -138,6 +139,7 @@ module StashApi
         expect(lnks['stash:file-download']['href']).to eq(download_file_path(@file_id))
       end
     end
+    # rubocop:enable Security/IoMethods
 
     describe '#index' do
 

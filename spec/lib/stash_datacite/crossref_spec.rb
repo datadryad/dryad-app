@@ -3,7 +3,7 @@ require 'rails_helper'
 module Stash
   module Import
     describe Crossref do
-
+      # rubocop:disable Lint/ConstantDefinitionInBlock
       TITLE = 'High-skilled labour mobility in Europe before and after the 2004 enlargement'.freeze
       AUTHOR = [
         { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
@@ -128,7 +128,7 @@ module Stash
         }
       }.freeze
       # rubocop:enable Layout/LineLength
-
+      # rubocop:enable Lint/ConstantDefinitionInBlock
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
         @user = StashEngine::User.create(
