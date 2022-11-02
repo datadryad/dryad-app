@@ -45,7 +45,7 @@ module LinkOut
       Zlib::GzipWriter.open(zipped) do |gz|
         gz.mtime = File.mtime(file_name)
         gz.orig_name = file_name
-        gz.write IO.binread(file_name)
+        gz.write File.binread(file_name)
       end
       p "    compressing (gzip) #{file_name} - before: #{File.size(file_name)} after: #{File.size(zipped)}"
       zipped

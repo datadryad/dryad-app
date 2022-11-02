@@ -7,8 +7,8 @@ module StashDatacite
 
     ResourceTypesGeneral = Datacite::Mapping::ResourceTypeGeneral.map(&:value)
 
-    ResourceTypeGeneralEnum = ResourceTypesGeneral.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    ResourceTypesGeneralStrToFull = ResourceTypesGeneral.map { |i| [i.downcase, i] }.to_h
+    ResourceTypeGeneralEnum = ResourceTypesGeneral.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    ResourceTypesGeneralStrToFull = ResourceTypesGeneral.to_h { |i| [i.downcase, i] }
 
     # odd ones out here are Spreadsheet, Video, Multiple Types and are only for UI display
     # rubocop:disable Naming/ConstantName

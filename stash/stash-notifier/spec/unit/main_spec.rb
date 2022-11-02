@@ -22,12 +22,12 @@ RSpec.describe 'main' do
     @main_path = File.expand_path(File.join(__dir__, '..', '..', 'main.rb'))
     @json_state_path = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.json'))
     @pid_path = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.pid'))
-    File.delete(@json_state_path) if File.exist?(@json_state_path)
+    FileUtils.rm_f(@json_state_path)
   end
 
   after(:each) do
-    File.delete(@json_state_path) if File.exist?(@json_state_path)
-    File.delete(@pid_path) if File.exist?(@pid_path)
+    FileUtils.rm_f(@json_state_path)
+    FileUtils.rm_f(@pid_path)
 
     ENV['STASH_ENV'] = nil
     ENV['NOTIFIER_OUTPUT'] = nil

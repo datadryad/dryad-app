@@ -42,7 +42,7 @@ Dir[Rails.root.join('lib/**/*.rb')].sort.each { |f| require f }
 # if you have precompiled assets, the tests will use them without telling you and they might be out of date
 # this burned me with out of date and non-working javascript for an entire afternoon of aggravating debugging.  :evil-asset-pipeline:
 dir = Rails.root.join('public/assets/')
-FileUtils.rm_rf(dir) if Dir.exist?(dir)
+FileUtils.rm_rf(dir)
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.

@@ -45,7 +45,7 @@ module StashEngine
 
     describe 'self.should_defer?(resource:)' do
       before(:each) do
-        FileUtils.rm(ZenodoCopyJob::DEFERRED_TOUCH_FILE) if File.exist?(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
+        FileUtils.rm_f(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
       end
 
       it 'returns true and sets deferred if defer file exists' do

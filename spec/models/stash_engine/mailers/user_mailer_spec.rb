@@ -203,7 +203,7 @@ module StashEngine
         'Subject' => expected_subject
       }
 
-      headers = header.fields.map { |field| [field.name, field.value] }.to_h
+      headers = header.fields.to_h { |field| [field.name, field.value] }
       expected_headers.each do |k, v|
         expect(headers[k]).to eq(v)
       end

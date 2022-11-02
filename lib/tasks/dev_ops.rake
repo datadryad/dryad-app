@@ -89,7 +89,7 @@ namespace :dev_ops do
   desc 'Backup database by mysqldump'
   task backup: :environment do
     directory = '/apps/dryad/apps/ui/shared/cron/backups'
-    FileUtils.mkdir directory unless File.exist?(directory)
+    FileUtils.mkdir_p directory
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad
     db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]

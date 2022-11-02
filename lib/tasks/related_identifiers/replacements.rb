@@ -59,7 +59,7 @@ module RelatedIdentifiers
 
       results.each do |result|
         ascii_string = ''
-        result.related_identifier.split('').each do |char|
+        result.related_identifier.chars.each do |char|
           ascii_string << char unless char.ord > 127
         end
 

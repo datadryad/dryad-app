@@ -17,8 +17,8 @@ module StashEngine
         scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
         scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
         scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
-        enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
-        enum digest_type: %w[adler-32 crc-32 md2 md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
+        enum file_state: %w[created copied deleted].to_h { |i| [i.to_sym, i] }
+        enum digest_type: %w[adler-32 crc-32 md2 md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] }
       end
 
       # display the correct error message based on the url status code

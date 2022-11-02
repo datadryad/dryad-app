@@ -17,7 +17,7 @@ module StashDatacite
       it 'detects if not all author ids are for same resource' do
         @resource2 = create(:resource, user_id: @user.id)
         @bad_author = create(:author, resource: @resource2)
-        update_info = (@authors + [@bad_author]).map { |author| [author.id.to_s, author.author_order] }.to_h
+        update_info = (@authors + [@bad_author]).to_h { |author| [author.id.to_s, author.author_order] }
 
         response_code = patch '/stash_datacite/authors/reorder',
                               params: update_info,
@@ -31,7 +31,7 @@ module StashDatacite
         @user2 = create(:user, role: 'user')
         @resource2 = create(:resource, user_id: @user2.id)
         @authors2 = Array.new(7) { |_i| create(:author, resource: @resource2) }
-        update_info = @authors2.map { |author| [author.id.to_s, author.author_order] }.to_h
+        update_info = @authors2.to_h { |author| [author.id.to_s, author.author_order] }
 
         response_code = patch '/stash_datacite/authors/reorder',
                               params: update_info,
@@ -43,9 +43,9 @@ module StashDatacite
 
       it 'updates the author order to the order given' do
         update_info = @authors.map { |author| {  id: author.id, order: author.author_order } }.shuffle
-        update_info = update_info.each_with_index.map do |author, idx|
+        update_info = update_info.each_with_index.to_h do |author, idx|
           [author[:id].to_s, idx]
-        end.to_h
+        end
 
         response_code = patch '/stash_datacite/authors/reorder',
                               params: update_info,

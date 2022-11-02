@@ -66,7 +66,7 @@ module Stash
 
       after(:each) do
         sqio.close if sqio
-        tempfiles.each { |f| File.delete(f) if File.exist?(f) } if tempfiles
+        tempfiles.each { |f| FileUtils.rm_f(f) } if tempfiles
       end
 
       def make_alphanumeric_string(chars)

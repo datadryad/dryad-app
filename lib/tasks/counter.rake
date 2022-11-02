@@ -6,7 +6,7 @@ namespace :counter do
 
   desc 'get and combine files from the other servers'
   task :combine_files do
-    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split(' '),
+    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
                                   scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.copy_missing_files
     lc.combine_logs
@@ -14,7 +14,7 @@ namespace :counter do
 
   desc 'remove log files we are not keeping because of our privacy policy'
   task :remove_old_logs do
-    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split(' '),
+    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
                                   scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.remove_old_logs(days_old: 60)
     lc.remove_old_logs_remote(days_old: 60)
@@ -83,7 +83,7 @@ namespace :counter do
   desc 'test that environment is passed in'
   task :test_env do
     puts "LOG_DIRECTORY is set as #{ENV['LOG_DIRECTORY']}" if ENV['LOG_DIRECTORY']
-    puts "SCP_HOSTS are set as #{ENV['SCP_HOSTS'].split(' ')}" if ENV['SCP_HOSTS']
+    puts "SCP_HOSTS are set as #{ENV['SCP_HOSTS'].split}" if ENV['SCP_HOSTS']
     puts "note: in order to scp, you must add this server's public key to the authorized keys for the server you want to copy from"
   end
 

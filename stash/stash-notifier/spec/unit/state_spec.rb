@@ -23,7 +23,7 @@ class StateSpec
       it 'leaves original statefile entries intact and just adds' do
         original_file = File.expand_path(File.join(__dir__, '..', 'data', 'statefile-example.json'))
         my_file = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.json'))
-        File.delete(my_file) if File.exist?(my_file)
+        FileUtils.rm_f(my_file)
         FileUtils.cp(original_file, my_file)
         State.ensure_statefile
         my_file_json = JSON.parse(File.read(my_file))
@@ -34,7 +34,7 @@ class StateSpec
 
       it "creates a statefile if it doesn't exist" do
         my_file = File.join(__dir__, '..', '..', 'state', 'test.json')
-        File.delete(my_file) if File.exist?(my_file)
+        FileUtils.rm_f(my_file)
         State.ensure_statefile
         expect(File.size(my_file)).to be > 0
       end
@@ -58,7 +58,7 @@ class StateSpec
     describe '#load_state_as_hash' do
       it 'loads the state file as a hash' do
         my_val = "{\n  \"cat1\": \"meow2\",\n  \"dog3\": \"ruff4\"\n}"
-        File.delete(State.statefile_path) if File.exist?(State.statefile_path)
+        FileUtils.rm_f(State.statefile_path)
         File.write(State.statefile_path, my_val)
         expect(State.load_state_as_hash).to eql('cat1' => 'meow2', 'dog3' => 'ruff4')
       end
@@ -66,7 +66,7 @@ class StateSpec
 
     describe '#sets' do
       it 'loads the set objects from the state' do
-        File.delete(State.statefile_path) if File.exist?(State.statefile_path)
+        FileUtils.rm_f(State.statefile_path)
         State.ensure_statefile
         my_sets = State.sets
         expect(my_sets).to be_an(Array)
@@ -76,7 +76,7 @@ class StateSpec
 
     describe '#sets_serialized_to_hash' do
       it 'serializes the set objects to a hash' do
-        File.delete(State.statefile_path) if File.exist?(State.statefile_path)
+        FileUtils.rm_f(State.statefile_path)
         State.ensure_statefile
         expect(State.sets_serialized_to_hash).to eql('test1' => { last_retrieved: '1970-01-01T00:00:00Z', retry_status_update: [] })
       end
@@ -84,7 +84,7 @@ class StateSpec
 
     describe '#save_sets_state' do
       it 'saves the state and loaded state is as expected' do
-        File.delete(State.statefile_path) if File.exist?(State.statefile_path)
+        FileUtils.rm_f(State.statefile_path)
         State.ensure_statefile
         State.save_sets_state
         out_from_load = State.load_state_as_hash
@@ -96,7 +96,7 @@ class StateSpec
       it 'saves a pid file' do
         Config.initializer(environment: 'test')
         pid_file = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'state', "#{Config.environment}.pid"))
-        File.delete(pid_file) if File.exist?(pid_file)
+        FileUtils.rm_f(pid_file)
         State.create_pid
         expect(File.exist?(pid_file)).to be_truthy
         State.remove_pid
@@ -108,7 +108,7 @@ class StateSpec
       it 'removes the pid file' do
         Config.initializer(environment: 'test')
         pid_file = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'state', "#{Config.environment}.pid"))
-        File.delete(pid_file) if File.exist?(pid_file)
+        FileUtils.rm_f(pid_file)
         State.create_pid
         State.remove_pid
         expect(File.exist?(pid_file)).to be_falsey

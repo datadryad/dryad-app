@@ -26,7 +26,7 @@ module StashEngine
 
     describe 'self.should_defer?(resource:)' do
       before(:each) do
-        FileUtils.rm(ZenodoCopyJob::DEFERRED_TOUCH_FILE) if File.exist?(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
+        FileUtils.rm_f(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
         @zsj = ZenodoSuppJob.new
         @zc = create(:zenodo_copy, state: 'enqueued', copy_type: 'supp', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         @zsj.job_entry = @zc
