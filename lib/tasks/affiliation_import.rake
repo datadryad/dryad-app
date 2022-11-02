@@ -124,20 +124,16 @@ namespace :affiliation_import do
     a2_std = author2.author_standard_name
     string_difference = levenshtein_distance(a1_std, a2_std).to_f / (a1_std.size > a2_std.size ? a1_std.size : a2_std.size)
     if string_difference >= 0.5
-      a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
-      a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+      a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split.map { |part| part[0].downcase }.join(' ')
+      a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split.map { |part| part[0].downcase }.join(' ')
       return false unless a1_initials == a2_initials
     end
 
-    a1 = "#{author1.author_first_name} #{author1.author_last_name}".downcase.split(' ')
-    a2 = "#{author2.author_first_name} #{author2.author_last_name}".downcase.split(' ')
+    a1 = "#{author1.author_first_name} #{author1.author_last_name}".downcase.split
+    a2 = "#{author2.author_first_name} #{author2.author_last_name}".downcase.split
 
     # ensure a1 is the author with the most parts in their name (otherwise a single-part name would match almost anything)
-    if a1.size < a2.size
-      temp = a1
-      a1 = a2
-      a2 = temp
-    end
+    a1, a2 = a2, a1 if a1.size < a2.size
 
     # iterate through each part of the string
     a1.each_with_index do |a1part, index|
@@ -223,7 +219,7 @@ namespace :affiliation_import do
 
     # start with the assuption that the firstname lastname split is at the first space, but
     # if that doesn't match an author on this item, try successive spaces
-    parts = name.split(' ')
+    parts = name.split
     author = nil
     (1..parts.size).each do |space_to_try|
       first = parts[0..space_to_try - 1].join(' ')

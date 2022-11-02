@@ -67,7 +67,7 @@ module LinkOut
         expect(@svc.lookup_genbank_sequences('21166729')).to eql({})
       end
       it 'returns the Pubmed ID if the API found a match' do
-        results_hash = StashEngine::ExternalReference.sources.collect { |db| [db, %w[316925971 316925605]] }.to_h
+        results_hash = StashEngine::ExternalReference.sources.to_h { |db| [db, %w[316925971 316925605]] }
         expect(@svc.lookup_genbank_sequences('21166729')).to eql(results_hash)
       end
     end

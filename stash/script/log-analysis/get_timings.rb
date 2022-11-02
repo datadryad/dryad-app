@@ -8,7 +8,7 @@ end
 
 fn = ARGV[0]
 
-lines = File.readlines(fn).select { |line| line =~ /Completed.+in.+\d+ms/ }
+lines = File.readlines(fn).grep(/Completed.+in.+\d+ms/)
 
 total_ms = 0
 

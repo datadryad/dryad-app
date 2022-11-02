@@ -56,7 +56,7 @@ module StashEngine
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
-      .map { |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
+      .to_h { |i| [i.name, i.class_name] }.with_indifferent_access.freeze
 
     accepts_nested_attributes_for :curation_activities
 

@@ -19,7 +19,7 @@ module StashEngine
       end
       it {
         should define_enum_for(:status).with_values(
-          %w[issues noissues checking error].map { |i| [i.to_sym, i] }.to_h
+          %w[issues noissues checking error].to_h { |i| [i.to_sym, i] }
         ).backed_by_column_of_type(:string)
       }
       it 'is valid with valid attributes' do

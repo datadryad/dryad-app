@@ -108,9 +108,9 @@ module StashEngine
       comma_split = name.split(',')
       return [comma_split[1].strip, comma_split[0].strip] if comma_split.length == 2 # gets a reversed name with comma like "Janee, Greg"
 
-      first = (name.split(' ').first || '').strip
+      first = (name.split.first || '').strip
       last = ''
-      last = name.split(' ').last unless name.split(' ').last == first
+      last = name.split.last unless name.split.last == first
       [first, last]
     end
 

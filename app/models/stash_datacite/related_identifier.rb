@@ -14,13 +14,13 @@ module StashDatacite
 
     RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
-    RelationTypesEnum = RelationTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    RelationTypesStrToFull = RelationTypes.map { |i| [i.downcase, i] }.to_h
+    RelationTypesEnum = RelationTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    RelationTypesStrToFull = RelationTypes.to_h { |i| [i.downcase, i] }
 
     RelatedIdentifierTypes = Datacite::Mapping::RelatedIdentifierType.map(&:value)
 
-    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map { |i| [i.downcase, i] }.to_h
+    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.to_h { |i| [i.downcase, i] }
 
     # rubocop:disable Naming/ConstantName
     RelatedIdentifierTypesLimited = { DOI: 'doi', ARK: 'ark', ArXiv: 'arxiv',

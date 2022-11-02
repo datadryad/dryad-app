@@ -22,7 +22,7 @@ class UrlPager
       prev: prev_url,
       next: next_url
     }.compact
-    hsh.map { |k, v| [k, { href: v }] }.to_h
+    hsh.to_h { |k, v| [k, { href: v }] }
   end
 
   def self_url

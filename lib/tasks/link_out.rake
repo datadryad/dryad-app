@@ -138,8 +138,8 @@ namespace :link_out do
   end
 
   def create_link_out_dir!
-    Dir.mkdir("#{Dir.pwd}/tmp") unless Dir.exist?("#{Dir.pwd}/tmp")
-    Dir.mkdir("#{Dir.pwd}/tmp/link_out") unless Dir.exist?("#{Dir.pwd}/tmp/link_out")
+    FileUtils.mkdir_p("#{Dir.pwd}/tmp")
+    FileUtils.mkdir_p("#{Dir.pwd}/tmp/link_out")
   end
 
 end

@@ -15,7 +15,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include AjaxHelper
 
   before(:each) do
-    FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
+    FileUtils.rm_f(HOLD_SUBMISSIONS_PATH)
     # for this we don't want to mock the whole repository, but just the actual submission to Merritt that happens in
     # the queue, Stash::Merritt::SubmissionJob.do_submit!
     mock_submission_job!
@@ -30,7 +30,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   end
 
   after(:each) do
-    FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
+    FileUtils.rm_f(HOLD_SUBMISSIONS_PATH)
   end
 
   describe :submitting_quickly do
