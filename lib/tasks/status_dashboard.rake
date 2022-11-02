@@ -2,35 +2,8 @@
 
 namespace :status_dashboard do
 
-  desc 'Check Solr'
-  task check: :environment do
-    StashEngine::ExternalDependency.all.each do |dependency|
-      class_name = "StashEngine::StatusDashboard::#{dependency.abbreviation.titleize.delete(' ')}Service"
-      begin
-        svc = Object.const_get(class_name).new(abbreviation: dependency.abbreviation)
-        online = svc.ping_dependency
-        p "#{online ? 'online' : 'OFFLINE'} <== #{dependency.name}"
-      rescue NameError => e
-        p "Unable to locate a service for #{dependency.name}: #{e.message}"
-        dependency.update(status: 2, error_message: "There is no #{class_name} defined! Unable to ping dependency.")
-        next
-      end
-    end
-    p 'If any errors were reported, please refer to the `stash_engine_external_dependencies` table for details.'
-  end
-
-  desc 'Seed the external_dependencies table'
-  task seed: :environment do
-    p 'Seeding the external_dependencies table.'
-    StashEngine::ExternalDependency.all.destroy_all
-
-    BASELINE_EXTERNAL_DEPENDENCIES.each do |dependency_hash|
-      StashEngine::ExternalDependency.create(dependency_hash)
-    end
-  end
-
   # rubocop:disable Layout/LineLength
-  BASELINE_EXTERNAL_DEPENDENCIES = [
+  baseline_external_dependencies = [
     {
       abbreviation: 'solr',
       name: 'Solr',
@@ -139,4 +112,31 @@ namespace :status_dashboard do
     }
   ].freeze
   # rubocop:enable Layout/LineLength
+
+  desc 'Check Solr'
+  task check: :environment do
+    StashEngine::ExternalDependency.all.each do |dependency|
+      class_name = "StashEngine::StatusDashboard::#{dependency.abbreviation.titleize.delete(' ')}Service"
+      begin
+        svc = Object.const_get(class_name).new(abbreviation: dependency.abbreviation)
+        online = svc.ping_dependency
+        p "#{online ? 'online' : 'OFFLINE'} <== #{dependency.name}"
+      rescue NameError => e
+        p "Unable to locate a service for #{dependency.name}: #{e.message}"
+        dependency.update(status: 2, error_message: "There is no #{class_name} defined! Unable to ping dependency.")
+        next
+      end
+    end
+    p 'If any errors were reported, please refer to the `stash_engine_external_dependencies` table for details.'
+  end
+
+  desc 'Seed the external_dependencies table'
+  task seed: :environment do
+    p 'Seeding the external_dependencies table.'
+    StashEngine::ExternalDependency.all.destroy_all
+
+    baseline_external_dependencies.each do |dependency_hash|
+      StashEngine::ExternalDependency.create(dependency_hash)
+    end
+  end
 end

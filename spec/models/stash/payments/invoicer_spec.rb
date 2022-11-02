@@ -75,8 +75,10 @@ module Stash
       end
 
       it 'makes an overage message' do
-        expect(@invoicer.overage_message).to eq('Oversize submission charges for doi:10.123/a1b.c2d3. Overage amount is 100 MB ' \
-                                                '@ $50.00 per 10 GB or part thereof over 50 GB (see https://datadryad.org/stash/publishing_charges for details)')
+        expect(@invoicer.overage_message)
+          .to eq('Oversize submission charges for doi:10.123/a1b.c2d3. Overage amount is 100 MB ' \
+                 '@ $50.00 per 10 GB or part thereof over 50 GB (see ' \
+                 'https://datadryad.org/stash/publishing_charges for details)')
       end
     end
   end

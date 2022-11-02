@@ -25,8 +25,9 @@ module Stash
         s3_resp = get_url(url: db_file.merritt_s3_presigned_url)
 
         unless s3_resp.status.success?
-          return { success: false, error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
-                                          "for resource #{@resource.id}" }
+          return { success: false,
+                   error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+                          "for resource #{@resource.id}" }
         end
 
         md5 = Digest::MD5.new

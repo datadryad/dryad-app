@@ -1,5 +1,7 @@
 require 'tempfile'
 
+ALPHANUMERIC = Array('A'..'Z') + Array('a'..'z') + Array('0'..'9')
+
 module Stash
   module Sword
 
@@ -50,8 +52,6 @@ module Stash
     end
 
     describe SequenceIO do
-
-      ALPHANUMERIC = Array('A'..'Z') + Array('a'..'z') + Array('0'..'9')
 
       attr_reader :len
       attr_reader :content

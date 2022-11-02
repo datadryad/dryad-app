@@ -177,7 +177,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -270,7 +270,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -334,7 +334,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -379,7 +379,7 @@ namespace :dev_ops do
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
   task download_s3: :environment do
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     resource_id = ARGV[1].to_i
