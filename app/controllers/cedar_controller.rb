@@ -13,7 +13,7 @@ class CedarController < ApplicationController
 
       "showSampleTemplateLinks": false,
       "expandedSampleTemplateLinks": false,
-      "sampleTemplateLocationPrefix": 'https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/',
+      "sampleTemplateLocationPrefix": '/cedar-embeddable-editor',
       "loadSampleTemplateName": params[:template],
 
       "showFooter": false,
