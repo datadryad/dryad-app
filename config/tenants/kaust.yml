@@ -25,7 +25,7 @@ default: &default
     entity_id: https://waseet.kaust.edu.sa/idp/shibboleth
     entity_domain: waseet.kaust.edu.sa
   default_license: cc0
-  campus_contacts: ["daryl.grenz@kaust.edu.sa"]
+  campus_contacts: []
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -71,5 +71,5 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: [""]
+  campus_contacts: ["daryl.grenz@kaust.edu.sa"]
 
