@@ -22,7 +22,7 @@ module StashApi
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-
+      # rubocop:disable Lint/ConstantDefinitionInBlock
       FILE_HASH = {
         'skipValidation' => true,
         'url' => 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico',
@@ -33,6 +33,7 @@ module StashApi
         'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/fixtures/http_responses/favicon.ico'))),
         'description' => 'Super fun comment from old Dryad'
       }.freeze
+      # rubocop:enable Lint/ConstantDefinitionInBlock
     end
 
     after(:all) do

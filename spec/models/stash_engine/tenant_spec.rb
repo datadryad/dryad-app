@@ -2,6 +2,7 @@ require 'tmpdir'
 require 'fileutils'
 
 module StashEngine
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   describe Tenant do
     before(:each) do
       @tenants = TENANT_CONFIG
@@ -21,6 +22,7 @@ module StashEngine
     after(:each) do
       TENANT_CONFIG = @tenants
     end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
 
     def expect_exemplia(tenant) # rubocop:disable Metrics/AbcSize
       expect(tenant.tenant_id).to eq('exemplia')

@@ -4,6 +4,7 @@ require 'stash/link_out/pubmed_service'
 
 module LinkOut
   describe PubmedService do
+    # rubocop:disable Lint/ConstantDefinitionInBlock
     TEST_FILE_DIR = "#{Dir.pwd}/spec/tmp/link_out".freeze
 
     RESPONSE = <<~XML.freeze
@@ -51,7 +52,7 @@ module LinkOut
         <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
       </eSearchResult>
     XML
-
+    # rubocop:enable Lint/ConstantDefinitionInBlock
     before(:each) do
       # Mock the app_config.yml and Rails.application.routes since we're not loading the full
       # Rails stack

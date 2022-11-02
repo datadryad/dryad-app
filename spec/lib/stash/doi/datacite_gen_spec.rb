@@ -9,10 +9,12 @@ module Stash
     RSpec.describe DataciteGen do
       include Mocks::Tenant
 
+      # rubocop:disable Lint/ConstantDefinitionInBlock
       # make these private methods public so I can test them
       class DataciteGen
         public :post_metadata, :put_doi, :get_doi
       end
+      # rubocop:enable Lint/ConstantDefinitionInBlock
 
       describe 'Cirneco replacement methods' do
         before(:each) do
