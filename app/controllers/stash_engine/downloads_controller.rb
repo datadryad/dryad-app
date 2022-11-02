@@ -146,8 +146,9 @@ module StashEngine
         log_counter_version
         redirect_to @status_hash[:url]
       when 202
-        render status: 202, plain: 'The version of the dataset is being assembled. ' \
-                                   "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+        render status: 202,
+               plain: 'The version of the dataset is being assembled. ' \
+                      "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
       when 408
         notify_download_timeout
         render status: 408, plain: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'

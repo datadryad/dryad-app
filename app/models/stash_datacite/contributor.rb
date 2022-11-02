@@ -14,8 +14,8 @@ module StashDatacite
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
-    ContributorTypesEnum = ContributorTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    ContributorTypesStrToFull = ContributorTypes.map { |i| [i.downcase, i] }.to_h
+    ContributorTypesEnum = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    ContributorTypesStrToFull = ContributorTypes.to_h { |i| [i.downcase, i] }
 
     # maps DB value to the DataciteMapping class of fun from that gem
     IdentifierTypesToMapping = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i] }.to_h

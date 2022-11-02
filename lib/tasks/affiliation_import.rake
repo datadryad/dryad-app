@@ -6,7 +6,7 @@ require 'stash/organization/ror_updater'
 # rubocop:disable Metrics/AbcSize
 namespace :affiliation_import do
 
-  ROOT = Rails.root.join('/tmp').freeze
+  root = Rails.root.join('/tmp').freeze
 
   desc 'Clean the long_names for all ROR affiliations'
   task clean_ror_names: :environment do
@@ -40,10 +40,10 @@ namespace :affiliation_import do
 
     puts 'Loading affiliation info from CSV files in /tmp/dryad_affiliations*'
 
-    Dir.entries(ROOT).each do |f|
+    Dir.entries(root).each do |f|
       next unless f.start_with?('dryad_affiliations')
 
-      qualified_file_name = "#{ROOT}/#{f}"
+      qualified_file_name = "#{root}/#{f}"
       puts "===== Processing file #{qualified_file_name} ====="
       process_file(file_name: qualified_file_name)
     end

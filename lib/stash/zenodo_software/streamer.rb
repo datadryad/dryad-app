@@ -72,9 +72,10 @@ module Stash
         request_thread.join
 
         if size != response.headers['Content-Length'].to_i
-          raise Stash::ZenodoReplicate::ZenodoError, "Size of http body doesn't match Content-Length for file:\n #{@file_model.class}," \
-                                                     "\n cumulative_size: #{size}, Content-Length from server: #{response.headers['Content-Length']}" \
-                                                     "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
+          raise Stash::ZenodoReplicate::ZenodoError,
+                "Size of http body doesn't match Content-Length for file:\n #{@file_model.class}," \
+                "\n cumulative_size: #{size}, Content-Length from server: #{response.headers['Content-Length']}" \
+                "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
         end
 
         { response: put_response, digests: digests_obj.hex_digests }

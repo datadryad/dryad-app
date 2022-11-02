@@ -11,9 +11,9 @@ module Stash
         { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
           'affiliation' => [{ 'name' => 'Catalonia' }] }
       ].freeze
-      ABSTRACT = 'Flip-flop gates must work. In fact, few biologists would disagree with the emulation of expert systems.' \
-                 ' Our focus in this work is not on whether the partition table and the UNIVAC computer can collude to accomplish this' \
-                 ' purpose, but rather on presenting an analysis of e-commerce (Newt).'.freeze
+      ABSTRACT = 'Flip-flop gates must work. In fact, few biologists would disagree with the emulation of expert systems. ' \
+                 'Our focus in this work is not on whether the partition table and the UNIVAC computer can collude to accomplish this ' \
+                 'purpose, but rather on presenting an analysis of e-commerce (Newt).'.freeze
 
       FUNDER = [{ 'name' => 'National Heart, Lung, and Blood Institute',
                   'award' => %w[R01-HL30077 R01-HL90880 R01-HL123526 R01-HL085727 R01-HL085844 P01-HL080101] },
