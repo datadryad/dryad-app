@@ -87,6 +87,8 @@ obtain a template from CEDAR:
 6. Ensure that the Dryad configuration references the new template, using the
    number of the directory that it was placed in.
 
+Older sample templates may still be available at URLs like: https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/40/template.json
+
 
 Styling
 =======
