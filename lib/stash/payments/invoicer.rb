@@ -23,11 +23,10 @@ module Stash
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
 
-        payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
         resource.identifier.payment_id = invoice.id
-        resource.identifier.payment_type = payment_type
+        resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
         invoice.send_invoice
       end
