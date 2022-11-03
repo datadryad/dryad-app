@@ -20,7 +20,7 @@ jobs:
 
     - name: 'Set Ruby and Bundler Versions'
       run: |
-        echo "RUBY_VERSION=2.6.6" >> $GITHUB_ENV
+        echo "RUBY_VERSION=2.7.6" >> $GITHUB_ENV
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
     - name: 'Install Ruby and gems'
@@ -48,17 +48,6 @@ jobs:
         mysql -u root -e 'CREATE USER IF NOT EXISTS travis@localhost'
         mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'  
         bin/rails db:migrate:reset RAILS_ENV=test
-
-    - name: 'Set up Python 3.x'
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: 'Display Python version'
-      run: python -c "import sys; print(sys.version)"
-
-    - name: 'Install frictionless python package'
-      run: pip install frictionless
 
     - name: 'Compile Assets'
       run: bin/rails assets:precompile
