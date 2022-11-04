@@ -17,10 +17,10 @@
 <!--  NOTE: Please add the following <FORM> element to your page.             -->
 <!--  ----------------------------------------------------------------------  -->
 
-<form class="c-input" action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
+<form class="c-input" action="<%= APP_CONFIG.salesforce.web_to_lead_target %>" method="POST">
 
-<input type=hidden name='captcha_settings' value='{"keyname":"Dryad_v2","fallback":"true","orgId":"00D54000000YogL","ts":""}'>
-<input type=hidden name="oid" value="00D54000000YogL">
+<input type=hidden name='captcha_settings' value='{"keyname":"Dryad_v2","fallback":"true","orgId":"<%= APP_CONFIG.salesforce.org_id %>","ts":""}'>
+<input type=hidden name="oid" value="<%= APP_CONFIG.salesforce.org_id %>">
 <input type=hidden name="retURL" value="<%= Rails.application.routes.url_helpers.contact_thanks_url %>">
 
 <!--  ----------------------------------------------------------------------  -->
@@ -37,24 +37,24 @@
 <label for="last_name" class="c-input__label">Last name</label>
 <input id="last_name" class="c-input__text" maxlength="80" name="last_name" size="20" type="text" /><br>
 
-<label for="00N5400000ifBP6" class="c-input__label">Institution</label>Please use your primary institutional affiliation
-<input id="00N5400000ifBP6" class="c-input__text" name="00N5400000ifBP6" title="Institution" /><br>
-
 <label for="email" class="c-input__label">Email address</label>Please use your institutional email address if possible
 <input id="email" class="c-input__text" maxlength="80" name="email" size="20" type="text" /><br>
+
+<label for="company" class="c-input__label">Institution or organization</label>Please use your primary institutional affiliation
+<input id="company" class="c-input__text" name="company" title="Institution" /><br>
 
 <label for="title" class="c-input__label">Job Title</label>Please use your current job title
 <input id="title" class="c-input__text" maxlength="40" name="title" size="20" type="text" /><br>
 
-<label for="00N5400000ifBPB" class="c-input__label">How would you like to participate?</label>Select all that apply
-<select  id="00N5400000ifBPB" multiple="multiple" name="00N5400000ifBPB" title="Participation">
+<label for="<%= APP_CONFIG.salesforce.participation_field_id %>" class="c-input__label">How would you like to participate?</label>Select all that apply
+<select  id="<%= APP_CONFIG.salesforce.participation_field_id %>" multiple="multiple" name="<%= APP_CONFIG.salesforce.participation_field_id %>" title="Participation">
   <option value="Join our mailing list">Join our mailing list</option>
   <option value="Set up a demo or meeting">Set up a demo or meeting</option>
   <option value="Get help with an issue">Get help with an issue</option>
 </select><br>
 
-<label for="00N5400000ifBP4" class="c-input__label">Comments</label>
-<textarea  id="00N5400000ifBP4" name="00N5400000ifBP4" rows="3" type="text" wrap="soft"></textarea><br>
+<label for="<%= APP_CONFIG.salesforce.comment_field_id %>" class="c-input__label">Comments</label>
+<textarea  id="<%= APP_CONFIG.salesforce.comment_field_id %>" name="<%= APP_CONFIG.salesforce.comment_field_id %>" rows="3" type="text" wrap="soft"></textarea><br>
 
 <div class="g-recaptcha" data-sitekey="<%= APP_CONFIG.google_recaptcha_sitekey %>"></div><br>
 <button class="o-button__plain-text1" style="width:min-content;" type="submit" name="submit">Submit</button>
