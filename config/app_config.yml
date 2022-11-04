@@ -187,10 +187,14 @@ defaults: &DEFAULTS
   salesforce:
     server: https://dryad2-dev-ed.lightning.force.com
     username: ryan+sf@datadryad.org
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>    
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_secret] %>
+    web_to_lead_target: https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8
+    org_id: 00D54000000YogL
+    participation_field_id: 00N5400000ifBPB
+    comment_field_id: 00N5400000ifBP4
   mce_key: <%= Rails.application.credentials[Rails.env.to_sym][:tiny_mce] %>
 
 development: &DEVELOPMENT
@@ -308,6 +312,10 @@ production:
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_secret] %>
+    web_to_lead_target: https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8
+    org_id: 00D3h000003z3po
+    participation_field_id: 00N3h00000Ix75q
+    comment_field_id: 00N3h00000Ix75j
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
