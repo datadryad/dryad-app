@@ -20,8 +20,12 @@ module Stash
         else
           do_create
         end
-      rescue RestClient::Exceptions::ReadTimeout, RestClient::InternalServerError, RestClient::ServiceUnavailable
+      rescue RestClient::Exceptions::ReadTimeout, RestClient::ServiceUnavailable
         raise GoneAsynchronous
+      rescue RestClient::InternalServerError => e
+        raise GoneAsynchronous if e&.response&.body&.include?('java.net.SocketTimeoutException')
+
+        raise e
       ensure
         resource.version_zipfile = File.basename(package.payload)
         resource.save!
