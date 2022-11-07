@@ -17,19 +17,19 @@
           <details class="o-showhide o-sites__details" role="group">
             <summary class="o-showhide__summary o-sites__summary">Admin</summary>
             <div class="o-sites__group">
-              <%= link_to 'Dataset Curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
+              <%= link_to 'Dataset curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
                                                                         editor_id: current_user.id, curation_status: 'submitted', only_path: true), class: 'o-sites__group-item' %>
-              <%= link_to 'Curation Stats', stash_url_helpers.curation_stats_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Curation stats', stash_url_helpers.curation_stats_path, class: 'o-sites__group-item' %>
               <%= link_to 'Journals', stash_url_helpers.journals_path, class: 'o-sites__group-item' %>
               <% if current_user.curator? %>
-                <%= link_to 'Publication Updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
+                <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
               <% end %>
-              <%= link_to 'Dataset Funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
               <% if current_user.superuser? %>
-                <%= link_to 'User Management', stash_url_helpers.user_admin_path, class: 'o-sites__group-item' %>
-                <%= link_to 'Status Dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
-                <%= link_to 'Submission Queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true), class: 'o-sites__group-item' %>
-                <%= link_to 'Zenodo Submissions', stash_url_helpers.zenodo_queue_path, class: 'o-sites__group-item' %>
+                <%= link_to 'User management', stash_url_helpers.user_admin_path, class: 'o-sites__group-item' %>
+                <%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
+                <%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true), class: 'o-sites__group-item' %>
+                <%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path, class: 'o-sites__group-item' %>
               <% end %>
             </div>
           </details>
@@ -45,7 +45,7 @@
             <div class="o-sites__group">
               <%= link_to 'Datasets', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
                                                                          only_path: true), class: 'o-sites__group-item' %>
-              <%= link_to 'Dataset Funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
             </div>
           </details>
         </div>
@@ -59,16 +59,16 @@
         <details class="o-showhide o-sites__details" role="group">
           <summary class="o-showhide__summary o-sites__summary">About</summary>
           <div class="o-sites__group">
-            <%= link_to 'Our Mission', "#{stash_url_helpers.our_mission_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Membership', "#{stash_url_helpers.our_membership_path}", class: 'o-sites__subgroup-head' %>
-            <%= link_to 'Join Us', "#{stash_url_helpers.join_us_path}", class: 'o-sites__subgroup-lastitem' %>
-            <%= link_to 'Our Governance', "#{stash_url_helpers.our_governance_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Team', "#{stash_url_helpers.our_staff_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Advisors', "#{stash_url_helpers.our_advisors_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Platform', "#{stash_url_helpers.our_platform_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Blog', "https://blog.datadryad.org/", class: 'o-sites__group-item' %>
-            <%= link_to 'Code of Conduct', stash_url_helpers.code_of_conduct_path, class: 'o-sites__group-item' %>
-            <%= link_to 'Data Publishing Ethics', stash_url_helpers.ethics_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Our mission', "#{stash_url_helpers.our_mission_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our membership', "#{stash_url_helpers.our_membership_path}", class: 'o-sites__subgroup-head' %>
+            <%= link_to 'Join us', "#{stash_url_helpers.join_us_path}", class: 'o-sites__subgroup-lastitem' %>
+            <%= link_to 'Our governance', "#{stash_url_helpers.our_governance_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our team', "#{stash_url_helpers.our_staff_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our advisors', "#{stash_url_helpers.our_advisors_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our platform', "#{stash_url_helpers.our_platform_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our blog', "https://blog.datadryad.org/", class: 'o-sites__group-item' %>
+            <%= link_to 'Code of conduct', stash_url_helpers.code_of_conduct_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Data publishing ethics', stash_url_helpers.ethics_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>
@@ -79,10 +79,10 @@
         <details class="o-showhide o-sites__details" role="group">
           <summary class="o-showhide__summary o-sites__summary">Help</summary>
           <div class="o-sites__group">
-            <%= link_to 'Submission Process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Good Data Practices', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Frequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
-            <%= link_to 'Contact Us', stash_url_helpers.contact_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Submission process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
+            <%= link_to 'Frequently asked questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Contact us', stash_url_helpers.contact_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>
