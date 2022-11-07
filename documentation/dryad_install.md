@@ -251,6 +251,8 @@ RAILS_ENV=production rails funders:set_nih
 
 which makes the rails database have a special structure for NIH to include sub-funders.  Other
 umbrella funders may be added later.
+  
+'op '
 
 ### Connection to Dryad machines in the UC infrastructure
 
