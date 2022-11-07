@@ -303,6 +303,55 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a detailed report of the instances when a dataset is in PPR'
+  task ppr_detail_report: :environment do
+    puts 'Writting ppr_detail.csv'
+    CSV.open('ppr_detail.csv', 'w') do |csv|
+      csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo DatasetSize Journal AutoPPR Integrated WhoPays]
+      StashEngine::Identifier.all.each_with_index do |i, ind|
+        puts ind.to_s if (ind % 100) == 0
+        in_ppr = false
+        date_entered_ppr = 'ERROR'
+
+        who_pays = if i.journal&.will_pay?
+                     'journal'
+                   elsif i.institution_will_pay?
+                     'institution'
+                   elsif i.submitter_affiliation&.fee_waivered?
+                     'waiver'
+                   elsif i.funder_will_pay?
+                     'funder'
+                   else
+                     'user'
+                   end
+
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          if ca.peer_review?
+            next if in_ppr # do nothing if it was already in PPR
+
+            in_ppr = true
+            date_entered_ppr = ca.created_at
+          elsif in_ppr
+            # the previous status was PPR, but this satatus is not,
+            # so close out the entry
+            in_ppr = false
+            csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
+                    ca.resource.stash_version.version, date_entered_ppr, ca.created_at, ca.status,
+                    ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+          end
+        end
+        # if we're at the end of the history and in_ppr,
+        # finalize the current stats before moving to next identifier
+        next unless in_ppr
+
+        csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
+                ca.resource.stash_version.version, date_entered_ppr, 'None', 'None',
+                ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+        in_ppr = false
+      end
+    end
+  end
+
   desc 'Generate a report of datasets with associated rejection notices'
   task rejected_datasets_report: :environment do
     puts 'Writing rejected_datasets.csv'
