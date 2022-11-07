@@ -55,7 +55,7 @@
 	<% elsif @resource.identifier.institution_will_pay? %>
 		<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
 	<% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
-		<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
+		<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>. Upon publication of your dataset, you will receive an invoice showing that the fee for this submission has been waived. If you have any questions, please <a href="mailto:help@datadryad.org">contact us</a>.</p>
 	<% elsif @resource.identifier.funder_will_pay? %>
 		<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.funder_payment_info.contributor_name %></b></p>
 	<% elsif @resource.identifier.user_must_pay? %>
