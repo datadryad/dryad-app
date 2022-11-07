@@ -13,8 +13,8 @@ module StashApi
     # id, first_name, last_name, email, created_at, tenant_id, role, orcid, old_dryad_email, eperson_id
     DB_FIELDS = %w[id first_name last_name email tenant_id role orcid old_dryad_email eperson_id created_at].freeze
     DISPLAY_FIELDS = %w[id firstName lastName email tenantId role orcid oldDryadEmail ePersonId createdAt].freeze
-    DB_TO_DISPLAY = Hash[DB_FIELDS.zip(DISPLAY_FIELDS)]
-    DISPLAY_TO_DB = Hash[DISPLAY_FIELDS.zip(DB_FIELDS)]
+    DB_TO_DISPLAY = DB_FIELDS.zip(DISPLAY_FIELDS).to_h
+    DISPLAY_TO_DB = DISPLAY_FIELDS.zip(DB_FIELDS).to_h
 
     # get /users/<id>
     def show

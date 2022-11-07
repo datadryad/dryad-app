@@ -199,7 +199,7 @@ module StashApi
     def make_deleted(data_file:)
       case data_file.file_state
       when 'created' # delete from db since it's new in this version
-        my_hate = { '_links': StashApi::File.new(file_id: data_file.id).links.except(:self) }
+        my_hate = { _links: StashApi::File.new(file_id: data_file.id).links.except(:self) }
         data_file.destroy
         return my_hate
       when 'copied' # make 'deleted' which will remove in this version on next submission

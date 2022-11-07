@@ -63,7 +63,7 @@ module StashDatacite
         # clean the partial_term of unwanted characters so it doesn't cause errors when calling the CrossRef API
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
         response = HTTParty.get('https://api.crossref.org/funders',
-                                query: { 'query': partial_term },
+                                query: { query: partial_term },
                                 headers: { 'Content-Type' => 'application/json' })
         return if response.parsed_response.blank?
         return if response.parsed_response['message'].blank?

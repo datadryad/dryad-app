@@ -131,10 +131,10 @@ module StashEngine
       @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
 
       # limit to only 5 lines at most and make unix line endings
-      return unless @preview.class == String
+      return unless @preview.instance_of?(String)
 
       @preview = @preview.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?') # replace bad chars
-      @preview = @preview.split(/[\r\n|\r|\n]+/).map(&:strip)[0..5].join("\n") # only 5 lines, please
+      @preview = @preview.split(/[\r\n|]+/).map(&:strip)[0..5].join("\n") # only 5 lines, please
     end
 
     private
@@ -147,7 +147,8 @@ module StashEngine
         redirect_to @status_hash[:url]
       when 202
         render status: 202, plain: 'The version of the dataset is being assembled. ' \
-              "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+                                   "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} " \
+                                   'and it should be ready to download.'
       when 408
         notify_download_timeout
         render status: 408, plain: 'The dataset assembly service is currently unresponsive. Try again later or download each individual file.'
