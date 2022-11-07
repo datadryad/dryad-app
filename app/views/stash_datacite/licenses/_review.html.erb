@@ -1,5 +1,5 @@
 <div>
-  <h3>License and Terms of Service for Data</h3>
+  <h3>License and terms of service for data</h3>
   <p>
     <span><%= check_box_tag 'agree_to_license', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
     <label for="agree_to_license" class="required">By checking this box, I agree to the license
@@ -32,7 +32,7 @@
 
 <% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>
 	<div>
-		<h3>License and Terms of Service for Zenodo</h3>
+		<h3>License and terms of service for Zenodo</h3>
 
 		<p>Software and supplemental files uploaded will be managed and preserved at Zenodo. Your related DOI will be linked to
 			your dataset.</p>
