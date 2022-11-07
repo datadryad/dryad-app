@@ -345,8 +345,8 @@ namespace :identifiers do
         next unless in_ppr
 
         csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
-                ca.resource.stash_version.version, date_entered_ppr, 'None', 'None',
-                ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+                i.latest_resource.stash_version.version, date_entered_ppr, 'None', 'None',
+                i.latest_resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
         in_ppr = false
       end
     end
