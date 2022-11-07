@@ -117,4 +117,20 @@ namespace :funders do
       puts "#{full_id ? '*' : ' '}Added #{row['funderName']} with id #{full_id} for #{row['doi']}"
     end
   end
+
+  desc 'Sets NIH as a mega-funder of sub-funders'
+  task set_nih: :environment do
+    nih = JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json')))
+    cg = StashDatacite::ContributorGrouping.where(name_identifier_id: 'http://dx.doi.org/10.13039/100000002')
+    if cg.count == 0
+      StashDatacite::ContributorGrouping.create(
+        contributor_name: 'National Institutes of Health',
+        contributor_type: 'funder',
+        identifier_type: 'crossref_funder_id',
+        name_identifier_id: 'http://dx.doi.org/10.13039/100000002',
+        json_contains: cg
+      )
+      puts 'Added NIH contributor group for sub-funders'
+    end
+  end
 end
