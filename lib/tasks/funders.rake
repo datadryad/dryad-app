@@ -128,7 +128,7 @@ namespace :funders do
         contributor_type: 'funder',
         identifier_type: 'crossref_funder_id',
         name_identifier_id: 'http://dx.doi.org/10.13039/100000002',
-        json_contains: cg
+        json_contains: nih
       )
       puts 'Added NIH contributor group for sub-funders'
     end
