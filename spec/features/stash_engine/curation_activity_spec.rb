@@ -99,6 +99,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         title = @identifiers.first.resources.first.title
         my_stats = @identifiers.first.counter_stat
 
+
         csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
         csv_parts = csv_line.split(',')
 
@@ -193,7 +194,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         within(:css, '.c-lined-table__row', wait: 10) do
           find('button[title="View Activity Log"]').click
         end
-        expect(page).to have_text('Activity Log for')
+        expect(page).to have_text('Activity log for')
         expect(page).to have_text('Not a valid SF link')
         # 'SF #0001' is not a valid case number, so the text is not changed
         expect(page).to have_text('SF #0001')
@@ -207,7 +208,7 @@ RSpec.feature 'CurationActivity', type: :feature do
           find('button[title="View Activity Log"]').click
         end
         expect(page).to have_text('Activity log for')
-        expect(page).to have_text('Salesforce Cases')
+        expect(page).to have_text('Salesforce cases')
         expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
       end
 

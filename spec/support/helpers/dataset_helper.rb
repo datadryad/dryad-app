@@ -1,7 +1,7 @@
 module DatasetHelper
 
   def start_new_dataset
-    click_button 'Start New Dataset'
+    click_button 'Start new dataset'
     expect(page).to have_content('Describe Dataset', wait: 15)
     navigate_to_metadata
   end
@@ -26,7 +26,7 @@ module DatasetHelper
   end
 
   def navigate_to_upload
-    click_link 'Upload files'
+    click_link 'Upload Files'
     expect(page).to have_content('Choose files', count: 3)
     expect(page).to have_content('Enter URLs', count: 3)
   end
