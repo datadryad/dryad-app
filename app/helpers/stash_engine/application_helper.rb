@@ -5,6 +5,10 @@ module StashEngine
     # displays log in/out based on session state, temporary for now
     # :nocov:
 
+    def institution_select
+      StashEngine::Tenant.all.map { |item| [item.short_name, item.tenant_id] }
+    end
+
     def log_in_out
       if session[:user_id].blank?
         link_to 'log in', stash_url_helpers.tenants_path

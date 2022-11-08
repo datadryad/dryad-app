@@ -24,7 +24,7 @@
 	flex: 1 0 50%;
 	height: $input-height + 2px;
 	padding: 0 8px 0 30px;
-	border: 1px solid $design-dark-blue-color;
+	border: thin solid $design-dark-blue-color;
 	background: left 8px center no-repeat;
 	color: $design-dark-blue-color;
 	text-align: left;
@@ -118,7 +118,7 @@
 	width: 50px;
 	height: $input-height;
 	padding: 0 10px;
-	border: 1px solid $design-dark-gray-color;
+	border: thin solid $design-dark-gray-color;
 
 	&:first-of-type {
 		margin: 0 10px 0 0;

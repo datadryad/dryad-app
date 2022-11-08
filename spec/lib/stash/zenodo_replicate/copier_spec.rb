@@ -99,6 +99,15 @@ module Stash
           expect(@ztc2.state).to eq('error')
           expect(@ztc2.error_info).to include('Items must replicate in order')
         end
+
+        it 'rejects an over 50GB submission' do
+          create(:data_file, upload_file_size: 6e+10, resource_id: @resource.id)
+          @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc.id)
+          @szr.add_to_zenodo
+          @ztc.reload
+          expect(@ztc.state).to eq('error')
+          expect(@ztc.error_info).to include('over 50GB')
+        end
       end
     end
   end

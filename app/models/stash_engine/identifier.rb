@@ -245,10 +245,9 @@ module StashEngine
     end
 
     # Check if the user must pay for this identifier, or if payment is
-    # otherwise covered
+    # otherwise covered - but send waivers to stripe
     def user_must_pay?
-      !journal&.will_pay? && !institution_will_pay? && !funder_will_pay? &&
-        (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
+      !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
     end
 
     def journal
@@ -272,7 +271,8 @@ module StashEngine
         self.payment_id = latest_resource&.tenant&.tenant_id
       elsif submitter_affiliation&.fee_waivered?
         self.payment_type = 'waiver'
-        self.payment_id = submitter_affiliation.country_name
+        self.waiver_basis = submitter_affiliation.country_name
+        self.payment_id = nil
       elsif funder_will_pay?
         contrib = funder_payment_info
         self.payment_type = 'funder'

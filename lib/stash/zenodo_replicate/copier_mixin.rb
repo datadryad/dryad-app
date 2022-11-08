@@ -31,6 +31,18 @@ module Stash
         raise ZenodoError, "identifier_id #{@copy.identifier_id}: Cannot replicate when a previous replication for the " \
                            'identifier has not finished yet. Items must replicate in order.'
       end
+
+      def error_if_over_50gb
+        file_map = { data: 'StashEngine::DataFile', software: 'StashEngine::SoftwareFile', supp: 'StashEngine::SuppFile' }
+        submission_size = StashEngine::GenericFile.where(type: file_map[@dataset_type])
+          .where(resource_id: @resource.id)
+          .where.not(file_state: 'deleted')
+          .sum(:upload_file_size)
+        return if submission_size < 50_000_000_000
+
+        raise ZenodoError, "resource #{@resource.id} has over 50GB of content which is being skipped for replication to " \
+                           "Zenodo since it's not currently reliable"
+      end
     end
   end
 end

@@ -21,7 +21,7 @@ $table-cell-label-width: 110px;
   }
 
   .o-table tr {
-    border-bottom: 1px solid $design-light-gray-color;
+    border-bottom: thin solid $design-light-gray-color;
   }
 
   .o-table th,
@@ -60,7 +60,7 @@ $table-cell-label-width: 110px;
       padding: $spacing-sm 0;
 
       &:not(:first-child) {
-        border-top: 1px solid $design-light-gray-color;
+        border-top: thin solid $design-light-gray-color;
       }
 
     }

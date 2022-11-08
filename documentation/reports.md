@@ -28,6 +28,7 @@ Fields in the shopping cart report
 - Size
 - Payment Type
 - Payment ID
+- Waiver Basis
 - Institution Name
 - Journal Name
 - Sponsor Name

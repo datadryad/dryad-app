@@ -1,7 +1,7 @@
 module DatasetHelper
 
   def start_new_dataset
-    click_button 'Start New Dataset'
+    click_button 'Start new dataset'
     expect(page).to have_content('Describe Dataset', wait: 15)
     navigate_to_metadata
   end

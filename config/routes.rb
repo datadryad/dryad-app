@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
 
   use_doorkeeper
@@ -300,6 +299,9 @@ Rails.application.routes.draw do
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
+
+    # admin report for dataset funders
+    get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
     
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
@@ -443,6 +445,18 @@ Rails.application.routes.draw do
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
   end
+
+  ########################## CEDAR Embeddable Editor ###############################
+
+  post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
+
+  # Redirect the calls for MaterialUI icons, since the embeddable editor doesn't know what path it was loaded from
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff', to: redirect('/MaterialIcons-Regular.woff')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
+
+  get '/cedar-config', to: 'cedar#json_config'
+  post '/cedar-save', to: 'cedar#save'
   
   ########################## Dryad v1 support ######################################
   

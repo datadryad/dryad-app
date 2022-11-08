@@ -16,7 +16,7 @@
 
 .c-latest__dataset {
 	padding: 10px 0 0;
-	border-top: 1px solid $design-dark-gray-color;
+	border-top: thin solid $design-dark-gray-color;
 
 	@include bp(screen1) {
         /* one column */
@@ -32,7 +32,7 @@
 		padding: 20px 20px 0;
 
 		&:nth-of-type(even) {
-			border-left: 1px solid $design-orange-color;
+			border-left: thin solid $design-orange-color;
 		}
 	}
 }
