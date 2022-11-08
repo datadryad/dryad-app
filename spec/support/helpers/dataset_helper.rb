@@ -26,7 +26,7 @@ module DatasetHelper
   end
 
   def navigate_to_upload
-    click_link 'Upload Files'
+    click_link 'Upload files'
     expect(page).to have_content('Choose files', count: 3)
     expect(page).to have_content('Enter URLs', count: 3)
   end

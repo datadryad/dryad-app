@@ -397,7 +397,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('button[title="View Activity Log"]')
       find('button[title="View Activity Log"]').click
 
-      expect(page).to have_text('Activity Log for')
+      expect(page).to have_text('Activity log for')
       expect(page).to have_text('Add Note')
     end
 
