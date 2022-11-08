@@ -31,30 +31,30 @@
   value="ryan@datadryad.org">                               -->
 <!--  ----------------------------------------------------------------------  -->
 
-<label for="first_name" class="c-input__label">First name</label>
-<input id="first_name" class="c-input__text" maxlength="80" name="first_name" type="text" /><br>
+<label for="first_name" class="required c-input__label">First name</label>
+<input id="first_name" class="c-input__text" maxlength="80" name="first_name" type="text" /><br><br>
 
-<label for="last_name" class="c-input__label">Last name</label>
-<input id="last_name" class="c-input__text" maxlength="80" name="last_name" size="20" type="text" /><br>
+<label for="last_name" class="required c-input__label">Last name</label>
+<input id="last_name" class="c-input__text" maxlength="80" name="last_name" size="20" type="text" /><br><br>
 
-<label for="email" class="c-input__label">Email address</label>Please use your institutional email address if possible
-<input id="email" class="c-input__text" maxlength="80" name="email" size="20" type="text" /><br>
+<label for="email" class="required c-input__label">Email address</label>Please use your institutional email address if possible
+<input id="email" class="c-input__text" maxlength="80" name="email" size="20" type="text" /><br><br>
 
 <label for="company" class="c-input__label">Institution or organization</label>Please use your primary institutional affiliation
-<input id="company" class="c-input__text" name="company" title="Institution" /><br>
+<input id="company" class="c-input__text" name="company" title="Institution" /><br><br>
 
 <label for="title" class="c-input__label">Job Title</label>Please use your current job title
-<input id="title" class="c-input__text" maxlength="40" name="title" size="20" type="text" /><br>
+<input id="title" class="c-input__text" maxlength="40" name="title" size="20" type="text" /><br><br>
 
 <label for="<%= APP_CONFIG.salesforce.participation_field_id %>" class="c-input__label">How would you like to participate?</label>Select all that apply
 <select  id="<%= APP_CONFIG.salesforce.participation_field_id %>" multiple="multiple" name="<%= APP_CONFIG.salesforce.participation_field_id %>" title="Participation">
   <option value="Join our mailing list">Join our mailing list</option>
   <option value="Set up a demo or meeting">Set up a demo or meeting</option>
   <option value="Get help with an issue">Get help with an issue</option>
-</select><br>
+</select><br><br>
 
 <label for="<%= APP_CONFIG.salesforce.comment_field_id %>" class="c-input__label">Comments</label>
-<textarea  id="<%= APP_CONFIG.salesforce.comment_field_id %>" name="<%= APP_CONFIG.salesforce.comment_field_id %>" rows="3" type="text" wrap="soft"></textarea><br>
+<textarea  id="<%= APP_CONFIG.salesforce.comment_field_id %>" name="<%= APP_CONFIG.salesforce.comment_field_id %>" rows="3" type="text" wrap="soft"></textarea><br><br>
 
 <div class="g-recaptcha" data-sitekey="<%= APP_CONFIG.google_recaptcha_sitekey %>"></div><br>
 <button class="o-button__plain-text1" style="width:min-content;" type="submit" name="submit">Submit</button>
