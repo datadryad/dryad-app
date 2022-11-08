@@ -41,7 +41,7 @@
 .c-lined-table__head > th.c-admin-hide-border-right {
   padding: 8px;
   border-collapse: collapse;
-  border: 1px solid $design-dark-gray-color;
+  border: thin solid $design-dark-gray-color;
   border-right: none;
   font-weight: bold;
   text-align: left;
@@ -49,7 +49,7 @@
 
 .c-lined-table__head > th.c-admin-hide-border-left {
   border-collapse: collapse;
-  border: 1px solid $design-dark-gray-color;
+  border: thin solid $design-dark-gray-color;
   border-left: none;
 }
 

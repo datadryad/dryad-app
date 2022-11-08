@@ -1,0 +1,35 @@
+<% ds_row = funder_row %>
+<tr class="c-lined-table__row" id="js-dataset-row-id-<%= ds_row.id %>">
+  <td>
+    <% if ds_row.title.blank? %>
+      <%= ds_row.title %>
+    <% else %>
+      <%= link_to ds_row.title, stash_url_helpers.show_path(id: "doi:#{ds_row.identifier}"), target: '_blank' %>
+    <% end %>
+  </td>
+  <td>
+    <%= ds_row.authors %>
+  </td>
+  <td>
+    <%= ds_row.identifier %>
+  </td>
+  <td>
+    <%= ds_row.contributor_name %>
+  </td>
+  <td>
+    <%= ds_row.award_number %>
+  </td>
+  <td>
+    <%= ds_row.init_sub_date&.strftime('%m/%d/%Y') %>
+  </td>
+  <td>
+    <% if ds_row.pub_state == 'embargoed' && ds_row.publication_date && ds_row.publication_date > Time.new %>
+      <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
+    <% end %>
+  </td>
+  <td>
+    <% if ds_row.pub_state == 'published' && ds_row.publication_date && ds_row.publication_date < Time.new %>
+      <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
+    <% end %>
+  </td>
+</tr>

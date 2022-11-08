@@ -1,0 +1,94 @@
+<div>
+  <%= form_with url: stash_url_helpers.ds_admin_funders_path, method: :get, local: true do |form| %>
+    <div class="o-admin-columns">
+
+      <!-- first column -->
+      <div class="o-admin-50-column">
+        <h2 class="o-heading__level2">Limit to</h2>
+
+        <% if current_user.limited_curator? %>
+          <!-- only show tenant select for limited curators and above, not admins or tenant curators -->
+          <div class="o-admin-form-pair">
+            <label class="o-admin-label-left" for="tenant">Partner institution</label>
+            <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
+                           class: 'o-admin-field-right' ) %>
+          </div>
+        <% end %>
+
+        <div class="o-admin-form-pair">
+          <label for="funder_name" class="o-admin-label-left">Funder</label>
+          <%= text_field_tag 'funder_name', params[:funder_name], {size: 15, class: 'o-admin-field-right'} %>
+          <%= hidden_field_tag 'funder_id', params[:funder_id] %>
+        </div>
+
+      </div>
+
+      <!-- second column -->
+      <div class="o-admin-50-column">
+        <h2 class="o-heading__level2">For dates</h2>
+
+        <div class="o-admin-form-pair">
+          <label class="o-admin-label-left" for="tenant">Date type</label>
+          <%= select_tag(:date_type, options_for_select(
+              [ ['Initial submission','initial'], ['Embargo/publication', 'published'] ], params[:date_type]),
+                         class: 'o-admin-field-right' ) %>
+        </div>
+
+        <div class="o-admin-form-pair">
+          <label class="o-admin-label-left" for="start_date">Start date</label>
+          <%= date_field_tag(:start_date, params[:start_date]) %>
+        </div>
+
+        <div class="o-admin-form-pair">
+          <div class="o-admin-label-left">to</div>
+          <div class="o-admin-field-right"></div>
+        </div>
+
+        <div class="o-admin-form-pair">
+          <lavel class="o-admin-label-left" for="end_date">End date</lavel>
+          <%= date_field_tag(:end_date, params[:end_date]) %>
+        </div>
+
+      </div>
+    </div>
+    <%= button_tag "Reset", type: :reset, id: 'reset_button' %>
+    <%= form.submit "Submit" %>
+  <% end %>
+</div>
+
+<script>
+  // this is for jQuery UI autocomplete which is fast and easy to implement and it seems like the priority for this
+  // is to get something working.
+  $( function() {
+    $( "#funder_name" ).autocomplete({
+      source: function(request, response) {
+        $.get('https://api.crossref.org/funders', { query: request.term }, function(data) {
+          response(data["message"]["items"].map((i) => { return { 'id': i.uri, 'value': i.name } } ));
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        document.getElementById('funder_id').value = ui.item.id;
+      }
+    })._renderItem = function( ul, item ) {
+      ul.attr('role', 'listbox');
+      return $( "<li>" )
+          .append( "<a role=\"option\">" + item.label + "</a>" )
+          .appendTo(ul);
+    };
+
+    $("#reset_button").on("click", function(e) {
+      e.preventDefault();
+      $("#tenant").val("");
+      $("#funder_name").val("");
+      $("#funder_id").val("");
+      $("#date_type").val("initial");
+      $("#start_date").val("");
+      $("#end_date").val("");
+      console.log("clicked_reset");
+      e.target.form.submit();
+    });
+
+  });
+</script>

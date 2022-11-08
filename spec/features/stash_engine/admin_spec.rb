@@ -28,7 +28,8 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'has admin link' do
       visit root_path
-      expect(page).to have_link('Admin')
+      section = first('summary').text
+      expect(section).to eq('Admin')
     end
 
     it "shows a user's version history for a dataset" do
@@ -38,9 +39,9 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'does not allow editing a dataset from the curation page', js: true do
       visit root_path
-      click_link('Admin')
-      expect(page).to have_text('Admin Dashboard')
-
+      first('summary').click
+      click_link('Datasets')
+      expect(page).to have_text('Admin dashboard')
       expect(page).not_to have_css('button[title="Edit Dataset"]')
     end
 
@@ -115,10 +116,10 @@ RSpec.feature 'Admin', type: :feature do
       it 'has admin link', js: true do
         visit root_path
         find('.o-sites__summary', text: 'Admin').click
-        expect(page).to have_link('Dataset Curation')
-        expect(page).to have_link('Publication Updater')
-        expect(page).to have_link('Status Dashboard')
-        expect(page).to have_link('Submission Queue')
+        expect(page).to have_link('Dataset curation')
+        expect(page).to have_link('Publication updater')
+        expect(page).to have_link('Status dashboard')
+        expect(page).to have_link('Submission queue')
       end
 
       it 'allows editing a dataset', js: true do
@@ -141,7 +142,7 @@ RSpec.feature 'Admin', type: :feature do
 
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
         find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
@@ -160,7 +161,7 @@ RSpec.feature 'Admin', type: :feature do
 
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
         find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
@@ -184,7 +185,7 @@ RSpec.feature 'Admin', type: :feature do
 
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
         find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
@@ -317,11 +318,11 @@ RSpec.feature 'Admin', type: :feature do
         menu = first('summary.o-showhide__summary')
         menu.click
         within menu.find(:xpath, '..') do
-          expect(page).to have_content('Dataset Curation')
-          expect(page).to have_content('Curation Stats')
+          expect(page).to have_content('Dataset curation')
+          expect(page).to have_content('Curation stats')
           expect(page).to have_content('Journals')
-          expect(page).not_to have_content('User Management')
-          expect(page).not_to have_content('Submission Queue')
+          expect(page).not_to have_content('User management')
+          expect(page).not_to have_content('Submission queue')
         end
       end
 
@@ -329,7 +330,7 @@ RSpec.feature 'Admin', type: :feature do
       xit 'Limits options in the curation page' do
         menu = first('summary.o-showhide__summary')
         menu.click
-        click_on('Dataset Curation')
+        click_on('Dataset curation')
         # select 'Status', from: 'curation_status'
         # find('#curation_status').set("Status\n") # trying to get headless to work reliably
         visit('/stash/ds_admin?utf8=✓') # remove the filter and load page which the JS action doesn't seem to be reliable on github
@@ -366,7 +367,7 @@ RSpec.feature 'Admin', type: :feature do
         ident1.reload
 
         click_link('Admin')
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(res1.title)
         expect(page).to_not have_text(res2.title)
       end
@@ -381,19 +382,22 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'has admin link' do
         visit root_path
-        expect(page).to have_link('Admin')
+        section = first('summary').text
+        expect(section).to eq('Admin')
       end
     end
 
     it 'allows adding notes to the curation activity log', js: true do
       visit root_path
-      click_link('Admin')
-      expect(page).to have_text('Admin Dashboard')
+      first('summary').click
+      click_link('Datasets')
+
+      expect(page).to have_text('Admin dashboard')
 
       expect(page).to have_css('button[title="View Activity Log"]')
       find('button[title="View Activity Log"]').click
 
-      expect(page).to have_text('Activity Log for')
+      expect(page).to have_text('Activity log for')
       expect(page).to have_text('Add Note')
     end
 

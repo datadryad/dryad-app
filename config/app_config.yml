@@ -210,7 +210,15 @@ development: &DEVELOPMENT
     data_processing_charge: 12000 # charge in cents
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
-
+  cedar:
+    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
+    template_base_url: "/cedar-embeddable-editor"
+    templates:
+      - [1, "Files", "Ted's File Description"]
+      - [40, "YOUTUBE",  "Youtube"]
+      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+    
 aws_db:
   <<: *DEVELOPMENT
   send_journal_published_notices: false

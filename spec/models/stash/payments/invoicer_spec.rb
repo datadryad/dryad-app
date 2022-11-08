@@ -9,6 +9,7 @@ module Stash
       before(:each) do
         @identifier = double(StashEngine::Identifier)
         allow(@identifier).to receive(:to_s).and_return('doi:10.123/a1b.c2d3')
+        allow(@identifier).to receive(:payment_type)
         allow(@identifier).to receive(:payment_id=)
         allow(@identifier).to receive(:payment_type=)
         allow(@identifier).to receive(:save).and_return(true)

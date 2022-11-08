@@ -1,8 +1,8 @@
-<h2>Item details for Zenodo Copy ID <%= @zenodo_copy.id %>,
+<h2>Item details for zenodo copy id <%= @zenodo_copy.id %>,
   <%= link_to @zenodo_copy&.identifier&.to_s, show_path(@zenodo_copy&.identifier&.to_s) %>
 </h2>
 
-<h3>Delayed Job Info</h3>
+<h3>Delayed job info</h3>
 
 <% if @delayed_jobs.count.positive? %>
   <table class="c-lined-table">
@@ -17,7 +17,7 @@
   <p>This item isn't currently processing in the delayed job runner.</p>
 <% end %>
 
-<h3>Zenodo Copy Info</h3>
+<h3>Zenodo copy info</h3>
 <table class="c-lined-table">
   <% @zenodo_copy.attributes.each_pair do |k, v| %>
     <tr class="c-lined-table__row">

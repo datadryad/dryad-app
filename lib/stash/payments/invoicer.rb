@@ -26,7 +26,7 @@ module Stash
         create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
         resource.identifier.payment_id = invoice.id
-        resource.identifier.payment_type = 'stripe'
+        resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
         invoice.send_invoice
       end
@@ -88,7 +88,7 @@ module Stash
           customer: customer_id,
           amount: APP_CONFIG.payments.data_processing_charge,
           currency: 'usd',
-          description: "Data Processing Charge for #{resource.identifier} (#{filesize(ds_size)})"
+          description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
         over_chunks = overage_chunks
         if over_chunks.positive?
@@ -98,6 +98,16 @@ module Stash
                        currency: 'usd',
                        quantity: over_chunks,
                        description: overage_message
+                     ))
+        end
+        # For users with a waiver, add line waiving invoice amount
+        if stripe_user_waiver?
+          overcharge = over_chunks.positive? ? APP_CONFIG.payments.additional_storage_chunk_cost * over_chunks : 0
+          items.push(Stripe::InvoiceItem.create(
+                       customer: customer_id,
+                       amount: -(APP_CONFIG.payments.data_processing_charge + overcharge),
+                       currency: 'usd',
+                       description: "Waiver of charges for #{resource.identifier} (#{filesize(ds_size)})"
                      ))
         end
         items
@@ -119,6 +129,10 @@ module Stash
           name: author.author_standard_name,
           email: author.author_email
         )
+      end
+
+      def stripe_user_waiver?
+        resource.identifier.payment_type == 'waiver'
       end
 
       def stripe_user_customer_id

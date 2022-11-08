@@ -9,14 +9,14 @@
   height: 8em;
   margin-right: 20px;
   padding: 10px;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
 }
 
 .o-admin-right-head {
   flex-grow: 1;
   height: 8em;
   padding: 10px;
-  border: 1px solid $design-light-gray-color;
+  border: thin solid $design-light-gray-color;
 }
 
 .o-admin-left {
@@ -37,4 +37,46 @@
 
 .o-admin-dialog {
   padding: 5px 15px 25px;
+}
+
+.o-admin-columns {
+  display: flex;
+  gap: 2rem;
+}
+
+.o-admin-25-column {
+  flex: 25;
+}
+
+.o-admin-40-column {
+  flex: 40;
+}
+
+.o-admin-50-column {
+  flex: 50;
+}
+
+.o-admin-60-column {
+  flex: 60;
+}
+
+.o-admin-75-column {
+  flex: 75;
+}
+
+.o-admin-form-pair {
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+}
+
+.o-admin-label-left {
+  flex: 0 0 30%;
+  justify-content: right;
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.o-admin-field-right {
+  flex: 0 0 70%;
 }
