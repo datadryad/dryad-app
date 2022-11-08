@@ -206,7 +206,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         within(:css, '.c-lined-table__row', wait: 10) do
           find('button[title="View Activity Log"]').click
         end
-        expect(page).to have_text('Activity Log for')
+        expect(page).to have_text('Activity log for')
         expect(page).to have_text('Salesforce Cases')
         expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
       end
