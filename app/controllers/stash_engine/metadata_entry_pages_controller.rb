@@ -16,6 +16,13 @@ module StashEngine
     end
     helper_method :resource
 
+    def cedar_popup
+      print("CEDAR popup: params are #{params}")
+      respond_to do |format|
+        format.js
+      end
+    end
+
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       return unless @resource.submitted? # create a new version if this is a submitted version

@@ -10,7 +10,7 @@
     z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
     justify-content: space-between;
     padding-bottom: 10px;
-    border-bottom: 1px solid $design-dark-gray-color;
+    border-bottom: thin solid $design-dark-gray-color;
   }
 
 }
@@ -129,7 +129,7 @@
     }
 
     &:not(:last-child) {
-      border-right: 1px solid $design-orange-color;
+      border-right: thin solid $design-orange-color;
     }
 
   }
