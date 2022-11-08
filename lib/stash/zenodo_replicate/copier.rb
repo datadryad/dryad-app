@@ -47,6 +47,7 @@ module Stash
 
       def add_to_zenodo
         # sanity checks
+        error_if_over_50gb # these error eventually and interfere with other jobs, so for now this is here
         error_if_not_enqueued
         error_if_replicating
         error_if_out_of_order
