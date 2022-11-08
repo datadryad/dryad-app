@@ -242,6 +242,18 @@ repository: # change me: you'll probably have to change all the following indent
     owner: null
 ```
 
+### Make NIH have sub-funders
+Type 
+
+```
+RAILS_ENV=production rails funders:set_nih
+```
+
+which makes the rails database have a special structure for NIH to include sub-funders.  Other
+umbrella funders may be added later.
+  
+'op '
+
 ### Connection to Dryad machines in the UC infrastructure
 
 If you are connecting your Dryad installation to any services in the UC

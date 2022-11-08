@@ -1,5 +1,5 @@
 <%  @datatype = (params[:action].include?('code') ? 'Software' : 'Data') %>
-<% @page_title = "Upload Your Files - Publish and Preserve your #{@datatype}" %>
+<% @page_title = "Upload your files - publish and preserve your #{@datatype}" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
