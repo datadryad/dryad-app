@@ -478,6 +478,7 @@ module StashEngine
         allow(@identifier).to receive(:submitter_affiliation).and_return(affil)
         @identifier.record_payment
         expect(@identifier.payment_type).to eq('waiver')
+        expect(@identifier.waiver_basis).to eq('Bogusland')
       end
 
       it 'records a funder-based payment' do

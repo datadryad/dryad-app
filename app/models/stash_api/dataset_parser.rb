@@ -45,6 +45,7 @@ module StashApi
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier.payment_type = @hash['paymentType']
       @resource.identifier.payment_id = @hash['paymentId']
+      @resource.identifier.waiver_basis = @hash['waiverBasis']
       parse_internal_data
       @resource.identifier.save
       @resource.identifier

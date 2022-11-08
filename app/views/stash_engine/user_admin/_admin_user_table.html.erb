@@ -52,7 +52,7 @@
 	<% end %>
       </td>
       <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
-	<%= u.role.capitalize %>
+	<%= u.role&.capitalize %>
       </td>
       <td class="c-admin-hide-border-left">
 	<% if current_user.role == 'superuser' %>

@@ -445,6 +445,18 @@ Rails.application.routes.draw do
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
   end
+
+  ########################## CEDAR Embeddable Editor ###############################
+
+  post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
+
+  # Redirect the calls for MaterialUI icons, since the embeddable editor doesn't know what path it was loaded from
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff', to: redirect('/MaterialIcons-Regular.woff')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
+  get '/stash/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
+
+  get '/cedar-config', to: 'cedar#json_config'
+  post '/cedar-save', to: 'cedar#save'
   
   ########################## Dryad v1 support ######################################
   
