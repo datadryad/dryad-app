@@ -99,7 +99,6 @@ RSpec.feature 'CurationActivity', type: :feature do
         title = @identifiers.first.resources.first.title
         my_stats = @identifiers.first.counter_stat
 
-
         csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
         csv_parts = csv_line.split(',')
 
