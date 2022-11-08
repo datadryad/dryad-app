@@ -1,3 +1,4 @@
+require 'cgi'
 module StashEngine
   RSpec.describe AdminDatasetFundersController, type: :request do
 
@@ -22,11 +23,11 @@ module StashEngine
         expect(response_code).to eq(200)
 
         @resources.each do |res|
-          expect(body).to include(res.title)
-          expect(body).to include(res.authors.first.author_last_name)
-          expect(body).to include(res.identifier.identifier)
-          expect(body).to include(res.contributors.first.contributor_name)
-          expect(body).to include(res.contributors.first.award_number)
+          expect(body).to include(CGI.escapeHTML(res.title))
+          expect(body).to include(CGI.escapeHTML(res.authors.first.author_last_name))
+          expect(body).to include(CGI.escapeHTML(res.identifier.identifier))
+          expect(body).to include(CGI.escapeHTML(res.contributors.first.contributor_name))
+          expect(body).to include(CGI.escapeHTML(res.contributors.first.award_number))
         end
       end
 
@@ -65,8 +66,8 @@ module StashEngine
       it 'limits by partner institution' do
         response_code = get '/stash/ds_admin_funders', params: { tenant: 'dryad' }
         expect(response_code).to eq(200)
-        expect(body).to include(@resources.second.title)
-        expect(body).not_to include(@resources.first.title)
+        expect(body).to include(CGI.escapeHTML(@resources.second.title))
+        expect(body).not_to include(CGI.escapeHTML(@resources.first.title))
       end
     end
 
@@ -75,8 +76,8 @@ module StashEngine
       it 'limits to a single, simple funder (not NIH)' do
         response_code = get '/stash/ds_admin_funders', params: { funder_name: @resources.first.contributors.first.contributor_name }
         expect(response_code).to eq(200)
-        expect(body).to include(@resources.first.title)
-        expect(body).not_to include(@resources.second.title)
+        expect(body).to include(CGI.escapeHTML(@resources.first.title))
+        expect(body).not_to include(CGI.escapeHTML(@resources.second.title))
       end
 
       it 'limits to a compound funder with sub-units' do
@@ -92,9 +93,9 @@ module StashEngine
         response_code = get '/stash/ds_admin_funders', params: { funder_name: cg.contributor_name, funder_id: cg.name_identifier_id }
         expect(response_code).to eq(200)
 
-        expect(body).to include(@resources[0].title)
-        expect(body).to include(@resources[1].title)
-        expect(body).not_to include(@resources[2].title)
+        expect(body).to include(CGI.escapeHTML(@resources[0].title))
+        expect(body).to include(CGI.escapeHTML(@resources[1].title))
+        expect(body).not_to include(CGI.escapeHTML(@resources[2].title))
       end
     end
 
@@ -106,8 +107,8 @@ module StashEngine
                                                                  end_date: '2011-12-01' }
         expect(response_code).to eq(200)
         expect(body).to include('11/11/2011')
-        expect(body).to include(@resources[0].title)
-        expect(body).not_to include(@resources[2].title)
+        expect(body).to include(CGI.escapeHTML(@resources[0].title))
+        expect(body).not_to include(CGI.escapeHTML(@resources[2].title))
       end
 
       it 'limits to an embargo/publication date' do
@@ -119,8 +120,8 @@ module StashEngine
                                                                  end_date: '2016-09-01' }
         expect(response_code).to eq(200)
         expect(body).to include('08/22/2016')
-        expect(body).to include(@resources[0].title)
-        expect(body).not_to include(@resources[1].title)
+        expect(body).to include(CGI.escapeHTML(@resources[0].title))
+        expect(body).not_to include(CGI.escapeHTML(@resources[1].title))
       end
     end
   end
