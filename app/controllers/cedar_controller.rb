@@ -1,5 +1,7 @@
 class CedarController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  # Since the CEDAR form doesn't know about Rails, we don't use the default Rails CSRF validation.
+  # Instead we pass the CSRF token as an "info" value in the form, and validate it explicitly in the save method
+  skip_before_action :verify_authenticity_token, only: [:save]
 
   def json_config
     json_output = {
@@ -13,7 +15,7 @@ class CedarController < ApplicationController
 
       "showSampleTemplateLinks": false,
       "expandedSampleTemplateLinks": false,
-      "sampleTemplateLocationPrefix": 'https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/',
+      "sampleTemplateLocationPrefix": '/cedar-embeddable-editor',
       "loadSampleTemplateName": params[:template],
 
       "showFooter": false,
@@ -41,7 +43,10 @@ class CedarController < ApplicationController
 
   # Save data from the Cedar editor into the database
   def save
-    # csrf = params['info']['csrf']
+    # If the CSRF token is not present or not valid, don't save the data
+    csrf = params['info']['csrf']
+    return unless csrf && valid_authenticity_token?(session, csrf)
+
     resource = StashEngine::Resource.find(params['info']['resource_id']&.to_i)
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
 

@@ -34,14 +34,16 @@ http://localhost:8009
 Configuration
 ==============
 
-Config file: `public/cedar-embeddable-editor/cee-config.json`
+The CEDAR editor requires a configuration file. These files are generated
+dynamically by the `cedar_controller.rb`, because they must include the ID of the
+template that the user is requesting.
 
-- The config file is publicly available. The user's browser will
-  download it when initiating the editor.
-- We could move this config into a more protected location, but it doesn't seem
-  necessary, since every user would have access to it anyway.
-- When the description page triggers config loading, the config file is injected into the
-  `cedar-embeddable-editor` component using a method called `loadConfigFromURL`.
+When the Cedar component opens the modal dialog:
+1. The editor is initialized using a method called `loadConfigFromURL`.
+2. The URL passed in is the path to `cedar_controller.json_config`, with a parameter
+   indicating the template ID.
+3. The editor receives the template ID in the configuration, and uses it to construct
+   a URL to retrieve the template file out of the `/cedar-embeddable-editor/` directory.
 
 
 Templates
@@ -55,10 +57,7 @@ For the CEDAR editor, templates are stored at a URL specified by
 `sampleTemplateLocationPrefix`. Within this URL, every template has a number,
 then the template itself is called `template.json`, so the full URL will be
 something like
-https://component.metadatacenter.org/cedar-embeddable-editor-sample-templates/53/template.json
-
-All the templates made public via the component server are available on GitHub
-https://github.com/metadatacenter/cedar-component-distribution/tree/master/cedar-embeddable-editor-sample-templates
+https://datadryad.org/cedar-embeddable-editor/53/template.json
 
 The template controls the types of fields that are displayed and how/whether
 they are tied to an ontolgy.
@@ -68,6 +67,27 @@ Field type
 
 Field values/ontology
 - _valueConstraints/branches/uri
+
+
+Obtaining new templates
+------------------------
+
+We store templates in the Dryad codebase, allowing us to control when they are
+updated. But templates are normally generated within the CEDAR website. To
+obtain a template from CEDAR:
+
+1. Get the CEDAR ID for the template you want to download (the template maintainer should give you this)
+2. Login to CEDAR at https://cedar.metadatacenter.org/ -- you can use any method
+   to login, but ORCID is always good!
+3. Go to your user profile page and find your API key
+4. Download the template using a command like this:
+   `curl -H "Authorization: apiKey <your-API-key-here>" "https://repo.metadatacenter.org/templates/<template-ID-here>"`
+5. Save the template in a numbered directory in Dryad like
+   `public/cedar-embeddable-editor/123/template.json`
+6. Ensure that the Dryad configuration references the new template, using the
+   number of the directory that it was placed in.
+
+Older sample templates may still be available at URLs like: https://component.staging.metadatacenter.org/cedar-embeddable-editor-sample-templates/40/template.json
 
 
 Styling
