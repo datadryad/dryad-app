@@ -1,5 +1,5 @@
 <% # local: user %>
-<h1>Choose <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s Tenant Institution</h1>
+<h1>Choose <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s tenant institution</h1>
 
 <%= form_with(url: user_admin_set_tenant_path(user.id), method: :post, remote: true) do |f| -%>  
 

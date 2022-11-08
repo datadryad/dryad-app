@@ -1,10 +1,10 @@
 <% @page_title = "Manage users" %>
-<h1 class="o-heading__level1">Manage Users</h1>
+<h1 class="o-heading__level1">Manage users</h1>
 
 <%= render partial: 'admin_head', locals: { stats: @stats} %>
 
 <div>
-  <h2>User Administration</h2>
+  <h2>User administration</h2>
   
   <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
   method: 'get', id: 'search_form', local: true ) do %>

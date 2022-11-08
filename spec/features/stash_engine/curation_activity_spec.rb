@@ -28,19 +28,19 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'is accessible by admins' do
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
       it 'is accessible by curators' do
         sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
       it 'is accessible by super users' do
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit dashboard_path
-        expect(page).to have_text('Admin Dashboard')
+        expect(page).to have_text('Admin dashboard')
       end
 
     end
@@ -193,7 +193,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         within(:css, '.c-lined-table__row', wait: 10) do
           find('button[title="View Activity Log"]').click
         end
-        expect(page).to have_text('Activity Log for')
+        expect(page).to have_text('Activity log for')
         expect(page).to have_text('Not a valid SF link')
         # 'SF #0001' is not a valid case number, so the text is not changed
         expect(page).to have_text('SF #0001')
@@ -206,8 +206,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         within(:css, '.c-lined-table__row', wait: 10) do
           find('button[title="View Activity Log"]').click
         end
-        expect(page).to have_text('Activity Log for')
-        expect(page).to have_text('Salesforce Cases')
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Salesforce cases')
         expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
       end
 

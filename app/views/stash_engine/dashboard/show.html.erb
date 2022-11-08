@@ -1,4 +1,4 @@
-<% @page_title = "My Datasets - Publish and Preserve your Data" %>
+<% @page_title = "My datasets - publish and preserve your data" %>
 <!--  Is this really needed?  Seems to duplicate the flash messages in template TODO: remove?
 <% if notice %>
   <div class="js-alert c-alert--success" role="alert">
@@ -12,7 +12,7 @@
 
 <div class="c-datasets-heading">
 	<h1 class="c-datasets-heading__heading o-heading__level1">My Datasets</h1>
-	<%= button_to 'Start New Dataset', stash_url_helpers.new_resource_path,
+	<%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
             class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
 </div>
 

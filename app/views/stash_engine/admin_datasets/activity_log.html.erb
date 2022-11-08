@@ -1,5 +1,5 @@
-<% @page_title = "Activity Log for #{@identifier.to_s}" %>
-<h1 class="o-heading__level1">Activity Log for <%= @identifier&.latest_resource&.title %></h1>
+<% @page_title = "Activity log for #{@identifier.to_s}" %>
+<h1 class="o-heading__level1">Activity log for <%= @identifier&.latest_resource&.title %></h1>
 
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
@@ -41,7 +41,7 @@
 
 <% if current_user.limited_curator? || current_user.role == 'admin' %>
     <div id="salesforce_links" style="clear: both">	
-	<div style="float: left"><h2>Salesforce Cases</h2></div>
+	<div style="float: left"><h2>Salesforce cases</h2></div>
 	<div style="float: right">
 	    <br/>
 	    <%= button_to "Create Salesforce Case",
@@ -88,7 +88,7 @@
 
 
 <div id="internal_data" style="clear: both">
-  <div style="float: left"><h2>Internal Data</h2></div>
+  <div style="float: left"><h2>Internal data</h2></div>
   <% if current_user.curator? || current_user.role == 'admin' %>
     <div style="float: right">
       <br/>
@@ -107,7 +107,7 @@
 
 <% if current_user.curator? %>
     <div id="dangerous_actions">
-	<div style="float: left"><h2>Dangerous Actions</h2>
+	<div style="float: left"><h2>Dangerous actions</h2>
 
 	    <div style="float: left">
 		<% res = @identifier&.latest_resource %>

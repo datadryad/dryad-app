@@ -97,12 +97,10 @@ module StashDatacite
     end
 
     def resource
-      @resource ||= begin
-                      if params[:stash_datacite_related_identifier]
-                        StashEngine::Resource.find(related_identifier_params[:resource_id])
-                      else
-                        @related_identifier.resource
-                      end
+      @resource ||= if params[:stash_datacite_related_identifier]
+                      StashEngine::Resource.find(related_identifier_params[:resource_id])
+                    else
+                      @related_identifier.resource
                     end
     end
 
