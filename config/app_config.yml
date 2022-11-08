@@ -248,6 +248,14 @@ stage:
     bucket: dryad-s3-stg
     key: AKIAIQ5XWADKJZ556SBQ
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  cedar:
+    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
+    template_base_url: "/cedar-embeddable-editor"
+    templates:
+      - [1, "Files", "Ted's File Description"]
+      - [40, "YOUTUBE",  "Youtube"]
+      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
 migration:
   <<: *DEFAULTS
