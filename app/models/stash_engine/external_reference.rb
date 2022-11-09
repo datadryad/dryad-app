@@ -28,6 +28,6 @@ module StashEngine
 
     validates :source, inclusion: { in: enum_vals, message: '%{value} is not a valid source' }
     validates :identifier, :value, presence: true
-    validates :source, uniqueness: { scope: :identifier, message: 'the dataset already has an entry for %{value}' }
+    validates :source, uniqueness: { case_sensitive: false, scope: :identifier, message: 'the dataset already has an entry for %{value}' }
   end
 end
