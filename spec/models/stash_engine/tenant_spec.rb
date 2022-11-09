@@ -42,7 +42,7 @@ module StashEngine
         expect(tenant.tenant_id).to eq('dataone')
         expect(tenant.long_name).to eq('DataONE')
         expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
-        expect(tenant.identifier_service.prefix).to eq("10.5072")
+        expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('author_match')
         # not going to check all since we've already tried that in initialize and not needed
       end
@@ -52,7 +52,7 @@ module StashEngine
         expect(tenant.tenant_id).to eq('dryad')
         expect(tenant.long_name).to eq('Dryad Digital Repository')
         expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
-        expect(tenant.identifier_service.prefix).to eq("10.5072")
+        expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('none')
         # not going to check all since we've already tried that in initialize and not needed
       end
@@ -87,9 +87,9 @@ module StashEngine
       it 'returns the Stash::Sword::Client parameter hash' do
         tenant = Tenant.find('ucop')
         expected = {
-          collection_uri: "http://merritt.repository.domain.here/mrtsword/collection/dash_cdl",
-          username: "submitter.username",
-          password: "submitter.password"
+          collection_uri: 'http://merritt.repository.domain.here/mrtsword/collection/dash_cdl',
+          username: 'submitter.username',
+          password: 'submitter.password'
         }
         expect(tenant.sword_params).to eq(expected)
       end
