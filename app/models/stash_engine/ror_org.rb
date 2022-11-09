@@ -1,7 +1,7 @@
 module StashEngine
   class RorOrg < ApplicationRecord
     self.table_name = 'stash_engine_ror_orgs'
-    validates :ror_id, uniqueness: true
+    validates :ror_id, uniqueness: { case_sensitive: true }
 
     ROR_MAX_RESULTS = 20
 
