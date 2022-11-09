@@ -121,6 +121,17 @@ module StashApi
         hsh = response_body_hash
         expect(hsh['error']).to eq('incorrect status set')
       end
+
+      it 'returns a 404 if the file or resource has been removed since report started processing' do
+        @generic_file.destroy!
+        @generic_file2.destroy!
+        response_code = put @path,
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
+                            headers: default_authenticated_headers
+        expect(response_code).to eq(404)
+        hsh = response_body_hash
+        expect(hsh['error']).to eq('not-found')
+      end
     end
   end
 end
