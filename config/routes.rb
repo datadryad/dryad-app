@@ -224,7 +224,7 @@ Rails.application.routes.draw do
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
     
     # root 'sessions#index'
-    root 'pages#home'
+    root 'pages#home', as: 'pages_root'
     
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
     match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]

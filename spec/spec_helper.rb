@@ -33,6 +33,8 @@ require 'support/database_cleaner'
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 
+  # config.full_backtrace = true
+
   config.bisect_runner = :shell
 
   config.example_status_persistence_file_path = './tmp/rspec'
