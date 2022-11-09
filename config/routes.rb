@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   use_doorkeeper
   # The priority is based upon order of creation: first created -> highest priority.
