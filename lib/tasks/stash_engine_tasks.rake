@@ -1,6 +1,6 @@
 require 'httparty'
 require 'stash/salesforce'
-require 'stash/google/journal_gmail'
+require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
 
 # rubocop:disable Metrics/BlockLength
