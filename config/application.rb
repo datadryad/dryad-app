@@ -23,7 +23,6 @@ module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
     config.load_defaults 6.0
-    config.autoloader = :classic
     config.generators.javascript_engine = :js
     config.autoload_paths << Rails.root.join("lib")
 
