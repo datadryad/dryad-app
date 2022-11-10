@@ -12,6 +12,23 @@ require 'restforce'
 module Stash
   class Salesforce
 
+    # ###### Generic operations #######
+
+    def self.find(obj_type:, obj_id:)
+      sf_client&.find(obj_type, obj_id)
+    end
+
+    # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
+    def self.update(obj_type:, obj_id:, kv_hash:)
+      sf_client&.update(obj_type, Id: obj_id, **kv_hash)
+    end
+
+    def self.db_query(query)
+      sf_client&.query(query)
+    end
+
+    # ##### Cases #####
+
     # Retrieve globally unique case_id from a Dryad-specific case_num
     def self.case_id(case_num:)
       return unless case_num
@@ -30,23 +47,6 @@ module Stash
       return unless case_id.present?
 
       "#{APP_CONFIG[:salesforce][:server]}/lightning/r/Case/#{case_id}/view"
-    end
-
-    def self.sf_user
-      sf_client&.user_info
-    end
-
-    def self.find(obj_type:, obj_id:)
-      sf_client&.find(obj_type, obj_id)
-    end
-
-    # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
-    def self.update(obj_type:, obj_id:, kv_hash:)
-      sf_client&.update(obj_type, Id: obj_id, **kv_hash)
-    end
-
-    def self.db_query(query)
-      sf_client&.query(query)
     end
 
     def self.find_cases_by_doi(doi)
@@ -75,22 +75,6 @@ module Stash
       cases_found
     end
 
-    def self.find_user_by_orcid(orcid)
-      result = db_query("SELECT Id FROM User Where EmployeeNumber='#{orcid}'")
-      return unless result && result.size > 0
-
-      result.first['Id']
-    end
-
-    def self.find_account_by_name(name)
-      return unless name
-
-      result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
-      return unless result && result.size > 0
-
-      result.first['Id']
-    end
-
     def self.create_case(identifier:, owner:)
       return unless identifier && owner && sf_client
 
@@ -113,6 +97,30 @@ module Stash
 
       case_id
     end
+
+    # ###### Users ######
+
+    def self.sf_user
+      sf_client&.user_info
+    end
+
+    def self.find_user_by_orcid(orcid)
+      result = db_query("SELECT Id FROM User Where EmployeeNumber='#{orcid}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    def self.find_account_by_name(name)
+      return unless name
+
+      result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    # ####### Private internal methods ######
 
     class << self
       private
