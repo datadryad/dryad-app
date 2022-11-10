@@ -1,5 +1,4 @@
 require 'kaminari'
-require 'stash_engine/application_controller'
 
 module StashEngine
   class UserAdminController < ApplicationController

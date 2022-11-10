@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class GeolocationBoxesController < ApplicationController
     before_action :set_geolocation_box, only: %i[show edit update delete]

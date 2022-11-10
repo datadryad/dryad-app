@@ -1,6 +1,3 @@
-require 'api_application_controller'
-require_relative 'datasets_controller'
-
 module StashApi
   class CurationActivityController < ApiApplicationController
     before_action :require_json_headers

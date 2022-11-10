@@ -1,5 +1,3 @@
-require 'stash_engine/application_controller'
-
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login, except: %i[edit_by_doi]

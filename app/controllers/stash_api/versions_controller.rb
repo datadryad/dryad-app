@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-
-require 'api_application_controller'
-
 module StashApi
   class VersionsController < ApiApplicationController
     include Downloadable

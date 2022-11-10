@@ -1,4 +1,3 @@
-require 'stash_datacite/application_controller'
 require 'http'
 module StashDatacite
   class ContributorsController < ApplicationController

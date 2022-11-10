@@ -1,5 +1,3 @@
-require 'stash_engine/application_controller'
-
 module StashEngine
   class PublicationUpdaterController < ApplicationController
 

@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class TemporalCoveragesController < ApplicationController
     before_action :set_temporal_coverage, only: %i[update destroy]
