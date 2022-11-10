@@ -4,7 +4,7 @@ require 'api_application_controller'
 
 module StashApi
   class VersionsController < ApiApplicationController
-    include Concerns::Downloadable
+    include Downloadable
 
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download

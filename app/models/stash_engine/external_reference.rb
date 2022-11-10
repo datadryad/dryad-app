@@ -9,7 +9,7 @@ module StashEngine
   # is not meant to be able to create/update/delete this data
   class ExternalReference < ApplicationRecord
     self.table_name = 'stash_engine_external_references'
-    include StashEngine::Concerns::StringEnum
+    include StashEngine::Support::StringEnum
 
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
