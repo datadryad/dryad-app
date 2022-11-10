@@ -843,7 +843,7 @@ DEPENDENCIES
   leaflet-rails (~> 1.7.0)
   listen
   loofah (~> 2.16.0)
-  mini_racer
+  mini_racer (~> 0.6.3)
   mocha
   mysql2 (~> 0.5.3)
   net-sftp
