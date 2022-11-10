@@ -10,7 +10,7 @@ namespace :download_check do
           'AND id IN (SELECT DISTINCT identifier_id FROM stash_engine_resources WHERE tenant_id = "dataone")'
 
     ids = StashEngine::Identifier.find_by_sql(sql)
-    dl_merritt = DownloadCheck::Merritt.new(identifiers: ids)
+    dl_merritt = Tasks::DownloadCheck::Merritt.new(identifiers: ids)
     dl_merritt.check_a_download
     dl_merritt.output_csv(filename: 'dataone.csv')
   end
@@ -19,7 +19,7 @@ namespace :download_check do
     ids = StashEngine::Identifier.publicly_viewable
     # these can produce errors for testing
     # ids = StashEngine::Identifier.where(id: [113, 151, 210, 2108, 2143, 2150, 5149, 5186])
-    dl_merritt = DownloadCheck::Merritt.new(identifiers: ids)
+    dl_merritt = Tasks::DownloadCheck::Merritt.new(identifiers: ids)
     dl_merritt.check_all_files
     dl_merritt.output_csv(filename: 'all_merritt_public.csv')
     puts 'wrote all_merritt_public.csv'
