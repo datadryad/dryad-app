@@ -6,6 +6,12 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Spring reloads the application code if something changes. In the test environment 
+  # you need to enable reloading for that to work: 
+  # https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#spring-and-the-test-environment
+  # config.cache_classes = false
+
+  # However this causes our tests to fail for lack of initialization!
   config.cache_classes = true
 
   # Do not eager load code on boot. This avoids loading your whole application

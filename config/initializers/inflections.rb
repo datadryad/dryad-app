@@ -17,3 +17,7 @@
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'embargo', 'embargoes'
 end
+
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym "XML"
+end

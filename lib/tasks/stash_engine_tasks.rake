@@ -7,7 +7,7 @@ require_relative 'identifier_rake_functions'
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
   task fix_missing: :environment do # loads rails environment
-    IdentifierRakeFunctions.update_identifiers
+    Tasks::IdentifierRakeFunctions.update_identifiers
   end
 
   desc "Update identifiers latest resource if they don't have one"

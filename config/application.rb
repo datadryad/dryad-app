@@ -23,8 +23,10 @@ module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
     config.load_defaults 6.0
+    config.eager_load_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib")
     Rails.autoloaders.main.ignore("#{Rails.root}/app/overrides")
+    Rails.autoloaders.main.ignore("#{Rails.root}/lib/core_extensions")
 
     config.generators.javascript_engine = :js
 
