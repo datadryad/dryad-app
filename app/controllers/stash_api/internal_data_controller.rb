@@ -12,18 +12,14 @@ module StashApi
     # GET /internal_data/{id}
     def show
       @internal_data = StashEngine::InternalDatum.find(params[:id])
-      respond_to do |format|
-        format.any { render json: @internal_data }
-      end
+      render json: @internal_data
     end
 
     # GET /datasets/{dataset_id}/internal_data
     def index
       @internal_data = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id)
       @internal_data = @internal_data.data_type(params[:data_type]) if params.key?(:data_type)
-      respond_to do |format|
-        format.any { render json: @internal_data }
-      end
+      render json: @internal_data
     end
 
     # POST /datasets/{dataset_id}/internal_data
@@ -37,9 +33,7 @@ module StashApi
     def update
       @internal_data = StashEngine::InternalDatum.find(params[:id])
       @internal_data.update!(params[:internal_datum])
-      respond_to do |format|
-        format.any { render json: @internal_data }
-      end
+      render json: @internal_data
     end
 
     # DELETE /internal_data/{id}

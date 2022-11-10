@@ -20,9 +20,7 @@ module StashApi
     def show
       user = StashEngine::User.find(params[:id])
       user = User.new(user_id: user)
-      respond_to do |format|
-        format.any { render json: user.metadata }
-      end
+      render json: user.metadata
     end
 
     # get /users
@@ -30,9 +28,7 @@ module StashApi
       query_hash = params.slice(*DISPLAY_FIELDS).transform_keys(&DISPLAY_TO_DB) # limits to display fields and transforms to DB fields
       filtered_users = StashEngine::User.where(query_hash.to_hash) # this was ActionController::Parameters
       out = paged_users(filtered_users)
-      respond_to do |format|
-        format.any { render json: out }
-      end
+      render json: out
     end
 
     private
