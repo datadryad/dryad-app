@@ -123,6 +123,7 @@ module Stash
         begin
           @sf_client = ::Restforce.new(username: APP_CONFIG[:salesforce][:username],
                                        password: APP_CONFIG[:salesforce][:password],
+                                       host: APP_CONFIG[:salesforce][:login_host],
                                        security_token: APP_CONFIG[:salesforce][:security_token],
                                        client_id: APP_CONFIG[:salesforce][:client_id],
                                        client_secret: APP_CONFIG[:salesforce][:client_secret],
