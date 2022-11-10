@@ -23,8 +23,10 @@ module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
     config.load_defaults 6.0
-    config.generators.javascript_engine = :js
     config.autoload_paths << Rails.root.join("lib")
+    Rails.autoloaders.main.ignore("#{Rails.root}/app/overrides")
+
+    config.generators.javascript_engine = :js
 
     config.time_zone = "UTC"
     config.active_record.default_timezone = :utc
