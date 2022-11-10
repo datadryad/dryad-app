@@ -5,7 +5,7 @@
 require 'fileutils'
 require 'stash/aws/s3'
 
-require_dependency 'api_application_controller'
+require 'api_application_controller'
 require 'stash/download/file_presigned'
 
 module StashApi

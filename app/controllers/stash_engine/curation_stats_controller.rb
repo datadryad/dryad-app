@@ -1,4 +1,4 @@
-require_dependency 'stash_engine/application_controller'
+require 'stash_engine/application_controller'
 
 module StashEngine
   class CurationStatsController < ApplicationController
