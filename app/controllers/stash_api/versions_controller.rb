@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'api_application_controller'
+require 'api_application_controller'
 
 module StashApi
   class VersionsController < ApiApplicationController

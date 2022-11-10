@@ -1,4 +1,4 @@
-require_dependency 'stash_datacite/application_controller'
+require 'stash_datacite/application_controller'
 
 module StashDatacite
   class AffiliationsController < ApplicationController

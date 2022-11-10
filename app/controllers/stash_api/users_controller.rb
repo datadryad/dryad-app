@@ -1,4 +1,4 @@
-require_dependency 'api_application_controller'
+require 'api_application_controller'
 
 module StashApi
   class UsersController < ApiApplicationController
