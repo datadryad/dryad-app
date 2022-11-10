@@ -1,4 +1,3 @@
-require 'api_application_controller'
 require 'fileutils'
 require 'stash/url_translator'
 

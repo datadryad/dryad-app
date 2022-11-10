@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]

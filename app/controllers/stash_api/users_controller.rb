@@ -1,5 +1,3 @@
-require 'api_application_controller'
-
 module StashApi
   class UsersController < ApiApplicationController
 

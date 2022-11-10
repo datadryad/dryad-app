@@ -1,5 +1,3 @@
-require 'stash_engine/application_controller'
-
 module StashEngine
   class PagesController < ApplicationController
     # the homepage shows latest plans and other things, so more than a static page

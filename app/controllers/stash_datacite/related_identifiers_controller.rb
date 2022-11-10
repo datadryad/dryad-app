@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
     before_action :set_related_identifier, only: %i[update delete]

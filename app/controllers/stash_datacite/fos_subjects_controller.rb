@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class FosSubjectsController < ApplicationController
     before_action :ajax_require_modifiable, only: %i[update]

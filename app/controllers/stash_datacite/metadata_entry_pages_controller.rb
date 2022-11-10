@@ -1,5 +1,3 @@
-require 'stash_datacite/application_controller'
-
 module StashDatacite
   class MetadataEntryPagesController < ApplicationController
     before_action :find_resource

@@ -1,4 +1,3 @@
-require 'stash_engine/application_controller'
 require 'stash/salesforce'
 
 # rubocop:disable Metrics/ClassLength

@@ -1,4 +1,3 @@
-require 'stash_engine/application_controller'
 require 'ipaddr'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
