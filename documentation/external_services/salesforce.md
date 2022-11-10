@@ -20,6 +20,9 @@ Sandboxes should be deleted and re-created periodically to ensure they contain
 the latest updates to the data model. None of the sandboxes should be treated as
 a "forever" copy.
 
+When configuring Dryad to connect with a sandbox instance, note that the
+login_host should be 'test.salesforce.com' instead of the default
+'login.salesforce.com'.
 
 
 Salesforce API
