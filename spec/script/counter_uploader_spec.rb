@@ -73,7 +73,7 @@ RSpec.describe Uploader do
   describe '#modify_headers' do
     it "modifies headers to say it's compressed" do
       @up.modify_headers
-      report = File.read(File.expand_path(File.join(__dir__, '../../stash/script/counter-uploader/tmp/fixed_large_report.json')))
+      report = File.read(File.expand_path(File.join(__dir__, '../../tmp/fixed_large_report.json')))
       report = JSON.parse(report)
       exc = report['report-header']['exceptions'].first
       expect(exc['code']).to eq(69)
@@ -87,7 +87,7 @@ RSpec.describe Uploader do
   describe '#compress' do
     it 'correctly compresses the file' do
       @up.modify_headers  # sets up the correct file to compress
-      filepath = File.expand_path(File.join(__dir__, '../../stash/script/counter-uploader/tmp/fixed_large_report.json'))
+      filepath = File.expand_path(File.join(__dir__, '../../tmp/fixed_large_report.json'))
       str = @up.compress(filepath)
       uncompressed = Zlib::GzipReader.new(StringIO.new(str)).read
       expect(uncompressed).to eq(File.read(filepath))
@@ -111,7 +111,7 @@ RSpec.describe Uploader do
                    headers: { 'content-type' => 'application/json; charset=utf-8' })
 
       @up.modify_headers  # sets up the correct file to compress
-      filepath = File.expand_path(File.join(__dir__, '../../stash/script/counter-uploader/tmp/fixed_large_report.json'))
+      filepath = File.expand_path(File.join(__dir__, '../../tmp/fixed_large_report.json'))
       resp_id = @up.send_file(filepath)
       expect(resp_id).to eq('7788394xxx')
     end

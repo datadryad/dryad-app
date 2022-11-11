@@ -1,4 +1,3 @@
-require_dependency 'stash_engine/application_controller'
 require 'stash/download/file_presigned'
 require 'stash/download/version_presigned'
 require 'http'

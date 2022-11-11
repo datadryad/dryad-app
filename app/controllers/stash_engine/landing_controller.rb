@@ -1,4 +1,3 @@
-require_dependency 'stash_engine/application_controller'
 require 'securerandom'
 
 module StashEngine

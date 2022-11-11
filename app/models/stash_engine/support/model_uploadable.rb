@@ -2,7 +2,7 @@ require 'active_support/concern'
 require 'stash/aws/s3'
 
 module StashEngine
-  module Concerns
+  module Support
     module ModelUploadable
 
       extend ActiveSupport::Concern

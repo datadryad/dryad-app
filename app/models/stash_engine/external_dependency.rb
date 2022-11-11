@@ -5,7 +5,7 @@
 module StashEngine
   class ExternalDependency < ApplicationRecord
     self.table_name = 'stash_engine_external_dependencies'
-    validates :abbreviation, uniqueness: true
+    validates :abbreviation, uniqueness: { case_sensitive: false }
     validates :abbreviation, :name, :status, presence: true
 
     def online?

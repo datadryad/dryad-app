@@ -29,7 +29,7 @@ class LatestController < ApplicationController
       q: '{!raw f=uuid v=$id}'
     }
 
-    config.search_builder_class = Geoblacklight::SearchBuilder
+    config.search_builder_class = SearchBuilder
 
     # solr field configuration for search results/index views
     # config.index.show_link = 'title_display'
