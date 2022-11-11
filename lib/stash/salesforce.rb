@@ -68,6 +68,7 @@ module Stash
                  end
 
         cases_found << { title: "SF #{found.CaseNumber}",
+                         id: found.Id,
                          path: case_view_url(case_num: found.CaseNumber),
                          status: found.Status,
                          reason: reason }.to_ostruct
@@ -98,6 +99,51 @@ module Stash
       case_id
     end
 
+    # Update the metadata in a case based on the metadata in a resource
+    # Updates each field separately, so a failure of one field doesn't impact the others
+    def self.update_case_metadata(case_id:, resource:)
+      return unless case_id.present? && resource.present?
+
+      if resource.title.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Dataset_Title__c: resource.title })
+      end
+
+      if resource.current_curation_status.present?
+        readable_status = StashEngine::CurationActivity.readable_status(resource.current_curation_status)
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Dataset_Status__c: readable_status })
+      end
+
+      current_editor = StashEngine::User.find(resource.current_editor_id)&.orcid
+      owner_id = find_user_by_orcid(current_editor)
+      if owner_id.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { OwnerId: owner_id })
+      end
+
+      if resource.identifier.journal.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Journal__c: find_account_by_name(resource.identifier.journal&.title) })
+      end
+
+      inst_name = resource.identifier.latest_resource&.user&.tenant&.long_name
+      if inst_name.present?
+        puts "XXX #{inst_name}"
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Institutional_Affiliation__c: find_account_by_name(inst_name) })
+      end
+
+      update(obj_type: 'Case', obj_id: case_id,
+             kv_hash: { Last_Activity_Date__c: Time.now.iso8601 })
+
+      if resource.identifier.publication_article_doi.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Related_DOI__c: resource.identifier.publication_article_doi })
+      end
+      
+    end
+    
     # ###### Users ######
 
     def self.sf_user
