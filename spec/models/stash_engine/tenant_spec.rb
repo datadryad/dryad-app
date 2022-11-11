@@ -2,28 +2,7 @@ require 'tmpdir'
 require 'fileutils'
 
 module StashEngine
-  # rubocop:disable Lint/ConstantDefinitionInBlock
   describe Tenant do
-    before(:each) do
-      @tenants = TENANT_CONFIG
-      TENANT_CONFIG = begin
-        tenants = ActiveSupport::HashWithIndifferentAccess.new
-        tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
-        tenants['exemplia'] = ActiveSupport::HashWithIndifferentAccess.new(tenant_hash)
-        tenants
-      end
-
-      # this rails_root stuff is required when faking Rails like david did and using the mailer since it seems to call it
-      rails_root = Dir.mktmpdir('rails_root')
-      allow(Rails).to receive(:root).and_return(rails_root)
-      allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash-dev.example.edu' }))
-    end
-
-    after(:each) do
-      TENANT_CONFIG = @tenants
-    end
-    # rubocop:enable Lint/ConstantDefinitionInBlock
-
     def expect_exemplia(tenant) # rubocop:disable Metrics/AbcSize
       expect(tenant.tenant_id).to eq('exemplia')
       expect(tenant.abbreviation).to eq('EX')
@@ -50,85 +29,66 @@ module StashEngine
 
     describe :initialize do
       it 'creates a tenant' do
-        tenant_hash = TENANT_CONFIG['exemplia']
+        tenant_hash = YAML.load_file('spec/data/tenant-example.yml')['test']
         tenant = Tenant.new(tenant_hash)
         expect_exemplia(tenant)
       end
     end
 
     describe :find do
-      it 'finds the tenant' do
-        tenant = Tenant.find('exemplia')
-        expect_exemplia(tenant)
+      it 'finds a test tenant' do
+        tenant = Tenant.find('dataone')
+        expect(tenant.tenant_id).to eq('dataone')
+        expect(tenant.long_name).to eq('DataONE')
+        expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
+        expect(tenant.identifier_service.prefix).to eq('10.5072')
+        expect(tenant.authentication.strategy).to eq('author_match')
+        # not going to check all since we've already tried that in initialize and not needed
       end
 
       it 'finds the tenant by long_name' do
-        tenant = Tenant.find_by_long_name('University of Exemplia')
-        expect_exemplia(tenant)
+        tenant = Tenant.find_by_long_name('Dryad Digital Repository')
+        expect(tenant.tenant_id).to eq('dryad')
+        expect(tenant.long_name).to eq('Dryad Digital Repository')
+        expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
+        expect(tenant.identifier_service.prefix).to eq('10.5072')
+        expect(tenant.authentication.strategy).to eq('none')
+        # not going to check all since we've already tried that in initialize and not needed
       end
     end
 
     describe :omniauth_login_path do
       it 'delegates to the auth strategy' do
-        tenant = Tenant.find('exemplia')
+        tenant = Tenant.find('ucop')
         login_path = tenant.omniauth_login_path
         # TODO: don't hard-code this
-        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
+        expect(login_path).to eq('https://localhost/Shibboleth.sso/Login?target=https%3A%2F%2Flocalhost%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu')
       end
     end
 
     describe :logo_file do
       it 'returns the tenant file if it exists' do
-        tenant = Tenant.find('exemplia')
-        logo_filename = "logo_#{tenant.tenant_id}.jpg"
-        Dir.mktmpdir('rails_root') do |rails_root|
-          allow(Rails).to receive(:root).and_return(rails_root)
-          tenant_images = File.join(rails_root, 'app', 'assets', 'images', 'tenants')
-          FileUtils.mkdir_p(tenant_images)
-          FileUtils.touch(File.join(tenant_images, logo_filename))
-          expect(tenant.logo_file).to eq(logo_filename)
-        end
-      end
-
-      it 'defaults if no tenant file exists' do
-        tenant = Tenant.find('exemplia')
-        Dir.mktmpdir('rails_root') do |rails_root|
-          allow(Rails).to receive(:root).and_return(rails_root)
-          expect(tenant.logo_file).to eq('') # no longer want to display a default and ignored by ui code if unavailable
-        end
+        tenant = Tenant.find('ucop')
+        logo_filename = "logo_#{tenant.tenant_id}.svg"
+        expect(tenant.logo_file).to eq(logo_filename)
       end
     end
 
     describe :shibboleth_login_path do
       it 'returns the login path' do
-        tenant = Tenant.find('exemplia')
+        tenant = Tenant.find('ucop')
         login_path = tenant.shibboleth_login_path
-        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
-      end
-    end
-
-    describe :google_login_path do
-      it 'returns the login path' do
-        tenant = Tenant.find('exemplia')
-        login_path = tenant.google_login_path
-        expect(login_path).to eq('https://stash-dev.example.edu/stash/auth/google_oauth2')
-      end
-
-      it 'returns http if domain is localhost' do
-        allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'localhost:12345' }))
-        tenant = Tenant.find('exemplia')
-        login_path = tenant.google_login_path
-        expect(login_path).to eq('http://localhost:12345/stash/auth/google_oauth2')
+        expect(login_path).to eq('https://localhost/Shibboleth.sso/Login?target=https%3A%2F%2Flocalhost%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu')
       end
     end
 
     describe :sword_params do
       it 'returns the Stash::Sword::Client parameter hash' do
-        tenant = Tenant.find('exemplia')
+        tenant = Tenant.find('ucop')
         expected = {
-          collection_uri: 'http://repo-dev.example.edu:39001/sword/collection/stash',
-          username: 'stash_submitter',
-          password: 'correct​horse​battery​staple'
+          collection_uri: 'http://merritt.repository.domain.here/mrtsword/collection/dash_cdl',
+          username: 'submitter.username',
+          password: 'submitter.password'
         }
         expect(tenant.sword_params).to eq(expected)
       end
@@ -136,14 +96,14 @@ module StashEngine
 
     describe :full_url do
       it 'builds a full URL from a tenant' do
-        tenant = Tenant.find('exemplia')
-        expect(tenant.full_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
+        tenant = Tenant.find('ucop')
+        expect(tenant.full_url('/doi:10.123/456')).to eq('https://localhost:3000/doi:10.123/456')
       end
     end
 
     describe :exists? do
       it 'checks if a tenant exists' do
-        expect(Tenant.exists?('exemplia')).to be true
+        expect(Tenant.exists?('ucop')).to be true
         expect(Tenant.exists?('pustule')).to be false
       end
     end
