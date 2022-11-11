@@ -73,7 +73,7 @@ module StashEngine
         ZenodoCopyJob.enqueue_deferred
         @resource.reload
         expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
-        expect(enqueued_jobs).to eq([{ job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy' }])
+        expect(enqueued_jobs).to match([a_hash_including(job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy')])
       end
 
       after(:each) do

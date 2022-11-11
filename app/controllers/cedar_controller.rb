@@ -55,8 +55,6 @@ class CedarController < ApplicationController
     resource.update(cedar_json: cedar_json)
     resource.reload
 
-    respond_to do |format|
-      format.any { render json: { message: 'Save value received in the Cedar Save method' } }
-    end
+    render json: { message: 'Save value received in the Cedar Save method' }
   end
 end

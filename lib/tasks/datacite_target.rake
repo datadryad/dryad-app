@@ -1,4 +1,4 @@
-require_relative 'datacite_target/dash_updater'
+require_relative 'dash_updater'
 namespace :datacite_target do
 
   # This will update only items that are in non-Dryad tenants
@@ -6,10 +6,10 @@ namespace :datacite_target do
   # items have non-Dryad tenants
   desc 'update_dash DOI targets to reflect new environment'
   task update_dash: :environment do
-    stash_ids = DashUpdater.dash_items_to_update
+    stash_ids = Tasks::DashUpdater.dash_items_to_update
     stash_ids.each_with_index do |stash_id, idx|
       puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
-      DashUpdater.submit_id_metadata(stash_identifier: stash_id)
+      Tasks::DashUpdater.submit_id_metadata(stash_identifier: stash_id)
       sleep 1
     end
   end
@@ -23,7 +23,7 @@ namespace :datacite_target do
     start_from = 0
     start_from = ARGV[1].to_i unless ARGV[1].blank?
 
-    stash_ids = DashUpdater.all_items_to_update
+    stash_ids = Tasks::DashUpdater.all_items_to_update
 
     stash_ids.each_with_index do |stash_id, idx|
       next if idx < start_from
@@ -31,7 +31,7 @@ namespace :datacite_target do
       puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
 
       begin
-        DashUpdater.submit_id_metadata(stash_identifier: stash_id)
+        Tasks::DashUpdater.submit_id_metadata(stash_identifier: stash_id)
       rescue Stash::Doi::IdGenError, ArgumentError => e
         outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{e.message}\n"
         File.write('datacite_update_errors.txt', outstr, mode: 'a')

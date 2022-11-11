@@ -6,7 +6,7 @@
 module StashEngine
   class CurationStats < ApplicationRecord
     self.table_name = 'stash_engine_curation_stats'
-    validates :date, presence: true, uniqueness: true
+    validates :date, presence: true, uniqueness: { case_sensitive: false }
 
     after_create :recalculate
 

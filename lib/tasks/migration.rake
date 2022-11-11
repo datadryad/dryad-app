@@ -73,7 +73,7 @@ namespace :dryad_migration do
 
     record_hash = JSON.parse(File.read(StashEngine::Engine.root.join('spec', 'data', 'migration_input.json')))
 
-    id_importer = MigrationImport::Identifier.new(hash: record_hash)
+    id_importer = Tasks::MigrationImport::Identifier.new(hash: record_hash)
     id_importer.import
 
     # my_id = StashEngine::Identifier.find(t)
@@ -95,7 +95,7 @@ namespace :dryad_migration do
 
     id_records.each_with_index do |id_record, counter|
       puts "#{counter + 1} of #{id_records.length}  #{id_record['identifier']}"
-      id_importer = MigrationImport::Identifier.new(hash: id_record)
+      id_importer = Tasks::MigrationImport::Identifier.new(hash: id_record)
       id_importer.import
     end
 
@@ -114,7 +114,7 @@ namespace :dryad_migration do
 
     resource_records.each_with_index do |res_record, counter|
       puts "#{counter + 1} of #{resource_records.length}  #{res_record['title']}"
-      res_importer = MigrationImport::Resource.new(hash: res_record, ar_identifier: nil)
+      res_importer = Tasks::MigrationImport::Resource.new(hash: res_record, ar_identifier: nil)
       res_importer.import
     end
 

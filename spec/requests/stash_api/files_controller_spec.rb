@@ -302,7 +302,7 @@ module StashApi
 
       it 'allows download by superuser for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
-        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(302)
       end
 
@@ -312,32 +312,32 @@ module StashApi
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_json_headers
-          .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
+          .merge('Accept' => '*/*', 'Authorization' => "Bearer #{access_token}")
         expect(response_code).to eq(302)
       end
 
       it 'allows download by admin for tenant for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         @user.update(role: 'admin', tenant_id: @tenant_ids.first)
-        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(302)
       end
 
       it 'disallows download by anonymous for unpublished' do
         @curation_activities[0][2].destroy!
-        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_json_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_json_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(404)
       end
 
       it 'disallows download by random normal user for unpublished' do
         @curation_activities[0][2].destroy!
         @user.update(role: 'user', tenant_id: @tenant_ids.first)
-        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(404)
       end
 
       it 'disallows download for an unsubmitted to Merritt version' do
-        response_code = get "/api/v2/files/#{@files[1].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[1].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(404)
       end
     end

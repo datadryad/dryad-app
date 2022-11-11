@@ -45,11 +45,11 @@ namespace :zenodo do
   task migration_stats: :environment do
 
     puts 'Stats for old datasets being copied to Zenodo--excludes items already sent since we began replicating'
-    elapsed = Time.new - Zenodo::Stats.first_migration
-    count_migrated = Zenodo::Stats.count_migrated
-    count_remaining = Zenodo::Stats.count_remaining
-    size_migrated = Zenodo::Stats.size_migrated
-    size_remaining = Zenodo::Stats.size_remaining
+    elapsed = Time.new - Tasks::Zenodo::Stats.first_migration
+    count_migrated = Tasks::Zenodo::Stats.count_migrated
+    count_remaining = Tasks::Zenodo::Stats.count_remaining
+    size_migrated = Tasks::Zenodo::Stats.size_migrated
+    size_remaining = Tasks::Zenodo::Stats.size_remaining
 
     bytes_per_second = size_migrated / elapsed
 
@@ -100,9 +100,9 @@ namespace :zenodo do
         puts "updating number #{idx + start_num} with identifier.id #{identifier.id}: #{identifier.identifier}" # if idx % 50 == 0
 
         begin
-          Zenodo::Metadata.new(zenodo_copy: data).update_metadata if data.present?
-          Zenodo::Metadata.new(zenodo_copy: supp).update_metadata if supp.present?
-          Zenodo::Metadata.new(zenodo_copy: sfw).update_metadata if sfw.present?
+          Tasks::Zenodo::Metadata.new(zenodo_copy: data).update_metadata if data.present?
+          Tasks::Zenodo::Metadata.new(zenodo_copy: supp).update_metadata if supp.present?
+          Tasks::Zenodo::Metadata.new(zenodo_copy: sfw).update_metadata if sfw.present?
         rescue Stash::ZenodoReplicate::ZenodoError => e
           puts "Error updating metadata:\n#{e}\n\n"
         end

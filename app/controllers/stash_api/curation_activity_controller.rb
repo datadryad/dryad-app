@@ -1,6 +1,3 @@
-require_dependency 'api_application_controller'
-require_relative 'datasets_controller'
-
 module StashApi
   class CurationActivityController < ApiApplicationController
     before_action :require_json_headers
@@ -16,9 +13,7 @@ module StashApi
     # GET /curation_activity/{id}
     def show
       @curation_activity = StashEngine::CurationActivity.find(params[:id])
-      respond_to do |format|
-        format.any { render json: @curation_activity }
-      end
+      render json: @curation_activity
     end
 
     # GET /datasets/{dataset_id}/curation_activity
@@ -27,27 +22,21 @@ module StashApi
       @curation_activity = @curation_activity.where(status: params[:status]) if params.key?(:status)
       @curation_activity = @curation_activity.where(user_id: @user.id) if params.key?(:user_id)
       @curation_activity = @curation_activity.order(updated_at: :desc)
-      respond_to do |format|
-        format.any { render json: @curation_activity }
-      end
+      render json: @curation_activity
     end
 
     # POST /datasets/{dataset_id}/curation_activity
     def create
       resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
-      respond_to do |format|
-        format.any { render json: resource&.reload&.last_curation_activity }
-      end
+      render json: resource&.reload&.last_curation_activity
     end
 
     # PUT /curation_activity/{id}
     def update
       resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
-      respond_to do |format|
-        format.any { render json: resource&.reload&.last_curation_activity }
-      end
+      render json: resource&.reload&.last_curation_activity
     end
 
     # DELETE /curation_activity/{id}

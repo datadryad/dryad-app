@@ -4,7 +4,7 @@ module StashEngine
 
   class CurationActivity < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_curation_activities'
-    include StashEngine::Concerns::StringEnum
+    include StashEngine::Support::StringEnum
 
     # Associations
     # ------------------------------------------

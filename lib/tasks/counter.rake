@@ -6,16 +6,16 @@ namespace :counter do
 
   desc 'get and combine files from the other servers'
   task :combine_files do
-    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
-                                  scp_path: ENV.fetch('LOG_DIRECTORY', nil))
+    lc = Tasks::Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
+                                         scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.copy_missing_files
     lc.combine_logs
   end
 
   desc 'remove log files we are not keeping because of our privacy policy'
   task :remove_old_logs do
-    lc = Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
-                                  scp_path: ENV.fetch('LOG_DIRECTORY', nil))
+    lc = Tasks::Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
+                                         scp_path: ENV.fetch('LOG_DIRECTORY', nil))
     lc.remove_old_logs(days_old: 60)
     lc.remove_old_logs_remote(days_old: 60)
   end
@@ -30,7 +30,7 @@ namespace :counter do
       next if filename == 'counter:validate_logs'
 
       puts "Validating #{filename}"
-      cv = Counter::ValidateFile.new(filename: filename)
+      cv = Tasks::Counter::ValidateFile.new(filename: filename)
       cv.validate_file
       puts ''
     end
@@ -44,7 +44,7 @@ namespace :counter do
     $stdout.sync = true
     puts "JSON_DIRECTORY is #{ENV.fetch('JSON_DIRECTORY', nil)}"
 
-    js = JsonStats.new
+    js = Tasks::Counter::JsonStats.new
     Dir.glob(File.join(ENV.fetch('JSON_DIRECTORY', nil), '????-??.json')).sort.each do |f|
       puts f
       js.update_stats(f)
