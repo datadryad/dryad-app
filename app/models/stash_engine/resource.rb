@@ -850,6 +850,14 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
+    def update_salesforce_metadata
+      sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)
+      sf_cases.each do |c|
+        puts 'XXXX updating case {c}'
+        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: self, update_timestamp: true)
+      end
+    end
+
     private
 
     # -----------------------------------------------------------
