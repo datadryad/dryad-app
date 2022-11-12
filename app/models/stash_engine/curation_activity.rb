@@ -99,6 +99,8 @@ module StashEngine
 
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed withdrawn].include?(ca.status) }
 
+    after_create :update_salesforce_metadata, if: proc { |_ca| latest_curation_status_changed? }
+
     # Class methods
     # ------------------------------------------
     # Translates the enum value to a human readable status
@@ -310,6 +312,17 @@ module StashEngine
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
       resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
     end
+
+    def update_salesforce_metadata
+      puts 'XXXXXX updating salesforce'
+
+      sf_cases = Stash::Salesforce.find_cases_by_doi(resource&.identifier&.identifier)
+      sf_cases.each do |c|
+        puts 'XXXX updating case {c}'
+        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: resource, update_timestamp: true)
+      end
+    end
+
     # rubocop:enable
 
     # Helper methods
