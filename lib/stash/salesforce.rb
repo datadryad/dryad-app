@@ -101,7 +101,8 @@ module Stash
 
     # Update the metadata in a case based on the metadata in a resource
     # Updates each field separately, so a failure of one field doesn't impact the others
-    def self.update_case_metadata(case_id:, resource:)
+    # rubocop:disable Metrics/MethodLength
+    def self.update_case_metadata(case_id:, resource:, update_timestamp: false)
       return unless case_id.present? && resource.present?
 
       if resource.title.present?
@@ -127,23 +128,24 @@ module Stash
                kv_hash: { Journal__c: find_account_by_name(resource.identifier.journal&.title) })
       end
 
-      inst_name = resource.identifier.latest_resource&.user&.tenant&.long_name
-      if inst_name.present?
-        puts "XXX #{inst_name}"
+      tenant = resource.identifier.latest_resource&.user&.tenant
+      if tenant.present?
         update(obj_type: 'Case', obj_id: case_id,
-               kv_hash: { Institutional_Affiliation__c: find_account_by_name(inst_name) })
+               kv_hash: { Institutional_Affiliation__c: find_account_by_tenant(tenant) })
       end
-
-      update(obj_type: 'Case', obj_id: case_id,
-             kv_hash: { Last_Activity_Date__c: Time.now.iso8601 })
 
       if resource.identifier.publication_article_doi.present?
         update(obj_type: 'Case', obj_id: case_id,
                kv_hash: { Related_DOI__c: resource.identifier.publication_article_doi })
       end
-      
+
+      return unless update_timestamp
+
+      update(obj_type: 'Case', obj_id: case_id,
+             kv_hash: { Last_Activity_Date__c: Time.now.iso8601 })
     end
-    
+    # rubocop:enable Metrics/MethodLength
+
     # ###### Users ######
 
     def self.sf_user
@@ -157,13 +159,38 @@ module Stash
       result.first['Id']
     end
 
+    # ###### Accounts ######
+
     def self.find_account_by_name(name)
-      return unless name
+      return unless name.present?
 
       result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
       return unless result && result.size > 0
 
       result.first['Id']
+    end
+
+    def self.find_account_by_ror(ror_id)
+      return unless ror_id.present?
+
+      result = db_query("SELECT Id FROM Account Where ROR_ID__c='#{ror_id}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    def self.find_account_by_tenant(tenant)
+      return unless tenant
+      return if tenant.tenant_id == 'dryad' # we don't maintain a Salesforce account for the Dryad organization
+
+      # try lookup by ROR
+      tenant.ror_ids&.each do |ror_id|
+        result = find_account_by_ror(ror_id)
+        return result if result.present?
+      end
+
+      # if ROR lookup fails, try lookup by long_name
+      find_account_by_name(tenant.long_name)
     end
 
     # ####### Private internal methods ######
