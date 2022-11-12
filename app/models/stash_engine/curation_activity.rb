@@ -315,12 +315,7 @@ module StashEngine
 
     def update_salesforce_metadata
       puts 'XXXXXX updating salesforce'
-
-      sf_cases = Stash::Salesforce.find_cases_by_doi(resource&.identifier&.identifier)
-      sf_cases.each do |c|
-        puts 'XXXX updating case {c}'
-        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: resource, update_timestamp: true)
-      end
+      resource.update_salesforce_metadata
     end
 
     # rubocop:enable

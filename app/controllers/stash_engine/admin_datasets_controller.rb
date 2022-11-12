@@ -146,6 +146,7 @@ module StashEngine
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
+          @resource.update_salesforce_metadata
           @resource.reload
           # Refresh the page the same way we would for a change of curation activity
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
