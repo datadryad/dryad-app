@@ -314,7 +314,6 @@ module StashEngine
     end
 
     def update_salesforce_metadata
-      puts 'XXXXXX updating salesforce'
       resource.update_salesforce_metadata
     end
 
