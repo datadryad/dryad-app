@@ -251,7 +251,7 @@ module Stash
 
         author.author_first_name = hash['given'] if hash['given'].present?
         author.author_last_name = hash['family'] if hash['family'].present?
-        author.author_orcid = hash['ORCID'].match(/[0-9\-]{19}$/).to_s if hash['ORCID'].present?
+        author.author_orcid = hash['ORCID'].match(/[0-9-]{19}$/).to_s if hash['ORCID'].present?
         populate_affiliation(author, hash)
         author.save
       end
