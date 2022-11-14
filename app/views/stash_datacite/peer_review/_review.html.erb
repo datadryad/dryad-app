@@ -6,7 +6,7 @@
     at any point if your dataset is ready to enter curation.</p>
 
   <div>
-    <%= form_with model: @resource, url: peer_review_path, remote: true, authenticity_token: true do |f| %>
+    <%= form_with model: @resource, url: peer_review_path, local: false, authenticity_token: true do |f| %>
       <%= f.check_box :hold_for_peer_review %>
       <label for="stash_engine_resource_hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
       <span class="c-input__error-message"><%= @error %></span>

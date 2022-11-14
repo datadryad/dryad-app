@@ -4,7 +4,7 @@
   <%= form_with model: StashEngine::CurationActivity.new,
         url: curation_note_path(@curation_activity.resource.identifier_id),
         method: :post,
-        remote: true do |f| %>
+        local: false do |f| %>
     <%= hidden_field_tag :log_page, 'true' %>
     <div class="c-input">
       <label class="c-input__label" for="curation_activity_note">Notes</label>
