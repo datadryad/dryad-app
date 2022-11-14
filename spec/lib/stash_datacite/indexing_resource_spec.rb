@@ -278,10 +278,7 @@ module Stash
           @resource.geolocations = [StashDatacite::Geolocation.create(box_id: the_box.id)]
           @resource.reload
           temp_ir = IndexingResource.new(resource: @resource)
-          mapbox = Datacite::Mapping::GeoLocationBox.new(south_latitude: -63.393966,
-                                                         north_latitude: -53.668786,
-                                                         west_longitude: -105.476213,
-                                                         east_longitude: -43.8285)
+          mapbox = Datacite::Mapping::GeoLocationBox.new(-63.393966, -105.476213, -53.668786, -43.8285)
           expect(temp_ir.calc_bounding_box).to eq(mapbox)
         end
 
