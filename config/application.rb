@@ -1,11 +1,11 @@
-require_relative 'boot'
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
-require "active_storage/engine" 
+require "active_storage/engine"
 require "action_controller/railtie"
 require "action_mailer/railtie"
 # require "action_mailbox/engine"
@@ -21,13 +21,18 @@ Bundler.require(*Rails.groups)
 
 module Dash2
   class Application < Rails::Application
-    # Initialize configuration defaults for the Rails version.
+    # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
     config.eager_load_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib")
     Rails.autoloaders.main.ignore("#{Rails.root}/app/overrides")
     Rails.autoloaders.main.ignore("#{Rails.root}/lib/core_extensions")
 
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
     config.generators.javascript_engine = :js
 
     config.time_zone = "UTC"
@@ -44,9 +49,5 @@ module Dash2
     # https://stackoverflow.com/questions/72970170/upgrading-to-rails-6-1-6-1-causes-psychdisallowedclass-tried-to-load-unspecif
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
   end
 end
