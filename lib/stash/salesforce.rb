@@ -134,11 +134,6 @@ module Stash
                kv_hash: { Institutional_Affiliation__c: find_account_by_tenant(tenant) })
       end
 
-      if resource.identifier.publication_article_doi.present?
-        update(obj_type: 'Case', obj_id: case_id,
-               kv_hash: { Related_DOI__c: resource.identifier.publication_article_doi })
-      end
-
       return unless update_timestamp
 
       update(obj_type: 'Case', obj_id: case_id,
