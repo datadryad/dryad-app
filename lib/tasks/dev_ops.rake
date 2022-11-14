@@ -308,7 +308,7 @@ namespace :dev_ops do
       ezid_client = ::Ezid::Client.new(user: tenant.identifier_service.account, password: tenant.identifier_service.password)
       params = { status: 'unavailable | withdrawn' }
       begin
-        ezid_client.modify_identifier("doi:#{identif_str}", params)
+        ezid_client.modify_identifier("doi:#{identif_str}", **params)
       rescue Ezid::IdentifierNotFoundError
         puts "EZID couldn't find identifier to create a tombstone"
       end

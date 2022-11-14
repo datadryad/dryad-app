@@ -140,35 +140,35 @@ module Stash
 
         it 'requires an identifier' do
           params.delete(:identifier)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid identifier' do
           params[:identifier] = 'doi:10.14749/1407399498'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a version' do
           params.delete(:version)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid version' do
           params[:version] = 1
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
 
           params[:version] = '1'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a license' do
           params.delete(:license)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid license' do
           params[:license] = 'CC-BY'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
       end
 
