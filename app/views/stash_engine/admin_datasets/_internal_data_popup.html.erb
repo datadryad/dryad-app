@@ -6,7 +6,7 @@
   else
     my_path = stash_engine_internal_datum_path(@internal_datum)
   end %>
-  <%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], remote: true ) do |f| -%>
+  <%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], local: false ) do |f| -%>
     <div class="c-input">
       <%= f.select(:data_type, options_for_select( @options, @internal_datum.data_type), {}, { disabled: ( params[:sub_method] == 'put' ) } ) %>
     </div>

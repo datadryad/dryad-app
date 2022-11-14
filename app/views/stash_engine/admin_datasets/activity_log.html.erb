@@ -6,7 +6,7 @@
   <% if current_user.limited_curator? || current_user.role == 'admin' %>
     <div style="float: right;">
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
-                    method: :get, remote: true) do -%>
+                    method: :get, local: false) do -%>
         <button class="o-button__submit">Add Note</button>
       <% end %>
     </div>
@@ -94,7 +94,7 @@
       <br/>
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,
 						   sub_method: 'post', only_path: true),
-                    method: :get, remote: true) do -%>
+                    method: :get, local: false) do -%>
         <button class="o-button__submit">Add Data</button>
       <% end %>
     </div>
@@ -111,7 +111,7 @@
 
 	    <div style="float: left">
 		<% res = @identifier&.latest_resource %>
-		<%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post, local: true) do -%>
+		<%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do -%>
 			<button class="o-button__submit">Forcibly Edit Dataset</button>
 			<%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
 			<%= hidden_field_tag :return_url, '/stash/dashboard' %>

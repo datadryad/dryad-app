@@ -1,5 +1,5 @@
 <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
-              method: 'get', id: 'filter_form', local: true) do -%>
+              method: 'get', id: 'filter_form') do -%>
   <label for="tenant" class="c-horizontal-form__input--filter-by">Filter by:</label>
   <% if current_user.limited_curator? %>
     <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
