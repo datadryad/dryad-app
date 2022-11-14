@@ -12,7 +12,7 @@ AllCops:
     - 'node_modules/**/*'
     - 'tmp/**/*'
   # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
 
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:

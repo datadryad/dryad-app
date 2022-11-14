@@ -1,6 +1,6 @@
-## 0.2.5 (1 November 2022)
+## 0.2.5 (14 November 2022)
 
-- Upgrade to ruby 2.7.6
+- Upgrade to ruby 3.0
 
 ## 0.2.4 (27 September 2022)
 
