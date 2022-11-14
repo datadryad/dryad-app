@@ -6,9 +6,11 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
   include Mocks::RSolr
   include Mocks::LinkOut
   include Mocks::Tenant
+  include Mocks::Salesforce
 
   before(:each) do
     mock_solr!
+    mock_salesforce!
     mock_link_out!
     mock_tenant!
   end

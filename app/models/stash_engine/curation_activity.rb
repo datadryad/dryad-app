@@ -99,7 +99,10 @@ module StashEngine
 
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed withdrawn].include?(ca.status) }
 
-    after_create :update_salesforce_metadata, if: proc { |_ca| latest_curation_status_changed? }
+    after_create :update_salesforce_metadata, if: proc { |_ca|
+                                                    latest_curation_status_changed? &&
+                                                         CurationActivity.where(resource_id: resource_id).count > 1
+                                                  }
 
     # Class methods
     # ------------------------------------------

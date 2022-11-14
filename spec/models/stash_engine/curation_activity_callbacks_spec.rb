@@ -5,12 +5,14 @@ module StashEngine
 
     include Mocks::Datacite
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::CurationActivity
 
     before(:each) do
       mock_solr!
       mock_datacite!
+      mock_salesforce!
       mock_stripe!
 
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')

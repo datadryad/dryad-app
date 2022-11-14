@@ -10,6 +10,7 @@ module StashApi
 
     include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Salesforce
     include Mocks::Tenant
 
     # set up some versions with different curation statuses (visibility)
@@ -20,6 +21,7 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
+      mock_salesforce!
       mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)

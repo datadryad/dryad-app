@@ -1,9 +1,11 @@
 module StashEngine
   RSpec.describe ResourcesController, type: :request do
     include DatabaseHelper
+    include Mocks::Salesforce
 
     context 'file uploads' do
       before(:each) do
+        mock_salesforce!
         create_basic_dataset!
         allow_any_instance_of(ResourcesController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
         @resource.current_resource_state.update(resource_state: 'in_progress')

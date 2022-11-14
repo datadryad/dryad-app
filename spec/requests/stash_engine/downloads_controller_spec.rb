@@ -5,9 +5,11 @@ require 'byebug'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine
   RSpec.describe DownloadsController, type: :request do
+    include Mocks::Salesforce
     include Mocks::Tenant
 
     before(:each) do
+      mock_salesforce!
       mock_tenant!
       @user = create(:user, role: 'superuser')
       @resource = create(:resource, user_id: @user.id)

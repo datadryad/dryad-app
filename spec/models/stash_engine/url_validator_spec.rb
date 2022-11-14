@@ -2,7 +2,6 @@ require 'webmock/rspec'
 
 module StashEngine
   describe UrlValidator do
-
     attr_reader :uv
 
     before(:each) do

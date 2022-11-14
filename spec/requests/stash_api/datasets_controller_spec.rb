@@ -14,11 +14,13 @@ module StashApi
     include Mocks::Stripe
     include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Salesforce
     include Mocks::Datacite
     include Mocks::Tenant
 
     before(:each) do
       neuter_curation_callbacks!
+      mock_salesforce!
       mock_tenant!
       mock_datacite_and_idgen!
       @user = create(:user, role: 'superuser', tenant_id: 'dryad')

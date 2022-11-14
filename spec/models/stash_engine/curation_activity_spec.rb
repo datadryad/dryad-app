@@ -6,10 +6,12 @@ module StashEngine
   RSpec.describe CurationActivity do
 
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
 
     before(:each) do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
+      mock_salesforce!
       mock_solr!
       mock_stripe!
     end
