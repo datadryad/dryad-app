@@ -13,6 +13,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
+  include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Aws
   include AjaxHelper
@@ -21,6 +22,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     mock_repository!
     mock_solr!
     mock_datacite!
+    mock_salesforce!
     mock_stripe!
     mock_aws!
     ignore_zenodo!

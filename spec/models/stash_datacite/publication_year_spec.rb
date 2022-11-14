@@ -2,7 +2,6 @@ require 'rails_helper'
 
 module StashDatacite
   describe PublicationYear do
-
     before(:each) do
       user = create(:user,
                     email: 'lmuckenhaupt@example.edu',

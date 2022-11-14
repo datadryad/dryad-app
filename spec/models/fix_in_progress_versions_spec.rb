@@ -3,6 +3,7 @@ require Rails.root.join('db/migrate/20170329190235_fix_in_progress_resources.rb'
 describe FixInProgressResources do
   include Mocks::Datacite
   include Mocks::RSolr
+  include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
 
@@ -11,6 +12,7 @@ describe FixInProgressResources do
   before(:each) do
     mock_solr!
     mock_datacite!
+    mock_salesforce!
     mock_stripe!
     mock_tenant!
 

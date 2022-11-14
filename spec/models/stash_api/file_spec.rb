@@ -2,7 +2,10 @@ require 'byebug'
 
 module StashApi
   RSpec.describe File do
+    include Mocks::Salesforce
+
     before(:each) do
+      mock_salesforce!
 
       # put the setup before the mocks (I think) and then metadata call at the end
       identifier = create(:identifier)
