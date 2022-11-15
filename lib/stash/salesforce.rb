@@ -101,7 +101,6 @@ module Stash
 
     # Update the metadata in a case based on the metadata in a resource
     # Updates each field separately, so a failure of one field doesn't impact the others
-    # rubocop:disable Metrics/MethodLength
     def self.update_case_metadata(case_id:, resource:, update_timestamp: false)
       return unless case_id.present? && resource.present?
 
@@ -139,7 +138,6 @@ module Stash
       update(obj_type: 'Case', obj_id: case_id,
              kv_hash: { Last_Activity_Date__c: Time.now.iso8601 })
     end
-    # rubocop:enable Metrics/MethodLength
 
     # ###### Users ######
 
