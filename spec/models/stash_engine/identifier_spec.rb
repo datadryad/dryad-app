@@ -1052,5 +1052,51 @@ module StashEngine
         expect(@identifier.has_zenodo_supp?).to eq(false)
       end
     end
+
+    describe '#merritt_object_info' do
+
+      it 'returns merritt info for a record that exists' do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json')),
+                     headers: { content_type: 'application/json; charset=utf-8' })
+
+        info = @identifier.merritt_object_info
+        versions = info['versions'].map { |i| i['version_number'] }
+
+        expect(versions).to include(1)
+        expect(versions).to include(2)
+        expect(versions).to include(3)
+      end
+
+      it "returns nothing for a merritt record that doesn't exist" do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}', headers: { content_type: 'application/json; charset=utf-8' })
+
+        expect(@identifier.merritt_object_info).to eq({})
+      end
+
+      it 'returns nothing when merritt is having some problems' do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 500, body: 'Internal server error', headers: { content_type: 'text/plain' })
+
+        expect(@identifier.merritt_object_info).to eq({})
+      end
+
+    end
   end
 end

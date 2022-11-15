@@ -1,0 +1,373 @@
+{
+  "ark": "ark:/99999/fk4dv31k28",
+  "version_number": 3,
+  "created": "2022-02-01T18:33:50.000Z",
+  "modified": "2022-11-12T14:51:19.000Z",
+  "erc_who": "Scherle, Ryan",
+  "erc_what": "Another submission test changed again",
+  "erc_when": "2022",
+  "versions": [
+    {
+      "version_number": 3,
+      "created": "2022-11-12T14:51:18.000Z",
+      "file_count": 14,
+      "files": [
+        {
+          "pathname": "system/mrt-ingest.txt",
+          "full_size": 1630,
+          "billable_size": 1630,
+          "mime_type": "text/plain",
+          "digest_value": "f32db413e10184e11ad29d25f62c81e30788acd56a9c477416028a746c3cc989",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-datacite.xml",
+          "full_size": 1516,
+          "billable_size": 1516,
+          "mime_type": "application/xml",
+          "digest_value": "ec42f910debeaa6fdb838879e77359213d31fb543f6344a435516c5a2b5bc4bc",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-object-map.ttl",
+          "full_size": 3444,
+          "billable_size": 0,
+          "mime_type": "plain/turtle",
+          "digest_value": "c531eaecfa67e4cd92087787811cbfdcbbc8059139a2b3e5998ee7539f35c2df",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/README.md",
+          "full_size": 21,
+          "billable_size": 0,
+          "mime_type": "text/x-web-markdown",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-dataone-manifest.txt",
+          "full_size": 309,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "508a7457fc88e5731d293c943c4cefbc4e997d34c6c947f525b6214e4c60d787",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-owner.txt",
+          "full_size": 19,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "c0a3943a504854fda06d533c1d47affbf99eb793862ea78bc90042e85546d66e",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-mom.txt",
+          "full_size": 126,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "1385cfeb257d7469cd9bed5be8d5bc65f793c0e86ca71bd99d40f50dfdc1f8e0",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-membership.txt",
+          "full_size": 20,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "1bd26d3f54bf48d3730fc78780c3e00446f88c9d3bd24e6d7d8a6ab000c3fc8d",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-dc.xml",
+          "full_size": 149,
+          "billable_size": 0,
+          "mime_type": "application/xml",
+          "digest_value": "f40dd72e54b7e93c389895de1c13922fe5ac2ac226d7159a9704ae6f19a67929",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/stash-wrapper.xml",
+          "full_size": 2958,
+          "billable_size": 2958,
+          "mime_type": "application/xml",
+          "digest_value": "46df2b6b3d89d2da2c402d54716992ef8d4f8c21d22e415605ad89920fb19fa5",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/aaa-test.Rmd",
+          "full_size": 21,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-submission-manifest.txt",
+          "full_size": 1956,
+          "billable_size": 1956,
+          "mime_type": "text/plain",
+          "digest_value": "52042af9c34f2b602509cd2e7d9b2c3bf61f8d774c3784c2784e319feeb8aee9",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-erc.txt",
+          "full_size": 143,
+          "billable_size": 143,
+          "mime_type": "text/plain",
+          "digest_value": "fd8a8554228a76def84fce5c2899236abd94b03aa517cc26cbec5f816f4c5e7c",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-oaidc.xml",
+          "full_size": 842,
+          "billable_size": 842,
+          "mime_type": "application/xml",
+          "digest_value": "9c9684339c4443f8626a84914da8a35bff6e720a93f25fe7347e9ee44e0fee8e",
+          "digest_type": "sha-256"
+        }
+      ]
+    },
+    {
+      "version_number": 2,
+      "created": "2022-11-12T14:18:17.000Z",
+      "file_count": 14,
+      "files": [
+        {
+          "pathname": "system/mrt-ingest.txt",
+          "full_size": 1631,
+          "billable_size": 1631,
+          "mime_type": "text/plain",
+          "digest_value": "595a28e1946cc1f13d3b516025efc34156a787a249a2b66ca9df5d86d4b68cd1",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-datacite.xml",
+          "full_size": 1510,
+          "billable_size": 1510,
+          "mime_type": "application/xml",
+          "digest_value": "2238fa76860977eb8fc3bb016067bf8bc202b8de5c27e2b3af7453e45ca20a6f",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-object-map.ttl",
+          "full_size": 3444,
+          "billable_size": 3444,
+          "mime_type": "plain/turtle",
+          "digest_value": "c531eaecfa67e4cd92087787811cbfdcbbc8059139a2b3e5998ee7539f35c2df",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/README.md",
+          "full_size": 21,
+          "billable_size": 0,
+          "mime_type": "text/x-web-markdown",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-dataone-manifest.txt",
+          "full_size": 309,
+          "billable_size": 309,
+          "mime_type": "text/plain",
+          "digest_value": "508a7457fc88e5731d293c943c4cefbc4e997d34c6c947f525b6214e4c60d787",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-owner.txt",
+          "full_size": 19,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "c0a3943a504854fda06d533c1d47affbf99eb793862ea78bc90042e85546d66e",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-mom.txt",
+          "full_size": 126,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "1385cfeb257d7469cd9bed5be8d5bc65f793c0e86ca71bd99d40f50dfdc1f8e0",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-membership.txt",
+          "full_size": 20,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "1bd26d3f54bf48d3730fc78780c3e00446f88c9d3bd24e6d7d8a6ab000c3fc8d",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-dc.xml",
+          "full_size": 149,
+          "billable_size": 0,
+          "mime_type": "application/xml",
+          "digest_value": "f40dd72e54b7e93c389895de1c13922fe5ac2ac226d7159a9704ae6f19a67929",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/stash-wrapper.xml",
+          "full_size": 2952,
+          "billable_size": 2952,
+          "mime_type": "application/xml",
+          "digest_value": "d8e45452b7992310d017655c62b4b02a990aef644aeda5b88b0abec66a882e6d",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/aaa-test.Rmd",
+          "full_size": 21,
+          "billable_size": 0,
+          "mime_type": "text/plain",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-submission-manifest.txt",
+          "full_size": 1956,
+          "billable_size": 1956,
+          "mime_type": "text/plain",
+          "digest_value": "4e12cd09ef4b6225a6996211aafef43115311f81f32286212d4bdebfa99459f9",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-erc.txt",
+          "full_size": 137,
+          "billable_size": 137,
+          "mime_type": "text/plain",
+          "digest_value": "9b1ea90a75a84fb8f2057f61788292c7ea6b2f80eecd00c4afbad8daf51c3b72",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-oaidc.xml",
+          "full_size": 836,
+          "billable_size": 836,
+          "mime_type": "application/xml",
+          "digest_value": "9c9df5bab10d7df6790cbac0af6f0cf8ead241f2d67f5a63562732652884b1be",
+          "digest_type": "sha-256"
+        }
+      ]
+    },
+    {
+      "version_number": 1,
+      "created": "2022-02-01T18:33:51.000Z",
+      "file_count": 14,
+      "files": [
+        {
+          "pathname": "system/mrt-ingest.txt",
+          "full_size": 1637,
+          "billable_size": 1637,
+          "mime_type": "text/plain",
+          "digest_value": "425b681b9d8e4093d25936db9556fa7f5a4b0c97ed7fc557f0d8af5fc1365eec",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-datacite.xml",
+          "full_size": 1322,
+          "billable_size": 1322,
+          "mime_type": "application/xml",
+          "digest_value": "8cd7e4b37838eeaa422500725e19025b051833be32f6bd68391a031d687cb3a4",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-object-map.ttl",
+          "full_size": 3496,
+          "billable_size": 3496,
+          "mime_type": "plain/turtle",
+          "digest_value": "2070dfcc13040e084fa4abd095536fcc2268e4e804036ef11ba145c252ee6482",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/README.md",
+          "full_size": 21,
+          "billable_size": 21,
+          "mime_type": "text/x-web-markdown",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-dataone-manifest.txt",
+          "full_size": 669,
+          "billable_size": 669,
+          "mime_type": "text/plain",
+          "digest_value": "ea91c08bb8a7caa6565ff020b5a2edc91100fad9c22d5c7e4a9203bf7f923acd",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-owner.txt",
+          "full_size": 19,
+          "billable_size": 19,
+          "mime_type": "text/plain",
+          "digest_value": "c0a3943a504854fda06d533c1d47affbf99eb793862ea78bc90042e85546d66e",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-mom.txt",
+          "full_size": 126,
+          "billable_size": 126,
+          "mime_type": "text/plain",
+          "digest_value": "1385cfeb257d7469cd9bed5be8d5bc65f793c0e86ca71bd99d40f50dfdc1f8e0",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-membership.txt",
+          "full_size": 20,
+          "billable_size": 20,
+          "mime_type": "text/plain",
+          "digest_value": "1bd26d3f54bf48d3730fc78780c3e00446f88c9d3bd24e6d7d8a6ab000c3fc8d",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-dc.xml",
+          "full_size": 149,
+          "billable_size": 149,
+          "mime_type": "application/xml",
+          "digest_value": "f40dd72e54b7e93c389895de1c13922fe5ac2ac226d7159a9704ae6f19a67929",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/stash-wrapper.xml",
+          "full_size": 2752,
+          "billable_size": 2752,
+          "mime_type": "application/xml",
+          "digest_value": "4e0f686ba42af07e75f112ab392d1b583822fae550aefb09fcbaad1667d80217",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/aaa-test.Rmd",
+          "full_size": 21,
+          "billable_size": 21,
+          "mime_type": "text/plain",
+          "digest_value": "649b8b471e7d7bc175eec758a7006ac693c434c8297c07db15286788c837154a",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-submission-manifest.txt",
+          "full_size": 2704,
+          "billable_size": 2704,
+          "mime_type": "text/plain",
+          "digest_value": "bd9ebca7ae79afe54ae0f7a8865920966cd74cf46fafe7cb4a8ba7cf8cf518a1",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "system/mrt-erc.txt",
+          "full_size": 129,
+          "billable_size": 129,
+          "mime_type": "text/plain",
+          "digest_value": "b11e4c8608c68e5316a85c7af45feea6661047dee1e36602dfc3c9f7a525b3b8",
+          "digest_type": "sha-256"
+        },
+        {
+          "pathname": "producer/mrt-oaidc.xml",
+          "full_size": 715,
+          "billable_size": 715,
+          "mime_type": "application/xml",
+          "digest_value": "6eb1c70339afe8025219894dc7dffa7136237c7553577e11ec542e4a69f1a5f2",
+          "digest_type": "sha-256"
+        }
+      ]
+    }
+  ],
+  "localids": [
+    "doi:10.7959/dryad.612jm650"
+  ],
+  "total_files": 42,
+  "included_files": 42
+}

@@ -1,4 +1,5 @@
 require 'httparty'
+require 'http'
 
 module StashEngine
   # rubocop:disable Metrics/ClassLength
@@ -500,6 +501,22 @@ module StashEngine
         .where("stash_engine_zenodo_copies.state = 'finished'")
         .where('stash_engine_zenodo_copies.copy_type = ?', copy_type)
         .order(id: :desc).limit(1).first
+    end
+
+    # Info about dataset object from Merritt. See spec/fixtures/merritt_local_id_search_response.json for an example.
+    # Currently used for checking if things have gone into Merritt yet, but may be used for other purposes in the future.
+    def merritt_object_info
+      repo = latest_resource.tenant.repository
+      collection = repo.endpoint.match(%r{[^/]+$}).to_s
+      enc_doi = ERB::Util.url_encode(to_s)
+      resp = HTTP.basic_auth(user: repo.username, pass: repo.password)
+        .headers(accept: 'application/json')
+        .get("#{repo.domain}/api/#{collection}/local_id_search?terms=#{enc_doi}")
+      return resp.parse if resp.headers['content-type'].start_with?('application/json')
+
+      {}
+    rescue HTTP::Error, JSON::ParserError
+      {}
     end
 
     # ------------------------------------------------------------
