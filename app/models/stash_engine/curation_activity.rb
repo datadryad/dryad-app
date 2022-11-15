@@ -317,12 +317,8 @@ module StashEngine
     end
 
     def update_salesforce_metadata
-      Rails.logger.debug "=== Starting SF update -- #{resource.id}"
       resource.update_salesforce_metadata
-      Rails.logger.debug "=== Finished SF update"
       true # ensure callbacks are not interrupted
-    rescue Exception => e
-      Rails.logger.error "===== EXCEPTION #{e.message}"
     end
 
     # rubocop:enable
