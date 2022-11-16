@@ -1,4 +1,4 @@
-<h1>Join Us</h1>
+<h1>Join us</h1>
 
 <p>We make it easy and affordable to curate, publish, and preserve research data
 by providing robust infrastructure, services, and expertise to meet your

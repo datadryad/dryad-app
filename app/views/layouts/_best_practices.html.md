@@ -1,4 +1,4 @@
-<h1>Good Data Practices</h1>
+<h1>Good data practices</h1>
 
 <h2>Best practices for creating reusable data publications</h2>
 
@@ -171,7 +171,7 @@ DatasetB.tar.gz
 </ul>
 
 <p>
-  Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My Datasets" to begin your data
+  Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My datasets" to begin your data
   submission now!
 </p>
 

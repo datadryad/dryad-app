@@ -1,11 +1,11 @@
-# Our Platform
+# Our platform
 
 Dryad is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dryad focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
 
 For information about submission to Dryad, see our [guidance here](<%= stash_url_helpers.submission_process_path %>).
 
 
-## Architecture and Implementation
+## Architecture and implementation
 
 Dryad is completely open source.  Our code is made publicly available [on GitHub](https://github.com/CDL-Dryad/dryad-app). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
