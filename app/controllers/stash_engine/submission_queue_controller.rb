@@ -13,7 +13,7 @@ module StashEngine
 
     def index
       # When the page first loads, the index view lays out the basic framework, but the
-      # table starts empty, and it is immediatly populated by refresh_table. So there is
+      # table starts empty, and it is immediately populated by refresh_table. So there is
       # no actual work to do in the index method.
     end
 
