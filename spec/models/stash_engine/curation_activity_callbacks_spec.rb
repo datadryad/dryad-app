@@ -56,7 +56,7 @@ module StashEngine
 
       it 'returns a readable version of :peer_review' do
         @ca.peer_review!
-        expect(@ca.readable_status).to eql('Private for Peer Review')
+        expect(@ca.readable_status).to eql('Private for peer review')
       end
 
       it 'returns a readable version of :action_required' do

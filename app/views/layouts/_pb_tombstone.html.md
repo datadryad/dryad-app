@@ -1,4 +1,4 @@
-<h1>Publication Blackout Tombstone</h1>
+<h1>Publication blackout tombstone</h1>
 
 <p>The DOI you are attempting to access was reserved by Dryad under a process
 called "publication blackout". This process allowed data to remain unpublished

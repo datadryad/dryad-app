@@ -210,7 +210,7 @@ The *Explore Data* link will allow you to search and view your dataset, if you i
 
 ### Enter dataset metadata, upload files and preview the landing page
 
-After you log in, you will be able to start entering metadata and uploading files for a dataset by clicking the *My Datasets* menu link.
+After you log in, you will be able to start entering metadata and uploading files for a dataset by clicking the *My datasets* menu link.
 
 Metadata entry, file uploading and landing page preview should be functional.
 

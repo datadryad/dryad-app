@@ -31,7 +31,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # Sign in and create a new dataset
     sign_in(@author)
     visit root_path
-    click_link 'My Datasets'
+    click_link 'My datasets'
     start_new_dataset
 
     # This has been tested with each mime type isolated.
@@ -53,7 +53,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     ][rand(4)]
   end
 
-  describe 'Tabular Data Check Index' do
+  describe 'Tabular data check Index' do
     before(:each) do
       @file = create(:generic_file,
                      resource_id: StashEngine::Resource.last.id,
@@ -66,7 +66,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'shows nothing For Validation for non-tabular files' do
       @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf', original_filename: 'non_tabular')
       sleep 1
-      click_link 'Upload Files'
+      click_link 'Upload files'
 
       within('table') do
         expect(page).not_to have_content('Uploaded Too Large For Validation')
@@ -76,7 +76,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'shows Uploaded Too Large For Validation for tabular files greater than the size limit' do
       @file.update(upload_file_size: APP_CONFIG[:frictionless][:size_limit] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
       sleep 1
-      click_link 'Upload Files'
+      click_link 'Upload files'
 
       within('table') do
         expect(page).to have_content('Uploaded Too Large For Validation')
@@ -88,7 +88,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         report: '[{errors: errors}]', generic_file: @file, status: 'issues'
       )
       sleep 1
-      click_link 'Upload Files'
+      click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to include('Issues')
@@ -98,7 +98,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'shows "Passed" if file is tabular, and the status is "noissues"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
-      click_link 'Upload Files'
+      click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to eq('Passed')
@@ -108,7 +108,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'shows "Validation Error" if file is plain-text and tabular, and the status is "error"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'error')
       sleep 1
-      click_link 'Upload Files'
+      click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to eq("Couldn't Read Tabular Data")
@@ -116,19 +116,19 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
   end
 
-  describe 'Tabular Data Check Validation' do
+  describe 'Tabular data check Validation' do
     before(:each) do
       @upload_type = %w[data software supp].sample
-      click_link 'Upload Files'
+      click_link 'Upload files'
     end
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move tests from here to React only tests
-    xit 'shows Tabular Data Check column' do
+    xit 'shows Tabular data check column' do
       attach_file(@upload_type, "#{Rails.root}/spec/fixtures/stash_engine/valid.csv", make_visible: { left: 0 })
       check('confirm_to_upload')
       click_on('validate_files')
 
-      expect(page).to have_content('Tabular Data Check')
+      expect(page).to have_content('Tabular data check')
     end
 
     # xit: Needs to mock S3 submission via Evaporate
@@ -152,7 +152,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_button("#{@upload_type}_manifest")
       validate_url_manifest(url)
 
-      expect(page).to have_content('Tabular Data Check')
+      expect(page).to have_content('Tabular data check')
     end
 
     # TODO: xit: skipping until intermittently capybara tests been solved or
