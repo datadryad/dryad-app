@@ -45,7 +45,7 @@ namespace :counter do
     puts "JSON_DIRECTORY is #{ENV.fetch('JSON_DIRECTORY', nil)}"
 
     js = Tasks::Counter::JsonStats.new
-    Dir.glob(File.join(ENV.fetch('JSON_DIRECTORY', nil), '????-??.json')).sort.each do |f|
+    Dir.glob(File.join(ENV.fetch('JSON_DIRECTORY', nil), '????-??.json')).each do |f|
       puts f
       js.update_stats(f)
     end

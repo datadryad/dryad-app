@@ -44,7 +44,7 @@ module StashEngine
       SQL
 
       # add extra joins when I need to reach into author affiliations for every dataset
-      FROM_CLAUSE_ADMIN = <<-SQL
+      FROM_CLAUSE_ADMIN = <<-SQL.freeze
         #{FROM_CLAUSE}
         LEFT OUTER JOIN stash_engine_authors sea2 ON ser.id = sea2.resource_id
         LEFT OUTER JOIN dcs_affiliations_authors dcs_aa ON sea2.id = dcs_aa.author_id

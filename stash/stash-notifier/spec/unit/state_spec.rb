@@ -1,4 +1,4 @@
-Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].each { |file| require file }
 # force reload of State because of changes
 require 'ostruct'
 require 'fileutils'

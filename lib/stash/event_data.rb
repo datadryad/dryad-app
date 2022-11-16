@@ -9,7 +9,7 @@ module Stash
 
     class QueryFailure < RuntimeError; end
 
-    Dir.glob(File.expand_path('event_data/*.rb', __dir__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('event_data/*.rb', __dir__)).each(&method(:require))
 
     TIME_BETWEEN_RETRIES = 1
     def logger
