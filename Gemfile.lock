@@ -1,4 +1,21 @@
 GIT
+  remote: https://github.com/CDL-Dryad/ezid-client
+  revision: dfcf7f49995560ed48df407560c4fe3fb6dbfa7b
+  specs:
+    ezid-client (1.9.2)
+      hashie (~> 3.4, >= 3.4.3)
+      nokogiri
+
+GIT
+  remote: https://github.com/CDLUC3/datacite-mapping
+  revision: fde8155e2f331a4b1ea06e7db9a66fd47eadf536
+  branch: upgrade-ruby
+  specs:
+    datacite-mapping (0.4.1)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.7)
+
+GIT
   remote: https://github.com/CDLUC3/uc3-ssm
   revision: bc398fdbdce0e6041a119813a47de857916eda56
   branch: 0.3.0rc0
@@ -195,9 +212,6 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    datacite-mapping (0.4.1)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (1.1.0)
     declarative (0.0.20)
     deep_merge (1.2.2)
@@ -264,7 +278,6 @@ GEM
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
     execjs (2.8.1)
-    ezid-client (0.3.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -362,7 +375,7 @@ GEM
       sprockets (>= 2.0.0)
       tilt (>= 1.2)
     hashdiff (1.0.1)
-    hashie (5.0.0)
+    hashie (3.6.0)
     http (5.0.4)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
@@ -811,7 +824,7 @@ DEPENDENCIES
   concurrent-ruby (~> 1.1.10)
   daemons (~> 1.4.1)
   database_cleaner (~> 2.0.1)
-  datacite-mapping (~> 0.4.1)
+  datacite-mapping!
   delayed_job_active_record (~> 4.1.7)
   devise (~> 4.8.0)
   devise-guests (~> 0.6)
@@ -820,7 +833,7 @@ DEPENDENCIES
   down
   equivalent-xml
   exception_notification
-  ezid-client
+  ezid-client!
   factory_bot_rails
   faker
   filesize (~> 0.2.0)
