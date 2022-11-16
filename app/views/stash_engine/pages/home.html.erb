@@ -10,14 +10,14 @@
     <div class="o-quote__quote">
       Dryad is a community-owned resource
       <br>
-      <a href="<%= stash_url_helpers.our_membership_path %>" class="o-quote__quote">Learn more about our organizational memberships</a>
+      <a href="<%= stash_url_helpers.our_membership_path %>" class="o-quote__quote">Learn about membership</a>
     </div>
   </div>
   <div class="t-home__search o-home-search">
     <div class="o-home__search-group">
       <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
       <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
-      <%= button_to 'Submit Now', lnk, method: :get, class: "o-home-search__submit-button", title: txt %>
+      <%= button_to 'Submit now', lnk, method: :get, class: "o-home-search__submit-button", title: txt %>
     </div>
   </div>
 </div>
