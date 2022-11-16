@@ -291,7 +291,7 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
-    faraday_middleware (1.0.0)
+    faraday_middleware (1.2.0)
       faraday (~> 1.0)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
@@ -312,17 +312,16 @@ GEM
       rsolr
       sanitize
       thor
-    geoblacklight (3.7.0)
-      blacklight (~> 7.8)
+    geoblacklight (4.0.0)
+      blacklight (~> 7.12)
       coderay
       config
       deprecation
-      faraday (~> 1.0)
-      faraday_middleware (~> 1.0.0.rc1)
+      faraday (>= 1.0)
       geo_combine (~> 0.4)
       handlebars_assets
       mime-types
-      rails (>= 5.2.4, < 7.1)
+      rails (>= 6.1, < 7.1)
       rgeo-geojson
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -827,7 +826,7 @@ DEPENDENCIES
   filesize (~> 0.2.0)
   font-awesome-rails (~> 4.7)
   fuubar
-  geoblacklight (~> 3.0)
+  geoblacklight (~> 4.0)
   google-apis-gmail_v1 (~> 0.14.0)
   guard
   guard-rspec
