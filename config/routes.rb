@@ -271,8 +271,6 @@ Rails.application.routes.draw do
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
     
-    patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
-    
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
