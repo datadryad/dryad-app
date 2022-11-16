@@ -9,7 +9,7 @@ module Stash
 
     # This helper class provides common methods used by all of the LinkOut services
     module Helper
-      TMP_DIR = "#{Rails.root}/tmp/link_out"
+      TMP_DIR = "#{Rails.root}/tmp/link_out".freeze
 
       def root_url_ssl
         Rails.application.routes.url_helpers.root_url.gsub(/^http:/, 'https:')

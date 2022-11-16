@@ -1,6 +1,6 @@
 require 'webmock/rspec'
 require 'active_support/inflector'
-Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].each { |file| require file }
 require 'ostruct'
 # require_relative '../../main.rb'
 RSpec.describe 'main' do

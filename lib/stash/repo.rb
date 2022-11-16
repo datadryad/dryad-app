@@ -9,6 +9,6 @@ module Stash
     # The copyright notice for this gem
     COPYRIGHT = 'Copyright (c) 2017 The Regents of the University of California'.freeze
 
-    Dir.glob(File.expand_path('repo/*.rb', __dir__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('repo/*.rb', __dir__)).each(&method(:require))
   end
 end

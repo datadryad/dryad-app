@@ -10,7 +10,7 @@ module StashDatacite
     DateTypes = Datacite::Mapping::DateType.map(&:value)
 
     DateTypesEnum = DateTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
-      .reject { |k, _v| k == :valid }.merge(valid_date: 'valid')
+      .except(:valid).merge(valid_date: 'valid')
     DateTypesStrToFull = DateTypes.to_h { |i| [i.downcase, i] }
 
     enum date_type: DateTypesEnum
