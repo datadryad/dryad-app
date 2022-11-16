@@ -1,11 +1,11 @@
-<h1>Our Membership</h1>
+<h1>Our membership</h1>
 
-<p>Dryad’s Members are part of a non-profit, shared community working together to promote
+<p>Dryad’s members are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryad’s services designed
 specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations
 including universities, research institutions and academic libraries. See more about <a href="/stash/join_us">joining us as a member organization</a>.</p>
 
-<h2>Institutional Members</h2>
+<h2>Institutional members</h2>
 
 <table class="c-table_institutions">
   <tbody>
@@ -74,7 +74,7 @@ including universities, research institutions and academic libraries. See more a
   </tbody>
 </table>
 
-<h2>Publisher Members</h2>
+<h2>Publisher members</h2>
 
 <table class="c-table_institutions">
   <tbody>

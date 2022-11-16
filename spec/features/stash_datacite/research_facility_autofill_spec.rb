@@ -20,7 +20,7 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
 
     it 'saves a non-selected, typed item to the database', js: true do
       fill_in 'research_facility', with: "Calling All Cats\t"
-      click_link 'Review and Submit'
+      click_link 'Review and submit'
       expect(page).to have_text('Research Facility: Calling All Cats')
     end
 
@@ -32,7 +32,7 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
       item.native.send_keys :arrow_down
       sleep 0.5
       item.native.send_keys :enter
-      click_link 'Review and Submit'
+      click_link 'Review and submit'
       expect(page).to have_text('Research Facility: University of California System')
     end
   end
