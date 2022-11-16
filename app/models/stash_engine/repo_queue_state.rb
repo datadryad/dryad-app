@@ -20,12 +20,14 @@ module StashEngine
     # errored                -- An unsuccessful return status was received (from Merritt-Sword).  See stash_engine_submission_logs and maybe
     #                           also server logs for details.
 
+    # a provisional complete means we got a message from SWORD saying it had been ingested but not searchable in Merritt yet
     enum_vals = %w[
       rejected_shutting_down
       enqueued
       processing
       completed
       errored
+      provisional_complete
     ]
     string_enum('state', enum_vals, 'enqueued', false)
 
@@ -77,36 +79,28 @@ module StashEngine
       this_version = resource&.stash_version&.merritt_version
       return unless mrt_results['versions'].map { |i| i['version_number'] }.include?(this_version)
 
+      merritt_id = "#{resource.tenant.repository.domain}/d/#{mrt_results['ark']}"
+      StashEngine.repository.harvested(identifier: resource.identifier, record_identifier: merritt_id)
 
-      #doi = '<doi-here>' # bare doi like 10.15146/mdpr-pm59
-      #merritt_id = 'http://n2t.net/ark:/<fill-correct-ark-here>' # this is the ARK at Merritt like http://n2t.net/ark:/13030/m58s9s7v
-      #version = 2
-      # it appears that the merritt_id is the record_identifier and the id is an identifier object?  Need to check that code
-      # lib/stash/repo/repository calls stash-merritt/lib/stash/merritt/repository.rb and this populates download and update URIs into the db
-
-      # identifier is full stash_engine_identifier model object, record_identifier is full url with ark:/383838/833838 on end
-      # #{merritt_host}/d/#{ERB::Util.url_encode(ark)}
-      # ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}.freeze
-      StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
-
-      if StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'completed').count < 1
-        StashEngine.repository.class.update_repo_queue_state(resource_id: @resource.id, state: 'completed')
+      if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1
+        StashEngine.repository.class.update_repo_queue_state(resource_id: resource_id, state: 'completed')
       end
 
+      update_size!
       # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
-      ::StashEngine.repository.cleanup_files(@resource)
-
+      ::StashEngine.repository.cleanup_files(resource)
     end
 
-    def update_size!
+    private def update_size!
       return unless resource
 
+      id = resource.identifier
       ds_info = Stash::Repo::DatasetInfo.new(id)
       id.update(storage_size: ds_info.dataset_size)
       update_zero_sizes!(ds_info)
     end
 
-    def update_zero_sizes!(ds_info_obj)
+    private def update_zero_sizes!(ds_info_obj)
       return unless resource
 
       resource.data_files.where(upload_file_size: 0).where(file_state: 'created').each do |f|
