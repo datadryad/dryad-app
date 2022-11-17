@@ -1,5 +1,0 @@
-# stop the log, json and pid files from being committed for harvester
-log/*.log
-state/*.json
-state/local.pid
-Gemfile.lock

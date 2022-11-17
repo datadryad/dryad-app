@@ -20,7 +20,7 @@ namespace :merritt_status do
 
     File.open(pid_file, 'w').write(Process.pid)
 
-    Signal.trap('INT') {throw :sigint }
+    Signal.trap('INT') { throw :sigint }
     Signal.trap('TERM') { throw :sigint }
 
     # get pid with Process.pid
@@ -33,8 +33,8 @@ namespace :merritt_status do
     Rails.logger.info("Starting Merritt status submission updater for environment #{ENV['RAILS_ENV']}")
 
     catch(:sigint) do
-      while true do
-        Rails.logger.info("Starting round of processing")
+      loop do
+        Rails.logger.info('Starting round of processing')
         StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete]).each do |queue_state|
           if queue_state.available_in_merritt?
             Rails.logger.info("  Resource #{queue_state.resource_id} available in Merritt")
@@ -44,7 +44,7 @@ namespace :merritt_status do
             Rails.logger.info("  Resource #{queue_state.resource_id} not yet available")
           end
         end
-        Rails.logger.info("Ending round of processing")
+        Rails.logger.info('Ending round of processing')
         sleep 30
       end
     end
