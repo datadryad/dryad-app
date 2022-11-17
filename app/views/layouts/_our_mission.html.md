@@ -1,6 +1,6 @@
 <h1>Our Mission</h1>
 
-<p>The Dryad Digital Repository is a curated resource that makes research data <strong>discoverable, freely reusable, and citable</strong>. Dryad provides a general-purpose home for a wide diversity of data types.</p>
+<p>The Dryad Digital Platform is a curated resource that makes research data <strong>discoverable, freely reusable, and citable</strong>. Dryad provides a general-purpose home for a wide diversity of data types.</p>
 <p>Dryad originated from an initiative among a group of leading journals and scientific societies to adopt a <a href="/docs/JointDataArchivingPolicy.pdf">joint data archiving policy (JDAP)</a> for their publications, and the recognition that <strong>open, easy-to-use, not-for-profit, community-governed data infrastructure</strong> was needed to support such a policy. These remain our guiding principles.</p>
 <p>Dryad’s vision is to promote a world where research data is openly available, integrated with the scholarly literature, and routinely re-used to create knowledge.</p>
 <p>Our mission is to provide the infrastructure for, and promote the re-use of, data underlying the scholarly literature.</p>
