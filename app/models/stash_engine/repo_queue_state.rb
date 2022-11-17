@@ -15,6 +15,8 @@ module StashEngine
     #
     # processing             -- The item has been sent to Merritt and we do not have a Promise return status for the item yet (from Merritt-Sword)
     #
+    # provisional_complete   -- Merritt said it was accepted but we still haven't seen it appear in their system search
+    #
     # completed              -- A successful return status was received (from Merritt-Sword)
     #
     # errored                -- An unsuccessful return status was received (from Merritt-Sword).  See stash_engine_submission_logs and maybe
