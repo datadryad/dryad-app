@@ -365,7 +365,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
         with a current cycle time of approximately two months.
     </li>
     <li>
-        <strong>Succession plans</strong>: In case of closure of the repository, reasonable efforts will be made to
+        <strong>Succession plans</strong>: In case of closure of the platform, reasonable efforts will be made to
         integrate all content into suitable alternative institutional and/or subject based repositories.
     </li>
 </ul>
