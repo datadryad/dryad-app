@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/CDL-Dryad/ezid-client
-  revision: dfcf7f49995560ed48df407560c4fe3fb6dbfa7b
-  specs:
-    ezid-client (1.9.2)
-      hashie (~> 3.4, >= 3.4.3)
-      nokogiri
-
-GIT
   remote: https://github.com/CDLUC3/datacite-mapping
   revision: fde8155e2f331a4b1ea06e7db9a66fd47eadf536
   branch: upgrade-ruby
@@ -119,7 +111,7 @@ GEM
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.660.0)
+    aws-partitions (1.662.0)
     aws-sdk-core (3.167.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -135,7 +127,7 @@ GEM
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
-    aws-sdk-ssm (1.144.0)
+    aws-sdk-ssm (1.145.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.2)
@@ -239,7 +231,7 @@ GEM
       railties (>= 5)
     down (5.3.1)
       addressable (~> 2.8)
-    dry-configurable (1.0.0)
+    dry-configurable (1.0.1)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
     dry-core (1.0.0)
@@ -278,6 +270,9 @@ GEM
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
     execjs (2.8.1)
+    ezid-client (1.9.3)
+      hashie (~> 3.4, >= 3.4.3)
+      nokogiri
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -393,7 +388,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     io-console (0.5.11)
-    irb (1.4.2)
+    irb (1.4.3)
       reline (>= 0.3.0)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
@@ -592,7 +587,7 @@ GEM
       railties (>= 3.2)
       tilt
     redcarpet (3.5.1)
-    regexp_parser (2.6.0)
+    regexp_parser (2.6.1)
     reline (0.3.1)
       io-console (~> 0.5)
     representable (3.2.0)
@@ -758,7 +753,7 @@ GEM
     unf_ext (0.0.8.2)
     unicode-display_width (2.3.0)
     version_gem (1.1.1)
-    view_component (2.75.0)
+    view_component (2.76.0)
       activesupport (>= 5.0.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -834,7 +829,7 @@ DEPENDENCIES
   down
   equivalent-xml
   exception_notification
-  ezid-client!
+  ezid-client (~> 1.9.2)
   factory_bot_rails
   faker
   filesize (~> 0.2.0)

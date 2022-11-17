@@ -69,7 +69,7 @@ gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification'
-gem 'ezid-client', git: 'https://github.com/CDL-Dryad/ezid-client'
+gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-rails', '~> 4.7'
 gem 'geoblacklight', '~> 3.0'
