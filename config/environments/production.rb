@@ -143,5 +143,6 @@ Rails.application.configure do
       :ignore_crawlers => %w{Googlebot bingbot}
   end
 
+  config.hosts << 'datadryad.org'
   Rails.application.default_url_options = { host: 'datadryad.org' }
 end
