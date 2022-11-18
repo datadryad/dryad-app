@@ -7,7 +7,7 @@ class AddMerrittDatasetStatusToStashEngineExternalDependencies < ActiveRecord::M
       INSERT INTO stash_engine_external_dependencies
         (abbreviation, `name`, description, status, documentation, error_message, internally_managed, created_at, updated_at)
         VALUES 
-          ('submission_status', 'Merritt Submission Status',
+          ('submission_status', 'Merritt submission status',
             'Hits the Merritt API endpoint to check if outstanding submissions are finished yet', 1,
             "Checks the logs at <RAILS_ROOT>/log/merritt_status_updater.log to be sure it has been checked recently. This is a daemon started by system.d which calls the a rake task like 'RAILS_ENV=development rails merritt_status:update'",
             NULL, 1, '2021-05-26 22:38:37', '2022-11-17 22:40:10')

@@ -40,10 +40,10 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'notifier',
-      name: 'Stash Notifier',
-      description: 'The service that lets Dryad know when Merritt has finished processing (via the OAI-PMH feed)',
-      documentation: 'If the OAI-PMH feed is working and the item is present, check the stash-notifier logs.  A pid file that was never removed may prevent the notifier from processing additional items since it believes a notifier instance is already running.  You may need to remove the pid file or look to see if there is some problem with the notifier.  Maybe a server got shut down in the middle of a run so the notifier didn\'t have a chance to remove it\'s own pid.',
+      abbreviation: 'submission_status',
+      name: 'Merritt submission status',
+      description: 'Hits the Merritt API endpoint to check if outstanding submissions are finished yet',
+      documentation: "Checks the logs at <RAILS_ROOT>/log/merritt_status_updater.log to be sure it has been checked recently. This is a daemon started by system.d which calls the a rake task like 'RAILS_ENV=development rails merritt_status:update'",
       internally_managed: true,
       status: 1
     },
