@@ -3,6 +3,8 @@ module StashEngine
     self.table_name = 'stash_engine_repo_queue_states'
     include StashEngine::Concerns::StringEnum
 
+    attr_reader :mrt_results # this is for tests
+
     belongs_to :resource
 
     # Explanation of statuses:  This will log all the statuses for the resource, so the final status is the current one.
@@ -59,13 +61,15 @@ module StashEngine
       where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
     end
 
-    # does remote query to check if this queue state has been ingested into Merritt yet
+    # Does remote query to check if this queue state has been ingested into Merritt yet
+    # Also sets @mrt_results as member variable so it can be reused without re-querying merritt again.
     def available_in_merritt?
-      mrt_results = resource&.identifier&.merritt_object_info
-      return false unless mrt_results.present?
+
+      @mrt_results = resource&.identifier&.merritt_object_info
+      return false unless @mrt_results.present?
 
       # get the merritt versions available, which may not be the same version numbers as stash versions in some cases
-      mrt_versions = mrt_results['versions'].map { |i| i['version_number'] }
+      mrt_versions = @mrt_results['versions'].map { |i| i['version_number'] }
       this_version = resource&.stash_version&.merritt_version
       return false unless this_version.present?
 
@@ -74,14 +78,13 @@ module StashEngine
       true
     end
 
-    def set_as_completed
-      mrt_results = resource&.identifier&.merritt_object_info
-      return unless mrt_results.present?
+    # also returns true/false on success/error so we don't have to call the merritt api twice
+    # (once to get status and once to do the completion)
+    def provisional_set_as_completed
+      # this is a guard against setting something completed that isn't and that will make this method fail
+      return false unless available_in_merritt? # this also sets @mrt_results member variable so we don't have to redo the query again
 
-      this_version = resource&.stash_version&.merritt_version
-      return unless mrt_results['versions'].map { |i| i['version_number'] }.include?(this_version)
-
-      merritt_id = "#{resource.tenant.repository.domain}/d/#{mrt_results['ark']}"
+      merritt_id = "#{resource.tenant.repository.domain}/d/#{@mrt_results['ark']}"
       StashEngine.repository.harvested(identifier: resource.identifier, record_identifier: merritt_id)
 
       if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1
@@ -91,8 +94,10 @@ module StashEngine
       update_size!
       # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
       ::StashEngine.repository.cleanup_files(resource)
+      true
     end
 
+    # these "update" methods were moved from previous location in controller as post-processing steps
     private def update_size!
       return unless resource
 

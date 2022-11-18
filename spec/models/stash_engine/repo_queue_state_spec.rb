@@ -29,42 +29,73 @@ module StashEngine
     end
 
     describe 'available_in_merritt?' do
-      it 'returns false if merritt_object_info returns no response' do
+
+      before(:each) do
         @states[2].destroy!
-        @identifier = @resources[0].identifier
+        @resource = @resources[0]
+        @identifier = @resource.identifier
+      end
+
+      it 'returns false if merritt_object_info returns no response' do
         allow(@identifier).to receive(:merritt_object_info).and_return({})
-        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
-        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+        allow(@resource).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resource)
 
         expect(@states[1].available_in_merritt?).to eql(false)
+        expect(@states[1].mrt_results).to be_empty
       end
 
       it 'returns true if the version exists in the returned data' do
-        @states[2].destroy!
-        @identifier = @resources[0].identifier
         allow(@identifier).to receive(:merritt_object_info).and_return(
             JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
-        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
-        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+        allow(@resource).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resource)
 
         expect(@states[1].available_in_merritt?).to eql(true)
+        expect(@states[1].mrt_results).not_to be_empty
       end
 
       it 'returns false if the version does not exist in the returned data' do
-        @states[2].destroy!
-        @identifier = @resources[0].identifier
         allow(@identifier).to receive(:merritt_object_info).and_return(
           JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
-        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
-        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+        allow(@resource).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resource)
 
-        @resources[0].stash_version.update(merritt_version: 4)
+        @resource.stash_version.update(merritt_version: 4)
 
         expect(@states[1].available_in_merritt?).to eql(false)
+        expect(@states[1].mrt_results).not_to be_empty # because there were results but they're not for this version
       end
     end
 
-    describe 'set_as_completed' do
+    describe 'provisional_set_as_completed' do
+
+      before(:each) do
+        @states[2].destroy!
+        @resource = @resources[0]
+        @identifier = @resource.identifier
+      end
+
+      # "not complete" case is tested more thoroughly above already
+      it "returns false if it isn't done yet" do
+        allow(@identifier).to receive(:merritt_object_info).and_return({})
+        allow(@resource).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resource)
+
+        expect(@states[1].provisional_set_as_completed).to eql(false)
+      end
+
+      it "calls the completion methods if it is completed" do
+        allow(@identifier).to receive(:merritt_object_info).and_return(
+          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+        allow(@resource).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resource)
+
+        expect(@states[1]).to receive(:update_size!).and_return(true)
+        expect(::StashEngine.repository).to receive(:cleanup_files).with(@resource).and_return(true)
+        expect(@states[1].provisional_set_as_completed).to eql(true)
+      end
+
 
     end
   end
