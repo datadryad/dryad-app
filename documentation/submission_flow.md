@@ -22,11 +22,12 @@ Basic Dryad Submission Flow
       * If sending a manifest, these xml files are hosted on the Dash server and picked up by Merritt as part of its ingest.
 5. Notifying of completion
     * When Merritt has successfully ingested the dataset, the dataset
-      shows up in Merritt's the OAI-PMH feed.
-    * The stash-notifier runs every minute and checks for the
-      OAI-PMH feed for updates.
-    * With new updates it adds metadata into SOLR and notifies the UI that update has finished.
-6. UI finishes actions for successfully submitted dataset when notified
+      shows up in Merritt's [local id search](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/CDLUC3/mrt-dashboard/main/swagger.yml#/experimental/get_api__group__local_id_search)
+    * A daemon in a rake task runs to check for updates can be
+      started like `RAILS_ENV=development rails merritt_status:update` or
+      likely will be added to systemd startup scripts on one server.
+    * With new updates it updates status for items that have gone through Merritt
+6. UI finishes actions for successfully submitted dataset
     * Sets download_uri and update_uri if needed
     * Changes state to ‘submitted’
     * Cleans up staged, temporary files for this submission
@@ -43,18 +44,6 @@ Allowable values:
 - processing = processing through Merritt as a submission right now (or maybe stalled in rare circumstances)
 - submitted = submitted to Merritt successfully
 - error = some error occurred while submitting to Merritt
-
-app/controllers/stash_engine/landing_controller.rb
-- See the update method. This gets called back by the notifier service
-  which is reading an OAI-PMH feed from Merritt which lists things that
-  have gone in successfully.  
-- This sets the merritt-status (stash_engine_resource_states) to 'submitted'.
-- It will not set the completed, 'submitted' state more than once, so
-  calling additional times will not have an effect (it returns early if
-  it has already been updated). 
-- updates size based on querying Merritt to get size after it was compressed/ingested.
-- populates SWORD-type URLs if they're missing for some reason.
-- cleans up temp files now that Merritt has told us ingest was successful.
 
 Curation Status
 =====================
