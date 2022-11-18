@@ -27,5 +27,45 @@ module StashEngine
         expect(result).to eq(@states[-1])
       end
     end
+
+    describe 'available_in_merritt?' do
+      it 'returns false if merritt_object_info returns no response' do
+        @states[2].destroy!
+        @identifier = @resources[0].identifier
+        allow(@identifier).to receive(:merritt_object_info).and_return({})
+        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+
+        expect(@states[1].available_in_merritt?).to eql(false)
+      end
+
+      it 'returns true if the version exists in the returned data' do
+        @states[2].destroy!
+        @identifier = @resources[0].identifier
+        allow(@identifier).to receive(:merritt_object_info).and_return(
+            JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+
+        expect(@states[1].available_in_merritt?).to eql(true)
+      end
+
+      it 'returns false if the version does not exist in the returned data' do
+        @states[2].destroy!
+        @identifier = @resources[0].identifier
+        allow(@identifier).to receive(:merritt_object_info).and_return(
+          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+        allow(@resources[0]).to receive(:identifier).and_return(@identifier)
+        allow(@states[1]).to receive(:resource).and_return(@resources[0])
+
+        @resources[0].stash_version.update(merritt_version: 4)
+
+        expect(@states[1].available_in_merritt?).to eql(false)
+      end
+    end
+
+    describe 'set_as_completed' do
+
+    end
   end
 end
