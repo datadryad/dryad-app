@@ -64,7 +64,6 @@ module StashEngine
     # Does remote query to check if this queue state has been ingested into Merritt yet
     # Also sets @mrt_results as member variable so it can be reused without re-querying merritt again.
     def available_in_merritt?
-
       @mrt_results = resource&.identifier&.merritt_object_info
       return false unless @mrt_results.present?
 
@@ -80,7 +79,7 @@ module StashEngine
 
     # also returns true/false on success/error so we don't have to call the merritt api twice
     # (once to get status and once to do the completion)
-    def provisional_set_as_completed
+    def possibly_set_as_completed
       # this is a guard against setting something completed that isn't and that will make this method fail
       return false unless available_in_merritt? # this also sets @mrt_results member variable so we don't have to redo the query again
 

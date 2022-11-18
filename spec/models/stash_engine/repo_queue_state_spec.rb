@@ -47,7 +47,8 @@ module StashEngine
 
       it 'returns true if the version exists in the returned data' do
         allow(@identifier).to receive(:merritt_object_info).and_return(
-            JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json')))
+        )
         allow(@resource).to receive(:identifier).and_return(@identifier)
         allow(@states[1]).to receive(:resource).and_return(@resource)
 
@@ -57,7 +58,8 @@ module StashEngine
 
       it 'returns false if the version does not exist in the returned data' do
         allow(@identifier).to receive(:merritt_object_info).and_return(
-          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json')))
+        )
         allow(@resource).to receive(:identifier).and_return(@identifier)
         allow(@states[1]).to receive(:resource).and_return(@resource)
 
@@ -68,7 +70,7 @@ module StashEngine
       end
     end
 
-    describe 'provisional_set_as_completed' do
+    describe 'possibly_set_as_completed' do
 
       before(:each) do
         @states[2].destroy!
@@ -82,20 +84,20 @@ module StashEngine
         allow(@resource).to receive(:identifier).and_return(@identifier)
         allow(@states[1]).to receive(:resource).and_return(@resource)
 
-        expect(@states[1].provisional_set_as_completed).to eql(false)
+        expect(@states[1].possibly_set_as_completed).to eql(false)
       end
 
-      it "calls the completion methods if it is completed" do
+      it 'calls the completion methods if it is completed' do
         allow(@identifier).to receive(:merritt_object_info).and_return(
-          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json'))))
+          JSON.parse(File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json')))
+        )
         allow(@resource).to receive(:identifier).and_return(@identifier)
         allow(@states[1]).to receive(:resource).and_return(@resource)
 
         expect(@states[1]).to receive(:update_size!).and_return(true)
         expect(::StashEngine.repository).to receive(:cleanup_files).with(@resource).and_return(true)
-        expect(@states[1].provisional_set_as_completed).to eql(true)
+        expect(@states[1].possibly_set_as_completed).to eql(true)
       end
-
 
     end
   end

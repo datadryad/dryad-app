@@ -36,7 +36,7 @@ namespace :merritt_status do
       loop do
         Rails.logger.info('Starting round of processing')
         StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete]).each do |queue_state|
-          if queue_state.provisional_set_as_completed
+          if queue_state.possibly_set_as_completed
             Rails.logger.info("  Resource #{queue_state.resource_id} available in Merritt")
           else
             Rails.logger.info("  Resource #{queue_state.resource_id} not yet available")
