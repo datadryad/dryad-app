@@ -86,7 +86,7 @@
 
 <figure>
 <blockquote>
-  <p>Dryad provides a simple solution for data sharing and compliance with emerging funder policies that is already recognised and supported by communities of authors, reviewers and editors. Partnering with Dryad over many years has been vital in realizing our data sharing policy: with hundreds of datasets being openly available in support of research integrity and openness.</p>
+  <p>Dryad is recognised and supported by communities of authors, reviewers and editors as providing a simple solution for data sharing and compliance with funder policies. Partnering with Dryad over many years has been vital in realizing our data sharing policy: with hundreds of datasets being openly available in support of research integrity and openness.</p>
 </blockquote>
 <figcaption><cite>– Publisher, the Royal Society </cite></figcaption>
 </figure>
