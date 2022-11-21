@@ -1,0 +1,512 @@
+$ python test_parse.py
+
+Started processing Table S3.xls at Thu Nov 10 10:59:42 2022
+    Created new csv file Table S3_Sheet_1.csv
+Completed processing Table S3.xls in 0.01843571662902832 seconds
+
+Started processing Experiment1_MO_6h_Juliana_13_31908.xls at Thu Nov 10 10:59:42 2022
+    Created new csv file Experiment1_MO_6h_Juliana_13_31908_Bioworks.csv
+Completed processing Experiment1_MO_6h_Juliana_13_31908.xls in 0.18694186210632324 seconds
+
+Started processing LEeur.full.Annotation.xls at Thu Nov 10 10:59:42 2022
+    File LEeur.full.Annotation.xls could not be parsed as an Excel file.  Is the format correct?
+
+Started processing Control2-VS-Cases2.DEseq2_Method.GeneDiffExpFilter.xls at Thu Nov 10 10:59:42 2022
+    File Control2-VS-Cases2.DEseq2_Method.GeneDiffExpFilter.xls could not be parsed as an Excel file.  Is the format correct?
+
+Started processing SSRs.xls at Thu Nov 10 10:59:42 2022
+    Created new csv file SSRs_worksheet1.csv
+Completed processing SSRs.xls in 1.0763349533081055 seconds
+
+Started processing DnaA2.xls at Thu Nov 10 10:59:43 2022
+    File DnaA2.xls could not be parsed as an Excel file.  Is the format correct?
+
+Started processing control2.xls at Thu Nov 10 10:59:43 2022
+    File control2.xls could not be parsed as an Excel file.  Is the format correct?
+
+Started processing DnaA1.xls at Thu Nov 10 10:59:43 2022
+    File DnaA1.xls could not be parsed as an Excel file.  Is the format correct?
+
+Started processing S2_data.xls at Thu Nov 10 10:59:43 2022
+    Created new csv file S2_data_Sheet1.csv
+Completed processing S2_data.xls in 0.011752843856811523 seconds
+
+Started processing Data_from_Marechaux_et_al_JEcol.xls at Thu Nov 10 10:59:43 2022
+    Created new csv file Data_from_Marechaux_et_al_JEcol_Metadata.csv
+    Created new csv file Data_from_Marechaux_et_al_JEcol_Data_from_Marecahux_et_al..csv
+Completed processing Data_from_Marechaux_et_al_JEcol.xls in 0.01717209815979004 seconds
+
+Started processing behavior_DRYAD.xlsx at Thu Nov 10 10:59:43 2022
+    Created new csv file behavior_DRYAD_Sheet1.csv
+Completed processing behavior_DRYAD.xlsx in 0.24097919464111328 seconds
+
+Started processing SupplementaryFile6.xlsx at Thu Nov 10 10:59:43 2022
+/Users/sfisher/.pyenv/versions/3.7.9/lib/python3.7/site-packages/openpyxl/worksheet/_reader.py:312: UserWarning: Unknown extension is not supported and will be removed
+  warn(msg)
+    Created new csv file SupplementaryFile6_Suppl_6.1.csv
+    Created new csv file SupplementaryFile6_Suppl_6.2.csv
+    Created new csv file SupplementaryFile6_Suppl_6.3.csv
+Completed processing SupplementaryFile6.xlsx in 11.228224992752075 seconds
+
+Started processing Mastertab_Thymus_morpho.xlsx at Thu Nov 10 10:59:54 2022
+    Created new csv file Mastertab_Thymus_morpho_Master.csv
+    Created new csv file Mastertab_Thymus_morpho_vegetation_records.csv
+    Created new csv file Mastertab_Thymus_morpho_abiotic_vegetation_records.csv
+    Created new csv file Mastertab_Thymus_morpho_abiotic_sites_Drei_Gleichen.csv
+    Created new csv file Mastertab_Thymus_morpho_multivariate_abiotic_ztrans_5.csv
+    Created new csv file Mastertab_Thymus_morpho_multivariat_all.csv
+    Created new csv file Mastertab_Thymus_morpho_multivariat_abiotic.csv
+Completed processing Mastertab_Thymus_morpho.xlsx in 0.16939091682434082 seconds
+
+Started processing Ots_RADcatalog_21504SNPs.xlsx at Thu Nov 10 10:59:55 2022
+    Created new csv file Ots_RADcatalog_21504SNPs_Locus_Key.csv
+    Created new csv file Ots_RADcatalog_21504SNPs_21504k_Whitelist.csv
+    Created new csv file Ots_RADcatalog_21504SNPs_Loci_Stats.csv
+    Created new csv file Ots_RADcatalog_21504SNPs_seqs.csv
+Completed processing Ots_RADcatalog_21504SNPs.xlsx in 41.09560513496399 seconds
+
+Started processing Fig_S1b_S2abcd_S3_uCT_63_days.xlsx at Thu Nov 10 11:00:36 2022
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Day_63_Early_PEMF_.csv
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Day_63_Mid_PEMP.csv
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Day_63_Late_PEMF.csv
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Day_63_Daily_PEMF.csv
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Day_63_No_PEMF.csv
+    Created new csv file Fig_S1b_S2abcd_S3_uCT_63_days_Calvaria.csv
+Completed processing Fig_S1b_S2abcd_S3_uCT_63_days.xlsx in 0.9926040172576904 seconds
+
+Started processing README_litter_column_legend.xlsx at Thu Nov 10 11:00:37 2022
+    Created new csv file README_litter_column_legend_Tabelle1.csv
+    Created new csv file README_litter_column_legend_Tabelle2.csv
+    Created new csv file README_litter_column_legend_Tabelle3.csv
+Completed processing README_litter_column_legend.xlsx in 0.018988609313964844 seconds
+
+Started processing Fig5B.xlsx at Thu Nov 10 11:00:37 2022
+    Created new csv file Fig5B_Description.csv
+    Created new csv file Fig5B_Blood_flow.csv
+Completed processing Fig5B.xlsx in 0.010509967803955078 seconds
+
+Started processing Parasitoid_fluorescence_data.xlsx at Thu Nov 10 11:00:37 2022
+    Created new csv file Parasitoid_fluorescence_data_Code_book.csv
+    Created new csv file Parasitoid_fluorescence_data_All_Pos.csv
+    Created new csv file Parasitoid_fluorescence_data_All_NTC.csv
+    Created new csv file Parasitoid_fluorescence_data_Cross_reactions.csv
+    Created new csv file Parasitoid_fluorescence_data_DinoSamples.csv
+    Created new csv file Parasitoid_fluorescence_data_HmirSamples.csv
+    Created new csv file Parasitoid_fluorescence_data_HterSamples.csv
+    Created new csv file Parasitoid_fluorescence_data_PhalSample.csv
+    Created new csv file Parasitoid_fluorescence_data_StriSamples.csv
+Completed processing Parasitoid_fluorescence_data.xlsx in 4.055452823638916 seconds
+
+Started processing aspera_DArT_Report_34304_SNPs.xlsx at Thu Nov 10 11:00:41 2022
+    Created new csv file aspera_DArT_Report_34304_SNPs_ScoringData_SNP.csv
+Completed processing aspera_DArT_Report_34304_SNPs.xlsx in 446.1500358581543 seconds
+
+Started processing Promiscuity_L3_F100M100_Autosomal_100Iterations.xlsx at Thu Nov 10 11:08:07 2022
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It1.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It1.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It1.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It1.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It2.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It2.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It2.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It2.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It3.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It3.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It3.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It3.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It4.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It4.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It4.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It4.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It5.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It5.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It5.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It5.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It6.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It6.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It6.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It6.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It7.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It7.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It7.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It7.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It8.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It8.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It8.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It8.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It9.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It9.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It9.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It9.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It10.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It10.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It10.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It10.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It11.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It11.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It11.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It11.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It12.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It12.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It12.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It12.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It13.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It13.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It13.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It13.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It14.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It14.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It14.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It14.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It15.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It15.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It15.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It15.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It16.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It16.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It16.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It16.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It17.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It17.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It17.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It17.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It18.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It18.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It18.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It18.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It19.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It19.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It19.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It19.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It20.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It20.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It20.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It20.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It21.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It21.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It21.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It21.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It22.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It22.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It22.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It22.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It23.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It23.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It23.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It23.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It24.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It24.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It24.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It24.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It25.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It25.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It25.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It25.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It26.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It26.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It26.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It26.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It27.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It27.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It27.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It27.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It28.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It28.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It28.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It28.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It29.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It29.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It29.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It29.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It30.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It30.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It30.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It30.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It31.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It31.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It31.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It31.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It32.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It32.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It32.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It32.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It33.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It33.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It33.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It33.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It34.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It34.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It34.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It34.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It35.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It35.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It35.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It35.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It36.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It36.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It36.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It36.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It37.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It37.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It37.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It37.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It38.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It38.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It38.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It38.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It39.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It39.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It39.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It39.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It40.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It40.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It40.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It40.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It41.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It41.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It41.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It41.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It42.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It42.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It42.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It42.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It43.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It43.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It43.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It43.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It44.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It44.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It44.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It44.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It45.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It45.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It45.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It45.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It46.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It46.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It46.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It46.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It47.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It47.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It47.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It47.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It48.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It48.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It48.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It48.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It49.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It49.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It49.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It49.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It50.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It50.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It50.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It50.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It51.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It51.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It51.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It51.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It52.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It52.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It52.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It52.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It53.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It53.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It53.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It53.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It54.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It54.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It54.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It54.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It55.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It55.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It55.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It55.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It56.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It56.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It56.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It56.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It57.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It57.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It57.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It57.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It58.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It58.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It58.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It58.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It59.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It59.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It59.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It59.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It60.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It60.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It60.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It60.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It61.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It61.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It61.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It61.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It62.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It62.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It62.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It62.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It63.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It63.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It63.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It63.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It64.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It64.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It64.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It64.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It65.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It65.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It65.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It65.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It66.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It66.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It66.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It66.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It67.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It67.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It67.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It67.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It68.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It68.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It68.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It68.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It69.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It69.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It69.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It69.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It70.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It70.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It70.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It70.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It71.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It71.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It71.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It71.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It72.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It72.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It72.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It72.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It73.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It73.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It73.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It73.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It74.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It74.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It74.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It74.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It75.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It75.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It75.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It75.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It76.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It76.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It76.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It76.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It77.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It77.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It77.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It77.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It78.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It78.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It78.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It78.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It79.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It79.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It79.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It79.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It80.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It80.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It80.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It80.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It81.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It81.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It81.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It81.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It82.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It82.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It82.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It82.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It83.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It83.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It83.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It83.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It84.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It84.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It84.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It84.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It85.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It85.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It85.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It85.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It86.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It86.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It86.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It86.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It87.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It87.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It87.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It87.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It88.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It88.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It88.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It88.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It89.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It89.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It89.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It89.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It90.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It90.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It90.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It90.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It91.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It91.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It91.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It91.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It92.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It92.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It92.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It92.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It93.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It93.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It93.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It93.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It94.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It94.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It94.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It94.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It95.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It95.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It95.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It95.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It96.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It96.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It96.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It96.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It97.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It97.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It97.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It97.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It98.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It98.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It98.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It98.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It99.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It99.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It99.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It99.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Females_It100.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Females_It100.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GGD_Males_It100.csv
+    Created new csv file Promiscuity_L3_F100M100_Autosomal_100Iterations_GD_Males_It100.csv
+Completed processing Promiscuity_L3_F100M100_Autosomal_100Iterations.xlsx in 242.72671794891357 seconds
+
+Started processing tracks_sm_tracking.xlsx at Thu Nov 10 11:12:10 2022
+    Created new csv file tracks_sm_tracking_T9R.csv
+    Created new csv file tracks_sm_tracking_T13R.csv
+    Created new csv file tracks_sm_tracking_T15R.csv
+    Created new csv file tracks_sm_tracking_T19R.csv
+Completed processing tracks_sm_tracking.xlsx in 11.942276000976562 seconds
