@@ -4,56 +4,56 @@ require 'stash/link_out/pubmed_service'
 
 module Stash
   module LinkOut
+
+    TEST_FILE_DIR = "#{Dir.pwd}/spec/tmp/link_out".freeze
+
+    RESPONSE = <<~XML.freeze
+      <?xml version="1.0" encoding="UTF-8" ?>
+      <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+      <eSearchResult>
+        <Count>1</Count>
+        <RetMax>1</RetMax>
+        <RetStart>0</RetStart>
+        <IdList>
+          <Id>26028437</Id>
+        </IdList>
+        <TranslationSet/>
+        <TranslationStack>
+          <TermSet>
+            <Term>10.1016/j.cub.2015.04.062[doi]</Term>
+            <Field>doi</Field>
+            <Count>1</Count>
+            <Explode>N</Explode>
+          </TermSet>
+          <OP>GROUP</OP>
+        </TranslationStack>
+        <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
+      </eSearchResult>
+    XML
+
+    EMPTY_RESPONSE = <<~XML.freeze
+      <?xml version="1.0" encoding="UTF-8" ?>
+      <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+      <eSearchResult>
+        <Count>0</Count>
+        <RetMax>0</RetMax>
+        <RetStart>0</RetStart>
+        <IdList/>
+        <TranslationSet/>
+        <TranslationStack>
+          <TermSet>
+            <Term>10.1016/j.cub.2015.04.062[doi]</Term>
+            <Field>doi</Field>
+            <Count>1</Count>
+            <Explode>N</Explode>
+          </TermSet>
+          <OP>GROUP</OP>
+        </TranslationStack>
+        <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
+      </eSearchResult>
+    XML
+
     describe PubmedService do
-      # rubocop:disable Lint/ConstantDefinitionInBlock
-      TEST_FILE_DIR = "#{Dir.pwd}/spec/tmp/link_out".freeze
-
-      RESPONSE = <<~XML.freeze
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
-        <eSearchResult>
-          <Count>1</Count>
-          <RetMax>1</RetMax>
-          <RetStart>0</RetStart>
-          <IdList>
-            <Id>26028437</Id>
-          </IdList>
-          <TranslationSet/>
-          <TranslationStack>
-            <TermSet>
-              <Term>10.1016/j.cub.2015.04.062[doi]</Term>
-              <Field>doi</Field>
-              <Count>1</Count>
-              <Explode>N</Explode>
-            </TermSet>
-            <OP>GROUP</OP>
-          </TranslationStack>
-          <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
-        </eSearchResult>
-      XML
-
-      EMPTY_RESPONSE = <<~XML.freeze
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
-        <eSearchResult>
-          <Count>0</Count>
-          <RetMax>0</RetMax>
-          <RetStart>0</RetStart>
-          <IdList/>
-          <TranslationSet/>
-          <TranslationStack>
-            <TermSet>
-              <Term>10.1016/j.cub.2015.04.062[doi]</Term>
-              <Field>doi</Field>
-              <Count>1</Count>
-              <Explode>N</Explode>
-            </TermSet>
-            <OP>GROUP</OP>
-          </TranslationStack>
-          <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
-        </eSearchResult>
-      XML
-      # rubocop:enable Lint/ConstantDefinitionInBlock
       before(:each) do
         # Mock the app_config.yml and Rails.application.routes since we're not loading the full
         # Rails stack
