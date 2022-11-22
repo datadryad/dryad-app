@@ -1,4 +1,4 @@
-<h1>Why Use Dryad?</h1>
+<h1>Why use Dryad?</h1>
 
 <p>Dryad aims to make data publishing as <strong>simple</strong> and as <strong>rewarding</strong> as possible through a suite of services:</p>
 
@@ -19,4 +19,4 @@
 <li><strong>Networked</strong>. Dryad is responsive to the needs of the researchers through its community of users and members, and is a participant in organizations such as BioSharing, DataCite and DataONE. You as a researcher benefit from, and contribute to, the work of these organizations by submitting to and using Dryad.</li>
 <li><strong>Community-led</strong>. By publishing in Dryad, you are supporting a nonprofit membership organization committed to making data available for research and educational reuse. Modest, one-time Data Publishing Charges help ensure our sustainability.</li>
 </ul>
-<p>You may find our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> and best practices guidance helpful as you get started. Log in and go to "My Datasets" to begin your data submission now!</p>
+<p>You may find our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> and best practices guidance helpful as you get started. Log in and go to "My datasets" to begin your data submission now!</p>

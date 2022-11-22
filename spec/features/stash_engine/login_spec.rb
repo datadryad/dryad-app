@@ -13,12 +13,12 @@ RSpec.feature 'Session', type: :feature do
 
     it 'New user signs up successfully with ORCID and does not select an organization', js: true do
       sign_in(@user)
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
     end
 
     it 'New user signs up successfully with ORCID and selects an organization', js: true do
       sign_in(@user, true)
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
     end
 
     it 'User fails ORCID authentication', js: true do
@@ -33,7 +33,7 @@ RSpec.feature 'Session', type: :feature do
 
     it 'existing user signs in successfully', js: true do
       sign_in
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
     end
 
   end
@@ -63,7 +63,7 @@ RSpec.feature 'Session', type: :feature do
       fill_in 'email', with: 'gloria.clooney@example.org'
       fill_in 'orcid', with: '1234-5678-9012-3456'
       click_button('Log In')
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.feature 'Session', type: :feature do
       click_link 'Login or create your ORCID iD'
       select 'DataONE', from: 'tenant_id'
       click_button 'Login to verify'
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
     end
   end
 end

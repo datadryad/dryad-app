@@ -112,7 +112,7 @@ module StashEngine
 
       case status
       when 'peer_review'
-        'Private for Peer Review'
+        'Private for peer review'
       when 'action_required'
         'Author Action Required'
       else

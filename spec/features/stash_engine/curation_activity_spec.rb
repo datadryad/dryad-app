@@ -21,8 +21,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'is not accessible by regular users' do
         sign_in
         visit dashboard_path
-        # User should be redirected to the My Datasets page
-        expect(page).to have_text('My Datasets')
+        # User should be redirected to the My datasets page
+        expect(page).to have_text('My datasets')
       end
 
       it 'is accessible by admins' do

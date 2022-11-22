@@ -1,10 +1,10 @@
 # New dataset with local files
 
 1. log in
-1. select **My Datasets**
-1. select **Start New Dataset**
+1. select **My datasets**
+1. select **Start new dataset**
 1. enter minimal necessary metadata for submission (title, creator, etc.)
-1. select **Upload Data**
+1. select **Upload data**
 1. make sure **Drag and drop or choose files from your computer** is selected
 1. click **Choose files**
    - choose one or more files
@@ -34,7 +34,7 @@
 1. click **Proceed to review** (lower right)
    - ✓ check that a **You have files that have not been uploaded** dialog appears
    - dismiss the dialog
-1. click **Review and Submit** (top right)
+1. click **Review and submit** (top right)
    - ✓ check that a **You have files that have not been uploaded** dialog appears
    - dismiss the dialog
 1. click **Upload**
@@ -57,12 +57,12 @@
    - ✓ check that the **I confirm…** check box and **Upload** button reappear
 1. tick the **I confirm…** check box
 1. click **Upload**
-1. when all files have uploaded, click **Proceed to review** or **Review and Submit**
-   - ✓ check that the uploaded files appear in the **Review Data Files** section
+1. when all files have uploaded, click **Proceed to review** or **Review and submit**
+   - ✓ check that the uploaded files appear in the **Review data files** section
 1. tick the **By checking this box, I agree...** (CC-BY) box
 1. click **Submit**
 1. wait for the dataset’s status to apepar as **published**
 1. on the dataset landing page:
-   - ✓ check that the files appear, with the correct sizes, under **Data Files**
+   - ✓ check that the files appear, with the correct sizes, under **Data files**
    - click **Download the dataset**
      - ✓ check that the files appear, with the correct sizes, in the downloaded ZIP file

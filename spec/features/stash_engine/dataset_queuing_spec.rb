@@ -42,7 +42,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       # Sign in and create a new dataset
       sign_in(@superuser)
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       3.times do
         start_new_dataset
         fill_required_fields

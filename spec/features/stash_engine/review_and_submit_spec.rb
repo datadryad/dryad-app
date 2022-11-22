@@ -28,7 +28,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     # Sign in and create a new dataset
     sign_in(@author)
     visit root_path
-    click_link 'My Datasets'
+    click_link 'My datasets'
     start_new_dataset
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
@@ -45,7 +45,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
 
     # TODO: it fails same times. Better to solve this before releasing it again
     xit 'shows right links to edit files' do
-      click_link('Review and Submit')
+      click_link('Review and submit')
       # wait_for_ajax(15)
       expect(page).to have_link('Edit Files', href: '/stash/resources/1/upload', count: 1)
     end
@@ -57,7 +57,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       # Sign in and create a new dataset
       sign_in(@author)
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       start_new_dataset
       fill_required_fields
       # navigate_to_review
@@ -67,7 +67,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       @resource = StashEngine::Resource.last
       @resource.data_files = []
       @resource.save
-      click_link 'Review and Submit'
+      click_link 'Review and submit'
 
       expect(page).to have_text('Include at least one data file')
     end
@@ -79,7 +79,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       # Sign in and create a new dataset
       sign_in(@author)
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       start_new_dataset
       fill_required_fields
       @resource = @resource = StashEngine::Resource.last

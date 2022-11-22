@@ -32,7 +32,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       # Sign in and create a new dataset
       sign_in(@author)
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       start_new_dataset
       fill_required_fields
       navigate_to_review
@@ -41,8 +41,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     end
 
     describe :pre_submit do
-      it 'should display the proper info on the My Datasets page', js: true do
-        click_link 'My Datasets'
+      it 'should display the proper info on the My datasets page', js: true do
+        click_link 'My datasets'
 
         expect(page).to have_text(@resource.title)
         expect(page).to have_text('In Progress')
@@ -54,9 +54,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     end
 
     describe :merritt_submission_error do
-      it 'displays the proper information on the My Datasets page', js: true do
+      it 'displays the proper information on the My datasets page', js: true do
         mock_unsuccessfull_merritt_submission!(@resource)
-        click_link 'My Datasets'
+        click_link 'My datasets'
         within(:css, '#user_submitted tbody tr:first-child') do
           expect(page).to have_text(@resource.title)
           expect(page).to have_text('Processing')
@@ -80,8 +80,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('submitted')
       end
 
-      it 'displays the proper information on the My Datasets page', js: true do
-        click_link 'My Datasets'
+      it 'displays the proper information on the My datasets page', js: true do
+        click_link 'My datasets'
         within(:css, '#user_submitted tbody tr:first-child') do
           expect(page).to have_text(@resource.title)
           expect(page).to have_text('Submitted')
@@ -207,7 +207,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       before(:each, js: true) do
         ActionMailer::Base.deliveries = []
         sign_in(@author)
-        click_link 'My Datasets'
+        click_link 'My datasets'
         within(:css, '#user_submitted') do
           click_button 'Update'
         end
@@ -283,7 +283,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         sign_in(@author)
-        click_link 'My Datasets'
+        click_link 'My datasets'
         within(:css, '#user_submitted') do
           click_button 'Update'
         end
@@ -299,7 +299,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         sign_in(@author)
-        click_link 'My Datasets'
+        click_link 'My datasets'
         within(:css, '#user_submitted') do
           click_button 'Update'
         end
@@ -327,7 +327,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @curator.update(role: 'user')
 
           sign_in(@author)
-          click_link 'My Datasets'
+          click_link 'My datasets'
           within(:css, '#user_submitted') do
             click_button 'Update'
           end
@@ -345,7 +345,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           sign_in(@author)
-          click_link 'My Datasets'
+          click_link 'My datasets'
           within(:css, '#user_submitted') do
             click_button 'Update'
           end
