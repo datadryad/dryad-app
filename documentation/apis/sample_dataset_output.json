@@ -44,7 +44,7 @@
             "firstName": "Who",
             "lastName": "OnFirst",
             "email": "who@somewhere.org",
-            "affiliation": "Dryad Digital Repository",
+            "affiliation": "Dryad Digital Platform",
             "affiliationROR": "https://ror.org/00x6h5n95",
             "orcid": "0000-1234-2184-5678"
           }
@@ -129,7 +129,7 @@
             "firstName": "Ryan",
             "lastName": "Scherle",
             "email": "ryan@somewhere.org",
-            "affiliation": "Dryad Digital Repository",
+            "affiliation": "Dryad Digital Platform",
             "affiliationROR": "https://ror.org/00pjdza24",
             "orcid": "0000-0001-6422-9814"
           },
@@ -137,14 +137,14 @@
             "firstName": "Joe",
             "lastName": "Someone",
             "email": "",
-            "affiliation": "Dryad Digital Repository",
+            "affiliation": "Dryad Digital Platform",
             "affiliationROR": "https://ror.org/00pjdza24"
           },
           {
             "firstName": "Tina",
             "lastName": "SomeoneElse",
             "email": "",
-            "affiliation": "Dryad Digital Repository",
+            "affiliation": "Dryad Digital Platform",
             "affiliationROR": "https://ror.org/00pjdza24"
           }
         ],
