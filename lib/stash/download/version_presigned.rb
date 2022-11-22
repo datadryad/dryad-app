@@ -112,7 +112,7 @@ module Stash
 
       def assemble_version_url
         path = ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s).to_s
-        query = { format: 'zip', content: 'producer' }.to_query
+        query = { format: 'zipunc', content: 'producer' }.to_query
         "#{@domain}#{path}?#{query}"
       end
 
