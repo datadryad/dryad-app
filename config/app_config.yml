@@ -185,8 +185,9 @@ defaults: &DEFAULTS
     api_requests_auth: 120
     api_requests_v1: 30
   salesforce:
-    server: https://dryad2-dev-ed.lightning.force.com
-    username: ryan+sf@datadryad.org
+    server: https://dryad--cloudparti.sandbox.lightning.force.com
+    login_host: test.salesforce.com
+    username: devs@datadryad.org.cloudparti
     password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>    
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
@@ -323,6 +324,7 @@ production:
     journal_error_label: journal-submit-error-v2
   salesforce:
     server: https://dryad.lightning.force.com
+    login_host: login.salesforce.com
     username: ryan@datadryad.org
     password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>

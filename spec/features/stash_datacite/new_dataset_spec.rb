@@ -5,8 +5,10 @@ RSpec.feature 'NewDataset', type: :feature do
   include Mocks::RSolr
   include Mocks::CrossrefFunder
   include Mocks::Tenant
+  include Mocks::Salesforce
 
   before(:each) do
+    mock_salesforce!
     mock_solr!
     mock_funders!
     mock_tenant!

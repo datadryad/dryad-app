@@ -106,9 +106,24 @@ RSpec.feature 'Admin', type: :feature do
       expect(page.current_path).to eq('/stash/sessions/choose_login')
     end
 
+    it 'allows adding notes to the curation activity log', js: true do
+      visit root_path
+      first('summary').click
+      click_link('Datasets')
+
+      expect(page).to have_text('Admin dashboard')
+
+      expect(page).to have_css('button[title="View Activity Log"]')
+      find('button[title="View Activity Log"]').click
+
+      expect(page).to have_text('Activity log for')
+      expect(page).to have_text('Add note')
+    end
+
     context :dataset_admin do
 
       before(:each) do
+        mock_salesforce!
         @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
         sign_in(@superuser, false)
       end
@@ -376,6 +391,7 @@ RSpec.feature 'Admin', type: :feature do
     context :tenant_curator do
 
       before(:each) do
+        mock_salesforce!
         @tenant_curator = create(:user, role: 'tenant_curator', tenant_id: 'mock_tenant')
         sign_in(@tenant_curator, false)
       end
@@ -385,20 +401,6 @@ RSpec.feature 'Admin', type: :feature do
         section = first('summary').text
         expect(section).to eq('Admin')
       end
-    end
-
-    it 'allows adding notes to the curation activity log', js: true do
-      visit root_path
-      first('summary').click
-      click_link('Datasets')
-
-      expect(page).to have_text('Admin dashboard')
-
-      expect(page).to have_css('button[title="View Activity Log"]')
-      find('button[title="View Activity Log"]').click
-
-      expect(page).to have_text('Activity log for')
-      expect(page).to have_text('Add Note')
     end
 
   end

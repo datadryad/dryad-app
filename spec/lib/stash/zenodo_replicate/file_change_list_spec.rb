@@ -14,9 +14,11 @@ module Stash
     RSpec.describe FileChangeList do
 
       include Stash::ZenodoSoftware::WebmocksHelper # make these methods available
+      include Mocks::Salesforce
 
       before(:each) do
         WebMock.disable_net_connect!(allow_localhost: true)
+        mock_salesforce!
         @resources = []
         @resources << create(:resource)
 

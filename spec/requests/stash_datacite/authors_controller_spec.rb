@@ -6,7 +6,10 @@ require_relative '../stash_api/helpers'
 module StashDatacite
   RSpec.describe AuthorsController, type: :request do
 
+    include Mocks::Salesforce
+
     before(:each) do
+      mock_salesforce!
       @user = create(:user, role: 'user')
       @resource = create(:resource, user_id: @user.id)
       @authors = Array.new(7) { |_i| create(:author, resource: @resource) }

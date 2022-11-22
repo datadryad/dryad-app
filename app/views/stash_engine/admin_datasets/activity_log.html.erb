@@ -7,7 +7,7 @@
     <div style="float: right;">
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
                     method: :get, remote: true) do -%>
-        <button class="o-button__submit">Add Note</button>
+        <button class="o-button__submit">Add note</button>
       <% end %>
     </div>
   <% end %>
@@ -44,7 +44,7 @@
 	<div style="float: left"><h2>Salesforce cases</h2></div>
 	<div style="float: right">
 	    <br/>
-	    <%= button_to "Create Salesforce Case",
+	    <%= button_to "Create salesforce case",
 	     stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
 	     method: :get,
 	     class: 'o-button__submit',
@@ -95,7 +95,7 @@
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,
 						   sub_method: 'post', only_path: true),
                     method: :get, remote: true) do -%>
-        <button class="o-button__submit">Add Data</button>
+        <button class="o-button__submit">Add data</button>
       <% end %>
     </div>
   <% end %>
@@ -112,7 +112,7 @@
 	    <div style="float: left">
 		<% res = @identifier&.latest_resource %>
 		<%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post, local: true) do -%>
-			<button class="o-button__submit">Forcibly Edit Dataset</button>
+			<button class="o-button__submit">Forcibly edit dataset</button>
 			<%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
 			<%= hidden_field_tag :return_url, '/stash/dashboard' %>
 		<% end %>

@@ -7,6 +7,7 @@ module StashEngine
     include Mocks::CurationActivity
     include Mocks::Datacite
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::Tenant
 
@@ -14,6 +15,7 @@ module StashEngine
       mock_aws!
       mock_solr!
       mock_datacite!
+      mock_salesforce!
       mock_stripe!
       mock_tenant!
       neuter_curation_callbacks!

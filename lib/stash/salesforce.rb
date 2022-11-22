@@ -12,6 +12,23 @@ require 'restforce'
 module Stash
   class Salesforce
 
+    # ###### Generic operations #######
+
+    def self.find(obj_type:, obj_id:)
+      sf_client&.find(obj_type, obj_id)
+    end
+
+    # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
+    def self.update(obj_type:, obj_id:, kv_hash:)
+      sf_client&.update(obj_type, Id: obj_id, **kv_hash)
+    end
+
+    def self.db_query(query)
+      sf_client&.query(query)
+    end
+
+    # ##### Cases #####
+
     # Retrieve globally unique case_id from a Dryad-specific case_num
     def self.case_id(case_num:)
       return unless case_num
@@ -30,23 +47,6 @@ module Stash
       return unless case_id.present?
 
       "#{APP_CONFIG[:salesforce][:server]}/lightning/r/Case/#{case_id}/view"
-    end
-
-    def self.sf_user
-      sf_client&.user_info
-    end
-
-    def self.find(obj_type:, obj_id:)
-      sf_client&.find(obj_type, obj_id)
-    end
-
-    # Update an object, using Salesforce field names in the kv_hash like {ISSN__c: '1234-5678'}
-    def self.update(obj_type:, obj_id:, kv_hash:)
-      sf_client&.update(obj_type, Id: obj_id, **kv_hash)
-    end
-
-    def self.db_query(query)
-      sf_client&.query(query)
     end
 
     def self.find_cases_by_doi(doi)
@@ -68,27 +68,12 @@ module Stash
                  end
 
         cases_found << { title: "SF #{found.CaseNumber}",
+                         id: found.Id,
                          path: case_view_url(case_num: found.CaseNumber),
                          status: found.Status,
                          reason: reason }.to_ostruct
       end
       cases_found
-    end
-
-    def self.find_user_by_orcid(orcid)
-      result = db_query("SELECT Id FROM User Where EmployeeNumber='#{orcid}'")
-      return unless result && result.size > 0
-
-      result.first['Id']
-    end
-
-    def self.find_account_by_name(name)
-      return unless name
-
-      result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
-      return unless result && result.size > 0
-
-      result.first['Id']
     end
 
     def self.create_case(identifier:, owner:)
@@ -114,6 +99,95 @@ module Stash
       case_id
     end
 
+    # Update the metadata in a case based on the metadata in a resource
+    # Updates each field separately, so a failure of one field doesn't impact the others
+    def self.update_case_metadata(case_id:, resource:, update_timestamp: false)
+      return unless case_id.present? && resource.present?
+
+      if resource.title.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Dataset_Title__c: resource.title })
+      end
+
+      if resource.current_curation_status.present?
+        readable_status = StashEngine::CurationActivity.readable_status(resource.current_curation_status)
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Dataset_Status__c: readable_status })
+      end
+
+      current_editor = StashEngine::User.find(resource.current_editor_id)&.orcid
+      owner_id = find_user_by_orcid(current_editor)
+      if owner_id.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { OwnerId: owner_id })
+      end
+
+      if resource.identifier.journal.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Journal__c: find_account_by_name(resource.identifier.journal&.title) })
+      end
+
+      tenant = resource.identifier.latest_resource&.user&.tenant
+      if tenant.present?
+        update(obj_type: 'Case', obj_id: case_id,
+               kv_hash: { Institutional_Affiliation__c: find_account_by_tenant(tenant) })
+      end
+
+      return unless update_timestamp
+
+      update(obj_type: 'Case', obj_id: case_id,
+             kv_hash: { Last_Activity_Date__c: Time.now.iso8601 })
+    end
+
+    # ###### Users ######
+
+    def self.sf_user
+      sf_client&.user_info
+    end
+
+    def self.find_user_by_orcid(orcid)
+      result = db_query("SELECT Id FROM User Where EmployeeNumber='#{orcid}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    # ###### Accounts ######
+
+    def self.find_account_by_name(name)
+      return unless name.present?
+
+      result = db_query("SELECT Id FROM Account Where Name='#{name.gsub("'", "\\\\'")}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    def self.find_account_by_ror(ror_id)
+      return unless ror_id.present?
+
+      result = db_query("SELECT Id FROM Account Where ROR_ID__c='#{ror_id}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
+    end
+
+    def self.find_account_by_tenant(tenant)
+      return unless tenant
+      return if tenant.tenant_id == 'dryad' # we don't maintain a Salesforce account for the Dryad organization
+
+      # try lookup by ROR
+      tenant.ror_ids&.each do |ror_id|
+        result = find_account_by_ror(ror_id)
+        return result if result.present?
+      end
+
+      # if ROR lookup fails, try lookup by long_name
+      find_account_by_name(tenant.long_name)
+    end
+
+    # ####### Private internal methods ######
+
     class << self
       private
 
@@ -123,6 +197,7 @@ module Stash
         begin
           @sf_client = ::Restforce.new(username: APP_CONFIG[:salesforce][:username],
                                        password: APP_CONFIG[:salesforce][:password],
+                                       host: APP_CONFIG[:salesforce][:login_host],
                                        security_token: APP_CONFIG[:salesforce][:security_token],
                                        client_id: APP_CONFIG[:salesforce][:client_id],
                                        client_secret: APP_CONFIG[:salesforce][:client_secret],

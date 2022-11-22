@@ -1,10 +1,36 @@
 
+Environments
+===============
+
+The production Dryad environment connects to the production Salesforce
+environment. Other versions of Dryad connect with a "sandbox" Salesforce
+environment.
+
+To set or manage a sandbox Salesforce:
+1. Login to the production Salesforce
+2. Go to the Setup app
+3. Search for "sandboxes"
+
+Dryad has licenses for various types of sandboxes, including:
+- Partial Copy -- The production Salesforce model, along with some of the content
+- Developer Pro -- The production Salesforce model, allows for creating a large amount of test content
+- Developer -- The production Salesforce model, allows for creating a small amount of test content
+
+Sandboxes should be deleted and re-created periodically to ensure they contain
+the latest updates to the data model. None of the sandboxes should be treated as
+a "forever" copy.
+
+When configuring Dryad to connect with a sandbox instance, note that the
+login_host should be 'test.salesforce.com' instead of the default
+'login.salesforce.com'.
+
+
 Salesforce API
 ===============
 
-
-- There is no "service" account; everything must be accessed through a client
-  account, so the client has to authorize access before you can get a token
+- When connecting to the API, we use the "app" called "Dryad_API"
+- There is no "service" account; everything must be accessed through a user
+  account, so the user has to authorize access before you can get a token
 
 To setup Salesforce for API use:
 - create an app in Setup/Apps/App Manager

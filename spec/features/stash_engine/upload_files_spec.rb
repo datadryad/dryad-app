@@ -15,12 +15,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Aws
+  include Mocks::Salesforce
 
   before(:each) do
     mock_repository!
     mock_solr!
     mock_datacite!
     mock_stripe!
+    mock_salesforce!
     mock_aws!
     ignore_zenodo!
     @author = create(:user, tenant_id: 'dryad')

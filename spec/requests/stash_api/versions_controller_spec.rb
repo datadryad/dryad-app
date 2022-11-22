@@ -12,6 +12,7 @@ module StashApi
     include Mocks::Stripe
     include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Salesforce
 
     before(:all) do
       host! 'my.example.org'
@@ -28,6 +29,7 @@ module StashApi
 
     # set up some versions with different curation statuses (visibility)
     before(:each) do
+      mock_salesforce!
       neuter_curation_callbacks!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
