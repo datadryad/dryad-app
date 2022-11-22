@@ -4512,6 +4512,10 @@ datalist {
   background-color: white;
 }
 
+.c-uploadmodal__header * {
+  word-break: break-all;
+}
+
 /* Proposed Change Object */
 .c-proposed-change-table__row-separator {
   max-height: 10px;
