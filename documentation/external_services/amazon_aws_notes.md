@@ -237,8 +237,8 @@ notification is sent by one of these alarms, it goes to Slack, the
 admin email, and developers' phones.
 
  
-Curator PC
-==============
+Curator Virtual Environment
+===========================
 
-Dryad maintains a [virtual PC for curator use](curator_pc.md) on AWS.
+Dryad maintains a [virtual environment for curator use](curator_pc.md) on AWS.
 
