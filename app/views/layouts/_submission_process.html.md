@@ -51,7 +51,7 @@
 <h3>Upload Files</h3>
 
 <p>
-  Dryad is a repository for the raw, unprocessed data that were used to support the conclusions presented in your
+  Dryad is a platform for the raw, unprocessed data that were used to support the conclusions presented in your
   article. We have partnered with <a href="https://zenodo.org/" target="_blank">Zenodo</a> to host
   software files and supplemental information uploaded to our site.
   Because non-data files are not always compatible with the CC0 license required by Dryad, submitters will have 
