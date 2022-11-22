@@ -53,12 +53,12 @@ module DownloadHelpers
   end
 
   def stub_404_assemble
-    stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+    stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
       .to_return(status: 404, body: 'Internal server error', headers: {})
   end
 
   def stub_408_assemble
-    stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+    stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
       .to_return(status: 408, body:
             {  status: 408,
                message: 'Timed out' }.to_json,
