@@ -6,7 +6,20 @@ require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
 require 'digest'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
+
 module StashApi
+
+  FILE_HASH = {
+    'skipValidation' => true,
+    'url' => 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico',
+    'digestType' => 'md5',
+    'path' => 'favicon.ico',
+    'mimeType' => 'image/vnd.microsoft.icon',
+    'size' => ::File.size(Rails.root.join('spec/fixtures/http_responses/favicon.ico')),
+    'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/fixtures/http_responses/favicon.ico'))),
+    'description' => 'Super fun comment from old Dryad'
+  }.freeze
+
   RSpec.describe UrlsController, type: :request do
 
     include Mocks::CurationActivity
@@ -22,18 +35,6 @@ module StashApi
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-      # rubocop:disable Lint/ConstantDefinitionInBlock
-      FILE_HASH = {
-        'skipValidation' => true,
-        'url' => 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico',
-        'digestType' => 'md5',
-        'path' => 'favicon.ico',
-        'mimeType' => 'image/vnd.microsoft.icon',
-        'size' => ::File.size(Rails.root.join('spec/fixtures/http_responses/favicon.ico')),
-        'digest' => Digest::MD5.hexdigest(::File.read(Rails.root.join('spec/fixtures/http_responses/favicon.ico'))),
-        'description' => 'Super fun comment from old Dryad'
-      }.freeze
-      # rubocop:enable Lint/ConstantDefinitionInBlock
     end
 
     after(:all) do
