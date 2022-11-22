@@ -163,6 +163,7 @@ defaults: &DEFAULTS
     api_requests_v1: 5
   salesforce:
     server: https://testsalesforce.com
+    login_host: test.salesforce.com
     username: nobody@datadryad.org
     password: nopass
     security_token: notoken
