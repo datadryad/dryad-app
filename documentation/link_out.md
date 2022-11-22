@@ -40,7 +40,7 @@ Sample `providerinfo.xml` file:
 <!DOCTYPE Provider PUBLIC "-//NLM//DTD LinkOut 1.0//EN" "LinkOut.dtd">
 <Provider>
   <ProviderId>1234</ProviderId>
-  <Name>Dryad Digital Repository</Name>
+  <Name>Dryad Digital Platform</Name>
   <NameAbbr>dryaddb</NameAbbr>
   <Url>http://datadryad.org/</Url>
   <Brief>Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.</Brief>
@@ -88,7 +88,7 @@ Sample `labslink-profile.xml` file:
 <providers>
   <provider>
     <id>1234</id>
-    <resourceName>Dryad Digital Repository</resourceName>
+    <resourceName>Dryad Digital Platform</resourceName>
     <description>Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.</description>
     <email>example@example.org</email>
   </provider>

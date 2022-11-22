@@ -7,7 +7,7 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "dryad"
   short_name: "Dryad"
-  long_name: "Dryad Digital Repository"
+  long_name: "Dryad Digital Platform"
   publisher_id: isni:0000000446638050
   ror_ids:
     - https://ror.org/00x6h5n95
