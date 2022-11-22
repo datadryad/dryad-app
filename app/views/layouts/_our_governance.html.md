@@ -1,4 +1,4 @@
-<h1>Our Governance</h1>
+<h1>Our governance</h1>
 
 <p>
   Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad
@@ -11,7 +11,7 @@
 <p>Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of Conduct</a> applies for all Dryad community spaces.</p>
 
 <a name="board"></a>
-<h2>Current Board Members</h2>
+<h2>Current Board members</h2>
 
 <div class="bio">
   <img src="/images/beckerman.jpg" alt="Andrew Beckerman" title="Andrew Beckerman">
@@ -207,7 +207,7 @@
 </div>
 
 
-<h2>Annual Reports</h2>
+<h2>Annual reports</h2>
 
 <p>Dryad produces annual reports on the state of the organization's operations:</p>
 
@@ -217,7 +217,7 @@
 </li>
 </ul>
 
-<h2>Board Information</h2>
+<h2>Board information</h2>
 
 Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting
 minutes</a> for all of its meetings.

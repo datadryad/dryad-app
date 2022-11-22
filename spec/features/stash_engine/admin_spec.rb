@@ -51,7 +51,7 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
-      expect(page).to have_text('Describe Your Dataset')
+      expect(page).to have_text('Describe your dataset')
       expect(page).to have_text('Logout')
     end
 
@@ -147,7 +147,7 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).to have_text("You are editing #{@user.name}'s dataset.")
         all('[id^=instit_affil_]').last.set('test institution')
         add_required_data_files
-        click_link 'Review and Submit'
+        click_link 'Review and submit'
         agree_to_everything
         expect(page).to have_css('input#user_comment')
       end
