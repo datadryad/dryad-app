@@ -3,10 +3,12 @@ module StashDatacite
 
     include DatabaseHelper
     include Mocks::Repository
+    include Mocks::Salesforce
     include Mocks::Stripe
 
     before(:each) do
       mock_repository!
+      mock_salesforce!
       mock_stripe!
 
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset

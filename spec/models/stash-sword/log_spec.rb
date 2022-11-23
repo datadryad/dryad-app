@@ -6,7 +6,7 @@ module Stash
       attr_reader :rails_env
       attr_reader :log_io
 
-      before(:all) { @rails_env = ENV['RAILS_ENV'] }
+      before(:all) { @rails_env = ENV.fetch('RAILS_ENV', nil) }
       after(:all) { ENV['RAILS_ENV'] = rails_env }
 
       before(:each) do

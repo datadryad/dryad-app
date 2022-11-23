@@ -1,6 +1,6 @@
 <div class="c-horizontal-form">
   <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
-               method: 'get', id: 'search_form', local: true ) do %>
+               method: 'get', id: 'search_form') do %>
     <label for="search-terms">Search Terms:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
     <%= hidden_field_tag(:sort, 'relevance') %>

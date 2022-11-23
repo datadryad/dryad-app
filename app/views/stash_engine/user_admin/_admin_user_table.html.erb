@@ -31,7 +31,7 @@
       </td>
       <td class="c-admin-hide-border-left">
 	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_email_popup_path(u.id), method: :get, remote: true) do %>
+	  <%= form_with(url: stash_url_helpers.user_email_popup_path(u.id), method: :get, local: false) do %>
 	    <button class="c-admin-edit-icon" aria-label="Edit user email" alt="Edit user email">
 	      <i class="fa fa-pencil" aria-hidden="true"></i>
 	    </button>
@@ -44,7 +44,7 @@
       </td>
       <td class="c-admin-hide-border-left">
 	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, remote: true) do %>
+	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, local: false) do %>
 	    <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
 	      <i class="fa fa-pencil" aria-hidden="true"></i>
 	    </button>
@@ -56,13 +56,13 @@
       </td>
       <td class="c-admin-hide-border-left">
 	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, remote: true) do %>
+	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, local: false) do %>
 	    <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
 	      <i class="fa fa-pencil" aria-hidden="true"></i>
 	    </button>
 	  <% end %>
 	<% end %>
-	<%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, remote: true) do %>
+	<%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, local: false) do %>
 	  <% if u.journals_as_admin.present? %>
 	    <button class="c-admin-edit-icon" title="Journal Administrator" aria-label="Journal Administrator" alt="Journal Administrator">
 	      <i class="fa fa-file-text" aria-hidden="true"></i>

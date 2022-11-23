@@ -4,9 +4,11 @@ module StashApi
   RSpec.describe DatasetParser do
     include Mocks::Datacite
     include Mocks::Tenant
+    include Mocks::Salesforce
 
     before(:each) do
       mock_datacite!
+      mock_salesforce!
       allow(Stash::Doi::IdGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
       @user = StashEngine::User.create(

@@ -5,8 +5,8 @@ module StashEngine
 
     class DependencyCheckerService
 
-      DATE_TIME_MATCHER = /[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/.freeze
-      LOG_ERR_MATCHER = /\[.*\] ERROR .*/.freeze
+      DATE_TIME_MATCHER = /[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:){2}[0-9]{2}/
+      LOG_ERR_MATCHER = /\[.*\] ERROR .*/
 
       def initialize(**args)
         @dependency = StashEngine::ExternalDependency.find_by(abbreviation: args[:abbreviation])

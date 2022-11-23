@@ -6,6 +6,7 @@
   <% if controller_name == 'landing' && action_name == 'show' %>
     <%= render 'layouts/stash_engine/landing_head' %>
   <% end %>
+  <%= content_for :head %>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
   <%= render 'layouts/stash_engine/top_area' %>

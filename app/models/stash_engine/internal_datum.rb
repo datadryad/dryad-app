@@ -16,8 +16,6 @@ module StashEngine
 
     def self.allows_multiple(type)
       case type
-      when 'publicationName', 'manuscriptNumber', 'publicationISSN', 'pubmedID', 'dansArchiveDate', 'dansEditIRI'
-        false
       when 'mismatchedDOI', 'duplicateItem', 'formerManuscriptNumber'
         true
       else

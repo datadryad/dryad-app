@@ -8,7 +8,7 @@ module StashApi
   class DatasetsController < ApiApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
-    include Concerns::Downloadable
+    include Downloadable
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action :force_json_content_type, except: :download
@@ -28,11 +28,9 @@ module StashApi
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, item_view: true)
-      respond_to do |format|
-        format.any { render json: ds.metadata }
-        res = @stash_identifier.latest_viewable_resource(user: @user)
-        StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
-      end
+      render json: ds.metadata
+      res = @stash_identifier.latest_viewable_resource(user: @user)
+      StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
     end
 
     # post /datasets

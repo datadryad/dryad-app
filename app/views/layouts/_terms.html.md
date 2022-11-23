@@ -2,9 +2,9 @@
 
 <p><i>Last revised 26 July 2019</i></p>
 
-<p>These Terms of Service apply to Individuals and Organizations who use or publish content in the Dryad Digital Repository, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Digital Repository. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Digital Repository.</p>
+<p>These Terms of Service apply to Individuals and Organizations who use or publish content on the Dryad Digital Platform, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Digital Platform. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Digital Platform.</p>
 
-<p><strong>By submitting content to or using content from the Dryad Digital Repository, submitters and users enter into a binding agreement to accept the Terms of Service described herein. If you do not agree to these Terms of Service, please refrain from using content from or submitting content to the Repository.</strong>
+<p><strong>By submitting content to or using content from the Dryad Digital Platform, submitters and users enter into a binding agreement to accept the Terms of Service described herein. If you do not agree to these Terms of Service, please refrain from using content from or submitting content to the Platform.</strong>
 </p>
 
 <p>If there is any conflict between the Organization Membership Agreement and these Terms, the Organization Membership Agreement will prevail.</p>
@@ -13,13 +13,13 @@
 <p>
 			<ul>
 				<li>enhance the scholarly record by making data freely available and reusable for research and education;</li>
-				<li>enable repository content to be widely indexed and discoverable;</li>
-				<li>assign and provide Digital Object Identifiers (DOIs) to repository content;</li>
+				<li>enable platform content to be widely indexed and discoverable;</li>
+				<li>assign and provide Digital Object Identifiers (DOIs) to platform content;</li>
 				<li>track the usage of content, and promote data reuse as a metric of scholarly credit;</li>
 				<li>manage data publication embargoes as stipulated by publisher policies;</li>
 				<li>make data both accessible today and preserved for accessibility in the future;</li>
 				<li>respect and protect the privacy of its users; and</li>
-				<li>generally, meet the needs of its stakeholders for a trustworthy repository.</li>
+				<li>generally, meet the needs of its stakeholders for a trustworthy platform.</li>
 			</ul>
 		</p>
 		
@@ -190,22 +190,22 @@
 <li><strong>Dataset</strong>: the Content files associated with one Document plus the metadata describing each file and the combined set of files.</li>
 <li><strong>Data Publishing Charge (DPC)</strong>: a one-time fee for publication of an Accepted Dataset in Dryad. A DPC is applied only when the Content is approved by Dryad curation personnel.</li>
 <li><strong>Document</strong>: a research article in a scholarly journal, or other scholarly publication such as, but not limited to, a book, chapter, conference proceedings, monograph or dissertation.</li>
-<li><strong>Dryad Digital Repository or Repository</strong>: the repository operated by Dryad, including the software, interfaces, and contents.</li>
+<li><strong>Dryad Digital Platform or Platform</strong>: the platform operated by Dryad, including the software, interfaces, and contents.</li>
 <li><strong>Eligible Country</strong>: a country listed on the World Bank website as having a low-income or a lower- middle-income economy.</li>
 <li><strong>Embargo</strong>: a delay of the Publication of Content for a defined period after the publication date of the related Document in a journal or other media.</li>
 <li><strong>Member</strong>: An Organization that is a signatory to an institutional Organization Membership Agreement with Dryad.</li>
 <li><strong>Organization</strong>: an organization (including its sub-organizations or affiliated organizations).</li>
-<li><strong>Organization Membership Agreement</strong>: an institutional membership agreement between an Organization and Dryad that governs the access to and use of the Dryad Digital Repository by the Organization’s employees, contractors, agents, affiliates, etc.</li>
+<li><strong>Organization Membership Agreement</strong>: an institutional membership agreement between an Organization and Dryad that governs the access to and use of the Dryad Digital Platform by the Organization’s employees, contractors, agents, affiliates, etc.</li>
 <li><strong>Payment Plan</strong>: any of several methods set forth in a Purchase Agreement that allows purchasing entities to cover the Data Publishing Charge on behalf of individuals Submitting to Dryad.</li>
-<li><strong>Publish/Publication</strong>: to deposit/depositing Content in the Repository for distribution to the public under a CC0 Waiver.</li>
+<li><strong>Publish/Publication</strong>: to deposit/depositing Content on the Platform for distribution to the public under a CC0 Waiver.</li>
 <li><strong>Purchaser</strong>: the purchasing entity set forth in a Purchase Agreement or an individual Submitter who pays to Publish Content in Dryad.</li>
 <li><strong>Research Data</strong>: information/materials collected, observed or created to validate, reproduce, or better understand research findings.</li>
 <li><strong>Submission Integration</strong>: the process whereby a Submission to Dryad is coordinated with the manuscript processing system of a scholarly journal.</li>
-<li><strong>Submit/Submission</strong>: to deposit/depositing Content in the Repository.</li>
-<li><strong>Submitter</strong>: the individual who Publishes Content in the Repository. It is anticipated that, in the majority of cases, the Submitter will be an author of the Dataset or a researcher collaborating with the author(s).</li>
-<li><strong>User</strong>: someone who views, downloads, or otherwise reuses Content from the Repository.</li>
+<li><strong>Submit/Submission</strong>: to deposit/depositing Content on the Platform.</li>
+<li><strong>Submitter</strong>: the individual who Publishes Content on the Platform. It is anticipated that, in the majority of cases, the Submitter will be an author of the Dataset or a researcher collaborating with the author(s).</li>
+<li><strong>User</strong>: someone who views, downloads, or otherwise reuses Content from the Platform.</li>
 <li><strong>Version/Versioning</strong>: updates to Datasets after Publication to correct errors in the Published files or to provide additional data supporting the findings in the associated Document.</li>
-<li><strong>Waiver</strong>: a waiver of all fees to Submit Content to the Repository that may be granted by Dryad to a Submitter: (i) who is employed by an institution in an Eligible Country; (ii)  who is an independent researcher in residence in an Eligible Country; or (iii) pursuant to an Organization Membership Agreement.</li>
+<li><strong>Waiver</strong>: a waiver of all fees to Submit Content to the Platform that may be granted by Dryad to a Submitter: (i) who is employed by an institution in an Eligible Country; (ii)  who is an independent researcher in residence in an Eligible Country; or (iii) pursuant to an Organization Membership Agreement.</li>
 	</ul>
 
 <p>
@@ -221,8 +221,8 @@
 	<ul>
 <li>Content may only be submitted by an individual who represents and warrants that s/he is the creator and owner of the Content or otherwise has sufficient rights to be able to make the Content available under a CC0 Waiver. At Dryad's sole discretion, legacy Content may be permitted to be made available under other licensing terms.</li>
 <li>Content must fall within the definition of Research Data and be in digital format.</li>
-<li>Content other than Research Data may be Submitted to the Repository provided such Content is allowed by an associated Document publisher's policy.</li>
-<li>Most Datasets in the Dryad Repository are associated with peer-reviewed Documents. Research Data associated with non-peer reviewed Documents from scholarly sources and Research Data not associated with Documents are also accepted.</li>
+<li>Content other than Research Data may be Submitted to the Platform provided such Content is allowed by an associated Document publisher's policy.</li>
+<li>Most Datasets on the Dryad Platform are associated with peer-reviewed Documents. Research Data associated with non-peer reviewed Documents from scholarly sources and Research Data not associated with Documents are also accepted.</li>
 <li>If Content is associated with a Document, the Submitter represents and warrants that the Content is in compliance with the formatting and reporting guidelines of the Document's publisher.</li>
 <li>For researchers affiliated with a Member organization, datasets (all files related to the same DOI) may not exceed 300GB.</li>
 <li>The primary language of the Content must be English. Dryad curators cannot effectively review or curate submissions in other languages at this time.</li>
@@ -233,16 +233,16 @@
 <p>
 	<ul>
 <li>By default, all accepted Content is made public upon approval by curation personnel.</li>
-<li>If allowed by the Submission Integration, preferences specific to the publisher of an associated Document, the Repository will Embargo Publication of Content for a period of one year following the earliest publication of the associated Document.</li>
+<li>If allowed by the Submission Integration, preferences specific to the publisher of an associated Document, the Platform will Embargo Publication of Content for a period of one year following the earliest publication of the associated Document.</li>
 <li>If allowed by the Submission Integration preferences specific to the publisher of an associated Document, and if approved by the publisher's designated editorial authority, an Embargo period of greater than one year, and not greater than ten years, may be applied. An Embargo must have an explicit termination date by the time of Content Publication.</li>
 	</ul>
 </p>
 
 <h3 id="retraction">2.3 Expressions of Concern, Retraction and Removal of Data Files</h3>
 
-<p>If there is an associated Document, Dryad generally defers authority to the Document publisher when issues arise regarding validity of Content. If Content in the Repository is associated with a Document for which there is an "expression of concern," "retraction," or similar statement on the part of the Document publisher, Dryad will continue to make the Content available, but with an appropriate warning and a link to the statement from the Document publisher. Data files that are updated as corrections to the original paper will be similarly linked to the publisher's corrigendum where Dryad is made aware of such.</p>
+<p>If there is an associated Document, Dryad generally defers authority to the Document publisher when issues arise regarding validity of Content. If Content on the Platform is associated with a Document for which there is an "expression of concern," "retraction," or similar statement on the part of the Document publisher, Dryad will continue to make the Content available, but with an appropriate warning and a link to the statement from the Document publisher. Data files that are updated as corrections to the original paper will be similarly linked to the publisher's corrigendum where Dryad is made aware of such.</p>
 
-<p>Those who wish to see Content in the repository taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact <a href="mailto:curator@datadryad.org">curator@datadryad.org</a> providing the following:</p>
+<p>Those who wish to see Content on the platform taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact <a href="mailto:curator@datadryad.org">curator@datadryad.org</a> providing the following:</p>
 <p>
 	<ol>
 		<li>A physical or electronic signature of a person authorized to act on behalf of the owner of an exclusive right that is allegedly infringed;</li>
@@ -260,7 +260,7 @@
 
 <h3 id="large-files">2.4 Large files</h3>
 
-<p>During the process of submission and review, and with the knowledge and consent of the Submitter, unusually large files that are within the scope of another repository may be transferred for archiving by Dryad to that secondary repository without retention of a copy in the Repository.</p>
+<p>During the process of submission and review, and with the knowledge and consent of the Submitter, unusually large files that are within the scope of another repository may be transferred for archiving by Dryad to that secondary repository without retention of a copy on the Platform.</p>
 
 <p>
 <a href="#top">(back to top)</a>
@@ -295,7 +295,7 @@
 <p>Dryad will not:</p>
 <p>
 	<ol>
-		<li>Make decisions regarding what Content is to be archived by the Document publisher rather than Submitted to the Repository;</li>
+		<li>Make decisions regarding what Content is to be archived by the Document publisher rather than Submitted to the Platform;</li>
 		<li>Check the scientific validity, veracity, accuracy or completeness of the Content;</li>
 		<li>Guarantee compliance with content policies or guidelines set by Purchasers, Document publishers or funders in the absence of a separate contract for special curation services;</li>
 		<li>Modify Content except as a by-product of format migration for preservation and accessibility.</li>
@@ -306,8 +306,8 @@
 <p>
 	<ul>
 		<li>Dryad will make Accepted Content available to the public under a CC0 Waiver and communicate scholarly norms for data reuse to Submitters and Users including, but not limited to, guidelines for data citation. However, Dryad shall NOT be responsible for enforcing scholarly norms.</li>
-		<li>Dryad shall make commercially reasonable efforts to maintain the continual availability of the Repository at datadryad.org (subject to reasonable downtime for maintenance), and provide advance notice, when possible, of any material changes or discontinuities. However, Dryad shall NOT be responsible for the consequences of any downtime, disruptions or discontinuity of the Repository, Website or application programming interfaces, that occur outside of Dryad’s or Dryad’s staff control.</li>
-		<li>Dryad is NOT responsible for the uses of Published Datasets made by third parties, including those who view and download Datasets through the Repository.</li>
+		<li>Dryad shall make commercially reasonable efforts to maintain the continual availability of the Platform at datadryad.org (subject to reasonable downtime for maintenance), and provide advance notice, when possible, of any material changes or discontinuities. However, Dryad shall NOT be responsible for the consequences of any downtime, disruptions or discontinuity of the Platform, Website or application programming interfaces, that occur outside of Dryad’s or Dryad’s staff control.</li>
+		<li>Dryad is NOT responsible for the uses of Published Datasets made by third parties, including those who view and download Datasets through the Platform.</li>
 	</ul>
 </p>
 
@@ -384,20 +384,20 @@
 		<li>Prior to release, files are manually inspected by a Dryad curator. Any issues that affect preservation (i.e., file corruption, etc.) are addressed before release.</li>
 		<li>Ingest, curation, and publication actions are documented by provenance metadata.</li>
 		<li>Dryad content is replicated through participation in the DataONE network.</li>
-		<li>To the greatest extent possible, personnel create documentation to reflect their activities. We strive to ensure that more than one employee can perform each critical function of the repository.</li>
+		<li>To the greatest extent possible, personnel create documentation to reflect their activities. We strive to ensure that more than one employee can perform each critical function of the platform.</li>
 	</ul>
 </p>
 
 <h4 id="security">3.3.3 Security</h4>
 
-<p>Full backup copies of Repository Contents are stored in multiple secure facilities offsite. All deposits to Dryad are sent to a CoreTrustSeal-certified preservation repository called Merritt. Merritt distributes backup copies through cloud and physical locations globally. For further details on Merritt’s process and certification, see: <a href="https://www.coretrustseal.org/wp-content/uploads/2018/08/UC3-Merritt.pdf">https://www.coretrustseal.org/wp-content/uploads/2018/08/UC3-Merritt.pdf</a></p>
+<p>Full backup copies of Platform Contents are stored in multiple secure facilities offsite. All deposits to Dryad are sent to a CoreTrustSeal-certified preservation repository called Merritt. Merritt distributes backup copies through cloud and physical locations globally. For further details on Merritt’s process and certification, see: <a href="https://www.coretrustseal.org/wp-content/uploads/2018/08/UC3-Merritt.pdf">https://www.coretrustseal.org/wp-content/uploads/2018/08/UC3-Merritt.pdf</a></p>
 
 <h4 id="versioning">3.3.4 Versioning</h4>
 
 <p>Dryad Datasets may be Versioned in order to correct errors in the archived files or to provide additional data associated with the analysis reported in the associated Document.</p>
 <p>
 	<ul>
-<li>Dryad shall include updated files in the Repository while retaining and allowing access to the original files and all prior Published Versions.</li>
+<li>Dryad shall include updated files on the Platform while retaining and allowing access to the original files and all prior Published Versions.</li>
 <li>The metadata of the Dataset will be updated to include information about the order of the Versions.</li>
 <li>The Dataset DOI and Dryad search results point to the most recent Version of a dataset, which displays a history that allows users to navigate to earlier Versions.</li>
 <li>Older Versions of the Dataset also display the Version history and a prominent warning message that this is not the current Version.</li>
@@ -415,7 +415,7 @@
 		<li>
 <strong>Content accessibility</strong>: Through registration of DOIs for Datasets, Dryad shows its commitment to online preservation of its Content for many years to come. Registration also allows identifiers to be seamlessly redirected in the event of URL changes. Dryad's partnership with Merritt, (CoreTrustSeal approved), as a back-up repository ensures that all its data will be available through other institutions if the Dryad organization ever dissolves.</li>
 		<li>
-<strong>Institutional and financial sustainability</strong>: Dryad's governance and business model are designed to provide for long-term organizational stability and viability, ensuring that revenues from Data Publishing Charges (DPCs) and Memberships cover the Repository's core operating costs (including curation, storage, and maintenance).</li>
+<strong>Institutional and financial sustainability</strong>: Dryad's governance and business model are designed to provide for long-term organizational stability and viability, ensuring that revenues from Data Publishing Charges (DPCs) and Memberships cover the Platform's core operating costs (including curation, storage, and maintenance).</li>
 	</ul>
 </p>	
 		
@@ -459,8 +459,8 @@
 <h3 id="permission">5.1 Permission</h3>
 
 <ul>
-<li>By Submitting Content to the Repository, Submitter grants Dryad irrevocable permission to make the Dataset available to the public under a CC0 Waiver.
-<li>Unless otherwise indicated during the Submission process to the Repository (see <a href="#embargos">Section 2.2</a>), the Submitter agrees that Content may be Published once it has been approved by Dryad curation personnel.</li>
+<li>By Submitting Content to the Platform, Submitter grants Dryad irrevocable permission to make the Dataset available to the public under a CC0 Waiver.
+<li>Unless otherwise indicated during the Submission process to the Platform (see <a href="#embargos">Section 2.2</a>), the Submitter agrees that Content may be Published once it has been approved by Dryad curation personnel.</li>
 <li>Submitter further grants Dryad permission to (i) promote and advertise the availability of the Dataset; (ii) re-format or otherwise transform the Dataset in any way to ensure its accessibility and preservability; (iii) modify and incorporate metadata or other documentation in the Content; and (iv) take any steps Dryad deems necessary in its sole discretion to remove inappropriate Content if identified; provided however, Dryad shall have no responsibility to screen or remove inappropriate Content from Submissions.</li>
 <li>Submitters may, at their discretion, update metadata for Published Datasets and submit new and/or updated files to a Published Dataset without being required to pay an additional Data Publishing Charge (excess storage charges may still apply). See <a href="#versioning">Section 3.3.4</a>.</li>
 </ul>
@@ -468,7 +468,7 @@
 		
 <h3 id="user-reps">5.2 Representations and Warranties</h3>
 <ul>
-<li>Submitter represents and warrants that s/he is an author of the Submitted Content or has been granted authority by the authors to Submit and Publish Content in the Repository.</li>
+<li>Submitter represents and warrants that s/he is an author of the Submitted Content or has been granted authority by the authors to Submit and Publish Content on the Platform.</li>
 <li>Submitter represents and warrants that the Publication of the Content does not infringe on the intellectual property or privacy rights of any person or entity (including co-authors or co- creators), and that distribution of the Content under a CC0 Waiver complies with all relevant laws and publisher, funder, and employer guidelines and/or contractual restrictions.</li>
 <li>Submitter represents and warrants that the Content does not contain any information (i) which identifies, or which can be used in conjunction with other publicly available information to personally identify, any individual; or (ii) which is false or misleading.</li>  
 <li>If Submitter requests a Waiver, the Submitter represents and warrants that s/he is employed by an institution in an Eligible Country or is an independent researcher in residence in an Eligible Country.</li>
@@ -483,7 +483,7 @@
 
 <h3 id="charges">6.1 Charges at Acceptance</h3>
 
-<p>Dryad does not charge any fees for Submissions that are not Accepted by the Repository. Dryad only Accepts Submissions that meet the Content criteria described in <a href="#content">Section 2.1</a>, including being in press or previously published by a scholarly publisher.</p>
+<p>Dryad does not charge any fees for Submissions that are not Accepted by the Platform. Dryad only Accepts Submissions that meet the Content criteria described in <a href="#content">Section 2.1</a>, including being in press or previously published by a scholarly publisher.</p>
 
 <h3 id="hierarchy">6.2 Hierarchy of Payments</h3>
 
@@ -516,28 +516,28 @@
 <h3 id="content-usage">7.1 Content Usage</h3>
 <p>
 	<ul>
-		<li>Repository Users are allowed and encouraged to reuse Content from the Repository in any manner except as described herein under "Prohibited Uses Generally" (<a href="#prohibited-use">Section 7.2</a>). To the extent possible under law, Submitters have waived all copyright and related or neighboring rights to this data.</li>
+		<li>Platform Users are allowed and encouraged to reuse Content from the Platform in any manner except as described herein under "Prohibited Uses Generally" (<a href="#prohibited-use">Section 7.2</a>). To the extent possible under law, Submitters have waived all copyright and related or neighboring rights to this data.</li>
 		<li>It is hoped and expected that Users will follow accepted scholarly norms for citing data and giving credit to fellow scholars.</li>
-		<li>The desired format for links to the data packages is the fully resolvable DOI URL (e.g. "Data available in the Dryad Digital Repository. <a href="https://doi.org/10.5061/dryad.1888">https://doi.org/10.5061/dryad.1888</a>")</li>
+		<li>The desired format for links to the data packages is the fully resolvable DOI URL (e.g. "Data available in the Dryad Digital Platform. <a href="https://doi.org/10.5061/dryad.1888">https://doi.org/10.5061/dryad.1888</a>")</li>
 	</ul>
 </p>	
 
 <h3 id="prohibited-use">7.2 Prohibited Uses Generally</h3>
 <p>
 	<ul>
-		<li>Users, Purchasers and Submitters may not use the Repository (i) in any unlawful manner; or (ii) in any manner that would impair Dryad's services to others or compromise the security or functionality of the Repository or Dryad's services generally.</li>
-		<li>Dryad is committed to building an international organization for Purchasers, Submitters, and users from around the globe. However, if Purchaser or Submitter is prohibited under any U.S. laws or regulations from receiving U.S. origin services or software, Purchaser or Submitter (as the case may be) may not use the Dryad Repository, Dryad Website or Dryad software.</li>
+		<li>Users, Purchasers and Submitters may not use the Platform (i) in any unlawful manner; or (ii) in any manner that would impair Dryad's services to others or compromise the security or functionality of the Platform or Dryad's services generally.</li>
+		<li>Dryad is committed to building an international organization for Purchasers, Submitters, and users from around the globe. However, if Purchaser or Submitter is prohibited under any U.S. laws or regulations from receiving U.S. origin services or software, Purchaser or Submitter (as the case may be) may not use the Dryad Platform, Dryad Website or Dryad software.</li>
 	</ul>
 </p>
 
 <h3 id="ownership">7.3 Ownership and Use of Other Intellectual Property</h3>
 
-<p>Dryad owns the service marks Dryad, Dryad Digital Repository, and the Dryad logos appearing on the Dryad Website.</p>
+<p>Dryad owns the service marks Dryad, Dryad Digital Platform, and the Dryad logos appearing on the Dryad Website.</p>
 
 <p>Permitted Uses of Dryad Intellectual Property:</p>
 <p>
 	<ul>
-		<li>Purchasers, Submitters and Users are welcome to use screenshots, the Dryad Digital Repository name, the Dryad name and other Dryad trademarks (such as the Dryad logo) for informational purposes only.</li>
+		<li>Purchasers, Submitters and Users are welcome to use screenshots, the Dryad Digital Platform name, the Dryad name and other Dryad trademarks (such as the Dryad logo) for informational purposes only.</li>
 		<li>Content other than Datasets on the Dryad Website and wiki is available for reuse with attribution under a Creative Commons CC-BY 3.0 license.</li>
 	</ul>
 </p>
@@ -581,11 +581,11 @@
 
 <p>Users who do not Submit Content to Dryad are not asked to provide any personally identifying information.</p>
 
-<p>The Repository shall not store or record any Purchaser's credit card, debit card, bank account or any other form of payment account information on its servers.</p>
+<p>The Platform shall not store or record any Purchaser's credit card, debit card, bank account or any other form of payment account information on its servers.</p>
 
-<p>Researchers creating data submissions will login to Dryad via ORCID; researchers affiliated with a Member institution will use a single sign in process via Shibboleth.  Personal identifiable information is used by Dryad to conduct and improve core services including billing, and responding to customer help requests. We may contact submitters with information or questions directly related to their use of the Repository service.</p>
+<p>Researchers creating data submissions will login to Dryad via ORCID; researchers affiliated with a Member institution will use a single sign in process via Shibboleth. Personal identifiable information is used by Dryad to conduct and improve core services including billing, and responding to customer help requests. We may contact submitters with information or questions directly related to their use of the Platform service.</p>
 
-<p>Publishing organizations and the Repository may send automated notices to each other as part of Submission Integration; these communications may convey personally identifiable information regarding authors and Submitters that will only be accessed by staff as required to provide services.</p>
+<p>Publishing organizations and the Platform may send automated notices to each other as part of Submission Integration; these communications may convey personally identifiable information regarding authors and Submitters that will only be accessed by staff as required to provide services.</p>
 
 <p>If Users or Submitters choose to provide Dryad with additional personally identifiable information through an email message, form, survey, etc., Dryad will maintain the information securely to the extent allowable by law and take every precaution to protect it. However, Dryad will treat feedback on services and software provided by Dryad, excluding personally identifiable information, as non-confidential unless the individual or organization providing the feedback states otherwise.</p>
 
@@ -635,12 +635,12 @@
 <h3 id="disclaimer">9.2 Disclaimer</h3>
 
 <p>
-<strong>The Content in the Repository and Dryad Website is made available to Purchasers, Submitters and Users on an "AS IS" basis. Except as set forth herein, and to the maximum extent permitted by law, Dryad makes no representations or warranties, express or implied, including, without limitation, (i) implied warranties of accuracy, quality, performance, compatibility, merchantability and/or fitness for a particular purpose, (ii) that any such Content, Dataset or other material is free from personally identifiable, sensitive, infringing, errors, illegal data or material, viruses or other harmful components and (iii) that any such Content not suffer loss, corruption, interruption or destruction.</strong>
+<strong>The Content on the Platform and Dryad Website is made available to Purchasers, Submitters and Users on an "AS IS" basis. Except as set forth herein, and to the maximum extent permitted by law, Dryad makes no representations or warranties, express or implied, including, without limitation, (i) implied warranties of accuracy, quality, performance, compatibility, merchantability and/or fitness for a particular purpose, (ii) that any such Content, Dataset or other material is free from personally identifiable, sensitive, infringing, errors, illegal data or material, viruses or other harmful components and (iii) that any such Content not suffer loss, corruption, interruption or destruction.</strong>
 </p>
 
 <h3 id="liability">9.3 Limitation and Release of Liability</h3>
 
-<p>To the fullest extent permitted by law, in no event shall Dryad, its directors, officers, employees, agents, contractors, consultants, and assigns (the "Dryad Parties") be liable for any special, indirect, and/or consequential damages incurred by Purchaser, Submitter or User in connection with the Repository, Content, Datasets, the Dryad Website, software or any other Dryad services, even if such damages are foreseeable. Further, to the extent permitted by law, the parties agree that the maximum liability of the Dryad Parties to any Purchaser, Submitter or User hereunder shall not exceed the fees (other than Purchaser's membership fees or Submitter's indemnity) paid by the relevant Purchaser, Submitter or User to Dryad in the last year hereunder. In the case of Users who have paid no such fees, if the law of the relevant jurisdiction bars zero damages, the maximum liability of the Dryad Parties shall be $50.00.</p>
+<p>To the fullest extent permitted by law, in no event shall Dryad, its directors, officers, employees, agents, contractors, consultants, and assigns (the "Dryad Parties") be liable for any special, indirect, and/or consequential damages incurred by Purchaser, Submitter or User in connection with the Platform, Content, Datasets, the Dryad Website, software or any other Dryad services, even if such damages are foreseeable. Further, to the extent permitted by law, the parties agree that the maximum liability of the Dryad Parties to any Purchaser, Submitter or User hereunder shall not exceed the fees (other than Purchaser's membership fees or Submitter's indemnity) paid by the relevant Purchaser, Submitter or User to Dryad in the last year hereunder. In the case of Users who have paid no such fees, if the law of the relevant jurisdiction bars zero damages, the maximum liability of the Dryad Parties shall be $50.00.</p>
 
 <p>
 <strong>Dryad is not responsible for the actions of other persons and entities, including without limitation, the Content submitted by Submitters and the use of such Content.</strong>
@@ -666,7 +666,7 @@
 
 <h3 id="misc">9.8 General Miscellaneous Provisions</h3>
 	
-<p>Each party shall comply with all applicable laws. Dryad reserves the right to take any actions necessary in order to comply with applicable laws or court orders in any jurisdiction. These Terms of Service, together with the Purchase Agreement in the case of Purchasers, makes up the entire agreement between Dryad and Purchaser, Submitter or User, and supersedes any prior written or oral agreements related to the subject matter hereof. If any term is unenforceable, it will not affect the other Terms of Service which shall remain in full force and effect. A waiver of any provision or breach shall not be deemed to be a waiver of any other provision or breach. These Terms of Service do not create any third party rights. Submitter/Purchaser/User (as the case may be) may not assign or otherwise transfer its rights hereunder without the prior written consent of Dryad, and any transfer to the contrary shall be null and void. Unless otherwise stated to the contrary in any Organization Membership Agreement Dryad reserves the right to transfer all of its rights and obligations under any Purchase Agreement and these Terms of Service, including ownership and/or operation of the Dryad Repository to another nonprofit entity in the event of a merger, joint venture, dissolution, or other corporate restructuring.</p>
+<p>Each party shall comply with all applicable laws. Dryad reserves the right to take any actions necessary in order to comply with applicable laws or court orders in any jurisdiction. These Terms of Service, together with the Purchase Agreement in the case of Purchasers, makes up the entire agreement between Dryad and Purchaser, Submitter or User, and supersedes any prior written or oral agreements related to the subject matter hereof. If any term is unenforceable, it will not affect the other Terms of Service which shall remain in full force and effect. A waiver of any provision or breach shall not be deemed to be a waiver of any other provision or breach. These Terms of Service do not create any third party rights. Submitter/Purchaser/User (as the case may be) may not assign or otherwise transfer its rights hereunder without the prior written consent of Dryad, and any transfer to the contrary shall be null and void. Unless otherwise stated to the contrary in any Organization Membership Agreement Dryad reserves the right to transfer all of its rights and obligations under any Purchase Agreement and these Terms of Service, including ownership and/or operation of the Dryad Platform to another nonprofit entity in the event of a merger, joint venture, dissolution, or other corporate restructuring.</p>
 
 <p>
 <a href="#top">(back to top)</a>

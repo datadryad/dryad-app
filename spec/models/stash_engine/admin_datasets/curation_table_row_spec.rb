@@ -5,6 +5,7 @@ require 'rails_helper'
 module StashEngine
   module AdminDatasets
     RSpec.describe CurationTableRow, type: :model do
+
       describe 'admin_generous_results' do
 
         before(:each) do

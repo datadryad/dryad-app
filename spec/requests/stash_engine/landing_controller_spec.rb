@@ -14,6 +14,7 @@ module StashEngine
     include Mocks::Datacite
     include Mocks::Repository
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::Tenant
 
@@ -22,6 +23,7 @@ module StashEngine
       mock_repository!
       mock_solr!
       mock_datacite!
+      mock_salesforce!
       mock_stripe!
       mock_tenant!
       ignore_zenodo!

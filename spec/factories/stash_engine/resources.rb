@@ -9,7 +9,7 @@ FactoryBot.define do
     download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri do
       "http://mrtsword-fake.cdlib.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
-      "doi%3A10.5061%2Fdryad.#{Faker::Alphanumeric.alphanumeric(number: 6)}"
+        "doi%3A10.5061%2Fdryad.#{Faker::Alphanumeric.alphanumeric(number: 6)}"
     end
     publication_date { Time.new.utc }
 

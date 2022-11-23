@@ -179,8 +179,8 @@ the format and structure of tabular data files, prior to our curation services.
 
 <p>
 If any issues are identified, a window with instructions will appear on the
-"Upload Files" page and a link to a detailed report will be provided in the
-"Tabular Data Check" column. The report will help guide you in locating and
+"Upload files" page and a link to a detailed report will be provided in the
+"Tabular data check" column. The report will help guide you in locating and
 evaluating errors in your tabular data. Any files flagged in the report will
 need to be removed, edited, and reuploaded prior to proceeding with the
 submission process.
@@ -188,8 +188,8 @@ submission process.
 
 <p>
 If your files have been accessed and are acceptable, "Passed" will appear in the
-"Tabular Data Check" column and no report will be generated. If your files have
-not been checked by the validator due to size or type, the "Tabular Data Check"
+"Tabular data check" column and no report will be generated. If your files have
+not been checked by the validator due to size or type, the "Tabular data check"
 column will be empty. In either scenario, no changes will be required and you
 may proceed with the submission process.
 </p>
@@ -204,7 +204,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 </p>
 
 
-<h2 id="ppr">How does Dryad’s Private for Peer Review feature work?</h2>
+<h2 id="ppr">How does Dryad’s Private for peer review feature work?</h2>
 
 <p>
   On the final page of the submission process, we offer the option to make the dataset private during your
@@ -213,8 +213,8 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
   office to access the data files during the review period or shared with collaborators while the dataset is not
   yet published. When your manuscript has been accepted, you can take your dataset out of private for peer review,
   so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate
-  to "My Datasets". Find the submission with the status "Private for Peer Review" and click 'Update'. Deselect the
-  "Private for Peer Review" checkbox on the 'Review and Submit' page. At the bottom of this page, click ‘Submit'.
+  to "My datasets". Find the submission with the status "Private for peer review" and click 'Update'. Deselect the
+  "Private for peer review" checkbox on the 'Review and submit' page. At the bottom of this page, click ‘Submit'.
 </p>
 
 <h2 id="when-to-submit">When should I submit my data?</h2>
@@ -236,7 +236,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
         If a delayed-release data embargo is allowed by your journal, you may request that
         (<a href="mailto:help@datadryad.org">help@datadryad.org</a>) at the time of submission.
     </li>
-    <li>Regardless of journal, you may choose to make your data temporarily <a href="#ppr">Private for Peer Review</a>.</li>
+    <li>Regardless of journal, you may choose to make your data temporarily <a href="#ppr">Private for peer review</a>.</li>
 </ul>
 
 <h2 id="after-submit">What happens after I submit my data?</h2>
@@ -365,7 +365,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
         with a current cycle time of approximately two months.
     </li>
     <li>
-        <strong>Succession plans</strong>: In case of closure of the repository, reasonable efforts will be made to
+        <strong>Succession plans</strong>: In case of closure of the platform, reasonable efforts will be made to
         integrate all content into suitable alternative institutional and/or subject based repositories.
     </li>
 </ul>
@@ -373,7 +373,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
 
 <h2 id="update">How can I update my data?</h2>
 You can update your data at any time by clicking on the 'Update' link for your dataset.
-Any edits made will create a new version of your submission, however the DOI will remain the same. Once the latest version has been approved by our curation team and published, only the most recent version of your dataset will be packaged and available for download via the ‘Download Dataset’ button. Prior versions can be accessed via the ‘Data Files’ section which is organized by the date of publication.
+Any edits made will create a new version of your submission, however the DOI will remain the same. Once the latest version has been approved by our curation team and published, only the most recent version of your dataset will be packaged and available for download via the ‘Download dataset’ button. Prior versions can be accessed via the ‘Data files’ section which is organized by the date of publication.
 
 <h2 id="delete">Can I delete my data?</h2>
 
@@ -442,5 +442,5 @@ Any edits made will create a new version of your submission, however the DOI wil
     https://doi.org/10.5061/dryad.XXXX. This, and the title and author information, is included in the Citation
     section of a published dataset and the notification emails you receive from Dryad. If you need the DOI before
     you submit your dataset, for instance to include in a manuscript submission, you can find the DOI on the
-    ‘Review and Submit’ page under ‘Review Description’.
+    ‘Review and submit’ page under ‘Review Description’.
 </p>

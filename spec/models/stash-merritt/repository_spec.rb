@@ -6,6 +6,7 @@ module Stash
       include Mocks::Aws
       include Mocks::Datacite
       include Mocks::CurationActivity
+      include Mocks::Salesforce
 
       attr_reader :resource
       attr_reader :identifier
@@ -19,6 +20,7 @@ module Stash
       before(:each) do
         mock_datacite!
         mock_aws!
+        mock_salesforce!
 
         @rails_root = Dir.mktmpdir('rails_root')
         root_path = Pathname.new(rails_root)

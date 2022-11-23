@@ -13,7 +13,7 @@ module StashEngine
 
     def landing(path)
       u = URI.parse(path)
-      "#{tenant.full_url(u.path)}#{(u.query ? "?#{u.query}" : '')}"
+      "#{tenant.full_url(u.path)}#{u.query ? "?#{u.query}" : ''}"
     end
   end
 end

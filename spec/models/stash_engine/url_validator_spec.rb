@@ -2,7 +2,6 @@ require 'webmock/rspec'
 
 module StashEngine
   describe UrlValidator do
-
     attr_reader :uv
 
     before(:each) do
@@ -64,7 +63,7 @@ module StashEngine
           send_timeout=
           receive_timeout=
           keep_alive_timeout=
-        ].map { |k| [k, nil] }.to_h
+        ].to_h { |k| [k, nil] }
 
         allow(client).to receive_messages(messages)
       end

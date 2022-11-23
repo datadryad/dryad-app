@@ -4,8 +4,10 @@ module StashApi
   RSpec.describe Dataset do
     include Mocks::Tenant
     include Mocks::Datacite
+    include Mocks::Salesforce
 
     before(:each) do
+      mock_salesforce!
       mock_tenant!
       # all these doubles are required because I can't get a url helper for creating URLs inside the tests.
       generic_path = double('generic_path')

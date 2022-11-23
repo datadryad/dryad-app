@@ -5,7 +5,7 @@
 
     <h2>Your institution may be a member* of Dryad.</h2>
     <div class="c-institution__container">
-      <%= form_with(url: 'sso/', method: :post, local: true) do %>
+      <%= form_with(url: 'sso/', method: :post) do %>
         <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name"), class: '.o-select' %>
         <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
       <% end %>
@@ -14,7 +14,7 @@
 
     <h2>Your institution is not a Dryad member</h2>
     <%= link_to stash_url_helpers.no_partner_path, class: 't-login__buttonlink', method: :post do %>
-      Continue to My Datasets
+      Continue to My datasets
     <% end %>
 
     <p>* Member institutions cover the fees for their researchers to use Dryad.</p>

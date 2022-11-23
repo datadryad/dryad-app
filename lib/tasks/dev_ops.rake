@@ -89,7 +89,7 @@ namespace :dev_ops do
   desc 'Backup database by mysqldump'
   task backup: :environment do
     directory = '/apps/dryad/apps/ui/shared/cron/backups'
-    FileUtils.mkdir directory unless File.exist?(directory)
+    FileUtils.mkdir_p directory
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad
     db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]
@@ -102,7 +102,7 @@ namespace :dev_ops do
 
   desc 'Kill large memory usage passenger processes'
   task kill_bloated_passengers: :environment do
-    passenger = DevOps::Passenger.new
+    passenger = Tasks::DevOps::Passenger.new
 
     passenger.kill_bloated_pids! unless passenger.items_submitting?
 
@@ -167,7 +167,7 @@ namespace :dev_ops do
       next
     end
 
-    DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
+    Tasks::DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
     puts 'Done'
   end
 
@@ -177,7 +177,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -270,7 +270,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -308,7 +308,7 @@ namespace :dev_ops do
       ezid_client = ::Ezid::Client.new(user: tenant.identifier_service.account, password: tenant.identifier_service.password)
       params = { status: 'unavailable | withdrawn' }
       begin
-        ezid_client.modify_identifier("doi:#{identif_str}", params)
+        ezid_client.modify_identifier("doi:#{identif_str}", **params)
       rescue Ezid::IdentifierNotFoundError
         puts "EZID couldn't find identifier to create a tombstone"
       end
@@ -334,7 +334,7 @@ namespace :dev_ops do
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     unless ENV['RAILS_ENV']
@@ -372,14 +372,14 @@ namespace :dev_ops do
     dep.publish
   end
 
-  # note this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
+  # NOTE: this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
   # that have been previously uploaded are in Merritt.
   #
   # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
   task download_s3: :environment do
     # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end }
+    ARGV.each { |a| task a.to_sym do; end } # see comment above
     # rubocop:enable Style/BlockDelimiters
 
     resource_id = ARGV[1].to_i
@@ -397,7 +397,7 @@ namespace :dev_ops do
     save_path = Rails.root.join(resource_id.to_s)
     FileUtils.mkdir_p(save_path)
 
-    dl_s3 = DevOps::DownloadS3.new(path: save_path)
+    dl_s3 = Tasks::DevOps::DownloadS3.new(path: save_path)
 
     StashEngine::DataFile.where(resource_id: resource_id).where(file_state: 'created').each_with_index do |data_file, idx|
       puts "#{idx}  #{data_file.upload_file_name}"

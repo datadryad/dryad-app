@@ -14,7 +14,7 @@ namespace :mysql do
       ActiveRecord::Base.connection.execute(query)
     end
 
-    # note: to alter the default for a database, do this, but it doesn't alter the varchar/text columns which the
+    # NOTE: to alter the default for a database, do this, but it doesn't alter the varchar/text columns which the
     # above does.
     #
     # ALTER DATABASE

@@ -5,8 +5,10 @@ RSpec.feature 'NewDataset', type: :feature do
   include Mocks::RSolr
   include Mocks::CrossrefFunder
   include Mocks::Tenant
+  include Mocks::Salesforce
 
   before(:each) do
+    mock_salesforce!
     mock_solr!
     mock_funders!
     mock_tenant!
@@ -24,7 +26,7 @@ RSpec.feature 'NewDataset', type: :feature do
     it 'displays an error message if unable to mint a new DOI/ARK' do
       allow(Stash::Doi::IdGen).to receive(:make_instance).and_raise(Ezid::Error.new)
       click_button 'Start new dataset'
-      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('My datasets')
       expect(page).to have_text('Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.')
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count)
       expect(StashEngine::Resource.all.length).to eql(@resource_count)

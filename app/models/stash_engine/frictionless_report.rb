@@ -6,6 +6,6 @@ module StashEngine
     validates_presence_of :generic_file
     validates_presence_of :status
 
-    enum status: %w[issues noissues checking error].map { |i| [i.to_sym, i] }.to_h
+    enum status: %w[issues noissues checking error].to_h { |i| [i.to_sym, i] }
   end
 end

@@ -7,7 +7,7 @@ module Stash
   module Merritt
     class Repository < Stash::Repo::Repository
 
-      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}.freeze
+      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
 
       def create_submission_job(resource_id:)
         SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)

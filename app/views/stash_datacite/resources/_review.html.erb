@@ -1,4 +1,4 @@
-<h1 class="o-heading__level1">Finalize Submission</h1>
+<h1 class="o-heading__level1">Finalize submission</h1>
 
     <!-- If a curator is viewing this page, highlight the changed fields -->
     <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
@@ -59,7 +59,7 @@
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h3 class="o-heading__level2">Data Files Hosted by Dryad</h3>
+    <h3 class="o-heading__level2">Data files Hosted by Dryad</h3>
 
     <div class="c-review-files">
 	<% if highlight_fields.include?('data_files') %>
@@ -114,7 +114,7 @@
   <% if !@resource.submitted? && @resource.identifier.allow_review? %>
     <!-- This is only available if the version has not yet been submitted to the repository AND
     	 the associated journal allows a review workflow -->
-    <h2 class="o-heading__page-span">Enable Private for Peer Review</h2>
+    <h2 class="o-heading__page-span">Enable Private for peer review</h2>
       <div id="peer_review_section">
         <%= render partial: "stash_datacite/peer_review/review" %>
       </div>
@@ -128,7 +128,7 @@
           class: 'o-button__icon-left', role: 'button' %>
 
   <% if @error_items.blank? # valid data %>
-    <%= form_with(url: resources_submission_path, local: true) do -%>
+    <%= form_with(url: resources_submission_path) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
@@ -188,7 +188,7 @@
       </p>
 
       <p>
-        If you <strong>did not</strong> intend to create a duplicate dataset, return to your <strong>"My Datasets"</strong> page and delete this dataset. 
+        If you <strong>did not</strong> intend to create a duplicate dataset, return to your <strong>"My datasets"</strong> page and delete this dataset. 
         It will be the one nearest the top of the page. Then you may <strong>"Resume"</strong> or <strong>"Update"</strong> the other dataset.
       </p>
 
@@ -210,9 +210,10 @@
       </p>
       <ol>
         <li>Open the link (above)</li>
-        <li>Copy and paste the text into a new note (create new by clicking the plus sign)</li>
-        <li>
-          When you're done, save into a README.md and
+        <li>Create a new note by clicking "+" at the top left of the screen</li>
+        <li>Copy and paste your text</li>
+        <li>Click the three dots on the top right to download as a Markdown file</li>
+        <li>Make sure your filename is 'README.md', and
           <%= link_to 'upload the file', stash_url_helpers.upload_resource_path(@resource) %> under the <em>Data</em>
            category
         </li>

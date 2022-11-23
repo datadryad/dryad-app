@@ -1,5 +1,5 @@
 
-Curator Virtual Environment
+Curator Virtual Environment (VE)
 ===================================
 
 Rationale:
@@ -15,14 +15,27 @@ Rationale:
 
 Implementation:
 - There is a machine in the Amazon AWS EC2 system that runs Windows.
-- The machine is physically located in Ohio, which is relatively centered in the
-  country. This minimizes lag as users work with the graphical environment.
+- The machine is physically located in Ohio, which is relatively centered within
+  the US. This minimizes lag as users work with the graphical
+  environment.
 - This machine allows users to login with a remote desktop.
-- The machine is equipped with a large amount of storage space and a collection
-  of software packages that are useful for curation.
+- The machine is equipped with a large amount of storage space and a collection of
+  software packages that are useful for curation.
+
+Data storage:
 - The directory `C:\DryadData` is accessible to all users. It is a place where
-  curators can download data files and discus them with each other.
-- `C:\DryadData\SoftwareShortcuts` contains links to the installed software packages.
+  curators can download data files and discus them with each other. Since the
+  `C:` drive contains the operating system and critical configuration, it is
+  backed up regularly, and any files in `C:\DryadData` are backed up as well.
+  The `C:` drive is formatted with the MBR partition type, so its size is maxed
+  out at 2TB.
+- For large files, there is a `D:` drive, which is available to all users,
+  similar to `C:\DryadData`. The `D:` drive can be expanded as needed, to store
+  arbitrarily large data, but it is not backed up.
+- As we install more software, it is expected that software will remain in `C:`,
+  while data storage will gradually move to `D:`. 
+- `C:\DryadData\SoftwareShortcuts` contains links to the installed software
+  packages.
 
 
 Setup
@@ -107,8 +120,9 @@ Once you have logged in, please change your password using this process:
    the password that it uses to connect.
 
 General usage tips:
-- Store all files that you are curating in `C:\DryadData\<your_account_name>` --
+- Store "regular" files that you are curating in `C:\DryadData\<your_account_name>` --
   this will allow other curators to view the files if needed.
+- Store "large" files that you are curating in `D:\<your_account_name>`
 - You may store personal files in your account, but this should rarely be
   needed.
 - Shortcuts to run useful software are in `C:\DryadData\SoftwareShortcuts`

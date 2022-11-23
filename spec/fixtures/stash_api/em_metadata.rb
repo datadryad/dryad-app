@@ -47,8 +47,8 @@ module Fixtures
       def add_author
         create_key_and_array(key: :authors)
         @metadata[:authors].push(
-          { "first_name": Faker::Name.first_name,
-            "last_name": Faker::Name.last_name,
+          { first_name: Faker::Name.first_name,
+            last_name: Faker::Name.last_name,
             email: Faker::Internet.email,
             orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
                    "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
@@ -73,10 +73,10 @@ module Fixtures
         article.merge!(final_disposition: 'ACCEPT')
         article.merge!(keywords: [Faker::Cosmere.aon, Faker::Cosmere.metal, Faker::Cosmere.spren])
         article.merge!(funding_information: [{
-                         "funder": Faker::Company.name,
-                         "funder_id": Faker::Pid.doi,
-                         "award_number": Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4),
-                         "grant_recipient": Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4)
+                         funder: Faker::Company.name,
+                         funder_id: Faker::Pid.doi,
+                         award_number: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4),
+                         grant_recipient: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4)
                        }])
 
         @metadata[:article] = article

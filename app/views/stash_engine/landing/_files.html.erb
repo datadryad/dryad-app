@@ -12,7 +12,7 @@
 %>
 <% if resources.count.positive? %>
   <div class="c-sidebox">
-    <h2 class="c-sidebox__heading">Data Files</h2>
+    <h2 class="c-sidebox__heading">Data files</h2>
 
     <!-- full download first -->
     <%= render partial: 'stash_engine/landing/download', locals: { dataset_identifier: dataset_identifier } %>
@@ -55,7 +55,7 @@
   </div>
 <% else %>
   <div class="c-sidebox">
-    <h2 class="c-sidebox__heading">Data Files</h2>
+    <h2 class="c-sidebox__heading">Data files</h2>
     <p>No data files are available for display.</p>
   </div>
 <% end %>

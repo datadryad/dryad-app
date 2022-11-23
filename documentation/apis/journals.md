@@ -342,7 +342,7 @@ To process emails:
 
 To use individual emails:
 ```
-require 'stash/google/journal_gmail'
+require 'stash/google/journal_g_mail'
 m=Stash::Google::JournalGMail.messages_to_process.first
 mc=Stash::Google::JournalGMail.message_content(message: m)
 ms=Stash::Google::JournalGMail.message_subject(message: m)

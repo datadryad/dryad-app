@@ -33,10 +33,10 @@ module StashApi
           b = geolocation.geolocation_box
           unless b.blank?
             return { box: {
-              'swLongitude': b&.sw_longitude&.to_f,
-              'swLatitude': b&.sw_latitude&.to_f,
-              'neLongitude': b&.ne_longitude&.to_f,
-              'neLatitude': b&.ne_latitude&.to_f
+              swLongitude: b&.sw_longitude&.to_f,
+              swLatitude: b&.sw_latitude&.to_f,
+              neLongitude: b&.ne_longitude&.to_f,
+              neLatitude: b&.ne_latitude&.to_f
             } }
           end
           nil

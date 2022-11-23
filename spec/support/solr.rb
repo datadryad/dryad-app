@@ -35,15 +35,14 @@ class SolrInstance
 
   def solr_env
     # For macOS local development, run Solr under Java 8 even if Java 9 is the default
-    @solr_env ||= begin
-      return ENV unless ENV['JAVA_HOME']
-      return ENV unless ENV['JAVA_HOME'].include?('jdk-9')
+    @solr_env ||= if ENV['JAVA_HOME'] && ENV['JAVA_HOME'].include?('jdk-9')
+                    mac_jdk8_home ||= `[[ -f /usr/libexec/java_home && -x /usr/libexec/java_home ]] && /usr/libexec/java_home -v 1.8`.strip!
+                    return if mac_jdk8_home
 
-      mac_jdk8_home ||= `[[ -f /usr/libexec/java_home && -x /usr/libexec/java_home ]] && /usr/libexec/java_home -v 1.8`.strip!
-      return ENV unless mac_jdk8_home
-
-      ENV.to_h.merge!('JAVA_HOME' => mac_jdk8_home)
-    end
+                    ENV.to_h.merge!('JAVA_HOME' => mac_jdk8_home)
+                  else
+                    ENV
+                  end
   end
 
   def create_collection
