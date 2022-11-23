@@ -37,7 +37,7 @@ module SessionsHelper
     # find('#tenant_id').find('option:last-child').select_option
     # click_button 'Login to verify'
     # TODO: figure out how to properly handle the Shibboleth SP redirection
-    click_link 'Continue to My Datasets'
+    click_link 'Continue to My datasets'
   end
 
   def safe_visit(url)
