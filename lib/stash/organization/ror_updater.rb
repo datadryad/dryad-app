@@ -23,7 +23,7 @@ module Stash
         metadata = fetch_zenodo_metadata
 
         if metadata.present?
-          Dir.mkdir(FILE_DIR) unless File.exist?(FILE_DIR)
+          FileUtils.mkdir_p(FILE_DIR)
 
           checksum = File.open(checksum_file, 'w+') unless File.exist?(checksum_file) && !force
           checksum = File.open(checksum_file, 'r+') unless checksum.present?

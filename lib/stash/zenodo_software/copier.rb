@@ -169,9 +169,9 @@ module Stash
           # don't reopen for metadata changes and just update status
           # because metadata is only updated to public on publishing or if the version is unpublished and public won't see changes.
           @copy.update(state: 'finished',
-                       error_info: "Warning: metadata wasn't updated because the last version was published, "\
-                          "versioning of metadata-only changes isn't allowed in zenodo and the public should " \
-                          'only see published metadata changes.')
+                       error_info: "Warning: metadata wasn't updated because the last version was published, " \
+                                   "versioning of metadata-only changes isn't allowed in zenodo and the public should " \
+                                   'only see published metadata changes.')
           return
         end
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
@@ -189,7 +189,7 @@ module Stash
           copy_record = res.zenodo_copies.where('copy_type like ?', "#{@dataset_type}%").first
           if copy_record.nil? || copy_record.state != 'finished'
             raise ZE, "identifier_id #{@resource.identifier.id}: Cannot replicate a later version until earlier " \
-              "versions with files have replicated. Resource id #{res.id} is incomplete or not present in the ZenodoCopies table."
+                      "versions with files have replicated. Resource id #{res.id} is incomplete or not present in the ZenodoCopies table."
           end
         end
       end

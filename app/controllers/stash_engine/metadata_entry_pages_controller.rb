@@ -1,5 +1,3 @@
-require_dependency 'stash_engine/application_controller'
-
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login, except: %i[edit_by_doi]
@@ -73,10 +71,10 @@ module StashEngine
         end
       end
 
-      if @resource&.current_resource_state&.resource_state != 'in_progress'
-        new_version
-      else
+      if @resource&.current_resource_state&.resource_state == 'in_progress'
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id))
+      else
+        new_version
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength

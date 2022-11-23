@@ -14,7 +14,7 @@ module StashApi
     end
 
     def stash_curie
-      { 'curies': [
+      { curies: [
         {
           name: 'stash',
           href: 'https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck

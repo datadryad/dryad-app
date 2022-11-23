@@ -1,4 +1,5 @@
 require 'yaml'
+
 module YamlHelper
   def self.output_test_section(example_filename:)
     my_file = Rails.root.join('dryad-config-example', example_filename)

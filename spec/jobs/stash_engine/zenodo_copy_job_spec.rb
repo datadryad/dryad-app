@@ -45,7 +45,7 @@ module StashEngine
 
     describe 'self.should_defer?(resource:)' do
       before(:each) do
-        FileUtils.rm(ZenodoCopyJob::DEFERRED_TOUCH_FILE) if File.exist?(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
+        FileUtils.rm_f(ZenodoCopyJob::DEFERRED_TOUCH_FILE)
       end
 
       it 'returns true and sets deferred if defer file exists' do
@@ -73,7 +73,7 @@ module StashEngine
         ZenodoCopyJob.enqueue_deferred
         @resource.reload
         expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
-        expect(enqueued_jobs).to eq([{ job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy' }])
+        expect(enqueued_jobs).to match([a_hash_including(job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy')])
       end
 
       after(:each) do

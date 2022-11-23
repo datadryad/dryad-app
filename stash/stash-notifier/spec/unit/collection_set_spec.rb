@@ -1,5 +1,5 @@
 # require the items for the notifier
-Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].each { |file| require file }
 require 'ostruct'
 class CollectionSetSpec
   describe 'collection_set' do

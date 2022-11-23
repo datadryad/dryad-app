@@ -6,7 +6,7 @@ namespace :funders do
   desc 'Set crossref funders for exact matches'
   task set_crossref_funders: :environment do
     # name as key, value is fundref doi
-    lookup = Funders::Utils.new.lookup
+    lookup = Tasks::Funders::Utils.new.lookup
 
     StashDatacite::Contributor.where(contributor_type: 'funder').where('name_identifier_id IS NULL or name_identifier_id = ""')
       .each_with_index do |contrib, idx|
@@ -20,7 +20,7 @@ namespace :funders do
 
   desc 'export similarity for unmatched to CSV'
   task similarity_csv: :environment do
-    util = Funders::Utils.new
+    util = Tasks::Funders::Utils.new
 
     sql = <<-SQL
       SELECT REPLACE(c.contributor_name, '*', '') as contrib, COUNT(*) as count FROM dcs_contributors c
@@ -86,7 +86,7 @@ namespace :funders do
 
   desc 'imports Tedsheet which is something someone gave us with IDs for some funders'
   task import_tedsheet: :environment do
-    util = Funders::Utils.new
+    util = Tasks::Funders::Utils.new
 
     CSV.foreach('/Users/sfisher/Downloads/funderOutputCrossrefFixed__20211006.csv', headers: true) do |row|
       # relevant fields are 'doi', 'funderName', 'funderIdentifier', there seem to be a lot of blank rows

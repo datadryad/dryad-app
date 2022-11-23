@@ -19,9 +19,9 @@ module MarkdownHandler
     @erb ||= ActionView::Template.registered_template_handler(:erb)
   end
 
-  def self.call(template)
+  def self.call(template, source)
     @md_options ||= MARKDOWN_OPTIONS
-    compiled_source = erb.call(template)
+    compiled_source = erb.call(template, source)
     renderer = template.locals.include?('toc') ? TOC_RENDERER : BODY_RENDERER
     "Redcarpet::Markdown.new(#{renderer}, #{@md_options} ). render(begin;#{compiled_source};end).html_safe"
   end

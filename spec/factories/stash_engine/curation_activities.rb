@@ -43,11 +43,11 @@ FactoryBot.define do
       before(:create) do |ca|
         # redefine these  methods so I can set this crap in peace without all the horror
         # https://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
-        ca.define_singleton_method(:submit_to_datacite) {}
-        ca.define_singleton_method(:update_solr) {}
-        ca.define_singleton_method(:process_payment) {}
-        ca.define_singleton_method(:email_status_change_notices) {}
-        ca.define_singleton_method(:email_orcid_invitations) {}
+        ca.define_singleton_method(:submit_to_datacite) {} # empty to remove callback
+        ca.define_singleton_method(:update_solr) {} # empty to remove callback
+        ca.define_singleton_method(:process_payment) {} # empty to remove callback
+        ca.define_singleton_method(:email_status_change_notices) {} # empty to remove callback
+        ca.define_singleton_method(:email_orcid_invitations) {} # empty to remove callback
       end
     end
   end

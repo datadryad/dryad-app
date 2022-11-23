@@ -11,7 +11,7 @@ role_radios = [ ['superuser', 'Superuser -- Has full access.'],
   role_radios.drop(1) if current_user.role == 'admin' # don't give admins a choice to make a superuser
 %>
 
-<%= form_with(url: user_admin_set_role_path(user.id), method: :post, remote: true) do -%>
+<%= form_with(url: user_admin_set_role_path(user.id), method: :post, local: false) do -%>
   <p>
   <% role_radios.each do |role| %>
       <%= radio_button_tag('role', role.first, user.role == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1] %></label></br>

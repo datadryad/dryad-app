@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_dependency 'api_application_controller'
-
 module StashApi
   class VersionsController < ApiApplicationController
-    include Concerns::Downloadable
+    include Downloadable
 
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download
@@ -16,19 +14,15 @@ module StashApi
     # get /versions/<id>
     def show
       v = Version.new(resource_id: params[:id], item_view: true)
-      respond_to do |format|
-        format.any { render json: v.metadata_with_links }
-        res = @stash_resources.first
-        StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
-      end
+      render json: v.metadata_with_links
+      res = @stash_resources.first
+      StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
     end
 
     # get /datasets/<dataset-id>/versions
     def index
       versions = paged_versions_for_dataset
-      respond_to do |format|
-        format.any { render json: versions }
-      end
+      render json: versions
     end
 
     # get /versions/<id>/download

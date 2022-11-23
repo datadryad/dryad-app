@@ -1,4 +1,3 @@
-require_dependency 'api_application_controller'
 require 'fileutils'
 require 'stash/url_translator'
 
@@ -32,9 +31,7 @@ module StashApi
       fu = StashEngine::DataFile.create(data_file_hash)
       check_file_size(data_file: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
-      respond_to do |format|
-        format.any { render json: file.metadata, status: 201 }
-      end
+      render json: file.metadata, status: 201
     end
 
     private

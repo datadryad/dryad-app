@@ -10,7 +10,7 @@ module StashEngine
       stub_request(:post, 'http://localhost:3000/oauth/token')
         .with(
           body: "{\"client_id\":\"#{@api_token.app_id}\",\"client_secret\":\"#{@api_token.secret}\"," \
-        '"grant_type":"client_credentials"}',
+                '"grant_type":"client_credentials"}',
           headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
         )
         .to_return(status: 200,

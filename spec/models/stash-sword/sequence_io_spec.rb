@@ -1,5 +1,7 @@
 require 'tempfile'
 
+ALPHANUMERIC = Array('A'..'Z') + Array('a'..'z') + Array('0'..'9')
+
 module Stash
   module Sword
 
@@ -51,8 +53,6 @@ module Stash
 
     describe SequenceIO do
 
-      ALPHANUMERIC = Array('A'..'Z') + Array('a'..'z') + Array('0'..'9')
-
       attr_reader :len
       attr_reader :content
       attr_reader :sqio
@@ -66,7 +66,7 @@ module Stash
 
       after(:each) do
         sqio.close if sqio
-        tempfiles.each { |f| File.delete(f) if File.exist?(f) } if tempfiles
+        tempfiles.each { |f| FileUtils.rm_f(f) } if tempfiles
       end
 
       def make_alphanumeric_string(chars)

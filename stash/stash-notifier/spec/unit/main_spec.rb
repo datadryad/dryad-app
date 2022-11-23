@@ -1,6 +1,6 @@
 require 'webmock/rspec'
 require 'active_support/inflector'
-Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, '..', '..', 'app', '*.rb')].each { |file| require file }
 require 'ostruct'
 # require_relative '../../main.rb'
 RSpec.describe 'main' do
@@ -12,7 +12,7 @@ RSpec.describe 'main' do
 
     WebMock.disable_net_connect!(allow_localhost: true)
 
-    file_contents = File.open(File.join(__dir__, '..', 'data', 'oai-example.xml')).read
+    file_contents = File.read(File.join(__dir__, '..', 'data', 'oai-example.xml'))
 
     allow(State).to receive(:statefile_path).and_return(File.join(__dir__, '..', '..', 'state', 'test.json'))
     # stub the request for the oai-pmh feed
@@ -22,12 +22,12 @@ RSpec.describe 'main' do
     @main_path = File.expand_path(File.join(__dir__, '..', '..', 'main.rb'))
     @json_state_path = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.json'))
     @pid_path = File.expand_path(File.join(__dir__, '..', '..', 'state', 'test.pid'))
-    File.delete(@json_state_path) if File.exist?(@json_state_path)
+    FileUtils.rm_f(@json_state_path)
   end
 
   after(:each) do
-    File.delete(@json_state_path) if File.exist?(@json_state_path)
-    File.delete(@pid_path) if File.exist?(@pid_path)
+    FileUtils.rm_f(@json_state_path)
+    FileUtils.rm_f(@pid_path)
 
     ENV['STASH_ENV'] = nil
     ENV['NOTIFIER_OUTPUT'] = nil

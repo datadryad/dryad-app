@@ -42,7 +42,7 @@ module Mocks
       mock_datacite!
 
       @mock_idgen = double('idgen')
-      allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_return(nil)
+      allow(@mock_idgen).to receive(:update_identifier_metadata!).and_return(nil)
       allow(@mock_idgen).to receive(:mint_id).and_return("doi:#{Faker::Pid.doi}")
       allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
     end

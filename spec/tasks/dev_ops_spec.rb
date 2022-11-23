@@ -85,11 +85,11 @@ describe 'dev_ops:download_uri', type: :task do
 
     it 'loads the file and calls updates' do
       # testing one specific value from the file
-      expect(DevOps::DownloadUri).to receive(:update)\
+      expect(Tasks::DevOps::DownloadUri).to receive(:update) \
         .with(doi: 'doi:10.5072/FK20R9S858', old_ark: 'ark:/99999/fk4np2b23p', new_ark: 'ark:/99999/fk4cv5xm2w').once
       # testing that it is called for the other 11
-      expect(DevOps::DownloadUri).to receive(:update).at_least(11).times
-      DevOps::DownloadUri.update_from_file(file_path: @test_path)
+      expect(Tasks::DevOps::DownloadUri).to receive(:update).at_least(11).times
+      Tasks::DevOps::DownloadUri.update_from_file(file_path: @test_path)
     end
 
     it 'updates the database download_uri and update_uri' do
@@ -104,7 +104,7 @@ describe 'dev_ops:download_uri', type: :task do
       old_ark = CGI.unescape(resource.download_uri.match(%r{[^/]+$}).to_s)
       new_ark = CGI.unescape(throwaway_resource.download_uri.match(%r{[^/]+$}).to_s)
 
-      DevOps::DownloadUri.update(doi: resource.identifier.to_s, old_ark: old_ark, new_ark: new_ark)
+      Tasks::DevOps::DownloadUri.update(doi: resource.identifier.to_s, old_ark: old_ark, new_ark: new_ark)
 
       resource.identifier.resources.each do |res|
         expect(res.download_uri).to eq(throwaway_resource.download_uri)

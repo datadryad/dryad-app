@@ -41,7 +41,7 @@ module StashApi
       add_edit_link!(metadata, lv)
 
       # gives the links to nearby objects
-      { '_links': links }.merge(metadata).recursive_compact
+      { _links: links }.merge(metadata).recursive_compact
     end
 
     def versions_path

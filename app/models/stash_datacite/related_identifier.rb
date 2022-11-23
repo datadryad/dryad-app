@@ -5,6 +5,7 @@ require 'http'
 module StashDatacite
 
   class ExternalServerError < RuntimeError; end
+
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
@@ -13,13 +14,13 @@ module StashDatacite
 
     RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
-    RelationTypesEnum = RelationTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    RelationTypesStrToFull = RelationTypes.map { |i| [i.downcase, i] }.to_h
+    RelationTypesEnum = RelationTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    RelationTypesStrToFull = RelationTypes.to_h { |i| [i.downcase, i] }
 
     RelatedIdentifierTypes = Datacite::Mapping::RelatedIdentifierType.map(&:value)
 
-    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map { |i| [i.downcase, i] }.to_h
+    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.to_h { |i| [i.downcase, i] }
 
     # rubocop:disable Naming/ConstantName
     RelatedIdentifierTypesLimited = { DOI: 'doi', ARK: 'ark', ArXiv: 'arxiv',
@@ -137,7 +138,6 @@ module StashDatacite
       "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
-    # rubocop:disable Naming/AccessorMethodName
     def self.set_latest_zenodo_relations(resource:)
       resource.related_identifiers.where(added_by: 'zenodo').destroy_all
 
@@ -168,7 +168,6 @@ module StashDatacite
              resource_id: resource.id,
              added_by: 'zenodo')
     end
-    # rubocop:enable Naming/AccessorMethodName
 
     def self.remove_zenodo_relation(resource_id:, doi:)
       doi = standardize_doi(doi)
@@ -206,7 +205,7 @@ module StashDatacite
     def live_url_valid?
       return false unless valid_url_format?
 
-      # note: this follows up to 10 redirects
+      # NOTE: this follows up to 10 redirects
       http = HTTP.timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 10)
       begin
         retries ||= 0
@@ -226,7 +225,7 @@ module StashDatacite
         # a bad attempt at resolving the URL and logging it.
 
         Rails.logger.error("Failed to live validate URL #{related_identifier}\n" \
-                                "#{e.full_message}")
+                           "#{e.full_message}")
       end
       false
     end
