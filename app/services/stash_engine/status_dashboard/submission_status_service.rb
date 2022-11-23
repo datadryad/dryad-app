@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'httparty'
+# require 'httparty'
 
 module StashEngine
   module StatusDashboard
+    class SubmissionStatusService < DependencyCheckerService
 
-    class NotifierService < DependencyCheckerService
+      LOG_FILE = '/apps/dryad/apps/ui/current/log/merritt_status_updater.log'
 
-      LOG_FILE = '/dryad/apps/ui/shared/cron/logs/stash-notifier.log'
       def ping_dependency
         super
         record_status(online: false, message: "No log file found at '#{LOG_FILE}'.") unless File.exist?(LOG_FILE)
@@ -20,7 +20,7 @@ module StashEngine
 
         online = last_run_date.present? && last_run_date >= (Time.now - 15.minutes).utc && !log_err.present?
         msg = ''
-        msg += "The Notifier service last updated its log at '#{last_run_date}'. " unless online
+        msg += "The Merritt submission status service last updated its log at '#{last_run_date}'. " unless online
         msg += "Notifier log has error: #{log_err}" if log_err.present?
         record_status(online: online, message: msg)
         online
@@ -28,8 +28,6 @@ module StashEngine
         record_status(online: false, message: e.to_s)
         false
       end
-
     end
-
   end
 end
