@@ -1,3 +1,4 @@
+require 'fileutils'
 # the notifier was logging to /dryad/apps/ui/shared/cron/logs/stash-notifier.log. Still the correct place?
 namespace :merritt_status do
 
@@ -18,7 +19,7 @@ namespace :merritt_status do
       abort('PID file already exists for log/merritt_status_updater.pid. Is another copy still running?')
     end
 
-    File.open(pid_file, 'w').write(Process.pid)
+    File.write(pid_file, Process.pid)
 
     Signal.trap('INT') { throw :sigint }
     Signal.trap('TERM') { throw :sigint }
@@ -30,7 +31,7 @@ namespace :merritt_status do
       abort('RAILS_ENV must be explicitly set before running this task')
     end
 
-    Rails.logger.info("Starting Merritt status submission updater for environment #{ENV['RAILS_ENV']}")
+    Rails.logger.info("Starting Merritt status submission updater for environment #{ENV.fetch('RAILS_ENV', nil)}")
 
     catch(:sigint) do
       loop do
@@ -47,7 +48,7 @@ namespace :merritt_status do
       end
     end
 
-    Rails.logger.info("Shutting down Merritt status updater for environment #{ENV['RAILS_ENV']}")
-    File.delete(pid_file) if File.exist?(pid_file)
+    Rails.logger.info("Shutting down Merritt status updater for environment #{ENV.fetch('RAILS_ENV', nil)}")
+    FileUtils.rm_f(pid_file)
   end
 end
