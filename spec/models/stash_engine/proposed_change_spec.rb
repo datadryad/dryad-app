@@ -4,6 +4,7 @@ module StashEngine
   describe ProposedChange do
 
     before(:each) do
+
       allow_any_instance_of(Resource).to receive(:submit_to_solr).and_return(true)
       @user = StashEngine::User.create(
         first_name: 'Lisa',

@@ -11,13 +11,13 @@ module Stash
     # box: https://ucop.box.com/s/o39s94g28puss5ttt7vss8b0qrlge184
     # non-mapped: http://www.koalastothemax.com/
 
-    GOOGLE_DRIVE = %r{^https://drive\.google\.com/file/d/(\S+)/(?:view|edit)(?:\?usp=sharing)?$}.freeze
-    GOOGLE_DOC = %r{^https://docs\.google\.com/document/d/(\S+)/edit(?:\?usp=sharing)?$}.freeze
-    GOOGLE_PRESENTATION = %r{^https://docs\.google\.com/presentation/d/(\S+)/edit(?:\?usp=sharing)?$}.freeze
-    GOOGLE_SHEET = %r{^https://docs\.google\.com/spreadsheets/d/(\S+)/edit(?:\?usp=sharing)?$}.freeze
-    DROPBOX = %r{^https://www\.dropbox\.com/s/(\S+)/([^/]+)(?:\?dl=[0-9]+)$}.freeze
-    BOX = %r{^https://([^/]+box\.com)/s/(\S+)$}.freeze
-    GITHUB = %r{^https?://github.com/([^/]+/[^/]+)/blob(/[^/]+/[^/]+)$}.freeze
+    GOOGLE_DRIVE = %r{^https://drive\.google\.com/file/d/(\S+)/(?:view|edit)(?:\?usp=sharing)?$}
+    GOOGLE_DOC = %r{^https://docs\.google\.com/document/d/(\S+)/edit(?:\?usp=sharing)?$}
+    GOOGLE_PRESENTATION = %r{^https://docs\.google\.com/presentation/d/(\S+)/edit(?:\?usp=sharing)?$}
+    GOOGLE_SHEET = %r{^https://docs\.google\.com/spreadsheets/d/(\S+)/edit(?:\?usp=sharing)?$}
+    DROPBOX = %r{^https://www\.dropbox\.com/s/(\S+)/([^/]+)(?:\?dl=[0-9]+)$}
+    BOX = %r{^https://([^/]+box\.com)/s/(\S+)$}
+    GITHUB = %r{^https?://github.com/([^/]+/[^/]+)/blob(/[^/]+/[^/]+)$}
 
     attr_reader :service, :direct_download, :original_url
 

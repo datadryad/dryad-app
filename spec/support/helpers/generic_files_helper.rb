@@ -1,9 +1,11 @@
 module GenericFilesHelper
 
   include Mocks::Tenant
+  include Mocks::Salesforce
 
   def generic_before
     mock_tenant!
+    mock_salesforce!
     @user = create(:user, role: 'superuser')
     @resource = create(:resource, user_id: @user.id)
     @resource.current_resource_state.update(resource_state: 'submitted')

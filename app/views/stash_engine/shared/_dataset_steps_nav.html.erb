@@ -2,9 +2,9 @@
   <%= link_to 'Describe Dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
            class: "c-progress__tab1#{ (params[:controller]&.end_with?('metadata_entry_pages') && params[:action] == 'find_or_create' ? '--active' : '' )} js-nav-out" %>
 
-  <%= link_to 'Upload Files', stash_url_helpers.upload_resource_path(@resource.id),
+  <%= link_to 'Upload files', stash_url_helpers.upload_resource_path(@resource.id),
                     class: "c-progress__tab2#{ (params[:controller]&.end_with?('resources') && params[:action].include?('upload') ? '--active' : '') } js-nav-out" %>
 
-  <%= link_to 'Review and Submit', stash_url_helpers.review_resource_path(@resource.id),
+  <%= link_to 'Review and submit', stash_url_helpers.review_resource_path(@resource.id),
             class: "c-progress__tab3#{ (params[:controller]&.end_with?('resources') && params[:action] == 'review' ? '--active' : '') } js-nav-out" %>
 </div>

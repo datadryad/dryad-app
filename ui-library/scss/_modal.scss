@@ -31,3 +31,7 @@
 .modalDialog .c-uploadmodal__button-close-modal {
   background-color: white;
 }
+
+.c-uploadmodal__header * {
+  word-break: break-all;
+}

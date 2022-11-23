@@ -2,6 +2,7 @@ require 'rails_helper'
 
 module StashEngine
   RSpec.describe FrictionlessReport, type: :model do
+
     before(:each) do
       @resource = create(:resource)
       @file = create(:generic_file, resource_id: @resource.id)
@@ -19,7 +20,7 @@ module StashEngine
       end
       it {
         should define_enum_for(:status).with_values(
-          %w[issues noissues checking error].map { |i| [i.to_sym, i] }.to_h
+          %w[issues noissues checking error].to_h { |i| [i.to_sym, i] }
         ).backed_by_column_of_type(:string)
       }
       it 'is valid with valid attributes' do

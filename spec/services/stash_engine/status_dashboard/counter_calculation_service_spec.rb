@@ -29,7 +29,7 @@ module StashEngine
         sample_file = Rails.root.join('spec', 'fixtures', 'counter_processor', 'sample_log.txt').to_s
         temp_file = Rails.root.join('spec', 'fixtures', 'counter_processor', 'temp_log').to_s
         contents = File.read(sample_file)
-        contents.gsub!('<replace-time>', (Time.new - 86_400 * 7).strftime('%Y-%m-%d %H:%M:%S'))
+        contents.gsub!('<replace-time>', (Time.new - (86_400 * 7)).strftime('%Y-%m-%d %H:%M:%S'))
         File.write(temp_file, contents)
 
         result = @cc_service.check_counter_log(temp_file)

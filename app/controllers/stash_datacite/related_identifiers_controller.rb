@@ -1,5 +1,3 @@
-require_dependency 'stash_datacite/application_controller'
-
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
     before_action :set_related_identifier, only: %i[update delete]
@@ -69,7 +67,7 @@ module StashDatacite
         .joins(:identifier).joins(:stash_version).order('stash_engine_identifiers.identifier')
         .where(stash_engine_resource_states: { resource_state: :submitted }).distinct
       respond_to do |format|
-        format.tsv {}
+        format.tsv
       end
     end
 

@@ -10,6 +10,7 @@ module StashApi
 
     include Mocks::CurationActivity
     include Mocks::Repository
+    include Mocks::Salesforce
     include Mocks::Tenant
 
     # set up some versions with different curation statuses (visibility)
@@ -20,6 +21,7 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
+      mock_salesforce!
       mock_tenant!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
@@ -120,6 +122,17 @@ module StashApi
         expect(response_code).to eq(400)
         hsh = response_body_hash
         expect(hsh['error']).to eq('incorrect status set')
+      end
+
+      it 'returns a 404 if the file or resource has been removed since report started processing' do
+        @generic_file.destroy!
+        @generic_file2.destroy!
+        response_code = put @path,
+                            params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
+                            headers: default_authenticated_headers
+        expect(response_code).to eq(404)
+        hsh = response_body_hash
+        expect(hsh['error']).to eq('not-found')
       end
     end
   end

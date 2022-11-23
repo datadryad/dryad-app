@@ -5,7 +5,10 @@ require 'uri'
 module StashDatacite
   RSpec.describe AffiliationsController, type: :request do
 
+    include Mocks::Salesforce
+
     before(:each) do
+      mock_salesforce!
       @user = StashEngine::User.create(
         email: 'lmuckenhaupt@example.edu',
         tenant_id: 'dataone'

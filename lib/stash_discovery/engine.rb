@@ -25,8 +25,8 @@ module StashDiscovery
 
     # this requires some open class overrides (ie, Monkeypatches to geoblacklight)
     config.to_prepare do
-      Dir.glob("#{Engine.root}app/decorators/**/*_decorator.rb").each do |c|
-        require_dependency(c)
+      Dir.glob("#{Rails.root}/app/overrides/**/*_override.rb").each do |override|
+        load override
       end
     end
     # :nocov:

@@ -9,7 +9,7 @@ module Stash
 
     class QueryFailure < RuntimeError; end
 
-    Dir.glob(File.expand_path('event_data/*.rb', __dir__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('event_data/*.rb', __dir__)).each(&method(:require))
 
     TIME_BETWEEN_RETRIES = 1
     def logger
@@ -34,7 +34,7 @@ module Stash
       r = make_reliable { http.get uri_begin, params: hash.merge(params) }
 
       resp = r.parse if r.headers['content-type'].start_with?('application/json') && r.code != 204 # 204 is no-content
-      resp = resp.with_indifferent_access if resp.class == Hash
+      resp = resp.with_indifferent_access if resp.instance_of?(Hash)
       resp
     end
 

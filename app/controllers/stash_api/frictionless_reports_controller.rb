@@ -20,9 +20,7 @@ module StashApi
     # GET
     def show
       @api_report = StashApi::FrictionlessReport.new(file_obj: @stash_file, fric_obj: @report)
-      respond_to do |format|
-        format.any { render json: @api_report.metadata }
-      end
+      render json: @api_report.metadata
     end
 
     # PUT
@@ -32,15 +30,13 @@ module StashApi
       fr = StashEngine::FrictionlessReport.new(generic_file_id: @stash_file.id) if fr.nil?
       fr.update(report: params[:report], status: params[:status])
       @api_report = StashApi::FrictionlessReport.new(file_obj: @stash_file, fric_obj: fr)
-      respond_to do |format|
-        format.any { render json: @api_report.metadata }
-      end
+      render json: @api_report.metadata
     end
 
     def require_file
       @stash_file = StashEngine::GenericFile.where(id: params[:file_id]).first
-      render json: { error: 'not-found' }.to_json, status: 404 if @stash_file.nil?
-      @resource = @stash_file.resource # for require_permission to use
+      @resource = @stash_file&.resource # for require_permission to use
+      render json: { error: 'not-found' }.to_json, status: 404 if @stash_file.nil? || @resource.nil?
     end
 
     def require_viewable_report

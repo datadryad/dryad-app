@@ -2,132 +2,131 @@ require 'rails_helper'
 
 module Stash
   module Import
+
+    TITLE = 'High-skilled labour mobility in Europe before and after the 2004 enlargement'.freeze
+    AUTHOR = [
+      { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
+        'affiliation' => [{ 'name' => 'Hotel California' }] },
+      { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
+        'affiliation' => [{ 'name' => 'Catalonia' }] }
+    ].freeze
+    ABSTRACT = 'Flip-flop gates must work. In fact, few biologists would disagree with the emulation of expert systems. ' \
+               'Our focus in this work is not on whether the partition table and the UNIVAC computer can collude to accomplish this ' \
+               'purpose, but rather on presenting an analysis of e-commerce (Newt).'.freeze
+
+    FUNDER = [{ 'name' => 'National Heart, Lung, and Blood Institute',
+                'award' => %w[R01-HL30077 R01-HL90880 R01-HL123526 R01-HL085727 R01-HL085844 P01-HL080101] },
+              { 'name' => 'U.S. Department of Veterans Affairs', 'award' => ['I01 BX000576', 'I01 CX001490'] },
+              { 'name' => 'Országos Tudományos Kutatási Alapprogramok', 'award' => ['OTKA101196'] },
+              { 'name' => 'California Institute for Regenerative Medicine', 'award' => ['TR3 05626'] },
+              { 'name' => 'American Heart Association', 'award' => ['14GRNT20510041'] }].freeze
+
+    URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
+
+    DOI = '10.1073/pnas.1718211115'.freeze
+    PAST_PUBLICATION_DATE = [2018, 0o1, 0o1].freeze
+    FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
+    PUBLISHER = 'Ficticious Journal'.freeze
+
+    # Example of a Crossref API journal response: view-source:http://api.crossref.org/journals?query=Journal%20of%20The%20Royal%20Society%20Interface
+    CROSSREF_JOURNAL_RESPONSE = {
+      'status' => 'ok',
+      'message-type' => 'journal-list',
+      'message-version' => '1.0.0',
+      'message' => {
+        'items-per-page' => 20,
+        'query' => {
+          'start-index' => 0,
+          'search-terms' => 'Journal of The Royal Society Interface'
+        },
+        'total-results' => 1,
+        'items' => [
+          {
+            'last-status-check-time' => 1_553_443_941_216,
+            'counts' => {
+              'total-dois' => 3163,
+              'current-dois' => 630,
+              'backfile-dois' => 2533
+            },
+            'breakdowns' => {
+              'dois-by-issued-year' => [[2014, 378]]
+            },
+            'publisher' => 'The Royal Society',
+            'coverage' => {
+              'affiliations-current' => 0.15714286267757416
+            },
+            'title' => 'Journal of The Royal Society Interface',
+            'subjects' => [{ 'name' => 'Biochemistry', 'ASJC' => 1303 }],
+            'coverage-type' => {
+              'all' => { 'last-status-check-time' => 1_553_443_938_923 },
+              'backfile' => { 'last-status-check-time' => 1_553_443_938_136 },
+              'current' => { 'last-status-check-time' => 1_553_443_937_362 }
+            },
+            'flags' => { 'deposits-abstracts-current' => false },
+            'ISSN' => %w[1742-5662 1742-5689],
+            'issn-type' => [
+              { 'value' => '1742-5662', 'type' => 'electronic ' },
+              { 'value' => '1742-5689', 'type' => 'print' }
+            ]
+          }
+        ]
+      }
+    }.freeze
+
+    # Example of a Crossref API response for a work: view-source:http://api.crossref.org/works/10.1101/139345
+    CROSSREF_WORK_RESPONSE = {
+      'status' => 'ok',
+      'message-type' => 'journal-list',
+      'message-version' => '1.0.0',
+      'message' => {
+        'total-results' => 1,
+        'institution' => {
+          'name' => 'bioRxiv',
+          'place' => ['-'],
+          'acronym' => ['-']
+        },
+        'indexed' => { 'date-parts' => [[2019, 2, 18]], 'date-time' => '2019-02-18T00:54:11Z', 'timestamp' => 1_550_451_251_128 },
+        'posted' => { 'date-parts' => [[2017, 5, 17]] },
+        'group-title' => 'Physiology',
+        'reference-count' => 0,
+        'publisher' => 'Cold Spring Harbor Laboratory',
+        'content-domain' => { 'domain' => [], 'crossmark-restriction' => false },
+        'short-container-title' => [],
+        'accepted' => { 'date-parts' => [[2017, 5, 17]] },
+        'abstract' => 'The aim of the present study was to examine if genetic factors associated with pain perception ...',
+        'DOI' => '10.1101\/139345',
+        'type' => 'posted-content',
+        'created' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:13Z', 'timestamp' => 1_495_084_213_000 },
+        'source' => 'Crossref',
+        'is-referenced-by-count' => 0,
+        'title' => ['The Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker For Placebo Analgesia'],
+        'prefix' => '10.1101',
+        'author' => [
+          { 'ORCID' => 'http:\/\/orcid.org\/0000-0002-9299-7260', 'authenticated-orcid' => false, 'given' => 'Per M.', 'family' => 'Aslaksen',
+            'sequence' => 'first', 'affiliation' => [] },
+          { 'given' => 'June Thorvaldsen', 'family' => 'Forsberg', 'sequence' => 'additional', 'affiliation' => [] }
+        ],
+        'member' => '246',
+        'container-title' => [],
+        'original-title' => [],
+        'link' => [{
+          'URL' => 'https:\/\/syndication.highwire.org\/content\/doi\/10.1101\/139345',
+          'content-type' => 'unspecified',
+          'content-version' => 'vor',
+          'intended-application' => 'similarity-checking'
+        }],
+        'deposited' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:33Z', 'timestamp' => 1_495_084_233_000 },
+        'score' => 1.0,
+        'subtitle' => [],
+        'short-title' => [],
+        'issued' => { 'date-parts' => [[2017, 5, 17]] },
+        'references-count' => 0,
+        'URL' => 'http:\/\/dx.doi.org\/10.1101\/139345',
+        'relation' => {},
+        'subtype' => 'preprint'
+      }
+    }.freeze
     describe Crossref do
-
-      TITLE = 'High-skilled labour mobility in Europe before and after the 2004 enlargement'.freeze
-      AUTHOR = [
-        { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
-          'affiliation' => [{ 'name' => 'Hotel California' }] },
-        { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
-          'affiliation' => [{ 'name' => 'Catalonia' }] }
-      ].freeze
-      ABSTRACT = 'Flip-flop gates must work. In fact, few biologists would disagree with the emulation of expert systems.' \
-            ' Our focus in this work is not on whether the partition table and the UNIVAC computer can collude to accomplish this' \
-            ' purpose, but rather on presenting an analysis of e-commerce (Newt).'.freeze
-
-      FUNDER = [{ 'name' => 'National Heart, Lung, and Blood Institute',
-                  'award' => %w[R01-HL30077 R01-HL90880 R01-HL123526 R01-HL085727 R01-HL085844 P01-HL080101] },
-                { 'name' => 'U.S. Department of Veterans Affairs', 'award' => ['I01 BX000576', 'I01 CX001490'] },
-                { 'name' => 'Országos Tudományos Kutatási Alapprogramok', 'award' => ['OTKA101196'] },
-                { 'name' => 'California Institute for Regenerative Medicine', 'award' => ['TR3 05626'] },
-                { 'name' => 'American Heart Association', 'award' => ['14GRNT20510041'] }].freeze
-
-      URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
-
-      DOI = '10.1073/pnas.1718211115'.freeze
-      PAST_PUBLICATION_DATE = [2018, 0o1, 0o1].freeze
-      FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
-      PUBLISHER = 'Ficticious Journal'.freeze
-
-      # rubocop:disable Layout/LineLength
-      # Example of a Crossref API journal response: view-source:http://api.crossref.org/journals?query=Journal%20of%20The%20Royal%20Society%20Interface
-      CROSSREF_JOURNAL_RESPONSE = {
-        'status' => 'ok',
-        'message-type' => 'journal-list',
-        'message-version' => '1.0.0',
-        'message' => {
-          'items-per-page' => 20,
-          'query' => {
-            'start-index' => 0,
-            'search-terms' => 'Journal of The Royal Society Interface'
-          },
-          'total-results' => 1,
-          'items' => [
-            {
-              'last-status-check-time' => 1_553_443_941_216,
-              'counts' => {
-                'total-dois' => 3163,
-                'current-dois' => 630,
-                'backfile-dois' => 2533
-              },
-              'breakdowns' => {
-                'dois-by-issued-year' => [[2014, 378]]
-              },
-              'publisher' => 'The Royal Society',
-              'coverage' => {
-                'affiliations-current' => 0.15714286267757416
-              },
-              'title' => 'Journal of The Royal Society Interface',
-              'subjects' => [{ 'name' => 'Biochemistry', 'ASJC' => 1303 }],
-              'coverage-type' => {
-                'all' => { 'last-status-check-time' => 1_553_443_938_923 },
-                'backfile' => { 'last-status-check-time' => 1_553_443_938_136 },
-                'current' => { 'last-status-check-time' => 1_553_443_937_362 }
-              },
-              'flags' => { 'deposits-abstracts-current' => false },
-              'ISSN' => %w[1742-5662 1742-5689],
-              'issn-type' => [
-                { 'value' => '1742-5662', 'type' => 'electronic ' },
-                { 'value' => '1742-5689', 'type' => 'print' }
-              ]
-            }
-          ]
-        }
-      }.freeze
-
-      # Example of a Crossref API response for a work: view-source:http://api.crossref.org/works/10.1101/139345
-      CROSSREF_WORK_RESPONSE = {
-        'status' => 'ok',
-        'message-type' => 'journal-list',
-        'message-version' => '1.0.0',
-        'message' => {
-          'total-results' => 1,
-          'institution' => {
-            'name' => 'bioRxiv',
-            'place' => ['-'],
-            'acronym' => ['-']
-          },
-          'indexed' => { 'date-parts' => [[2019, 2, 18]], 'date-time' => '2019-02-18T00:54:11Z', 'timestamp' => 1_550_451_251_128 },
-          'posted' => { 'date-parts' => [[2017, 5, 17]] },
-          'group-title' => 'Physiology',
-          'reference-count' => 0,
-          'publisher' => 'Cold Spring Harbor Laboratory',
-          'content-domain' => { 'domain' => [], 'crossmark-restriction' => false },
-          'short-container-title' => [],
-          'accepted' => { 'date-parts' => [[2017, 5, 17]] },
-          'abstract' => 'The aim of the present study was to examine if genetic factors associated with pain perception ...',
-          'DOI' => '10.1101\/139345',
-          'type' => 'posted-content',
-          'created' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:13Z', 'timestamp' => 1_495_084_213_000 },
-          'source' => 'Crossref',
-          'is-referenced-by-count' => 0,
-          'title' => ['The Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker For Placebo Analgesia'],
-          'prefix' => '10.1101',
-          'author' => [
-            { 'ORCID' => 'http:\/\/orcid.org\/0000-0002-9299-7260', 'authenticated-orcid' => false, 'given' => 'Per M.', 'family' => 'Aslaksen', 'sequence' => 'first', 'affiliation' => [] },
-            { 'given' => 'June Thorvaldsen', 'family' => 'Forsberg', 'sequence' => 'additional', 'affiliation' => [] }
-          ],
-          'member' => '246',
-          'container-title' => [],
-          'original-title' => [],
-          'link' => [{
-            'URL' => 'https:\/\/syndication.highwire.org\/content\/doi\/10.1101\/139345',
-            'content-type' => 'unspecified',
-            'content-version' => 'vor',
-            'intended-application' => 'similarity-checking'
-          }],
-          'deposited' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:33Z', 'timestamp' => 1_495_084_233_000 },
-          'score' => 1.0,
-          'subtitle' => [],
-          'short-title' => [],
-          'issued' => { 'date-parts' => [[2017, 5, 17]] },
-          'references-count' => 0,
-          'URL' => 'http:\/\/dx.doi.org\/10.1101\/139345',
-          'relation' => {},
-          'subtype' => 'preprint'
-        }
-      }.freeze
-      # rubocop:enable Layout/LineLength
 
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
@@ -591,7 +590,8 @@ module Stash
           end
 
           it 'returns the ISSN' do
-            expect(Crossref.send(:get_journal_issn, 'container-title' => 'ABCD')).to eql(CROSSREF_JOURNAL_RESPONSE['message']['items'].first['ISSN'])
+            expect(Crossref.send(:get_journal_issn,
+                                 'container-title' => 'ABCD')).to eql(CROSSREF_JOURNAL_RESPONSE['message']['items'].first['ISSN'])
           end
         end
       end
@@ -617,7 +617,9 @@ module Stash
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
           resource = cr.populate_resource!
           expect(resource.title).to eql(@params[:title])
-          expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
+          expect(resource.identifier.internal_data.select do |id|
+                   id.data_type == 'publicationName'
+                 end.first.value).to eql(@params[:publication_name])
           doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'iscitedby' }
           expect(doi.first&.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(@params[:publication_doi]))
         end

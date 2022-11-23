@@ -142,10 +142,10 @@ module StashEngine
       attributes = validator.upload_attributes_from(
         translator: url_translator, resource: resource, association: @resource_assoc
       )
-      if attributes[:status_code] != 200
-        { url: attributes[:url], status_code: attributes[:status_code] }
-      else
+      if attributes[:status_code] == 200
         @file_model.create(attributes)
+      else
+        { url: attributes[:url], status_code: attributes[:status_code] }
       end
     end
 

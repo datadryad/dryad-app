@@ -59,21 +59,21 @@ module StashEngine
     def formatted_date(t)
       return 'Not available' if t.blank?
 
-      t = t.to_time if t.class == String
+      t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%B %e, %Y')
     end
 
     def formatted_datetime(t)
       return 'Not available' if t.blank?
 
-      t = t.to_time if t.class == String
+      t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%m/%d/%Y %H:%M:%S %Z')
     end
 
     def formatted_html5_date(t)
       return 'Not available' if t.blank?
 
-      t = t.to_time if t.class == String
+      t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%Y-%m-%d')
     end
 
@@ -169,7 +169,7 @@ module StashEngine
     # try to display identifiers linked, but if if not, then just display what you can
     def display_id(type:, my_id:)
       result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
-      if result.class == Array
+      if result.instance_of?(Array)
         view_context.link_to(result.first, result[1], target: '_blank')
       else
         "#{type}: #{result}"
@@ -179,7 +179,7 @@ module StashEngine
     # display some random identifier in plan text, not linked
     def display_id_plain(type:, my_id:)
       result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
-      if result.class == Array
+      if result.instance_of?(Array)
         result.first
       else
         result

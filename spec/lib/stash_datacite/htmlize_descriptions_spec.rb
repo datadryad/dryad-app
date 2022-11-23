@@ -23,17 +23,18 @@ module Script
         expect(item2.text_as_html).to eq("<p>My cat\nYour cat</p><p>All cats</p>")
 
         item3 = Script::HtmlizeDescriptions.new('My simple site is http://catfood.com.')
-        expect(item3.text_as_html).to eq('<p>My simple site is <a href="http://catfood.com" target="_blank" '\
-          'title="http://catfood.com">http://catfood.com</a>.</p>')
+        expect(item3.text_as_html).to eq('<p>My simple site is <a href="http://catfood.com" target="_blank" ' \
+                                         'title="http://catfood.com">http://catfood.com</a>.</p>')
 
         item4 = Script::HtmlizeDescriptions.new('My simple site is http://catfood.com. She & I love it.')
-        expect(item4.text_as_html).to eq('<p>My simple site is <a href="http://catfood.com" target="_blank" '\
-          'title="http://catfood.com">http://catfood.com</a>. She &amp; I love it.</p>')
+        expect(item4.text_as_html).to eq('<p>My simple site is <a href="http://catfood.com" target="_blank" ' \
+                                         'title="http://catfood.com">http://catfood.com</a>. She &amp; I love it.</p>')
 
         item5 = Script::HtmlizeDescriptions.new('A long url like https://googleblog.blogspot.com/2009/12/making-urls-shorter-for-google-toolbar.html')
-        expect(item5.text_as_html).to eq('<p>A long url like <a href="https://googleblog.blogspot.com/2009/12/making-urls-'\
-          'shorter-for-google-toolbar.html" target="_blank" title="https://googleblog.blogspot.com/2009/12/making-urls-shorter'\
-          '-for-google-toolbar.html">https://googleblog.blogspot.com/2009/12/making-urls-short...</a></p>')
+        expect(item5.text_as_html).to eq('<p>A long url like <a href="https://googleblog.blogspot.com/2009/12/making-urls-' \
+                                         'shorter-for-google-toolbar.html" target="_blank" ' \
+                                         'title="https://googleblog.blogspot.com/2009/12/making-urls-shorter-for-google-toolbar.html"' \
+                                         '>https://googleblog.blogspot.com/2009/12/making-urls-short...</a></p>')
 
       end
     end

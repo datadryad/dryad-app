@@ -33,7 +33,7 @@
 	     dataset.resource_state == 'submitted') %>
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
                      action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
-                   method: :get, remote: true) do -%>
+                   method: :get, local: false) do -%>
         <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" alt="Update status">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
@@ -57,7 +57,7 @@
   <td class="c-admin-hide-border-left">
     <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
                                id: dataset.identifier_id, only_path: true),
-                  method: :get, local: true) do -%>
+                  method: :get) do -%>
       <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log" alt="View Activity Log">
         <i class="fa fa-clock-o" aria-hidden="true"></i>
       </button>
@@ -71,7 +71,7 @@
              dataset.resource.curatable?) %>
 	  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
 				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
-	                method: :get, remote: true) do -%>
+	                method: :get, local: false) do -%>
 	      <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" alt="Update curator">
 		  <i class="fa fa-pencil" aria-hidden="true"></i>
 	      </button>

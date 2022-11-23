@@ -6,10 +6,12 @@ module StashEngine
   RSpec.describe CurationActivity do
 
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
 
     before(:each) do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
+      mock_salesforce!
       mock_solr!
       mock_stripe!
     end
@@ -29,7 +31,7 @@ module StashEngine
         @resource = create(:resource, identifier_id: @identifier.id)
         @curation_activity = create(:curation_activity, resource: @resource)
         @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
+        allow(@mock_idgen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
       end
 
@@ -48,7 +50,7 @@ module StashEngine
         @version = create(:version, resource_id: @resource.id)
 
         @mock_idgen = spy('idgen')
-        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern) # .and_return('called make metadata')
+        allow(@mock_idgen).to receive(:update_identifier_metadata!) # .and_return('called make metadata')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
 
         @curation_activity1 = create(:curation_activity, resource: @resource)

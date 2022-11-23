@@ -1,9 +1,9 @@
 # Updating a dataset with a URL manifest
 
 1. log in
-1. select **My Datasets**
+1. select **My datasets**
 1. select an existing, **published** dataset
-1. select **Upload Data**
+1. select **Upload data**
    - ✓ check that the old files appear in the **Uploaded Files** table
 1. select **Enter URLs of file locations**
    - ✓ check that the **Validate files** button is disabled
@@ -17,13 +17,13 @@
    - ✓ check that the file for the new URL has been renamed to avoid collision with the old file
      - _(Note: This behavior is different from the local files workflow.—DM)_
    - ✓ check that the total size is correct
-1. click **Proceed to Review** or **Review and Submit**
-   - ✓ check that both new and old files appear under **review Data Files**
+1. click **Proceed to review** or **Review and submit**
+   - ✓ check that both new and old files appear under **Review data files**
    - ✓ check that the **By checking this box, I agree...** (CC-BY) box is already ticked
 1. click **Submit**
 1. wait for the dataset’s status to apepar as **published**
 1. on the dataset landing page:
-   - ✓ check that the files appear, with the correct sizes, under **Data Files**
+   - ✓ check that the files appear, with the correct sizes, under **Data files**
    - click **Download the dataset**
      - ✓ check that the files appear, with the correct sizes, in the downloaded ZIP file
 

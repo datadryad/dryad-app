@@ -56,7 +56,7 @@ module StashEngine
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
-      .map { |i| [i.name, i.class_name] }.to_h.with_indifferent_access.freeze
+      .to_h { |i| [i.name, i.class_name] }.with_indifferent_access.freeze
 
     accepts_nested_attributes_for :curation_activities
 
@@ -275,7 +275,7 @@ module StashEngine
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads(my_class: StashEngine::DataFile)
       subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
-                                         '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
+                                                       '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
@@ -850,6 +850,13 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
+    def update_salesforce_metadata
+      sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)
+      sf_cases&.each do |c|
+        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: self, update_timestamp: true)
+      end
+    end
+
     private
 
     # -----------------------------------------------------------
@@ -901,11 +908,11 @@ module StashEngine
       publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
       if hold_for_peer_review?
         if publication_accepted
-          curation_note = 'Private for Peer Review was requested, but associated manuscript has ' \
+          curation_note = 'Private for peer review was requested, but associated manuscript has ' \
                           'already been accepted, so automatically moving to Submitted status'
           target_status = 'submitted'
         else
-          curation_note = "Set to Private for Peer Review at author's request"
+          curation_note = "Set to Private for peer review at author's request"
           target_status = 'peer_review'
         end
       else

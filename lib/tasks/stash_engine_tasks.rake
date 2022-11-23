@@ -1,13 +1,13 @@
 require 'httparty'
 require 'stash/salesforce'
-require 'stash/google/journal_gmail'
+require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
 
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
   task fix_missing: :environment do # loads rails environment
-    IdentifierRakeFunctions.update_identifiers
+    Tasks::IdentifierRakeFunctions.update_identifiers
   end
 
   desc "Update identifiers latest resource if they don't have one"
@@ -120,7 +120,7 @@ namespace :identifiers do
         note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
       )
     rescue StandardError => e
-      # note we get errors with test data updating DOI and some of the other callbacks on publishing
+      # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       p "    Exception! #{e.message}"
 
     end

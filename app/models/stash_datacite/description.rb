@@ -7,8 +7,8 @@ module StashDatacite
 
     DescriptionTypes = Datacite::Mapping::DescriptionType.map(&:value)
 
-    DescriptionTypesEnum = DescriptionTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-    DescriptionTypesStrToFull = DescriptionTypes.map { |i| [i.downcase, i] }.to_h
+    DescriptionTypesEnum = DescriptionTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    DescriptionTypesStrToFull = DescriptionTypes.to_h { |i| [i.downcase, i] }
 
     # GrantRegex = Regexp.new(/^Data were created with funding from (.+) under grant (.+)$/)
 

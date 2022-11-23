@@ -45,8 +45,8 @@ module Fixtures
       def add_author(order: nil)
         create_key_and_array(key: :authors)
         @metadata[:authors].push(
-          { "firstName": Faker::Name.first_name,
-            "lastName": Faker::Name.last_name,
+          { firstName: Faker::Name.first_name,
+            lastName: Faker::Name.last_name,
             email: Faker::Internet.email,
             orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
                    "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
@@ -152,10 +152,10 @@ module Fixtures
 
       def random_box
         {
-          "swLongitude": Faker::Address.longitude,
-          "swLatitude": Faker::Address.latitude,
-          "neLongitude": Faker::Address.longitude,
-          "neLatitude": Faker::Address.latitude
+          swLongitude: Faker::Address.longitude,
+          swLatitude: Faker::Address.latitude,
+          neLongitude: Faker::Address.longitude,
+          neLatitude: Faker::Address.latitude
         }
       end
 
@@ -163,10 +163,10 @@ module Fixtures
         create_key_and_array(key: :funders)
         @metadata[:funders].push(
           {
-            "organization": Faker::Company.name,
-            "awardNumber": Faker::Number.number(digits: 4),
-            "identifier": "http://dx.doi.org/10.13039/fakedoi.#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
-            "identifierType": 'crossref_funder_id'
+            organization: Faker::Company.name,
+            awardNumber: Faker::Number.number(digits: 4),
+            identifier: "http://dx.doi.org/10.13039/fakedoi.#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
+            identifierType: 'crossref_funder_id'
           }
         )
       end

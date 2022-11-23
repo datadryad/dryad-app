@@ -5,8 +5,10 @@ module StashEngine
     # https://github.com/bobf/rspec-html might be helpful if I want more complex matching of document returned
 
     include Mocks::Tenant
+    include Mocks::Salesforce
 
     before(:each) do
+      mock_salesforce!
       mock_tenant!
       @user = create(:user, role: 'superuser')
       # HACK: in session because requests specs don't allow session in rails 4

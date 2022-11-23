@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.description   = 'A minimal SWORD 2.0 connector providing those features needed for Stash'
   s.license       = 'MIT'
 
-  s.required_ruby_version = '~> 2.6.6'
+  s.required_ruby_version = '~> 3.0.4'
 
   origin = `git config --get remote.origin.url`.chomp
   origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.gsub(%r{git@([^:]+)(.com|.org)[^/]+}, 'http://\1\2'))
@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files -z`.split("\x0")
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
 
-  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
   s.add_dependency 'rest-client', '~> 2.1.0'
@@ -56,4 +55,5 @@ Gem::Specification.new do |s|
   # s.add_development_dependency 'simplecov-console'
   # s.add_development_dependency 'webmock'
   # s.add_development_dependency 'yard'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end

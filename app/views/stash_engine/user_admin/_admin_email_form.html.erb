@@ -1,7 +1,7 @@
 <% # local: user %>
 <h1>Update <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s email</h1>
 
-<%= form_with(url: user_admin_set_email_path(user.id), method: :post, remote: true) do -%>
+<%= form_with(url: user_admin_set_email_path(user.id), method: :post, local: false) do -%>
   <p>
     <%= text_field_tag('email', user.email, autofocus: true) %>
   </p>

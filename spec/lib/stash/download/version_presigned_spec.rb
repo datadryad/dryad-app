@@ -18,26 +18,26 @@ module Stash
       describe 'urls for Merritt service' do
         it 'creates correct assemble_version_url' do
           u = @vp.assemble_version_url
-          expect(u).to end_with("/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
+          expect(u).to end_with("/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zipunc")
         end
 
         it 'handles ports for assemble_version_url' do
           @vp.instance_variable_set(:@domain, 'https://truculent.com:2838')
           u = @vp.assemble_version_url
-          expect(u).to eq("https://truculent.com:2838/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
+          expect(u).to eq("https://truculent.com:2838/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zipunc")
         end
 
         it 'creates correct status_url' do
           u = @vp.status_url
           expect(u).to end_with("/api/presign-obj-by-token/#{@resource.download_token.token}" \
-            "?filename=#{@vp.filename}&no_redirect=true")
+                                "?filename=#{@vp.filename}&no_redirect=true")
         end
 
         it 'handles ports for status_url' do
           @vp.instance_variable_set(:@domain, 'https://truculent.com:2838')
           u = @vp.status_url
           expect(u).to eq("https://truculent.com:2838/api/presign-obj-by-token/#{@resource.download_token.token}" \
-            "?filename=#{@vp.filename}&no_redirect=true")
+                          "?filename=#{@vp.filename}&no_redirect=true")
         end
       end
 
@@ -77,21 +77,21 @@ module Stash
 
       describe '#assemble' do
         it 'returns non-success status in hash for items not in the 200 http status range' do
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 404, body: 'Not found', headers: {})
 
           expect(@vp.assemble[:status]).to eq(404)
         end
 
         it 'raises errors when Merritt has a problem so we know about it' do
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 500, body: 'Internal server error', headers: {})
 
           expect { @vp.assemble }.to raise_exception(Stash::Download::MerrittException).with_message(/Merritt/)
         end
 
         it 'returns a 408 status code if Merritt gives us one' do
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 408, body: 'Not found', headers: {})
 
           expect(@vp.assemble[:status]).to eq(408)
@@ -99,7 +99,7 @@ module Stash
 
         it 'saves token and predicted availability time to database on good response' do
           token = SecureRandom.uuid
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 200, body:
                   { status: 200, token: token,
                     'anticipated-availability-time': (Time.new + 30).to_s }.to_json,
@@ -118,7 +118,7 @@ module Stash
         it 'parses and returns json status' do
           # do assembly first so we have status to check
           token = SecureRandom.uuid
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 200, body:
                   { status: 200, token: token,
                     'anticipated-availability-time': (Time.new + 30).to_s }.to_json,
@@ -128,7 +128,7 @@ module Stash
             .to_return(status: 202, body:
                   {  status: 202,
                      token: token,
-                     "cloud-content-byte": 4_393_274_895,
+                     'cloud-content-byte': 4_393_274_895,
                      message: 'Object is not ready' }.to_json,
                        headers: { 'Content-Type' => 'application/json' })
           @vp.assemble
@@ -142,7 +142,7 @@ module Stash
         it 'handles non-json status and a 404' do
           # do assembly first so we have status to check
           token = SecureRandom.uuid
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zipunc})
             .to_return(status: 200, body:
                   { status: 200, token: token,
                     'anticipated-availability-time': (Time.new + 30).to_s }.to_json,

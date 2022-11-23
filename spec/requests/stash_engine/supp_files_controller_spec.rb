@@ -19,7 +19,7 @@ module StashEngine
       before(:each) do
         @url = Rails.application.routes.url_helpers.supp_file_presign_url_path(resource_id: @resource.id)
         @json_hash = { 'to_sign' => "AWS4-HMAC-SHA256\n20210213T001147Z\n20210213/us-west-2/s3/aws4_request\n" \
-                                  '98fd9689d64ec7d84eb289ba859a122f07f7944e802edc4d5666d3e2df6ce7d6',
+                                    '98fd9689d64ec7d84eb289ba859a122f07f7944e802edc4d5666d3e2df6ce7d6',
                        'datetime' => '20210213T001147Z' }
       end
 

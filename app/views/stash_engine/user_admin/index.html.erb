@@ -7,7 +7,7 @@
   <h2>User administration</h2>
   
   <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
-  method: 'get', id: 'search_form', local: true ) do %>
+  method: 'get', id: 'search_form') do %>
   <label for="search-terms">User Search:</label>
   <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
   &nbsp;&nbsp;
@@ -26,7 +26,7 @@
   <script>
     const selected_users = new Set()
   </script>
-  <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, remote: true) do %>
+  <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, local: false) do %>
   <%= hidden_field_tag 'selected_users', '', id: "selected_users" %>
   <button title="Merge selected" aria-label="Merge selected" alt="Merge selected">
     Merge selected

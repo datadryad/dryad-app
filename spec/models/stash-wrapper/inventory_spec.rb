@@ -15,43 +15,43 @@ module Stash
 
         it 'sets the file list' do
           files = params[:files]
-          inv = Inventory.new(params)
+          inv = Inventory.new(**params)
           expect(inv.files).to eq(files)
         end
 
         it 'sets the file count' do
           files = params[:files]
-          inv = Inventory.new(params)
+          inv = Inventory.new(**params)
           expect(inv.num_files).to eq(files.size)
         end
 
         it 'accepts an empty list' do
           params[:files] = []
-          inv = Inventory.new(params)
+          inv = Inventory.new(**params)
           expect(inv.files).to eq([])
           expect(inv.num_files).to eq(0)
         end
 
         it 'rejects single files' do
           params[:files] = params[:files][0]
-          expect { Inventory.new(params) }.to raise_error(ArgumentError)
+          expect { Inventory.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'rejects strings' do
           params[:files] = 'HSRC_MasterSampleII.dat'
-          expect { Inventory.new(params) }.to raise_error(ArgumentError)
+          expect { Inventory.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'rejects File objects' do
           File.open('spec/data/wrapper/wrapper-2-payload.xml') do |f|
             params[:files] = f
-            expect { Inventory.new(params) }.to raise_error(ArgumentError)
+            expect { Inventory.new(**params) }.to raise_error(ArgumentError)
           end
         end
 
         it 'rejects arrays of strings' do
           params[:files] = params[:files].map(&:pathname)
-          expect { Inventory.new(params) }.to raise_error(ArgumentError)
+          expect { Inventory.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'rejects arrays of File objects' do
@@ -61,7 +61,7 @@ module Stash
           ]
           begin
             params[:files] = files
-            expect { Inventory.new(params) }.to raise_error(ArgumentError)
+            expect { Inventory.new(**params) }.to raise_error(ArgumentError)
           ensure
             files.each(&:close)
           end

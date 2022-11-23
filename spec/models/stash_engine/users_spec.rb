@@ -1,7 +1,9 @@
 module StashEngine
   describe User, type: :model do
+    include Mocks::Salesforce
 
     before(:each) do
+      mock_salesforce!
       # Mock all the mailers fired by callbacks because these tests don't load everything we need
       allow_any_instance_of(CurationActivity).to receive(:email_status_change_notices).and_return(true)
       allow_any_instance_of(CurationActivity).to receive(:email_orcid_invitations).and_return(true)
@@ -254,7 +256,7 @@ module StashEngine
         @resource_state3 = create(:resource_state, user_id: @user3.id, resource_state: 'submitted', resource_id: @resource3.id)
 
         @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
+        allow(@mock_idgen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
       end
 
