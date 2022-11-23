@@ -24,6 +24,7 @@ module StashApi
 
     include Mocks::CurationActivity
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::Repository
     include Mocks::Tenant
@@ -46,6 +47,7 @@ module StashApi
     before(:each) do
       neuter_curation_callbacks!
       mock_tenant!
+      mock_salesforce!
 
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
 

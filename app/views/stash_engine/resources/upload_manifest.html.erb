@@ -27,8 +27,8 @@
     <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>
     <!-- software/supplemental zenodo upload page, should only get here if you can upload to zenodo -->
-    <%= link_to 'Back to Upload Data', stash_url_helpers.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-    <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+    <%= link_to 'Back to Upload data', stash_url_helpers.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+    <%= link_to 'Proceed to review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% end %>
 </div>
 

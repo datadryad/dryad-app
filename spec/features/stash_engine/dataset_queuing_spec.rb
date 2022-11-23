@@ -12,6 +12,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Tenant
+  include Mocks::Salesforce
   include AjaxHelper
 
   before(:each) do
@@ -22,6 +23,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     mock_solr!
     mock_datacite_and_idgen!
     mock_stripe!
+    mock_salesforce!
     mock_tenant!
     neuter_curation_callbacks!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
@@ -40,7 +42,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       # Sign in and create a new dataset
       sign_in(@superuser)
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       3.times do
         start_new_dataset
         fill_required_fields

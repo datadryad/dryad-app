@@ -6,12 +6,14 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include DatasetHelper
   include Mocks::Repository
   include Mocks::RSolr
+  include Mocks::Salesforce
   include Mocks::Tenant
 
   before(:each) do
     mock_solr!
     mock_tenant!
     mock_repository!
+    mock_salesforce!
     @user = create(:user)
     sign_in(@user)
   end
@@ -56,7 +58,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should be visible', js: true do
       start_new_dataset
       navigate_to_review
-      expect(page).to have_content('Enable Private for Peer Review')
+      expect(page).to have_content('Enable Private for peer review')
     end
 
   end
@@ -65,7 +67,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     before(:each, js: true) do
       # Sign in and create a new dataset
       visit root_path
-      click_link 'My Datasets'
+      click_link 'My datasets'
       start_new_dataset
       fill_required_fields
 
@@ -90,7 +92,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       # it shows upload complete
       expect(page).to have_content('Upload complete')
 
-      click_on('Proceed to Review')
+      click_on('Proceed to review')
       expect(page).to have_content('Software Files Hosted by Zenodo')
       expect(page).to have_content('favicon.ico')
       # expect(page).to have_content('Select license for files')
@@ -99,7 +101,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     xit "doesn't show the software info if software not uploaded", js: true do
       navigate_to_software_file
 
-      click_on('Proceed to Review')
+      click_on('Proceed to review')
       expect(page).not_to have_content('Software Files Hosted by Zenodo')
       expect(page).not_to have_content('favicon.ico')
       # expect(page).not_to have_content('Select license for files')
@@ -117,7 +119,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       # it shows upload complete
       expect(page).to have_content('Upload complete')
 
-      click_on('Proceed to Review')
+      click_on('Proceed to review')
       # type hidden -- software_license 'MIT'
       v = find('#software_license', visible: false).value
       expect(v).to eq('MIT')

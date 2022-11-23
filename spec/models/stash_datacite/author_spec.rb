@@ -2,7 +2,10 @@ require 'rails_helper'
 
 module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch?)
   describe Author do
+    include Mocks::Salesforce
+
     before(:each) do
+      mock_salesforce!
       user = create(:user,
                     email: 'lmuckenhaupt@example.edu',
                     tenant_id: 'dataone')

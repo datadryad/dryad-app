@@ -2,6 +2,7 @@ require 'rails_helper'
 
 module StashEngine
   RSpec.describe FrictionlessReport, type: :model do
+
     before(:each) do
       @resource = create(:resource)
       @file = create(:generic_file, resource_id: @resource.id)

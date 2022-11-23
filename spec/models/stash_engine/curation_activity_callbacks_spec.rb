@@ -5,12 +5,14 @@ module StashEngine
 
     include Mocks::Datacite
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::CurationActivity
 
     before(:each) do
       mock_solr!
       mock_datacite!
+      mock_salesforce!
       mock_stripe!
 
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
@@ -56,7 +58,7 @@ module StashEngine
 
       it 'returns a readable version of :peer_review' do
         @ca.peer_review!
-        expect(@ca.readable_status).to eql('Private for Peer Review')
+        expect(@ca.readable_status).to eql('Private for peer review')
       end
 
       it 'returns a readable version of :action_required' do

@@ -15,12 +15,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Aws
+  include Mocks::Salesforce
 
   before(:each) do
     mock_repository!
     mock_solr!
     mock_datacite!
     mock_stripe!
+    mock_salesforce!
     mock_aws!
     ignore_zenodo!
     @author = create(:user, tenant_id: 'dryad')
@@ -30,12 +32,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     # Sign in and create a new dataset
     sign_in(@author)
     visit root_path
-    click_link 'My Datasets'
+    click_link 'My datasets'
     start_new_dataset
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
-  describe 'Upload Files index' do
+  describe 'Upload files index' do
     before(:each) do
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
@@ -44,7 +46,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file2 = create_software_file(@resource_id)
       @file2.update(url: 'http://example.com/example.csv')
       @file3 = create_supplemental_file(@resource_id)
-      click_link('Upload Files') # to refresh the page
+      click_link('Upload files') # to refresh the page
     end
 
     it 'shows correct introductory text' do
@@ -74,13 +76,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows the right navigation buttons at the bottom' do
       expect(page). to have_content('Back to Describe Dataset')
-      expect(page). to have_content('Proceed to Review')
+      expect(page). to have_content('Proceed to review')
     end
 
     it 'shows only files with status different of "deleted"' do
       @file4 = create_data_file(@resource_id)
       @file4.update(original_filename: 'file_deleted.txt', file_state: 'deleted')
-      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+      click_link('Upload files') # click on it to refresh the page and show the table with the file
 
       expect(page).to_not have_content(@file4.original_filename)
     end
@@ -97,7 +99,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         upload_file_name: 'new_example2.com',
         url: 'http://example.com/new%20example*2.com'
       )
-      click_link('Upload Files') # to refresh the page
+      click_link('Upload files') # to refresh the page
       expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
       expect(page).to have_content('new_example2')
     end
@@ -108,7 +110,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
-      click_link('Upload Files') # click on it to refresh the page and show the table with the file
+      click_link('Upload files') # click on it to refresh the page and show the table with the file
       attach_files
     end
 
@@ -350,7 +352,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'disallows navigation away with pending uploads' do
-      click_on('Proceed to Review')
+      click_on('Proceed to review')
       sleep 0.5
       expect(page).to have_text('please click "Upload pending files"')
     end
@@ -528,7 +530,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file2.url = 'http://example.com/example.csv'
       @file2.save
       @file3 = create_supplemental_file(@resource_id)
-      click_link 'Upload Files' # refresh the page to show the table with the file
+      click_link 'Upload files' # refresh the page to show the table with the file
     end
 
     xit 'calls destroy_manifest when removing New file' do

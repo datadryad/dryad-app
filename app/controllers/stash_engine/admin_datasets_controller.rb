@@ -145,6 +145,7 @@ module StashEngine
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
+          @resource.update_salesforce_metadata
           @resource.reload
           # Refresh the page the same way we would for a change of curation activity
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
@@ -312,7 +313,7 @@ module StashEngine
         <p>The most likely ways to fix this error:</p>
         <ul>
           <li>Close this dialog and re-open the dialog to set the curation status again.</li>
-          <li>Or refresh the <strong>Dataset Curation</strong> list by reloading the page.</li>
+          <li>Or refresh the <strong>Dataset curation</strong> list by reloading the page.</li>
           <li>In some circumstances, submissions or re-submissions of metadata and files must be completed before states can update correctly,
            so waiting a minute or two may fix the problem.</li>
         </ul>

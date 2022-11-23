@@ -30,7 +30,7 @@ http = HTTP.timeout(connect: 30, read: 30).timeout(1.hour.to_i).follow(max_hops:
 assemble_version_url = URI::HTTPS.build(
     host: mrt_domain,
     path: File.join('/api', 'assemble-version', url_encode(url_encode(ark)), version.to_s),
-    query: {format: 'zip', content: 'producer'}.to_query)
+    query: {format: 'zipunc', content: 'producer'}.to_query)
 
 puts "The ASSEMBLE call"
 puts "--- GET: #{assemble_version_url} ---"

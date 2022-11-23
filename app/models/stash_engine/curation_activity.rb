@@ -99,6 +99,11 @@ module StashEngine
 
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed withdrawn].include?(ca.status) }
 
+    after_create :update_salesforce_metadata, if: proc { |_ca|
+                                                    latest_curation_status_changed? &&
+                                                         CurationActivity.where(resource_id: resource_id).count > 1
+                                                  }
+
     # Class methods
     # ------------------------------------------
     # Translates the enum value to a human readable status
@@ -107,7 +112,7 @@ module StashEngine
 
       case status
       when 'peer_review'
-        'Private for Peer Review'
+        'Private for peer review'
       when 'action_required'
         'Author Action Required'
       else
@@ -304,6 +309,12 @@ module StashEngine
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
       resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
     end
+
+    def update_salesforce_metadata
+      resource.update_salesforce_metadata
+      true # ensure callbacks are not interrupted
+    end
+
     # rubocop:enable
 
     # Helper methods
