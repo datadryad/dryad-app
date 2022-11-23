@@ -128,7 +128,7 @@
           class: 'o-button__icon-left', role: 'button' %>
 
   <% if @error_items.blank? # valid data %>
-    <%= form_with(url: resources_submission_path, local: true) do -%>
+    <%= form_with(url: resources_submission_path) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>

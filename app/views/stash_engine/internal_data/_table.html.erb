@@ -23,7 +23,7 @@
             <% end %>
             <%= form_with(url: url_for( controller: '/stash_engine/admin_datasets', action: 'data_popup',
                                         id: item.identifier_id, sub_method: 'put', only_path: true),
-                    method: :get, remote: true) do -%>
+                    method: :get, local: false) do -%>
               <%= hidden_field_tag :internal_datum_id, item.id %>
               <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <% end %>

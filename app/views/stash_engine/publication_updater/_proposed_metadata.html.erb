@@ -5,10 +5,10 @@
 <td class="c-proposed-change-table__column-centered">
   <strong>Changes</strong>
   <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
-  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, remote: true do |f| %>
+  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, local: false do |f| %>
     <button name="accept_changes" type="submit">Accept</button>
   <% end %>
-  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, remote: true do |f| %>
+  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, local: false do |f| %>
      <button name="reject_changes" type="submit">Reject</button>
     <% end %>
 </td>

@@ -1,5 +1,3 @@
-require_dependency 'stash_engine/application_controller'
-
 module StashEngine
   class TenantsController < ApplicationController
     # GET /tenants

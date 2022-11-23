@@ -37,14 +37,14 @@ module StashEngine
       def pages
         return 0 if count == 0
 
-        (count - 1) / @page_size + 1
+        ((count - 1) / @page_size) + 1
       end
 
       def page(number)
         number = number.to_i
         number = 1 if number < 1
         @datasets.select('stash_engine_identifiers.id as identifier_id, stash_engine_identifiers.identifier, ' \
-                    'res.id as resource_id, res.updated_at').limit(@page_size).offset(@page_size * (number - 1))
+                         'res.id as resource_id, res.updated_at').limit(@page_size).offset(@page_size * (number - 1))
       end
 
       def sitemap_index

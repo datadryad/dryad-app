@@ -5,7 +5,7 @@ require 'fileutils'
 
 # Example of use:
 #
-# require 'stash/google/journal_gmail'
+# require 'stash/google/journal_g_mail'
 # m = Stash::Google::JournalGMail.messages_to_process
 # Stash::Google::JournalGMail.message_content(message: m.first)
 #

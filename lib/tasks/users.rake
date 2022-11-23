@@ -1,5 +1,4 @@
 require 'byebug'
-require 'pp'
 namespace :users do
   desc 'Merge old and new users (into old account like it works in the UI)'
   task merge_users: :environment do

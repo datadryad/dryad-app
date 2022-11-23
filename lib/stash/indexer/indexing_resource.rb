@@ -51,6 +51,7 @@ module Datacite
     end
   end
 end
+
 module Stash
   module Indexer
     class IndexingResource
@@ -282,16 +283,13 @@ module Stash
       def db_box_to_dc_mapping(db_box:)
         return nil unless db_box.sw_latitude && db_box.ne_latitude && db_box.sw_longitude && db_box.ne_longitude
 
-        Datacite::Mapping::GeoLocationBox.new(south_latitude: db_box.sw_latitude.to_f,
-                                              west_longitude: db_box.sw_longitude.to_f,
-                                              north_latitude: db_box.ne_latitude.to_f,
-                                              east_longitude: db_box.ne_longitude.to_f)
+        Datacite::Mapping::GeoLocationBox.new(db_box.sw_latitude.to_f, db_box.sw_longitude.to_f, db_box.ne_latitude.to_f, db_box.ne_longitude.to_f)
       end
 
       def db_point_to_dc_mapping(db_point:)
         return nil unless db_point.latitude && db_point.longitude
 
-        Datacite::Mapping::GeoLocationPoint.new(latitude: db_point.latitude.to_f, longitude: db_point.longitude.to_f)
+        Datacite::Mapping::GeoLocationPoint.new(db_point.latitude.to_f, db_point.longitude.to_f)
       end
 
       def fix_html(my_str)

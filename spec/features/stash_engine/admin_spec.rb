@@ -279,7 +279,7 @@ RSpec.feature 'Admin', type: :feature do
           find('input[name=commit]').click
         end
 
-        # Note: Although this tests the process of changing a tenant, it doesn't actually test the result,
+        # NOTE: Although this tests the process of changing a tenant, it doesn't actually test the result,
         # since the Mock Tenant makes everything look like the same tenant. Doing this "right" would require
         # even more contortions than the ones in `tenant_spec.rb`, and it's not really worthwhile.
       end

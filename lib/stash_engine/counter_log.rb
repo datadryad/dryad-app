@@ -32,7 +32,7 @@ module StashEngine
       l = @@logger
       l.info('#Version: 0.0.1')
       l.info("#Fields: event_time\tclient_ip\tsession_cookie_id\tuser_cookie_id\tuser_id\trequest_url\tidentifier\tfilename\tsize\tuser-agent\t" \
-            "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_id\ttarget_url\tpublication_year")
+             "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_id\ttarget_url\tpublication_year")
       l.info('#Software: Dryad')
       l.info("#Start-Date: #{Time.parse(date_string).iso8601}")
       l.info("#End-Date: #{(Time.parse(date_string) + 24.hours).iso8601}")

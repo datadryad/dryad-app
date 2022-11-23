@@ -39,9 +39,9 @@ module Stash
         @description ||= begin
           resource = StashEngine::Resource.find(resource_id)
           description_for(resource)
-                         rescue StandardError => e
-                           logger.error("Can't find resource #{resource_id}: #{e}\n#{e.full_message}\n")
-                           "#{self.class} for missing resource #{resource_id}"
+        rescue StandardError => e
+          logger.error("Can't find resource #{resource_id}: #{e}\n#{e.full_message}\n")
+          "#{self.class} for missing resource #{resource_id}"
         end
       end
 

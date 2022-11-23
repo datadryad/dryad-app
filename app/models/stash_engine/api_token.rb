@@ -25,7 +25,7 @@ module StashEngine
     def self.test_api
       url = Rails.application.routes.url_helpers.test_url
 
-      resp = HTTP.headers('Authorization': "Bearer #{token}").get(url)
+      resp = HTTP.headers(Authorization: "Bearer #{token}").get(url)
 
       resp.parse
     end

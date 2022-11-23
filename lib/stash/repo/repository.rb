@@ -165,7 +165,7 @@ module Stash
       def remove_if_exists(file)
         return if file.blank?
 
-        FileUtils.remove_entry_secure(file, true) if File.exist?(file)
+        FileUtils.remove_entry_secure(file, true)
       end
 
       def remove_public_dir(resource)

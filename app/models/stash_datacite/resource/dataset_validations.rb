@@ -2,10 +2,12 @@ require 'addressable'
 require 'cgi'
 require 'stash/aws/s3'
 
+# rubocop:disable Style/MixinUsage
 # this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
 # to output digital storage sizes
 #
 include StashEngine::ApplicationHelper
+# rubocop:enable Style/MixinUsage
 
 module StashDatacite
   module Resource
@@ -181,8 +183,8 @@ module StashDatacite
         return [] if errored_uploads.empty?
 
         msg = '{Check that the following file(s) have uploaded}:<br/><br/>' \
-          "#{errored_uploads.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
-          'If this state persists for more than a few minutes, please remove and upload the file(s) again.'
+              "#{errored_uploads.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
+              'If this state persists for more than a few minutes, please remove and upload the file(s) again.'
 
         ErrorItem.new(message: msg,
                       page: files_page(@resource),
@@ -196,9 +198,9 @@ module StashDatacite
         return [] if files.empty?
 
         msg = '{Check that the URLs associated with the following files are available and publicly viewable}:<br/><br/>' \
-          "#{files.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
-          'URLs for deposit need to be publicly accessible and self-contained objects.  For example, ' \
-          'adding an HTML file will only retrieve the HTML and not all referenced images or other assets.'
+              "#{files.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
+              'URLs for deposit need to be publicly accessible and self-contained objects.  For example, ' \
+              'adding an HTML file will only retrieve the HTML and not all referenced images or other assets.'
 
         ErrorItem.new(message: msg,
                       page: files_page(@resource),
@@ -209,7 +211,7 @@ module StashDatacite
         return [] unless @resource.generic_files.present_files.count > APP_CONFIG.maximums.files
 
         ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
-          'or package your files in a container such as a zip archive',
+                               'or package your files in a container such as a zip archive',
                       page: files_page(@resource),
                       ids: ['filelist_id'])
       end
@@ -218,22 +220,22 @@ module StashDatacite
         errors = []
 
         if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size
-          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}." \
-                                  ' {Remove some data files to proceed}.',
+          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}. " \
+                                           '{Remove some data files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." \
-            ' {Remove some software files to proceed}.',
+          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
+                                           '{Remove some software files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}." \
-            ' {Remove some supplemental files to proceed}.',
+          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
+                                           '{Remove some supplemental files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
@@ -245,8 +247,8 @@ module StashDatacite
         errors = []
 
         unless contains_data?
-          errors << ErrorItem.new(message: 'Include at least one data file in your submission.' \
-                                           ' {Add some data files to proceed}.',
+          errors << ErrorItem.new(message: 'Include at least one data file in your submission. ' \
+                                           '{Add some data files to proceed}.',
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end

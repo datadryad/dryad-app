@@ -1,6 +1,3 @@
-require_dependency 'api_application_controller'
-require_relative 'datasets_controller'
-
 module StashApi
   class SubmissionQueueController < ApiApplicationController
     before_action :require_json_headers
@@ -14,9 +11,7 @@ module StashApi
       # by default we should calculate the length as rejected_shutting_down and enqueued
       @queue_length = StashEngine::RepoQueueState.latest_per_resource.where(state: %w[enqueued rejected_shutting_down]).count
       @executor = StashEngine.repository.executor
-      respond_to do |format|
-        format.any { render json: { queue_length: @queue_length, executor_queue_length: @executor.queue_length } }
-      end
+      render json: { queue_length: @queue_length, executor_queue_length: @executor.queue_length }
     end
   end
 end

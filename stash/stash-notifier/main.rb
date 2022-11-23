@@ -8,7 +8,7 @@ Dir.chdir(__dir__) # gets bundler.require(:default) working from any directory
 
 require 'rubygems'
 require 'bundler/setup'
-Dir[File.join(__dir__, 'app', '*.rb')].sort.each { |file| require file }
+Dir[File.join(__dir__, 'app', '*.rb')].each { |file| require file }
 require 'active_support/core_ext/object/to_query'
 
 Bundler.require(:default)

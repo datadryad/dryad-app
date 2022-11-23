@@ -4,8 +4,6 @@
 
 require 'fileutils'
 require 'stash/aws/s3'
-
-require_dependency 'api_application_controller'
 require 'stash/download/file_presigned'
 
 module StashApi
@@ -28,17 +26,13 @@ module StashApi
     # GET /files/<id>
     def show
       file = StashApi::File.new(file_id: params[:id])
-      respond_to do |format|
-        format.any { render json: file.metadata }
-      end
+      render json: file.metadata
     end
 
     # GET /versions/<version-id>/files
     def index
       files = paged_files_for_version
-      respond_to do |format|
-        format.any { render json: files }
-      end
+      render json: files
     end
 
     # PUT /datasets/<encoded-doi>/files/<encoded-file-name>
@@ -48,9 +42,7 @@ module StashApi
       Stash::Aws::S3.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
-      respond_to do |format|
-        format.any { render json: file.metadata, status: 201 }
-      end
+      render json: file.metadata, status: 201
     end
 
     # DELETE /files/<id>
@@ -60,9 +52,7 @@ module StashApi
         return
       end
       file_hash = make_deleted(data_file: @stash_file)
-      respond_to do |format|
-        format.any { render json: file_hash, status: 200 }
-      end
+      render json: file_hash, status: 200
     end
 
     # GET /files/<id>/download

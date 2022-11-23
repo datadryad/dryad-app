@@ -16,11 +16,11 @@ module Stash
 
       describe :do_validate? do
         it 'is true in test' do
-          expect(ENV['RAILS_ENV']).to eq('test') # just to be sure
+          expect(ENV.fetch('RAILS_ENV', nil)).to eq('test') # just to be sure
           expect(builder.do_validate?).to eq(true)
         end
         it 'is true in dev' do
-          rails_env = ENV['RAILS_ENV']
+          rails_env = ENV.fetch('RAILS_ENV', nil)
           begin
             ENV['RAILS_ENV'] = 'development'
             expect(builder.do_validate?).to eq(true)
@@ -29,7 +29,7 @@ module Stash
           end
         end
         it 'is false in stage' do
-          rails_env = ENV['RAILS_ENV']
+          rails_env = ENV.fetch('RAILS_ENV', nil)
           begin
             ENV['RAILS_ENV'] = 'stage'
             expect(builder.do_validate?).to eq(false)
@@ -38,7 +38,7 @@ module Stash
           end
         end
         it 'is false in production' do
-          rails_env = ENV['RAILS_ENV']
+          rails_env = ENV.fetch('RAILS_ENV', nil)
           begin
             ENV['RAILS_ENV'] = 'production'
             expect(builder.do_validate?).to eq(false)

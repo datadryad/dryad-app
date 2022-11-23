@@ -1,5 +1,5 @@
 <%# the local variable 'geolocation_point' should be passed in to this partial when there are multiple per page %>
-<%= form_with(model: geolocation_point, url: stash_datacite.geolocation_points_create_path, remote: true,
+<%= form_with(model: geolocation_point, url: stash_datacite.geolocation_points_create_path, local: false,
               authenticity_token: true, id: "geolocation_point_new_form", class: 'c-location__point-inputs') do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
   <%= f.text_field :latitude, class: 'c-location__input', placeholder: "e.g., 37.8012", id: "geo_lat_point" %>&nbsp;,&nbsp;
