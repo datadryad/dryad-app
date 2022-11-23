@@ -21,8 +21,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'is not accessible by regular users' do
         sign_in
         visit dashboard_path
-        # User should be redirected to the My Datasets page
-        expect(page).to have_text('My Datasets')
+        # User should be redirected to the My datasets page
+        expect(page).to have_text('My datasets')
       end
 
       it 'is accessible by admins' do
@@ -50,6 +50,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         mock_tenant!
+        mock_salesforce!
 
         # Create a user, identifier and 2 resources for each tenant
         %w[ucop dryad mock_tenant].each do |tenant|
@@ -129,6 +130,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_solr!
         mock_repository!
         mock_datacite_and_idgen!
+        mock_salesforce!
 
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))

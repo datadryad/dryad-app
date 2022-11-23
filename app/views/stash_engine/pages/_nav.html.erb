@@ -89,7 +89,7 @@
     </div>
 
     <% if current_user %>
-      <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
+      <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
     <% end %>
     <%= render partial: 'stash_engine/shared/log_in_out' %>
   </div>

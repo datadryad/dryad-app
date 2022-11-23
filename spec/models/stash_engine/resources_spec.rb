@@ -1,12 +1,14 @@
 module StashEngine
 
   describe Resource, type: :model do
+    include Mocks::Salesforce
 
     attr_reader :user
     attr_reader :skip_emails
     attr_reader :future_date
 
     before(:each) do
+      mock_salesforce!
       tomorrow = Date.today + 1
       @future_date = tomorrow + 366.days
       @user = StashEngine::User.create(

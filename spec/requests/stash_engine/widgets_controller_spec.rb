@@ -8,11 +8,13 @@ module StashEngine
     include Mocks::Datacite
     include Mocks::Repository
     include Mocks::RSolr
+    include Mocks::Salesforce
     include Mocks::Stripe
 
     before(:each) do
       # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
       mock_repository!
+      mock_salesforce!
       mock_solr!
       mock_datacite_and_idgen!
       mock_stripe!

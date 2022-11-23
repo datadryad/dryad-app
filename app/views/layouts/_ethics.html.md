@@ -1,4 +1,4 @@
-<h1>Data Publishing Ethics</h1>
+<h1>Data publishing ethics</h1>
 
 <p>
   Dryad follows community best practices on data publishing ethics and aligns
