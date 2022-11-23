@@ -138,7 +138,7 @@ module Stash
 
         # don't set new queue state on deferred submission results until the OAI-PMH feed does it for us, it's still
         # in progress until that happens.
-        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed') unless result.deferred?
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'provisional_complete') unless result.deferred?
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)

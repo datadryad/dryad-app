@@ -66,6 +66,3 @@ jobs:
 
     - name: 'RSpec Task Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/tasks
-
-    - name: 'RSpec Stash-Notifier Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip stash/stash-notifier/spec/

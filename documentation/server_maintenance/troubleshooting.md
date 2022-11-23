@@ -104,32 +104,17 @@ See also: [Slides on Submission Processes](https://docs.google.com/presentation/
 Errors in the queue_state or resource_state or stuck states
 -----------------------------------------------------------
 
-If the download_uri and update_uri exist in the resource, then set it
-to `complete` as above.
+Check that the Merritt submission status daemon is running.
 
-For an error state from Merritt that has been corrected (by fixing
-Merritt or the dataset) and now the item needs to be sent to Merritt
-again, see the [Merritt](merritt.md) docs to restart the submission.
+Be sure we can get results for queries from Merritt.
 
-If the latest stash_engine_repo_queue_state is stuck at processing (or
-other states) or the resource_state is stuck at processing for an
-unreasonably long time. An unreasonably long time is over 6
-hours to a day depending on size of the submission and the queue.
-See if Merritt received the submission, if they didn't receive it,
-then treat it like an error state above and re-submit it (see above).
-If Merritt has received and processed the submission and it's still
-stuck, double-check that the OAI-PMH feed is working because if it
-isn't then the we may never be notified something is complete.
-Check that the completed item shows up in the OAI-PMH feed. (See
-below.)
+The daemon can be run manually with rake task like:
+```
+RAILS_ENV=<environment> bundle exec rails merritt_status:update
+```
 
-If the OAI-PMH feed is working and the item is present, check the
-stash-notifier logs.  A pid file that was never removed may prevent
-the notifier from processing additional items since it believes a
-notifier instance is already running.  You may need to remove the pid
-file or look to see if there is some problem with the notifier.  Maybe
-a server got shut down in the middle of a run so the notifier didn't
-have a chance to remove it's own pid.
+However, it will start automatically from systemd startup and
+can be managed through it as the preferred method.
 
 
 If the user needs to change a data problem that caused a submission error (rare)

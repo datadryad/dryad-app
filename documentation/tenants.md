@@ -131,19 +131,6 @@ Logos go into `app/assets/images/tenants`
 Add the institution to the list in `app/views/layouts/_our_membership.html.md`
 
 
-
-Updating the Notifier
------------------------
-
-When adding a new tenant that has a new Merritt collection, you need
-to update the notifier because it only harvests certain collections
-because our stage and demo environments both use the Merritt stage
-collections.
-
-Edit `stash/stash-notifier/notifier.yml` and add the
-merritt collection to the “sets” section for any environments that
-will need it.
-
 Updating pre-existing users in the database
 -------------------------------------------
 
