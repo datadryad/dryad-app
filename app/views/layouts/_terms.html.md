@@ -2,9 +2,9 @@
 
 <p><i>Last revised 26 July 2019</i></p>
 
-<p>These Terms of Service apply to Individuals and Organizations who use or publish content on the Dryad Digital Platform, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Digital Platform. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Digital Platform.</p>
+<p>These Terms of Service apply to Individuals and Organizations who use or publish content on the Dryad Data Platform, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Data Platform. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Data Platform.</p>
 
-<p><strong>By submitting content to or using content from the Dryad Digital Platform, submitters and users enter into a binding agreement to accept the Terms of Service described herein. If you do not agree to these Terms of Service, please refrain from using content from or submitting content to the Platform.</strong>
+<p><strong>By submitting content to or using content from the Dryad Data Platform, submitters and users enter into a binding agreement to accept the Terms of Service described herein. If you do not agree to these Terms of Service, please refrain from using content from or submitting content to the Platform.</strong>
 </p>
 
 <p>If there is any conflict between the Organization Membership Agreement and these Terms, the Organization Membership Agreement will prevail.</p>
@@ -190,12 +190,12 @@
 <li><strong>Dataset</strong>: the Content files associated with one Document plus the metadata describing each file and the combined set of files.</li>
 <li><strong>Data Publishing Charge (DPC)</strong>: a one-time fee for publication of an Accepted Dataset in Dryad. A DPC is applied only when the Content is approved by Dryad curation personnel.</li>
 <li><strong>Document</strong>: a research article in a scholarly journal, or other scholarly publication such as, but not limited to, a book, chapter, conference proceedings, monograph or dissertation.</li>
-<li><strong>Dryad Digital Platform or Platform</strong>: the platform operated by Dryad, including the software, interfaces, and contents.</li>
+<li><strong>Dryad Data Platform or Platform</strong>: the platform operated by Dryad, including the software, interfaces, and contents.</li>
 <li><strong>Eligible Country</strong>: a country listed on the World Bank website as having a low-income or a lower- middle-income economy.</li>
 <li><strong>Embargo</strong>: a delay of the Publication of Content for a defined period after the publication date of the related Document in a journal or other media.</li>
 <li><strong>Member</strong>: An Organization that is a signatory to an institutional Organization Membership Agreement with Dryad.</li>
 <li><strong>Organization</strong>: an organization (including its sub-organizations or affiliated organizations).</li>
-<li><strong>Organization Membership Agreement</strong>: an institutional membership agreement between an Organization and Dryad that governs the access to and use of the Dryad Digital Platform by the Organization’s employees, contractors, agents, affiliates, etc.</li>
+<li><strong>Organization Membership Agreement</strong>: an institutional membership agreement between an Organization and Dryad that governs the access to and use of the Dryad Data Platform by the Organization’s employees, contractors, agents, affiliates, etc.</li>
 <li><strong>Payment Plan</strong>: any of several methods set forth in a Purchase Agreement that allows purchasing entities to cover the Data Publishing Charge on behalf of individuals Submitting to Dryad.</li>
 <li><strong>Publish/Publication</strong>: to deposit/depositing Content on the Platform for distribution to the public under a CC0 Waiver.</li>
 <li><strong>Purchaser</strong>: the purchasing entity set forth in a Purchase Agreement or an individual Submitter who pays to Publish Content in Dryad.</li>
@@ -518,7 +518,7 @@
 	<ul>
 		<li>Platform Users are allowed and encouraged to reuse Content from the Platform in any manner except as described herein under "Prohibited Uses Generally" (<a href="#prohibited-use">Section 7.2</a>). To the extent possible under law, Submitters have waived all copyright and related or neighboring rights to this data.</li>
 		<li>It is hoped and expected that Users will follow accepted scholarly norms for citing data and giving credit to fellow scholars.</li>
-		<li>The desired format for links to the data packages is the fully resolvable DOI URL (e.g. "Data available in the Dryad Digital Platform. <a href="https://doi.org/10.5061/dryad.1888">https://doi.org/10.5061/dryad.1888</a>")</li>
+		<li>The desired format for links to the data packages is the fully resolvable DOI URL (e.g. "Data available in the Dryad Data Platform. <a href="https://doi.org/10.5061/dryad.1888">https://doi.org/10.5061/dryad.1888</a>")</li>
 	</ul>
 </p>	
 
@@ -532,12 +532,12 @@
 
 <h3 id="ownership">7.3 Ownership and Use of Other Intellectual Property</h3>
 
-<p>Dryad owns the service marks Dryad, Dryad Digital Platform, and the Dryad logos appearing on the Dryad Website.</p>
+<p>Dryad owns the service marks Dryad, Dryad Data Platform, and the Dryad logos appearing on the Dryad Website.</p>
 
 <p>Permitted Uses of Dryad Intellectual Property:</p>
 <p>
 	<ul>
-		<li>Purchasers, Submitters and Users are welcome to use screenshots, the Dryad Digital Platform name, the Dryad name and other Dryad trademarks (such as the Dryad logo) for informational purposes only.</li>
+		<li>Purchasers, Submitters and Users are welcome to use screenshots, the Dryad Data Platform name, the Dryad name and other Dryad trademarks (such as the Dryad logo) for informational purposes only.</li>
 		<li>Content other than Datasets on the Dryad Website and wiki is available for reuse with attribution under a Creative Commons CC-BY 3.0 license.</li>
 	</ul>
 </p>
