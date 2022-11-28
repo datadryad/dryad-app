@@ -90,8 +90,8 @@ module Stash
           now = Time.now.to_i
           path = 'dcs.xml'
           FileUtils.mkdir('tmp') unless File.directory?('tmp')
-          File.open("tmp/#{now}-expected-#{path}", 'w') { |f| f.write(expected_xml) }
-          File.open("tmp/#{now}-actual-#{path}", 'w') { |f| f.write(desc_elem) }
+          File.write("tmp/#{now}-expected-#{path}", expected_xml)
+          File.write("tmp/#{now}-actual-#{path}", desc_elem)
 
           expect(desc_elem).to be_xml(expected_xml)
         end
@@ -140,35 +140,35 @@ module Stash
 
         it 'requires an identifier' do
           params.delete(:identifier)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid identifier' do
           params[:identifier] = 'doi:10.14749/1407399498'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a version' do
           params.delete(:version)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid version' do
           params[:version] = 1
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
 
           params[:version] = '1'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a license' do
           params.delete(:license)
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
 
         it 'requires a valid license' do
           params[:license] = 'CC-BY'
-          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+          expect { StashWrapper.new(**params) }.to raise_error(ArgumentError)
         end
       end
 
@@ -238,7 +238,7 @@ module Stash
                   StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
                 ]
               ),
-              # Note: the recursive asserts only work because descriptive_elements is empty
+              # NOTE: the recursive asserts only work because descriptive_elements is empty
               descriptive_elements: []
             )
             @wrapper_xml = wrapper.save_to_xml

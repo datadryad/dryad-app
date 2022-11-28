@@ -1,4 +1,4 @@
-$('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create.html.erb')) %>");
+$('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create', formats: [:html])) %>");
 
 // TODO: Clean the ones of these no longer needed
 loadAccordion();

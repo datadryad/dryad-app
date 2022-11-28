@@ -28,7 +28,7 @@
       </td>
       <td class="c-admin-hide-border-left">
         <% if p.resource.submitted? || p.resource.dataset_in_progress_editor&.id == current_user.id %>
-          <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post, local: true) do -%>
+          <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do -%>
             <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <%= hidden_field_tag :resource_id, p.resource.id %>
           <% end %>

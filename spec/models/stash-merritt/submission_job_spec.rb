@@ -38,7 +38,7 @@ module Stash
         @job = SubmissionJob.new(resource_id: @resource.id, url_helpers: @url_helpers)
         allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
 
-        allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(false)
+        allow(Stash::Repo::Repository).to receive(:hold_submissions?).and_return(false)
       end
 
       after(:each) do
@@ -54,7 +54,7 @@ module Stash
         describe 'create' do
 
           it "doesn't submit the package if holding submissions for a restart" do
-            allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(true)
+            allow(Stash::Repo::Repository).to receive(:hold_submissions?).and_return(true)
             expect(@sword_helper).not_to receive(:submit!)
             @job.submit!
           end
@@ -63,7 +63,7 @@ module Stash
             # not having working database and activerecord in these tests sucks
             allow(StashEngine::RepoQueueState).to receive(:where).and_return([1, 2])
             allow(StashEngine::RepoQueueState).to receive(:latest)
-              .and_return({ 'present?': true, state: { 'enqueued?': true }.to_ostruct }.to_ostruct)
+              .and_return({ present?: true, state: { enqueued?: true }.to_ostruct }.to_ostruct)
             expect(@sword_helper).not_to receive(:submit!)
             @job.submit!
           end

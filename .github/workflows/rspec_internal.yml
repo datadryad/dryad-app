@@ -20,7 +20,7 @@ jobs:
 
     - name: 'Set Ruby and Bundler Versions'
       run: |
-        echo "RUBY_VERSION=2.6.6" >> $GITHUB_ENV
+        echo "RUBY_VERSION=3.0.4" >> $GITHUB_ENV
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
     - name: 'Install Ruby and gems'
@@ -66,6 +66,3 @@ jobs:
 
     - name: 'RSpec Task Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/tasks
-
-    - name: 'RSpec Stash-Notifier Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip stash/stash-notifier/spec/

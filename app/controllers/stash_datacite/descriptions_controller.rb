@@ -1,5 +1,3 @@
-require_dependency 'stash_datacite/application_controller'
-
 module StashDatacite
   class DescriptionsController < ApplicationController
     before_action :set_description, only: %i[update destroy]

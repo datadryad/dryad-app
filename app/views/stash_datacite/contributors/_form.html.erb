@@ -1,6 +1,6 @@
 <%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(contributor) %>
-<%= form_with(model: contributor, url: path, remote: true, authenticity_token: true, id: form_id, class: 'c-input__inline') do |f| %>
+<%= form_with(model: contributor, url: path, local: false, authenticity_token: true, id: form_id, class: 'c-input__inline') do |f| %>
 <% my_suffix = field_suffix(contributor) %>
 <%#= render "datacite/shared/error_messages", target: @contributor %>
 	<div class="c-input">

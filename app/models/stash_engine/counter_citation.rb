@@ -13,7 +13,7 @@ module StashEngine
       # dois, but eliminate blank citations
       dois.map do |citation_event|
         citation_metadata(doi: citation_event, stash_identifier: stash_identifier)
-      end.reject(&:nil?)
+      end.compact
     end
 
     # gets cached citation or retrieves a new one

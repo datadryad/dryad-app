@@ -30,14 +30,14 @@ module Stash
         it 'creates correct status_url' do
           u = @vp.status_url
           expect(u).to end_with("/api/presign-obj-by-token/#{@resource.download_token.token}" \
-            "?filename=#{@vp.filename}&no_redirect=true")
+                                "?filename=#{@vp.filename}&no_redirect=true")
         end
 
         it 'handles ports for status_url' do
           @vp.instance_variable_set(:@domain, 'https://truculent.com:2838')
           u = @vp.status_url
           expect(u).to eq("https://truculent.com:2838/api/presign-obj-by-token/#{@resource.download_token.token}" \
-            "?filename=#{@vp.filename}&no_redirect=true")
+                          "?filename=#{@vp.filename}&no_redirect=true")
         end
       end
 
@@ -128,7 +128,7 @@ module Stash
             .to_return(status: 202, body:
                   {  status: 202,
                      token: token,
-                     "cloud-content-byte": 4_393_274_895,
+                     'cloud-content-byte': 4_393_274_895,
                      message: 'Object is not ready' }.to_json,
                        headers: { 'Content-Type' => 'application/json' })
           @vp.assemble

@@ -66,7 +66,7 @@ module StashDatacite
 
       def to_item(value)
         return unless value
-        return value unless value.class == Array
+        return value unless value.instance_of?(Array)
 
         value.length == 1 ? value.first : value
       end

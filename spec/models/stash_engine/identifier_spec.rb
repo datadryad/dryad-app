@@ -419,7 +419,7 @@ module StashEngine
           @identifier2.update_search_words!
           @identifier2.reload
           expect(@identifier2.search_words.strip).to eq('doi:10.123/450 Frolicks with the seahorses ' \
-            'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
+                                                        'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
         end
       end
     end
@@ -486,8 +486,8 @@ module StashEngine
       it 'records a funder-based payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         @identifier.record_payment
@@ -592,13 +592,13 @@ module StashEngine
     describe '#funder_will_pay?' do
       it 'does not make user pay when funder pays' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
-          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': true)])
+          .and_return([OpenStruct.new(payment_exempted?: false), OpenStruct.new(payment_exempted?: true)])
         expect(@identifier.funder_will_pay?).to be_truthy
       end
 
       it 'makes the user pay when funder will not' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
-          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': false)])
+          .and_return([OpenStruct.new(payment_exempted?: false), OpenStruct.new(payment_exempted?: false)])
         expect(@identifier.funder_will_pay?).to be_falsey
       end
     end
@@ -607,20 +607,20 @@ module StashEngine
       it 'returns payment information if funder is paying' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': true,  contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: true,  contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         expect(@identifier.funder_payment_info).to eql(
-          OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+          OpenStruct.new(payment_exempted?: true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
         )
       end
 
       it 'returns nil if no funder payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
-            OpenStruct.new('payment_exempted?': false, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new(payment_exempted?: false, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
           ]
         )
         expect(@identifier.funder_payment_info).to eql(nil)
@@ -1053,6 +1053,52 @@ module StashEngine
       it 'correctly detects no zenodo supplemental' do
         expect(@identifier.has_zenodo_supp?).to eq(false)
       end
+    end
+
+    describe '#merritt_object_info' do
+
+      it 'returns merritt info for a record that exists' do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: File.read(Rails.root.join('spec/fixtures/merritt_local_id_search_response.json')),
+                     headers: { content_type: 'application/json; charset=utf-8' })
+
+        info = @identifier.merritt_object_info
+        versions = info['versions'].map { |i| i['version_number'] }
+
+        expect(versions).to include(1)
+        expect(versions).to include(2)
+        expect(versions).to include(3)
+      end
+
+      it "returns nothing for a merritt record that doesn't exist" do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}', headers: { content_type: 'application/json; charset=utf-8' })
+
+        expect(@identifier.merritt_object_info).to eq({})
+      end
+
+      it 'returns nothing when merritt is having some problems' do
+        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+          .with(
+            headers: {
+              'Accept' => 'application/json'
+            }
+          )
+          .to_return(status: 500, body: 'Internal server error', headers: { content_type: 'text/plain' })
+
+        expect(@identifier.merritt_object_info).to eq({})
+      end
+
     end
   end
 end

@@ -3,10 +3,10 @@ namespace :publication_updater do
   # Query to retrieve the latest resource and its latest curation activity
   # where the status is not in_progress (Merritt has already processed it) and not published
   # and its most recent curation activity was within the past 6 months
-  QUERY = <<-SQL.freeze
+  query = <<-SQL.freeze
     SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
     FROM stash_engine_identifiers sei
-      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id 
+      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id#{' '}
       LEFT OUTER JOIN dcs_related_identifiers dri ON ser.id = dri.resource_id
         AND dri.work_type = 'primary_article' AND dri.related_identifier_type = 'doi'
       INNER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id
@@ -20,7 +20,7 @@ namespace :publication_updater do
     # We only want to harass Crossref with DOIs of datasets that have been curated within the past 6 months
     from_date = (Time.now - 6.months).strftime('%Y-%m-%d %H:%M:%S')
 
-    results = ActiveRecord::Base.connection.execute("#{QUERY} AND seca.created_at >= '#{from_date}'").map do |rec|
+    results = ActiveRecord::Base.connection.execute("#{query} AND seca.created_at >= '#{from_date}'").map do |rec|
       OpenStruct.new(resource_id: rec[0], identifier_id: rec[1], status: rec[2], doi: rec[3], title: rec[4], change_id: rec[5])
     end
     p "Scanning Crossref API for #{results.length} resources"

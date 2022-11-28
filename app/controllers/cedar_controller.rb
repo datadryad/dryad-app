@@ -5,35 +5,35 @@ class CedarController < ApplicationController
 
   def json_config
     json_output = {
-      "showTemplateUpload": false,
-      "templateUploadBaseUrl": 'https://api-php.cee.metadatacenter.org',
-      "templateUploadEndpoint": '/upload_not_used',
-      "templateDownloadEndpoint": '/download_not_used',
+      showTemplateUpload: false,
+      templateUploadBaseUrl: 'https://api-php.cee.metadatacenter.org',
+      templateUploadEndpoint: '/upload_not_used',
+      templateDownloadEndpoint: '/download_not_used',
 
-      "showDataSaver": true,
-      "dataSaverEndpointUrl": '/cedar-save',
+      showDataSaver: true,
+      dataSaverEndpointUrl: '/cedar-save',
 
-      "showSampleTemplateLinks": false,
-      "expandedSampleTemplateLinks": false,
-      "sampleTemplateLocationPrefix": '/cedar-embeddable-editor',
-      "loadSampleTemplateName": params[:template],
+      showSampleTemplateLinks: false,
+      expandedSampleTemplateLinks: false,
+      sampleTemplateLocationPrefix: '/cedar-embeddable-editor',
+      loadSampleTemplateName: params[:template],
 
-      "showFooter": false,
-      "showHeader": false,
+      showFooter: false,
+      showHeader: false,
 
-      "terminologyProxyUrl": 'https://terminology.metadatacenter.org/bioportal/integrated-search',
+      terminologyProxyUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
 
-      "showTemplateRenderingRepresentation": false,
-      "showMultiInstanceInfo": false,
-      "showTemplateSourceData": false,
-      "showInstanceDataCore": false,
-      "showInstanceDataFull": true,
+      showTemplateRenderingRepresentation: false,
+      showMultiInstanceInfo: false,
+      showTemplateSourceData: false,
+      showInstanceDataCore: false,
+      showInstanceDataFull: true,
 
-      "expandedInstanceDataCore": false,
-      "expandedInstanceDataFull": false,
-      "expandedTemplateSourceData": false,
-      "expandedTemplateRenderingRepresentation": false,
-      "expandedMultiInstanceInfo": false
+      expandedInstanceDataCore: false,
+      expandedInstanceDataFull: false,
+      expandedTemplateSourceData: false,
+      expandedTemplateRenderingRepresentation: false,
+      expandedMultiInstanceInfo: false
     }
 
     respond_to do |format|
@@ -55,8 +55,6 @@ class CedarController < ApplicationController
     resource.update(cedar_json: cedar_json)
     resource.reload
 
-    respond_to do |format|
-      format.any { render json: { message: 'Save value received in the Cedar Save method' } }
-    end
+    render json: { message: 'Save value received in the Cedar Save method' }
   end
 end

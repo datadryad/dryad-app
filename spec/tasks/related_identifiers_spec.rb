@@ -6,7 +6,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
 
   it "updates format for items like 'doi:10.1073/pnas.1322632112'" do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'doi:10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.update_doi_prefix
+    Tasks::RelatedIdentifiers::Replacements.update_doi_prefix
     matching_one.reload
     @non_matching.reload
     expect(matching_one.fixed_id).to eq('https://doi.org/10.1073/pnas.1322632112')
@@ -15,7 +15,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
 
   it "updates a bare doi like '10.1073/pnas.1322632112'" do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: '10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.update_bare_doi
+    Tasks::RelatedIdentifiers::Replacements.update_bare_doi
     matching_one.reload
     @non_matching.reload
     expect(matching_one.fixed_id).to eq('https://doi.org/10.1073/pnas.1322632112')
@@ -24,7 +24,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
 
   it "copies across preferred format like 'https://doi.org/10.1073/pnas.1322632112'" do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'https://doi.org/10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.move_good_format
+    Tasks::RelatedIdentifiers::Replacements.move_good_format
     matching_one.reload
     @non_matching.reload
     expect(matching_one.fixed_id).to eq('https://doi.org/10.1073/pnas.1322632112')
@@ -33,7 +33,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
 
   it 'changes good http ones into preferred https protocol' do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'http://doi.org/10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.update_http_good
+    Tasks::RelatedIdentifiers::Replacements.update_http_good
     matching_one.reload
     @non_matching.reload
     expect(matching_one.fixed_id).to eq('https://doi.org/10.1073/pnas.1322632112')
@@ -43,7 +43,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
   it 'updates dx.doi.org ones' do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'https://dx.doi.org/10.1073/pnas.1322632112')
     matching_two = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'http://dx.doi.org/10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.update_http_dx_doi
+    Tasks::RelatedIdentifiers::Replacements.update_http_dx_doi
     matching_one.reload
     matching_two.reload
     @non_matching.reload
@@ -55,7 +55,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
   it 'updates protocol free ones' do
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'dx.doi.org/10.1073/pnas.1322632112')
     matching_two = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'doi.org/10.1073/pnas.1322632112')
-    RelatedIdentifiers::Replacements.update_protocol_free
+    Tasks::RelatedIdentifiers::Replacements.update_protocol_free
     matching_one.reload
     matching_two.reload
     @non_matching.reload
@@ -68,7 +68,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
     badchar = [8203].pack('U*')
     matching_one = create(:related_identifier, related_identifier_type: 'doi', related_identifier: "doi:10.1016/​j.c#{badchar}ub.2018.08.012")
     matching_two = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'doi.org/10.1073/pna✅s.1322632112')
-    RelatedIdentifiers::Replacements.update_non_ascii
+    Tasks::RelatedIdentifiers::Replacements.update_non_ascii
     matching_one.reload
     matching_two.reload
     @non_matching.reload
@@ -82,7 +82,7 @@ describe 'related_identifiers:fix_common_doi_problems', type: :task do
                                                related_identifier: 'my cat likes to rrag=10.1016/j.cub.2018.08.012 and so do I')
     matching_two = create(:related_identifier, related_identifier_type: 'doi', related_identifier: 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.023256510')
     already_done = create(:related_identifier, related_identifier_type: 'doi', related_identifier: '10.2222/nog', fixed_id: 'https://doi.org/10.2222/nogggin')
-    RelatedIdentifiers::Replacements.remaining_strings_containing_dois
+    Tasks::RelatedIdentifiers::Replacements.remaining_strings_containing_dois
     matching_one.reload
     matching_two.reload
     @non_matching.reload

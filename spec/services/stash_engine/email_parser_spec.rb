@@ -1,7 +1,5 @@
 module StashEngine
   describe EmailParser do
-    before(:each) do
-    end
 
     describe '#metadata_basics' do
       it 'does not return content when there are no parseable values' do

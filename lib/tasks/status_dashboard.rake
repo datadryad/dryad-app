@@ -2,35 +2,8 @@
 
 namespace :status_dashboard do
 
-  desc 'Check Solr'
-  task check: :environment do
-    StashEngine::ExternalDependency.all.each do |dependency|
-      class_name = "StashEngine::StatusDashboard::#{dependency.abbreviation.titleize.delete(' ')}Service"
-      begin
-        svc = Object.const_get(class_name).new(abbreviation: dependency.abbreviation)
-        online = svc.ping_dependency
-        p "#{online ? 'online' : 'OFFLINE'} <== #{dependency.name}"
-      rescue NameError => e
-        p "Unable to locate a service for #{dependency.name}: #{e.message}"
-        dependency.update(status: 2, error_message: "There is no #{class_name} defined! Unable to ping dependency.")
-        next
-      end
-    end
-    p 'If any errors were reported, please refer to the `stash_engine_external_dependencies` table for details.'
-  end
-
-  desc 'Seed the external_dependencies table'
-  task seed: :environment do
-    p 'Seeding the external_dependencies table.'
-    StashEngine::ExternalDependency.all.destroy_all
-
-    BASELINE_EXTERNAL_DEPENDENCIES.each do |dependency_hash|
-      StashEngine::ExternalDependency.create(dependency_hash)
-    end
-  end
-
   # rubocop:disable Layout/LineLength
-  BASELINE_EXTERNAL_DEPENDENCIES = [
+  baseline_external_dependencies = [
     {
       abbreviation: 'solr',
       name: 'Solr',
@@ -40,10 +13,10 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'notifier',
-      name: 'Stash Notifier',
-      description: 'The service that lets Dryad know when Merritt has finished processing (via the OAI-PMH feed)',
-      documentation: 'If the OAI-PMH feed is working and the item is present, check the stash-notifier logs.  A pid file that was never removed may prevent the notifier from processing additional items since it believes a notifier instance is already running.  You may need to remove the pid file or look to see if there is some problem with the notifier.  Maybe a server got shut down in the middle of a run so the notifier didn\'t have a chance to remove it\'s own pid.',
+      abbreviation: 'submission_status',
+      name: 'Merritt submission status',
+      description: 'Hits the Merritt API endpoint to check if outstanding submissions are finished yet',
+      documentation: "Checks the logs at <RAILS_ROOT>/log/merritt_status_updater.log to be sure it has been checked recently. This is a daemon started by system.d which calls the a rake task like 'RAILS_ENV=development rails merritt_status:update'",
       internally_managed: true,
       status: 1
     },
@@ -124,8 +97,8 @@ namespace :status_dashboard do
       name: 'DataCite Event Data Citations Pre-population',
       description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
       documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
-          'The cron logs to /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log.' \
-          'Looks for "Completed populating citations" and date that is not too old.',
+                     'The cron logs to /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log.' \
+                     'Looks for "Completed populating citations" and date that is not too old.',
       internally_managed: true,
       status: 1
     },
@@ -139,4 +112,31 @@ namespace :status_dashboard do
     }
   ].freeze
   # rubocop:enable Layout/LineLength
+
+  desc 'Check Solr'
+  task check: :environment do
+    StashEngine::ExternalDependency.all.each do |dependency|
+      class_name = "StashEngine::StatusDashboard::#{dependency.abbreviation.titleize.delete(' ')}Service"
+      begin
+        svc = Object.const_get(class_name).new(abbreviation: dependency.abbreviation)
+        online = svc.ping_dependency
+        p "#{online ? 'online' : 'OFFLINE'} <== #{dependency.name}"
+      rescue NameError => e
+        p "Unable to locate a service for #{dependency.name}: #{e.message}"
+        dependency.update(status: 2, error_message: "There is no #{class_name} defined! Unable to ping dependency.")
+        next
+      end
+    end
+    p 'If any errors were reported, please refer to the `stash_engine_external_dependencies` table for details.'
+  end
+
+  desc 'Seed the external_dependencies table'
+  task seed: :environment do
+    p 'Seeding the external_dependencies table.'
+    StashEngine::ExternalDependency.all.destroy_all
+
+    baseline_external_dependencies.each do |dependency_hash|
+      StashEngine::ExternalDependency.create(dependency_hash)
+    end
+  end
 end

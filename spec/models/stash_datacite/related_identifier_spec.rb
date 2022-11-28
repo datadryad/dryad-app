@@ -309,7 +309,7 @@ module StashDatacite
       end
 
       it 'calls self.valid_url? from valid_url_format' do
-        expect(RelatedIdentifier).to receive(:'valid_url?')
+        expect(RelatedIdentifier).to receive(:valid_url?)
         @related_identifier.valid_url_format?
       end
     end

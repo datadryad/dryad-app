@@ -9,11 +9,6 @@ module Stash
     RSpec.describe DataciteGen do
       include Mocks::Tenant
 
-      # make these private methods public so I can test them
-      class DataciteGen
-        public :post_metadata, :put_doi, :get_doi
-      end
-
       describe 'Cirneco replacement methods' do
         before(:each) do
           mock_tenant!
@@ -33,7 +28,7 @@ module Stash
                                'Host' => 'mds.test.datacite.org' })
               .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
 
-            res = @datacite_gen.post_metadata(@dc4_xml, username: repo.username, password: repo.password, sandbox: true)
+            res = @datacite_gen.send(:post_metadata, @dc4_xml, { username: repo.username, password: repo.password, sandbox: true })
             expect(res.status).to eq(201)
           end
 
@@ -45,7 +40,7 @@ module Stash
                                'Content-Type' => 'application/xml;charset=UTF-8',
                                'Host' => 'mds.datacite.org' })
               .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
-            res = @datacite_gen.post_metadata(@dc4_xml, username: repo.username, password: repo.password, sandbox: false)
+            res = @datacite_gen.send(:post_metadata, @dc4_xml, { username: repo.username, password: repo.password, sandbox: false })
             expect(res.status).to eq(201)
           end
         end
@@ -60,7 +55,7 @@ module Stash
                                'Content-Type' => 'application/xml;charset=UTF-8',
                                'Host' => 'mds.test.datacite.org' })
               .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
-            res = @datacite_gen.put_doi(bare_id, username: repo.username, password: repo.password, sandbox: true)
+            res = @datacite_gen.send(:put_doi, bare_id, { username: repo.username, password: repo.password, sandbox: true })
             expect(res.status).to eq(201)
           end
 
@@ -73,7 +68,7 @@ module Stash
                                'Content-Type' => 'application/xml;charset=UTF-8',
                                'Host' => 'mds.datacite.org' })
               .to_return(status: 201, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
-            res = @datacite_gen.put_doi(bare_id, username: repo.username, password: repo.password, sandbox: false)
+            res = @datacite_gen.send(:put_doi, bare_id, { username: repo.username, password: repo.password, sandbox: false })
             expect(res.status).to eq(201)
           end
 
@@ -88,7 +83,7 @@ module Stash
                                                       .encode_credentials(repo.username, repo.password),
                                'Host' => 'mds.test.datacite.org' })
               .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
-            res = @datacite_gen.get_doi(bare_id, username: repo.username, password: repo.password, sandbox: true)
+            res = @datacite_gen.send(:get_doi, bare_id, { username: repo.username, password: repo.password, sandbox: true })
             expect(res.status).to eq(200)
           end
 
@@ -101,7 +96,7 @@ module Stash
                                'Host' => 'mds.datacite.org' })
               .to_return(status: 200, body: 'operation succeeded') # not sure what real body is from DC, but we don't use it
 
-            res = @datacite_gen.get_doi(bare_id, username: repo.username, password: repo.password, sandbox: false)
+            res = @datacite_gen.send(:get_doi, bare_id, { username: repo.username, password: repo.password, sandbox: false })
             expect(res.status).to eq(200)
           end
         end

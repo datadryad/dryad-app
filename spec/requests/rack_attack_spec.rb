@@ -18,7 +18,7 @@ RSpec.describe 'Rack::Attack', type: :request do
   end
 
   describe 'rack-attack limiting' do
-    let(:headers) { { 'REMOTE_ADDR': '1.2.3.4' } }
+    let(:headers) { { REMOTE_ADDR: '1.2.3.4' } }
 
     it 'limits basic page access' do
       # succeeds initially, blocks after too many attempts, then allows afteer time passes
@@ -58,8 +58,8 @@ RSpec.describe 'Rack::Attack', type: :request do
     end
 
     it 'throttles authenticated API access' do
-      auth_headers = { 'REMOTE_ADDR': '1.2.3.4',
-                       'HTTP_AUTHORIZATION': 'abc' }
+      auth_headers = { REMOTE_ADDR: '1.2.3.4',
+                       HTTP_AUTHORIZATION: 'abc' }
       target_url = '/api/v2/datasets'
       freeze_time do
         APP_CONFIG[:rate_limit][:api_requests_auth].times do

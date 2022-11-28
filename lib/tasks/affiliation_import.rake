@@ -6,7 +6,7 @@ require 'stash/organization/ror_updater'
 # rubocop:disable Metrics/AbcSize
 namespace :affiliation_import do
 
-  ROOT = Rails.root.join('/tmp').freeze
+  root = Rails.root.join('/tmp').freeze
 
   desc 'Clean the long_names for all ROR affiliations'
   task clean_ror_names: :environment do
@@ -28,22 +28,22 @@ namespace :affiliation_import do
     @live_mode = false
     @last_resource = nil
 
-    case ENV['AFFILIATION_MODE']
+    case ENV.fetch('AFFILIATION_MODE', nil)
     when nil
       puts 'Environment variable AFFILIATION_MODE is blank, assuming test mode.'
     when 'live'
       puts 'Starting live processing due to environment variable AFFILIATION_MODE.'
       @live_mode = true
     else
-      puts "Environment variable AFFILIATION_MODE is #{ENV['AFFILIATION_MODE']}, entering test mode."
+      puts "Environment variable AFFILIATION_MODE is #{ENV.fetch('AFFILIATION_MODE', nil)}, entering test mode."
     end
 
     puts 'Loading affiliation info from CSV files in /tmp/dryad_affiliations*'
 
-    Dir.entries(ROOT).each do |f|
+    Dir.entries(root).each do |f|
       next unless f.start_with?('dryad_affiliations')
 
-      qualified_file_name = "#{ROOT}/#{f}"
+      qualified_file_name = "#{root}/#{f}"
       puts "===== Processing file #{qualified_file_name} ====="
       process_file(file_name: qualified_file_name)
     end
@@ -56,14 +56,14 @@ namespace :affiliation_import do
     start_time = Time.now
     @live_mode = false
 
-    case ENV['AUTHOR_MERGE_MODE']
+    case ENV.fetch('AUTHOR_MERGE_MODE', nil)
     when nil
       puts 'Environment variable AUTHOR_MERGE_MODE is blank, assuming test mode.'
     when 'live'
       puts 'Starting live processing due to environment variable AUTHOR_MERGE_MODE.'
       @live_mode = true
     else
-      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV['AUTHOR_MERGE_MODE']}, entering test mode."
+      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV.fetch('AUTHOR_MERGE_MODE', nil)}, entering test mode."
     end
 
     start_from = 0
@@ -124,20 +124,16 @@ namespace :affiliation_import do
     a2_std = author2.author_standard_name
     string_difference = levenshtein_distance(a1_std, a2_std).to_f / (a1_std.size > a2_std.size ? a1_std.size : a2_std.size)
     if string_difference >= 0.5
-      a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
-      a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split(' ').map { |part| part[0].downcase }.join(' ')
+      a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split.map { |part| part[0].downcase }.join(' ')
+      a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split.map { |part| part[0].downcase }.join(' ')
       return false unless a1_initials == a2_initials
     end
 
-    a1 = "#{author1.author_first_name} #{author1.author_last_name}".downcase.split(' ')
-    a2 = "#{author2.author_first_name} #{author2.author_last_name}".downcase.split(' ')
+    a1 = "#{author1.author_first_name} #{author1.author_last_name}".downcase.split
+    a2 = "#{author2.author_first_name} #{author2.author_last_name}".downcase.split
 
     # ensure a1 is the author with the most parts in their name (otherwise a single-part name would match almost anything)
-    if a1.size < a2.size
-      temp = a1
-      a1 = a2
-      a2 = temp
-    end
+    a1, a2 = a2, a1 if a1.size < a2.size
 
     # iterate through each part of the string
     a1.each_with_index do |a1part, index|
@@ -223,7 +219,7 @@ namespace :affiliation_import do
 
     # start with the assuption that the firstname lastname split is at the first space, but
     # if that doesn't match an author on this item, try successive spaces
-    parts = name.split(' ')
+    parts = name.split
     author = nil
     (1..parts.size).each do |space_to_try|
       first = parts[0..space_to_try - 1].join(' ')
@@ -256,7 +252,7 @@ namespace :affiliation_import do
 
     resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                          note: 'Duplicate authors combined by ' \
-                                                                         'affiliation_import:merge_duplicate_authors',
+                                                                               'affiliation_import:merge_duplicate_authors',
                                                                          status: resource.curation_activities.last.status)
     @last_resource = resource
   end

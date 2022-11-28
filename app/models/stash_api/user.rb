@@ -10,7 +10,7 @@ module StashApi
 
     def metadata
       afilliation = StashDatacite::Affiliation.find(@se_user.affiliation_id) if @se_user.affiliation_id
-      { '_links': links }.merge(
+      { _links: links }.merge(
         id: @se_user.id,
         firstName: @se_user.first_name,
         lastName: @se_user.last_name,

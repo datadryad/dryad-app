@@ -72,7 +72,7 @@ module Stash
         return unless upload.digest_type.present? && upload.digest.present? && out[:digests][upload.digest_type] != upload.digest
 
         raise FileError, "Error #{upload.digest_type} digest doesn't match database value:\nCalculated:#{out[:digests][upload.digest_type]}\n" \
-              "Database: #{upload.digest}"
+                         "Database: #{upload.digest}"
       end
 
       # resource method is :software_files or :supp_files, the method from resource to get the right type of files
@@ -91,13 +91,13 @@ module Stash
 
           if zen_file.blank?
             file_errors << "#{dry_file.upload_file_name} (id: #{dry_file.id}) exists in the Dryad database but not in Zenodo " \
-                'after Zenodo indicated a successful upload'
+                           'after Zenodo indicated a successful upload'
             next
           end
 
           if zen_file[:filesize] != dry_file.upload_file_size
             file_errors << "Dryad and Zenodo file sizes do not match for #{dry_file.upload_file_name} (id: #{dry_file.id}): " \
-              "Dryad size is #{dry_file.upload_file_size} and Zenodo size is #{zen_file[:filesize]}"
+                           "Dryad size is #{dry_file.upload_file_size} and Zenodo size is #{zen_file[:filesize]}"
           end
         end
 

@@ -7,8 +7,8 @@ require 'json'
 
 class Uploader
 
-  LARGE_FILE_EXCEPTION = { 'code': 69, 'severity': 'warning', 'message': 'Report is compressed using gzip',
-                           'help-url': 'https://github.com/datacite/sashimi', 'data': 'usage data needs to be uncompressed' }.freeze
+  LARGE_FILE_EXCEPTION = { code: 69, severity: 'warning', message: 'Report is compressed using gzip',
+                           'help-url': 'https://github.com/datacite/sashimi', data: 'usage data needs to be uncompressed' }.freeze
 
   URI = 'https://api.datacite.org/reports'.freeze
 

@@ -4,7 +4,7 @@ module StashEngine
 
   class CurationActivity < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_curation_activities'
-    include StashEngine::Concerns::StringEnum
+    include StashEngine::Support::StringEnum
 
     # Associations
     # ------------------------------------------
@@ -219,15 +219,9 @@ module StashEngine
       return if previously_published?
 
       case status
-      when 'published'
+      when 'published', 'embargoed', 'peer_review'
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
-      when 'embargoed'
-        StashEngine::UserMailer.status_change(resource, status).deliver_now
-        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
-      when 'peer_review'
-        StashEngine::UserMailer.status_change(resource, status).deliver_now
-        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
         return if previously_submitted? # Don't send multiple emails for the same resource
 

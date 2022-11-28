@@ -5,7 +5,7 @@
     
   <%= form_with model: StashEngine::Resource.new,
                 url: stash_url_helpers.current_editor_change_path(resource.id),
-                method: :post, remote: true do |f| %>
+                method: :post, local: false do |f| %>
 
     <p class="c-alert--error">Unable to save your changes at this time due to an internal error. Please contact a developer.</p>
     

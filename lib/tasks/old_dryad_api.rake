@@ -1,6 +1,5 @@
 # This is a rake file to  get some identifiers to test the 'manuscript_in_progress' id from the existing dryad api.
 require 'httparty'
-require 'pp'
 
 namespace :old_dryad_api do
   desc 'Get a random manuscript ID/metadata from the Dryad classic API to ease manual testing of autofill'

@@ -11,14 +11,14 @@ module StashApi
     end
 
     def metadata
-      { '_links': links }.merge(path: @se_data_file.upload_file_name,
-                                url: @se_data_file.url,
-                                size: @se_data_file.upload_file_size,
-                                mimeType: @se_data_file.upload_content_type,
-                                status: @se_data_file.file_state,
-                                digest: @se_data_file.digest,
-                                digestType: @se_data_file.digest_type,
-                                description: @se_data_file.description).recursive_compact
+      { _links: links }.merge(path: @se_data_file.upload_file_name,
+                              url: @se_data_file.url,
+                              size: @se_data_file.upload_file_size,
+                              mimeType: @se_data_file.upload_content_type,
+                              status: @se_data_file.file_state,
+                              digest: @se_data_file.digest,
+                              digestType: @se_data_file.digest_type,
+                              description: @se_data_file.description).recursive_compact
     end
 
     def links
