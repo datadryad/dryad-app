@@ -48,9 +48,9 @@ module StashEngine
       end
 
       it 'finds the tenant by long_name' do
-        tenant = Tenant.find_by_long_name('Dryad Digital Platform')
+        tenant = Tenant.find_by_long_name('Dryad Data Platform')
         expect(tenant.tenant_id).to eq('dryad')
-        expect(tenant.long_name).to eq('Dryad Digital Platform')
+        expect(tenant.long_name).to eq('Dryad Data Platform')
         expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
         expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('none')

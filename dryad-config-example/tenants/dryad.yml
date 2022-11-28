@@ -13,7 +13,7 @@ default: &default
     password: "submitter.password"
   abbreviation: "dryad"
   short_name: "Dryad"
-  long_name: "Dryad Digital Platform"
+  long_name: "Dryad Data Platform"
   publisher_id: isni:0000000446638050
   # put primary ror_id first
   ror_ids:

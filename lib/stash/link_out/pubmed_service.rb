@@ -82,7 +82,7 @@ module LinkOut
             id: @ftp.ftp_provider_id,
             abbreviation: @ftp.ftp_username,
             url: @root_url,
-            name: 'Dryad Digital Platform',
+            name: 'Dryad Data Platform',
             description: 'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.'
           }
         ), nil, 'UTF-8')
