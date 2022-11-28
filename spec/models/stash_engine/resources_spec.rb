@@ -70,7 +70,7 @@ module StashEngine
         end
 
         it 'sends the software to zenodo' do
-          expect(@identifier).to receive(:'has_zenodo_software?').and_call_original
+          expect(@identifier).to receive(:has_zenodo_software?).and_call_original
           expect(StashEngine::ZenodoSoftwareJob).to receive(:perform_later)
           @resource.send_software_to_zenodo
           copy_record = @resource.zenodo_copies.software.first
@@ -88,7 +88,7 @@ module StashEngine
       end
 
       it 'sends the supplemental to zenodo' do
-        expect(@identifier).to receive(:'has_zenodo_supp?').and_call_original
+        expect(@identifier).to receive(:has_zenodo_supp?).and_call_original
         expect(StashEngine::ZenodoSuppJob).to receive(:perform_later)
         @resource.send_supp_to_zenodo
         copy_record = @resource.zenodo_copies.supp.first
@@ -1213,7 +1213,7 @@ module StashEngine
         end
 
         it 'doesn\'t create extra identifier records' do
-          (0..3).each do |_|
+          4.times do |_|
             @resource.ensure_identifier(@doi_value)
           end
           expect(Identifier.count).to eq(1)
@@ -1254,7 +1254,7 @@ module StashEngine
           expect(Resource.submitted_dataset_count).to eq(0)
         end
         it 'counts published current states' do
-          (0...3).each do |index|
+          3.times do |index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
@@ -1265,7 +1265,7 @@ module StashEngine
         it 'groups by identifier' do
           ident1 = create(:identifier)
           ident2 = create(:identifier)
-          (0...3).each do |_index|
+          3.times do |_index|
 
             res1 = create(:resource, identifier: ident1, user_id: user.id)
             res1.current_state = 'submitted'

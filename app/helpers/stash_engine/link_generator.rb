@@ -9,7 +9,6 @@ module StashEngine
     # This *should* only be called from #create_link, and if we reach it,
     # it's because the identifier type is one that we didn't know how to handle,
     # in which case we just return the identifier as-is.
-    # rubocop:disable Lint/MissingSuper
     def self.method_missing(_method_name, *arguments)
       arguments.first
     end
@@ -18,7 +17,6 @@ module StashEngine
     def self.respond_to_missing?(*_args)
       true
     end
-    # rubocop:enable Lint/MissingSuper
 
     # all these return [link_text, url]
     def self.doi(value)

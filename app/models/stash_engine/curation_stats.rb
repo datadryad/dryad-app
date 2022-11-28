@@ -6,7 +6,7 @@
 module StashEngine
   class CurationStats < ApplicationRecord
     self.table_name = 'stash_engine_curation_stats'
-    validates :date, presence: true, uniqueness: true
+    validates :date, presence: true, uniqueness: { case_sensitive: false }
 
     after_create :recalculate
 
@@ -154,9 +154,8 @@ module StashEngine
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
 
         # add to datasets_found if it's transition we want to count
-        if from_status.blank? && (prev_ca&.status != ca&.status)
-          datasets_found.add(ca.resource.identifier)
-        elsif prev_ca&.status == from_status
+        if (from_status.blank? && (prev_ca&.status != ca&.status)) ||
+           prev_ca&.status == from_status
           datasets_found.add(ca.resource.identifier)
         end
       end

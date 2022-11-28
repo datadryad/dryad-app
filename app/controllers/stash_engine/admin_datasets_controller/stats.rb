@@ -3,7 +3,7 @@ module StashEngine
   class AdminDatasetsController
     class Stats
 
-      START_OF_AD_TIME = Time.new(0, 1, 1).utc
+      START_OF_AD_TIME = '1000-01-01 00:00:00'.freeze
 
       STATUS_QUERY_BASE = <<-SQL.freeze
            SELECT count(*)

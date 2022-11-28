@@ -1,4 +1,3 @@
-require_dependency 'stash_engine/application_controller'
 require 'securerandom'
 
 module StashEngine
@@ -70,42 +69,6 @@ module StashEngine
       end
     end
 
-    # PATCH /dataset/doi:10.xyz/abc
-    def update
-      return render(body: nil, status: 404) unless id
-
-      record_identifier = params[:record_identifier]
-      return render(body: nil, status: 400) unless record_identifier
-
-      # get this exact resource by id and version number
-      resources = id.resources.joins(:stash_version).where(['stash_engine_versions.version = ? ', params[:stash_version]])
-
-      return render(body: nil, status: 404) unless resources.count == 1
-
-      # set the @resource variable which is returned by the caching method "resource" if @resource is set
-      @resource = resources.first
-
-      my_state = resource.current_resource_state.resource_state
-      return render(body: nil, status: 204) if my_state == 'submitted'  # already switched state, don't do more than once, but give happy response
-      return render(body: nil, status: 400) if my_state != 'processing' # only change processing items to submitted
-
-      # lib/stash/repo/repository calls stash-merritt/lib/stash/merritt/repository.rb and this populates download and update URIs into the db
-      StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
-
-      if StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'completed').count < 1
-        StashEngine.repository.class.update_repo_queue_state(resource_id: @resource.id, state: 'completed')
-      end
-
-      # success but no content, see RFC 5789 sec. 2.1
-      update_size!
-      # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
-      ::StashEngine.repository.cleanup_files(@resource)
-      render(body: nil, status: 204)
-    rescue ArgumentError => e
-      logger.debug(e)
-      render(body: nil, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
-    end
-
     # ############################################################
     # Private
 
@@ -135,23 +98,6 @@ module StashEngine
       logger.warn("Identifier '#{id}' not found (id_param was: '#{id_param}')") if identifiers.empty?
 
       identifiers.first
-    end
-
-    # updates the total size & call to update zero sizes for individual files
-    def update_size!
-      return unless resource
-
-      ds_info = Stash::Repo::DatasetInfo.new(id)
-      id.update(storage_size: ds_info.dataset_size)
-      update_zero_sizes!(ds_info)
-    end
-
-    def update_zero_sizes!(ds_info_obj)
-      return unless resource
-
-      resource.data_files.where(upload_file_size: 0).where(file_state: 'created').each do |f|
-        f.update(upload_file_size: ds_info_obj.file_size(f.upload_file_name))
-      end
     end
 
   end

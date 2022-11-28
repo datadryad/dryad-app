@@ -7,7 +7,7 @@ source 'https://rubygems.org'
 
 gem 'irb', '~> 1.4.1'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 5.2.7'
+gem 'rails', '~> 6.1.0'
 gem 'react-rails', '~> 2.6.2'
 gem 'sprockets', '~> 3.0' # going to 4 breaks lots of things unless doing manual upgrade of files
 gem 'webpacker', '~> 5.4.3'
@@ -27,7 +27,7 @@ end
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6.2'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
-gem 'rubocop', '~> 0.90.0'
+gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
 gem 'puma', group: :puma, require: false
 # Our homegrown artisinal SSM gem
@@ -42,7 +42,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.4.0'
 # gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
-gem 'mini_racer'
+gem 'mini_racer', '~> 0.6.3'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
@@ -56,23 +56,23 @@ gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight' # , '~> 7.19.2' # do we really need this should be required by geoblacklight
+gem 'blacklight', '~> 7.19.2' # do we really need this should be required by geoblacklight
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
-gem 'datacite-mapping', '~> 0.4.1'
+gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping', branch: 'upgrade-ruby'
 gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
 gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification'
-gem 'ezid-client', '~> 1.9.1'
+gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-rails', '~> 4.7'
-gem 'geoblacklight', '~> 3.6.0'
+gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'http', '~> 5.0.4'
 gem 'httparty', '~> 0.20.0'
@@ -161,7 +161,7 @@ group :test do
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
   # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
-  gem 'shoulda-matchers', '~> 4.0'
+  gem 'shoulda-matchers', '~> 5.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.

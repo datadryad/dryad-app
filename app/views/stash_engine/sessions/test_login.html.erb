@@ -5,7 +5,7 @@
   user will be created.
 </p>
 
-<%= form_with(url: stash_url_helpers.test_login_path, method: :post, local: true) do %>
+<%= form_with(url: stash_url_helpers.test_login_path, method: :post) do %>
   <p>
     <%= label_tag(:first_name, 'First name') %><br/>
     <%= text_field_tag(:first_name) %>

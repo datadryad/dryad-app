@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   use_doorkeeper
   # The priority is based upon order of creation: first created -> highest priority.
@@ -223,7 +224,7 @@ Rails.application.routes.draw do
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
     
     # root 'sessions#index'
-    root 'pages#home'
+    root 'pages#home', as: 'pages_root'
     
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
     match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]
@@ -270,8 +271,6 @@ Rails.application.routes.draw do
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
-    
-    patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
     
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users

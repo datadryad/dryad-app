@@ -1,5 +1,3 @@
-require_dependency 'stash_datacite/application_controller'
-
 module StashDatacite
   class PeerReviewController < ApplicationController
     respond_to :json

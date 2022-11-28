@@ -321,8 +321,7 @@ Keywords: great research, stellar data
   whether peer review is allowed and whether to charge the user. Normally, you
   will want to put the submission into `peer_review` status to test the
   subsequent steps.
-- Wait for Merritt processing of the Dryad submission, or
-  force the notifier to run (`notifier_force.sh` on most servers)
+- Wait for Merritt processing of the Dryad submission
 - Send another email to `journal-submit@datadryad.org` to update the
   status of the submission. This can be exactly the same message as
   above, just with the Article Status changed to either "accepted" or
@@ -343,7 +342,7 @@ To process emails:
 
 To use individual emails:
 ```
-require 'stash/google/journal_gmail'
+require 'stash/google/journal_g_mail'
 m=Stash::Google::JournalGMail.messages_to_process.first
 mc=Stash::Google::JournalGMail.message_content(message: m)
 ms=Stash::Google::JournalGMail.message_subject(message: m)

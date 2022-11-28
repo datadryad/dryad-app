@@ -32,8 +32,8 @@ module Stash
         response = put_doi(bare_identifier, username: account, password: password, sandbox: sandbox, url: landing_page_url)
         validate_response(response: response, operation: 'update target')
       rescue HTTP::Error => e
-        err = DataciteError.new("Datacite failed to update metadata for resource #{resource&.identifier_str}" \
-                                " (#{e.message}) with params: #{dc4_xml.inspect}")
+        err = DataciteError.new("Datacite failed to update metadata for resource #{resource&.identifier_str} " \
+                                "(#{e.message}) with params: #{dc4_xml.inspect}")
         err.set_backtrace(e.backtrace) if e.backtrace.present?
         raise err
       end

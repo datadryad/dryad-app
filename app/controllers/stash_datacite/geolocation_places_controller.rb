@@ -1,5 +1,3 @@
-require_dependency 'stash_datacite/application_controller'
-
 module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: %i[edit update delete]

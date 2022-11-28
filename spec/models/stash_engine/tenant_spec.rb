@@ -3,7 +3,6 @@ require 'fileutils'
 
 module StashEngine
   describe Tenant do
-
     def expect_exemplia(tenant) # rubocop:disable Metrics/AbcSize
       expect(tenant.tenant_id).to eq('exemplia')
       expect(tenant.abbreviation).to eq('EX')

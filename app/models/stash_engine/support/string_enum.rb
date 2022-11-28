@@ -4,7 +4,7 @@ require 'active_support/concern'
 # This can be dropped in Rails 5
 module StashEngine
 
-  module Concerns
+  module Support
 
     module StringEnum
 

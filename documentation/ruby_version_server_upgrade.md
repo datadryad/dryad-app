@@ -80,17 +80,6 @@ bundle exec cap $CAP_ENV deploy BRANCH="$MY_BRANCH"
 - [ ] Watch out for disk filling up.  You can go delete the temp-cap directory you created earlier here. Maybe clean
 up some things in ~/install or logs
 
-## Fix the Notifier if it's on this server (the 2a servers)
-
-Copy any state file from an old server to `shared/config/notifier_state.json`.  It will pick up at the date/time
-of the old state looking for new datasets.
-
-Runs like: 
-
-`RAILS_ENV=development bundle exec rails notifier:execute`
-
-It is in a cron script.
-
 ## Check the disk isn't full
 - [ ] for good measure check `df` to see free space and clean something up if needed
 - [ ] It doesn't hurt to check the restart scripts in ~/init.d for passenger still working

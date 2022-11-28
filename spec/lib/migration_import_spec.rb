@@ -4,7 +4,7 @@ require_relative '../support/helpers/ror_helper'
 require 'time'
 
 # rubocop:disable Layout/LineLength
-RSpec.describe MigrationImport do
+RSpec.describe Tasks::MigrationImport do
 
   include RorHelper
 
@@ -21,7 +21,7 @@ RSpec.describe MigrationImport do
 
       record_hash = JSON.parse(File.read(StashEngine::Engine.root.join('spec', 'data', 'migration_input.json')))
 
-      id_importer = MigrationImport::Identifier.new(hash: record_hash)
+      id_importer = Tasks::MigrationImport::Identifier.new(hash: record_hash)
       id_importer.import
       @identifier = StashEngine::Identifier.all.last
     end

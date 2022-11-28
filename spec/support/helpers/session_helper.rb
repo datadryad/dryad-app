@@ -31,15 +31,13 @@ module SessionsHelper
     visit root_path
     click_link 'Login'
     click_link 'Login or create your ORCID iD'
-    if with_shib
-      # mock_shibboleth!(user)
-      # find('#tenant_id').find('option:last-child').select_option
-      # click_button 'Login to verify'
-      # TODO: figure out how to properly handle the Shibboleth SP redirection
-      click_link 'Continue to My datasets'
-    elsif user.tenant_id.blank?
-      click_link 'Continue to My datasets'
-    end
+    return unless with_shib || user.tenant_id.blank?
+
+    # mock_shibboleth!(user)
+    # find('#tenant_id').find('option:last-child').select_option
+    # click_button 'Login to verify'
+    # TODO: figure out how to properly handle the Shibboleth SP redirection
+    click_link 'Continue to My datasets'
   end
 
   def safe_visit(url)

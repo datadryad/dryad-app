@@ -82,7 +82,7 @@ namespace :link_out do
       internal_datum.value = pmid.to_s
       next unless internal_datum.value_changed?
 
-      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' "\
+      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' " \
         "(identifier: #{data.resource.identifier_id})"
       internal_datum.save
     end
@@ -138,8 +138,8 @@ namespace :link_out do
   end
 
   def create_link_out_dir!
-    Dir.mkdir("#{Dir.pwd}/tmp") unless Dir.exist?("#{Dir.pwd}/tmp")
-    Dir.mkdir("#{Dir.pwd}/tmp/link_out") unless Dir.exist?("#{Dir.pwd}/tmp/link_out")
+    FileUtils.mkdir_p("#{Dir.pwd}/tmp")
+    FileUtils.mkdir_p("#{Dir.pwd}/tmp/link_out")
   end
 
 end

@@ -36,7 +36,7 @@ module Mocks
       def employment_response(user)
         {
           'employment-summary': [
-            { 'organization': user.present? && user.affiliation.present? ? user.affiliation.long_name : Faker::Educator.university }
+            { organization: user.present? && user.affiliation.present? ? user.affiliation.long_name : Faker::Educator.university }
           ]
         }
       end

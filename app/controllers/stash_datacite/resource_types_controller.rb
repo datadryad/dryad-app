@@ -1,5 +1,3 @@
-require_dependency 'stash_datacite/application_controller'
-
 module StashDatacite
   class ResourceTypesController < ApplicationController
     before_action :set_resource_type, only: %i[update destroy]

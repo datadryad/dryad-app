@@ -280,7 +280,7 @@ module StashApi
 
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
           response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                              headers: { 'Accept' => '*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
+                              headers: { 'Accept' => '*/*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
 
           expect(response_code).to eq(302)
           expect(response.body).to include('http://example.com/fun')
@@ -289,7 +289,7 @@ module StashApi
 
         it 'allows superuser to download private, but submitted to Merritt version' do
           response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                              headers: default_authenticated_headers.merge('Accept' => '*')
+                              headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
           expect(response.body).to include('http://example.com/fun')
           expect(response.body).to include('redirected')
@@ -298,18 +298,18 @@ module StashApi
         it 'disallows random user from downloading non-public, but submitted version' do
           @user.update(role: 'user')
           response_code = get "/api/v2/versions/#{@resources[1].id}/download",
-                              headers: default_authenticated_headers.merge('Accept' => '*')
+                              headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(404)
         end
 
         it 'disallows nil user from downloading non-public, but submitted version' do
-          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*')
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_json_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(404)
         end
 
         it 'allows admin to download private, but submitted to Merritt version' do
           @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
-          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
           expect(response.body).to include('http://example.com/fun')
           expect(response.body).to include('redirected')
@@ -317,7 +317,7 @@ module StashApi
 
         it "disallows download if it's not submitted to Merritt" do
           @resources[1].current_state = 'in_progress'
-          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*')
+          response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(404)
         end
       end

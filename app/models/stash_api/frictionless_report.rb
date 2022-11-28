@@ -12,10 +12,10 @@ module StashApi
     end
 
     def metadata
-      { '_links': links }.merge(report: @se_frictionless.report,
-                                createdAt: @se_frictionless.created_at,
-                                updatedAt: @se_frictionless.updated_at,
-                                status: @se_frictionless.status).recursive_compact
+      { _links: links }.merge(report: @se_frictionless.report,
+                              createdAt: @se_frictionless.created_at,
+                              updatedAt: @se_frictionless.updated_at,
+                              status: @se_frictionless.status).recursive_compact
     end
 
     def links
