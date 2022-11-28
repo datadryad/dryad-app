@@ -7,7 +7,7 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "dryad_ip"
   short_name: "Dryad IP Address Test"
-  long_name: "Dryad Digital Platform IP Address Test"
+  long_name: "Dryad Data Platform IP Address Test"
   publisher_id: isni:0000000446638050
   ror_ids:
     - https://ror.org/dummy
