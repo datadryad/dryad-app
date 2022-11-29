@@ -79,6 +79,7 @@ module Stash
 
           expect(@svc.lookup_pubmed_id('abcd')).to eql(nil)
         end
+
         it 'returns the Pubmed ID if the API found a match' do
           expect(@svc.lookup_pubmed_id('abcd')).to eql('26028437')
         end
