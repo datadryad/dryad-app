@@ -35,6 +35,8 @@ module Stash
         query = "#{@pubmed_api_query_prefix}#{doi}#{@pubmed_api_query_suffix}"
         results = get_xml_from_api(@pubmed_api, query)
         return nil if results.blank?
+
+        extract_pubmed_id(results)
       end
 
       def generate_files!
