@@ -7,7 +7,7 @@ namespace :merritt_status do
 
     # on servers, the log directory is shared across deployment versions, so is a good place to put the logs and also pid file
     log_file = Rails.root.join('log', 'merritt_status_updater.log')
-    pid_file = Rails.root.join('log', 'merritt_status_updater.pid')
+    pid_file = Rails.root.join('tmp', 'pids', 'merritt_status_updater.pid')
     # use something like "kill -15 `cat my/path/to/log/merritt_status_updater.pid`" in bash script to kill this.
     # Using kill -9 doesn't give chance to shutdown and clean up
 
