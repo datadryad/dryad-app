@@ -6,6 +6,25 @@ Some common problems and how to deal with them.
 Also see the notes on [Interactions with Merritt](merritt.md)
 
 
+Setting a maintenance notice on the site
+========================================
+
+If there is a serious issue that users need to know about, edit the file
+`app/views/layouts/stash_engine/application.html.erb`
+
+Add an alert box like this:
+```
+<div class="js-alert c-alert--informational" role="alert">
+  <div class="c-alert__text">
+    The message goes here!
+  </div>
+</div>       
+```
+
+In an emergendy, you can make this edit on the production servers and restart
+puma on each server, to avoid doing a full redeploy.
+
+
 Dataset is not showing up in searches
 ===================================
 
