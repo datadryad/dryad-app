@@ -1,20 +1,33 @@
 # Frictionless Implementation Overview
 
 ## Background
-1. Our Frictionless [install](./INSTALL.md) is for the Python libraries which are called from a Python command
-   line and return validation results as standard output which is captured by our application.
-   While Frictionless had a validation server being written, it wasn't ready when we worked on this project.
-2. We capture the standard output of the validation and save it to our database.
-3. From the validation output, we display a React component which is a lightly modified version
-   of [frictionlessdata/components](https://github.com/frictionlessdata/components).
+1. Frictionless is a Python library that runs in an AWS Lambda function.  You can also run it locally for
+   and manually to see the output of validation, but it doesn't work with our code this way.  Our 
+   current code for the lambda is at `script/py-frictionless/lambda.py`.
+2. The AWS lambda takes these parameters `download_url, token, callback_url` in the event being passed in.
+3. Once AWS lambda has finished validating it calls the callback_url (our API) with the API token that
+   authorizes the call.
 
-## Code Examples
-- **Calling validation and capturing validation output.**  See the
-  [call_frictionless](https://github.com/CDL-Dryad/dryad-app/blob/7299fff7dd5e2e2ea578c7caf5c3753a3c6d91f1/stash/stash_engine/app/models/stash_engine/generic_file.rb#L233)
-  method in our github repository.  Note, the `$(pyenv init -)` is specific to the way we installed
-  frictionless on our servers with pyenv.  See, also our 
-  [config](https://github.com/CDL-Dryad/dryad-app/blob/c5a4c1241cab1495ade69081300faf8441dd649f/config/app_config.yml#L171) 
-  for values being interpolated in the call to frictionless.
+The results of the validation are stored in the `stash_engine_frictionless_reports` table which is associated with a
+specific file that was validated.
+
+The AWS Lambda was put into the AWS console and uses a Lambda Layer (Python version andlibraries that include the 
+frictionless ones)
+created under the AWS cloudshell.  I believe I followed
+[this article](https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/).
+
+In order to use the lambda from a development environment you need to either:
+
+- Use an environment that connects to our development database server (`rails server -e local_dev`)
+
+OR
+
+- Create a Rails environment for your server with correctly set server domain name information in the environment
+  configuration file.  The server needs to be accessible on the internet so that the Lambda can access the
+  callback URL of the server's API to update the results of the frictionless validation.
+
+## Additional info
+
 - **The JSON output for validation is saved in a database field** which we refer to later.
   The JSON has information about number or errors and all error messages.
 - At the appropriate time, a **React component is initialized and displayed** by the user.
