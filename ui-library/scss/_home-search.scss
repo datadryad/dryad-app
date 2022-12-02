@@ -32,12 +32,7 @@
 .o-home__search-group {
 	display: flex;
   justify-content: center;
-	height: 35px;
-
-  @include bp(screen1) {
-    width: 350px;
-  }
-
+  align-items: center;
 }
 
 .o-home-search__input {
@@ -47,8 +42,8 @@
 }
 
 .o-home-search__submit-button {
-  margin: -10px auto 0;
-  padding: 15px 35px 18px;
+  font-size: 18px;
+  padding: 17px 35px 15px;
   border: thin solid $design-white-color;
   background-color: $design-white-color;
   color: $design-dark-blue-color;
