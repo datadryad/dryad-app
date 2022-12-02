@@ -213,7 +213,7 @@ namespace :identifiers do
   task peer_review_reminder: :environment do
     p 'Mailing users whose datasets have been in peer_review for a while...'
     StashEngine::Resource.where(hold_for_peer_review: true)
-      .where('stash_engine_resources.peer_review_end_date <= ?', Date.today)
+      .where('stash_engine_resources.peer_review_end_date <= ? OR stash_engine_resources.peer_review_end_date IS NULL', Date.today)
       .each do |r|
 
       reminder_flag = 'peer_review_reminder CRON'
