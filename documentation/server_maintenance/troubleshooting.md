@@ -429,6 +429,26 @@ you can still change the payment_type to the desired value, but let
 the curation team know that the associated Stripe invoice needs to be
 voided.
 
+Tabular data file isn't validating in Frictionless
+==================================================
+There could be a number of reasons for this, but there are a number of things to check to find where an error
+might be happening.
+
+- Check that the file has been uploaded correctly to S3 (check web browser console to see it completes and
+  for any errors).
+- The code should be polling an endpoint waiting for the report to appear in our database on the file upload
+  page (you should also see this polling in the web browser javascript console)
+- Log into the AWS Console and examine the AWS Lambda function.  You can browse logs stored on amazon to see
+  if there are any errors for recent runs of the Lambda function that validates.
+- When the validation completes it will call a URL in our API to deposit the results of the validation
+  which happens asynchronously in the background (this explains the polling a couple points above).
+- Look at rails web server logs while you try to do the frictionless validation to see if any errors appear
+  in the logs from the API method that updates the frictionless report.
+
+For using in a development environment you will either need to use an environment that connects to our
+standard development database (like `local_dev`) or create your own environment with configuration of
+a domain name in the rails environment so that the callback can reach your instance's API to deposit results.
+
 Issues with testing
 =====================
 
@@ -438,3 +458,4 @@ Many failures with `latest_resource` and `current_status`
 This can be caused by the database triggers being dropped. To reinstantiate the
 complete database setup:
 `bin/rails db:migrate:reset RAILS_ENV=test`
+
