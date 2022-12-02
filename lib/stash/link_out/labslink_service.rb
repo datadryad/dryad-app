@@ -56,7 +56,7 @@ module Stash
             file: 'link_out/labslink_provider.xml.erb',
             locals: {
               id: @ftp.ftp_provider_id,
-              name: 'Dryad Digital Repository',
+              name: 'Dryad Data Platform',
               description: 'Dryad is a nonprofit organization and an international repository ' /
                            'of data underlying scientific and medical publications.',
               email: 'linkout@datadryad.org'

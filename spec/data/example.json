@@ -30,7 +30,7 @@
     "contentUrl": "http://localhost:3000/api/v2/datasets/doi%253A10.15146%252FR3RG6G/download"
   },
   "provider": {"@id": "https://datadryad.org"},
-  "publisher": {"@id": "https://datadryad.org", "@type": "Organization", "legalName": "Dryad Digital Repository", "name": "Dryad", "url": "https://datadryad.org"},
+  "publisher": {"@id": "https://datadryad.org", "@type": "Organization", "legalName": "Dryad Data Plaform", "name": "Dryad", "url": "https://datadryad.org"},
   "temporalCoverage": [
     "2016",
     "2015-12-02",

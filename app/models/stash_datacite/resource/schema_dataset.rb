@@ -52,7 +52,7 @@ module StashDatacite
         {
           '@id': 'https://datadryad.org',
           '@type': 'Organization',
-          legalName: 'Dryad Digital Repository',
+          legalName: 'Dryad Data Platform',
           name: 'Dryad',
           url: 'https://datadryad.org'
         }.compact
