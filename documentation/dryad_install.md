@@ -169,8 +169,13 @@ rails s
 Some portions of Dryad's interface rely on Node and React. See the [Node Installation](node_npm_server_install.md) instructions.
 
 Dryad's submission system validates files with the Frictionless Data
-toolkit. See the [Frictionless
-Installation](frictionless_integration/INSTALL.md) instructions.
+toolkit. The [Frictionless
+Installation](frictionless_integration/INSTALL.md) instructions are deprecated since it uses an
+AWS Lambda for validating files.  The [implementation overview](frictionless_integration/implementation_overview.md) 
+gives a few details.  In order to get your local server to work with the callbacks, you'll need to have them
+publicly accessible and create an environment with the correct domain name or use an environment that uses
+our dev database.  To mock the functionality, you could manually
+insert a validation report into the stash_engine_frictionless_reports table to examine UI elements.
 
 ## Final search configuration
 
