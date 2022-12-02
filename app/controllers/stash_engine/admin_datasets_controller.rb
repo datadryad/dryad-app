@@ -77,7 +77,6 @@ module StashEngine
       end
     end
 
-    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
@@ -122,6 +121,13 @@ module StashEngine
             @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
           end
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
+        format.js
+      end
+    end
+
+    def waiver_popup
+      respond_to do |format|
+        @identifier = Identifier.where(id: params[:id]).first
         format.js
       end
     end
@@ -191,6 +197,48 @@ module StashEngine
       end
     end
     # rubocop:enable Metrics/AbcSize
+
+    def waiver_add
+      puts 'XXXXXX add waiver '
+      puts "XXXXXXp #{params} "
+
+      @identifier = Identifier.find(params[:id])
+      @resource = @identifier.latest_resource
+
+      puts "XXXX id #{@identifier.id}"
+      puts "XXXX user #{current_user.id}"
+
+      respond_to do |format|
+        format.js do
+          if @identifier.payment_type == 'stripe'
+            puts 'XXXXX a'
+            # if it's already invoiced, show a warning
+            @error_message = '<p>Unable to apply a waiver to a dataset that was already invoiced.</p>'
+            render :curation_activity_error
+          else
+            puts 'XXXXX b'
+            # Update the waiver settings
+
+            basis = if params[:waiver_basis] == 'other'
+                      if params[:other].present?
+                        params[:other]
+                      else
+                        'unspecified'
+                      end
+                    else
+                      params[:waiver_basis]
+                    end
+
+            @identifier.update(payment_type: 'waiver',
+                               payment_id: '',
+                               waiver_basis: basis)
+
+            puts "XXXXX c #{basis}"
+            render
+          end
+        end
+      end
+    end
 
     # show curation activities for this item
     def activity_log
