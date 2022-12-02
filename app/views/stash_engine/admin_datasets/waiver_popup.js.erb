@@ -1,0 +1,15 @@
+// replace dialog div with contents of dialog text from partial
+
+$('#genericModalContent').html("<%= escape_javascript(
+          render partial: 'stash_engine/admin_datasets/waiver_popup', locals: { identifier: @identifier }) %>");
+
+// now open a jquery ui modal dialog
+$(function() {
+    $('#genericModalDialog')[0].showModal();
+
+    // make the cancel button in the dialog hide the dialog
+    $("#cancel_dialog").click(function (e) {
+        e.preventDefault();
+        $('#genericModalDialog')[0].close();
+    });
+});
