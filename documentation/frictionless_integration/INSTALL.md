@@ -1,5 +1,7 @@
 # Frictionless Integration Install
 
+# NOTE: this document is deprecated, but it may be useful to install a local copy of the frictionless python libraries for other kinds of testing
+
 Some of these install instructions are specific to our installation.
 [We've also documented an overview of how we integrated Frictionless](./implementation_overview.md).
 
