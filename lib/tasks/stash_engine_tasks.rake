@@ -267,16 +267,15 @@ namespace :identifiers do
     # For each funder entry that is NIH
     StashEngine::Identifier.all.each do |i|
       i.latest_resource.contributors.each do |contrib|
-        puts "XXX #{contrib.contributor_name}"
         next unless contrib.contributor_name == 'National Institutes of Health'
 
-        puts "  lookup #{contrib.award_number}"
+        puts "NIH lookup #{contrib.award_number}"
         # - look up the actual grant with the NIH API
         g = Stash::NIH.find_grant(contrib.award_number)
-        puts "   found #{g['project_num']}"
+        puts "NIH  found #{g['project_num']}"
         # - see which Institute or Center is the first funder
         ic = g['agency_ic_fundings'][0]['name']
-        puts "  funder #{ic}"
+        puts "NIH funder #{ic}"
         # - replace with the equivalent IC in Dryad
         Stash::NIH.set_contributor_to_ic(contributor: contrib, ic_name: ic)
       end
