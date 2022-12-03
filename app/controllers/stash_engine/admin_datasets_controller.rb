@@ -199,24 +199,19 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def waiver_add
-      puts 'XXXXXX add waiver '
-      puts "XXXXXXp #{params} "
-
       @identifier = Identifier.find(params[:id])
       @resource = @identifier.latest_resource
-
-      puts "XXXX id #{@identifier.id}"
-      puts "XXXX user #{current_user.id}"
 
       respond_to do |format|
         format.js do
           if @identifier.payment_type == 'stripe'
-            puts 'XXXXX a'
             # if it's already invoiced, show a warning
             @error_message = '<p>Unable to apply a waiver to a dataset that was already invoiced.</p>'
             render :curation_activity_error
+          elsif params[:waiver_basis] == 'none'
+            @error_message = '<p>No waiver message selected, so waiver was not applied.'
+            redner :curation_activity_error
           else
-            puts 'XXXXX b'
             # Update the waiver settings
 
             basis = if params[:waiver_basis] == 'other'
@@ -233,7 +228,6 @@ module StashEngine
                                payment_id: '',
                                waiver_basis: basis)
 
-            puts "XXXXX c #{basis}"
             render
           end
         end
