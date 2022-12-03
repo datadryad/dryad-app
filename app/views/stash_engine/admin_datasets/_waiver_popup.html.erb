@@ -7,7 +7,7 @@
 </script>
 
 <div class="o-admin-dialog">
-  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("IN") %>
+  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
     <h1>Warning!</h1>
     <p>
       This dataset has been approved for publication, and the submitter has already
