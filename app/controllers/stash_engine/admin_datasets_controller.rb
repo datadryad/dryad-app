@@ -206,30 +206,27 @@ module StashEngine
         format.js do
           if @identifier.payment_type == 'stripe'
             # if it's already invoiced, show a warning
-            @error_message = '<p>Unable to apply a waiver to a dataset that was already invoiced.</p>'
-            render :curation_activity_error
+            @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
+            render :curation_activity_error and return
           elsif params[:waiver_basis] == 'none'
-            @error_message = '<p>No waiver message selected, so waiver was not applied.'
-            redner :curation_activity_error
+            @error_message = 'No waiver message selected, so waiver was not applied.'
+            render :curation_activity_error and return
+          elsif params[:waiver_basis] == 'other'
+            basis = 'unspecified'
+            if params[:other].present?
+              basis = params[:other]
+            else
+              @error_message = 'No waiver message selected, so waiver was not applied.'
+              render :curation_activity_error and return
+            end
           else
-            # Update the waiver settings
-
-            basis = if params[:waiver_basis] == 'other'
-                      if params[:other].present?
-                        params[:other]
-                      else
-                        'unspecified'
-                      end
-                    else
-                      params[:waiver_basis]
-                    end
-
-            @identifier.update(payment_type: 'waiver',
-                               payment_id: '',
-                               waiver_basis: basis)
-
-            render
+            params[:waiver_basis]
           end
+
+          @identifier.update(payment_type: 'waiver',
+                             payment_id: '',
+                             waiver_basis: basis)
+          render
         end
       end
     end
