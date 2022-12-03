@@ -7,27 +7,33 @@
 </script>
 
 <div class="o-admin-dialog">
-  <h1>Add fee waiver</h1>
-  <%= form_with(model: @identifier, url: waiver_add_path, method: :post, local: false ) do |f| -%>
-  <div class="c-input">
-    <div id="select_div" class="c-input">
-      <label class="c-input__label" for="waiver_basis">Please provide a reason for applying a waiver</label>
-      <select name="waiver_basis" onchange="showOther('other_div', this)">
-	<option value="none">- Select a reason -</option>
-	<option value="country_not_detected">Waiver country, but not detected automatically</option>
-	<option value="early_career_researcher">Early-career researcher</option>
-	<option value="other">Other</option>
-      </select>
-    </div>
-      
-    <div id="other_div" class="c-input" style="display: none;">
-      <label class="c-input__label" for="other">Other reason</label>
-      <input class="c-input__text" size="80" type="text" name="other" />
-    </div>
-  </div>
-  <%= f.submit 'Submit' %>
-  <%= f.button 'Cancel', type: 'button', id: 'cancel_dialog' %>
-
+  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("IN") %>
+    <h1>Warning!</h1>
+    <p>
+      This dataset has been approved for publication, and the submitter has already
+      received an invoice. Please ensure invoice <%= @identifier.payment_id %> is voided.
+    </p>
+  <% else %>
+    <h1>Add fee waiver</h1>
+    <%= form_with(model: @identifier, url: waiver_add_path, method: :post, local: false ) do |f| -%>
+      <div class="c-input">
+	<div id="select_div" class="c-input">
+	  <label class="c-input__label" for="waiver_basis">Please provide a reason for applying a waiver</label>
+	  <select name="waiver_basis" onchange="showOther('other_div', this)">
+	    <option value="none">- Select a reason -</option>
+	    <option value="country_not_detected">Waiver country, but not detected automatically</option>
+	    <option value="early_career_researcher">Early-career researcher</option>
+	    <option value="other">Other</option>
+	  </select>
+	</div>	
+	<div id="other_div" class="c-input" style="display: none;">
+	  <label class="c-input__label" for="other">Other reason</label>
+	  <input class="c-input__text" size="80" type="text" name="other" />
+	</div>
+      </div>
+      <%= f.submit 'Submit' %>
+      <%= f.button 'Cancel', type: 'button', id: 'cancel_dialog' %>
+    <% end %>
   <% end %>
 </div>
 
