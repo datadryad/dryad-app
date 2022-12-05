@@ -807,7 +807,7 @@ DEPENDENCIES
   aws-sdk-lambda
   aws-sdk-s3 (~> 1.113)
   binding_of_caller
-  blacklight (~> 7.19.2)
+  blacklight
   bootsnap
   bootstrap (~> 4.0)
   byebug
