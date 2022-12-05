@@ -266,6 +266,8 @@ namespace :identifiers do
   task nih_funders_clean: :environment do
     # For each funder entry that is NIH
     StashEngine::Identifier.all.each do |i|
+      next if i.latest_resource.nil?
+
       i.latest_resource.contributors.each do |contrib|
         next unless contrib.contributor_name == 'National Institutes of Health'
 
