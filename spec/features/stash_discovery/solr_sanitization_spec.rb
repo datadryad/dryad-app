@@ -28,7 +28,7 @@ RSpec.feature 'SolrSanitization', type: :feature do
       end
     end
 
-    xit 'displays 3 facets (Placename, Subject and Journal) on the Explore Data page' do
+    xit 'displays 3 facets (Placename, Subject and Journal) on the Explore data page' do
       visit search_path
       expect(page).to have_text('Placename')
       expect(page).to have_text('Subject')

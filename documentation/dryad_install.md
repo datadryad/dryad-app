@@ -207,7 +207,7 @@ Set up [SSHuttle](technical_notes/sshuttle_README.md) to connect with Merritt.
 ### Explore the datasets
 Open your web browser and go to [http://localhost:3000](http://localhost:3000) to see the homepage.
 
-The *Explore Data* link will allow you to search and view your dataset, if you imported a sample record.
+The *Explore data* link will allow you to search and view your dataset, if you imported a sample record.
 
 ![Explore Splash](images/explore1.png)<br><br>
 ![Search Results](images/explore2.png)<br><br>
