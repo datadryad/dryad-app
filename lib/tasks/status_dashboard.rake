@@ -7,8 +7,8 @@ namespace :status_dashboard do
     {
       abbreviation: 'solr',
       name: 'Solr',
-      description: 'The Solr engine that drives the Dryad "Explore Data" pages',
-      documentation: 'Solr drives the logic behind the \'Explore Data\' section of the application. <br /><br />If the log is reporting a connection error then it is likely that Solr is not running. You will need to log onto the Solr instance and restart it: <blockquote>/dryad/apps/init.d/solr.dryad start</blockquote><br />For information on how to manage Dryad\'s instance of Solr/Geoblacklight please see: <a href="https://confluence.ucop.edu/display/UC3/Dash-Stash+Solr" target="_blank">https://confluence.ucop.edu/display/UC3/Dash-Stash+Solr</a>',
+      description: 'The Solr engine that drives the Dryad "Explore data" pages',
+      documentation: 'Solr drives the logic behind the \'Explore data\' section of the application. <br /><br />If the log is reporting a connection error then it is likely that Solr is not running. You will need to log onto the Solr instance and restart it: <blockquote>/dryad/apps/init.d/solr.dryad start</blockquote><br />For information on how to manage Dryad\'s instance of Solr/Geoblacklight please see: <a href="https://confluence.ucop.edu/display/UC3/Dash-Stash+Solr" target="_blank">https://confluence.ucop.edu/display/UC3/Dash-Stash+Solr</a>',
       internally_managed: true,
       status: 1
     },
