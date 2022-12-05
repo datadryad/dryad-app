@@ -9,13 +9,35 @@
 	@include bp(screen3) {
 		margin-bottom: 0;
 	}
-
 }
 
 .t-home__banner {
 	@extend %pull-full-bleed;
 	margin-bottom: 10px;
-	background-position: center;
+
+	.o-banner__tagline {
+		margin: auto auto -16px;
+
+		@media (max-width: $screen-sm-min - 1) {
+			margin: auto;
+		}
+	}
+
+	.o-banner__credit {
+		padding: 8px;
+		font-size: .8rem;
+		color: $design-white-color;
+		align-self: end;
+		margin-top: auto;
+
+		@media (max-width: 760px) {
+			font-size: .7rem;
+		}
+
+		@media (max-width: $screen-sm-min - 1) {
+			display: none;
+		}
+	}
 }
 
 .t-home__quote-search-group {
@@ -45,6 +67,10 @@
 
 	@include bp(screen2) {
 		margin: 0 0 0 5px;
+	}
+
+	@media (max-width: $screen-sm-min - 1) {
+		padding: 20px 10px;
 	}
 
 }
