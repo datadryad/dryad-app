@@ -1,13 +1,11 @@
 // ##### Banner Object ##### //
 
 .o-banner {
-  display: flex;
   position: relative;
-  z-index: 0;
-  flex-flow: column nowrap;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 10px 0;
-  background-color: $design-light-blue-color;
+  justify-content: center;
 
 	// 'background-image: none' needs to override the inline background-image style in the HTML at small screen:
 
@@ -18,32 +16,9 @@
 
   @include bp(screen1) {
     height: 27vw;
-    padding: 10vw 0 0;
     background-repeat: no-repeat;
-    background-position: 0 0;
+    background-position: center;
     background-size: 100%;
-
-    // Blue, semi-transparent bar over banner image:
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(transparent 8vw, rgba($design-dark-blue-color, 0.6) 8vw, rgba($design-dark-blue-color, 0.6) 15vw, transparent 15vw);
-  	}
-
-  }
-
-  @include bp(screen2) {
-		padding: 75px 0 0;
-
-  	&::before {
-			background: linear-gradient(transparent 60px, rgba($design-dark-blue-color, 0.6) 60px, rgba($design-dark-blue-color, 0.6) 130px, transparent 130px);
-  	}
-
   }
 
   @include bp(screen4) {
@@ -58,14 +33,17 @@ html.no-multiplebgs .o-banner {
 }
 
 .o-banner__tagline {
-  z-index: 1;
-  margin: 0 0 10px;
+  width: 100%;
+  text-align: center;
+  padding: 16px 8px;
   color: $design-white-color;
   font-size: 1.7em;
   font-style: italic;
 
+   // Blue, semi-transparent bar over banner image:
+  background-color: rgba(0, 85, 129, 0.6);
+
   @include bp(screen1) {
-    margin: 0 0 2vw;
     font-size: 3.5vw;
   }
 
@@ -78,7 +56,6 @@ html.no-multiplebgs .o-banner {
   }
 
   @include bp(screen4) {
-    margin: 0 0 15px;
     font-size: 2.6em;
   }
 
@@ -86,7 +63,7 @@ html.no-multiplebgs .o-banner {
 
 .o-banner__button {
 	display: inline-block;
-    z-index: 1;
+  z-index: 1;
 	padding: 6px 12px;
 	background-color: $design-white-color;
 	color: $design-dark-blue-color;
