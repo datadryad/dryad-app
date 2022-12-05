@@ -48,6 +48,13 @@
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 
+<div class="bio">
+    <img src="/images/okubo.jpg" alt="Donna Okubo" title="Donna Okubo">
+  <p><strong>Donna Okubo</strong><br/>
+  Partnership Advisor<br/>
+  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where he was the Sr Strategic Partnership Manager.</p>
+</div>
+
 <h2 id="dev">Product Development Team</h2>
 
 <div class="bio">
