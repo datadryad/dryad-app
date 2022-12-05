@@ -220,12 +220,13 @@ module StashEngine
               render :curation_activity_error and return
             end
           else
-            params[:waiver_basis]
+            basis = params[:waiver_basis]
           end
 
           @identifier.update(payment_type: 'waiver',
                              payment_id: '',
                              waiver_basis: basis)
+
           render
         end
       end

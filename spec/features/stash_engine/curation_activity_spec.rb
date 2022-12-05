@@ -163,7 +163,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
         @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit "#{dashboard_path}?curation_status=curation"
       end
 
@@ -236,6 +236,31 @@ RSpec.feature 'CurationActivity', type: :feature do
         find('#railsConfirmDialogYes').click
         expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
       end
+
+      it 'allows superuser to set a fee waiver' do
+        within(:css, '.c-lined-table__row', wait: 10) do
+          find('button[title="View Activity Log"]').click
+        end
+        expect(@resource.identifier.payment_type).to be(nil)
+        expect(page).to have_text('Payment information')
+        click_button('Apply fee waiver')
+        expect(page).to have_text('Please provide a reason')
+        find("#select_div option[value='no_funds']").select_option
+        click_button('Submit')
+        sleep(0.1) # wait for waiver updates to complete
+        expect(@resource.identifier.payment_type).to be(nil)
+      end
+
+      it 'denies fee waiver selection when there is already a waiver' do
+        @resource.identifier.update(payment_type: 'waiver')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          find('button[title="View Activity Log"]').click
+        end
+        expect(page).to have_text('Payment information')
+        expect { click_button('Apply fee waiver') }.to raise_error(Capybara::ElementNotFound)
+      end
+
     end
   end
 end
