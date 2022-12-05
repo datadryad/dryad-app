@@ -1,6 +1,6 @@
 <h1>Merge users</h1>
 
-<%= form_with(url: user_admin_merge_path, method: :post, id: 'merge_user_form') do -%>
+<%= form_with(url: user_admin_merge_path, method: :post, id: 'merge_user_form', local: false) do -%>
 <% if @user1 && @user2 %>
 <%= hidden_field_tag 'user1', @user1.id, id: "selected_users" %>
 <%= hidden_field_tag 'user2', @user2.id, id: "selected_users" %>
