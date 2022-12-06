@@ -105,6 +105,13 @@
   </div>
 </div>
 
+<% if current_user.superuser? %>
+<div id="payment_info" style="clear: both">
+  <div style="float: left"><h2>Payment information</h2></div>
+  <%= render partial: 'payment_info_table' %>
+</div>
+<% end %>
+
 <% if current_user.curator? %>
     <div id="dangerous_actions">
 	<div style="float: left"><h2>Dangerous actions</h2>
@@ -119,6 +126,19 @@
 		<p>Forcibly editing a dataset will assign it to you, and begin an editing session.
 		Please only do this if you know the author is unable/unwilling to submit it.</p>
 	    </div>
+
+	    <% if current_user.superuser? && @identifier.payment_type != 'waiver' %>
+	      <div style="float: left" id="apply_fee_waiver">
+	        <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'waiver_popup', id: @identifier.id,
+		    sub_method: 'post', only_path: true),
+                    method: :get, local: false) do -%>
+	        <button class="o-button__submit">Apply fee waiver</button>
+		<p>&nbsp;</p>
+		<% end %>
+  	      </div>
+	    <% end %>
+	    
 	</div>
     </div>
 <% end %>
+

@@ -1,0 +1,24 @@
+<table class="c-lined-table" id="payment_info_table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table">
+      Payment type
+    </th>
+    <th class="c-admin-table">
+      Payment id
+    </th>
+    <th class="c-admin-table">
+      Waiver basis
+    </th>
+  </tr>
+  <tr class="c-lined-table__row">
+    <td>
+      <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+        User
+      <% else %>
+        <%= @identifier.payment_type %>
+      <% end %>
+    </td>
+    <td><%= @identifier.payment_id %></td>
+    <td><%= @identifier.waiver_basis %></td>
+  </tr>
+</table>

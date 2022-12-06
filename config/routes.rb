@@ -292,6 +292,7 @@ Rails.application.routes.draw do
     get 'ds_admin/index/:id', to: 'admin_datasets#index'
     get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
     get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
+    get 'ds_admin/waiver_popup/:id', to: 'admin_datasets#waiver_popup'
     get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
     get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
@@ -300,6 +301,7 @@ Rails.application.routes.draw do
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
+    post 'waiver_add/:id', to: 'admin_datasets#waiver_add', as: 'waiver_add'
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
