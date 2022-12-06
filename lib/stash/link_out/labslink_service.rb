@@ -51,14 +51,14 @@ module Stash
 
       def generate_provider_file!
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new('app/views')
+        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: 'link_out/labslink_provider.xml.erb',
+            file: Rails.root.join('app', 'views', 'link_out', 'labslink_provider.xml.erb'),
             locals: {
               id: @ftp.ftp_provider_id,
               name: 'Dryad Data Platform',
-              description: 'Dryad is a nonprofit organization and an international repository ' /
-                           'of data underlying scientific and medical publications.',
+              description:
+                'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.',
               email: 'linkout@datadryad.org'
             }
           ), nil, 'UTF-8')
@@ -70,9 +70,9 @@ module Stash
         identifiers = StashEngine::Identifier.cited_by_pubmed
 
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new('app/views')
+        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: 'link_out/labslink_links.xml.erb',
+            file: Rails.root.join('app', 'views', 'link_out', 'labslink_links.xml.erb'),
             locals: {
               provider_id: @ftp.ftp_provider_id,
               database: 'MED',
