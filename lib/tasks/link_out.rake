@@ -1,7 +1,4 @@
-require_relative '../stash/link_out/helper'
-require_relative '../stash/link_out/labslink_service'
-require_relative '../stash/link_out/pubmed_sequence_service'
-require_relative '../stash/link_out/pubmed_service'
+require 'stash/link_out'
 
 namespace :link_out do
 
@@ -22,7 +19,7 @@ namespace :link_out do
   task create_pubmed_linkouts: :environment do
     create_link_out_dir!
     p "Generating LinkOut files for Pubmed #{Time.now.utc.strftime('%H:%m:%s')}"
-    pubmed_service = LinkOut::PubmedService.new
+    pubmed_service = Stash::LinkOut::PubmedService.new
     pubmed_service.generate_files!
     p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
@@ -31,7 +28,7 @@ namespace :link_out do
   task create_labslink_linkouts: :environment do
     create_link_out_dir!
     p "Generating LinkOut files for LabLinks #{Time.now.utc.strftime('%H:%m:%s')}"
-    labslink_service = LinkOut::LabslinkService.new
+    labslink_service = Stash::LinkOut::LabslinkService.new
     labslink_service.generate_files!
     p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
@@ -40,7 +37,7 @@ namespace :link_out do
   task create_pubmed_sequence_linkouts: :environment do
     create_link_out_dir!
     p "Generating LinkOut files for GenBank #{Time.now.utc.strftime('%H:%m:%s')}"
-    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    pubmed_sequence_service = Stash::LinkOut::PubmedSequenceService.new
     pubmed_sequence_service.generate_files!
     p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
@@ -49,22 +46,22 @@ namespace :link_out do
   task push: :environment do
     p 'Publishing LinkOut files'
     p '  processing Pubmed files:'
-    pubmed_service = LinkOut::PubmedService.new
+    pubmed_service = Stash::LinkOut::PubmedService.new
     pubmed_service.publish_files! # if pubmed_service.validate_files!
 
     p '  processing GenBank files'
-    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    pubmed_sequence_service = Stash::LinkOut::PubmedSequenceService.new
     pubmed_sequence_service.publish_files! # if pubmed_sequence_service.validate_files!
 
     p '  processing LabsLink files'
-    labslink_service = LinkOut::LabslinkService.new
+    labslink_service = Stash::LinkOut::LabslinkService.new
     labslink_service.publish_files! # if labslink_service.validate_files!
   end
 
   desc 'Seed existing datasets with PubMed Ids - This will query the API for each dataset created in the last year that has a cites DOI'
   task seed_pmids: :environment do
     p 'Retrieving Pubmed IDs for existing datasets'
-    pubmed_service = LinkOut::PubmedService.new
+    pubmed_service = Stash::LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
     resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids)
       .where('stash_engine_resources.created_at > ?', 1.year.ago).pluck(:id)
@@ -91,7 +88,7 @@ namespace :link_out do
   desc 'Seed existing datasets with GenBank Sequence Ids - this will query the API for each dataset created in the last year that has a pubmedID'
   task seed_genbank_ids: :environment do
     p 'Retrieving GenBank Sequence IDs for existing datasets'
-    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    pubmed_sequence_service = Stash::LinkOut::PubmedSequenceService.new
     existing_refs = StashEngine::ExternalReference.all.pluck(:identifier_id).uniq
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.where.not(id: existing_refs)
       .where('stash_engine_identifiers.created_at > ?', 1.year.ago).pluck(:id)
