@@ -21,7 +21,7 @@ Add an alert box like this:
 </div>       
 ```
 
-In an emergendy, you can make this edit on the production servers and restart
+In an emergency, you can make this edit on the production servers and restart
 puma on each server, to avoid doing a full redeploy.
 
 
