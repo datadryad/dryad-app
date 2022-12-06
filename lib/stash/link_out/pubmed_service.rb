@@ -74,9 +74,9 @@ module Stash
 
       def generate_provider_file!
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new('app/views')
+        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: 'link_out/pubmed_provider.xml.erb',
+            file: Rails.root.join('app', 'views', 'link_out', 'pubmed_provider.xml.erb'),
             locals: {
               id: @ftp.ftp_provider_id,
               abbreviation: @ftp.ftp_username,
@@ -96,9 +96,9 @@ module Stash
         end
 
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new('app/views')
+        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: 'link_out/pubmed_links.xml.erb',
+            file: Rails.root.join('app', 'views', 'link_out', 'pubmed_links.xml.erb'),
             locals: {
               provider_id: @ftp.ftp_provider_id,
               database: 'PubMed',
