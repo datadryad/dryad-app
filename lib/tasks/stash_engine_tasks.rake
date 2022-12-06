@@ -1,4 +1,5 @@
 require 'httparty'
+require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
@@ -258,6 +259,28 @@ namespace :identifiers do
     rescue StandardError => e
       p "    Exception! #{e.message}"
 
+    end
+  end
+
+  desc 'Update NIH funder entry'
+  task nih_funders_clean: :environment do
+    # For each funder entry that is NIH
+    StashEngine::Identifier.all.each do |i|
+      next if i.latest_resource.nil?
+
+      i.latest_resource.contributors.each do |contrib|
+        next unless contrib.contributor_name == 'National Institutes of Health'
+
+        puts "NIH lookup #{contrib.award_number}"
+        # - look up the actual grant with the NIH API
+        g = Stash::NIH.find_grant(contrib.award_number)
+        puts "NIH  found #{g['project_num']}"
+        # - see which Institute or Center is the first funder
+        ic = g['agency_ic_fundings'][0]['name']
+        puts "NIH funder #{ic}"
+        # - replace with the equivalent IC in Dryad
+        Stash::NIH.set_contributor_to_ic(contributor: contrib, ic_name: ic)
+      end
     end
   end
 
