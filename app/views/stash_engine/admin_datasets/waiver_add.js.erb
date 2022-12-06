@@ -1,0 +1,5 @@
+<% # redrawing full row rather than trying to fix each item. %>
+
+$("#payment_info_table").replaceWith("<%= escape_javascript(render partial: 'payment_info_table', locals: { identifier: @identifier }) %>")
+$("#apply_fee_waiver").replaceWith("<br/>")
+$('#genericModalDialog')[0].close()

@@ -1,6 +1,6 @@
 // replace dialog div with contents of dialog text from partial
-<% title = @resource.title.html_safe %>
+<% title = @resource.title&.html_safe %>
 
-$('#genericModalContent').html("<%= escape_javascript("<h1>#{title}</h1>#{@error_message}") %>");
+$('#genericModalContent').html("<h1><%= escape_javascript(title) %></h1><%= escape_javascript(@error_message) %>");
 $('#genericModalDialog')[0].showModal();
 
