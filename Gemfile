@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 # Rails
 
 gem 'irb', '~> 1.4.1'
+gem 'mail', '= 2.7.1' # update this later
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 6.1.0'
 gem 'react-rails', '~> 2.6.2'
