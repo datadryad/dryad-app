@@ -478,3 +478,17 @@ This can be caused by the database triggers being dropped. To reinstantiate the
 complete database setup:
 `bin/rails db:migrate:reset RAILS_ENV=test`
 
+
+Re-generating invoices for datasets
+===================================
+
+If you need to generate a new invoice for a dataset that has already been published:
+1. On the Activity log page, look at the payment information to determine the current status of payment.
+2. If there was a previous invoice, go into Stripe and ensure that it is voided.
+3. In the database, remove the payment information from the dataset.
+4. In a Rails console:
+```
+r = StashEngine::Resource.find(<resource_id>)
+user = StashEngine::User.find(r.current_editor_id)
+inv = Stash::Payments::Invoicer.new(resource: r, curator: user)
+```
