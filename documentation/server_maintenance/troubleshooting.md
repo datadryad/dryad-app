@@ -491,4 +491,5 @@ If you need to generate a new invoice for a dataset that has already been publis
 r = StashEngine::Resource.find(<resource_id>)
 user = StashEngine::User.find(r.current_editor_id)
 inv = Stash::Payments::Invoicer.new(resource: r, curator: user)
+inv.charge_user_via_invoice
 ```
