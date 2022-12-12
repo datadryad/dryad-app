@@ -13,6 +13,7 @@ rules:
   "react/destructuring-assignment": [0]
   "react/forbid-prop-types": [2, { forbid: [], checkContextTypes: false, checkChildContextTypes: false}]
   "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }]
+  "react/jsx-indent": off # interferes with normal indent rule
   "react/jsx-one-expression-per-line": [0, { allow: "single-child" }] # does bad things to our code like see https://github.com/yannickcr/eslint-plugin-react/issues/1855
   "react/jsx-props-no-spreading": [0]
   "react/prop-types": [0]
