@@ -47,7 +47,8 @@ module StashEngine
       return unless manuscript.identifier
 
       target_status = nil
-      target_note = 'setting manuscript status based on notification from journal'
+      target_note = "setting manuscript status based on notification from journal #{manuscript.journal&.title} " \
+                    "-- manuscript #{manuscript.manuscript_number}, status #{manuscript.status}"
       if manuscript.accepted?
         target_status = 'submitted'
       elsif manuscript.rejected?
