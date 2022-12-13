@@ -11,6 +11,16 @@ module Stash
 
       attr_reader :resource, :curator
 
+      def self.data_processing_charge(identifier:)
+        return APP_CONFIG.payments.data_processing_charge unless APP_CONFIG.payments&.dpc_change_date
+
+        if identifier.created_at >= APP_CONFIG.payments.dpc_change_date
+          APP_CONFIG.payments.data_processing_charge_new
+        else
+          APP_CONFIG.payments.data_processing_charge
+        end
+      end
+
       def initialize(resource:, curator:)
         @resource = resource
         @curator = curator
@@ -86,7 +96,7 @@ module Stash
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
-          amount: APP_CONFIG.payments.data_processing_charge,
+          amount: data_processing_charge(identifier: resource.identifier),
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
