@@ -13,6 +13,7 @@ module Stash
         allow(@identifier).to receive(:payment_id=)
         allow(@identifier).to receive(:payment_type=)
         allow(@identifier).to receive(:save).and_return(true)
+        allow(@identifier).to receive(:created_at).and_return(Time.now)
 
         @resource_id = 17
         @resource = double(StashEngine::Resource)
@@ -80,6 +81,21 @@ module Stash
           .to eq('Oversize submission charges for doi:10.123/a1b.c2d3. Overage amount is 100 MB ' \
                  '@ $50.00 per 10 GB or part thereof over 50 GB (see ' \
                  'https://datadryad.org/stash/publishing_charges for details)')
+      end
+
+      it 'defaults to the main fee when there is no cutoff date' do
+        allow(APP_CONFIG.payments).to receive(:dpc_change_date).and_return(nil)
+        expect(Stash::Payments::Invoicer.data_processing_charge(identifier: @identifier)).to be(APP_CONFIG.payments.data_processing_charge)
+      end
+
+      it 'gives the old price for datasets created prior to the cutoff date' do
+        allow(APP_CONFIG.payments).to receive(:dpc_change_date).and_return(Date.tomorrow)
+        expect(Stash::Payments::Invoicer.data_processing_charge(identifier: @identifier)).to be(APP_CONFIG.payments.data_processing_charge)
+      end
+
+      it 'gives the new price for datasets created after the cutoff date' do
+        allow(APP_CONFIG.payments).to receive(:dpc_change_date).and_return(Date.yesterday)
+        expect(Stash::Payments::Invoicer.data_processing_charge(identifier: @identifier)).to be(APP_CONFIG.payments.data_processing_charge_new)
       end
     end
   end
