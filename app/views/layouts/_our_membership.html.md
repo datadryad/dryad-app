@@ -81,22 +81,23 @@ including universities, research institutions and academic libraries. See more a
   <tr>
     <td>
       <ul>
-	      <li>American Academy for the Advancement of Science</li>
+        <li>American Academy for the Advancement of Science</li>
         <li>American Genetic Association</li>
         <li>American Geophysical Union</li>
         <li>American Medical Informatics Association</li>
+		<li>American Ornithological Society</li>
         <li>American Society of Naturalists</li>
         <li>American Society of Plant Taxonomists</li>
         <li>Association for Tropical Biology and Conservation</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
         <li>eLife</li>
-		    <li>European Society for Evolutionary Biology</li>
-        <li>Hindawi</li>
+	    <li>European Society for Evolutionary Biology</li>
       </ul>
     </td>
     <td>
       <ul>
+        <li>Hindawi</li>
         <li>Institute of Botany, Chinese Academy of Sciences</li>
         <li>International Society for Behavioral Ecology</li>
         <li>John Wiley &amp; Sons, Inc</li>
