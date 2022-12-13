@@ -96,7 +96,7 @@ module Stash
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
-          amount: data_processing_charge(identifier: resource.identifier),
+          amount: Invoicer.data_processing_charge(identifier: resource.identifier),
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
