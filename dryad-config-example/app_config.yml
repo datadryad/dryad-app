@@ -36,7 +36,7 @@ defaults: &DEFAULTS
     key: replace-me
     data_processing_charge: 12000 # charge in cents
     data_processing_charge_new: 15000 # charge in cents	
-    dpc_change_date: nil
+    dpc_change_date: 2023-01-01
     large_file_size: 5.0e+10
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents
