@@ -398,6 +398,12 @@ namespace :identifiers do
     end
   end
 
+  desc 'Report on voided invoices'
+  task voided_invoices_report: :environment do
+    # Get all invoices created in the past two months
+    inv = Stash::Payments::Invoicer.find_recent
+  end
+
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
     # Get the year-month specified in YEAR_MONTH environment variable.
