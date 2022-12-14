@@ -62,8 +62,10 @@
 		<p>
 			Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
 			publication of your dataset, you will receive an invoice for
-			&dollar;<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100 %>. If you have any questions,
-			please <a href="mailto:help@datadryad.org">contact us</a>.
+			&dollar;<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100 %> USD.
+			We’re sensitive to the fact that fees for individual
+			researchers are a burden and create inequities. If you'd
+			like to request a fee waiver, please contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.
 		</p>
 
 		<% if @resource.identifier.large_files? %>
