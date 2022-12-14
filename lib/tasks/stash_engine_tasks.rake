@@ -400,8 +400,10 @@ namespace :identifiers do
 
   desc 'Report on voided invoices'
   task voided_invoices_report: :environment do
-    # Get all invoices created in the past two months
-    inv = Stash::Payments::Invoicer.find_recent
+    # Get all invoices voided recently
+    Stash::Payments::Invoicer.find_recent_voids.each do |inv|
+      puts "Found voided invoice #{inv.id}"
+    end
   end
 
   desc 'Generate a report of items that have been published in a given month'
