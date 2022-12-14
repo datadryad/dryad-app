@@ -8,15 +8,15 @@ namespace :merritt_status do
     # on servers, the log directory is shared across deployment versions, so is a good place to put the logs and also pid file
     log_file = Rails.root.join('log', 'merritt_status_updater.log')
     pid_file = Rails.root.join('tmp', 'pids', 'merritt_status_updater.pid')
-    # use something like "kill -15 `cat my/path/to/log/merritt_status_updater.pid`" in bash script to kill this.
+    # use something like "kill -15 `cat my/path/to/tmp/pids/merritt_status_updater.pid`" in bash script to kill this.
     # Using kill -9 doesn't give chance to shutdown and clean up
 
     $stdout.sync = true
     Rails.logger = Logger.new(log_file)
 
     if File.exist?(pid_file)
-      Rails.logger.error('PID file already exists for log/merritt_status_updater.pid. Is another copy still running?')
-      abort('PID file already exists for log/merritt_status_updater.pid. Is another copy still running?')
+      Rails.logger.error('PID file already exists for tmp/pids/merritt_status_updater.pid. Is another copy still running?')
+      abort('PID file already exists for tmp/pids/merritt_status_updater.pid. Is another copy still running?')
     end
 
     File.write(pid_file, Process.pid)
