@@ -49,7 +49,7 @@
 </p>
 
 <p>
-    The base DPC per data submission is $120 USD. DPCs are invoiced upon curator approval/publication, unless the submitter
+    The base DPC per data submission is $<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: StashEngine::Identifier.last) / 100 %> USD. DPCs are invoiced upon curator approval/publication, unless the submitter
     is based at a <a href="/stash/our_membership#institutional">member institution</a> (determined by login credentials),
     an associated journal or publisher has an agreement with Dryad to sponsor the DPC
     (<a href="/stash/journals">see list</a>) or the submitter is based
