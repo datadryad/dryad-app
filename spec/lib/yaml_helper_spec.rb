@@ -10,7 +10,7 @@ RSpec.describe YamlHelper do
 
     # outputs the YAML and re-parses it
     yaml_text = YamlHelper.output_test_section(example_filename: 'app_config.yml')
-    manipulated_yaml = YAML.safe_load(yaml_text)
+    manipulated_yaml = YAML.safe_load(yaml_text, [Date])
 
     # see if the two match, they should
     expect(direct_to_file['test']['old_dryad_access_token']).to eq(manipulated_yaml['test']['old_dryad_access_token'])

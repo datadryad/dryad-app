@@ -42,6 +42,8 @@ defaults: &DEFAULTS
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
     data_processing_charge: 12000 # charge in cents
+    data_processing_charge_new: 15000 # charge in cents
+    dpc_change_date: 2023-01-04
     large_file_size: 5.0e+10 # 50 GB
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents
@@ -214,6 +216,8 @@ development: &DEVELOPMENT
     # Very small limit for large files to facilitate testing (500KB)
     large_file_size: 5.0e+5
     data_processing_charge: 12000 # charge in cents
+    data_processing_charge_new: 15000 # charge in cents
+    dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
   cedar:
@@ -307,6 +311,8 @@ production:
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>
     large_file_size: 5.0e+10
     data_processing_charge: 12000 # charge in cents
+    data_processing_charge_new: 15000 # charge in cents
+    dpc_change_date: 2023-01-04
     additional_storage_chunk_size: 1.0e+10 # (10GB)
     additional_storage_chunk_cost: 5000
   s3:
