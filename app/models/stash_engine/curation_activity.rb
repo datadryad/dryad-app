@@ -219,7 +219,12 @@ module StashEngine
       return if previously_published?
 
       case status
-      when 'published', 'embargoed', 'peer_review'
+      when 'published', 'embargoed'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
+      when 'peer_review'
+        return if previously_ppr? # Don't send multiple emails for the same resource
+
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
       when 'submitted'
@@ -227,6 +232,18 @@ module StashEngine
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
+    end
+
+    def previously_ppr?
+      # has this already gone into ppr? prevent multiple emails while curator editing, see github #2083
+      prev_ppr = false
+      resource.curation_activities&.each do |ca|
+        if (ca.id != id) && ca.peer_review?
+          prev_ppr = true
+          break
+        end
+      end
+      prev_ppr
     end
 
     def previously_published?
