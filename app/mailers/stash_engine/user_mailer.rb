@@ -15,7 +15,7 @@ module StashEngine
            template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
 
-      update_activities('status change')
+      update_activities(resource, 'Status change')
     end
 
     # Called from CurationActivity when the status is published or embargoed
@@ -29,7 +29,7 @@ module StashEngine
       mail(to: @resource&.identifier&.journal&.notify_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
 
-      update_activities(status, true)
+      update_activities(resource, "Status #{status}", true)
     end
 
     # Called from CurationActivity when the status is peer_review
@@ -43,7 +43,7 @@ module StashEngine
       mail(to: @resource&.identifier&.journal&.review_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
 
-      update_activities('private for peer review', true)
+      update_activities(resource, 'Private for peer review', true)
     end
 
     # Called from the LandingController when an update happens
@@ -67,7 +67,6 @@ module StashEngine
       @backtrace = error.full_message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
-      update_activities('error report')
     end
 
     def in_progress_reminder(resource)
@@ -80,7 +79,7 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities('in progress reminder')
+      update_activities(resource, 'In progress reminder')
     end
 
     def peer_review_reminder(resource)
@@ -93,7 +92,7 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities('peer review reminder')
+      update_activities(resource, 'Peer review reminder')
     end
 
     def dependency_offline(dependency, message)
@@ -140,12 +139,12 @@ module StashEngine
       @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
     end
 
-    def update_activities(message, journal: false)
-      recipient = journal ? 'Journal' : 'Author'
-      note = "#{recipient} sent #{message} notification"
-      @resource.curation_activities << CurationActivity.create(note: note)
-      @resource.save
-      @resource.reload
+    def update_activities(resource, message, journal: false)
+      recipient = journal ? 'journal' : 'author'
+      note = "#{message} notification sent to #{recipient}"
+      StashEngine::CurationActivity.create(resource: resource,
+                                           user_id: 0,  # system user
+                                           note: note)
     end
 
     def rails_env
