@@ -14,6 +14,8 @@ module StashEngine
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
+
+      update_activities('status change')
     end
 
     # Called from CurationActivity when the status is published or embargoed
@@ -26,6 +28,8 @@ module StashEngine
 
       mail(to: @resource&.identifier&.journal&.notify_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
+
+      update_activities(status, true)
     end
 
     # Called from CurationActivity when the status is peer_review
@@ -38,6 +42,8 @@ module StashEngine
 
       mail(to: @resource&.identifier&.journal&.review_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
+
+      update_activities('private for peer review', true)
     end
 
     # Called from the LandingController when an update happens
@@ -61,6 +67,7 @@ module StashEngine
       @backtrace = error.full_message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
+      update_activities('error report')
     end
 
     def in_progress_reminder(resource)
@@ -72,6 +79,8 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+
+      update_activities('in progress reminder')
     end
 
     def peer_review_reminder(resource)
@@ -83,6 +92,8 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+
+      update_activities('peer review reminder')
     end
 
     def dependency_offline(dependency, message)
@@ -127,6 +138,14 @@ module StashEngine
       @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
+    end
+
+    def update_activities(message, journal: false)
+      recipient = journal ? 'Journal' : 'Author'
+      note = "#{recipient} sent #{message} notification"
+      @resource.curation_activities << CurationActivity.create(note: note)
+      @resource.save
+      @resource.reload
     end
 
     def rails_env
