@@ -1,0 +1,17 @@
+<% # @identifiers is a list if Identifier objects associated with voided invoices
+%>
+
+<p>There are invoices that have been voided in Stripe, but they are still active in Dryad.
+   Check on their status, and update the payment information appropriately.</p>
+
+<table border="1"> 
+  <tr><th>Identifier</th><th>DOI</th><th>Invoice</th></tr>
+  <% @identifiers.each do |i| %>
+  <tr>
+    <td style="padding: 5px;"><%= i.id %></td>
+    <td style="padding: 5px;"><%= i.identifier %></td>
+    <td style="padding: 5px;"><%= i.payment_id %></td>
+  </tr>
+  <% end %>
+</table>
+
