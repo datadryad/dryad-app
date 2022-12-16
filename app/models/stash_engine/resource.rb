@@ -908,8 +908,9 @@ module StashEngine
       publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
       if hold_for_peer_review?
         if publication_accepted
-          curation_note = 'Private for peer review was requested, but associated manuscript has ' \
-                          'already been accepted, so automatically moving to Submitted status'
+          manuscript = identifier.manuscript_number || identifier.publication_article_doi
+          curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has " \
+                          'already been accepted, so automatically moving to submitted status'
           target_status = 'submitted'
         else
           curation_note = "Set to Private for peer review at author's request"
