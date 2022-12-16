@@ -39,7 +39,6 @@ module Stash
         fake_customer = OpenStruct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
 
         @invoicer = Invoicer.new(resource: @resource, curator: @curator)
-        allow(@invoicer).to receive(:set_api_key).and_return(true)
         allow(@invoicer).to receive(:create_invoice_items_for_dpc).and_return([fake_invoice_item])
         allow(@invoicer).to receive(:create_invoice).and_return(fake_invoice)
         allow(@invoicer).to receive(:create_customer).and_return(fake_customer)
