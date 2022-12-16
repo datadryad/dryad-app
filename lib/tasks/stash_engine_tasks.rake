@@ -411,7 +411,7 @@ namespace :identifiers do
     end
 
     if alert_list.present?
-      puts "Send alert! #{alert_list.map(&:id)}"
+      puts "Sending alert for identifiers #{alert_list.map(&:id)}"
       StashEngine::UserMailer.voided_invoices(alert_list).deliver_now
     end
   end
