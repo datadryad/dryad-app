@@ -307,6 +307,63 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of the instances when a dataset is in_progress'
+  task in_progress_detail_report: :environment do
+    puts 'Writting in_progress_detail.csv'
+    CSV.open('in_progress_detail.csv', 'w') do |csv|
+      csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo DatasetSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
+      StashEngine::Identifier.all.each_with_index do |i, ind|
+        puts ind.to_s if (ind % 100) == 0
+        in_ip = false
+        date_entered_ip = i.created_at
+
+        who_pays = if i.journal&.will_pay?
+                     'journal'
+                   elsif i.institution_will_pay?
+                     'institution'
+                   elsif i.submitter_affiliation&.fee_waivered?
+                     'waiver'
+                   elsif i.funder_will_pay?
+                     'funder'
+                   else
+                     'user'
+                   end
+
+        ever_curated = i.resources.map(&:curation_activities).flatten.map(&:status).include?('curation')
+        ever_published = i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
+
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          if ca.in_progress?
+            next if in_ip # do nothing if it was already in in_progress
+
+            in_ip = true
+            date_entered_ip = ca.created_at
+          elsif in_ip
+            # the previous status was in_progress, but this satatus is not,
+            # so close out the entry
+            in_ip = false
+            csv << [i.identifier, i.publication_article_doi,
+                    ca.resource.stash_version.version, date_entered_ip, ca.created_at, ca.status,
+                    ca.resource.size, i.latest_resource&.current_curation_status,
+                    ever_curated, ever_published,
+                    i.journal&.title, who_pays]
+          end
+        end
+
+        # if we're at the end of the history and in_ip,
+        # finalize the current stats before moving to next identifier
+        next unless in_ip
+
+        csv << [i.identifier, i.publication_article_doi,
+                i.latest_resource.stash_version.version, date_entered_ip, 'None', 'None',
+                i.latest_resource.size, i.latest_resource&.current_curation_status,
+                ever_curated, ever_published,
+                i.journal&.title, who_pays]
+        in_ip = false
+      end
+    end
+  end
+
   desc 'Generate a report of PPR to Curation'
   task ppr_to_curation_report: :environment do
     puts 'Writing ppr_to_curation.csv'
