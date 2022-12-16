@@ -400,9 +400,19 @@ namespace :identifiers do
 
   desc 'Report on voided invoices'
   task voided_invoices_report: :environment do
-    # Get all invoices voided recently
-    Stash::Payments::Invoicer.find_recent_voids.each do |inv|
-      puts "Found voided invoice #{inv.id}"
+    voids = Stash::Payments::Invoicer.find_recent_voids.map(&:id)
+
+    # for each void, check if it exists in dryad
+    alert_list = []
+    voids.each do |invoice_id|
+      puts "voided invoice #{invoice_id}"
+      in_dryad = StashEngine::Identifier.where(payment_id: invoice_id)
+      alert_list << in_dryad.first if in_dryad.present?
+    end
+
+    if alert_list.present?
+      puts "Send alert! #{alert_list.map(&:id)}"
+      StashEngine::UserMailer.voided_invoices(alert_list).deliver_now
     end
   end
 
