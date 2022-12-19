@@ -10,6 +10,8 @@ cd /apps/dryad/apps/ui/current/
 
 bundle exec rails publication_updater:crossref >> /apps/dryad/apps/ui/shared/cron/logs/publication_updater_crossref.log 2>&1
 
+bundle exec rails identifiers:voided_invoices_report >>/apps/dryad/apps/ui/shared/cron/logs/voided_invoices_report.log 2>&1
+
 # putting this in background since I don't want to delay the counter processor starting
 bundle exec rails counter:populate_citations >> /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log 2>&1 &!
 

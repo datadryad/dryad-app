@@ -1,6 +1,7 @@
 # this require needed in tests, but not really in app, though it doesn't hurt anything
 require_relative '../../../app/helpers/stash_engine/application_helper'
 require 'stripe'
+
 module Stash
   module Payments
     class Invoicer
@@ -10,6 +11,15 @@ module Stash
       include StashEngine::ApplicationHelper
 
       attr_reader :resource, :curator
+
+      # Settings used by all Stripe services
+      Stripe.api_key = APP_CONFIG.payments.key
+      Stripe.api_version = '2022-11-15'
+
+      def self.find_recent_voids
+        d = Date.today - 2.months
+        Stripe::Invoice.list({ created: { gt: d.to_time.to_i }, status: 'void' }).data
+      end
 
       def self.data_processing_charge(identifier:)
         return APP_CONFIG.payments.data_processing_charge unless APP_CONFIG.payments&.dpc_change_date
@@ -29,12 +39,11 @@ module Stash
       # For an end-user, generate an invoice with a single charge
       # based on the DPC, and immediately finalize the invoice.
       def charge_user_via_invoice
-        set_api_key
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
 
-        create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
+        create_invoice_items_for_dpc(customer_id, invoice.id)
         resource.identifier.payment_id = invoice.id
         resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
@@ -42,7 +51,6 @@ module Stash
       end
 
       def external_service_online?
-        set_api_key
         latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
         return false unless latest.present?
 
@@ -88,14 +96,10 @@ module Stash
       # ------------------------------------------
       private
 
-      def set_api_key
-        Stripe.api_key = APP_CONFIG.payments.key
-      end
-
-      # this is mostly just long because of long text & formatting text
-      def create_invoice_items_for_dpc(customer_id)
+      def create_invoice_items_for_dpc(customer_id, invoice_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
+          invoice: invoice_id,
           amount: Invoicer.data_processing_charge(identifier: resource.identifier),
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
@@ -104,6 +108,7 @@ module Stash
         if over_chunks.positive?
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,
+                       invoice: invoice_id,
                        unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
                        currency: 'usd',
                        quantity: over_chunks,
@@ -115,6 +120,7 @@ module Stash
           overcharge = over_chunks.positive? ? APP_CONFIG.payments.additional_storage_chunk_cost * over_chunks : 0
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,
+                       invoice: invoice_id,
                        amount: -(APP_CONFIG.payments.data_processing_charge + overcharge),
                        currency: 'usd',
                        description: "Waiver of charges for #{resource.identifier} (#{filesize(ds_size)})"
