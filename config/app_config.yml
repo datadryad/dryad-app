@@ -235,6 +235,7 @@ aws_db:
 
 local:
   <<: *DEVELOPMENT
+  submission_error_email: [dryad.submission.error.emails@mailinator.com]
   send_journal_published_notices: false
 
 local_dev:

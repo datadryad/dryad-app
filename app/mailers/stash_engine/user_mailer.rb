@@ -117,6 +117,15 @@ module StashEngine
            subject: "#{rails_env} Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
     end
 
+    def voided_invoices(voided_identifier_list)
+      return unless voided_identifier_list.present?
+
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @identifiers = voided_identifier_list
+      mail(to: @submission_error_emails,
+           subject: "#{rails_env} Voided invoices need to be updated")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator
