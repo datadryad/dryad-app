@@ -368,7 +368,7 @@ module StashApi
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
-        format.any do
+        format.json do
           dp = if @resource
                  DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
                else
