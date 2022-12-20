@@ -36,7 +36,7 @@ module StashApi
     # post /datasets
     def create
       respond_to do |format|
-        format.any do
+        format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
@@ -50,7 +50,7 @@ module StashApi
       # The Editorial Manager API sends metadata that is largely similar to our normal API, but it needs to be
       # reformatted before and after the normal processing.
       respond_to do |format|
-        format.any do
+        format.json do
           deposit_request = params['article'].blank?
 
           if @stash_identifier&.first_submitted_resource.present?
@@ -368,7 +368,7 @@ module StashApi
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
-        format.any do
+        format.json do
           dp = if @resource
                  DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
                else
