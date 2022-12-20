@@ -106,7 +106,7 @@
 
 <p>
   If you believe someone is violating the Code of Conduct, we ask that you report it by emailing the Code of Conduct 
-  Working Group at <a href="mailto:conduct@datadryad.org">conduct@datadryad.org</a>.
+  Working Group at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@tcudnoc</a>.
 </p>
 
 <h2 class="o-heading__level2">Dryad Code of Conduct Working Group</h2>
@@ -114,8 +114,8 @@
 <p><em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em></p>
 
 <ul>
-  <li>Jennifer Gibson &#8211; jgibson@datadryad.org</li>
-  <li>Jason Williams &#8211; williams@cshl.edu</li>
+  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></p></li>
+  <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></p></li>
 </ul>
 
 <p>
