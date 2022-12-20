@@ -25,6 +25,8 @@ module Stash
 
       response = HTTP.post(NIH_BASE, json: nih_award_id_criteria(award_id))
       resp = JSON.parse(response)
+      return unless resp.present?
+
       grants = resp['results']
       return if grants.blank?
 
