@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   rspec-response:
     name: RSpec Request Tests
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     env:
       DB_ADAPTER: mysql2
@@ -32,7 +32,7 @@ jobs:
     - name: 'setup node for node-sass'
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16'
 
     - name: 'Install MySQL Packages'
       run: |
