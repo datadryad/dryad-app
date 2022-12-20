@@ -51,9 +51,9 @@ module Stash
 
       def generate_provider_file!
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
+        doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: Rails.root.join('app', 'views', 'link_out', 'labslink_provider.xml.erb'),
+            template: 'link_out/labslink_provider.xml.erb',
             locals: {
               id: @ftp.ftp_provider_id,
               name: 'Dryad Data Platform',
@@ -70,9 +70,9 @@ module Stash
         identifiers = StashEngine::Identifier.cited_by_pubmed
 
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-        doc = Nokogiri::XML(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
+        doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: Rails.root.join('app', 'views', 'link_out', 'labslink_links.xml.erb'),
+            template: 'link_out/labslink_links.xml.erb',
             locals: {
               provider_id: @ftp.ftp_provider_id,
               database: 'MED',

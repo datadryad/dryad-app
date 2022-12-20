@@ -117,9 +117,9 @@ module Stash
       end
 
       def generate_fragment(idx, db, hash)
-        Nokogiri::XML.fragment(ActionView::Base.new(ActionView::LookupContext.new('app/views'), {}, nil)
+        Nokogiri::XML.fragment(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            file: Rails.root.join('app', 'views', 'link_out', 'sequence_links.xml.erb'),
+            template: 'link_out/sequence_links.xml.erb',
             locals: {
               counter: idx,
               provider_id: @ftp.ftp_provider_id,
