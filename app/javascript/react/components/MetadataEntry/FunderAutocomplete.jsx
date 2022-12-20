@@ -3,6 +3,7 @@ import axios from 'axios';
 import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
+import {NIHgroup} from './FunderGroups';
 
 // the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
 export default function FunderAutocomplete({
@@ -14,10 +15,17 @@ export default function FunderAutocomplete({
   const [prevText, setPrevText] = useState(acText);
   const [prevID, setPrevID] = useState(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
+  const [showSelect, setShowSelect] = useState(null);
+  const FunderGroups = {'http://dx.doi.org/10.13039/100000002': {label: 'NIH Institute or Center', group: NIHgroup}};
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
   useEffect(() => {
+    if (acID in FunderGroups) {
+      setShowSelect(FunderGroups[acID]);
+    } else {
+      setShowSelect(null);
+    }
     if (autoBlurred) {
       if (!acText) {
         setAcID('');
@@ -65,18 +73,37 @@ export default function FunderAutocomplete({
   // Given a js object from list (supplyLookupList above) it returns the unique identifier
   const idFunc = (item) => item.uri;
 
+  const subSelect = (e) => {
+    const select = e.target;
+    setAcID(select.value);
+    setAcText(select.selectedOptions[0].text);
+    setAutoBlurred(true);
+    setShowSelect(null);
+  };
+
   return (
-    <GenericNameIdAutocomplete
-      acText={acText || ''}
-      setAcText={setAcText}
-      acID={acID}
-      setAcID={setAcID}
-      setAutoBlurred={setAutoBlurred}
-      supplyLookupList={supplyLookupList}
-      nameFunc={nameFunc}
-      idFunc={idFunc}
-      controlOptions={controlOptions}
-    />
+    <>
+      <GenericNameIdAutocomplete
+        acText={acText || ''}
+        setAcText={setAcText}
+        acID={acID}
+        setAcID={setAcID}
+        setAutoBlurred={setAutoBlurred}
+        supplyLookupList={supplyLookupList}
+        nameFunc={nameFunc}
+        idFunc={idFunc}
+        controlOptions={controlOptions}
+      />
+      {showSelect && (
+        <>
+          <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.label}</label>
+          <select id="subfunder_select" className="c-input__select" onChange={subSelect}>
+            <option value="">- Select one -</option>
+            {showSelect.group.map((item) => <option key={item.uri} value={item.uri}>{item.name}</option>)}
+          </select>
+        </>
+      )}
+    </>
   );
 }
 
