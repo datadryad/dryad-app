@@ -43,10 +43,6 @@ class AddTriggersForLastCurationActivity < ActiveRecord::Migration[5.2]
 
   def up
     execute <<-SQL
-      set GLOBAL log_bin_trust_function_creators = 1
-    SQL
-
-    execute <<-SQL
       UPDATE stash_engine_resources
       INNER JOIN
         (SELECT max(id) as max_curation_id, resource_id
@@ -59,10 +55,6 @@ class AddTriggersForLastCurationActivity < ActiveRecord::Migration[5.2]
     execute TRIGGER_CURATION_INSERT
     execute TRIGGER_CURATION_UPDATE
     execute TRIGGER_CURATION_DELETE
-
-    execute <<-SQL
-      set GLOBAL log_bin_trust_function_creators = 0
-    SQL
   end
 
   def down

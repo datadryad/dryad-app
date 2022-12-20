@@ -47,6 +47,7 @@ jobs:
         mysql -u root -e 'CREATE DATABASE IF NOT EXISTS dashv2_test' 
         mysql -u root -e 'CREATE USER IF NOT EXISTS travis@localhost'
         mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'
+        mysql -u root -e 'set global log_bin_trust_function_creators=1'
         bin/rails db:migrate:reset RAILS_ENV=test
 
     - name: 'RSpec Controller Tests'
