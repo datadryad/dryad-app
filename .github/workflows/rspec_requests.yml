@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   rspec-response:
     name: RSpec Request Tests
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     env:
       DB_ADAPTER: mysql2
@@ -32,7 +32,7 @@ jobs:
     - name: 'setup node for node-sass'
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: 16
 
     - name: 'Install MySQL Packages'
       run: |
@@ -46,7 +46,8 @@ jobs:
       run: |
         mysql -u root -e 'CREATE DATABASE IF NOT EXISTS dashv2_test' 
         mysql -u root -e 'CREATE USER IF NOT EXISTS travis@localhost'
-        mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'  
+        mysql -u root -e 'GRANT ALL ON dashv2_test.* TO travis@localhost'
+        mysql -u root -e 'set global log_bin_trust_function_creators=1'
         bin/rails db:migrate:reset RAILS_ENV=test
 
     - name: 'Compile Assets'
