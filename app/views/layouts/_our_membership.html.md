@@ -85,14 +85,14 @@ including universities, research institutions and academic libraries. See more a
         <li>American Genetic Association</li>
         <li>American Geophysical Union</li>
         <li>American Medical Informatics Association</li>
-		<li>American Ornithological Society</li>
+        <li>American Ornithological Society</li>
         <li>American Society of Naturalists</li>
         <li>American Society of Plant Taxonomists</li>
         <li>Association for Tropical Biology and Conservation</li>
         <li>British Ecological Society</li>
         <li>Cambridge University Press</li>
         <li>eLife</li>
-	    <li>European Society for Evolutionary Biology</li>
+        <li>European Society for Evolutionary Biology</li>
       </ul>
     </td>
     <td>
@@ -104,7 +104,8 @@ including universities, research institutions and academic libraries. See more a
         <li>Nordic Society Oikos</li>
         <li>Oxford University Press</li>
         <li>The Paleontological Association</li>
-		    <li>The Paleontological Society</li>
+        <li>The Paleontological Society</li>
+	<li>Rockefeller University Press</li>
         <li>The Royal Society</li>
         <li>Society for the Study of Evolution</li>
         <li>Society of Systematic Biologists</li>
