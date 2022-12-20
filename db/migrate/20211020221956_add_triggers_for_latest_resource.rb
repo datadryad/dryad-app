@@ -42,11 +42,6 @@ class AddTriggersForLatestResource < ActiveRecord::Migration[5.2]
   SQL
 
   def up
-    execute <<-SQL
-      set GLOBAL log_bin_trust_function_creators = 1
-    SQL
-
-
     # this is sort of large, but just 1) updates all the latest_resource_ids to be correct in stash_engine_identifiers
     # and then 2) defines create, update, delete triggers that will keep them up to date in MySQL
     execute <<-SQL
@@ -62,10 +57,6 @@ class AddTriggersForLatestResource < ActiveRecord::Migration[5.2]
     execute TRIGGER_RESOURCE_INSERT
     execute TRIGGER_RESOURCE_UPDATE
     execute TRIGGER_RESOURCE_DELETE
-
-    execute <<-SQL
-      set GLOBAL log_bin_trust_function_creators = 0
-    SQL
   end
 
   def down
