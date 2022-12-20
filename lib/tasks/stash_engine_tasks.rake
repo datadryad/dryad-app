@@ -274,6 +274,7 @@ namespace :identifiers do
         puts "NIH lookup #{contrib.award_number}"
         # - look up the actual grant with the NIH API
         g = Stash::NIH.find_grant(contrib.award_number)
+        next unless g.present?
         puts "NIH  found #{g['project_num']}"
         # - see which Institute or Center is the first funder
         ic = g['agency_ic_fundings'][0]['name']
