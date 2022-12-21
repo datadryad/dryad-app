@@ -295,7 +295,8 @@ See the instructions for "Private for peer review above" since it's almost the s
 changes.
 
 - In the step of setting "peer_review_end_date" set it to NULL instead.
-- In the step of adding a curation_activity description, set to "Set to unpublished at curator request"
+- In the step of adding a curation_activity description, set to "curation" and
+  "Set to unpublished at curator request" instead of the peer_review state.
 
 We cannot easily remove everything from Zenodo or DataCite without a lot of problems and it sounds
 like it will eventually get published again, anyway. For Zenodo, set the embargo an 
