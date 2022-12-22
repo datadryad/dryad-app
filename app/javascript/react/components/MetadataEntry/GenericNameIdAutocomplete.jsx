@@ -40,7 +40,7 @@ export default function GenericNameIdAutocomplete(
   }
 
   // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
-  const debounceFN = useCallback(_debounce(wrapLookupList, 500), []);
+  const debounceFN = useCallback(_debounce(wrapLookupList, 300), []);
 
   const {
     isOpen,
