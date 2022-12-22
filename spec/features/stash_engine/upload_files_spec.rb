@@ -75,7 +75,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows the right navigation buttons at the bottom' do
-      expect(page). to have_content('Back to Describe Dataset')
+      expect(page). to have_content('Back to Describe dataset')
       expect(page). to have_content('Proceed to review')
     end
 

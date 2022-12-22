@@ -4,7 +4,7 @@
     <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
 
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
-    <h2 class="o-heading__page-span">Review Description</h2>
+    <h2 class="o-heading__page-span">Review description</h2>
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
@@ -55,11 +55,11 @@
       </div>
     <% end %>
 
-    <h2 class="o-heading__page-span">Review Files</h2>
+    <h2 class="o-heading__page-span">Review files</h2>
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h3 class="o-heading__level2">Data files Hosted by Dryad</h3>
+    <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
 
     <div class="c-review-files">
 	<% if highlight_fields.include?('data_files') %>
@@ -120,7 +120,7 @@
       </div>
   <% end %>
 
-  <h2 class="o-heading__page-span">Agree to Terms</h2>
+  <h2 class="o-heading__page-span">Agree to terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
@@ -177,7 +177,7 @@
 
     <% if @completions.duplicate_submission %>
     skippable_warning += `
-      <h2 class="o-heading__level2">Duplicate Submission Detected</h2>
+      <h2 class="o-heading__level2">Duplicate submission detected</h2>
       <p>
         This submission appears to be a duplicate of your previous submission  "<%= @completions.duplicate_submission.title %>".
       </p>

@@ -7,7 +7,7 @@
   <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-files-zenodo') %>
 <% end %>
 
-<h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
+<h1 class="o-heading__level1">Upload your <%= @datatype %></h1>
 
 <div id="choose_method">
   <%= render partial: 'stash_engine/data_files/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
@@ -22,7 +22,7 @@
 <div class="o-dataset-nav">
   <% if params[:controller]&.end_with?('resources') && params[:action].include?('upload') %>
     <!-- standard upload page -->
-    <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+    <%= link_to 'Back to Describe dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
 
     <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>

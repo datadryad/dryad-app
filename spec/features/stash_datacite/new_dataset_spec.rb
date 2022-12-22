@@ -34,7 +34,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'successfully mints a new DOI/ARK' do
       click_button 'Start new dataset'
-      expect(page).to have_text('Describe Dataset')
+      expect(page).to have_text('Describe dataset')
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count + 1)
       expect(StashEngine::Resource.all.length).to eql(@resource_count + 1)
     end
@@ -68,7 +68,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Optional fields
-      description_divider = find('h2', text: 'Data Description')
+      description_divider = find('h2', text: 'Data description')
       description_divider.click
 
       # ##############################
