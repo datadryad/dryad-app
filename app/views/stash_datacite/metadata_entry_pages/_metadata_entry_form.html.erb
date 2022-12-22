@@ -8,7 +8,7 @@
   <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
 
-<h2 class="o-heading__page-span">Preliminary Information</h2>
+<h2 class="o-heading__page-span">Preliminary information</h2>
 
   <%= react_component('components/MetadataEntry/PrelimInfo',
                       { importInfo: @resource&.identifier&.import_info,
@@ -20,7 +20,7 @@
                         related_identifier: @doi.related_identifier || ''
                       }) %>
 
-<h2 class="o-heading__page-span">Dataset: Basic Information</h2>
+<h2 class="o-heading__page-span">Dataset: Basic information</h2>
 
   <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path } ) %><br>
 
@@ -70,7 +70,7 @@
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
                         isCurator: current_user&.limited_curator?) %>
 
-    <h2 class="o-heading__page-span">Data Description</h2>
+    <h2 class="o-heading__page-span">Data description</h2>
     
     <!--  CEDAR Metadata Editor -->
     <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), appConfig: APP_CONFIG[:cedar] } ) %>
@@ -103,7 +103,7 @@
 			       'If proprietary, include open-source alternatives.'},
                     isCurator: current_user&.limited_curator?) %>
 
-    <h2 class="o-heading__page-span">Related Works</h2>
+    <h2 class="o-heading__page-span">Related works</h2>
 
     <%= react_component('components/MetadataEntry/RelatedWorks',
                         resourceId: @resource.id,

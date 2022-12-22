@@ -33,7 +33,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
-  describe 'Review Files' do
+  describe 'Review files' do
     before(:each) do
       navigate_to_upload
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i

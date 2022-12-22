@@ -2,15 +2,15 @@ module DatasetHelper
 
   def start_new_dataset
     click_button 'Start new dataset'
-    expect(page).to have_content('Describe Dataset', wait: 15)
+    expect(page).to have_content('Describe dataset', wait: 15)
     navigate_to_metadata
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe Dataset'
-    expect(page).to have_content('Dataset: Basic Information')
+    click_link 'Describe dataset'
+    expect(page).to have_content('Dataset: Basic information')
   end
 
   def navigate_to_software_file
@@ -33,7 +33,7 @@ module DatasetHelper
 
   def navigate_to_review
     click_link 'Review and submit'
-    expect(page).to have_content('Review Description')
+    expect(page).to have_content('Review description')
   end
 
   def fill_required_fields
