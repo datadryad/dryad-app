@@ -202,19 +202,28 @@ RSpec.feature 'Admin', type: :feature do
 
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
+
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text('Curation')
+        end
+
         find('button[title="Update curator"]').click
         find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
         click_button('Submit')
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text(@curator.name)
+        end
         find('button[title="Update curator"]').click
         find("#stash_engine_resource_current_editor_id option[value='0']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
-          expect(page).not_to have_text(@curator.name_last_first)
+          expect(page).not_to have_text(@curator.name)
         end
         @resource.reload
 
-        expect(@resource.current_editor_id).to eq(nil)
-        expect(@resource.current_curation_status).to eq('submitted')
+        within(:css, '.c-lined-table__row', wait: 10) do
+          expect(page).to have_text('Submitted')
+        end
       end
     end
 
