@@ -132,7 +132,7 @@ group :test do
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
   gem 'capybara-screenshot'
   # chromedriver-helper is now deprecated, use webdrivers instead
-  gem 'webdrivers'
+  gem 'webdrivers', '~> 5.0', require: false
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'diffy'
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
