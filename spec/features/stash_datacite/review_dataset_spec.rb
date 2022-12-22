@@ -58,7 +58,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should be visible', js: true do
       start_new_dataset
       navigate_to_review
-      expect(page).to have_content('Enable Private for peer review')
+      expect(page).to have_content('Private for peer review')
     end
 
   end

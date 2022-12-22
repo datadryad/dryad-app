@@ -111,14 +111,10 @@
       </div>
     <% end %>
 
-  <% if !@resource.submitted? && @resource.identifier.allow_review? %>
-    <!-- This is only available if the version has not yet been submitted to the repository AND
-    	 the associated journal allows a review workflow -->
-    <h2 class="o-heading__page-span">Enable Private for peer review</h2>
-      <div id="peer_review_section">
-        <%= render partial: "stash_datacite/peer_review/review" %>
-      </div>
-  <% end %>
+  <h2 class="o-heading__page-span">Private for peer review</h2>
+    <div id="peer_review_section">
+      <%= render partial: "stash_datacite/peer_review/review" %>
+    </div>  
 
   <h2 class="o-heading__page-span">Agree to terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
