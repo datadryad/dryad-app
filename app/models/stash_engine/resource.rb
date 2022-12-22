@@ -907,6 +907,7 @@ module StashEngine
       # Determine which submission status to use, :submitted or :peer_review status
       publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
       if hold_for_peer_review?
+        # Moving this logic to user facing, will not allow PPR selection by user
         if publication_accepted
           manuscript = identifier.manuscript_number || identifier.publication_article_doi
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has " \
