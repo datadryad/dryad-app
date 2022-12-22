@@ -908,7 +908,7 @@ DEPENDENCIES
   uc3-ssm!
   uglifier (~> 4.2.0)
   web-console
-  webdrivers
+  webdrivers (~> 5.0)
   webmock
   webpacker (~> 5.4.3)
   wicked_pdf (~> 2.1.0)
