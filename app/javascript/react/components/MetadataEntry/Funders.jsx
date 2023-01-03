@@ -5,7 +5,7 @@ import FunderForm from './FunderForm';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function Funders({
-  resourceId, contributors, createPath, updatePath, deletePath,
+  resourceId, contributors, createPath, updatePath, deletePath, groupings,
 }) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -83,6 +83,7 @@ function Funders({
           key={contrib.id}
           resourceId={resourceId}
           contributor={contrib}
+          groupings={groupings}
           updatePath={updatePath}
           removeFunction={removeItem}
           updateFunder={updateFunder}

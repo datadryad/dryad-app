@@ -7,7 +7,7 @@ import FunderAutocomplete from './FunderAutocomplete';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function FunderForm({
-  resourceId, contributor, updatePath, removeFunction, updateFunder,
+  resourceId, contributor, updatePath, removeFunction, updateFunder, groupings,
 }) {
   const formRef = useRef();
 
@@ -78,6 +78,7 @@ function FunderForm({
               setAcText={setAcText}
               acID={acID}
               setAcID={setAcID}
+              groupings={groupings}
               controlOptions={
                 {
                   htmlId: `contrib_${contributor.id}`,
