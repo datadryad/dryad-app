@@ -19,7 +19,7 @@ export default function FunderAutocomplete({
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
   useEffect(() => {
-    const group = groupings.find((g) => g.name_identifier_id === acID);
+    const group = groupings?.find((g) => g.name_identifier_id === acID);
     if (group) {
       setShowSelect(group);
     } else {
