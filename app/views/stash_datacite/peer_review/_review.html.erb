@@ -1,22 +1,30 @@
-<div>
-  <p>By choosing this option, your dataset will be private during your related article's peer review period. You will
-    have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not
-    enter curation or be published. Because we may not have the status of your related article, the default for this
-    period is six months. Please <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> or uncheck this box
-    at any point if your dataset is ready to enter curation.</p>
-
+<% if !@resource.submitted? && @resource.identifier.allow_review? %>
+  <!-- This is only available if the version has not yet been submitted to the repository AND
+     the associated journal allows a review workflow -->
   <div>
-    <%= form_with model: @resource, url: peer_review_path, local: false, authenticity_token: true do |f| %>
-      <%= f.check_box :hold_for_peer_review %>
-      <label for="stash_engine_resource_hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
-      <span class="c-input__error-message"><%= @error %></span>
-      <%= f.hidden_field :id %>
-    <% end %>
+    <p>By choosing this option, your dataset will be private during your related article's peer review period. You will
+      have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not
+      enter curation or be published. Because we may not have the status of your related article, the default for this
+      period is six months. Please <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> or uncheck this box
+      at any point if your dataset is ready to enter curation.</p>
+
+    <div>
+      <%= form_with model: @resource, url: peer_review_path, local: false, authenticity_token: true do |f| %>
+        <%= f.check_box :hold_for_peer_review %>
+        <label for="stash_engine_resource_hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
+        <span class="c-input__error-message"><%= @error %></span>
+        <%= f.hidden_field :id %>
+      <% end %>
+    </div>
+    <br/>
+    <script type="text/javascript">
+     $('#stash_engine_resource_hold_for_peer_review').on('change', function(e) {
+        $(this).closest('form').submit();
+      });
+    </script>
   </div>
-</div>
-<br>
-<script type="text/javascript">
- $('#stash_engine_resource_hold_for_peer_review').on('change', function(e) {
-    $(this).closest('form').submit();
-  });
-</script>
+<% else %>
+  <div>
+    <p>The private for peer review option is not available for this data submission<% if @resource.submitted? %>, because the data has already been submitted<% elsif @resource.identifier.pub_state == 'published' %>, because the data has been previously published<% elsif @resource.identifier.has_accepted_manuscript? %>, because the associated article has been accepted for publication by the journal <% elsif @resource.identifier.publication_article_doi %>, because the associated article has been published by the journal<% end %>. Upon submission, the dataset will proceed to our curation process for evaluation and publication.</p>
+  </div>
+<% end %>
