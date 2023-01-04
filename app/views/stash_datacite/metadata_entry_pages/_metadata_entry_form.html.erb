@@ -56,6 +56,7 @@
       <%= react_component('components/MetadataEntry/Funders',
                           resourceId: @resource.id,
                           contributors: @metadata_entry.contributors,
+                          groupings: @metadata_entry.contributor_groupings,
                           createPath: contributors_create_path,
                           updatePath: contributors_update_path,
                           deletePath: contributors_delete_path('id_xox'))
