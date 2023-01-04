@@ -57,6 +57,10 @@ module StashDatacite
         @contributors = Contributor.where(resource_id: @resource.id).where(contributor_type: :funder)
       end
 
+      def contributor_groupings
+        @contributor_groupings = ContributorGrouping.all
+      end
+
       def new_related_identifier
         @related_identifier = RelatedIdentifier.new(resource_id: @resource.id)
       end

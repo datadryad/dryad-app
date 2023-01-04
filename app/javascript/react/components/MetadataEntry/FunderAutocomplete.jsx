@@ -3,11 +3,10 @@ import axios from 'axios';
 import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
-import {NIHgroup} from './FunderGroups';
 
 // the autocomplete name, autocomplete id (like ROR), formRef for parent form, get/set autocomplete Text, get/set autocomplete ID
 export default function FunderAutocomplete({
-  formRef, acText, setAcText, acID, setAcID, controlOptions,
+  formRef, acText, setAcText, acID, setAcID, controlOptions, groupings,
 }) {
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
@@ -16,13 +15,13 @@ export default function FunderAutocomplete({
   const [prevID, setPrevID] = useState(acID);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const [showSelect, setShowSelect] = useState(null);
-  const FunderGroups = {'http://dx.doi.org/10.13039/100000002': {label: 'NIH Institute or Center', group: NIHgroup}};
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
   useEffect(() => {
-    if (acID in FunderGroups) {
-      setShowSelect(FunderGroups[acID]);
+    const group = groupings?.find((g) => g.name_identifier_id === acID);
+    if (group) {
+      setShowSelect(group);
     } else {
       setShowSelect(null);
     }
@@ -96,10 +95,10 @@ export default function FunderAutocomplete({
       />
       {showSelect && (
         <>
-          <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.label}</label>
+          <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.group_label}</label>
           <select id="subfunder_select" className="c-input__select" onChange={subSelect}>
             <option value="">- Select one -</option>
-            {showSelect.group.map((item) => <option key={item.uri} value={item.uri}>{item.name}</option>)}
+            {showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
           </select>
         </>
       )}
