@@ -26,7 +26,7 @@
 </div>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Describe Dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
+  <%= link_to 'Back to Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
   <%= link_to 'Proceed to review', stash_url_helpers.review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
 </div>
 

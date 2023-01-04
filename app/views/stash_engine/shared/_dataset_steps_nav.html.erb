@@ -1,5 +1,5 @@
 <div class="c-progress">
-  <%= link_to 'Describe Dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+  <%= link_to 'Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
            class: "c-progress__tab1#{ (params[:controller]&.end_with?('metadata_entry_pages') && params[:action] == 'find_or_create' ? '--active' : '' )} js-nav-out" %>
 
   <%= link_to 'Upload files', stash_url_helpers.upload_resource_path(@resource.id),

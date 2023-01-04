@@ -287,6 +287,9 @@ module StashEngine
 
     def allow_review?
       return false if pub_state == 'published' # do not allow to go into peer review after already published
+      if has_accepted_manuscript? || publication_article_doi
+        return false
+      end # do not allow to go into peer review if associated manuscript already accepted or published
       return true if journal.blank?
       return true if last_submitted_resource&.current_curation_status == 'peer_review'
 
