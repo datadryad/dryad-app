@@ -8,18 +8,19 @@ const instructions = () => (
       using Google Drive.
     </p>
     <p>
-      We require that you include a <a href="/docs/README.md" target="_blank" rel="noreferrer">README.md</a> file based
-      on our template in order to provide key
-      information for understanding and reuse of your data.
+      We require that you include a
+      <a href="/docs/README.md" target="_blank" rel="noreferrer">README.md file based on our template</a>
+      in order to provide key information for understanding and reuse of your data.
     </p>
     <p>If you prefer, you can edit the Markdown online
       at <a href="https://hackmd.io/JgxUwkEdS9uOOcgadhe29w?both=" target="_blank" rel="noreferrer">hackmd.io</a>.
     </p>
-
     <ol>
       <li>Open the link (above)</li>
-      <li>Copy and paste the text into a new note (create new by clicking the plus sign)</li>
-      <li>When you&apos;re done, save into a README.md and upload the file under the <em>Data</em> category</li>
+      <li>Create a new note by clicking &quot;+&quot; at the top left of the screen</li>
+      <li>Copy and paste your text</li>
+      <li>Click the three dots on the top right to download as a Markdown file</li>
+      <li>Make sure your filename is &apos;README.md&apos;, and upload the file under the <em>Data</em> category</li>
     </ol>
 
     <p>
