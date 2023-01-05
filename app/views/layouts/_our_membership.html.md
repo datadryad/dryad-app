@@ -64,6 +64,7 @@ including universities, research institutions and academic libraries. See more a
         <li>The University of Rhode Island</li>
         <li>University of Rochester</li>
         <li>The University of Sheffield</li>
+        <li>University of Washington</li>
 		    <li>University of Wisconsin, Madison</li>
         <li>US Fish and Wildlife Service</li>
         <li>Victoria University, Melbourne</li>
