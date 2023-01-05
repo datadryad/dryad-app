@@ -111,11 +111,13 @@ Rails.application.routes.draw do
           get :download, on: :member
           resource :frictionless_report, path: '/frictionlessReport'
         end
+        resources :processor_results, only: [:show, :index, :create, :update]
       end
             
       resources :urls, shallow: true, path: '/urls', only: [:create]
     end
-  
+
+    # TODO: Do we really need this section?  Seems redundant to the one above
     resources :versions, shallow: true, path: '/versions' do
       get 'download', on: :member
       resources :files, shallow: true, path: '/files' do
