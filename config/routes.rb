@@ -95,11 +95,7 @@ Rails.application.routes.draw do
     resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/, path: '/datasets' do
       member do
         get 'download'
-      end
-      member do
         post 'set_internal_datum'
-      end
-      member do
         post 'add_internal_datum'
       end
       resources :internal_data, shallow: true, path: '/internal_data'
@@ -115,18 +111,6 @@ Rails.application.routes.draw do
       end
             
       resources :urls, shallow: true, path: '/urls', only: [:create]
-    end
-
-    # TODO: Do we really need this section?  Seems redundant to the one above
-    resources :versions, shallow: true, path: '/versions' do
-      get 'download', on: :member
-      resources :files, shallow: true, path: '/files' do
-        get :download, on: :member
-      end
-    end
-
-    resources :files, shallow: true, path: '/files' do
-      get 'download', on: :member
     end
   
     # this one doesn't follow the pattern since it gloms filename on the end, so manual route
