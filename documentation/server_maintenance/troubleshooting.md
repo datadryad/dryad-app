@@ -64,18 +64,27 @@ Dataset submission issues
 =========================
 
 
-Forcing a dataset to submit
+Dealing with submission problems/resubmitting
 ---------------------------
 
-Sometimes a dataset becomes "stuck in progress". This is often due to
-confusion on the part of a user, but there are times when the user
-loses access to editing a particular version of a dataset. Find the
-most recent resource object associated with that dataset, and force it
-to submit:
+Go to the `Submission queue` page, check the box and click `Resend checked submissions` if there is
+a problem.  If there is weirdness in the queuing and resubmitting you can look at `stash_engine_repo_queue_states`
+and search by the resource_id.  A normal submission goes through 'enqueued', 'processing', 
+'provisional_complete' and 'complete'.  `provisional_complete' means we got a success message from 
+Merritt SWORD but we haven't seen it show up in Merritt as really completed yet and we wait to see
+a real completion before taking actions since it may be delayed or rarely has a problem in Merritt.
 
-```
-StashEngine.repository.submit(resource_id: <resource_id>)
-```
+If a submission has failed in Merritt, do the following on the server(s) to see Merritt error messages
+to give to them or to troubleshoot the problem.
+
+`less /apps/dryad/apps/ui/current/log/production.log`
+
+- Press `>` to go to the end of the file.
+- Press CTRL-C to stop line number calculation.
+- type `\Submission failed` which will search in a forward direction (you will not find it).
+- type 'N' (must be a capital letter) to search backwards for the (N)ext of the same string, this should find the last 
+  submission failures in the log.
+
 
 Diagnosing a failed submission
 ------------------------------
@@ -127,14 +136,11 @@ Check that the Merritt submission status daemon is running.
 
 Be sure we can get results for queries from Merritt.
 
-The daemon can be run manually with rake task like:
+The daemon can be restarted on the server like:
 ```
-RAILS_ENV=<environment> bundle exec rails merritt_status:update
+sudo cdlsysctl restart merritt_status_updater
+# it can be run manually like `RAILS_ENV=<environment> bundle exec rails merritt_status:update' if needed
 ```
-
-However, it will start automatically from systemd startup and
-can be managed through it as the preferred method.
-
 
 If the user needs to change a data problem that caused a submission error (rare)
 --------------------------------------------------------------------------------
@@ -250,13 +256,17 @@ INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `ke
   VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, '2022-07-27', '2022-07-27', 
   <resource-id>);
 
-select * from stash_engine_zenodo_copies where resource_id=;
+select * from stash_engine_zenodo_copies where identifier_id=;
 ```
+For each finished `data`, `supp_publish` and `software_publish` record in the
+`stash_engine_zenodo_copies` table do the following procedure. (see last query above)
 
-Now run a command like the one one below if it has been published to Zenodo.  It will
+Now run a command like the one one below for each of these published to Zenodo.  It will
 re-open the published record, set embargo and publish it again with the
 embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies
-table. The zenodo_copy_id is the id from that same table.
+table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same table.
+
+
 ```
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
@@ -278,6 +288,20 @@ What to do at datacite?
 - Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
 - Click `Update DOI`
 - (if it's EZID, you may have to do this a different way, but most are datacite dois)
+
+# This dataset was accidentally published early (unpublish now and likely again published later)
+
+See the instructions for "Private for peer review above" since it's almost the same process with a few minor
+changes.
+
+- In the step of setting "peer_review_end_date" set it to NULL instead.
+- In the step of adding a curation_activity description, set to "curation" and
+  "Set to unpublished at curator request" instead of the peer_review state.
+
+We cannot easily remove everything from Zenodo or DataCite without a lot of problems and it sounds
+like it will eventually get published again, anyway. For Zenodo, set the embargo an 
+unreasonably long time into the future for the items that were published there. For Datacite change
+to `Registered` instead of `Findable` so at least it's not searchable.
 
 
 Permanently removing data that was accidentally published (and should never be)
