@@ -22,7 +22,8 @@ module Helpers
     return {} if response.body.blank?
 
     p = JSON.parse(response.body)
-    return p.with_indifferent_access if p.class == Hash
+    return p.with_indifferent_access if p.instance_of?(Hash)
+
     p # an array
   end
 

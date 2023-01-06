@@ -9,7 +9,7 @@ module StashApi
       @user = create(:user, role: 'superuser')
 
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                       owner_id: @user.id, owner_type: 'StashEngine::User')
+                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
       @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
     end
@@ -48,7 +48,7 @@ module StashApi
     describe :update do
       it 'updates the information about an existing processing result' do
         @processor_result2 = create(:processor_result, resource: @resource, parent_id: 1234, processing_type: 'compressed_info',
-                                    completion_state: 'error')
+                                                       completion_state: 'error')
         response_code = put "/api/v2/processor_results/#{@processor_result.id}",
                             params: @processor_result2.to_json, # has more than required keys, extras will be ignored
                             headers: default_authenticated_headers
@@ -88,8 +88,10 @@ module StashApi
                  completion_state: pr.completion_state, message: pr.message, structured_info: pr.structured_info }
 
         response_code = post "/api/v2/versions/#{@resource.id}/processor_results",
-                            params: data.to_json,
-                            headers: default_authenticated_headers
+                             params: data.to_json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(200)
 
         h = response_body_hash
         expect(h['resource_id']).to eq(@resource.id)
