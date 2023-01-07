@@ -43,7 +43,7 @@ Capybara.asset_host = 'http://localhost:33000'
 
 Capybara.register_driver :selenium_chrome_headless do |app|
   # Capybara::Selenium::Driver.load_selenium
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+  browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
     opts.args << '--window-size=1920,1080'
     opts.args << '--force-device-scale-factor=0.95'
     opts.args << '--headless'

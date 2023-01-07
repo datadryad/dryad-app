@@ -4,7 +4,7 @@ require 'url_pager'
 require 'cgi'
 
 # class ApplicationController < ActionController::Base
-class ApiApplicationController < ::StashEngine::ApplicationController
+class ApiApplicationController < StashEngine::ApplicationController
 
   layout 'layouts/stash_engine/application'
 

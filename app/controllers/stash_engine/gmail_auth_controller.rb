@@ -7,9 +7,7 @@ module StashEngine
     def index
       params.permit(:format)
 
-      respond_to do |format|
-        format.html
-      end
+      respond_to(&:html)
     end
   end
 end
