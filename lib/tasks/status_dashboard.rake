@@ -37,14 +37,6 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'oai',
-      name: 'Merritt OAI server',
-      description: 'The Merritt OAI server that Dryad uses to determine the status of a dataset submission',
-      documentation: 'The OAI-PMH feed is how Dryad determines the state of a Merritt submission after the user submits their dataset.<br><br>For further information on OAI-PMH, please refer to the <a href="https://confluence.ucop.edu/display/Stash/Dryad+Operations#DryadOperations-TestingtheOAI-PMHfeedwegetfromMerritt" target="_blank">Testing OAI-PMH feed</a> document on confluence.',
-      internally_managed: true,
-      status: 1
-    },
-    {
       abbreviation: 'download',
       name: 'Merritt Download server',
       description: 'The Merritt server used to retrieve/download dataset files',
