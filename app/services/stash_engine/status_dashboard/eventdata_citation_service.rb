@@ -31,7 +31,7 @@ module StashEngine
 
         # read the end of the log file, last 1000 characters or the size of file
         f = File.new(log)
-        seek_back = (f.size < 1_000 ? f.size : 1_000)
+        seek_back = [f.size, 1_000].min
         f.seek(-seek_back, IO::SEEK_END)
         str = f.read
 

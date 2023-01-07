@@ -16,9 +16,7 @@ module StashEngine
 
     def cedar_popup
       print("CEDAR popup: params are #{params}")
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # GET/POST/PUT  /generals/find_or_create

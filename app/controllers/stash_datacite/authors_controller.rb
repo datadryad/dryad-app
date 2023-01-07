@@ -9,9 +9,7 @@ module StashDatacite
     # GET /authors/new
     def new
       @author = StashEngine::Author.new(resource_id: params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # POST /authors
