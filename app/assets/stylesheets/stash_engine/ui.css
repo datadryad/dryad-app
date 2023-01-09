@@ -8229,6 +8229,9 @@ body, body#yes-really {
     padding: 10px 30px;
   }
 }
+body.prevent-clicks, body.prevent-clicks *, body#yes-really.prevent-clicks, body#yes-really.prevent-clicks * {
+  pointer-events: none;
+}
 
 *:focus {
   outline: 2px solid #cf4817;
