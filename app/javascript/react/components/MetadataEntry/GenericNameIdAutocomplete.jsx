@@ -114,8 +114,8 @@ export default function GenericNameIdAutocomplete(
         />
         { !acID && isRequired
           ? (
-            <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list. `
-                         + `${(labelText === 'Granting Organization') ? 'If no Granting Organization is applicable, enter N/A.' : ''}`}
+            <span title={`${labelText} not found. Select the correct item from the auto-complete list. `
+                         + `${(labelText === 'Granting organization') ? 'If no funding is applicable, check the box below.' : ''}`}
             >&#x2753;
             </span>
           )

@@ -53,16 +53,12 @@ export default function FunderAutocomplete({
         return [];
         // raise an error here if we want to catch it and display something to user or do something else
       }
-
       const list = data.data.message.items.map((item) => {
         // add one point if starts with the same string, sends to top
         const similarity = stringSimilarity.compareTwoStrings(item.name, qt) + (item.name.startsWith(qt) ? 1 : 0);
         return {...item, similarity};
       });
       list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
-      // Add 'N/A' to the top of the list in case there is no funder
-      const na_item = {id: 0, name: 'N/A', uri: '0'};
-      list.unshift(na_item);
       return list;
     });
 

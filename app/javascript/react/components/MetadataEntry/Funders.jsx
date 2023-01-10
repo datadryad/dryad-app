@@ -17,13 +17,16 @@ function Funders({
     resource_id: resourceId,
   };
 
-  const [funders, setFunders] = useState(contributors);
+  const noContrib = {...blankContrib, name_identifier_id: '0'};
 
-  const addNewFunder = () => {
+  const [funders, setFunders] = useState(contributors);
+  const [disabled, setDisabled] = useState(contributors[0].name_identifier_id === '0');
+
+  const addNewFunder = (contributor) => {
     console.log(`${(new Date()).toISOString()}: Adding funder`);
     const contribJson = {
       authenticity_token: csrf,
-      contributor: blankContrib,
+      contributor,
     };
 
     axios.post(createPath, contribJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
@@ -36,7 +39,7 @@ function Funders({
   };
 
   if (funders.length < 1) {
-    addNewFunder();
+    addNewFunder(blankContrib);
   }
 
   // delete a funder from the list
@@ -76,27 +79,47 @@ function Funders({
     setFunders((prevState) => prevState.map((funder) => (updatedContributor.id === funder.id ? updatedContributor : funder)));
   };
 
+  const setNoFunders = (e) => {
+    setDisabled(e.currentTarget.checked);
+    if (e.currentTarget.checked) {
+      contributors.forEach((c) => c.name_identifier_id !== '0' && removeItem(c.id));
+      if (!contributors.some((c) => c.name_identifier_id === '0')) {
+        addNewFunder(noContrib);
+      }
+    } else {
+      contributors.forEach((c) => removeItem(c.id));
+    }
+  };
+
   return (
-    <>
-      {funders.map((contrib) => (
-        <FunderForm
-          key={contrib.id}
-          resourceId={resourceId}
-          contributor={contrib}
-          groupings={groupings}
-          updatePath={updatePath}
-          removeFunction={removeItem}
-          updateFunder={updateFunder}
-        />
-      ))}
-      <button
-        className="t-describe__add-funder-button o-button__add"
-        type="button"
-        onClick={addNewFunder}
-      >
-        Add another funder
-      </button>
-    </>
+    <div style={{marginBottom: '20px'}}>
+      {!disabled && (
+        <>
+          {funders.map((contrib) => (
+            <FunderForm
+              key={contrib.id}
+              resourceId={resourceId}
+              contributor={contrib}
+              groupings={groupings}
+              disabled={disabled}
+              updatePath={updatePath}
+              removeFunction={removeItem}
+              updateFunder={updateFunder}
+            />
+          ))}
+          <button
+            className="t-describe__add-funder-button o-button__add"
+            type="button"
+            disabled={disabled}
+            onClick={() => addNewFunder(blankContrib)}
+            style={{marginRight: '2em'}}
+          >
+          Add another funder
+          </button>
+        </>
+      )}
+      <label><input type="checkbox" checked={disabled} onChange={setNoFunders} /> No funding received</label>
+    </div>
   );
 }
 
