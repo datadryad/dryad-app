@@ -35,7 +35,7 @@ describe('FunderForm', () => {
   it("renders the basic funders form", () => {
     render(<FunderForm {...info} />);
 
-    const labeledElements = screen.getAllByLabelText('Granting Organization', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Granting organization', { exact: false });
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
 

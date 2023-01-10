@@ -20,7 +20,7 @@ function Funders({
   const noContrib = {...blankContrib, name_identifier_id: '0'};
 
   const [funders, setFunders] = useState(contributors);
-  const [disabled, setDisabled] = useState(contributors[0].name_identifier_id === '0');
+  const [disabled, setDisabled] = useState(contributors[0]?.name_identifier_id === '0');
 
   const addNewFunder = (contributor) => {
     console.log(`${(new Date()).toISOString()}: Adding funder`);
@@ -82,7 +82,7 @@ function Funders({
   const setNoFunders = (e) => {
     setDisabled(e.currentTarget.checked);
     if (e.currentTarget.checked) {
-      contributors.forEach((c) => c.name_identifier_id !== '0' && removeItem(c.id));
+      contributors.forEach((c) => { if (c.name_identifier_id !== '0') removeItem(c.id); });
       if (!contributors.some((c) => c.name_identifier_id === '0')) {
         addNewFunder(noContrib);
       }
