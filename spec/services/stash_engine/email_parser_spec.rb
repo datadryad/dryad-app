@@ -11,7 +11,7 @@ module StashEngine
       end
 
       it 'turns a basic message into a hash' do
-        content = "Journal Name: Royal Society Open Science\nJournal Code: RSOS\nOnline ISSN: 2054-5703"
+        content = "Journal name: Royal Society Open Science\nJournal Code: RSOS\nOnline ISSN: 2054-5703"
         parser = EmailParser.new(content: content)
         hash = parser.metadata_hash
 
@@ -19,7 +19,7 @@ module StashEngine
       end
 
       it 'turns an HTML message into a hash' do
-        content = 'Journal Name: Royal Society Open Science<br/>Journal Code: RSOS<br />Online ISSN: 2054-5703'
+        content = 'Journal name: Royal Society Open Science<br/>Journal Code: RSOS<br />Online ISSN: 2054-5703'
         parser = EmailParser.new(content: content)
         hash = parser.metadata_hash
 
@@ -27,7 +27,7 @@ module StashEngine
       end
 
       it 'ignores content after the EndDryadContent tag' do
-        content = 'Journal Name: Royal Society Open Science<br/>EndDryadContent<br/>Journal Code: RSOS<br />Online ISSN: 2054-5703'
+        content = 'Journal name: Royal Society Open Science<br/>EndDryadContent<br/>Journal Code: RSOS<br />Online ISSN: 2054-5703'
         parser = EmailParser.new(content: content)
         hash = parser.metadata_hash
 

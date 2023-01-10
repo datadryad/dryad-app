@@ -5,7 +5,7 @@
     facility = resource.contributors.where(contributor_type: 'sponsor').first
     if facility.present? && facility.contributor_name.present? %>
     <div class="o-metadata__group2-item <%= 'highlight' if highlight %>">
-      Research Facility: <%= facility.contributor_name %>
+      Research facility: <%= facility.contributor_name %>
     </div>
   <% end %>
   <% if resource.identifier %>
