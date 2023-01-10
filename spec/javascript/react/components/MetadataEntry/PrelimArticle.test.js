@@ -51,7 +51,7 @@ describe('PrelimArticle', () => {
         relatedIdentifier={relatedIdentifier}
         setRelatedIdentifier={setRelatedIdentifier} />);
 
-    const labeledElements = screen.getAllByLabelText('Journal Name', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Journal name', { exact: false });
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', publication_name.value);
     expect(screen.getByLabelText('DOI')).toHaveValue(related_identifier);

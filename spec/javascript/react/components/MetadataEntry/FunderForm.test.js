@@ -39,7 +39,7 @@ describe('FunderForm', () => {
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
 
-    expect(screen.getByLabelText('Award Number')).toHaveValue(info.contributor.award_number);
+    expect(screen.getByLabelText('Award number')).toHaveValue(info.contributor.award_number);
   });
 
   // gives some pointers and info about act and async examples
@@ -55,10 +55,10 @@ describe('FunderForm', () => {
 
     render(<FunderForm {...info} />);
 
-    userEvent.clear(screen.getByLabelText('Award Number'));
-    userEvent.type(screen.getByLabelText('Award Number'), 'alf234');
+    userEvent.clear(screen.getByLabelText('Award number'));
+    userEvent.type(screen.getByLabelText('Award number'), 'alf234');
 
-    await waitFor(() => expect(screen.getByLabelText('Award Number')).toHaveValue('alf234'));
+    await waitFor(() => expect(screen.getByLabelText('Award number')).toHaveValue('alf234'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 

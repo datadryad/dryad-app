@@ -13,7 +13,7 @@ describe('GenericNameIdAutocomplete', () => {
     const supplyLookupList = () => { return [ { "id": 1, "name": 'cat'}, { "id": 2, "name": 'dog' } ] };
     const nameFunc = (item) => item?.name;
     const idFunc = (item) => item?.id;
-    const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional Affiliation', "isRequired": true };
+    const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional affiliation', "isRequired": true };
 
     render(
       <GenericNameIdAutocomplete

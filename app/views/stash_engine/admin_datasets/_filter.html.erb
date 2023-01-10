@@ -17,7 +17,7 @@
 
   <p>
   <% if @publications.any? %>
-      <label for="publication_name">Journal Name:</label>
+      <label for="publication_name">Journal name:</label>
       <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', id: 'publication_name') %>
   <% end %>
   </p>

@@ -17,7 +17,7 @@ import menuStyles from './AcMenuStyles';
    idFunc(item) is a function that returns an id for an item from the list
    controlOptions: {
        htmlID -- the base unique ID used for this autocomplete component (should be unique on the page)
-       labelText -- The label for the lookup (like "Institutional Affiliation")
+       labelText -- The label for the lookup (like "Institutional affiliation")
        isRequired -- boolean.  Makes the * for required fields and also shows warning "?" if no id gets filled for an item
 
        See the file RorAutocomplete.js for a real example.

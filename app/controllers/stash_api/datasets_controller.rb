@@ -121,7 +121,7 @@ module StashApi
         else
           StashEngine::InternalDatum.create(stash_identifier: @stash_identifier, data_type: 'manuscriptNumber', value: manu)
         end
-        fields_changed << 'Manuscript Number'
+        fields_changed << 'Manuscript number'
       end
 
       # Add funding info if it was not added by the submitter

@@ -49,7 +49,7 @@ module StashApi
       }.with_indifferent_access
 
       @update_metadata = {
-        'title' => 'Changed my Dataset Title',
+        'title' => 'Changed my Dataset title',
         'authors' => [
           {
             'firstName' => 'Grok',

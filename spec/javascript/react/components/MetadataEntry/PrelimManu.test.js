@@ -55,10 +55,10 @@ describe('PrelimManu', () => {
         msId={msId}
         setMsId={setMsId} />);
 
-    const labeledElements = screen.getAllByLabelText('Journal Name', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Journal name', { exact: false });
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', publication_name.value);
-    expect(screen.getByLabelText('Manuscript Number')).toHaveValue(msid.value);
+    expect(screen.getByLabelText('Manuscript number')).toHaveValue(msid.value);
   });
 
   it("checks that updating fields triggers axios save on blur", async () => {
@@ -80,10 +80,10 @@ describe('PrelimManu', () => {
         msId={msId}
         setMsId={setMsId} />);
 
-    userEvent.clear(screen.getByLabelText('Manuscript Number'));
-    userEvent.type(screen.getByLabelText('Manuscript Number'), 'GUD-MS-387-555');
+    userEvent.clear(screen.getByLabelText('Manuscript number'));
+    userEvent.type(screen.getByLabelText('Manuscript number'), 'GUD-MS-387-555');
 
-    await waitFor(() => expect(screen.getByLabelText('Manuscript Number')).toHaveValue('GUD-MS-387-555'));
+    await waitFor(() => expect(screen.getByLabelText('Manuscript number')).toHaveValue('GUD-MS-387-555'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
