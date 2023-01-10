@@ -123,7 +123,9 @@ module StashEngine
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review])
       cas.each do |ca|
-        next if ca.note&.include?('peer_review_reminder') # don't count reminder statuses
+        prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
+        # don't count reminder statuses or other minor updates
+        next if prev_ca&.peer_review? || ca.note&.include?('peer_review_reminder') || ca.note&.include?('notification sent to author')
 
         # include this dataset unless it has a previous resource that had been submitted
         this_resource = ca.resource
