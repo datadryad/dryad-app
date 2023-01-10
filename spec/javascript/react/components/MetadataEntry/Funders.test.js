@@ -39,7 +39,7 @@ describe('Funders', () => {
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
                     deletePath={deletePath} />);
 
-    const labeledElements = screen.getAllByLabelText('Granting Organization', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Granting organization', { exact: false });
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
     const awardNums = screen.getAllByLabelText('Award Number', { exact: false })
     expect(awardNums.length).toBe(3);

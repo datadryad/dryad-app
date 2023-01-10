@@ -73,7 +73,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Funding
-      find_field('Granting Organization').set(Faker::Company.name)
+      find_field('Granting organization').set(Faker::Company.name)
       find_field('Award Number').set(Faker::Number.number(digits: 5))
 
       # ##############################
