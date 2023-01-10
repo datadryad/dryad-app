@@ -23,7 +23,7 @@ describe('RorAutocomplete', () => {
   it("renders the basic autocomplete form", () => {
 
     const info = {formRef: null, acText: acText, setAcText: setAcText, acID: acID, setAcID,
-      'controlOptions': { htmlId: "instit_affil_1234", labelText: 'Institutional Affiliation', isRequired: true } }
+      'controlOptions': { htmlId: "instit_affil_1234", labelText: 'Institutional affiliation', isRequired: true } }
 
     const { container } = render(<RorAutocomplete {...info} />);
 

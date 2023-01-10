@@ -75,7 +75,7 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
           <Field name="id" type="hidden" />
           <div className="c-input">
             <label className="c-input__label required" htmlFor={`author_first_name__${dryadAuthor.id}`}>
-              First Name
+              First name
             </label>
             <Field
               id={`author_first_name__${dryadAuthor.id}`}
@@ -89,7 +89,7 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
           </div>
           <div className="c-input">
             <label className="c-input__label required" htmlFor={`author_last_name__${dryadAuthor.id}`}>
-              Last Name
+              Last name
             </label>
             <Field
               id={`author_last_name__${dryadAuthor.id}`}
@@ -110,12 +110,12 @@ export default function AuthorForm({dryadAuthor, removeFunction, correspondingAu
               setAcID={setAcID}
               // name={dryadAuthor.affiliation.long_name}
               // id={dryadAuthor.affiliation.ror_id}
-              controlOptions={{htmlId: `instit_affil_${dryadAuthor.id}`, labelText: 'Institutional Affiliation', isRequired: true}}
+              controlOptions={{htmlId: `instit_affil_${dryadAuthor.id}`, labelText: 'Institutional affiliation', isRequired: true}}
             />
           </div>
           <div className="c-input">
             <label className={`c-input__label ${(dryadAuthor.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${dryadAuthor.id}`}>
-              Author Email
+              Author email
             </label>
             <Field
               id={`author_email__${dryadAuthor.id}`}

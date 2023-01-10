@@ -13,7 +13,7 @@ describe('FacilityAutocomplete', () => {
 
     const info = {name: 'Friends of Karen', rorId: 'https://ror.org/02rrdqs77',
       contribId: null, resourceId: 123, createPath: '/create_path', updatePath: 'update_path',
-      'controlOptions': { htmlId: "research_facility", labelText: 'Research Facility', isRequired: false } }
+      'controlOptions': { htmlId: "research_facility", labelText: 'Research facility', isRequired: false } }
 
     const { container } = render(<FacilityAutocomplete {...info} />);
 
@@ -25,7 +25,7 @@ describe('FacilityAutocomplete', () => {
   it('allows changes to dd text input', async () => {
     const info = {name: 'Friends of Karen', rorId: 'https://ror.org/02rrdqs77',
       contribId: null, resourceId: 123, createPath: '/create_path', updatePath: 'update_path',
-      'controlOptions': { htmlId: "research_facility", labelText: 'Research Facility', isRequired: false } }
+      'controlOptions': { htmlId: "research_facility", labelText: 'Research facility', isRequired: false } }
 
     /*
     // The promise stuff in here was trying to mock axios to return drop-down list, but can't get it to work for anything

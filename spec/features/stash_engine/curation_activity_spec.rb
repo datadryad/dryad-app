@@ -230,7 +230,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         # the button to edit has this class on it
         find('.js-trap-curator-url').click
 
-        expect(page).to have_field('Dataset Title') # so it waits for actual ajax doc to load before doing anything else
+        expect(page).to have_field('Dataset title') # so it waits for actual ajax doc to load before doing anything else
 
         click_on('Cancel and Discard Changes')
         find('#railsConfirmDialogYes').click

@@ -29,12 +29,12 @@ describe('AuthorForm', () => {
   it("renders the basic author form", () => {
     render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
 
-    const labeledElements = screen.getAllByLabelText('Institutional Affiliation', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Institutional affiliation', { exact: false });
     expect(labeledElements.length).toBe(2);
 
-    expect(screen.getByLabelText('First Name')).toHaveValue(dryadAuthor.author_first_name);
-    expect(screen.getByLabelText('Last Name')).toHaveValue(dryadAuthor.author_last_name);
-    expect(screen.getByLabelText('Author Email')).toHaveValue(dryadAuthor.author_email);
+    expect(screen.getByLabelText('First name')).toHaveValue(dryadAuthor.author_first_name);
+    expect(screen.getByLabelText('Last name')).toHaveValue(dryadAuthor.author_last_name);
+    expect(screen.getByLabelText('Author email')).toHaveValue(dryadAuthor.author_email);
   });
 
   // gives some pointers and info about act and async examples
@@ -50,14 +50,14 @@ describe('AuthorForm', () => {
 
     render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
 
-    userEvent.clear(screen.getByLabelText('First Name'));
-    userEvent.type(screen.getByLabelText('First Name'), 'Alphred');
+    userEvent.clear(screen.getByLabelText('First name'));
+    userEvent.type(screen.getByLabelText('First name'), 'Alphred');
 
-    await waitFor(() => expect(screen.getByLabelText('First Name')).toHaveValue('Alphred'));
+    await waitFor(() => expect(screen.getByLabelText('First name')).toHaveValue('Alphred'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByLabelText('Last Name')).toHaveFocus());
+    await waitFor(() => expect(screen.getByLabelText('Last name')).toHaveFocus());
     await waitFor(() => promise); // waits for the axios promise to fulfil
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.

@@ -21,7 +21,7 @@ export default function OrcidInfo({
       )}
       {correspondingAuthorId === dryadAuthor.id && (
         <div className="c-orcid__div" style={{marginLeft: '2em'}}><i className="fa fa-address-card-o" aria-hidden="true" />
-          &nbsp;&nbsp;Corresponding Author
+          &nbsp;&nbsp;Corresponding author
         </div>
       )}
       {(curator && !orcidInfo && dryadAuthor.orcid_invite_path) ? (

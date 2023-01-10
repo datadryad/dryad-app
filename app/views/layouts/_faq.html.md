@@ -102,7 +102,7 @@
 
 <p>We require:</p>
 <ul>
-    <li>Journal Name: If associated with a manuscript, fields for journal name and manuscript number are required.</li>
+    <li>Journal name: If associated with a manuscript, fields for journal name and manuscript number are required.</li>
     <li>
       Title:  The title should be a succinct summary of both the data and study subject or focus. A good title
       typically contains 8 to 10 words that adequately describe the content of the dataset.
@@ -149,7 +149,7 @@
     how the data were generated (i.e. equipment/tools/reagents used, or procedures followed).
   </li>
   <li>
-    Usage Notes: Guidance on the programs and/or software that are required to open the data files included with your 
+    Usage notes: Guidance on the programs and/or software that are required to open the data files included with your 
     submission will be helpful to include for future users of your dataset. This information will ensure ease of 
     accessibility, especially for the less common file types. If proprietary software is required, include open-source 
     alternatives.
@@ -326,7 +326,7 @@ Foundation, visit this link: <a href="https://frictionlessdata.io/">https://fric
         the context in which the data were collected, the measurements that were made, and the quality of the data),
         the data cannot be found through internet searches or data indexing services, understood by fellow researchers,
         or effectively used. We require a few key pieces of metadata. Additional information can be included in the
-        &quot;Usage Notes&quot; section of the description, or as a separate readme.txt file archived alongside the
+        &quot;Usage notes&quot; section of the description, or as a separate readme.txt file archived alongside the
         dataset files. The metadata entry form is based on fields from the
         <a href="http://schema.datacite.org/meta/kernel-3/index.html">DataCite schema</a> and is broadly applicable
         to data from any field.

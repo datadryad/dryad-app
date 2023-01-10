@@ -90,7 +90,7 @@ function FunderForm({
           </div>
           <div className="c-input">
             <label className="c-input__label" htmlFor={`contributor_award_number__${contributor.id}`}>Award
-              Number
+              number
             </label>
             <Field
               id={`contributor_award_number__${contributor.id}`}

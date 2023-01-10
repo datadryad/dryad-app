@@ -97,7 +97,7 @@ function PrelimArticle({
                   controlOptions={
                     {
                       htmlId: 'publication',
-                      labelText: 'Journal Name',
+                      labelText: 'Journal name',
                       isRequired: false,
                     }
                   }

@@ -95,7 +95,7 @@ function PrelimManu({
                   controlOptions={
                     {
                       htmlId: 'publication',
-                      labelText: 'Journal Name',
+                      labelText: 'Journal name',
                       isRequired: true,
                     }
                   }
@@ -103,7 +103,7 @@ function PrelimManu({
               </div>
               <div className="c-input">
                 <label className="c-input__label required" htmlFor="msId">
-                  Manuscript Number
+                  Manuscript number
                 </label>
                 <Field
                   className="c-input__text"

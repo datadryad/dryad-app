@@ -71,7 +71,7 @@ function RelatedWorkForm(
             <Field name="id" type="hidden" />
             <div className="c-input">
               <label className="c-input__label" htmlFor={`work_type__${relatedIdentifier.id}`}>
-                Work Type
+                Work type
               </label>
               <Field
                 id={`work_type__${relatedIdentifier.id}`}
