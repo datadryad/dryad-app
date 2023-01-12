@@ -217,6 +217,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         # the button to edit has this class on it
         find('.js-trap-curator-url').click
         all('[id^=instit_affil_]').last.set('test institution')
+        page.send_keys(:tab)
+        page.has_css?('.use-text-entered')
+        all(:css, '.use-text-entered').each { |i| i.set(true) }
         add_required_data_files
         navigate_to_review
         agree_to_everything

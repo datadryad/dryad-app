@@ -81,6 +81,12 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in 'keyword_ac', with: Array.new(3) { Faker::Lorem.word }.join(' ')
 
       # ##############################
+      # Autocomplete checkboxes
+      page.send_keys(:tab)
+      page.has_css?('.use-text-entered')
+      all(:css, '.use-text-entered').each { |i| i.set(true) }
+
+      # ##############################
       # Methods
       fill_in_tinymce(field: 'methods', content: Faker::Lorem.paragraph)
 
