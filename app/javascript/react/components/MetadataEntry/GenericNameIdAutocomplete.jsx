@@ -176,7 +176,7 @@ export default function GenericNameIdAutocomplete(
         <>
           {!textEnter && <span className="c-ac__error_message">Please select an item from the list, or check the box below</span>}
           <label className="c-input__label c-ac__checkbox">
-            <input type="checkbox" checked={textEnter} onChange={saveText} />
+            <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
             {` I cannot find my ${labelText.toLowerCase()}, "${acText}", in the list`}
           </label>
         </>

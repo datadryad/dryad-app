@@ -40,7 +40,7 @@ describe('Funders', () => {
                     deletePath={deletePath} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization', { exact: false });
-    expect(labeledElements.length).toBe(6); // two for each autocomplete list
+    expect(labeledElements.length).toBe(9); // three for each autocomplete list
     const awardNums = screen.getAllByLabelText('Award number', { exact: false })
     expect(awardNums.length).toBe(3);
     expect(awardNums[0]).toHaveValue(contributors[0].award_number);
