@@ -189,20 +189,40 @@ module StashEngine
       { triggered: false, msg: item }
     end
 
+
+    # testing:
+    # res = StashEngine::Resource.find(3756)
+    # my_file = res.data_files.where("upload_file_name LIKE '%xls'").first
+    #
     def trigger_excel_to_csv
       credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
       client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
 
       h = Rails.application.routes.url_helpers
 
+      pr = ProcessorResult.create(resource: resource,
+                                  processing_type: 'excel_to_csv',
+                                  parent_id: id,
+                                  completion_state: 'not_started')
+
+      # download_url, filename, callback_url, token, processor_obj
+
       payload = JSON.generate({
                                 download_url: url || direct_s3_presigned_url,
-                                callback_url: h.file_frictionless_report_url(id)
+                                filename: upload_file_name,
+                                callback_url: h.processor_result_url(id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
                                                .gsub(/^http:/, 'https:'),
-                                token: StashEngine::ApiToken.token
+                                token: StashEngine::ApiToken.token,
+                                processor_obj: pr
                               })
 
+      resp = client.invoke(
+        { function_name: 'excelToCsv',
+          invocation_type: 'Event',
+          log_type: 'None',
+          payload: payload }
+      )
     end
 
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
