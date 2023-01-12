@@ -53,6 +53,7 @@ module StashEngine
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
+    has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
