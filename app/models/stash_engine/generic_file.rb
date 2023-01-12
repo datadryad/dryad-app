@@ -189,6 +189,22 @@ module StashEngine
       { triggered: false, msg: item }
     end
 
+    def trigger_excel_to_csv
+      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+      client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
+
+      h = Rails.application.routes.url_helpers
+
+      payload = JSON.generate({
+                                download_url: url || direct_s3_presigned_url,
+                                callback_url: h.file_frictionless_report_url(id)
+                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub(/^http:/, 'https:'),
+                                token: StashEngine::ApiToken.token
+                              })
+
+    end
+
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
     # brace or after the closing brace, because it is typically a warning message from Python
     # that Frictionless didn't handle properly.
