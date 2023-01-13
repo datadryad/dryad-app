@@ -75,6 +75,7 @@ function Funders({
     const noFunders = e.currentTarget.checked;
     const [contributor] = contributors;
     setDisabled(noFunders);
+    contributor.contributor_name = noFunders ? 'N/A' : '';
     contributor.name_identifier_id = noFunders ? '0' : '';
     // submit by json
     return axios.patch(
