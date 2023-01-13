@@ -1,4 +1,5 @@
 import json
+import time
 import pandas as pd
 import requests
 
@@ -13,17 +14,21 @@ def lambda_handler(event, context):
 
 def update_processor_results(processor_obj, callback_url, token):
   headers = {'Authorization': f'Bearer {token}'}
+  # print(processor_obj)
+  # print (processor_obj.__class__.__name__)
+
   update = processor_obj.copy()
   # the following setting are just for testing
   update['completion_state'] = 'processing'
   update['message'] = 'This is a new message'
-  update['structured_info'] = processor_obj
+  update['structured_info'] = json.dumps(processor_obj, indent = 2)
 
   for i in range(0,5):
     r = requests.put(callback_url, headers=headers, json=update)
     if r.status_code < 400:
       break
     else:
+      print(f'Error from server: code {r.status_code}, try {i}')
       time.sleep(5)
 
   return r.status_code
