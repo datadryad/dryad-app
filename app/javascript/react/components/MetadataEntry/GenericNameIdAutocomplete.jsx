@@ -119,6 +119,7 @@ export default function GenericNameIdAutocomplete(
           {...getInputProps(
             {
               onBlur: (e) => {
+                document.getElementById(`menu_${htmlId}`).blur();
                 if (completionClick.current) {
                   // don't fire a save after a mousedown state set on clicking a completion item, it's not a real blur
                   completionClick.current = false;
