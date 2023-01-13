@@ -210,11 +210,11 @@ module StashEngine
       payload = JSON.generate({
                                 download_url: url || direct_s3_presigned_url,
                                 filename: upload_file_name,
-                                callback_url: h.processor_result_url(id)
+                                callback_url: h.processor_result_url(pr.id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
                                                .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token,
-                                processor_obj: pr
+                                processor_obj: pr.as_json # really a hash and this is a terrible method name
                               })
 
       resp = client.invoke(
