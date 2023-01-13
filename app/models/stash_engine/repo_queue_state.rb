@@ -91,7 +91,6 @@ module StashEngine
       end
 
       update_size!
-      # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
       ::StashEngine.repository.cleanup_files(resource)
       true
     end

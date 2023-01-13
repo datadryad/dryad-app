@@ -4,9 +4,7 @@ module StashDatacite
     def details
       @resource = StashEngine::Resource.find(params[:resource_id])
       @rights = @resource.rights
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
   end
 end

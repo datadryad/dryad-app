@@ -48,9 +48,7 @@ module StashEngine
     end
 
     def role_popup
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # sets the user role (admin/user)
@@ -61,15 +59,11 @@ module StashEngine
       @user.role = new_role
       @user.save!
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def email_popup
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # sets the user email
@@ -79,29 +73,21 @@ module StashEngine
 
       @user.update(email: new_email)
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def journals_popup
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def tenant_popup
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def set_tenant
       @user.update(tenant_id: params[:tenant])
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def merge_popup
@@ -112,9 +98,7 @@ module StashEngine
         @user2 = StashEngine::User.find(selected_users[1])
       end
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def merge
@@ -123,9 +107,7 @@ module StashEngine
       user1.merge_user!(other_user: user2)
       user2.destroy
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # profile for a user showing stats and datasets

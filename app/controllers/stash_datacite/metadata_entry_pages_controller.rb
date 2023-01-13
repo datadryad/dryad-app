@@ -18,9 +18,7 @@ module StashDatacite
                                                     work_type: 'primary_article')
       end
       @resource.update(updated_at: Time.current)
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
 
       # If the most recent Curation Activity was from the "Dryad System", add an entry for the
       # current_user so the history makes more sense.

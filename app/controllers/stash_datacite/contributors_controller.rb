@@ -7,9 +7,7 @@ module StashDatacite
     # GET /contributors/new
     def new
       @contributor = Contributor.new(resource_id: params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # POST /contributors
