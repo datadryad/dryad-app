@@ -214,7 +214,8 @@ module StashEngine
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
                                                .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token,
-                                processor_obj: pr.as_json # really a hash and this is a terrible method name
+                                doi: resource.identifier.to_s,
+                                processor_obj: pr.as_json
                               })
 
       resp = client.invoke(

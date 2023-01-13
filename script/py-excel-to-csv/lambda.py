@@ -5,8 +5,9 @@ import requests
 from pathlib import Path
 from datetime import datetime
 import re
+from urllib.parse import urlparse, quote
 
-# event json has these params passed in: download_url, filename, callback_url, token, processor_obj
+# event json has these params passed in: download_url, filename, callback_url, token, doi, processor_obj
 # the filename is tricky to parse out of http request (sometimes in content-disposition and sometimes not), so just pass it from our DB
 def lambda_handler(event, context):
   # update_processor_results(event['processor_obj'], event['callback_url'], event['token'])
@@ -47,11 +48,12 @@ def fix_fn(fn):
   return re.sub(r'[^-a-zA-Z0-9_.()]+', '_', fn)
 
 class ExcelToCsv:
-  def __init__(self, download_url, filename, callback_url, token, processor_obj):
+  def __init__(self, download_url, filename, callback_url, token, doi, processor_obj):
     self.download_url = download_url
     self.filename = fix_fn(filename)
     self.callback_url = callback_url
     self.token = token
+    self.doi = doi
     self.processor_obj = processor_obj
 
   def update_processor(self, state, message, struct_info):
@@ -109,4 +111,22 @@ class ExcelToCsv:
       new_files.append(new_fn)
 
     return new_files
+
+  def upload_new_files(self, new_files):
+    domain = urlparse(self.callback_url).netloc
+    headers = {'Authorization': f'Bearer {self.token}', 'Content-Type': 'text/csv'}
+    for new_file in new_files:
+      url = f'https://{domain}/api/v2/datasets/{quote(self.doi)}/files/{quote(new_file)}'
+
+      for i in range(0,5):
+        r = requests.put(url, headers=headers, data=open(f'/tmp/{new_file}', 'rb'))
+        if r.status_code < 400:
+          break
+        else:
+          print(f'Error from server while uploading {new_file}: code {r.status_code}, try {i}')
+          time.sleep(5)
+
+    return
+
+
 
