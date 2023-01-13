@@ -45,7 +45,7 @@ module StashDatacite
       @geolocation_box.try(:geolocation).try(:destroy_box)
 
       @geolocation_boxes = GeolocationBox.only_geo_bbox(resource.id)
-      respond_to { |format| format.js }
+      respond_to(&:js)
     end
 
     private

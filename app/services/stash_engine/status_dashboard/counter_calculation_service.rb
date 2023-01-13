@@ -33,7 +33,7 @@ module StashEngine
         # read the end of the log file
         f = File.new(log)
         # Read back approx the last 1,000 lines at 50 characters a line, one run of the processor is much more than this
-        seek_back = (f.size < 50_000 ? f.size : 50_000)
+        seek_back = [f.size, 50_000].min
         f.seek(-seek_back, IO::SEEK_END)
         str = f.read
 

@@ -15,9 +15,7 @@ module StashDatacite
         @error = 'Unable to enable peer review status at this time.'
       end
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     private
