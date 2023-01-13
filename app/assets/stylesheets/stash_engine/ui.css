@@ -5080,6 +5080,9 @@ html.no-details .o-showhide__summary {
 .c-auto_complete .c-ac__menu .c-ac__menu_item.highlighted {
   background-color: #bde4ff;
 }
+.c-auto_complete .c-ac__menu_closed {
+  display: none;
+}
 
 .c-ac__error_message {
   padding: 5px;
