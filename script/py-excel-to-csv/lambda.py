@@ -6,7 +6,12 @@ import requests
 # event json has these params passed in: download_url, filename, callback_url, token, processor_obj
 # the filename is tricky to parse out of http request (sometimes in content-disposition and sometimes not), so just pass it from our DB
 def lambda_handler(event, context):
-  update_processor_results(event['processor_obj'], event['callback_url'], event['token'])
+  # update_processor_results(event['processor_obj'], event['callback_url'], event['token'])
+  # TODO: validation of correct events passed in
+
+  e2c = ExcelToCsv(event['download_url'], event['filename'], event['callback_url'], event['token'], event['processor_obj'])
+  e2c.update_processor_start()
+
   return {
     'statusCode': 200,
     'body': event
@@ -17,14 +22,8 @@ def update_processor_results(processor_obj, callback_url, token):
   # print(processor_obj)
   # print (processor_obj.__class__.__name__)
 
-  update = processor_obj.copy()
-  # the following setting are just for testing
-  update['completion_state'] = 'processing'
-  update['message'] = 'This is a new message'
-  update['structured_info'] = json.dumps(processor_obj, indent = 2)
-
   for i in range(0,5):
-    r = requests.put(callback_url, headers=headers, json=update)
+    r = requests.put(callback_url, headers=headers, json=processor_obj)
     if r.status_code < 400:
       break
     else:
@@ -36,24 +35,33 @@ def update_processor_results(processor_obj, callback_url, token):
 
 
 class ExcelToCsv:
-  def __init__(self, download_url, filename, callback_url, token, processor_object):
+  def __init__(self, download_url, filename, callback_url, token, processor_obj):
     self.download_url = download_url
     self.filename = filename
     self.callback_url = callback_url
     self.token = token
+    self.processor_obj = processor_obj
 
-  def download_excel():
-    r = requests.get(url, allow_redirects=True)
+  def update_processor_start(self):
+    update = self.processor_obj.copy()
+    update['completion_state'] = 'processing'
+    update['message'] = 'This is a new message'
+    update['structured_info'] = json.dumps(update, indent = 2)
+    update_processor_results(update, self.callback_url, self.token)
 
-  # tries to upload it to our API, TODO: needs to be fixed
-  def update_status(token, status, report, callback):
-    headers = {'Authorization': f'Bearer {token}'}
-    update = { 'status': status, 'report': report }
-    for i in range(0,5):
-      r = requests.put(callback, headers=headers, json=update)
-      if r.status_code < 400:
-        break
-      else:
-        time.sleep(5)
 
-    return r.status_code
+#   def download_excel():
+#     r = requests.get(url, allow_redirects=True)
+#
+#   # tries to upload it to our API, TODO: needs to be fixed
+#   def update_status(token, status, report, callback):
+#     headers = {'Authorization': f'Bearer {token}'}
+#     update = { 'status': status, 'report': report }
+#     for i in range(0,5):
+#       r = requests.put(callback, headers=headers, json=update)
+#       if r.status_code < 400:
+#         break
+#       else:
+#         time.sleep(5)
+#
+#    return r.status_code
