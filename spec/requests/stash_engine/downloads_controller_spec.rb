@@ -133,7 +133,24 @@ module StashEngine
         # supposed to be used by the progress bar and not other users.  "ProgressBarForever" until they tire of hacking us.
         expect(json[:status]).to eq(202)
       end
+    end
 
+    describe :share do
+      it 'gives 200 in response to valid share item' do
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
+        share_id = @resource.identifier.shares.first.secret_id
+        response_code = get "/stash/share/#{share_id}"
+        expect(response_code).to eq(200)
+      end
+
+      it 'gives 404 in response to sharing for withdrawn item' do
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
+        share_id = @resource.identifier.shares.first.secret_id
+        @resource.identifier.update(pub_state: 'withdrawn')
+        response_code = get "/stash/share/#{share_id}"
+        expect(response_code).to eq(302) # since this redirects to a generic 404 page
+        expect(response.headers['Location']).to eq("http://#{request.host}/stash/404")
+      end
     end
   end
 end
