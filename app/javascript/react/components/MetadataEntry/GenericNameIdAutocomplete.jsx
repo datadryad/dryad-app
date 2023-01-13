@@ -119,7 +119,6 @@ export default function GenericNameIdAutocomplete(
           {...getInputProps(
             {
               onBlur: (e) => {
-                document.getElementById(`menu_${htmlId}`).blur();
                 if (completionClick.current) {
                   // don't fire a save after a mousedown state set on clicking a completion item, it's not a real blur
                   completionClick.current = false;
@@ -152,27 +151,27 @@ export default function GenericNameIdAutocomplete(
           : ''}
         <ul
           {...getMenuProps()}
-          className="c-ac__menu"
+          className={`c-ac__menu c-ac__menu_${isOpen ? 'open' : 'closed'}`}
           id={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
+          tabIndex={-1}
         >
-          {isOpen
-            && inputItems.map((item, index) => {
-              const id = idFunc(item);
-              const name = nameFunc(item);
-              return (
-                <li
-                  key={id}
-                  name={name}
-                  className={`c-ac__menu_item ${highlightedIndex === index ? 'highlighted' : ''}`}
-                  {...getItemProps({
-                    item, index, id, onMouseDown: () => { completionClick.current = true; },
-                  })}
-                >
-                  {name}
-                </li>
-              );
-            })}
+          {inputItems.map((item, index) => {
+            const id = idFunc(item);
+            const name = nameFunc(item);
+            return (
+              <li
+                key={id}
+                name={name}
+                className={`c-ac__menu_item ${highlightedIndex === index ? 'highlighted' : ''}`}
+                {...getItemProps({
+                  item, index, id, onMouseDown: () => { completionClick.current = true; },
+                })}
+              >
+                {name}
+              </li>
+            );
+          })}
         </ul>
       </div>
       {showError && (
