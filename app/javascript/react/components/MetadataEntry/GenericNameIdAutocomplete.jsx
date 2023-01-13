@@ -137,6 +137,8 @@ export default function GenericNameIdAutocomplete(
           value={acText || ''}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
+          aria-invalid={showError && !textEnter}
+          aria-errormessage={`error_${htmlId}`}
         />
         { !acID && isRequired
           ? (
@@ -175,7 +177,9 @@ export default function GenericNameIdAutocomplete(
       </div>
       {showError && (
         <>
-          {!textEnter && <span className="c-ac__error_message">Please select an item from the list, or check the box below</span>}
+          {!textEnter && (
+            <span className="c-ac__error_message" id={`error_${htmlId}`}>Please select an item from the list, or check the box below</span>
+          )}
           <label className="c-input__label c-ac__checkbox">
             <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
             {` I cannot find my ${labelText.toLowerCase()}, "${acText}", in the list`}
