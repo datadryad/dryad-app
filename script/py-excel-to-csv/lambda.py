@@ -13,7 +13,7 @@ def lambda_handler(event, context):
   # update_processor_results(event['processor_obj'], event['callback_url'], event['token'])
   # TODO: validation of correct events passed in
 
-  e2c = ExcelToCsv(event['download_url'], event['filename'], event['callback_url'], event['token'], event['processor_obj'])
+  e2c = ExcelToCsv(event['download_url'], event['filename'], event['callback_url'], event['token'], event['doi'], event['processor_obj'])
   e2c.update_processor_start()
 
   mypath = e2c.download_excel()
@@ -21,6 +21,8 @@ def lambda_handler(event, context):
 
   new_files = e2c.extract_worksheets(mypath)
   if(new_files is None): return
+
+  e2c.upload_new_files(new_files)
 
   e2c.update_processor_end()
 
@@ -112,11 +114,12 @@ class ExcelToCsv:
 
     return new_files
 
+  # TODO: extra logging and sending information back, but this works!
   def upload_new_files(self, new_files):
     domain = urlparse(self.callback_url).netloc
     headers = {'Authorization': f'Bearer {self.token}', 'Content-Type': 'text/csv'}
     for new_file in new_files:
-      url = f'https://{domain}/api/v2/datasets/{quote(self.doi)}/files/{quote(new_file)}'
+      url = f'https://{domain}/api/v2/datasets/{quote(self.doi, safe="")}/files/{quote(new_file, safe="")}'
 
       for i in range(0,5):
         r = requests.put(url, headers=headers, data=open(f'/tmp/{new_file}', 'rb'))
