@@ -82,8 +82,7 @@
     </li>
     <li>Files must not contain any copyright restrictions.</li>
     <li>
-        A <a href="https://data.research.cornell.edu/content/readme">README file</a> that describes your data must be
-        included.
+        A <a href="https://datadryad.org/docs/README.md">README file</a> that describes your data must be included.
     </li>
 </ul>
 
