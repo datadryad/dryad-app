@@ -21,7 +21,10 @@ module Helpers
   def response_body_hash
     return {} if response.body.blank?
 
-    JSON.parse(response.body).with_indifferent_access
+    p = JSON.parse(response.body)
+    return p.with_indifferent_access if p.instance_of?(Hash)
+
+    p # an array
   end
 
   def default_json_headers
