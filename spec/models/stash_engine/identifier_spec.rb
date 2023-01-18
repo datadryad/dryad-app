@@ -628,8 +628,8 @@ module StashEngine
     end
 
     describe '#submitter_affiliation' do
-      it 'returns the current version\'s first author\'s affiliation' do
-        expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
+      it 'returns the current version\'s submitter\'s affiliation' do
+        expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.owner_author&.affiliation)
       end
     end
 

@@ -129,6 +129,10 @@ body, body#yes-really {
 		padding: 10px 30px;
 	}
 
+	&.prevent-clicks, &.prevent-clicks * {
+		pointer-events: none;
+	}
+
 }
 
 *:focus {

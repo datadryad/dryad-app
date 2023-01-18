@@ -8,7 +8,6 @@ The files deploy with the code (in `apps/ui/current`), but the logs and shared i
 ## Frequencies:
 
 Cron jobs run on one of the following schedules:
-- every_1.sh <-- Every minute for checking the OAI feed for publications
 - every_5.sh <-- Every 5 minutes
 - daily.sh <-- Every day at 12:00
 - weekly.sh <-- Every Sunday at 21:00

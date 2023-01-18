@@ -35,7 +35,7 @@ module StashEngine
     # the show_files is for refreshing the files lists to their default states for the resource
     def show_files
       @uploads = resource.latest_file_states
-      respond_to { |format| format.js }
+      respond_to(&:js)
     end
 
     # GET /resources/new

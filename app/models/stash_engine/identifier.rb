@@ -356,7 +356,7 @@ module StashEngine
     end
 
     def submitter_affiliation
-      latest_resource&.authors&.first&.affiliation
+      latest_resource&.owner_author&.affiliation
     end
 
     def large_files?

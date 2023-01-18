@@ -305,7 +305,7 @@ namespace :dev_ops do
     tenant = identifier.resources.last.tenant
     if tenant.identifier_service.provider == 'ezid'
       puts 'tombstoning EZID'
-      ezid_client = ::Ezid::Client.new(user: tenant.identifier_service.account, password: tenant.identifier_service.password)
+      ezid_client = Ezid::Client.new(user: tenant.identifier_service.account, password: tenant.identifier_service.password)
       params = { status: 'unavailable | withdrawn' }
       begin
         ezid_client.modify_identifier("doi:#{identif_str}", **params)
