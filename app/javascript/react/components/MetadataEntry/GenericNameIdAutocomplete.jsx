@@ -66,6 +66,8 @@ export default function GenericNameIdAutocomplete(
 
   const {
     isOpen,
+    inputValue,
+    openMenu,
     getLabelProps,
     getMenuProps,
     getInputProps,
@@ -118,6 +120,11 @@ export default function GenericNameIdAutocomplete(
           className="c-input__text c-ac__input"
           {...getInputProps(
             {
+              onFocus: (e) => {
+                if (!isOpen && inputValue?.length > 3 && inputItems?.length > 0) {
+                  openMenu()
+                } 
+              },
               onBlur: (e) => {
                 if (completionClick.current) {
                   // don't fire a save after a mousedown state set on clicking a completion item, it's not a real blur
