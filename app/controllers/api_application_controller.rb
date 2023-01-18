@@ -4,7 +4,7 @@ require 'url_pager'
 require 'cgi'
 
 # class ApplicationController < ActionController::Base
-class ApiApplicationController < ::StashEngine::ApplicationController
+class ApiApplicationController < StashEngine::ApplicationController
 
   layout 'layouts/stash_engine/application'
 
@@ -46,6 +46,7 @@ class ApiApplicationController < ::StashEngine::ApplicationController
 
   def require_resource_id(resource_id:)
     @stash_resources = StashEngine::Resource.where(id: resource_id)
+    @resource = @stash_resources&.first if @stash_resources.count.positive?
     render json: { error: 'not-found' }.to_json, status: 404 if @stash_resources.count < 1
   end
 

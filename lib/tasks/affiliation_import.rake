@@ -84,7 +84,7 @@ namespace :affiliation_import do
           autha = authors[a].author_standard_name
           authb = authors[b].author_standard_name
           puts("DUPLICATES: |#{autha}|#{authb}|#{i.latest_resource.id}|" \
-               "#{levenshtein_distance(autha, authb).to_f / (autha.size > authb.size ? autha.size : authb.size)}")
+               "#{levenshtein_distance(autha, authb).to_f / [autha.size, authb.size].max}")
           if @live_mode
             do_author_merge(authors[a], authors[b])
             record_author_merge(resource: i.latest_resource)
@@ -122,7 +122,7 @@ namespace :affiliation_import do
     # if distance is >= 0.5, must have all of their initials the same before doing the normal tests
     a1_std = author1.author_standard_name
     a2_std = author2.author_standard_name
-    string_difference = levenshtein_distance(a1_std, a2_std).to_f / (a1_std.size > a2_std.size ? a1_std.size : a2_std.size)
+    string_difference = levenshtein_distance(a1_std, a2_std).to_f / [a1_std.size, a2_std.size].max
     if string_difference >= 0.5
       a1_initials = "#{author1.author_first_name} #{author1.author_last_name}".split.map { |part| part[0].downcase }.join(' ')
       a2_initials = "#{author2.author_first_name} #{author2.author_last_name}".split.map { |part| part[0].downcase }.join(' ')

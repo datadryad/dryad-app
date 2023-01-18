@@ -6,9 +6,7 @@ module StashDatacite
     # GET /related_identifiers/new
     def new
       @related_identifier = RelatedIdentifier.new(resource_id: params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # POST /related_identifiers
@@ -66,9 +64,7 @@ module StashDatacite
       @resources = StashEngine::Resource.joins(:related_identifiers).joins(:current_resource_state)
         .joins(:identifier).joins(:stash_version).order('stash_engine_identifiers.identifier')
         .where(stash_engine_resource_states: { resource_state: :submitted }).distinct
-      respond_to do |format|
-        format.tsv
-      end
+      respond_to(&:tsv)
     end
 
     private

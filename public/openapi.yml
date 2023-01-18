@@ -33,6 +33,8 @@ tags:
       description: Operations on individual versions of a dataset
     - name: files
       description: Operations on individual files of a dataset
+    - name: internal
+      description: Internal APIs not of general interest to the public
     
 paths:
   # --- root uri ----
@@ -408,6 +410,75 @@ paths:
             application/json:
               $ref: api/v2/docs/examples/file.json
 
+  # --- internal ---
+  '/processor_results/{id}':
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: Get processor results for the id given
+      tags:
+        - internal
+      description: Shows the processor results stored in the database for the given ID
+      parameters:
+        - $ref: '#/components/parameters/processor_result_id'
+      responses:
+        '200':
+          description: A json representation of processor results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processor_result'
+    put:
+      security:
+        - bearerAuth: [ ]
+      summary: Overwrite processor results for the id given
+      tags:
+        - internal
+      description: Overwrite the processor results stored in the database for the given ID, resource_id, dates can't be manually changed
+      parameters:
+        - $ref: '#/components/parameters/processor_result_id'
+      responses:
+        '200':
+          description: A json representation of processor results that were saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processor_result'
+
+  '/versions/{version_id}/processor_results':
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: Get processor results for the version given
+      tags:
+        - internal
+      description: Shows the processor results stored in the database for the resource_id
+      parameters:
+        - $ref: '#/components/parameters/version_id'
+      responses:
+        '200':
+          description: A json representation of processor results for the version id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processor_results'
+    post:
+      security:
+        - bearerAuth: [ ]
+      summary: Create processor results for the id given
+      tags:
+        - internal
+      description: Create new processor result in the database
+      parameters:
+        - $ref: '#/components/parameters/processor_result_id'
+      responses:
+        '200':
+          description: A json representation of processor results that were saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/processor_result'
+
   # --- search ---
   /search:
     get:
@@ -683,6 +754,44 @@ components:
             - $ref: '#/components/schemas/hal_self_link'
             - $ref: '#/components/schemas/hal_file_links'
 
+    # singular
+    processor_result:
+      allOf:
+        - properties:
+            id:
+              type: integer
+              example: 27
+            resource_id:
+              type: integer
+              example: 48
+            processing_type:
+              type: string
+              enum: ['excel_to_csv', 'compressed_info', 'frictionless']
+              example: excel_to_csv
+            parent_id:
+              type: integer
+              example: 747
+            completion_state:
+              type: string
+              enum: ['not_started', 'processing', 'success', 'error']
+              example: success
+            message:
+              type: string
+              example: Completed processing with no errors
+            structured_info:
+              type: string
+              example: "{\"cat\": \"dog\"}"
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    processor_results:
+      type: array
+      items:
+        $ref: '#/components/schemas/processor_result'
 
     # singular
     url:
@@ -941,6 +1050,14 @@ components:
         type: integer
       required: true
       description: "The version id is a unique integer and can be obtained from the list of versions for a dataset"
+
+    processor_result_id:
+      in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: "The processor results id for a single item"
 
     file_id:
       in: path
