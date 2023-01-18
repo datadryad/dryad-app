@@ -224,6 +224,22 @@ module StashEngine
           log_type: 'None',
           payload: payload }
       )
+
+      return { triggered: true, msg: '' } if resp.status_code == 202 # true with no msg
+
+      # this is just if  there is trouble triggering it manually, check CloudWatch for the lambda or ProcessorResult model
+      # for code or application errors that happen async
+
+      item = { triggered: false, msg: "Error invoking lambda for file: #{id}" \
+                                      "\nstatus code: #{resp.status_code}" \
+                                      "\nfunction error: #{resp.function_error}" \
+                                      "\nlog_result: #{resp.log_result}" \
+                                      "\npayload: #{resp.payload}" \
+                                      "\nexecuted version: #{resp.executed_version}" }
+
+      logger.error(item)
+
+      { triggered: false, msg: item }
     end
 
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
