@@ -183,7 +183,9 @@ export default function GenericNameIdAutocomplete(
       {showError && (
         <>
           {!textEnter && (
-            <span className="c-ac__error_message" id={`error_${htmlId}`}>Please select an item from the list, or check the box below</span>
+            <span className="c-ac__error_message" id={`error_${htmlId}`}>
+              Please type above to search and select from the dropdown list, or check the box below
+            </span>
           )}
           <label className="c-input__label c-ac__checkbox">
             <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
