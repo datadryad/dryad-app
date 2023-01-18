@@ -66,7 +66,6 @@ export default function GenericNameIdAutocomplete(
 
   const {
     isOpen,
-    inputValue,
     openMenu,
     getLabelProps,
     getMenuProps,
@@ -120,10 +119,10 @@ export default function GenericNameIdAutocomplete(
           className="c-input__text c-ac__input"
           {...getInputProps(
             {
-              onFocus: (e) => {
-                if (!isOpen && inputValue?.length > 3 && inputItems?.length > 0) {
-                  openMenu()
-                } 
+              onFocus: () => {
+                if (!isOpen && inputItems?.length > 0) {
+                  openMenu();
+                }
               },
               onBlur: (e) => {
                 if (completionClick.current) {
