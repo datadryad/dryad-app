@@ -145,16 +145,6 @@ export default function GenericNameIdAutocomplete(
           aria-invalid={showError && !textEnter}
           aria-errormessage={`error_${htmlId}`}
         />
-        { !acID && isRequired
-          ? (
-            <span
-              className="is__required"
-              title={`${labelText} not found. Select the correct item from the auto-complete list. `
-                      + `${(labelText === 'Granting organization') ? 'If no funding is applicable, check the box below.' : ''}`}
-            >&#x2753;
-            </span>
-          )
-          : ''}
         <ul
           {...getMenuProps()}
           className={`c-ac__menu c-ac__menu_${isOpen ? 'open' : 'closed'}`}

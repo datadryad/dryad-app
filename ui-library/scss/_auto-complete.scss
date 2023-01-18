@@ -37,10 +37,6 @@
   color: $design-white-color;
 }
 
-.is__required + .c-ac__menu, .c-ac__error_message {
-  width: calc(100% - 16px);
-}
-
 .c-ac__checkbox {
   display: block;
   margin-top: 12px;
