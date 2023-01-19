@@ -8,9 +8,9 @@ const instructions = () => (
       using Google Drive.
     </p>
     <p>
-      We require that you include a
+      We require that you include a{' '}
       <a href="/docs/README.md" target="_blank" rel="noreferrer">README.md file based on our template</a>
-      in order to provide key information for understanding and reuse of your data.
+      {' '}in order to provide key information for understanding and reuse of your data.
     </p>
     <p>If you prefer, you can edit the Markdown online
       at <a href="https://hackmd.io/JgxUwkEdS9uOOcgadhe29w?both=" target="_blank" rel="noreferrer">hackmd.io</a>.

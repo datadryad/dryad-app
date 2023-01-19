@@ -54,7 +54,7 @@ module Stash
       rescue SwordHelper::GoneAsynchronous
         res = Stash::Repo::SubmissionResult
           .success(resource_id: resource_id, request_desc: description,
-                   message: 'Presumed eventual success -- check in OAI-PMH for completion')
+                   message: 'Presumed eventual success -- check Merritt for completion')
         res.deferred = true
         res
       end
