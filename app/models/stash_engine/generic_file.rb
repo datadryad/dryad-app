@@ -227,7 +227,7 @@ module StashEngine
       # this is just if  there is trouble triggering it manually, check CloudWatch for the lambda or ProcessorResult model
       # for code or application errors that happen async
 
-      item = { triggered: false, msg: "Error invoking lambda for file: #{id}" \
+      item = { triggered: false, msg: "Error invoking excelToCsv lambda for file: #{id}" \
                                       "\nstatus code: #{resp.status_code}" \
                                       "\nfunction error: #{resp.function_error}" \
                                       "\nlog_result: #{resp.log_result}" \
