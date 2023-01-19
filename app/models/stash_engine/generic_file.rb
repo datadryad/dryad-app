@@ -189,7 +189,6 @@ module StashEngine
       { triggered: false, msg: item }
     end
 
-
     # testing:
     # res = StashEngine::Resource.find(3756)
     # my_file = res.data_files.where("upload_file_name LIKE '%xls'").first
@@ -200,23 +199,19 @@ module StashEngine
 
       h = Rails.application.routes.url_helpers
 
-      pr = ProcessorResult.create(resource: resource,
-                                  processing_type: 'excel_to_csv',
-                                  parent_id: id,
-                                  completion_state: 'not_started')
+      pr = ProcessorResult.where(resource_id: resource_id, parent_id: id)&.first ||
+        ProcessorResult.create(resource: resource, processing_type: 'excel_to_csv', parent_id: id, completion_state: 'not_started')
 
       # download_url, filename, callback_url, token, processor_obj
 
-      payload = JSON.generate({
-                                download_url: url || direct_s3_presigned_url,
+      payload = JSON.generate({ download_url: url || direct_s3_presigned_url,
                                 filename: upload_file_name,
                                 callback_url: h.processor_result_url(pr.id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
                                                .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token,
                                 doi: resource.identifier.to_s,
-                                processor_obj: pr.as_json
-                              })
+                                processor_obj: pr.as_json })
 
       resp = client.invoke(
         { function_name: 'excelToCsv',
