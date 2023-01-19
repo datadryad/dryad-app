@@ -189,10 +189,6 @@ module StashEngine
       { triggered: false, msg: item }
     end
 
-    # testing:
-    # res = StashEngine::Resource.find(3756)
-    # my_file = res.data_files.where("upload_file_name LIKE '%xls'").first
-    #
     def trigger_excel_to_csv
       credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
       client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
