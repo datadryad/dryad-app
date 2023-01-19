@@ -50,23 +50,17 @@ module StashEngine
       CounterLogger.general_hit(request: request, resource: resource) if resource.metadata_published?
       ensure_has_geolocation!
       @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
-      respond_to do |format|
-        format.html
-      end
+      respond_to(&:html)
     end
 
     def citations
       @identifier = Identifier.find(params[:identifier_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     def metrics
       @identifier = Identifier.find(params[:identifier_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
 
     # ############################################################

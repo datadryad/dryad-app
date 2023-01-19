@@ -197,7 +197,7 @@ module StashEngine
         def build_limit_clause(page:, page_size:)
           # rows start at 0 and limit is offset, row_count.  I multiply page size so we know if there are a few pages afterward
           # LIMIT [offset,] row_count;
-          " LIMIT #{(page - 1) * page_size}, #{4 * page_size}"
+          " LIMIT #{(page - 1) * page_size}, #{page_size * 4}"
         end
 
         def sort_by_author_names(results, direction)

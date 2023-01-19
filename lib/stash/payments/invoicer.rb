@@ -97,10 +97,11 @@ module Stash
       private
 
       def create_invoice_items_for_dpc(customer_id, invoice_id)
+        dpc = Invoicer.data_processing_charge(identifier: resource.identifier)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
           invoice: invoice_id,
-          amount: Invoicer.data_processing_charge(identifier: resource.identifier),
+          amount: dpc,
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
@@ -121,7 +122,7 @@ module Stash
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,
                        invoice: invoice_id,
-                       amount: -(APP_CONFIG.payments.data_processing_charge + overcharge),
+                       amount: -(dpc + overcharge),
                        currency: 'usd',
                        description: "Waiver of charges for #{resource.identifier} (#{filesize(ds_size)})"
                      ))

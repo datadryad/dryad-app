@@ -60,7 +60,7 @@ module StashDatacite
       @geolocation_point.try(:geolocation).try(:destroy_point)
       # @resource = StashEngine::Resource.find(params[:resource_id])
       @geolocation_points = GeolocationPoint.only_geo_points(resource.id)
-      respond_to { |format| format.js }
+      respond_to(&:js)
     end
 
     private
