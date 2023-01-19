@@ -307,5 +307,16 @@ module StashEngine
       end
     end
 
+    describe :trigger_excel_to_csv do
+      it 'calls client.invoke for an AWS lambda function and returns a 202' do
+        allow(StashEngine::ApiToken).to receive(:token).and_return('123456789ABCDEF')
+        expect_any_instance_of(Aws::Lambda::Client).to receive(:invoke).and_return({ status_code: 202 }.to_ostruct)
+        expect(@upload.trigger_excel_to_csv[:triggered]).to eql(true)
+        proc_result = @resource.processor_results.first
+        expect(proc_result.resource_id).to eq(@resource.id)
+        expect(proc_result.processing_type).to eq('excel_to_csv')
+        expect(proc_result.completion_state).to eq('not_started')
+      end
+    end
   end
 end
