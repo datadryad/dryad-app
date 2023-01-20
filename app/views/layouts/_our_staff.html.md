@@ -102,17 +102,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/amelia.jpg" alt="Amelia Culp" title="Amelia Culp">
-  <p><strong>Amelia Culp</strong><br/>
-  Data Curator<br/>
-  Amelia has a B.S. in Physics and a background in physics and neuroscience
-  research. In addition to data curation, she is a PhD candidate studying neural
-  connectomics. Outside of work, Amelia enjoys rock climbing, backpacking, and
-  taking care of her plants.
-  </p>
-</div>
-
-<div class="bio">
   <img src="/images/jdafesh.jpeg" alt="Joseph Dafesh" title="Joseph Dafesh">
   <p><strong>Joseph Dafesh</strong><br/>
   Data Curator<br/>
