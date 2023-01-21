@@ -133,7 +133,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
       )
       expect(page).to have_content('file_10.ods', count: 1)
-      expect(page).to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     it 'does not allow to select new FILES already in the table and of the same upload type' do
@@ -382,7 +382,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # the message for already added file is displayed
 
       first(:button, 'Remove').click
-      expect(page).not_to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).not_to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     xit 'shows spinner when calling ajax to remove the file' do
@@ -448,7 +448,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to select new FILE from file system with the same name of manifest FILE' do
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
-      expect(page).to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     it 'does not allow to select new FILES from file system with the same name of manifest FILES' do
@@ -477,7 +477,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_on('validate_files')
 
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
-      expect(page).to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     it 'does not allow to add manifest FILEs with the same name of FILES selected from file system' do
@@ -505,7 +505,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         'data',
         "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
       )
-      expect(page).not_to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).not_to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     it 'removes warning message when adding new manifest file' do
@@ -516,7 +516,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar_2.txt')
       click_on('validate_files')
-      expect(page).not_to have_content('A file of the same type is already in the table, and was not added.')
+      expect(page).not_to have_content('A file of the same name is already in the table, and was not added.')
     end
   end
 
