@@ -149,7 +149,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       )
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
-      expect(page).to have_content('Some files of the same type are already in the table, and were not added.')
+      expect(page).to have_content('Some files of the same name are already in the table, and were not added.')
     end
 
     it 'allows to select new files already in the table and are not of the same upload type' do
@@ -258,7 +258,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect(page).to have_content(/^\b#{@file_name1}\b/, count: 1)
       expect(page).to have_content(/^\b#{@file_name2}\b/, count: 1)
-      expect(page).to have_content('Some files of the same type are already in the table, and were not added.')
+      expect(page).to have_content('Some files of the same name are already in the table, and were not added.')
     end
 
     it 'shows only non-deleted files after validating URLs' do
@@ -467,7 +467,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
-      expect(page).to have_content('Some files of the same type are already in the table, and were not added.')
+      expect(page).to have_content('Some files of the same name are already in the table, and were not added.')
     end
 
     it 'does not allow to add a manifest FILE with the same name of a FILE selected from file system' do
@@ -494,7 +494,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
       expect(page).to have_content(/^\bfile_100.ods\b/, count: 1)
-      expect(page).to have_content('Some files of the same type are already in the table, and were not added.')
+      expect(page).to have_content('Some files of the same name are already in the table, and were not added.')
     end
 
     it 'removes warning message when adding new file from file system' do
