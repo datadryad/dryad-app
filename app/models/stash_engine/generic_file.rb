@@ -123,7 +123,7 @@ module StashEngine
 
       # tested to identify duplicates, also of different capitalization (at least on our dev server, may depend on mysql collation)
       self.class.where(resource_id: prev_res.id, upload_file_name: upload_file_name)
-                      .where.not(file_state: 'deleted').order(id: :desc)
+        .where.not(file_state: 'deleted').order(id: :desc)
     end
 
     def in_previous_version?
