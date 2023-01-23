@@ -23,9 +23,14 @@ module Stash
     def self.find_grant(award_id)
       return if award_id.blank? || award_id.size < 5
 
+      award_id = simplify_nih_id(award_id)
+      puts " -- simplified id #{award_id}"
       response = HTTP.post(NIH_BASE, json: nih_award_id_criteria(award_id))
+      puts " -- response #{response.code}"
+
       resp = JSON.parse(response)
       return unless resp.present?
+      return if resp.instance_of?(Array) # weird error responses
 
       grants = resp['results']
       return if grants.blank?
@@ -51,6 +56,13 @@ module Stash
 
     def self.clean_ic_name(ic_name)
       IC_MAPPING[ic_name] || ic_name
+    end
+
+    def self.simplify_nih_id(id)
+      match = id.match(/([A-Z][A-Z]\d\d\d\d\d\d)/)
+      return match[1] if match
+
+      id
     end
 
     # Criteria object that is passed as a query to the NIH API, initilaized with a single award_id
