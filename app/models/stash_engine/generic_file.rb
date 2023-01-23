@@ -97,30 +97,40 @@ module StashEngine
       s3_key = calc_s3_path
       Stash::Aws::S3.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.exists?(s3_key: s3_key)
 
-      if in_previous_version?
-        # destroy any others of this filename in this resource
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where('id <> ?', id).destroy_all
-        # and mark to remove from merritt
-        update(file_state: 'deleted')
-      else
-        # remove all of this filename for this resource from the database
-        FrictionlessReport.where(generic_file_id: id).destroy_all
-        self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).destroy_all
+      prev_files = case_insensitive_previous_files
+
+      # get rid of dependent report
+      FrictionlessReport.where(generic_file_id: id).destroy_all
+
+      # destroy previous state for this filename
+      self.class.where(upload_file_name: upload_file_name, resource_id: resource_id).destroy_all
+
+      # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
+      prev_files.each do |prev_file|
+        self.class.create(upload_file_name: prev_file.upload_file_name, upload_content_type: prev_file.upload_content_type,
+                          resource_id: resource_id, file_state: 'deleted')
       end
+
+      # delete the non-"deleted" entries for this file
+      self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where.not(file_state: 'deleted').destroy_all
 
       resource.reload
     end
 
-    # We need to know state from last resource version if any.  It may have both deleted and created last time, which really
-    # means created last time.
-    def in_previous_version?
+    def case_insensitive_previous_files
       prev_res = resource.previous_resource
-      return false if prev_res.nil?
+      return [] if prev_res.nil?
 
-      prev_file = self.class.where(resource_id: prev_res.id, upload_file_name: upload_file_name).order(id: :desc).first
-      return false if prev_file.nil? || prev_file.file_state == 'deleted'
+      # tested to identify duplicates, also of different capitalization (at least on our dev server, may depend on mysql collation)
+      self.class.where(resource_id: prev_res.id, upload_file_name: upload_file_name)
+                      .where.not(file_state: 'deleted').order(id: :desc)
+    end
 
-      true # otherwise it existed last version because file state is created, copied or nil (nil is assumed to be copied)
+    def in_previous_version?
+      prev_files = case_insensitive_previous_files
+      return false unless prev_files.count.positive?
+
+      true
     end
 
     def last_version_file
