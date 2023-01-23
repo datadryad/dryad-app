@@ -89,6 +89,14 @@
 
 <h2 id="curation">Curation Team</h2>
 <div class="bio">
+  <img src="/images/laura.jpg" alt="Laura Bowman" title="Laura Bowman">
+  <p><strong>Laura Bowman</strong><br/>
+  Data Curator<br/>
+  Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
+  </p>
+</div>
+
+<div class="bio">
   <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
   Data Curator<br/>  
