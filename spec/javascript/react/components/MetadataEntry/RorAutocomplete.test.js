@@ -9,9 +9,8 @@ jest.mock('axios');
 
 describe('RorAutocomplete', () => {
 
-  let ac_text, ac_id;
-  const acText = () => ac_text;
-  const acID = () => ac_id;
+  let ac_text = ''; 
+  let ac_id = '';
   const setAcText = (item) => { ac_text = item };
   const setAcID = (item) => { ac_id = item };
 
@@ -22,7 +21,7 @@ describe('RorAutocomplete', () => {
 
   it("renders the basic autocomplete form", () => {
 
-    const info = {formRef: null, acText: acText, setAcText: setAcText, acID: acID, setAcID,
+    const info = {formRef: {}, acText: ac_text, setAcText, acID: ac_id, setAcID,
       'controlOptions': { htmlId: "instit_affil_1234", labelText: 'Institutional affiliation', isRequired: true } }
 
     const { container } = render(<RorAutocomplete {...info} />);
