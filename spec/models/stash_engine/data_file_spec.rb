@@ -114,7 +114,11 @@ module StashEngine
         changed_case.update(upload_file_name: 'NoGgIn3.JpG')
         changed_case.smart_destroy!
         destroy_file = @resource2.data_files.where(file_state: 'deleted').first
-        expect(destroy_file.upload_file_name).to eq('noggin3.jpg') # not NoGgIn3.JpG for the current version and that is just gone
+        expect(destroy_file.upload_file_name).to eq('noggin3.jpg'), lambda {
+          "#{@resource2.data_files.inspect}"
+        }
+
+        # not NoGgIn3.JpG for the current version and that is just gone
         expect(@resource2.data_files.where(upload_file_name: 'noggin3.jpg').count).to eq(1) # only destroy file and not former file
       end
     end
