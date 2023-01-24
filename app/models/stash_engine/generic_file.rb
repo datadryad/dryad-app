@@ -125,7 +125,7 @@ module StashEngine
       return [] if prev_res.nil?
 
       # tested to identify duplicates, also of different capitalization (at least on our dev server, may depend on mysql collation)
-      self.class.where(resource_id: prev_res.id, upload_file_name: upload_file_name)
+      self.class.where(resource_id: prev_res.id).where('lower(upload_file_name) = ?', upload_file_name.downcase)
         .where.not(file_state: 'deleted').order(id: :desc)
     end
 
