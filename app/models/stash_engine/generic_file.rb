@@ -106,16 +106,13 @@ module StashEngine
       FrictionlessReport.where(generic_file_id: id).destroy_all
 
       # destroy previous state for this filename
-      self.class.where(upload_file_name: upload_file_name, resource_id: resource_id).destroy_all
+      self.class.where(resource_id: resource_id).where('lower(upload_file_name) = ?', upload_file_name.downcase).destroy_all
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
         self.class.create(upload_file_name: prev_file[:upload_file_name], upload_content_type: prev_file[:upload_content_type],
                           resource_id: resource_id, file_state: 'deleted')
       end
-
-      # delete the non-"deleted" entries for this file
-      self.class.where(resource_id: resource_id, upload_file_name: upload_file_name).where.not(file_state: 'deleted').destroy_all
 
       resource.reload
     end
