@@ -115,7 +115,6 @@ module StashEngine
         changed_case.smart_destroy!
         destroy_file = @resource2.data_files.where(file_state: 'deleted').first
 
-        pp(@resource2.data_files)
         expect(destroy_file.upload_file_name).to eq('noggin3.jpg')
 
         # not NoGgIn3.JpG for the current version and that is just gone

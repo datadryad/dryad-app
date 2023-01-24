@@ -97,7 +97,10 @@ module StashEngine
       s3_key = calc_s3_path
       Stash::Aws::S3.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.exists?(s3_key: s3_key)
 
-      prev_files = case_insensitive_previous_files
+      # convert to hash so we still have after destroying them
+      prev_files = case_insensitive_previous_files.map do |pf|
+        { upload_file_name: pf.upload_file_name, upload_content_type: pf.upload_content_type }
+      end
 
       # get rid of dependent report
       FrictionlessReport.where(generic_file_id: id).destroy_all
@@ -107,7 +110,7 @@ module StashEngine
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
-        self.class.create(upload_file_name: prev_file.upload_file_name, upload_content_type: prev_file.upload_content_type,
+        self.class.create(upload_file_name: prev_file[:upload_file_name], upload_content_type: prev_file[:upload_content_type],
                           resource_id: resource_id, file_state: 'deleted')
       end
 
