@@ -303,6 +303,37 @@ like it will eventually get published again, anyway. For Zenodo, set the embargo
 unreasonably long time into the future for the items that were published there. For Datacite change
 to `Registered` instead of `Findable` so at least it's not searchable.
 
+# A dataset has an extra file when downloading the zip vs the individual files
+
+First check that Merritt and Dryad have the same number of versions. (Get the Merritt URL from
+the resource.download_uri and change `/d/` to `/m/` in the url).  If the number of versions is
+different between the two systems it may be that the zip is downloading the wrong version
+and it may need to be tweaked in the `stash_engine_versions` table (perhaps Merritt has an extra version).
+
+Otherwise this sometimes happened when people changed filename case of a file that had been previously
+uploaded to their dataset (shouldn't be a problem for these changes within the same version).
+
+To fix the latest version of the dataset in Merritt, you'll need to do a manual reversion in a new
+version to remove this file:
+
+1. Find the dataset in the curation dashboard and begin editing it as a curator.  Write down the resource_id (in url).
+2. In the database set the `skip_emails` to `1` for the resource you're editing.
+3. Open the `stash_engine_generic_files` table and find the last time the file existed for this dataset and
+   duplicate the row.
+4. Edit the newly duplicated row:
+   - Change the `resource_id` to the resource_id from step 1.
+   - Update the dates to something near the current date and time.
+   - Change `file_state` to `deleted`.
+   - Save changes.
+5. Go to the last page of the submission form, enter a comment saying you're removing an extra published file
+   from the Merritt versions and submit and wait for it to go through.
+6. In `stash_engine_curation_activities` add an additional row at the end for the resource_id, setting
+   the `status` to the previous version state (usually `published`), with your user_id and add a note like
+   're-submitted to remove extra file'.
+7. Assuming the previous version was the published one, go back to `stash_engine_resources` and
+   set `meta_view` and `file_view` for the previous version to 0.  Set those to 1 for the current
+   version you just resubmitted.  This will make this the new published version with the merritt files removed.
+
 
 Permanently removing data that was accidentally published (and should never be)
 ===============================================================================
