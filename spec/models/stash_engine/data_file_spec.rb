@@ -112,8 +112,6 @@ module StashEngine
       it 'makes merritt remove request for a file of different capitalization' do
         changed_case = @resource2.data_files.where(upload_file_name: 'noggin3.jpg').first
         changed_case.update(upload_file_name: 'NoGgIn3.JpG')
-        puts 'IS GITHUB ACTIONS RUNNING THE SQL QUERY THE SAME? -- querying noggin3.jpg:'
-        pp(@resource2.data_files.where(upload_file_name: 'noggin3.jpg'))
         changed_case.smart_destroy!
         destroy_file = @resource2.data_files.where(file_state: 'deleted').first
 
