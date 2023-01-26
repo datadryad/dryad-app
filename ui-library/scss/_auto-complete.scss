@@ -1,0 +1,43 @@
+.c-auto_complete {
+  position: relative;
+  display: flex;
+
+  .c-ac__input {}
+
+  .c-ac__menu {  
+    max-height: 180px;
+    overflow-y: auto;
+    width: 100%;
+    min-width: 200px;
+    background-color: #fafafa;
+    position: absolute;
+    top: 1em;
+    right: 16px;
+    z-index: 1000;
+    padding: 0;
+    list-style: none;
+
+    .c-ac__menu_item {
+      margin-bottom: 0.5em;
+
+      &.highlighted {
+        background-color: #bde4ff;
+      }
+    }
+  }
+  
+  .c-ac__menu_closed {
+    display: none;
+  }
+}
+
+.c-ac__error_message {
+  padding: 5px;
+  background-color: $design-red-color;
+  color: $design-white-color;
+}
+
+.c-ac__checkbox {
+  display: block;
+  margin-top: 12px;
+}

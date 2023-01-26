@@ -43,7 +43,7 @@ describe('RelatedWorks', () => {
   it("renders multiple related works forms as related works section", () => {
     render(<RelatedWorks resourceId={resourceId} relatedIdentifiers={works} workTypes={relatedTypes} />);
 
-    const labeledElements = screen.getAllByLabelText('Work Type', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Work type', { exact: false });
     expect(labeledElements.length).toBe(3); // two for each autocomplete list
     const relIds = screen.getAllByLabelText('Identifier or external url', { exact: false })
     expect(relIds.length).toBe(3);

@@ -23,7 +23,7 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
     it 'saves a non-selected, typed item to the database', js: true do
       fill_in 'research_facility', with: "Calling All Cats\t"
       click_link 'Review and submit'
-      expect(page).to have_text('Research Facility: Calling All Cats')
+      expect(page).to have_text('Research facility: Calling All Cats')
     end
 
     # this is hacky since it calls live api.  No easy way to mock it here since request is happening from Javascript now.
@@ -35,7 +35,7 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
       sleep 0.5
       item.native.send_keys :enter
       click_link 'Review and submit'
-      expect(page).to have_text('Research Facility: University of California System')
+      expect(page).to have_text('Research facility: University of California System')
     end
   end
 end

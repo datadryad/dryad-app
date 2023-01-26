@@ -18,12 +18,12 @@ describe('PrelimAutocomplete', () => {
     info = {formRef, acText, setAcText, acID, setAcID,
       'controlOptions': {
         htmlId: `publication`,
-        labelText: 'Journal Name',
+        labelText: 'Journal name',
         isRequired: true,
       } }
   });
 
-  it("renders the basic autocomplete form for Journal Name", () => {
+  it("renders the basic autocomplete form for Journal name", () => {
     /* mocks for use/set state, these don't really do the functionality, but just give dummy objects */
 
     const { container } = render(<PrelimAutocomplete {...info} />);

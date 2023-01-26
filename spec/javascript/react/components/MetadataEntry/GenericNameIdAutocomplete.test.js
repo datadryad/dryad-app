@@ -13,7 +13,7 @@ describe('GenericNameIdAutocomplete', () => {
     const supplyLookupList = () => { return [ { "id": 1, "name": 'cat'}, { "id": 2, "name": 'dog' } ] };
     const nameFunc = (item) => item?.name;
     const idFunc = (item) => item?.id;
-    const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional Affiliation', "isRequired": true };
+    const controlOptions = { "htmlId": "instit_affil_1234", "labelText": 'Institutional affiliation', "isRequired": true };
 
     render(
       <GenericNameIdAutocomplete
@@ -31,7 +31,7 @@ describe('GenericNameIdAutocomplete', () => {
 
     // screen.debug();  // shows the html output of the document
     const labeledElements = screen.getAllByLabelText(controlOptions.labelText, { exact: false })
-    expect(labeledElements.length).toBe(2);
+    expect(labeledElements.length).toBe(3);
     expect(labeledElements[0]).toHaveAttribute('value', 'ralpheo');
   })
 });

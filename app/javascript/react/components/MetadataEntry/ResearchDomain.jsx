@@ -40,7 +40,7 @@ function ResearchDomain({
       {(formik) => (
         <Form className="c-input" id={`dc_fos_subjects_${frmSuffix}`}>
           <label className="c-input__label required" htmlFor={`fos_subjects__${frmSuffix}`}>
-            Research Domain
+            Research domain
           </label>
           <Field
             type="text"

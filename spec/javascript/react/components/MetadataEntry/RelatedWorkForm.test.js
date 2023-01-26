@@ -44,7 +44,7 @@ describe('RelatedWorkForm', () => {
   it("renders the basic Related Work form", () => {
     render(<RelatedWorkForm {...info} />);
 
-    expect(screen.getByLabelText('Work Type')).toHaveValue('article');
+    expect(screen.getByLabelText('Work type')).toHaveValue('article');
 
     expect(screen.getByLabelText('Identifier or external url')).toHaveValue(info.relatedIdentifier.related_identifier);
   });
