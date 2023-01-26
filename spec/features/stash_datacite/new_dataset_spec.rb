@@ -73,12 +73,18 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Funding
-      find_field('Granting Organization').set(Faker::Company.name)
-      find_field('Award Number').set(Faker::Number.number(digits: 5))
+      find_field('Granting organization').set(Faker::Company.name)
+      find_field('Award number').set(Faker::Number.number(digits: 5))
 
       # ##############################
       # Keywords
       fill_in 'keyword_ac', with: Array.new(3) { Faker::Lorem.word }.join(' ')
+
+      # ##############################
+      # Autocomplete checkboxes
+      page.send_keys(:tab)
+      page.has_css?('.use-text-entered')
+      all(:css, '.use-text-entered').each { |i| i.set(true) }
 
       # ##############################
       # Methods
@@ -90,7 +96,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Related works
-      select 'Dataset', from: 'Work Type'
+      select 'Dataset', from: 'Work type'
       fill_in 'Identifier or external url', with: Faker::Pid.doi
     end
 

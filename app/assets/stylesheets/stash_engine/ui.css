@@ -5055,6 +5055,46 @@ html.no-details .o-showhide__summary {
   margin: 0 0 0 1em;
 }
 
+.c-auto_complete {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.c-auto_complete .c-ac__menu {
+  max-height: 180px;
+  overflow-y: auto;
+  width: 100%;
+  min-width: 200px;
+  background-color: #fafafa;
+  position: absolute;
+  top: 1em;
+  right: 16px;
+  z-index: 1000;
+  padding: 0;
+  list-style: none;
+}
+.c-auto_complete .c-ac__menu .c-ac__menu_item {
+  margin-bottom: 0.5em;
+}
+.c-auto_complete .c-ac__menu .c-ac__menu_item.highlighted {
+  background-color: #bde4ff;
+}
+.c-auto_complete .c-ac__menu_closed {
+  display: none;
+}
+
+.c-ac__error_message {
+  padding: 5px;
+  background-color: rgb(209, 44, 29);
+  color: rgb(255, 255, 255);
+}
+
+.c-ac__checkbox {
+  display: block;
+  margin-top: 12px;
+}
+
 .c-choose__input-file-label {
   display: block;
   padding: 10px;

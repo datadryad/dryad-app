@@ -15,7 +15,7 @@ module StashDatacite
     enum description_type: DescriptionTypesEnum
 
     # usage_notes is our special sauce for 'other' which is the real value it would take in datacite.xml.  I suspect
-    # we also want to prefix the value with "Usage Notes:" in the XML so we can differentiate it.
+    # we also want to prefix the value with "Usage notes:" in the XML so we can differentiate it.
 
     # The grant_number is always in the form "Data were created with funding from <funder> under grant <grant>".
     # However, it could become awful to differentiate grants only based on this string in the database since there

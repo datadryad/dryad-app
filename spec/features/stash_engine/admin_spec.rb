@@ -146,6 +146,9 @@ RSpec.feature 'Admin', type: :feature do
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@user.name}'s dataset.")
         all('[id^=instit_affil_]').last.set('test institution')
+        page.send_keys(:tab)
+        page.has_css?('.use-text-entered')
+        all(:css, '.use-text-entered').each { |i| i.set(true) }
         add_required_data_files
         click_link 'Review and submit'
         agree_to_everything

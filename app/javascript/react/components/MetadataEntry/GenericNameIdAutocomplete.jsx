@@ -1,8 +1,7 @@
 import React, {useCallback, useState, useRef} from 'react';
 import {useCombobox} from 'downshift';
-import _debounce from 'lodash/debounce';
+import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
-import menuStyles from './AcMenuStyles';
 
 /* This is kind of ugly, but is based on the parent component (more specific autocomplete details) defining some things
    and passing down details for it to work with.  The react docs I found suggested if something needed to be shared by
@@ -17,7 +16,7 @@ import menuStyles from './AcMenuStyles';
    idFunc(item) is a function that returns an id for an item from the list
    controlOptions: {
        htmlID -- the base unique ID used for this autocomplete component (should be unique on the page)
-       labelText -- The label for the lookup (like "Institutional Affiliation")
+       labelText -- The label for the lookup (like "Institutional affiliation")
        isRequired -- boolean.  Makes the * for required fields and also shows warning "?" if no id gets filled for an item
 
        See the file RorAutocomplete.js for a real example.
@@ -29,47 +28,71 @@ export default function GenericNameIdAutocomplete(
   },
 ) {
   const [inputItems, setInputItems] = useState([]);
+  const [showError, setShowError] = useState(acText && !acID);
+  const [textEnter, setTextEnter] = useState(acText && !acID);
 
-  const lastItemText = useRef(acText);
   const completionClick = useRef(false);
 
-  function wrapLookupList(qt) {
+  const clearErrors = () => {
+    setTextEnter(false);
+    setShowError(false);
+  };
+
+  const getInputItems = useCallback(debounce(async (qt) => {
     supplyLookupList(qt).then((items) => {
       setInputItems(items);
     });
-  }
+  }, 200), []);
 
-  // see https://stackoverflow.com/questions/36294134/lodash-debounce-with-react-input
-  const debounceFN = useCallback(_debounce(wrapLookupList, 300), []);
+  const checkValues = (e) => {
+    // check if text is in the id list
+    const {children} = document.getElementById(e.currentTarget.getAttribute('aria-controls'));
+    const match = children.namedItem(acText);
+    if (match) {
+      setAcID(match.id);
+      clearErrors();
+      setAutoBlurred(true);
+    } else if (isRequired) {
+      setShowError(true);
+    } else {
+      setAutoBlurred(true);
+    }
+  };
+
+  const saveText = (e) => {
+    setTextEnter(e.currentTarget.checked);
+    setAutoBlurred(true);
+  };
 
   const {
     isOpen,
-    // getToggleButtonProps,
+    openMenu,
     getLabelProps,
     getMenuProps,
     getInputProps,
     getComboboxProps,
     highlightedIndex,
     getItemProps,
-    // closeMenu,
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
-      setAcText(inputValue);
-      if (inputValue !== lastItemText.current) {
-        setAcID(''); // reset any identifiers if they've changed input text, but otherwise leave alone
+      // reset information if they've changed input text, but otherwise leave alone
+      if (acText !== inputValue) {
+        setAcText(inputValue);
+        setAcID('');
       }
       // only autocomplete with 3 or more characters so as not to waste queries
-      if (!inputValue || inputValue.length < 3) {
+      if (inputValue?.length > 3) {
+        getInputItems(inputValue);
+      } else {
         setInputItems([]);
-        return;
       }
-      debounceFN(inputValue);
     },
     onSelectedItemChange: ({selectedItem}) => {
       setAcID(idFunc(selectedItem));
-      lastItemText.current = nameFunc(selectedItem);
+      setAcText(nameFunc(selectedItem));
       setAutoBlurred(true); // this notifies parent component to save
+      clearErrors();
     },
     itemToString: (item) => nameFunc(item),
   });
@@ -90,17 +113,25 @@ export default function GenericNameIdAutocomplete(
       <div
         {...getComboboxProps()}
         aria-owns={`menu_${htmlId}`}
-        style={{position: 'relative', display: 'flex'}}
+        className="c-auto_complete"
       >
         <input
-          className="c-input__text"
+          className="c-input__text c-ac__input"
           {...getInputProps(
             {
-              onBlur: () => {
+              onFocus: () => {
+                if (!isOpen && inputItems?.length > 0) {
+                  openMenu();
+                }
+              },
+              onBlur: (e) => {
                 if (completionClick.current) {
                   // don't fire a save after a mousedown state set on clicking a completion item, it's not a real blur
                   completionClick.current = false;
+                } else if (acText && !acID) {
+                  checkValues(e);
                 } else {
+                  clearErrors();
                   setAutoBlurred(true); // set this to notify the parent component to save or do whatever
                 }
               },
@@ -111,39 +142,47 @@ export default function GenericNameIdAutocomplete(
           value={acText || ''}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
+          aria-invalid={showError && !textEnter}
+          aria-errormessage={`error_${htmlId}`}
         />
-        { !acID && isRequired
-          ? (
-            <span title={`${labelText} not found. Select the correct ${labelText} from the auto-complete list. `
-                         + `${(labelText === 'Granting Organization') ? 'If no Granting Organization is applicable, enter N/A.' : ''}`}
-            >&#x2753;
-            </span>
-          )
-          : ''}
         <ul
           {...getMenuProps()}
-          style={menuStyles}
+          className={`c-ac__menu c-ac__menu_${isOpen ? 'open' : 'closed'}`}
           id={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
+          tabIndex={-1}
         >
-          {isOpen
-            && inputItems.map((item, index) => (
+          {inputItems.map((item, index) => {
+            const id = idFunc(item);
+            const name = nameFunc(item);
+            return (
               <li
-                style={
-                  highlightedIndex === index ? {backgroundColor: '#bde4ff', marginBottom: '0.5em'} : {marginBottom: '0.5em'}
-                }
-                key={idFunc(item)}
+                key={id}
+                name={name}
+                className={`c-ac__menu_item ${highlightedIndex === index ? 'highlighted' : ''}`}
                 {...getItemProps({
-                  item,
-                  index,
-                  onMouseDown: () => { completionClick.current = true; },
+                  item, index, id, onMouseDown: () => { completionClick.current = true; },
                 })}
               >
-                {nameFunc(item)}
+                {name}
               </li>
-            ))}
+            );
+          })}
         </ul>
       </div>
+      {showError && (
+        <>
+          {!textEnter && (
+            <span className="c-ac__error_message" id={`error_${htmlId}`}>
+              Please type above to search and select from the dropdown list, or check the box below
+            </span>
+          )}
+          <label className="c-input__label c-ac__checkbox">
+            <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
+            {` I cannot find my ${labelText.toLowerCase()}, "${acText}", in the list`}
+          </label>
+        </>
+      )}
     </>
   );
 }

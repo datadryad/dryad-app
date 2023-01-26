@@ -49,6 +49,9 @@ module DatasetHelper
     fill_in_author
     fill_in_research_domain
     fill_in_funder
+    page.send_keys(:tab)
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
   end
 

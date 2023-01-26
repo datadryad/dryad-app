@@ -26,14 +26,14 @@ describe('ResearchDomain', () => {
   });
 
   // {resourceId, subject, subjectList, updatePath}
-  it("renders basic Research Domain form", () => {
+  it("renders basic Research domain form", () => {
     render(<ResearchDomain
         resourceId={resourceId}
         subject={subject}
         subjectList={subjectList}
         updatePath={updatePath} />);
 
-    const resDomain = screen.getByLabelText('Research Domain', { exact: false });
+    const resDomain = screen.getByLabelText('Research domain', { exact: false });
     expect(resDomain).toHaveValue(subject);
   });
 
@@ -51,13 +51,13 @@ describe('ResearchDomain', () => {
         subjectList={subjectList}
         updatePath={updatePath} />);
 
-    const resDomain = screen.getByLabelText('Research Domain', { exact: false });
+    const resDomain = screen.getByLabelText('Research domain', { exact: false });
     expect(resDomain).toHaveValue(subject);
 
-    userEvent.clear(screen.getByLabelText('Research Domain'));
-    userEvent.type(screen.getByLabelText('Research Domain'), subjectList[20]);
+    userEvent.clear(screen.getByLabelText('Research domain'));
+    userEvent.type(screen.getByLabelText('Research domain'), subjectList[20]);
 
-    await waitFor(() => expect(screen.getByLabelText('Research Domain')).toHaveValue(subjectList[20]));
+    await waitFor(() => expect(screen.getByLabelText('Research domain')).toHaveValue(subjectList[20]));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 

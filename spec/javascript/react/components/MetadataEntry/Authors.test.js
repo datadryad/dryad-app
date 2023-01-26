@@ -43,9 +43,9 @@ describe('Authors', () => {
 
     render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
 
-    const labeledElements = screen.getAllByLabelText('Institutional Affiliation', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Institutional affiliation', { exact: false });
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
-    const firsts = screen.getAllByLabelText('First Name', { exact: false })
+    const firsts = screen.getAllByLabelText('First name', { exact: false })
     expect(firsts.length).toBe(3);
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);

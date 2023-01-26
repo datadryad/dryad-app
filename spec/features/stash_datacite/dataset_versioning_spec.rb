@@ -366,6 +366,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
     all('[id^=instit_affil_]').last.set('test institution')
+    page.send_keys(:tab)
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.set(true) }
     description_divider = find('h2', text: 'Data description')
     description_divider.click
     doi = 'https://doi.org/10.5061/dryad.888gm50'

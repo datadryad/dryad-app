@@ -22,9 +22,9 @@
 
 <% unless other.try(:description).blank? %>
   <% if params[:controller].include?('landing') %>
-    <h2 class="o-heading__level2">Usage Notes</h2>
+    <h2 class="o-heading__level2">Usage notes</h2>
   <% else %>
-    <h3 class="o-heading__level2">Usage Notes</h3>
+    <h3 class="o-heading__level2">Usage notes</h3>
   <% end %>
   <div class="t-landing__text-wall <% 'highlight' if highlight_fields.include?('usage_notes') %>">
     <%= raw(other.description) %>

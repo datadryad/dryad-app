@@ -15,7 +15,7 @@ describe('FunderAutocomplete', () => {
     groupings = [];
 
     info = {formRef, acText, setAcText, acID, setAcID, groupings,
-      'controlOptions': { 'htmlId': "contrib_1", 'labelText': 'Granting Organization', 'isRequired': false } }
+      'controlOptions': { 'htmlId': "contrib_1", 'labelText': 'Granting organization', 'isRequired': false } }
   });
 
   it("renders the basic autocomplete form", () => {
