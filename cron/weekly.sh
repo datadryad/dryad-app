@@ -8,6 +8,10 @@ PATH=$PATH:/apps/dryad/local/bin
 
 cd /apps/dryad/apps/ui/current/
 
+# clear out cache older than 3 weeks old, remove empty directories in cache
+find /apps/dryad/apps/ui/shared/tmp/cache -mtime +21 -type f -exec rm {} \;
+find /apps/dryad/apps/ui/shared/tmp/cache -empty -type d -delete
+
 bundle exec rails publication_updater:crossref >> /apps/dryad/apps/ui/shared/cron/logs/publication_updater_crossref.log 2>&1
 
 bundle exec rails identifiers:voided_invoices_report >>/apps/dryad/apps/ui/shared/cron/logs/voided_invoices_report.log 2>&1
