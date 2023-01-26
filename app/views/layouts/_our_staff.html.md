@@ -89,6 +89,14 @@
 
 <h2 id="curation">Curation Team</h2>
 <div class="bio">
+  <img src="/images/laura.jpg" alt="Laura Bowman" title="Laura Bowman">
+  <p><strong>Laura Bowman</strong><br/>
+  Data Curator<br/>
+  Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
+  </p>
+</div>
+
+<div class="bio">
   <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
   Data Curator<br/>  
@@ -98,17 +106,6 @@
   field supporting displaced people throughout Europe, and outside of Dryad she
   supports NGOs in grant writing. In her spare time, Savannah enjoys swimming,
   rock climbing, cooking, and learning new languages.
-  </p>
-</div>
-
-<div class="bio">
-  <img src="/images/amelia.jpg" alt="Amelia Culp" title="Amelia Culp">
-  <p><strong>Amelia Culp</strong><br/>
-  Data Curator<br/>
-  Amelia has a B.S. in Physics and a background in physics and neuroscience
-  research. In addition to data curation, she is a PhD candidate studying neural
-  connectomics. Outside of work, Amelia enjoys rock climbing, backpacking, and
-  taking care of her plants.
   </p>
 </div>
 

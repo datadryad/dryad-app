@@ -44,18 +44,17 @@ including universities, research institutions and academic libraries. See more a
         <li>Scripps College</li>
         <li>Stanford University</li> 
         <li>Texas Tech University</li>
-        <li>UC Berkeley</li>
-        <li>UC Davis</li>
-        <li>UC Irvine</li>
-        <li>UCLA</li>
-        <li>UC Merced</li>
-        <li>UC Riverside</li>
-        <li>UC San Francisco</li>
-        <li>UC San Diego</li>
-        <li>UC Santa Barbara</li>
-        <li>UC Santa Cruz</li>
-        <li>U.S. Fish &amp; Wildlife Service</li>
         <li>The University of British Columbia</li>
+        <li>University of California, Berkeley</li>
+        <li>University of California, Davis</li>
+        <li>University of California, Irvine</li>
+        <li>University of California, Los Angeles</li>
+        <li>University of California, Merced</li>
+        <li>University of California, Riverside</li>
+        <li>University of California, San Francisco</li>
+        <li>University of California, San Diego</li>
+        <li>University of California, Santa Barbara</li>
+        <li>University of California, Santa Cruz</li>        
         <li>University of California, California Digital Library</li>
         <li>University of Illinois, Urbana-Champagne</li>
         <li>University of Minnesota</li>
@@ -66,7 +65,7 @@ including universities, research institutions and academic libraries. See more a
         <li>The University of Sheffield</li>
         <li>University of Washington</li>
 		    <li>University of Wisconsin, Madison</li>
-        <li>US Fish and Wildlife Service</li>
+        <li>U.S. Fish &amp; Wildlife Service</li>
         <li>Victoria University, Melbourne</li>
         <li>Yale University</li>
       </ul>
