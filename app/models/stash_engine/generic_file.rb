@@ -189,6 +189,52 @@ module StashEngine
       { triggered: false, msg: item }
     end
 
+    def trigger_excel_to_csv
+      credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+      client = Aws::Lambda::Client.new(region: APP_CONFIG[:s3][:region], credentials: credentials)
+
+      h = Rails.application.routes.url_helpers
+
+      # Don't create multiple entries for all the processing steps, just overwrite this one (will save last step).
+      # We can move to a more full log of every step in the future if we need it.
+      pr = ProcessorResult.where(resource_id: resource_id, parent_id: id)&.first ||
+        ProcessorResult.create(resource: resource, processing_type: 'excel_to_csv', parent_id: id, completion_state: 'not_started')
+
+      # download_url, filename, callback_url, token, processor_obj
+
+      payload = JSON.generate({ download_url: url || direct_s3_presigned_url,
+                                filename: upload_file_name,
+                                callback_url: h.processor_result_url(pr.id)
+                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub(/^http:/, 'https:'),
+                                token: StashEngine::ApiToken.token,
+                                doi: resource.identifier.to_s,
+                                processor_obj: pr.as_json })
+
+      resp = client.invoke(
+        { function_name: 'excelToCsv',
+          invocation_type: 'Event',
+          log_type: 'None',
+          payload: payload }
+      )
+
+      return { triggered: true, msg: '' } if resp.status_code == 202 # true with no msg
+
+      # this is just if  there is trouble triggering it manually, check CloudWatch for the lambda or ProcessorResult model
+      # for code or application errors that happen async
+
+      item = { triggered: false, msg: "Error invoking excelToCsv lambda for file: #{id}" \
+                                      "\nstatus code: #{resp.status_code}" \
+                                      "\nfunction error: #{resp.function_error}" \
+                                      "\nlog_result: #{resp.log_result}" \
+                                      "\npayload: #{resp.payload}" \
+                                      "\nexecuted version: #{resp.executed_version}" }
+
+      logger.error(item)
+
+      { triggered: false, msg: item }
+    end
+
     # Given a (mostly) JSON response from Frictionless, discard anything before the opening
     # brace or after the closing brace, because it is typically a warning message from Python
     # that Frictionless didn't handle properly.
