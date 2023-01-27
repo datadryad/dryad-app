@@ -30,7 +30,7 @@ jobs:
         bundler-cache: true
 
     - name: 'setup node for node-sass'
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 16
 
