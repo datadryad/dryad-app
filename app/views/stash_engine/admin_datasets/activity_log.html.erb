@@ -118,7 +118,8 @@
 
       <div style="float: left">
         <% res = @identifier&.latest_resource %>
-        <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+        <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
+                      method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
           <button class="o-button__submit">Forcibly edit dataset</button>
           <%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
           <%= hidden_field_tag :return_url, '/stash/dashboard' %>
@@ -137,6 +138,39 @@
           <% end %>
         </div>
       <% end %>
+
+      <div style="clear: both" id="revert_edit_div">
+
+        <hr/>
+        <h3>New version based on previous</h3>
+        <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
+          <%
+            resource_list = @identifier.resources.includes(:stash_version).by_version
+            sel_list = resource_list.map do |res|
+              ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
+            end
+            sel_idx = resource_list[-2]&.id || resource_list.last.id
+          %>
+          <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
+                        method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
+
+            <%= f.label :select_res, 'Select version' %>
+            <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res') %>
+            <button class="o-button__submit">&lt;- New edit based on</button>
+
+            <p>
+              Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
+              the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
+              last version of the dataset are not correct.
+            </p>
+          <% end %>
+        <% else %>
+          <p>
+            You may only create and edit a new version based on an old version if there are currently no in-progress
+            versions being edited or there is more than one version submitted.
+          </p>
+        <% end %>
+      </div>
 
     </div>
   </div>
