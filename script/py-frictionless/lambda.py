@@ -5,6 +5,7 @@ from frictionless import Detector, validate, validate_resource
 import requests
 import sys
 
+# event json has these params passed in: download_url, callback_url, token
 def lambda_handler(event, context):
   detector = Detector(field_missing_values="na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank".split(","))
   try:

@@ -11,7 +11,7 @@
 The results of the validation are stored in the `stash_engine_frictionless_reports` table which is associated with a
 specific file that was validated.
 
-The AWS Lambda was put into the AWS console and uses a Lambda Layer (Python version andlibraries that include the 
+The AWS Lambda was put into the AWS console and uses a Lambda Layer (Python version and libraries that include the 
 frictionless ones)
 created under the AWS cloudshell.  I believe I followed
 [this article](https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/).
