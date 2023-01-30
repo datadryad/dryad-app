@@ -94,7 +94,7 @@ module StashEngine
       duplicate_resource
 
       # now fix the files based on last resource rather than the duplicated one, since we're not copying old files to S3
-      # from all the different services (Merritt, Zenodo)
+      # from all the different services (Merritt, Zenodo) which could be error-prone and take some time
       @new_res.generic_files.destroy_all
       prev_files.each do |f|
         next if f.deleted? # deleted so no longer exists here
