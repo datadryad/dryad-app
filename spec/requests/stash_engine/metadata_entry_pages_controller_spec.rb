@@ -49,6 +49,8 @@ module StashEngine
 
         # files match version 2 (last version before this)
         expect(@resource2.data_files.map(&:upload_file_name)).to eq(@resource3.data_files.map(&:upload_file_name))
+
+        expect(@resource2.stash_version.version + 1).to eq(@resource3.stash_version.version) # they get sequential versions
       end
     end
 
