@@ -60,8 +60,9 @@ module StashEngine
     def upload_complete
       respond_to do |format|
         format.any(:json, :html) do
-          # destroy any previous with this name and overwrite with this one
-          @resource.send(@resource_assoc).where(upload_file_name: params[:name]).destroy_all
+          # It can maintain previous deletions for the file (both same and different case), but delete non-deletions
+          @resource.send(@resource_assoc).where('lower(upload_file_name) = ?', params[:name]&.downcase)
+            .where.not(file_state: 'deleted').destroy_all
 
           db_file =
             @file_model.create(
