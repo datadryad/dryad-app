@@ -1,18 +1,18 @@
 
-<p>The dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been successfully submitted to Dryad. The dataset
-  will now remain private until the related manuscript has been accepted. At that point we will begin the curation process.
-</p>
+<p>This dataset has been successfully submitted to Dryad:</p>
 
 <p>
-    Data DOI: <%= @resource.identifier_str %><br/>
-    Submitted by: <%= @user_name %><br/>
-    Journal: <%= @resource.identifier.publication_name %><br/>
-    Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
-    Article DOI: <%= @resource.identifier.publication_article_doi %><br/>
+Title: <%= @resource.title %><br/>
+Data DOI: <%= @resource.identifier_str %><br/>
+Submitted by: <%= @user_name %><br/>
+Journal: <%= @resource.identifier.publication_name %><br/>
+Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
+Article DOI: <%= @resource.identifier.publication_article_doi %><br/>
 </p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
-<p>For private access during this review period, you may share the unpublished dataset using this temporary link:
-  <a href="<%= shr %>"><%= shr %></a></p>
+<p>The submission will remain private until the related manuscript has been accepted. Once a notification of acceptance is received, the curation process will be initiated. For private access during this review period, you may share the unpublished data files using this unique link: <a href="<%= shr %>"><%= shr %></a></p>
 
-<p>If you have questions or concerns, please visit the help page or get in touch with us <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>If you have questions or concerns, please visit our Help page, or contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+
+<p>The Dryad Team</p>

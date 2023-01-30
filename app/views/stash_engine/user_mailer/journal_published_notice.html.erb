@@ -1,11 +1,14 @@
 
-<p>The dataset "<%= @resource.title %>" has been approved for publication in Dryad.</p>
+<p>Congratulations! This dataset has been approved for publication in Dryad:</p>
 
 <p>
-    Data DOI: <%= @resource.identifier_str %><br/>
-    Journal: <%= @resource.identifier.publication_name %><br/>
-    Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
-    Article DOI: <%= @resource.identifier.publication_article_doi %><br/>
+Title: <%= @resource.title %><br/>
+Data DOI: <%= @resource.identifier_str %><br/>
+Journal: <%= @resource.identifier.publication_name %><br/>
+Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
+Article DOI: <%= @resource.identifier.publication_article_doi %><br/>
 </p>
 
-<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>Thank you for choosing Dryad to host your data. If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+
+<p>The Dryad Team</p>
