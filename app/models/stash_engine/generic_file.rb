@@ -5,7 +5,7 @@ require 'stash/download' # for the thing that prevents character mangling in htt
 require 'http'
 require 'aws-sdk-lambda'
 
-# rubocop:disable Metrics/classLength
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class GenericFile < ApplicationRecord
     self.table_name = 'stash_engine_generic_files'
@@ -293,4 +293,4 @@ module StashEngine
   end
 end
 
-# rubocop:enable Metrics/classLength
+# rubocop:enable Metrics/ClassLength
