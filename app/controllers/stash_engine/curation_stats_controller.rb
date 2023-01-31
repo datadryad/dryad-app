@@ -12,7 +12,7 @@ module StashEngine
       @current_stats = CurationStats.where(date: 1.month.ago..Date.today).order('date DESC')
 
       @admin_stats = StashEngine::AdminDatasetsController::Stats.new
-      @admin_stats_2day = StashEngine::AdminDatasetsController::Stats.new(untouched_since: Time.now - 2.days)
+      @admin_stats_3day = StashEngine::AdminDatasetsController::Stats.new(untouched_since: Time.now - 3.days)
 
       respond_to do |format|
         format.html

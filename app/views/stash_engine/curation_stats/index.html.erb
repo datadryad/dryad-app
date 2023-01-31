@@ -3,9 +3,10 @@
 
 <div class="o-admin-container">
     <div class="o-admin-left-head">
-	<div class="o-heading__level3">At a glance</div>
-	<%= @admin_stats.datasets_available_for_curation %> datasets currently available for curation<br/>
-	<%= @admin_stats_2day.datasets_available_for_curation %> datasets available for curation and not touched in 48 hours 
+      <div class="o-heading__level3">At a glance</div>
+      <%= @admin_stats.datasets_submitted_unclaimed_count %> datasets currently in 'Submitted' status (that are unclaimed/unassigned)<br/>
+      <%= @admin_stats.datasets_available_for_curation %> datasets currently available for curation<br/>
+      <%= @admin_stats_3day.datasets_available_for_curation %> datasets available for curation and not touched in 72 hours 
     </div>
 </div>
 

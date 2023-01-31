@@ -40,6 +40,10 @@ module StashEngine
         datasets_with_resource_state_count(state: 'submitted')
       end
 
+      def datasets_submitted_unclaimed_count
+        datasets_with_curation_status_count(status: 'submitted', only_unclaimed: true)
+      end
+
       def datasets_available_for_curation
         datasets_with_curation_status_count(status: 'submitted') +
           datasets_with_curation_status_count(status: 'curation')
@@ -54,8 +58,9 @@ module StashEngine
         ident_query.count
       end
 
-      def datasets_with_curation_status_count(status:)
+      def datasets_with_curation_status_count(status:, only_unclaimed: false)
         query = "#{STATUS_QUERY_BASE} WHERE ser.updated_at < '#{@untouched_since}' AND ser.created_at > '#{@since}' AND seca.status = '#{status}'"
+        query += ' AND ser.current_editor_id is NULL' if only_unclaimed
         ApplicationRecord.connection.execute(query)&.first&.first
       end
 
