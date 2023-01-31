@@ -4,7 +4,7 @@ module StashEngine
     before_action :resource_exist, except: %i[metadata_callback]
     before_action :require_modify_permission, except: %i[metadata_callback edit_by_doi]
     before_action :require_in_progress_editor, only: %i[find_or_create]
-    before_action :require_can_duplicate, only: :new_version
+    before_action :require_can_duplicate, only: %i[new_version new_version_from_previous]
     before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
     before_action :bust_cache, only: %i[find_or_create]
     before_action :require_not_obsolete, only: %i[find_or_create]
@@ -84,6 +84,30 @@ module StashEngine
       duplicate_resource
 
       # redirect to find or create path
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
+    end
+
+    def new_version_from_previous
+      session["return_url_#{@identifier.id}"] = params[:return_url] if params[:return_url] && @identifier
+      prev_resource = @identifier.latest_resource # reference for undoing versioning and files from the duplication, if needed
+      prev_files = prev_resource.generic_files
+      duplicate_resource
+
+      # now fix the files based on last resource rather than the duplicated one, since we're not copying old files to S3
+      # from all the different services (Merritt, Zenodo) which could be error-prone and take some time
+      @new_res.generic_files.destroy_all
+      prev_files.each do |f|
+        next if f.deleted? # deleted so no longer exists here
+
+        # create new based on file record from immediately previous version before the version being created
+        my_hash = f.as_json
+        my_hash.delete('id')
+        my_hash['file_state'] = 'copied'
+        my_hash['resource_id'] = @new_res.id
+        my_hash['type'] = f.type # otherwise this doesn't get set in the as_json hash
+        @new_res.generic_files.create(my_hash)
+      end
+
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
     end
 
