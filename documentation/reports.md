@@ -184,7 +184,7 @@ publication dates are in the future.
 Sorry, IDK why the markdown seems to do it's own thing when indenting, even if I do it preformatted.
 
 <pre>
-SELECT se_id3.identifier, se_res3.title, se_auth3.author_first_name, se_auth3.author_last_name, dcs_affil3.long_name, se_res3.publication_date,
+SELECT se_id3.identifier, se_res3.title, se_auth3.author_first_name, se_auth3.author_last_name, se_auth3.author_email, dcs_affil3.long_name, se_id3.created_at, se_res3.publication_date,
 (stash_engine_counter_stats.unique_investigation_count - stash_engine_counter_stats.unique_request_count) as unique_views, stash_engine_counter_stats.unique_request_count as unique_downloads
 FROM
   /* get only the earliest published/embagoed one */
