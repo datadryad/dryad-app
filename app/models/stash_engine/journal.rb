@@ -13,6 +13,14 @@ module StashEngine
         payment_plan_type == 'DEFERRED'
     end
 
+    def top_level_org
+      return nil unless sponsor
+
+      o = sponsor
+      o = o.parent_org while o.parent_org
+      o
+    end
+
     def self.find_by_title(title)
       return unless title.present?
 
