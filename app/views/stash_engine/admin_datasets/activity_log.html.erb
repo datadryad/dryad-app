@@ -11,12 +11,12 @@
       <% end %>
     </div>
   <% end %>
-  <div style="clear: both";>&nbsp;</div>
+  <div style="clear: both" ;>&nbsp;</div>
   <table class="c-lined-table" id="curation_table">
-      <tr class="c-lined-table__head">
+    <tr class="c-lined-table__head">
       <th class="c-admin-table">
         Resource ID
-      </th>	  
+      </th>
       <th class="c-admin-table <%= sort_display('created_at') %>">
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
@@ -34,56 +34,56 @@
       </th>
     </tr>
     <% @curation_activities.each do |ca| %>
-	<%= render partial: 'activity_log_row', locals: { curation_activity: ca } %>
+      <%= render partial: 'activity_log_row', locals: { curation_activity: ca } %>
     <% end %>
   </table>
 </div>
 
 <% if current_user.limited_curator? || current_user.role == 'admin' %>
-    <div id="salesforce_links" style="clear: both">	
-	<div style="float: left"><h2>Salesforce cases</h2></div>
-	<div style="float: right">
-	    <br/>
-	    <%= button_to "Create salesforce case",
-	     stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
-	     method: :get,
-	     class: 'o-button__submit',
-	     form: {target: '_blank'}
-	     %>
-	</div>
-	
-	<% sf_links = salesforce_links(@identifier.identifier) %>
-	<% if sf_links %>
-	    <div id="sf_link_list" style="clear: both">
-		<table class="c-lined-table" id="curation_table">
-		    <tr class="c-lined-table__head">
-			<th class="c-admin-table">
-			    Case
-			</th>
-			<th class="c-admin-table">
-			    Status
-			</th>
-			<th class="c-admin-table">
-			    Reason
-			</th>			    
-		    </tr>
-		    <% sf_links.each do |sf_link| %>
-			<tr class="c-lined-table__row">
-			    <td>				
-				<%= link_to sf_link.title, sf_link.path, target: '_blank' %>
-			    </td>
-			    <td>
-				<%= sf_link.status %>
-			    </td>
-			    <td>
-				<%= sf_link.reason %>
-			    </td>
-			</tr>
-		    <% end %>
-		</table>
-	    </div>
-	<% end %>
+  <div id="salesforce_links" style="clear: both">
+    <div style="float: left"><h2>Salesforce cases</h2></div>
+    <div style="float: right">
+      <br/>
+      <%= button_to "Create salesforce case",
+                    stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
+                    method: :get,
+                    class: 'o-button__submit',
+                    form: { target: '_blank' }
+      %>
     </div>
+
+    <% sf_links = salesforce_links(@identifier.identifier) %>
+    <% if sf_links %>
+      <div id="sf_link_list" style="clear: both">
+        <table class="c-lined-table" id="curation_table">
+          <tr class="c-lined-table__head">
+            <th class="c-admin-table">
+              Case
+            </th>
+            <th class="c-admin-table">
+              Status
+            </th>
+            <th class="c-admin-table">
+              Reason
+            </th>
+          </tr>
+          <% sf_links.each do |sf_link| %>
+            <tr class="c-lined-table__row">
+              <td>
+                <%= link_to sf_link.title, sf_link.path, target: '_blank' %>
+              </td>
+              <td>
+                <%= sf_link.status %>
+              </td>
+              <td>
+                <%= sf_link.reason %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 
 
@@ -93,52 +93,86 @@
     <div style="float: right">
       <br/>
       <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,
-						   sub_method: 'post', only_path: true),
+                                                   sub_method: 'post', only_path: true),
                     method: :get, local: false) do -%>
         <button class="o-button__submit">Add data</button>
       <% end %>
     </div>
   <% end %>
-  
+
   <div id="internal_data_table" style="clear: both">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
 </div>
 
 <% if current_user.superuser? %>
-<div id="payment_info" style="clear: both">
-  <div style="float: left"><h2>Payment information</h2></div>
-  <%= render partial: 'payment_info_table' %>
-</div>
+  <div id="payment_info" style="clear: both">
+    <div style="float: left"><h2>Payment information</h2></div>
+    <%= render partial: 'payment_info_table' %>
+  </div>
 <% end %>
 
 <% if current_user.curator? %>
-    <div id="dangerous_actions">
-	<div style="float: left"><h2>Dangerous actions</h2>
+  <div id="dangerous_actions">
+    <div style="float: left"><h2>Dangerous actions</h2>
 
-	    <div style="float: left">
-		<% res = @identifier&.latest_resource %>
-		<%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post, :html => {onsubmit: "document.body.classList.add('prevent-clicks')"}) do -%>
-			<button class="o-button__submit">Forcibly edit dataset</button>
-			<%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
-			<%= hidden_field_tag :return_url, '/stash/dashboard' %>
-		<% end %>
-		<p>Forcibly editing a dataset will assign it to you, and begin an editing session.
-		Please only do this if you know the author is unable/unwilling to submit it.</p>
-	    </div>
+      <div style="float: left">
+        <% res = @identifier&.latest_resource %>
+        <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
+                      method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+          <button class="o-button__submit">Forcibly edit dataset</button>
+          <%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
+          <%= hidden_field_tag :return_url, '/stash/dashboard' %>
+        <% end %>
+        <p>Forcibly editing a dataset will assign it to you, and begin an editing session.
+          Please only do this if you know the author is unable/unwilling to submit it.</p>
+      </div>
 
-	    <% if current_user.superuser? && @identifier.payment_type != 'waiver' %>
-	      <div style="float: left" id="apply_fee_waiver">
-	        <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'waiver_popup', id: @identifier.id,
-		    sub_method: 'post', only_path: true),
-                    method: :get, local: false) do -%>
-	        <button class="o-button__submit">Apply fee waiver</button>
-		<p>&nbsp;</p>
-		<% end %>
-  	      </div>
-	    <% end %>
-	    
-	</div>
+      <% if current_user.superuser? && @identifier.payment_type != 'waiver' %>
+        <div style="float: left" id="apply_fee_waiver">
+          <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'waiver_popup', id: @identifier.id,
+                                                       sub_method: 'post', only_path: true),
+                        method: :get, local: false) do -%>
+            <button class="o-button__submit">Apply fee waiver</button>
+            <p>&nbsp;</p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div style="clear: both" id="revert_edit_div">
+
+        <hr/>
+        <h3>New version based on previous</h3>
+        <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
+          <%
+            resource_list = @identifier.resources.includes(:stash_version).by_version
+            sel_list = resource_list.map do |res|
+              ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
+            end
+            sel_idx = resource_list[-2]&.id || resource_list.last.id
+          %>
+          <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
+                        method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
+
+            <%= f.label :select_res, 'Select version' %>
+            <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res') %>
+            <button class="o-button__submit">&lt;- New edit based on</button>
+
+            <p>
+              Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
+              the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
+              last version of the dataset are not correct.
+            </p>
+          <% end %>
+        <% else %>
+          <p>
+            You may only create and edit a new version based on an old version if there are currently no in-progress
+            versions being edited or there is more than one version submitted.
+          </p>
+        <% end %>
+      </div>
+
     </div>
+  </div>
 <% end %>
 

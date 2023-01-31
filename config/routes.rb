@@ -206,6 +206,7 @@ Rails.application.routes.draw do
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
     match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
     match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
+    post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
     
