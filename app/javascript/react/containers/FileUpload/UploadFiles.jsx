@@ -27,8 +27,8 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 const Messages = {
-  fileAlreadySelected: 'A file of the same type is already in the table, and was not added.',
-  filesAlreadySelected: 'Some files of the same type are already in the table, and were not added.',
+  fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
+  filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
 };
 const ValidTabular = {
@@ -560,8 +560,8 @@ class UploadFiles extends React.Component {
     const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType);
     if (!filesAlreadySelected.length) return filenames;
 
-    const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name);
-    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename)));
+    const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
+    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase()));
   };
 
   setWarningRepeatedFile = (countRepeated) => {
