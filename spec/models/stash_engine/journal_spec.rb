@@ -56,5 +56,23 @@ module StashEngine
       end
     end
 
+    describe '#top_level_org' do
+      it 'returns nil when there is no parent org' do
+        expect(@journal.top_level_org).to be(nil)
+      end
+
+      it 'returns correct top level org' do
+        # single level
+        parent = build(:journal_organization)
+        @journal.sponsor = parent
+        expect(@journal.top_level_org).to be(parent)
+
+        # multi level
+        grandparent = build(:journal_organization)
+        parent.parent_org = grandparent
+        expect(@journal.top_level_org).to be(grandparent)
+      end
+    end
+
   end
 end

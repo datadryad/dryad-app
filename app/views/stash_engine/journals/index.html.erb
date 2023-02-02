@@ -35,7 +35,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <td><span style="white-space: nowrap;"><%= journal.issn %></span></td>
       <td><%= journal.allow_blackout %></td>
       <td><%= journal.payment_plan_type %></td>
-      <td><%= journal.sponsor&.name %></td>
+      <td><%= journal.top_level_org&.name %></td>
       <td><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at %></td>
   </tr>
 

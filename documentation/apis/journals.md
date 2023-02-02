@@ -8,6 +8,7 @@ Dryad manages two types of information about journals:
 2. Metadata about journal manuscripts, which can be imported into a dataset, and
    which can automatically change the status of a `peer_review` dataset.
 
+
 Metadata about journals
 =======================
 
@@ -17,11 +18,11 @@ models:
 - `StashEngine::JournalRoles`
 - `StashEngine::JournalOrganizations`
 
+
 Meaning of fields
 -----------------
 
-Options for processing in `StashEngine::Journal`
-
+Options for processing in `StashEngine::Journal`:
 - *allow_review_workflow* -- Was previously used to determine whether
   a journal allowed authors to submit data during the manuscript
   review process. Controls whether the "private for peer review"
@@ -37,6 +38,19 @@ Options for processing in `StashEngine::Journal`
   the dataset.
 - *default_to_ppr* -- Whether the Peer Review checkbox should be checked by
   default when a new dataset is associated with this journal.
+
+Organizational relationships:
+- `StashEngine::Journal.sponsor` is the organization that controls the journal
+  and causes it to be sponsored. Note that the actual payments may come from a
+  parent organization of the sponsor.
+- `StashEngine::JournalOrganization.parent`` is a parent organization that provides funding
+  for a lower-level organization.
+
+The organizational relationships are used for:
+- permissions (which journals an administrator controls; see below)
+- display of sponsorship (who to credit throughout the Dryad site)
+- actual sponsorship (who to bill)
+
 
 Adding journal administrators
 -------------------------------
@@ -54,6 +68,7 @@ administrator:
    their `sponsor`
 3. Ensure that the administrator has a `User` account
 3. Add a `JournalRole` as in `StashEngine::JournalRole.create(user: u, journal_organization: o, role: 'org_admin')`
+
 
 Alternate titles
 ================
