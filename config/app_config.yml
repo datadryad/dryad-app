@@ -51,6 +51,8 @@ defaults: &DEFAULTS
   merritt_max_submission_threads: 5
   crossref_base_url: https://api.crossref.org
   crossref_mailto: scott.fisher@ucop.edu
+  # world bank low income or lower-middle income
+  # DR Congo is there since ROR data seems to have both values for it
   fee_waiver_countries:
     - 'Afghanistan'
     - 'Burkina Faso'
@@ -58,6 +60,7 @@ defaults: &DEFAULTS
     - 'Central African Republic'
     - 'Chad'
     - 'Democratic Republic of the Congo'
+    - 'DR Congo'
     - 'Eritrea'
     - 'Ethiopia'
     - 'Gambia'
@@ -68,7 +71,7 @@ defaults: &DEFAULTS
     - 'Malawi'
     - 'Mali'
     - 'Mozambique'
-    - 'Nigeria'
+    - 'Niger'
     - 'North Korea'
     - 'Republic of the Congo'
     - 'Rwanda'
@@ -80,10 +83,10 @@ defaults: &DEFAULTS
     - 'Togo'
     - 'Uganda'
     - 'Yemen'
-    - 'Angola'
+    - 'Zambia'
     - 'Algeria'
+    - 'Angola'
     - 'Bangladesh'
-    - 'Belize'
     - 'Benin'
     - 'Bhutan'
     - 'Bolivia'
@@ -108,6 +111,7 @@ defaults: &DEFAULTS
     - 'Kiribati'
     - 'Kyrgyzstan'
     - 'Laos'
+    - 'Lebanon'
     - 'Lesotho'
     - 'Mauritania'
     - 'Micronesia'
@@ -130,12 +134,13 @@ defaults: &DEFAULTS
     - 'Swaziland'
     - 'Tajikistan'
     - 'Tanzania'
+    - 'Timor-Leste'
     - 'Tunisia'
     - 'Ukraine'
     - 'Uzbekistan'
     - 'Vanuatu'
     - 'Vietnam'
-    - 'Zambia'
+    - 'West Bank and Gaza'
     - 'Zimbabwe'
   funder_exemptions:
     - 'Chan Zuckerberg Initiative'
