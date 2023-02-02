@@ -5,9 +5,13 @@
 Title: <%= @resource.title %><br/>
 Data DOI: <%= @resource.identifier_str %><br/>
 Submitted by: <%= @user_name %><br/>
-Journal: <%= @resource.identifier.publication_name %><br/>
-Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
-Article DOI: <%= @resource.identifier.publication_article_doi %><br/>
+Journal: <%= @resource.identifier.publication_name %>
+<% if @resource.identifier.manuscript_number.present? %>
+  <br/>Journal manuscript number: <%= @resource.identifier.manuscript_number %>
+<% end %>
+<% if @resource.identifier.publication_article_doi.present? %>
+  <br/>Article DOI: <%= @resource.identifier.publication_article_doi %>
+<% end %>
 </p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
