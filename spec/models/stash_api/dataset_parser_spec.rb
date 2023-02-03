@@ -111,7 +111,7 @@ module StashApi
       end
 
       it 'reduces emails to one for format of "display name <my@email>"' do
-        emails = Array.new(2){|_i| Faker::Internet.email }
+        emails = Array.new(2) { |_i| Faker::Internet.email }
         @basic_metadata = {
           'authors' => [
             {
@@ -130,7 +130,7 @@ module StashApi
       end
 
       it 'reduces emails to one when more are jammed in with commas or semicolons' do
-        emails = Array.new(2){|_i| Faker::Internet.email }
+        emails = Array.new(2) { |_i| Faker::Internet.email }
         @basic_metadata = {
           'authors' => [
             {
