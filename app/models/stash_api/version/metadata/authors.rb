@@ -12,7 +12,7 @@ module StashApi
             {
               firstName: a.author_first_name,
               lastName: a.author_last_name,
-              email: parse_email(a.author_email),
+              email: a.author_email,
               affiliation: a.try(:affiliation).try(:smart_name),
               affiliationROR: a.try(:affiliation).try(:ror_id),
               orcid: a.author_orcid,
