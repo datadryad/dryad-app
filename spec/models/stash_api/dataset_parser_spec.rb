@@ -110,6 +110,44 @@ module StashApi
         expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
       end
 
+      it 'reduces emails to one for format of "display name <my@email>"' do
+        emails = Array.new(2){|_i| Faker::Internet.email }
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'email' => "Crazy Name1 <#{emails.first}>; Crazy Name2 <#{emails.second}>"
+            }
+          ]
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+        expect(author.author_email).to eq(emails.first)
+      end
+
+      it 'reduces emails to one when more are jammed in with commas or semicolons' do
+        emails = Array.new(2){|_i| Faker::Internet.email }
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'email' => "  #{emails.first}; #{emails.second}" # also adding extra space just for fun
+            }
+          ]
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+        expect(author.author_email).to eq(emails.first)
+      end
+
       it 'creates the author with a ROR id, matching to an existing affiliation in the database' do
         target_affil = StashDatacite::Affiliation.create(long_name: 'Some Great Institution', ror_id: 'https://ror.org/sgi123')
         @basic_metadata = {
