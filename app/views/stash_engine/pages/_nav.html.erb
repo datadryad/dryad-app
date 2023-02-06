@@ -1,96 +1,96 @@
-<nav class="c-header__nav js-header__nav">
-  <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
-    <input name="utf8" value="✓" type="hidden">
-    <label class="o-global-search__label" for="search-field-input1">Search Dryad site</label>
-    <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
-    <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search"></button>
-  </form>
-
-  <div class="c-header__nav-group">
+<nav class="c-header__nav js-header__nav" aria-label="Main">
+  <ul class="c-header__nav-group">
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
-      <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>
-        @<%= current_tenant&.tenant_id %>]</span>
+      <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>
+        @<%= current_tenant&.tenant_id %>]</li>
     <% end %>
-    <% if current_user && current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>
-      <div class="c-header__nav-item">
-        <div class="o-sites">
-          <details class="o-showhide o-sites__details" role="group">
-            <summary class="o-showhide__summary o-sites__summary">Admin</summary>
-            <div class="o-sites__group">
-              <%= link_to 'Dataset curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
-                                                                        editor_id: current_user.id, curation_status: 'submitted', only_path: true), class: 'o-sites__group-item' %>
-              <%= link_to 'Curation stats', stash_url_helpers.curation_stats_path, class: 'o-sites__group-item' %>
-              <%= link_to 'Journals', stash_url_helpers.journals_path, class: 'o-sites__group-item' %>
-              <% if current_user.curator? %>
-                <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path, class: 'o-sites__group-item' %>
-              <% end %>
-              <%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
-              <% if current_user.superuser? %>
-                <%= link_to 'User management', stash_url_helpers.user_admin_path, class: 'o-sites__group-item' %>
-                <%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path, class: 'o-sites__group-item' %>
-                <%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true), class: 'o-sites__group-item' %>
-                <%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path, class: 'o-sites__group-item' %>
-              <% end %>
-            </div>
-          </details>
-        </div>
-      </div>
-    <% elsif current_user && (current_user.journals_as_admin.present? || current_user.funders_as_admin.present?) %>
-      <%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'c-header__nav-item' %>
-    <% elsif current_user && (current_user.role == 'admin' || current_user.role == 'tenant_curator') %>
-      <div class="c-header__nav-item">
-        <div class="o-sites">
-          <details class="o-showhide o-sites__details" role="group">
-            <summary class="o-showhide__summary o-sites__summary">Admin</summary>
-            <div class="o-sites__group">
-              <%= link_to 'Datasets', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index',
-                                                                         only_path: true), class: 'o-sites__group-item' %>
-              <%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path, class: 'o-sites__group-item' %>
-            </div>
-          </details>
-        </div>
-      </div>
-    <% end %>
-    <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
-    <%= link_to 'Explore data', '/search', class: 'c-header__nav-item js-nav-out' %>
+    <li class="c-header__nav-item"><%= link_to 'Explore data', '/search', class: 'js-nav-out' %>
+    <li class="c-header__nav-item">
+      <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
+        <input name="utf8" value="✓" type="hidden">
+        <label class="o-global-search__label" for="search-field-input1">Search Dryad site</label>
+        <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
+        <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search"></button>
+      </form>
+    </li>
+  </ul>
 
-    <div class="c-header__nav-item">
-      <div class="o-sites">
-        <details class="o-showhide o-sites__details" role="group">
-          <summary class="o-showhide__summary o-sites__summary">About</summary>
-          <div class="o-sites__group">
-            <%= link_to 'Our mission', "#{stash_url_helpers.our_mission_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our membership', "#{stash_url_helpers.our_membership_path}", class: 'o-sites__subgroup-head' %>
-            <%= link_to 'Join us', "#{stash_url_helpers.join_us_path}", class: 'o-sites__subgroup-lastitem' %>
-            <%= link_to 'Our governance', "#{stash_url_helpers.our_governance_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our team', "#{stash_url_helpers.our_staff_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our advisors', "#{stash_url_helpers.our_advisors_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our platform', "#{stash_url_helpers.our_platform_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our blog', "https://blog.datadryad.org/", class: 'o-sites__group-item' %>
-            <%= link_to 'Code of conduct', stash_url_helpers.code_of_conduct_path, class: 'o-sites__group-item' %>
-            <%= link_to 'Data publishing ethics', stash_url_helpers.ethics_path, class: 'o-sites__group-item' %>
-          </div>
-        </details>
-      </div>
-    </div>
+  <ul class="c-header__nav-group">    
 
-    <div class="c-header__nav-item">
-      <div class="o-sites">
-        <details class="o-showhide o-sites__details" role="group">
-          <summary class="o-showhide__summary o-sites__summary">Help</summary>
-          <div class="o-sites__group">
-            <%= link_to 'Submission process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Frequently asked questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
-            <%= link_to 'Contact us', stash_url_helpers.contact_path, class: 'o-sites__group-item' %>
-          </div>
-        </details>
-      </div>
-    </div>
+    <li class="c-header__nav-item">
+      <button class="c-header_nav-button" aria-expanded="false" aria-controls="who-menu">Who we are</button>
+      <ul class="c-header__nav-submenu" id="who-menu" hidden>
+        <li><%= link_to 'Members', "#{stash_url_helpers.our_membership_path}" %>
+        <li><%= link_to 'Governance', "#{stash_url_helpers.our_governance_path}" %>
+        <li><%= link_to 'Advisors', "#{stash_url_helpers.our_advisors_path}" %>
+        <li><%= link_to 'Team', "#{stash_url_helpers.our_staff_path}" %>
+        <li><%= link_to 'Contact', stash_url_helpers.contact_path %>
+      </ul>
+    </li>
+
+    <li class="c-header__nav-item">
+      <button class="c-header_nav-button" aria-expanded="false" aria-controls="what-menu">What we do</button>
+      <ul class="c-header__nav-submenu" id="what-menu" hidden>
+        <li><%= link_to 'What we do', "#{stash_url_helpers.our_mission_path}" %>
+        <li><%= link_to 'Latest news', "https://blog.datadryad.org/" %>    
+        <li><%= link_to 'Platform', "#{stash_url_helpers.our_platform_path}" %>
+      </ul>
+    </li>
+
+    <li class="c-header__nav-item">
+      <%= link_to 'Join us', "#{stash_url_helpers.join_us_path}" %>
+    </li>
+
+    <li class="c-header__nav-item">
+      <button class="c-header_nav-button" aria-expanded="false" aria-controls="help-menu">Help</button>
+      <ul class="c-header__nav-submenu" id="help-menu" hidden>
+        <li><%= link_to 'Submission process', "#{stash_url_helpers.submission_process_path}" %>
+        <li><%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}" %>
+        <li><%= link_to 'Frequently asked questions', stash_url_helpers.faq_path %>
+        <li><%= link_to 'Contact support', stash_url_helpers.contact_path %>
+      </ul>
+    </li>
 
     <% if current_user %>
-      <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
+      <li class="c-header__nav-item">
+        <% if current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>        
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Dataset curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
+            <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
+            <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
+            <% if current_user.curator? %>
+              <li>
+                <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %>
+              </li>
+            <% end %>
+            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+            <% if current_user.superuser? %>
+              <li><%= link_to 'User management', stash_url_helpers.user_admin_path %>
+              <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
+              <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
+              <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
+            <% end %>
+          </ul>
+        <% elsif current_user.journals_as_admin.present? || current_user.funders_as_admin.present? %>
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'c-header__nav-item' %>
+          </ul>
+        <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
+            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+          </ul>
+        <% else %>
+        <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
+        <% end %>
+      </li>
     <% end %>
-    <%= render partial: 'stash_engine/shared/log_in_out' %>
-  </div>
+    <li class="c-header__nav-item"><%= render partial: 'stash_engine/shared/log_in_out' %></li>
+  </ul>
 </nav>
