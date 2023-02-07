@@ -5038,6 +5038,9 @@ html.no-details .o-showhide__summary {
 }
 
 #page-nav {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 30ch;
+          flex: 0 1 30ch;
   padding-top: 2rem;
 }
 #page-nav ul {
@@ -6938,6 +6941,10 @@ blockquote.c-text_styles {
 ul.c-text_styles li {
   margin: 1.2ex 0;
   padding: 0;
+}
+
+img {
+  max-width: 100%;
 }
 
 #page-columns table {

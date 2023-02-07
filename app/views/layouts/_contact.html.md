@@ -1,13 +1,17 @@
 <h1>Contact</h1>
-<h2>Help & support</h2>
+
+## Help & support
+
 <p>Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with dataset submissions.</p> 
-<br/>
-<h2>General enquiries</h2>
+
+## General enquiries
+
 <p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a></p>
 <p><strong>Phone:</strong> <a href="tel:+18332925326">+1 833-292-5326</a></p>
 <p><a href="https://twitter.com/datadryad">Twitter</a> | <a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a> | <a href="https://www.facebook.com/profile.php?id=100075926210112">Facebook</a></p>
-<br/>
-<h2>Head office</h2>
+
+## Head office
+
 <p>Dryad<br>
 417 Mace Blvd. , Ste J110<br>
 Davis, CA 95618<br>
