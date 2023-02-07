@@ -135,7 +135,7 @@ module StashApi
                                              last_name: Faker::Name.last_name,
                                              email: Faker::Internet.email)
         @meta.add_field(field_name: 'userId', value: test_user.id)
-        @meta.add_field(field_name: 'publicationISSN', value: journal.issn)
+        @meta.add_field(field_name: 'publicationISSN', value: journal.single_issn)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
@@ -466,7 +466,7 @@ module StashApi
           user4 = create(:user, tenant_id: 'ucop', role: nil)
           journal = create(:journal)
           create(:journal_role, journal: journal, user: user4, role: 'admin')
-          create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.issn)
+          create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.single_issn)
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                     owner_id: user4.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)

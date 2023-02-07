@@ -389,7 +389,7 @@ RSpec.feature 'Admin', type: :feature do
         res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
         ident2 = create(:identifier)
         res2 = create(:resource, identifier_id: ident2.id, user: @user, tenant_id: @admin.tenant_id)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.issn)
+        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
         StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
         ident1.reload
 

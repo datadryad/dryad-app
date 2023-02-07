@@ -15,7 +15,7 @@ module StashEngine
 
       it 'turns a basic message into a manuscript' do
         content = "Journal Name: #{@journal.title}\n" \
-                  "Online ISSN: #{@journal.issn}\n" \
+                  "Online ISSN: #{@journal.single_issn}\n" \
                   "Article Status: accepted\n" \
                   "MS Reference Number: #{@ms_number}\n" \
                   "MS Title: #{@title}\n" \
@@ -50,7 +50,7 @@ module StashEngine
       end
 
       it 'provides an error when MS Number missing' do
-        content = "Online ISSN: #{@journal.issn}\n" \
+        content = "Online ISSN: #{@journal.single_issn}\n" \
                   "Article Status: accepted\n" \
                   "MS Title: #{@title}\n" \
                   'MS Authors: Lastname, Firstname; McOtherLastname, Somename'
@@ -62,7 +62,7 @@ module StashEngine
       end
 
       it 'provides an error when Title missing' do
-        content = "Online ISSN: #{@journal.issn}\n" \
+        content = "Online ISSN: #{@journal.single_issn}\n" \
                   "Article Status: accepted\n" \
                   "MS Reference Number: #{@ms_number}\n" \
                   'MS Authors: Lastname, Firstname; McOtherLastname, Somename'
@@ -74,7 +74,7 @@ module StashEngine
       end
 
       it 'provides an error when Author info missing' do
-        content = "Online ISSN: #{@journal.issn}\n" \
+        content = "Online ISSN: #{@journal.single_issn}\n" \
                   "Article Status: accepted\n" \
                   "MS Reference Number: #{@ms_number}\n" \
                   "MS Title: #{@title}\n"
@@ -86,7 +86,7 @@ module StashEngine
       end
 
       it 'provides an error when Article Status info missing' do
-        content = "Online ISSN: #{@journal.issn}\n" \
+        content = "Online ISSN: #{@journal.single_issn}\n" \
                   "MS Reference Number: #{@ms_number}\n" \
                   "MS Title: #{@title}\n" \
                   'MS Authors: Lastname, Firstname; McOtherLastname, Somename'
