@@ -17,18 +17,7 @@
 
   <ul class="c-header__nav-group">    
 
-    <li class="c-header__nav-item">
-      <button class="c-header_nav-button" aria-expanded="false" aria-controls="who-menu">Who we are</button>
-      <ul class="c-header__nav-submenu" id="who-menu" hidden>
-        <li><%= link_to 'Who we are', stash_url_helpers.who_we_are_path %>
-        <li><%= link_to 'Governance', "#{stash_url_helpers.our_governance_path}" %>
-        <li><%= link_to 'Advisors', "#{stash_url_helpers.our_advisors_path}" %>
-        <li><%= link_to 'Team', "#{stash_url_helpers.our_staff_path}" %>
-        <li><%= link_to 'Collaborations', stash_url_helpers.collaborations_path %>
-        <li><%= link_to 'Origins', stash_url_helpers.origins_path %>
-        <li><%= link_to 'Contact', stash_url_helpers.contact_path %>
-      </ul>
-    </li>
+    <li class="c-header__nav-item"><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
 
     <li class="c-header__nav-item">
       <button class="c-header_nav-button" aria-expanded="false" aria-controls="what-menu">What we do</button>

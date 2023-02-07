@@ -230,11 +230,8 @@ Rails.application.routes.draw do
     
     get 'close_page', to: 'pages#close_page'
     get 'faq', to: 'pages#faq'
-    get 'collaborations', to: 'pages#collaborations'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
-    get 'origins', to: 'pages#origins'
-    get 'our_governance', to: 'pages#our_governance'
     get 'our_mission', to: 'pages#our_mission'
     get 'interested', to: 'pages#interested'
     get 'contact_thanks', to: 'pages#contact_thanks'
@@ -242,8 +239,6 @@ Rails.application.routes.draw do
     get 'our_platform', to: 'pages#our_platform'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
-    get 'our_staff', to: 'pages#our_staff'
-    get 'our_advisors', to: 'pages#our_advisors'
     get 'process', to: 'pages#process'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
@@ -253,7 +248,7 @@ Rails.application.routes.draw do
     get 'terms', to: 'pages#terms'
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
-    get 'who_we_are', to: 'pages#who_we_are'
+    get 'about', to: 'pages#who_we_are'
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
     get '404', to: 'pages#app_404', as: 'app_404'
@@ -458,6 +453,9 @@ Rails.application.routes.draw do
   get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
   get 'our_membership', to: redirect('stash/join_us#our-membership')
   get 'our_community', to: redirect('stash/join_us#our-membership')
+  get 'our_governance', to: redirect('stash/about#our-board')
+  get 'our_staff', to: redirect('stash/about#our-staff')
+  get 'our_advisors', to: redirect('stash/about#our-advisors')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')

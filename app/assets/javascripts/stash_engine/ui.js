@@ -1657,4 +1657,34 @@ function joelsReady(){
     }
   });
 
+  var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
+  expandButtons.forEach(button => {
+    button.onclick = e => {
+      const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+      const baseURL = window.location.pathname + window.location.search
+      expandButtons.forEach(nb => {
+        history.pushState('', '', baseURL);
+        nb.setAttribute('aria-expanded', 'false');
+        nb.nextElementSibling.setAttribute('hidden', true);
+      });
+      if (closed) {
+        const newHash = '#' + e.currentTarget.nextElementSibling.id
+        history.pushState('', '', baseURL + newHash);
+        e.currentTarget.setAttribute('aria-expanded', 'true');
+        e.currentTarget.nextElementSibling.removeAttribute('hidden');
+        e.currentTarget.scrollIntoView()
+      }
+    }
+  });
+
+  if(window.location.hash) {
+    const hashed = document.getElementById(window.location.hash.substring(1))
+    console.log(hashed)
+    if (hashed.hasAttribute('hidden')) {
+      hashed.previousElementSibling.setAttribute('aria-expanded', 'true');
+      hashed.removeAttribute('hidden');
+      hashed.previousElementSibling.scrollIntoView()
+    }
+  }
+
 }// close joelsReady()
