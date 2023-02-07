@@ -2,7 +2,6 @@
 
 .c-header {
   @extend %pull-borders;
-  margin-bottom: $spacing-md;
   font-size: 1rem;
 
   @include bp(screen3) {

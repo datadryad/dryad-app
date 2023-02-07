@@ -13,7 +13,7 @@ module MarkdownHandler
     link_attributes: { rel: 'nofollow', target: '_blank' }.freeze
   }.freeze
   BODY_RENDERER = 'Redcarpet::Render::HTML.new(with_toc_data: true)'.freeze
-  TOC_RENDERER = 'Redcarpet::Render::HTML_TOC'.freeze
+  TOC_RENDERER = 'Redcarpet::Render::HTML_TOC.new(nesting_level: 2)'.freeze
 
   def self.erb
     @erb ||= ActionView::Template.registered_template_handler(:erb)
