@@ -21,7 +21,6 @@
 
   h1 {
     margin-bottom: 45px;
-    color: $design-orange-color;
   }
 
   p {
@@ -81,10 +80,6 @@
   padding-left: 35px;
   border-left: thin solid $design-orange-color;
   text-align: left;
-
-  h3 {
-    margin-top: 35px;
-  }
 }
 
 .t-login__or-box {
@@ -168,7 +163,6 @@
 }
 
 .o-heading__level2-login-with {
-  @extend %o-heading__level2;
   margin-bottom: 0;
   font-size: 1.6em;
   text-align: center;

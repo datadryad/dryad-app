@@ -18,6 +18,10 @@
   }
 }
 
+a {
+  @extend %o-link__primary;
+}
+
 .o-link__primary {
   @extend %o-link__primary;
 }

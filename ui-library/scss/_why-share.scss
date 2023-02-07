@@ -1,8 +1,8 @@
 // ##### Why Share section ##### //
 
 .o-heading__level2-why-share {
-  @extend %o-heading__level2;
-  font-size: 1.6em;
+  margin-top: $spacing-base;
+  margin-bottom: $spacing-sm;
 
   @include bp(screen3) {
     text-align: center;
@@ -11,9 +11,9 @@
 }
 
 .t-home__why-share-group {
-  padding-top: 20px;
+  padding-top: $spacing-sm;
   @media (max-width: 550px) {
-    margin-bottom: 40px;
+    margin-bottom: $spacing-md;
   }
 }
 
@@ -59,7 +59,7 @@
 
   @media (max-width: 550px) {
     flex: 1 0 100%;
-    padding: 20px 0;
+    padding: $spacing-sm 0;
     &:not(:last-child) {
       border-bottom: thin solid $design-orange-color;
     }
@@ -68,7 +68,7 @@
   @media (min-width: 550px) and (max-width: 1000px) {
     /* two column */
     flex: 1 0 50%;
-    padding: 20px 0 40px;
+    padding: $spacing-sm 0 $spacing-md;
 
     &:nth-child(-n+2) {
       border-bottom: thin solid $design-orange-color;
@@ -83,7 +83,7 @@
     /* four column */
     flex: 1 0 24%;
     height: auto;
-    margin-bottom: 40px;
+    margin-bottom: $spacing-md;
 
     &:not(:last-child) {
       border-right: thin solid $design-orange-color;
@@ -92,19 +92,14 @@
 }
 
 .c-why-share__text-group {
-  padding: 0 40px;
+  padding: 0 $spacing-md;
 
   div {
-    font-size: 1.1em;
-    line-height: 1.5em;
+    font-size: 1.1rem;
+    line-height: 150%;
 
     @include bp(screen3) {
-      font-size: 1.3em;
-      line-height: 1.5em;
+      font-size: 1.3rem;      
     }
-  }
-
-  a {
-    @extend %o-link__primary;
   }
 }
