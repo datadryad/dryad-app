@@ -1,11 +1,8 @@
-<h1>Our advisors</h1>
-
 <p>Our Scientific Advisory Committee guides our strategic direction
 and provides feedback and insight from the broad research
 community.</p>
 
-<a name="advisors"></a>
-
+<div class="about-bios">
 <div class="bio">
   <img src="/images/Ascandari_AbdulAziz.jpg" alt="AbdulAziz Ascandari" title="AbdulAziz Ascandari" />
   <p>
@@ -22,7 +19,6 @@ community.</p>
     in science communication.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/ColonRodriguez_Alexandra.jpg" alt="Alexandra Colón-Rodríguez" title="Alexandra Colón-Rodríguez" />
     <p>
@@ -39,7 +35,6 @@ community.</p>
     Medicine, the Society for Neuroscience, and UC Davis.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Copenhaver_Greg.jpg" alt="Greg Copenhaver" title="Greg Copenhaver" />
     <p>
@@ -66,7 +61,6 @@ community.</p>
     biotechnology company Chromatin Inc.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Fayanju_Lola.jpg" alt="Lola Fayanju" title="Lola Fayanju" />
     <p>
@@ -110,7 +104,6 @@ community.</p>
     Surgical Oncology at The University of Texas MD Anderson Cancer Center.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Gazda_Malgorzata.jpg" alt="Małgorzata Anna Gazda" title="Małgorzata Anna Gazda" />
     <p>
@@ -134,7 +127,6 @@ community.</p>
     at Department of Biology of the École Normale Supérieure (IBENS).
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Gutam_Sridhar.jpg" alt="Sridhar Gutam" title="Sridhar Gutam" />
     <p>
@@ -161,7 +153,6 @@ community.</p>
     <a href="https://www.iihr.res.in/sridhar-gutam">read more about his background</a>.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Kibet_Caleb.jpg" alt="Caleb Kibet" title="Caleb Kibet" />
     <p>
@@ -182,7 +173,6 @@ community.</p>
     bioinformatics community in Kenya.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Krause_Melanie.jpg" alt="Melanie Krause" title="Melanie Krause" />
     <p>
@@ -203,7 +193,6 @@ community.</p>
     findings and policy decisions.
     </p>
 </div>
-
 <div class="bio">
     <img src="/images/Marwick_Ben.jpg" alt="Ben Marwick" title="Ben Marwick" />
     <p>
@@ -218,7 +207,6 @@ community.</p>
 	<a href="http://faculty.washington.edu/bmarwick/">
     his interviews, writing, and more
     about his teaching and research
-  </a>.
-	
-    </p>
+  </a>.</p>
+</div>
 </div>

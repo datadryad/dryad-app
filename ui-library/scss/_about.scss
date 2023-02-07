@@ -1,16 +1,39 @@
-.about-page .bio {
-  display: flex;
-  margin-bottom: 15px;
+h3.expand-button {
+  border-bottom: thin solid $design-orange-color;
+  cursor: pointer;
 
-  img {
-    width: 150px;
-    min-width: 150px;
-    height: 150px;
-    margin-right: 15px;
+  &::after {
+    font-family: FontAwesome;
+    content: " \f0d7";
   }
 
-  p {
-    margin-top: 0;
+  &[aria-expanded=true]::after {
+    content: " \f0d8";
+  }
+}
+
+.about-bios {
+  padding-top: $spacing-sm;
+  border-top: thin solid $design-dark-blue-color;
+  columns: 2;
+
+  .bio {
+    margin-bottom: $spacing-md;
+    padding-right: $spacing-sm;
+    display: inline-block;
+
+    img {
+      width: 150px;
+      min-width: 150px;
+      height: 150px;
+      margin-right: 15px;
+      float: left;
+    }
+
+    p {
+      margin: 0;
+      font-size: .9em;
+    }
   }
 }
 
@@ -39,4 +62,73 @@
   tr:nth-child(even) {
     background-color: $design-super-extra-light-gray-color;
   }
+}
+
+
+dl.timeline {
+  position: relative;
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: $spacing-sm;
+    left: 40px;
+    z-index: -1;
+    width: 2px;
+    height: calc(100% - $spacing-sm);
+    background-color: $design-black-color;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-sm;
+  }
+  dt {
+    flex: 0 0 80px;
+    font-size: 1.5rem;
+    color: $design-white-color;
+    background-color: $design-dark-blue-color;    
+    border-radius: 50%;
+    width: 80px;
+    height: 70px; 
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center;
+  }
+  div:nth-child(even) dt {
+    background-color: $design-orange-color;
+  }
+  div:nth-child(3n+3) dt {
+    background-color: $design-green-color;  
+  } 
+  dd {
+    position: relative;
+    margin-left: $spacing-sm;
+    padding: $spacing-sm;
+    border-radius: $spacing-base;
+    border: thin solid $design-dark-blue-color;
+
+    &:before {
+      content: '';
+      display: block;
+      height: 2px;
+      position: absolute;
+      width: $spacing-sm;
+      top: 50%;
+      left: -$spacing-sm;
+      background-color: $design-dark-blue-color;
+    }
+  }
+  div:nth-child(even) dd {
+    border-color: $design-orange-color;  
+    &:before {
+      background-color: $design-orange-color;
+    }
+  }
+  div:nth-child(3n+3) dd {
+    border-color: $design-green-color;  
+    &:before {
+      background-color: $design-green-color;
+    }
+  } 
 }

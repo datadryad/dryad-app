@@ -3,7 +3,7 @@ strong {
 }
 
 blockquote.c-text_styles {
-  line-height: 135%;
+  line-height: 150%;
 }
 
 ul.c-text_styles {
@@ -12,3 +12,37 @@ ul.c-text_styles {
     padding: 0;
   }
 }
+
+#page-columns {
+  table {
+  border-collapse: collapse;
+  }
+
+  td, th {
+    text-align: left;
+    padding: 8px 4px !important;
+    border: thin solid #ccc;
+  }
+}
+
+blockquote {
+  margin: 2rem 0 2rem 2.2rem;
+
+  &:before {
+    font-family: FontAwesome;
+    content: '\f10d';
+    font-size: 2rem;
+    margin-left: -2.2rem;
+    position: absolute;
+    color: $design-orange-color;
+  }
+}
+
+figure {
+  margin: 0 0 2rem 2.2rem;
+
+  blockquote {
+    margin: 2rem 0 0;
+  }
+}
+  
