@@ -32,7 +32,7 @@ $design-slate-color: #2f4f4f;
 
 // ***** Link Colors ***** //
 
-$link-body-color: #337ab7;
+$link-body-color: #2e59a3;
 $link-body-hover-color: $design-orange-color;
 $link-body-visited-color: #883f88;
 
@@ -48,8 +48,8 @@ $screen-max: 1280px;
 
 // ***** Spacing ***** //
 
-$spacing-base: 5px;
-$spacing-sm: 10px;
-$spacing-md: 20px;
-$spacing-lg: 30px;
+$spacing-base: .5rem;
+$spacing-sm: 1rem;
+$spacing-md: 2rem;
+$spacing-lg: 3rem;
 $spacing-body: $spacing-sm;

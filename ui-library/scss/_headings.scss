@@ -1,29 +1,33 @@
 // ##### Headings Object ##### //
 
 %o-heading__level1 {
-  margin: 0 0 $spacing-md;
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-sm;
   color: $design-orange-color;
-  font-size: 2em;
+  font-size: 2rem;
+  line-height: 2.5rem;
   font-weight: normal;
 }
 
-.o-heading__level1 {
+h1, *[class^="o-heading__level1"] {
   @extend %o-heading__level1;
 }
 
 .o-heading__level1-home {
-  @extend %o-heading__level1;
+  margin-top: 0;
   text-align: center;
 }
 
 %o-heading__level2 {
-  margin: 12px 0 $spacing-md;
+  margin-top: calc($spacing-base * 3.75);
+  margin-bottom: $spacing-sm;
   color: $design-dark-blue-color;
-  font-size: 1.3em;
+  font-size: 1.5rem;
+  line-height: 2rem;
   font-weight: normal;
 }
 
-.o-heading__level2 {
+h2, *[class^="o-heading__level2"] {
   @extend %o-heading__level2;
 }
 
@@ -32,23 +36,20 @@
 }
 
 %o-heading__level3 {
-  margin: 0 0 $spacing-md;
-  color: $design-black-color;
-  font-size: 1.1em;
+  margin-top: calc($spacing-base * 3.5);
+  margin-bottom: calc($spacing-base * 1.5);
+  color: $design-orange-color;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
   font-weight: bold;
 }
 
-.o-heading__level3 {
+h3, *[class^="o-heading__level3"]  {
   @extend %o-heading__level3;
 }
 
-.o-heading__level3-file-title {
-  @extend %o-heading__level3;
-  margin: 0;
-}
-
+.o-heading__level3-file-title,
 .o-heading__level3-related-works {
-  @extend %o-heading__level3;
   margin: 0;
 }
 
@@ -61,4 +62,28 @@
   color: $design-white-color;
   font-size: 1.3em;
   font-weight: normal;
+}
+
+*[class^="o-heading__level"]:first-child {
+  margin-top: 0;
+}
+
+h4 {
+  margin-top: calc($spacing-base * 3);
+  margin-bottom: calc($spacing-base * 1.5);
+  color: $design-dark-blue-color;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+}
+
+h5, h6 {
+  margin-top: $spacing-sm;
+  margin-bottom: $spacing-base;
+  color: $design-orange-color;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+h6 {
+  font-style: italic;
 }

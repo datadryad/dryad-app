@@ -2,9 +2,9 @@
 
 .c-uploadwidgets {
   display: grid;
-  gap: $spacing-md;
+  gap: $spacing-sm;
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  margin-bottom: $spacing-lg;
+  margin-bottom: $spacing-md;
 }
 
 .c-uploadwidget--data,
@@ -12,8 +12,8 @@
 .c-uploadwidget--supplemental {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
-  gap: $spacing-md;
-  padding: $spacing-md;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
   border: thin solid $design-light-gray-color;
 
   header {
@@ -22,7 +22,7 @@
     img {
       display: block;
       height: 17px;
-      margin-bottom: $spacing-md;
+      margin-bottom: $spacing-sm;
     }
 
     h2 {
@@ -43,7 +43,7 @@
 
   button {
     grid-column: 2;
-    padding: $spacing-sm;
+    padding: $spacing-base;
     border: none;
   }
 }

@@ -24,6 +24,11 @@ html.no-multiplebgs .o-quote {
 	line-height: 1.3em;
 }
 
+.o-quote__quote:link, .o-quote__quote:visited,
+.o-quote__quote a:link, .o-quote__quote a:visited {
+  color: $design-white-color;
+}
+
 .o-quote__author {
 	width: 380px;
 	color: $design-white-color;
