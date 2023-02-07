@@ -5017,6 +5017,41 @@ html.no-details .o-showhide__summary {
   }
 }
 
+#page-columns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+#page-content {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 1 90ch;
+          flex: 0 1 90ch;
+  padding-right: 5ch;
+}
+
+#page-nav {
+  padding-top: 2rem;
+}
+#page-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+#page-nav ul li {
+  margin: 0.5rem 0;
+}
+#page-nav > ul {
+  position: sticky;
+  top: 2rem;
+}
 .c-datasets-heading {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5319,7 +5354,6 @@ html.no-details .o-showhide__summary {
 }
 
 .c-header {
-  margin-bottom: 2rem;
   font-size: 1rem;
 }
 @media (min-width: 870px) {

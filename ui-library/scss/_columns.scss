@@ -33,3 +33,30 @@
   }
 
 }
+
+#page-columns {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+#page-content {
+  flex: 0 1 90ch;
+  padding-right: 5ch;
+}
+
+#page-nav {
+  padding-top: $spacing-md;
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    li {
+      margin: $spacing-base 0;
+    }
+  }
+  & > ul {
+    position: sticky;
+    top: $spacing-md;
+  }
+}
