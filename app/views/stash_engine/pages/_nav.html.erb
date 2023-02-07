@@ -81,7 +81,7 @@
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true), class: 'c-header__nav-item' %>
+            <li><%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
           </ul>
         <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
@@ -91,7 +91,7 @@
             <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
           </ul>
         <% else %>
-        <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
+        <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out border-left' %>
         <% end %>
       </li>
     <% end %>
