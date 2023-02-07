@@ -234,10 +234,8 @@ Rails.application.routes.draw do
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'origins', to: 'pages#origins'
-    get 'our_community', to: 'pages#our_membership'
     get 'our_governance', to: 'pages#our_governance'
     get 'our_mission', to: 'pages#our_mission'
-    get 'our_membership', to: 'pages#our_membership'
     get 'interested', to: 'pages#interested'
     get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
@@ -457,7 +455,9 @@ Rails.application.routes.draw do
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('stash/faq')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
-  get '/pages/membershipOverview', to: redirect('stash/our_membership')
+  get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
+  get 'our_membership', to: redirect('stash/join_us#our-membership')
+  get 'our_community', to: redirect('stash/join_us#our-membership')
   get '/pages/organization', to: redirect('stash/our_mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')

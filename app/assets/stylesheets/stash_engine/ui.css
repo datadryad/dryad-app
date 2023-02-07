@@ -5052,6 +5052,19 @@ html.no-details .o-showhide__summary {
   position: sticky;
   top: 2rem;
 }
+
+.member-list {
+  -webkit-columns: 3;
+     -moz-columns: 3;
+          columns: 3;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.member-list li {
+  display: inline-block;
+}
+
 .c-datasets-heading {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -6810,20 +6823,6 @@ html.no-details .o-showhide__summary {
   .c-table-heading__button {
     display: none;
   }
-}
-
-table.c-table_institutions {
-  border: none;
-}
-
-table.c-table_institutions td {
-  padding-right: 2em;
-  vertical-align: top;
-}
-
-table.c-table_institutions ul li {
-  list-style-type: none;
-  line-height: 1.7ex;
 }
 
 @media (min-width: 760px) {
