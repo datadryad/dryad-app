@@ -96,7 +96,7 @@ module StashApi
 
     def parse_internal_data
       if @hash['publicationName'].present? && @hash['publicationISSN'].blank?
-        @hash['publicationISSN'] = StashEngine::Journal.find_by_title(@hash['publicationName'])&.issn
+        @hash['publicationISSN'] = StashEngine::Journal.find_by_title(@hash['publicationName'])&.single_issn
       end
 
       INTERNAL_DATA_FIELDS.each do |int_field|

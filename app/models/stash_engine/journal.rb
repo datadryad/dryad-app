@@ -21,6 +21,15 @@ module StashEngine
       o
     end
 
+    # Return the single ISSN that is representative of this journal, even if
+    # we are storing multiple ISSNs
+    def single_issn
+      return issn.first if issn.is_a?(Array)
+      return JSON.parse(issn)&.first if issn.start_with?('[')
+
+      issn
+    end
+
     def self.find_by_title(title)
       return unless title.present?
 
@@ -34,6 +43,12 @@ module StashEngine
       journal
     end
 
+    def self.find_by_issn(issn)
+      return nil if issn.blank? || issn.size < 9
+
+      StashEngine::Journal.where("issn like '%#{issn}%'")&.first
+    end
+
     # Replace an uncontrolled journal name (typically containing '*')
     # with a controlled journal reference, using an id
     def self.replace_uncontrolled_journal(old_name:, new_id:)
@@ -42,7 +57,7 @@ module StashEngine
       idents = data.map(&:identifier_id)
       idents.each do |ident|
         puts "  converting journal for #{ident}"
-        update_journal_for_identifier(new_title: j.title, new_issn: j.issn, identifier_id: ident)
+        update_journal_for_identifier(new_title: j.title, new_issn: j.single_issn, identifier_id: ident)
       end
     end
 
