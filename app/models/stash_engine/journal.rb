@@ -21,9 +21,10 @@ module StashEngine
       o
     end
 
-    # Return the single ISSN that is representative of this journal, even if
-    # we are storing multiple ISSNs
+    # Return the single ISSN that is representative of this journal,
+    # even if the journal contains multiple ISSNs
     def single_issn
+      return nil unless issn.present?
       return issn.first if issn.is_a?(Array)
       return JSON.parse(issn)&.first if issn.start_with?('[')
 

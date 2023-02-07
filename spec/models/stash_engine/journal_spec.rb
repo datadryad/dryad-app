@@ -5,6 +5,7 @@ module StashEngine
 
     before(:each) do
       @journal = create(:journal)
+      @journal2 = create(:journal)
     end
 
     describe '#find_by_title' do
@@ -32,6 +33,53 @@ module StashEngine
         expect(j).not_to eq(@journal)
       end
 
+    end
+
+    describe '#issn' do
+      before(:each) do
+        @issn1 = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @issn2 = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @issn3 = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @issn_distractor = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+      end
+
+      it 'finds by issn' do
+        @journal.update(issn: @issn1)
+        j = StashEngine::Journal.find_by_issn(@issn1)
+        expect(j).to eq(@journal)
+
+        j = StashEngine::Journal.find_by_issn(nil)
+        expect(j).to be(nil)
+
+        j = StashEngine::Journal.find_by_issn('notanumber')
+        expect(j).to be(nil)
+
+        j = StashEngine::Journal.find_by_issn(@issn_distractor)
+        expect(j).to be(nil)
+      end
+
+      it 'finds by issn when there are multiples' do
+        @journal.update(issn: [@issn1, @issn2, @issn3])
+        j = StashEngine::Journal.find_by_issn(@issn1)
+        expect(j).to eq(@journal)
+        j = StashEngine::Journal.find_by_issn(@issn2)
+        expect(j).to eq(@journal)
+        j = StashEngine::Journal.find_by_issn(@issn3)
+        expect(j).to eq(@journal)
+        j = StashEngine::Journal.find_by_issn(@issn_distractor)
+        expect(j).to be(nil)
+      end
+
+      it 'gets single_issn' do
+        @journal.update(issn: @issn1)
+        expect(@journal.single_issn).to eq(@issn1)
+
+        @journal.update(issn: [@issn2, @issn3])
+        expect(@journal.single_issn).to eq(@issn2)
+
+        @journal.update(issn: nil)
+        expect(@journal.single_issn).to be(nil)
+      end
     end
 
     describe '#will_pay?' do
