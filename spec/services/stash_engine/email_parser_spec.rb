@@ -48,8 +48,8 @@ module StashEngine
         journal = create(:journal)
         ms_number = "ms-#{Faker::Number.number(digits: 4)}"
         create(:internal_data, identifier_id: ident.id, data_type: 'manuscriptNumber', value: ms_number)
-        create(:internal_data, identifier_id: ident.id, data_type: 'publicationISSN', value: journal.issn)
-        content = "Online ISSN: #{journal.issn}\nMS Reference Number: #{ms_number}"
+        create(:internal_data, identifier_id: ident.id, data_type: 'publicationISSN', value: journal.single_issn)
+        content = "Online ISSN: #{journal.single_issn}\nMS Reference Number: #{ms_number}"
         parser = EmailParser.new(content: content)
         expect(parser.identifier).to eq(ident)
       end
@@ -61,13 +61,13 @@ module StashEngine
       end
 
       it 'finds journal from print ISSN' do
-        content = "Print ISSN: #{@journal.issn}"
+        content = "Print ISSN: #{@journal.single_issn}"
         parser = EmailParser.new(content: content)
         expect(parser.journal).to eq(@journal)
       end
 
       it 'finds journal from online ISSN' do
-        content = "Print ISSN: 1234-1234\nOnline ISSN: #{@journal.issn}"
+        content = "Print ISSN: 1234-1234\nOnline ISSN: #{@journal.single_issn}"
         parser = EmailParser.new(content: content)
         expect(parser.journal).to eq(@journal)
       end

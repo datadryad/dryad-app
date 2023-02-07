@@ -550,7 +550,7 @@ namespace :identifiers do
         end
         journal_item_count = 0
         sc_report.each do |item|
-          if item['JournalISSN'] == j.issn
+          if item['JournalISSN'] == j.single_issn
             journal_item_count += 1
             sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
           end
@@ -961,14 +961,14 @@ namespace :journals do
       end
 
       sfj = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_id)
-      if sfj['ISSN__c'] != j.issn
-        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.issn}"
-        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.issn }) unless dry_run
+      if sfj['ISSN__c'] != j.single_issn
+        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.single_issn}"
+        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.single_issn }) unless dry_run
       end
 
       sf_parent_id = sfj['ParentId']
       sf_parent = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_parent_id)
-      puts "SPONSOR MISMATCH for #{j.issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
+      puts "SPONSOR MISMATCH for #{j.single_issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
     end
     nil
   end

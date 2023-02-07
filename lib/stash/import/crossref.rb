@@ -313,7 +313,7 @@ module Stash
         # it is likely an alternative ISSN for a journal where we have a different primary ISSN
         # (most journals have separate ISSNs for print, online, linking)
         # In that case, we will save the journal name, and look up the correct ISSN from the name.
-        return unless StashEngine::Journal.where(issn: @sm['ISSN'].first).present?
+        return unless StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present?
 
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationISSN')
@@ -333,7 +333,7 @@ module Stash
         # If the publication name matches an existing journal, populate/update the ISSN
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationISSN')
-        datum.update(value: journal.issn)
+        datum.update(value: journal.single_issn)
       end
 
       def populate_title
