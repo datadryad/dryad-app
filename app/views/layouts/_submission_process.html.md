@@ -1,4 +1,4 @@
-<h1>Submission and publication process</h1>
+# Submission and publication process</h1>
 
 <p>
     Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to
@@ -10,7 +10,7 @@
 
 <p>Ready to get started? <a href="/stash/">Log in</a> and go to "My datasets" to begin your data submission now!</p>
 
-<h2 id="login">Login</h2>
+## Login
 
 <p>
     Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the
@@ -31,7 +31,7 @@
   submission now!
 </p>
 
-<h2 id="uploading">Uploading your data</h2>
+## Uploading your data
 
 <h3>Describe your dataset</h3>
 <p>
@@ -147,13 +147,13 @@ Foundation</a>.
 
 <p>If you have questions or require assistance, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 
-<h2 id="curation">Dataset curation</h2>
+## Dataset curation
 <p>
     We will review your data ensuring it meets our <a href="/stash/faq#curation">curation requirements</a>. If we have
     questions we’ll get in touch with you. For more information check out <a href="/stash/faq">our FAQ</a>.
 </p>
 
-<h2 id="publication">Dataset publication</h2>
+## Dataset publication
 
 <p>
   Once your submission has been reviewed and approved by our team of curators, you will receive a notification of 
