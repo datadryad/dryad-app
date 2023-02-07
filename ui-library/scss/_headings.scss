@@ -22,7 +22,7 @@ h1, *[class^="o-heading__level1"] {
   margin-top: calc($spacing-base * 3.75);
   margin-bottom: $spacing-sm;
   color: $design-dark-blue-color;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   line-height: 2rem;
   font-weight: normal;
 }
@@ -39,7 +39,7 @@ h2, *[class^="o-heading__level2"] {
   margin-top: calc($spacing-base * 3.5);
   margin-bottom: calc($spacing-base * 1.5);
   color: $design-orange-color;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   line-height: 1.75rem;
   font-weight: bold;
 }
@@ -72,7 +72,7 @@ h4 {
   margin-top: calc($spacing-base * 3);
   margin-bottom: calc($spacing-base * 1.5);
   color: $design-dark-blue-color;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.5rem;
 }
 
@@ -80,7 +80,7 @@ h5, h6 {
   margin-top: $spacing-sm;
   margin-bottom: $spacing-base;
   color: $design-orange-color;
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.5rem;
 }
 
