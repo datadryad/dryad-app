@@ -28,8 +28,8 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'has admin link' do
       visit root_path
-      section = first('summary').text
-      expect(section).to eq('Admin')
+      section = find('.c-header_nav-button', text: 'Datasets').text
+      expect(section).to eq('Datasets')
     end
 
     it "shows a user's version history for a dataset" do
@@ -39,8 +39,9 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'does not allow editing a dataset from the curation page', js: true do
       visit root_path
-      first('summary').click
-      click_link('Datasets')
+      find('.c-header_nav-button', text: 'Datasets').click
+      page.has_link?('.c-header__nav-submenu')
+      click_link('Admin dashboard')
       expect(page).to have_text('Admin dashboard')
       expect(page).not_to have_css('button[title="Edit Dataset"]')
     end
@@ -108,8 +109,9 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'allows adding notes to the curation activity log', js: true do
       visit root_path
-      first('summary').click
-      click_link('Datasets')
+      find('.c-header_nav-button', text: 'Datasets').click
+      page.has_link?('Admin dashboard')
+      click_link('Admin dashboard')
 
       expect(page).to have_text('Admin dashboard')
 
@@ -130,7 +132,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        find('.o-sites__summary', text: 'Admin').click
+        find('.c-header_nav-button', text: 'Datasets').click
+        page.has_link?('Dataset curation')
         expect(page).to have_link('Dataset curation')
         expect(page).to have_link('Publication updater')
         expect(page).to have_link('Status dashboard')
@@ -342,21 +345,19 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'shows limited menus to an administrative curator' do
-        menu = first('summary.o-showhide__summary')
-        menu.click
-        within menu.find(:xpath, '..') do
-          expect(page).to have_content('Dataset curation')
-          expect(page).to have_content('Curation stats')
-          expect(page).to have_content('Journals')
-          expect(page).not_to have_content('User management')
-          expect(page).not_to have_content('Submission queue')
-        end
+        find('.c-header_nav-button', text: 'Datasets').click
+        page.has_link?('Dataset curation')
+        expect(page).to have_link('Dataset curation')
+        expect(page).to have_link('Curation stats')
+        expect(page).to have_link('Journals')
+        expect(page).not_to have_link('User management')
+        expect(page).not_to have_link('Submission queue')
       end
 
       # TODO: is there a way to make this test reliable on github?
       xit 'Limits options in the curation page' do
-        menu = first('summary.o-showhide__summary')
-        menu.click
+        find('.c-header_nav-button', text: 'Datasets').click
+        page.has_link?('Dataset curation')
         click_on('Dataset curation')
         # select 'Status', from: 'curation_status'
         # find('#curation_status').set("Status\n") # trying to get headless to work reliably
@@ -369,7 +370,7 @@ RSpec.feature 'Admin', type: :feature do
       end
     end
 
-    context :journal_admin do
+    context :journal_admin, js: true do
       before(:each) do
         @journal = create(:journal)
         @journal_admin = create(:user, tenant_id: 'mock_tenant')
@@ -381,6 +382,7 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'has admin link' do
         visit root_path
+        find('.c-header_nav-button', text: 'Datasets').click
         expect(page).to have_link('Admin')
       end
 
@@ -393,6 +395,8 @@ RSpec.feature 'Admin', type: :feature do
         StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
         ident1.reload
 
+        find('.c-header_nav-button', text: 'Datasets').click
+        page.has_link?('Admin')
         click_link('Admin')
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(res1.title)
@@ -400,7 +404,7 @@ RSpec.feature 'Admin', type: :feature do
       end
     end
 
-    context :tenant_curator do
+    context :tenant_curator, js: true do
 
       before(:each) do
         mock_salesforce!
@@ -410,8 +414,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'has admin link' do
         visit root_path
-        section = first('summary').text
-        expect(section).to eq('Admin')
+        section = find('.c-header_nav-button', text: 'Datasets').text
+        expect(section).to eq('Datasets')
       end
     end
 
