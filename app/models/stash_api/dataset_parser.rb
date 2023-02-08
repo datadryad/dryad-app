@@ -95,10 +95,20 @@ module StashApi
     end
 
     def parse_internal_data
-      if @hash['publicationName'].present? && @hash['publicationISSN'].blank?
-        @hash['publicationISSN'] = StashEngine::Journal.find_by_title(@hash['publicationName'])&.single_issn
+      # Ensure we have the standardized journal title and ISSN
+      journal = nil
+      if @hash['publicationISSN'].present?
+        journal = StashEngine::Journal.find_by_issn(@hash['publicationISSN'])
+      elsif @hash['publicationName'].present?
+        journal = StashEngine::Journal.find_by_title(@hash['publicationName'])
       end
 
+      if journal.present?
+        @hash['publicationISSN'] = journal.single_issn
+        @hash['publicationName'] = journal.title
+      end
+
+      # Store all internal fields
       INTERNAL_DATA_FIELDS.each do |int_field|
         StashEngine::InternalDatum.create(data_type: int_field, stash_identifier: @resource.identifier, value: @hash[int_field]) if @hash[int_field]
       end

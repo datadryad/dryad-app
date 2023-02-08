@@ -142,6 +142,21 @@ module StashApi
         expect(output[:userId]).to eq(test_user.id)
       end
 
+      it 'creates a new dataset with a secondary ISSN representing the journal' do
+        issn_target = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        issn_secondary = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        journal = create(:journal, issn: [issn_target, issn_secondary])
+
+        @meta.add_field(field_name: 'publicationISSN', value: issn_secondary)
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        puts(output)
+        ident = StashEngine::Identifier.find(output[:id])
+        expect(ident.publication_issn).to eq(issn_target)
+        expect(ident.publication_name).to eq(journal.title)
+      end
+
       it 'creates a new basic dataset with related software' do
         @meta.add_related_work(work_type: 'software')
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
@@ -882,16 +897,22 @@ module StashApi
 
         it 'allows publicationISSN to be updated, to claim a dataset for a journal' do
           expect(@identifier.publication_issn).to eq(nil)
-          new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
 
-          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: new_issn }].to_json
+          # use multiple ISSNs to test that the patch process sets the journal's primary ISSN (issn_target)
+          # even when it is presented with an alternate (issn_test)
+          issn_target = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          issn_test = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          journal = create(:journal, issn: [issn_target, issn_test])
+
+          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: issn_test }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
                                   'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
                                 )
           expect(response_code).to eq(200)
-          expect(@identifier.publication_issn).to eq(new_issn)
+          expect(@identifier.publication_issn).to eq(issn_target)
+          expect(@identifier.publication_name).to eq(journal.title)
         end
 
         it 'allows publicationISSN to be removed with a nil value' do
