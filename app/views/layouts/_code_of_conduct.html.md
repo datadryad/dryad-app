@@ -1,42 +1,16 @@
-<h1 class="o-heading__level1">Code of Conduct</h1>
+# Code of Conduct
 
 <em>Last modified: 2020-07-13</em>
 
-<p>
-  We value the participation of each member of the Dryad community. Accordingly, all community members are expected to
-  show respect and courtesy to other community members in Dryad spaces.
-</p>
+We value the participation of each member of the Dryad community. Accordingly, all community members are expected to show respect and courtesy to other community members in Dryad spaces.
 
-<p>
-  Every member of our community has the right to have their identity respected. The Dryad community is dedicated to 
-  providing a positive experience for everyone, regardless of age, gender identity and expression, sexual 
-  orientation, disability, physical appearance, body size, ethnicity, nationality, race, or religion (or lack 
-  thereof), education, or socio-economic status.
-</p>
+Every member of our community has the right to have their identity respected. The Dryad community is dedicated to providing a positive experience for everyone, regardless of age, gender identity and expression, sexual orientation, disability, physical appearance, body size, ethnicity, nationality, race, or religion (or lack thereof), education, or socio-economic status.
 
+To make clear what is expected, all staff, attendees, speakers, exhibitors, organizers, participants and volunteers in any Dryad virtual or in-person space are required to conform to the following Code of Conduct. The Code of Conduct Working Group will enforce this code in alignment with our reporting guidelines and procedures
 
+We enjoy partnering with other groups and know that our projects are all stronger when we work together. Therefore, this is not an exhaustive list of things that we can’t do. Rather, please take these guidelines in the spirit in which they’re intended &#8211; a guide to make it easier to enrich all of us and the communities in which we participate.
 
-<p>
-  To make clear what is expected, all staff, attendees, speakers, exhibitors, organizers, participants and 
-  volunteers in any Dryad virtual or in-person space are required to conform to the following Code of Conduct. The 
-  Code of Conduct Working Group will enforce this code in alignment with our reporting guidelines and procedures
-</p>
-
-<p>
-  We enjoy partnering with other groups and know that our projects are all stronger when we work together. 
-  Therefore, this is not an exhaustive list of things that we can’t do. Rather, please take these guidelines in the 
-  spirit in which they’re intended &#8211; a guide to make it easier to enrich all of us and the communities in which 
-  we participate.
-</p>
-
-<p>
-  This Code of Conduct applies to all spaces managed by Dryad, which include Slack, Github, events, meetings, and 
-  other forums created by Dryad that are used for communication. This Code of Conduct also applies in public spaces 
-  when an individual is representing the organization or its community. Examples of representing the organization or 
-  community include using an official project e-mail address, posting via an official social media account, or acting 
-  as an appointed representative at an online or offline event. In addition, violations of this code outside these 
-  spaces may affect a person&#8217;s ability to participate within them.
-</p>
+This Code of Conduct applies to all spaces managed by Dryad, which include Slack, Github, events, meetings, and other forums created by Dryad that are used for communication. This Code of Conduct also applies in public spaces when an individual is representing the organization or its community. Examples of representing the organization or community include using an official project e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event. In addition, violations of this code outside these spaces may affect a person&#8217;s ability to participate within them.
 
 <ul>
   <li>
@@ -87,52 +61,31 @@
   </li>
 </ul>
 
-<p>Thank you for helping make this a welcoming, friendly community for everyone.</p>
+Thank you for helping make this a welcoming, friendly community for everyone.
 
-<h2 class="o-heading__level2">Dryad Code of Conduct &#8211; Reporting Guide</h2>
+## Dryad Code of Conduct &#8211; Reporting Guide
 
-<p>
-  Reports of harassment/discrimination will be promptly and thoroughly investigated by the people responsible for the 
-  safety of the space, event or activity. For online spaces, this is the Code of Conduct Working Group. For in-person 
-  events, there will be clearly identified Code of Conduct incident responders. Appropriate measures will be taken to 
-  address the situation.
-</p>
+Reports of harassment/discrimination will be promptly and thoroughly investigated by the people responsible for the safety of the space, event or activity. For online spaces, this is the Code of Conduct Working Group. For in-person events, there will be clearly identified Code of Conduct incident responders. Appropriate measures will be taken to address the situation.
 
-<p>
-  Anyone asked to stop unacceptable behavior is expected to comply immediately. Violation of these guidelines can 
-  result in you being asked to leave an event or online space, either temporarily or for the duration of the event, 
-  or being banned from participation in spaces, or future events and activities in perpetuity.
-</p>
+Anyone asked to stop unacceptable behavior is expected to comply immediately. Violation of these guidelines can result in you being asked to leave an event or online space, either temporarily or for the duration of the event, or being banned from participation in spaces, or future events and activities in perpetuity.
 
-<p>
-  If you believe someone is violating the Code of Conduct, we ask that you report it by emailing the Code of Conduct 
-  Working Group at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@tcudnoc</a>.
-</p>
+If you believe someone is violating the Code of Conduct, we ask that you report it by emailing the Code of Conduct Working Group at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@tcudnoc</a>.
 
-<h2 class="o-heading__level2">Dryad Code of Conduct Working Group</h2>
+## Dryad Code of Conduct Working Group
 
-<p><em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em></p>
+<em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em>
 
 <ul>
   <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></p></li>
   <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></p></li>
 </ul>
 
-<p>
-  <strong>All reports will be kept confidential.</strong> In some cases we may determine that a public statement will 
-  need to be made. If that&#8217;s the case, the identities of all victims and reporters will remain confidential 
-  unless those individuals instruct us otherwise.
-</p>
+<strong>All reports will be kept confidential.</strong> In some cases we may determine that a public statement will need to be made. If that&#8217;s the case, the identities of all victims and reporters will remain confidential unless those individuals instruct us otherwise.
 
 
-<p>
-  <strong>If you believe anyone is in physical danger, please notify appropriate responders first.</strong> If you 
-  are unsure what types of responders are appropriate, please include this in your report and we will attempt to 
-  notify them.
-</p>
+<strong>If you believe anyone is in physical danger, please notify appropriate responders first.</strong> If you are unsure what types of responders are appropriate, please include this in your report and we will attempt to notify them.
 
-<p>In your report please include:</p>
-
+In your report please include:
 <ul>
   <li>
     Your contact information (so we can get in touch with you if we need to follow up)</li><li>Names (real, 
@@ -144,15 +97,11 @@
   </li>
 </ul>
 
-<h2 class="o-heading__level2">What happens after you file a report?</h2>
+## What happens after you file a report?
 
-<p>
-  You will receive an email from the Dryad Code of Conduct working group acknowledging receipt. We promise to 
-  acknowledge receipt within 24 hours (and will aim for much quicker than that).
-</p>
+You will receive an email from the Dryad Code of Conduct working group acknowledging receipt. We promise to acknowledge receipt within 24 hours (and will aim for much quicker than that).
 
-<p>The working group will immediately review the incident and  work to determine:</p>
-
+The working group will immediately review the incident and  work to determine:
 <ul>
   <li>What happened.</li>
   <li>Whether this event constitutes a code of conduct violation.</li>
@@ -160,17 +109,9 @@
   <li>Whether this is an ongoing situation, or if there is a threat to anyone&#8217;s physical safety.</li>
 </ul>
 
-<p>
-  If this is determined to be an ongoing incident or a threat to physical safety, the working group’s immediate 
-  priority will be to protect everyone involved. This means we may delay an &#8220;official&#8221; response until we 
-  believe that the situation has ended and that everyone is physically safe.
-</p>
+If this is determined to be an ongoing incident or a threat to physical safety, the working group’s immediate priority will be to protect everyone involved. This means we may delay an &#8220;official&#8221; response until we believe that the situation has ended and that everyone is physically safe.
 
-<p>
-  Once the working group has a complete account of the events they will make a decision as to how to respond. 
-  Responses may include:
-</p>
-
+Once the working group has a complete account of the events they will make a decision as to how to respond. Responses may include:
 <ul>
   <li>Taking no further action (if we determine no violation occurred).</li>
   <li>
@@ -188,64 +129,29 @@
   </li>
 </ul>
 
-<p>
-  We&#8217;ll respond within one week to the person who filed the report with either a resolution or an explanation 
-  of why the situation is not yet resolved.
-</p>
+We&#8217;ll respond within one week to the person who filed the report with either a resolution or an explanation of why the situation is not yet resolved.
 
-<p>
-  Once we&#8217;ve determined our final action, we&#8217;ll contact the original reporter to let them know what 
-  action (if any) we&#8217;ll be taking. We&#8217;ll take into account feedback from the reporter on the 
-  appropriateness of our response, but we don&#8217;t guarantee we&#8217;ll act on it.
-</p>
+Once we&#8217;ve determined our final action, we&#8217;ll contact the original reporter to let them know what action (if any) we&#8217;ll be taking. We&#8217;ll take into account feedback from the reporter on the appropriateness of our response, but we don&#8217;t guarantee we&#8217;ll act on it.
 
-<p>
-  Finally, the working group will make a report on the situation to the Dryad leadership. The leadership may choose 
-  to make a public statement about the incident.
-</p>
+Finally, the working group will make a report on the situation to the Dryad leadership. The leadership may choose to make a public statement about the incident.
 
-<p>
-  Dryad staff are held accountable, in addition to these guidelines, to Dryad’s staff policies. For contractors or 
-  vendors, violation of these guidelines may affect continuation or renewal of contract.
-</p>
+Dryad staff are held accountable, in addition to these guidelines, to Dryad’s staff policies. For contractors or vendors, violation of these guidelines may affect continuation or renewal of contract.
 
-<h2 class="o-heading__level2">
-  What if your report concerns a possible violation by a working group member?
-</h2>
+## What if your report concerns a possible violation by a working group member?
 
-<p>
-  If your report concerns a current member of the Code of Conduct working group, you may not feel comfortable sending 
-  your report to the committee, as all members will see the report.
-</p>
+If your report concerns a current member of the Code of Conduct working group, you may not feel comfortable sending your report to the committee, as all members will see the report.
 
-<p>
-  In that case, you can make a report directly to any of the individuals on the Code of Conduct working group. The 
-  individuals will follow the usual enforcement process with the other members, but will exclude the member(s) that 
-  the report concerns from any discussion or decision making.
-</p>
+In that case, you can make a report directly to any of the individuals on the Code of Conduct working group. The individuals will follow the usual enforcement process with the other members, but will exclude the member(s) that the report concerns from any discussion or decision making.
 
-<h2 class="o-heading__level2">Conflicts of Interest</h2>
+## Conflicts of Interest
 
-<p>
-  In the event of any conflict of interest a committee member must immediately notify the other members, and recuse 
-  themselves if necessary. If a report concerns a possible violation by a current committee member, this member 
-  should be excluded from the response process. For these cases, anyone can make a report directly to any of the 
-  committee chairs, as documented in the reporting guidelines.
-</p>
+In the event of any conflict of interest a committee member must immediately notify the other members, and recuse themselves if necessary. If a report concerns a possible violation by a current committee member, this member should be excluded from the response process. For these cases, anyone can make a report directly to any of the committee chairs, as documented in the reporting guidelines.
 
-<h2 class="o-heading__level2">Reconsideration</h2>
+## Reconsideration
 
-<p>
-  Any of the parties directly involved or affected can request reconsideration of the committee’s decision. To make 
-  such a request, contact the Dryad Board with your request and motivation and the Dryad Board will review the case.
-</p>
+Any of the parties directly involved or affected can request reconsideration of the committee’s decision. To make such a request, contact the Dryad Board with your request and motivation and the Dryad Board will review the case.
 
-<h2 class="o-heading__level2">Acknowledgement and License</h2>
+## Acknowledgement and License
 
-<p>
-  This Code of Conduct is based on the <a href="https://www.djangoproject.com/conduct/">Django CoC</a> and <a 
-  href="https://www.mozilla.org/en-US/about/governance/policies/participation/">Mozilla Community Participation 
-  Guidelines</a> and developed in collaboration with California Digital<em> </em>Library
-  <a href="https://uc3.cdlib.org/who/code-of-conduct/">UC3&#8217;s Code of Conduct</a>. This document is licensed 
-  CC-BY in accordance with these other Codes of Conduct&#8217;s licenses.
-</p>
+This Code of Conduct is based on the <a href="https://www.djangoproject.com/conduct/">Django CoC</a> and <a
+href="https://www.mozilla.org/en-US/about/governance/policies/participation/">Mozilla Community Participation Guidelines</a> and developed in collaboration with California Digital<em> </em>Library <a href="https://uc3.cdlib.org/who/code-of-conduct/">UC3&#8217;s Code of Conduct</a>. This document is licensed CC-BY in accordance with these other Codes of Conduct&#8217;s licenses.

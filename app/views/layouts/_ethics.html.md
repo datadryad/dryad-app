@@ -7,9 +7,9 @@
 </p>
 
 <blockquote>
-  Puebla, Iratxe, Lowenberg, Daniella, & FORCE11 Research Data Publishing Ethics WG. (2021).
+  <p>Puebla, Iratxe, Lowenberg, Daniella, & FORCE11 Research Data Publishing Ethics WG. (2021).
   Joint FORCE11 & COPE Research Data Publishing Ethics Working Group Recommendations.
-  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank">https://doi.org/10.5281/zenodo.5391293</a>
+  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank">https://doi.org/10.5281/zenodo.5391293</a></p>
 </blockquote>
 
 <p>
