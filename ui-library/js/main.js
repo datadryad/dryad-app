@@ -272,15 +272,15 @@ function joelsReady(){
       checkButtons();
     });
 
-    var scrollDuration = 200;
+    var scrollDuration = 150;
     // scroll to left
     $(rightButton).on('click', function() {
-      $(menu).animate( { scrollLeft: menuInvisibleSize}, scrollDuration);
+      $(menu).animate( { scrollLeft: menuPosition += (menuWrapperSize/2)}, scrollDuration);
     });
 
     // scroll to right
     $(leftButton).on('click', function() {
-      $(menu).animate( { scrollLeft: '0' }, scrollDuration);
+      $(menu).animate( { scrollLeft: menuPosition -= (menuWrapperSize/2) }, scrollDuration);
     });
   }
 

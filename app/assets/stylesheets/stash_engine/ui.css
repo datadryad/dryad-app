@@ -5149,6 +5149,9 @@ html.no-details .o-showhide__summary {
     display: block;
     padding: 0.5rem;
     color: rgb(255, 255, 255);
+    max-width: 20ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   #page-nav a:link, #page-nav a:visited {
     text-decoration: none;
