@@ -227,12 +227,15 @@ module Stash
 
       # this takes a deposit that hasn't changed and makes it the same deposition as the previous version to make Zenodo happy
       def revert_to_previous_version
-        prev_res = @deposit.resource.previous_resource
-        prev_copy = prev_res.zenodo_copies.where(copy_type: @copy.copy_type).first
+        # get last that wasn't this deposition
+        prev_copy = StashEngine::ZenodoCopy.send(@dataset_type.to_sym)
+          .where(identifier_id: @resource.identifier_id)
+          .where.not(deposition_id: @copy.deposition_id)
+          .order(:resource_id).last
         curr_deposition_id = @copy.deposition_id
 
         # now set the information for these copy records to be the same deposition and software_doi as the previous version
-        @resource.zenodo_copies.where('copy_type like ?', "#{@dataset_type}%").each do |copy|
+        StashEngine::ZenodoCopy.where(deposition_id: curr_deposition_id).send(@dataset_type.to_sym).each do |copy|
           copy.update(deposition_id: prev_copy.deposition_id, software_doi: prev_copy.software_doi, note: 'no changes in this version')
         end
 
