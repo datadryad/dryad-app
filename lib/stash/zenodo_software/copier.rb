@@ -163,9 +163,7 @@ module Stash
         @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
         @copy.update(state: 'finished', error_info: nil)
       rescue Stash::ZenodoReplicate::ZenodoError => e
-        if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
-          revert_to_previous_version
-        end
+        revert_to_previous_version if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
       end
 
       # no files are changing, but a previous version should always exist
@@ -232,7 +230,6 @@ module Stash
         prev_res = @deposit.resource.previous_resource
         prev_copy = prev_res.zenodo_copies.where(copy_type: @copy.copy_type).first
         curr_deposition_id = @copy.deposition_id
-
 
         # now set the information for these copy records to be the same deposition and software_doi as the previous version
         @resource.zenodo_copies.where('copy_type like ?', "#{@dataset_type}%").each do |copy|

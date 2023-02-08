@@ -369,18 +369,20 @@ module Stash
               # resource 2 has a software and a software_publish copy, also.
               @zc.update(state: 'finished')
               @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software_publish',
-                            deposition_id: @zc.deposition_id, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id}")
+                                          deposition_id: @zc.deposition_id, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id}")
 
               @resource2 = create(:resource, identifier: @resource.identifier)
               @zc3 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
-                            deposition_id: @zc2.deposition_id + 1, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
+                                          deposition_id: @zc2.deposition_id + 1, state: 'finished',
+                                          software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
               @zc4 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software_publish',
-                            deposition_id: @zc2.deposition_id + 1, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}" )
+                                          deposition_id: @zc2.deposition_id + 1, state: 'finished',
+                                          software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
               @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc4.id)
 
               @stub = stub_request(:delete, "https://sandbox.zenodo.org/api/deposit/depositions/#{@zc2.deposition_id + 1}?" \
-                'access_token=ThisIsAFakeToken').
-                to_return(status: 201, body: "", headers: {})
+                                            'access_token=ThisIsAFakeToken')
+                .to_return(status: 201, body: '', headers: {})
             end
 
             it 'reverts to a previous version' do
