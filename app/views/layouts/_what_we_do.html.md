@@ -1,11 +1,42 @@
-# Our platform
+# What we do
 
-Dryad is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dryad focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
+Dryad advances our vision – for the open availability and routine reuse of research data to drive the acceleration of discovery and translation of research into benefits for society – by enabling the open publication and routine reuse of all research data. 
 
-For information about submission to Dryad, see our [guidance here](<%= stash_url_helpers.submission_process_path %>).
+**We make it easier to share, find, use and cite data, and are ready-made for emerging data-sharing requirements.**
 
+* Data curation at Dryad – Ensures data is appropriate and licensed for sharing; Verifies data is accessible and usable; and Supports authors.
+* Data publishing at Dryad – Ensures metadata quality; Increases discoverability of data; Connects data with other research outputs; Promotes data citation; and Makes data count.
+* The Dryad platform – Offers a smooth and easy publishing experience for authors; Integrates readily with publisher workflows; Runs on open-source software; May be accessed via open API.
 
-## Architecture and implementation
+Dryad serves all research domains and welcomes submissions of data in every field – where there is not an existing specialist repository and where the data may be shared openly. Dryad publishes data exclusively under a [Creative Commons Public Domain License](https://creativecommons.org/share-your-work/public-domain/cc0/) (CC0) and does not support the publication of sensitive data, to which access should be restricted.
+
+Our custom process is dedicated exclusively to research data. We work in concert with [aligned organizations](/stash/about#collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans and more. 
+
+See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7189481). 
+
+## Our curation and publication process
+
+Since 2007 Dryad has been a leader in curating and openly publishing research data across domains. For the community of academic and research institutions, research funders, scholarly societies, publishers and individual researchers that invest in Dryad, our service offers expertise, capacity, accountability and quality.
+
+At Dryad, curation is the process of thoroughly evaluating research metadata and related objects to verify that data are accessible, organized, intelligible, and complete to ensure ease of re-use. Curators collaborate with researchers to confirm that data are appropriate for open sharing, follow FAIR principles, and meet ethical standards for publication. They also offer guidance on best practices for creating reusable data and help authors navigate publication requirements. 
+
+Dryad Curators do not verify, validate or authenticate data for scientific reuse, however, they do assess submissions carefully and raise questions for investigation/escalation when there are concerns about the reusability, provenance, interoperability, or comprehensibility of the data submitted for publication in Dryad. We do not attempt to assess rigor. 
+
+Data publishing is the presentation of openly available and citable research data that is optimized to promote discoverability, connected to enhance visibility, and protected to guarantee the long-term preservation of quality research data. 
+
+Together, these processes ensure equitable access to data, and create opportunities to foster new collaborations and connections across the research community—helping Dryad to achieve our vision for the acceleration of discovery and translation of research into benefits for society.
+
+For a demonstration of our process, please [contact us](/stash/interested). 
+
+Learn more:
+
+* [Submission and publication process](/stash/submission_process)
+* [Data publishing ethics](/stash/ethics)
+* [Good data practices](/stash/best_practices)
+
+## Our platform
+
+### Architecture and implementation
 
 Dryad is completely open source.  Our code is made publicly available [on GitHub](https://github.com/CDL-Dryad/dryad-app). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
@@ -21,7 +52,7 @@ To facilitate flexible configuration and future enhancement, all support for the
 
 We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad [help desk](mailto:help@datadryad.org) or [visit GitHub](https://github.com/CDL-Dryad/dryad-app) for more information.
 
-## Features of Dryad service
+### Features of Dryad service
 
 | Feature | Tech-focused | User-focused | Description                                                                                                                                   |
 |:---------------------------------|:-------------------------:|:------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -51,6 +82,6 @@ We welcome collaborations to develop additional modules for additional metadata 
 | Support Data Reuse |  | X | Focus researchers on describing methods and explaining ways to reuse their datasets                                                           |
 | Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply             |
 
-## History
+### History
 
-Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL).
+Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL). See more about [the origins of Dryad](/stash/about#origins).

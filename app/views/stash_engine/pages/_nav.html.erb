@@ -20,13 +20,7 @@
     <li class="c-header__nav-item"><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
 
     <li class="c-header__nav-item">
-      <button class="c-header_nav-button" aria-expanded="false" aria-controls="what-menu">What we do</button>
-      <ul class="c-header__nav-submenu" id="what-menu" hidden>
-        <li><%= link_to 'What we do', "#{stash_url_helpers.our_mission_path}" %>
-        <li><%= link_to 'Latest news', "https://blog.datadryad.org/" %>
-        <li><%= link_to 'Process', stash_url_helpers.process_path %>
-        <li><%= link_to 'Platform', "#{stash_url_helpers.our_platform_path}" %>
-      </ul>
+      <%= link_to 'What we do', "#{stash_url_helpers.mission_path}" %>
     </li>
 
     <li class="c-header__nav-item">
@@ -39,6 +33,7 @@
         <li><%= link_to 'Submission process', "#{stash_url_helpers.submission_process_path}" %>
         <li><%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}" %>
         <li><%= link_to 'Frequently asked questions', stash_url_helpers.faq_path %>
+        <li><%= link_to 'Latest news', "https://blog.datadryad.org/" %>
         <li><%= link_to 'Contact support', stash_url_helpers.contact_path %>
       </ul>
     </li>
