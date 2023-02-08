@@ -149,6 +149,9 @@
       display: block;
       padding: $spacing-base;
       color: $design-white-color;
+      max-width: 20ch;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       &:link, &:visited {
         text-decoration: none;
