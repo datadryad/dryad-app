@@ -95,7 +95,7 @@ dl.timeline {
     align-items: center; 
     justify-content: center;
   }
-  div:nth-child(even) dt {
+  div:nth-child(3n-1) dt {
     background-color: $design-orange-color;
   }
   div:nth-child(3n+3) dt {
@@ -113,13 +113,13 @@ dl.timeline {
       display: block;
       height: 2px;
       position: absolute;
-      width: $spacing-sm;
+      width: $spacing-md;
       top: 50%;
-      left: -$spacing-sm;
+      left: -$spacing-md;
       background-color: $design-dark-blue-color;
     }
   }
-  div:nth-child(even) dd {
+  div:nth-child(3n-1) dd {
     border-color: $design-orange-color;  
     &:before {
       background-color: $design-orange-color;

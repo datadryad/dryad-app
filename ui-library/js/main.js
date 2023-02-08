@@ -130,6 +130,9 @@ function joelsReady(){
   // ***** Header Mobile Menu Toggle ***** //
 
   $('.js-header__menu-button').click(function(){
+    $(this).attr('aria-expanded', (i, attr) => {
+      return attr == 'true' ? 'false' : 'true';
+    });
     $('.js-header__nav').toggleClass('c-header__nav c-header__nav--is-open');
   });
 
@@ -214,14 +217,71 @@ function joelsReady(){
     }
   });
 
-  if(window.location.hash) {
+  if (window.location.hash) {
     const hashed = document.getElementById(window.location.hash.substring(1))
-    console.log(hashed)
     if (hashed.hasAttribute('hidden')) {
       hashed.previousElementSibling.setAttribute('aria-expanded', 'true');
       hashed.removeAttribute('hidden');
       hashed.previousElementSibling.scrollIntoView()
     }
+  }
+
+  if (!!document.getElementById('nav-mobile-buttons')) {
+    const leftButton = document.getElementById('left-scroll-button');
+    const rightButton = document.getElementById('right-scroll-button');
+    const menu = document.getElementById('nav-mobile-buttons').previousElementSibling
+    let menuSize = 0
+    $('#page-nav a').each(function(){
+      menuSize += $(this).outerWidth()
+    })
+    let menuWrapperSize = $(menu).outerWidth();
+    let menuInvisibleSize = menuSize - menuWrapperSize;
+    let menuPosition = menu.scrollLeft;
+    let menuEndOffset = menuInvisibleSize - 22;
+
+    const checkButtons = function() {
+      if (menuInvisibleSize < 0) {
+        leftButton.setAttribute('hidden', true)
+        rightButton.setAttribute('hidden', true)
+      } else if (menuPosition <= 22) {
+        leftButton.setAttribute('hidden', true)
+        rightButton.removeAttribute('hidden')
+      } else if (menuPosition < menuEndOffset) {
+        leftButton.removeAttribute('hidden')
+        rightButton.removeAttribute('hidden')
+      } else if (menuPosition >= menuEndOffset) {
+        rightButton.setAttribute('hidden', true)
+        leftButton.removeAttribute('hidden')
+      }
+    }
+
+    checkButtons();
+    
+    $(window).on('resize', function() {
+      menuWrapperSize = $(menu).outerWidth();
+      menuInvisibleSize = menuSize - menuWrapperSize;
+      menuPosition = menu.scrollLeft;
+      menuEndOffset = menuInvisibleSize - 22;
+      checkButtons();
+    });   
+
+    $(menu).on('scroll', function() {
+      menuInvisibleSize = menuSize - menuWrapperSize;
+      menuPosition = menu.scrollLeft;
+      menuEndOffset = menuInvisibleSize - 22;
+      checkButtons();
+    });
+
+    var scrollDuration = 200;
+    // scroll to left
+    $(rightButton).on('click', function() {
+      $(menu).animate( { scrollLeft: menuInvisibleSize}, scrollDuration);
+    });
+
+    // scroll to right
+    $(leftButton).on('click', function() {
+      $(menu).animate( { scrollLeft: '0' }, scrollDuration);
+    });
   }
 
 }// close joelsReady()

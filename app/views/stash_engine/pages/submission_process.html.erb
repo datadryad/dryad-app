@@ -1,7 +1,2 @@
 <% @page_title = 'Submission process' %>
-<div id="page-columns">
-  <nav id="page-nav" aria-label="Page navigation">
-    <%= render "layouts/submission_process", toc: true %>
-  </nav>
-  <div id="page-content"><%= render "layouts/submission_process" %></div>
-</div>
+<%= render "layouts/page_columns", page_content: "layouts/submission_process" %>

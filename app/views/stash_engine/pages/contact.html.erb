@@ -1,7 +1,2 @@
 <% @page_title = 'Contact' %>
-<div id="page-columns">
-  <nav id="page-nav" aria-label="Page navigation">
-    <%= render "layouts/contact", toc: true %>
-  </nav>
-  <div id="page-content"><%= render "layouts/contact" %></div>
-</div>
+<%= render "layouts/page_columns", page_content: "layouts/contact" %>

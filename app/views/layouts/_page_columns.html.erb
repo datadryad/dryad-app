@@ -1,0 +1,10 @@
+<div id="page-columns">
+  <nav id="page-nav" aria-label="Page navigation">
+    <%= render page_content, toc: true %>
+    <div id="nav-mobile-buttons">
+      <button id="left-scroll-button" aria-label="Scroll left" hidden></button>
+      <button id="right-scroll-button" aria-label="Scroll right" hidden></button>
+    </div>
+  </nav>
+  <div id="page-content"><%= render page_content %></div>
+</div>
