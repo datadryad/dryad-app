@@ -232,14 +232,12 @@ Rails.application.routes.draw do
     get 'faq', to: 'pages#faq'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
-    get 'our_mission', to: 'pages#our_mission'
+    get 'mission', to: 'pages#what_we_do'
     get 'interested', to: 'pages#interested'
     get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
-    get 'our_platform', to: 'pages#our_platform'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
-    get 'process', to: 'pages#process'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
     get 'why_use', to: 'pages#why_use'
@@ -451,12 +449,14 @@ Rails.application.routes.draw do
   get '/pages/faq', to: redirect('stash/faq')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
   get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
-  get 'our_membership', to: redirect('stash/join_us#our-membership')
-  get 'our_community', to: redirect('stash/join_us#our-membership')
-  get 'our_governance', to: redirect('stash/about#our-board')
-  get 'our_staff', to: redirect('stash/about#our-staff')
-  get 'our_advisors', to: redirect('stash/about#our-advisors')
-  get '/pages/organization', to: redirect('stash/our_mission')
+  get '/stash/our_membership', to: redirect('stash/join_us#our-membership')
+  get '/stash/our_community', to: redirect('stash/join_us#our-membership')
+  get '/stash/our_governance', to: redirect('stash/about#our-board')
+  get '/stash/our_staff', to: redirect('stash/about#our-staff')
+  get '/stash/our_advisors', to: redirect('stash/about#our-advisors')
+  get '/stash/our_platform', to: redirect('stash/mission#our_platform')
+  get '/stash/our_mission', to: redirect('stash/mission')
+  get '/pages/organization', to: redirect('stash/mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')
   get '/publicationBlackout', to: redirect('stash/pb_tombstone')
