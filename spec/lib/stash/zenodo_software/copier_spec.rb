@@ -362,6 +362,42 @@ module Stash
               expect(@zc2.conceptrecid).to eq((new_deposition_id - 1).to_s)
             end
           end
+
+          describe 'revert to previous version' do
+            before(:each) do
+              # resource 1 has a software and a software_publish copy.
+              # resource 2 has a software and a software_publish copy, also.
+              @zc.update(state: 'finished')
+              @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software_publish',
+                            deposition_id: @zc.deposition_id, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id}")
+
+              @resource2 = create(:resource, identifier: @resource.identifier)
+              @zc3 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software',
+                            deposition_id: @zc2.deposition_id + 1, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
+              @zc4 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software_publish',
+                            deposition_id: @zc2.deposition_id + 1, state: 'finished', software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}" )
+              @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc4.id)
+
+              @stub = stub_request(:delete, "https://sandbox.zenodo.org/api/deposit/depositions/#{@zc2.deposition_id + 1}?" \
+                'access_token=ThisIsAFakeToken').
+                to_return(status: 201, body: "", headers: {})
+            end
+
+            it 'reverts to a previous version' do
+              @zsc.send(:revert_to_previous_version) # private method
+              @zc3.reload
+              @zc4.reload
+
+              # set them to be the same as the previous deposition since this one is now bad and deleted
+              expect(@zc3.deposition_id).to eq(@zc2.deposition_id)
+              expect(@zc4.deposition_id).to eq(@zc2.deposition_id)
+
+              # set them to be the same as the previous software_doi since this one is now bad and deleted
+              expect(@zc3.software_doi).to eq(@zc2.software_doi)
+              expect(@zc4.software_doi).to eq(@zc2.software_doi)
+              expect(@stub).to have_been_requested
+            end
+          end
         end
       end
     end
