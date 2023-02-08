@@ -31,6 +31,7 @@ module Stash
     }.with_indifferent_access.freeze
 
     class Copier
+      ZC = Stash::ZenodoReplicate::ZenodoConnection
 
       # This is just a convenience method for manually testing without going through delayed_job, but may be useful
       # as a utility manually submit sometime in the future.
@@ -161,6 +162,10 @@ module Stash
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
         @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
         @copy.update(state: 'finished', error_info: nil)
+      rescue Stash::ZenodoReplicate::ZenodoError => e
+        if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
+          revert_to_previous_version
+        end
       end
 
       # no files are changing, but a previous version should always exist
@@ -221,6 +226,30 @@ module Stash
       def submitted_before?
         !@previous_copy.nil?
       end
+
+      # this takes a deposit that hasn't changed and makes it the same deposition as the previous version to make Zenodo happy
+      def revert_to_previous_version
+        prev_res = @deposit.resource.previous_resource
+        prev_copy = prev_res.zenodo_copies.where(copy_type: @copy.copy_type).first
+        curr_deposition_id = @copy.deposition_id
+
+
+        # now set the information for these copy records to be the same deposition and software_doi as the previous version
+        @resource.zenodo_copies.where('copy_type like ?', "#{@dataset_type}%").each do |copy|
+          copy.update(deposition_id: prev_copy.deposition_id, software_doi: prev_copy.software_doi, note: 'no changes in this version')
+        end
+
+        # Delete an existing unpublished deposition resource. Note, only unpublished depositions may be deleted.
+        # DELETE /api/deposit/depositions/:id
+        # return code: 201 Created -- see https://developers.zenodo.org/#delete
+        ZC.standard_request(:delete, "#{ZC.base_url}/api/deposit/depositions/#{curr_deposition_id}", zc_id: @zc_id)
+
+        # also need to fix the related work since the deposition_id is changed
+        StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
+
+        @copy.update(state: 'finished', error_info: 'Reverted to previous version because no files ultimately changed in this version.')
+      end
+
     end
   end
 end
