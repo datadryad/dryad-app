@@ -18,7 +18,7 @@
 	padding: 10px 0 0;
 	border-top: thin solid $design-orange-color;
 
-	&:first-of-type {
+	&:nth-of-type(-n+2) {
 		border-top: none;
 	}
 
@@ -47,7 +47,7 @@
 
 .c-latest__title {
 	@extend %o-link__primary;
-	font-size: 1.3em;
+	font-size: 1.2em;
 }
 
 .c-latest__author {

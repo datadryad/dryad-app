@@ -4,8 +4,6 @@
 <p>Our vision is for a future in which the open availability and routine reuse of all research data enables the acceleration of discovery across domains and the translation of research into benefits for society worldwide. We advance our vision through our mission: to enable the open publication and routine reuse of all research data.</p>
 <p><a href="/stash/join_us#our-membership">Our multi-stakeholder community</a> of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. They invest in Dryad for the curation, open sharing and reuse of research data in all fields.</p> 
 
-<p class="callout"><a href="/stash/join_us">Learn about joining our members</a></p>
-
 <p>We value responsibility, inclusion, openness and trustworthiness:
   <ul>
     <li>We are mindful that our decisions can impact the health of the research community and the environment and we assume responsibility for considering the implications of our actions in advance.

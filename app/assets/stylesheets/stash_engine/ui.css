@@ -6014,7 +6014,7 @@ html.no-details .o-showhide__summary {
   padding: 10px 0 0;
   border-top: thin solid #cf4817;
 }
-.c-latest__dataset:first-of-type {
+.c-latest__dataset:nth-of-type(-n+2) {
   border-top: none;
 }
 @media (min-width: 480px) {
@@ -6052,7 +6052,7 @@ html.no-details .o-showhide__summary {
 }
 
 .c-latest__title {
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
 
 .c-latest__type {
