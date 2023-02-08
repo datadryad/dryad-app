@@ -1,7 +1,2 @@
 <% @page_title = 'Who we are' %>
-<div id="page-columns">
-  <nav id="page-nav" aria-label="Page navigation">
-    <%= render "layouts/who_we_are", toc: true %>
-  </nav>
-  <div id="page-content"><%= render "layouts/who_we_are" %></div>
-</div>
+<%= render "layouts/page_columns", page_content: "layouts/who_we_are" %>

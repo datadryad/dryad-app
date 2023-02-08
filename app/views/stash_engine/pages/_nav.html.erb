@@ -1,4 +1,4 @@
-<nav class="c-header__nav js-header__nav" aria-label="Main">
+<nav class="c-header__nav js-header__nav" aria-label="Main" id="main-menu">
   <ul class="c-header__nav-group">
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
       <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>

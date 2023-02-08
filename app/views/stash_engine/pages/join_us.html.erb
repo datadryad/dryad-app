@@ -1,7 +1,2 @@
 <% @page_title = 'Join the community' %>
-<div id="page-columns">
-  <nav id="page-nav" aria-label="Page navigation">
-    <%= render "layouts/join_us", toc: true %>
-  </nav>
-  <div id="page-content"><%= render "layouts/join_us" %></div>
-</div>
+<%= render "layouts/page_columns", page_content: "layouts/join_us" %>

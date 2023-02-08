@@ -36,8 +36,6 @@ function modernizeIt(){
         $(this).parent().attr('aria-expanded', 'false');
 
       } else {
-        // Close any other menu items before displaying the one clicked
-        closeSiblings(this);
         $(this).parent().attr('aria-expanded', 'true');
       }
     });
@@ -60,8 +58,6 @@ function modernizeIt(){
         $(this).parent().removeAttr('open');
         $(this).parent().attr('aria-expanded', 'false');
       } else {
-        // Close any other menu items before displaying the one clicked
-        closeSiblings(this);
         $(this).parent().attr('open', '');
         $(this).parent().attr('aria-expanded', 'true');
       }

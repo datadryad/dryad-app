@@ -36,29 +36,127 @@
 
 #page-columns {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
+
+  @include bp(screen3) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
 }
 
 #page-content {
-  flex: 0 1 90ch;
-  padding-right: 5ch;
+  @include bp(screen3) {
+    flex: 0 1 90ch;
+    padding-right: 5ch;
+  }
 }
 
 #page-nav {
-  flex: 0 1 30ch;
-  padding-top: $spacing-md;
+  margin: $spacing-sm -10px 0;
+
   ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
-    li {
+  }
+
+  #nav-mobile-buttons {
+    button {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      width: $spacing-lg;
+      border: thick solid $design-dark-blue-color;
+      border-radius: $spacing-base;
+      background-color: $design-white-color;
+      color: $design-dark-blue-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &::before {
+        font-family: FontAwesome;
+        font-size: 1.25rem;
+      }
+    }
+    #left-scroll-button {
+      left: 2px;
+      &::before {
+        content: "\f0d9";
+      }
+    }
+    #right-scroll-button {
+      right: 2px;
+      &::before {
+        content: "\f0da";
+      }
+    }
+  }
+
+  @include bp(screen1) {
+    margin: $spacing-sm -20px 0;
+  }
+
+  @include bp(screen2) {
+    margin: $spacing-sm -30px 0;
+  }
+
+  @include bp(screen3) {
+    margin: 0;
+    flex: 0 1 30ch;
+    padding-top: $spacing-md;
+
+    #nav-mobile-buttons {
+      display: none;
+    }
+
+    & > ul {
+      position: sticky;
+      top: $spacing-md;
+    }
+
+    ul li {
       margin: $spacing-base 0;
     }
   }
-  & > ul {
+  
+  @media (max-width: $screen-lg-min - 1) {
+    padding: 0 $spacing-sm;
+    background-color: $design-dark-blue-color;
     position: sticky;
-    top: $spacing-md;
+    z-index: +1;
+    bottom: 0;
+    height: 2.65rem;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    li {
+      margin: 0;
+    }
+
+    ul, li {
+      display: flex;
+    }
+
+    & > ul {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    a {
+      display: block;
+      padding: $spacing-base;
+      color: $design-white-color;
+
+      &:link, &:visited {
+        text-decoration: none;
+      }
+      &:hover, &:focus, &:active {
+        text-decoration: underline;
+      }
+    }
   }
 }
 

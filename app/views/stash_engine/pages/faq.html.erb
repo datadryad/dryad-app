@@ -1,7 +1,2 @@
 <% @page_title = 'FAQ - publish and preserve your data' %>
-<div id="page-columns">
-  <nav id="page-nav" aria-label="Page navigation">
-    <%= render "layouts/faq", toc: true %>
-  </nav>
-  <div id="page-content"><%= render "layouts/faq" %></div>
-</div>
+<%= render "layouts/page_columns", page_content: "layouts/faq" %>
