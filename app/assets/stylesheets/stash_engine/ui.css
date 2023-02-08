@@ -4176,7 +4176,8 @@ datalist {
 }
 
 .o-heading__level3-file-title,
-.o-heading__level3-related-works {
+.o-heading__level3-related-works,
+.o-heading__level3:first-child {
   margin: 0;
 }
 
@@ -4188,10 +4189,6 @@ datalist {
   color: rgb(255, 255, 255);
   font-size: 1.3em;
   font-weight: normal;
-}
-
-*[class^=o-heading__level]:first-child {
-  margin-top: 0;
 }
 
 h4 {
@@ -5195,12 +5192,6 @@ html.no-details .o-showhide__summary {
   }
 }
 
-@media (min-width: 480px) {
-  .c-datasets-heading__heading {
-    margin: 0;
-  }
-}
-
 .c-datasets-heading__button {
   -ms-flex-item-align: center;
       align-self: center;
@@ -6021,7 +6012,10 @@ html.no-details .o-showhide__summary {
 
 .c-latest__dataset {
   padding: 10px 0 0;
-  border-top: thin solid rgb(78, 80, 80);
+  border-top: thin solid #cf4817;
+}
+.c-latest__dataset:first-of-type {
+  border-top: none;
 }
 @media (min-width: 480px) {
   .c-latest__dataset {
@@ -6058,7 +6052,7 @@ html.no-details .o-showhide__summary {
 }
 
 .c-latest__title {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 
 .c-latest__type {
@@ -6066,7 +6060,7 @@ html.no-details .o-showhide__summary {
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
   margin: 0 0 10px 1em;
-  font-size: 0.9em;
+  font-size: 0.8em;
   font-weight: bold;
   text-align: right;
 }
@@ -7602,7 +7596,7 @@ th.c-admin-table {
 }
 
 .o-heading__level2-why-share {
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   margin-bottom: 1rem;
 }
 @media (min-width: 870px) {

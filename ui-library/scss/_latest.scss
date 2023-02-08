@@ -16,7 +16,11 @@
 
 .c-latest__dataset {
 	padding: 10px 0 0;
-	border-top: thin solid $design-dark-gray-color;
+	border-top: thin solid $design-orange-color;
+
+	&:first-of-type {
+		border-top: none;
+	}
 
 	@include bp(screen1) {
         /* one column */
@@ -43,7 +47,7 @@
 
 .c-latest__title {
 	@extend %o-link__primary;
-	font-size: 1.4em;
+	font-size: 1.3em;
 }
 
 .c-latest__author {
@@ -53,7 +57,7 @@
 .c-latest__type {
     flex: 1 0 auto; // for safari so that things don't overflow
 	margin: 0 0 10px 1em;
-	font-size: 0.9em;
+	font-size: 0.8em;
 	font-weight: bold;
 	text-align: right;
 }
