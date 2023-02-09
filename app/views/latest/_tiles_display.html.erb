@@ -1,19 +1,12 @@
-<div class="c-latest">
-  <% @document_list.each do |document| %>
-    <div class="c-latest__dataset">
-      <div class="c-latest__title-group">
-      <%= link_to document['dc_title_s'], stash_url_helpers.show_path(document['dc_identifier_s']),
-                  class: 'c-latest__title', title: document['dc_title_s'] %>
-        <p class="c-latest__author">
-          <%= (document['dc_creator_sm'] ?
-            document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') : ''
-              ) %>,
-          <%= document['dc_publisher_s'] %>
-        </p>
-      </div>
-    </div>
-  <% end %>
-  <% if @document_list.length.odd? %>
-    <div class="c-latest__dataset"></div>
-  <% end %>
-</div>
+<% @document_list.take(5).each do |document| %>
+  <div class="c-latest__dataset">
+    <%= link_to document['dc_title_s'], stash_url_helpers.show_path(document['dc_identifier_s']),
+                class: 'c-latest__title', title: document['dc_title_s'] %>
+    <p class="c-latest__author">
+      <%= (document['dc_creator_sm'] ?
+        document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') : ''
+          ) %>,
+      <%= document['dc_publisher_s'] %>
+    </p>
+  </div>
+<% end %>

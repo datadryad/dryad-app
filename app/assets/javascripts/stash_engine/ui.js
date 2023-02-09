@@ -1685,6 +1685,24 @@ function joelsReady(){
     }
   }
 
+  if (!!document.getElementById('blog-latest-posts')) {
+    const sec = document.getElementById('blog-latest-posts')
+    const limit = sec.dataset.count - 1
+    $.get('https://blog.datadryad.org/feed', (data) => {
+      sec.innerHTML = ''
+      $(data).find('item').each((i, post) => {
+        const title = post.querySelector('title').innerHTML
+        const link = post.querySelector('link').innerHTML
+        const desc = $(post.querySelector('description')).text()
+        const div = document.createElement('div')
+        div.classList.add('latest-post')
+        div.innerHTML = `<p class="blog-post-heading" role="heading" aria-level="3">${title}</p><p>${desc}</p>`
+        sec.appendChild(div)
+        return i < limit
+      })
+    })
+  }     
+
   if (!!document.getElementById('nav-mobile-buttons')) {
     const leftButton = document.getElementById('left-scroll-button');
     const rightButton = document.getElementById('right-scroll-button');

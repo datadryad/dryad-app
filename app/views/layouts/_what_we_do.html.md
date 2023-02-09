@@ -14,6 +14,13 @@ Our custom process is dedicated exclusively to research data. We work in concert
 
 See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7189481). 
 
+## Latest news
+
+<div id="blog-latest-posts" data-count="3">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+<p style="text-align:right"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
+
 ## Our curation and publication process
 
 Since 2007 Dryad has been a leader in curating and openly publishing research data across domains. For the community of academic and research institutions, research funders, scholarly societies, publishers and individual researchers that invest in Dryad, our service offers expertise, capacity, accountability and quality.
