@@ -24,12 +24,17 @@
 <%= render partial: 'why_share' %>
 
 <%= render partial: 'why_use' %>
-
-<% unless @hostname == 'localhost' %>
-  <h1 class="o-heading__level1-home">Most recent datasets</h1>
-  <div id="latest_tiles"
-       data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+<div id="dryads-latest">
+  <!--% unless @hostname == 'localhost' %-->
+    <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
+    <div id="latest_tiles" data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+    </div>
+  <!--% end %-->
+  <h2 class="o-heading__level1-home">Latest news</h2>
+  <div id="blog-latest-posts" data-count="5">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
-<% end %>
+</div>
+<p style="text-align:right; font-size:.9em"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
 

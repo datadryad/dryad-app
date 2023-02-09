@@ -65,12 +65,16 @@ h3, *[class^="o-heading__level3"]  {
   font-weight: normal;
 }
 
-h4 {
+%o-heading__level4 {
   margin-top: calc($spacing-base * 3);
   margin-bottom: calc($spacing-base * 1.5);
   color: $design-dark-blue-color;
   font-size: 1.25rem;
   line-height: 1.5rem;
+}
+
+h4, *[class^="o-heading__level3"]  {
+  @extend %o-heading__level4;
 }
 
 h5, h6 {
