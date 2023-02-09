@@ -5,7 +5,7 @@ module StashEngine
 
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
     def status_change(resource, status)
-      return unless %w[submitted peer_review published embargoed].include?(status)
+      return unless %w[submitted peer_review published embargoed withdrawn].include?(status)
 
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
@@ -13,7 +13,7 @@ module StashEngine
       mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
-           subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Status change', status: status)
     end
@@ -158,7 +158,7 @@ module StashEngine
     end
 
     def rails_env
-      return "[#{Rails.env}]" unless Rails.env == 'production'
+      return "[#{Rails.env}] " unless Rails.env == 'production'
 
       ''
     end
