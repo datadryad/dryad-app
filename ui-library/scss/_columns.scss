@@ -103,7 +103,6 @@
   @include bp(screen3) {
     margin: 0;
     flex: 0 1 30ch;
-    padding-top: $spacing-md;
 
     #nav-mobile-buttons {
       display: none;

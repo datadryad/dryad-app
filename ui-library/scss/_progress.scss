@@ -8,120 +8,89 @@
     justify-content: space-between;
   }
 
-}
-
-%c-progress__tab-base {
-  color: $design-black-color;
-  text-decoration: none;
-  white-space: nowrap;
-
-  @include bp(screen1) {
-    display: flex;
-    position: relative;
-    flex: 1 0 auto;
-    align-items: center;
-    justify-content: center;
-    height: 33px;
-    border: thin solid $design-dark-gray-color;
-  }
-
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-  }
-
-}
-
-%c-progress__tab-arrow {
-  @extend %c-progress__tab-base;
-
-  @include bp(screen1) {
-    margin: 0 5vw 0 0;
-    border-right: none;
-  }
-
-  &::after {
-    content: '>';
-    display: inline-block;
-    margin: 0 0 0 0.25em;
-    font-size: 1.2em;
-
-    // Right angle arrow using borders:
+  a {
     @include bp(screen1) {
-      content: '';
-      position: absolute;
-      top: 4px;
-      right: -12px;
-      padding: 11px;
-      transform: rotate(45deg);
-      border-width: 1px;
-      border-top-style: solid;
-      border-right-style: solid;
-      border-color: $design-dark-gray-color;
+      display: flex;
+      position: relative;
+      flex: 1 0 auto;
+      align-items: center;
+      justify-content: center;
+      height: 33px;
+      border: thin solid $design-dark-gray-color;
+    }
+
+    &:link, &:visited {
+      color: $design-black-color;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+      outline: none;
+    }
+
+    &:nth-child(-n+2) {
+
+      @include bp(screen1) {
+        margin: 0 5vw 0 0;
+        border-right: none;
+      }
+
+      &::after {
+        content: '>';
+        display: inline-block;
+        margin: 0 0 0 0.25em;
+        font-size: 1.2em;
+
+        // Right angle arrow using borders:
+        @include bp(screen1) {
+          content: '';
+          position: absolute;
+          top: 4px;
+          right: -12px;
+          padding: 11px;
+          transform: rotate(45deg);
+          border-width: 1px;
+          border-top-style: solid;
+          border-right-style: solid;
+          border-color: $design-dark-gray-color;
+        }
+
+      }
+    }
+
+    &[class*="--active"] {
+      height: 34px;
+      border-width: 2px;
+      border-color: $design-orange-color;
+      color: $design-orange-color;
+
+      &:nth-child(-n+2) {
+        &::after {
+          border-width: 2px;
+          border-color: $design-orange-color;
+          // Right angle arrow using borders:
+          @include bp(screen1) {
+            top: 3px;
+          }
+
+        }
+      }
+    }
+
+    &[class*="--inactive"] {
+      border-width: 2px;
+      border-color: $design-light-gray-color;
+      color: $design-light-gray-color;
+
+      &::after {
+        border-width: 2px;
+        border-color: $design-light-gray-color;
+      }
     }
 
   }
-
-}
-
-.c-progress__tab1,
-.c-progress__tab2 {
-  @extend %c-progress__tab-base;
-  @extend %c-progress__tab-arrow;
-}
-
-.c-progress__tab3 {
-  @extend %c-progress__tab-base;
-}
-
-%c-progress__tab--active {
-  @extend %c-progress__tab-base;
-  height: 34px;
-  border-width: 2px;
-  border-color: $design-orange-color;
-  color: $design-orange-color;
-
-  &::after {
-
-    // Right angle arrow using borders:
-    @include bp(screen1) {
-      top: 3px;
-    }
-
-  }
-}
-
-%c-progress__tab--inactive {
-  @extend %c-progress__tab-base;
-  border-width: 2px;
-  border-color: $design-light-gray-color;
-  color: $design-light-gray-color;
-}
-
-.c-progress__tab1--active,
-.c-progress__tab2--active {
-  @extend %c-progress__tab-arrow;
-  @extend %c-progress__tab--active;
-
-  &::after {
-    border-width: 2px;
-    border-color: $design-orange-color;
-  }
-
-}
-
-.c-progress__tab1--inactive,
-.c-progress__tab2--inactive {
-  @extend %c-progress__tab-arrow;
-  @extend %c-progress__tab--inactive;
-
-  &::after {
-    border-width: 2px;
-    border-color: $design-light-gray-color;
-  }
-
-}
-
-.c-progress__tab3--active {
-  @extend %c-progress__tab--active;
+ 
 }
