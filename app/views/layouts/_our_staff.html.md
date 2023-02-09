@@ -110,17 +110,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/jdafesh.jpeg" alt="Joseph Dafesh" title="Joseph Dafesh">
-  <p><strong>Joseph Dafesh</strong><br/>
-  Data Curator<br/>
-  Joseph studied Molecular, Cellular, and Developmental Biology at UC
-  Riverside, and has a background in medicine, research, and biotechnology. He
-  has aspirations to go into Genetic Engineering in the future. For fun Joseph
-  loves working out, going to the beach, and keeping up with the latest fashion trends.
-  </p>
-</div>
-
-<div class="bio">
   <img src="/images/bryan.jpg" alt="Bryan Gee" title="Bryan Gee">
   <p><strong>Bryan Gee</strong><br/>
   Data Curator<br/>
