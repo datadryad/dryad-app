@@ -32,9 +32,9 @@ $design-slate-color: #2f4f4f;
 
 // ***** Link Colors ***** //
 
-$link-body-color: #2e59a3;
+$link-body-color: $design-medium-blue-color;
 $link-body-hover-color: $design-orange-color;
-$link-body-visited-color: #883f88;
+$link-body-visited-color: #337ab7;
 
 $link-globalnav-color: $design-black-color;
 $link-globalnav-hover-color: $design-orange-color;

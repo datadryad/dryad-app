@@ -4,17 +4,15 @@
   color: $link-body-color;
   /* text-decoration: underline; */
 
+  &:visited {
+    color: $link-body-visited-color;
+  }
+
   &:hover,
-  &:focus,
-  &:visited:hover,
-  &:visited:focus {
+  &:focus {
     color: $link-body-hover-color;
     /* text-decoration: none; */
     text-decoration: underline;
-  }
-
-  &:visited {
-    color: $link-body-visited-color;
   }
 }
 
@@ -30,17 +28,17 @@ a {
   color: $link-body-color;
   text-decoration: none;
 
+  &:visited {
+    color: $link-body-visited-color;
+  }
+
   &:hover,
-  &:focus,
-  &:visited:hover,
-  &:visited:focus {
+  &:focus {
     color: $link-body-hover-color;
     text-decoration: underline;
   }
 
-  &:visited {
-    color: $link-body-visited-color;
-  }
+
 }
 
 .o-link__secondary {
@@ -96,17 +94,17 @@ a {
   color: $design-medium-blue-color;
   text-decoration: none;
 
+  &:visited {
+    color: $link-body-visited-color;
+  }
+
   &:hover,
-  &:focus,
-  &:visited:hover,
-  &:visited:focus {
+  &:focus {
     color: $link-body-hover-color;
     text-decoration: underline;
   }
 
-  &:visited {
-    color: $link-body-visited-color;
-  }
+
 }
 
 // Skipnav component:

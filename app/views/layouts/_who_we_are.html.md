@@ -81,7 +81,7 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2011</dt>
-    <dd>The [Joint Data Archiving Policy](https://datadryad.org/docs/JointDataArchivingPolicy.pdf) (JDAP) is released</dd>
+    <dd>The <a href="https://datadryad.org/docs/JointDataArchivingPolicy.pdf">Joint Data Archiving Policy</a> (JDAP) is released</dd>
   </div>
   <div>
     <dt>2012</dt>
@@ -89,23 +89,23 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2018</dt>
-    <dd>[Dryad partners with the California Digital Library](https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/) (CDL)</dd>
+    <dd><a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/">Dryad partners with the California Digital Library</a> (CDL)</dd>
   </div>
   <div>
     <dt>2019</dt>
-    <dd>[Dryad launches on a new platform](https://blog.datadryad.org/2019/09/24/new-dryad-is-here/)</dd>
+    <dd><a href="https://blog.datadryad.org/2019/09/24/new-dryad-is-here/">Dryad launches on a new platform</a></dd>
   </div>
   <div>
     <dt>2020</dt>
-    <dd>[The Dryad-Zenodo integration goes live](https://blog.datadryad.org/2020/03/10/dryad-zenodo-our-path-ahead/)</dd>
+    <dd><a href="https://blog.datadryad.org/2020/03/10/dryad-zenodo-our-path-ahead/">The Dryad-Zenodo integration goes live</a></dd>
   </div>
   <div>
     <dt>2021</dt>
-    <dd>[Dryad host to COVID Data Tracking Project from the Atlantic Monthly](https://blog.datadryad.org/2021/08/04/covid-tracking-project-data-now-available-in-dryad/)</dd>
+    <dd><a href="https://blog.datadryad.org/2021/08/04/covid-tracking-project-data-now-available-in-dryad/">Dryad host to COVID Data Tracking Project from the Atlantic Monthly</a></dd>
   </div>
   <div>
     <dt>2022</dt>
-    <dd>[Dryad selecting by SCOSS for funding as essential open-source infrastructure](https://scoss.org/4thpledgingroundannouncment/)</dd>
+    <dd><a href="https://scoss.org/4thpledgingroundannouncment/">Dryad selecting by SCOSS for funding as essential open-source infrastructure</a></dd>
   </div>
 </dl>
 

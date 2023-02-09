@@ -73,7 +73,7 @@
 
 <p>Individual journals, publishers of all kinds, and scholarly societies can join the Dryad community through <strong>publisher membership</strong>. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors. <a href="/stash/interested">Contact us</a> for the latest fees.</p>
 
-## Our membership
+## Members
 
 <p>Dryad’s members are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryad’s services designed

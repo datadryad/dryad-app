@@ -96,10 +96,10 @@ dl.timeline {
     justify-content: center;
   }
   div:nth-child(3n-1) dt {
-    background-color: $design-orange-color;
+    background-color: $design-dark-navy-color;
   }
   div:nth-child(3n+3) dt {
-    background-color: $design-green-color;  
+    background-color: $design-dark-gray-color;  
   } 
   dd {
     position: relative;
@@ -120,15 +120,15 @@ dl.timeline {
     }
   }
   div:nth-child(3n-1) dd {
-    border-color: $design-orange-color;  
+    border-color: $design-dark-navy-color;  
     &:before {
-      background-color: $design-orange-color;
+      background-color: $design-dark-navy-color;
     }
   }
   div:nth-child(3n+3) dd {
-    border-color: $design-green-color;  
+    border-color: $design-dark-gray-color;  
     &:before {
-      background-color: $design-green-color;
+      background-color: $design-dark-gray-color;
     }
   } 
 }
