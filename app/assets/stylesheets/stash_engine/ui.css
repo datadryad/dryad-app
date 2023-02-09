@@ -7985,7 +7985,7 @@ dl.timeline dt {
           flex: 0 0 80px;
   font-size: 1.5rem;
   color: rgb(255, 255, 255);
-  background-color: rgb(0, 85, 129);
+  background-color: rgb(72, 145, 175);
   border-radius: 50%;
   width: 80px;
   height: 70px;
@@ -7999,20 +7999,14 @@ dl.timeline dt {
       -ms-flex-pack: center;
           justify-content: center;
 }
-dl.timeline div:nth-child(3n-1) dt {
-  background-color: #07364b;
-}
-dl.timeline div:nth-child(3n+3) dt {
-  background-color: rgb(78, 80, 80);
-}
 dl.timeline dd {
   position: relative;
   margin-left: 1rem;
   padding: 1rem;
   border-radius: 0.5rem;
-  border: thin solid rgb(0, 85, 129);
+  border: 2px solid rgb(72, 145, 175);
 }
-dl.timeline dd:before {
+dl.timeline dd::before {
   content: "";
   display: block;
   height: 2px;
@@ -8020,18 +8014,30 @@ dl.timeline dd:before {
   width: 2rem;
   top: 50%;
   left: -2rem;
+  background-color: rgb(72, 145, 175);
+}
+dl.timeline div:nth-child(5n-3) dd {
+  border-color: rgb(0, 85, 129);
+}
+dl.timeline div:nth-child(5n-3) dt, dl.timeline div:nth-child(5n-3) dd::before {
   background-color: rgb(0, 85, 129);
 }
-dl.timeline div:nth-child(3n-1) dd {
+dl.timeline div:nth-child(5n-2) dd {
   border-color: #07364b;
 }
-dl.timeline div:nth-child(3n-1) dd:before {
+dl.timeline div:nth-child(5n-2) dt, dl.timeline div:nth-child(5n-2) dd::before {
   background-color: #07364b;
 }
-dl.timeline div:nth-child(3n+3) dd {
+dl.timeline div:nth-child(5n-1) dd {
+  border-color: rgb(0, 0, 0);
+}
+dl.timeline div:nth-child(5n-1) dt, dl.timeline div:nth-child(5n-1) dd::before {
+  background-color: rgb(0, 0, 0);
+}
+dl.timeline div:nth-child(5n+5) dd {
   border-color: rgb(78, 80, 80);
 }
-dl.timeline div:nth-child(3n+3) dd:before {
+dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   background-color: rgb(78, 80, 80);
 }
 

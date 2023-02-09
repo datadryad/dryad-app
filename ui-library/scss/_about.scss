@@ -87,7 +87,7 @@ dl.timeline {
     flex: 0 0 80px;
     font-size: 1.5rem;
     color: $design-white-color;
-    background-color: $design-dark-blue-color;    
+    background-color: $design-light-blue-color;    
     border-radius: 50%;
     width: 80px;
     height: 70px; 
@@ -95,20 +95,14 @@ dl.timeline {
     align-items: center; 
     justify-content: center;
   }
-  div:nth-child(3n-1) dt {
-    background-color: $design-dark-navy-color;
-  }
-  div:nth-child(3n+3) dt {
-    background-color: $design-dark-gray-color;  
-  } 
   dd {
     position: relative;
     margin-left: $spacing-sm;
     padding: $spacing-sm;
     border-radius: $spacing-base;
-    border: thin solid $design-dark-blue-color;
+    border: 2px solid $design-light-blue-color;
 
-    &:before {
+    &::before {
       content: '';
       display: block;
       height: 2px;
@@ -116,19 +110,39 @@ dl.timeline {
       width: $spacing-md;
       top: 50%;
       left: -$spacing-md;
+      background-color: $design-light-blue-color;
+    }
+  }
+  div:nth-child(5n-3) {
+    dd {
+      border-color: $design-dark-blue-color;
+    }
+    dt, dd::before {
       background-color: $design-dark-blue-color;
     }
   }
-  div:nth-child(3n-1) dd {
-    border-color: $design-dark-navy-color;  
-    &:before {
+  div:nth-child(5n-2) {
+    dd {
+      border-color: $design-dark-navy-color;
+    }
+    dt, dd::before {
       background-color: $design-dark-navy-color;
     }
-  }
-  div:nth-child(3n+3) dd {
-    border-color: $design-dark-gray-color;  
-    &:before {
+  } 
+  div:nth-child(5n-1) {
+    dd {
+      border-color: $design-black-color;
+    }
+    dt, dd::before {
+      background-color: $design-black-color;
+    }
+  }  
+  div:nth-child(5n+5) {
+    dd {
+      border-color: $design-dark-gray-color;
+    }
+    dt, dd::before {
       background-color: $design-dark-gray-color;
     }
-  } 
+  }  
 }
