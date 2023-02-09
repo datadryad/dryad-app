@@ -49,19 +49,22 @@ h3, *[class^="o-heading__level3"]  {
 }
 
 .o-heading__level3-file-title,
-.o-heading__level3-related-works,
-.o-heading__level3:first-child {
+.o-heading__level3-related-works {
   margin: 0;
+}
+
+h1:first-child, *[class^="o-heading__level"]:first-child {
+  margin-top: 0;
 }
 
 .o-heading__page-span {
   @extend %pull-background;
   margin-bottom: $spacing-md;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   background-color: $design-dark-blue-color;
   color: $design-white-color;
-  font-size: 1.3em;
+  font-size: 1.2em;
   font-weight: normal;
 }
 
