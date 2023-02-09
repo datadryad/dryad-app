@@ -1661,27 +1661,24 @@ function joelsReady(){
     button.onclick = e => {
       const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
       const baseURL = window.location.pathname + window.location.search
-      expandButtons.forEach(nb => {
-        history.pushState('', '', baseURL);
-        nb.setAttribute('aria-expanded', 'false');
-        nb.nextElementSibling.setAttribute('hidden', true);
-      });
       if (closed) {
-        const newHash = '#' + e.currentTarget.nextElementSibling.id
-        history.pushState('', '', baseURL + newHash);
+        const newHash = '#' + e.currentTarget.id
+        history.replaceState('', '', baseURL + newHash);
         e.currentTarget.setAttribute('aria-expanded', 'true');
         e.currentTarget.nextElementSibling.removeAttribute('hidden');
-        e.currentTarget.scrollIntoView()
+      } else {
+        history.replaceState('', '', baseURL);
+        e.currentTarget.setAttribute('aria-expanded', 'false');
+        e.currentTarget.nextElementSibling.setAttribute('hidden', true);
       }
     }
   });
 
   if (window.location.hash) {
     const hashed = document.getElementById(window.location.hash.substring(1))
-    if (hashed.hasAttribute('hidden')) {
-      hashed.previousElementSibling.setAttribute('aria-expanded', 'true');
-      hashed.removeAttribute('hidden');
-      hashed.previousElementSibling.scrollIntoView()
+    if (hashed.getAttribute('aria-expanded') === 'false') {
+      hashed.setAttribute('aria-expanded', 'true');
+      hashed.nextElementSibling.removeAttribute('hidden');
     }
   }
 

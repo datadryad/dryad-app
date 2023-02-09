@@ -16,16 +16,16 @@
 
 ## Get to know Dryad
 
-<h3 class="expand-button" role="button" aria-expanded="false" aria-controls="our-board">Our board</h3>
-<div class="about-page" id="our-board" hidden>
+<h3 id="our-board" class="expand-button" role="button" aria-expanded="false" aria-controls="our-board-sec">Our board</h3>
+<div class="about-page" id="our-board-sec" hidden>
   <%= render "layouts/our_governance" %>
 </div>
-<h3 class="expand-button" role="button" aria-expanded="false" aria-controls="our-staff">Our staff</h3>
-<div class="about-page" id="our-staff" hidden>
+<h3 id="our-staff" class="expand-button" role="button" aria-expanded="false" aria-controls="our-staff-sec">Our staff</h3>
+<div class="about-page" id="our-staff-sec" hidden>
   <%= render "layouts/our_staff" %>
 </div>
-<h3 class="expand-button" role="button" aria-expanded="false" aria-controls="our-advisors">Our advisors</h3>
-<div class="about-page" id="our-advisors" hidden>
+<h3 id="our-advisors" class="expand-button" role="button" aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</h3>
+<div class="about-page" id="our-advisors-sec" hidden>
   <%= render "layouts/our_advisors" %>
 </div>
 
