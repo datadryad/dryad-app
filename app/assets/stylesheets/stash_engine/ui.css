@@ -5170,6 +5170,7 @@ html.no-details .o-showhide__summary {
 }
 .member-list li {
   display: inline-block;
+  width: 100%;
 }
 
 .c-datasets-heading {
