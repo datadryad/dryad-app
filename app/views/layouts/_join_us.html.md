@@ -96,7 +96,7 @@ including universities, research institutions and academic libraries. <a href="/
   <li>Keck Graduate Institute</li>
   <li>King Abdullah University of Science and Technology</li>
   <li>Kyoto University</li>
-  <li>Lawrence Berkeley National Lab</li>
+  <li>Lawrence Berkeley National Laboratory</li>
   <li>Macquarie University</li>
   <li>Michigan State University</li>
   <li>Montana State University</li>
@@ -123,7 +123,7 @@ including universities, research institutions and academic libraries. <a href="/
   <li>University of California, Santa Barbara</li>
   <li>University of California, Santa Cruz</li>        
   <li>University of California, California Digital Library</li>
-  <li>University of Illinois, Urbana-Champagne</li>
+  <li>University of Illinois, Urbana-Champaign</li>
   <li>University of Minnesota</li>
   <li>University of New Mexico</li>
   <li>University of New South Wales, Sydney</li>
@@ -131,7 +131,7 @@ including universities, research institutions and academic libraries. <a href="/
   <li>University of Rochester</li>
   <li>The University of Sheffield</li>
   <li>University of Washington</li>
-  <li>University of Wisconsin, Madison</li>
+  <li>University of Wisconsin–Madison</li>
   <li>U.S. Fish &amp; Wildlife Service</li>
   <li>Victoria University, Melbourne</li>
   <li>Yale University</li>
