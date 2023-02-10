@@ -38,13 +38,17 @@
 				border-bottom: none;
 			}
 		}
+		p {
+			font-size: .9em;
+		}
 	}
 
 	#blog-latest-posts{
-		p {
-			font-size: .8em;
+		@include bp(screen2) {
+			p {
+				font-size: .8em;
+			}
 		}
-
 		.blog-post-heading {
 			@extend %o-heading__level4;
 		}
@@ -52,12 +56,6 @@
 
 	@media (max-width: $screen-md-min) {
 		display: block;
-		#latest_tiles, #blog-latest-posts {
-			display: block;
-			p {
-				font-size: .9em;
-			}
-		}
 		#latest_tiles {
 			margin-bottom: $spacing-md;
 		}

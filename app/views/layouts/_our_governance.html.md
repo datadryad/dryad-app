@@ -6,19 +6,19 @@
 
 <div class="about-bios">
 <div class="bio">
-  <img src="/images/beckerman.jpg" alt="Andrew Beckerman" title="Andrew Beckerman">
+  <img src="/images/beckerman.jpg" alt="Andrew Beckerman">
   <p>
     <strong>Andrew Beckerman (Class of 2023)</strong> is a Professor of Evolutionary Ecology at the University of Sheffield where he collaborates with his team on questions about the impacts of climate and environmental change on biodiversity. They are passionate and curious about the landscape of open science. He is on the University of Sheffield School of Bioscience Executive Board and has recently been appointed to the University Council Finance Committee. Andrew has been co- Editor-in-Chief for the Wiley Open Access journal Ecology and Evolution for over 10 years. He has provided strategic contributions to the British Ecological Society for more than a decade as former Chair of Meetings and member of the Management Board and more recently via the Publications committee. Andew is also currently the Chair of Governors for a local primary school providing strategic support to the senior leadership team on finance, infrastructure and curriculum.
   </p>  
 </div>
 <div class="bio">
-  <img src="/images/ebert.jpg" alt="Barbara Ebert" title="Barbara Ebert">
+  <img src="/images/ebert.jpg" alt="Barbara Ebert">
   <p>
     <strong>Barbara Ebert (Class of 2023)</strong> is Executive Secretary, German Federation for Biological Data e.V. (GFBio). GFBio e.V. is a non-profit association founded in 2016 as the legal entity for the sustainable operation of data services in Biodiversity research. It is active in the recently founded National Research Data Infrastructure (NFDI) in Germany. Starting October 2020 we are building a coordination team for the NFDI4BioDiversity consortium, and a pool of IT developers to mobilise data available at the partner organisations and feed them into a common data infrastructure.
   </p>  
 </div>
 <div class="bio">
-  <img src="/images/edmunds.jpg" alt="Scott Edmunds" title="Scott Edmunds">
+  <img src="/images/edmunds.jpg" alt="Scott Edmunds">
   <p>
     <strong>Scott Edmunds (Class of 2023)</strong> is Editor-in-Chief for <a href="https://academic.oup.com/gigascience">
     GigaScience</a>, a self-proclaimed data nerd, and an Executive Committee member for Open Data Hong Kong. He has co-founded
@@ -34,7 +34,7 @@
   </p>  
 </div>
 <div class="bio">
-  <img src="/images/hanson.jpg" alt="Brooks Hanson" title="Brooks Hanson">
+  <img src="/images/hanson.jpg" alt="Brooks Hanson">
   <p>
     <strong>Brooks Hanson (Class of 2023)</strong> serves as the Executive Vice President for Science for the
     <a href="https://www.agu.org/">American Geophysical Union (AGU)</a>. He’s responsible for overseeing AGU’s publications,
@@ -49,19 +49,19 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/holmes.jpg" alt="Kristi Holmes" title="Kristi Holmes">
+  <img src="/images/holmes.jpg" alt="Kristi Holmes">
   <p>
     <strong>Kristi Holmes (Class of 2023)</strong> is the Director of Galter Health Sciences Library & Learning Center and Professor of Preventive Medicine (Health & Biomedical Informatics) at Northwestern University. Her research is focused on the development and application of information standards to support interoperability and data exchange to enhance discovery across basic science, clinical, and community-based research and ultimately, develop new methods for understanding translational impact. Operationalized workflows for the library and beyond have been developed, including a robust evaluation infrastructure for the campus in NUCATS. Holmes is especially enthusiastic about new roles and opportunities for modern biomedical research libraries in an increasingly informatics and data-driven environment.
   </p>  
 </div>
 <div class="bio">
-  <img src="/images/madalli.jpg" alt="Devika Madalli" title="Devika Madalli">
+  <img src="/images/madalli.jpg" alt="Devika Madalli">
   <p>
     <strong>Devika Madalli (Class of 2023)</strong> is a Professor of the Documentation Research and Training Centre, Indian Statistical Institute (faculty since 1996), India and Adjunct faculty, DISI, University of Trento, Italy. Her interest lies in the area of OERs and Educational resources repositories, Open Data Repositories and Data Management, Knowledge Organization and application of facetization in Information Systems, Information Infrastructures, Digital Libraries, Semantic Web technologies, Faceted Ontologies, Content Management System, Agrisemantics, multilingual information services. She is a member of the Karnataka Evaluation Authority(KEA). Dr.Madalli has extensive experience in capacity building, training on e-learning, MOOCs (moodle) and digital repositories. Dr. Madalli is a member of the Technical Advisory Board of Research Data Alliance and Prof.Madalli is a founding member of and served as the co-chair of the Agriculture Data Interest Group [IGAD], Research Data Alliance [RDA][2013-2016] and present co-chair of the Global Research Commons and RDA for UNSDGs Interest groups.
   </p>  
 </div>
 <div class="bio">
-  <img src="/images/mulvany.jpg" alt="Ian Mulvany" title="Ian Mulvany">
+  <img src="/images/mulvany.jpg" alt="Ian Mulvany">
   <p>
     <strong>Ian Mulvany (Class of 2024)</strong> is CTO at BMJ where he leads
   teams that deliver the technologies and features that underpin new products as
@@ -81,7 +81,7 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/murphy.jpg" alt="Fiona Murphy" title="Fiona Murphy">
+  <img src="/images/murphy.jpg" alt="Fiona Murphy">
   <p>
     <strong>Fiona Murphy (Class of 2023)</strong> held a range of scholarly publishing roles with Oxford University Press,
     Bloomsbury Academic and Wiley after completing a DPhil in English Literature. As Publisher for Earth and Environmental
@@ -97,7 +97,7 @@
     these topics and recently co-edited a special issue on persistent identifiers.
   </p>
 </div>
-<div class="bio"><img src="/images/nilsson.jpg" alt="Johan Nilsson" title="Johan Nilsson">
+<div class="bio"><img src="/images/nilsson.jpg" alt="Johan Nilsson">
   <p><strong>Johan Nilsson (Class of 2022)</strong> works at the Oikos Editorial Office, a society-owned publishing foundation
     based at Lund University, Sweden. His main responsibilities are to manage the peer-review, production and marketing
     of one of their journals, Journal of Avian Biology. He also coordinates the society’s projects on open access, open
@@ -107,7 +107,7 @@
     communicated to researchers.</p>
 </div>
 <div class="bio">
-  <img src="/images/puebla.jpg" alt="Iratxe Puebla" title="Iratxe Puebla">
+  <img src="/images/puebla.jpg" alt="Iratxe Puebla">
   <p><strong>Iratxe Puebla (Class of 2024)</strong> is Associate Director at
   ASAPbio, a nonprofit with a mission to accelerate innovation and transparency
   in life sciences communication, and which supports the productive use of
@@ -122,7 +122,7 @@
   Ethics Working Group.</p>
 </div>
 <div class="bio">
-  <img src="/images/ruttenberg.jpg" alt="Judy Ruttenberg" title="Judy Ruttenberg">
+  <img src="/images/ruttenberg.jpg" alt="Judy Ruttenberg">
   <p><strong>Judy Ruttenberg (Class of 2023)</strong> is the Director of Scholars and Scholarship at the
     <a href="https://www.arl.org/">Association of Research Libraries</a>. With more than twenty years of experience
     working in and on behalf of academic and research libraries, Ruttenberg’s expertise is in scholarly communication and
@@ -134,7 +134,7 @@
     relationships between data curators within universities and federal agencies</p>
 </div>
 <div class="bio">
-  <img src="/images/sutton.jpg" alt="Caroline Sutton" title="Caroline Sutton">
+  <img src="/images/sutton.jpg" alt="Caroline Sutton">
   <p><strong>Caroline Sutton (Class of 2021)</strong> is Director of Editorial Development with Taylor & Francis.
     Before joining the company in October 2016, she was co-founder of Co-Action Publishing, a full OA publisher. She
     helped to found and served as the first President of the Open Access Scholarly Publishers Association (OASPA) from
@@ -144,7 +144,7 @@
     well as initiatives related to open scholarship across subject areas. She holds a PhD in Sociology from Uppsala University.</p>
 </div>
 <div class="bio">
-  <img src="/images/williams.jpg" alt="Jason Williams" title="Jason Williams">
+  <img src="/images/williams.jpg" alt="Jason Williams">
   <p><strong>Jason Williams (Class of 2023)</strong> is Assistant Director, External Collaborations at the
     <a href="https://dnalc.cshl.edu/">Cold Spring Harbor Laboratory DNA Learning Center</a> where he develops national
     biology education programs. Jason leads education, outreach, and training for CyVerse (US national cyberinfrastructure
@@ -159,7 +159,7 @@
     of Science Fellow. Jason is also a teacher at the Yeshiva University High School for Girls.</p>
 </div>
 <div class="bio">
-  <img src="/images/waibel.jpg" alt="Günter Waibel" title="Günter Waibel">
+  <img src="/images/waibel.jpg" alt="Günter Waibel">
   <p>    <strong>Günter Waibel (Ex Officio)</strong> is Associate Vice Provost and Executive Director of California Digital
     Library, one of the world's largest digital research libraries. Collaborating with stakeholders across the UC system
     and beyond, Waibel is advancing efforts to build and support new models of scholarly communication; provide leadership,
