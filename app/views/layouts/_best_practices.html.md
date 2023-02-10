@@ -54,7 +54,7 @@
 ## Make sure your data are accessible
 
 <ul>
-<li>To maximize accessibility, reusability and preservability, share data in non-proprietary <a href="https://en.wikipedia.org/wiki/Open_format">open formats</a> when possible (see <a href="#formats">preferred formats</a>). This ensures your data will be accessible by most people.</li>
+<li>To maximize accessibility, reusability and preservability, share data in non-proprietary <a href="https://en.wikipedia.org/wiki/Open_format">open formats</a> when possible (see <a href="#preferred-file-formats">preferred formats</a>). This ensures your data will be accessible by most people.</li>
 <li>Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a service like <a href="https://goodtables.io/">goodTables</a> can identify missing data and data type formatting problems.</li>
 <li>Files compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (<code>.zip, .7z, .tar.gz</code>). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.</li>
 </ul>

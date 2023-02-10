@@ -172,31 +172,26 @@ Data may be submitted and published at any time. However, if your data are assoc
         If a delayed-release data embargo is allowed by your journal, you may request that
         (<a href="mailto:help@datadryad.org">help@datadryad.org</a>) at the time of submission.
     </li>
-    <li>Regardless of journal, you may choose to make your data temporarily <a href="#ppr">Private for peer review</a>.</li>
+    <li>Regardless of journal, you may choose to make your data temporarily <a href="#how-does-dryad-s-private-for-peer-review-feature-work">Private for peer review</a>.</li>
 </ul>
 
 ## What happens after I submit my data?
 
-Dryad is a curated repository. We perform basic checks on each submission through <a href="#curation">curation</a>. If our curators have questions or suggestions about your submission, they will contact you directly. Otherwise you will be notified when your dataset is approved.
+Dryad is a curated repository. We perform basic checks on each submission through <a href="#what-happens-during-curation">curation</a>. If our curators have questions or suggestions about your submission, they will contact you directly. Otherwise you will be notified when your dataset is approved.
 
-If your data submission is <a href="#ppr">private for peer review</a> it will not be processed by our curators until the associated manuscript is accepted.
+If your data submission is <a href="#how-does-dryad-s-private-for-peer-review-feature-work">private for peer review</a> it will not be processed by our curators until the associated manuscript is accepted.
 
-Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="#cost">Data Publishing Charge (DPC)</a> and any overage fees are invoiced.
+Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="\#how-much-does-it-cost">Data Publishing Charge (DPC)</a> and any overage fees are invoiced.
 
-After data publication, if you have edits, additional files, or subsequent related work we recommend versioning your data by using the <a href="#update">&quot;update&quot;</a> link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.
+After data publication, if you have edits, additional files, or subsequent related work we recommend versioning your data by using the <a href="#how-can-i-update-my-data">&quot;update&quot;</a> link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.
 
 ## What happens during curation?
 
-<p>
-    Dryad has a team of curators who check every submission to ensure the validity of files and metadata. Once your
-    data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring
-    that your dataset meets all of our requirements for <a href="#metadata">metadata</a> and <a href="#files">data files</a>
-    will ensure that the curation process is as efficient and timely as possible.
-</p>
+Dryad has a team of curators who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks. As an author, you can review these for your dataset. Assuring that your dataset meets all of our requirements for metadata and data files will ensure that the curation process is as efficient and timely as possible.
 
 <ul>
-    <li><a href="#metadata">Metadata requirements</a></li>
-    <li><a href="#files">File requirements</a></li>
+    <li><a href="#what-should-i-include-in-my-metadata">Metadata requirements</a></li>
+    <li><a href="#how-should-i-prepare-my-data-files-before-submitting">File requirements</a></li>
 </ul>
 
 <p>
@@ -205,43 +200,23 @@ After data publication, if you have edits, additional files, or subsequent relat
     <a href="mailto:help@datadryad.org">help@datadryad.org</a>
 </p>
 
-## How do Dryad & Zenodo partner and integrate?
+## How do Dryad &amp; Zenodo partner and integrate?
 
-<p>
-    Dryad formed a partnership with <a href="https://zenodo.org/">Zenodo</a>, a multidisciplinary repository based at
-    CERN, in 2019. <a href="https://blog.datadryad.org/2019/07/17/funded-partnership-brings-dryad-and-zenodo-closer/">This
-    partnership</a> leverages each organization's strengths: data curation at Dryad and software publication at Zenodo.
-</p>
+Dryad formed a partnership with <a href="https://zenodo.org/">Zenodo</a>, a multidisciplinary repository based at CERN, in 2019. <a href="https://blog.datadryad.org/2019/07/17/funded-partnership-brings-dryad-and-zenodo-closer/">This partnership</a> leverages each organization's strengths: data curation at Dryad and software publication at Zenodo.
 
-<p>
-    Through our integration, any software uploaded during the data submission process will be triaged and published at Zenodo.
-    The software will not go through Dryad curation processes but it will be time-released with
-    the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad
-    landing page under “Related Works”.
-<p>
+Through our integration, any software uploaded during the data submission process will be triaged and published at Zenodo. The software will not go through Dryad curation processes but it will be time-released with the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad landing page under “Related Works”.
 
-<p>Dryad stores a copy of all datasets in Zenodo for enhanced preservation services.</p>
+Dryad stores a copy of all datasets in Zenodo for enhanced preservation services.
 
 
 ## How are the datasets discoverable?
 
-<p>
-    All datasets will be indexed by the <a href="http://wokinfo.com/products_tools/multidisciplinary/dci/about/">Thomson-Reuters
-    Data Citation Index</a>, <a href="http://www.elsevier.com/online-tools/scopus">Scopus</a>, and
-    <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>. Each dataset is given a unique Digital
-    Object Identifier or DOI. Entering the DOI URL in any browser will take the user to the dataset&#39;s landing page. Dryad
-    also provides a faceted search and browse capability for direct discovery.
-</p>
+All datasets will be indexed by the <a href="http://wokinfo.com/products_tools/multidisciplinary/dci/about/">Thomson-Reuters Data Citation Index</a>, <a href="http://www.elsevier.com/online-tools/scopus">Scopus</a>, and <a href="https://toolbox.google.com/datasetsearch">Google Dataset Search</a>. Each dataset is given a unique Digital Object Identifier or DOI. Entering the DOI URL in any browser will take the user to the dataset&#39;s landing page. Dryad also provides a faceted search and browse capability for direct discovery.
 
-<p>
-    Dryad has implemented the <a href="https://makedatacount.org">Make Data Count</a> project
-    recommendations. This means that that views and downloads on each dataset landing page are standardized against the
-    COUNTER Code of Practice for Research Data. Within this framework, Dryad also exposes all related citations to a
-    dataset on the landing page. These are updated each time a new citation from an article or other source has been
-    published.
-</p>
+Dryad has implemented the <a href="https://makedatacount.org">Make Data Count</a> project
+recommendations. This means that that views and downloads on each dataset landing page are standardized against the COUNTER Code of Practice for Research Data. Within this framework, Dryad also exposes all related citations to a dataset on the landing page. These are updated each time a new citation from an article or other source has been published.
 
-<p>Ways you can ensure your data publication has the broadest reach:</p>
+Ways you can ensure your data publication has the broadest reach:
 <ul>
     <li>
         <strong>Comprehensive documentation</strong> (i.e. metadata) is the key for discoverability as well as ensuring
