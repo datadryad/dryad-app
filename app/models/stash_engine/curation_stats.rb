@@ -40,10 +40,6 @@ module StashEngine
       populate_author_versioned
     end
 
-    def rp
-      populate_ppr_to_curation
-    end
-
     private
 
     # The number processed (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')
