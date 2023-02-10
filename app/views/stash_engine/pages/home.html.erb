@@ -25,12 +25,12 @@
 
 <%= render partial: 'why_use' %>
 <div id="dryads-latest">
-  <!--% unless @hostname == 'localhost' %-->
+  <% unless @hostname == 'localhost' %>
     <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
     <div id="latest_tiles" data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
       <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
     </div>
-  <!--% end %-->
+  <% end %>
   <h2 class="o-heading__level1-home">Latest news</h2>
   <div id="blog-latest-posts" data-count="5">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
