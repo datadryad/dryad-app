@@ -40,6 +40,10 @@ module StashEngine
       populate_author_versioned
     end
 
+    def rp
+      populate_ppr_to_curation
+    end
+
     private
 
     # The number processed (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')
@@ -166,9 +170,31 @@ module StashEngine
       datasets_found.size
     end
 
-    # The number PPR to Curation that day
+    # The number of previously PPR datasets that entered Curation that day
+    # Note that this is intended to be more inclusive than other transitions. It includes
+    # any dataset entering Curation status that was in PPR more recently than it was in a
+    # prior curation status.
     def populate_ppr_to_curation
-      update(ppr_to_curation: datasets_transitioned(from_status: 'peer_review', to_status: 'curation'))
+      p2c_count = 0
+      # for each dataset that received curation status on the given day
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'curation')
+      cas.each do |ca|
+        # find the most recent PPR or curation status
+        # if it's PPR, count it as a ppr_to_curation transition
+        # if it's curation, or we get to the end of the list, don't count it
+        ca.resource&.identifier&.resources&.map(&:curation_activities)&.flatten&.reverse&.each do |sibling_ca|
+          next if sibling_ca.id >= ca.id
+
+          if sibling_ca.peer_review?
+            p2c_count += 1
+            break
+          elsif sibling_ca.curation?
+            break
+          end
+        end
+      end
+
+      update(ppr_to_curation: p2c_count)
     end
 
     # The number AAR'd that day (status change from 'curation' to 'action_required')
