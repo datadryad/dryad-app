@@ -490,7 +490,7 @@ namespace :identifiers do
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID WaiverBasis InstitutionName
-                JournalName JournalISSN SponsorName]
+                JournalName JournalISSN SponsorName CurrentStatus]
 
       # Limit the query to datasets that existed at the time of the target report,
       # and have been updated the within the month of the target.
@@ -507,7 +507,7 @@ namespace :identifiers do
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
         csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
-                i.publication_name, i.publication_issn, i.journal&.sponsor&.name]
+                i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
