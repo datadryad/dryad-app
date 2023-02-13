@@ -7140,6 +7140,9 @@ img {
 #page-columns table {
   border-collapse: collapse;
 }
+#page-columns tbody tr:nth-child(odd) {
+  background-color: #eee;
+}
 #page-columns td, #page-columns th {
   text-align: left;
   padding: 8px 4px !important;
