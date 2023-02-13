@@ -6510,6 +6510,7 @@ html.no-details .o-showhide__summary {
   border: 2px solid #cf4817;
   border-radius: 35px;
   background-color: rgb(255, 255, 255);
+  white-space: nowrap;
 }
 
 .t-login__buttonlink:hover {
