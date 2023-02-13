@@ -6465,67 +6465,57 @@ html.no-details .o-showhide__summary {
 }
 
 .t-login__section {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  display: grid;
+  grid-column-gap: 3rem;
+  grid-row-gap: 3rem;
   width: 100%;
   text-align: center;
 }
+.t-login__section > div {
+  padding: 2rem;
+}
 
-.t-login__box {
-  padding-right: 25px;
+@media (min-width: 870px) {
+  .t-login__box, .t-login__choose {
+    grid-column: 1;
+  }
 }
 .t-login__box a:link,
 .t-login__box a:visited,
 .t-login__box a:hover,
-.t-login__box a:active {
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-  text-decoration: none;
-}
-.t-login__box h1 {
-  margin-bottom: 45px;
-}
-.t-login__box p {
-  margin-top: 45px;
-}
-
-.t-login__choose {
-  padding-right: 25px;
-  text-align: left;
-}
-.t-login__choose a:link,
+.t-login__box a:active, .t-login__choose a:link,
 .t-login__choose a:visited,
 .t-login__choose a:hover,
 .t-login__choose a:active {
   color: rgb(0, 0, 0);
+  font-weight: bold;
   text-decoration: none;
 }
-.t-login__choose h1 {
+.t-login__box h1, .t-login__choose h1 {
   margin-bottom: 45px;
-  color: #cf4817;
-  text-align: center;
 }
-.t-login__choose p {
+.t-login__box p, .t-login__choose p {
   margin-top: 45px;
 }
-.t-login__choose .c-institution__container {
+.t-login__box .c-institution__container, .t-login__choose .c-institution__container {
   margin-bottom: 25px;
   margin-left: 0;
 }
-.t-login__choose .c-institution__container select {
+.t-login__box .c-institution__container select, .t-login__choose .c-institution__container select {
   width: 20rem;
   margin-right: 10px;
+}
+
+.t-login__info {
+  text-align: left;
+  border-top: thin solid #cf4817;
+}
+@media (min-width: 870px) {
+  .t-login__info {
+    grid-column: 2;
+    border-top: none;
+    border-left: thin solid #cf4817;
+  }
 }
 
 .t-login__buttonlink {
@@ -6539,14 +6529,6 @@ html.no-details .o-showhide__summary {
   border: 2px solid #cf4817;
   border-radius: 35px;
   background-color: rgb(255, 255, 255);
-}
-
-.t-login__info {
-  -ms-flex-preferred-size: 35rem;
-      flex-basis: 35rem;
-  padding-left: 35px;
-  border-left: thin solid #cf4817;
-  text-align: left;
 }
 
 .t-login__or-box {
