@@ -1,1 +1,63 @@
 @import 'geoblacklight/geoblacklight';
+
+// search bar better spacing
+div.geobl-search-spacing {
+  margin: 0 1.5rem 1rem 0;
+}
+
+a.catalog_startOverLink:hover {
+  background-color: $light-blue;
+}
+
+a.btn-primary {
+  background-color: $blue;
+  color: #fff;
+}
+
+a.btn-primary:hover {
+  background-color: $light-blue;
+}
+
+// make search button match our colors
+#search, a.catalog_startOverLink {
+  z-index: 0; // needed for crazy thing where menu goes behind it
+  background-color: $blue;
+
+  &:hover {
+    background-color: $light-blue;
+  }
+}
+
+#map {
+  z-index: 0; // menus go behind without this
+}
+
+// The facets shouldn't be lime green
+h3.bg-success, h3.facet-limit-active h3.card-header {
+  background-color: rgba(0, 0, 0, 0.07) !important; }
+
+// the dumb selected items shouldn't be lime green
+ul.facet-values li .selected {
+  color: black !important;
+}
+
+#facets {
+  font-size: 1rem;
+}
+
+// links visited, no text decoration
+a.facet-select {
+  color: $blue;
+}
+
+a.facet-select:visited, div.more_facets a, div.page_links a {
+  color: #65007a;
+}
+
+a.facet-select:hover {
+  color: rgb(237, 129, 90);
+}
+
+h3 .document-counter {
+  color: #000;
+}
