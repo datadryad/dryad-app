@@ -92,6 +92,15 @@
     }
   }
 
+  a {
+    &:link, &:visited {
+      text-decoration: none;
+    }
+    &:hover, &:focus, &:active {
+      text-decoration: underline;
+    }
+  }
+
   @include bp(screen1) {
     margin: $spacing-sm -20px 0;
   }
@@ -102,7 +111,8 @@
 
   @include bp(screen3) {
     margin: 0;
-    flex: 0 1 30ch;
+    flex: 0 1 32ch;
+    background-color: $design-lightest-blue-color;
 
     #nav-mobile-buttons {
       display: none;
@@ -110,11 +120,18 @@
 
     & > ul {
       position: sticky;
-      top: $spacing-md;
+      top: 0;
+      padding: 1ch 2ch;
+      max-height: 100vh;
+      overflow-y: auto;
     }
 
     ul li {
       margin: $spacing-base 0;
+    }
+
+    a:link, a:visited {
+      color: $link-body-color;
     }
   }
   
@@ -151,13 +168,6 @@
       max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;
-
-      &:link, &:visited {
-        text-decoration: none;
-      }
-      &:hover, &:focus, &:active {
-        text-decoration: underline;
-      }
     }
   }
 }
