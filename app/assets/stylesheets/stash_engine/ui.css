@@ -8148,9 +8148,10 @@ dl.timeline dd::before {
   display: block;
   height: 2px;
   position: absolute;
-  width: 2rem;
+  z-index: -1;
   top: 50%;
-  left: -2rem;
+  left: -1.5rem;
+  width: 1.5rem;
   background-color: rgb(55, 150, 196);
 }
 dl.timeline div:nth-child(5n-3) dd {

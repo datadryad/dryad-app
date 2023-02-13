@@ -107,9 +107,10 @@ dl.timeline {
       display: block;
       height: 2px;
       position: absolute;
-      width: $spacing-md;
+      z-index: -1;
       top: 50%;
-      left: -$spacing-md;
+      left: -($spacing-sm + $spacing-base);
+      width: ($spacing-sm + $spacing-base);
       background-color: $design-light-blue-color;
     }
   }
