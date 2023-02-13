@@ -13,6 +13,10 @@ ul.c-text_styles {
   }
 }
 
+code, a {
+  word-break: break-word;
+} 
+
 img {
   max-width: 100%;
 }

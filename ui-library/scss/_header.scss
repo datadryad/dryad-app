@@ -141,8 +141,8 @@
   }
 
   &.is-open {
-    padding-bottom: 10px;
-    margin-bottom: -10px;
+    padding-bottom: 6px;
+    margin-bottom: -6px;
     background-color: $design-medium-blue-color;
     color: $design-white-color;
   }
@@ -151,7 +151,7 @@
     display: inline-flex;
     width: 100%;
     height: 48px;
-    padding: 0 16px;
+    padding: 0 $spacing-base;
     align-items: center;
     justify-content: space-around;
     @include bp(screen3) {
@@ -164,11 +164,23 @@
 
 #site-menu .c-header__nav-item {
   white-space: nowrap;
-  margin: 0 -10px 2px;
-  padding: 10px 30px;
-  background-color: $design-medium-blue-color;
-  color: $design-white-color;
   text-decoration: none;
+  margin: 0 -10px 2px;
+
+  @media (max-width: $screen-lg-min - 1) {
+    a, button {
+      background-color: $design-medium-blue-color;
+      color: $design-white-color;
+      padding: 10px 30px;
+      display: block;
+      width: 100%;
+      text-align: left;
+
+      &:hover, &[aria-expanded="true"] {
+        background-color: $design-light-blue-color;
+      }
+    }
+  }
 
   a:link, a:visited {
     color: $design-white-color;
@@ -182,10 +194,63 @@
   @include bp(screen2) {
     margin: 0 -30px 2px;
   }
+
+  .c-header__nav-submenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    @include bp(screen3) {
+      position: absolute;
+      top: 100%;
+      right: -1px;
+      margin: 0;
+      min-width: 180px;
+      white-space: nowrap;
+      border-right: thin solid $design-orange-color;
+    }
+
+    li {
+      margin: 0;
+      a {
+        display: block;
+        padding: 10px 30px;
+        background-color: $design-white-color;
+        color: $design-dark-blue-color;
+        text-decoration: none;
+        border-top: 2px solid $design-medium-blue-color;
+
+        &:hover {
+          background-color: $design-lighter-blue-color;
+        }
+
+        @include bp(screen3) {
+          margin: 0;
+          background-color: $design-white-color;
+          color: $design-black-color;
+          border-top: none;
+          border-left: thin solid $design-light-gray-color;
+          border-bottom: thin solid $design-light-gray-color;
+
+          &:hover,
+          &:focus {
+            color: $link-globalnav-hover-color;
+            text-decoration: underline;
+          }
+
+          &:hover,
+          &:focus {
+            color: $link-globalnav-hover-color;
+          }
+        }
+      }
+    }
+  }
 }
 
 #mobile-nav-bar .c-header__nav-item, 
 #site-menu .c-header__nav-item {
+  position: relative;
 
   &.dev-only {
     text-align: right;
@@ -230,8 +295,8 @@
     }
 
     &.is-open {
-      padding-bottom: 6px;
-      margin-bottom: -6px;
+      padding-bottom: 10px;
+      margin-bottom: -10px;
     }    
   }
 }
@@ -276,7 +341,7 @@
     width: calc(100% - 48px);
   }
   .o-global-search__submit-button {
-    width: 38px;
+    width: 32px;
   }
 
   @include bp(screen3) {
@@ -300,66 +365,17 @@
 .c-header__menu-button {
   height: 48px;
   width: 100%;
-  padding: 0 16px;
+  padding: 0 $spacing-base;
   background-color: transparent;
   border: none;
   color: $design-dark-blue-color;
+  white-space: nowrap;
 
   i {
-    margin-left: 1ch;
+    margin-left: 2px;
   }
 
   &[aria-expanded="true"] {
     color: $design-white-color;
-  }
-}
-
-
-.c-header__nav-submenu {
-  list-style-type: none;
-  margin: 10px 0 -10px;
-  padding: 0;
-
-  @include bp(screen3) {
-    position: absolute;
-    top: 100%;
-    right: -1px;
-    margin: 0;
-    min-width: 180px;
-    white-space: nowrap;
-    border-right: thin solid $design-orange-color;
-  }
-
-  li {
-    margin: 0;
-    a {
-      display: block;
-      margin: 0 0 2px;
-      padding: 10px;
-      background-color: $design-medium-blue-color;
-      color: $design-white-color;
-      text-decoration: none;
-      border-top: 2px solid $design-white-color;
-
-      @include bp(screen3) {
-        margin: 0;
-        background-color: $design-white-color;
-        color: $design-black-color;
-        border-top: none;
-        border-left: thin solid $design-light-gray-color;
-        border-bottom: thin solid $design-light-gray-color;
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-          text-decoration: underline;
-        }
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-        }
-      }
-    }
   }
 }
