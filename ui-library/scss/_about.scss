@@ -15,7 +15,18 @@ h3.expand-button {
 .about-bios {
   padding-top: $spacing-sm;
   border-top: thin solid $design-dark-blue-color;
-  columns: 2;
+
+  @media (min-width: 620px) {
+    columns: 2;
+  }
+
+  @include bp(screen3) {
+    columns: 1;
+  }
+
+  @media (min-width: 980px) {
+    columns: 2;
+  }
 
   .bio {
     margin-bottom: $spacing-md;
@@ -64,6 +75,29 @@ h3.expand-button {
   }
 }
 
+.member-list {
+  columns: 2;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  @media (min-width: 620px) {
+    columns: 3;
+  }
+
+  @include bp(screen3) {
+    columns: 2;
+  }
+
+  @media (min-width: 980px) {
+    columns: 3;
+  }
+
+  li {
+    display: inline-block;
+    width: 100%;
+  }
+}
 
 dl.timeline {
   position: relative;

@@ -2,7 +2,7 @@
 
 <p>Dryad is an open data publishing platform and a community committed to the open availability and routine re-use of all research data.</p>
 <p>Our vision is for a future in which the open availability and routine reuse of all research data enables the acceleration of discovery across domains and the translation of research into benefits for society worldwide. We advance our vision through our mission: to enable the open publication and routine reuse of all research data.</p>
-<p><a href="/stash/join_us#our-membership">Our multi-stakeholder community</a> of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. They invest in Dryad for the curation, open sharing and reuse of research data in all fields.</p> 
+<p>Our multi-stakeholder community of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. They invest in Dryad for the curation, open sharing and reuse of research data in all fields.</p> 
 
 <p>We value responsibility, inclusion, openness and trustworthiness:
   <ul>
@@ -19,7 +19,10 @@
 <div class="about-page" id="our-members-sec" hidden>
 <p>Dryad’s members are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/stash/join_us">Learn about joining us as a member organization</a>.</p>
-  <%= render "layouts/our_members" %>
+<h4>Institutional members</h4>
+  <%= render "layouts/members_institutional" %>
+<h4>Publisher members</h4>
+  <%= render "layouts/members_publishers" %>
 </div>
 <h3 id="our-board" class="expand-button" role="button" aria-expanded="false" aria-controls="our-board-sec">Our board</h3>
 <div class="about-page" id="our-board-sec" hidden>

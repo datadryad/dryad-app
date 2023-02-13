@@ -78,4 +78,8 @@
 <p>Our community is open to a full spectrum of stakeholder organizations
 including universities, research institutions and academic libraries. <a href="/stash/interested">Contact us about joining us as a member organization</a>.</p>
 
-<%= render "layouts/our_members" %>
+### Institutional members
+<%= render "layouts/members_institutional" %>
+
+### Publisher members
+<%= render "layouts/members_publishers" %>
