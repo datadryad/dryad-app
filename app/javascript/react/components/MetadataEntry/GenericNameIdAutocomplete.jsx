@@ -123,7 +123,7 @@ export default function GenericNameIdAutocomplete(
                 }
               },
               onChange: (e) => {
-                const {value} = e.target
+                const {value} = e.target;
                 // reset information if they've changed input text, but otherwise leave alone
                 if (acText !== value) {
                   setAcText(value);
