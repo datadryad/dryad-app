@@ -1588,11 +1588,12 @@ function joelsReady(){
 
   // ***** Header Mobile Menu Toggle ***** //
 
-  $('.js-header__menu-button').click(function(){
+  $('#header-menu-button').click(function(){
     $(this).attr('aria-expanded', (i, attr) => {
       return attr == 'true' ? 'false' : 'true';
     });
-    $('.js-header__nav').toggleClass('c-header__nav c-header__nav--is-open');
+    $(this).parent().toggleClass('is-open');
+    $('#site-menu').toggleClass('is-open');
   });
 
   // ***** Required Field State ***** //

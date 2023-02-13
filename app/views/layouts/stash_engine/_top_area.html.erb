@@ -6,7 +6,6 @@
   <header class="c-header">
 <% end %>
     <div class="c-header__logos">
-      <button aria-label="Show main menu" class="o-button__menu c-header__menu-button js-header__menu-button" aria-controls="main-menu" aria-expanded="false"></button>
       <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link js-nav-out') do %>
         <%
         dash_logo = image_tag('stash_engine/logo_dryad.png', class: 'c-header__dash-logo-svg', alt: 'Dryad')
