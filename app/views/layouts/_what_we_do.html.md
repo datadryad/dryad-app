@@ -62,36 +62,165 @@ We welcome collaborations to develop additional modules for additional metadata 
 ### Features of Dryad service
 
 <div style="max-width: 100%; overflow-x: auto; overflow-y: hidden">
-
-| Feature | Tech-focused | User-focused | Description                                                                                                                                   |
-|:---------------------------------|:-------------------------:|:------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------|
-| Open Source | X |  | All components open source, [MIT licensed code](https://github.com/CDL-Dryad/dryad-app)                                                       |
-| Standards compliant | X |  | Dryad integrates with any SWORD-compliant repository                                                                                          |
-| Pluggable Framework | X |  | Inherent extensibility for supporting additional protocols and metadata schemas                                                               |
-| Flexible metadata schemas | X |  | Support Datacite metadata schema out-of-the-box, but can be configured to support any schema                                                  |
-| Innovation | X |  | Our modular framework will make new feature development easier and quicker                                                                    |
-| Mobile/responsive design | X | X | Built mobile-first, from the ground up, for better user experience                                                                            |
-| Geolocation - Metadata | X | X | For applicable research outputs, we have an easy to use way to capture location of your datasets                                              |
-| Persistent Identifers - ORCID | X | X | Dryad requires ORCID for login and allows for co-authors to attach their ORCID, allowing them to track their work                             |
-| Persistent Identifers - DOIs | X | X | Dryad issues DOIs for all datasets, allowing researchers to track and get credit for their work                                               |
-| Persistent Identifers - Funder Registry | X | X | Dryad tracks funder information using Crossref's Funder Registry, allowing researchers and funders to track their reasearch outputs           |
-| Persistent Identifers - Research Organization Registry | X | X | Dryad tracks institutional affiliations with ROR IDs, allowing institutions to track their reasearch outputs                                  |
-| Login - Shibboleth /OAuth2 | X | X | We offer easy single-sign with your campus credentials and ORCID account                                                                      |
-| Versioning | X | X | Datasets can change. Dryad offers a quick way for you to upload new versions of your datasets and offer a simple process for tracking updates |
-| Accessibility | X | X | The technology, design, and user workflows have all been built with accessibility in mind                                                     |
-| Better user experience |  | X | Self-depositing made easy. Simple workflow, drag-and-drop upload, simple navigation, clean data publication pages, user dashboards            |
-| Geolocation - Search |  | X | With GeoBlacklight, we can offer search by location                                                                                           |
-| Robust Search |  | X | Search by subject, filetype, keywords, campus, location, etc.                                                                                 |
-| Discoverability |  | X | Indexing by search engines including Google Dataset Search                                                                                    |
-| Build Relationships |  | X | Many datasets are related to publications or other data. Dryad offers a quick way to describe these relationships                             |
-| Supports Best Practices |  | X | Data publication can be confusing. But with Dryad, you can trust deposits are following best practices                                        |
-| Data Metrics |  | X | See the reach of your datasets through standardized (Make Data Count) usage and download metrics                                              |
-| Data Citations |  | X | Quick access to a well-formed citiation reference (with DOI) to every data publication. Easy for your peers to quickly grab                   |
-| Open License |  | X | Dryad supports open Creative Commons licensing for all data deposits                                                                          |
-| Support Data Reuse |  | X | Focus researchers on describing methods and explaining ways to reuse their datasets                                                           |
-| Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply             |
-
-
+<table style=""><thead>
+<tr>
+<th style="text-align: left">Feature</th>
+<th style="text-align: center">Tech-focused</th>
+<th style="text-align: center">User-focused</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Open Source</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center"></td>
+<td style="text-align: left">All components open source, <a href="https://github.com/CDL-Dryad/dryad-app">MIT licensed code</a></td>
+</tr>
+<tr>
+<td style="text-align: left">Standards compliant</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center"></td>
+<td style="text-align: left">Dryad integrates with any SWORD-compliant repository</td>
+</tr>
+<tr>
+<td style="text-align: left">Pluggable Framework</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center"></td>
+<td style="text-align: left">Inherent extensibility for supporting additional protocols and metadata schemas</td>
+</tr>
+<tr>
+<td style="text-align: left">Flexible metadata schemas</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center"></td>
+<td style="text-align: left">Support Datacite metadata schema out-of-the-box, but can be configured to support any schema</td>
+</tr>
+<tr>
+<td style="text-align: left">Innovation</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center"></td>
+<td style="text-align: left">Our modular framework will make new feature development easier and quicker</td>
+</tr>
+<tr>
+<td style="text-align: left">Mobile/responsive design</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Built mobile-first, from the ground up, for better user experience</td>
+</tr>
+<tr>
+<td style="text-align: left">Geolocation - Metadata</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">For applicable research outputs, we have an easy to use way to capture location of your datasets</td>
+</tr>
+<tr>
+<td style="text-align: left">Persistent Identifers - ORCID</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Dryad requires ORCID for login and allows for co-authors to attach their ORCID, allowing them to track their work</td>
+</tr>
+<tr>
+<td style="text-align: left">Persistent Identifers - DOIs</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Dryad issues DOIs for all datasets, allowing researchers to track and get credit for their work</td>
+</tr>
+<tr>
+<td style="text-align: left">Persistent Identifers - Funder Registry</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Dryad tracks funder information using Crossref's Funder Registry, allowing researchers and funders to track their reasearch outputs</td>
+</tr>
+<tr>
+<td style="text-align: left">Persistent Identifers - Research Organization Registry</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Dryad tracks institutional affiliations with ROR IDs, allowing institutions to track their reasearch outputs</td>
+</tr>
+<tr>
+<td style="text-align: left">Login - Shibboleth /OAuth2</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">We offer easy single-sign with your campus credentials and ORCID account</td>
+</tr>
+<tr>
+<td style="text-align: left">Versioning</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Datasets can change. Dryad offers a quick way for you to upload new versions of your datasets and offer a simple process for tracking updates</td>
+</tr>
+<tr>
+<td style="text-align: left">Accessibility</td>
+<td style="text-align: center">X</td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">The technology, design, and user workflows have all been built with accessibility in mind</td>
+</tr>
+<tr>
+<td style="text-align: left">Better user experience</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Self-depositing made easy. Simple workflow, drag-and-drop upload, simple navigation, clean data publication pages, user dashboards</td>
+</tr>
+<tr>
+<td style="text-align: left">Geolocation - Search</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">With GeoBlacklight, we can offer search by location</td>
+</tr>
+<tr>
+<td style="text-align: left">Robust Search</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Search by subject, filetype, keywords, campus, location, etc.</td>
+</tr>
+<tr>
+<td style="text-align: left">Discoverability</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Indexing by search engines including Google Dataset Search</td>
+</tr>
+<tr>
+<td style="text-align: left">Build Relationships</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Many datasets are related to publications or other data. Dryad offers a quick way to describe these relationships</td>
+</tr>
+<tr>
+<td style="text-align: left">Supports Best Practices</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Data publication can be confusing. But with Dryad, you can trust deposits are following best practices</td>
+</tr>
+<tr>
+<td style="text-align: left">Data Metrics</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">See the reach of your datasets through standardized (Make Data Count) usage and download metrics</td>
+</tr>
+<tr>
+<td style="text-align: left">Data Citations</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Quick access to a well-formed citiation reference (with DOI) to every data publication. Easy for your peers to quickly grab</td>
+</tr>
+<tr>
+<td style="text-align: left">Open License</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Dryad supports open Creative Commons licensing for all data deposits</td>
+</tr>
+<tr>
+<td style="text-align: left">Support Data Reuse</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Focus researchers on describing methods and explaining ways to reuse their datasets</td>
+</tr>
+<tr>
+<td style="text-align: left">Satisfies Data Availability Requirements</td>
+<td style="text-align: center"></td>
+<td style="text-align: center">X</td>
+<td style="text-align: left">Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply</td>
+</tr>
+</tbody></table>
 </div>
 
 ### History
