@@ -6459,7 +6459,12 @@ html.no-details .o-showhide__summary {
   text-align: center;
 }
 .t-login__section > div {
-  padding: 2rem;
+  padding: 2rem 1rem;
+}
+@media (min-width: 870px) {
+  .t-login__section > div {
+    padding: 2rem;
+  }
 }
 
 @media (min-width: 870px) {
