@@ -42,8 +42,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       # Sign in and create a new dataset
       sign_in(@superuser)
       visit root_path
-      find('button', text: 'Datasets').click
-      page.has_css?('.c-header__nav-submenu')
       click_link 'My datasets'
       3.times do
         start_new_dataset

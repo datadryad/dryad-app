@@ -1,17 +1,18 @@
-# What we do
+<h1>Our mission</h1>
 
-Dryad advances our vision – for the open availability and routine reuse of research data to drive the acceleration of discovery and translation of research into benefits for society – by enabling the open publication and routine reuse of all research data. 
+<p>The Dryad Data Platform is a curated resource that makes research data <strong>discoverable, freely reusable, and citable</strong>. Dryad provides a general-purpose home for a wide diversity of data types.</p>
+<p>Dryad originated from an initiative among a group of leading journals and scientific societies to adopt a <a href="/docs/JointDataArchivingPolicy.pdf">joint data archiving policy (JDAP)</a> for their publications, and the recognition that <strong>open, easy-to-use, not-for-profit, community-governed data infrastructure</strong> was needed to support such a policy. These remain our guiding principles.</p>
+<p>Dryad’s vision is to promote a world where research data is openly available, integrated with the scholarly literature, and routinely re-used to create knowledge.</p>
+<p>Our mission is to provide the infrastructure for, and promote the re-use of, data underlying the scholarly literature.</p>
 
-**We make it easier to share, find, use and cite data, and are ready-made for emerging data-sharing requirements.**
-
-
-
-* Data curation at Dryad – Ensures data is appropriate and licensed for sharing; Verifies data is accessible and usable; and Supports authors.
-* Data publishing at Dryad – Ensures metadata quality; Increases discoverability of data; Connects data with other research outputs; Promotes data citation; and Makes data count.
-* The Dryad platform – Offers a smooth and easy publishing experience for authors; Integrates readily with publisher workflows; Runs on open-source software; May be accessed via open API.
-
-Dryad serves all research domains and welcomes submissions of data in every field – where there is not an existing specialist repository and where the data may be shared openly. Dryad publishes data exclusively under a [Creative Commons Public Domain License](https://creativecommons.org/share-your-work/public-domain/cc0/) (CC0) and does not support the publication of sensitive data, to which access should be restricted.
-
-Our [custom process](/stash/process) is dedicated exclusively to research data. We work in concert with [aligned organizations](/stash/collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans and more. 
-
-See how [Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7189481). 
+<h2>Key features</h2>
+<ul>
+<li>Flexible about data format, while encouraging the use and further development of research community standards.</li>
+<li>Fits into the manuscript submission workflow of its partner journals, making data submission easy.</li>
+<li>Assigns Digital Object Identifiers (DOIs) to data so that researchers can gain professional credit through data citation.</li>
+<li>Promotes data visibility through usage and download metrics and by allowing content to be indexed, searched and retrieved.</li>
+<li>Promotes data quality by employing professional curators to ensure the validity of the files and descriptive information.</li>
+<li>Contents are free to download and re-use under a Creative Commons Zero (CC0) license.</li>
+<li>Contents are preserved for the long term to guarantee access to contents indefinitely.</li>
+<li>Open source, standards-compliant technology.</li>
+</ul>

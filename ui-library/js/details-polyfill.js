@@ -68,3 +68,14 @@ function modernizeIt(){
     });
   }
 }
+
+function closeSiblings(selector) {
+  // Close any other menu items before displaying the selector
+  $(selector).closest('.c-header__nav-item').siblings().each(function(idx, sibling) {
+    var details = $(sibling).find('details');
+    if (details && details.is('[open]')) {
+      details.attr('aria-expanded', 'false');
+      details.removeAttr('open');
+    }
+  });
+}

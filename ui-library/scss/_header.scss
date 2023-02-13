@@ -17,10 +17,9 @@
 
 .c-header__logos {
   display: flex;
+  flex: 1 0 auto; // IE 11 fix
 
   @include bp(screen3) {
-    display: block;
-    max-width: 50%;
     margin: 5px 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
   }
 
@@ -37,8 +36,6 @@
 
 .c-header__dash-logo-link {
   display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
 }
 
 // The SVG height properties below also set the header height, in addition to the c-header__logos margin property above.
@@ -46,12 +43,11 @@
 .c-header__dash-logo-svg {
   /* Blacklight/geoblacklight resets */
   box-sizing: content-box;
+  height: 30px;
   padding: 5px 0;
-  max-height: 30px;
 
   @include bp(screen3) {
-    width: 100%;
-    max-height: 40px;
+    height: 40px;
   }
 
   &:nth-child(2) {
@@ -62,7 +58,7 @@
 
 }
 
-.c-header__nav, .c-header__nav--is-open {
+%c-header__nav {
   display: none;
   flex-flow: column nowrap;
   margin: 5px 0 0;
@@ -72,22 +68,22 @@
     justify-content: space-between;
     margin: 0;
   }
+
+}
+
+.c-header__nav {
+  @extend %c-header__nav;
 }
 
 .c-header__nav--is-open {
+  @extend %c-header__nav;
   display: flex;
 }
 
 .c-header__global-search {
-  margin: -5px auto;
+  margin: 0 0 2px;
+  padding: 6px;
   background-color: $design-light-blue-color;
-  height: 38px;
-  .o-global-search__input {
-    font-size: 1em;
-  }
-  .o-global-search__submit-button {
-    width: 38px;
-  }
 
   @include bp(screen3) {
     align-self: flex-end;
@@ -95,71 +91,39 @@
     margin: 0;
     padding: 0;
     background-color: $design-white-color;
-    height: 28px;
-
-    .o-global-search__input {
-      font-size: .9em;
-    }
-    .o-global-search__submit-button {
-      width: 28px;
-    }
   }
 
 }
 
 .c-header__nav-group {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-flow: column nowrap;
 
   @include bp(screen3) {
     z-index: 1;
     flex-flow: row nowrap;
-    align-items: center;
-    justify-content: flex-end;
-
-    &:not(:first-child) {
-      margin-top: 10px;
-    }
+    justify-content: space-between;
   }
+
 }
 
-.c-header__nav-item {
-  white-space: nowrap;
-  margin: 0 -30px 2px;
-  padding: 10px 30px;
+%c-header__nav-item {
+  margin: 0 0 2px;
+  padding: 10px;
   background-color: $design-light-blue-color;
   color: $design-white-color;
   text-decoration: none;
-  position: relative;
-
-  &.dev-only {
-    text-align: right;
-    @include bp(screen3) {
-      color: $design-orange-color;
-    }
-  }
-
-  a:link, a:visited {
-    color: $design-white-color;
-    text-decoration: none;
-  }
 
   @include bp(screen3) {
     display: flex;
+    flex: 1 0 auto;
     margin: 0;
     padding: 0 15px;
     background-color: $design-white-color;
-    
-    a:link, a:visited {
-      color: $design-black-color;
-      text-decoration: none;
-    }
+    color: $design-black-color;
 
-    a:hover,
-    a:focus {
+    &:hover,
+    &:focus {
       color: $link-globalnav-hover-color;
       text-decoration: underline;
     }
@@ -168,96 +132,24 @@
       border-right: thin solid $design-orange-color;
     }
 
-    &.is-open {
-      padding-bottom: 10px;
-      margin-bottom: -10px;
-    }
-
-    &:last-child {
-      padding-right: 0;
-    }
   }
 }
 
-.c-header_nav-button {
-  border: none;
-  background-color: transparent;
-
-  &::after {
-    color: $design-white-color;
-    font-family: FontAwesome;
-    content: " \f0d7";
-  }
-
-  &[aria-expanded=true]::after {
-    content: " \f0d8";
-  }
-
-  @include bp(screen3) {
-    padding: 0;
-    color: $design-black-color;
-
-    &:hover,
-    &:focus {
-      color: $link-globalnav-hover-color;
-      text-decoration: none;
-    }
-
-    &::after {
-      color: $design-dark-blue-color;
-    }
-  }
+.c-header__nav-item {
+  @extend %c-header__nav-item;
 }
 
-.c-header__nav-submenu {
-  list-style-type: none;
-  margin: 10px 0 -10px;
-  padding: 0;
+.c-header__nav-item:last-child {
+  @extend %c-header__nav-item;
+  padding-right: 0;
+}
 
-  &[hidden] {
-    display: none;
-  }
+.c-header__nav-item--active {
+  @extend %c-header__nav-item;
+  color: $design-black-color;
 
   @include bp(screen3) {
-    position: absolute;
-    top: 1.95em;
-    right: -1px;
-    margin: 0;
-    min-width: 180px;
-    white-space: nowrap;
-    border-right: thin solid $design-orange-color;
+    color: $design-dark-blue-color;
   }
 
-  li {
-    margin: 0;
-    a {
-      display: block;
-      margin: 0 0 2px;
-      padding: 10px;
-      background-color: $design-light-blue-color;
-      color: $design-white-color;
-      text-decoration: none;
-      border-top: 2px solid $design-white-color;
-
-      @include bp(screen3) {
-        margin: 0;
-        background-color: $design-white-color;
-        color: $design-black-color;
-        border-top: none;
-        border-left: thin solid $design-light-gray-color;
-        border-bottom: thin solid $design-light-gray-color;
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-          text-decoration: underline;
-        }
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-        }
-      }
-    }
-  }
 }

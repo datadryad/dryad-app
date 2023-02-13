@@ -230,10 +230,8 @@ Rails.application.routes.draw do
     
     get 'close_page', to: 'pages#close_page'
     get 'faq', to: 'pages#faq'
-    get 'collaborations', to: 'pages#collaborations'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
-    get 'origins', to: 'pages#origins'
     get 'our_community', to: 'pages#our_membership'
     get 'our_governance', to: 'pages#our_governance'
     get 'our_mission', to: 'pages#our_mission'
@@ -246,7 +244,6 @@ Rails.application.routes.draw do
     get 'ethics', to: 'pages#ethics'
     get 'our_staff', to: 'pages#our_staff'
     get 'our_advisors', to: 'pages#our_advisors'
-    get 'process', to: 'pages#process'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
     get 'why_use', to: 'pages#why_use'
@@ -255,7 +252,6 @@ Rails.application.routes.draw do
     get 'terms', to: 'pages#terms'
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
-    get 'who_we_are', to: 'pages#who_we_are'
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
     get '404', to: 'pages#app_404', as: 'app_404'
