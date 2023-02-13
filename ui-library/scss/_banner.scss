@@ -6,20 +6,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-	// 'background-image: none' needs to override the inline background-image style in the HTML at small screen:
-
-	// scss-lint:disable ImportantRule
-  @media (max-width: $screen-sm-min - 1) {
-  	background-image: none !important;
-  }
-
-  @include bp(screen1) {
-    height: 27vw;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
-  }
+  height: 27vw;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 
   @include bp(screen4) {
 		height: 345px;
