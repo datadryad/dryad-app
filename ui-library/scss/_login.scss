@@ -6,7 +6,10 @@
   text-align: center;
 
   & > div {
-    padding: $spacing-md;
+    padding: $spacing-md $spacing-sm;
+    @include bp(screen3) {
+      padding: $spacing-md;
+    }
   }
 }
 
