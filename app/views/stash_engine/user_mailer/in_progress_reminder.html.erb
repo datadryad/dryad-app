@@ -1,20 +1,19 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>We noticed that you have initiated a submission to Dryad, “<%= @resource.title %>”, but have not completed the process.</p>
+<p>Your Dryad data submission, “<%= @resource.title %>”, is currently "In Progress". It has not yet been submitted for evaluation by a member of our curation team.</p>
 
-<p>When you are prepared to submit this dataset for curation and archiving, please follow these steps:</p>
+<p>When you are prepared to submit this dataset for curation and publication, please follow these steps:</p>
 <ol>
-<li>Log in at https://datadryad.org/</li>
-<li>Navigate to “My datasets”</li>
+<li>Login to <a href="https://datadryad.org">https://datadryad.org</a></li>
+<li>Click on "My datasets"</li>
 <li>Locate your submission with the status "In Progress"</li>
-<li>Click “Resume” to access your submission</li>
-<ul>
-  <li>If you have pending edits, incorporate the updates then click "Resume"</li>
-  <li>If you do not have edits, you can simply delete the version of the submission that shows in your dashboard under "In Progress"</li>
-</ul>
-<li>Click “Submit”</li>
+<li>Click "Resume" to access your submission</li>
+<li>Incorporate pending edits, if any</li>
+<li>Click "Submit"</li>
 </ol>
 
-<p>If you do not intend to submit this dataset, you may select the option to “Delete” this dataset from your dashboard.</p>
+<p>If you do not intend to proceed with the publication of this dataset, you may either select "Delete" from your dashboard if this option is available to you, or contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a> to request that it is withdrawn.
 
-<p>Please get in touch with any questions at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>Should you need to reach out to us in regards to this submission, please include the DOI in your email to ensure swift assistance.</p>
+
+<p>The Dryad Team</p>

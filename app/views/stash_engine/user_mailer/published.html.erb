@@ -1,33 +1,30 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-    Your dataset entitled "<%= @resource.title %>" has been reviewed by our curation team and approved for publication.
+  Your dataset titled "<%= @resource.title %>" has been reviewed by our curation team and approved for publication. It is publicly accessible via this link: <a href="https://doi.org/<%= @resource.identifier_str %>">https://doi.org/<%= @resource.identifier_str %></a>.
 </p>
-
-<p>Your dataset is now publicly accessible (<%= @resource.identifier_str %>).</p>
 
 <% rel_sfw = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'software')&.first %>
 <% rel_supp = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'supplemental_information')&.first %>
-
 <% unless rel_sfw.nil? %>
-  <p>Your related software is being published at Zenodo: <%= link_to rel_sfw.related_identifier, rel_sfw.related_identifier %></p>
+  <p>Your related software files are being hosted by Zenodo and are now published and publicly available here: <%= link_to rel_sfw.related_identifier, rel_sfw.related_identifier %></p>
 <% end %>
-
 <% unless rel_supp.nil? %>
-  <p>Your supplemental information is being published at Zenodo: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
+  <p>Your supplemental information is being hosted by Zenodo and is now published and publicly available here: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
 <% end %>
 
-<p>If you would like to update your dataset you may do so, at any time, by
-    clicking "Update" on your "My datasets" page. Please note, any edits made
-    will create a new version of your submission, however, the DOI will remain
-    unchanged. Once the latest version has been approved by our curation team
-    and published, only the most recent version of your dataset will be packaged
-    and available for download via the "Download dataset" button. Prior versions
-    can be accessed via the "Data files" section.</p> 
+<p>
+  If you would like to update your dataset you may do so, at any time, by
+  clicking "Update" on your "My datasets" page. Please note, any edits made
+  will create a new version of your submission, however, the DOI will remain
+  unchanged. Additionally, any changes will not be immediately publicly available as all updates must be approved by our curation team prior to republication. Only the most recent version of your dataset will be packaged and available for download via the "Download dataset" button. Previous versions can be accessed via the "Data files" section.
+</p> 
 
-<p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
+<p>Thank you for choosing Dryad to host your data.</p>
 
-<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>The Dryad Team</p>
+
+<p>We welcome your feedback! Please share your thoughts with us at: <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
 
 
 
