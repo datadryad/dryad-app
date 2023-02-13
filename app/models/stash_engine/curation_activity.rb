@@ -229,6 +229,8 @@ module StashEngine
         return if previously_submitted? # Don't send multiple emails for the same resource
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
+      when 'withdrawn'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
     end
 
