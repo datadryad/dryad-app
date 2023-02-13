@@ -8249,9 +8249,9 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
     font-size: 1.7em;
   }
 }
-@media (max-width: 479px) {
+@media (max-width: 760px) {
   .t-home__banner {
-    height: 38vw;
+    height: 180px;
   }
 }
 .t-home__banner .o-banner__credit {

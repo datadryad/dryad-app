@@ -26,8 +26,8 @@
 		}
 	}
 
-	@media (max-width: $screen-sm-min - 1) {
-		height: 38vw;
+	@media (max-width: $screen-md-min) {
+		height: 180px;
 	}
 
 	.o-banner__credit {
@@ -37,7 +37,7 @@
 		align-self: end;
 		margin-top: auto;
 
-		@media (max-width: 760px) {
+		@media (max-width: $screen-md-min) {
 			font-size: .7rem;
 		}
 	}
