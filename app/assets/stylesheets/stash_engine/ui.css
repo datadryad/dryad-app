@@ -7147,6 +7147,7 @@ img {
   text-align: left;
   padding: 8px 4px !important;
   border: thin solid #ccc;
+  line-height: 135%;
 }
 
 blockquote {
