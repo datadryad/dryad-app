@@ -141,7 +141,7 @@ module StashApi
       a = StashEngine::Author.new(
         author_first_name: json_author[:firstName],
         author_last_name: json_author[:lastName],
-        author_email: json_author[:email],
+        author_email: parse_email(json_author[:email]),
         author_orcid: json_author[:orcid] || @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id,
         author_order: json_author[:order] || nil
@@ -186,6 +186,19 @@ module StashApi
       return unless @resource.resource_type.blank?
 
       StashDatacite::ResourceType.create(resource_type_general: 'dataset', resource_type: 'dataset', resource_id: @resource.id)
+    end
+
+    private def parse_email(email_string)
+      # is it an email with display name and brackets like "Bob Jones <bob.jones@example.org>"-- then suck email out
+      matches = email_string&.match(/<(.+?@.+?)>/)
+      return matches[1] if matches
+
+      # if comma or semicolon
+      parts = email_string&.split(/[;,]/)
+      return parts[0]&.strip if parts && parts.length > 1
+
+      # otherwise, pass through unchanged
+      email_string
     end
 
   end

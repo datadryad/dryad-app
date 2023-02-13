@@ -26,7 +26,7 @@ module Stash
       def self.standard_request(method, url, **args)
         retries = 0
 
-        # the zenodo copy so we can log all the requests to the database
+        # the zenodo copy so we can log all the requests to the database, zd_id is just to enable logging
         zen_copy = (StashEngine::ZenodoCopy.where(id: args[:zc_id]).first if args[:zc_id])
         args.delete(:zc_id)
 

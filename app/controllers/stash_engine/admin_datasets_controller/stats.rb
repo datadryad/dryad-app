@@ -60,7 +60,7 @@ module StashEngine
 
       def datasets_with_curation_status_count(status:, only_unclaimed: false)
         query = "#{STATUS_QUERY_BASE} WHERE ser.updated_at < '#{@untouched_since}' AND ser.created_at > '#{@since}' AND seca.status = '#{status}'"
-        query += ' AND ser.current_editor_id is NULL' if only_unclaimed
+        query += ' AND (ser.current_editor_id is NULL or ser.current_editor_id = ser.user_id)' if only_unclaimed
         ApplicationRecord.connection.execute(query)&.first&.first
       end
 
