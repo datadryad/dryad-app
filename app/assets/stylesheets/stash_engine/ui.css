@@ -5090,6 +5090,12 @@ html.no-details .o-showhide__summary {
 #page-nav #nav-mobile-buttons #right-scroll-button::before {
   content: "\f0da";
 }
+#page-nav a:link, #page-nav a:visited {
+  text-decoration: none;
+}
+#page-nav a:hover, #page-nav a:focus, #page-nav a:active {
+  text-decoration: underline;
+}
 @media (min-width: 480px) {
   #page-nav {
     margin: 1rem -20px 0;
@@ -5104,18 +5110,25 @@ html.no-details .o-showhide__summary {
   #page-nav {
     margin: 0;
     -webkit-box-flex: 0;
-        -ms-flex: 0 1 30ch;
-            flex: 0 1 30ch;
+        -ms-flex: 0 1 32ch;
+            flex: 0 1 32ch;
+    background-color: #e4eff4;
   }
   #page-nav #nav-mobile-buttons {
     display: none;
   }
   #page-nav > ul {
     position: sticky;
-    top: 2rem;
+    top: 0;
+    padding: 1ch 2ch;
+    max-height: 100vh;
+    overflow-y: auto;
   }
   #page-nav ul li {
     margin: 0.5rem 0;
+  }
+  #page-nav a:link, #page-nav a:visited {
+    color: #00527A;
   }
 }
 @media (max-width: 869px) {
@@ -5151,12 +5164,6 @@ html.no-details .o-showhide__summary {
     max-width: 20ch;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  #page-nav a:link, #page-nav a:visited {
-    text-decoration: none;
-  }
-  #page-nav a:hover, #page-nav a:focus, #page-nav a:active {
-    text-decoration: underline;
   }
 }
 

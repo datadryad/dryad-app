@@ -249,6 +249,7 @@ function joelsReady(){
     $('#page-nav a').each(function(){
       menuSize += $(this).outerWidth()
     })
+    let menuAverage = menuSize/$('#page-nav a').length
     let menuWrapperSize = $(menu).outerWidth();
     let menuInvisibleSize = menuSize - menuWrapperSize;
     let menuPosition = menu.scrollLeft;
@@ -290,12 +291,12 @@ function joelsReady(){
     var scrollDuration = 150;
     // scroll to left
     $(rightButton).on('click', function() {
-      $(menu).animate( { scrollLeft: menuPosition += (menuWrapperSize/2)}, scrollDuration);
+      $(menu).animate( { scrollLeft: menuPosition += (menuAverage + 22)}, scrollDuration);
     });
 
     // scroll to right
     $(leftButton).on('click', function() {
-      $(menu).animate( { scrollLeft: menuPosition -= (menuWrapperSize/2) }, scrollDuration);
+      $(menu).animate( { scrollLeft: menuPosition -= (menuAverage + 22) }, scrollDuration);
     });
   }
 
