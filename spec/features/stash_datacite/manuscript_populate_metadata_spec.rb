@@ -51,19 +51,6 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
         .to_return(status: 200,
                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
                    headers: {})
-      stub_request(:get, 'https://api.datadryad.example.org/api/v1/journals/1742-5689')
-        .with(
-          headers: {
-            'Content-Type' => 'application/json'
-          }
-        )
-        .to_return(status: 200, body: {
-          fullName: 'Journal of The Royal Society Interface',
-          issn: '1742-5689',
-          allowReviewWorkflow: true,
-          allowEmbargo: true,
-          allowBlackout: false
-        }.to_json, headers: {})
 
       stub_request(:get, 'https://doi.org/10.1098/rsif.2017.0030').with(
         headers: { 'Host' => 'doi.org' }

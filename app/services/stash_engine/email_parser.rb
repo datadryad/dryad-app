@@ -88,10 +88,10 @@ module StashEngine
       @journal = StashEngine::Journal.where(journal_code: @hash['journal code'].downcase).first if @hash['journal code']
       return if @journal
 
-      @journal = StashEngine::Journal.where(issn: @hash['print issn']).first if @hash['print issn']
+      @journal = StashEngine::Journal.find_by_issn(@hash['print issn']) if @hash['print issn']
       return if @journal
 
-      @journal = StashEngine::Journal.where(issn: @hash['online issn']).first if @hash['online issn']
+      @journal = StashEngine::Journal.find_by_issn(@hash['online issn']) if @hash['online issn']
       return if @journal
 
       @journal = StashEngine::Journal.find_by_title(@hash['journal name']) if @hash['journal name']
