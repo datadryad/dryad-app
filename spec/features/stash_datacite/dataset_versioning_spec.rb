@@ -92,7 +92,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       describe :when_viewed_by_curator do
         before(:each, js: true) do
           sign_in(@curator)
-          find('summary', text: 'Admin').click
+          find('.c-header_nav-button', text: 'Datasets').click
           visit stash_url_helpers.ds_admin_path
         end
 
@@ -146,7 +146,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         sign_in(@curator)
-        find('summary', text: 'Admin').click
+        find('.c-header_nav-button', text: 'Datasets').click
         visit stash_url_helpers.ds_admin_path
 
         # Edit the Dataset as an admin
@@ -234,7 +234,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Admin page', js: true do
         sign_in(@curator)
-        find('summary', text: 'Admin').click
+        find('.c-header_nav-button', text: 'Datasets').click
 
         visit stash_url_helpers.ds_admin_path
 
@@ -253,7 +253,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Activity Log page', js: true do
         sign_in(@curator)
-        find('summary', text: 'Admin').click
+        find('.c-header_nav-button', text: 'Datasets').click
         visit stash_url_helpers.ds_admin_path
 
         within(:css, '.c-lined-table__row') do
