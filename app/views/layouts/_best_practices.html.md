@@ -102,7 +102,7 @@
 </ul>
 
 <h3>Examples</h3>
-<div style="display: flex; align-items: flex-start; justify-content: flex-start;">
+<div style="display: flex; align-items: flex-start; justify-content: flex-start; flex-wrap: wrap;">
 <div style="margin-right: 4em;">
 <h4 style="margin-top: 0;">A) Organized by File type</h4>
 <pre>

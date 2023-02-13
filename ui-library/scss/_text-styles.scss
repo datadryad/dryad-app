@@ -26,8 +26,12 @@ img {
 }
 
 #page-columns {
-  table {
-  border-collapse: collapse;
+  table {  
+    border-collapse: collapse;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #eee;
   }
 
   td, th {

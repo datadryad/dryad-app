@@ -61,6 +61,8 @@ We welcome collaborations to develop additional modules for additional metadata 
 
 ### Features of Dryad service
 
+<div style="max-width: 100%; overflow-x: auto; overflow-y: hidden">
+
 | Feature | Tech-focused | User-focused | Description                                                                                                                                   |
 |:---------------------------------|:-------------------------:|:------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------|
 | Open Source | X |  | All components open source, [MIT licensed code](https://github.com/CDL-Dryad/dryad-app)                                                       |
@@ -88,6 +90,9 @@ We welcome collaborations to develop additional modules for additional metadata 
 | Open License |  | X | Dryad supports open Creative Commons licensing for all data deposits                                                                          |
 | Support Data Reuse |  | X | Focus researchers on describing methods and explaining ways to reuse their datasets                                                           |
 | Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply             |
+
+
+</div>
 
 ### History
 
