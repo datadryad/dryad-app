@@ -75,19 +75,6 @@ export default function GenericNameIdAutocomplete(
     getItemProps,
   } = useCombobox({
     items: inputItems,
-    onInputValueChange: ({inputValue}) => {
-      // reset information if they've changed input text, but otherwise leave alone
-      if (acText !== inputValue) {
-        setAcText(inputValue);
-        setAcID('');
-      }
-      // only autocomplete with 3 or more characters so as not to waste queries
-      if (inputValue?.length > 3) {
-        getInputItems(inputValue);
-      } else {
-        setInputItems([]);
-      }
-    },
     onSelectedItemChange: ({selectedItem}) => {
       setAcID(idFunc(selectedItem));
       setAcText(nameFunc(selectedItem));
@@ -133,6 +120,20 @@ export default function GenericNameIdAutocomplete(
                 } else {
                   clearErrors();
                   setAutoBlurred(true); // set this to notify the parent component to save or do whatever
+                }
+              },
+              onChange: (e) => {
+                const {value} = e.target;
+                // reset information if they've changed input text, but otherwise leave alone
+                if (acText !== value) {
+                  setAcText(value);
+                  setAcID('');
+                }
+                // only autocomplete with 3 or more characters so as not to waste queries
+                if (value?.length > 3) {
+                  getInputItems(value);
+                } else {
+                  setInputItems([]);
                 }
               },
             },

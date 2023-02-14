@@ -11,7 +11,7 @@ namespace :dryad_migration do
       code.downcase!
       issn.chomp!
       puts "code=#{code} issn=#{issn}"
-      journal = StashEngine::Journal.where(issn: issn).first
+      journal = StashEngine::Journal.find_by_issn(issn)
       if journal
         journal.journal_code = code
         journal.save

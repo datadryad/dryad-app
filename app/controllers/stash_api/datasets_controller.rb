@@ -491,19 +491,30 @@ module StashApi
     end
 
     def update_publication_issn(new_issn)
-      datum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
+      idatum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
       if new_issn.present?
+        # Ensure we have the standardized journal title and ISSN
+        journal = StashEngine::Journal.find_by_issn(new_issn)
+        return unless journal.present?
+
         # real value, update an existing value or create a new one
-        if datum
-          datum.update(value: new_issn)
+        if idatum
+          idatum.update(value: journal.single_issn)
         else
           StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
                                             data_type: 'publicationISSN',
-                                            value: new_issn)
+                                            value: journal.single_issn)
         end
+
+        # remove and create publicationName to ensure it matches the ISSN
+        pdatum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationName').first
+        pdatum&.destroy
+        StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
+                                          data_type: 'publicationName',
+                                          value: journal.title)
       else
         # nil/empty new_issn, remove any existing datum
-        datum&.destroy
+        idatum&.destroy
       end
     end
 

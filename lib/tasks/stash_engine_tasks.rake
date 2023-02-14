@@ -490,7 +490,7 @@ namespace :identifiers do
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID WaiverBasis InstitutionName
-                JournalName JournalISSN SponsorName]
+                JournalName JournalISSN SponsorName CurrentStatus]
 
       # Limit the query to datasets that existed at the time of the target report,
       # and have been updated the within the month of the target.
@@ -507,7 +507,7 @@ namespace :identifiers do
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
         csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
-                i.publication_name, i.publication_issn, i.journal&.sponsor&.name]
+                i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
@@ -550,7 +550,7 @@ namespace :identifiers do
         end
         journal_item_count = 0
         sc_report.each do |item|
-          if item['JournalISSN'] == j.issn
+          if item['JournalISSN'] == j.single_issn
             journal_item_count += 1
             sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
           end
@@ -1032,14 +1032,14 @@ namespace :journals do
       end
 
       sfj = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_id)
-      if sfj['ISSN__c'] != j.issn
-        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.issn}"
-        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.issn }) unless dry_run
+      if sfj['ISSN__c'] != j.single_issn
+        puts "Updating ISSN in SF from #{sfj['ISSN__c']} to #{j.single_issn}"
+        Stash::Salesforce.update(obj_type: 'Account', obj_id: sf_id, kv_hash: { ISSN__c: j.single_issn }) unless dry_run
       end
 
       sf_parent_id = sfj['ParentId']
       sf_parent = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_parent_id)
-      puts "SPONSOR MISMATCH for #{j.issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
+      puts "SPONSOR MISMATCH for #{j.single_issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
     end
     nil
   end
