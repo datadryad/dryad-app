@@ -5542,8 +5542,10 @@ html.no-details .o-showhide__summary {
           flex-flow: column nowrap;
   margin: 5px 0 0;
 }
-.c-header__nav .hide-mobile {
-  display: none !important;
+@media (max-width: 870px) {
+  .c-header__nav .hide-mobile {
+    display: none !important;
+  }
 }
 @media (min-width: 870px) {
   .c-header__nav {
