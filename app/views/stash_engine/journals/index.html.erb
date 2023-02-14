@@ -13,8 +13,8 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <th class="c-admin-table <%= sort_display('title') %>">
 	  <%= sortable_column_head sort_field: 'title', title: 'Title' %>
       </th>
-      <th class="c-admin-table <%= sort_display('issn') %>">
-	  <%= sortable_column_head sort_field: 'issn', title: 'ISSN' %>
+      <th class="c-admin-table %>">
+	  ISSN
       </th>
       <th class="c-admin-table <%= sort_display('allow_blackout') %>">
 	  <%= sortable_column_head sort_field: 'allow_blackout', title: 'Automatic embargo?' %>
@@ -32,7 +32,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
   <% @journals.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
       <td><%= journal.title %></td>
-      <td><span style="white-space: nowrap;"><%= journal.issn %></span></td>
+      <td><span style="white-space: nowrap;"><%= journal.single_issn %></span></td>
       <td><%= journal.allow_blackout %></td>
       <td><%= journal.payment_plan_type %></td>
       <td><%= journal.top_level_org&.name %></td>

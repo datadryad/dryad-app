@@ -50,7 +50,7 @@ module StashEngine
         tenant_admin = (user.tenant_id if user.role == 'admin')
         with_visibility(states: %w[published embargoed],
                         tenant_id: tenant_admin,
-                        journal_issns: user.journals_as_admin.map(&:issn),
+                        journal_issns: user.journals_as_admin.map(&:single_issn),
                         funder_ids: user.funders_as_admin.map(&:funder_id),
                         user_id: user.id)
       end
@@ -254,7 +254,7 @@ module StashEngine
     def journal
       return nil if publication_issn.nil?
 
-      Journal.where(issn: publication_issn).first
+      Journal.find_by_issn(publication_issn)
     end
 
     def record_payment
@@ -609,7 +609,7 @@ module StashEngine
     def clear_payment_for_changed_journal
       return unless payment_type.present?
       return unless payment_type.include?('journal')
-      return if payment_id == journal&.issn
+      return if payment_id == journal&.single_issn
 
       self.payment_type = nil
       self.payment_id = nil

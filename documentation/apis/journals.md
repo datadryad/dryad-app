@@ -114,7 +114,8 @@ database.
 
 IF there is no corresponding journal, create an entry for a new journal in the
 system, using a command like the the one below. Edit any
-of the relevant fields, but the most critical are `title` and `issn`.
+of the relevant fields, but the most critical are `title` and `issn`. Note that `issn` may contain
+either a single ISSN or an array of them. 
 ```
 j = StashEngine::Journal.create(title: '', issn: '',
                                 notify_contacts: ["automated-messages@datadryad.org"], allow_review_workflow: true,
@@ -314,7 +315,7 @@ To run a test:
 - Send an email to the Gmail account with the required metadata. The
   account can be journal-submit-app OR the more general
   journal-submit@datadryad.org. Note that you must use a "real" journal
-  ISSNname to match the settings in the concept above. Something like:
+  name to match the settings in the concept above. Something like:
 
 ```
 Journal Name: Molecular Ecology
