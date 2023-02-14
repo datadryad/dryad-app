@@ -230,7 +230,7 @@ module StashEngine
         with_visibility(states: %w[published embargoed],
                         tenant_id: tenant_admin,
                         funder_ids: user.funders_as_admin.map(&:funder_id),
-                        journal_issns: user.journals_as_admin.map(&:issn),
+                        journal_issns: user.journals_as_admin.map(&:single_issn),
                         user_id: user.id)
       end
     end

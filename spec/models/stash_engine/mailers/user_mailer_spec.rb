@@ -54,7 +54,7 @@ module StashEngine
 
     describe 'curation status changes' do
 
-      mailable = %w[peer_review submitted published embargoed]
+      mailable = %w[peer_review submitted published embargoed withdrawn]
 
       StashEngine::CurationActivity.statuses.each do |status|
 
@@ -69,16 +69,19 @@ module StashEngine
             case status
             when 'peer_review'
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
-              expect(delivery.body.to_s).to include('will now remain private until your related manuscript has been accepted.')
+              expect(delivery.body.to_s).to include('your submission will not enter our curation process for review and publication')
             when 'submitted'
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
-              expect(delivery.body.to_s).to include('Thank you for submitting your dataset')
+              expect(delivery.body.to_s).to include('Thank you for your submission to Dryad')
             when 'published'
               expect(delivery.body.to_s).to include('approved for publication')
               expect(delivery.body.to_s).to include(@identifier.identifier.to_s)
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
+            when 'withdrawn'
+              expect(delivery.body.to_s).to include('Your data submission has been withdrawn from the Dryad platform')
+              expect(delivery.body.to_s).to include(@identifier.identifier.to_s)
             end
           end
         else
@@ -119,8 +122,8 @@ module StashEngine
         UserMailer.status_change(@resource, 'published').deliver_now
         delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
 
-        expect(delivery.body.to_s).to include('Your related software is being published at Zenodo')
-        expect(delivery.body.to_s).to include('Your supplemental information is being published at Zenodo')
+        expect(delivery.body.to_s).to include('Your related software files are being hosted by Zenodo')
+        expect(delivery.body.to_s).to include('Your supplemental information is being hosted by Zenodo')
         expect(delivery.body.to_s).to include(@test_doi)
         expect(delivery.body.to_s).to include(@test_doi2)
       end
@@ -151,7 +154,7 @@ module StashEngine
 
       UserMailer.orcid_invitation(@invite).deliver_now
       delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
-      expect(delivery.body.to_s).to include('We encourage you to register your ORCID researcher information for this dataset')
+      expect(delivery.body.to_s).to include('we encourage you to link your ORCID iD to this publication by following the URL below')
     end
 
     describe 'failures' do

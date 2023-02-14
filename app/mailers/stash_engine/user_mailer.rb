@@ -5,7 +5,7 @@ module StashEngine
 
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
     def status_change(resource, status)
-      return unless %w[submitted peer_review published embargoed].include?(status)
+      return unless %w[submitted peer_review published embargoed withdrawn].include?(status)
 
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
@@ -13,7 +13,7 @@ module StashEngine
       mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
-           subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Status change', status: status)
     end
@@ -27,7 +27,7 @@ module StashEngine
       return unless @resource&.identifier&.journal&.notify_contacts&.present?
 
       mail(to: @resource&.identifier&.journal&.notify_contacts,
-           subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
+           subject: "#{rails_env}Dryad Submission: \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: "Status #{status}", status: status, journal: true)
     end
@@ -41,7 +41,7 @@ module StashEngine
       return unless @resource&.identifier&.journal&.review_contacts&.present?
 
       mail(to: @resource&.identifier&.journal&.review_contacts,
-           subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
+           subject: "#{rails_env}Dryad Submission: \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Private for peer review', status: status, journal: true)
     end
@@ -55,7 +55,7 @@ module StashEngine
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
       mail(to: orcid_invite.email,
-           subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
     end
 
     # Called from the StashEngine::Repository
@@ -66,7 +66,7 @@ module StashEngine
       assign_variables(resource)
       @backtrace = error.full_message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
-           subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
+           subject: "#{rails_env}Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
 
     def in_progress_reminder(resource)
@@ -77,7 +77,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+           subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
     end
@@ -90,7 +90,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+           subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
     end
@@ -103,7 +103,7 @@ module StashEngine
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @message = message
       mail(to: @submission_error_emails, bcc: @bcc_emails,
-           subject: "#{rails_env} dependency offline: #{dependency.name}")
+           subject: "#{rails_env}dependency offline: #{dependency.name}")
     end
 
     def zenodo_error(zenodo_copy_obj)
@@ -114,7 +114,7 @@ module StashEngine
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email'] || [@helpdesk_email]
 
       mail(to: @zenodo_error_emails,
-           subject: "#{rails_env} Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
+           subject: "#{rails_env}Failed to update Zenodo for #{@zen.identifier} for event type #{@zen.copy_type}")
     end
 
     def voided_invoices(voided_identifier_list)
@@ -123,7 +123,7 @@ module StashEngine
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @identifiers = voided_identifier_list
       mail(to: @submission_error_emails,
-           subject: "#{rails_env} Voided invoices need to be updated")
+           subject: "#{rails_env}Voided invoices need to be updated")
     end
 
     private
@@ -158,7 +158,7 @@ module StashEngine
     end
 
     def rails_env
-      return "[#{Rails.env}]" unless Rails.env == 'production'
+      return "[#{Rails.env}] " unless Rails.env == 'production'
 
       ''
     end

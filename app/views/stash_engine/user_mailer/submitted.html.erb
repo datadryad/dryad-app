@@ -1,34 +1,32 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Thank you for submitting your dataset entitled, "<%= @resource.title %>".</p>
+<p>Thank you for your submission to Dryad titled, "<%= @resource.title %>".</p>
 
 <p>
-  Your submission will soon enter our curation process. Once your submission
-  has been reviewed and approved by our curators, your dataset will be
-  published, pending any questions or requests from our team and/or timed
-  publication requirements dictated by the journal title associated with your
-  submission.
+  Once your submission has been reviewed and approved for publication by our curators, your dataset will be made public, pending any questions or requests from our team and/or timed publication requirements dictated by the journal title associated with your submission.
 </p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
 
 <p>
-  Your dataset has been assigned a unique digital object
+  Your submission has been assigned a unique digital object
   identifier (DOI): <%= @resource.identifier_str %><br/>
   If your dataset is associated with a manuscript submission, you may provide
   this DOI to the journal office. The link will only be active upon
-  publication of your dataset and it will not change post-publication. For
-  private access prior to publication, you may share your dataset using the
+  publication of your dataset, and it will not change. Prior to publication,
+  you may provide private access to download the data files included with your submission by sharing this 
   unique URL: <a href="<%= shr %>"><%= shr %></a>.
 </p>
 
 <p>
-  Please note, datasets are curated in the order they are received. Attempting to access or update your submission
-  before it enters our curation process will reset its' position in the queue and potentially delay the curation
-  and publication processes. If you need to edit your dataset before curation begins, be sure to select 'Submit'
-  after you have reviewed and confirmed your most recent changes. Otherwise, exiting from editing mode will place
-  your submission 'In Progress' and it will not re-enter the queue for curation. To check the status of your data
-  submission, please contact <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.
+  Please note, datasets are evaluated in the order they are received. Changing your submission
+  before it enters our curation process will reset its position in the queue and potentially delay its publication.
+  If you do need to edit your dataset before curation begins, be sure to select 'Submit'
+  after you have reviewed and confirmed your most recent changes. Once editing has begun, navigating away from the page without submitting or discarding your changes will keep your submission from entering the curation queue.
+</p>
+
+<p>
+  To check the status of your data submission, please contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>. Kindly include the DOI in your email to ensure efficient and effective assistance.
 </p>
 
 <p>

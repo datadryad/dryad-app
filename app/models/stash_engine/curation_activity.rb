@@ -97,7 +97,7 @@ module StashEngine
     after_create :email_orcid_invitations,
                  if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
 
-    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed withdrawn].include?(ca.status) }
+    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
 
     after_create :update_salesforce_metadata, if: proc { |_ca|
                                                     latest_curation_status_changed? &&
@@ -229,6 +229,8 @@ module StashEngine
         return if previously_submitted? # Don't send multiple emails for the same resource
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
+      when 'withdrawn'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
     end
 
@@ -287,17 +289,22 @@ module StashEngine
       case status
       when 'withdrawn'
         resource.update_columns(meta_view: false, file_view: false)
+        target_pub_state = 'withdrawn'
+      when 'peer_review'
+        target_pub_state = 'unpublished'
       when 'embargoed'
         resource.update_columns(meta_view: true, file_view: false)
+        target_pub_state = 'embargoed'
       when 'published'
         resource.update_columns(meta_view: true, file_view: true)
+        target_pub_state = 'published'
       end
 
       return if resource&.identifier.nil?
 
-      resource.identifier.update_column(:pub_state, status)
+      resource.identifier.update_column(:pub_state, target_pub_state)
 
-      return if %w[withdrawn embargoed].include?(status)
+      return if %w[withdrawn embargoed peer_review].include?(status)
 
       # find out if there were not file changes since last publication and reset file_view, if so.
       changed = false # want to see that none are changed
