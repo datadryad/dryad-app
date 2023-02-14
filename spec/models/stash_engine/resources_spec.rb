@@ -215,7 +215,7 @@ module StashEngine
       it 'returns true if admin for same journal' do
         journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
         JournalRole.create(journal: journal, user: @user, role: 'admin')
 
@@ -432,7 +432,7 @@ module StashEngine
         journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         identifier.update(pub_state: 'unpublished')
-        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
         resource.update(file_view: false)
         JournalRole.create(journal: journal, user: @user, role: 'admin')
@@ -496,7 +496,7 @@ module StashEngine
         @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'user')
         journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
-        InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         JournalRole.create(journal: journal, user: @user2, role: 'admin')
 
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
@@ -1493,7 +1493,7 @@ module StashEngine
 
           it 'shows all resources to an admin for this journal' do
             journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
-            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
             JournalRole.create(journal: journal, user: @user2, role: 'admin')
             resources = @identifier.resources.visible_to_user(user: @user2)
             expect(resources.count).to eq(3)

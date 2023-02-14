@@ -41,7 +41,7 @@ module StashDatacite
         matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
         alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
         alt_matches.each do |am|
-          matches << { title: am.title, issn: am.journal.issn }
+          matches << { title: am.title, issn: am.journal.single_issn }
         end
         render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
       end
@@ -53,7 +53,7 @@ module StashDatacite
       return if target_issn.blank?
       return unless target_issn =~ /\d+-\w+/
 
-      match = StashEngine::Journal.where(issn: target_issn).first
+      match = StashEngine::Journal.find_by_issn(target_issn)
       render json: match
     end
 
@@ -62,7 +62,7 @@ module StashDatacite
       @pub_issn = params[:publication_issn]
       if @pub_issn.blank?
         exact_matches = StashEngine::Journal.where(title: @pub_name)
-        @pub_issn = exact_matches.first.issn if exact_matches.count == 1
+        @pub_issn = exact_matches.first.single_issn if exact_matches.count == 1
       end
       fix_removable_asterisk
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
@@ -139,7 +139,7 @@ module StashDatacite
       return if @pub_issn&.value.blank?
       return if @msid&.value.blank?
 
-      journal = StashEngine::Journal.where(issn: @pub_issn.value).first
+      journal = StashEngine::Journal.find_by_issn(@pub_issn.value)
       if journal.blank?
         @error = 'Journal not recognized by Dryad'
         return
@@ -231,7 +231,7 @@ module StashDatacite
       journal = StashEngine::Journal.find_by_title(@pub_name)
       return unless journal.present?
 
-      @pub_issn = journal.issn
+      @pub_issn = journal.single_issn
       @pub_name = journal.title
     end
 

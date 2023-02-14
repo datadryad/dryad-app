@@ -144,7 +144,7 @@ module StashApi
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: nil)
         journal = create(:journal)
         create(:journal_role, journal: journal, user: @user2, role: 'admin')
-        create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)

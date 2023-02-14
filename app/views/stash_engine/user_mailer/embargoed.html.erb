@@ -6,8 +6,10 @@
   <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %><% if @resource.identifier.embargoed_until_article_appears? %>, or until the associated article appears, whichever happens first<% end %>.</p>
 <% end %>
 
-<p>Your DOI has been registered and the landing page for your dataset is publicly available. However, the data files are not viewable or downloadable. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>
+<p>Your DOI has been registered and the landing page for your dataset is publicly available. However, the data files cannot be viewed or downloaded. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>
 
-<p>Thanks again for making your research openly available.</p>
+<p>Thank you for choosing Dryad to host your data.</p>
 
-<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+<p>The Dryad Team</p>
+
+<p>We welcome your feedback! Please share your thoughts with us at: <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>

@@ -1,0 +1,13 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>Your data submission has been withdrawn from the Dryad platform:</p>
+
+<p>
+Title: <%= @resource.title %><br/>
+DOI: <%= @resource.identifier_str %>
+</p>
+
+<p>If you would like to reinstate your submission at any time, please contact the Dryad Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+
+<p>All the best,<br/>
+The Dryad Team</p>
