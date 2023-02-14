@@ -564,6 +564,77 @@ namespace :identifiers do
     exit
   end
 
+  
+  desc 'Generate reports of items that should be billed for tiered journals'
+  task tiered_journal_reports: :environment do
+    # Get the input shopping cart report in SC_REPORT environment variable.
+    if ENV['SC_REPORT'].blank?
+      puts 'Usage: tiered_journal_reports SC_REPORT=<shopping_cart_report_filename>'
+      exit
+    else
+      sc_report_file = ENV['SC_REPORT']
+      puts "Producing tiered journal reports for #{sc_report_file}"
+    end
+
+    sc_report = CSV.parse(File.read(sc_report_file), headers: true)
+
+    md = /(.*)shopping_cart_report_(.*).csv/.match(sc_report_file)
+    time_period = nil
+    prefix = ''
+    deferred_filename = 'tiered_summary.csv'
+    if md.present? && md.size > 1
+      prefix = md[1]
+      time_period = md[2]
+      tiered_filename = "#{md[1]}#{time_period}_tiered_summary.csv"
+    end
+
+    puts "Writing summary report to #{tiered_filename}"
+    CSV.open(tiered_filename, 'w') do |csv|
+      csv << %w[SponsorName JournalName Count Price]
+      curr_sponsor = nil
+      sponsor_summary = []
+      StashEngine::Journal.where(payment_plan_type: 'TIERED').order(:sponsor_id, :title).each do |j|
+        if j.sponsor&.name != curr_sponsor
+          write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+          sponsor_summary = []
+          curr_sponsor = j.sponsor&.name
+        end
+        journal_item_count = 0
+        sc_report.each do |item|
+          if item['JournalISSN'] == j.single_issn
+            journal_item_count += 1
+            sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
+          end
+        end
+        csv << [j.sponsor&.name, j.title, journal_item_count, tiered_price(journal_item_count)]
+      end
+      write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+    end
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+
+  def tiered_price(count)
+    return nil unless count.is_a?(Integer)
+    free_datasets = 10
+    
+    if count <= free_datasets
+      price = 0
+    elsif count <= 100
+      price = (count - free_datasets) * 135
+    elsif count <= 250
+      price = (count - free_datasets) * 100
+    elsif count <= 500
+      price = (count - free_datasets) * 85
+    elsif count <= 500
+      price = (count - free_datasets) * 55
+    end
+
+    "$#{price}"
+  end
+  
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
   # rubocop:disable Metrics/MethodLength
   def write_sponsor_summary(name:, file_prefix:, report_period:, table:)
