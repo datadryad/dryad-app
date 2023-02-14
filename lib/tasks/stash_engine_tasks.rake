@@ -564,7 +564,6 @@ namespace :identifiers do
     exit
   end
 
-  
   desc 'Generate reports of items that should be billed for tiered journals'
   task tiered_journal_reports: :environment do
     # Get the input shopping cart report in SC_REPORT environment variable.
@@ -581,7 +580,7 @@ namespace :identifiers do
     md = /(.*)shopping_cart_report_(.*).csv/.match(sc_report_file)
     time_period = nil
     prefix = ''
-    deferred_filename = 'tiered_summary.csv'
+    tiered_filename = 'tiered_summary.csv'
     if md.present? && md.size > 1
       prefix = md[1]
       time_period = md[2]
@@ -615,26 +614,26 @@ namespace :identifiers do
     exit
   end
 
-
   def tiered_price(count)
     return nil unless count.is_a?(Integer)
+
     free_datasets = 10
-    
-    if count <= free_datasets
-      price = 0
-    elsif count <= 100
-      price = (count - free_datasets) * 135
-    elsif count <= 250
-      price = (count - free_datasets) * 100
-    elsif count <= 500
-      price = (count - free_datasets) * 85
-    elsif count <= 500
-      price = (count - free_datasets) * 55
-    end
+
+    price = if count <= free_datasets
+              0
+            elsif count <= 100
+              (count - free_datasets) * 135
+            elsif count <= 250
+              (count - free_datasets) * 100
+            elsif count <= 500
+              (count - free_datasets) * 85
+            else
+              (count - free_datasets) * 55
+            end
 
     "$#{price}"
   end
-  
+
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
   # rubocop:disable Metrics/MethodLength
   def write_sponsor_summary(name:, file_prefix:, report_period:, table:)
