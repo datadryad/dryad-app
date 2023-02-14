@@ -10,7 +10,8 @@ module StashEngine
     def will_pay?
       payment_plan_type == 'SUBSCRIPTION' ||
         payment_plan_type == 'PREPAID' ||
-        payment_plan_type == 'DEFERRED'
+        payment_plan_type == 'DEFERRED' ||
+        payment_plan_type == 'TIERED'
     end
 
     def top_level_org
