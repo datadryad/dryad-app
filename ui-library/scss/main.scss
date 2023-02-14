@@ -71,7 +71,6 @@
 @import 'sidebox';
 @import 'table-admin';
 @import 'table-heading';
-@import 'table-institutions';
 @import 'table-latest';
 @import 'table-progress';
 @import 'table-submitted';
@@ -112,13 +111,15 @@
 @import 'ui-library';
 
 body, body#yes-really {
-	max-width: $screen-max - ($spacing-lg * 2);
+	max-width: 1220px;
 	margin: 0 auto;
 	padding: 10px;
 	font-family: 'KievitWeb', sans-serif;
 
 	/* Blacklight/geoblacklight resets */
 	font-size: initial;
+
+	font-size: 1.1rem;
 
 	@include bp(screen1) {
 		padding: 10px 20px;

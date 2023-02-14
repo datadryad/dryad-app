@@ -3,7 +3,7 @@
 .t-home__header {
     position: relative;
     z-index: 10;
-	margin-bottom: 10px;
+	margin-bottom: 8px;
 	border-bottom: none;
 
 	@include bp(screen3) {
@@ -18,9 +18,16 @@
 	.o-banner__tagline {
 		margin: auto auto -16px;
 
-		@media (max-width: $screen-sm-min - 1) {
-			margin: auto;
+		@include bp(screen1) {
+			font-size: 1.7em;
 		}
+		@include bp(screen2) {
+			font-size: 1.7em;
+		}
+	}
+
+	@media (max-width: $screen-md-min) {
+		height: 180px;
 	}
 
 	.o-banner__credit {
@@ -30,12 +37,8 @@
 		align-self: end;
 		margin-top: auto;
 
-		@media (max-width: 760px) {
+		@media (max-width: $screen-md-min) {
 			font-size: .7rem;
-		}
-
-		@media (max-width: $screen-sm-min - 1) {
-			display: none;
 		}
 	}
 }

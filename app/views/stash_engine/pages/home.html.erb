@@ -1,6 +1,6 @@
 <% @page_title = 'Home - publish and preserve your data' %>
 <div class="t-home__banner o-banner" role="img" aria-label="A new species of Hiptage (Malpighiaceae) from Nujiang Gorge of Southwest China. Image CC0 https://doi.org/10.5061/dryad.xd2547dd5" style="background-image: url(<%= asset_path 'stash_engine/fruitback.jpg'%>)">
-  <div class="o-banner__tagline">Make the most of your research data</div>
+  <h1 class="o-banner__tagline">Make the most of your research data</h1>
   <!-- Promoting scholarship through open data -->
   <!-- the above may be required for Nagios check -->
   <div class="o-banner__credit">Photo DOI 10.5061/dryad.xd2547dd5</div>
@@ -10,7 +10,7 @@
     <div class="o-quote__quote">
       Dryad is a community-owned resource
       <br>
-      <a href="<%= stash_url_helpers.our_membership_path %>" class="o-quote__quote">Learn about membership</a>
+      <a href="<%= stash_url_helpers.join_us_path %>" class="o-quote__quote">Learn about membership</a>
     </div>
   </div>
   <div class="t-home__search o-home-search">
@@ -24,12 +24,17 @@
 <%= render partial: 'why_share' %>
 
 <%= render partial: 'why_use' %>
-
-<% unless @hostname == 'localhost' %>
-  <h1 class="o-heading__level1-home">Most recent datasets</h1>
-  <div id="latest_tiles"
-       data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+<div id="dryads-latest">
+  <% unless @hostname == 'localhost' %>
+    <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
+    <div id="latest_tiles" data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+    </div>
+  <% end %>
+  <h2 class="o-heading__level1-home">Latest news</h2>
+  <div id="blog-latest-posts" data-count="5">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
-<% end %>
+</div>
+<p style="text-align:right; font-size:.9em"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
 

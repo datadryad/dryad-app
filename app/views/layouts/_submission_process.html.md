@@ -1,4 +1,4 @@
-<h1>Submission and publication process</h1>
+# Submission and publication process</h1>
 
 <p>
     Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to
@@ -10,7 +10,7 @@
 
 <p>Ready to get started? <a href="/stash/">Log in</a> and go to "My datasets" to begin your data submission now!</p>
 
-<h2 id="login">Login</h2>
+## Login
 
 <p>
     Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the
@@ -31,14 +31,13 @@
   submission now!
 </p>
 
-<h2 id="uploading">Uploading your data</h2>
+## Uploading your data
 
 <h3>Describe your dataset</h3>
 <p>
-    You will first be asked to enter metadata (information about your data). Check out our tips for complete and
-    <a href="/stash/faq#metadata">comprehensive metadata</a>.  When you <a href="/stash/faq#upload-files">upload data files</a>,
-    ensure that they meet our <a href="/stash/faq#files">file requirements</a> and are able to be opened, they do not
-    contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#cc0">CC0</a>.
+    You will first be asked to enter metadata (information about your data). Check out our tips for complete and <a href="/stash/faq#what-should-i-include-in-my-metadata">comprehensive metadata</a>.  When you <a href="/faq#how-do-i-upload-my-files">upload data files</a>,
+    ensure that they meet our <a href="/stash/faq#how-should-i-prepare-my-data-files-before-submitting">file requirements</a> and are able to be opened, they do not
+    contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#why-cc0">CC0</a>.
 </p>
 
 <p>
@@ -89,7 +88,7 @@
 
 <p>
     For more information about our Zenodo integration check
-    out <a href="/stash/faq#zenodo-integrate">our FAQ</a>.
+    out <a href="/stash/faq#how-do-dryad-zenodo-partner-and-integrate">our FAQ</a>.
 </p>
 
 <h3>Tabular data validator</h3>
@@ -139,7 +138,7 @@ Foundation</a>.
 </p>
 
 <p>
-  If you prefer that your data remain private during the peer review process, select <a href="/stash/faq#ppr">Private for peer review</a>
+  If you prefer that your data remain private during the peer review process, select <a href="/stash/faq#how-does-dryad-s-private-for-peer-review-feature-work">Private for peer review</a>
   on the final page of the submission form. While in this status, your submission will not enter
   our curation process or publish until the checkbox for this option is deselected or you contact
   us to update the status of your submission.
@@ -147,23 +146,23 @@ Foundation</a>.
 
 <p>If you have questions or require assistance, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 
-<h2 id="curation">Dataset curation</h2>
+## Dataset curation
 <p>
-    We will review your data ensuring it meets our <a href="/stash/faq#curation">curation requirements</a>. If we have
+    We will review your data ensuring it meets our <a href="/stash/faq#what-happens-during-curation">curation requirements</a>. If we have
     questions we’ll get in touch with you. For more information check out <a href="/stash/faq">our FAQ</a>.
 </p>
 
-<h2 id="publication">Dataset publication</h2>
+## Dataset publication
 
 <p>
   Once your submission has been reviewed and approved by our team of curators, you will receive a notification of 
-  publication via email and your dataset will be made publicly available. The DOI <a href="/stash/faq#cite">provided 
+  publication via email and your dataset will be made publicly available. The DOI <a href="/stash/faq#how-do-i-cite-my-data">provided 
   to you</a> upon submission will remain unchanged.
 </p>
 
 <p>
   If the data publication charge is not covered by a journal, your institution, or if you are not eligible for a 
-  fee waiver, <a href="/stash/faq#cost">an invoice</a> will be generated and sent upon publication.
+  fee waiver, <a href="/stash/faq#how-much-does-it-cost">an invoice</a> will be generated and sent upon publication.
 </p>
 
 <p>

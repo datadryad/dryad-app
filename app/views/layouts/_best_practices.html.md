@@ -1,6 +1,6 @@
 <h1>Good data practices</h1>
 
-<h2>Best practices for creating reusable data publications</h2>
+## Best practices for creating reusable data publications
 
 <p>So, you want to share your research data in Dryad, but are unsure where to start or what you 'should' share? Don't worry, it's not always clear how to craft a dataset with reusability in mind.</p>
 
@@ -8,41 +8,28 @@
 
 <p>No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing</a>.</p>
 
-<p class="toc_title">Contents:</p>
-<ul>
-  <li><a href="#gather">Gather all relevant data needed for reanalysis</a></li>
-  <li><a href="#shareable">Make sure your data are shareable</a></li>
-  <li><a href="#accessible">Make sure your data are accessible</a></li>
-  <li><a href="#organize">Organize files in a logical schema</a></li>
-  <li><a href="#describe">Describe your dataset in a README file</a></li>
-  <li><a href="#examples">Examples of good reusability practices</a></li>
-  <li><a href="#resources">Further resources</a></li>
-</ul>
-
-
-
-<h2 id="gather">Gather all relevant data needed for reanalysis</h2>
+## Gather all relevant data needed for reanalysis
 
 <ul>
   <li>
-    <strong>Consider all of the information necessary for one to reuse your dataset and replicate the analyses in
+    <p><strong>Consider all of the information necessary for one to reuse your dataset and replicate the analyses in
     your publication</strong>. Gather and organize everything&mdash;this may include experimental method details, raw data files,
     organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data
     processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit
-    out superfluous or ambiguous content that would confuse others.<br/><br/>
-    Additionally, if applicable, please do not include any data visualizations that will appear in the published
-    article. For example, data figures and/or other supplementary material already present within the manuscript.<br/><br/>
+    out superfluous or ambiguous content that would confuse others.
+    <p>Additionally, if applicable, please do not include any data visualizations that will appear in the published
+    article. For example, data figures and/or other supplementary material already present within the manuscript.
   </li>
   <li>
     <strong>Unprocessed and processed data:</strong> Providing both unprocessed and processed data can be valuable for
     re-analysis, assuming the data are of a reasonable size. Including unprocessed raw digital data from a recording
     instrument or database ensures that no details are lost, and any issues in the processing pipeline can be discovered
-    and rectified. Processed data are cleaned, formatted, organized and ready for reuse by others.<br/><br/>
+    and rectified. Processed data are cleaned, formatted, organized and ready for reuse by others.
   </li>
   <li>
     <strong>Code:</strong> Programming scripts communicate to others all of the steps in processing and analysis.
     Including them ensures that your results are reproducible by others. Informative comments throughout your code will
-    help future users understand its logic.<br/><br/>
+    help future users understand its logic.
   </li>
   <li>
     <strong>External resources:</strong> Links to associated data stored in other data repositories, code in
@@ -51,7 +38,7 @@
 </ul>
 
 
-<h2>Make sure your data are shareable<a name="shareable"></a></h2>
+## Make sure your data are shareable
 
 <ul>
 <li><strong>All files submitted to Dryad must abide by the terms of the <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0 1.0)</a> waiver</strong>. Under these terms, the author releases the data to the public domain.
@@ -64,16 +51,16 @@
 
 
 
-<h2>Make sure your data are accessible<a name="accessible"></a></h2>
+## Make sure your data are accessible
 
 <ul>
-<li>To maximize accessibility, reusability and preservability, share data in non-proprietary <a href="https://en.wikipedia.org/wiki/Open_format">open formats</a> when possible (see <a href="#formats">preferred formats</a>). This ensures your data will be accessible by most people.</li>
+<li>To maximize accessibility, reusability and preservability, share data in non-proprietary <a href="https://en.wikipedia.org/wiki/Open_format">open formats</a> when possible (see <a href="#preferred-file-formats">preferred formats</a>). This ensures your data will be accessible by most people.</li>
 <li>Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a service like <a href="https://goodtables.io/">goodTables</a> can identify missing data and data type formatting problems.</li>
 <li>Files compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (<code>.zip, .7z, .tar.gz</code>). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.</li>
 </ul>
 
 
-<h2>Preferred file formats<a name="formats"></a></h2>
+## Preferred file formats
 
 <p>Dryad welcomes the submission of <em>data in multiple formats</em> to enable various reuse scenarios. For instance, Dryad's preferred format for tabular data is CSV, however, an Excel spreadsheet may optimize reuse in some cases. Thus, Dryad accepts more than just the preservation-friendly formats listed below.</p>
 
@@ -90,7 +77,7 @@
 </ul>
 
 
-<h2 id="organize">Organize files in a logical schema</h2>
+## Organize files in a logical schema
 
 <h3>File naming</h3>
 
@@ -115,7 +102,7 @@
 </ul>
 
 <h3>Examples</h3>
-<div style="display: flex; align-items: flex-start; justify-content: flex-start;">
+<div style="display: flex; align-items: flex-start; justify-content: flex-start; flex-wrap: wrap;">
 <div style="margin-right: 4em;">
 <h4 style="margin-top: 0;">A) Organized by File type</h4>
 <pre>
@@ -147,7 +134,7 @@ DatasetB.tar.gz
 </div>
 </div>
 
-<h2 id="describe">Describe your dataset in a README file</h2>
+## Describe your dataset in a README file
 
 <p>Provide a clear and concise description of all components of your dataset in a README document. This will help others interpret and reanalyze your data.</p>
 
@@ -176,7 +163,7 @@ DatasetB.tar.gz
 </p>
 
 
-<h2 id="examples">Examples of good reusability practices</h2>
+## Examples of good reusability practices
 
 <ul>
 <li>Gallo T, Fidino M, Lehrer E, Magle S (2017) Data from: Mammal diversity and metacommunity dynamics in urban green spaces: implications for urban wildlife conservation. Dryad Data Platform. <a href="https://doi.org/10.5061/dryad.9mf02">https://doi.org/10.5061/dryad.9mf02</a></li>
@@ -187,7 +174,7 @@ DatasetB.tar.gz
 </ul>
 
 
-<h2 id="resources">Further resources</h2>
+## Further resources
 
 <ul>
 <li>Institutional data librarians are an outstanding resource. Check with your university library's data management services team.</li>

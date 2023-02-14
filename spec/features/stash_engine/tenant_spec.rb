@@ -9,10 +9,10 @@ RSpec.feature 'Tenant', type: :feature do
         sign_in(create(:user, tenant_id: hash[:tenant_id]))
         visit root_path
         # Always expect to see the Dryad logo
-        expect(page).to have_css('img[alt="Dryad logo"]')
+        expect(page).to have_css('img[alt="Dryad"]')
         # If the tenant_id is not dryad or localhost then expect to
         # see the institution's logo
-        expect(page).to have_css("img[alt=\"#{hash[:short_name]} logo\"]") unless %w[localhost dryad].include?(hash[:tenant_id])
+        expect(page).to have_css("img[alt=\" #{hash[:short_name]}\"]") unless %w[localhost dryad].include?(hash[:tenant_id])
       end
     end
 

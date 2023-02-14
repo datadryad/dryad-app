@@ -1,59 +1,67 @@
 // ##### Latest Datasets Component ##### //
 
-.c-latest {
-
-	@include bp(screen1) {
-    // margin: 0 -10px;
-  }
-
-	@include bp(screen2) {
-		display: flex;
-		flex-flow: row wrap;
-		// margin: 0 -20px;
-	}
-
+#blog-latest-posts .blog-post-heading {
+	@extend %o-heading__level3;
 }
 
-.c-latest__dataset {
-	padding: 10px 0 0;
-	border-top: thin solid $design-dark-gray-color;
+.c-latest__dataset, #blog-latest-posts div {
+	border-bottom: thin solid $design-dark-blue-color;
+}
 
-	@include bp(screen1) {
-        /* one column */
-		display: flex;
-		justify-content: space-between;
-		padding: 10px 10px 0;
+#dryads-latest {
+	display: grid;
+	grid-column-gap: $spacing-lg;
+
+	h2 {
+		grid-row: 1;
+		grid-column: 2;
 	}
 
-	@include bp(screen2) {
-        /* two column */
-		flex: 1 0 40%;
-        justify-content: space-between;
-		padding: 20px 20px 0;
+	h2:first-of-type {
+		grid-column: 1;
+	}
 
-		&:nth-of-type(even) {
-			border-left: thin solid $design-orange-color;
+	#latest_tiles, #blog-latest-posts {
+		border: thin solid $design-orange-color;
+		border-radius: $spacing-base;
+		grid-row: 2;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+
+		div {
+			flex: 1 1 20%;
+			padding: 0 $spacing-sm;
+
+			&:last-of-type {
+				border-bottom: none;
+			}
+		}
+		p {
+			font-size: .9em;
+		}
+	}
+
+	#blog-latest-posts{
+		@include bp(screen2) {
+			p {
+				font-size: .8em;
+			}
+		}
+		.blog-post-heading {
+			@extend %o-heading__level4;
+		}
+	}
+
+	@media (max-width: $screen-md-min) {
+		display: block;
+		#latest_tiles {
+			margin-bottom: $spacing-md;
 		}
 	}
 }
 
-.c-latest__title-group {
-	flex: 3 1 auto; // IE 10 fix, modified to make safari work, also
-}
-
 .c-latest__title {
-	@extend %o-link__primary;
-	font-size: 1.4em;
-}
-
-.c-latest__author {
-	// empty
-}
-
-.c-latest__type {
-    flex: 1 0 auto; // for safari so that things don't overflow
-	margin: 0 0 10px 1em;
-	font-size: 0.9em;
-	font-weight: bold;
-	text-align: right;
+	display: block;
+	@extend %o-heading__level4;
 }

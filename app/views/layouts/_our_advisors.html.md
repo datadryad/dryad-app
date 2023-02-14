@@ -1,13 +1,10 @@
-<h1>Our advisors</h1>
-
 <p>Our Scientific Advisory Committee guides our strategic direction
 and provides feedback and insight from the broad research
 community.</p>
 
-<a name="advisors"></a>
-
+<div class="about-bios">
 <div class="bio">
-  <img src="/images/Ascandari_AbdulAziz.jpg" alt="AbdulAziz Ascandari" title="AbdulAziz Ascandari" />
+  <img src="/images/Ascandari_AbdulAziz.jpg" alt="AbdulAziz Ascandari" />
   <p>
     <strong>AbdulAziz Ascandari</strong> is a Ghanaian and currently a
     research assistant at the Parasitology department of the Noguchi
@@ -22,9 +19,8 @@ community.</p>
     in science communication.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/ColonRodriguez_Alexandra.jpg" alt="Alexandra Colón-Rodríguez" title="Alexandra Colón-Rodríguez" />
+    <img src="/images/ColonRodriguez_Alexandra.jpg" alt="Alexandra Colón-Rodríguez"/>
     <p>
     <strong>Alexandra Colón-Rodríguez</strong> is currently a
     postdoctoral scientist at the University of California Davis,
@@ -39,9 +35,8 @@ community.</p>
     Medicine, the Society for Neuroscience, and UC Davis.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Copenhaver_Greg.jpg" alt="Greg Copenhaver" title="Greg Copenhaver" />
+    <img src="/images/Copenhaver_Greg.jpg" alt="Greg Copenhaver"/>
     <p>
         <strong>Gregory P. Copenhaver</strong> shares joint appointments as
     a Professor and Associate Chair in the Department of Biology and
@@ -66,9 +61,8 @@ community.</p>
     biotechnology company Chromatin Inc.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Fayanju_Lola.jpg" alt="Lola Fayanju" title="Lola Fayanju" />
+    <img src="/images/Fayanju_Lola.jpg" alt="Lola Fayanju"/>
     <p>
     <strong>Lola Fayanju</strong> is Associate
     Professor of Surgery and Population Health Sciences in the Duke
@@ -110,9 +104,8 @@ community.</p>
     Surgical Oncology at The University of Texas MD Anderson Cancer Center.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Gazda_Malgorzata.jpg" alt="Małgorzata Anna Gazda" title="Małgorzata Anna Gazda" />
+    <img src="/images/Gazda_Malgorzata.jpg" alt="Małgorzata Anna Gazda"/>
     <p>
         <strong>Małgorzata Anna Gazda</strong> is an early career
     scientist with demonstrated passion for positive cultural change
@@ -134,9 +127,8 @@ community.</p>
     at Department of Biology of the École Normale Supérieure (IBENS).
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Gutam_Sridhar.jpg" alt="Sridhar Gutam" title="Sridhar Gutam" />
+    <img src="/images/Gutam_Sridhar.jpg" alt="Sridhar Gutam"/>
     <p>
     <strong>Sridhar Gutam</strong> is Senior Scientist at
     ICAR-Indian Institute of Horticultural Research (<a href="https://www.iihr.res.in/">ICAR-IIHR</a>),
@@ -161,9 +153,8 @@ community.</p>
     <a href="https://www.iihr.res.in/sridhar-gutam">read more about his background</a>.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Kibet_Caleb.jpg" alt="Caleb Kibet" title="Caleb Kibet" />
+    <img src="/images/Kibet_Caleb.jpg" alt="Caleb Kibet"/>
     <p>
     <strong>Caleb Kibet</strong> is a bioinformatics researcher, a
     lecturer, an open science advocate, and a mentor. He is currently
@@ -182,9 +173,8 @@ community.</p>
     bioinformatics community in Kenya.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Krause_Melanie.jpg" alt="Melanie Krause" title="Melanie Krause" />
+    <img src="/images/Krause_Melanie.jpg" alt="Melanie Krause"/>
     <p>
 <strong>Melanie Krause</strong> is a postdoctoral fellow at the
     European Molecular Biology Laboratory (EMBL) in Heidelberg,
@@ -203,9 +193,8 @@ community.</p>
     findings and policy decisions.
     </p>
 </div>
-
 <div class="bio">
-    <img src="/images/Marwick_Ben.jpg" alt="Ben Marwick" title="Ben Marwick" />
+    <img src="/images/Marwick_Ben.jpg" alt="Ben Marwick"/>
     <p>
     <strong>Ben Marwick</strong> is a faculty member in the
     Anthropology Department at the University of Washington. He is an
@@ -218,7 +207,6 @@ community.</p>
 	<a href="http://faculty.washington.edu/bmarwick/">
     his interviews, writing, and more
     about his teaching and research
-  </a>.
-	
-    </p>
+  </a>.</p>
+</div>
 </div>

@@ -40,8 +40,8 @@ p {
 
 ol li,
 ul li {
-   margin-bottom: 1em;
-   line-height: 125%;
+   margin: 0 auto $spacing-base;
+   line-height: 150%;
 }
 
 dialog {

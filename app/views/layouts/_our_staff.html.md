@@ -1,9 +1,8 @@
-<h1>Our team</h1>
-
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
+<div class="about-bios">
 <div class="bio">
-  <img src="/images/jgibson.jpeg" alt="Jennifer Gibson" title="Jennifer Gibson">
+  <img src="/images/jgibson.jpeg" alt="Jennifer Gibson">
   <p><strong>Jennifer Gibson</strong><br/>
   Executive Director<br/>
   Jen joined Dryad as Executive Director in October 2021. Since 2005, she has
@@ -17,9 +16,8 @@
   <a href="https://www.linkedin.com/in/jmclenna/" target="_blank">LinkedIn</a>.
   </p>
 </div>
-
 <div class="bio">
-    <img src="/images/mark.jpg" alt="Mark Kurtz" title="Mark Kurtz">
+    <img src="/images/mark.jpg" alt="Mark Kurtz">
   <p><strong>Mark Kurtz</strong><br/>
   Head of Business Operations<br/>
   
@@ -32,41 +30,39 @@
   meaningful innovation in scholarly communications.
   </p>
 </div>
-
 <div class="bio">
-    <img src="/images/sarah.jpg" alt="Sarah Lippincott" title="Sarah Lippincott">
+    <img src="/images/sarah.jpg" alt="Sarah Lippincott">
   <p><strong>Sarah Lippincott</strong><br/>
   Head of Community Engagement<br/>
   Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Head of Community Engagement at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.
 </p>
 </div>
-
 <div class="bio">
-    <img src="/images/JHerzog.jpg" alt="Jess Herzog" title="Jess Herzog">
+    <img src="/images/JHerzog.jpg" alt="Jess Herzog">
   <p><strong>Jess Herzog</strong><br/>
   Head of Publishing Services<br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
-
 <div class="bio">
-    <img src="/images/okubo.jpg" alt="Donna Okubo" title="Donna Okubo">
+    <img src="/images/okubo.jpg" alt="Donna Okubo">
   <p><strong>Donna Okubo</strong><br/>
   Partnership Advisor<br/>
   Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Sr Strategic Partnership Manager.</p>
 </div>
+</div>
 
-<h2 id="dev">Product Development Team</h2>
+#### Product Development Team
 
+<div class="about-bios">
 <div class="bio">
-  <img src="/images/rscherle.jpg" alt="Ryan Scherle" title="Ryan Scherle">
+  <img src="/images/rscherle.jpg" alt="Ryan Scherle">
   <p><strong>Ryan Scherle</strong><br/>
   Software Developer<br/>
   Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
 </p>
 </div>
-
 <div class="bio">
-  <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
+  <img src="/images/scott.jpg" alt="Scott Fisher">
   <p><strong>Scott Fisher</strong><br/>
   Software Developer<br/>
   Scott is a lead developer at the University of California Curation Center (UC3) at the California Digital Library (CDL).
@@ -78,26 +74,27 @@
   research data, and make data metrics available.
   </p>
 </div>
-
 <div class="bio">
-  <img src="/images/audrey.jpg" alt="Audrey Hamelers" title="Audrey Hamelers">
+  <img src="/images/audrey.jpg" alt="Audrey Hamelers">
   <p><strong>Audrey Hamelers</strong><br/>
   Software Developer<br/>
   Audrey has many years of experience developing websites and digital repositories, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University.
   </p>
 </div>
+</div>
 
-<h2 id="curation">Curation Team</h2>
+#### Curation Team
+
+<div class="about-bios">
 <div class="bio">
-  <img src="/images/laura.jpg" alt="Laura Bowman" title="Laura Bowman">
+  <img src="/images/laura.jpg" alt="Laura Bowman">
   <p><strong>Laura Bowman</strong><br/>
   Data Curator<br/>
   Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
   </p>
 </div>
-
 <div class="bio">
-  <img src="/images/savannah.jpg" alt="Savannah Butler" title="Savannah Butler">
+  <img src="/images/savannah.jpg" alt="Savannah Butler">
   <p><strong>Savannah Butler</strong><br/>
   Data Curator<br/>  
   Savannah holds a B.A. in Chemistry and an M.S. in Civil & Environmental
@@ -108,9 +105,8 @@
   rock climbing, cooking, and learning new languages.
   </p>
 </div>
-
 <div class="bio">
-  <img src="/images/bryan.jpg" alt="Bryan Gee" title="Bryan Gee">
+  <img src="/images/bryan.jpg" alt="Bryan Gee">
   <p><strong>Bryan Gee</strong><br/>
   Data Curator<br/>
   Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
@@ -119,16 +115,14 @@
   sports.
   </p>
 </div>
-
 <div class="bio">
-  <img src="/images/Aadithya_Sekar_Profile.jpeg" alt="Aadithya Sekar" title="Aadithya Sekar">
+  <img src="/images/Aadithya_Sekar_Profile.jpeg" alt="Aadithya Sekar">
   <p><strong>Aadithya Sekar</strong><br/>
   Data Curator<br/>
   Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
 </div>
-
 <div class="bio">
-  <img src="/images/carolyn.png" alt="Carolyn Tarpey" title="Carolyn Tarpey">
+  <img src="/images/carolyn.png" alt="Carolyn Tarpey">
   <p><strong>Carolyn Tarpey</strong><br/>
   Data Curator<br/>  
   Carolyn has a B.S. in Marine Biology from the College of Charleston, and an
@@ -138,9 +132,8 @@
   marine fish species. Carolyn loves gardening and all crafts.
   </p>
 </div>
-
 <div class="bio">
-  <img src="/images/jwalter.png" alt="Jeremy Walter" title="Jeremy Walter">
+  <img src="/images/jwalter.png" alt="Jeremy Walter">
   <p><strong>Jeremy Walter</strong><br/>
   Data Curator<br/>
   Jeremy transitioned from a management role in English as a Second Language
@@ -149,5 +142,4 @@
   to California where he helps the UC Davis effort on the NIH Common Fund Data
   Ecosystem.</p>
 </div>
-
-
+</div>
