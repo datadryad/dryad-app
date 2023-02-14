@@ -18,12 +18,12 @@
 
 .c-header__logos {
   display: flex;
-  padding-bottom: 10px;
+  margin: 0 0 $spacing-base;
 
   @include bp(screen3) {
     display: block;
     max-width: 50%;
-    margin: 5px 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
+    margin: $spacing-base 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
   }
 
 }
@@ -39,17 +39,17 @@
 .c-header__dash-logo-svg {
   /* Blacklight/geoblacklight resets */
   box-sizing: content-box;
-  padding: 5px 0;
-  max-height: 30px;
+  padding: 0 0 $spacing-base;
+  max-height: 2rem;
 
   @include bp(screen3) {
     width: 100%;
-    max-height: 40px;
+    max-height: 2.75rem;
   }
 
   &:nth-child(2) {
-    margin-left: 15px;
-    padding-left: 15px;
+    margin-left: $spacing-sm;
+    padding-left: $spacing-sm;
     border-left: 2px solid $design-dark-gray-color;
   }
 
