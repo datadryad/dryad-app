@@ -4,7 +4,7 @@
       <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>
         @<%= current_tenant&.tenant_id %>]</li>
     <% end %>
-    <li class="c-header__nav-item"><%= link_to raw('Explore<span class="hide-mobile"> data</span>'), '/search', class: 'js-nav-out' %>
+    <li class="c-header__nav-item"><%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'js-nav-out' %>
     <li class="c-header__nav-item last-child">
       <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
         <input name="utf8" value="✓" type="hidden">

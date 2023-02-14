@@ -60,9 +60,11 @@
   flex-flow: column nowrap;
   margin: 5px 0 0;
 
-  .hide-mobile {
-    display: none !important;
-  } 
+  @media (max-width: $screen-lg-min) {
+    .hide-mobile {
+      display: none !important;
+    } 
+  }
   @include bp(screen3) {
     display: flex;
     justify-content: space-between;
