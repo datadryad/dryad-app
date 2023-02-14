@@ -4961,10 +4961,18 @@ html.no-details .o-showhide__summary {
 }
 
 .c-choose__input-file-label {
-  display: block;
-  padding: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  height: 38px;
+  padding: 0.5rem;
   background-color: var(--c-uploadwidget-color);
-  text-align: center;
   cursor: pointer;
 }
 
@@ -5484,13 +5492,13 @@ html.no-details .o-showhide__summary {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-bottom: 10px;
+  margin: 0 0 0.5rem;
 }
 @media (min-width: 870px) {
   .c-header__logos {
     display: block;
     max-width: 50%;
-    margin: 5px 0;
+    margin: 0.5rem 0;
   }
 }
 
@@ -5509,18 +5517,18 @@ html.no-details .o-showhide__summary {
   /* Blacklight/geoblacklight resets */
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
-  padding: 5px 0;
-  max-height: 30px;
+  padding: 0 0 0.5rem;
+  max-height: 2rem;
 }
 @media (min-width: 870px) {
   .c-header__dash-logo-svg {
     width: 100%;
-    max-height: 40px;
+    max-height: 2.75rem;
   }
 }
 .c-header__dash-logo-svg:nth-child(2) {
-  margin-left: 15px;
-  padding-left: 15px;
+  margin-left: 1rem;
+  padding-left: 1rem;
   border-left: 2px solid rgb(78, 80, 80);
 }
 
