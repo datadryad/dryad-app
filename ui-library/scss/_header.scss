@@ -5,6 +5,7 @@
   margin-bottom: $spacing-md;
 
   @include bp(screen3) {
+    font-size: 1rem;
     display: flex;
     position: relative;
     z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
@@ -17,20 +18,12 @@
 
 .c-header__logos {
   display: flex;
+  margin: 0 0 $spacing-base;
 
   @include bp(screen3) {
     display: block;
     max-width: 50%;
-    margin: 5px 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
-  }
-
-}
-
-.c-header__menu-button {
-  margin: 0 25px 0 0;
-
-  @include bp(screen3) {
-    display: none;
+    margin: $spacing-base 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
   }
 
 }
@@ -46,65 +39,41 @@
 .c-header__dash-logo-svg {
   /* Blacklight/geoblacklight resets */
   box-sizing: content-box;
-  padding: 5px 0;
-  max-height: 30px;
+  padding: 0 0 $spacing-base;
+  max-height: 2rem;
 
   @include bp(screen3) {
     width: 100%;
-    max-height: 40px;
+    max-height: 2.75rem;
   }
 
   &:nth-child(2) {
-    margin-left: 15px;
-    padding-left: 15px;
+    margin-left: $spacing-sm;
+    padding-left: $spacing-sm;
     border-left: 2px solid $design-dark-gray-color;
   }
 
 }
 
-.c-header__nav, .c-header__nav--is-open {
-  display: none;
+.c-header__nav {
+  display: flex;
   flex-flow: column nowrap;
   margin: 5px 0 0;
 
+  @media (max-width: $screen-lg-min) {
+    .hide-mobile {
+      display: none !important;
+    } 
+  }
   @include bp(screen3) {
     display: flex;
     justify-content: space-between;
     margin: 0;
-  }
-}
 
-.c-header__nav--is-open {
-  display: flex;
-}
-
-.c-header__global-search {
-  margin: -5px auto;
-  background-color: $design-light-blue-color;
-  height: 38px;
-  .o-global-search__input {
-    font-size: 1em;
-  }
-  .o-global-search__submit-button {
-    width: 38px;
-  }
-
-  @include bp(screen3) {
-    align-self: flex-end;
-    width: $global-search-width;
-    margin: 0;
-    padding: 0;
-    background-color: $design-white-color;
-    height: 28px;
-
-    .o-global-search__input {
-      font-size: .9em;
-    }
-    .o-global-search__submit-button {
-      width: 28px;
+    .show-mobile {
+      display: none !important;
     }
   }
-
 }
 
 .c-header__nav-group {
@@ -112,39 +81,189 @@
   margin: 0;
   padding: 0;
   display: flex;
-  flex-flow: column nowrap;
 
-  @include bp(screen3) {
-    z-index: 1;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: flex-end;
+  &#site-menu {
+    display: none;
+    flex-flow: column nowrap;
 
-    &:not(:first-child) {
+    &.is-open {
+      display: flex;
+    }
+  }
+
+  &#mobile-nav-bar {
+    align-items: baseline;
+    margin: 0 -10px 2px;
+    background-color: $design-lightest-blue-color;
+    
+    @include bp(screen1) {
+      margin: 0 -20px 2px;
+    }
+
+    @include bp(screen2) {
+      margin: 0 -30px 2px;
+    }
+    @include bp(screen3) {
+      margin: 0;
+      background-color: transparent;
+    }
+  }
+
+  &#site-menu {
+    @include bp(screen3) {
       margin-top: 10px;
+    }
+  }
+
+  &#mobile-nav-bar, &#site-menu {
+    @include bp(screen3) {
+      display: flex;
+      z-index: 1;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: flex-end;
     }
   }
 }
 
-.c-header__nav-item {
-  white-space: nowrap;
-  margin: 0 -30px 2px;
-  padding: 10px 30px;
-  background-color: $design-light-blue-color;
-  color: $design-white-color;
+#mobile-nav-bar .c-header__nav-item {
+  margin: 0;
+  flex: 1;
+  text-align: center;
   text-decoration: none;
-  position: relative;
 
-  &.dev-only {
-    text-align: right;
+  a:link, a:visited {
+    color: $design-dark-blue-color;
+    text-decoration: none;
+  }
+
+  @include bp(screen3) {
+    flex: 0 1 auto;
+    text-align: left;
+  }
+
+  &.is-open {
+    padding-bottom: 6px;
+    margin-bottom: -6px;
+    background-color: $design-medium-blue-color;
+    color: $design-white-color;
+  }
+
+  a {
+    display: inline-flex;
+    width: 100%;
+    height: 48px;
+    padding: 0 $spacing-base;
+    align-items: center;
+    justify-content: space-around;
     @include bp(screen3) {
-      color: $design-orange-color;
+      width: auto;
+      height: auto;
+      padding: 0;
+    }
+  }
+}
+
+#site-menu .c-header__nav-item {
+  white-space: nowrap;
+  text-decoration: none;
+  margin: 0 -10px 2px;
+
+  @media (max-width: $screen-lg-min - 1) {
+    a, button {
+      background-color: $design-medium-blue-color;
+      color: $design-white-color;
+      padding: 10px 30px;
+      display: block;
+      width: 100%;
+      text-align: left;
+
+      &:hover, &[aria-expanded="true"] {
+        background-color: $design-light-blue-color;
+      }
     }
   }
 
   a:link, a:visited {
     color: $design-white-color;
     text-decoration: none;
+  }
+
+  @include bp(screen1) {
+    margin: 0 -20px 2px;
+  }
+
+  @include bp(screen2) {
+    margin: 0 -30px 2px;
+  }
+
+  .c-header__nav-submenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    @include bp(screen3) {
+      position: absolute;
+      top: 100%;
+      right: -1px;
+      margin: 0;
+      min-width: 180px;
+      white-space: nowrap;
+      border-right: thin solid $design-orange-color;
+    }
+
+    li {
+      margin: 0;
+      a {
+        display: block;
+        padding: 10px 30px;
+        background-color: $design-white-color;
+        color: $design-dark-blue-color;
+        text-decoration: none;
+        border-top: 2px solid $design-medium-blue-color;
+
+        &:hover {
+          background-color: $design-lighter-blue-color;
+        }
+
+        @include bp(screen3) {
+          margin: 0;
+          background-color: $design-white-color;
+          color: $design-black-color;
+          border-top: none;
+          border-left: thin solid $design-light-gray-color;
+          border-bottom: thin solid $design-light-gray-color;
+
+          &:hover,
+          &:focus {
+            color: $link-globalnav-hover-color;
+            text-decoration: underline;
+          }
+
+          &:hover,
+          &:focus {
+            color: $link-globalnav-hover-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+#mobile-nav-bar .c-header__nav-item, 
+#site-menu .c-header__nav-item {
+  position: relative;
+
+  &.dev-only {
+    text-align: right;
+    color: $design-orange-color;
+    background-color: $design-white-color;
+    @media (max-width: $screen-lg-min - 1) {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: +1;
+    }
   }
 
   @include bp(screen3) {
@@ -168,14 +287,19 @@
       border-right: thin solid $design-orange-color;
     }
 
-    &.is-open {
-      padding-bottom: 10px;
-      margin-bottom: -10px;
-    }
-
     &:last-child {
       padding-right: 0;
     }
+
+    &.last-child {
+      padding-right: 0;
+      border-right: none;
+    }
+
+    &.is-open {
+      padding-bottom: 10px;
+      margin-bottom: -10px;
+    }    
   }
 }
 
@@ -209,55 +333,51 @@
   }
 }
 
-.c-header__nav-submenu {
-  list-style-type: none;
-  margin: 10px 0 -10px;
-  padding: 0;
-
-  &[hidden] {
-    display: none;
+.c-header__global-search {
+  margin: -5px auto;
+  background-color: $design-light-blue-color;
+  height: 38px;
+  .o-global-search__input {
+    font-size: 1em;
+    min-width: 6ch;
+    width: calc(100% - 48px);
+  }
+  .o-global-search__submit-button {
+    width: 32px;
   }
 
   @include bp(screen3) {
-    position: absolute;
-    top: 1.95em;
-    right: -1px;
+    align-self: flex-end;
+    width: $global-search-width;
     margin: 0;
-    min-width: 180px;
-    white-space: nowrap;
-    border-right: thin solid $design-orange-color;
+    padding: 0;
+    background-color: $design-white-color;
+    height: 28px;
+
+    .o-global-search__input {
+      font-size: .9em;
+      width: calc(100% - 38px);
+    }
+    .o-global-search__submit-button {
+      width: 28px;
+    }
+  }
+}
+
+.c-header__menu-button {
+  height: 48px;
+  width: 100%;
+  padding: 0 $spacing-base;
+  background-color: transparent;
+  border: none;
+  color: $design-dark-blue-color;
+  white-space: nowrap;
+
+  i {
+    margin-left: 2px;
   }
 
-  li {
-    margin: 0;
-    a {
-      display: block;
-      margin: 0 0 2px;
-      padding: 10px;
-      background-color: $design-light-blue-color;
-      color: $design-white-color;
-      text-decoration: none;
-      border-top: 2px solid $design-white-color;
-
-      @include bp(screen3) {
-        margin: 0;
-        background-color: $design-white-color;
-        color: $design-black-color;
-        border-top: none;
-        border-left: thin solid $design-light-gray-color;
-        border-bottom: thin solid $design-light-gray-color;
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-          text-decoration: underline;
-        }
-
-        &:hover,
-        &:focus {
-          color: $link-globalnav-hover-color;
-        }
-      }
-    }
+  &[aria-expanded="true"] {
+    color: $design-white-color;
   }
 }

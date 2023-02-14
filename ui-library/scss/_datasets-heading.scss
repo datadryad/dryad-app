@@ -9,15 +9,6 @@
 		flex-flow: row nowrap;
 		justify-content: space-between;
 	}
-
-}
-
-.c-datasets-heading__heading {
-
-	@include bp(screen1) {
-		margin: 0;
-	}
-
 }
 
 .c-datasets-heading__button {

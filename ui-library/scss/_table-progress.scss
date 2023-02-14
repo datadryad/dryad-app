@@ -6,10 +6,6 @@
 
 @include bp(screen2) {
 
-  .c-table-progress td:nth-of-type(1) {
-    font-size: 1.1em;
-  }
-
   .c-table-progress td:nth-of-type(2) {
     white-space: nowrap;
   }
@@ -29,13 +25,11 @@
   .c-table-progress td:nth-of-type(1),
   .c-table-progress--details td:nth-of-type(1) {
     margin: 0;
-    font-size: 1.3em;
     font-weight: normal;
   }
 
   .c-table-progress td:nth-of-type(2),
   .c-table-progress--details td:nth-of-type(2) {
-    line-height: 1.8; // double-space
 
     &:before {
       content: 'Description:';
@@ -64,7 +58,6 @@
   .c-table-progress td:nth-of-type(6),
   .c-table-progress--details td:nth-of-type(6) {
     margin: 0;
-    font-size: 1.2em;
   }
 
 }

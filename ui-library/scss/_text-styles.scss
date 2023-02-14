@@ -1,16 +1,9 @@
 strong {
-  font-size: 1.1em;
   font-weight: bold;
-  text-shadow: 0 0;
 }
 
 blockquote.c-text_styles {
-  line-height: 135%;
-  strong {
-    font-weight: bold;
-    letter-spacing:1px;
-    text-shadow: 1px 0;
-  }
+  line-height: 150%;
 }
 
 ul.c-text_styles {
@@ -18,9 +11,55 @@ ul.c-text_styles {
     margin: 1.2ex 0;
     padding: 0;
   }
-  strong {
-    font-weight: bold;
-    letter-spacing:1px;
-    text-shadow: 1px 0;
+}
+
+code, a {
+  word-break: break-word;
+} 
+
+img {
+  max-width: 100%;
+}
+
+*[hidden] {
+  display: none !important;
+}
+
+#page-columns {
+  table {  
+    border-collapse: collapse;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #eee;
+  }
+
+  td, th {
+    text-align: left;
+    padding: 8px 4px !important;
+    border: thin solid #ccc;
+    line-height: 135%;
   }
 }
+
+blockquote {
+  margin: 2rem 0 2rem 2.2rem;
+
+  &:before {
+    font-family: FontAwesome;
+    content: '\f10d';
+    font-size: 2rem;
+    margin-left: -2.2rem;
+    position: absolute;
+    color: $design-orange-color;
+  }
+}
+
+figure {
+  margin: 0 0 2rem 2.2rem;
+
+  blockquote {
+    margin: 2rem 0 0;
+  }
+}
+  

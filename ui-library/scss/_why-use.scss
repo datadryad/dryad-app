@@ -8,7 +8,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(rgba($design-dark-gray-color, 0.75) 100%, transparent 0), inline('../images/stem.jpg') top left / cover no-repeat;
+  background: linear-gradient(rgba($design-dark-gray-color, 0.85) 100%, transparent 0), inline('../images/stem.jpg') top left / cover no-repeat;
   background-color: $design-dark-gray-color;
 }
 
@@ -26,8 +26,10 @@
 .c-why-use__text {
   margin: 1em 0;
   padding: 0 2em 0 0;
-  font-size: 1.3em;
   line-height: 1.7;
+  @include bp(screen2) {
+    font-size: 1.3rem;
+  }
 }
 
 .c-why-use__strong {

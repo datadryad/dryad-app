@@ -7,10 +7,11 @@ $input-height: 30px;
 
 // ***** Colors ***** //
 
-$design-dark-blue-color: rgb(0, 85, 129);
-$design-medium-blue-color: #005581;
-$design-light-blue-color: rgb(72, 145, 175);
+$design-dark-blue-color: #00527A;
+$design-medium-blue-color: #0071a8;
+$design-light-blue-color: rgb(55, 150, 196);
 $design-lighter-blue-color: lighten($design-light-blue-color, 25%);
+$design-lightest-blue-color: lighten($design-light-blue-color, 44%);
 $design-dark-gray-color: rgb(78, 80, 80);
 $design-light-gray-color: rgb(157, 159, 162);
 $design-extra-light-gray-color: rgb(211, 211, 211);
@@ -32,9 +33,9 @@ $design-slate-color: #2f4f4f;
 
 // ***** Link Colors ***** //
 
-$link-body-color: #337ab7;
+$link-body-color: $design-dark-blue-color;
 $link-body-hover-color: $design-orange-color;
-$link-body-visited-color: #883f88;
+$link-body-visited-color: #65007a;
 
 $link-globalnav-color: $design-black-color;
 $link-globalnav-hover-color: $design-orange-color;
@@ -48,8 +49,8 @@ $screen-max: 1280px;
 
 // ***** Spacing ***** //
 
-$spacing-base: 5px;
-$spacing-sm: 10px;
-$spacing-md: 20px;
-$spacing-lg: 30px;
+$spacing-base: .5rem;
+$spacing-sm: 1rem;
+$spacing-md: 2rem;
+$spacing-lg: 3rem;
 $spacing-body: $spacing-sm;

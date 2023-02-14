@@ -5,10 +5,12 @@
 }
 
 .c-choose__input-file-label {
-	display: block;
-	padding: $spacing-sm;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 38px;
+	padding: $spacing-base;
 	background-color: var(--c-uploadwidget-color);
-	text-align: center;
 	cursor: pointer;
 }
 

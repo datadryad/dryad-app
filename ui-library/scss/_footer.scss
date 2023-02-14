@@ -7,10 +7,10 @@
   padding-top: 10px;
   clear: both;
   border-top: thin solid $design-dark-gray-color;
-  font-size: 1em;
+  font-size: .9em;
 
   @include bp(screen3) {
-    font-size: 0.8em;
+    font-size: .8em;
   }
 
 }
@@ -21,7 +21,10 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 10px;
+
+  span {
+    margin-bottom: $spacing-sm;
+  }
 }
 
 .c-footer__policy-group,
@@ -29,19 +32,21 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
   text-align: left;
 
   a {
     @extend %o-link__primary;
-
-    .fa {
-      vertical-align: middle;
+    margin: 0 $spacing-md $spacing-sm 0;
+    i {
+      font-size: 1.5em;
+      display: inline-flex;
+      margin-right: 3px;
+      vertical-align: -4px;
     }
   }
 
-  a:not(:last-child) {
-    margin: 0 20px 0 0;
+  a:last-child {
+    margin-right: 0;
   }
 
 }

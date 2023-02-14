@@ -1,14 +1,22 @@
 .t-login__section {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-evenly;
+  display: grid;
+  grid-column-gap: $spacing-lg;
+  grid-row-gap: $spacing-lg;
   width: 100%;
   text-align: center;
+
+  & > div {
+    padding: $spacing-md $spacing-sm;
+    @include bp(screen3) {
+      padding: $spacing-md;
+    }
+  }
 }
 
-.t-login__box {
-  padding-right: 25px;
+.t-login__box, .t-login__choose {
+  @include bp(screen3) {
+    grid-column: 1;
+  }
 
   a:link,
   a:visited,
@@ -21,30 +29,6 @@
 
   h1 {
     margin-bottom: 45px;
-    color: $design-orange-color;
-  }
-
-  p {
-    margin-top: 45px;
-  }
-}
-
-.t-login__choose {
-  padding-right: 25px;
-  text-align: left;
-
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    color: $design-black-color;
-    text-decoration: none;
-  }
-
-  h1 {
-    margin-bottom: 45px;
-    color: $design-orange-color;
-    text-align: center;
   }
 
   p {
@@ -62,29 +46,29 @@
   }
 }
 
+.t-login__info {
+  text-align: left;
+  border-top: thin solid $design-orange-color;
+
+  @include bp(screen3) {
+    grid-column: 2;
+    border-top: none;
+    border-left: thin solid $design-orange-color;
+  }
+}
+
 .t-login__buttonlink {
   padding: 10px 15px;
   border: 2px solid $design-orange-color;
   border-radius: 35px;
   background-color: $design-white-color;
+  white-space: nowrap;
 }
 
 .t-login__buttonlink:hover {
   border: 2px solid $design-orange-color;
   border-radius: 35px;
   background-color: $design-white-color;
-}
-
-
-.t-login__info {
-  flex-basis: 35rem;
-  padding-left: 35px;
-  border-left: thin solid $design-orange-color;
-  text-align: left;
-
-  h3 {
-    margin-top: 35px;
-  }
 }
 
 .t-login__or-box {
@@ -168,7 +152,6 @@
 }
 
 .o-heading__level2-login-with {
-  @extend %o-heading__level2;
   margin-bottom: 0;
   font-size: 1.6em;
   text-align: center;

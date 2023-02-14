@@ -13,28 +13,3 @@
  *= require_tree .
  *= require_self
  */
-
-
-/* These css styles are interfering with our UI library sometimes. */
-
-.markdown_styles h1 {
-  color: #e65722;
-}
-.markdown_styles h3 {
-  color: #e65722;
-  font-size: 1.19em;
-}
-.markdown_styles h2 {
-  color: #005581;
-}
-.markdown_styles h4 {
-  color: #005581;
-}
-.markdown_styles ul {
-  list-style: circle outside;
-}
-/*
-.markdown_styles li {
-  padding: 5px;
-}
-*/
