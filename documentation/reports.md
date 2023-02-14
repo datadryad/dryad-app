@@ -65,6 +65,20 @@ Run the deferred payment reports with a command like:
 RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports SC_REPORT=/tmp/shopping_cart_report_2020-01.csv
 ```
 
+Tiered payment reports
+--------------------------
+
+For journals that have a tiered payment plan, a secondary task generates
+PDF reports that can be be sent to the journal sponsors. The secondary task
+takes as input a shopping_cart_report, as generated above, but it should only be
+used with quarterly reports to follow the current billing model.
+
+Run the tiered payment reports with a command like:
+```
+# This command must be run on the production server, to access the production database
+RAILS_ENV=production bundle exec rails identifiers:tiered_journal_reports SC_REPORT=/tmp/shopping_cart_report_2023-Q1.csv
+```
+
 
 Dataset info report
 ===================
