@@ -5749,6 +5749,7 @@ html.no-details .o-showhide__summary {
   }
   #site-menu .c-header__nav-item .c-header__nav-submenu li a:hover, #site-menu .c-header__nav-item .c-header__nav-submenu li a:focus {
     color: #cf4817;
+    background-color: rgb(255, 255, 255);
     text-decoration: underline;
   }
   #site-menu .c-header__nav-item .c-header__nav-submenu li a:hover, #site-menu .c-header__nav-item .c-header__nav-submenu li a:focus {

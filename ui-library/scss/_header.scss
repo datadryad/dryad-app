@@ -237,6 +237,7 @@
           &:hover,
           &:focus {
             color: $link-globalnav-hover-color;
+            background-color: $design-white-color;
             text-decoration: underline;
           }
 
