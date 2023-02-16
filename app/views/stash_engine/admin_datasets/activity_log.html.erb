@@ -11,32 +11,37 @@
       <% end %>
     </div>
   <% end %>
-  <div style="clear: both" ;>&nbsp;</div>
+  <div class="table-wrapper" style="clear: both" ;>
   <table class="c-lined-table" id="curation_table">
-    <tr class="c-lined-table__head">
-      <th class="c-admin-table">
+    <thead>
+    <tr>
+      <th>
         Resource ID
       </th>
-      <th class="c-admin-table <%= sort_display('created_at') %>">
+      <th class="c-lined-table__sort <%= sort_display('created_at') %>">
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
-      <th class="c-admin-table">
+      <th>
         Version
       </th>
-      <th class="c-admin-table">
+      <th>
         Status
       </th>
-      <th class="c-admin-table">
+      <th>
         Action taken by
       </th>
-      <th class="c-admin-table">
+      <th>
         Notes
       </th>
     </tr>
+  </thead>
+  <tbody>
     <% @curation_activities.each do |ca| %>
       <%= render partial: 'activity_log_row', locals: { curation_activity: ca } %>
     <% end %>
+  </tbody>
   </table>
+  </div>
 </div>
 
 <% if current_user.limited_curator? || current_user.role == 'admin' %>
@@ -54,19 +59,16 @@
 
     <% sf_links = salesforce_links(@identifier.identifier) %>
     <% if sf_links %>
-      <div id="sf_link_list" style="clear: both">
+      <div class="table-wrapper" id="sf_link_list" style="clear: both">
         <table class="c-lined-table" id="curation_table">
-          <tr class="c-lined-table__head">
-            <th class="c-admin-table">
-              Case
-            </th>
-            <th class="c-admin-table">
-              Status
-            </th>
-            <th class="c-admin-table">
-              Reason
-            </th>
+          <thead>
+          <tr>
+            <th>Case</th>
+            <th>Status</th>
+            <th>Reason</th>
           </tr>
+        </thead>
+        <tbody>
           <% sf_links.each do |sf_link| %>
             <tr class="c-lined-table__row">
               <td>
@@ -80,6 +82,7 @@
               </td>
             </tr>
           <% end %>
+        </tbody>
         </table>
       </div>
     <% end %>
@@ -100,13 +103,13 @@
     </div>
   <% end %>
 
-  <div id="internal_data_table" style="clear: both">
+  <div id="internal_data_table" class="table-wrapper" style="clear: both">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
 </div>
 
 <% if current_user.superuser? %>
-  <div id="payment_info" style="clear: both">
+  <div id="payment_info" class="table-wrapper" style="clear: both">
     <div style="float: left"><h2>Payment information</h2></div>
     <%= render partial: 'payment_info_table' %>
   </div>

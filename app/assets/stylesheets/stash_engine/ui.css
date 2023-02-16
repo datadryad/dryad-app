@@ -3695,7 +3695,7 @@ html.no-multiplebgs .o-banner {
   padding: 0 12px 0 0;
   border: none;
   border-right: 2px solid rgb(157, 159, 162);
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   color: #00527A;
   font-weight: bold;
 }
@@ -4606,66 +4606,199 @@ html.no-details .o-showhide__summary {
   cursor: pointer;
 }
 
-.o-table__highlight1 {
-  color: #cf4817;
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
-.o-table__highlight2 {
+table {
+  border-collapse: collapse;
+}
+
+tr {
+  border: thin solid #888;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+
+td, th {
+  text-align: left;
+  padding: 0.5rem;
+  border-right: thin solid #ddd;
+  line-height: 135%;
+  overflow-wrap: break-word;
+}
+td:last-child, th:last-child {
+  border-color: #888;
+}
+
+.c-lined-table {
+  width: 100%;
+  margin: 2rem auto;
+  font-size: 0.9em;
+}
+.c-lined-table td, .c-lined-table th {
+  border: thin solid #888;
+  vertical-align: top;
+}
+
+.c-lined-table__sort {
+  white-space: nowrap;
+}
+.c-lined-table__sort a:visited {
+  color: #00527A;
+}
+.c-lined-table__sort::after {
+  display: inline-block;
+  font-family: "FontAwesome";
+  content: "\f176\f175";
+  margin-left: 0.5ch;
+  color: rgb(157, 159, 162);
+  letter-spacing: 0.2ch;
+}
+
+.c-lined-table__sort-asc a::after {
+  display: inline-block;
+  font-family: "FontAwesome";
+  content: "\f176";
+  margin-left: 0.7ch;
+  color: #00527A;
+}
+.c-lined-table__sort-asc::after {
+  margin-left: -0.3ch;
+  content: "\f175";
+}
+
+.c-lined-table__sort-desc a::after {
+  display: inline-block;
+  font-family: "FontAwesome";
+  content: "\f176";
+  margin-left: 0.7ch;
+  color: rgb(157, 159, 162);
+}
+.c-lined-table__sort-desc::after {
+  margin-left: -0.3ch;
+  content: "\f175";
   color: #00527A;
 }
 
+.c-lined-table__digits {
+  font-size: 0.9em;
+}
+
+.c-lined-table__with-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.c-lined-table__data div {
+  margin-top: 0.5rem;
+}
+
+.c-lined-table__actions {
+  padding-left: 0.5rem;
+}
+.c-lined-table__actions > *:first-child {
+  margin-bottom: 0.5rem;
+}
+.c-lined-table__actions button {
+  border: none;
+  color: #0071a8;
+  background-color: transparent;
+}
+.c-lined-table__actions button:hover {
+  color: #cf4817;
+}
+
+.c-user-datasets-table {
+  border-right: hidden;
+  border-left: hidden;
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  margin-bottom: 1rem;
+}
+.c-user-datasets-table th:first-child, .c-user-datasets-table td:first-child {
+  padding-left: 0;
+}
+.c-user-datasets-table th:last-child, .c-user-datasets-table td:last-child {
+  padding-right: 0;
+}
+.c-user-datasets-table td:not(:first-child) {
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+@media (min-width: 480px) {
+  .c-user-datasets-table {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+  }
+}
 @media (min-width: 760px) {
-  .o-table {
-    width: 100%;
-    margin: 0 -1rem 1rem;
+  .c-user-datasets-table {
+    width: calc(100% + 60px);
+    margin-left: -30px;
   }
-  .o-table tr {
-    border-bottom: thin solid rgb(157, 159, 162);
+  .c-user-datasets-table th:first-child, .c-user-datasets-table td:first-child {
+    padding-left: 30px;
   }
-  .o-table th,
-  .o-table td {
-    padding: 1rem;
-    line-height: 1;
-    text-align: left;
+  .c-user-datasets-table th:last-child, .c-user-datasets-table td:last-child {
+    padding-right: 30px;
   }
 }
-@media (max-width: 759px) {
-  .o-table table,
-  .o-table thead,
-  .o-table tbody,
-  .o-table th,
-  .o-table td,
-  .o-table tr {
+@media (max-width: 760px) {
+  .c-user-datasets-table thead {
+    display: none;
+  }
+  .c-user-datasets-table tr {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    padding: 1rem 20px;
+    border-top: none;
+  }
+  .c-user-datasets-table td {
     display: block;
+    white-space: normal;
+    border: none;
+    padding: 0;
   }
-  .o-table {
-    width: 100%;
+  .c-user-datasets-table td:first-child {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    margin-bottom: 0.5rem;
   }
-  .o-table thead tr {
-    position: absolute;
-    left: -9999px;
+  .c-user-datasets-table td:nth-child(n+3) {
+    display: none;
   }
-  .o-table tbody tr {
-    padding: 1rem 0;
-  }
-  .o-table tbody tr:not(:first-child) {
-    border-top: thin solid rgb(157, 159, 162);
-  }
-  .o-table td {
-    position: relative;
-    margin: 0 0 0 110px;
-    padding: 5px 0;
-    font-weight: bold;
-  }
-  .o-table td:before {
-    position: absolute;
-    left: -110px;
-    width: calc(110px - 1rem);
-    font-weight: normal;
-    text-align: right;
-    white-space: nowrap;
+  .c-user-datasets-table td:last-child {
+    display: block;
+    padding-left: 1rem;
   }
 }
+.c-user-datasets-table + nav {
+  text-align: right;
+  margin-bottom: 3rem;
+}
+.c-user-datasets-table + nav > * {
+  margin: 0 0.5rem;
+}
+
 .o-admin-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -6897,103 +7030,6 @@ html.no-details .o-showhide__summary {
   font-weight: normal;
 }
 
-.c-space-paginator {
-  margin: 15px 0;
-}
-
-.screen-reader-only {
-  position: absolute;
-  top: auto;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.c-admin-table-header__hidden {
-  overflow: hidden;
-  border-width: 0 1px 0 0;
-  border-color: black;
-}
-
-.c-admin-table__user-campus {
-  width: 27%;
-}
-
-.c-admin-table__user-name {
-  width: 33%;
-}
-
-.c-admin-table__user-role {
-  width: 15%;
-}
-
-.c-admin-table__role-edit {
-  width: 5%;
-}
-
-.c-admin-table__user-last-login {
-  width: 20%;
-}
-
-/* this cascading is to get it to override a style from hell I can't get rid of */
-.c-lined-table__head > th.c-admin-hide-border-right {
-  padding: 8px;
-  border-collapse: collapse;
-  border: thin solid rgb(78, 80, 80);
-  border-right: none;
-  font-weight: bold;
-  text-align: left;
-}
-
-.c-lined-table__head > th.c-admin-hide-border-left {
-  border-collapse: collapse;
-  border: thin solid rgb(78, 80, 80);
-  border-left: none;
-}
-
-.c-lined-table__row > td.c-admin-hide-border-right {
-  border-right: none;
-}
-
-.c-lined-table__row > td.c-admin-hide-border-left {
-  border-left: none;
-}
-
-.c-lined-table__head a:link,
-.c-lined-table__head a:visited {
-  color: #00527A;
-}
-
-.c-admin-table__sort-asc:after {
-  content: "\f15d";
-  float: right;
-  color: rgb(78, 80, 80);
-  font-family: "FontAwesome", sans-serif;
-  font-size: 1em;
-  line-height: normal;
-}
-
-.c-admin-table__sort-desc:after {
-  content: "\f15e";
-  float: right;
-  color: rgb(78, 80, 80);
-  font-family: "FontAwesome", sans-serif;
-  font-size: 1em;
-  line-height: normal;
-}
-
-.c-admin-edit-icon {
-  margin: 10px 0;
-  float: right;
-  border: none;
-  background: none;
-}
-
-.c-admin-edit-icon:focus {
-  outline: 0;
-}
-
 .c-table-heading {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7014,114 +7050,6 @@ html.no-details .o-showhide__summary {
   margin: 0;
 }
 
-@media (min-width: 760px) {
-  .c-table-heading__button {
-    display: none;
-  }
-}
-
-@media (min-width: 760px) {
-  .c-table-latest td:nth-of-type(1) {
-    font-size: 1.1em;
-  }
-}
-@media (max-width: 759px) {
-  .c-table-latest td {
-    margin: 0;
-  }
-  .c-table-latest td:nth-of-type(1) {
-    font-size: 1.3em;
-    font-weight: normal;
-  }
-}
-@media (min-width: 760px) {
-  .c-table-progress td:nth-of-type(2) {
-    white-space: nowrap;
-  }
-}
-@media (max-width: 759px) {
-  .c-table-progress td:nth-of-type(2),
-  .c-table-progress td:nth-of-type(3),
-  .c-table-progress td:nth-of-type(4) {
-    display: none;
-  }
-  .c-table-progress td:nth-of-type(1),
-  .c-table-progress--details td:nth-of-type(1) {
-    margin: 0;
-    font-weight: normal;
-  }
-  .c-table-progress td:nth-of-type(2):before,
-  .c-table-progress--details td:nth-of-type(2):before {
-    content: "Description:";
-  }
-  .c-table-progress td:nth-of-type(3):before,
-  .c-table-progress--details td:nth-of-type(3):before {
-    content: "Files:";
-  }
-  .c-table-progress td:nth-of-type(4):before,
-  .c-table-progress--details td:nth-of-type(4):before {
-    content: "Created:";
-  }
-  .c-table-progress td:nth-of-type(5) {
-    margin: 0;
-  }
-  .c-table-progress--details td:nth-of-type(5):before {
-    content: "Modified:";
-  }
-  .c-table-progress td:nth-of-type(6),
-  .c-table-progress--details td:nth-of-type(6) {
-    margin: 0;
-  }
-}
-@media (min-width: 760px) {
-  .c-table-submitted td:nth-of-type(1) {
-    font-size: 1.1em;
-  }
-  .c-table-submitted td:nth-of-type(2) {
-    white-space: nowrap;
-  }
-}
-@media (max-width: 759px) {
-  .c-table-submitted td:nth-of-type(2),
-  .c-table-submitted td:nth-of-type(3) {
-    display: none;
-  }
-  .c-table-submitted td:nth-of-type(1),
-  .c-table-submitted--details td:nth-of-type(1) {
-    margin: 0;
-    font-size: 1.3em;
-    font-weight: normal;
-  }
-  .c-table-submitted td:nth-of-type(2),
-  .c-table-submitted--details td:nth-of-type(2) {
-    line-height: 1.8;
-  }
-  .c-table-submitted td:nth-of-type(2):before,
-  .c-table-submitted--details td:nth-of-type(2):before {
-    content: "Description:";
-  }
-  .c-table-submitted td:nth-of-type(3):before,
-  .c-table-submitted--details td:nth-of-type(3):before {
-    content: "Files:";
-  }
-  .c-table-submitted td:nth-of-type(4) {
-    margin: 0;
-  }
-  .c-table-submitted--details td:nth-of-type(4):before {
-    content: "Status:";
-  }
-  .c-table-submitted td:nth-of-type(5) {
-    margin: 0;
-  }
-  .c-table-submitted--details td:nth-of-type(5):before {
-    content: "Modified:";
-  }
-  .c-table-submitted td:nth-of-type(6),
-  .c-table-submitted--details td:nth-of-type(6) {
-    margin: 0;
-    font-size: 1.2em;
-  }
-}
 strong {
   font-weight: bold;
 }
@@ -7136,7 +7064,7 @@ ul.c-text_styles li {
 }
 
 code, a {
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 img {
@@ -7145,19 +7073,6 @@ img {
 
 *[hidden] {
   display: none !important;
-}
-
-#page-columns table {
-  border-collapse: collapse;
-}
-#page-columns tbody tr:nth-child(odd) {
-  background-color: #eee;
-}
-#page-columns td, #page-columns th {
-  text-align: left;
-  padding: 8px 4px !important;
-  border: thin solid #ccc;
-  line-height: 135%;
 }
 
 blockquote {
@@ -7353,54 +7268,6 @@ img.c-upload__spinner {
   background-color: transparent;
   color: #00527A;
   font-weight: bold;
-}
-
-.c-lined-table {
-  width: 100%;
-  margin: 1em 0;
-  border-collapse: collapse;
-  border: thin solid rgb(78, 80, 80);
-}
-
-/* .c-lined-table__head>th */
-th.c-admin-table {
-  padding: 8px;
-  border-collapse: collapse;
-  border: thin solid rgb(78, 80, 80);
-  font-weight: bold;
-  text-align: left;
-}
-
-.c-lined-table__row > td {
-  padding: 8px;
-  border-collapse: collapse;
-  border: thin solid rgb(78, 80, 80);
-  font-weight: normal;
-}
-
-.c-manifest-table__td-size,
-.c-manifest-table__td-version {
-  text-align: right;
-}
-
-.c-manifest-table__filename-col {
-  width: 23%;
-}
-
-.c-manifest-table__url-col {
-  width: 45%;
-}
-
-.c-manifest-table__size-col {
-  width: 10%;
-}
-
-.c-manifest-table__version-col {
-  width: 5%;
-}
-
-.c-manifest-table__actions-col {
-  width: 17%;
 }
 
 .c-uploadmodal {

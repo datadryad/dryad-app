@@ -23,25 +23,29 @@
   </p>
 </div>
 
+<div class="table-wrapper">
 <table class="c-lined-table">
-	<tr class="c-lined-table__head">
+  <thead>
+	<tr>
 		<th>&check;</th>
-		<th class="<%= sort_display('resource_id') %>">
+		<th class="c-lined-table__sort <%= sort_display('resource_id') %>">
 				<%= sortable_column_head sort_field: 'resource_id', title: 'Resource' %>
 		</th>
 		<th>
 				DOI
 		</th>
-		<th class="<%= sort_display('state') %>">
+		<th class="c-lined-table__sort <%= sort_display('state') %>">
 				<%= sortable_column_head sort_field: 'state', title: 'State' %>
 		</th>
-		<th class="<%= sort_display('hostname') %>">
+		<th class="c-lined-table__sort <%= sort_display('hostname') %>">
 				<%= sortable_column_head sort_field: 'hostname', title: 'Hostname' %>
 		</th>
-		<th class="<%= sort_display('updated_at') %>">
+		<th class="c-lined-table__sort <%= sort_display('updated_at') %>">
 				<%= sortable_column_head sort_field: 'updated_at', title: 'Updated at' %>
 		</th>
 	</tr>
+  </thead>
+  <tbody class="c-lined-table__digits">
     <% @queue_rows.each do |qr| %>
     <tr class="c-lined-table__row">
 			<td><%= check_box_tag(qr.resource_id) %></td>
@@ -52,4 +56,6 @@
       <td><%= formatted_datetime(qr.updated_at) %></td>
     </tr>
     <% end %>
+  </tbody>
 </table>
+</div>

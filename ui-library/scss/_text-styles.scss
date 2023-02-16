@@ -14,7 +14,7 @@ ul.c-text_styles {
 }
 
 code, a {
-  word-break: break-word;
+  overflow-wrap: break-word;
 } 
 
 img {
@@ -23,23 +23,6 @@ img {
 
 *[hidden] {
   display: none !important;
-}
-
-#page-columns {
-  table {  
-    border-collapse: collapse;
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: #eee;
-  }
-
-  td, th {
-    text-align: left;
-    padding: 8px 4px !important;
-    border: thin solid #ccc;
-    line-height: 135%;
-  }
 }
 
 blockquote {
