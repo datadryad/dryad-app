@@ -83,7 +83,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
         visit dashboard_path
         el = find('td', text: @identifiers.first.resources.first.title)
-        el = el.first(:xpath, './following-sibling::td').find(:css, '.js-stats')
+        el = el.find(:css, '.js-stats')
         el.click
         my_stats = @identifiers.first.counter_stat
         page.first :css, '.o-metrics__icon'
