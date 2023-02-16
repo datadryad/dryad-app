@@ -50,7 +50,7 @@ function Keywords({
 
   return (
     <div className="c-keywords">
-      <label className="c-input__label" htmlFor="keyword_ac">Keywords:</label>
+      <label className="c-input__label" id="label_keyword_ac" htmlFor="keyword_ac">Keywords:</label>
         &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
 
       <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
