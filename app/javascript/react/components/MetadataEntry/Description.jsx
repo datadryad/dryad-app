@@ -36,7 +36,7 @@ export default function Description({
 
   return (
     <div style={{width: '100%'}}>
-      <label className={`c-input__label ${(mceLabel.required ? 'required' : '')}`} id={`${dcsDescription.description_type}_label`}>
+      <label className={`c-input__label ${(mceLabel.required ? 'required' : '')}`} id={`${dcsDescription.description_type}_label`} htmlFor={`editor_${dcsDescription.description_type}`}>
         {mceLabel.label}
       </label>
       {mceLabel.describe}

@@ -6062,6 +6062,12 @@ html.no-details .o-showhide__summary {
           flex: 1 1;
 }
 
+.c-import__fieldset {
+  border: none;
+  margin: 1em auto;
+  padding: 0;
+}
+
 .c-import__choicesbox {
   display: -webkit-box;
   display: -ms-flexbox;
