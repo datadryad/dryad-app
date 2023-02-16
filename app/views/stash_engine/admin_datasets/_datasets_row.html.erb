@@ -96,6 +96,10 @@
   </td>                    
   <!-- Size -->
   <td class="c-lined-table__digits"><%= filesize(dataset.storage_size) %></td>
+  <!-- Submission Date -->
+  <td class="c-admin c-lined-table__digits">
+    <%= formatted_date(dataset.submission_date) %>
+  </td>
   <!-- Publication Date -->
   <td class="c-admin c-lined-table__digits" id="js-embargo-state-<%= dataset.identifier_id %>">
     <%= formatted_date(dataset.publication_date) %>
