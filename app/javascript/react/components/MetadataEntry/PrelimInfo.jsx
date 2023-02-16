@@ -44,7 +44,7 @@ function PrelimInfo(
 
   return (
     <>
-      <fieldset class="c-import__fieldset">
+      <fieldset className="c-import__fieldset">
         <div className="js-contributors_form_top">
           <legend id="import-choices-label">My data is related to:</legend>
         </div>
