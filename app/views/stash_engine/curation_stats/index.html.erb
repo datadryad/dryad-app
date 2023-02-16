@@ -16,34 +16,38 @@
     <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %>
   </div>
 
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-      <th title="Date for the activity, bounded by UTC." class="c-admin-table">Date</th>
+  <thead style="cursor: help">
+  <tr>
+      <th title="Date for the activity, bounded by UTC.">Date</th>
       <th title="The number processed that day (meaning the status changed from 'curation' to 'action_required', 'embargoed' or 'published')"
-	  class="c-admin-table">Datasets Curated</th>
+	 >Datasets Curated</th>
       <th title="The number of datasets available for curation on that day (either entered 'curation' or 'submitted', and the author made the last change)"
-	  class="c-admin-table">Datasets to be Curated</th>
+	 >Datasets to be Curated</th>
       <th title="Total of all new submissions that day (so the first time we see them as 'submitted' or 'peer_review' in the system)"
-	  class="c-admin-table">New Submissions</th>
+	 >New Submissions</th>
       <th title="The number of new submissions that day (so the first time we see them as 'submitted' in the system)"
-	  class="c-admin-table">New Datasets to Submitted</th>
+	 >New Datasets to Submitted</th>
       <th title="The number of new PPR that day (so the first time we see them as 'peer_review' in the system)"
-	  class="c-admin-table">New Datasets to Peer Review</th>
+	 >New Datasets to Peer Review</th>
       <th title="The number released from PPR into Curation (status change to 'curation', and had previously been in PPR with no intervening 'curation')"
-	  class="c-admin-table">PPR to Curation</th>
+	 >PPR to Curation</th>
       <th title="The number AAR'd that day (status change from 'curation' to 'action_required')"
-	  class="c-admin-table">Datasets to AAR</th>
+	 >Datasets to AAR</th>
       <th title="The number published by a curator that day (status change from 'curation' to 'published' by a curator and not the system)"
-	  class="c-admin-table">Datasets to Published</th>
+	 >Datasets to Published</th>
       <th title="The number embargoed that day (status change from 'curation' to 'embargoed' per day)"
-	  class="c-admin-table">Datasets to Embargoed</th>
+	 >Datasets to Embargoed</th>
       <th title="The number withdrawn that day (change from any status to 'withdrawn' per day)"
-	  class="c-admin-table">Datasets to Withdrawn</th>
+	 >Datasets to Withdrawn</th>
       <th title="The number that come back to us after an Author Action Required that day (so they change status from 'action_required' to 'curation')"
-	  class="c-admin-table">Author Revised</th>
+	 >Author Revised</th>
       <th title="The number resubmitted that day (were 'published' or 'embargoed' before, and change status to 'submitted')"
-	  class="c-admin-table">Author Versioned</th>
+	 >Author Versioned</th>
   </tr>
+</thead>
+<tbody>
   <% @current_stats.each do |stat| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
       <td><%= formatted_date(stat.date) %></td>
@@ -60,9 +64,8 @@
       <td><%= stat.author_revised %></td>
       <td><%= stat.author_versioned %></td>
   </tr>
-
 <% end -%>
-
-  
+</tbody>
 </table>
+</div>
 

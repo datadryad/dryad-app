@@ -1,98 +1,203 @@
-// ##### Table Object ##### //
-
-// Inspired from: https://css-tricks.com/examples/ResponsiveTables/responsive.php
-
-$table-cell-label-width: 110px;
-
-.o-table__highlight1 {
-  color: $design-orange-color;
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
-.o-table__highlight2 {
-  color: $design-dark-blue-color;
+table {  
+  border-collapse: collapse;
 }
 
-// ***** Large Screen Styles ***** //
-
-@include bp(screen2) {
-  .o-table {
-    width: 100%;
-    margin: 0 (-$spacing-sm) $spacing-sm;
-  }
-
-  .o-table tr {
-    border-bottom: thin solid $design-light-gray-color;
-  }
-
-  .o-table th,
-  .o-table td {
-    padding: $spacing-sm;
-    line-height: 1;
-    text-align: left;
-  }
-
+tr {
+  border: thin solid #888;
 }
 
-// ***** Small Screen Styles ***** //
+tbody tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
 
-@media (max-width: $screen-md-min - 1) {
-  .o-table table,
-  .o-table thead,
-  .o-table tbody,
-  .o-table th,
-  .o-table td,
-  .o-table tr {
-    display: block;
+td, th {
+  text-align: left;
+  padding: $spacing-base;
+  border-right: thin solid #ddd;
+  line-height: 135%;
+  overflow-wrap: break-word;
+
+  &:last-child {
+    border-color: #888;
+  }
+}
+
+.c-lined-table {
+  width: 100%;
+  margin: $spacing-md auto;
+  font-size: .9em;
+
+  td, th {
+    border: thin solid #888;
+    vertical-align: top;
+  }
+}
+
+.c-lined-table__sort {
+  white-space: nowrap;
+
+  a:visited {
+    color: $link-body-color;
+  }
+  
+  &::after {
+    display: inline-block;
+    font-family: 'FontAwesome';
+    content: '\f176\f175';
+    margin-left: .5ch;
+    color: $design-light-gray-color;
+    letter-spacing: .2ch;
+  }
+}
+
+.c-lined-table__sort-asc {
+  a::after {
+    display: inline-block;
+    font-family: 'FontAwesome';
+    content: '\f176';
+    margin-left: .7ch;
+    color: $design-dark-blue-color;
+  }
+  &::after {
+    margin-left: -.3ch;
+    content: '\f175';
+  }
+}
+
+.c-lined-table__sort-desc {
+  a::after {
+    display: inline-block;
+    font-family: 'FontAwesome';
+    content: '\f176';
+    margin-left: .7ch;
+    color: $design-light-gray-color;
+  }
+  &::after {
+    margin-left: -.3ch;
+    content: '\f175';
+    color: $design-dark-blue-color;
+  }
+}
+
+.c-lined-table__digits {
+  font-size: .9em;
+}
+
+.c-lined-table__with-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.c-lined-table__data {
+  div {
+    margin-top: $spacing-base;
+  }
+}
+
+.c-lined-table__actions {
+  padding-left: $spacing-base;
+
+  & > *:first-child {
+    margin-bottom: $spacing-base;
   }
 
-  .o-table {
-    width: 100%;
+  button {
+    border: none;
+    color: $design-medium-blue-color;
+    background-color: transparent;
+
+    &:hover {
+      color: $design-orange-color;
+    }
+  }
+}
+
+.c-user-datasets-table {
+  border-right: hidden;
+  border-left: hidden;
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  margin-bottom: $spacing-sm;
+
+  th:first-child, td:first-child {
+    padding-left: 0;
   }
 
-  .o-table thead tr {
-    position: absolute;
-    left: -9999px;
+  th:last-child, td:last-child {
+    padding-right: 0;
   }
 
-  .o-table tbody {
+  td:not(:first-child) {
+    font-size: .9em;
+    white-space: nowrap;
+  }
+
+  @include bp(screen1) {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+  }
+
+  @include bp(screen2) {
+    width: calc(100% + 60px);
+    margin-left: -30px;
+
+    th:first-child, td:first-child {
+      padding-left: 30px;
+    }
+
+    th:last-child, td:last-child {
+      padding-right: 30px;
+    }
+  }
+
+  @media (max-width: $screen-md-min) {
+    thead {
+      display: none;
+    }
 
     tr {
-      padding: $spacing-sm 0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: $spacing-sm 20px;
+      border-top: none;
+    }
 
-      &:not(:first-child) {
-        border-top: thin solid $design-light-gray-color;
+    td {
+      display: block;
+      white-space: normal;
+      border: none;
+      padding: 0;
+
+      &:first-child {
+        flex: 0 0 100%;
+        margin-bottom: $spacing-base;
       }
 
-    }
+      &:nth-child(n+3) {
+        display: none;
+      }
 
+      &:last-child {
+        display: block;
+        padding-left: $spacing-sm;
+      }
+    }
   }
 
-  .o-table td {
-    position: relative;
-    margin: 0 0 0 $table-cell-label-width;
-    padding: 5px 0;
-    font-weight: bold;
+  & + nav {
+    text-align: right;
+    margin-bottom: $spacing-lg;
 
-    &:before {
-      position: absolute;
-      left: (-$table-cell-label-width);
-      width: calc($table-cell-label-width - $spacing-sm);
-      font-weight: normal;
-      text-align: right;
-      white-space: nowrap;
+    & > * {
+      margin: 0 $spacing-base;
     }
-
   }
-
 }
-
-// ***** Show / Hide Table Data ***** //
-
-// .o-table__td-toggle {
-//   display: none;
-
-//   @include bp(screen2) {
-//     display: table-cell;
-//   }
-
-// }

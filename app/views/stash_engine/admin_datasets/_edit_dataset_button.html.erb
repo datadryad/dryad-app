@@ -1,6 +1,6 @@
 <% if %w[superuser curator tenant_curator].include?(current_user.role) %>
   <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do -%>
-    <button class="c-admin-edit-icon js-trap-curator-url" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button class="c-admin-edit-icon js-trap-curator-url" title="Edit dataset" aria-label="Edit dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <%= hidden_field_tag :resource_id, resource_id, id: "resource_id_#{resource_id}" %>
     <%= hidden_field_tag :return_url, '/stash/dashboard' %>
   <% end %>

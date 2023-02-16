@@ -1,23 +1,25 @@
 <%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="<%= sort_display('resource_created_at') %>">
-      <%= sortable_column_head sort_field: 'resource_created_at', title: 'Timestamp' %>
-    </th>
-    <th class="<%= sort_display('edited_by_name_w_role') %>">
-      <%= sortable_column_head sort_field: 'edited_by_name_w_role', title: 'Modified By' %>
-    </th>
-    <th class="<%= sort_display('version') %>">
-      <%= sortable_column_head sort_field: 'version', title: 'Version' %>
-    </th>
-    <th class="<%= sort_display('comment') %>">
-      <%= sortable_column_head sort_field: 'comment', title: 'Notes' %>
-    </th>
-  </tr>
-
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('resource_created_at') %>">
+        <%= sortable_column_head sort_field: 'resource_created_at', title: 'Timestamp' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('edited_by_name_w_role') %>">
+        <%= sortable_column_head sort_field: 'edited_by_name_w_role', title: 'Modified By' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('version') %>">
+        <%= sortable_column_head sort_field: 'version', title: 'Version' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('comment') %>">
+        <%= sortable_column_head sort_field: 'comment', title: 'Notes' %>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
   <% presenters.each do |p| %>
     <tr class="c-lined-table__row">
-      <td>
+      <td class="c-lined-table__digits">
         <%= formatted_datetime(p.resource_created_at) %>
       </td>
       <td>
@@ -31,4 +33,5 @@
       </td>
     </tr>
   <% end %>
+  </tbody>
 </table>

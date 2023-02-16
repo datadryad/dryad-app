@@ -1,31 +1,36 @@
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="c-admin-table <%= sort_display('title') %>">
+  <thead>
+  <tr>
+    <th class="c-lined-table__sort <%= sort_display('title') %>">
       <%= sortable_column_head sort_field: 'title', title: 'Title' %>
     </th>
-    <th class="c-admin-table <%= sort_display('authors') %>">
+    <th class="c-lined-table__sort <%= sort_display('authors') %>">
       <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
     </th>
-    <th class="c-admin-table <%= sort_display('identifier') %>">
+    <th class="c-lined-table__sort <%= sort_display('identifier') %>">
       <%= sortable_column_head sort_field: 'identifier', title: 'DOI' %>
     </th>
-    <th class="c-admin-table <%= sort_display('contributor_name') %>">
+    <th class="c-lined-table__sort <%= sort_display('contributor_name') %>">
       <%= sortable_column_head sort_field: 'contributor_name', title: 'Funder' %>
     </th>
-    <th class="c-admin-table <%= sort_display('award_number') %>">
+    <th class="c-lined-table__sort <%= sort_display('award_number') %>">
       <%= sortable_column_head sort_field: 'award_number', title: 'Award' %>
     </th>
-    <th class="c-admin-table <%= sort_display('init_sub_date') %>">
+    <th class="c-lined-table__sort <%= sort_display('init_sub_date') %>">
       <%= sortable_column_head sort_field: 'init_sub_date', title: 'First submitted' %>
     </th>
-    <th class="c-admin-table <%= sort_display('publication_date1') %>">
+    <th class="c-lined-table__sort <%= sort_display('publication_date1') %>">
       <%= sortable_column_head sort_field: 'publication_date1', title: 'Embargoed' %>
     </th>
-    <th class="c-admin-table <%= sort_display('publication_date2') %>">
+    <th class="c-lined-table__sort <%= sort_display('publication_date2') %>">
       <%= sortable_column_head sort_field: 'publication_date2', title: 'Published' %>
     </th>
-
-    <%= render partial: 'funder_row', collection: @funder_table  %>
-
   </tr>
+  </thead>
+  <tbody>
+    <%= render partial: 'funder_row', collection: @funder_table  %>
+  </tbody>
+
 </table>
+</div>

@@ -8,39 +8,37 @@ encourages publishers to sponsor their authors' Data Publishing Charges (DPCs). 
 <p>If your journal is not sponsored or does not appear on this list, and your institution is not a
 Dryad member, you will be responsible for paying the DPC as well as any overage fees for large files.</p>
 
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-      <th class="c-admin-table <%= sort_display('title') %>">
-	  <%= sortable_column_head sort_field: 'title', title: 'Title' %>
-      </th>
-      <th class="c-admin-table %>">
-	  ISSN
-      </th>
-      <th class="c-admin-table <%= sort_display('allow_blackout') %>">
-	  <%= sortable_column_head sort_field: 'allow_blackout', title: 'Automatic embargo?' %>
-      </th>
-      <th class="c-admin-table <%= sort_display('payment_plan_type') %>">
-	  <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment Plan' %>
-      </th>
-      <th class="c-admin-table <%= sort_display('name') %>">
-	  <%= sortable_column_head sort_field: 'name', title: 'Sponsored by' %>
-      </th>
-      <th class="c-admin-table">
-	  Metadata Last Received
-      </th>
-  </tr>
+  <thead>
+    <tr>
+        <th class="c-lined-table__sort  <%= sort_display('title') %>">
+  	  <%= sortable_column_head sort_field: 'title', title: 'Title' %>
+        </th>
+        <th>ISSN</th>
+        <th class="c-lined-table__sort <%= sort_display('allow_blackout') %>">
+  	  <%= sortable_column_head sort_field: 'allow_blackout', title: 'Automatic embargo?' %>
+        </th>
+        <th class="c-lined-table__sort <%= sort_display('payment_plan_type') %>">
+  	  <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment Plan' %>
+        </th>
+        <th class="c-lined-table__sort  <%= sort_display('name') %>">
+  	  <%= sortable_column_head sort_field: 'name', title: 'Sponsored by' %>
+        </th>
+        <th>Metadata Last Received</th>
+    </tr>
+  </thead>
+<tbody>
   <% @journals.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
       <td><%= journal.title %></td>
-      <td><span style="white-space: nowrap;"><%= journal.single_issn %></span></td>
+      <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.single_issn %></span></td>
       <td><%= journal.allow_blackout %></td>
       <td><%= journal.payment_plan_type %></td>
       <td><%= journal.top_level_org&.name %></td>
-      <td><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at %></td>
+      <td class="c-lined-table__digits"><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at %></td>
   </tr>
-
 <% end -%>
-
-  
+</tbody>  
 </table>
 
