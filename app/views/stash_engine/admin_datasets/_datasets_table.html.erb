@@ -21,6 +21,9 @@
       <th class="c-lined-table__sort <%= sort_display('storage_size') %>">
         <%= sortable_column_head sort_field: 'storage_size', title: 'Size' %>
       </th>
+      <th class="c-lined-table__sort <%= sort_display('submission_date') %>">
+        <%= sortable_column_head sort_field: 'submission_date', title: 'Submitted' %>
+      </th>
       <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
         <%= sortable_column_head sort_field: 'publication_date', title: 'Published' %>
       </th>
