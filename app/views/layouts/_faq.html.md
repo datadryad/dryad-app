@@ -50,7 +50,7 @@ We require:
     <li>All information needs to be in English.</li>
     <li>
         No Personal Health Information or sensitive data can be included. See tips for
-        <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">Human Subjects data</a> or for <a href=https://docs.gbif.org/sensitive-species-best-practices/master/en/>sensitive species</a>.
+        <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">human subjects data</a> or for <a href=https://docs.gbif.org/sensitive-species-best-practices/master/en/>sensitive species</a>.
     </li>
     <li>Files must not contain any copyright restrictions.</li>
     <li>
