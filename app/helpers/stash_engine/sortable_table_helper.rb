@@ -43,7 +43,7 @@ module StashEngine
         title,
         sort_link_url(sort_field),
         class: params[:sort] == sort_field ? "current #{params[:direction]}" : nil,
-        title: "Click to sort"
+        title: 'Click to sort'
       )
     end
 
