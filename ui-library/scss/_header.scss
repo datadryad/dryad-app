@@ -23,36 +23,37 @@
   @include bp(screen3) {
     display: block;
     max-width: 50%;
-    margin: $spacing-base 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
+    margin: $spacing-base 0 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
   }
 
 }
+
+// The SVG height properties below also set the header height, in addition to the c-header__logos margin property above.
 
 .c-header__dash-logo-link {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
+
+  div {
+    &:nth-child(2) {
+      margin-left: $spacing-sm;
+      padding-left: $spacing-sm;
+      border-left: 2px solid $design-dark-gray-color;
+    }
+  }
 }
 
-// The SVG height properties below also set the header height, in addition to the c-header__logos margin property above.
+
 
 .c-header__dash-logo-svg {
   /* Blacklight/geoblacklight resets */
   box-sizing: content-box;
-  padding: 0 0 $spacing-base;
   max-height: 2rem;
 
-  @include bp(screen3) {
-    width: 100%;
-    max-height: 2.75rem;
+  @include bp(screen3) {  
+    max-height: 3rem;
   }
-
-  &:nth-child(2) {
-    margin-left: $spacing-sm;
-    padding-left: $spacing-sm;
-    border-left: 2px solid $design-dark-gray-color;
-  }
-
 }
 
 .c-header__nav {
