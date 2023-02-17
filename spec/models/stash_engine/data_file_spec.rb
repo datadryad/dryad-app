@@ -35,31 +35,6 @@ module StashEngine
       end
     end
 
-    describe :merritt_express_url do
-      before(:each) do
-        @tricky_ark = 'ark%3A%2F12345/38568'
-        allow_any_instance_of(Resource).to receive(:merritt_protodomain_and_local_id).and_return(
-          ['https://merritt.example.com', @tricky_ark]
-        )
-      end
-
-      it 'creates url with the merritt-express host' do
-        expect(@upload.merritt_express_url).to start_with(APP_CONFIG.merritt_express_base_url)
-      end
-
-      it 'creates url that ends with the filename' do
-        expect(@upload.merritt_express_url).to end_with(@upload.upload_file_name)
-      end
-
-      it "has decoded ark because M.E. doesn't work right with ark encoded" do
-        expect(@upload.merritt_express_url).to include(CGI.unescape(@tricky_ark))
-      end
-
-      it 'includes the /dv/ and version in the url' do
-        expect(@upload.merritt_express_url).to include('/dv/1/')
-      end
-    end
-
     describe '#smart_destroy!' do
 
       before(:each) do

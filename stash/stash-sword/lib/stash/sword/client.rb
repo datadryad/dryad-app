@@ -5,6 +5,7 @@ require 'stash/sword/log_utils'
 require 'stash/sword/http_helper'
 require 'stash/sword/sequence_io'
 require 'logger'
+require 'byebug'
 
 module Stash
   module Sword

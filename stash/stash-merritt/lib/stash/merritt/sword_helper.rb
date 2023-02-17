@@ -1,5 +1,5 @@
 require 'stash/sword'
-require 'rest-client' # so we have access to its exception classes
+require 'stash/merritt_deposit'
 
 module Stash
   module Merritt
@@ -20,12 +20,10 @@ module Stash
         else
           do_create
         end
-      rescue RestClient::Exceptions::ReadTimeout, RestClient::GatewayTimeout
-        raise GoneAsynchronous
-      rescue RestClient::InternalServerError => e
-        raise GoneAsynchronous if e&.response&.body&.include?('java.net.SocketTimeoutException')
 
-        raise e
+        # everything is now asynchronous.  Can move to new class since it's not sword in the future
+        raise GoneAsynchronous
+
       ensure
         resource.version_zipfile = File.basename(package.payload)
         resource.save!
@@ -45,18 +43,18 @@ module Stash
         resource.identifier_str
       end
 
-      def sword_client
-        @sword_client ||= Stash::Sword::Client.new(logger: logger, **tenant.sword_params)
+      def merritt_client
+        @merritt_client ||= Stash::MerrittDeposit::Client.new(logger: logger, **tenant.sword_params)
       end
 
       def do_create
-        receipt = sword_client.create(doi: identifier_str, payload: package.payload, packaging: package.packaging)
-        resource.download_uri = receipt.em_iri
-        resource.update_uri = receipt.edit_iri
+        merritt_client.create(doi: identifier_str, payload: package.payload)
+        # resource.download_uri = receipt.em_iri
+        # resource.update_uri = receipt.edit_iri
       end
 
       def do_update(update_uri)
-        sword_client.update(edit_iri: update_uri, payload: package.payload, packaging: package.packaging)
+        merritt_client.update(doi: identifier_str, payload: package.payload)
       end
 
     end

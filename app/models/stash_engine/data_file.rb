@@ -54,18 +54,6 @@ module StashEngine
             "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
 
-    # example
-    # http://mrtexpress-stage.cdlib.org/dv/<version>/<ark>/<file pathname>
-    def merritt_express_url
-      domain, ark = resource.merritt_protodomain_and_local_id
-      # the ark is already encoded in the URLs we are given from sword
-      return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
-
-      # the slash is being double-encoded and normally shouldn't be present, except in a couple of one-off datasets that we regret.
-      "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
-        "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
-    end
-
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def direct_s3_presigned_url
