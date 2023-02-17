@@ -16,7 +16,7 @@ module Stash
 
       EOL = "\r\n".freeze
 
-      attr_reader :collection_uri, :username, :password
+      attr_reader :collection_uri, :username, :password, :logger
 
       # Creates a new {Client} for the specified collection URI, with the specified credentials.
       #
@@ -47,25 +47,36 @@ module Stash
         logger.debug("Stash::MerrittDeposit::Client.create(doi: #{doi}, payload: #{payload})")
         profile = "#{collection_uri.to_s.split('/').last}_content"
 
-        response = do_post(profile, payload, doi)
-        byebug
+        response = do_post(profile: profile, payload: payload, doi: doi)
         # do we need to check response for something here? Check additional codes or errors.
       rescue StandardError => e
         log_error(e)
         raise
       end
 
-      # Updates a resource with a new payload
+      # Updates a new resource for the specified DOI with the specified payload
       #
-      # @param edit_iri [URI, String] the Atom Edit-IRI
-      # @param payload [String] the payload path
-      def update(doi:, payload:)
-        byebug
-        logger.debug("Stash::Sword::MerrittDeposit.update(edit_iri: #{edit_iri}, payload: #{payload})")
-        uri = to_uri(edit_iri).to_s
-        response = do_put(uri, payload, packaging)
-        logger.debug(to_log_msg(response))
-        response.code # TODO: what if anything should we return here?
+      # @param doi [String] the DOI
+      # @param payload [String] the checkm file path
+      def update(doi:, payload:, download_uri:)
+        logger.debug("Stash::MerrittDeposit::Client.update(doi: #{doi}, payload: #{payload}, download_uri: #{download_uri})")
+        profile = "#{collection_uri.to_s.split('/').last}_content"
+        ark = URI.decode_www_form_component(download_uri.split('/').last)
+
+        response = do_post(profile: profile, payload: payload, doi: doi, ark: ark)
+
+        # TODO: check for errors better here
+        # response.code == 200
+        # JSON.parse(response.body.to_s)
+        # sample:
+        # {"bat:batchState"=>
+        #   { "xmlns:bat"=>"http://uc3.cdlib.org/ontology/mrt/ingest/batch",
+        #     "bat:batchID"=>"bid-9dee0fbd-b674-44ce-abc0-937f5a0afed8",
+        #     "bat:jobStates"=>"",
+        #     "bat:batchStatus"=>"QUEUED",
+        #     "bat:userAgent"=>"dash_demo_user/Dash Demo User",
+        #     "bat:submissionDate"=>"2023-02-17T15:26:38-08:00"}
+        # }
       rescue StandardError => e
         log_error(e)
         raise
@@ -90,33 +101,22 @@ module Stash
       # We no longer need an update_uri, since I think it's based on the DOI, which we can use directly.
       # The download_uri should be populated by the rake task which checks merritt for something finishing from the processing state.
       # There should no longer be a provisional complete state.
+      def do_post(profile:, payload:, doi:, ark: nil)
 
+        params = {
+          file: HTTP::FormData::File.new(payload),
+          profile: profile,
+          localIdentifier: doi,
+          submitter: @on_behalf_of,
+          retainTargetURL: true,
+          responseForm: 'json'
+        }
 
-      # TODO: the update option may also want to include a primaryIdentifier which is the Merritt ARK
-      def do_post(profile, payload, doi)
-        # HTTP example with post HTTP.post("http://example.com/upload", form: { file: HTTP::FormData::File.new(io) })
+        params[:primaryIdentifier] = ark if ark
 
-        @http.post("#{base_url}/object/update",
-                   form: {
-                     file: HTTP::FormData::File.new(payload),
-                     profile: profile,
-                     localIdentifier: doi,
-                     submitter: @on_behalf_of,
-                     retainTargetURL: true,
-                     responseForm: 'json'
-                   })
+        @http.post("#{base_url}/object/update", form: params)
       end
 
-      # no more PUT/update requests in Merritt API
-      # def do_put(uri, payload, packaging)
-      #   boundary        = "========#{Time.now.utc.to_i}=="
-      #   stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary, packaging: packaging)
-      #   begin
-      #     helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
-      #   ensure
-      #     stream.close
-      #   end
-      # end
 
       def to_uri(url)
         ::XML::MappingExtensions.to_uri(url)

@@ -15,8 +15,8 @@ module Stash
       end
 
       def submit!
-        if (update_uri = resource.update_uri)
-          do_update(update_uri)
+        if resource.update_uri
+          do_update
         else
           do_create
         end
@@ -53,8 +53,8 @@ module Stash
         # resource.update_uri = receipt.edit_iri
       end
 
-      def do_update(update_uri)
-        merritt_client.update(doi: identifier_str, payload: package.payload)
+      def do_update
+        merritt_client.update(doi: identifier_str, payload: package.payload, download_uri: resource.download_uri)
       end
 
     end
