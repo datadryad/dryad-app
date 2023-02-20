@@ -122,17 +122,6 @@
   Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
 </div>
 <div class="bio">
-  <img src="/images/carolyn.png" alt="Carolyn Tarpey">
-  <p><strong>Carolyn Tarpey</strong><br/>
-  Data Curator<br/>  
-  Carolyn has a B.S. in Marine Biology from the College of Charleston, and an
-  M.S. in Aquatic and Fishery Sciences from the University of Washington. She
-  also works as a Research Scientist at the University of Washington, using
-  genomic tools to investigate stock structure, diversity, and connectivity of
-  marine fish species. Carolyn loves gardening and all crafts.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/jwalter.png" alt="Jeremy Walter">
   <p><strong>Jeremy Walter</strong><br/>
   Data Curator<br/>
