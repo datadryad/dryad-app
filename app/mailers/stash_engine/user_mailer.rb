@@ -3,7 +3,7 @@ module StashEngine
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
-    # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
+    # Called from CurationActivity when the status is submitted, peer_review, published, embargoed or withdrawn
     def status_change(resource, status)
       return unless %w[submitted peer_review published embargoed withdrawn].include?(status)
 
@@ -16,6 +16,21 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Status change', status: status)
+    end
+
+    # Called from CurationActivity when the status is withdrawn by the system user
+    def user_journal_withdrawn(resource, status)
+      return unless status == 'withdrawn'
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           bcc: @resource&.tenant&.campus_contacts,
+           template_name: withdrawn_by_journal,
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+
+      update_activities(resource: resource, message: 'Withdrawal by journal', status: status)
     end
 
     # Called from CurationActivity when the status is published or embargoed
