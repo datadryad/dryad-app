@@ -43,6 +43,10 @@
   }
 }
 
+#genericModalContent > *:first-child {
+  margin-right: calc(26px + $spacing-md);
+}
+
 .c-modal-h1 {
   @extend %o-heading__level1;
   font-size: 1.5em;
