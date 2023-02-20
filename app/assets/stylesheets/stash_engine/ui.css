@@ -4527,6 +4527,10 @@ h6 {
   color: #cf4817;
 }
 
+#genericModalContent > *:first-child {
+  margin-right: calc(26px + 2rem);
+}
+
 .c-modal-h1 {
   font-size: 1.5em;
 }
