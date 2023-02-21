@@ -71,7 +71,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload files'
 
       within('table') do
-        expect(page).not_to have_content('Uploaded Too Large For Validation')
+        expect(page).not_to have_content('Uploaded Too large for validation')
       end
     end
 
@@ -81,7 +81,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload files'
 
       within('table') do
-        expect(page).to have_content('Uploaded Too Large For Validation')
+        expect(page).to have_content('Uploaded Too large for validation')
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to include('Alerts')
+        expect(text).to include('alerts')
       end
     end
 
@@ -113,7 +113,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to eq("Couldn't Read Tabular Data")
+        expect(text).to eq("Couldn't read tabular data")
       end
     end
   end
