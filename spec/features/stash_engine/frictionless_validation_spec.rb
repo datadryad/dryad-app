@@ -85,7 +85,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       end
     end
 
-    xit 'shows "issues" if file is tabular and status is "issues"' do
+    xit 'shows "Alerts" if file is tabular and status is "issues"' do
       @report = StashEngine::FrictionlessReport.create!(
         report: '[{errors: errors}]', generic_file: @file, status: 'issues'
       )
@@ -93,7 +93,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_link 'Upload files'
 
       within(:xpath, '//table/tbody/tr/td[2]') do
-        expect(text).to include('Issues')
+        expect(text).to include('Alerts')
       end
     end
 

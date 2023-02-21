@@ -4,10 +4,10 @@ import classes from './File.module.css';
 
 export const TabularCheckStatus = {
   checking: 'Checking...',
-  issues: 'View alerts',
+  issues: 'View Alerts',
   noissues: 'Passed',
-  na: 'Too large for validation',
-  error: "Couldn't read tabular data",
+  na: 'Too Large For Validation',
+  error: "Couldn't Read Tabular Data",
 };
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
