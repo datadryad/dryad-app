@@ -221,9 +221,9 @@ export default function Authors({
                 aria-describedby="global-help"
                 type="button"
                 className="fa-workaround handle c-input"
-                aria-labelledby={`author-button-${auth.id} author-text-${auth.id}`}
+                aria-label="Drag to reorder this author"
                 id={`author-button-${auth.id}`}
-                style={{background: `url('${icon}') no-repeat`}}
+                style={{background: `url('${icon}') no-repeat`, boxShadow: 'none'}}
               >
                 <div className="offscreen">Reorder</div>
               </button>
