@@ -5,8 +5,6 @@ module Stash
   module Merritt
     class MerrittHelper
 
-      class GoneAsynchronous < StandardError; end
-
       attr_reader :logger, :package
 
       def initialize(package:, logger: nil)
@@ -20,9 +18,6 @@ module Stash
         else
           do_create
         end
-
-        # everything is now asynchronous.  Can move to new class since it's not sword in the future
-        raise GoneAsynchronous
 
       ensure
         resource.version_zipfile = File.basename(package.payload)
