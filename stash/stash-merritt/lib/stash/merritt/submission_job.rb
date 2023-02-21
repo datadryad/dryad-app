@@ -1,7 +1,7 @@
 require_relative '../../../../../lib/stash/repo'
 require_relative '../../../../../lib/stash/doi/id_gen'
 require 'stash/merritt/submission_package'
-require 'stash/merritt/sword_helper'
+require 'stash/merritt/merritt_helper'
 
 module Stash
   module Merritt
@@ -51,7 +51,7 @@ module Stash
         package = create_package
         submit(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
-      rescue SwordHelper::GoneAsynchronous
+      rescue MerrittHelper::GoneAsynchronous
         res = Stash::Repo::SubmissionResult
           .success(resource_id: resource_id, request_desc: description,
                    message: 'Presumed eventual success -- check Merritt for completion')
@@ -81,8 +81,8 @@ module Stash
 
       def submit(package)
         log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
-        sword_helper = SwordHelper.new(package: package, logger: logger)
-        sword_helper.submit!
+        merritt_helper = MerrittHelper.new(package: package, logger: logger)
+        merritt_helper.submit!
       end
 
       def description_for(resource)

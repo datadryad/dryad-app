@@ -3,7 +3,7 @@ require 'stash/merritt_deposit'
 
 module Stash
   module Merritt
-    class SwordHelper
+    class MerrittHelper
 
       class GoneAsynchronous < StandardError; end
 
