@@ -51,11 +51,8 @@ module Stash
         package = create_package
         submit(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
-      rescue MerrittHelper::GoneAsynchronous
         res = Stash::Repo::SubmissionResult
-          .success(resource_id: resource_id, request_desc: description,
-                   message: 'Presumed eventual success -- check Merritt for completion')
-        res.deferred = true
+          .success(resource_id: resource_id, request_desc: description, message: 'Submitted to Merritt for asynchronous completion')
         res
       end
 

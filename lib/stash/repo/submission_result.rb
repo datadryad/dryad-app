@@ -17,11 +17,9 @@ module Stash
         @message = message
         @error = error
 
-        # for asyncronous processing, gets set if the request has gone asynchronous and not really
-        # success or failure until Merritt finishes in a state that we don't have access to until showing in the
-        # OAI-PMH feed as a separate process.  Deferred is hoped a success, but shouldn't be setting finished states
-        # in the database until done so by OAI feed and not by our own process.
-        @deferred = false
+        # for asynchronous processing, gets set if the request is deferred (which is all the time now, but previously
+        # some items were submitted synchronously)
+        @deferred = true
       end
 
       def success?
