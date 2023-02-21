@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rest-client', '~> 2.1.0'
   s.add_dependency 'rubyzip', '~> 2.3.2'
 
-  s.add_dependency 'stash-sword'
+  s.add_dependency 'stash-deposit'
   s.add_dependency 'stash-wrapper'
 
   # s.add_development_dependency 'nokogiri'

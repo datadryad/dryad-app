@@ -1,7 +1,7 @@
 require 'stringio'
 
 module Stash
-  module Sword
+  module Deposit
     # A read-only `IO`-like that concatenates a sequence of strings or IOs.
     class SequenceIO
 

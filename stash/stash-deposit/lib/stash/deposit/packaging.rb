@@ -2,7 +2,7 @@ require 'uri'
 require 'typesafe_enum'
 
 module Stash
-  module Sword
+  module Deposit
     class Packaging < TypesafeEnum::Base
 
       new :BINARY, URI('http://purl.org/net/sword/package/Binary') do

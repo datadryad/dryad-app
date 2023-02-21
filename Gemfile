@@ -18,6 +18,7 @@ gem 'webpacker', '~> 5.4.3'
 
 path 'stash' do
   gem 'stash-merritt'
+  gem 'stash-deposit'
   gem 'stash-wrapper'
 end
 
