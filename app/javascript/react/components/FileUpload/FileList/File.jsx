@@ -4,10 +4,10 @@ import classes from './File.module.css';
 
 export const TabularCheckStatus = {
   checking: 'Checking...',
-  issues: 'View Issues',
+  issues: 'View alerts',
   noissues: 'Passed',
-  na: 'Too Large For Validation',
-  error: "Couldn't Read Tabular Data",
+  na: 'Too large for validation',
+  error: "Couldn't read tabular data",
 };
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -66,7 +66,7 @@ class File extends React.Component {
               type="button"
               style={{padding: '10px'}}
             >
-              View {jsReport?.report?.stats?.errors} Issues
+              View {jsReport?.report?.stats?.errors} alerts
             </button>
           </div>
         </div>

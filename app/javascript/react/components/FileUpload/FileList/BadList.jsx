@@ -33,8 +33,8 @@ const badList = (props) => {
   if (errorFiles.length > 0) {
     errorMsg = (
       <div className="c-alert__text-lite">
-        Our tabular format checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
-        If you expect them to have consistent tabular data, check they are readable and formatted correctly.
+        Our tabular data checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
+        If you expect them to have consistent tabular data, check that they are readable and formatted correctly.
       </div>
     );
   }
@@ -42,25 +42,20 @@ const badList = (props) => {
   if (issueFiles.length > 0) {
     issueMsg = (
       <div className="c-alert__text-lite">
-        Our tabular format checker found formatting issues in {makeAndString(issueFiles)}.
-        Please view the issues from the links below and correct them.
+        Our automated tabular data checker identified potential inconsistencies in the format and structure
+        of {issueFiles.length} of your files. A detailed report is available for each file. To address the identified alerts:
         <ol>
           <li>
-            Manually correct the issues shown in your local copy of the file. Click the error report in the
+            Click the report in the
             {' '}<em>Tabular data check</em>{' '}
-            column to get detailed information about the issues found.
+            column to see what has been highlighted for your review.
           </li>
           <li>
-            Click
-            {' '}<em>Remove</em>{' '}
-            in the Action column to delete the file.
+            If you would like to edit and replace any file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current file.
           </li>
+          <li>Review the local copy of your file and make any desired changes.</li>
           <li>
-            Re-upload the corrected file using the
-            {' '}<em>Choose files</em>{' '}
-            or
-            {' '}<em>Enter URLs</em>{' '}
-            button above.
+            Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
           </li>
         </ol>
       </div>
