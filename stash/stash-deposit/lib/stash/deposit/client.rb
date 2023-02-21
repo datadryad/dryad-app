@@ -2,17 +2,16 @@ require 'digest'
 require 'uri'
 require 'http'
 # require 'stash/sword/header_utils'
-# require 'stash/sword/log_utils'
+require 'stash/deposit/log_utils'
 # require 'stash/sword/http_helper'
 # require 'stash/sword/sequence_io'
 require 'logger'
 require 'byebug'
 
 module Stash
-  module MerrittDeposit
+  module Deposit
     class Client
-      # include HeaderUtils
-      # include LogUtils
+      include LogUtils
 
       EOL = "\r\n".freeze
 
@@ -28,7 +27,7 @@ module Stash
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
       def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil) # rubocop:disable Metrics/ParameterLists
         validate(collection_uri, password, username)
-        @collection_uri = to_uri(collection_uri)
+        @collection_uri = collection_uri
         @username = username
         @password = password
         @on_behalf_of = on_behalf_of || username
@@ -116,12 +115,6 @@ module Stash
 
         @http.post("#{base_url}/object/update", form: params)
       end
-
-
-      def to_uri(url)
-        ::XML::MappingExtensions.to_uri(url)
-      end
-      protected :to_uri
 
     end
   end
