@@ -7075,6 +7075,17 @@ img {
   display: none !important;
 }
 
+.screen-reader-only {
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+          clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 blockquote {
   margin: 2rem 0 2rem 2.2rem;
 }
@@ -7465,13 +7476,14 @@ img.c-upload__spinner {
 }
 
 /* ********************************************** */
-.c-uploadtable {
+.c-uploadtable-wrapper {
   margin-bottom: 3rem;
 }
+
 .c-uploadtable th,
 .c-uploadtable td {
   padding: 1rem;
-  border: thin solid black;
+  border: thin solid #888;
   text-align: left;
 }
 .c-uploadtable th[scope=col] {
@@ -7488,6 +7500,9 @@ img.c-upload__spinner {
   border: none;
   background-color: transparent;
   color: #00527A;
+}
+.c-uploadtable .c-uploadtable-size {
+  font-size: 0.9em;
 }
 
 .c-uploadtable__status {
