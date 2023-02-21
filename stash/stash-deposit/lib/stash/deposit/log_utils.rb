@@ -1,5 +1,5 @@
 module Stash
-  module Sword
+  module Deposit
     module LogUtils
 
       def logger
