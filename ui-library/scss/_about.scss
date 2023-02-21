@@ -41,11 +41,22 @@ h3.expand-button {
       float: left;
     }
 
+    h5 {
+      color: $design-black-color;
+      display: inline;
+    }
+
     p {
+      display: inline;
       margin: 0;
       font-size: .9em;
     }
   }
+}
+
+h4 + .about-bios {
+  padding-top: $spacing-sm + $spacing-base;
+  margin-top: -$spacing-sm;
 }
 
 .about-page table {
