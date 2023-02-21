@@ -25,6 +25,16 @@ img {
   display: none !important;
 }
 
+.screen-reader-only {
+  clip: rect(0 0 0 0); 
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; 
+  width: 1px;
+}
+
 blockquote {
   margin: 2rem 0 2rem 2.2rem;
 
