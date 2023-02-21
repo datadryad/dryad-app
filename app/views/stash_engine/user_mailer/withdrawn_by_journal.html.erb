@@ -1,6 +1,6 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>We have received a notification from the journal that your manuscript was not approved for publication. Therefore, we have withdrawn your related Dryad data submission:</p>
+<p>We have received a notification from <%= @resource.identifier.publication_name %> that your manuscript was not approved for publication. Therefore, we have withdrawn your related Dryad data submission:</p>
 
 <p>
 Title: <%= @resource.title %><br/>
