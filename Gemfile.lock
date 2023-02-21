@@ -893,7 +893,6 @@ DEPENDENCIES
   spring-commands-rspec
   sprockets (~> 3.0)
   stash-merritt!
-  stash-sword!
   stash-wrapper!
   stripe (~> 5.50.0)
   sync (~> 0.5.0)

@@ -1,5 +1,4 @@
-require 'stash/sword'
-require 'stash/merritt_deposit'
+require 'stash/deposit'
 
 module Stash
   module Merritt
@@ -39,7 +38,7 @@ module Stash
       end
 
       def merritt_client
-        @merritt_client ||= Stash::MerrittDeposit::Client.new(logger: logger, **tenant.sword_params)
+        @merritt_client ||= Stash::Deposit::Client.new(logger: logger, **tenant.sword_params)
       end
 
       def do_create
