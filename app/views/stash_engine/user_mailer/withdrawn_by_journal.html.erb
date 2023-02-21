@@ -1,0 +1,15 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>We have received a notification from <%= @resource.identifier.publication_name %> that your manuscript was not approved for publication. Therefore, we have withdrawn your related Dryad data submission:</p>
+
+<p>
+Title: <%= @resource.title %><br/>
+DOI: <%= @resource.identifier_str %>
+</p>
+
+<p>If you plan to submit to an alternate journal for consideration, or if you would like to proceed to publish your dataset as a standalone publication, we can reinstate your submission at any time.</p>
+
+<p>Please contact the Dryad Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a> if you have any questions.</p>
+
+<p>Kind regards,<br/>
+The Dryad Team</p>
