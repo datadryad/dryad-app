@@ -8089,9 +8089,19 @@ h3.expand-button[aria-expanded=true]::after {
   margin-right: 15px;
   float: left;
 }
+.about-bios .bio h5 {
+  color: rgb(0, 0, 0);
+  display: inline;
+}
 .about-bios .bio p {
+  display: inline;
   margin: 0;
   font-size: 0.9em;
+}
+
+h4 + .about-bios {
+  padding-top: 1.5rem;
+  margin-top: -1rem;
 }
 
 .about-page table {
