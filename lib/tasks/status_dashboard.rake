@@ -101,6 +101,14 @@ namespace :status_dashboard do
       documentation: 'Dryad calculates the stats using a Python library that may run for a few days. https://github.com/CDLUC3/counter-processor .  It should submit stats after running and by done by late in the week (Thursday).  It checks the log to see if it ran.',
       internally_managed: true,
       status: 1
+    },
+    {
+      abbreviation: 'wordpress',
+      name: 'Wordpress',
+      description: 'Hosts the Dryad blog',
+      documentation: 'Dryad uses Wordpress to host its blog, and uses the RSS feed generated there to show latest posts on the main Dryad site. ',
+      internally_managed: false,
+      status: 1
     }
   ].freeze
   # rubocop:enable Layout/LineLength

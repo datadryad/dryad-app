@@ -3,13 +3,13 @@ $(function() {
   $('#genericModalContent').html("<%= escape_javascript(
           render partial: 'stash_engine/user_admin/admin_merge_form', locals: { user1: @user1, user2: @user2 }) %>");
   // expand the width of the default dialog to accommodate the merge table
-  $('#genericModalContent')[0].style.width = '80rem';
+  $('#genericModalDialog')[0].classList.add('extra-wide');
   $('#genericModalDialog')[0].showModal();
 
   $("#cancel_dialog").click(function (e) {
     e.preventDefault();
     // reset the dialog to its default width
-    $('#genericModalContent')[0].style.width = '40rem';
+    $('#genericModalDialog')[0].classList.remove('extra-wide');
     $('#genericModalDialog')[0].close();
   });
 });
