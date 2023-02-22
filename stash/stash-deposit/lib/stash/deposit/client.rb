@@ -25,16 +25,15 @@ module Stash
       # @param on_behalf_of [String, nil] the user for whom the original sword package was deposited on behalf of.
       #   Defaults to `username`.
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil) # rubocop:disable Metrics/ParameterLists
+      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil)
         validate(collection_uri, password, username)
         @collection_uri = collection_uri
         @username = username
         @password = password
         @on_behalf_of = on_behalf_of || username
         @http         = HTTP.basic_auth(user: username, pass: password)
-                          .timeout(connect: 60, read: 60).timeout(60).follow(max_hops: 10)
+          .timeout(connect: 60, read: 60).timeout(60).follow(max_hops: 10)
 
-        # HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}", logger: logger)
         @logger       = logger || default_logger
       end
 
@@ -47,6 +46,7 @@ module Stash
         profile = "#{collection_uri.to_s.split('/').last}_content"
 
         response = do_post(profile: profile, payload: payload, doi: doi)
+        puts "TODO: do something with #{response}"
         # do we need to check response for something here? Check additional codes or errors.
       rescue StandardError => e
         log_error(e)
@@ -63,6 +63,7 @@ module Stash
         ark = URI.decode_www_form_component(download_uri.split('/').last)
 
         response = do_post(profile: profile, payload: payload, doi: doi, ark: ark)
+        puts "TODO: do something with #{response}"
 
         # TODO: check for errors better here
         # response.code == 200
@@ -101,7 +102,6 @@ module Stash
       # The download_uri should be populated by the rake task which checks merritt for something finishing from the processing state.
       # There should no longer be a provisional complete state.
       def do_post(profile:, payload:, doi:, ark: nil)
-
         params = {
           file: HTTP::FormData::File.new(payload),
           profile: profile,

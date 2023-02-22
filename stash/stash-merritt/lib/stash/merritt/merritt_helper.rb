@@ -18,7 +18,6 @@ module Stash
         else
           do_create
         end
-
       ensure
         resource.version_zipfile = File.basename(package.payload)
         resource.save!
