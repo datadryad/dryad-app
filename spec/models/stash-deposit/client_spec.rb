@@ -15,21 +15,20 @@ module Stash
         @manifest       = 'spec/data/manifest.checkm'
         @doi            = "doi:10.5072/FK#{Time.now.getutc.xmlschema.gsub(/[^0-9a-z]/i, '')}"
 
-        @merritt_output = {"bat:batchState"=>
-                             { "xmlns:bat"=>"http://uc3.cdlib.org/ontology/mrt/ingest/batch",
-                               "bat:batchID"=>"bid-9dee0fbd-b674-44ce-abc0-937f5a0afed8",
-                               "bat:jobStates"=>"",
-                               "bat:batchStatus"=>"QUEUED",
-                               "bat:userAgent"=>"dash_demo_user/Dash Demo User",
-                               "bat:submissionDate"=>"2023-02-17T15:26:38-08:00"}
-        }.to_json
+        @merritt_output = { 'bat:batchState' =>
+                             { 'xmlns:bat' => 'http://uc3.cdlib.org/ontology/mrt/ingest/batch',
+                               'bat:batchID' => 'bid-9dee0fbd-b674-44ce-abc0-937f5a0afed8',
+                               'bat:jobStates' => '',
+                               'bat:batchStatus' => 'QUEUED',
+                               'bat:userAgent' => 'dash_demo_user/Dash Demo User',
+                               'bat:submissionDate' => '2023-02-17T15:26:38-08:00' } }.to_json
       end
 
       describe '#create' do
 
         it 'successfully sends a request to Merritt' do
           stub_request(:post, @mrt_uri).with(basic_auth: [@username, @password])
-                                       .to_return(status: 200, body: @merritt_output)
+            .to_return(status: 200, body: @merritt_output)
           resp = @client.create(payload: @manifest, doi: @doi)
           expect(resp.code).to eq(200)
         end
@@ -53,7 +52,7 @@ module Stash
 
         it 'successfully sends a request to Merritt' do
           stub_request(:post, @mrt_uri).with(basic_auth: [@username, @password])
-                                       .to_return(status: 200, body: @merritt_output)
+            .to_return(status: 200, body: @merritt_output)
           resp = @client.update(payload: @manifest, doi: @doi, download_uri: @download_uri)
           expect(resp.code).to eq(200)
         end
