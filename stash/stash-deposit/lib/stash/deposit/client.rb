@@ -57,6 +57,7 @@ module Stash
       #
       # @param doi [String] the DOI
       # @param payload [String] the checkm file path
+      # @param download_uri [String] the download URI which merritt returns to us and contains the internal merritt ark
       def update(doi:, payload:, download_uri:)
         logger.debug("Stash::MerrittDeposit::Client.update(doi: #{doi}, payload: #{payload}, download_uri: #{download_uri})")
         profile = "#{collection_uri.to_s.split('/').last}_content"

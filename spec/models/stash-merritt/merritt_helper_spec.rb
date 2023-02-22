@@ -15,7 +15,7 @@ module Stash
         @request_host = 'example.org'
 
         @sword_params = {
-          collection_uri: 'http://example.org/sword/my_collection',
+          collection_uri: 'https://example.org/sword/my_collection',
           username: 'elvis',
           password: 'presley'
         }.freeze
@@ -71,14 +71,10 @@ module Stash
           end
         end
 
-        @receipt = instance_double(Stash::Sword::DepositReceipt)
-        allow(@receipt).to(receive(:em_iri)).and_return(@download_uri)
-        allow(@receipt).to(receive(:edit_iri)).and_return(@update_uri)
-
-        @sword_client = instance_double(Stash::Sword::Client)
-        allow(@sword_client).to receive(:update).and_return(200)
-        allow(@sword_client).to receive(:create).and_return(@receipt)
-        allow(Stash::Sword::Client).to receive(:new).and_return(@sword_client)
+        @deposit_client = instance_double(Stash::Deposit::Client)
+        allow(@deposit_client).to receive(:update).and_return(200)
+        allow(@deposit_client).to receive(:create).and_return(@receipt)
+        allow(Stash::Deposit::Client).to receive(:new).and_return(@deposit_client)
       end
 
       after(:each) do
@@ -104,19 +100,17 @@ module Stash
 
             before(:each) do
               @package = Stash::Merritt::ObjectManifestPackage.new(resource: @resource)
-              @helper = SwordHelper.new(package: @package)
+              @helper = MerrittHelper.new(package: @package)
             end
 
             it 'submits the manifest' do
-              expect(@sword_client).to receive(:create)
+              expect(@deposit_client).to receive(:create)
                 .with(
                   doi: "doi:#{@doi}",
-                  payload: @package.payload,
-                  packaging: Stash::Sword::Packaging::BINARY
+                  payload: @package.payload
                 ).and_return(@receipt)
-              @helper.submit!
-              expect(@resource.download_uri).to eq(@download_uri)
-              expect(@resource.update_uri).to eq(@update_uri)
+              expect { @helper.submit! }.not_to raise_error
+              # no longer setting download and update urls and they're always asynch
             end
 
             it 'sets the version "zipfile"' do
@@ -127,13 +121,9 @@ module Stash
             end
 
             it 'forwards errors' do
-              expect(@sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
-              expect { @helper.submit! }.to raise_error(RestClient::RequestFailed)
-            end
+              expect(@deposit_client).to receive(:create).and_raise(HTTP::ConnectionError)
 
-            it 'handles RestClient::Exceptions::ReadTimeout and returns and raises GoneAsynchronous exception' do
-              expect(@sword_client).to receive(:create).and_raise(RestClient::Exceptions::ReadTimeout)
-              expect { @helper.submit! }.to raise_error(Stash::Merritt::SwordHelper::GoneAsynchronous)
+              expect { @helper.submit! }.to raise_error(HTTP::ConnectionError)
             end
           end
 
@@ -144,15 +134,15 @@ module Stash
               @resource.download_uri = @download_uri
               @resource.save
               @package = Stash::Merritt::ObjectManifestPackage.new(resource: @resource)
-              @helper = SwordHelper.new(package: @package)
+              @helper = MerrittHelper.new(package: @package)
             end
 
             it 'submits the manifest' do
-              expect(@sword_client).to receive(:update)
+              expect(@deposit_client).to receive(:update)
                 .with(
-                  edit_iri: @update_uri,
+                  doi: @resource.identifier.to_s,
                   payload: @package.payload,
-                  packaging: Stash::Sword::Packaging::BINARY
+                  download_uri: @resource.download_uri
                 ).and_return(200)
               @helper.submit!
             end
@@ -165,8 +155,8 @@ module Stash
             end
 
             it 'forwards errors' do
-              expect(@sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
-              expect { @helper.submit! }.to raise_error(RestClient::RequestFailed)
+              expect(@deposit_client).to receive(:update).and_raise(HTTP::ConnectionError)
+              expect { @helper.submit! }.to raise_error(HTTP::ConnectionError)
             end
           end
         end
