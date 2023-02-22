@@ -1,25 +1,18 @@
 import React from 'react';
 
 import '@cdl-dryad/frictionless-components/lib/styles';
-import classes from './ModalValidationReport.module.css';
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => (
   <dialog
-    className="c-uploadmodal"
-    style={{
-      position: 'fixed',
-      width: '60%',
-      maxWidth: '950px',
-      minWidth: '220px',
-    }}
+    className="modalDialog"
     ref={ref}
   >
     <div className="c-uploadmodal__header">
-      <h2 className="c-datasets-heading__heading o-heading__level1">
+      <h1 className="c-datasets-heading__heading o-heading__level1">
         Formatting Report: {file?.sanitized_name}
-      </h2>
+      </h1>
       <button
-        className={classes.CloseButton}
+        className="button-close-modal"
         aria-label="close"
         type="button"
         onClick={clickedClose}

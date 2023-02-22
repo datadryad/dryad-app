@@ -4,28 +4,21 @@ import ValidateFiles from './ValidateFiles';
 const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref) => (
   <dialog
     id="js-uploadmodal"
-    className="c-uploadmodal"
+    className="modalDialog"
     ref={ref}
-    style={{
-      position: 'fixed',
-      width: '60%',
-      height: '370px',
-      maxWidth: '750px',
-      minWidth: '220px',
-    }}
   >
     <form method="dialog" onSubmit={submitted}>
-      <div className="c-uploadmodal__header">
-        <label htmlFor="location_urls" className="c-uploadmodal__textarea-url-label">
+      <h1 className="c-uploadmodal__header">
+        <label htmlFor="location_urls">
           Enter URLs
         </label>
         <button
-          className="c-uploadmodal__button-close-modal"
+          className="button-close-modal"
           aria-label="close"
           type="button"
           onClick={clickedClose}
         />
-      </div>
+      </h1>
       <textarea
         id="location_urls"
         className="c-uploadmodal__textarea-url"
