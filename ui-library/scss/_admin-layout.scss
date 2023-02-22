@@ -26,65 +26,51 @@
   }
 }
 
-.o-admin-left {
-  min-width: 252px;
-  margin-right: 20px;
-  padding: 10px;
-  /* margin: 20px 20px 0 0;
-  padding: 5px; */
-}
-
-.o-admin-right {
-  flex-grow: 1;
-  padding: 10px;
-  /*margin: 25px 0 0;
-  padding: 10px;
-  background-color: orange; */
-}
-
 .o-admin-dialog {
   padding: 5px 15px 25px;
 }
 
 .o-admin-columns {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: $spacing-md;
+
+  @include bp(screen3) {
+    flex-wrap: nowrap;
+  }
 }
 
-.o-admin-25-column {
-  flex: 25;
+.o-admin-left, .o-admin-right {
+  min-width: 225px;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
-.o-admin-40-column {
-  flex: 40;
-}
-
-.o-admin-50-column {
-  flex: 50;
-}
-
-.o-admin-60-column {
-  flex: 60;
-}
-
-.o-admin-75-column {
-  flex: 75;
-}
-
-.o-admin-form-pair {
+%o-admin-form {
   display: flex;
-  margin: 1rem 0;
+  gap: $spacing-sm;
+
+  & > * {
+    margin: 0;
+  }
+}
+
+.o-admin-form {
+  @extend %o-admin-form;
+  flex-direction: column;
+}
+
+.o-admin-form-inline {
+  @extend %o-admin-form;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
 }
 
-.o-admin-label-left {
-  flex: 0 0 30%;
-  justify-content: right;
-  text-align: right;
-  padding-right: 1rem;
-}
-
-.o-admin-field-right {
-  flex: 0 0 70%;
+.o-admin-form-pair {
+  display: inline-flex;
+  gap: $spacing-base/2;
+  align-items: center;
+  flex-wrap: wrap;
 }

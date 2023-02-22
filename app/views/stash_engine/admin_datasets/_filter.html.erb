@@ -1,42 +1,44 @@
 <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
               method: 'get', id: 'filter_form') do -%>
-  <label for="tenant" class="c-horizontal-form__input--filter-by">Filter by:</label>
+<div class="o-admin-form-inline">
+  <h3 class="o-heading__level3">Filter by:</h3>
   <% if current_user.limited_curator? %>
-    <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
-                   class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
-
+    <div class="o-admin-form-pair">
+      <label for="tenant">Institution:</label>
+      <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]), class: 'c-input__text', onchange: "this.form.submit();" ) %>
+    </div>
+    <div class="o-admin-form-pair">
       <label for="editor_id">Curator:</label>
       <%= select_tag(:editor_id, options_for_select( [['Curator', '']] + editor_select, params[:editor_id]),
-		     class: 'c-horizontal-form__input',                 
+		     class: 'c-input__text',                 
 		     onchange: "this.form.submit();" ) %>
-
+    </div>
   <% end %>
-  <label for="curation_status">Status:</label>
-  <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
-                 class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
-
-  <p>
+  <div class="o-admin-form-pair">
+    <label for="curation_status">Status:</label>
+    <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
+                 class: 'c-input__text', onchange: "this.form.submit();" ) %>
+  </div>
   <% if @publications.any? %>
+    <div class="o-admin-form-pair">
       <label for="publication_name">Journal name:</label>
-      <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', id: 'publication_name') %>
+      <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-input__text', id: 'publication_name') %>
+    </div>
   <% end %>
-  </p>
-  <p>
   <% if current_user.limited_curator? %>
-    <label for="sponsor_org">Sponsoring Org:</label>
-    <%= select_tag(:sponsor_org, options_for_select( [['Sponsoring Org', '']] + sponsor_select, params[:sponsor_org]),
-                   class: 'c-horizontal-form__input', onchange: "this.form.submit();") %>
-
-  <% end %>
-  </p>
- 
-  <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
-
+    <div class="o-admin-form-pair">
+      <label for="sponsor_org">Sponsoring Org:</label>
+      <%= select_tag(:sponsor_org, options_for_select( [['Sponsoring Org', '']] + sponsor_select, params[:sponsor_org]),
+                   class: 'c-input__text', onchange: "this.form.submit();") %>
+    </div>
+  <% end %> 
   <% params.except(:controller, :action, :tenant, :curation_status, :sponsor_org, :editor_id,
 		   :commit, :page, :page_size, :show_all, :publication_name).each_pair do |k,v| %>
     <%= hidden_field_tag k, v, id: "filter_#{k}" %>
   <% end %>
+</div>
 <% end -%>
+<a href="#" id="filter_resetter">Reset all filters</a>
 
 <script>
   // put this in here because it goes along with this form only

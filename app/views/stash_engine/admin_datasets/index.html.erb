@@ -3,43 +3,42 @@
 
 <%= render partial: 'admin_head', locals: { all_stats: @all_stats, seven_day_stats: @seven_day_stats } %>
  
-<div>
-    <h2>Datasets</h2>
+<h2>Datasets</h2>
 
+<div class="o-admin-form">
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
-
-  <%= render partial: 'datasets_table', locals: { datasets: @datasets } %>
-
-  <div class="search-results-footer">
-  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
-       stash_url_helpers.ds_admin_path(sortable_table_params.merge(format: :csv)) %>
-
-    <div class="c-space-paginator">
-      <%= paginate @datasets, params: { page_size: @page_size, show_all: false, show_last_page: false } %>
-      <div class="c-paginator-page_size">
-        Page size:
-        <%
-          current_ps = params[:page_size].to_i
-          current_ps = 10 if current_ps == 0
-          [10, 50, 100].each do |ps| %>
-          <% if ps == current_ps %>
-            <span class="page-current"><%= ps %></span>
-          <% else %>
-              <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.merge(page_size: ps, page: 1))) %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>      
-  </div>
-
-  <p>
-    &dagger; By default the search uses relevance ranking and not all terms are required.  Choosing the <em>All terms</em>
-    option requires all the terms in your query to be present in the results.  If you prefer to do an advanced query
-    with more fine-grained options, select <em>All terms</em>
-    and add any of (<em>~ + < > *</em>) that are commonly part of
-    <a href="https://dev.mysql.com/doc/refman/5.5/en/fulltext-boolean.html">the boolean query syntax</a> to use that
-    syntax.
-  </p>
 </div>
 
+<%= render partial: 'datasets_table', locals: { datasets: @datasets } %>
+
+<div class="search-results-footer">
+<%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+     stash_url_helpers.ds_admin_path(sortable_table_params.merge(format: :csv)) %>
+
+  <div class="c-space-paginator">
+    <%= paginate @datasets, params: { page_size: @page_size, show_all: false, show_last_page: false } %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+            <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.merge(page_size: ps, page: 1))) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>      
+</div>
+
+<p>
+  &dagger; By default the search uses relevance ranking and not all terms are required.  Choosing the <em>All terms</em>
+  option requires all the terms in your query to be present in the results.  If you prefer to do an advanced query
+  with more fine-grained options, select <em>All terms</em>
+  and add any of (<em>~ + &lt; &gt; *</em>) that are commonly part of
+  <a href="https://dev.mysql.com/doc/refman/5.5/en/fulltext-boolean.html">the boolean query syntax</a> to use that
+  syntax.
+</p>
