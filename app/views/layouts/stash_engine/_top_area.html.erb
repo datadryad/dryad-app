@@ -10,7 +10,7 @@
         <%
         dash_logo = image_tag('stash_engine/logo_dryad.png', class: 'c-header__dash-logo-svg', alt: 'Dryad')
         tenant_logo = ( (current_tenant.blank? || current_tenant.logo_file.blank?) ? '' : logo_path(class: "c-header__dash-logo-svg") ) %>
-        <%= dash_logo %><%= tenant_logo %>
+        <div><%= dash_logo %></div><% unless tenant_logo.blank? %><div><%= tenant_logo %></div><% end %>
       <% end %>
     </div>
 
