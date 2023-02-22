@@ -1,5 +1,6 @@
 <div class="o-admin-container">
   <div>
+    <h2 class="o-heading__level2">Queue information</h2>
     <p>
       Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new.utc) %><br/>
       <% if @holding_submissions %>Submissions are being held for shutdown on this server<% else %>Normal submissions in effect on this server<% end %><br/><br/>
@@ -14,8 +15,9 @@
     </p>
   </div>
   <div>
+    <h3 class="o-heading__level2">Pool state</h3>
+    <p>Internal concurrent-ruby executor pool state for repository class</p>
     <p>
-      <strong>Internal concurrent-ruby executor pool state for repository class</strong><br>
       pool length: <%= @executor.length %><br>
       queue length: <%= @executor.queue_length %><br>
       scheduled task count: <%= @executor.scheduled_task_count %><br>
