@@ -1,22 +1,29 @@
 .o-admin-container {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: $spacing-md;
 }
 
-.o-admin-left-head {
-  min-width: 250px;
-  height: 8em;
-  margin-right: 20px;
-  padding: 10px;
-  border: thin solid $design-light-gray-color;
-}
+*[class^="o-admin-head-"] {
+  min-width: 225px;
+  border: thin solid $design-dark-blue-color;
 
-.o-admin-right-head {
-  flex-grow: 1;
-  height: 8em;
-  padding: 10px;
-  border: thin solid $design-light-gray-color;
+  h2 {
+    padding: $spacing-base;
+    color: $design-white-color;
+    background-color: $design-dark-blue-color;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 $spacing-base; 
+
+    li {
+      line-height: 135%;
+    }
+  }
 }
 
 .o-admin-left {
@@ -41,7 +48,8 @@
 
 .o-admin-columns {
   display: flex;
-  gap: 2rem;
+  flex-wrap: wrap;
+  gap: $spacing-md;
 }
 
 .o-admin-25-column {

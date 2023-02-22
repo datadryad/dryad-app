@@ -1,13 +1,17 @@
 <%# takes locals of user & progress_count in this partial %>
 <div class="o-admin-container">
-  <div class="o-admin-left-head">
-    <div class="o-heading__level3">At a glance</div>
-    Last login: <%= formatted_datetime(user.last_login) %><br/>
-    <%= progress_count %> datasets in progress
+  <div class="o-admin-head-left">
+    <h2 class="o-heading__level3">At a glance</h2>
+    <ul>
+      <li>Last login: <%= formatted_datetime(user.last_login) %><br/>
+      <li><%= progress_count %> datasets in progress
+    </ul>
   </div>
-  <div class="o-admin-right-head">
-    <div class="o-heading__level3"><%= "#{user.first_name} #{user.last_name}" %></div>
-    <%= StashEngine::Tenant.find(user.tenant_id)&.short_name %><br/>
-    <%= mail_to user.email %>
+  <div class="o-admin-head-right">
+    <h2 class="o-heading__level3"><%= "#{user.first_name} #{user.last_name}" %></h2>
+    <ul>
+      <li><%= StashEngine::Tenant.find(user.tenant_id)&.short_name %><br/>
+      <li><%= mail_to user.email %>
+    </ul>
   </div>
 </div>
