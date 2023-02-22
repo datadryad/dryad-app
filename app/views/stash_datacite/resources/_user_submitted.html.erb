@@ -7,5 +7,5 @@
     <%= render partial: 'submitted_line', collection: @submitted_lines, as: :line %>
     </tbody>
   </table>
-  <%= paginate @resources, params: {page_size: @page_size}, remote: true %>
+  <%= paginate @resources, params: {page_size: @page_size, show_all: false}, remote: true %>
 <% end %>
