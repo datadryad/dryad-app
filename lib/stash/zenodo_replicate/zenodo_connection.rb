@@ -93,7 +93,7 @@ module Stash
       # The only problem we've ever seen is for metadata updates with a PUT request for a dataset like
       # http.put https://sandbox.zenodo.org/api/deposit/depositions/745192 and we got a 400 response code if the DOI
       # already exists in another dataset and problem surfaced only a couple of times out of about 8,000 submissions.
-      # I think it is better to understand why these couple may happen and fix manually rather than blindly try to upate
+      # I think it is better to understand why these couple may happen and fix manually rather than blindly try to update
       # some other random dataset that has the same DOI in it and may not be in a good state in other ways besides this
       # one request.
 

@@ -10,6 +10,9 @@ require 'byebug'
 
 module Stash
   module Deposit
+
+    class ResponseError < StandardError; end
+
     class Client
       include LogUtils
 
@@ -41,13 +44,11 @@ module Stash
       #
       # @param doi [String] the DOI
       # @param payload [String] the checkm file path
-      def create(doi:, payload:)
+      def create(doi:, payload:, retries: 3)
         logger.debug("Stash::MerrittDeposit::Client.create(doi: #{doi}, payload: #{payload})")
         profile = "#{collection_uri.to_s.split('/').last}_content"
 
-        response = do_post(profile: profile, payload: payload, doi: doi)
-        puts "TODO: do something with #{response}"
-        # do we need to check response for something here? Check additional codes or errors.
+        do_post(profile: profile, payload: payload, doi: doi, retries: retries)
       rescue StandardError => e
         log_error(e)
         raise
@@ -58,26 +59,12 @@ module Stash
       # @param doi [String] the DOI
       # @param payload [String] the checkm file path
       # @param download_uri [String] the download URI which merritt returns to us and contains the internal merritt ark
-      def update(doi:, payload:, download_uri:)
+      def update(doi:, payload:, download_uri:, retries: 3)
         logger.debug("Stash::MerrittDeposit::Client.update(doi: #{doi}, payload: #{payload}, download_uri: #{download_uri})")
         profile = "#{collection_uri.to_s.split('/').last}_content"
         ark = URI.decode_www_form_component(download_uri.split('/').last)
 
-        response = do_post(profile: profile, payload: payload, doi: doi, ark: ark)
-        puts "TODO: do something with #{response}"
-
-        # TODO: check for errors better here
-        # response.code == 200
-        # JSON.parse(response.body.to_s)
-        # sample:
-        # {"bat:batchState"=>
-        #   { "xmlns:bat"=>"http://uc3.cdlib.org/ontology/mrt/ingest/batch",
-        #     "bat:batchID"=>"bid-9dee0fbd-b674-44ce-abc0-937f5a0afed8",
-        #     "bat:jobStates"=>"",
-        #     "bat:batchStatus"=>"QUEUED",
-        #     "bat:userAgent"=>"dash_demo_user/Dash Demo User",
-        #     "bat:submissionDate"=>"2023-02-17T15:26:38-08:00"}
-        # }
+        do_post(profile: profile, payload: payload, doi: doi, ark: ark, retries: retries)
       rescue StandardError => e
         log_error(e)
         raise
@@ -99,10 +86,10 @@ module Stash
       #         resource.download_uri = receipt.em_iri
       #         resource.update_uri = receipt.edit_iri
 
-      # We no longer need an update_uri, since I think it's based on the DOI, which we can use directly.
+      # We no longer need an update_uri, since it's based on the DOI, which we can use directly.
       # The download_uri should be populated by the rake task which checks merritt for something finishing from the processing state.
-      # There should no longer be a provisional complete state.
-      def do_post(profile:, payload:, doi:, ark: nil)
+      # There should no longer be a provisional complete state for the new way of submitting to merritt.
+      def do_post(profile:, payload:, doi:, ark: nil, retries: 3)
         params = {
           file: HTTP::FormData::File.new(payload),
           profile: profile,
@@ -113,8 +100,25 @@ module Stash
         }
 
         params[:primaryIdentifier] = ark if ark
+        begin
+          resp = @http.post("#{base_url}/object/update", form: params)
+          raise ResponseError, "Merritt returned #{resp.code} for #{doi} while submitting" unless resp.code < 300
 
-        @http.post("#{base_url}/object/update", form: params)
+          begin
+            json = JSON.parse(resp.body.to_s)
+            logger.info("Merritt submission started for #{doi}:\n#{json}")
+          rescue JSON::ParserError
+            raise ResponseError, "Merritt returned #{resp.code} for #{doi} while submitting, but the response was not JSON"
+          end
+        rescue HTTP::Error => e
+          if (retries -= 1) > 0
+            sleep 5
+            retry
+          end
+          raise e
+        end
+
+        resp
       end
 
     end
