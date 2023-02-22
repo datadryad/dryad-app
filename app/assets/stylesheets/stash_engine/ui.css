@@ -4637,8 +4637,8 @@ td:last-child, th:last-child {
 
 .c-lined-table {
   width: 100%;
-  margin: 2rem auto;
   font-size: 0.9em;
+  margin-top: 2rem;
 }
 .c-lined-table td, .c-lined-table th {
   border: thin solid #888;
@@ -4791,12 +4791,8 @@ td:last-child, th:last-child {
     padding-left: 1rem;
   }
 }
-.c-user-datasets-table + nav {
-  text-align: right;
+.c-user-datasets-table + nav.pagination {
   margin-bottom: 3rem;
-}
-.c-user-datasets-table + nav > * {
-  margin: 0 0.5rem;
 }
 
 .o-admin-container {
@@ -6804,41 +6800,36 @@ td:last-child, th:last-child {
   margin-bottom: 0.75em;
 }
 
-.c-pagination {
+.c-space-paginator {
+  margin: 2rem 0;
+}
+
+.search-results-footer {
+  margin: 2rem 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: reverse;
-      -ms-flex-flow: column-reverse nowrap;
-          flex-flow: column-reverse nowrap;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 2rem;
 }
-@media (min-width: 480px) {
-  .c-pagination {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-flow: row nowrap;
-            flex-flow: row nowrap;
-    -webkit-box-pack: end;
-        -ms-flex-pack: end;
-            justify-content: flex-end;
-    margin: 0 0 20px;
-  }
+.search-results-footer .c-space-paginator {
+  margin: 0;
+  margin-left: auto;
 }
 
-.c-pagination__show-all {
-  margin: 10px 0;
+nav.pagination, .c-paginator-page_size {
+  text-align: right;
 }
-@media (min-width: 480px) {
-  .c-pagination__show-all {
-    margin: 0 30px 0 0;
-  }
+nav.pagination > *, .c-paginator-page_size > * {
+  margin: 0 0.25rem;
+}
+
+nav.pagination + .c-paginator-page_size {
+  margin-top: 1rem;
 }
 
 .c-progress {
