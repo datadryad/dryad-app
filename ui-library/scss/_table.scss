@@ -30,8 +30,8 @@ td, th {
 
 .c-lined-table {
   width: 100%;
-  margin: $spacing-md auto;
   font-size: .9em;
+  margin-top: $spacing-md;
 
   td, th {
     border: thin solid #888;
@@ -192,12 +192,7 @@ td, th {
     }
   }
 
-  & + nav {
-    text-align: right;
+  & + nav.pagination {
     margin-bottom: $spacing-lg;
-
-    & > * {
-      margin: 0 $spacing-base;
-    }
   }
 }
