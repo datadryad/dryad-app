@@ -4803,26 +4803,27 @@ td:last-child, th:last-child {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.o-admin-left-head {
-  min-width: 250px;
-  height: 8em;
-  margin-right: 20px;
-  padding: 10px;
-  border: thin solid rgb(157, 159, 162);
+*[class^=o-admin-head-] {
+  min-width: 225px;
+  border: thin solid #00527A;
 }
-
-.o-admin-right-head {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  height: 8em;
-  padding: 10px;
-  border: thin solid rgb(157, 159, 162);
+*[class^=o-admin-head-] h2 {
+  padding: 0.5rem;
+  color: rgb(255, 255, 255);
+  background-color: #00527A;
+}
+*[class^=o-admin-head-] ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 0.5rem;
+}
+*[class^=o-admin-head-] ul li {
+  line-height: 135%;
 }
 
 .o-admin-left {
@@ -4851,6 +4852,8 @@ td:last-child, th:last-child {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   gap: 2rem;
 }
 

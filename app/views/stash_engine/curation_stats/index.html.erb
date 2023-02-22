@@ -2,19 +2,18 @@
 <h1 class="o-heading__level1">Curation stats</h1>
 
 <div class="o-admin-container">
-    <div class="o-admin-left-head">
-      <div class="o-heading__level3">At a glance</div>
-      <%= @admin_stats.datasets_submitted_unclaimed_count %> datasets currently in 'Submitted' status (that are unclaimed/unassigned)<br/>
-      <%= @admin_stats.datasets_available_for_curation %> datasets currently available for curation<br/>
-      <%= @admin_stats_3day.datasets_available_for_curation %> datasets available for curation and not touched in 72 hours 
-    </div>
+  <div class="o-admin-head-left">
+    <h2 class="o-heading__level3">At a glance</h2>
+    <ul>
+      <li><%= @admin_stats.datasets_submitted_unclaimed_count %> datasets currently in 'Submitted' status (that are unclaimed/unassigned)<br/>
+      <li><%= @admin_stats.datasets_available_for_curation %> datasets currently available for curation<br/>
+      <li><%= @admin_stats_3day.datasets_available_for_curation %> datasets available for curation and not touched in 72 hours 
+    </ul>
+  </div>
 </div>
 
-<p>Recent statistics are available in the table below (mouseover any table heading for a more complete description), or the complete stats history can be downloaded as a CSV.</p>
-
-  <div>
-    <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %>
-  </div>
+<h2>Curation stats table</h2>
+<p>Recent statistics are available in the table below (mouseover any table heading for a more complete description), or the complete stats history can be downloaded as a CSV: <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %></p>
 
 <div class="table-wrapper">
 <table class="c-lined-table">
