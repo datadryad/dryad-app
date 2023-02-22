@@ -1,7 +1,7 @@
 require 'webmock/rspec'
 
 module Stash
-  module Sword
+  module Deposit
     describe Client do
       attr_reader :username, :client, :password, :on_behalf_of, :zipfile, :doi, :collection_uri
 

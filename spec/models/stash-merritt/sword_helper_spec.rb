@@ -5,7 +5,7 @@ require 'ostruct'
 
 module Stash
   module Merritt
-    describe SwordHelper do
+    describe MerrittHelper do
       include Mocks::Aws
 
       before(:all) do
