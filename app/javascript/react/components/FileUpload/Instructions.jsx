@@ -24,7 +24,7 @@ const instructions = () => (
     </ol>
 
     <p>
-      Software and Supplemental Information can be uploaded for publication
+      Software and supplemental information can be uploaded for publication
       at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo</a>.
       You will have the opportunity to choose a separate license for your software on the review page.
     </p>
