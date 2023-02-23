@@ -4185,7 +4185,7 @@ h1:first-child, *[class^=o-heading__level]:first-child {
   font-weight: normal;
 }
 
-.c-latest__title, #dryads-latest #blog-latest-posts .blog-post-heading, h4, *[class^=o-heading__level3] {
+.c-latest__title, #dryads-latest #blog-latest-posts .blog-post-heading, h4, *[class^=o-heading__level4] {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   color: #00527A;
