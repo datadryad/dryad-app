@@ -144,6 +144,8 @@ Foundation</a>.
   us to update the status of your submission.
 </p>
 
+<p>All data submissions are assigned a private, randomized URL. This link can be shared with the journal office and/or with collaborators to access the data files before the dataset is made public. When your dataset is published, this temporary URL will be deactivated and the DOI assigned to your dataset upon submission will become its public URL.</p>
+
 <p>If you have questions or require assistance, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 
 ## Dataset curation
