@@ -39,7 +39,7 @@ You should end up with a directory structure that looks like this one.
 └── stash
     ├── stash-harvester
     ├── stash-merritt
-    ├── stash-sword
+`    ├── stash-deposit
     ├── stash-wrapper
     ├── stash_datacite
     ├── stash_discovery
