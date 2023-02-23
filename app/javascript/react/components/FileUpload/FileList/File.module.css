@@ -7,6 +7,5 @@
 }
 
 .ValidationError {
-    /* From _alert.scss */
-    color: rgb(209, 44, 29);
+    color: #cf4817;
 }

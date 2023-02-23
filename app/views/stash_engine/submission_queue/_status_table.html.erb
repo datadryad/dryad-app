@@ -1,47 +1,55 @@
-<div style="float: right; width: 30rem;">
-  <p>
-    <strong>Internal concurrent-ruby executor pool state for repository class</strong><br>
-    pool length: <%= @executor.length %><br>
-    queue length: <%= @executor.queue_length %><br>
-    scheduled task count: <%= @executor.scheduled_task_count %><br>
-    largest_length: <%= @executor.largest_length %><br>
-    completed_task_count: <%= @executor.completed_task_count %>
-  </p>
-</div>
-<div>
-  <p>
-    Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new.utc) %><br/>
-    <% if @holding_submissions %>Submissions are being held for shutdown on this server<% else %>Normal submissions in effect on this server<% end %><br/><br/>
-    <%= @server_held_count %> items being held on this server<br/>
-    <%= @server_queued_count %> queued on this server<br/>
-    <%= @server_processing_count %> are currently processing from this server<br/>
-    <br/>
-    <%= @queued_count %> are in queued state<br/>
-    <%= @processing_count %> are currently processing<br/>
-    <%= @errored_count %> errored<br/>
-    <%= @day_completed_submissions %> submissions completed in the last 24 hours<br/>
-  </p>
+<div class="o-admin-container">
+  <div>
+    <h2 class="o-heading__level2">Queue information</h2>
+    <p>
+      Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new.utc) %><br/>
+      <% if @holding_submissions %>Submissions are being held for shutdown on this server<% else %>Normal submissions in effect on this server<% end %><br/><br/>
+      <%= @server_held_count %> items being held on this server<br/>
+      <%= @server_queued_count %> queued on this server<br/>
+      <%= @server_processing_count %> are currently processing from this server<br/>
+      <br/>
+      <%= @queued_count %> are in queued state<br/>
+      <%= @processing_count %> are currently processing<br/>
+      <%= @errored_count %> errored<br/>
+      <%= @day_completed_submissions %> submissions completed in the last 24 hours<br/>
+    </p>
+  </div>
+  <div>
+    <h3 class="o-heading__level2">Pool state</h3>
+    <p>Internal concurrent-ruby executor pool state for repository class</p>
+    <p>
+      pool length: <%= @executor.length %><br>
+      queue length: <%= @executor.queue_length %><br>
+      scheduled task count: <%= @executor.scheduled_task_count %><br>
+      largest_length: <%= @executor.largest_length %><br>
+      completed_task_count: <%= @executor.completed_task_count %>
+    </p>
+  </div>
 </div>
 
+<div class="table-wrapper">
 <table class="c-lined-table">
-	<tr class="c-lined-table__head">
+  <thead>
+	<tr>
 		<th>&check;</th>
-		<th class="<%= sort_display('resource_id') %>">
+		<th class="c-lined-table__sort <%= sort_display('resource_id') %>">
 				<%= sortable_column_head sort_field: 'resource_id', title: 'Resource' %>
 		</th>
 		<th>
 				DOI
 		</th>
-		<th class="<%= sort_display('state') %>">
+		<th class="c-lined-table__sort <%= sort_display('state') %>">
 				<%= sortable_column_head sort_field: 'state', title: 'State' %>
 		</th>
-		<th class="<%= sort_display('hostname') %>">
+		<th class="c-lined-table__sort <%= sort_display('hostname') %>">
 				<%= sortable_column_head sort_field: 'hostname', title: 'Hostname' %>
 		</th>
-		<th class="<%= sort_display('updated_at') %>">
+		<th class="c-lined-table__sort <%= sort_display('updated_at') %>">
 				<%= sortable_column_head sort_field: 'updated_at', title: 'Updated at' %>
 		</th>
 	</tr>
+  </thead>
+  <tbody class="c-lined-table__digits">
     <% @queue_rows.each do |qr| %>
     <tr class="c-lined-table__row">
 			<td><%= check_box_tag(qr.resource_id) %></td>
@@ -52,4 +60,6 @@
       <td><%= formatted_datetime(qr.updated_at) %></td>
     </tr>
     <% end %>
+  </tbody>
 </table>
+</div>

@@ -1,18 +1,51 @@
 .modalDialog {
   position: fixed;
-  max-width: 45rem;
+  max-width: 80vw;
 
-  .modalClose button, input[type=submit], button[type=submit] {
-    @extend %o-button__plain-text;
-    border: thin solid $design-light-gray-color;
-    border-radius: 0;
-    background-color: $design-white-color;
+  @include bp(screen2) {
+    max-width: 45rem;
+  }
+
+  &.extra-wide {
+    width: 80vw;
+    max-width: 1220px;
+  }
+
+  &::backdrop { // native
+    background-color: rgba(0, 0, 0, 0.45);
+  }
+
+  + .backdrop { // polyfill
+    background-color: rgba(0, 0, 0, 0.45);
   }
 }
 
 .modalClose {
+  padding: $spacing-sm 0;
   text-align: right;
-  margin-bottom: -1em;
+  margin-bottom: -$spacing-lg;
+}
+
+.modalClose button, .button-close-modal {
+  background-color: transparent;
+  color: $design-dark-blue-color;
+  border: none;
+  padding: 0 $spacing-sm;
+  font-size: 26px;
+
+  &:after {
+    font-family: FontAwesome;
+    content: '\f00d'
+  }
+
+  &:hover, &:focus {
+    outline: none;
+    color: $design-orange-color;
+  }
+}
+
+#genericModalContent > *:first-child {
+  margin-right: calc(26px + $spacing-md);
 }
 
 .c-modal-h1 {
@@ -28,10 +61,33 @@
   @extend %o-heading__level3;
 }
 
-.modalDialog .c-uploadmodal__button-close-modal {
-  background-color: white;
+.c-uploadmodal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  * {
+    overflow-wrap: break-word;
+  }
 }
 
-.c-uploadmodal__header * {
-  word-break: break-all;
+.c-uploadmodal__textarea-url-label {
+  @extend %o-heading__level2;
+  display: block;
+  margin-top: 0;
+  margin-bottom: $spacing-md;
+}
+
+.c-uploadmodal__textarea-url {
+  width: 100%;
+  height: 200px;
+}
+
+.c-uploadmodal__text-content {
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.c-uploadmodal__button-validate {
+  display: block;
+  margin-top: $spacing-md;
 }

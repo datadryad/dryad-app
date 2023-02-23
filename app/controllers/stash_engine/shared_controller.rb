@@ -57,21 +57,21 @@ module StashEngine
     # ----------------------
 
     def formatted_date(t)
-      return 'Not available' if t.blank?
+      return 'NA' if t.blank?
 
       t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%B %e, %Y')
     end
 
     def formatted_datetime(t)
-      return 'Not available' if t.blank?
+      return 'NA' if t.blank?
 
       t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%m/%d/%Y %H:%M:%S %Z')
     end
 
     def formatted_html5_date(t)
-      return 'Not available' if t.blank?
+      return 'NA' if t.blank?
 
       t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%Y-%m-%d')

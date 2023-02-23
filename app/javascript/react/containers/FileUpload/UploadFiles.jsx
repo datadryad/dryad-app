@@ -219,10 +219,15 @@ class UploadFiles extends React.Component {
   };
 
   checkPollingDone = (filteredFiles) => {
-    if (this.state.pollingCount > 500 || filteredFiles.length < 1 || !this.state.validating) {
+    if (this.state.pollingCount > 60 || filteredFiles.length < 1 || !this.state.validating) {
+      // 60 * 10000 = 600000 or 10 minutes
       clearInterval(this.interval);
       this.interval = null;
-      this.setState({validating: false, pollingCount: 0});
+      this.setState({validating: false, pollingCount: 0}, () => {
+        // Set any unchecked files as error after 10 minutes
+        const files = this.simpleTabularCheckStatus(filteredFiles);
+        this.updateAlreadyChosenById(files);
+      });
       return true;
     }
     return false;
@@ -249,7 +254,7 @@ class UploadFiles extends React.Component {
     } if (file.frictionless_report) {
       return TabularCheckStatus[file.frictionless_report.status];
     }
-    return true;
+    return TabularCheckStatus.error;
   };
 
   addFilesHandler = (event, uploadType) => {
@@ -369,22 +374,23 @@ class UploadFiles extends React.Component {
   // I'm not sure why this is plural since only one file at a time is passed in, maybe because of some of the
   // other methods it uses which rely on a collection
   validateFrictionlessLambda = (f) => {
-    this.setState({validating: true});
-    // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
-    const files = this.updateTabularCheckStatus(f);
-    // I think these are files that are being uploaded now????  IDK what it means.
-    this.updateAlreadyChosenById(files);
-    // post to the method to trigger frictionless validation in AWS Lambda
-    axios.post(
-      `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
-      {file_ids: files.map((file) => file.id)},
-    ).then((response) => {
-      console.log('validateFrictionlessLambda RESPONSE', response);
-      if (!this.interval) {
-        // start polling for report updates if not polling already
-        this.interval = setInterval(this.tick, this.state.pollingDelay);
-      }
-    }).catch((error) => console.log(error));
+    this.setState({validating: true}, () => {
+      // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
+      const files = this.updateTabularCheckStatus(f);
+      // I think these are files that are being uploaded now????  IDK what it means.
+      this.updateAlreadyChosenById(files);
+      // post to the method to trigger frictionless validation in AWS Lambda
+      axios.post(
+        `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
+        {file_ids: files.map((file) => file.id)},
+      ).then((response) => {
+        console.log('validateFrictionlessLambda RESPONSE', response);
+        if (!this.interval) {
+          // start polling for report updates if not polling already
+          this.interval = setInterval(this.tick, this.state.pollingDelay);
+        }
+      }).catch((error) => console.log(error));
+    });
   };
 
   updateAlreadyChosenById = (filesToUpdate) => {

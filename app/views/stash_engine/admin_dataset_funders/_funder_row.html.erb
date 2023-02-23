@@ -10,7 +10,7 @@
   <td>
     <%= ds_row.authors %>
   </td>
-  <td>
+  <td class="c-lined-table__digits">
     <%= ds_row.identifier %>
   </td>
   <td>
@@ -19,15 +19,15 @@
   <td>
     <%= ds_row.award_number %>
   </td>
-  <td>
+  <td class="c-lined-table__digits">
     <%= ds_row.init_sub_date&.strftime('%m/%d/%Y') %>
   </td>
-  <td>
+  <td class="c-lined-table__digits">
     <% if ds_row.pub_state == 'embargoed' && ds_row.publication_date && ds_row.publication_date > Time.new %>
       <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
     <% end %>
   </td>
-  <td>
+  <td class="c-lined-table__digits">
     <% if ds_row.pub_state == 'published' && ds_row.publication_date && ds_row.publication_date < Time.new %>
       <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
     <% end %>
