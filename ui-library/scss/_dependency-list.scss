@@ -1,9 +1,3 @@
-.o-dependency-group {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-}
-
 .o-dependency-group__list {
   display: flex;
   flex-direction: column;
@@ -25,41 +19,13 @@
     font-weight: bold;
   }
 
-  .fa-times-circle { color: $design-red-color; }       /* red */
-  .fa-question-circle { color: $design-orange-color; } /* yellow */
-  .fa-check-circle { color: $design-green-color; }     /* green */
-
-  .dialog {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    top: 0;
-    left: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: $design-black-color-forty-percent; /* Black w/ opacity */
+  button {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
   }
 
-  .dialog-content {
-    width: 80%; /* Could be more or less, depending on screen size */
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: thin solid $design-dark-gray-color;
-    background-color: $design-super-extra-light-gray-color;
-  }
-  /* The Close Button */
-  .dialog-close {
-    float: right;
-    color: $design-dark-gray-color;
-    font-size: 28px;
-    font-weight: bold;
-  }
-
-  .dialog-close:hover,
-  .dialog-close:focus {
-    color: $design-black-color;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  .fa-times-circle { color: $design-red-color; }
+  .fa-question-circle { color: $design-orange-color; }
+  .fa-check-circle { color: $design-green-color; } 
 }

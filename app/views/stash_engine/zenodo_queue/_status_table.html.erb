@@ -1,53 +1,58 @@
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="<%= sort_display('id') %>">
+  <thead>
+  <tr>
+    <th class="c-lined-table__sort <%= sort_display('id') %>">
       <%= sortable_column_head sort_field: 'id', title: 'ID' %>
     </th>
-    <th class="<%= sort_display('identifier_id') %>">
+    <th class="c-lined-table__sort <%= sort_display('identifier_id') %>">
       <%= sortable_column_head sort_field: 'identifier_id', title: 'Ident.Id' %>
     </th>
-    <th class="<%= sort_display('resource_id') %>">
+    <th class="c-lined-table__sort <%= sort_display('resource_id') %>">
       <%= sortable_column_head sort_field: 'resource_id', title: 'Res.Id' %>
     </th>
-    <th class="<%= sort_display('state') %>">
+    <th class="c-lined-table__sort <%= sort_display('state') %>">
       <%= sortable_column_head sort_field: 'state', title: 'State' %>
     </th>
-    <th class="<%= sort_display('updated_at') %>">
+    <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
       <%= sortable_column_head sort_field: 'updated_at', title: 'Updated at' %>
     </th>
-    <th class="<%= sort_display('created_at') %>">
+    <th class="c-lined-table__sort <%= sort_display('created_at') %>">
       <%= sortable_column_head sort_field: 'created_at', title: 'Created at' %>
     </th>
-    <th class="<%= sort_display('copy_type') %>">
+    <th class="c-lined-table__sort <%= sort_display('copy_type') %>">
       <%= sortable_column_head sort_field: 'copy_type', title: 'Copy Type' %>
     </th>
-    <th class="<%= sort_display('size') %>">
+    <th class="c-lined-table__sort <%= sort_display('size') %>">
       <%= sortable_column_head sort_field: 'size', title: 'Size' %>
     </th>
-    <th class="<%= sort_display('error_info') %>">
+    <th class="c-lined-table__sort <%= sort_display('error_info') %>">
       <%= sortable_column_head sort_field: 'error_info', title: 'Error Info' %>
     </th>
     <th>Actions</th>
-
   </tr>
+  </thead>
+  <tbody>
   <% @zenodo_copies.each do |zc| %>
     <tr class="c-lined-table__row">
-      <td><%= link_to(zc.id, zenodo_queue_item_details_path(zc.id)) %></td>
-      <td>
+      <td class="c-lined-table__digits"><%= link_to(zc.id, zenodo_queue_item_details_path(zc.id)) %></td>
+      <td class="c-lined-table__digits">
         <% unless zc.identifier_id.blank? %>
           <%= link_to(zc.identifier_id, zenodo_queue_identifier_details_path(zc.identifier_id)) %>
         <% end %>
-      </td>
+      </td class="c-lined-table__digits">
       <td><%= zc.resource_id %></td>
       <td><%= zc.state %></td>
-      <td><%= formatted_datetime(zc.updated_at) %></td>
-      <td><%= formatted_datetime(zc.created_at) %></td>
+      <td class="c-lined-table__digits"><%= formatted_datetime(zc.updated_at) %></td>
+      <td class="c-lined-table__digits"><%= formatted_datetime(zc.created_at) %></td>
       <td><%= zc.copy_type.gsub('_', ' ') %></td>
-      <td><%= filesize(zc.size) %></td>
+      <td class="c-lined-table__digits"><%= filesize(zc.size) %></td>
       <td><%= link_to truncate(zc.error_info || 'null', length: 20), zenodo_queue_item_details_path(zc.id), title: zc.error_info %></td>
       <td>
         <%= button_to('resend', zenodo_queue_resubmit_job_path(id: zc.id)) %>
       </td>
     </tr>
   <% end %>
+  </tbody>
 </table>
+</div>

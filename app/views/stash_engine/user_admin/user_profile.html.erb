@@ -3,7 +3,7 @@
 
 <%= render partial: 'user_activity_head', locals: {user: @user, progress_count: @progress_count } %>
 
-<div class="o-admin-container">
+<div class="o-admin-columns">
   <div class="o-admin-left">
     <h2>Filters</h2>
     <%= render partial: 'status_facet', locals: { facets: @status_facets } %>

@@ -1,22 +1,22 @@
-<div class="c-horizontal-form">
-  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
+<%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
                method: 'get', id: 'search_form') do %>
+<div class="o-admin-form-inline">
+  <div class="o-admin-form-pair">
     <label for="search-terms">Search Terms:</label>
-    <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
+    <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
     <%= hidden_field_tag(:sort, 'relevance') %>
-    <span class="c-horizontal-form__input">
-      &nbsp;
-      <%= check_box_tag(:all_advanced, value = "1", checked = (params[:all_advanced] == '1')) %>
-      <%= label_tag(:all_advanced, 'All terms') %> <sup>&dagger;</sup>
-    </span>
-    <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
-    <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
-
-    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
-        <%= hidden_field_tag k, v, id: "search_#{k}" %>
-    <% end %>
+  </div>
+  <div class="o-admin-form-pair">
+    <%= check_box_tag(:all_advanced, value = "1", checked = (params[:all_advanced] == '1')) %>
+    <span><%= label_tag(:all_advanced, 'All terms') %> <sup>&dagger;</sup></span>
+  </div>
+  <%= submit_tag('Search', class: 'o-button__submit' ) %>
+  <a href="#" id="clear_search">Clear Search</a>
+  <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
+      <%= hidden_field_tag k, v, id: "search_#{k}" %>
   <% end %>
 </div>
+<% end %>
 
 <script>
   // put this in here because it goes along with this form only

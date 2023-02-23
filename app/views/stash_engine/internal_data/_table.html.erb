@@ -1,22 +1,20 @@
 <% if @internal_data.count.positive? %>
   <table class="c-lined-table" id="activity_log_table">
-    <tr class="c-lined-table__head">
-      <th class="c-admin-table">
-        Date
-      </th>
-      <th class="c-admin-table" colspan="2">
-        Type
-      </th>
-      <th class="c-admin-table">
-        Value
-      </th>
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Value</th>
     </tr>
+  </thead>
+  <tbody>
     <% @internal_data.each do |item| %>
       <tr class="c-lined-table__row">
         <td><%= formatted_datetime(item.updated_at) %></td>
-        <td class="c-admin-hide-border-right"><%= item.data_type %></td>
-        <td class="c-admin-hide-border-left">
+        <td><div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data"><%= item.data_type %></div>
           <% if current_user.curator? %>
+          <div class="c-lined-table__actions">
             <%= button_to stash_engine_internal_datum_path(item), method: :delete, remote: true, data: { confirm: 'Are you sure?' },
                           form_class: 'o-button__inline-form', class: 'c-admin-edit-icon', title: 'Delete internal data item' do %>
               <i class="fa fa-trash" aria-hidden="true"></i>
@@ -27,11 +25,13 @@
               <%= hidden_field_tag :internal_datum_id, item.id %>
               <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <% end %>
+          </div>
           <% end %>
-        </td>
+        </div></td>
         <td><%= item.value %></td>
       </tr>
     <% end %>
+    </tbody>
   </table>
 <% else %>
   <p>No internal data is available for this dataset</p>

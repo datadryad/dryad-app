@@ -1,17 +1,16 @@
-<h2>Information about the current queue for Zenodo</h2>
-
+<h1>Zenodo submission queue</h1>
 <p>
   <%= @zenodo_copies.count %> items in list
 </p>
 
 <p>
-  <%= button_to('Reset stalled to error state', zenodo_queue_set_errored_path) %>
+  <%= button_to('Reset stalled to error state', zenodo_queue_set_errored_path, class: 'o-button__plain-text2') %>
 </p>
 <div id="status_table">
   <%= render partial: 'status_table' %>
 </div>
 
-<h3>Information</h3>
+<h2>Information</h2>
 
 <ul>
   <li>
