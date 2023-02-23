@@ -61,8 +61,8 @@ We welcome collaborations to develop additional modules for additional metadata 
 
 ### Features of Dryad service
 
-<div style="max-width: 100%; overflow-x: auto; overflow-y: hidden">
-<table style=""><thead>
+<div class="table-wrapper">
+<table><thead>
 <tr>
 <th style="text-align: left">Feature</th>
 <th style="text-align: center">Tech-focused</th>
