@@ -10,6 +10,7 @@
 ## Benefits of membership
 <p>Dryad members champion best practice in open data sharing and commit to the health and growth of shared, open infrastructure for data curation, publishing, preservation and reuse.</p>
 
+<div class="table-wrapper">
 <table>
   <thead>
     <th/>
@@ -46,6 +47,7 @@
     </tr>
   </tbody>
 </table>
+</div>
 
 <figure>
 <blockquote>
