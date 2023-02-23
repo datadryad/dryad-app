@@ -1,62 +1,73 @@
 <%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="<%= sort_display('title') %>" colspan="2">
-      <%= sortable_column_head sort_field: 'title', title: 'Dataset title' %>
-    </th>
-    <th class="<%= sort_display('embargo_status') %>">
-      <%= sortable_column_head sort_field: 'embargo_status', title: 'Status' %>
-    </th>
-    <th class="<%= sort_display('publication_date') %>">
-      <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
-    </th>
-    <th class="<%= sort_display('updated_at') %>">
-      <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
-    </th>
-    <th class="<%= sort_display('size') %>">
-      <%= sortable_column_head sort_field: 'size', title: 'Size' %>
-    </th>
-    <th class="<%= sort_display('edited_by_name') %>" colspan="2">
-      <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
-    </th>
-  </tr>
-
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('title') %>">
+        <%= sortable_column_head sort_field: 'title', title: 'Dataset title' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('embargo_status') %>">
+        <%= sortable_column_head sort_field: 'embargo_status', title: 'Status' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+        <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+        <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('size') %>">
+        <%= sortable_column_head sort_field: 'size', title: 'Size' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('edited_by_name') %>">
+        <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
   <% presenters.each do |p| %>
     <tr class="c-lined-table__row">
-      <td class="c-admin-hide-border-right">
-        <span title="<%= p.title %>"><%= link_to truncate(p.title), stash_url_helpers.edit_histories_path(resource_id: p.resource.id)  %></span>
-      </td>
-      <td class="c-admin-hide-border-left">
+      <td>
+        <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data">
+          <span title="<%= p.title %>"><%= link_to truncate(p.title), stash_url_helpers.edit_histories_path(resource_id: p.resource.id)  %></span>
+        </div>
         <% if p.resource.submitted? || p.resource.dataset_in_progress_editor&.id == current_user.id %>
+        <div class="c-lined-table__actions">
           <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do -%>
             <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <%= hidden_field_tag :resource_id, p.resource.id %>
           <% end %>
+        </div>
         <% end %>
+      </div>
       </td>
       <td>
         <%= p.embargo_status_pretty %>
       </td>
-      <td>
+      <td class="c-lined-table__digits">
         <% if p.resource.submitted? %>
           <%= default_date(p.publication_date) %>
         <% end %>
       </td>
-      <td>
+      <td class="c-lined-table__digits">
         <%= default_date(p.updated_at) %>
       </td>
-      <td>
+      <td class="c-lined-table__digits">
         <%= filesize(p.size) %>
       </td>
-      <td class="c-admin-hide-border-right">
-        <%= p.edited_by_name_w_role %>
-      </td>
-      <td class="c-admin-hide-border-left">
+      <td>
+        <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data"><%= p.edited_by_name_w_role %></div>
+        <div class="c-lined-table__actions">
         <%= form_with(url: stash_url_helpers.edit_histories_path, method: :get) do -%>
           <%= hidden_field_tag :resource_id, p.resource.id %>
           <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
         <% end %>
+        </div>
+      </div>
       </td>
     </tr>
   <% end %>
+  </tbody>
 </table>
+</div>

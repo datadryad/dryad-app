@@ -1,78 +1,91 @@
 <%# locals: users %>
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="c-admin-table__user-selection" />
-    <th class="c-admin-table__user-name <%= sort_display('last_name') %>">
-      <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
-    </th>
-    <th class="c-admin-table__user-email <%= sort_display('email') %>" colspan="2">
-      <%= sortable_column_head sort_field: 'email', title: 'Email' %>
-    </th>
-    <th class="c-admin-table__user-orcid">
-      Orcid
-    </th>
-    <th class="c-admin-table__user-tenant <%= sort_display('tenant_id') %>" colspan="2">
-      <%= sortable_column_head sort_field: 'tenant_id', title: 'Institution' %>
-    </th>
-    <th class="c-admin-table__user-role <%= sort_display('role') %>" colspan="2">
-      <%= sortable_column_head sort_field: 'role', title: 'Role' %>
-    </th>
-    <th class="c-admin-table__user-last-login <%= sort_display('last_login') %>">
-      <%= sortable_column_head sort_field: 'last_login', title: 'Last login' %>
-    </th>
-  </tr>
-  
+  <thead>
+    <tr>
+      <th class="c-admin-table__user-selection" />
+      <th class="c-lined-table__sort c-admin-table__user-name <%= sort_display('last_name') %>">
+        <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-email <%= sort_display('email') %>">
+        <%= sortable_column_head sort_field: 'email', title: 'Email' %>
+      </th>
+      <th class="c-admin-table__user-orcid">
+        Orcid
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-tenant <%= sort_display('tenant_id') %>">
+        <%= sortable_column_head sort_field: 'tenant_id', title: 'Institution' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-role <%= sort_display('role') %>">
+        <%= sortable_column_head sort_field: 'role', title: 'Role' %>
+      </th>
+      <th class="c-lined-table__sort c-admin-table__user-last-login <%= sort_display('last_login') %>">
+        <%= sortable_column_head sort_field: 'last_login', title: 'Last login' %>
+      </th>
+    </tr>
+  </thead>
+
+<tbody>  
   <% users.each do |u| %>
     <tr class="c-lined-table__row">
       <td><%= check_box("user_ids", "selections", {:multiple => true}, u.id, nil) %></td>
       <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
-      <td class="c-admin-hide-border-right" id="user_email_<%= u.id %>" >
-	<%= u.email %>
+      <td id="user_email_<%= u.id %>" >
+        <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data">
+	       <%= u.email %>
+        </div>
+      	<% if current_user.role == 'superuser' %>
+          <div class="c-lined-table__actions">
+        	  <%= form_with(url: stash_url_helpers.user_email_popup_path(u.id), method: :get, local: false) do %>
+        	    <button class="c-admin-edit-icon" aria-label="Edit user email" alt="Edit user email">
+        	      <i class="fa fa-pencil" aria-hidden="true"></i>
+        	    </button>
+        	  <% end %>
+          </div>
+        	<% end %>
+        </div>
       </td>
-      <td class="c-admin-hide-border-left">
-	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_email_popup_path(u.id), method: :get, local: false) do %>
-	    <button class="c-admin-edit-icon" aria-label="Edit user email" alt="Edit user email">
-	      <i class="fa fa-pencil" aria-hidden="true"></i>
-	    </button>
-	  <% end %>
-	<% end %>
+      <td class="c-lined-table__digits"><nobr><%= u.orcid %></nobr></td>
+      <td id="user_tenant_<%= u.id %>">
+        <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data"><%= StashEngine::Tenant.find(u.tenant_id)&.short_name %></div>
+      	<% if current_user.role == 'superuser' %>
+          <div class="c-lined-table__actions">
+      	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, local: false) do %>
+      	    <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
+      	      <i class="fa fa-pencil" aria-hidden="true"></i>
+      	    </button>
+      	  <% end %>
+          </div>
+      	<% end %>
+        </div>
       </td>
-      <td><nobr><%= u.orcid %></nobr></td>
-      <td class="c-admin-hide-border-right" id="user_tenant_<%= u.id %>">
-	<nobr><%= StashEngine::Tenant.find(u.tenant_id)&.short_name %></nobr>
+      <td id="user_role_<%= u.id %>">
+        <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data"><%= u.role&.capitalize %></div>
+        <div class="c-lined-table__actions">
+      	<% if current_user.role == 'superuser' %>
+      	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, local: false) do %>
+      	    <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+      	      <i class="fa fa-pencil" aria-hidden="true"></i>
+      	    </button>
+      	  <% end %>
+      	<% end %>
+	      <%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, local: false) do %>
+      	  <% if u.journals_as_admin.present? %>
+      	    <button class="c-admin-edit-icon" title="Journal Administrator" aria-label="Journal Administrator" alt="Journal Administrator">
+      	      <i class="fa fa-file-text" aria-hidden="true"></i>
+      	    </button>
+      	  <% end %>
+	       <% end %>
+        </div>
+      </div>
       </td>
-      <td class="c-admin-hide-border-left">
-	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, local: false) do %>
-	    <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
-	      <i class="fa fa-pencil" aria-hidden="true"></i>
-	    </button>
-	  <% end %>
-	<% end %>
-      </td>
-      <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
-	<%= u.role&.capitalize %>
-      </td>
-      <td class="c-admin-hide-border-left">
-	<% if current_user.role == 'superuser' %>
-	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, local: false) do %>
-	    <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
-	      <i class="fa fa-pencil" aria-hidden="true"></i>
-	    </button>
-	  <% end %>
-	<% end %>
-	<%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, local: false) do %>
-	  <% if u.journals_as_admin.present? %>
-	    <button class="c-admin-edit-icon" title="Journal Administrator" aria-label="Journal Administrator" alt="Journal Administrator">
-	      <i class="fa fa-file-text" aria-hidden="true"></i>
-	    </button>
-	  <% end %>
-	<% end %>
-      </td>
-      <td><%= formatted_datetime(u.last_login) %></td>
+      <td class="c-lined-table__digits"><%= formatted_datetime(u.last_login) %></td>
     </tr>
   <% end %>
+</tbody>
 </table>
-
+</div>
 

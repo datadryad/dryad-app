@@ -1,14 +1,18 @@
 <%# takes a local of stats to display on this page %>
 <div class="o-admin-container">
-  <div class="o-admin-left-head">
-    <div class="o-heading__level3">At a glance</div>
-    <%= number_with_delimiter(stats[:user_count]) %> Users<br/>
-    <%= number_with_delimiter(stats[:dataset_count]) %> Datasets<br/>
+  <div class="o-admin-head-left">
+    <h2 class="o-heading__level3">At a glance</h2>
+    <ul>
+      <li><%= number_with_delimiter(stats[:user_count]) %> Users
+      <li><%= number_with_delimiter(stats[:dataset_count]) %> Datasets
+    </ul>
   </div>
-  <div class="o-admin-right-head">
-    <div class="o-heading__level3">Activity in the last 7 days</div>
-    <%= number_with_delimiter(stats[:user_7days]) %> users added<br/>
-    <%= number_with_delimiter(stats[:dataset_started_7days]) %> datasets started<br/>
-    <%= number_with_delimiter(stats[:dataset_submitted_7days]) %> datasets submitted
+  <div class="o-admin-head-right">
+    <h2 class="o-heading__level3">Activity in the last 7 days</h2>
+    <ul>
+      <li><%= number_with_delimiter(stats[:user_7days]) %> users added
+      <li><%= number_with_delimiter(stats[:dataset_started_7days]) %> datasets started
+      <li><%= number_with_delimiter(stats[:dataset_submitted_7days]) %> datasets submitted
+    </li>
   </div>
 </div>

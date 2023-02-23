@@ -3,13 +3,13 @@ en:
     pagination:
       first: '&laquo; First'
       last: 'Last &raquo;'
-      previous: '&laquo; Previous'
-      next: 'Next &raquo;'
+      previous: '&lsaquo; Previous'
+      next: 'Next &rsaquo;'
       truncate: '…'
 
     pagination_compact:
-      previous: '&laquo; Previous'
-      next: 'Next &raquo;'
+      previous: '&lsaquo; Previous'
+      next: 'Next &rsaquo;'
 
   blacklight:
     application_name: 'Blacklight'

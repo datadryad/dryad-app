@@ -1,44 +1,54 @@
 <%# takes dataset as local variable, dataset is a custom object of type StashEngine::AdminDatasets::CurationTableRow %>
 <tr class="c-lined-table__row" id="js-dataset-row-id-<%= dataset.identifier_id %>">
   <!-- Title -->
-  <td class="c-admin-hide-border-right">
-    <% if dataset&.qualified_identifier %>
-      <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.qualified_identifier), target: '_blank' %>
-    <% else %>
-      <%= dataset.title %>
-    <% end %>
-  </td>
-  <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
-    <%# only with permission and not being messed with or in_progress or they're the ones futzing with it and making it in progress, lockout other concurrent editing %>
-    <% if (dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted') ||
-        (dataset.resource_state == 'in_progress' && dataset.resource.current_editor_id == current_user.id)
-    %>
-      <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
-    <% end %>
-    <%= render partial: 'stash_engine/admin_datasets/show_stats_button', locals: { resource_id: dataset.resource_id } %>
+  <td>
+    <div class="c-lined-table__with-actions">
+      <div class="c-lined-table__data">
+        <% if dataset&.qualified_identifier %>
+          <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.qualified_identifier), target: '_blank' %>
+        <% else %>
+          <%= dataset.title %>
+        <% end %>
+        <!-- Identifier -->
+        <div class="c-lined-table__digits">DOI: <%= dataset.identifier %></div>
+      </div>
+      <div class="c-lined-table__actions">
+        <%# only with permission and not being messed with or in_progress or they're the ones futzing with it and making it in progress, lockout other concurrent editing %>
+      <% if (dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted') ||
+          (dataset.resource_state == 'in_progress' && dataset.resource.current_editor_id == current_user.id)
+      %>
+        <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
+      <% end %>
+      <%= render partial: 'stash_engine/admin_datasets/show_stats_button', locals: { resource_id: dataset.resource_id } %>
+      </div>
+    </div>
   </td>
   <!-- Status -->
-  <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
-    <% if (dataset.resource_state == 'error') %>
-      Merritt Error
-    <% elsif (dataset.resource_state == 'processing') %>
-      Processing
-    <% else %>
-      <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
-    <% end %>
-  </td>
-  <td class="c-admin-hide-border-left">
+  <td id="js-curation-state-<%= dataset.identifier_id %>">
+    <div class="c-lined-table__with-actions">
+      <div class="c-lined-table__data">
+        <% if (dataset.resource_state == 'error') %>
+          Merritt Error
+        <% elsif (dataset.resource_state == 'processing') %>
+          Processing
+        <% else %>
+          <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
+        <% end %>
+      </div>
       <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
-	     dataset.resource&.permission_to_edit?(user: current_user) &&
-	     dataset.resource_state == 'submitted') %>
-      <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
-                     action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
-                   method: :get, local: false) do -%>
-        <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" alt="Update status">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
+       dataset.resource&.permission_to_edit?(user: current_user) &&
+       dataset.resource_state == 'submitted') %>
+       <div class="c-lined-table__actions">
+        <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
+                       action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
+                     method: :get, local: false) do -%>
+          <button class="c-admin-edit-icon" title="Update status" aria-label="Update status">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        <% end %>
+        </div>
       <% end %>
-    <% end %>
+    </div>
   </td>
   <!-- Authors -->
   <td>
@@ -48,40 +58,50 @@
       <%= dataset.author_names %>
     <% end %>
   </td>
-  <!-- Identifier -->
-  <td><%= dataset.identifier %></td>
   <!-- Last Modified -->
-  <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= dataset.identifier_id %>">
-    <%= formatted_datetime(dataset.updated_at) %>
-  </td>
-  <td class="c-admin-hide-border-left">
-    <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
-                               id: dataset.identifier_id, only_path: true),
-                  method: :get) do -%>
-      <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log" alt="View Activity Log">
-        <i class="fa fa-clock-o" aria-hidden="true"></i>
-      </button>
-    <% end %>
+  <td id="js-curation-activity-date-<%= dataset.identifier_id %>">
+    <div class="c-lined-table__with-actions">
+      <div class="c-lined-table__data c-lined-table__digits">
+        <%= formatted_datetime(dataset.updated_at) %>
+      </div>
+      <div class="c-lined-table__actions">
+        <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
+                                 id: dataset.identifier_id, only_path: true),
+                    method: :get) do -%>
+          <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+          </button>
+        <% end %>
+      </div>
+    </div>
   </td>
   <!-- Curation -->
-  <td class="c-admin-hide-border-right" id="js-curation-activity-user-<%= dataset.identifier_id %>"><%= dataset.editor_name %></td>
-  <td class="c-admin-hide-border-left">
+  <td id="js-curation-activity-user-<%= dataset.identifier_id %>">
+    <div class="c-lined-table__with-actions">
+      <div class="c-lined-table__data"><%= dataset.editor_name %></div>
       <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
-	     dataset.resource&.permission_to_edit?(user: current_user) &&
-             dataset.resource.curatable?) %>
-	  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
-				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
-	                method: :get, local: false) do -%>
-	      <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" alt="Update curator">
-		  <i class="fa fa-pencil" aria-hidden="true"></i>
-	      </button>
-	  <% end %>
+  	     dataset.resource&.permission_to_edit?(user: current_user) &&
+               dataset.resource.curatable?) %>
+        <div class="c-lined-table__actions">
+  	     <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
+  				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
+  	                method: :get, local: false) do -%>
+  	      <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator">
+  		  <i class="fa fa-pencil" aria-hidden="true"></i>
+  	      </button>
+    	  <% end %>
+        </div>
       <% end %>
+    </div>
   </td>                    
   <!-- Size -->
-  <td><%= filesize(dataset.storage_size) %></td>
+  <td class="c-lined-table__digits"><%= filesize(dataset.storage_size) %></td>
+  <!-- Submission Date -->
+  <td class="c-admin c-lined-table__digits">
+    <%= formatted_date(dataset.submission_date) %>
+  </td>
   <!-- Publication Date -->
-  <td class="c-admin" id="js-embargo-state-<%= dataset.identifier_id %>">
+  <td class="c-admin c-lined-table__digits" id="js-embargo-state-<%= dataset.identifier_id %>">
     <%= formatted_date(dataset.publication_date) %>
   </td>
 </tr>

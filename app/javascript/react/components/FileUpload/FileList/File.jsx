@@ -41,14 +41,7 @@ class File extends React.Component {
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
-        <div>
-          <img
-            className="c-upload__spinner js-tabular-checking"
-            src="../../../images/spinner.gif"
-            alt="Validating spinner"
-            style={{padding: 0, width: '2rem'}}
-          />
-        </div>
+        <i className="fa fa-circle-o-notch fa-spin" alt="Validating spinner" />
       );
     case TabularCheckStatus.issues: {
       let jsReport = '';
@@ -103,20 +96,16 @@ class File extends React.Component {
           )}
         </td>
         <td>{capitalize(file.uploadType)}</td>
-        <td>{file.sizeKb}</td>
-        {removing ? (
-          <td style={{padding: 0, width: '74px'}}>
-            <div>
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          </td>
-        ) : (
-          <td>
+        <td className="c-uploadtable-size">{file.sizeKb}</td>
+        <td>
+          {removing ? (
+            <i className="fa fa-circle-o-notch fa-spin" alt="Loading spinner" />
+          ) : (
             <button onClick={this.clickRemove} type="button" className="c-upload__button">
               Remove
             </button>
-          </td>
-        )}
+          )}
+        </td>
       </tr>
     );
   }

@@ -2,10 +2,10 @@
 // $("#js-embargo-state-<%= params[:id] %>").html("<%# formatted_date(@resource.publication_date) %>");
 $('#genericModalDialog')[0].close();
 
-if($("#curation_table .c-admin-table__sort-asc").length > 0){
-    $('#curation_table .c-lined-table__row:last').after("<%= escape_javascript(
+if($("#curation_table .c-lined-table__sort-asc").length > 0){
+    $('#curation_table tr:last').after("<%= escape_javascript(
         render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity }) %>");
 }else{
-    $('#curation_table .c-lined-table__head').after("<%= escape_javascript(
+    $('#curation_table thead').after("<%= escape_javascript(
         render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity }) %>");
 }
