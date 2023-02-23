@@ -1,12 +1,11 @@
 <% if @submitted_lines.blank? %>
   <p>You do not have any submitted datasets.</p>
 <% else %>
-  <table class="o-table c-table-submitted js-table-submitted">
+  <table class="c-user-datasets-table">
     <%= render 'submitted_head' %>
     <tbody>
     <%= render partial: 'submitted_line', collection: @submitted_lines, as: :line %>
     </tbody>
   </table>
-
-  <%= paginate @resources, params: {page_size: @page_size}, remote: true %>
+  <%= paginate @resources, params: {page_size: @page_size, show_all: false}, remote: true %>
 <% end %>

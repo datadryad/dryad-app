@@ -16,7 +16,7 @@ module StashEngine
       @managed_dependencies = StashEngine::ExternalDependency.where(internally_managed: true).order(:name)
       @unmanaged_dependencies = StashEngine::ExternalDependency.where(internally_managed: false).order(:name)
       @latest_check = StashEngine::ExternalDependency.where.not(status: 2).limit(1).first
-        .updated_at.localtime.strftime('%b %e %I:%M%p')
+        .updated_at.localtime
     end
 
   end

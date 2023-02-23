@@ -8,23 +8,25 @@
 <% else %>
   <%= render partial: 'funder_table' %>
 
-  <div class="c-space-paginator">
-    <%= paginate @funder_table, params: { page_size: @page_size, show_all: false, show_last_page: false } %><br/>
-    Page Size:
-    <%
-      current_ps = params[:page_size].to_i
-      current_ps = 10 if current_ps == 0
-      [10, 50, 100].each do |ps| %>
-      <% if ps == current_ps %>
-        <%= ps %>
-      <% else %>
-        <%= link_to(ps, stash_url_helpers.ds_admin_funders_path(request.parameters.merge(page_size: ps, page: 1))) %>
-      <% end %>
-    <% end %>
-  </div>
-
-  <div>
+  <div class="search-results-footer">
     <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
                 stash_url_helpers.ds_admin_funders_path(request.params.merge(format: :csv)) %>
+
+    <div class="c-space-paginator">
+      <%= paginate @funder_table, params: { page_size: @page_size, show_all: false, show_last_page: false } %>
+      <div class="c-paginator-page_size">
+        Page size:
+        <%
+          current_ps = params[:page_size].to_i
+          current_ps = 10 if current_ps == 0
+          [10, 50, 100].each do |ps| %>
+          <% if ps == current_ps %>
+            <span class="page-current"><%= ps %></span>
+          <% else %>
+            <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.merge(page_size: ps, page: 1))) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div> 
   </div>
 <% end %>
