@@ -3982,15 +3982,6 @@ datalist {
   margin: 0 0 20px;
 }
 
-.o-dependency-group {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  width: 100%;
-}
-
 .o-dependency-group__list {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -4014,15 +4005,16 @@ datalist {
       -ms-flex-pack: justify;
           justify-content: space-between;
   margin-bottom: 25px;
-  /* red */
-  /* yellow */
-  /* green */
-  /* The Close Button */
 }
 .o-dependency-group__list__item .dependency-name {
   padding-right: 25px;
   font-size: 1.2rem;
   font-weight: bold;
+}
+.o-dependency-group__list__item button {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
 }
 .o-dependency-group__list__item .fa-times-circle {
   color: rgb(209, 44, 29);
@@ -4032,36 +4024,6 @@ datalist {
 }
 .o-dependency-group__list__item .fa-check-circle {
   color: #3c763d;
-}
-.o-dependency-group__list__item .dialog {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-.o-dependency-group__list__item .dialog-content {
-  width: 80%; /* Could be more or less, depending on screen size */
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: thin solid rgb(78, 80, 80);
-  background-color: rgb(235, 235, 235);
-}
-.o-dependency-group__list__item .dialog-close {
-  float: right;
-  color: rgb(78, 80, 80);
-  font-size: 28px;
-  font-weight: bold;
-}
-.o-dependency-group__list__item .dialog-close:hover,
-.o-dependency-group__list__item .dialog-close:focus {
-  color: rgb(0, 0, 0);
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .o-download {
@@ -4515,7 +4477,8 @@ h6 {
   }
 }
 .modalDialog.extra-wide {
-  max-width: 80vw;
+  width: 80vw;
+  max-width: 1220px;
 }
 .modalDialog::-webkit-backdrop {
   background-color: rgba(0, 0, 0, 0.45);
@@ -4569,7 +4532,7 @@ h6 {
           justify-content: space-between;
 }
 .c-uploadmodal__header * {
-  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .c-uploadmodal__textarea-url-label {
