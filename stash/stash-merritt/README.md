@@ -29,9 +29,10 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 
    \* Note that the DataONE manifest is generated for all tenants, not just DataONE.
 
-1. using the [stash-sword](../stash-sword) gem, submit the
-   package to Merritt via [SWORD 2.0](http://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html);
-   update the `download_uri` and `update_uri` of the resource if not present
+1. using the [stash-deposit](../stash-deposit) gem, submit the
+   package to Merritt through an api endpoint.
+   A separate process updates the `download_uri` and `update_uri` of the resource to appropriate values after successful
+   submission with the merritt_status:update rake task (which runs a daemon started by systemd).
 1. set the resource `version_zipfile`
 1. again via [ezid-client](https://github.com/duke-libraries/ezid-client), update the
    target URL (landing page) and Datacite 3 metadata for the DOI

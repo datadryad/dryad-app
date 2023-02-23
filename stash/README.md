@@ -31,17 +31,6 @@ The next generation of [Dryad](https://datadryad.org) is being rebuilt
 with the Stash core. For the Dryad source code, see the
 [dryad](https://github.com/CDL-Dryad/dryad-app) repository.
 
-## Architecture
-
-Stash is intended to be applicable to any standards-compliant repository
-that supports the
-[SWORD 2](https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html)
-protocol for deposit and [OAI-PMH](https://www.openarchives.org/pmh/) or
-[ResourceSync](http://www.openarchives.org/rs/1.1/resourcesync) protocols
-for metadata harvesting.
-
-![Stash architecture](https://raw.githubusercontent.com/CDLUC3/dash/gh-pages/docs/stash_architecture.png)
-
 ## Contributing
 
 For individual projects, `bundle exec rspec` will run unit tests, check test

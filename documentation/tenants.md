@@ -56,7 +56,7 @@ Some configuration option information:
 allow log in.
 
 `repository` is always Merritt right now.  The main options are domain,
-endpoint url for sword, username and password used for http basic auth
+endpoint url for sword (soon to be deprecated after running in production for a while, username and password used for http basic auth
 
 `abbreviation`, `short_name`, `long_name`: different versions of an
 institution name like UCLA; UC Los Angeles; University of California,
