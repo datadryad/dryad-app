@@ -3,59 +3,56 @@
 
 <%= render partial: 'admin_head', locals: { stats: @stats} %>
 
-<div>
-  <h2>User administration</h2>
-  
-  <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
-  method: 'get', id: 'search_form') do %>
-  <label for="search-terms">User Search:</label>
-  <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
-  &nbsp;&nbsp;
-  <label for="tenant_id">Institution</label>
-  <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]) %>
-  <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
+<h2>User administration</h2>
+
+<%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
+method: 'get', id: 'search_form') do %>
+<div class="o-admin-form-inline">
+  <div class="o-admin-form-pair">
+    <label for="search-terms">User Search:</label>
+    <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
+  </div>
+  <div class="o-admin-form-pair">
+    <label for="tenant_id">Institution:</label>
+    <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]), class: 'c-input__text' %>
+  </div>
+  <%= submit_tag('Search', class: 'o-button__submit' ) %>
 
   <%# not sure what the following is really doing since I don't think anything needs rewriting %>
   <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction,
   :all_advanced, :tenant_id).each_pair do |k,v| %>
-  <%= hidden_field_tag k, v, id: "search_#{k}" %>
+    <%= hidden_field_tag k, v, id: "search_#{k}" %>
   <% end %>
-  <% end %>         
+</div>
+<% end %>     
 
-  <br/>
-  <script>
-    const selected_users = new Set()
-  </script>
+
+<!-- table and paging here -->
+<%= render partial: 'admin_user_table', locals: { users: @users } %>
+
+<div class="search-results-footer">
   <%= form_with(url: stash_url_helpers.user_merge_popup_path, method: :get, local: false) do %>
   <%= hidden_field_tag 'selected_users', '', id: "selected_users" %>
-  <button title="Merge selected" aria-label="Merge selected" alt="Merge selected">
+  <button class="o-button__plain-text5">
     Merge selected
   </button>
   <% end %>
-
-
-  
-  <!-- table and paging here -->
-  <%= render partial: 'admin_user_table', locals: { users: @users } %>
-  
   <div class="c-space-paginator">
     <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
   </div>
-
-  <!-- Catch selections from the admin_user_table and populate the selected_users for the merge form above -->
-  <script>
-    $('input[type=checkbox]').change(
-      function(){
-      // for every change, collect the values of all checked items and store them in the selected_users field
-      var checkedBoxes = document.querySelectorAll('input:checked');
-      checkedValues = Array.from(checkedBoxes).map(x => x['value']);
-      
-      // find selected_users
-      var su = document.getElementById("selected_users");
-      su.value = checkedValues;
-      console.log('selected_users ', su);
-    });
-  </script>
-
 </div>
-
+<!-- Catch selections from the admin_user_table and populate the selected_users for the merge form above -->
+<script>
+  const selected_users = new Set()
+  $('input[type=checkbox]').change(
+    function(){
+    // for every change, collect the values of all checked items and store them in the selected_users field
+    var checkedBoxes = document.querySelectorAll('input:checked');
+    checkedValues = Array.from(checkedBoxes).map(x => x['value']);
+    
+    // find selected_users
+    var su = document.getElementById("selected_users");
+    su.value = checkedValues;
+    console.log('selected_users ', su);
+  });
+</script>

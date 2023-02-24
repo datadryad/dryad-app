@@ -15,7 +15,7 @@ module StashEngine
 
       attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :storage_size,
                   :search_words, :resource_id, :title, :publication_date, :tenant_id, :resource_state_id,
-                  :resource_state, :curation_activity_id, :status, :updated_at, :editor_id, :editor_name,
+                  :resource_state, :curation_activity_id, :status, :updated_at, :submission_date, :editor_id, :editor_name,
                   :author_names, :views, :downloads, :citations, :relevance
 
       SELECT_CLAUSE = <<-SQL
@@ -23,7 +23,7 @@ module StashEngine
           sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), sei.storage_size, sei.search_words,
           ser.id, ser.title, ser.publication_date, ser.tenant_id,
           sers.id, sers.resource_state,
-          seca.id, seca.status, seca.updated_at,
+          seca.id, seca.status, seca.updated_at, sd.submission_date,
           seu.id, seu.last_name, seu.first_name,
           (SELECT GROUP_CONCAT(DISTINCT sea.author_last_name ORDER BY sea.author_last_name SEPARATOR '; ')
            FROM stash_engine_authors sea
@@ -41,6 +41,13 @@ module StashEngine
           LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = ser.last_curation_activity_id
           LEFT OUTER JOIN stash_engine_counter_stats secs ON sei.id = secs.identifier_id
           LEFT OUTER JOIN dcs_contributors dcs_c ON ser.id = dcs_c.resource_id
+          LEFT OUTER JOIN (SELECT DISTINCT sei.id, min(subcur.created_at) submission_date
+            FROM stash_engine_identifiers sei
+            RIGHT OUTER JOIN stash_engine_resources subser on sei.id = subser.identifier_id
+            RIGHT OUTER JOIN stash_engine_curation_activities subcur on subser.id = subcur.resource_id
+            WHERE subcur.status in ('submitted', 'peer-review')
+            group by sei.id
+          ) sd on sd.id = sei.id
       SQL
 
       # add extra joins when I need to reach into author affiliations for every dataset
@@ -63,7 +70,7 @@ module StashEngine
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
       #
       def initialize(result, curator_ids)
-        return unless result.is_a?(Array) && result.length >= 22
+        return unless result.is_a?(Array) && result.length >= 23
 
         # Convert the array of results into attribute values
         @publication_name = result[0]
@@ -81,13 +88,14 @@ module StashEngine
         @curation_activity_id = result[12]
         @status = result[13]
         @updated_at = result[14]
-        @editor_id = curator_ids.include?(result[15].to_i) ? result[15] : nil
-        @editor_name = @editor_id ? "#{result[17]} #{result[16]}" : nil
-        @author_names = result[18]
-        @views = (result[20].nil? ? 0 : result[19] - result[20])
-        @downloads = result[20] || 0
-        @citations = result[21] || 0
-        @relevance = result.length > 22 ? result[22] : nil
+        @submission_date = result[15]
+        @editor_id = curator_ids.include?(result[16].to_i) ? result[16] : nil
+        @editor_name = @editor_id ? "#{result[18]} #{result[17]}" : nil
+        @author_names = result[19]
+        @views = (result[21].nil? ? 0 : result[20] - result[21])
+        @downloads = result[21] || 0
+        @citations = result[22] || 0
+        @relevance = result.length > 23 ? result[23] : nil
       end
 
       # lets you get a resource when you need it and caches it

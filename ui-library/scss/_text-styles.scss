@@ -13,8 +13,16 @@ ul.c-text_styles {
   }
 }
 
+code,
+kbd,
+pre,
+samp {
+  font-family: Monaco, monospace, monospace;
+  font-size: .9em;
+}
+
 code, a {
-  word-break: break-word;
+  overflow-wrap: break-word;
 } 
 
 img {
@@ -25,21 +33,14 @@ img {
   display: none !important;
 }
 
-#page-columns {
-  table {  
-    border-collapse: collapse;
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: #eee;
-  }
-
-  td, th {
-    text-align: left;
-    padding: 8px 4px !important;
-    border: thin solid #ccc;
-    line-height: 135%;
-  }
+.screen-reader-only {
+  clip: rect(0 0 0 0); 
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; 
+  width: 1px;
 }
 
 blockquote {

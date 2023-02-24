@@ -25,7 +25,7 @@
   <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path } ) %><br>
 
   <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">Author(s)</legend>
+    <legend class="c-fieldset__legend" id="authors-head">Author(s)</legend>
     <div class="js-authors_form">
       <%= react_component('components/MetadataEntry/Authors', { resource: @resource,
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(

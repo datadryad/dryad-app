@@ -27,7 +27,7 @@ Since 2007 Dryad has been a leader in curating and openly publishing research da
 
 At Dryad, curation is the process of thoroughly evaluating research metadata and related objects to verify that data are accessible, organized, intelligible, and complete to ensure ease of re-use. Curators collaborate with researchers to confirm that data are appropriate for open sharing, follow FAIR principles, and meet ethical standards for publication. They also offer guidance on best practices for creating reusable data and help authors navigate publication requirements. 
 
-Dryad Curators do not verify, validate or authenticate data for scientific reuse, however, they do assess submissions carefully and raise questions for investigation/escalation when there are concerns about the reusability, provenance, interoperability, or comprehensibility of the data submitted for publication in Dryad. We do not attempt to assess rigor. 
+Dryad Curators assess submissions carefully and raise questions for investigation/escalation when there are concerns about the reusability, provenance, interoperability, or comprehensibility of the data submitted for publication in Dryad. We do not attempt to assess rigor. 
 
 Data publishing is the presentation of openly available and citable research data that is optimized to promote discoverability, connected to enhance visibility, and protected to guarantee the long-term preservation of quality research data. 
 

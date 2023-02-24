@@ -1,44 +1,35 @@
 <%# locals: ds_identifiers %>
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="c-admin-hide-border-right <%= sort_display('title') %>">
-      <%= sortable_column_head sort_field: 'title', title: 'Title' %> 
-    </th>
-    <th class="c-admin-hide-border-left">
-      <div class="screen-reader-only">Dataset Actions</div>
-    </th>
-    <th class="c-admin-hide-border-right <%= sort_display('status') %>">
-      <%= sortable_column_head sort_field: 'status', title: 'Status' %>
-    </th>
-    <th class="c-admin-hide-border-left">
-      <div class="screen-reader-only">Change Curation</div>
-    </th>
-    <th class="c-admin-table <%= sort_display('author_names') %>">
-      <%= sortable_column_head sort_field: 'author_names', title: 'Author' %>
-    </th>
-    <th class="c-admin-table <%= sort_display('identifier') %>">
-      <%= sortable_column_head sort_field: 'identifier', title: 'DOI' %>
-    </th>
-    <th class="c-admin-hide-border-right <%= sort_display('updated_at') %>">
-      <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
-    </th>
-    <th class="c-admin-hide-border-left">
-      <div class="screen-reader-only">View Activity Action</div>
-    </th>
-    <th class="c-admin-hide-border-right <%= sort_display('editor_name') %>">
-      <%= sortable_column_head sort_field: 'editor_name', title: 'Curator' %>
-    </th>
-    <th class="c-admin-hide-border-left">
-      <div class="screen-reader-only">Update Curator Action</div>
-    </th>
-    <th class="c-admin-table <%= sort_display('storage_size') %>">
-      <%= sortable_column_head sort_field: 'storage_size', title: 'Size' %>
-    </th>
-    <th class="c-admin-table <%= sort_display('publication_date') %>">
-      <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
-    </th>
-  </tr>
-
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('title') %>">
+        <%= sortable_column_head sort_field: 'title', title: 'Description' %> 
+      </th>
+      <th class="c-lined-table__sort<%= sort_display('status') %>">
+        <%= sortable_column_head sort_field: 'status', title: 'Status' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('author_names') %>">
+        <%= sortable_column_head sort_field: 'author_names', title: 'Author' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+        <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('editor_name') %>">
+        <%= sortable_column_head sort_field: 'editor_name', title: 'Curator' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('storage_size') %>">
+        <%= sortable_column_head sort_field: 'storage_size', title: 'Size' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('submission_date') %>">
+        <%= sortable_column_head sort_field: 'submission_date', title: 'Submitted' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+        <%= sortable_column_head sort_field: 'publication_date', title: 'Published' %>
+      </th>
+    </tr>
+</thead>
+<tbody>
   <% datasets.each do |dataset| %>
     <%= render partial: 'stash_engine/admin_datasets/datasets_row', locals: { dataset: dataset } %>
   <% end %>
@@ -47,4 +38,6 @@
       No datasets matched your search term and/or filter settings.
     </td></tr>
   <% end %>
+</tbody>
 </table>
+</div>

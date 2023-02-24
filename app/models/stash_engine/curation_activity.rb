@@ -230,7 +230,11 @@ module StashEngine
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       when 'withdrawn'
-        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        if user_id == 0
+          StashEngine::UserMailer.user_journal_withdrawn(resource, status).deliver_now
+        else
+          StashEngine::UserMailer.status_change(resource, status).deliver_now
+        end
       end
     end
 

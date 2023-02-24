@@ -8,32 +8,38 @@
 <p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets.
 Once these users are merged, the operation cannot be reversed.</p>
 
+<div class="table-wrapper">
 <table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th>Name</th>
-    <th>Email</th>
-    <th>ORCID</th>
-    <th>Institution</th>
-    <th>Last login</th>
-    <th>Num datasets</th>
-  </tr>
-  <tr class="c-lined-table__row">
-    <td><nobr><%= "#{@user1.first_name} #{@user1.last_name}" %></nobr></td>
-    <td><nobr><%= @user1.email %></nobr></td>
-    <td><nobr><%= @user1.orcid %></nobr></td>
-    <td><nobr><%= @user1.tenant&.short_name %></nobr></td>
-    <td><nobr><%= @user1.last_login %></nobr></td>
-    <td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
-  </tr>
-  <tr class="c-lined-table__row">
-    <td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
-    <td><nobr><%= @user2.email %></nobr></td>
-    <td><nobr><%= @user2.orcid %></nobr></td>
-    <td><nobr><%= @user2.tenant&.short_name %></nobr></td>
-    <td><nobr><%= @user2.last_login %></nobr></td>
-    <td><%= StashEngine::Resource.where(user_id: @user2.id).map(&:identifier).uniq.size %></td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>ORCID</th>
+      <th>Institution</th>
+      <th>Last login</th>
+      <th>Num datasets</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="c-lined-table__digits">
+      <td><nobr><%= "#{@user1.first_name} #{@user1.last_name}" %></nobr></td>
+      <td><nobr><%= @user1.email %></nobr></td>
+      <td><nobr><%= @user1.orcid %></nobr></td>
+      <td><nobr><%= @user1.tenant&.short_name %></nobr></td>
+      <td><nobr><%= @user1.last_login %></nobr></td>
+      <td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
+    </tr>
+    <tr class="c-lined-table__digits">
+      <td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
+      <td><nobr><%= @user2.email %></nobr></td>
+      <td><nobr><%= @user2.orcid %></nobr></td>
+      <td><nobr><%= @user2.tenant&.short_name %></nobr></td>
+      <td><nobr><%= @user2.last_login %></nobr></td>
+      <td><%= StashEngine::Resource.where(user_id: @user2.id).map(&:identifier).uniq.size %></td>
+    </tr>
+  </tbody>
 </table>
+</div>
 <br/>
 <%= button_tag 'Merge', type: 'button', id: 'submit_merge' %>
 <% else %>
