@@ -7,20 +7,14 @@ Dryad accepts all research data. However, this service is intended for complete,
 Most types of files can be submitted (e.g., text, spreadsheets, video, photographs, code) including compressed archives of multiple files. View additional guidance on preservation-friendly file types.
 <ul>
     <li>
-        Dryad does <strong>not</strong> accept submissions that contain personally identifiable human subject information.
-        Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please
-        see additional guidance on <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">human subjects data</a>.
+        Dryad does <strong>not</strong> accept submissions that contain personally identifiable human subject information. Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please see <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">additional guidance on human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>.
     </li>
     <li>
         Dryad does <strong>not</strong> accept any files with licensing terms that are incompatible with the
-        <a href="http://creativecommons.org/publicdomain/zero/1.0">Creative Commons Zero waiver</a>. For more information,
-        please see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use CC0?</a>
+        <a href="http://creativecommons.org/publicdomain/zero/1.0">Creative Commons Zero waiver</a>. For more information, please see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use CC0?</a>
     </li>
     <li>
-      For software scripts and snapshots of software source code, files can be uploaded via Dryad and published at
-      Zenodo, which allows public software deposits with version control for the ongoing maintenance of software packages.
-      If you are only seeking to store code, software, and/or supplemental information please
-      <a href="https://zenodo.org" target="_blank">visit Zenodo</a>.
+      For software scripts and snapshots of software source code, files can be uploaded via Dryad and published at Zenodo, which allows public software deposits with version control for the ongoing maintenance of software packages. If you are only seeking to store code, software, and/or supplemental information please <a href="https://zenodo.org" target="_blank">visit Zenodo</a>.
     </li>
 </ul>
 
@@ -49,8 +43,7 @@ We require:
     <li>All files should be able to be opened without any passcode restrictions.</li>
     <li>All information needs to be in English.</li>
     <li>
-        No Personal Health Information or sensitive data can be included. See tips for
-        <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">human subjects data</a> or for <a href=https://datadryad.org/docs/EndangeredSpeciesData.pdf>sensitive species</a>.
+        No Personal Health Information or sensitive data can be included. See <a href="https://datadryad.org/docs/HumanSubjectsData.pdf">tips for human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a> and <a href=https://datadryad.org/docs/EndangeredSpeciesData.pdf>tips for sensitive species data<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>.
     </li>
     <li>Files must not contain any copyright restrictions.</li>
     <li>
@@ -233,16 +226,9 @@ Ways you can ensure your data publication has the broadest reach:
 
 ## How are the datasets preserved?
 
-<p>
-    Data deposited are permanently archived and available through the <a href="http://cdlib.org/">California Digital
-    Library</a>&#39;s <a href="https://merritt.cdlib.org/">Merritt Repository</a>. For a full description
-    of the services provided by Merritt, see this document:
-    <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3,
-    Merritt, and Long-term preservation</a>.
-</p>
+Data deposited are permanently archived and available through the <a href="http://cdlib.org/">California Digital Library</a>&#39;s <a href="https://merritt.cdlib.org/">Merritt Repository</a>. For a full description of the services provided by Merritt, see <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3, Merritt, and Long-term preservation<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>.
 
-<p>Preservation policy details include:</p>
-
+Preservation policy details include:
 <ul>
     <li><strong>Retention period</strong>: Items will be retained indefinitely</li>
     <li>

@@ -6,7 +6,7 @@
 
 <p>We want to help you share your research with the scientific community to increase its <a href="https://peerj.com/articles/175/">visibility</a> and foster collaborations. The following guidelines will help make your Dryad datasets as <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a> as possible.</p>
 
-<p>No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing</a>.</p>
+<p>No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>.</p>
 
 ## Gather all relevant data needed for reanalysis
 
@@ -44,8 +44,8 @@
 <li><strong>All files submitted to Dryad must abide by the terms of the <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0 1.0)</a> waiver</strong>. Under these terms, the author releases the data to the public domain.
 <ul><li>Review all files and ensure they conform to <code>CC0</code> terms and are not covered by copyright claims or other terms-of-use. We cannot archive any files that contain licenses incompatible with <code>CC0</code> (<code>GNU GPL, MIT, CC-BY,</code> etc.), but we can link to content in a dedicated software repository (Github, Zenodo, Bitbucket, or CRAN, etc.). </li>
 <li>For more information see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use <code>CC0</code></a>, and <a href="https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/">Some dos and don'ts for <code>CC0</code></a>.</li></ul></li>
-<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see tips for <a href="/docs/HumanSubjectsData.pdf">human subjects data</a>).</li>
-<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species (see tips for <a href="/docs/EndangeredSpeciesData.pdf">endangered species data</a>).</li>
+<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see <a href="/docs/HumanSubjectsData.pdf">tips for human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>).</li>
+<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species (see <a href="/docs/EndangeredSpeciesData.pdf">tips for endangered species data<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>).</li>
 </ul>
 
 
@@ -180,7 +180,7 @@ DatasetB.tar.gz
 <li>Institutional data librarians are an outstanding resource. Check with your university library's data management services team.</li>
 <li><a href="https://data.research.cornell.edu/content/readme">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata</a></li>
 <li><a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Dryad uses Creative Commons Zero</a></li>
-<li><a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices</a></li>
+<li><a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a></li>
 <li><a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/">Introduction to Open Science: Why data versioning and data care practices are key for science and social science</a></li>
 <li><a href="https://www.force11.org/group/fairgroup/fairprinciples">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)</a></li>
 <li><a href="https://try.goodtables.io/">goodTables - free online service for tabular data validation</a></li>

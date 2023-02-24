@@ -17,8 +17,8 @@ const validate_files = (props) => {
     <div>
       <p>Data archived in Dryad are publicly available, and any human subjects data or species data must be
         properly anonymized and prepared under applicable legal and ethical guidelines. Please see our
-      {' '}<a href="/docs/HumanSubjectsData.pdf">human subjects guidance</a> and
-      {' '}<a href="/docs/EndangeredSpeciesData.pdf">species conservation guidance</a>.
+      {' '}<a href="/docs/HumanSubjectsData.pdf">human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" /></a> and
+      {' '}<a href="/docs/EndangeredSpeciesData.pdf">species conservation guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" /></a>.
       </p>
       {checkConfirm}
       <input
