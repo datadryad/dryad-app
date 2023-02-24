@@ -14,11 +14,3 @@
 	padding: 8px 0;
 	margin: 0;
 }
-
-.c-table-heading__button {
-
-	@include bp(screen2) {
-		display: none;
-	}
-
-}

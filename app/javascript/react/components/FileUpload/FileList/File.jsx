@@ -4,10 +4,10 @@ import classes from './File.module.css';
 
 export const TabularCheckStatus = {
   checking: 'Checking...',
-  issues: 'View Issues',
+  issues: 'View alerts',
   noissues: 'Passed',
-  na: 'Too Large For Validation',
-  error: "Couldn't Read Tabular Data",
+  na: 'Too large for validation',
+  error: "Couldn't read tabular data",
 };
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -41,14 +41,7 @@ class File extends React.Component {
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
-        <div>
-          <img
-            className="c-upload__spinner js-tabular-checking"
-            src="../../../images/spinner.gif"
-            alt="Validating spinner"
-            style={{padding: 0, width: '2rem'}}
-          />
-        </div>
+        <i className="fa fa-circle-o-notch fa-spin" alt="Validating spinner" />
       );
     case TabularCheckStatus.issues: {
       let jsReport = '';
@@ -66,7 +59,7 @@ class File extends React.Component {
               type="button"
               style={{padding: '10px'}}
             >
-              View {jsReport?.report?.stats?.errors} Issues
+              View {jsReport?.report?.stats?.errors} alerts
             </button>
           </div>
         </div>
@@ -103,20 +96,16 @@ class File extends React.Component {
           )}
         </td>
         <td>{capitalize(file.uploadType)}</td>
-        <td>{file.sizeKb}</td>
-        {removing ? (
-          <td style={{padding: 0, width: '74px'}}>
-            <div>
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          </td>
-        ) : (
-          <td>
+        <td className="c-uploadtable-size">{file.sizeKb}</td>
+        <td>
+          {removing ? (
+            <i className="fa fa-circle-o-notch fa-spin" alt="Loading spinner" />
+          ) : (
             <button onClick={this.clickRemove} type="button" className="c-upload__button">
               Remove
             </button>
-          </td>
-        )}
+          )}
+        </td>
       </tr>
     );
   }

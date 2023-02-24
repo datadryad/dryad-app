@@ -6,7 +6,7 @@
 
   <p><strong>The following dependencies were last checked on: <em><%= formatted_datetime(@latest_check) %></em></strong></p>
 
-  <div class="o-dependency-group">
+  <div class="o-admin-columns" style="justify-content: space-around;">
     <div>
       <h2>Dryad or CDL managed</h2>
       <%= render partial: 'dependency_list', locals: { dependencies: @managed_dependencies } %>
@@ -18,30 +18,3 @@
     </div>
   </div>
 </main>
-
-<script type="text/javascript">
-  /* JS wiring for dialog boxes that open when user clicks on the status icon */
-  var toggleDialog = function(el) {
-    var dialog = $(el).parent().find('.dialog');
-    if (dialog.hasClass('dialog-open')) {
-      dialog.removeClass('dialog-open');
-      dialog.addClass('dialog');
-    } else {
-      dialog.removeClass('dialog');
-      dialog.addClass('dialog-open');
-    }
-  };
-
-  $(document).ready(function(){
-    $('.o-dependency-group__list__item .fa-times-circle').click(function() {
-      $(this).parent().find('.dialog').css('display', 'block');
-    });
-    $('.o-dependency-group__list__item .fa-question-circle').click(function() {
-      $(this).parent().find('.dialog').css('display', 'block');
-    });
-
-    $('.o-dependency-group__list__item .dialog-close').click(function() {
-      $(this).closest('.dialog').css('display', 'none');
-    });
-  });
-</script>

@@ -12,18 +12,22 @@
     %>
     <li title="<%= dependency.description %>" class="o-dependency-group__list__item">
       <span class="dependency-name"><%= dependency.name %></span>
-      <span class="fa <%= status_class %>" title="<%= dependency.status != 1 ? 'Offline - Click for troubleshooting information' : 'Online' %>"></span>
+      <button <%= 'disabled' if dependency.status == 1 %> onclick="document.getElementById('<%= dependency.abbreviation %>-dialog').showModal()" title="<%= dependency.status != 1 ? 'Offline - Click for troubleshooting information' : 'Online' %>"><i class="fa <%= status_class %>"></i></button>
       <% if dependency.documentation.present? %>
-        <div class="dialog">
-          <div class="dialog-content">
-            <span class="dialog-close">&times;</span>
-            <h3><%= dependency.name %> troubleshooting information:</h3>
-            <p><%= dependency.documentation.html_safe %></p>
-            <br>
-            <h4>Error message:</h4>
-            <p><%= dependency.error_message %></p>
+        <dialog class="modalDialog extra-wide" id="<%= dependency.abbreviation %>-dialog">
+          <div class="c-uploadmodal__header">
+            <h1 class="o-heading__level1"><%= dependency.name %> troubleshooting information:</h1>
+            <button
+              class="button-close-modal"
+              aria-label="close"
+              type="button"
+              onclick="this.closest('dialog').close()"
+            />
           </div>
-        </div>
+          <p><%= dependency.documentation.html_safe %></p>
+          <h2>Error message:</h2>
+          <p><%= dependency.error_message %></p>
+        </dialog>
       <% end %>
     </li>
   <% end %>

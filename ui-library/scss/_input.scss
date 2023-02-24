@@ -15,6 +15,7 @@
 
 	@include bp(screen2) {
 		display: flex;
+		flex-wrap: wrap;
 
 		.c-input ~ .c-input {
 			margin: 0 0 20px 20px;

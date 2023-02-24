@@ -1,28 +1,27 @@
-// ##### Pagination Component ##### //
+.c-space-paginator {
+  margin: $spacing-md 0;
+}
 
-.c-pagination {
+.search-results-footer {
+  margin: $spacing-md 0;
   display: flex;
-  flex-flow: column-reverse nowrap;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: $spacing-md;
 
-  @include bp(screen1) {
-    flex-flow: row nowrap;
-    justify-content: flex-end;
-    margin: 0 0 20px;
+  .c-space-paginator {
+    margin: 0;
+    margin-left: auto;
   }
-
 }
 
-.c-pagination__prev-next {
-  // empty
+nav.pagination, .c-paginator-page_size {
+  text-align: right;
+  & > * {
+    margin: 0 ($spacing-base/2);
+  }
 }
 
-.c-pagination__show-all {
-  margin: 10px 0;
-
-  @include bp(screen1) {
-    margin: 0 30px 0 0;
-  }
-
+nav.pagination + .c-paginator-page_size {
+  margin-top: $spacing-sm;
 }

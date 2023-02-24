@@ -1,60 +1,57 @@
-<div>
-  <%= form_with url: stash_url_helpers.ds_admin_funders_path, method: :get do |form| %>
-    <div class="o-admin-columns">
+<%= form_with url: stash_url_helpers.ds_admin_funders_path, method: :get do |form| %>
+  <div class="o-admin-columns">
 
-      <!-- first column -->
-      <div class="o-admin-50-column">
-        <h2 class="o-heading__level2">Limit to</h2>
+    <!-- first column -->
+    <div class="o-admin-left o-admin-form">
+      <h2 class="o-heading__level2">Limit to</h2>
 
-        <% if current_user.limited_curator? %>
-          <!-- only show tenant select for limited curators and above, not admins or tenant curators -->
-          <div class="o-admin-form-pair">
-            <label class="o-admin-label-left" for="tenant">Partner institution</label>
-            <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
-                           class: 'o-admin-field-right' ) %>
-          </div>
-        <% end %>
-
+      <% if current_user.limited_curator? %>
+        <!-- only show tenant select for limited curators and above, not admins or tenant curators -->
         <div class="o-admin-form-pair">
-          <label for="funder_name" class="o-admin-label-left">Funder</label>
-          <%= text_field_tag 'funder_name', params[:funder_name], {size: 15, class: 'o-admin-field-right'} %>
-          <%= hidden_field_tag 'funder_id', params[:funder_id] %>
+          <label for="tenant">Partner institution:</label>
+          <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]), class: 'c-input__text' ) %>
         </div>
+      <% end %>
 
+      <div class="o-admin-form-pair">
+        <label for="funder_name">Funder:</label>
+        <%= text_field_tag 'funder_name', params[:funder_name], {size: 15, class: 'c-input__text'} %>
+        <%= hidden_field_tag 'funder_id', params[:funder_id] %>
       </div>
 
-      <!-- second column -->
-      <div class="o-admin-50-column">
-        <h2 class="o-heading__level2">For dates</h2>
-
-        <div class="o-admin-form-pair">
-          <label class="o-admin-label-left" for="tenant">Date type</label>
-          <%= select_tag(:date_type, options_for_select(
-              [ ['Initial submission','initial'], ['Embargo/publication', 'published'] ], params[:date_type]),
-                         class: 'o-admin-field-right' ) %>
-        </div>
-
-        <div class="o-admin-form-pair">
-          <label class="o-admin-label-left" for="start_date">Start date</label>
-          <%= date_field_tag(:start_date, params[:start_date]) %>
-        </div>
-
-        <div class="o-admin-form-pair">
-          <div class="o-admin-label-left">to</div>
-          <div class="o-admin-field-right"></div>
-        </div>
-
-        <div class="o-admin-form-pair">
-          <lavel class="o-admin-label-left" for="end_date">End date</lavel>
-          <%= date_field_tag(:end_date, params[:end_date]) %>
-        </div>
-
-      </div>
     </div>
-    <%= button_tag "Reset", type: :reset, id: 'reset_button' %>
-    <%= form.submit "Submit" %>
-  <% end %>
-</div>
+
+    <!-- second column -->
+    <div class="o-admin-right o-admin-form">
+      <h2 class="o-heading__level2">For dates</h2>
+
+      <div class="o-admin-form-pair">
+        <label for="tenant">Date type:</label>
+        <%= select_tag(:date_type, options_for_select(
+            [ ['Initial submission','initial'], ['Embargo/publication', 'published'] ], params[:date_type]), class: 'c-input__text') %>
+      </div>
+
+      <div class="o-admin-form-pair">
+        <label for="start_date">Start date:</label>
+        <%= date_field_tag(:start_date, params[:start_date], class: 'c-input__text') %>
+      </div>
+
+      <div class="o-admin-form-pair">
+        <div>to</div>
+      </div>
+
+      <div class="o-admin-form-pair">
+        <lavel for="end_date">End date:</lavel>
+        <%= date_field_tag(:end_date, params[:end_date], class: 'c-input__text') %>
+      </div>
+
+    </div>
+  </div>
+  <p class="o-admin-columns">    
+    <%= form.submit "Submit", class: "o-button__submit" %>
+    <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
+  </p>
+<% end %>
 
 <script>
   // this is for jQuery UI autocomplete which is fast and easy to implement and it seems like the priority for this
