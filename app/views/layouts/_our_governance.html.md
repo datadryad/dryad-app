@@ -1,4 +1,4 @@
-<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to <a href="/docs/DryadBylaws.pdf">the organization’s Bylaws<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
+<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to <a href="/docs/DryadBylaws.pdf">the organization’s bylaws<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
 
 <p>Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of Conduct</a> applies for all Dryad community spaces.</p>
 
@@ -146,11 +146,10 @@
 </ul>
 
 
-#### Past Board Members
+#### Past Board members
 
 <p>
-  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of 
-  Directors for at least one term from 2012 to 2021:
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of Directors for at least one term from 2012 to 2021:
 </p>
 
 <p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Naomi Penfold, Allen Rodrigo, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>
