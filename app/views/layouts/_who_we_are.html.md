@@ -69,7 +69,7 @@ Dryad was first conceived in a series of meetings in 2007, hosted alternately by
 
 The project was originally named DRIADE: The Digital Repository of Information and Data for Evolution – which was coincidentally also the name of a [favorite local cafe](https://caffedriade.com/). By the time the platform launched, the name had evolved to “Dryad,” which is easier to remember – frankly – and evokes positive associations with trees. It was important not to hard-code evolution research into what would become home for a wide-ranging scope of data but, with the shorter name, the founders did “coyly allude to phylogenies”.<sup><a title="Quoting Todd Vision, Dryad Principal Investigator from 2007, in email communication with Executive Director Jennifer Gibson - July 6, 2022">1</a></sup>
 
-In the life of Dryad, outlined below, the introduction of the [Joint Data Archiving Policy](https://datadryad.org/docs/JointDataArchivingPolicy.pdf) (JDAP) by a pioneering group of journals and scientific societies in 2011 is worth singling out. JDAP states, to start, that committing journals will require: 
+In the life of Dryad, outlined below, the introduction of the [Joint Data Archiving Policy<span class="pdfIcon" role="img" aria-label=" (PDF)"></span>](/docs/JointDataArchivingPolicy.pdf) (JDAP) by a pioneering group of journals and scientific societies in 2011 is worth singling out. JDAP states, to start, that committing journals will require: 
 
 
 <blockquote><p>as a condition for publication, that data supporting the results in the paper should be archived in an appropriate public archive [...]. Data are important products of the scientific enterprise, and they should be preserved and usable for decades in the future.</p></blockquote>
@@ -89,7 +89,7 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2011</dt>
-    <dd>The <a href="https://datadryad.org/docs/JointDataArchivingPolicy.pdf">Joint Data Archiving Policy</a> (JDAP) is released</dd>
+    <dd>The <a href="/docs/JointDataArchivingPolicy.pdf">Joint Data Archiving Policy<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a> (JDAP) is released</dd>
   </div>
   <div>
     <dt>2012</dt>
