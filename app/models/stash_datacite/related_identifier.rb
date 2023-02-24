@@ -43,12 +43,12 @@ module StashDatacite
     enum added_by: { default: 0, zenodo: 1 }
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
-                          supplemental_information: 'Supplemental Information',
-                          data_management_plan: 'Data Management Plan' }.with_indifferent_access
+                          supplemental_information: 'Supplemental information',
+                          data_management_plan: 'Data management plan' }.with_indifferent_access
 
     # because the plural of Software is Software and not "Softwares" like Rails thinks
     WORK_TYPE_CHOICES_PLURAL = { article: 'Articles', dataset: 'Datasets', preprint: 'Preprints', software: 'Software',
-                                 supplemental_information: 'Supplemental Information' }.with_indifferent_access
+                                 supplemental_information: 'Supplemental information' }.with_indifferent_access
 
     WORK_TYPES_TO_RELATION_TYPE = { article: 'iscitedby',
                                     dataset: 'issupplementedby',

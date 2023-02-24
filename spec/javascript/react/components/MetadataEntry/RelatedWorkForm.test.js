@@ -15,8 +15,8 @@ describe('RelatedWorkForm', () => {
       ["Dataset","dataset"],
       ["Preprint","preprint"],
       ["Software","software"],
-      ["Supplemental Information","supplemental_information"],
-      ["Data Management Plan","data_management_plan"]
+      ["Supplemental information","supplemental_information"],
+      ["Data management plan","data_management_plan"]
   ]
 
   // relatedIdentifier, workTypes, removeFunction, updateWork,
