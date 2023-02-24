@@ -5,7 +5,7 @@ community.</p>
 <h4>Scientific Advisory Committee members</h4>
 <div class="about-bios">
 <div class="bio">
-  <img src="/images/Ascandari_AbdulAziz.jpg" alt="AbdulAziz Ascandari" />
+  <img src="/images/Ascandari_AbdulAziz.jpg" alt="Headshot of AbdulAziz Ascandari" />
   <h5>AbdulAziz Ascandari</h5><p> is a Ghanaian and currently a
     research assistant at the Parasitology department of the Noguchi
     Memorial Institute for medical research in Ghana. His work focuses
@@ -20,7 +20,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/ColonRodriguez_Alexandra.jpg" alt="Alexandra Colón-Rodríguez"/>
+    <img src="/images/ColonRodriguez_Alexandra.jpg" alt="Headshot of Alexandra Colón-Rodríguez"/>
     <h5>Alexandra Colón-Rodríguez</h5> 
     <p> is currently a
     postdoctoral scientist at the University of California Davis,
@@ -36,7 +36,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Copenhaver_Greg.jpg" alt="Greg Copenhaver"/>
+    <img src="/images/Copenhaver_Greg.jpg" alt="Headshot of Greg Copenhaver"/>
     <h5>Gregory P. Copenhaver</h5><p> shares joint appointments as
     a Professor and Associate Chair in the Department of Biology and
     Professor in the Integrative Program for Biological and Genome
@@ -61,7 +61,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Fayanju_Lola.jpg" alt="Lola Fayanju"/>
+    <img src="/images/Fayanju_Lola.jpg" alt="Headshot of Lola Fayanju"/>
     <h5>Lola Fayanju</h5><p> is Associate
     Professor of Surgery and Population Health Sciences in the Duke
     University School of Medicine and Director of the Durham VA Breast
@@ -103,7 +103,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Gazda_Malgorzata.jpg" alt="Małgorzata Anna Gazda"/>
+    <img src="/images/Gazda_Malgorzata.jpg" alt="Headshot of Małgorzata Anna Gazda"/>
     <h5>Małgorzata Anna Gazda</h5><p> is an early career
     scientist with demonstrated passion for positive cultural change
     in academia. Her academic background includes training in biology
@@ -125,7 +125,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Gutam_Sridhar.jpg" alt="Sridhar Gutam"/>
+    <img src="/images/Gutam_Sridhar.jpg" alt="Headshot of Sridhar Gutam"/>
     <h5>Sridhar Gutam</h5><p> is Senior Scientist at
     ICAR-Indian Institute of Horticultural Research (<a href="https://www.iihr.res.in/">ICAR-IIHR</a>),
     Bengaluru and Convenor for <a href="http://openaccessindia.org/">Open Access India</a>. He has earned his
@@ -150,7 +150,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Kibet_Caleb.jpg" alt="Caleb Kibet"/>
+    <img src="/images/Kibet_Caleb.jpg" alt="Headshot of Caleb Kibet"/>
     <h5>Caleb Kibet</h5><p> is a bioinformatics researcher, a
     lecturer, an open science advocate, and a mentor. He is currently
     a bioinformatician at <a href="http://www.icipe.org/">icipe</a> - International Centre of Insect
@@ -169,7 +169,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Krause_Melanie.jpg" alt="Melanie Krause"/>
+    <img src="/images/Krause_Melanie.jpg" alt="Headshot of Melanie Krause"/>
     <h5>Melanie Krause</h5><p> is a postdoctoral fellow at the
     European Molecular Biology Laboratory (EMBL) in Heidelberg,
     Germany working on novel proteome tagging strategies. She has
@@ -188,7 +188,7 @@ community.</p>
     </p>
 </div>
 <div class="bio">
-    <img src="/images/Marwick_Ben.jpg" alt="Ben Marwick"/>
+    <img src="/images/Marwick_Ben.jpg" alt="Headshot of Ben Marwick"/>
     <h5>Ben Marwick</h5><p> is a faculty member in the
     Anthropology Department at the University of Washington. He is an
     archaeologist that works on hominin dispersals into mainland
