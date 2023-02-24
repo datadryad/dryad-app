@@ -43,7 +43,7 @@ namespace :merritt_status do
             Rails.logger.info("  Resource #{queue_state.resource_id} has been processing for more than a day, so marking as errored")
             StashEngine::RepoQueueState.create(resource_id: queue_state.resource_id, state: 'errored')
             exception = StandardError.new("item has been processing for more than a day, so marking as errored")
-            exception.set_backtrace(queue_state.caller)
+            exception.set_backtrace(caller)
             StashEngine::UserMailer.error_report(queue_state.resource, exception).deliver_now
           else
             Rails.logger.info("  Resource #{queue_state.resource_id} not yet available")
