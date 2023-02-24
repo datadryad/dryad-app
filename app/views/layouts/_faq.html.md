@@ -118,7 +118,7 @@ We recommend:
     alternatives.
   </li>
   <li>
-    Related Works: Use this field to indicate other resources that are associated with the data.
+    Related works: Use this field to indicate other resources that are associated with the data.
     Examples include publications, related datasets, etc.
   </li>
 </ul>
@@ -200,7 +200,7 @@ Dryad has a team of curators who check every submission to ensure the validity o
 
 Dryad formed a partnership with <a href="https://zenodo.org/">Zenodo</a>, a multidisciplinary repository based at CERN, in 2019. <a href="https://blog.datadryad.org/2019/07/17/funded-partnership-brings-dryad-and-zenodo-closer/">This partnership</a> leverages each organization's strengths: data curation at Dryad and software publication at Zenodo.
 
-Through our integration, any software uploaded during the data submission process will be triaged and published at Zenodo. The software will not go through Dryad curation processes but it will be time-released with the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad landing page under “Related Works”.
+Through our integration, any software uploaded during the data submission process will be triaged and published at Zenodo. The software will not go through Dryad curation processes but it will be time-released with the publication of the Dryad dataset. Both the data and software packages will be linked and denoted on the Dryad landing page under “Related works”.
 
 Dryad stores a copy of all datasets in Zenodo for enhanced preservation services.
 

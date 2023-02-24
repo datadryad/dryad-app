@@ -1,4 +1,4 @@
-# Submission and publication process</h1>
+# Submission and publication process
 
 <p>
     Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to
@@ -55,7 +55,7 @@
   software files and supplemental information uploaded to our site.
   Because non-data files are not always compatible with the CC0 license required by Dryad, submitters will have 
   the opportunity to choose a  separate license for their code at the final stage of the submission process. 
-  All files uploaded as "Supplemental Information" will be licensed under CCBY. 
+  All files uploaded as "Supplemental information" will be licensed under CCBY. 
 </p>
 
 <img src="/images/dryad_upload.png" alt="Screenshot of image upload" />
