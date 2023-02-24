@@ -49,10 +49,10 @@ module Stash
 
       def do_submit!
         package = create_package
-        submit(package)
+        result_str = submit(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
         Stash::Repo::SubmissionResult
-          .success(resource_id: resource_id, request_desc: description, message: 'Submitted to Merritt for asynchronous completion')
+          .success(resource_id: resource_id, request_desc: description, message: "Submitted to Merritt for asynchronous completion\n#{result_str}")
       end
 
       def resource

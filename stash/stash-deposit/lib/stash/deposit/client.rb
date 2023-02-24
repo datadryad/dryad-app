@@ -107,6 +107,7 @@ module Stash
           begin
             json = JSON.parse(resp.body.to_s)
             logger.info("Merritt submission started for #{doi}:\n#{json}")
+            json.to_s
           rescue JSON::ParserError
             raise ResponseError, "Merritt returned #{resp.code} for #{doi} while submitting, but the response was not JSON"
           end
