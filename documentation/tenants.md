@@ -128,7 +128,7 @@ Adding the logo and institution to the list
 
 Logos go into `app/assets/images/tenants`
 
-Add the institution to the list in `app/views/layouts/_our_membership.html.md`
+Add the institution to the list in `app/views/layouts/_members_institutional.html.md`
 
 
 Updating pre-existing users in the database
