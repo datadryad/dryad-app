@@ -65,8 +65,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  // wrapping for file names in the upload modal
   * {
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 }
 
