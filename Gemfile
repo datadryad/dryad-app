@@ -17,8 +17,8 @@ gem 'webpacker', '~> 5.4.3'
 # Local engines
 
 path 'stash' do
+  gem 'stash-deposit'
   gem 'stash-merritt'
-  gem 'stash-sword'
   gem 'stash-wrapper'
 end
 

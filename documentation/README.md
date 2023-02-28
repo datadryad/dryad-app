@@ -26,7 +26,7 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
     * The stash_discovery module is a relatively thin wrapper and customization around Geoblacklight.
 
-    * The repository contains some other libraries/gems for things such as sword or harvesting.
+``    * The repository contains some other libraries/gems for things such as Merritt deposits or harvesting.
 
 ## Documentation
 

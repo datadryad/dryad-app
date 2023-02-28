@@ -9,7 +9,7 @@ gem 'standalone_migrations'
 gem 'mysql2', '~> 0.5.3'
 
 path '..' do
-  gem 'stash-sword'
+  gem 'stash-deposit'
   gem 'stash-wrapper'
 end
 

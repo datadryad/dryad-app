@@ -19,15 +19,15 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 # for our uses.
 
 require 'uri'
-require 'stash/sword/module_info'
+require 'stash/deposit/module_info'
 
 Gem::Specification.new do |s|
-  s.name          = Stash::Sword::NAME
-  s.version       = Stash::Sword::VERSION
+  s.name          = Stash::Deposit::NAME
+  s.version       = Stash::Deposit::VERSION
   s.authors       = ['David Moles']
   s.email         = ['david.moles@ucop.edu']
-  s.summary       = 'Stash SWORD 2.0 connector'
-  s.description   = 'A minimal SWORD 2.0 connector providing those features needed for Stash'
+  s.summary       = 'Stash Deposit 2.0 connector for Merritt'
+  s.description   = 'A minimal deposit connector for Merritt'
   s.license       = 'MIT'
 
   s.required_ruby_version = '~> 3.0.4'
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
 
   s.require_paths = ['lib']
 
-  s.add_dependency 'rest-client', '~> 2.1.0'
+  s.add_dependency 'http', '~> 5.0.4'
   s.add_dependency 'typesafe_enum', '~> 0.1.9'
   s.add_dependency 'xml-mapping_extensions', '~> 0.4.9'
 

@@ -47,7 +47,7 @@ defaults: &DEFAULTS
     large_file_size: 5.0e+10 # 50 GB
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents
-  merritt_express_base_url: http://mrtexpress-stage.cdlib.org
+  merritt_base_url: https://merritt-stage.cdlib.org
   merritt_max_submission_threads: 5
   crossref_base_url: https://api.crossref.org
   crossref_mailto: scott.fisher@ucop.edu
@@ -277,7 +277,6 @@ migration:
   shib_sp_host: dryad-stg.cdlib.org
   page_error_email: ["scott.fisher@ucop.edu"]
   feedback_email_from: no-reply-dryad-migration@datadryad.org
-  merritt_express_base_url: http://mrtexpress.cdlib.org
 
 demo:
   <<: *DEFAULTS
@@ -313,7 +312,7 @@ production:
     base_url: https://zenodo.org
     community_id: dryad
     application_id: 42723
-  merritt_express_base_url: http://mrtexpress.cdlib.org
+  merritt_base_url: https://merritt.cdlib.org
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>

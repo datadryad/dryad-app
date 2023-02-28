@@ -3,6 +3,7 @@ require 'ostruct'
 require 'tmpdir'
 require 'datacite/mapping/datacite_xml_factory'
 require 'stash/merritt/submission_package'
+require 'stash/deposit/packaging'
 
 module Stash
   module Merritt
@@ -11,7 +12,7 @@ module Stash
       attr_reader :root_url
 
       def initialize(resource:)
-        super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
+        super(resource: resource, packaging: Stash::Deposit::Packaging::BINARY)
         @resource = resource
         @root_url = to_uri("https://#{Rails.application.default_url_options[:host]}/system/#{@resource.id}/")
         @manifest = create_manifest
