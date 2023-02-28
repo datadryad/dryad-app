@@ -124,3 +124,14 @@ a {
     opacity: 1;
   }
 }
+
+.pdfIcon {
+  display: inline-block;
+  vertical-align: middle;
+  background-color: currentColor;
+  mask-image: inline('../images/fa-pdf.svg');
+  mask-repeat: no-repeat;
+  width: 1em;
+  height: 1em;
+  margin-left: .5ch;
+}
