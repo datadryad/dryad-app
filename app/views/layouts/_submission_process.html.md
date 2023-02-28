@@ -1,35 +1,16 @@
 # Submission and publication process
 
-<p>
-    Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to
-    researchers. For an overview see our <a href="/docs/QuickstartGuideToDataSharing.pdf">Quick Start to Data Sharing</a>.
-    Dryad’s process is outlined here, including links to our <a href="/stash/faq">Frequently Asked Questions</a> with
-    information on particular topics and <a href="/stash/best_practices">recommendations for good data practices</a>. If
-    you need further assistance, please contact us at <a href="mailto:help@datadryad.org">help@datadryad.org</a>.
-</p>
+Data publishing includes describing and organizing your data in a way that makes it accessible and reusable to researchers. For an overview see our <a href="/docs/QuickstartGuideToDataSharing.pdf">Quick Start to Data Sharing<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>. Dryad’s process is outlined here, including links to our <a href="/stash/faq">Frequently Asked Questions</a> with information on particular topics and <a href="/stash/best_practices">recommendations for good data practices</a>. If you need further assistance, please contact us at <a href="mailto:help@datadryad.org">help@datadryad.org</a>.
 
-<p>Ready to get started? <a href="/stash/">Log in</a> and go to "My datasets" to begin your data submission now!</p>
+Ready to get started? <a href="/stash/">Log in</a> and go to "My datasets" to begin your data submission now!
 
 ## Login
 
-<p>
-    Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the
-    opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can
-    authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the
-    website, through the API, through a journal integration, etc.). When datasets are published, they should appear in
-    your ORCID profile along with articles and other works.
-</p>
+Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works.
 
-<p>
-    For institutional members, we require a second form of authentication at login for campus single-sign-on. After you
-    have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so
-    that you will not have to include this information a second time.
-</p>
+For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.
 
-<p>
-  Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My datasets" to begin your data
-  submission now!
-</p>
+Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My datasets" to begin your data submission now!
 
 ## Uploading your data
 
@@ -141,6 +122,8 @@ Foundation</a>.
   our curation process or publish until the checkbox for this option is deselected or you contact
   us to update the status of your submission.
 </p>
+
+<p>All data submissions are assigned a private, randomized URL. This link can be shared with the journal office and/or with collaborators to access the data files before the dataset is made public. When your dataset is published, this temporary URL will be deactivated and the DOI assigned to your dataset upon submission will become its public URL.</p>
 
 <p>If you have questions or require assistance, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
 

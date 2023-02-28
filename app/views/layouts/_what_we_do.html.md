@@ -51,7 +51,7 @@ Dryad is completely open source.  Our code is made publicly available [on GitHub
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
 - Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface
 
-<a href="/images/dash_architecture_diagram.png"><img src="/images/dash_architecture_diagram.png" alt="Dash Architecture Diagram" style="width: 500px;"/></a>
+<p><a href="/images/dash_architecture_diagram.png" target="_blank" style="display: block;"><img src="/images/dash_architecture_diagram.png" alt="Dash Architecture Diagram"></a></p>
 
 Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.
 
@@ -61,8 +61,8 @@ We welcome collaborations to develop additional modules for additional metadata 
 
 ### Features of Dryad service
 
-<div style="max-width: 100%; overflow-x: auto; overflow-y: hidden">
-<table style=""><thead>
+<div class="table-wrapper">
+<table><thead>
 <tr>
 <th style="text-align: left">Feature</th>
 <th style="text-align: center">Tech-focused</th>
