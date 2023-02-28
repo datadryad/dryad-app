@@ -104,6 +104,10 @@
 @import 'resets';
 @import 'ui-library';
 
+body {
+	line-height: 135%;
+}
+
 body, body#yes-really {
 	max-width: 1220px;
 	margin: 0 auto;
@@ -113,7 +117,6 @@ body, body#yes-really {
 	/* Blacklight/geoblacklight resets */
 	font-size: initial;
 	font-size: 1.1rem;
-	line-height: 135%;
 
 	@include bp(screen1) {
 		padding: 10px 20px;

@@ -8501,6 +8501,10 @@ dialog {
   border: thin solid black;
 }
 
+body {
+  line-height: 135%;
+}
+
 body, body#yes-really {
   max-width: 1220px;
   margin: 0 auto;
@@ -8509,7 +8513,6 @@ body, body#yes-really {
   /* Blacklight/geoblacklight resets */
   font-size: initial;
   font-size: 1.1rem;
-  line-height: 135%;
 }
 @media (min-width: 480px) {
   body, body#yes-really {
