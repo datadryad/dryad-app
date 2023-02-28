@@ -40,7 +40,7 @@ defaults: &DEFAULTS
     large_file_size: 5.0e+10
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents
-  merritt_express_base_url: http://mrtexpress-test.example.org
+  merritt_base_url: https://merritt-stage.cdlib.org
   merritt_max_submission_threads: 1
   crossref_base_url: https://api.crossref.org
   crossref_mailto: test.dude@example.edu

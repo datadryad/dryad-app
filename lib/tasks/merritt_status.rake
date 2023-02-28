@@ -39,6 +39,12 @@ namespace :merritt_status do
         StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete]).each do |queue_state|
           if queue_state.possibly_set_as_completed
             Rails.logger.info("  Resource #{queue_state.resource_id} available in Merritt")
+          elsif queue_state.updated_at < 1.day.ago # older than 1 day ago
+            Rails.logger.info("  Resource #{queue_state.resource_id} has been processing for more than a day, so marking as errored")
+            StashEngine::RepoQueueState.create(resource_id: queue_state.resource_id, state: 'errored')
+            exception = StandardError.new('item has been processing for more than a day, so marking as errored')
+            exception.set_backtrace(caller)
+            StashEngine::UserMailer.error_report(queue_state.resource, exception).deliver_now
           else
             Rails.logger.info("  Resource #{queue_state.resource_id} not yet available")
           end

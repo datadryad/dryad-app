@@ -6,7 +6,7 @@ module Stash
     require_relative 'merritt/object_manifest_package'
     require_relative 'merritt/repository'
     require_relative 'merritt/submission_job'
-    require_relative 'merritt/sword_helper'
+    require_relative 'merritt/merritt_helper'
     require_relative '../../../../lib/stash/doi/id_gen'
     require_relative '../../../../lib/stash/doi/ezid_gen'
     require_relative '../../../../lib/stash/doi/datacite_gen'

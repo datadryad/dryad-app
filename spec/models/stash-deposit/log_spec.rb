@@ -1,5 +1,5 @@
 module Stash
-  module Sword
+  module Deposit
     describe LogUtils do
 
       attr_reader :log_utils

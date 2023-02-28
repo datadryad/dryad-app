@@ -31,9 +31,9 @@ module Stash
         allow(ObjectManifestPackage).to receive(:new).with(resource: @resource).and_return(@package)
         allow(@package).to receive(:dc4_xml)
 
-        @sword_helper = instance_double(SwordHelper)
-        allow(SwordHelper).to receive(:new).with(package: @package, logger: @logger).and_return(@sword_helper)
-        allow(@sword_helper).to receive(:submit!)
+        @merritt_helper = instance_double(MerrittHelper)
+        allow(MerrittHelper).to receive(:new).with(package: @package, logger: @logger).and_return(@merritt_helper)
+        allow(@merritt_helper).to receive(:submit!)
 
         @job = SubmissionJob.new(resource_id: @resource.id, url_helpers: @url_helpers)
         allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
@@ -55,7 +55,7 @@ module Stash
 
           it "doesn't submit the package if holding submissions for a restart" do
             allow(Stash::Repo::Repository).to receive(:hold_submissions?).and_return(true)
-            expect(@sword_helper).not_to receive(:submit!)
+            expect(@merritt_helper).not_to receive(:submit!)
             @job.submit!
           end
 
@@ -64,7 +64,7 @@ module Stash
             allow(StashEngine::RepoQueueState).to receive(:where).and_return([1, 2])
             allow(StashEngine::RepoQueueState).to receive(:latest)
               .and_return({ present?: true, state: { enqueued?: true }.to_ostruct }.to_ostruct)
-            expect(@sword_helper).not_to receive(:submit!)
+            expect(@merritt_helper).not_to receive(:submit!)
             @job.submit!
           end
 
@@ -92,12 +92,12 @@ module Stash
             bad_id = @resource.id * 17
             @job = SubmissionJob.new(resource_id: bad_id, url_helpers: @url_helpers)
             allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
-            expect_any_instance_of(Stash::Merritt::SwordHelper).not_to receive(:submit!)
+            expect_any_instance_of(Stash::Merritt::MerrittHelper).not_to receive(:submit!)
             @job.submit!
           end
 
           it 'fails on a SWORD submission error' do
-            allow(@sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
+            allow(@merritt_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
             @job = SubmissionJob.new(resource_id: @resource.id, url_helpers: @url_helpers)
             allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
             expect(@job.submit!.error).to be_a(RestClient::RequestFailed)
