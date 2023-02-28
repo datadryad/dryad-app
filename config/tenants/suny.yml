@@ -65,7 +65,7 @@ default: &default
     #- https://ror.org/02r2qbj91
     #- https://ror.org/01sfc5174
     - https://ror.org/0041qmd21
-  tenant_id: suny-cs
+  tenant_id: suny
   identifier_service:
     provider: datacite
     prefix: "10.7959"
