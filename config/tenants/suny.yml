@@ -1,0 +1,124 @@
+default: &default
+  enabled: true
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
+  abbreviation: "SUNY"
+  short_name: "State University of New York"
+  long_name: "State University of New York"
+  publisher_id: grid.189747.4
+  ror_ids:
+    - https://ror.org/01q1z8k08
+    #- https://ror.org/00fe1xp94
+    - https://ror.org/008rmbt77
+    - https://ror.org/05ms04m92
+    #- https://ror.org/01a2m8x11
+    #- https://ror.org/0468fwt03
+    - https://ror.org/0306aeb62
+    #- https://ror.org/00sepad12
+    #- https://ror.org/0188sb718
+    #- https://ror.org/03sg2bq51
+    #- https://ror.org/00tqjtg68
+    #- https://ror.org/010thz337
+    #- https://ror.org/03jwrn541
+    #- https://ror.org/011kg8p14
+    #- https://ror.org/053j19t39
+    #- https://ror.org/03hrye043
+    #- https://ror.org/0068dme40
+    #- https://ror.org/00j387684
+    #- https://ror.org/02ps2mz85
+    #- https://ror.org/03psxy088
+    #- https://ror.org/008zr3m11
+    #- https://ror.org/05v0vas53
+    #- https://ror.org/031m8s392
+    #- https://ror.org/00j52pq61
+    - https://ror.org/02n1c7856
+    #- https://ror.org/04r17kf39
+    #- https://ror.org/01nyadv46
+    #- https://ror.org/00zg6dt46
+    #- https://ror.org/047g2xp14
+    #- https://ror.org/05k6w6915
+    #- https://ror.org/04msyas67
+    - https://ror.org/057trrr89
+    #- https://ror.org/02sgpe757
+    - https://ror.org/02rrhsz92
+    - https://ror.org/00qv0tw17
+    #- https://ror.org/05vrs0r17
+    - https://ror.org/03g1q6c06
+    #- https://ror.org/02d07gm56
+    #- https://ror.org/02r3ym141
+    - https://ror.org/033zmj163
+    - https://ror.org/000fxgx19
+    - https://ror.org/040kfrw16
+    #- https://ror.org/03ncxj847
+    - https://ror.org/05a4pj207
+    - https://ror.org/02v9m6h26
+    - https://ror.org/02d4maz67
+    - https://ror.org/03j3dv688
+    - https://ror.org/01597g643
+    - https://ror.org/032qgrc76
+    - https://ror.org/05qghxh33
+    - https://ror.org/012zs8222
+    - https://ror.org/01y64my43
+    #- https://ror.org/02r2qbj91
+    #- https://ror.org/01sfc5174
+    - https://ror.org/0041qmd21
+  tenant_id: suny-cs
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: ip_address
+    ranges: [ "192.168.100.100/31" ] # No IP addresses allowed
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: false
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt-stage.cdlib.org
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  repository:
+    domain: https://merritt.cdlib.org
+    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
