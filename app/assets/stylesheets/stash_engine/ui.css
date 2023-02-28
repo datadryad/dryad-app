@@ -4545,7 +4545,8 @@ h6 {
           justify-content: space-between;
 }
 .c-uploadmodal__header * {
-  overflow-wrap: break-word;
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .c-uploadmodal__textarea-url-label {
@@ -7446,6 +7447,8 @@ img.c-upload__spinner {
 }
 .c-uploadtable th[scope=row] {
   font-weight: normal;
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 .c-uploadtable tr:not(:first-child) th {
   font-weight: normal;

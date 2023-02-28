@@ -20,6 +20,8 @@
 
     &[scope='row'] {
       font-weight: normal;
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
   }
 
