@@ -113,6 +113,7 @@ gem 'wicked_pdf', '~> 2.1.0'
 gem 'wkhtmltopdf-binary'
 gem 'yaml', '~> 0.1.1' # version 0.2 breaks Gmail, see https://github.com/CDL-Dryad/dryad-app/pull/771
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
+gem 'zip_tricks', '~> 5.6.0'
 
 # ############################################################
 # Development and testing
