@@ -790,7 +790,6 @@ GEM
     yaml (0.1.1)
     zaru (0.3.0)
     zeitwerk (2.6.7)
-    zip_tricks (5.6.0)
 
 PLATFORMS
   ruby
@@ -911,7 +910,6 @@ DEPENDENCIES
   wkhtmltopdf-binary
   yaml (~> 0.1.1)
   zaru (~> 0.3.0)
-  zip_tricks (~> 5.6.0)
 
 BUNDLED WITH
    2.3.26
