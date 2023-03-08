@@ -114,6 +114,8 @@ namespace :identifiers do
     resources = StashEngine::Resource.need_publishing
 
     resources.each do |res|
+      # only release if it's the latest version of the resource
+      next unless res.id == res.identifier.last_submitted_resource.id
 
       res.curation_activities << StashEngine::CurationActivity.create(
         user_id: 0,
