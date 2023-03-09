@@ -20,6 +20,11 @@ RSpec.describe 'Rack::Attack', type: :request do
   describe 'rack-attack limiting' do
     let(:headers) { { REMOTE_ADDR: '1.2.3.4' } }
 
+    let(:badheaders) do
+      { REMOTE_ADDR: '1.2.3.4',
+        ACCEPT: '${${r:-j}${81p:-n}${i:-d}${cq:eg7c:yk4d:-i}${kpi:h0x:-:}${k:h:-l}${8:f5:-d}}' }
+    end
+
     it 'limits basic page access' do
       # succeeds initially, blocks after too many attempts, then allows afteer time passes
       target_url = '/stash'
@@ -99,6 +104,25 @@ RSpec.describe 'Rack::Attack', type: :request do
       freeze_time do
         get '/etc/passwd', headers: headers
         expect(response).to have_http_status(:forbidden)
+      end
+      # Banned from the rest of the site
+      get '/stash', headers: headers
+      expect(response).to have_http_status(:forbidden)
+      # Resets after days
+      travel_to(2.days.from_now) do
+        get '/stash', headers: headers
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    it 'tells users about 2 bad requests, then blocks user from whole site' do
+      freeze_time do
+        2.times do
+          get '/stash', headers: badheaders
+          puts response.status
+          puts response.body
+          expect(response).to have_http_status(:bad_request)
+        end
       end
       # Banned from the rest of the site
       get '/stash', headers: headers
