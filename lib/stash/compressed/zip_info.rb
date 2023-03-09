@@ -1,11 +1,10 @@
 require 'http'
-require 'zip'
 require 'stringio'
-require 'byebug'
 
 module Stash
   module Compressed
     class InvalidResponse < StandardError; end
+    class ZipError < StandardError; end
 
     class ZipInfo
       attr_reader :presigned_url
@@ -33,7 +32,7 @@ module Stash
       # I tried both RubyZip and ZipTricks to see if I could get them to parse out files only from the central directory
       # but they didn't work correctly.  ZipTricks is supposed to be able to handle it, but I could never get it to work.
 
-      # I finally had to use the spec and examples and roll my own which I should've started on earlier.
+      # I finally had to use the spec and examples and roll my own.
       def file_entries
         file_info = []
 
@@ -60,10 +59,12 @@ module Stash
           # forward past the file name
           ss.pos += file_name_length
 
-          # if compressed and uncompressed equal 4294967295 then it's a zip64 file and they need recalculation
+          # if compressed or uncompressed equal 4294967295 then it's a zip64 file and they need recalculation
           if compressed_size == 4294967295 || uncompressed_size == 4294967295
 
-            raise "Something is wrong with the zip64 file signature" unless ss.peek(2) == "\x01\x00"
+            unless ss.peek(2) == "\x01\x00"
+              raise Stash::Compressed::ZipError, "Something is wrong with the zip64 file signature for #{file_name} for #{@presigned_url}"
+            end
 
             # uncompressed size
             ss.pos += 4
@@ -85,11 +86,13 @@ module Stash
       def get_size
         # the presigned URLs are only authorized as get requests, not head, so must do GET for size
         http = HTTP.headers('Range' => 'bytes=0-0').get(@presigned_url)
-        raise Stash::Compressed::InvalidResponse if http.code > 399
+        if http.code > 399
+          raise Stash::Compressed::InvalidResponse, "Status code #{http.code} returned for GET range 0-0 for #{@presigned_url}"
+        end
 
         info = http.headers['Content-Range']
         m = info.match(%r{/(\d+)$})
-        raise Stash::Compressed::InvalidResponse if m.nil?
+        raise Stash::Compressed::InvalidResponse, 'No valid size returned for #{@presigned_url}' if m.nil?
 
         m[1].to_i
       end
@@ -102,7 +105,7 @@ module Stash
         start_search = 0 if start_search < 0
         eocd_record = fetch(start: start_search, length: size - start_search)
         eocd_start = eocd_record.rindex("\x50\x4b\x05\x06") # find last EOCD record
-        raise "No end of central directory record found" if eocd_start.nil?
+        raise Stash::Compressed::ZipError, "No end of central directory record found for #{@presigned_url}" if eocd_start.nil?
 
         @eocd_record32 = eocd_record[eocd_start..-1]
       end
@@ -117,8 +120,8 @@ module Stash
         start_search = 0 if start_search < 0
 
         eocd_record = fetch(start: start_search, length: end_search - start_search)
-        eocd_start = eocd_record.rindex("\x50\x4b\x06\x06") # find other EOCD record
-        raise "No end of central directory record found" if eocd_start.nil?
+        eocd_start = eocd_record.rindex("\x50\x4b\x06\x06") # find other EOCD record (x0606 instead of x0506 for zip64)
+        raise Stash::Compressed::ZipError, "No zip64 end of central directory found for #{@presigned_url}" if eocd_start.nil?
 
         @eocd_record64 = eocd_record[eocd_start..-1]
       end
@@ -130,6 +133,7 @@ module Stash
 
       def central_directory
         return @central_directory if @central_directory
+
         if zip64?
           cd_start, cd_size = central_directory_metadata_from_eocd64(eocd_record64)
         else
@@ -143,18 +147,22 @@ module Stash
         http = HTTP.headers('Range' => "bytes=#{start}-#{the_end}").get(@presigned_url)
         raise Stash::Compressed::InvalidResponse if http.code > 399
 
-        http.body.to_s # now how to convert it to bytes or 4-byte integers?
+        http.body.to_s
       end
 
       def central_directory_metadata_from_eocd(eocd)
         cd_size = parse_little_endian_to_int(eocd[12..15])
         cd_start = parse_little_endian_to_int(eocd[16..19])
+        raise Stash::Compressed::ZipError, "Central directory is out of bounds for #{@presigned_url}" if cd_start + cd_size > size
+
         [ cd_start, cd_size ]
       end
 
       def central_directory_metadata_from_eocd64(eocd64)
         cd_size = parse_little_endian_to_int(eocd64[40..47])
         cd_start = parse_little_endian_to_int(eocd64[48..55])
+        raise Stash::Compressed::ZipError, "Central directory is out of bounds for #{@presigned_url}" if cd_start + cd_size > size
+
         [ cd_start, cd_size ]
       end
 
