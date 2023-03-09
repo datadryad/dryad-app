@@ -10,13 +10,6 @@ module Stash
     class ZipInfo
       attr_reader :presigned_url
 
-
-      EOCD_RECORD_SIZE = 22
-      ZIP64_EOCD_RECORD_SIZE = 56
-      ZIP64_EOCD_LOCATOR_SIZE = 20
-
-      MAX_STANDARD_ZIP_SIZE = 4_294_967_295
-
       def initialize(presigned_url:)
         @presigned_url = presigned_url
       end
@@ -25,34 +18,22 @@ module Stash
         @size ||= get_size
       end
 
-      def zip_directory
-        sio = StringIO.new('', 'rb+')
-        # sio.write('\x50\x4b\x03\x04\x2d\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
-        # sio.write('\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
-        sio.write(central_directory)
-        # set offset to 0
-        sio.write("#{eocd_record32[0..15]}#{"\x20\x00\x00\x00"}#{eocd_record32[20..-1]}")
-        sio.rewind
+      # this gets out the file entries in the central directory
+      # See https://blog.yaakov.online/zip64-go-big-or-go-home/ for a good diagram and a simple case
 
-        File.open('testfile.zip', 'wb') do |f|
-          f.write(sio.read)
-        end
+      # See https://rhardih.io/2021/04/listing-the-contents-of-a-remote-zip-archive-without-downloading-the-entire-file/
+      # but it doesn't handle zip64 files
 
-        sio.rewind
+      # Other resources:
+      # https://en.wikipedia.org/wiki/ZIP_(file_format)
 
-        # rz_central = Zip::CentralDirectory.new
+      # https://betterprogramming.pub/how-to-know-zip-content-without-downloading-it-87a5b30be20a (makes some bad assumptions
+      # about the end of central directory record and is missing the zip64 case)
 
-        # blah = Zip::CentralDirectory.send(:read_central_directory_entries, sio)
+      # I tried both RubyZip and ZipTricks to see if I could get them to parse out files only from the central directory
+      # but they didn't work correctly.  ZipTricks is supposed to be able to handle it, but I could never get it to work.
 
-        byebug
-
-        Zip::InputStream.open(sio) do |io|
-          while (entry = io.get_next_entry)
-            puts "#{entry.name}: '#{io.read}'"
-          end
-        end
-      end
-
+      # I finally had to use the spec and examples and roll my own which I should've started on earlier.
       def file_entries
         file_info = []
 
@@ -62,15 +43,15 @@ module Stash
 
           # compressed size
           ss.pos += 16
-          compressed_size = ss.peek(4).unpack('L<*').first
+          compressed_size = ss.peek(4).unpack('L<').first
 
           # uncompressed size
           ss.pos += 4
-          uncompressed_size = ss.peek(4).unpack('L<*').first
+          uncompressed_size = ss.peek(4).unpack('L<').first
 
           # file name length
           ss.pos += 4
-          file_name_length =  ss.peek(2).unpack("S<*").first
+          file_name_length =  ss.peek(2).unpack("S<").first
 
           # filename
           ss.pos += 18
@@ -80,17 +61,17 @@ module Stash
           ss.pos += file_name_length
 
           # if compressed and uncompressed equal 4294967295 then it's a zip64 file and they need recalculation
-          if compressed_size == 4294967295 && uncompressed_size == 4294967295
+          if compressed_size == 4294967295 || uncompressed_size == 4294967295
 
-            assert(peek(2) == "\x01\x00") # zip64 extra field signature
+            raise "Something is wrong with the zip64 file signature" unless ss.peek(2) == "\x01\x00"
 
             # uncompressed size
             ss.pos += 4
-            uncompressed_size = ss.peek(8).unpack('Q<*').first
+            uncompressed_size = ss.peek(8).unpack('Q<').first
 
             # compressed size
             ss.pos += 8
-            compressed_size = ss.peek(8).unpack('Q<*').first
+            compressed_size = ss.peek(8).unpack('Q<').first
 
             ss.pos += 8
           end
@@ -99,32 +80,6 @@ module Stash
         end
 
         file_info
-      end
-
-      def get_zip_file
-        eocd_record = fetch(start: size - EOCD_RECORD_SIZE, length: EOCD_RECORD_SIZE)
-        if size <= MAX_STANDARD_ZIP_SIZE
-          cd_start, cd_size = get_central_directory_metadata_from_eocd(eocd_record)
-          central_directory = fetch(start: cd_start, length: cd_size)
-          sio = StringIO.new(central_directory)
-          sio.binmode
-          sio << eocd_record
-          sio.rewind
-          return sio
-        else
-          zip64_eocd_record = fetch(start: size - (EOCD_RECORD_SIZE + ZIP64_EOCD_LOCATOR_SIZE + ZIP64_EOCD_RECORD_SIZE),
-                                    length: ZIP64_EOCD_RECORD_SIZE)
-          zip64_eocd_locator = fetch(start: size - (EOCD_RECORD_SIZE + ZIP64_EOCD_LOCATOR_SIZE),
-                                     length: ZIP64_EOCD_LOCATOR_SIZE)
-          cd_start, cd_size = get_central_directory_metadata_from_eocd64(zip64_eocd_record)
-          central_directory = fetch(start: cd_start, length: cd_size)
-          sio = StringIO.new(central_directory, "wb+")
-          sio << zip64_eocd_record
-          sio << zip64_eocd_locator
-          sio << eocd_record
-          sio.rewind
-          return sio
-        end
       end
 
       def get_size
@@ -147,7 +102,9 @@ module Stash
         start_search = 0 if start_search < 0
         eocd_record = fetch(start: start_search, length: size - start_search)
         eocd_start = eocd_record.rindex("\x50\x4b\x05\x06") # find last EOCD record
-        @eocd_record32 = fetch(start: eocd_start, length: size - eocd_start)
+        raise "No end of central directory record found" if eocd_start.nil?
+
+        @eocd_record32 = eocd_record[eocd_start..-1]
       end
 
       # for the zip64 file
@@ -160,14 +117,15 @@ module Stash
         start_search = 0 if start_search < 0
 
         eocd_record = fetch(start: start_search, length: end_search - start_search)
-
         eocd_start = eocd_record.rindex("\x50\x4b\x06\x06") # find other EOCD record
-        @eocd_record64 = fetch(start: eocd_start, length: end_search - eocd_start)
+        raise "No end of central directory record found" if eocd_start.nil?
+
+        @eocd_record64 = eocd_record[eocd_start..-1]
       end
 
       # zip64s have a certain signature in the 32-bit EOCD record
       def zip64?
-        eocd_record32[8..19] == "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+        eocd_record32[16..19].unpack('L<').first == 4294967295 # 0xFFFFFFFF
       end
 
       def central_directory
@@ -201,8 +159,8 @@ module Stash
       end
 
       def parse_little_endian_to_int(little_endian_bytes)
-        # I want L<* for 4 bytes (32-bit) and Q<* for 8 bytes (64-bit)--unsigned, little endian
-        format = ( little_endian_bytes.length == 4 ? 'L<*' : 'Q<*')
+        # I want L< for 4 bytes (32-bit) and Q< for 8 bytes (64-bit)--unsigned, little endian
+        format = ( little_endian_bytes.length == 4 ? 'L<' : 'Q<')
         little_endian_bytes.unpack(format).first
       end
     end
