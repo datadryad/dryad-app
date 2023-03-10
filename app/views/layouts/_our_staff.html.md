@@ -123,6 +123,18 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/sachin.png" alt="Headshot of Sachin Gopinath">
+  <h5>Sachin Gopinath</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Sachin has an M.A. in Biochemistry and 13 years of experience in scientific data curation, content development, project training, and management. He has expertise in article analysis to manually curate molecular interactions, molecular pathways, biomarker-gene-disease associations, and chemical metabolism and toxicity information to build pathway maps and signaling networks.</p>
+</div>
+<div class="bio">
+  <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
+  <h5>Evangeline Janani</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Evangeline has a B.A. in Information Technology. For the last 3 years she has worked in different sectors of the scholarly publishing industry, as a Senior Sales Advisor, an Editorial Quality Analyst, and a Copyeditor, and brings a diverse skill set and experience to data curation. In her spare time, Evangeline enjoys gardening, painting, cooking, and arts & crafts.</p>
+</div>
+<div class="bio">
   <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
   <h5>Kailasha Purushothaman</h5><br/>
   <p><em>Data Curator</em><br/>
@@ -133,6 +145,12 @@
   <h5>Aadithya Sekar</h5><br/>
   <p><em>Data Curator</em><br/>
   Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
+</div>
+<div class="bio">
+  <img src="/images/prerana.jpg" alt="Headshot of Prerana Charakara Sukumar">
+  <h5>Prerana Charakara Sukumar</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Prerana is an experienced scientific analyst with an M.A. in Biochemistry. She has worked in various data curation projects and has expertise in pathway analysis and identification of novel biomarkers, targets, and mechanisms of action based on hypotheses. Prerana is also an active vlogger.</p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
