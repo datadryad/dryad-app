@@ -48,7 +48,7 @@
     <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
   <h5>Donna Okubo</h5><br/>
   <p><em>Partnership Advisor</em><br/>
-  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Sr Strategic Partnership Manager.</p>
+  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Senior Strategic Partnership Manager.</p>
 </div>
 </div>
 
