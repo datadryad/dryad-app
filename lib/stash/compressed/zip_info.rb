@@ -91,7 +91,7 @@ module Stash
         end
 
         info = http.headers['Content-Range']
-        m = info.match(%r{/(\d+)$})
+        m = info&.match(%r{/(\d+)$})
         raise Stash::Compressed::InvalidResponse, 'No valid size returned for #{@presigned_url}' if m.nil?
 
         m[1].to_i
