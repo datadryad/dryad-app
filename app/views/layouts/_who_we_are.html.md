@@ -56,6 +56,7 @@ We are also pleased to partner with the following organizations and initiatives,
 * **Community engagement and standards development**: [Data Curation Network](https://datacurationnetwork.org/), [Research Data Alliance (RDA)](https://www.rd-alliance.org/), [DataCite](https://datacite.org/), [Principles of Open Scholarly Infrastructure](https://openscholarlyinfrastructure.org/)
 * **Data publishing and generalist repository alignment:** [National Institutes of Health Generalist Repository Ecosystem Initiative](https://datascience.nih.gov/news/nih-office-of-data-science-strategy-announces-new-initiative-to-improve-data-access) (GREI)
 * **Metadata enhancement**: [Metadata Game Changers](https://metadatagamechangers.com/), [CEDAR](https://metadatacenter.org/)
+* **Dataset curation and publication**: [Kriyadocs](https://www.kriyadocs.com/), [Molecular Connections](https://molecularconnections.com/)
 
 This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/stash/contact). 
 
