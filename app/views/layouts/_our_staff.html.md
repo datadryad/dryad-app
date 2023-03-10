@@ -56,6 +56,12 @@
 
 <div class="about-bios">
 <div class="bio">
+  <img src="/images/stevediggs.png" alt="Headshot of Steve Diggs">
+  <h5>Steve Diggs</h5><br/>
+  <p><em>Product Manager</em><br/>
+  Steve is a Research Data Specialist with the University of California Office of the President (UCOP), where he serves as the Senior Product Manager for the data publishing portfolio at the University of California Curation Center (UC3). Previously, Steve worked as the Technical Director for the Hydrographic Data Office at the Scripps Institution of Oceanography at UC San Diego. Steve has spent decades focusing on designing and operating full-stack information systems that deliver valuable data to the research community. Besides actively managing data, Steve is a member of several international data and data science teams and currently serves on the Board on Research Data and Information (BRDI) under The National Academies of Sciences, Engineering, and Medicine (NASEM). Having worked directly with researchers in both field and lab settings, Steve understands the challenges and opportunities they face when managing data as an integral part of their scholarly outputs.</p>
+</div>
+<div class="bio">
   <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
   <h5>Ryan Scherle</h5><br/>
   <p><em>Software Developer</em><br/>
