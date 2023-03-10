@@ -79,7 +79,7 @@
   <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
   <h5>Audrey Hamelers</h5><br/>
   <p><em>Software Developer</em><br/>
-  Audrey has many years of experience developing websites and digital repositories, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University.
+  Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
   </p>
 </div>
 </div>
