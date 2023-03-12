@@ -48,13 +48,19 @@
     <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
   <h5>Donna Okubo</h5><br/>
   <p><em>Partnership Advisor</em><br/>
-  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Sr Strategic Partnership Manager.</p>
+  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Senior Strategic Partnership Manager.</p>
 </div>
 </div>
 
 #### Product Development Team
 
 <div class="about-bios">
+<div class="bio">
+  <img src="/images/stevediggs.png" alt="Headshot of Steve Diggs">
+  <h5>Steve Diggs</h5><br/>
+  <p><em>Product Manager</em><br/>
+  Steve is a Research Data Specialist with the University of California Office of the President (UCOP), where he serves as the Senior Product Manager for the data publishing portfolio at the University of California Curation Center (UC3). Previously, Steve worked as the Technical Director for the Hydrographic Data Office at the Scripps Institution of Oceanography at UC San Diego. Steve has spent decades focusing on designing and operating full-stack information systems that deliver valuable data to the research community. Besides actively managing data, Steve is a member of several international data and data science teams and currently serves on the Board on Research Data and Information (BRDI) under The National Academies of Sciences, Engineering, and Medicine (NASEM). Having worked directly with researchers in both field and lab settings, Steve understands the challenges and opportunities they face when managing data as an integral part of their scholarly outputs.</p>
+</div>
 <div class="bio">
   <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
   <h5>Ryan Scherle</h5><br/>
@@ -79,7 +85,7 @@
   <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
   <h5>Audrey Hamelers</h5><br/>
   <p><em>Software Developer</em><br/>
-  Audrey has many years of experience developing websites and digital repositories, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University.
+  Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
   </p>
 </div>
 </div>
@@ -117,6 +123,18 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/sachin.png" alt="Headshot of Sachin Gopinath">
+  <h5>Sachin Gopinath</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Sachin has an M.A. in Biochemistry and 13 years of experience in scientific data curation, content development, project training, and management. He has expertise in article analysis to manually curate molecular interactions, molecular pathways, biomarker-gene-disease associations, and chemical metabolism and toxicity information to build pathway maps and signaling networks.</p>
+</div>
+<div class="bio">
+  <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
+  <h5>Evangeline Janani</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Evangeline has a B.A. in Information Technology. For the last 3 years she has worked in different sectors of the scholarly publishing industry, as a Senior Sales Advisor, an Editorial Quality Analyst, and a Copyeditor, and brings a diverse skill set and experience to data curation. In her spare time, Evangeline enjoys gardening, painting, cooking, and arts & crafts.</p>
+</div>
+<div class="bio">
   <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
   <h5>Kailasha Purushothaman</h5><br/>
   <p><em>Data Curator</em><br/>
@@ -127,6 +145,12 @@
   <h5>Aadithya Sekar</h5><br/>
   <p><em>Data Curator</em><br/>
   Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
+</div>
+<div class="bio">
+  <img src="/images/prerana.jpg" alt="Headshot of Prerana Charakara Sukumar">
+  <h5>Prerana Charakara Sukumar</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Prerana is an experienced scientific analyst with an M.A. in Biochemistry. She has worked in various data curation projects and has expertise in pathway analysis and identification of novel biomarkers, targets, and mechanisms of action based on hypotheses. Prerana is also an active vlogger.</p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
