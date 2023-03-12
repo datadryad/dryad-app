@@ -454,7 +454,7 @@ Rails.application.routes.draw do
   get '/stash/our_governance', to: redirect('stash/about#our-board')
   get '/stash/our_staff', to: redirect('stash/about#our-staff')
   get '/stash/our_advisors', to: redirect('stash/about#our-advisors')
-  get '/stash/our_platform', to: redirect('stash/mission#our_platform')
+  get '/stash/our_platform', to: redirect('stash/mission#our-platform')
   get '/stash/our_mission', to: redirect('stash/mission')
   get '/pages/organization', to: redirect('stash/mission')
   get '/pages/policies', to: redirect('stash/terms')
