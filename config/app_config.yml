@@ -163,7 +163,7 @@ defaults: &DEFAULTS
   s3:
     region: us-west-2
     bucket: dryad-s3-dev
-    key: AKIAIQ5XWADKJZ556SBQ
+    key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: null
   google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
@@ -258,7 +258,7 @@ stage:
   s3:
     region: us-west-2
     bucket: dryad-s3-stg
-    key: AKIAIQ5XWADKJZ556SBQ
+    key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   cedar:
     editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
@@ -325,7 +325,7 @@ production:
   s3:
     region: us-west-2
     bucket: dryad-s3-prd
-    key: AKIAIQ5XWADKJZ556SBQ
+    key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: UA-145629338-1
   google:
