@@ -27,7 +27,7 @@ AND pub_state = 'published'
 ```
 
 UC Authors of datasets grouped by publication year.  I'm assuming the first resource
-where the files show up is the publication year.
+where the files show up is the one with the publication year that is correct.
 ```mysql
 SELECT pub_year, count(pub_year) as number FROM
 (SELECT pub_ids.id, first_pub.min_resource_id, year(res2.publication_date) as pub_year FROM
