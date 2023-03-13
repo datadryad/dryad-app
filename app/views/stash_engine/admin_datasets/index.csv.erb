@@ -1,13 +1,14 @@
-<%= "Title,Status,Author,DOI,Last modified,Last modified by,Size,Publication date, Journal name, Views,Downloads,Citations, Submitting Author Institution" %>
+<%= "Title,DOI,Status,Author,Last modified,Last modified by,Size,Submitted,Published,Journal name,Views,Downloads,Citations,Submitting author institution" %>
 <% @datasets.each do |resource| -%>
 <%
     row = [ resource&.title || '[no title set]',
+            resource.identifier,
             resource&.status,
             resource&.author_names,
-            resource.identifier,
             formatted_datetime(resource&.updated_at),
             resource&.editor_name,
             resource.storage_size,
+            formatted_datetime(resource&.submission_date),
             formatted_datetime(resource&.publication_date),
 	          resource&.publication_name,
             resource.views,
