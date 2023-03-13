@@ -162,7 +162,6 @@ module StashEngine
         end
 
         StashEngine::CurationActivity.statuses.each do |status|
-
           if %w[published embargoed peer_review submitted withdrawn].include?(status)
             it "sends email when '#{status}'" do
               expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
@@ -176,7 +175,32 @@ module StashEngine
               ca.save
             end
           end
+        end
 
+        it "does not send email when resource is 'submitted' a second time" do
+          ca = create(:curation_activity, resource: @resource, status: 'submitted')
+          ca.save
+          ca2 = create(:curation_activity, resource: @resource, status: 'peer_review')
+          ca2.save
+          expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+          ca3 = create(:curation_activity, resource: @resource, status: 'submitted')
+          ca3.save
+        end
+
+        it "does not send email when identifier is 'published' a second time" do
+          ca = create(:curation_activity, resource: @resource, status: 'published')
+          ca.save
+          expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+          new_version = create(:resource, identifier_id: @identifier.id)
+          ca2 = create(:curation_activity, resource: new_version, status: 'published')
+          ca2.save
+        end
+
+        it "does not send email when 'submitted' by a curator" do
+          user = create(:user, role: 'curator')
+          expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
+          ca = create(:curation_activity, resource: @resource, status: 'submitted', user: user)
+          ca.save
         end
       end
 
