@@ -63,7 +63,7 @@ gem 'bootstrap', '~> 4.0'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
-gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping', branch: 'upgrade-ruby'
+gem 'datacite-mapping', '~> 0.5'
 gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
 gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
