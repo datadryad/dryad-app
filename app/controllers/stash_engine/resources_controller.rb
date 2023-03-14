@@ -56,6 +56,7 @@ module StashEngine
       resource.identifier_id = db_id_obj.id
       resource.save
       resource.fill_blank_author!
+      import_manuscript_using_params(resource) if params['journalID']
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
@@ -161,6 +162,28 @@ module StashEngine
     end
 
     private
+
+    # We have parameters requesting to match to a Manuscript object; prefill journal info and import metadata if possible
+    def import_manuscript_using_params(resource)
+      return unless resource && params['journalID'] && params['manu']
+
+      j = StashEngine::Journal.where(journal_code: params['journalID'].downcase).first
+      return unless j
+
+      ident = resource.identifier.id
+
+      # Save the journal and manuscript information in the dataset
+      StashEngine::InternalDatum.create(data_type: 'publicationISSN', value: j.single_issn, identifier_id: ident)
+      StashEngine::InternalDatum.create(data_type: 'publicationName', value: j.title, identifier_id: ident)
+      StashEngine::InternalDatum.create(data_type: 'manuscriptNumber', value: params['manu'], identifier_id: ident)
+
+      # If possible, import existing metadata from the Manuscript objects into the dataset
+      manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params['manu']).first
+      return unless manu
+
+      dryad_import = Stash::Import::DryadManuscript.new(resource: resource, manuscript: manu)
+      dryad_import.populate
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def resource_params
