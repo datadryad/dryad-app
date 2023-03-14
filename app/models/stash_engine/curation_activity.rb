@@ -226,7 +226,9 @@ module StashEngine
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
-        return if previously_submitted? # Don't send multiple emails for the same resource
+
+        # Don't send multiple emails for the same resource, or for submission made by curator
+        return if previously_submitted?
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       when 'withdrawn'
@@ -253,14 +255,16 @@ module StashEngine
     end
 
     def previously_submitted?
-      # ignoring the current CA, is there a submitted status at any point for this resource?
       prev_sub = false
+      # ignoring the current CA, is there a submitted status at any point for this resource?
       resource.curation_activities&.each do |ca|
         if (ca.id != id) && ca.submitted?
           prev_sub = true
           break
         end
       end
+      # was this version submitted by a curator?
+      prev_sub = true if user.curator?
       prev_sub
     end
 
