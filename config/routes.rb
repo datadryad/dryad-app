@@ -464,7 +464,7 @@ Rails.application.routes.draw do
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
-  get '/submit', to: redirect("/stash/resources/new")
+  get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
