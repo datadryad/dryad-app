@@ -26,7 +26,7 @@ module StashEngine
           end
         end
 
-        online = last_run_date >= (Time.now - 45.minutes)
+        online = last_run_date >= (Time.now - 90.minutes)
 
         msg = "The database backup service last ran at '#{last_run_date}'. " unless online
         record_status(online: online, message: msg)
