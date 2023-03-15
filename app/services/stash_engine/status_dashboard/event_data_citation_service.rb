@@ -3,7 +3,7 @@
 module StashEngine
   module StatusDashboard
 
-    class EventdataCitationService < DependencyCheckerService
+    class EventDataCitationService < DependencyCheckerService
 
       LOG_FILE = '/apps/dryad/apps/ui/shared/cron/logs/citation_populator.log'
 

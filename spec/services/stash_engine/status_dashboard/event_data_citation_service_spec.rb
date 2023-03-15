@@ -9,7 +9,7 @@ module StashEngine
   module StatusDashboard
     describe CounterCalculationService do
       before(:each) do
-        @ed_service = StashEngine::StatusDashboard::EventdataCitationService.new
+        @ed_service = StashEngine::StatusDashboard::EventDataCitationService.new
       end
 
       it "returns false if the log file doesn't exist" do
@@ -19,15 +19,15 @@ module StashEngine
       end
 
       it 'returns false if there is no completion message and date in the file' do
-        f = Rails.root.join('spec', 'fixtures', 'eventdata_citation', 'incomplete_sample_log.txt').to_s
+        f = Rails.root.join('spec', 'fixtures', 'event_data_citation', 'incomplete_sample_log.txt').to_s
         result = @ed_service.check_citation_log(f)
         expect(result[0]).to eq(false)
         expect(result[1]).to eq("Log file doesn't end with completion message")
       end
 
       it 'returns false if the last date is long ago' do
-        sample_file = Rails.root.join('spec', 'fixtures', 'eventdata_citation', 'incomplete_sample_log.txt').to_s
-        temp_file = Rails.root.join('spec', 'fixtures', 'eventdata_citation', 'temp_log').to_s
+        sample_file = Rails.root.join('spec', 'fixtures', 'event_data_citation', 'incomplete_sample_log.txt').to_s
+        temp_file = Rails.root.join('spec', 'fixtures', 'event_data_citation', 'temp_log').to_s
         contents = File.read(sample_file) + "Completed populating citations at #{(Time.new - 10.days).iso8601}"
         File.write(temp_file, contents)
 
@@ -39,8 +39,8 @@ module StashEngine
       end
 
       it 'returns true if the log file has completed recently' do
-        sample_file = Rails.root.join('spec', 'fixtures', 'eventdata_citation', 'incomplete_sample_log.txt').to_s
-        temp_file = Rails.root.join('spec', 'fixtures', 'eventdata_citation', 'temp_log').to_s
+        sample_file = Rails.root.join('spec', 'fixtures', 'event_data_citation', 'incomplete_sample_log.txt').to_s
+        temp_file = Rails.root.join('spec', 'fixtures', 'event_data_citation', 'temp_log').to_s
         contents = File.read(sample_file) + "Completed populating citations at #{(Time.new - 3.days).iso8601}"
         File.write(temp_file, contents)
 
