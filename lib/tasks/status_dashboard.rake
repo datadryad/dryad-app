@@ -77,28 +77,12 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'event_data',
-      name: 'Datacite Event Data',
-      description: 'Dryad uses Datacite\'s EventData API to gather Counter statistics',
-      documentation: 'Dryad uses the EventData API to collect statistics for Counter.<br><br>The logic behind this integration can be found in `stash_engine/lib/stash/event_data`',
-      internally_managed: false,
-      status: 1
-    },
-    {
       abbreviation: 'event_data_citation',
       name: 'DataCite Event Data Citations Pre-population',
       description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
       documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
                      'The cron logs to /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log.' \
                      'Looks for "Completed populating citations" and date that is not too old.',
-      internally_managed: true,
-      status: 1
-    },
-    {
-      abbreviation: 'counter_calculation',
-      name: 'Counter Calculation Script',
-      description: 'Dryad calculates stats weekly and submits them to the DataCite hub, required for correct stats',
-      documentation: 'Dryad calculates the stats using a Python library that may run for a few days. https://github.com/CDLUC3/counter-processor .  It should submit stats after running and by done by late in the week (Thursday).  It checks the log to see if it ran.',
       internally_managed: true,
       status: 1
     },
