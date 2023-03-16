@@ -20,7 +20,7 @@ module Stash
                                 is-documented-by is-compiled-by is-reviewed-by is-derived-from is-required-by].freeze
 
       def initialize(doi:)
-        @doi = doi&.downcase # had lots of problems from DataCite eventdata with an upcase and DOIs are supposed to be case insensitive
+        @doi = doi&.downcase # had lots of problems from DataCite event data with an upcase and DOIs are supposed to be case insensitive
         @doi = doi[4..] if doi.start_with?('doi:')
         @base_url = BASE_URL
         @email = APP_CONFIG&.contact_email&.first
