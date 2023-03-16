@@ -5,7 +5,7 @@ default: &default
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
-  abbreviation: "buffalo"
+  abbreviation: "UB"
   short_name: "SUNY Buffalo"
   long_name: "University at Buffalo"
   publisher_id: grid.273335.3
