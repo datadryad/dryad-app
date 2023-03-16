@@ -132,7 +132,7 @@
   <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
   <h5>Evangeline Janani</h5><br/>
   <p><em>Data Curator</em><br/>
-  Evangeline has a B.A. in Information Technology. For the last 3 years she has worked in different sectors of the scholarly publishing industry, as a Senior Sales Advisor, an Editorial Quality Analyst, and a Copyeditor, and brings a diverse skill set and experience to data curation. In her spare time, Evangeline enjoys gardening, painting, cooking, and arts & crafts.</p>
+  Evangeline has a B.Tech in Information Technology. For the last 3 years she has worked in different sectors of the scholarly publishing industry, as a Senior Sales Advisor, an Editorial Quality Analyst, and a Copyeditor, and brings a diverse skill set and experience to data curation. In her spare time, Evangeline enjoys gardening, painting, cooking, and arts & crafts.</p>
 </div>
 <div class="bio">
   <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
