@@ -41,6 +41,10 @@ development: &DEVELOPMENT
 local_dev:
   <<: *DEVELOPMENT
 
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
 stage:
   <<: *default
   #Add any items that need to override the defaults here

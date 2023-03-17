@@ -5,13 +5,16 @@ default: &default
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
-  abbreviation: "KGI"
-  short_name: "Keck Graduate Institute"
-  long_name: "Keck Graduate Institute"
-  publisher_id: grid.419735.d
+  abbreviation: "UPenn"
+  short_name: "University of Pennsylvania"
+  long_name: "University of Pennsylvania"
+  publisher_id: grid.25879.31
   ror_ids:
-    - https://ror.org/00f4jdp82
-  tenant_id: clare-kgi
+    - https://ror.org/00b30xv10
+    - https://ror.org/047939x15
+    - https://ror.org/02917wp91
+    - https://ror.org/04h81rw26
+  tenant_id: upenn
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -20,8 +23,8 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://webauth.kgi.edu/idp/shibboleth
-    entity_domain: kgi.edu
+    entity_id: https://idp.pennkey.upenn.edu/idp/shibboleth
+    entity_domain: upenn.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
@@ -69,6 +72,7 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+  campus_contacts: [""]
 
 test:
   <<: *default

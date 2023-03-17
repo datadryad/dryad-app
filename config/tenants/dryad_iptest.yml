@@ -24,12 +24,13 @@ default: &default
   default_license: cc0
   campus_contacts: ["scott.fisher@ucop.edu"] # for testing
   data_deposit_agreement: false
-  partner_display: true
+  partner_display: false
   covers_dpc: true
 
 development: &DEVELOPMENT
   <<: *default
   #Add any items that need to override the defaults here
+  partner_display: true
 
 
 local_dev:
