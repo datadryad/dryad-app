@@ -7,7 +7,7 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "UIUC"
   short_name: "University of Illinois Urbana-Champaign"
-  long_name: "University of Illinois Urbana-Champaign"
+  long_name: "University of Illinois, Urbana-Champaign"
   publisher_id: grid.35403.31
   ror_ids:
     - https://ror.org/047426m28
