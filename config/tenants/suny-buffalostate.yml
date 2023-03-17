@@ -5,13 +5,13 @@ default: &default
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
-  abbreviation: "KGI"
-  short_name: "Keck Graduate Institute"
-  long_name: "Keck Graduate Institute"
-  publisher_id: grid.419735.d
+  abbreviation: "Buff State"
+  short_name: "Buffalo State"
+  long_name: "SUNY Buffalo State University"
+  publisher_id: grid.468712.e
   ror_ids:
-    - https://ror.org/00f4jdp82
-  tenant_id: clare-kgi
+    - https://ror.org/05ms04m92
+  tenant_id: suny-buffalostate
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -19,9 +19,8 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: shibboleth
-    entity_id: https://webauth.kgi.edu/idp/shibboleth
-    entity_domain: kgi.edu
+    strategy: ip_address
+    ranges: [ "136.183.0.0/16" ]
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
@@ -48,13 +47,6 @@ stage:
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
 
-migration:
-  <<: *default
-  enabled: false
-
-demo:
-  <<: *default
-
 production:
   <<: *default
   #Add any items that need to override the defaults here
@@ -70,6 +62,3 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
 
-test:
-  <<: *default
-  #Add any items that need to override the defaults here
