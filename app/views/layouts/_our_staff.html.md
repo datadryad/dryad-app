@@ -141,12 +141,6 @@
   Kailasha has a diverse range of experiences and expertise in the fields of medical physics, teaching, biophysics imaging and copyediting. She earned her Master of Medical Physics degree from RMIT University and began her career as a Physicist at Peter MacCallum Cancer Center in Australia, where she gained valuable experience in radiation therapy. She has also taught medical physics and biomedical imaging to undergraduate students. In her free time, Kailasha enjoys pursuing creative outlets such as cooking and painting.</p>
 </div>
 <div class="bio">
-  <img src="/images/Aadithya_Sekar_Profile.jpeg" alt="Headshot of Aadithya Sekar">
-  <h5>Aadithya Sekar</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Aadithya has a research background in molecular biology and genetics and graduated with a B.S. in Biochemistry from the University of Washington. In addition to his role as a Data Curator at Dryad, he is training to achieve technical certification in GIS. In his free time, Aadithya enjoys hiking and reading.</p>
-</div>
-<div class="bio">
   <img src="/images/prerana.jpg" alt="Headshot of Prerana Charakara Sukumar">
   <h5>Prerana Charakara Sukumar</h5><br/>
   <p><em>Data Curator</em><br/>
