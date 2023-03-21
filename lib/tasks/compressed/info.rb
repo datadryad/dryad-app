@@ -18,7 +18,7 @@ module Tasks
           next if entry[:file_name].end_with?('/') # skip directories
 
           output << { path: entry[:file_name], size: entry[:uncompressed_size],
-                        mime_type: Rack::Mime.mime_type(File.extname(entry[:file_name])) }
+                      mime_type: Rack::Mime.mime_type(File.extname(entry[:file_name])) }
         end
 
         output
