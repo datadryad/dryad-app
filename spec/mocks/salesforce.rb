@@ -5,12 +5,12 @@ module Mocks
     def mock_salesforce!
       allow(Stash::Salesforce).to receive(:sf_client).and_return(nil)
 
-      test_user = {"id"=>"https://test.salesforce.com/id/00D8A000000MiuBUAS/0053h000004cJ6YAAU",
-                   "asserted_user"=>true,    
-                   "user_id"=>"0053h000004cJ6YAAU",
-                   "organization_id"=>"00D8A000000MiuBUAS",
-                   "username"=>"testuser@datadryad.org",
-                   "display_name"=>"Test User"}
+      test_user = { 'id' => 'https://test.salesforce.com/id/00D8A000000MiuBUAS/0053h000004cJ6YAAU',
+                    'asserted_user' => true,
+                    'user_id' => '0053h000004cJ6YAAU',
+                    'organization_id' => '00D8A000000MiuBUAS',
+                    'username' => 'testuser@datadryad.org',
+                    'display_name' => 'Test User' }
       allow(Stash::Salesforce).to receive(:sf_user).and_return(test_user)
       mock_case_numbers!
       mock_case_find!
