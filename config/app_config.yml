@@ -194,7 +194,7 @@ defaults: &DEFAULTS
   salesforce:
     server: https://dryad--cloudparti.sandbox.lightning.force.com
     login_host: test.salesforce.com
-    username: admin@datadryad.org.cloudparti
+    username: xadmin@datadryad.org.cloudparti
     password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>    
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
