@@ -1,7 +1,7 @@
 require 'byebug'
 module StashEngine
   class DataFile < GenericFile
-    has_many container_files, class_name: 'StashEngine::ContainerFile', dependent: :destroy
+    has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :destroy
 
     def calc_s3_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
