@@ -4,4 +4,3 @@ module StashEngine
     belongs_to :data_file, class_name: 'StashEngine::DataFile'
   end
 end
-
