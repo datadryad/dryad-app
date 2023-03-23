@@ -171,6 +171,10 @@ defaults: &DEFAULTS
     security_token: notoken
     client_id: noclientid
     client_secret: noclientsecret
+  container_file_extensions:
+    - 'zip'
+    - 'tar.gz'
+    - 'tgz'
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
