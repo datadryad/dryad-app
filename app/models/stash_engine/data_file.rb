@@ -95,7 +95,7 @@ module StashEngine
     # This is mostly used to duplicate these files when a new version is created.
     # It will fail getting previous version if the record isn't saved and has no id or resource_id yet.
     def populate_container_files_from_last
-      @container_file_exts ||= APP_CONFIG[:container_file_extensions].map{ |ext| ".#{ext}" }
+      @container_file_exts ||= APP_CONFIG[:container_file_extensions].map { |ext| ".#{ext}" }
       return unless upload_file_name&.end_with?(*@container_file_exts)
 
       old_files = case_insensitive_previous_files
@@ -104,7 +104,7 @@ module StashEngine
       container_files.delete_all # remove any existing container files
 
       to_insert = old_files.first.container_files.map do |container_file|
-        {data_file_id: id, path: container_file.path, mime_type: container_file.mime_type, size: container_file.size}
+        { data_file_id: id, path: container_file.path, mime_type: container_file.mime_type, size: container_file.size }
       end
       StashEngine::ContainerFile.insert_all(to_insert)
     end

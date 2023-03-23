@@ -7,7 +7,7 @@ namespace :compressed do
     db_files =
       StashEngine::DataFile.joins(resource: :current_resource_state).left_joins(:container_files)
         .where("stash_engine_resource_states.resource_state = 'submitted'")
-        .where(container_files: { id: nil } )
+        .where(container_files: { id: nil })
         .where(file_state: %w[copied created])
         .where("upload_file_name LIKE '%.zip' OR upload_file_name LIKE '%.tar.gz' OR upload_file_name LIKE '%.tgz'")
         .order(resource_id: :asc).distinct

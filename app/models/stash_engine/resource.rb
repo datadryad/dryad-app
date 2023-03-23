@@ -83,7 +83,7 @@ module StashEngine
 
                     file.file_state = 'copied' if file.file_state == 'created'
                     file.save # if not saved first then some other queries that depend on id or resource_id will fail
-                    file.populate_container_files_from_last if file.type = 'StashEngine::DataFile'
+                    file.populate_container_files_from_last if file.type == 'StashEngine::DataFile'
                   end
 
                   # I think there was something weird about Amoeba that required this approach

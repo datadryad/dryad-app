@@ -305,7 +305,7 @@ module StashEngine
 
       it "ignores copying if this isn't a container file type" do
         df1 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'created', resource_id: @resource.id)
-        fromulent_contain1 = create(:container_file, data_file: df1)
+        create(:container_file, data_file: df1)
 
         resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         df2 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'copied', resource_id: resource2.id)
@@ -316,9 +316,9 @@ module StashEngine
         expect(df2.container_files.count).to eq(0)
       end
 
-      it "ignores copying if this was a deleted file type" do
+      it 'ignores copying if this was a deleted file type' do
         df1 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'deleted', resource_id: @resource.id)
-        fromulent_contain1 = create(:container_file, data_file: df1)
+        create(:container_file, data_file: df1)
 
         resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         df2 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'created', resource_id: resource2.id)
