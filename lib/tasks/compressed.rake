@@ -17,24 +17,25 @@ namespace :compressed do
     db_files.each_with_index do |db_file, idx|
 
       if db_file.copied? && (old_files = db_file.case_insensitive_previous_files).any?
+        puts "#{idx + 1}/#{count} Copying container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
+             "resource_id: #{db_file.resource_id}) from previous unchanged file"
+
         to_insert = old_files.first.container_files.map do |container_file|
           {data_file_id: db_file.id, path: container_file.path, mime_type: container_file.mime_type, size: container_file.size}
         end
         StashEngine::ContainerFile.insert_all(to_insert)
-
-        puts "#{idx + 1}/#{count} Copied container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
-             "resource_id: #{db_file.resource_id}) from previous unchanged file"
         next
       end
 
       sleep 1 # so we don't bomb merritt with presigned URL requests
+      puts "#{idx + 1}/#{count} Updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
+           "resource_id: #{db_file.resource_id})"
+
       to_insert = Tasks::Compressed::Info.files(db_file: db_file).map do |file_info|
         { data_file_id: db_file.id, path: file_info[:path], mime_type: file_info[:mime_type], size: file_info[:size] }
       end
       StashEngine::ContainerFile.insert_all(to_insert)
 
-      puts "#{idx + 1}/#{count} Updated container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
-           "resource_id: #{db_file.resource_id})"
     rescue StandardError => e
       puts "#{idx + 1}/#{count} Error updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
            "resource_id: #{db_file.resource_id}): #{e.message}"
