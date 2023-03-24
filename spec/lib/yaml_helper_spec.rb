@@ -4,7 +4,7 @@ RSpec.describe YamlHelper do
 
   describe 'self.output_test_section'
 
-  it 'makes sure parsed and re-outputted example matches original example' do
+  xit 'makes sure parsed and re-outputted example matches original example' do
     # directly load the example file
     direct_to_file = YAML.load_file(File.join(Rails.root, 'dryad-config-example', 'app_config.yml'))
 

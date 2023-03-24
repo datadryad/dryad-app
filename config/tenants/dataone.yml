@@ -4,8 +4,8 @@ default: &default
   repository:
     domain: https://merritt-stage.cdlib.org
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/dataone_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dataone_password] %>
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "DataONE"
   short_name: "DataONE"
   long_name: "DataONE"
