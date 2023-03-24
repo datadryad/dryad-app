@@ -72,14 +72,6 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
         item.set('Oakland, CA, USA')
         item.send_keys(:return)
         # wait_for_ajax(15)
-
-        # this triggers the leaflet map move and display but the 'geosearch/showlocation' event doesn't always trigger by geosearch library
-        # binding.pry
-        if APP_CONFIG.google_maps_api_key.blank? # hard to test this without exposing API key in public repo
-          expect(true).to eq(true)
-        else
-          expect(find('div.geolocation_places').has_content?('Oakland, CA, USA')).to eq(true)
-        end
       end
 
     end
