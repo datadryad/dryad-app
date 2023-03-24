@@ -13,6 +13,7 @@ module StashEngine
     has_one :frictionless_report, dependent: :destroy
     amoeba do
       include_association :frictionless_report
+      propagate
     end
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
