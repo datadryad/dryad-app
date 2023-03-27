@@ -2,10 +2,8 @@ class ApplicationController < ActionController::Base
   def process_action(*args)
     super
 
-    # Show Bad Request Error for bad Content-Type or Accept headers
-  rescue ActionDispatch::Http::MimeNegotiation::InvalidType => e
-    render status: 400, plain: e.message
-  rescue URI::InvalidURIError => e
+    # Show Bad Request Error for bad Content-Type/Accept headers, Invalid URI
+  rescue ActionDispatch::Http::MimeNegotiation::InvalidType, URI::InvalidURIError => e
     render status: 400, plain: e.message
   end
 
