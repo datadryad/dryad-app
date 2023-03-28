@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<% if current_user.limited_curator? || current_user.role == 'admin' %>
+<% if Stash::Salesforce.sf_user && (current_user.limited_curator? || current_user.role == 'admin') %>
   <div id="salesforce_links" style="clear: both">
     <div style="float: left"><h2>Salesforce cases</h2></div>
     <div style="float: right">
