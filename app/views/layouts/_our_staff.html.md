@@ -18,10 +18,9 @@
   </p>
 </div>
 <div class="bio">
-    <img src="/images/mark.jpg" alt="Headshot of Mark Kurtz">
+  <img src="/images/mark.jpg" alt="Headshot of Mark Kurtz">
   <h5>Mark Kurtz</h5><br/>
-  <p><em>Head of Business Operations</em><br/>
-  
+  <p><em>Head of Business Operations</em><br/>  
   Mark has worked in academic publishing for over 20 years, with experience
   ranging from editorial management to strategic development, in academic,
   nonprofit, and commercial settings. He has held positions at the
@@ -32,23 +31,29 @@
   </p>
 </div>
 <div class="bio">
-    <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
+  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
   <h5>Sarah Lippincott</h5><br/>
   <p><em>Head of Community Engagement</em><br/>
   Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Head of Community Engagement at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.
 </p>
 </div>
 <div class="bio">
-    <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
+  <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
   <h5>Jess Herzog</h5><br/>
   <p><em>Head of Publishing Services</em><br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 <div class="bio">
-    <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
+  <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
   <h5>Donna Okubo</h5><br/>
   <p><em>Partnership Advisor</em><br/>
   Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Senior Strategic Partnership Manager.</p>
+</div>
+<div class="bio">
+  <img src="/images/angelica.jpg" alt="Headshot of Donna Okubo">
+  <h5>Angelica Del Sette</h5><br/>
+  <p><em>Administrative Assistant</em><br/>
+  Angelica is an Executive Assistant with over 15 years working at C-Suite level with experience in banking, pharmaceutical, and venture capital organisations with a particular focus on administration, project management, and MS Office 365. In South Africa, she was involved in implementing software across large organisations, workflow and process management and team administration. During her time in Italy she worked alongside political figures and entrepreneurs assisting with campaigns and business administration. She grew up in Johannesburg, South Africa, and has worked in the Netherlands, Italy and the UK.</p>
 </div>
 </div>
 
