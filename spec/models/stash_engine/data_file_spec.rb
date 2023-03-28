@@ -286,6 +286,50 @@ module StashEngine
       end
     end
 
+    describe :populate_container_files_from_last do
+      it 'copies the files from the last version of the resource' do
+        df1 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'created', resource_id: @resource.id)
+        fromulent_contain1 = create(:container_file, data_file: df1)
+
+        resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        df2 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'copied', resource_id: resource2.id)
+        df2.populate_container_files_from_last
+
+        df2.reload
+
+        cf = df2.container_files.first
+        expect(cf.path).to eql(fromulent_contain1.path)
+        expect(cf.mime_type).to eql(fromulent_contain1.mime_type)
+        expect(cf.size).to eql(fromulent_contain1.size)
+      end
+
+      it "ignores copying if this isn't a container file type" do
+        df1 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'created', resource_id: @resource.id)
+        create(:container_file, data_file: df1)
+
+        resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        df2 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'copied', resource_id: resource2.id)
+        df2.populate_container_files_from_last
+
+        df2.reload
+
+        expect(df2.container_files.count).to eq(0)
+      end
+
+      it 'ignores copying if this was a deleted file type' do
+        df1 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'deleted', resource_id: @resource.id)
+        create(:container_file, data_file: df1)
+
+        resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        df2 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'created', resource_id: resource2.id)
+        df2.populate_container_files_from_last
+
+        df2.reload
+
+        expect(df2.container_files.count).to eq(0)
+      end
+    end
+
     describe :trigger_frictionless do
       it 'calls client.invoke for an AWS lambda function and returns a 202' do
         allow(StashEngine::ApiToken).to receive(:token).and_return('123456789ABCDEF')
