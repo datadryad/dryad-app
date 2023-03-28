@@ -5,7 +5,6 @@ defaults: &DEFAULTS
   ezid:
     host: ezid.cdlib.org
     port: 443
-  google_maps_api_key: <add_key_here>
   contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
   orcid:
     site: https://sandbox.orcid.org/
@@ -21,7 +20,6 @@ defaults: &DEFAULTS
   zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
   contact_email: ["changeme@example.org"]
   default_tenant: dryad
-  old_dryad_access_token: <REPLACE-ME>
   old_dryad_url: https://api.datadryad.org
   counter:
     account: CDL.DASH
@@ -190,10 +188,8 @@ local:
 
 test:
   <<: *DEFAULTS
-  google_maps_api_key: ~
   repository: Mocks::Repository::Repository
   contact_email: ["contact1@example.edu", "contact2@example.edu"]
   default_tenant: localhost
-  old_dryad_access_token: bad_token
   old_dryad_url: https://api.datadryad.example.org
 

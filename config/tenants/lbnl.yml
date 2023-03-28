@@ -46,8 +46,8 @@ stage:
   repository:
     domain: https://merritt-stage.cdlib.org
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/lbnl_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_lbnl_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_lbnl_password] %> 
+    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
 
 production:
   <<: *default
