@@ -593,10 +593,10 @@ namespace :identifiers do
     CSV.open(tiered_filename, 'w') do |csv|
       csv << %w[SponsorName JournalName Count Price]
       sponsor_summary = []
-      StashEngine::JournalOrganizations.each do |org|
+      StashEngine::JournalOrganization.all.each do |org|
         journals = org.journals_sponsored_deep
         journals.each do |j|
-          next unless j.payment_plan_type == 'TIERED'
+          next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
 
           journal_item_count = 0
           sc_report.each do |item|
@@ -607,10 +607,11 @@ namespace :identifiers do
           end
           csv << [org.name, j.title, journal_item_count, tiered_price(journal_item_count)]
         end
-        unless sponsor_summary.blank?
-          write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
-                                       table: sponsor_summary)
-        end
+        next if sponsor_summary.blank?
+
+        write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
+                                     table: sponsor_summary)
+        sponsor_summary = []
       end
     end
 
