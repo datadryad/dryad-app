@@ -1,5 +1,5 @@
 <ul class="member-list">
-  <li>American Academy for the Advancement of Science</li>
+  <li>American Association for the Advancement of Science</li>
   <li>American Genetic Association</li>
   <li>American Geophysical Union</li>
   <li>American Medical Informatics Association</li>
