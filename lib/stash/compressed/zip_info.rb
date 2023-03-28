@@ -9,12 +9,10 @@ module Stash
     class ZipInfo
       attr_reader :presigned_url
 
+      include Stash::Compressed::S3Size
+
       def initialize(presigned_url:)
         @presigned_url = presigned_url
-      end
-
-      def size
-        @size ||= calc_size
       end
 
       # this gets out the file entries in the central directory
@@ -81,18 +79,6 @@ module Stash
         end
 
         file_info
-      end
-
-      def calc_size
-        # the presigned URLs are only authorized as get requests, not head, so must do GET for size
-        http = HTTP.headers('Range' => 'bytes=0-0').get(@presigned_url)
-        raise Stash::Compressed::InvalidResponse, "Status code #{http.code} returned for GET range 0-0 for #{@presigned_url}" if http.code > 399
-
-        info = http.headers['Content-Range']
-        m = info&.match(%r{/(\d+)$})
-        raise Stash::Compressed::InvalidResponse, "No valid size returned for #{@presigned_url}" if m.nil?
-
-        m[1].to_i
       end
 
       # for the standard 32-bit zip file
