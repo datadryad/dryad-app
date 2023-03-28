@@ -28,7 +28,6 @@ defaults: &DEFAULTS
   helpdesk_email: dryad.helpdesk@mailinator.com
   send_journal_published_notices: false
   default_tenant: dryad
-  old_dryad_access_token: <%= Rails.application.credentials[Rails.env.to_sym][:old_dryad_access_token] %>
   old_dryad_url: https://v1.datadryad.org
   counter:
     account: CDL.DASH
@@ -166,7 +165,6 @@ defaults: &DEFAULTS
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: null
-  google_maps_api_key: <%= Rails.application.credentials[Rails.env.to_sym][:google_maps_api_key] %>
   google_recaptcha_sitekey: 6Lfhn5kiAAAAAIzZPQEGRa43cDJz-rNVxRcQIkU4
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
@@ -310,7 +308,6 @@ production:
     api: https://api.orcid.org
   submission_bc_emails: [""]
   send_journal_published_notices: true
-  old_dryad_access_token: <%= Rails.application.credentials[Rails.env.to_sym][:old_dryad_access_token] %>
   zenodo:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
     base_url: https://zenodo.org

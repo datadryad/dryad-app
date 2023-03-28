@@ -2,7 +2,7 @@
 require 'httparty'
 
 namespace :old_dryad_api do
-  desc 'Get a random manuscript ID/metadata from the Dryad classic API to ease manual testing of autofill'
+  desc 'DEPRECATED -- Get a random manuscript ID/metadata from the Dryad classic API to ease manual testing of autofill'
   task manuscript: :environment do # loads rails environment
     # the ones from http://datadryad.org/pages/journalLookup that don't say they cost $120 is mostly where I got these journals
     pub_issns = %w[2168-0450 1435-0645 1465-7279 1744-957X 1744-7429 1472-4642 1600-0587 2045-7758 2050-084X 2312-0541
