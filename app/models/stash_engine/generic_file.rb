@@ -12,7 +12,7 @@ module StashEngine
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
     amoeba do
-      enable
+      include_association :frictionless_report
       propagate
     end
 

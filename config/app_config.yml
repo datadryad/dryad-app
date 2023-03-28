@@ -204,6 +204,10 @@ defaults: &DEFAULTS
     participation_field_id: 00N5400000ifBPB
     comment_field_id: 00N5400000ifBP4
   mce_key: <%= Rails.application.credentials[Rails.env.to_sym][:tiny_mce] %>
+  container_file_extensions:
+    - 'zip'
+    - 'tar.gz'
+    - 'tgz'
 
 development: &DEVELOPMENT
   <<: *DEFAULTS

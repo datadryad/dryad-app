@@ -81,10 +81,9 @@ module StashEngine
                   new_resource.generic_files.each do |file|
                     raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-                    if file.file_state == 'created'
-                      file.file_state = 'copied'
-                      file.save
-                    end
+                    file.file_state = 'copied' if file.file_state == 'created'
+                    file.save # if not saved first then some other queries that depend on id or resource_id will fail
+                    file.populate_container_files_from_last if file.type == 'StashEngine::DataFile'
                   end
 
                   # I think there was something weird about Amoeba that required this approach
