@@ -206,7 +206,7 @@ module Stash
           @sf_client
         rescue StandardError => e
           Rails.logger.error("Failed to initialize Salesforce client -- #{e}")
-          nil
+          @sf_client = nil
         end
       end
 

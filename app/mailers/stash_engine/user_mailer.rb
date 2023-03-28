@@ -11,7 +11,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           bcc: @resource&.tenant&.campus_contacts,
+           bcc: status == 'published' ? @resource&.tenant&.campus_contacts : '',
            template_name: status,
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
@@ -26,7 +26,6 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           bcc: @resource&.tenant&.campus_contacts,
            template_name: withdrawn_by_journal,
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
