@@ -139,7 +139,27 @@ Updating journals for payment plans and integrations
 ====================================================
 
 When a journal changes payment plans, simply update the `payment_plan_type`
-field.
+field. If the change needs to be retroactive, use this function in the Rails console,
+and then re-generate any needed shopping cart reports:
+```
+# Update the payment types for datasets associated with a journal in a given month
+# usage: change_journal_payment_type(year_month: '2023-01',
+#                                    journal_id: 220, 
+#                                    new_payment_type: 'journal-DEFERRED')
+
+def change_journal_payment_type(year_month:, journal_id:, new_payment_type:)
+  limit_date = Date.parse("#{year_month}-01")
+  limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
+  StashEngine::Identifier.publicly_viewable.where(limit_date_filter).each do |i|
+  	approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+    next unless approval_date_str&.start_with?(year_month)
+    next unless i.journal&.id == journal_id
+	puts "#{i.identifier} -- #{i.payment_type} --> #{new_payment_type}"
+	i.update(payment_type: new_payment_type)
+  end
+  nil
+end
+```
 
 When a journal integrates with the email process, the journal must have the
 `manuscript_number_regex` to properly process the email messages. The 
