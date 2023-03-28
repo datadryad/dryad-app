@@ -592,24 +592,26 @@ namespace :identifiers do
     puts "Writing summary report to #{tiered_filename}"
     CSV.open(tiered_filename, 'w') do |csv|
       csv << %w[SponsorName JournalName Count Price]
-      curr_sponsor = nil
       sponsor_summary = []
-      StashEngine::Journal.where(payment_plan_type: 'TIERED').order(:sponsor_id, :title).each do |j|
-        if j.sponsor&.name != curr_sponsor
-          write_tiered_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
-          sponsor_summary = []
-          curr_sponsor = j.sponsor&.name
-        end
-        journal_item_count = 0
-        sc_report.each do |item|
-          if item['JournalISSN'] == j.single_issn
-            journal_item_count += 1
-            sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
+      StashEngine::JournalOrganizations.each do |org|
+        journals = org.journals_sponsored_deep
+        journals.each do |j|
+          next unless j.payment_plan_type == 'TIERED'
+
+          journal_item_count = 0
+          sc_report.each do |item|
+            if item['JournalISSN'] == j.single_issn
+              journal_item_count += 1
+              sponsor_summary << [item['DOI'], j.title, item['ApprovalDate']]
+            end
           end
+          csv << [org.name, j.title, journal_item_count, tiered_price(journal_item_count)]
         end
-        csv << [j.sponsor&.name, j.title, journal_item_count, tiered_price(journal_item_count)]
+        unless sponsor_summary.blank?
+          write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
+                                       table: sponsor_summary)
+        end
       end
-      write_tiered_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
     end
 
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
