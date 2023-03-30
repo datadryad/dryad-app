@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 module TinymceHelper
 
   # tox tox-tinymce
