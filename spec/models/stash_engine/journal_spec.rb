@@ -80,6 +80,17 @@ module StashEngine
         @journal.update(issn: nil)
         expect(@journal.single_issn).to be(nil)
       end
+
+      it 'gets issn_array' do
+        @journal.update(issn: @issn1)
+        expect(@journal.issn_array).to eq([@issn1])
+
+        @journal.update(issn: [@issn2, @issn3])
+        expect(@journal.issn_array).to eq([@issn2, @issn3])
+
+        @journal.update(issn: nil)
+        expect(@journal.issn_array).to be(nil)
+      end
     end
 
     describe '#will_pay?' do

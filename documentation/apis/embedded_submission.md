@@ -99,7 +99,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "curationStatus": "In Progress",
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
-  "userId": 37182,
+  "userId": "0000-0003-0597-4085",
   "license": "https://creativecommons.org/publicdomain/zero/1.0/",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
