@@ -2,7 +2,7 @@ module Stash
   module Compressed
     module S3Size
       BASE_HTTP = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-                      .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
+        .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
 
       # size and calc_size are the same as in ZipInfo maybe split into a base class or module
       def size
