@@ -38,6 +38,7 @@ namespace :compressed do
       puts "#{idx + 1}/#{count} Error updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
            "resource_id: #{db_file.resource_id}): #{e.message}"
       puts "  Error: #{e.class} #{e.message}\n  #{e.backtrace.join("\n  ")}"
+      db_file.container_files.delete_all
     end
 
     puts "#{Time.new.iso8601} Finished update of container_contents for compressed files"
