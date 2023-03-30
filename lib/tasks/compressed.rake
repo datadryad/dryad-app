@@ -42,4 +42,29 @@ namespace :compressed do
 
     puts "#{Time.new.iso8601} Finished update of container_contents for compressed files"
   end
+
+  # a simplified version of the above task that only updates one resource for testing and doesn't catch errors
+  task update_one: :environment do
+    $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
+
+    if ARGV.length != 1
+      puts 'Please enter the file id as the only argument to this task'
+      exit
+    end
+
+    db_file = StashEngine::DataFile.find(ARGV[0])
+
+    puts "Updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
+         "resource_id: #{db_file.resource_id})"
+
+    db_file.container_files.delete_all
+
+    to_insert = Tasks::Compressed::Info.files(db_file: db_file).map do |file_info|
+      { data_file_id: db_file.id, path: file_info[:path], mime_type: file_info[:mime_type], size: file_info[:size] }
+    end.first(1000)
+
+    StashEngine::ContainerFile.insert_all(to_insert)
+
+    exit
+  end
 end
