@@ -128,7 +128,7 @@ module Stash
 
       def fetch(start:, length:)
         the_end = start + length - 1
-        http = HTTP.headers('Range' => "bytes=#{start}-#{the_end}").get(@presigned_url)
+        http = BASE_HTTP.headers('Range' => "bytes=#{start}-#{the_end}").get(@presigned_url)
         raise Stash::Compressed::InvalidResponse if http.code > 399
 
         http.body.to_s
