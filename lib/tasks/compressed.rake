@@ -32,7 +32,12 @@ namespace :compressed do
         { data_file_id: db_file.id, path: file_info[:path], mime_type: file_info[:mime_type], size: file_info[:size] }
       end.first(1000) # only do 1000 if there are more than that, they are probably repetitive
 
-      StashEngine::ContainerFile.insert_all(to_insert)
+      if to_insert.empty?
+        puts "  No files found in #{db_file.upload_file_name}. Zip may be corrupted."
+      else
+        StashEngine::ContainerFile.insert_all(to_insert)
+      end
+
 
     rescue StandardError => e
       puts "#{idx + 1}/#{count} Error updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
@@ -64,7 +69,11 @@ namespace :compressed do
       { data_file_id: db_file.id, path: file_info[:path], mime_type: file_info[:mime_type], size: file_info[:size] }
     end.first(1000)
 
-    StashEngine::ContainerFile.insert_all(to_insert)
+    if to_insert.empty?
+      puts "  No files found in #{db_file.upload_file_name}. Zip may be corrupted."
+    else
+      StashEngine::ContainerFile.insert_all(to_insert)
+    end
 
     exit
   end
