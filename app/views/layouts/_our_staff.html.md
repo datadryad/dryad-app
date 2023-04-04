@@ -18,6 +18,13 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/maria.jpg" alt="Headshot of Maria Guerreiro">
+  <h5>Maria Guerreiro</h5><br/>
+  <p><em>Head of Partnership Development</em><br/>
+  Maria is an open science enthusiast who enjoys working collaboratively with researchers and other stakeholders in scholarly communication to drive positive change. Maria joins Dryad after more than ten years in academic publishing, primarily at the not-for-profit and open-access journal eLife, where she was Head of Journal Development and worked closely with scientists, research organizations and funding agencies in the biomedical and life sciences space in initiatives to drive growth, foster community engagement and promote best practices in peer review and scientific publishing. At Dryad, Maria helps grow the community of academic and research institutions, research funders, journals and publishers that invest in us to pursue the open sharing and full reuse of all research data.
+  </p>
+</div>
+<div class="bio">
   <img src="/images/mark.jpg" alt="Headshot of Mark Kurtz">
   <h5>Mark Kurtz</h5><br/>
   <p><em>Head of Business Operations</em><br/>  
