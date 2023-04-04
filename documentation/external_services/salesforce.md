@@ -92,3 +92,20 @@ To create/edit fields in Salesforce objects:
 - Object Manager
 - Select the type of object (e.g., "case")
 - Fields and Relationships
+
+
+Managing accounts
+==================
+
+If a user has problems with the Salesforce authenticator app, reset their connection:
+1. Go to the Salesforce Setup
+2. Click Users in the Quick Find box
+3. Click on the users name that you wish to reset
+4. Click disconnect next to App Registration: Salesforce Authenticator
+5. Ask the user to log back in and reconnect their Salesforce Authenticator app.
+
+MFA Notes:
+- MFA does not apply for API logins, not the Dryad codebase
+- In the Salesforce user settings, MFA is controlled by the user's Profile
+  - To force a user to MFA, edit the Profile to add permission `Multi-Factor Authentication for User Interface Logins`
+  - To exclude a user from MFA, add permission `Waive Multi-Factor Authentication for Exempt User`
