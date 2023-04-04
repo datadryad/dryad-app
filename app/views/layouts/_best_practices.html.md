@@ -55,8 +55,8 @@
 
 <ul>
 <li>To maximize accessibility, reusability and preservability, share data in non-proprietary <a href="https://en.wikipedia.org/wiki/Open_format">open formats</a> when possible (see <a href="#preferred-file-formats">preferred formats</a>). This ensures your data will be accessible by most people.</li>
-<li>Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a service like <a href="https://goodtables.io/">goodTables</a> can identify missing data and data type formatting problems.</li>
-<li>Files compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (<code>.zip, .7z, .tar.gz</code>). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.</li>
+<li>Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a tool like <a href="https://framework.frictionlessdata.io/">Frictionless validation</a> can identify missing data and data type formatting problems.</li>
+<li>File compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (<code>.zip, .7z, .tar.gz</code>). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.</li>
 </ul>
 
 
@@ -183,6 +183,5 @@ DatasetB.tar.gz
 <li><a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a></li>
 <li><a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/">Introduction to Open Science: Why data versioning and data care practices are key for science and social science</a></li>
 <li><a href="https://www.force11.org/group/fairgroup/fairprinciples">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)</a></li>
-<li><a href="https://try.goodtables.io/">goodTables - free online service for tabular data validation</a></li>
 <li><a href="http://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989">Data organization in spreadsheets</a></li>
 </ul>
