@@ -61,6 +61,7 @@ gem 'blacklight'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.0'
 gem 'concurrent-ruby', '~> 1.1.10'
+gem 'charlock_holmes', '~> 0.7.7'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', '~> 0.5'

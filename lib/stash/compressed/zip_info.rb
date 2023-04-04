@@ -1,5 +1,6 @@
 require 'http'
 require 'stringio'
+require 'charlock_holmes/string'
 
 module Stash
   module Compressed
@@ -52,7 +53,9 @@ module Stash
 
           # filename
           ss.pos += 18
-          file_name = ss.peek(file_name_length).force_encoding('utf-8')
+          file_name = ss.peek(file_name_length)
+          enc = file_name.detect_encoding[:encoding] || 'UTF-8'
+          file_name.force_encoding(enc)
 
           # forward past the file name
           ss.pos += file_name_length
