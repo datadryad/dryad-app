@@ -173,6 +173,7 @@ defaults: &DEFAULTS
     - 'zip'
     - 'tar.gz'
     - 'tgz'
+  datacite_data_repo_id: dryad_testing_repo_id
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
