@@ -38,7 +38,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@rails/webpacker": "^5.4.3",
-    "@tinymce/tinymce-react": "^3.13.0",
+    "@tinymce/tinymce-react": "^4.3.0",
     "aws-sdk": "^2.1060.0",
     "axios": "^0.25.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",

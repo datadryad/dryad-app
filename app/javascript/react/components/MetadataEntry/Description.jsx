@@ -53,13 +53,11 @@ export default function Description({
           height: 300,
           width: '100%',
           menubar: false,
-          plugins: [
-            'advlist anchor autolink charmap code directionality hr help lists link table textcolor',
-          ],
-          toolbar: 'help | formatselect | '
+          plugins: 'advlist anchor autolink charmap code directionality help lists link table',
+          toolbar: 'help | blocks | '
                   + 'bold italic strikethrough forecolor backcolor removeformat | alignleft aligncenter '
                   + 'alignright | bullist numlist outdent indent | '
-                  + 'table link hr blockquote | superscript subscript charmap | undo redo | fontsizeselect | ltr rtl '
+                  + 'table link hr blockquote | superscript subscript charmap | undo redo | fontsize | ltr rtl '
                   + `${(isCurator ? 'code' : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
