@@ -32,7 +32,7 @@ module Stash
         begin
           file_info = []
           # streams the response body in chunks
-          response = HTTP.get(@presigned_url)
+          response = BASE_HTTP.get(@presigned_url)
 
           raise HTTP::Error, "Bad status code #{response&.status&.code}" unless response.status.ok?
 

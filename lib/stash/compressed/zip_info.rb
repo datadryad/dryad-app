@@ -89,7 +89,11 @@ module Stash
         start_search = 0 if start_search < 0
         eocd_record = fetch(start: start_search, length: size - start_search)
         eocd_start = eocd_record.rindex("\x50\x4b\x05\x06") # find last EOCD record
-        raise Stash::Compressed::ZipError, "No end of central directory record found for #{@presigned_url}" if eocd_start.nil?
+
+        if eocd_start.nil?
+          raise Stash::Compressed::ZipError, "No end of central directory record found for #{@presigned_url}, likely " \
+                                             'not a zip file, a multivolume zip or corrupted (such as transferred in ASCII mode)'
+        end
 
         @eocd_record32 = eocd_record[eocd_start..]
       end
@@ -128,7 +132,7 @@ module Stash
 
       def fetch(start:, length:)
         the_end = start + length - 1
-        http = HTTP.headers('Range' => "bytes=#{start}-#{the_end}").get(@presigned_url)
+        http = BASE_HTTP.headers('Range' => "bytes=#{start}-#{the_end}").get(@presigned_url)
         raise Stash::Compressed::InvalidResponse if http.code > 399
 
         http.body.to_s
