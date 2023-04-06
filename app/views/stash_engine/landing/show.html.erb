@@ -1,4 +1,9 @@
 <% @page_title = "Data -- #{@resource.clean_title}" %>
+<!-- Track View for COUNTER and new DataCite metrics widget -->
+<script defer data-doi="<%= @resource&.identifier&.identifier %>"
+				data-repoid="<%= APP_CONFIG[:datacite_data_repo_id] %>"
+				data-metric="view"
+				src="https://cdn.jsdelivr.net/npm/@datacite/datacite-tracker"></script>
 <div class="c-columns">
 	<main class="t-landing__main c-columns__content">
 		<% if @user_type == 'privileged' %>

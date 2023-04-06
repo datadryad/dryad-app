@@ -206,6 +206,7 @@ defaults: &DEFAULTS
     - 'zip'
     - 'tar.gz'
     - 'tgz'
+  datacite_data_repo_id: dryad_testing_repo_id
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
@@ -348,6 +349,7 @@ production:
     org_id: 00D3h000003z3po
     participation_field_id: 00N3h00000Ix75q
     comment_field_id: 00N3h00000Ix75j
+  datacite_data_repo_id: da-80l49bsf
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
