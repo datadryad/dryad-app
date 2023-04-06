@@ -32,6 +32,15 @@ module StashEngine
       issn
     end
 
+    # Return an array of ISSNs, even if the journal contains a single ISSN
+    def issn_array
+      return nil unless issn.present?
+      return issn if issn.is_a?(Array)
+      return JSON.parse(issn) if issn.start_with?('[')
+
+      [issn]
+    end
+
     def self.find_by_title(title)
       return unless title.present?
 
