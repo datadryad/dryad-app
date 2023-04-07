@@ -54,8 +54,9 @@ module Stash
           # filename
           ss.pos += 18
           file_name = ss.peek(file_name_length)
-          enc = file_name.detect_encoding[:encoding] || 'UTF-8'
-          file_name.force_encoding(enc)
+          enc = file_name.detect_encoding
+          file_name = CharlockHolmes::Converter.convert file_name, enc[:encoding], 'UTF-8'
+          file_name.force_encoding('UTF-8')
 
           # forward past the file name
           ss.pos += file_name_length
