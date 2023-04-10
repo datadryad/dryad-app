@@ -6,6 +6,11 @@ defaults: &DEFAULTS
     host: ezid.cdlib.org
     port: 443
   contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
+  repository:
+    domain: https://merritt-test.example.org
+    endpoint: "https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: horsecat
+    password: MyHorseCatPassword
   orcid:
     site: https://sandbox.orcid.org/
     authorize_url: https://sandbox.orcid.org/oauth/authorize

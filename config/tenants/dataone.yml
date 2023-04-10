@@ -1,11 +1,6 @@
 # I think we need to keep UC Press and DataONE (but disabled) for the DOI metadata update info in here
 default: &default
   enabled: false
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/dataone_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "DataONE"
   short_name: "DataONE"
   long_name: "DataONE"
@@ -43,11 +38,6 @@ demo:
 production:
   <<: *default
   manager_email: [""]
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/dataone_dash"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: datacite
     prefix: "10.15146"
