@@ -83,7 +83,7 @@ module StashEngine
       # this is a guard against setting something completed that isn't and that will make this method fail
       return false unless available_in_merritt? # this also sets @mrt_results member variable so we don't have to redo the query again
 
-      merritt_id = "#{resource.tenant.repository.domain}/d/#{@mrt_results['ark']}"
+      merritt_id = "#{APP_CONFIG[:repository][:domain]}/d/#{@mrt_results['ark']}"
       StashEngine.repository.harvested(identifier: resource.identifier, record_identifier: merritt_id)
 
       if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1

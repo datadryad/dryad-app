@@ -65,15 +65,6 @@ module StashEngine
       "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/auth/"
     end
 
-    def sword_params
-      repository = self.repository
-      {
-        collection_uri: repository.endpoint,
-        username: repository.username,
-        password: repository.password
-      }
-    end
-
     def self.exists?(tenant_id)
       TENANT_CONFIG.key?(tenant_id)
     end

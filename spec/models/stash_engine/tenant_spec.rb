@@ -40,7 +40,6 @@ module StashEngine
         tenant = Tenant.find('dataone')
         expect(tenant.tenant_id).to eq('dataone')
         expect(tenant.long_name).to eq('DataONE')
-        expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
         expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('author_match')
         # not going to check all since we've already tried that in initialize and not needed
@@ -50,7 +49,6 @@ module StashEngine
         tenant = Tenant.find_by_long_name('Dryad Data Platform')
         expect(tenant.tenant_id).to eq('dryad')
         expect(tenant.long_name).to eq('Dryad Data Platform')
-        expect(tenant.repository.domain).to eq('http://merritt.repository.domain.here')
         expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('none')
         # not going to check all since we've already tried that in initialize and not needed
@@ -79,18 +77,6 @@ module StashEngine
         tenant = Tenant.find('ucop')
         login_path = tenant.shibboleth_login_path
         expect(login_path).to eq('https://localhost/Shibboleth.sso/Login?target=https%3A%2F%2Flocalhost%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu')
-      end
-    end
-
-    describe :sword_params do
-      it 'returns the Stash::Sword::Client parameter hash' do
-        tenant = Tenant.find('ucop')
-        expected = {
-          collection_uri: 'http://merritt.repository.domain.here/mrtsword/collection/dash_cdl',
-          username: 'submitter.username',
-          password: 'submitter.password'
-        }
-        expect(tenant.sword_params).to eq(expected)
       end
     end
 

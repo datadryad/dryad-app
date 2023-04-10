@@ -23,7 +23,7 @@ module Stash
 
         protodomain, id = @resource.merritt_protodomain_and_local_id
         url = "#{protodomain}/dm/#{id}"
-        client = HttpClient.new(tenant: tenant).client
+        client = HttpClient.new().client
         timeouts(client)
         resp = client.get(url, follow_redirect: true)
         return nil unless resp.http_header.status_code == 200
