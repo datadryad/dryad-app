@@ -5,9 +5,9 @@ module Tasks
       # maps into container_contents format, using appropriate compressed processor, eliminates directory entries and returns array of hashes
       def self.files(db_file:)
         entries =
-          if db_file.upload_file_name.end_with?('.zip')
+          if db_file.upload_file_name.downcase.end_with?('.zip')
             Stash::Compressed::ZipInfo.new(presigned_url: db_file.merritt_s3_presigned_url).file_entries
-          elsif db_file.upload_file_name.end_with?('.tar.gz') || db_file.upload_file_name.end_with?('.tgz')
+          elsif db_file.downcase.upload_file_name.downcase.end_with?('.tar.gz', '.tgz')
             Stash::Compressed::TarGz.new(presigned_url: db_file.merritt_s3_presigned_url).file_entries
           else
             raise Stash::Compressed::Error, "Unknown file type for #{db_file.upload_file_name}"
