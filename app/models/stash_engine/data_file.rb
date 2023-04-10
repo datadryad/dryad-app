@@ -106,7 +106,7 @@ module StashEngine
       to_insert = old_files.first.container_files.map do |container_file|
         { data_file_id: id, path: container_file.path, mime_type: container_file.mime_type, size: container_file.size }
       end
-      StashEngine::ContainerFile.insert_all(to_insert)
+      StashEngine::ContainerFile.insert_all(to_insert) unless to_insert.blank?
     end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
