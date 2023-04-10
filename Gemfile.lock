@@ -171,6 +171,7 @@ GEM
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
+    charlock_holmes (0.7.7)
     coderay (1.1.3)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
@@ -804,6 +805,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.6.2)
   capybara
   capybara-screenshot
+  charlock_holmes (~> 0.7.7)
   coffee-rails (~> 5.0)
   colorize
   concurrent-ruby (~> 1.1.10)
