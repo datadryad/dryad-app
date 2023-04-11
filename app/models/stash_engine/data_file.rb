@@ -45,7 +45,7 @@ module StashEngine
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
         .timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 2)
-        .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
+        .basic_auth(user: APP_CONFIG[:repository][:username], pass: APP_CONFIG[:repository][:password])
 
       r = http.get(merritt_presign_info_url)
 
