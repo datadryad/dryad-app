@@ -26,7 +26,7 @@ module Stash
           @stubby = stub_request(:get, @data_file.merritt_presign_info_url)
             .with(
               headers: {
-                'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
                 'Host' => 'merritt-fake.cdlib.org'
               }
             )
@@ -50,7 +50,7 @@ module Stash
           stub_request(:get, @data_file.merritt_presign_info_url)
             .with(
               headers: {
-                'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
+                'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
                 'Host' => 'merritt-fake.cdlib.org'
               }
             )

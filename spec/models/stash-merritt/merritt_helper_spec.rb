@@ -94,9 +94,9 @@ module Stash
               @package = Stash::Merritt::ObjectManifestPackage.new(resource: @resource)
               @helper = MerrittHelper.new(package: @package)
               expected = {
-                collection_uri: 'http://merritt.repository.domain.here/mrtsword/collection/dash_cdl',
-                username: 'submitter.username',
-                password: 'submitter.password'
+                collection_uri: 'https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev',
+                username: 'horsecat',
+                password: 'MyHorseCatPassword'
               }
               expect(@helper.sword_params).to eq(expected)
             end

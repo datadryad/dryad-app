@@ -194,7 +194,7 @@ local:
 
 test:
   <<: *DEFAULTS
-  repository: Mocks::Repository::Repository
+  # repository: Mocks::Repository::Repository
   contact_email: ["contact1@example.edu", "contact2@example.edu"]
   default_tenant: localhost
   old_dryad_url: https://api.datadryad.example.org
