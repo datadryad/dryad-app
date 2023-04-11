@@ -158,7 +158,7 @@ module StashEngine
         stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
           .with(
             headers: {
-              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
               'Host' => 'merritt.example.com'
             }
           )
@@ -170,7 +170,7 @@ module StashEngine
         stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
           .with(
             headers: {
-              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
               'Host' => 'merritt.example.com'
             }
           )
@@ -186,7 +186,7 @@ module StashEngine
         stub_request(:get, "https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2F#{str}?no_redirect=true")
           .with(
             headers: {
-              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
               'Host' => 'merritt.example.com'
             }
           )
