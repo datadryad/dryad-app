@@ -1,6 +1,8 @@
 require 'http'
 require 'stringio'
 require 'charlock_holmes/string'
+require 'zip'
+require 'down/http'
 
 module Stash
   module Compressed
@@ -162,6 +164,36 @@ module Stash
         format = (little_endian_bytes.length == 4 ? 'L<' : 'Q<')
         little_endian_bytes.unpack1(format)
       end
+
+      # this reads the whole file using rubyzip input stream
+      # but it doesn't return size of zip64s always
+      def fallback_file_entries1
+        file_info = []
+        # response = BASE_HTTP.get(@presigned_url)
+        # response.body.each do |chunk|
+        remote_file = Down::Http.open(@presigned_url)
+        Zip::InputStream.open(remote_file) do |io|
+          while entry = io.get_next_entry
+            file_info << { file_name: entry.name, uncompressed_size: entry.size }
+            # puts "Name: #{entry.name}, Size: #{entry.size}, Compressed Size: #{entry.compressed_size}"
+          end
+        end
+        file_info
+      end
+
+      # this maybe seems to do better with zip64 if java jar is installed
+      def fallback_file_entries2
+        file_info = []
+        std_out = `curl -s -L "#{@presigned_url}" | jar -tv`
+        std_out.each_line do |line|
+          arr = line.strip.split(/\s+/, 8)
+          my_fn = arr[-1]
+          my_size = arr[0].to_i
+          file_info << { file_name: my_fn , uncompressed_size: my_size }
+        end
+        file_info
+      end
+
     end
   end
 end
