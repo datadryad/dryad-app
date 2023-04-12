@@ -99,7 +99,7 @@ module Stash
       describe :download_uri_for do
         it 'determines the download URI' do
           expected_uri = 'http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b'
-          actual_uri = repo.download_uri_for(resource: resource, record_identifier: record_identifier)
+          actual_uri = repo.download_uri_for(record_identifier: record_identifier)
           expect(actual_uri).to eq(expected_uri)
         end
       end

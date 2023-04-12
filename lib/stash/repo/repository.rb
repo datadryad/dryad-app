@@ -42,7 +42,7 @@ module Stash
       # for discovery.
       # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
-      def download_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+      def download_uri_for(record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
       end
 
@@ -121,7 +121,7 @@ module Stash
       private
 
       def get_download_uri(resource, record_identifier)
-        download_uri_for(resource: resource, record_identifier: record_identifier)
+        download_uri_for(record_identifier: record_identifier)
       rescue StandardError => e
         raise ArgumentError, "Unable to determine download URI for resource #{resource.id} from record identifier #{record_identifier}: #{e}"
       end
