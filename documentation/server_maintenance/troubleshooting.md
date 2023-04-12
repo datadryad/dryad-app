@@ -25,6 +25,32 @@ In an emergency, you can make this edit on the production servers and restart
 puma on each server, to avoid doing a full redeploy.
 
 
+Restoring metadata from a database backup
+=========================================
+
+If the database is corrupted, it can be rebuilt from an AWS snapshot. But it is sometimes useful
+to do a more targeted restore from one of our local backups (e.g., if someone runs a SQL command
+with a typo and wipes out the values in a single column).
+
+1. Extract the recovery SQL:
+```
+# from the backup file, extract only the table that you want to restore. This sed command will extract 'mytable':
+$ sed -n -e '/CREATE TABLE.*`mytable`/,/Table structure for table/p' mysql.dump > mytable.dump
+```
+2. At the top of the new file, add a drop table command:
+```
+DROP TABLE IF EXISTS `mytable`;
+```
+3. In the new file, just above the table contents, remove any "commented" commands about character sets, like this:
+```
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+```
+4. Do the restore, setting the appropriate suffix to pick the password up from your config file:
+```
+mysql --defaults-group-suffix=stg --user dryaddba --host some-hostname dryad < queryfile.sql > output.txt
+```
+
+
 Dataset is not showing up in searches
 ===================================
 
