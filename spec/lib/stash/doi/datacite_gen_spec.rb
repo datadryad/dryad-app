@@ -20,7 +20,7 @@ module Stash
 
         describe :post_metadata do
           it 'creates a successful sandbox post request to DataCite' do
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             stub_request(:post, 'https://mds.test.datacite.org/metadata')
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
                                                       .encode_credentials(repo.username, repo.password),
@@ -33,7 +33,7 @@ module Stash
           end
 
           it 'creates a successful post request to DataCite' do
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             stub_request(:post, 'https://mds.datacite.org/metadata')
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
                                                       .encode_credentials(repo.username, repo.password),
@@ -47,7 +47,7 @@ module Stash
 
         describe :put_doi do
           it 'creates a successful sandbox put request to DataCite' do
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             bare_id = @resource.identifier.identifier
             stub_request(:put, "https://mds.test.datacite.org/doi/#{bare_id}")
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
@@ -61,7 +61,7 @@ module Stash
 
           it 'creates a successful put request to DataCite' do
             bare_id = @resource.identifier.identifier
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             stub_request(:put, "https://mds.datacite.org/doi/#{bare_id}")
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
                                                       .encode_credentials(repo.username, repo.password),
@@ -77,7 +77,7 @@ module Stash
         describe :get_doi do
           it 'creates a successful sandbox get request to DataCite' do
             bare_id = @resource.identifier.identifier
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             stub_request(:get, "https://mds.test.datacite.org/doi/#{bare_id}")
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
                                                       .encode_credentials(repo.username, repo.password),
@@ -89,7 +89,7 @@ module Stash
 
           it 'creates a successful get request to DataCite' do
             bare_id = @resource.identifier.identifier
-            repo = @resource.tenant.repository
+            repo = APP_CONFIG[:repository]
             stub_request(:get, "https://mds.datacite.org/doi/#{bare_id}")
               .with(headers: { 'Authorization' => ActionController::HttpAuthentication::Basic
                                                       .encode_credentials(repo.username, repo.password),

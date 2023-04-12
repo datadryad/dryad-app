@@ -18,11 +18,11 @@ module Stash
         @version = @resource&.stash_version&.merritt_version
         # local_id is encoded, so later it gets double-encoded which is required by Merritt for some crazy reason
         _ignored, @local_id = @resource.merritt_protodomain_and_local_id
-        @domain = @tenant&.repository&.domain
+        @domain = APP_CONFIG[:repository][:domain]
 
         @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
           .timeout(connect: 10, read: 10).timeout(10.seconds.to_i).follow(max_hops: 3)
-          .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
+          .basic_auth(user: APP_CONFIG[:repository][:username], pass: APP_CONFIG[:repository][:password])
       end
 
       def valid_resource?

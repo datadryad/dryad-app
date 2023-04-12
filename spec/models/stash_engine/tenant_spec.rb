@@ -10,7 +10,6 @@ module StashEngine
       expect(tenant.long_name).to eq('University of Exemplia')
       expect(tenant.default_license).to eq('cc_by')
       expect(tenant.stash_logo_after_tenant).to eq(true)
-      repo = tenant.repository
       expect(repo.type).to eq('exemplum')
       expect(repo.domain).to eq('http://repo-dev.example.edu')
       expect(repo.endpoint).to eq('http://repo-dev.example.edu:39001/sword/collection/stash')
