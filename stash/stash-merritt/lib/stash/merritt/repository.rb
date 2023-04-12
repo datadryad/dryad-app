@@ -14,32 +14,19 @@ module Stash
       end
 
       def download_uri_for(resource:, record_identifier:)
-        merritt_host = merritt_host_for(resource)
+        merritt_host = APP_CONFIG[:repository][:domain]
         ark = ark_from(record_identifier)
         "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
       def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        sword_endpoint = sword_endpoint_for(resource)
+        sword_endpoint = APP_CONFIG[:repository][:endpoint]
         doi = resource.identifier_str
         edit_uri_base = sword_endpoint.sub('/collection/', '/edit/')
         "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
       end
 
       private
-
-      def merritt_host_for(resource)
-        repo_params_for(resource).domain
-      end
-
-      def sword_endpoint_for(resource)
-        repo_params_for(resource).endpoint
-      end
-
-      def repo_params_for(resource)
-        tenant = resource.tenant
-        tenant.repository
-      end
 
       def ark_from(record_identifier)
         ark_match_data = record_identifier && record_identifier.match(ARK_PATTERN)
