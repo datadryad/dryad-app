@@ -173,7 +173,7 @@ module Stash
         # response.body.each do |chunk|
         remote_file = Down::Http.open(@presigned_url)
         Zip::InputStream.open(remote_file) do |io|
-          while entry = io.get_next_entry
+          while (entry = io.get_next_entry)
             file_info << { file_name: entry.name, uncompressed_size: entry.size }
             # puts "Name: #{entry.name}, Size: #{entry.size}, Compressed Size: #{entry.compressed_size}"
           end
@@ -189,7 +189,7 @@ module Stash
           arr = line.strip.split(/\s+/, 8)
           my_fn = arr[-1]
           my_size = arr[0].to_i
-          file_info << { file_name: my_fn , uncompressed_size: my_size }
+          file_info << { file_name: my_fn, uncompressed_size: my_size }
         end
         file_info
       end
