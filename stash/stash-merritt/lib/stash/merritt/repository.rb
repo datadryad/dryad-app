@@ -13,7 +13,7 @@ module Stash
         SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
       end
 
-      def download_uri_for(resource:, record_identifier:)
+      def download_uri_for(record_identifier:)
         merritt_host = APP_CONFIG[:repository][:domain]
         ark = ark_from(record_identifier)
         "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
