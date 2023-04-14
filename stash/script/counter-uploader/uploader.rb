@@ -57,7 +57,7 @@ class Uploader
 
     resp = nil
     12.times do |i|
-      puts "  Try #{1}"
+      puts "  Try #{i}"
       resp =
         if @report_id.nil?
           @http.post(URI, body: body, headers: headers)
