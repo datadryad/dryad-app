@@ -79,11 +79,7 @@ function PrelimManu({
     >
       {(formik) => (
         <Form className="c-input__inline">
-          <div className="c-import__form-section">
-            <p>Please provide the following information. You may either enter the information and leave it or choose
-              to autofill your dataset based on the information you supply below.
-            </p>
-
+          <div className="c-import__form-section" style={{width: '100%'}}>
             <div className="c-input__inline">
               <div className="c-input">
                 <PrelimAutocomplete
