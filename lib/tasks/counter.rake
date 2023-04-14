@@ -96,9 +96,9 @@ namespace :counter do
     # RAILS_ENV=production REPORT_DIR="/my/report/dir" FORCE_SUBMISSION="2021-11" bundle exec rails counter:datacite_pusher
     $stdout.sync = true
 
-    require_relative '../../../script/counter-uploader/submitted_reports'
-    require_relative '../../../script/counter-uploader/uploader'
-    require_relative '../../../script/counter-uploader/utility_methods'
+    require_relative '../../stash/script/counter-uploader/submitted_reports'
+    require_relative '../../stash/script/counter-uploader/uploader'
+    require_relative '../../stash/script/counter-uploader/utility_methods'
 
     if ENV['REPORT_DIR'].blank?
       puts 'You must set an environment varaiable for REPORT_DIR to upload to DataCite.'
