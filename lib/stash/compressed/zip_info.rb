@@ -200,8 +200,13 @@ module Stash
 
         entries
       rescue Stash::Compressed::ZipError, Stash::Compressed::InvalidResponse
-        entries = fallback_file_entries1
-        return entries unless entries.empty?
+        begin
+          entries = fallback_file_entries1
+          return entries unless entries.empty?
+        rescue Zip::GPFBit3Error
+          # ignore
+          # this is a known issue with rubyzip
+        end
 
         fallback_file_entries2
       end
