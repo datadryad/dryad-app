@@ -45,10 +45,10 @@ default: &default
     #- https://ror.org/02sgpe757
     - https://ror.org/02rrhsz92
     - https://ror.org/00qv0tw17
-    #- https://ror.org/05vrs0r17
+    - https://ror.org/05vrs0r17
     - https://ror.org/03g1q6c06
     #- https://ror.org/02d07gm56
-    #- https://ror.org/02r3ym141
+    - https://ror.org/02r3ym141
     - https://ror.org/033zmj163
     - https://ror.org/000fxgx19
     - https://ror.org/040kfrw16
