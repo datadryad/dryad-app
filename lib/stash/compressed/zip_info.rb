@@ -194,6 +194,18 @@ module Stash
         file_info
       end
 
+      def entries_with_fallback
+        entries = file_entries
+        raise Stash::Compressed::InvalidResponse if entries.empty?
+
+        entries
+      rescue Stash::Compressed::ZipError, Stash::Compressed::InvalidResponse
+        entries = fallback_file_entries1
+        return entries unless entries.empty?
+
+        fallback_file_entries2
+      end
+
     end
   end
 end
