@@ -201,8 +201,10 @@ module Stash
         entries
       rescue Stash::Compressed::ZipError, Stash::Compressed::InvalidResponse
         begin
-          entries = fallback_file_entries1
-          return entries unless entries.empty?
+          if size < 8e+9.to_i # 8GB and the dumb zip library writes something to disk when it streams so it fills up disk
+            entries = fallback_file_entries1
+            return entries unless entries.empty?
+          end
         rescue Zip::GPFBit3Error
           # ignore
           # this is a known issue with rubyzip
