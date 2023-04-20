@@ -41,6 +41,32 @@ module StashEngine
       @day2 = @day + 2.days + 1.second
     end
 
+    describe :status_on_date do
+      it 'does not assign a status when created after the date' do
+        stats = CurationStats.create(date: @day - 1.day)
+        expect(stats.status_on_date(@idents.first)).to be(nil)
+      end
+
+      it 'assigns in_progress when first created' do
+        stats = CurationStats.create(date: @day)
+        expect(stats.status_on_date(@idents.first)).to eq('in_progress')
+      end
+
+      it 'keeps the last status' do
+        i = @idents.first
+        i.resources.first.curation_activities.first.update(status: 'peer_review')
+        stats = CurationStats.create(date: @day1)
+        expect(stats.status_on_date(@idents.first)).to eq('peer_review')
+      end
+
+      it 'finds an intermediate status' do
+        @res.first.curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1)
+        @res.first.curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day2)
+        stats = CurationStats.create(date: @day + 1.day)
+        expect(stats.status_on_date(@idents.first)).to eq('curation')
+      end
+    end
+
     describe :datasets_curated do
       it 'knows when there are none' do
         # @res[0] stays in_progress
@@ -105,13 +131,13 @@ module StashEngine
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(4)
 
-        # NO -- curator is working on it, but user submitted in the past
+        # YES -- curator is working on it, but user submitted in the past
         @res[4].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day - 2.days)
         res_new2 = create(:resource, identifier_id: @res[4].identifier.id, user: @curator, tenant_id: 'dryad')
         res_new2.curation_activities << CurationActivity.create(status: 'in_progress', user: @curator, created_at: @day)
         res_new2.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
         stats.recalculate
-        expect(stats.datasets_to_be_curated).to eq(4)
+        expect(stats.datasets_to_be_curated).to eq(5)
       end
     end
 
