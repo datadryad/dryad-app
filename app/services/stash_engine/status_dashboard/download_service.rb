@@ -15,7 +15,7 @@ module StashEngine
         record_status(online: false, message: 'No dataset available for download to perform test') unless identifier.present?
         resource = identifier.resources.where.not(download_uri: nil).order(:id).last
 
-        client = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client
+        client = Stash::Repo::HttpClient.new(cert_file: APP_CONFIG.ssl_cert_file).client
         resp = client.head(resource.download_uri, follow_redirect: true)
         online = resp.code == 200
         msg = "Merritt Download service is reporting an HTTP #{resp.code}!" unless online

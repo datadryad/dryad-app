@@ -1058,7 +1058,7 @@ module StashEngine
     describe '#merritt_object_info' do
 
       it 'returns merritt info for a record that exists' do
-        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+        stub_request(:get, 'https://merritt-test.example.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
           .with(
             headers: {
               'Accept' => 'application/json'
@@ -1076,7 +1076,7 @@ module StashEngine
       end
 
       it "returns nothing for a merritt record that doesn't exist" do
-        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+        stub_request(:get, 'https://merritt-test.example.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
           .with(
             headers: {
               'Accept' => 'application/json'
@@ -1088,7 +1088,7 @@ module StashEngine
       end
 
       it 'returns nothing when merritt is having some problems' do
-        stub_request(:get, 'https://merritt-stage.cdlib.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
+        stub_request(:get, 'https://merritt-test.example.org/api/cdl_dryaddev/local_id_search?terms=doi:10.123/456')
           .with(
             headers: {
               'Accept' => 'application/json'
