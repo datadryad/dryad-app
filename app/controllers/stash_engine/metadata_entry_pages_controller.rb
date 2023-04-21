@@ -47,6 +47,7 @@ module StashEngine
                                        note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code")
           @resource.curation_activities << ca
           @resource.user_id = current_user.id
+          @resource.current_editor_id = current_user.id
           @resource.save
         else
           # The user will need to login (possibly creating an
