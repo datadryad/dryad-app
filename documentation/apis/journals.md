@@ -151,11 +151,16 @@ def change_journal_payment_type(year_month:, journal_id:, new_payment_type:)
   limit_date = Date.parse("#{year_month}-01")
   limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
   StashEngine::Identifier.publicly_viewable.where(limit_date_filter).each do |i|
-  	approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+    approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+    if i.payment_type == 'stripe'
+      puts "Skipping invoiced dataset #{i.identifer}"
+      next
+    end
     next unless approval_date_str&.start_with?(year_month)
     next unless i.journal&.id == journal_id
-	puts "#{i.identifier} -- #{i.payment_type} --> #{new_payment_type}"
-	i.update(payment_type: new_payment_type)
+    puts "#{i.identifier} -- #{i.payment_type} --> #{new_payment_type}"
+    i.update(payment_type: new_payment_type)
+    i.update(payment_id: StashEngine::Journal.find(journal_id).single_issn)
   end
   nil
 end
