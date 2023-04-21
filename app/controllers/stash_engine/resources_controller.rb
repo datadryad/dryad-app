@@ -10,6 +10,9 @@ module StashEngine
     before_action :bust_cache, only: %i[upload manifest up_code up_code_manifest review]
     before_action :require_not_obsolete, only: %i[upload manifest up_code up_code_manifest review]
 
+    include Pundit::Authorization
+    # after_action :verify_authorized, only: %i[create]
+
     attr_writer :resource
 
     def resource
@@ -49,15 +52,15 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      resource = Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
+      @resource = authorize Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::IdGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, import_info: 'manuscript')
-      resource.identifier_id = db_id_obj.id
-      resource.save
-      resource.fill_blank_author!
+      @resource.identifier_id = db_id_obj.id
+      @resource.save
+      @resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
       logger.error("Unable to create new resource: #{e.full_message}")
