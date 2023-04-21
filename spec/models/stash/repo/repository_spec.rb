@@ -70,7 +70,7 @@ module Stash
 
       describe :download_uri_for do
         it 'is abstract' do
-          expect { repo.download_uri_for(resource: resource, record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
+          expect { repo.download_uri_for(record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
         end
       end
 

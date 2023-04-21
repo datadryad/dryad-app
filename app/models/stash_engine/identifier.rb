@@ -509,7 +509,7 @@ module StashEngine
     # Info about dataset object from Merritt. See spec/fixtures/merritt_local_id_search_response.json for an example.
     # Currently used for checking if things have gone into Merritt yet, but may be used for other purposes in the future.
     def merritt_object_info
-      repo = latest_resource.tenant.repository
+      repo = APP_CONFIG[:repository]
       collection = repo.endpoint.match(%r{[^/]+$}).to_s
       enc_doi = ERB::Util.url_encode(to_s)
       resp = HTTP.basic_auth(user: repo.username, pass: repo.password)

@@ -61,13 +61,6 @@ module Stash
           expect(@vp.valid_resource?).to be_falsey
         end
 
-        it 'is false if domain is blank' do
-          allow(@resource).to receive(:tenant)
-            .and_return({ repository: { domain: nil }.to_ostruct }.to_ostruct)
-          @vp = VersionPresigned.new(resource: @resource)
-          expect(@vp.valid_resource?).to be_falsey
-        end
-
         it 'is false if local_id is blank' do
           allow(@resource).to receive(:merritt_protodomain_and_local_id).and_return(['', nil])
           @vp = VersionPresigned.new(resource: @resource)

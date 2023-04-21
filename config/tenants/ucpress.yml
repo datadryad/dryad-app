@@ -1,11 +1,6 @@
 # I think we need to keep this config, though disabled in case of DOI updates.
 default: &default
   enabled: false
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "UC Press"
   short_name: "UC Press"
   long_name: "University of California Press"
@@ -42,19 +37,10 @@ local:
 stage:
   <<: *default
   #Add any items that need to override the defaults here
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %> 
+ 
 
 production:
   <<: *default
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: ezid
     shoulder: "doi:10.17916/P6"

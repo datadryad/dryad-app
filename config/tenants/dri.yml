@@ -1,10 +1,5 @@
 default: &default
   enabled: true
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   abbreviation: "DRI"
   short_name: "Desert Research Institute"
   long_name: "Desert Research Institute"
@@ -42,11 +37,6 @@ local:
 stage:
   <<: *default
   #Add any items that need to override the defaults here
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
 
 production:
   <<: *default
@@ -55,11 +45,6 @@ production:
     strategy: shibboleth
     entity_id: http://www.okta.com/exkh1l6ocbKBRm4RB1t7
     entity_domain: www.okta.com
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   identifier_service:
     provider: datacite
     prefix: "10.5061"

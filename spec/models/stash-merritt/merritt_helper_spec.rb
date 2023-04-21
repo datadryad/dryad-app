@@ -13,12 +13,6 @@ module Stash
 
         @title = 'A Zebrafish Model for Studies on Esophageal Epithelial Biology'
         @request_host = 'example.org'
-
-        @sword_params = {
-          collection_uri: 'https://example.org/sword/my_collection',
-          username: 'elvis',
-          password: 'presley'
-        }.freeze
       end
 
       before(:each) do
@@ -43,7 +37,6 @@ module Stash
         allow(@tenant).to receive(:tenant_id).and_return('dataone')
         allow(@tenant).to receive(:short_name).and_return('DataONE')
         allow(@tenant).to receive(:full_url) { |path| "https://stash-dev.example.edu/#{path}" }
-        allow(@tenant).to receive(:sword_params).and_return(@sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(@tenant)
 
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read('spec/data/archive/stash-wrapper.xml'))
@@ -94,6 +87,19 @@ module Stash
               upload.save
             end
             allow(@resource).to receive(:upload_type).and_return(:manifest)
+          end
+
+          describe :sword_params do
+            it 'returns the Stash::Sword::Client parameter hash' do
+              @package = Stash::Merritt::ObjectManifestPackage.new(resource: @resource)
+              @helper = MerrittHelper.new(package: @package)
+              expected = {
+                collection_uri: 'https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev',
+                username: 'horsecat',
+                password: 'MyHorseCatPassword'
+              }
+              expect(@helper.sword_params).to eq(expected)
+            end
           end
 
           describe 'create' do

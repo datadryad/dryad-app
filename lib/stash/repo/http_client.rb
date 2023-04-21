@@ -12,7 +12,7 @@ module Stash
       attr_accessor :client
 
       # pass in the tenant so that it can set all the stuff it needs for domains and basic auth, pass in a special cert file if needed
-      def initialize(tenant:, cert_file: nil)
+      def initialize(cert_file: nil)
         @client = HTTPClient.new
 
         # this callback allows following redirects from http to https, otherwise it will not
@@ -22,7 +22,7 @@ module Stash
 
         # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
         @client.force_basic_auth = true
-        @client.set_basic_auth(nil, tenant.repository.username, tenant.repository.password)
+        @client.set_basic_auth(nil, APP_CONFIG[:repository][:username], APP_CONFIG[:repository][:password])
 
         # TODO: remove this once Merritt has fixed their certs on their stage server.
         @client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE # TODO: remove for extra security once Merritt gets real certs
