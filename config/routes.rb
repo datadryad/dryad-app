@@ -253,6 +253,7 @@ Rails.application.routes.draw do
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
+    get 'pages(/:action(/:id(.:format)))', controller: 'pages'
     
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users

@@ -1,0 +1,36 @@
+<h1>Just testing out some markdown editors</h1>
+
+<p>See <a href="https://blog.logrocket.com/comparing-milkdown-other-wysiwyg-editors/" target="_blank">a list of commonly used ones</a>
+for example.</p>
+
+<ul>
+  <li><%= link_to "Milkdown", action: 'md_milkdown' %></li>
+  <li><%= link_to "ProseMirror", action: 'md_prosemirror' %></li>
+    <ul>
+      <li>You can see a demo at <a href="https://prosemirror.net/examples/markdown/" target="_blank">
+        https://prosemirror.net/examples/markdown/</a></li>
+      <li>
+        I attempted to install it on <%= link_to "a page", action: 'md_prosemirror' %> on our site but the formatting
+        was off and I also saws lots of what were apparently CORs errors in the console and didn't proceed much further.
+      </li>
+    </ul>
+  <li>Quill</li>
+    <ul>
+      <li>
+        Apparently Quill is more of a generic rich text editor and you have to jump through hoops with plugins to output
+        markdown. This is similar to TinyMCE, so if we're going to have to do a lot of work to sanitize and be sure it only
+        supports the markdown-specific things then I think we're better off staying with TinyMCE which we use for the other
+        rich text fields. But TinyMCE seems not-ideal and involves converting HTML back and forth to markdown.
+      </li>
+    </ul>
+  <li>Toast UI</li>
+    <ul>
+      <li>
+        Toast UI looks promising.  The demo at
+        <a href="https://codesandbox.io/s/markdown-editor-u9odd?file=/src/index.js:0-511" target="_blank">https://codesandbox.io/s/markdown-editor-u9odd?file=/src/index.js:0-511</a>
+        Allowed clicking formatting in one pane while displaying the output markdown in another.  I assume this could be
+        customized more.  (Sorry, I ran into some troubles while trying to install and get it to run locally without a lot
+        of work.)
+      </li>
+    </ul>
+</ul>

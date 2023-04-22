@@ -1,0 +1,97 @@
+<h1>A prosemirror demo</h1>
+
+<p>This is supposed to be a prosemirror demo for markdown but it doesn't work right on our site.</p>
+
+<p>Bonus points for it having both markdown and rendered views on their site.</p>
+
+<style>
+  .ProseMirror {
+    height: 120px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box
+  }
+
+  textarea {
+    width: 100%;
+    height: 123px;
+    border: 1px solid silver;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 3px 10px;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit
+  }
+
+  .ProseMirror-menubar-wrapper, #markdown textarea {
+    display: block;
+    margin-bottom: 4px
+  }
+</style>
+
+
+<div id="editor" style="margin-bottom: 0">
+  <div class="ProseMirror-menubar-wrapper">
+    <div class="ProseMirror-menubar" style="min-height: 27px;">
+      <span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Toggle strong style"><svg style="width: 0.786133em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon-4eb53ba9"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Toggle emphasis"><svg style="width: 0.571289em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon-25612f7a"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Toggle code font"><svg style="width: 0.875em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--1d0983fe"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Add or remove link"><svg style="width: 0.928711em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--78ecc05e"></use></svg></div></span><span class="ProseMirror-menuseparator"></span><span class="ProseMirror-menuitem"><div class="ProseMirror-menu-dropdown-wrap"><div class="ProseMirror-menu-dropdown ">Insert</div></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-menu-dropdown-wrap"><div class="ProseMirror-menu-dropdown ">Type...</div></div></span><span class="ProseMirror-menuseparator"></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon ProseMirror-menu-disabled" title="Undo last change"><svg style="width: 1em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon-5a60796"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon ProseMirror-menu-disabled" title="Redo last undone change"><svg style="width: 1em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--6ff882d4"></use></svg></div></span><span class="ProseMirror-menuseparator"></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Wrap in bullet list"><svg style="width: 0.857143em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--6141f81"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Wrap in ordered list"><svg style="width: 0.857143em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon-28a6efee"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Wrap in block quote"><svg style="width: 0.714286em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--2d1566b3"></use></svg></div></span><span class="ProseMirror-menuitem" style="display: none;"><div class="ProseMirror-icon" title="Join with above block" style="display: none;"><svg style="width: 0.888889em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--3cb9c8"></use></svg></div></span><span class="ProseMirror-menuitem" style="display: none;"><div class="ProseMirror-icon" title="Lift out of enclosing block" style="display: none;"><svg style="width: 1em;"><use xlink:href="https://prosemirror.net/examples/markdown/#pm-icon--2eec1b76"></use></svg></div></span><span class="ProseMirror-menuitem"><div class="ProseMirror-icon" title="Select parent node"><span style="font-weight: bold;">⬚</span></div></span>
+    </div>
+    <div contenteditable="true" translate="no" class="ProseMirror ProseMirror-example-setup-style">
+      <p>This is a comment written in <a href="http://commonmark.org">Markdown</a>. <em>You</em> may know the syntax for
+        inserting a link, but does your whole audience?</p>
+      <p>So you can give people the <strong>choice</strong> to use a more familiar, discoverable interface.</p></div>
+  </div>
+</div>
+
+<script>
+  class MarkdownView {
+    constructor(target, content) {
+      this.textarea = target.appendChild(document.createElement("textarea"))
+      this.textarea.value = content
+    }
+
+    get content() { return this.textarea.value }
+    focus() { this.textarea.focus() }
+    destroy() { this.textarea.remove() }
+  }
+
+  import {EditorView} from "prosemirror-view"
+  import {EditorState} from "prosemirror-state"
+  import {schema, defaultMarkdownParser,
+    defaultMarkdownSerializer} from "prosemirror-markdown"
+  import {exampleSetup} from "prosemirror-example-setup"
+
+  class ProseMirrorView {
+    constructor(target, content) {
+      this.view = new EditorView(target, {
+        state: EditorState.create({
+          doc: defaultMarkdownParser.parse(content),
+          plugins: exampleSetup({schema})
+        })
+      })
+    }
+
+    get content() {
+      return defaultMarkdownSerializer.serialize(this.view.state.doc)
+    }
+    focus() { this.view.focus() }
+    destroy() { this.view.destroy() }
+  }
+
+  let place = document.querySelector("#editor")
+  let view = new MarkdownView(place, document.querySelector("#content").value)
+
+  document.querySelectorAll("input[type=radio]").forEach(button => {
+    button.addEventListener("change", () => {
+      if (!button.checked) return
+      let View = button.value == "markdown" ? MarkdownView : ProseMirrorView
+      if (view instanceof View) return
+      let content = view.content
+      view.destroy()
+      view = new View(place, content)
+      view.focus()
+    })
+  });
+</script>
+
