@@ -1,11 +1,5 @@
 module StashEngine
-  class CurationActivityPolicy
-    attr_reader :user, :resource
-
-    def initialize(user, resource)
-      @user = user
-      @resource = resource
-    end
+  class CurationActivityPolicy < ApplicationPolicy
 
     def index?
       @user.limited_curator?

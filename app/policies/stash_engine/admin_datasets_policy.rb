@@ -1,11 +1,5 @@
 module StashEngine
-  class AdminDatasetsPolicy
-    attr_reader :user, :datasets
-
-    def initialize(user, datasets)
-      @user = user
-      @datasets = datasets
-    end
+  class AdminDatasetsPolicy < ApplicationPolicy
 
     class Scope
       def initialize(user, scope, params)

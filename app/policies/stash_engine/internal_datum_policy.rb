@@ -1,13 +1,5 @@
-# frozen_string_literal: true
-
 module StashEngine
-  class InternalDatumPolicy
-    attr_reader :user, :internal_data
-
-    def initialize(user, internal_data)
-      @user = user
-      @internal_data = internal_data
-    end
+  class InternalDatumPolicy < ApplicationPolicy
 
     def index?
       @user.limited_curator?

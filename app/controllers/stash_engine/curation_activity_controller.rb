@@ -1,7 +1,6 @@
 module StashEngine
   class CurationActivityController < ApplicationController
-    include Pundit::Authorization
-    after_action :verify_authorized, except: :curation_activity_params
+    # after_action :verify_authorized, except: :curation_activity_params
 
     helper AdminDatasetsHelper
 

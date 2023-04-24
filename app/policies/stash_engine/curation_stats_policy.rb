@@ -1,11 +1,5 @@
 module StashEngine
-  class CurationStatsPolicy
-    attr_reader :user, :stats
-
-    def initialize(user, stats)
-      @user = user
-      @stats = stats
-    end
+  class CurationStatsPolicy < ApplicationPolicy
 
     def index?
       @user.admin?
