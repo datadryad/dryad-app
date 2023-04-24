@@ -4,14 +4,41 @@
 for example.</p>
 
 <ul>
-  <li><%= link_to "Milkdown", action: 'md_milkdown' %></li>
+  <li>
+    Milkdown: <a href="https://milkdown.dev/playground" target="_blank">https://milkdown.dev/playground</a>.
+  </li>
+  <ul>
+    <li>It seems to have basic features<li/>
+    <li>If you insert a table, how do you add a row or column except with markdown directly?</li>
+    <li>I didn't see a way to switch between code and rendered view (which may be useful)</li>
+    <li>I don't think we should expect most users to know to
+      <blockquote>
+        You can type `||` and a `space` to create a table
+      </blockquote>
+      Or other md syntax inside a GUI.
+    </li>
+    <li>I guess it is very expandable and open source-y</li>
+    <li>I tried to <%= link_to "test it out", action: 'md_milkdown' %>, but their directions don't seem to get it working.</li>
+  </ul>
   <li><%= link_to "ProseMirror", action: 'md_prosemirror' %></li>
     <ul>
-      <li>You can see a demo at <a href="https://prosemirror.net/examples/markdown/" target="_blank">
-        https://prosemirror.net/examples/markdown/</a></li>
+      <li>You can see a configuration at <a href="https://prosemirror.net/examples/markdown/" target="_blank">
+        https://prosemirror.net/examples/markdown/</a> and a <a href="https://codepen.io/JessieWooten/pen/wYObEX" target="_blank">demo here</a>.
+      </li>
       <li>
         I attempted to install it on <%= link_to "a page", action: 'md_prosemirror' %> on our site but the formatting
         was off and I also saws lots of what were apparently CORs errors in the console and didn't proceed much further.
+      </li>
+      <li>
+        In the demo, I didn't see any way to toggle markdown code view and gui editor. I think some technical users may
+        want to have that option.
+      </li>
+      <li>
+        It seems it's not really meant to play nicely or be a complete solution out of the box and searching on
+        <a href="https://discuss.prosemirror.net/t/how-the-heck-do-i-use-this-with-react/3437" target="_blank">how to
+          integrate it with React</a> makes it seem like it's not designed for to be easy: "but it is not easy nor
+          something you can just do with a wave of hand. Probably you should use a framework unless you
+          really want to dive deep with PM + React plumbing. PM is not maybe the most beginner-friendly rich-text editing framework to pick."
       </li>
     </ul>
   <li>Quill</li>
@@ -28,9 +55,12 @@ for example.</p>
       <li>
         Toast UI looks promising.  The demo at
         <a href="https://codesandbox.io/s/markdown-editor-u9odd?file=/src/index.js:0-511" target="_blank">https://codesandbox.io/s/markdown-editor-u9odd?file=/src/index.js:0-511</a>
-        Allowed clicking formatting in one pane while displaying the output markdown in another.  I assume this could be
-        customized more.  (Sorry, I ran into some troubles while trying to install and get it to run locally without a lot
-        of work.)
+        Allowed clicking formatting in one pane while displaying the output markdown in another.
+      </li>
+      <li>
+        I installed <%= link_to "Toast", action: 'md_toast' %> as a test without a lot of problems, unlike some other editors.
       </li>
     </ul>
+  <li>TinyMCE -- Doesn't directly support Markdown though some people have hacked plugins to take HTML and make some
+    kind of markdown from it. On the support site they say it is on their roadmap to add (when?).</li>
 </ul>

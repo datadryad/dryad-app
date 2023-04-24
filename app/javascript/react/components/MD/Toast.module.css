@@ -1,0 +1,15 @@
+body {
+  font-family: sans-serif;
+}
+#output {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #ccc;
+  padding: 16px;
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.te-mode-switch-section {
+  display: none !important;
+}
