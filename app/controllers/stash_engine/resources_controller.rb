@@ -11,6 +11,8 @@ module StashEngine
     before_action :require_not_obsolete, only: %i[upload manifest up_code up_code_manifest review]
     # after_action :verify_authorized, only: %i[create]
 
+    # apply Pundit?
+
     attr_writer :resource
 
     def resource
