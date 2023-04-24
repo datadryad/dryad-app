@@ -3,6 +3,8 @@ module StashEngine
     before_action :require_login, only: %i[show]
     before_action :ensure_tenant, only: :show
 
+    # apply Pundit?
+
     MAX_VALIDATION_TRIES = 5
 
     def show; end

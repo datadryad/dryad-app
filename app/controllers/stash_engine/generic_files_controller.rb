@@ -8,6 +8,8 @@ module StashEngine
     before_action :set_file_info, only: %i[destroy_manifest]
     before_action :ajax_require_modifiable, only: %i[destroy_manifest validate_urls presign_upload upload_complete]
 
+    # apply Pundit?
+
     helper_method :resource
 
     # this should be overridden for each specific type of file class
