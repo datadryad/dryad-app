@@ -9,6 +9,7 @@
   <li>Association for Tropical Biology and Conservation</li>
   <li>British Ecological Society</li>
   <li>Cambridge University Press</li>
+  <li>Ecological Society of America</li>
   <li>eLife</li>
   <li>European Society for Evolutionary Biology</li>
   <li>Hindawi</li>
