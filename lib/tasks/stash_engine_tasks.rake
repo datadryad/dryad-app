@@ -288,6 +288,36 @@ namespace :identifiers do
     end
   end
 
+  desc 'Curation and publication report'
+  task curation_publication_report: :environment do
+    p 'Writing curation_publication_report.csv...'
+    launch_day = Date.new(2019, 9, 17)
+    CSV.open('curation_publication_report.csv', 'w') do |csv|
+      csv << %w[DOI CreatedAt Size NumFiles FileExtensions DaysSubmissionToApproval DaysInCuration]
+      StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day + 1.day}'").each do |i|
+        num_files = i.latest_resource.data_files.select { |f| f[:file_state] == 'copied' || f[:file_state] == 'created' }.size
+        file_extensions = i.latest_resource.data_files.map { |f| File.extname(f.upload_file_name).downcase }.uniq
+
+        r = i.first_submitted_resource
+        next unless r
+
+        # TimeInCuration = time from first actual curation to approval
+        ttc_end = i.date_first_curated
+        time_in_curation = (i.approval_date - ttc_end).to_i / 1.day if ttc_end && i.approval_date
+
+        # don't list old migrated content
+        next unless ttc_end
+        next unless i.approval_date
+        next unless time_in_curation >=	0
+
+        # TimeToApproval = time from submission to approval
+        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
+
+        csv << [i.identifier, i.created_at, i.latest_resource.size, num_files, file_extensions, time_to_approval, time_in_curation]
+      end
+    end
+  end
+
   desc 'Generate a report of items associated with common preprint servers'
   task preprints_report: :environment do
     p 'Writing preprints_report.csv...'
