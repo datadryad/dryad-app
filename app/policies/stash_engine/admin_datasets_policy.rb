@@ -1,6 +1,10 @@
 module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
+    def index?
+      user.admin?
+    end
+
     class Scope
       def initialize(user, scope, params)
         @user = user
