@@ -736,7 +736,7 @@ namespace :identifiers do
       csv << ['Dataset DOI', 'Author First', 'Author Last', 'Institution', 'Country']
       StashEngine::Identifier.publicly_viewable.each do |i|
         res = i.latest_viewable_resource
-        res.authors.each do |a|
+        res&.authors&.each do |a|
           affil = a.affiliation
           csv << [i.identifier,
                   a&.author_first_name,
