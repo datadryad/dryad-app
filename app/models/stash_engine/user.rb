@@ -65,6 +65,10 @@ module StashEngine
       role == 'tenant_curator' || role == 'admin'
     end
 
+    def admin?
+      role == 'admin' || limited_curator? || journals_as_admin.present? || funders_as_admin.present?
+    end
+
     # this role and higher permission
     def curator?
       role == 'superuser' || role == 'curator' || role == 'tenant_curator'
