@@ -1,4 +1,5 @@
 /* eslint-disable */
+/*
 import React from 'react';
 import { Editor, rootCtx } from '@milkdown/core';
 import { nord } from '@milkdown/theme-nord';
@@ -26,3 +27,4 @@ export default function MilkdownEditorWrapper(){
       </MilkdownProvider>
   );
 }
+ */
