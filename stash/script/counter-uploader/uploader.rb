@@ -56,7 +56,8 @@ class Uploader
     body = compress(file)
 
     resp = nil
-    12.times do
+    12.times do |i|
+      puts "  Try #{i}"
       resp =
         if @report_id.nil?
           @http.post(URI, body: body, headers: headers)
@@ -64,6 +65,9 @@ class Uploader
           @http.put("#{URI}/#{@report_id}", body: body, headers: headers)
         end
       break if resp.status.code.between?(200, 299)
+
+      puts "  Status code #{resp.status.code}"
+      puts "  Response body: \n #{resp.body}"
 
       sleep 5
     end
