@@ -61,6 +61,10 @@ module StashEngine
       role == 'superuser'
     end
 
+    def tenant_limited?
+      role == 'tenant_curator' || role == 'admin'
+    end
+
     # this role and higher permission
     def curator?
       role == 'superuser' || role == 'curator' || role == 'tenant_curator'

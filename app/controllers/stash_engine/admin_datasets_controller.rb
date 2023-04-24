@@ -10,26 +10,16 @@ module StashEngine
     before_action :require_admin
     before_action :setup_paging, only: [:index]
 
+    include Pundit::Authorization
+    # after_action :verify_policy_scoped, only: %i[index]
+
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def index
-      # These limits are imposed by the user's permissions
       # Limits due to the current search/filter settings are handled within CurationTableRow
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
-      tenant_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant : nil)
-      journal_limit = (if current_user.role != 'superuser' &&
-                          current_user.role != 'curator' &&
-                          current_user.journals_as_admin.present?
-                         current_user.journals_as_admin.map(&:title)
-                       end)
-      funder_limit = (if current_user.role != 'superuser' &&
-                         current_user.role != 'curator' &&
-                         current_user.funders_as_admin.present?
-                        current_user.funders_as_admin.map(&:funder_id)
-                      end)
-
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 
@@ -40,12 +30,10 @@ module StashEngine
         page = @page.to_i
         page_size = @page_size.to_i
       end
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: helpers.sortable_table_params,
-                                                                     tenant: tenant_limit,
-                                                                     journals: journal_limit,
-                                                                     funders: funder_limit,
-                                                                     page: page.to_i,
-                                                                     page_size: page_size.to_i)
+
+      search_terms = { params: helpers.sortable_table_params, page: page.to_i, page_size: page_size.to_i }
+
+      @datasets = AdminDatasetsPolicy::Scope.new(current_user, StashEngine::AdminDatasets::CurationTableRow, search_terms).resolve
       @publications = StashEngine::Journal.order(:title).map(&:title)
       @pub_name = params[:publication_name] || nil
 
@@ -61,7 +49,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def data_popup
