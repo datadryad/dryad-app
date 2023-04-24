@@ -5,7 +5,8 @@ import { nord } from '@milkdown/theme-nord';
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react';
 import { commonmark } from '@milkdown/preset-commonmark';
 
-const MilkdownEditor: React.FC = () => {
+
+function MilkdownEditor(){
   const { editor } = useEditor((root) =>
       Editor.make()
           .config(nord)
@@ -18,10 +19,10 @@ const MilkdownEditor: React.FC = () => {
   return <Milkdown />;
 };
 
-export const MilkdownEditorWrapper: React.FC = () => {
+export default function MilkdownEditorWrapper(){
   return (
       <MilkdownProvider>
         <MilkdownEditor />
       </MilkdownProvider>
   );
-};
+}
