@@ -1,3 +1,5 @@
+require 'stash/compressed'
+
 module Tasks
   module Compressed
     module Info
@@ -6,7 +8,8 @@ module Tasks
       def self.files(db_file:)
         entries =
           if db_file.upload_file_name.downcase.end_with?('.zip')
-            Stash::Compressed::ZipInfo.new(presigned_url: db_file.merritt_s3_presigned_url).file_entries
+            zip_info = Stash::Compressed::ZipInfo.new(presigned_url: db_file.merritt_s3_presigned_url)
+            zip_info.entries_with_fallback
           elsif db_file.upload_file_name.downcase.end_with?('.tar.gz', '.tgz')
             Stash::Compressed::TarGz.new(presigned_url: db_file.merritt_s3_presigned_url).file_entries
           else
