@@ -1,13 +1,5 @@
-# frozen_string_literal: true
-
 module StashEngine
-  class ProposedChangePolicy
-    attr_reader :user, :change
-
-    def initialize(user, change)
-      @user = user
-      @change = change
-    end
+  class ProposedChangePolicy < ApplicationPolicy
 
     def index?
       @user.limited_curator?

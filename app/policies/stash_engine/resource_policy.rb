@@ -1,11 +1,5 @@
 module StashEngine
-  class ResourcePolicy
-    attr_reader :user, :resource
-
-    def initialize(user, resource)
-      @user = user
-      @resource = resource
-    end
+  class ResourcePolicy < ApplicationPolicy
 
     def create?
       @user.present?

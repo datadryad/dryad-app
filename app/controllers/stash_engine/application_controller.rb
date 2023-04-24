@@ -5,10 +5,13 @@ require 'uri'
 module StashEngine
   class ApplicationController < ::ApplicationController
 
+    include Pundit::Authorization
     include SharedController
     include SharedSecurityController
 
     prepend_view_path("#{Rails.application.root}/app/views")
+
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
     # returns the :return_to_path set in the session or else goes back to the path supplied
     def return_to_path_or(default_path)
@@ -23,6 +26,11 @@ module StashEngine
     end
 
     private
+
+    def user_not_authorized
+      flash[:alert] = 'You are not authorized to view this information.'
+      redirect_back(fallback_location: stash_url_helpers.dashboard_path)
+    end
 
     def display_authorization_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource.user_id || 'nil'} but " \

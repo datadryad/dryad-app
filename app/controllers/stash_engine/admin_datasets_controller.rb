@@ -10,7 +10,6 @@ module StashEngine
     before_action :require_admin
     before_action :setup_paging, only: [:index]
 
-    include Pundit::Authorization
     # after_action :verify_policy_scoped, only: %i[index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)

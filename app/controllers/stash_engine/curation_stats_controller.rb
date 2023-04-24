@@ -1,7 +1,5 @@
 module StashEngine
   class CurationStatsController < ApplicationController
-    include Pundit::Authorization
-
     helper SortableTableHelper
 
     def index

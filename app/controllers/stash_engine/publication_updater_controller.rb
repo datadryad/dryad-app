@@ -1,8 +1,5 @@
 module StashEngine
   class PublicationUpdaterController < ApplicationController
-    include Pundit::Authorization
-    # after_action :verify_authorized, except: :setup_paging
-
     helper SortableTableHelper
 
     before_action :setup_paging, only: [:index]

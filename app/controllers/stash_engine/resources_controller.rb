@@ -9,8 +9,6 @@ module StashEngine
     before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
     before_action :bust_cache, only: %i[upload manifest up_code up_code_manifest review]
     before_action :require_not_obsolete, only: %i[upload manifest up_code up_code_manifest review]
-
-    include Pundit::Authorization
     # after_action :verify_authorized, only: %i[create]
 
     attr_writer :resource
