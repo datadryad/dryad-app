@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {useRef, useEffect} from 'react';
 
 import Editor from "@toast-ui/editor";
