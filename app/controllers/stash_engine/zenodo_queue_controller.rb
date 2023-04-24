@@ -1,10 +1,7 @@
 module StashEngine
   class ZenodoQueueController < ApplicationController
 
-    include SharedSecurityController
     helper SortableTableHelper
-
-    before_action :require_superuser
 
     ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size error_info].freeze
     ALLOWED_ORDER = %w[asc desc].freeze
@@ -33,11 +30,11 @@ module StashEngine
         WHERE state != "finished"
         ORDER BY #{sort} #{order};
       SQL
-      @zenodo_copies = ZenodoCopy.find_by_sql(sql)
+      @zenodo_copies = authorize ZenodoCopy.find_by_sql(sql)
     end
 
     def item_details
-      @zenodo_copy = ZenodoCopy.find(params[:id])
+      @zenodo_copy = authorize ZenodoCopy.find(params[:id])
 
       @delayed_jobs = running_jobs(@zenodo_copy)
     end
@@ -51,12 +48,12 @@ module StashEngine
         ORDER BY #{sort} #{order};
       SQL
 
-      @zenodo_copies = ZenodoCopy.find_by_sql([sql, params[:id]])
+      @zenodo_copies = authorize ZenodoCopy.find_by_sql([sql, params[:id]])
       @identifier = Identifier.find(params[:id])
     end
 
     def resubmit_job
-      @zenodo_copy = ZenodoCopy.find(params[:id])
+      @zenodo_copy = authorize ZenodoCopy.find(params[:id])
       copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
 
       previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
@@ -82,7 +79,7 @@ module StashEngine
         #{BASIC_SQL}
         WHERE state != "finished";
       SQL
-      @zenodo_copies = ZenodoCopy.find_by_sql(sql)
+      @zenodo_copies = authorize ZenodoCopy.find_by_sql(sql)
 
       @zenodo_copies.each do |zc|
         zc.update(state: 'error') unless running_jobs(zc).count.positive?
