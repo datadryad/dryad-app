@@ -95,6 +95,45 @@ namespace :affiliation_import do
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
   end
 
+  desc 'Populate fundref_id to ror_id mapping table'
+  task populate_funder_ror_mapping: :environment do
+    $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
+
+    if ARGV.length != 1
+      puts 'Please enter the path to the ROR dump json file as an argument'
+      exit
+    end
+
+    ror_dump_file = ARGV[0]
+    exit unless File.exist?(ror_dump_file)
+
+    ActiveRecord::Base.connection.truncate(StashEngine::XrefFunderToRor.table_name)
+    fundref_ror_mapping = {}
+    File.open(ror_dump_file, 'r') do |f|
+      data = JSON.parse(f.read)
+      data.each do |org|
+        ror_id = org['id']
+        fundref_ids = org.dig('external_ids', 'FundRef', 'all')
+        next if fundref_ids.blank?
+
+        fundref_ids.each do |fundref_id|
+          fundref_ror_mapping[fundref_id] = ror_id
+        end
+      end
+    end
+
+    to_insert = []
+    fundref_ror_mapping.each_with_index do |(fundref_id, ror_id), index|
+      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_id }
+      if index % 1000 == 0 && index > 0
+        StashEngine::XrefFunderToRor.insert_all(to_insert)
+        to_insert = []
+      end
+    end
+    StashEngine::XrefFunderToRor.insert_all(to_insert) unless to_insert.empty?
+    puts 'Done updating fundref to ror mapping table'
+  end
+
   def do_author_merge(a1, a2)
     # keep the text of the name that is longest, but
     # keep the affiliation for the author that was updated most recently
