@@ -6,7 +6,7 @@ module StashEngine
 
     # GET /resources/{id}/curation_activities
     def index
-      @resource = Resource.includes(:identifier, :curation_activities).find(params[:resource_id])
+      resource = Resource.includes(:identifier, :curation_activities).find(params[:resource_id])
       @ident = resource.identifier
       @curation_activities = authorize resource.curation_activities.order(created_at: :desc), policy_class: CurationActivityPolicy
       respond_to do |format|
