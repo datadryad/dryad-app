@@ -62,7 +62,7 @@ module Stash
 
         # example output from tar -ztv
         # -rwxr-xr-x  0 tracyh staff     422 Jun  1  2011 dppdiv_1.0b/bootstrap.sh
-        stdout, stderr, status = Open3.capture3("curl -s -L \"#{@presigned_url}\" | tar -ztv")
+        stdout, stderr, _status = Open3.capture3("curl -s -L \"#{@presigned_url}\" | tar -ztv")
 
         stdout.each_line do |line|
           arr = line.strip.split(/\s+/, 9)

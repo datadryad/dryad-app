@@ -3,6 +3,7 @@ require 'stringio'
 require 'charlock_holmes/string'
 require 'zip'
 require 'down/http'
+require 'open3'
 
 module Stash
   module Compressed
@@ -184,13 +185,14 @@ module Stash
       # this maybe seems to do better with zip64 if java jar is installed
       def fallback_file_entries2
         file_info = []
-        std_out = `curl -s -L "#{@presigned_url}" | jar -tv`
-        std_out.each_line do |line|
+        stdout, stderr, _status = Open3.capture3("curl -s -L \"#{@presigned_url}\" | jar -tv")
+        stdout.each_line do |line|
           arr = line.strip.split(/\s+/, 8)
           my_fn = arr[-1]
           my_size = arr[0].to_i
           file_info << { file_name: my_fn, uncompressed_size: my_size }
         end
+        raise Stash::Compressed::ZipError, stderr if stdout.empty? && stderr.present?
         file_info
       end
 
