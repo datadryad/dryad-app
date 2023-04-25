@@ -60,6 +60,10 @@ module Stash
           enc = file_name.detect_encoding[:ruby_encoding] || 'UTF-8'
           file_name.force_encoding(enc)
 
+          # try to make UTF-8 and in the rare case it fails then make bad characters into question marks
+          file_name = file_name.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
+
+
           # forward past the file name
           ss.pos += file_name_length
 
