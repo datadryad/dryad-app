@@ -11,7 +11,8 @@ module Tasks
             zip_info = Stash::Compressed::ZipInfo.new(presigned_url: db_file.merritt_s3_presigned_url)
             zip_info.entries_with_fallback
           elsif db_file.upload_file_name.downcase.end_with?('.tar.gz', '.tgz')
-            Stash::Compressed::TarGz.new(presigned_url: db_file.merritt_s3_presigned_url).file_entries
+            tar_gz_info = Stash::Compressed::TarGz.new(presigned_url: db_file.merritt_s3_presigned_url)
+            tar_gz_info.entries_with_fallback
           else
             raise Stash::Compressed::Error, "Unknown file type for #{db_file.upload_file_name}"
           end
