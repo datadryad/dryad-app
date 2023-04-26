@@ -12,6 +12,13 @@
   </div>
 </div>
 
+<% if @resource&.identifier&.pub_state == 'published' %>
+<div class="c-sidebox" id="share_section">
+  <h2 class="c-sidebox__heading">Share</h2>
+  <%= render partial: 'stash_engine/landing/share', locals: {identifier: @id, resource: @resource, review: @review} %>
+</div>
+<% end %>
+
 <div class="c-sidebox">
   <h2 class="c-sidebox__heading">Metrics</h2>
   <div class="o-metrics">

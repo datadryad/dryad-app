@@ -1,0 +1,54 @@
+#share_buttons {
+  display: flex;
+  justify-content: space-between;
+
+  a, button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 8px;
+    font-size: 2em;
+    opacity: .9;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  button, button:hover {
+    color: $design-dark-gray-color;
+  }
+  a[data-share='email'] {
+    &, &:hover, &:visited {
+      color: $link-body-color;
+    }
+  }
+  a[data-share='reddit'] {
+    &, &:hover, &:visited {
+      color: #FF4500;
+    }
+  }
+  a[data-share='twitter'] {
+    &, &:hover, &:visited {
+      color: #00acee;
+    }
+  }
+  a[data-share='facebook'] {
+    &, &:hover, &:visited {
+      color: #3B5998;
+    }
+  }
+  a[data-share='linkedin'] {
+    &, &:hover, &:visited {
+      color: #0077b5;
+    }
+  }
+}
+
+#copy-success {
+  margin: 0;
+  font-size: .85em;
+  padding: 6px;
+  color: $design-white-color;
+  background-color: $design-green-color;
+}
