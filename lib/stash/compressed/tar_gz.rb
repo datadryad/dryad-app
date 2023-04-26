@@ -71,6 +71,7 @@ module Stash
           file_info << { file_name: my_fn, uncompressed_size: my_size }
         end
         raise Stash::Compressed::InvalidResponse, stderr if stdout.empty? && stderr.present?
+
         file_info
       end
 

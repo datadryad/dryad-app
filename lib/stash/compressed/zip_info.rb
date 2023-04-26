@@ -63,7 +63,6 @@ module Stash
           # try to make UTF-8 and in the rare case it fails then make bad characters into question marks
           file_name = file_name.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
 
-
           # forward past the file name
           ss.pos += file_name_length
 
