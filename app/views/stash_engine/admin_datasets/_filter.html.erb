@@ -27,8 +27,8 @@
   <% end %>
   <% if current_user.limited_curator? %>
     <div class="o-admin-form-pair">
-      <label for="sponsor_org">Sponsoring Org:</label>
-      <%= select_tag(:sponsor_org, options_for_select( [['Sponsoring Org', '']] + sponsor_select, params[:sponsor_org]),
+      <label for="sponsor_org">Sponsoring org:</label>
+      <%= select_tag(:sponsor_org, options_for_select( [['Sponsoring org', '']] + sponsor_select, params[:sponsor_org]),
                    class: 'c-input__text', onchange: "this.form.submit();") %>
     </div>
   <% end %> 

@@ -1,8 +1,8 @@
 <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index', only_path: true),
                method: 'get', id: 'search_form') do %>
 <div class="o-admin-form-inline">
-  <div class="o-admin-form-pair">
-    <label for="search-terms">Search Terms:</label>
+  <div class="o-admin-form-pair" id="search-pair">
+    <label for="search-terms">Search terms:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
     <%= hidden_field_tag(:sort, 'relevance') %>
   </div>
@@ -11,7 +11,7 @@
     <span><%= label_tag(:all_advanced, 'All terms') %> <sup>&dagger;</sup></span>
   </div>
   <%= submit_tag('Search', class: 'o-button__submit' ) %>
-  <a href="#" id="clear_search">Clear Search</a>
+  <a href="#" id="clear_search">Clear terms</a>
   <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
       <%= hidden_field_tag k, v, id: "search_#{k}" %>
   <% end %>
