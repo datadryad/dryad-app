@@ -10,6 +10,7 @@ namespace :compressed do
         .where(container_files: { id: nil })
         .where(file_state: %w[copied created])
         .where("upload_file_name LIKE '%.zip' OR upload_file_name LIKE '%.tar.gz' OR upload_file_name LIKE '%.tgz'")
+        .where('compressed_try < 3')
         .order(resource_id: :asc).distinct
 
     count = db_files.count
@@ -43,6 +44,8 @@ namespace :compressed do
            "resource_id: #{db_file.resource_id}): #{e.message}"
       puts "  Error: #{e.class} #{e.message}\n  #{e.backtrace.join("\n  ")}"
       db_file.container_files.delete_all
+    ensure
+      db_file.update(compressed_try: db_file.compressed_try + 1)
     end
 
     puts "#{Time.new.iso8601} Finished update of container_contents for compressed files"
@@ -72,6 +75,7 @@ namespace :compressed do
       puts "  No files found in #{db_file.upload_file_name}. Zip may be corrupted."
     else
       StashEngine::ContainerFile.insert_all(to_insert)
+      db_file.update(compessed_try: db_file.compressed_try + 1)
     end
 
     exit
