@@ -33,3 +33,11 @@ SELECT DISTINCT c.contributor_name as xref_name, c.name_identifier_id
  WHERE c.identifier_type = 'crossref_funder_id' and c.contributor_type = 'funder'
     AND c.name_identifier_id <> '' AND x.ror_id IS NULL;
 ```
+
+Items that are funders but don't match a fundref ID:
+
+```sql
+SELECT DISTINCT contributor_name, contributor_type, identifier_type, name_identifier_id
+  FROM dcs_contributors
+ WHERE contributor_type = 'funder' AND name_identifier_id ='';
+```
