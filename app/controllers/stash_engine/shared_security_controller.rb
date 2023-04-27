@@ -9,7 +9,7 @@ module StashEngine
         ]
     end
 
-    def require_login_wo_tenant
+    def require_user_login
       return if current_user.present?
 
       flash[:alert] = 'You must be logged in.'

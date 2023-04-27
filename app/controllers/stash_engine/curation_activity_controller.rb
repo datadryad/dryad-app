@@ -1,7 +1,6 @@
 module StashEngine
   class CurationActivityController < ApplicationController
-    # after_action :verify_authorized, except: :curation_activity_params
-
+    before_action :require_user_login
     helper AdminDatasetsHelper
 
     # GET /resources/{id}/curation_activities

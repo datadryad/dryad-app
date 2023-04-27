@@ -1,6 +1,7 @@
 module StashEngine
   class AdminDatasetFundersController < ApplicationController
     helper SortableTableHelper
+    before_action :require_user_login
 
     def index
       setup_paging

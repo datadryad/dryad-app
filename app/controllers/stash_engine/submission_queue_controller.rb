@@ -6,6 +6,7 @@ module StashEngine
     HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
     helper SortableTableHelper
+    before_action :require_user_login
 
     def index
       authorize %i[stash_engine repo_queue_state], :index?

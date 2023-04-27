@@ -5,6 +5,7 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
 
     helper SortableTableHelper
+    before_action :require_user_login
     before_action :setup_paging, only: [:index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)

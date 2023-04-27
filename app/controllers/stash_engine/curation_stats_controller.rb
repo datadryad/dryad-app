@@ -1,5 +1,6 @@
 module StashEngine
   class CurationStatsController < ApplicationController
+    before_action :require_user_login
     helper SortableTableHelper
 
     def index

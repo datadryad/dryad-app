@@ -1,7 +1,7 @@
 module StashEngine
   class PublicationUpdaterController < ApplicationController
     helper SortableTableHelper
-
+    before_action :require_user_login
     before_action :setup_paging, only: [:index]
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
