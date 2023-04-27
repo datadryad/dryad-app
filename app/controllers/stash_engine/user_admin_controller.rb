@@ -4,7 +4,7 @@ module StashEngine
   class UserAdminController < ApplicationController
 
     helper SortableTableHelper
-
+    before_action :require_user_login
     before_action :load_user, only: %i[email_popup role_popup tenant_popup journals_popup set_role set_tenant set_email user_profile]
     before_action :setup_paging, only: %i[index]
 

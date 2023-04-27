@@ -2,6 +2,7 @@ module StashEngine
   class JournalsController < ApplicationController
 
     helper SortableTableHelper
+    before_action :require_user_login
 
     def index
       params.permit(:q)

@@ -2,6 +2,7 @@ module StashEngine
   class ZenodoQueueController < ApplicationController
 
     helper SortableTableHelper
+    before_action :require_user_login
 
     ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size error_info].freeze
     ALLOWED_ORDER = %w[asc desc].freeze
