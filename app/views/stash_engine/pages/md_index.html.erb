@@ -11,13 +11,7 @@ for example.</p>
     <li>It seems to have basic features<li/>
     <li>If you insert a table, how do you add a row or column except with markdown directly?</li>
     <li>I didn't see a way to switch between code and rendered view (which may be useful)</li>
-    <li>I don't think we should expect most users to know to
-      <blockquote>
-        You can type `||` and a `space` to create a table
-      </blockquote>
-      Or other md syntax inside a GUI.
-    </li>
-    <li>I guess it is very expandable and open source-y</li>
+    <li>It is very expandable and open source</li>
     <li>I tried to <%= link_to "test it out", action: 'md_milkdown' %>, but their directions don't seem to get it working.</li>
   </ul>
   <li><%= link_to "ProseMirror", action: 'md_prosemirror' %></li>
@@ -27,11 +21,10 @@ for example.</p>
       </li>
       <li>
         I attempted to install it on <%= link_to "a page", action: 'md_prosemirror' %> on our site but the formatting
-        was off and I also saws lots of what were apparently CORs errors in the console and didn't proceed much further.
+        was off and I also saws lots of what were apparently CORS errors in the console and didn't proceed much further.
       </li>
       <li>
-        In the demo, I didn't see any way to toggle markdown code view and gui editor. I think some technical users may
-        want to have that option.
+        The demo has pretty simple controls and formatting options. It was probably OK for basics, yet wasn't the most attractive.
       </li>
       <li>
         It seems it's not really meant to play nicely or be a complete solution out of the box and searching on
@@ -47,7 +40,7 @@ for example.</p>
         Apparently Quill is more of a generic rich text editor and you have to jump through hoops with plugins to output
         markdown. This is similar to TinyMCE, so if we're going to have to do a lot of work to sanitize and be sure it only
         supports the markdown-specific things then I think we're better off staying with TinyMCE which we use for the other
-        rich text fields. But TinyMCE seems not-ideal and involves converting HTML back and forth to markdown.
+        rich text fields. But TinyMCE seems not-ideal and involves converting HTML back and forth to markdown, also.
       </li>
     </ul>
   <li>Toast UI</li>
@@ -60,6 +53,7 @@ for example.</p>
       <li>
         I installed <%= link_to "Toast", action: 'md_toast' %> as a test without a lot of problems, unlike some other editors.
       </li>
+      <li>A blog post comparing them says that it is mature and stable.</li>
     </ul>
   <li>TinyMCE -- Doesn't directly support Markdown though some people have hacked plugins to take HTML and make some
     kind of markdown from it. On the support site they say it is on their roadmap to add (when?).</li>
