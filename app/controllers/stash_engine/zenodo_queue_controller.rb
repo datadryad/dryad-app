@@ -23,6 +23,7 @@ module StashEngine
     SQL
 
     def index
+      authorize %i[stash_engine zenodo_copy]
       sort = (ALLOWED_SORT & [params[:sort]]).first || 'identifier_id'
       order = (ALLOWED_ORDER & [params[:direction]]).first || 'asc'
       sql = <<~SQL
@@ -30,7 +31,7 @@ module StashEngine
         WHERE state != "finished"
         ORDER BY #{sort} #{order};
       SQL
-      @zenodo_copies = authorize ZenodoCopy.find_by_sql(sql)
+      @zenodo_copies = ZenodoCopy.find_by_sql(sql)
     end
 
     def item_details
