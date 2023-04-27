@@ -1,5 +1,5 @@
 module StashEngine
-  class AdminDatasetsFunderPolicy < ApplicationPolicy
+  class AdminDatasetFunderPolicy < ApplicationPolicy
     def index?
       user.admin?
     end
