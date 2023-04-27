@@ -5,12 +5,12 @@ module StashEngine
     def index
       setup_paging
 
-      @rep = authorize Report.new, policy_class: AdminDatasetsFunderPolicy
-      # the AdminFundersController::Report is where most of the complicated SQL is for this
+      @rep = authorize Report.new, policy_class: AdminDatasetFunderPolicy
+      # the AdminDatasetFundersController::Report is where most of the complicated SQL is for this
 
       # WHERE conditions
       # Limit to tenant by either role or selected limit
-      @rep = policy_scope(@rep, policy_scope_class: AdminDatasetsFunderPolicy::Scope)
+      @rep = policy_scope(@rep, policy_scope_class: AdminDatasetFunderPolicy::Scope)
       @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]]) if params[:tenant]
 
       @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
