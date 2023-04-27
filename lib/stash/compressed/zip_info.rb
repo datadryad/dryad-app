@@ -3,6 +3,7 @@ require 'stringio'
 require 'charlock_holmes/string'
 require 'zip'
 require 'down/http'
+require 'open3'
 
 module Stash
   module Compressed
@@ -58,6 +59,9 @@ module Stash
           file_name = ss.peek(file_name_length)
           enc = file_name.detect_encoding[:ruby_encoding] || 'UTF-8'
           file_name.force_encoding(enc)
+
+          # try to make UTF-8 and in the rare case it fails then make bad characters into question marks
+          file_name = file_name.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?')
 
           # forward past the file name
           ss.pos += file_name_length
@@ -181,16 +185,23 @@ module Stash
         file_info
       end
 
-      # this maybe seems to do better with zip64 if java jar is installed
+      # this maybe seems to do better with zip64 if java jar is installed.  I would use zipinfo but it
+      # doesn't work with piping input and only displays help output rather than parsing the zip file.
+      # I believe the only way to use zipinfo is to write the file to disk and then run zipinfo on it
+      # which would take up lots of disk space for items that are large zip files.
       def fallback_file_entries2
         file_info = []
-        std_out = `curl -s -L "#{@presigned_url}" | jar -tv`
-        std_out.each_line do |line|
+        stdout, stderr, _status = Open3.capture3("curl -s -L \"#{@presigned_url}\" | jar -tv")
+        stdout.each_line do |line|
           arr = line.strip.split(/\s+/, 8)
           my_fn = arr[-1]
           my_size = arr[0].to_i
           file_info << { file_name: my_fn, uncompressed_size: my_size }
         end
+        # I don't know if the following does much since jar doesn't seem to always give good error messages like zipinfo
+        # and instead just gives blank output for many items it can't really parse.
+        raise Stash::Compressed::ZipError, stderr if stdout.empty? && stderr.present?
+
         file_info
       end
 
