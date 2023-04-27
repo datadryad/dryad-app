@@ -129,6 +129,9 @@ module StashApi
         description: request.env['HTTP_CONTENT_DESCRIPTION'],
         original_filename: @original_filename || @sanitized_name
       )
+      @resource.update(
+        total_file_size: StashEngine::DataFile.where(resource_id: @resource.id).sum(:upload_file_size)
+      )
     end
 
     def file_content_type
