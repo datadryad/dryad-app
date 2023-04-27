@@ -1,5 +1,6 @@
 require 'http'
 require 'rubygems/package'
+require 'open3'
 
 # test with files 14139 and 14140
 # df = StashEngine::DataFile.find(14139)
@@ -45,14 +46,42 @@ module Stash
             end
           end
           file_info
-        rescue HTTP::Error => e
+        rescue HTTP::Error, ArgumentError => e # ArgumentError is from Ruby tar library
+          Rails.logger.error("Error caught attempt #{attempts} -- #{e.message}")
           sleep sleep_time
           if (attempts += 1) < tries
-            Rails.logger.error("Error getting tar.gz file from S3 -- retrying: #{e.message}")
             retry
           end
           raise(e)
         end
+      end
+
+      def fallback_file_entries
+        file_info = []
+        # Open3.capture3 info at https://www.honeybadger.io/blog/capturing-stdout-stderr-from-shell-commands-via-ruby/
+
+        # example output from tar -ztv
+        # -rwxr-xr-x  0 tracyh staff     422 Jun  1  2011 dppdiv_1.0b/bootstrap.sh
+        stdout, stderr, _status = Open3.capture3("curl -s -L \"#{@presigned_url}\" | tar -ztv")
+
+        stdout.each_line do |line|
+          arr = line.strip.split(/\s+/, 9)
+          my_fn = arr[-1]
+          my_size = arr[4].to_i
+          file_info << { file_name: my_fn, uncompressed_size: my_size }
+        end
+        raise Stash::Compressed::InvalidResponse, stderr if stdout.empty? && stderr.present?
+
+        file_info
+      end
+
+      def entries_with_fallback
+        entries = file_entries(sleep_time: 5, tries: 1)
+        raise Stash::Compressed::InvalidResponse if entries.empty?
+
+        entries
+      rescue Stash::Compressed::InvalidResponse, ArgumentError
+        fallback_file_entries
       end
     end
   end
