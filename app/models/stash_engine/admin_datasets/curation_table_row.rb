@@ -13,14 +13,14 @@ module StashEngine
   module AdminDatasets
     class CurationTableRow
 
-      attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :storage_size,
+      attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :resource_size,
                   :search_words, :resource_id, :title, :publication_date, :tenant_id, :resource_state_id,
                   :resource_state, :curation_activity_id, :status, :updated_at, :submission_date, :editor_id, :editor_name,
                   :author_names, :views, :downloads, :citations, :relevance
 
       SELECT_CLAUSE = <<-SQL
         SELECT DISTINCT seid.value,
-          sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), sei.storage_size, sei.search_words,
+          sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), ser.total_file_size, sei.search_words,
           ser.id, ser.title, ser.publication_date, ser.tenant_id,
           sers.id, sers.resource_state,
           seca.id, seca.status, seca.updated_at, sd.submission_date,
@@ -77,7 +77,7 @@ module StashEngine
         @identifier_id = result[1]
         @identifier = result[2]
         @qualified_identifier = result[3]
-        @storage_size = result[4]
+        @resource_size = result[4]
         @search_words = result[5]
         @resource_id = result[6]
         @title = result[7]
