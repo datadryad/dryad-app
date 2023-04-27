@@ -630,6 +630,7 @@ class UploadFiles extends React.Component {
               chosenFiles={chosenFiles}
               clickedRemove={this.removeFileHandler}
               clickedValidationReport={this.showValidationReportHandler}
+              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
             />
             {loading && (
               <div className="c-upload__loading-spinner">
