@@ -8,8 +8,10 @@ module StashEngine
       @all_stats = authorize CurationStats.all
       @current_stats = authorize CurationStats.where(date: 1.month.ago..Date.today).order('date DESC')
 
-      @admin_stats = authorize StashEngine::AdminDatasetsController::Stats.new
-      @admin_stats_3day = authorize StashEngine::AdminDatasetsController::Stats.new(untouched_since: Time.now - 3.days)
+      @admin_stats = authorize StashEngine::AdminDatasetsController::Stats.new, policy_class: CurationStatsPolicy
+      @admin_stats_3day = authorize StashEngine::AdminDatasetsController::Stats.new(
+        untouched_since: Time.now - 3.days
+      ), policy_class: CurationStatsPolicy
 
       respond_to do |format|
         format.html
