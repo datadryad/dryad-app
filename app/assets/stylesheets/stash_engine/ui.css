@@ -8259,6 +8259,9 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 .t-landing__sidebar .c-sidebox {
   margin: 30px 0 0;
 }
+.t-landing__sidebar .c-sidebox:first-child {
+  margin-top: 0;
+}
 
 .t-landing__pdftable {
   margin-bottom: 1.5em;

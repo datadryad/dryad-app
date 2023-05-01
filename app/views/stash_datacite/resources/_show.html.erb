@@ -1,6 +1,3 @@
-<script type="application/ld+json">
-  <%= schema_org_ds %>
-</script>
   <%= render partial: "stash_datacite/titles/show", locals: { title: review.title_str, highlight: false } %>
   <div class="t-landing__metadata o-metadata">
     <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors, highlight: false } %>
@@ -45,7 +42,9 @@
                  locals: { geolocation_places: review.geolocation_places } %>
     </div>
   <% end %>
-
+<script type="application/ld+json">
+  <%= schema_org_ds %>
+</script>
 <script>
   $( document ).ready( loadReviewMap(<%=resource.id%>) );
 </script>
