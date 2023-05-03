@@ -34,6 +34,9 @@ module StashEngine
         .or(present_files.where('upload_file_name LIKE ?', '%.xlsx'))
         .or(present_files.where(upload_content_type: 'application/json'))
         .or(present_files.where('upload_file_name LIKE ?', '%.json'))
+        .or(present_files.where(upload_content_type: 'application/xml'))
+        .or(present_files.where(upload_content_type: 'text/xml'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.xml'))
     }
     enum file_state: %w[created copied deleted].to_h { |i| [i.to_sym, i] }
     enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] }
@@ -173,6 +176,7 @@ module StashEngine
 
       payload = JSON.generate({
                                 download_url: url || direct_s3_presigned_url,
+                                file_mime_type: upload_content_type,
                                 callback_url: h.file_frictionless_report_url(id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
                                                .gsub(/^http:/, 'https:'),
