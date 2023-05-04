@@ -28,6 +28,8 @@ module StashEngine
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
+        .or(present_files.where(upload_content_type: 'text/tab-separated-values'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.tsv'))
         .or(present_files.where(upload_content_type: 'application/vnd.ms-excel'))
         .or(present_files.where('upload_file_name LIKE ?', '%.xls'))
         .or(present_files.where(upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
