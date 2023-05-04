@@ -10,7 +10,7 @@ import sys
 # event json has these params passed in: download_url, callback_url, file_mime_type, token
 def lambda_handler(event, context):
   ftype = event.get("file_mime_type", '')
-  if "xml" in ftype:
+  if "/xml" in ftype:
     try:
       xmlfile = urlopen(event["download_url"])
       report = ET.parse(xmlfile)
