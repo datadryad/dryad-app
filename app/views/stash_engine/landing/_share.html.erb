@@ -1,0 +1,31 @@
+<% url = CGI.escape(show_url("doi:#{identifier.identifier}")) %>
+<% citation = CGI.escape(ActionController::Base.helpers.strip_tags(citation(resource.authors, resource.title, resource.resource_type, review.identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)))) %>
+<% title = CGI.escape("Dryad dataset: " + resource.title) %>
+<% abstract = CGI.escape("Abstract: " + ActionController::Base.helpers.strip_tags(review.abstract.description))%>
+<div id="share_buttons">
+  <!-- LinkedIn -->
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%=url%>" title="Share on LinkedIn" data-share="linkedin" target="blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i><span class="screen-reader-only">Share on LinkedIn (opens in new window)</span></a>
+  <!-- Facebook -->
+  <a href="https://www.facebook.com/sharer/sharer.php?u=<%=url%>" title="Share on Facebook" data-share="facebook" target="blank"><i class="fa fa-facebook-square" aria-hidden="true"></i><span class="screen-reader-only">Share on Facebook (opens in new window)</span></a>
+  <!-- Twitter -->
+  <a href="https://twitter.com/intent/tweet?text=<%=title%>%0A&url=<%=url%>" title="Share on Twitter" data-share="twitter" target="blank"><i class="fa fa-twitter-square" aria-hidden="true"></i><span class="screen-reader-only">Share on Twitter (opens in new window)</span></a>
+  <!-- Reddit -->
+  <a href="https://www.reddit.com/submit?url=<%=url%>&title=<%=title%>" title="Share on Reddit" data-share="reddit" target="blank"><i class="fa fa-reddit-square" aria-hidden="true"></i><span class="screen-reader-only">Share on Reddit (opens in new window)</span></a>
+  <!-- Email -->
+  <a href="mailto:?subject=<%=title%>&body=Citation%3A+<%=citation%>%0A%0A<%=abstract%>" title="Share with email" data-share="email" target="blank"><i class="fa fa-envelope-square" aria-hidden="true"></i><span class="screen-reader-only">Share with email (opens in new window)</span></a>
+  <!-- Copy -->
+  <button onclick="copyUrl()" title="Copy link to this page"><i class="fa fa-share-square"></i><span class="screen-reader-only">Copy link to this page</span></button>
+</div>
+<div role="status">
+  <p id="copy-success" hidden><i class="fa fa-check" aria-hidden="true"></i> Link copied</p>
+</div>
+
+<script type="text/javascript">
+  async function copyUrl() {
+    window.navigator.clipboard.writeText(window.location.href);
+    const flash = document.getElementById('copy-success');
+    flash.removeAttribute('hidden');
+    await new Promise(res => setTimeout(res, 3000));
+    flash.setAttribute('hidden', 'true');
+  }
+</script>
