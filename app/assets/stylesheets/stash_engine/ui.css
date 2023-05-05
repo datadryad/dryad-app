@@ -7865,6 +7865,52 @@ img.c-upload__spinner {
   margin-bottom: 3em;
 }
 
+#share_buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+#share_buttons a, #share_buttons button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 8px;
+  font-size: 2em;
+  opacity: 0.9;
+}
+#share_buttons a:hover, #share_buttons button:hover {
+  opacity: 1;
+}
+#share_buttons button, #share_buttons button:hover {
+  color: rgb(78, 80, 80);
+}
+#share_buttons a[data-share=email], #share_buttons a[data-share=email]:hover, #share_buttons a[data-share=email]:visited {
+  color: #00527A;
+}
+#share_buttons a[data-share=reddit], #share_buttons a[data-share=reddit]:hover, #share_buttons a[data-share=reddit]:visited {
+  color: #FF4500;
+}
+#share_buttons a[data-share=twitter], #share_buttons a[data-share=twitter]:hover, #share_buttons a[data-share=twitter]:visited {
+  color: #00acee;
+}
+#share_buttons a[data-share=facebook], #share_buttons a[data-share=facebook]:hover, #share_buttons a[data-share=facebook]:visited {
+  color: #3B5998;
+}
+#share_buttons a[data-share=linkedin], #share_buttons a[data-share=linkedin]:hover, #share_buttons a[data-share=linkedin]:visited {
+  color: #0077b5;
+}
+
+#copy-success {
+  margin: 0;
+  font-size: 0.85em;
+  padding: 6px;
+  color: rgb(255, 255, 255);
+  background-color: #3c763d;
+}
+
 progress {
   height: 0.7em;
   border: none;
