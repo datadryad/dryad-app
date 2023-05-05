@@ -2,23 +2,22 @@
   <!-- This is only available if the version has not yet been submitted to the repository AND
      the associated journal allows a review workflow -->
   <div>
-    <p>By choosing this option, your dataset will be private during your related article's peer review period. You will
-      have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not
-      enter curation or be published. Because we may not have the status of your related article, the default for this
-      period is six months. Please <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> or uncheck this box
-      at any point if your dataset is ready to enter curation.</p>
-
     <div>
       <%= form_with model: @resource, url: peer_review_path, local: false, authenticity_token: true do |f| %>
-        <%= f.check_box :hold_for_peer_review %>
-        <label for="stash_engine_resource_hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
+        <div id="stash_engine_resource_hold_for_peer_review" role="group" aria-labelledby="peer_review_label">
+        <p><%= f.radio_button :hold_for_peer_review, false, class: "t-review__agree-to-license" %>
+          <%= f.label :hold_for_peer_review, "Make my dataset available for public download as soon as possible", value: "false"%>  
+         <p><%= f.radio_button :hold_for_peer_review, true, class: "t-review__agree-to-license" %>
+          <%= f.label :hold_for_peer_review, "Keep my dataset private while my related article is in peer review", value: "true" %>
+        </div>
+        <p id="stash_engine_resource_hold_for_peer_review_disclaimer" <% if !@resource.hold_for_peer_review? %>hidden<% end %>>By choosing this option, your dataset will be private during your related article's peer review period, or for 6 months in cases where we do not know your related article's status. You will have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not enter curation or be published. After submission, please <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> or edit this choice when your dataset is ready to enter curation.</p>
         <span class="c-input__error-message"><%= @error %></span>
         <%= f.hidden_field :id %>
       <% end %>
     </div>
     <br/>
     <script type="text/javascript">
-     $('#stash_engine_resource_hold_for_peer_review').on('change', function(e) {
+     $('#stash_engine_resource_hold_for_peer_review input:radio').on('change', function(e) {
         $(this).closest('form').submit();
       });
     </script>
