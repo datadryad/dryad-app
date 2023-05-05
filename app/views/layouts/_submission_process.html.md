@@ -117,8 +117,8 @@ Foundation</a>.
 </p>
 
 <p>
-  If you prefer that your data remain private during the peer review process, select <a href="/stash/faq#how-does-dryad-s-private-for-peer-review-feature-work">Private for peer review</a>
-  on the final page of the submission form. While in this status, your submission will not enter
+  If you prefer that your data remain private during the peer review process, select the option "Keep my dataset private while my related article is in peer review"
+  on the final page of the submission form. While in "<a href="/stash/faq#how-does-dryad-s-private-for-peer-review-feature-work">Private for peer review</a>" status, your submission will not enter
   our curation process or publish until the checkbox for this option is deselected or you contact
   us to update the status of your submission.
 </p>
