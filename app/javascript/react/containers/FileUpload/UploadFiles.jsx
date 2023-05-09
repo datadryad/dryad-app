@@ -32,9 +32,9 @@ const Messages = {
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
 };
 const ValidTabular = {
-  extensions: ['csv', 'xls', 'xlsx'],
-  mime_types: ['text/csv', 'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  extensions: ['csv', 'tsv', 'xls', 'xlsx', 'json', 'xml'],
+  mime_types: ['text/csv', 'text/tab-separated-values', 'application/vnd.ms-excel', 'text/xml',
+    'application/xml', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   ],
 };
 const upload_types = [
