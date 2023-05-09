@@ -29,6 +29,10 @@
 
 	.c-sidebox {
 		margin: 30px 0 0;
+
+		&:first-child {
+			margin-top: 0;
+		}
 	}
 
 }
