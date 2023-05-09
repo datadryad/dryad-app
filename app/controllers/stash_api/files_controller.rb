@@ -130,7 +130,7 @@ module StashApi
         original_filename: @original_filename || @sanitized_name
       )
       @resource.update(
-        total_file_size: StashEngine::DataFile.where(resource_id: @resource.id).sum(:upload_file_size)
+        total_file_size: StashEngine::DataFile.where(resource_id: @resource.id).where(file_state: %w[created copied]).sum(:upload_file_size)
       )
       file
     end
