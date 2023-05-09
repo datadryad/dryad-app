@@ -75,6 +75,10 @@ module StashEngine
               original_filename: params[:original]
             )
 
+          @resource.update(total_file_size: StashEngine::DataFile
+                                              .where(resource_id: @resource.id)
+                                              .where(file_state: %w[created copied])
+                                              .sum(:upload_file_size))
           render json: { new_file: db_file }
         end
       end
