@@ -10,7 +10,7 @@ import sys
 # event json has these params passed in: download_url, callback_url, file_mime_type, token
 def lambda_handler(event, context):
   ftype = event.get("file_mime_type", '')
-  if "/xml" in ftype:
+  if ftype.endswith('/xml'):
     try:
       xmlfile = urlopen(event["download_url"])
       report = ET.parse(xmlfile)
@@ -19,7 +19,7 @@ def lambda_handler(event, context):
       update(token=event["token"], status='issues', report=json.dumps({'report': f'XML file is invalid: {err}'}), callback=event['callback_url'])
     # valid XML
     update(token=event["token"], status='noissues', report=json.dumps({'report': ''}), callback=event['callback_url'])
-  if "json" in ftype:
+  if ftype.endswith('/json'):
     try:
       jsonfile = urlopen(event["download_url"])
       report = json.load(jsonfile)
