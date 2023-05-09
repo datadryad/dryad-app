@@ -36,7 +36,14 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
       {jsReport?.report?.stats?.errors === 10 && (
         <p>The report shows the maximum of 10 alerts. More alerts may appear if these 10 are corrected and the file is re-uploaded.</p>
       )}
-      <div id="validation_report" />
+      {typeof jsReport.report === 'string' ? (
+        <div className="error">
+          {jsReport.report}
+          <div id="validation_report" hidden />
+        </div>
+      ) : (
+        <div id="validation_report" />
+      )}
       <p>
         You can choose to proceed to the final page of the submission form without editing your file.
         At curation stage, if there are questions about how your data is presented, a curator will contact
