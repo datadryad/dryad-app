@@ -4959,6 +4959,16 @@ td:last-child, th:last-child {
       flex-wrap: wrap;
 }
 
+#search-pair {
+  max-width: 100%;
+  width: 660px;
+}
+#search-pair #search-terms {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
 .c-admin-editing-banner {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8294,6 +8304,9 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 }
 .t-landing__sidebar .c-sidebox {
   margin: 30px 0 0;
+}
+.t-landing__sidebar .c-sidebox:first-child {
+  margin-top: 0;
 }
 
 .t-landing__pdftable {
