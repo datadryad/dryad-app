@@ -1,15 +1,12 @@
 module StashEngine
   class PublicationUpdaterController < ApplicationController
-
-    include SharedSecurityController
     helper SortableTableHelper
-
-    before_action :require_limited_curator
+    before_action :require_user_login
     before_action :setup_paging, only: [:index]
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
-      proposed_changes = StashEngine::ProposedChange.includes(identifier: :resources)
+      proposed_changes = authorize StashEngine::ProposedChange.includes(identifier: :resources)
         .joins(identifier: :resources).where(approved: false, rejected: false)
       params[:sort] = 'score' if params[:sort].blank?
       params[:direction] = 'desc' if params[:direction].blank?
@@ -25,7 +22,7 @@ module StashEngine
 
     def update
       respond_to do |format|
-        @proposed_change = StashEngine::ProposedChange.find(params[:id])
+        @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
         @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
         @proposed_change.approve!(current_user: current_user)
         @proposed_change.reload
@@ -35,7 +32,7 @@ module StashEngine
 
     def destroy
       respond_to do |format|
-        @proposed_change = StashEngine::ProposedChange.find(params[:id])
+        @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
         @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
         @proposed_change.reject!(current_user: current_user)
         @proposed_change.reload

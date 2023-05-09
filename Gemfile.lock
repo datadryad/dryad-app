@@ -528,6 +528,8 @@ GEM
     public_suffix (5.0.1)
     puma (6.1.0)
       nio4r (~> 2.0)
+    pundit (2.3.0)
+      activesupport (>= 3.0.0)
     racc (1.6.2)
     rack (2.2.6.3)
     rack-attack (6.6.1)
@@ -860,6 +862,7 @@ DEPENDENCIES
   pry-rails
   pry-remote
   puma
+  pundit (~> 2.3)
   rack-attack
   rails (~> 6.1.0)
   rb-readline

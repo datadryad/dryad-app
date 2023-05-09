@@ -9,6 +9,8 @@ module StashEngine
     before_action :bust_cache, only: %i[find_or_create]
     before_action :require_not_obsolete, only: %i[find_or_create]
 
+    # apply Pundit?
+
     def resource
       @resource ||= Resource.find(params[:resource_id])
     end
