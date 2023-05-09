@@ -1,21 +1,20 @@
 module StashEngine
   class AdminDatasetFundersController < ApplicationController
-    include SharedSecurityController
     helper SortableTableHelper
-
-    before_action :require_admin
+    before_action :require_user_login
 
     def index
       setup_paging
 
-      @rep = Report.new # the AdminFundersController::Report is where most of the complicated SQL is for this
-      @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
+      @rep = authorize Report.new, policy_class: AdminDatasetFunderPolicy
+      # the AdminDatasetFundersController::Report is where most of the complicated SQL is for this
 
       # WHERE conditions
       # Limit to tenant by either role or selected limit
-      @role_limit = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
-      tenant_limit = @role_limit || params[:tenant]
-      @rep.add_where(arr: ['last_res.tenant_id = ?', tenant_limit]) if tenant_limit.present?
+      @rep = policy_scope(@rep, policy_scope_class: AdminDatasetFunderPolicy::Scope)
+      @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]]) if params[:tenant].present?
+
+      @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
 
       add_funder_limit
       add_date_range

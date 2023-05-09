@@ -3,10 +3,8 @@ require 'kaminari'
 module StashEngine
   class UserAdminController < ApplicationController
 
-    include SharedSecurityController
     helper SortableTableHelper
-
-    before_action :require_superuser
+    before_action :require_user_login
     before_action :load_user, only: %i[email_popup role_popup tenant_popup journals_popup set_role set_tenant set_email user_profile]
     before_action :setup_paging, only: %i[index]
 
@@ -22,7 +20,7 @@ module StashEngine
         params[:direction] = 'desc'
       end
 
-      @users = User.all
+      @users = authorize User.all
 
       @users = @users.where('tenant_id = ?', params[:tenant_id]) if params[:tenant_id].present?
 
@@ -91,6 +89,7 @@ module StashEngine
     end
 
     def merge_popup
+      authorize %i[stash_engine user]
       selected_users = params['selected_users'].split(',')
 
       if selected_users.size == 2
@@ -102,6 +101,7 @@ module StashEngine
     end
 
     def merge
+      authorize %i[stash_engine user]
       user1 = StashEngine::User.find(params['user1'])
       user2 = StashEngine::User.find(params['user2'])
       user1.merge_user!(other_user: user2)
@@ -132,7 +132,7 @@ module StashEngine
     end
 
     def load_user
-      @user = User.find(params[:id])
+      @user = authorize User.find(params[:id]), :load_user?
     end
 
     def setup_ds_status_facets

@@ -6,45 +6,6 @@ module StashEngine
       @hostname = request.host
     end
 
-    # Utility page that closes itself
-    def close_page; end
-
-    def best_practices; end
-
-    def jounral_integration; end
-
-    def our_governance; end
-
-    def our_mission; end
-
-    def our_membership; end
-
-    def join_us; end
-
-    def our_platform; end
-
-    def our_staff; end
-
-    def pb_tombstone; end
-
-    def publishing_charges; end
-
-    def submission_process; end
-
-    def why_use; end
-
-    def code_of_conduct; end
-
-    def contact; end
-
-    # The faq controller uses the standard app layout, so the default is here.
-    # Perhaps specific views would override it in the base application.
-    def faq; end
-
-    # The about controller uses the standard app layout, so the default is here.
-    # Perhaps specific views would override it in the base application.
-    def about; end
-
     # produces a sitemap for the domain name/tenant listing the released datasets
     # TODO: change page to display all that are embargoed or published, not merritt status and cache the doc so it's not too heavy
     def sitemap

@@ -5,6 +5,7 @@ module StashEngine
   class StatusDashboardController < ApplicationController
 
     include SharedController
+    before_action :require_user_login
 
     # NOTE: that this is a bit confusing since it service checks tied in from various strange places.
 
@@ -12,6 +13,7 @@ module StashEngine
     # similar model ExternalDependency in StashEngine.  It also has specific checks for the dependency in the directory
     # app/services/stash_engine/status_dashboard/<service-name>.rb that does the actual check and sets a value for it.
     def show
+      authorize StashEngine::ExternalDependency.all
       @main_documentation = 'https://confluence.ucop.edu/display/Stash/Dryad+Operations'
       @managed_dependencies = StashEngine::ExternalDependency.where(internally_managed: true).order(:name)
       @unmanaged_dependencies = StashEngine::ExternalDependency.where(internally_managed: false).order(:name)

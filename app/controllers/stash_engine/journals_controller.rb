@@ -1,13 +1,13 @@
 module StashEngine
   class JournalsController < ApplicationController
 
-    include SharedSecurityController
     helper SortableTableHelper
+    before_action :require_user_login
 
     def index
       params.permit(:q)
       params[:sort] = 'title' if params[:sort].blank?
-      @all_journals = Journal.all
+      @all_journals = authorize Journal.all
 
       metadata_journal_clause = 'stash_engine_journals.id IN ' \
                                 "(select distinct journal_id from stash_engine_manuscripts where created_at > '#{1.year.ago.iso8601}')"

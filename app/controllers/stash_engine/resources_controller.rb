@@ -9,6 +9,9 @@ module StashEngine
     before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
     before_action :bust_cache, only: %i[upload manifest up_code up_code_manifest review]
     before_action :require_not_obsolete, only: %i[upload manifest up_code up_code_manifest review]
+    # after_action :verify_authorized, only: %i[create]
+
+    # apply Pundit?
 
     attr_writer :resource
 
@@ -49,7 +52,7 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      resource = Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
+      resource = authorize Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::IdGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, import_info: 'manuscript')

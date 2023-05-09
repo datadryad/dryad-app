@@ -5,12 +5,11 @@ module StashEngine
 
     HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
-    include SharedSecurityController
     helper SortableTableHelper
-
-    before_action :require_superuser
+    before_action :require_user_login
 
     def index
+      authorize %i[stash_engine repo_queue_state], :index?
       # When the page first loads, the index view lays out the basic framework, but the
       # table starts empty, and it is immediately populated by refresh_table. So there is
       # no actual work to do in the index method.
@@ -21,7 +20,7 @@ module StashEngine
       params[:sort] = 'updated_at' if params[:sort].blank?
       ord = helpers.sortable_table_order(whitelist:
                                            %w[resource_id state hostname updated_at])
-      @queue_rows = RepoQueueState.latest_per_resource.where.not(state: 'completed').order(ord)
+      @queue_rows = authorize RepoQueueState.latest_per_resource.where.not(state: 'completed').order(ord)
       @queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued').count
       @server_held_count = RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down')
         .where(hostname: StashEngine.repository.class.hostname).count
@@ -46,7 +45,8 @@ module StashEngine
 
       resource_ids.each do |res_id|
         # clear out all the previous queue states and start with just the first set to 'rejected_shutting_down'
-        RepoQueueState.where(resource_id: res_id).each_with_index do |rqs, idx|
+        @states = authorize RepoQueueState.where(resource_id: res_id)
+        @states.each_with_index do |rqs, idx|
           if idx == 0
             rqs.update(state: 'rejected_shutting_down', hostname: StashEngine.repository.class.hostname) # set up for a re-starting state
           else
@@ -62,6 +62,7 @@ module StashEngine
     private
 
     def enqueue_submissions(resource_ids:)
+      authorize %i[stash_engine repo_queue_state], :index?
       resource_ids.each do |res_id|
         StashEngine.repository.submit(resource_id: res_id)
       end
