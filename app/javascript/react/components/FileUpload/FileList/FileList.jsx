@@ -3,9 +3,14 @@ import React from 'react';
 import File from './File';
 import BadList from './BadList';
 
-const file_list = ({chosenFiles, clickedRemove, clickedValidationReport}) => (
+const file_list = ({
+  chosenFiles, clickedRemove, clickedValidationReport, totalSize,
+}) => (
   <>
-    <h2 className="o-heading__level2" id="filelist_id">Files</h2>
+    <div className="c-uploadtable-header">
+      <h2 className="o-heading__level2" id="filelist_id">Files</h2>
+      <p>Total size: {totalSize}</p>
+    </div>
     <BadList chosenFiles={chosenFiles} />
     <div className="table-wrapper c-uploadtable-wrapper">
       <table className="c-uploadtable">

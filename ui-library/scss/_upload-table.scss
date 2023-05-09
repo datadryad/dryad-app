@@ -1,10 +1,21 @@
 // ##### Upload Table Component ##### //
+.c-uploadtable-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  p {
+    font-size: 0.9em;
+  }
+}
 
 .c-uploadtable-wrapper {
   margin-bottom: $spacing-lg;
 }
 
 .c-uploadtable {
+  min-width: 100%;
+
   th,
   td {
     padding: $spacing-sm;

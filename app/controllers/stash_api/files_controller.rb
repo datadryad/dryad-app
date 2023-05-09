@@ -119,7 +119,7 @@ module StashApi
 
     def save_file_to_db
       handle_previous_duplicates(upload_filename: @sanitized_name)
-      StashEngine::DataFile.create(
+      file = StashEngine::DataFile.create(
         upload_file_name: @sanitized_name,
         upload_content_type: file_content_type,
         upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
@@ -129,6 +129,10 @@ module StashApi
         description: request.env['HTTP_CONTENT_DESCRIPTION'],
         original_filename: @original_filename || @sanitized_name
       )
+      @resource.update(
+        total_file_size: StashEngine::DataFile.where(resource_id: @resource.id).where(file_state: %w[created copied]).sum(:upload_file_size)
+      )
+      file
     end
 
     def file_content_type
