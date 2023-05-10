@@ -9,8 +9,6 @@ module StashEngine
     before_action :require_identifier_and_resource, only: %i[show]
     protect_from_forgery(except: [:update])
 
-    # apply Pundit?
-
     # ############################################################
     # Helper methods
 
