@@ -10,7 +10,7 @@
          <p><%= f.radio_button :hold_for_peer_review, true, class: "t-review__agree-to-license" %>
           <%= f.label :hold_for_peer_review, "Keep my dataset private while my related article is in peer review", value: "true" %>
         </div>
-        <p id="stash_engine_resource_hold_for_peer_review_disclaimer" <% if !@resource.hold_for_peer_review? %>hidden<% end %>>By choosing this option, your dataset will be private during your related article's peer review period, or for 6 months in cases where we do not know your related article's status. You will have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not enter curation or be published. After submission, please <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> or edit this choice when your dataset is ready to enter curation.</p>
+        <p id="stash_engine_resource_hold_for_peer_review_disclaimer" <% if !@resource.hold_for_peer_review? %>hidden<% end %>>By choosing this option, your dataset will be kept private during your related article's peer review process. After submission your Dryad data files can be shared with collaborators and others using a private URL that will be provided. Your submission will not be evaluated by curators or published until you choose to release your submission from this status. To do so, please edit this choice or <%= mail_to APP_CONFIG[:contact_us_uri], 'email us'  %> when your dataset is ready to enter curation.</p>
         <span class="c-input__error-message"><%= @error %></span>
         <%= f.hidden_field :id %>
       <% end %>
