@@ -1,5 +1,5 @@
 default: &default
-  enabled: true
+  enabled: false
   abbreviation: "IITISM"
   short_name: "Indian Institute of Technology Dhanbad"
   long_name: "Indian Institute of Technology Dhanbad"
@@ -20,7 +20,7 @@ default: &default
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
-  partner_display: true
+  partner_display: false
   covers_dpc: true
 
 development: &DEVELOPMENT
