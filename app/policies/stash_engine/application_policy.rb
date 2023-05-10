@@ -1,10 +1,10 @@
 module StashEngine
   class ApplicationPolicy
-    attr_reader :user, :resouce
+    attr_reader :user, :resource
 
     def initialize(user, resource)
       @user = user
-      @record = resource
+      @resource = resource
     end
 
     def index?
