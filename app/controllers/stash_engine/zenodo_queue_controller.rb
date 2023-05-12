@@ -36,12 +36,14 @@ module StashEngine
     end
 
     def item_details
-      @zenodo_copy = authorize ZenodoCopy.find(params[:id])
+      authorize %i[stash_engine zenodo_copy]
+      @zenodo_copy = ZenodoCopy.find(params[:id])
 
       @delayed_jobs = running_jobs(@zenodo_copy)
     end
 
     def identifier_details
+      authorize %i[stash_engine zenodo_copy]
       sort = (ALLOWED_SORT & [params[:sort]]).first || 'identifier_id'
       order = (ALLOWED_ORDER & [params[:direction]]).first || 'asc'
       sql = <<~SQL
@@ -50,12 +52,13 @@ module StashEngine
         ORDER BY #{sort} #{order};
       SQL
 
-      @zenodo_copies = authorize ZenodoCopy.find_by_sql([sql, params[:id]])
+      @zenodo_copies = ZenodoCopy.find_by_sql([sql, params[:id]])
       @identifier = Identifier.find(params[:id])
     end
 
     def resubmit_job
-      @zenodo_copy = authorize ZenodoCopy.find(params[:id])
+      authorize %i[stash_engine zenodo_copy]
+      @zenodo_copy = ZenodoCopy.find(params[:id])
       copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
 
       previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
@@ -77,11 +80,12 @@ module StashEngine
     end
 
     def set_errored
+      authorize %i[stash_engine zenodo_copy]
       sql = <<~SQL
         #{BASIC_SQL}
         WHERE state != "finished";
       SQL
-      @zenodo_copies = authorize ZenodoCopy.find_by_sql(sql)
+      @zenodo_copies = ZenodoCopy.find_by_sql(sql)
 
       @zenodo_copies.each do |zc|
         zc.update(state: 'error') unless running_jobs(zc).count.positive?
