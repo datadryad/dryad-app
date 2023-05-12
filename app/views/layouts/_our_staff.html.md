@@ -135,12 +135,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/sachin.png" alt="Headshot of Sachin Gopinath">
-  <h5>Sachin Gopinath</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Sachin has an M.A. in Biochemistry and 13 years of experience in scientific data curation, content development, project training, and management. He has expertise in article analysis to manually curate molecular interactions, molecular pathways, biomarker-gene-disease associations, and chemical metabolism and toxicity information to build pathway maps and signaling networks.</p>
-</div>
-<div class="bio">
   <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
   <h5>Evangeline Janani</h5><br/>
   <p><em>Data Curator</em><br/>
@@ -151,12 +145,6 @@
   <h5>Kailasha Purushothaman</h5><br/>
   <p><em>Data Curator</em><br/>
   Kailasha has a diverse range of experiences and expertise in the fields of medical physics, teaching, biophysics imaging and copyediting. She earned her Master of Medical Physics degree from RMIT University and began her career as a Physicist at Peter MacCallum Cancer Center in Australia, where she gained valuable experience in radiation therapy. She has also taught medical physics and biomedical imaging to undergraduate students. In her free time, Kailasha enjoys pursuing creative outlets such as cooking and painting.</p>
-</div>
-<div class="bio">
-  <img src="/images/prerana.jpg" alt="Headshot of Prerana Charakara Sukumar">
-  <h5>Prerana Charakara Sukumar</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Prerana is an experienced scientific analyst with an M.A. in Biochemistry. She has worked in various data curation projects and has expertise in pathway analysis and identification of novel biomarkers, targets, and mechanisms of action based on hypotheses. Prerana is also an active vlogger.</p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
