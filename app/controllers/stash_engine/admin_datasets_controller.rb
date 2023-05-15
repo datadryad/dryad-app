@@ -82,9 +82,9 @@ module StashEngine
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def curation_activity_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
-        authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
         @resource =
           if @identifier.last_submitted_resource&.id.present?
@@ -98,9 +98,9 @@ module StashEngine
     end
 
     def current_editor_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
-        authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
         # using the last submitted resource should apply the curation to the correct place, even with windows held open
         @resource =
           if @identifier.last_submitted_resource&.id.present?
@@ -122,10 +122,10 @@ module StashEngine
     end
 
     def current_editor_change
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         format.js do
           @identifier = Identifier.find(params[:identifier_id])
-          authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
           @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
           decipher_curation_activity
           editor_id = params[:stash_engine_resource][:current_editor][:id]
@@ -152,10 +152,10 @@ module StashEngine
 
     # rubocop:disable Metrics/AbcSize
     def curation_activity_change
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         format.js do
           @identifier = Identifier.find(params[:identifier_id])
-          authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
           @resource = @identifier.last_submitted_resource
           @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
 

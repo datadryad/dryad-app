@@ -17,6 +17,22 @@ module StashEngine
       @user.limited_curator?
     end
 
+    def curation_activity_change?
+      user.curator?
+    end
+
+    def curation_activity_popup?
+      curation_activity_change?
+    end
+
+    def current_editor_change?
+      user.curator?
+    end
+
+    def current_editor_popup?
+      current_editor_change?
+    end
+
     def create_salesforce_case?
       user.limited_curator?
     end
