@@ -14,9 +14,7 @@
       </div>
       <div class="c-lined-table__actions">
         <%# only with permission and not being messed with or in_progress or they're the ones futzing with it and making it in progress, lockout other concurrent editing %>
-      <% if (dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted') ||
-          (dataset.resource_state == 'in_progress' && dataset.resource.current_editor_id == current_user.id)
-      %>
+      <% if policy(dataset).edit? %>
         <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
       <% end %>
       <%= render partial: 'stash_engine/admin_datasets/show_stats_button', locals: { resource_id: dataset.resource_id } %>
@@ -35,9 +33,7 @@
           <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
         <% end %>
       </div>
-      <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
-       dataset.resource&.permission_to_edit?(user: current_user) &&
-       dataset.resource_state == 'submitted') %>
+      <% if policy(dataset).curation_activity_popup? %>
        <div class="c-lined-table__actions">
         <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
                        action: 'curation_activity_popup', id: dataset.identifier_id, only_path: true ),
@@ -64,24 +60,24 @@
       <div class="c-lined-table__data c-lined-table__digits">
         <%= formatted_datetime(dataset.updated_at) %>
       </div>
-      <div class="c-lined-table__actions">
-        <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
-                                 id: dataset.identifier_id, only_path: true),
-                    method: :get) do -%>
-          <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-          </button>
-        <% end %>
-      </div>
+      <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
+        <div class="c-lined-table__actions">
+          <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
+                                   id: dataset.identifier_id, only_path: true),
+                      method: :get) do -%>
+            <button class="c-admin-edit-icon" title="View Activity Log" aria-label="View Activity Log">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </td>
   <!-- Curation -->
   <td id="js-curation-activity-user-<%= dataset.identifier_id %>">
     <div class="c-lined-table__with-actions">
       <div class="c-lined-table__data"><%= dataset.editor_name %></div>
-      <% if (%w[superuser curator tenant_curator].include?(current_user.role) &&
-  	     dataset.resource&.permission_to_edit?(user: current_user) &&
-               dataset.resource.curatable?) %>
+      <% if policy(dataset).current_editor_popup? %>
         <div class="c-lined-table__actions">
   	     <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets',
   				     action: 'current_editor_popup', id: dataset.identifier_id, only_path: true ),
