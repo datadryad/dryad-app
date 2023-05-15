@@ -5,6 +5,34 @@ module StashEngine
       user.admin?
     end
 
+    def activity_log?
+      index?
+    end
+
+    def note_popup?
+      index?
+    end
+
+    def data_popup?
+      @user.limited_curator?
+    end
+
+    def create_salesforce_case?
+      user.limited_curator?
+    end
+
+    def waiver_add?
+      user.superuser?
+    end
+
+    def waiver_popup?
+      waiver_add?
+    end
+
+    def stats_popup?
+      index?
+    end
+
     class Scope
       def initialize(user, scope, params)
         @user = user
