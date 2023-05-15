@@ -14,6 +14,7 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def index
       # Limits due to the current search/filter settings are handled within CurationTableRow
+      authorize %i[stash_engine admin_datasets]
       my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
@@ -27,8 +28,6 @@ module StashEngine
       end
 
       search_terms = { params: helpers.sortable_table_params, page: page.to_i, page_size: page_size.to_i }
-
-      authorize @all_stats, policy_class: AdminDatasetsPolicy
 
       @datasets = AdminDatasetsPolicy::Scope.new(current_user, StashEngine::AdminDatasets::CurationTableRow, search_terms).resolve
       @publications = StashEngine::Journal.order(:title).map(&:title)
@@ -50,9 +49,9 @@ module StashEngine
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def data_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         @identifier = Identifier.find(params[:id])
-        authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
         @internal_datum = if params[:internal_datum_id]
                             InternalDatum.find(params[:internal_datum_id])
                           else
@@ -64,9 +63,9 @@ module StashEngine
     end
 
     def note_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
-        authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
         resource =
           if @identifier.last_submitted_resource&.id.present?
             Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
@@ -115,9 +114,9 @@ module StashEngine
     end
 
     def waiver_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         @identifier = Identifier.where(id: params[:id]).first
-        authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
         format.js
       end
     end
@@ -191,8 +190,8 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def waiver_add
+      authorize %i[stash_engine admin_datasets]
       @identifier = Identifier.find(params[:id])
-      authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
       @resource = @identifier.latest_resource
 
       respond_to do |format|
@@ -227,8 +226,8 @@ module StashEngine
 
     # show curation activities for this item
     def activity_log
+      authorize %i[stash_engine admin_datasets]
       @identifier = Identifier.find(params[:id])
-      authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
       resource_ids = @identifier.resources.collect(&:id)
       ord = helpers.sortable_table_order(whitelist: %w[created_at])
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(ord, id: :asc)
@@ -239,18 +238,18 @@ module StashEngine
     end
 
     def stats_popup
+      authorize %i[stash_engine admin_datasets]
       respond_to do |format|
         format.js do
           @resource = Resource.find(params[:id])
-          authorize @resource, :index?, policy_class: AdminDatasetsPolicy
         end
       end
     end
 
     def create_salesforce_case
+      authorize %i[stash_engine admin_datasets]
       # create the case
       @identifier = Identifier.find(params[:id])
-      authorize @identifier, :index?, policy_class: AdminDatasetsPolicy
       sf_case_id = Stash::Salesforce.create_case(identifier: @identifier, owner: current_user)
 
       # redirect to it
