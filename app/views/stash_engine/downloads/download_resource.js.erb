@@ -8,7 +8,9 @@ function delayedEnable() {
 
 <% if @status_hash[:status] == 200 %>
   delayedEnable();
-  // trackMetric(DataCiteTracker.MetricType.Download, { doi: '<%= @resource&.identifier&.identifier %>' });
+  if (typeof dc_download !== 'undefined') {
+    trackMetric(dc_download, {doi: '<%= @resource&.identifier&.identifier %>'});
+  }
   window.location.href = "<%= raw(@status_hash[:url]) %>";
 <% elsif @status_hash[:status] == 202 %>
   <%= render partial: 'download_popup', formats: :js %>
