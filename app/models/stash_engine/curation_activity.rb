@@ -115,9 +115,9 @@ module StashEngine
       when 'peer_review'
         'Private for peer review'
       when 'action_required'
-        'Author Action Required'
+        'Action required'
       else
-        status.humanize.split.map(&:capitalize).join(' ')
+        status.humanize
       end
     end
 
