@@ -8167,6 +8167,125 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   direction: rtl;
 }
 
+.c-user-datasets-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: table;
+  border-collapse: collapse;
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  margin-bottom: 1rem;
+}
+.c-user-datasets-list li {
+  border: thin solid #888;
+  display: table-row;
+}
+.c-user-datasets-list li:nth-child(even) {
+  background-color: #f6f6f6;
+}
+.c-user-datasets-list li > div {
+  display: table-cell;
+}
+.c-user-datasets-list li > div:first-child {
+  padding-left: 10px;
+  padding-right: 2rem;
+}
+.c-user-datasets-list li > div:last-child {
+  width: 200px;
+  font-size: 0.9em;
+  padding-right: 10px;
+}
+.c-user-datasets-list li p {
+  margin: 0.5rem auto;
+}
+@media (min-width: 480px) {
+  .c-user-datasets-list {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+  }
+  .c-user-datasets-list li > div:first-child {
+    padding-left: 20px;
+  }
+  .c-user-datasets-list li > div:last-child {
+    padding-right: 20px;
+  }
+}
+@media (min-width: 760px) {
+  .c-user-datasets-list {
+    width: calc(100% + 60px);
+    margin-left: -30px;
+  }
+  .c-user-datasets-list li > div:first-child {
+    padding-left: 30px;
+  }
+  .c-user-datasets-list li > div:last-child {
+    padding-right: 30px;
+  }
+}
+
+.c-user-dataset-details {
+  font-size: 0.85em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-column-gap: 1rem;
+     -moz-column-gap: 1rem;
+          column-gap: 1rem;
+}
+.c-user-dataset-details .prev-published {
+  margin-left: auto;
+}
+.c-user-dataset-details .prev-published i {
+  color: #3c763d;
+}
+
+.c-user-datasets-status {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 0.5rem;
+}
+.c-user-datasets-status .dataset-status {
+  display: block;
+  padding: 0.15rem 0.5rem;
+}
+.c-user-datasets-status .error-status {
+  background-color: rgb(209, 44, 29);
+  color: #fff;
+}
+.c-user-datasets-status .warning-status {
+  background-color: #edba5a;
+}
+.c-user-datasets-status .info-status {
+  background-color: #0071a8;
+  color: #fff;
+}
+.c-user-datasets-status .success-status {
+  background-color: #3c763d;
+  color: #fff;
+}
+.c-user-datasets-status .disabled-status {
+  background-color: rgb(78, 80, 80);
+}
+.c-user-datasets-status .c-user-datasets-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
 .t-describe__remove-button {
   -ms-flex-item-align: center;
       align-self: center;
