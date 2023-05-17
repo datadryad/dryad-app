@@ -1,10 +1,12 @@
 <dialog id="railsConfirmDialog" class="modalDialog">
   <div>
-    <h1 id="railsConfMsg" style="width: 25rem; float: left;"></h1>
+    <h1 id="railsConfMsg" class="o-heading__level2" style="width: 25rem; float: left;"></h1>
     <button id="railsConfirmDialogClose" class="button-close-modal" style="float: right;" aria-label="close" type="button"></button>
     <div style="clear: both;">&nbsp;</div>
-    <button id="railsConfirmDialogYes" value="default">Yes</button>
-    <button id="railsConfirmDialogNo" value="cancel">No</button>
+    <div style="display: flex; justify-content: flex-end; column-gap: 1rem;">
+      <button id="railsConfirmDialogYes" class="o-button__plain-text2" style="padding: .5rem 2rem;" value="default">Yes</button>
+      <button id="railsConfirmDialogNo" class="o-button__plain-text2" style="padding: .5rem 2rem;" value="cancel">No</button>
+    </div>
   </div>
 </dialog>
 
