@@ -55,13 +55,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     describe :merritt_submission_error do
       it 'displays the proper information on the My datasets page', js: true do
+        mock_merritt_send!(@resource)
         mock_unsuccessfull_merritt_submission!(@resource)
         click_link 'My datasets'
-        within(:css, '#user_submitted tbody tr:first-child') do
+        within(:css, '#user_processing li:first-child') do
           expect(page).to have_text(@resource.title)
           expect(page).to have_text('Processing')
-          # Capybara matcher returns nil for the 'Update' link since it is disabled
-          expect(page).not_to have_link('Update')
+          expect(page).not_to have_selector('button[name="update"]')
         end
       end
     end
@@ -69,6 +69,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     describe :merritt_submission_success do
       before(:each) do
         ActionMailer::Base.deliveries = []
+        mock_merritt_send!(@resource)
         mock_successfull_merritt_submission!(@resource)
       end
 
@@ -82,10 +83,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the My datasets page', js: true do
         click_link 'My datasets'
-        within(:css, '#user_submitted tbody tr:first-child') do
+        within(:css, '#user_processing li:first-child') do
           expect(page).to have_text(@resource.title)
           expect(page).to have_text('Submitted')
-          expect(page).to have_button('Update')
+          expect(page).to have_selector('button[name="update"]')
         end
       end
 
@@ -208,8 +209,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         ActionMailer::Base.deliveries = []
         sign_in(@author)
         click_link 'My datasets'
-        within(:css, '#user_submitted') do
-          click_button 'Update'
+        within(:css, '#user_processing') do
+          find('button[name="update"]').click
         end
         update_dataset
         @resource.reload
@@ -284,8 +285,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         sign_in(@author)
         click_link 'My datasets'
-        within(:css, '#user_submitted') do
-          click_button 'Update'
+        within(:css, '#user_in-progress') do
+          find('button[name="update"]').click
         end
         update_dataset
         @resource.reload
@@ -300,8 +301,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         sign_in(@author)
         click_link 'My datasets'
-        within(:css, '#user_submitted') do
-          click_button 'Update'
+        within(:css, '#user_withdrawn') do
+          find('button[name="update"]').click
         end
         update_dataset
         @resource.reload
@@ -328,8 +329,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
           sign_in(@author)
           click_link 'My datasets'
-          within(:css, '#user_submitted') do
-            click_button 'Update'
+          within(:css, '#user_complete') do
+            find('button[name="update"]').click
           end
           update_dataset
           @resource.reload
@@ -346,8 +347,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
           sign_in(@author)
           click_link 'My datasets'
-          within(:css, '#user_submitted') do
-            click_button 'Update'
+          within(:css, '#user_complete') do
+            find('button[name="update"]').click
           end
           update_dataset
           @resource.reload
