@@ -45,7 +45,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         click_link 'My datasets'
 
         expect(page).to have_text(@resource.title)
-        expect(page).to have_text('In Progress')
+        expect(page).to have_text('In progress')
       end
 
       it 'did not send out an email to the author', js: true do
