@@ -72,6 +72,8 @@ module StashDatacite
 
       StashEngine.repository.submit(resource_id: resource_id)
 
+      resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data', user_id: 0)
+
       resource.reload
 
       resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
