@@ -429,6 +429,7 @@ Rails.application.routes.draw do
     get 'resources/show', to: 'resources#show'
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
+    patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
 
   ########################## CEDAR Embeddable Editor ###############################
