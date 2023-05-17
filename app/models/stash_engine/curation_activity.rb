@@ -26,6 +26,7 @@ module StashEngine
     #
     enum_vals = %w[
       in_progress
+      processing
       submitted
       peer_review
       curation
