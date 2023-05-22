@@ -16,7 +16,7 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://shib2.its.rochester.edu/idp/shibboleth
+    entity_id: https://uidp-prod.its.rochester.edu/idp/shibboleth
     entity_domain: shib2.its.rochester.edu
   default_license: cc0
   campus_contacts: []
