@@ -236,6 +236,68 @@ WHERE dcs_affil3.ror_id IN ('https://ror.org/02y3ad647', 'https://ror.org/0419bg
 ORDER BY se_res3.publication_date, se_id3.identifier, se_res3.title;
 </pre>
 
+# See all institutions associated with all authors for dataset (all versions, all statuses)
+(replace the identifier with the one you want to see).
+```mysql
+SELECT res.id as resource_id, res.created_at resource_created, resource_id, affil.*
+  FROM stash_engine_identifiers ids
+	JOIN stash_engine_resources res
+      ON ids.id = res.identifier_id
+    JOIN stash_engine_authors auth
+      ON res.id = auth.resource_id
+    JOIN dcs_affiliations_authors aff_auth
+      ON auth.id = aff_auth.author_id
+    JOIN dcs_affiliations affil
+      ON aff_auth.affiliation_id = affil.id
+  WHERE ids.identifier = '10.5061/dryad.k0p2ngfb1'
+  ORDER BY res.id;
+```
+
+# See all unique DOIs associated with authors at institutions (all versions, all statuses)
+
+Replace the list of ROR institutions and only works when people have filled in the
+RORs correctly.
+
+```mysql
+SELECT DISTINCT ids.identifier
+  FROM stash_engine_identifiers ids
+	JOIN stash_engine_resources res
+      ON ids.id = res.identifier_id
+    JOIN stash_engine_authors auth
+      ON res.id = auth.resource_id
+    JOIN dcs_affiliations_authors aff_auth
+      ON auth.id = aff_auth.author_id
+    JOIN dcs_affiliations affil
+      ON aff_auth.affiliation_id = affil.id
+  WHERE affil.ror_id IN ('https://ror.org/01q1z8k08', 'https://ror.org/008rmbt77', 'https://ror.org/05ms04m92', 'https://ror.org/0306aeb62', 'https://ror.org/02n1c7856', 'https://ror.org/057trrr89', 'https://ror.org/02rrhsz92', 'https://ror.org/00qv0tw17', 'https://ror.org/05vrs0r17', 'https://ror.org/03g1q6c06', 'https://ror.org/02r3ym141', 'https://ror.org/033zmj163', 'https://ror.org/000fxgx19', 'https://ror.org/040kfrw16', 'https://ror.org/05a4pj207', 'https://ror.org/02v9m6h26', 'https://ror.org/02d4maz67', 'https://ror.org/03j3dv688', 'https://ror.org/01597g643', 'https://ror.org/032qgrc76', 'https://ror.org/05qghxh33', 'https://ror.org/012zs8222', 'https://ror.org/01y64my43', 'https://ror.org/0041qmd21');
+```
+
+# See all DOIs submitted under a tenant
+(Change tenant ids below to the ones you want to see)
+```mysql
+SELECT DISTINCT ids.identifier
+  FROM stash_engine_identifiers ids
+    JOIN stash_engine_resources res
+    ON ids.id = res.identifier_id
+  WHERE res.tenant_id IN ('suny-buffalo', 'suny-buffalostate', 'suny-stonybrook', 'suny');
+```
+
+# See all DOIs submitted by a user who is associated with a tenant (all versions, all statuses)
+(Change tenant ids below to the ones you want to see)
+
+This may not match the tenant id in the dataset since users may have their affiliation changed later
+after making submissions. Users have their tenant_id association set after bringing
+a new tenant on board by searching for users with emails at an institution.
+
+```mysql
+SELECT DISTINCT ids.identifier
+  FROM stash_engine_identifiers ids
+    JOIN stash_engine_resources res
+      ON ids.id = res.identifier_id
+    JOIN stash_engine_users users
+      ON res.user_id = users.id
+  WHERE users.tenant_id IN ('suny-buffalo', 'suny-buffalostate', 'suny-stonybrook', 'suny');
+```
 
 Unique authors from ROR institutions (from SQL)
 ===============================================
