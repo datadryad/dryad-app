@@ -134,6 +134,7 @@
         dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
+        dryad_related_publication_name_ti^15
       </str>
       <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
@@ -155,6 +156,7 @@
         dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
+        dryad_related_publication_name_ti^15
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
