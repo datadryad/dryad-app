@@ -9,14 +9,6 @@ module StashEngine
       create?
     end
 
-    # def update?
-    #  @user = @resource.current_editor_id
-    # end
-
-    # def edit?
-    #  update?
-    # end
-
     class Scope
       def initialize(user, scope)
         @user = user
@@ -24,13 +16,7 @@ module StashEngine
       end
 
       def resolve
-        if @user.limited_curator?
-          @scope.all
-        elsif @user.journals_as_admin.present? || @user.funders_as_admin.present?
-          @scope.where(admin_for_this_item?)
-        else
-          @scope.where(user_id: @user.user_id)
-        end
+        @scope.where(user_id: @user.id)
       end
 
       private
