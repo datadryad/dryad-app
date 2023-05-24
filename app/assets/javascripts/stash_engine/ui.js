@@ -1615,12 +1615,9 @@ function joelsReady(){
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
   var emails = document.getElementsByClassName('emailr');
-  console.log('emails length = ', emails.length);
   for (var i=0; i < emails.length; i++) {
     emails[i].onclick = e => {
       var email = e.currentTarget.textContent.split('').reverse().join('');
-      console.log('email', email);
-      console.log('currentTarget', e.currentTarget);
       e.currentTarget.href='mailto:'+email;
     }
 
@@ -1635,7 +1632,6 @@ function joelsReady(){
       const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
       navigator.clipboard.writeText(email).then(() => {
         // Successful copy
-        console.log('Text copied!');
         copyText.style.display = 'inline';
         setTimeout(function(){
           copyText.style.display = 'none';
