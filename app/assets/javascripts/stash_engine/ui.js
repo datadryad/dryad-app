@@ -1637,6 +1637,9 @@ function joelsReady(){
         // Successful copy
         console.log('Text copied!');
         copyText.style.display = 'inline';
+        setTimeout(function(){
+          copyText.style.display = 'none';
+        }, 2000);
       });
     }
   };
