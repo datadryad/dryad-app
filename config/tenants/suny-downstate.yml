@@ -1,0 +1,49 @@
+default: &default
+  enabled: true
+  abbreviation: "Downstate"
+  short_name: "SUNY Downstate"
+  long_name: "SUNY Downstate Health Sciences University"
+  publisher_id: grid.262863.b
+  ror_ids:
+    - https://ror.org/0041qmd21
+  tenant_id: suny-downstate
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: ip_address
+    ranges: [ "138.5.0.0/16" ]
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+

@@ -123,12 +123,10 @@ Press wanted this disclaimer when people go to submit.
 reason institutions become tenants.
 
 
-Adding the logo and institution to the list
--------------------------------------------
+Adding the logo
+---------------
 
 Logos go into `app/assets/images/tenants`
-
-Add the institution to the list in `app/views/layouts/_members_institutional.html.md`
 
 
 Updating pre-existing users in the database
