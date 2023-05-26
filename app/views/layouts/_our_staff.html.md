@@ -113,18 +113,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/savannah.jpg" alt="Headshot of Savannah Butler">
-  <h5>Savannah Butler</h5><br/>
-  <p><em>Data Curator</em><br/>  
-  Savannah holds a B.A. in Chemistry and an M.S. in Civil & Environmental
-  Engineering, with research interests in atmospheric and water pollution
-  mitigation. Savannah has spent the last two years working in the humanitarian
-  field supporting displaced people throughout Europe, and outside of Dryad she
-  supports NGOs in grant writing. In her spare time, Savannah enjoys swimming,
-  rock climbing, cooking, and learning new languages.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/bryan.jpg" alt="Headshot of Bryan Gee">
   <h5>Bryan Gee</h5><br/>
   <p><em>Data Curator</em><br/>
