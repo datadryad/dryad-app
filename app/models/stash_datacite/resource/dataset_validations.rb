@@ -9,6 +9,8 @@ require 'stash/aws/s3'
 include StashEngine::ApplicationHelper
 # rubocop:enable Style/MixinUsage
 
+# rubocop:disable Metrics/ClassLength
+
 module StashDatacite
   module Resource
 
@@ -138,7 +140,7 @@ module StashDatacite
         if @resource.subjects.non_fos.count < 3 && @resource.identifier.created_at > subjects_require_date
           return ErrorItem.new(message: 'Fill in at least three {keywords}',
                                page: metadata_page(@resource),
-                               ids: ["keyword_ac"])
+                               ids: ['keyword_ac'])
         end
         []
       end
@@ -308,3 +310,5 @@ module StashDatacite
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength
