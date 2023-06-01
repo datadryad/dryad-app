@@ -15,8 +15,8 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: unknown
-    entity_domain: macelester.galaxydigital.com
+    entity_id: https://idp.macalester.edu/openathens
+    entity_domain: macalester.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
