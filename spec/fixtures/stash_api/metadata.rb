@@ -22,6 +22,7 @@ module Fixtures
         add_author
         add_research_domain
         add_funder
+        add_keywords
       end
 
       def make_minimal_ordered_authors
@@ -32,6 +33,7 @@ module Fixtures
         add_author(order: 1)
         add_author(order: 0)
         add_research_domain
+        add_keywords
       end
 
       def add_field(field_name:, value: nil)
