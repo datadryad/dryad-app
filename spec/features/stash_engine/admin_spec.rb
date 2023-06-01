@@ -152,6 +152,7 @@ RSpec.feature 'Admin', type: :feature do
         page.send_keys(:tab)
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
+        3.times { fill_in_keyword }
         add_required_data_files
         click_link 'Review and submit'
         agree_to_everything
