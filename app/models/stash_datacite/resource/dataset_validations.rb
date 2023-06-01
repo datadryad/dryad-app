@@ -136,7 +136,7 @@ module StashDatacite
       end
 
       def subjects
-        subjects_require_date = '2023-05-31'
+        subjects_require_date = '2023-06-07'
         if @resource.subjects.non_fos.count < 3 && @resource.identifier.created_at > subjects_require_date
           return ErrorItem.new(message: 'Fill in at least three {keywords}',
                                page: metadata_page(@resource),
