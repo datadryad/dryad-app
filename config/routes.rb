@@ -463,7 +463,7 @@ Rails.application.routes.draw do
   get '/pages/searching', to: redirect('search')
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
-  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
+  get '/themes/Mirage/*path', to: redirect('/')
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   
   # Routing to redirect old Dryad landing pages to the correct location
