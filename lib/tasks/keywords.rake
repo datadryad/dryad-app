@@ -22,7 +22,7 @@ namespace :keywords do
 
     # without silencing this, all I saw was ActiveRecord SQL logging and it was hard to see the progress
     Rails.logger.silence do
-      plos = Tasks::Keywords::Plos.new(fn: ENV['PLOS_PATH'])
+      plos = Tasks::Keywords::Plos.new(fn: ENV.fetch('PLOS_PATH', nil))
       plos.populate
     end
 
