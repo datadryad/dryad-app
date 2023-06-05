@@ -53,6 +53,7 @@ module DatasetHelper
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    3.times { fill_in_keyword }
   end
 
   def add_required_data_files
@@ -80,6 +81,11 @@ module DatasetHelper
     choose('choose_published')
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
+  end
+
+  def fill_in_keyword(keyword: Faker::Creature::Animal.name)
+    fill_in 'keyword_ac', with: keyword
+    page.send_keys(:tab)
   end
 
   def fill_in_author
