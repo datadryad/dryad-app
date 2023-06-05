@@ -865,6 +865,7 @@ module StashApi
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                    create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
           @res.authors.first.update(author_orcid: @super_user.orcid)
+          @res.subjects << [create(:subject), create(:subject), create(:subject)]
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
         end
 
