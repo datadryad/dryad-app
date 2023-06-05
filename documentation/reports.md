@@ -46,12 +46,14 @@ git pull
 git add <new-file>
 git commit -a -m "add reports for 2019-11"
 git push origin main
-
-# If it is the end of a quarter, combine the three monthly files into a single quarterly file
 ```
 
-Deferred payment reports
---------------------------
+End-of-quarter reporting
+------------------------
+
+At the end of a quarter, combine the three monthly files into a single quarterly file so it can be used for the quarterly reports below.
+
+**Deferred payment reports**
 
 For journals that have a deferred payment plan, a secondary task generates
 PDF reports that can be be sent to the journal sponsors. The secondary task
@@ -65,8 +67,7 @@ Run the deferred payment reports with a command like:
 RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports SC_REPORT=/tmp/shopping_cart_report_2020-01.csv
 ```
 
-Tiered payment reports
---------------------------
+**Tiered payment reports**
 
 For journals that have a tiered payment plan, a secondary task generates
 PDF reports that can be be sent to the journal sponsors. The secondary task
