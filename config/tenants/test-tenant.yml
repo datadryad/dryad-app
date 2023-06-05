@@ -1,13 +1,13 @@
 default: &default
   enabled: true
   abbreviation: "test"
-  short_name: "Test"
+  short_name: "Test tenant"
   long_name: "Test tenant"
   publisher_id: grid.471410.7
   ror_ids:
     - https://ror.org/02r109517
     - https://ror.org/05v5hg569
-  tenant_id: test_tenant
+  tenant_id: test-tenant
   identifier_service:
     provider: datacite
     prefix: "10.7959"
