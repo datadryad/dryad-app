@@ -28,7 +28,7 @@ en:
       institution: 'Institution'
       data_type: 'Data type'
       placename: 'Placename'
-      subject: 'Subject'
+      subject: 'Subject keyword'
       publication: 'Journal'
       version: ''
     tools:
