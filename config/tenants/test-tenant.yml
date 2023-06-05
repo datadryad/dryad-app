@@ -50,6 +50,7 @@ production:
   <<: *default
   #Add any items that need to override the defaults here
   enabled: false
+  partner_display: false
 
 test:
   <<: *default
