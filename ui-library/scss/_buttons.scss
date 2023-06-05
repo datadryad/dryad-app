@@ -349,3 +349,9 @@
 }
 
 button.o-button__calendar:focus { outline: none; }
+
+.copy-icon {
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px;
+}

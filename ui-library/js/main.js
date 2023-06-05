@@ -161,6 +161,24 @@ function joelsReady(){
       var email = e.currentTarget.textContent.split('').reverse().join('');
       e.currentTarget.href='mailto:'+email;
     }
+
+    const newEl = document.createElement("span");
+    newEl.setAttribute('class', 'copy-icon');
+    newEl.innerHTML = '&nbsp;<i class="fa fa-clipboard" aria-hidden="true"><i><span style="display: none">&nbsp;copied</span>';
+    const element = emails[i];
+    element.parentNode.insertBefore(newEl, element.nextSibling);
+    newEl.onclick = e => {
+      e.preventDefault();
+      const copyText = e.currentTarget.getElementsByTagName('span')[0];
+      const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
+      navigator.clipboard.writeText(email).then(() => {
+        // Successful copy
+        copyText.style.display = 'inline';
+        setTimeout(function(){
+          copyText.style.display = 'none';
+        }, 2000);
+      });
+    }
   };
 
   var navButtons = Array.from(document.getElementsByClassName('c-header_nav-button'));
