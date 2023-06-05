@@ -1,0 +1,56 @@
+default: &default
+  enabled: true
+  abbreviation: "test"
+  short_name: "Test"
+  long_name: "Test tenant"
+  publisher_id: grid.471410.7
+  ror_ids:
+    - https://ror.org/02r109517
+    - https://ror.org/05v5hg569
+  tenant_id: test_tenant
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: shibboleth
+    entity_id: https://login.weill.cornell.edu/idp
+    entity_domain: login.weill.cornell.edu
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  enabled: false
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
