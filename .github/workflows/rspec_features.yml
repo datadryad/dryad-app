@@ -63,4 +63,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: capybara-screenshots
-        path: tmp/capybara
+        path: tmp/capybara/*
