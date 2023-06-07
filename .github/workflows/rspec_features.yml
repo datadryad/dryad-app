@@ -58,3 +58,9 @@ jobs:
 
     - name: 'Run RSpec Feature Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/
+
+    - name: Archive capybara screenshots
+      uses: actions/upload-artifact@v3
+      with:
+        name: capybara-screenshots
+        path: tmp/capybara
