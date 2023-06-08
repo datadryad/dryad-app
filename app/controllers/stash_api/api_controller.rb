@@ -20,6 +20,10 @@ module StashApi
       render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id }
     end
 
+    def reports
+      render json: { message: "Requested report #{params['report_name']}"}
+    end
+    
     private
 
     def output
