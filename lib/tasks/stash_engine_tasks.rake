@@ -319,6 +319,11 @@ namespace :identifiers do
   end
 
   desc 'Generate a report of items associated with common preprint servers'
+  
+  task datasets_without_articles_report: :environment do
+    Stash::Reports::RelatedWorksReports.datasets_without_articles
+  end
+  
   task preprints_report: :environment do
     p 'Writing preprints_report.csv...'
     CSV.open('preprints_report.csv', 'w') do |csv|

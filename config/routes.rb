@@ -88,6 +88,7 @@ Rails.application.routes.draw do
     get '/', to: 'api#index'
     match '/test', to: 'api#test', via: %i[get post]
     match '/search', to: 'datasets#search', via: %i[get]
+    get '/reports(/:report_name)', to: 'api#reports'
     
     # Support for the Editorial Manager API
     match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
