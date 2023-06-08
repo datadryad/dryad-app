@@ -135,22 +135,26 @@ module Datacite
       end
 
       def add_dates(dcs_resource)
-        dcs_resource.dates = se_resource.datacite_dates.where.not(date: nil).map do |d|
-          sd_date = d.date
-          Date.new(
-            type: d.date_type_mapping_obj,
-            value: sd_date
-          )
-        end
+        iss_dt = se_resource&.identifier&.datacite_issued_date
+        avail_dt = se_resource&.identifier&.datacite_available_date
+
+        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::ISSUED, value: iss_dt) if iss_dt
+        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::AVAILABLE, value: avail_dt) if avail_dt
       end
 
       def add_subjects(dcs_resource)
-        normal_subjects = se_resource.subjects.non_fos.map { |s| Subject.new(value: s.subject) }
-        # FOS subjects are a special kind Martin is handling differently based on a prefix in the string
-        fos_subjects = se_resource.subjects.where(subject_scheme: 'fos').map do |s|
-          Subject.new(value: "FOS: #{s.subject}")
-        end
-        dcs_resource.subjects = normal_subjects + fos_subjects
+        subjects = se_resource.subjects.map do |s|
+          if s.subject.present?
+            if s.subject_scheme.present?
+              Subject.new(value: s.subject, scheme: s.subject_scheme, scheme_uri: s.scheme_URI)
+            else
+              Subject.new(value: s.subject)
+            end
+          else
+            nil
+          end
+        end.compact
+        dcs_resource.subjects = subjects if subjects.any?
       end
 
       def add_contributors(dcs_resource, datacite_3: false)
