@@ -150,8 +150,6 @@ module Datacite
             else
               Subject.new(value: s.subject)
             end
-          else
-            nil
           end
         end.compact
         dcs_resource.subjects = subjects if subjects.any?
