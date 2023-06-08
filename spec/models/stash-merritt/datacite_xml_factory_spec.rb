@@ -138,10 +138,10 @@ module Datacite
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
-          expect(doc.xpath("//creators/creator/affiliation").first.child.to_s).to eql(@resource.authors.first.affiliation.long_name)
-          expect(doc.xpath("//creators/creator/affiliation[@affiliationIdentifier]").first.attributes['affiliationIdentifier'].value).to \
-              eql(@resource.authors.first.affiliation.ror_id)
-          expect(doc.xpath("//creators/creator/affiliation[@affiliationIdentifier]").first.attributes['affiliationIdentifierScheme'].value)
+          expect(doc.xpath('//creators/creator/affiliation').first.child.to_s).to eql(@resource.authors.first.affiliation.long_name)
+          expect(doc.xpath('//creators/creator/affiliation[@affiliationIdentifier]').first.attributes['affiliationIdentifier'].value).to \
+            eql(@resource.authors.first.affiliation.ror_id)
+          expect(doc.xpath('//creators/creator/affiliation[@affiliationIdentifier]').first.attributes['affiliationIdentifierScheme'].value)
             .to eql('ROR')
         end
 
@@ -150,11 +150,11 @@ module Datacite
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
-          expect(doc.xpath("//fundingReferences//fundingReference/funderName").first.text)
+          expect(doc.xpath('//fundingReferences//fundingReference/funderName').first.text)
             .to eql(@resource.contributors.where(contributor_type: 'funder').first.contributor_name)
-          expect(doc.xpath("//fundingReferences//fundingReference/funderIdentifier").first.text)
+          expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.text)
             .to eql(@resource.contributors.where(contributor_type: 'funder').first.name_identifier_id)
-          expect(doc.xpath("//fundingReferences//fundingReference/funderIdentifier").first.attributes['funderIdentifierType'].value)
+          expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.attributes['funderIdentifierType'].value)
             .to eql('Crossref Funder ID')
         end
       end
