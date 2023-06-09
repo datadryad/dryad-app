@@ -102,7 +102,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       system_user = create(:user, id: 0)
-      expect{ create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      expect { create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page.current_path).to eq('/stash/sessions/choose_login')
     end
@@ -143,7 +143,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows editing a dataset', js: true do
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
-        expect{ @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
+        expect { @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
           .to change(StashEngine::Resource, :count).by(1)
         visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit Dataset"]')
@@ -244,10 +244,10 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows filtering by institution', js: true do
-        expect {
+        expect do
           @user1 = create(:user, tenant_id: 'dataone')
           @user2 = create(:user, tenant_id: 'ucop')
-        }.to change(StashEngine::User, :count).by(2)
+        end.to change(StashEngine::User, :count).by(2)
         visit stash_url_helpers.user_admin_path
         select 'DataONE', from: 'tenant_id'
         click_on 'Search'
@@ -256,7 +256,7 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows changing user email as a superuser', js: true do
-        expect{ @user = create(:user) }.to change(StashEngine::User, :count).by(1)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
         expect(page).to have_link(@user.name)
         within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(@user.id)}\"]") do
@@ -272,7 +272,7 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows changing user role as a superuser', js: true do
-        expect{ @user = create(:user) }.to change(StashEngine::User, :count).by(1)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
         expect(page).to have_link(@user.name)
         within(:css, "form[action=\"#{stash_url_helpers.user_role_popup_path(@user.id)}\"]") do
@@ -288,7 +288,7 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows changing user tenant as a superuser', js: true do
-        expect{ @user = create(:user) }.to change(StashEngine::User, :count).by(1)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
         expect(page).to have_link(@user.name)
         within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(@user.id)}\"]") do
