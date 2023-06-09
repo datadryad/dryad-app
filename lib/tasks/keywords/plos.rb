@@ -18,7 +18,7 @@ module Tasks
             StashDatacite::Subject.create(subject: k, subject_scheme: SCHEME, scheme_URI: SCHEME_URI)
           else
             subjs.each do |subj|
-              next if subj.subject == k && subj.subject_scheme == SCHEME && subj.scheme_URI == SCHEME_URI
+              next if subj.subject_scheme == 'fos' || (subj.subject == k && subj.subject_scheme == SCHEME && subj.scheme_URI == SCHEME_URI)
 
               # update the existing one to the correct values, so it reflects the vocabulary it came from
               subj.update(subject: k, subject_scheme: SCHEME, scheme_URI: SCHEME_URI)
