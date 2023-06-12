@@ -91,7 +91,7 @@ module DatasetHelper
   def fill_in_author
     fill_in 'author_first_name', with: Faker::Name.unique.first_name
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
-    fill_in 'author_email', with: Faker::Internet.safe_email
+    fill_in 'author_email', with: Faker::Internet.email
     # just fill in results of name dropdown (react) in hidden field and test this separately
     page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
   end
