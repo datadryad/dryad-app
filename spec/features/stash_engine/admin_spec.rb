@@ -68,6 +68,7 @@ RSpec.feature 'Admin', type: :feature do
       @resource.tenant_id = 'dryad'
       expect { @resource.save }.to change(@resource, :updated_at)
       @resource.reload
+      sleep 1
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
