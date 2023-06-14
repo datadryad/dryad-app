@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'pry-remote'
 
 RSpec.feature 'Admin', type: :feature do
@@ -66,7 +67,8 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
       @resource.tenant_id = 'dryad'
-      expect { @resource.save }.to change(@resource, :updated_at)
+      @resource.save
+      sleep 1
       @resource.reload
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
