@@ -57,4 +57,11 @@ jobs:
       run: RAILS_ENV=test bundle exec rails webpacker:compile
 
     - name: 'Run RSpec Feature Tests'
-      run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/
+      run: bin/bundle exec rspec --force-color --fail-fast --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/
+
+    - name: Archive capybara screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: capybara-screenshots
+        path: tmp/capybara/*

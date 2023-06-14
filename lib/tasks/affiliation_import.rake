@@ -101,6 +101,7 @@ namespace :affiliation_import do
 
     if ARGV.length != 1
       puts 'Please enter the path to the ROR dump json file as an argument'
+      puts 'You can get the latest dump from https://doi.org/10.5281/zenodo.6347574 (get json file for last version in zip)'
       exit
     end
 
