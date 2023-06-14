@@ -69,6 +69,7 @@ RSpec.feature 'Admin', type: :feature do
       @resource.save
       sleep 1
       @resource.reload
+      sleep 1
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
