@@ -67,6 +67,7 @@ RSpec.feature 'Admin', type: :feature do
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
       @resource.tenant_id = 'dryad'
       @resource.save
+      sleep 1
       @resource.reload
       sleep 1
       visit stash_url_helpers.dashboard_path

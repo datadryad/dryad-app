@@ -102,8 +102,8 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'reorders authors with keyboard', js: true do
       fill_in 'title', with: Faker::Lorem.sentence
-      first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.safe_email }
-      second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.safe_email }
+      first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
+      second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
       # fill first
       fill_in 'author_first_name', with: first_author[:first]

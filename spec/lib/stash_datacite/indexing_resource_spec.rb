@@ -89,6 +89,7 @@ module Stash
         @related_identifier = create(:related_identifier)
         @resource_type = create(:resource_type, resource_id: @resource.id)
         @right = create(:right, resource_id: @resource.id)
+        @resource.subjects = []
         @subject1 = create(:subject, resources: [@resource])
         @subject2 = create(:subject, subject: 'parsimonious', resources: [@resource])
         @data_files = [create(:data_file, resource_id: @resource.id),
