@@ -321,7 +321,7 @@ module Stash
           @cr = Crossref.new(resource: @resource, crossref_json: { 'publisher' => nil })
           resp = @cr.send(:populate_publication_name)
           expect(resp).to eql(nil)
-          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.empty?).to eql(true)
+          expect(@resource.identifier.internal_data.none? { |id| id.data_type == 'publicationName' }).to eql(true)
         end
       end
 

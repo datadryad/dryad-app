@@ -23,6 +23,7 @@ FactoryBot.define do
       create(:right, resource: resource)
       create(:contributor, resource: resource)
       resource.subjects << create(:subject, subject_scheme: 'fos')
+      3.times { resource.subjects << create(:subject) }
     end
 
     trait :submitted do
