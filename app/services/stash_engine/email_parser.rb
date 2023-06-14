@@ -172,7 +172,6 @@ module StashEngine
 
       # is there a comma in the name?
       # it could either be lastname, firstname, or firstname lastname, title
-      # rubocop:disable Style/CaseLikeIf
       comma_match = auth.match(/^(.+),\s*(.+)$/)
       if comma_match
         if comma_match[2].match(/(Jr\.*|Sr\.*|III)/)
@@ -188,8 +187,6 @@ module StashEngine
           return { family_name: comma_match[1].strip, given_name: comma_match[2].strip }.with_indifferent_access
         end
       end
-      # rubocop:enable Style/CaseLikeIf
-
       space_match = auth.match(/^(.+) +(.*)$/)
       if space_match
         { family_name: "#{space_match[2].strip}#{suffix}", given_name: space_match[1].strip }.with_indifferent_access

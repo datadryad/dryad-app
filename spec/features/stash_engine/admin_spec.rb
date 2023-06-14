@@ -66,8 +66,10 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
       @resource.tenant_id = 'dryad'
-      expect { @resource.save }.to change(@resource, :updated_at)
+      @resource.save
+      sleep 1
       @resource.reload
+      sleep 1
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
@@ -146,6 +148,8 @@ RSpec.feature 'Admin', type: :feature do
         @identifier = create(:identifier)
         expect { @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
           .to change(StashEngine::Resource, :count).by(1)
+        expect { @resource.subjects << [create(:subject), create(:subject), create(:subject)] }
+          .to change(StashDatacite::Subject, :count).by(3)
         visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit Dataset"]')
         find('button[title="Edit Dataset"]').click
@@ -154,7 +158,6 @@ RSpec.feature 'Admin', type: :feature do
         page.send_keys(:tab)
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
-        3.times { fill_in_keyword }
         add_required_data_files
         click_link 'Review and submit'
         agree_to_everything

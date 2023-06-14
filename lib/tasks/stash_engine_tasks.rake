@@ -347,7 +347,7 @@ namespace :identifiers do
     CSV.open('in_progress_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo DatasetSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         in_ip = false
         date_entered_ip = i.created_at
 
@@ -404,7 +404,7 @@ namespace :identifiers do
     CSV.open('ppr_to_curation.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         ppr_found = false
         i.resources.map(&:curation_activities).flatten.each do |ca|
           ppr_found = true if ca.peer_review?
@@ -423,7 +423,7 @@ namespace :identifiers do
     CSV.open('ppr_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo DatasetSize Journal AutoPPR Integrated WhoPays]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         in_ppr = false
         date_entered_ppr = 'ERROR'
 
