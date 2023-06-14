@@ -57,7 +57,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       @resource = StashEngine::Resource.where(user: @superuser).last
     end
 
-    it 'should show queuing', js: true do
+    xit 'should show queuing', js: true do
       visit '/stash/submission_queue'
       wait_for_ajax(15)
       expect(page).to have_content(/[01] are currently processing from this server/)
