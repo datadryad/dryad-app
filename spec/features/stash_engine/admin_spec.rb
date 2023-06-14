@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'pry-remote'
 
 RSpec.feature 'Admin', type: :feature do
