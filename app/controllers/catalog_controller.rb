@@ -83,7 +83,7 @@ class CatalogController < ApplicationController
     # config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
     # config.add_facet_field 'dc_type_s', label: 'Type', limit: 8
     # config.add_facet_field Settings.FIELDS.PUBLISHER, label: 'Institution', limit: 8
-    config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject Area', limit: 8
+    config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject keyword', limit: 8
     config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location', limit: 8
     config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
     config.add_facet_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', limit: 8
@@ -136,8 +136,8 @@ class CatalogController < ApplicationController
                                                        itemprop: 'description', helper_method: :render_value_as_truncate_abstract
     # config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
     config.add_show_field Settings.FIELDS.PART_OF, label: 'Collection', itemprop: 'isPartOf'
-    config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location(s)', itemprop: 'spatial', link_to_search: true
-    config.add_show_field Settings.FIELDS.SUBJECT, label: 'Subject Area(s)', itemprop: 'keywords', link_to_search: true
+    config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical location(s)', itemprop: 'spatial', link_to_search: true
+    config.add_show_field Settings.FIELDS.SUBJECT, label: 'Subject keyword(s)', itemprop: 'keywords', link_to_search: true
     config.add_show_field Settings.FIELDS.TEMPORAL, label: 'Year', itemprop: 'temporal'
     config.add_show_field Settings.FIELDS.PROVENANCE, label: 'Held by', link_to_search: true
     config.add_show_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', itemprop: 'related_publication_name'

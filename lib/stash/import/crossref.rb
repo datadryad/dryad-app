@@ -160,7 +160,7 @@ module Stash
 
           # Last name matches are useful but both first+last matches are better
           last_name_match = names.map { |h| h[:last] }.include?(author['family']&.downcase)
-          both_name_match = names.select { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }.any?
+          both_name_match = names.any? { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }
 
           amatch += 0.05 if both_name_match
           amatch += 0.025 if last_name_match && !both_name_match
