@@ -26,7 +26,7 @@
   <% else %>
     <h3 class="o-heading__level2">Usage notes</h3>
   <% end %>
-  <div class="t-landing__text-wall <% 'highlight' if highlight_fields.include?('usage_notes') %>">
+  <div class="t-landing__text-wall <%= 'highlight' if highlight_fields.include?('usage_notes') %>">
     <%= raw(other.description) %>
   </div>
 <% end %>
