@@ -39,7 +39,7 @@ module StashDatacite
       if params[:term].blank?
         render json: nil
       else
-        @subjects = Subject.order(:subject).non_fos.where('subject LIKE ?', "%#{params[:term]}%").limit(40)
+        @subjects = Subject.order(:subject).non_fos.where('scheme_URI IS NOT NULL').where('subject LIKE ?', "%#{params[:term]}%").limit(40)
         render json: @subjects.map { |i| { id: i.id, name: i.subject } }
       end
     end
