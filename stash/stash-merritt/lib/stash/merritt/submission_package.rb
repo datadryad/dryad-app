@@ -27,6 +27,7 @@ module Stash
       end
 
       def dc4_builder
+        byebug
         @dc4_builder ||= begin
           datacite_xml_factory = Datacite::Mapping::DataciteXMLFactory.new(
             doi_value: resource.identifier_value,
