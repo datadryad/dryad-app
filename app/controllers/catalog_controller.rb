@@ -281,7 +281,7 @@ class CatalogController < ApplicationController
   def redirect_discover_to_landing(identifiers, query)
     if identifiers.length > 1
       # Found multiple datasets for the publication so do a Blacklight search for their DOIs
-      redirect_to search_path(q: query.to_s)
+      redirect_to search_catalog_path(q: query.to_s)
     elsif identifiers.length == 1
       # Found one match so just send them to the landing page
       redirect_to stash_url_helpers.show_path(identifiers.first&.to_s)
@@ -291,7 +291,7 @@ class CatalogController < ApplicationController
       redirect_to stash_url_helpers.show_path(identifier.to_s) if identifier.present?
 
       # Nothing was found so send the user to the Blacklight search page with the original query
-      redirect_to search_path(q: query.to_s) if identifier.blank?
+      redirect_to search_catalog_path(q: query.to_s) if identifier.blank?
     end
   end
 
