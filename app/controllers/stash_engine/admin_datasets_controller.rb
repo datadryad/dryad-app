@@ -178,11 +178,18 @@ module StashEngine
           @resource.publication_date = @pub_date
           @resource.hold_for_peer_review = true if @status == 'peer_review'
           @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
+          @resource.save
+          @resource.reload
+
+          # this is super janky because the publication activity is triggered after create of the curation activity so it's
+          # a weird side effect.  DataCiteXML to be generated correctly then the view flags and date both need to be set
+          # before the curation activity side effect happens.
+          byebug
+
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
-          @resource.save
-          @resource.reload
+
           @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
         end
       end

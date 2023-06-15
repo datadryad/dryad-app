@@ -25,6 +25,7 @@ module Stash
       end
 
       def update_metadata(dc4_xml:, landing_page_url:)
+        byebug
         # the doi apparently is known from the DC xml document
         response = post_metadata(dc4_xml, username: account, password: password, sandbox: sandbox)
         validate_response(response: response, operation: 'update metadata')

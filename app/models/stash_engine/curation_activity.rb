@@ -73,11 +73,15 @@ module StashEngine
       (ca.published? || ca.embargoed?) && latest_curation_status_changed?
     }
 
+    # the publication flags need to be set before creating datacite metadata (after create below)
+    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
+
     # When the status is published/embargoed send to Stripe and DataCite
     after_create do
       if !resource.skip_datacite_update &&
          (published? || embargoed?) &&
          latest_curation_status_changed?
+        byebug
         submit_to_datacite
         update_solr
         process_payment
@@ -96,8 +100,6 @@ module StashEngine
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
                  if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
-
-    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
 
     after_create :update_salesforce_metadata, if: proc { |_ca|
                                                     latest_curation_status_changed? &&
@@ -183,6 +185,7 @@ module StashEngine
       return unless should_update_doi?
 
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
+      byebug
       idg.update_identifier_metadata!
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
@@ -294,6 +297,7 @@ module StashEngine
     end
 
     def update_publication_flags
+      byebug
       case status
       when 'withdrawn'
         resource.update_columns(meta_view: false, file_view: false)

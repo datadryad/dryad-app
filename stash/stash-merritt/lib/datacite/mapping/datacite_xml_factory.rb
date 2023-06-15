@@ -1,5 +1,6 @@
 require 'datacite/mapping'
 require 'action_controller'
+require 'byebug'
 
 module Datacite
   module Mapping
@@ -9,6 +10,7 @@ module Datacite
       attr_reader :doi_value, :se_resource_id, :total_size_bytes, :version
 
       def initialize(doi_value:, se_resource_id:, total_size_bytes:, version:)
+        byebug
         @doi_value = doi_value
         @se_resource_id = se_resource_id
         @total_size_bytes = total_size_bytes
@@ -16,6 +18,7 @@ module Datacite
       end
 
       def build_datacite_xml(datacite_3: false)
+        byebug
         dcs_resource = build_resource(datacite_3: datacite_3)
 
         return dcs_resource.write_xml(mapping: :datacite_3) if datacite_3
@@ -25,6 +28,8 @@ module Datacite
 
       def build_resource(datacite_3: false) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         pub_year = se_resource.publication_years[0] # TODO: make this has_one instead of has_many
+
+        byebug
 
         dcs_resource = Resource.new(
           identifier: Identifier.from_doi(doi_value),
@@ -135,6 +140,7 @@ module Datacite
       end
 
       def add_dates(dcs_resource)
+        byebug
         iss_dt = se_resource&.identifier&.datacite_issued_date
         avail_dt = se_resource&.identifier&.datacite_available_date
 
