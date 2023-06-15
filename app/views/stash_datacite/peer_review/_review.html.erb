@@ -17,7 +17,12 @@
     </div>
     <br/>
     <script type="text/javascript">
-     $('#stash_engine_resource_hold_for_peer_review input:radio').on('change', function(e) {
+      $('#stash_engine_resource_hold_for_peer_review').ready(function(e) {
+        if ($('#stash_engine_resource_hold_for_peer_review input:radio:checked').length === 0) {
+          $('#stash_engine_resource_hold_for_peer_review_false').prop('checked', true).trigger('click');
+        }
+      });
+      $('#stash_engine_resource_hold_for_peer_review input:radio').on('change', function(e) {
         $(this).closest('form').submit();
       });
     </script>
