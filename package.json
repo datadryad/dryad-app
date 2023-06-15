@@ -44,6 +44,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",
+    "caniuse-lite": "^1.0.30001503",
     "copyfiles": "^2.4.1",
     "downshift": "^6.1.12",
     "draft-js": "^0.11.7",
