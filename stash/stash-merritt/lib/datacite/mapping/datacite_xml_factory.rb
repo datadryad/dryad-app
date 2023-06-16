@@ -194,13 +194,12 @@ module Datacite
 
       def add_funding_references(dcs_resource)
         dcs_resource.funding_references = sd_funder_contribs.map do |c|
-          if c.name_identifier_id.present?
-            dmfi = FunderIdentifier.new(type: c.identifier_type_mapping_obj, value: c.name_identifier_id,
-              scheme_uri: (c.identifier_type == 'crossref_funder_id' ?
-                             'https://www.crossref.org/services/funder-registry/' :nil))
-          else
-            dmfi = nil
-          end
+          dmfi = if c.name_identifier_id.present?
+                   FunderIdentifier.new(type: c.identifier_type_mapping_obj, value: c.name_identifier_id,
+                                        scheme_uri: (if c.identifier_type == 'crossref_funder_id'
+                                                       'https://www.crossref.org/services/funder-registry/'
+                                                     end))
+                 end
 
           FundingReference.new(
             name: c.contributor_name,
