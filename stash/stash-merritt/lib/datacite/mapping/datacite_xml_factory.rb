@@ -37,6 +37,7 @@ module Datacite
                   Affiliation.new(
                     identifier: a.ror_id,
                     identifier_scheme: 'ROR',
+                    scheme_uri: 'https://ror.org',
                     value: a.smart_name
                   )
                 else
@@ -166,7 +167,7 @@ module Datacite
                 Affiliation.new(
                   identifier: a.ror_id,
                   identifier_scheme: 'ROR',
-                  scheme_uri: 'https://ror.org',
+                  scheme_uri: to_uri('https://ror.org'),
                   value: a.smart_name
                 )
               else
