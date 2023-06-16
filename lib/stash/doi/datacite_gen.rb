@@ -25,7 +25,7 @@ module Stash
       end
 
       def update_metadata(dc4_xml:, landing_page_url:)
-        byebug
+        # add breakpoint here to get a peek at the XML being sent to DataCite
         # the doi apparently is known from the DC xml document
         response = post_metadata(dc4_xml, username: account, password: password, sandbox: sandbox)
         validate_response(response: response, operation: 'update metadata')

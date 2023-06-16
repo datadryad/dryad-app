@@ -81,7 +81,6 @@ module StashEngine
       if !resource.skip_datacite_update &&
          (published? || embargoed?) &&
          latest_curation_status_changed?
-        byebug
         submit_to_datacite
         update_solr
         process_payment
@@ -185,7 +184,6 @@ module StashEngine
       return unless should_update_doi?
 
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
-      byebug
       idg.update_identifier_metadata!
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
@@ -297,7 +295,6 @@ module StashEngine
     end
 
     def update_publication_flags
-      byebug
       case status
       when 'withdrawn'
         resource.update_columns(meta_view: false, file_view: false)
