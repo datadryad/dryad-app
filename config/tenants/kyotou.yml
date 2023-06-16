@@ -22,8 +22,8 @@ default: &default
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
-  partner_display: true
-  covers_dpc: true
+  partner_display: false
+  covers_dpc: false
 
 development: &DEVELOPMENT
   <<: *default
