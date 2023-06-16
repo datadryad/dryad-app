@@ -181,10 +181,9 @@ module StashEngine
           @resource.save
           @resource.reload
 
-          # this is super janky because the publication activity is triggered after create of the curation activity so it's
-          # a weird side effect.  DataCiteXML to be generated correctly then the view flags and date both need to be set
-          # before the curation activity side effect happens.
-          byebug
+          # this is janky because the publication activity is triggered after create of the curation activity so it's
+          # a side effect.  For DataCiteXML to be generated correctly then the view flags and date both need to be set
+          # before the curation activity side effect happens that submits to DataCite.
 
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
