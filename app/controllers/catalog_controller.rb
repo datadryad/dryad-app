@@ -267,11 +267,17 @@ class CatalogController < ApplicationController
   # based on the InternalDatum types defined below
   # GET stash/discover?query=[:internal_datum_value]
   def discover
-    internal_datum_types = %w[pubmedID publicationDOI manuscriptNumber]
+    internal_datum_types = %w[pubmedID manuscriptNumber]
     where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
-    identifiers = StashEngine::Identifier
+    internal_data = StashEngine::Identifier
       .publicly_viewable.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
+    related_ids = StashEngine::Identifier
+      .publicly_viewable
+      .joins(resources: :related_identifiers)
+      .where("work_type = 6 AND related_identifier like '%#{params[:query]}'")
+
+    identifiers = internal_data + related_ids
 
     redirect_discover_to_landing(identifiers, params[:query])
   end
