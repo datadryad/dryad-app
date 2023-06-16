@@ -170,6 +170,7 @@ defaults: &DEFAULTS
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: null
+  matomo_analytics_id: null
   google_recaptcha_sitekey: 6Lfhn5kiAAAAAIzZPQEGRa43cDJz-rNVxRcQIkU4
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
@@ -223,6 +224,7 @@ development: &DEVELOPMENT
   send_journal_published_notices: false
   collection_uri: http://mrtsword-stg.cdlib.org:39001/mrtsword/
   google_analytics_id: UA-145629338-2
+  matomo_analytics_id: datadryad-dev
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
@@ -263,6 +265,7 @@ stage:
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
   google_analytics_id: UA-145629338-3
+  matomo_analytics_id: datadryad-stg
   repository:
     domain: https://merritt-stage.cdlib.org
     endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
@@ -345,6 +348,7 @@ production:
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: G-6CWE0T05CC
+  matomo_analytics_id: datadryad
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
