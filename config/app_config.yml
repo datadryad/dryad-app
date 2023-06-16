@@ -344,7 +344,7 @@ production:
     bucket: dryad-s3-prd
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
-  google_analytics_id: UA-145629338-1
+  google_analytics_id: G-6CWE0T05CC
   google:
     gmail_client_id: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_id] %>
     gmail_client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:gmail_client_secret] %>
