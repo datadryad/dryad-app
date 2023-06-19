@@ -23,7 +23,7 @@ module StashEngine
     # GET /resources
     # GET /resources.json
     def index
-      @resources = Resource.where(user_id: current_user.id)
+      @resources = policy_scope(Resource)
     end
 
     # GET /resources/1

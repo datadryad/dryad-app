@@ -12,7 +12,7 @@ module Mocks
             token: "#{Faker::Alphanumeric.alphanumeric(number: 4)}.#{Faker::Alphanumeric.alphanumeric(number: 26)}"
           },
           info: {
-            email: user.present? && user.email.present? ? user.email : Faker::Internet.safe_email,
+            email: user.present? && user.email.present? ? user.email : Faker::Internet.email,
             name: user.present? && user.first_name.present? ? user.name : Faker::Name.name,
             test_domain: user.present? ? user.tenant_id : 'localhost'
           },
@@ -28,7 +28,7 @@ module Mocks
       def email_response(user)
         {
           email: [
-            user.present? ? user.email : Faker::Internet.safe_email
+            user.present? ? user.email : Faker::Internet.email
           ]
         }
       end

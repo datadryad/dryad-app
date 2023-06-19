@@ -41,7 +41,9 @@ $(function() {
                     if(data["status"] == 200){
                         $( "#progressbar" ).progressbar( "option", "value", 100 );
                         $("#cancel_dialog").click(); // click cancel which closes popup and does the close actions
-                        trackMetric(DataCiteTracker.MetricType.Download, { doi: '<%= @resource&.identifier&.identifier %>' });
+                        if (typeof dc_download !== 'undefined') {
+                            trackMetric(dc_download, { doi: '<%= @resource&.identifier&.identifier %>' });
+                        }
                         window.location.href = data["url"]; // navigate to URL
                     }
                 },

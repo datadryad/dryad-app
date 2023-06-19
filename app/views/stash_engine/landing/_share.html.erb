@@ -1,7 +1,7 @@
 <% url = CGI.escape(show_url("doi:#{identifier.identifier}")) %>
 <% citation = CGI.escape(ActionController::Base.helpers.strip_tags(citation(resource.authors, resource.title, resource.resource_type, review.identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)))) %>
 <% title = CGI.escape("Dryad dataset: " + resource.title) %>
-<% abstract = CGI.escape("Abstract: " + ActionController::Base.helpers.strip_tags(review.abstract.description))%>
+<% abstract = CGI.escape("Abstract: " + ActionController::Base.helpers.strip_tags((review&.abstract&.description).to_s))%>
 <div id="share_buttons">
   <!-- LinkedIn -->
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%=url%>" title="Share on LinkedIn" data-share="linkedin" target="blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i><span class="screen-reader-only">Share on LinkedIn (opens in new window)</span></a>

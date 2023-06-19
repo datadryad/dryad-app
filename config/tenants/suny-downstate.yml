@@ -1,13 +1,12 @@
 default: &default
   enabled: true
-  abbreviation: "rochester"
-  short_name: "University of Rochester"
-  long_name: "University of Rochester"
-  publisher_id: grid.16416.34
+  abbreviation: "Downstate"
+  short_name: "SUNY Downstate"
+  long_name: "SUNY Downstate Health Sciences University"
+  publisher_id: grid.262863.b
   ror_ids:
-    - https://ror.org/022kthw22
-    - https://ror.org/00trqv719
-  tenant_id: rochester
+    - https://ror.org/0041qmd21
+  tenant_id: suny-downstate
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -15,11 +14,10 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: shibboleth
-    entity_id: https://uidp-prod.its.rochester.edu/idp/shibboleth
-    entity_domain: shib2.its.rochester.edu
+    strategy: ip_address
+    ranges: [ "138.5.0.0/16" ]
   default_license: cc0
-  campus_contacts: []
+  campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -48,5 +46,4 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: ["s.pugachev@rochester.edu"]
 

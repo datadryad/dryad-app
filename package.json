@@ -44,6 +44,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",
+    "caniuse-lite": "^1.0.30001503",
     "copyfiles": "^2.4.1",
     "downshift": "^6.1.12",
     "draft-js": "^0.11.7",
@@ -80,6 +81,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@faker-js/faker": "^6.0.0-beta.0",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.2",

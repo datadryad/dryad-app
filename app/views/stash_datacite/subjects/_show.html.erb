@@ -1,5 +1,5 @@
 <% unless subjects.nil? || subjects.length < 1 %>
-    <h3 class="o-heading__level2">Keywords</h3>
+    <h3 class="o-heading__level2">Subject keywords</h3>
     <div class="<%= 'highlight' if highlight %>">  
 	<p><%= subjects.map(&:subject).join(", ") %></p>
     </div>

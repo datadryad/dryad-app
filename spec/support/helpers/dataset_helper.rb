@@ -53,6 +53,7 @@ module DatasetHelper
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    3.times { fill_in_keyword }
   end
 
   def add_required_data_files
@@ -82,10 +83,15 @@ module DatasetHelper
     fill_in 'primary_article_doi', with: doi
   end
 
+  def fill_in_keyword(keyword: Faker::Creature::Animal.name)
+    fill_in 'keyword_ac', with: keyword
+    page.send_keys(:tab)
+  end
+
   def fill_in_author
     fill_in 'author_first_name', with: Faker::Name.unique.first_name
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
-    fill_in 'author_email', with: Faker::Internet.safe_email
+    fill_in 'author_email', with: Faker::Internet.email
     # just fill in results of name dropdown (react) in hidden field and test this separately
     page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
   end

@@ -1,13 +1,13 @@
 default: &default
   enabled: true
-  abbreviation: "rochester"
-  short_name: "University of Rochester"
-  long_name: "University of Rochester"
-  publisher_id: grid.16416.34
+  abbreviation: "test"
+  short_name: "Test tenant"
+  long_name: "Test tenant"
+  publisher_id: grid.471410.7
   ror_ids:
-    - https://ror.org/022kthw22
-    - https://ror.org/00trqv719
-  tenant_id: rochester
+    - https://ror.org/02r109517
+    - https://ror.org/05v5hg569
+  tenant_id: test-tenant
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -16,10 +16,10 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://uidp-prod.its.rochester.edu/idp/shibboleth
-    entity_domain: shib2.its.rochester.edu
+    entity_id: https://login.weill.cornell.edu/idp
+    entity_domain: login.weill.cornell.edu
   default_license: cc0
-  campus_contacts: []
+  campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -39,14 +39,19 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
-  campus_contacts: ["s.pugachev@rochester.edu"]
+  enabled: false
+  partner_display: false
 
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

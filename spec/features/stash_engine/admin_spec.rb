@@ -67,6 +67,9 @@ RSpec.feature 'Admin', type: :feature do
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
       @resource.tenant_id = 'dryad'
       @resource.save
+      sleep 1
+      @resource.reload
+      sleep 1
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
@@ -78,7 +81,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       new_user = create(:user, tenant_id: nil)
-      create(:resource, :submitted, user: new_user, identifier: new_ident)
+      expect { create(:resource, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page.current_path).to eq('/stash/sessions/choose_sso')
       expect(page).to have_text('Logout')
@@ -89,11 +92,11 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
-      resource = create(:resource, :submitted, user: system_user, identifier: new_ident)
+      expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('Logout')
-      resource.reload
-      expect(resource.user_id).to eq(@admin.id)
+      @resource.reload
+      expect(@resource.user_id).to eq(@admin.id)
     end
 
     it 'forces a non-logged-in user with a valid edit_code to login before take ownership of a dataset owned by the system user' do
@@ -102,7 +105,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       system_user = create(:user, id: 0)
-      create(:resource, :submitted, user: system_user, identifier: new_ident)
+      expect { create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page.current_path).to eq('/stash/sessions/choose_login')
     end
@@ -143,7 +146,10 @@ RSpec.feature 'Admin', type: :feature do
       it 'allows editing a dataset', js: true do
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
-        @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
+        expect { @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
+          .to change(StashEngine::Resource, :count).by(1)
+        expect { @resource.subjects << [create(:subject), create(:subject), create(:subject)] }
+          .to change(StashDatacite::Subject, :count).by(3)
         visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit Dataset"]')
         find('button[title="Edit Dataset"]').click
@@ -159,7 +165,7 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows assigning a curator to a dataset', js: true do
-        @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+        expect { @curator = create(:user, role: 'superuser', tenant_id: 'dryad') }.to change(StashEngine::User, :count).by(1)
 
         visit stash_url_helpers.ds_admin_path
 
@@ -177,7 +183,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'allows un-assigning a curator, keeping status if it is peer_review', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
-        create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review')
+        expect { create(:curation_activity, resource: @resource, status: 'peer_review', note: 'forcing to peer_review') }
+          .to change(StashEngine::CurationActivity, :count).by(1)
         @resource.reload
 
         visit stash_url_helpers.ds_admin_path
@@ -201,7 +208,8 @@ RSpec.feature 'Admin', type: :feature do
 
       it 'allows un-assigning a curator, changing status if it is curation', js: true do
         @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
-        create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation')
+        expect { create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation') }
+          .to change(StashEngine::CurationActivity, :count).by(1)
         @resource.reload
 
         visit stash_url_helpers.ds_admin_path
@@ -240,52 +248,54 @@ RSpec.feature 'Admin', type: :feature do
       end
 
       it 'allows filtering by institution', js: true do
-        user1 = create(:user, tenant_id: 'dataone')
-        user2 = create(:user, tenant_id: 'ucop')
+        expect do
+          @user1 = create(:user, tenant_id: 'dataone')
+          @user2 = create(:user, tenant_id: 'ucop')
+        end.to change(StashEngine::User, :count).by(2)
         visit stash_url_helpers.user_admin_path
         select 'DataONE', from: 'tenant_id'
         click_on 'Search'
-        expect(page).to have_link(user1.name)
-        expect(page).not_to have_link(user2.name)
+        expect(page).to have_link(@user1.name)
+        expect(page).not_to have_link(@user2.name)
       end
 
       it 'allows changing user email as a superuser', js: true do
-        user = create(:user)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
-        expect(page).to have_link(user.name)
-        within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(user.id)}\"]") do
+        expect(page).to have_link(@user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
         within(:css, '#genericModalDialog') do
           find('#email').set('new-email@example.org')
           find('input[name=commit]').click
         end
-        expect(page.find("#user_email_#{user.id}")).to have_text('new-email@example.org')
-        user_changed = StashEngine::User.find(user.id)
+        expect(page.find("#user_email_#{@user.id}")).to have_text('new-email@example.org')
+        user_changed = StashEngine::User.find(@user.id)
         expect(user_changed.email).to eq('new-email@example.org')
       end
 
       it 'allows changing user role as a superuser', js: true do
-        user = create(:user)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
-        expect(page).to have_link(user.name)
-        within(:css, "form[action=\"#{stash_url_helpers.user_role_popup_path(user.id)}\"]") do
+        expect(page).to have_link(@user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_role_popup_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
         within(:css, '#genericModalDialog') do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
-        expect(page.find("#user_role_#{user.id}")).to have_text('Admin')
-        user_changed = StashEngine::User.find(user.id)
+        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
+        user_changed = StashEngine::User.find(@user.id)
         expect(user_changed.role).to eq('admin')
       end
 
       it 'allows changing user tenant as a superuser', js: true do
-        user = create(:user)
+        expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
         visit stash_url_helpers.user_admin_path
-        expect(page).to have_link(user.name)
-        within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(user.id)}\"]") do
+        expect(page).to have_link(@user.name)
+        within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
         within(:css, '#genericModalDialog') do

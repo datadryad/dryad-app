@@ -6,7 +6,7 @@ module StashEngine
     end
 
     def curation_note?
-      @user.limited_curator?
+      @user.admin?
     end
 
   end

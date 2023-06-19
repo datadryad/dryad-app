@@ -35,3 +35,8 @@ Please have your Identity and Access Management team provide your Idp's metadata
 
 Once configurations have occurred in both your IdP and on Dryad's SP, you can attempt the test again.
 
+### Additional resources
+
+To look up community organizations for InCommon, check https://incommon.org/community-organizations/ as it may
+be an additional resource beyond the shibinfo cgi above.
+
