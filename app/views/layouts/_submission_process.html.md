@@ -10,7 +10,7 @@ Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do 
 
 For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.
 
-Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to the "My datasets" to begin your data submission now!
+Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go to "My datasets" to begin your data submission now!
 
 ## Uploading your data
 
