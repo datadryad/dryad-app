@@ -913,6 +913,7 @@ module StashEngine
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has " \
                           'already been accepted, so automatically moving to submitted status'
           target_status = 'submitted'
+          update(hold_for_peer_review: false)
         else
           curation_note = "Set to Private for peer review at author's request"
           target_status = 'peer_review'

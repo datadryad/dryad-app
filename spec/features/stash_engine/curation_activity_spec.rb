@@ -220,6 +220,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         page.send_keys(:tab)
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
+        3.times { fill_in_keyword }
         add_required_data_files
         navigate_to_review
         agree_to_everything

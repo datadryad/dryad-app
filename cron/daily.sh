@@ -13,3 +13,4 @@ bundle exec rails identifiers:update_missing_search_words RAILS_ENV=$1 >> /apps/
 bundle exec rails dev_ops:retry_zenodo_errors RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/retry_zenodo_errors.log 2>&1
 bundle exec rails curation_stats:update_recent RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/curation_stats.log 2>&1
 bundle exec rails journal_email:clean_old_manuscripts RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/manuscripts_clean.log 2>&1
+bundle exec rails compressed:update_contents RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/compressed_contents.log 2>&1

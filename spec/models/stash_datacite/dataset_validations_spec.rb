@@ -15,6 +15,7 @@ module StashDatacite
                           author_email: @user.email,
                           author_orcid: @user.orcid,
                           resource_id: @resource.id)
+        @resource.subjects << [create(:subject), create(:subject), create(:subject)]
         create(:data_file, resource: @resource)
         @readme = create(:data_file, resource: @resource, upload_file_name: 'README.md')
         create(:data_file, resource: @resource)

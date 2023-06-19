@@ -9,6 +9,8 @@ require 'stash/aws/s3'
 include StashEngine::ApplicationHelper
 # rubocop:enable Style/MixinUsage
 
+# rubocop:disable Metrics/ClassLength
+
 module StashDatacite
   module Resource
 
@@ -64,6 +66,7 @@ module StashDatacite
         err << research_domain
         err << funder
         err << abstract
+        err << subjects
 
         err << s3_error_uploads
         err << url_error_validating
@@ -132,13 +135,23 @@ module StashDatacite
         []
       end
 
+      def subjects
+        subjects_require_date = '2023-06-07'
+        if @resource.subjects.non_fos.count < 3 && @resource.identifier.created_at > subjects_require_date
+          return ErrorItem.new(message: 'Fill in at least three {keywords}',
+                               page: metadata_page(@resource),
+                               ids: ['keyword_ac'])
+        end
+        []
+      end
+
       def funder
         funder_require_date = '2022-04-14'
         if (@resource.contributors.where(contributor_type: 'funder').blank? ||
           @resource.contributors.where(contributor_type: 'funder').first.contributor_name.blank?) &&
            @resource.identifier.created_at > funder_require_date &&
            @resource.identifier.pub_state == 'unpublished'
-          return ErrorItem.new(message: 'Fill in a {funder}. Use "N/A" if there is no funder associated with the dataset.',
+          return ErrorItem.new(message: 'Fill in a {funder}. Check "No funding received" if there is no funder associated with the dataset.',
                                page: metadata_page(@resource),
                                ids: ['funder_fieldset'])
         end
@@ -297,3 +310,5 @@ module StashDatacite
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength

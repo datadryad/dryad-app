@@ -142,8 +142,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
 
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
-        create(:data_file, file_state: 'copied', resource: @resource, upload_file_name: 'README.md')
-        create(:data_file, file_state: 'copied', resource: @resource)
+        expect do
+          create(:data_file, file_state: 'copied', resource: @resource, upload_file_name: 'README.md')
+          create(:data_file, file_state: 'copied', resource: @resource)
+        end.to change(StashEngine::DataFile, :count).by(2)
+
         @resource.reload
 
         sign_in(@curator)
@@ -366,6 +369,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
+    3.times { fill_in_keyword }
     all('[id^=instit_affil_]').last.set('test institution')
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')

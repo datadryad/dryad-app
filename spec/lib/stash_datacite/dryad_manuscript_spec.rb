@@ -11,6 +11,7 @@ module Stash
                        email: 'lmuckenhaupt@ucop.edu',
                        tenant_id: 'ucop')
         @resource = create(:resource, user_id: @user.id, tenant_id: 'ucop')
+        @resource.subjects = []
         @resource.authors = []
         @manuscript = create(:manuscript)
         @dm = DryadManuscript.new(resource: @resource, manuscript: @manuscript)
