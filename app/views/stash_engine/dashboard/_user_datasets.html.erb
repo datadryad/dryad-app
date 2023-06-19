@@ -75,7 +75,7 @@
             <% end %>
           <% end %>
           <% if ['submitted', 'action_required'].include?(resource&.last_curation_activity.status) || dataset.sort_order >= 3 %>
-            <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+            <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', onclick: 'setLoading(event)' do %>
               Create new version <i class="fa fa-file" aria-hidden="true"></i>
             <% end %>
           <% end %> 
@@ -88,3 +88,17 @@
   <% end %>
 <% end %>
 <%= paginate @datasets, params: {page_size: @page_size}, remote: true %>
+<script type="text/javascript">
+  (function () {
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+          }
+      };
+  })();
+  function setLoading(e) {
+    var icon = e.target.lastElementChild
+    icon.className = 'fa fa-spinner fa-spin'
+    document.body.classList.add('prevent-clicks')
+  }
+</script>
