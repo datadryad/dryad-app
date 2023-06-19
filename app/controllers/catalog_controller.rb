@@ -273,9 +273,9 @@ class CatalogController < ApplicationController
       .publicly_viewable.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
     related_ids = StashEngine::Identifier
-      .publicly_viewable
-      .joins(resources: :related_identifiers)
-      .where("work_type = 6 AND related_identifier like '%#{params[:query]}'")
+      .publicly_viewable.joins(resources: :related_identifiers)
+      .where(related_identifiers: { work_type: StashDatacite::RelatedIdentifier.work_types[:primary_article] })
+      .where("related_identifier like '%#{params[:query]}'")
 
     identifiers = internal_data + related_ids
 
