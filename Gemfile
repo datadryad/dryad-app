@@ -43,7 +43,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.4.0'
 # gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
-gem 'mini_racer', '~> 0.6.3'
+gem 'mini_racer', '~> 0.8.0'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
