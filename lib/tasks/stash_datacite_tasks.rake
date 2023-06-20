@@ -11,10 +11,14 @@ namespace :stash_datacite do
       next unless resource.present?
 
       related_identifier = StashDatacite::RelatedIdentifier.find_or_create_by(resource_id: resource.id,
-                                                                              related_identifier_type: 'doi', relation_type: 'cites')
+                                                                              related_identifier_type: 'doi',
+                                                                              work_type: 'primary_article')
 
-      # Only overwrite the value if its blank!
-      related_identifier.update(related_identifier: internal_datum.value) unless related_identifier.related_identifier.present?
+      next if related_identifier.related_identifier.present?
+
+      related_identifier.update(related_identifier: internal_datum.value,
+                                relation_type: 'iscitedby',
+                                hidden: false)
 
     end
     StashEngine::InternalDatum.where(data_type: 'publicationDOI').destroy_all
