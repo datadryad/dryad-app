@@ -65,6 +65,16 @@ module Datacite
         expect(resource_type.resource_type_general).to be(ResourceTypeGeneral::DATASET)
       end
 
+      it 'creates FOS Science subject in the way DataCite requested' do
+        subject = create(:subject, subject_scheme: 'fos')
+        @resource.subjects << subject
+        @resource.save!
+
+        dcs_resource = @xml_factory.build_resource
+        subjs = dcs_resource.subjects.map(&:value)
+        expect(subjs).to include("FOS: #{subject.subject}")
+      end
+
       it 'generates funders with funderIdentifiers if contributor has name_identifier_id' do
         @resource.contributors = [] # erase the default funder
         contributor = create(:contributor, resource_id: @resource.id)
@@ -129,7 +139,8 @@ module Datacite
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
-          expect(doc.xpath("//subjects/subject[@subjectScheme = 'fos']").first.child.text).to eql(@resource.subjects.first.subject)
+          expect(doc.xpath("//subjects/subject[@subjectScheme = 'fos']").first.child.text)
+            .to eql("FOS: #{@resource.subjects.first.subject}")
           expect(doc.xpath("//subjects/subject[@subjectScheme = 'LCSH']").first.child.text).to eql('My Test Subject')
         end
 

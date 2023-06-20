@@ -146,10 +146,15 @@ module Datacite
       def add_subjects(dcs_resource)
         subjects = se_resource.subjects.map do |s|
           if s.subject.present?
+            massaged_subject = if s.subject_scheme == 'fos'
+                                 "FOS: #{s.subject}"
+                               else
+                                 s.subject
+                               end
             if s.subject_scheme.present?
-              Subject.new(value: s.subject, scheme: s.subject_scheme, scheme_uri: s.scheme_URI)
+              Subject.new(value: massaged_subject, scheme: s.subject_scheme, scheme_uri: s.scheme_URI)
             else
-              Subject.new(value: s.subject)
+              Subject.new(value: massaged_subject)
             end
           end
         end.compact
