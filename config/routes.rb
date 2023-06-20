@@ -188,6 +188,7 @@ Rails.application.routes.draw do
         as: 'generic_file_check_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
+    get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
     get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
     get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
@@ -434,6 +435,7 @@ Rails.application.routes.draw do
     get 'resources/show', to: 'resources#show'
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
+    patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
 
   ########################## CEDAR Embeddable Editor ###############################
