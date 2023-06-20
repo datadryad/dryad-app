@@ -1,50 +1,10 @@
 <% @page_title = "My datasets - publish and preserve your data" %>
-<!--  Is this really needed?  Seems to duplicate the flash messages in template TODO: remove?
-<% if notice %>
-  <div class="js-alert c-alert--success" role="alert">
-    <div class="c-alert__text">
-      <%= notice %>
-    </div>
-    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
-  </div>
-<% end %>
--->
 
 <div class="c-datasets-heading">
-	<h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
-	<%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
+  <h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
+  <%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
             class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
 </div>
-
-<div class="c-table-heading">
-	<h2 class="c-table-heading__text">
-		In Progress
-	</h2>
-</div>
-
-<div id="user_in_progress"
-    data-load="<%= metadata_url_helpers.resources_user_in_progress_path(format: :js) %>">
+<div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
-
-<div class="c-table-heading">
-	<h2 class="c-table-heading__text">
-		Submitted
-	</h2>
-</div>
-
-<div id="user_submitted"
-     data-load="<%= metadata_url_helpers.resources_user_submitted_path(format: :js) %>">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-</div>
-
-<!--
-<div class="c-table-heading">
-	<div class="c-table-heading__text">
-		Latest Activity
-	</div>
-</div>
-
-<p>[Table to go here]</p>
-
--->

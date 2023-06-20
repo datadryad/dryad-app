@@ -107,7 +107,7 @@ module StashApi
       it 'has a curation status' do
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
-        expect(@metadata[:curationStatus]).to eq('In Progress')
+        expect(@metadata[:curationStatus]).to eq('In progress')
       end
 
       it 'has an edit link' do

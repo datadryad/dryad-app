@@ -2,6 +2,7 @@ module StashEngine
   class DashboardController < ApplicationController
     before_action :require_login, only: :show
     before_action :ensure_tenant, only: :show
+    protect_from_forgery except: :user_datasets
 
     MAX_VALIDATION_TRIES = 5
 
@@ -14,6 +15,17 @@ module StashEngine
     def upload_basics; end
 
     def react_basics; end
+
+    def user_datasets
+      @page = params[:page] || '1'
+      @page_size = params[:page_size] || '10'
+      respond_to do |format|
+        format.js do
+          @datasets = policy_scope(Identifier).page(@page).per(@page_size)
+          @display_resources = @datasets.map { |dataset| StashDatacite::ResourcesController::DatasetPresenter.new(dataset&.latest_resource) }
+        end
+      end
+    end
 
     # an AJAX wait to allow in-progress items to complete before continuing.
     def ajax_wait
