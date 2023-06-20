@@ -1,0 +1,73 @@
+default: &default
+  enabled: true
+  abbreviation: "MIT"
+  short_name: "MIT"
+  long_name: "Massachusetts Institute of Technology"
+  publisher_id: grid.116068.8
+  ror_ids:
+    - https://ror.org/042nb2s44
+    - https://ror.org/032q5ym94
+    - https://ror.org/00rj4dg52
+    - https://ror.org/01t9bgr30
+    - https://ror.org/022z6jk58
+    - https://ror.org/03fg5ns40
+    - https://ror.org/053tmcn30
+    - https://ror.org/0071sjj14
+    - https://ror.org/05ymca674
+    - https://ror.org/02dgwnb72
+    - https://ror.org/053r20n13
+    - https://ror.org/04pvzz946
+    - https://ror.org/04vqm6w82
+  tenant_id: mit
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:mit.edu
+    entity_domain: mit.edu
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+  campus_contacts: [""]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
