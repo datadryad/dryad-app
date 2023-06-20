@@ -1,7 +1,7 @@
 default: &default
   enabled: true
   abbreviation: "MIT"
-  short_name: "MIT"
+  short_name: "Massachusetts Institute of Technology"
   long_name: "Massachusetts Institute of Technology"
   publisher_id: grid.116068.8
   ror_ids:
