@@ -26,6 +26,7 @@ module StashEngine
     #
     enum_vals = %w[
       in_progress
+      processing
       submitted
       peer_review
       curation
@@ -114,9 +115,9 @@ module StashEngine
       when 'peer_review'
         'Private for peer review'
       when 'action_required'
-        'Author Action Required'
+        'Action required'
       else
-        status.humanize.split.map(&:capitalize).join(' ')
+        status.humanize
       end
     end
 
