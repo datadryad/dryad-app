@@ -82,6 +82,9 @@ We require:
       Research domain: Primary research domain. Domains are drawn from the OECD Fields of Science and Technology
       classification.
     </li>
+    <li>
+        Keyword(s): Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable.
+    </li>
 </ul>
 
 We recommend:
@@ -94,11 +97,6 @@ We recommend:
   <li>
     Research facility: Where the research was conducted, if different from your current affiliation
     (e.g., a field station).
-  </li>
-  <li>
-    Keyword(s): Descriptive words that may help others discover your dataset. We recommend
-    that you determine whether your discipline has an existing controlled vocabulary from which to
-    choose your keywords. Please enter as many keywords as applicable.
   </li>
   <li>
     Methods: Any technical or methodological information that may help others to understand
