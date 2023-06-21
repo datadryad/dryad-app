@@ -318,12 +318,26 @@ namespace :identifiers do
     end
   end
 
-  desc 'Generate a report of items associated with common preprint servers'
-  
-  task datasets_without_articles_report: :environment do
-    Stash::Reports::RelatedWorksReports.datasets_without_articles
+  desc 'Generate a report of datasets without primary articles'
+  task datasets_without_primary_articles_report: :environment do
+    p 'Writing datasets_without_primary_articles_report.csv...'
+    CSV.open('datasets_without_primary_articles_report.csv', 'w') do |csv|
+      csv << %w[DataDOI ISSN Institutions Relations]
+      ii = StashEngine::Identifier.publicly_viewable.each do |i|
+        d = i.publication_article_doi
+        next unless d.blank?
+
+        r = i.latest_viewable_resource
+        next unless r.present?
+
+        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.compact!
+        relations = r.related_identifiers.map { |ri| [ri.work_type, ri.related_identifier] }
+        csv << [i.identifier, i.publication_issn, rors, relations]
+      end
+    end
   end
-  
+
+  desc 'Generate a report of items associated with common preprint servers'
   task preprints_report: :environment do
     p 'Writing preprints_report.csv...'
     CSV.open('preprints_report.csv', 'w') do |csv|
@@ -352,7 +366,7 @@ namespace :identifiers do
     CSV.open('in_progress_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo DatasetSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         in_ip = false
         date_entered_ip = i.created_at
 
@@ -409,7 +423,7 @@ namespace :identifiers do
     CSV.open('ppr_to_curation.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         ppr_found = false
         i.resources.map(&:curation_activities).flatten.each do |ca|
           ppr_found = true if ca.peer_review?
@@ -428,7 +442,7 @@ namespace :identifiers do
     CSV.open('ppr_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo DatasetSize Journal AutoPPR Integrated WhoPays]
       StashEngine::Identifier.all.each_with_index do |i, ind|
-        puts ind.to_s if (ind % 100) == 0
+        puts ind if (ind % 100) == 0
         in_ppr = false
         date_entered_ppr = 'ERROR'
 
