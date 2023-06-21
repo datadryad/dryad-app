@@ -11,7 +11,7 @@ Most types of files can be submitted (e.g., text, spreadsheets, video, photograp
     </li>
     <li>
         Dryad does <strong>not</strong> accept any files with licensing terms that are incompatible with the
-        <a href="http://creativecommons.org/publicdomain/zero/1.0">Creative Commons Zero waiver</a>. For more information, please see <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Does Dryad Use CC0?</a>
+        <a href="http://creativecommons.org/publicdomain/zero/1.0">Creative Commons Zero waiver</a>. For more information, please see <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/">Good data practices: Removing barriers to data reuse with CC0 licensing</a>.
     </li>
     <li>
       For software scripts and snapshots of software source code, files can be uploaded via Dryad and published at Zenodo, which allows public software deposits with version control for the ongoing maintenance of software packages. If you are only seeking to store code, software, and/or supplemental information please <a href="https://zenodo.org" target="_blank">visit Zenodo</a>.
@@ -299,7 +299,7 @@ Data deposited in Dryad is intended to remain permanently archived and available
 ## Why CC0?
 
 All data in Dryad is released into the public domain under the terms of a <a href="http://creativecommons.org/about/cc0">Creative Commons Zero</a> (CC0) waiver. CC0 was crafted specifically
-to reduce any legal and technical impediments, be they intentional and unintentional, to the reuse of data. Importantly, CC0 does not exempt those who reuse the data from following community norms for scholarly communication.  It does not exempt researchers from reusing the data in a way that is mindful of its limitations.  Nor does it exempt researchers from the obligation of citing the original data authors. CC0 facilitates the discovery, re-use, and citation of that data. For more information see a post on <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Dryad’s blog</a> as well as <a href="https://osc.universityofcalifornia.edu/2016/09/cc-by-and-data-not-always-a-good-fit/">University of California’s Office of Scholarly Communications blog</a>.
+to reduce any legal and technical impediments, be they intentional and unintentional, to the reuse of data. Importantly, CC0 does not exempt those who reuse the data from following community norms for scholarly communication.  It does not exempt researchers from reusing the data in a way that is mindful of its limitations.  Nor does it exempt researchers from the obligation of citing the original data authors. CC0 facilitates the discovery, re-use, and citation of that data. For more information see <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/">Good data practices: Removing barriers to data reuse with CC0 licensing</a>.
 
 ## How do I cite my data?
 
