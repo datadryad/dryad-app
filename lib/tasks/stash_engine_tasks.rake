@@ -323,7 +323,7 @@ namespace :identifiers do
     p 'Writing datasets_without_primary_articles_report.csv...'
     CSV.open('datasets_without_primary_articles_report.csv', 'w') do |csv|
       csv << %w[DataDOI ISSN Institutions Relations]
-      ii = StashEngine::Identifier.publicly_viewable.each do |i|
+      StashEngine::Identifier.publicly_viewable.each do |i|
         d = i.publication_article_doi
         next unless d.blank?
 

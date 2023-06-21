@@ -21,9 +21,9 @@ module StashApi
     end
 
     def reports
-      render json: { message: "Requested report #{params['report_name']}"}
+      render json: { message: "Requested report #{params['report_name']}" }
     end
-    
+
     private
 
     def output
