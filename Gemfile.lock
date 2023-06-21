@@ -844,6 +844,7 @@ DEPENDENCIES
   jwt (~> 2.3.0)
   kaminari (~> 1.2.2)
   leaflet-rails (~> 1.7.0)
+  libv8-node (~> 18.16.0.0)
   listen
   loofah (~> 2.16.0)
   mail (= 2.7.1)
