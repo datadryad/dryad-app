@@ -151,7 +151,7 @@ module StashDatacite
           @resource.contributors.where(contributor_type: 'funder').first.contributor_name.blank?) &&
            @resource.identifier.created_at > funder_require_date &&
            @resource.identifier.pub_state == 'unpublished'
-          return ErrorItem.new(message: 'Fill in a {funder}. Use "N/A" if there is no funder associated with the dataset.',
+          return ErrorItem.new(message: 'Fill in a {funder}. Check "No funding received" if there is no funder associated with the dataset.',
                                page: metadata_page(@resource),
                                ids: ['funder_fieldset'])
         end

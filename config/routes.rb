@@ -189,6 +189,7 @@ Rails.application.routes.draw do
         as: 'generic_file_check_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
+    get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
     get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
     get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
@@ -248,6 +249,11 @@ Rails.application.routes.draw do
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
+
+    # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
+    # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
+    get 'dataset/*id', to: redirect{ |params| "/stash/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
+        constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
     get '404', to: 'pages#app_404', as: 'app_404'
@@ -430,6 +436,7 @@ Rails.application.routes.draw do
     get 'resources/show', to: 'resources#show'
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
+    patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
 
   ########################## CEDAR Embeddable Editor ###############################
@@ -465,6 +472,8 @@ Rails.application.routes.draw do
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/*path', to: redirect('/')
+  get '/repo/*path', to: redirect('/')
+  get '/repo', to: redirect('/')
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   
   # Routing to redirect old Dryad landing pages to the correct location
