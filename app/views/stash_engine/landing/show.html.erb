@@ -4,7 +4,7 @@
 <script data-autotrack="false" src="https://cdn.jsdelivr.net/npm/@datacite/datacite-tracker"></script>
 <script>
 	const { trackMetric } = DataCiteTracker.Tracker({
-		repoid: '<%= APP_CONFIG[:datacite_data_repo_id] %>',
+		repoId: '<%= APP_CONFIG[:datacite_data_repo_id] %>',
 		trackLocalhost: <%= Rails.env == 'production' ? 'true' : 'false' %>,
 	});
 	let dc_download = DataCiteTracker.MetricType.Download;
