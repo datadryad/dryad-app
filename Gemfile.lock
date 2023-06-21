@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/CDLUC3/uc3-ssm
+  revision: bc398fdbdce0e6041a119813a47de857916eda56
+  branch: 0.3.0rc0
+  specs:
+    uc3-ssm (0.3.0)
+      aws-sdk-ssm (~> 1.84)
+      logger (~> 1.4)
+      yaml (~> 0.1)
+
 PATH
   remote: stash
   specs:
@@ -108,6 +118,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.174.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
+    aws-sdk-ssm (1.152.0)
+      aws-sdk-core (~> 3, >= 3.174.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.2)
       aws-eventstream (~> 1, >= 1.0.2)
     babel-source (5.8.35)
@@ -403,6 +416,7 @@ GEM
     llhttp-ffi (0.4.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
+    logger (1.5.3)
     loofah (2.16.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -869,6 +883,7 @@ DEPENDENCIES
   tins (~> 1.31.0)
   turbolinks
   twitter-typeahead-rails (= 0.11.1)
+  uc3-ssm!
   uglifier (~> 4.2.0)
   web-console
   webdrivers (~> 5.0)
