@@ -161,7 +161,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def contributor_params
       params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
-                                          :affiliation_id, :award_number, :resource_id)
+                                          :affiliation_id, :award_number, :award_description, :resource_id)
     end
 
     def find_or_initialize
@@ -173,8 +173,9 @@ module StashDatacite
                                         contrib_name,
                                         "#{contrib_name}*")&.last
       end
-      if contributor.present? && contributor.award_number.blank?
+      if contributor.present? && (contributor.award_number.blank? || contributor.award_description.blank?)
         contributor.award_number = contributor_params[:award_number]
+        contributor.award_description = contributor_params[:award_description]
       else
         contributor = Contributor.new(contributor_params)
       end

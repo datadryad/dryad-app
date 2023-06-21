@@ -22,7 +22,8 @@ module StashApi
             contributor_type: 'funder',
             identifier_type: funder['identifierType'],
             name_identifier_id: funder['identifier'],
-            award_number: funder['awardNumber']
+            award_number: funder['awardNumber'],
+            award_description: funder['awardDescription']
           )
         end
       end
