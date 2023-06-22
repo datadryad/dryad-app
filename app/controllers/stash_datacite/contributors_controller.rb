@@ -1,8 +1,11 @@
 require 'http'
 module StashDatacite
   class ContributorsController < ApplicationController
+    before_action :check_reorder_valid, only: %i[reorder]
     before_action :set_contributor, only: %i[update delete]
-    before_action :ajax_require_modifiable, only: %i[update create delete]
+    before_action :ajax_require_modifiable, only: %i[update create delete reorder]
+
+    respond_to :json
 
     # GET /contributors/new
     def new
@@ -46,6 +49,18 @@ module StashDatacite
       respond_to do |format|
         format.js
         format.json { render json: @contributor }
+      end
+    end
+
+    # takes a list of funder ids and their new orders like [{id: 3323, order: 0},{id:3324, order: 1}] etc
+    def reorder
+      respond_to do |format|
+        format.json do
+          js = params[:contributor].to_h.to_a.map { |i| { id: i[0], funder_order: i[1] } }
+          grouped_funders = js.index_by { |funder| funder[:id] }
+          resp = Contributor.update(grouped_funders.keys, grouped_funders.values)
+          render json: resp, status: :ok
+        end
       end
     end
 
@@ -161,7 +176,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def contributor_params
       params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
-                                          :affiliation_id, :award_number, :award_description, :resource_id)
+                                          :affiliation_id, :award_number, :award_description, :funder_order, :resource_id)
     end
 
     def find_or_initialize
@@ -173,13 +188,28 @@ module StashDatacite
                                         contrib_name,
                                         "#{contrib_name}*")&.last
       end
-      if contributor.present? && (contributor.award_number.blank? || contributor.award_description.blank?)
-        contributor.award_number = contributor_params[:award_number]
-        contributor.award_description = contributor_params[:award_description]
+      if contributor.present?
+        if contributor.award_number.blank? || contributor.award_description.blank?
+          contributor.award_number = contributor_params[:award_number]
+          contributor.award_description = contributor_params[:award_description]
+        else
+          contributor.funder_order = contributor_params[:funder_order]
+        end
       else
         contributor = Contributor.new(contributor_params)
       end
       contributor
+    end
+
+    def check_reorder_valid
+      puts params.inspect
+      params.require(:contributor).permit!
+      @contributors = Contributor.where(id: params[:contributor].keys)
+
+      # you can only order things belonging to one resource
+      render json: { error: 'bad request' }, status: :bad_request unless @contributors.map(&:resource_id)&.uniq&.length == 1
+
+      @resource = StashEngine::Resource.find(@contributors.first.resource_id) # set resource to check permission to modify
     end
   end
 end
