@@ -25,7 +25,7 @@ See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.718
 
 Since 2007 Dryad has been a leader in curating and openly publishing research data across domains. For the community of academic and research institutions, research funders, scholarly societies, publishers and individual researchers that invest in Dryad, our service offers expertise, capacity, accountability and quality.
 
-At Dryad, curation is the process of thoroughly evaluating research metadata and related objects to verify that data are accessible, organized, intelligible, and complete to ensure ease of re-use. Curators collaborate with researchers to confirm that data are appropriate for open sharing, follow FAIR principles, and meet ethical standards for publication. They also offer guidance on best practices for creating reusable data and help authors navigate publication requirements. 
+At Dryad, curation is the process of thoroughly evaluating research metadata and related objects to verify that data are accessible, organized, intelligible, and complete to ensure ease of re-use. Curators work with researchers to confirm that data are appropriate for open sharing, follow FAIR principles, and meet ethical standards for publication. They also offer guidance on best practices for creating reusable data and help authors navigate publication requirements. 
 
 Dryad Curators assess submissions carefully and raise questions for investigation/escalation when there are concerns about the reusability, provenance, interoperability, or comprehensibility of the data submitted for publication in Dryad. We do not attempt to assess rigor. 
 
