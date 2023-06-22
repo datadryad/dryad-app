@@ -55,7 +55,7 @@
     json5 "^2.2.2"
     semver "^6.3.0"
 
-"@babel/eslint-parser@^7.19.1":
+"@babel/eslint-parser@^7.21.4-esm.4":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.22.5.tgz#fa032503b9e2d188e25b1b95d29e8b8431042d78"
   integrity sha512-C69RWYNYtrgIRE5CmTd77ZiLDXqgBipahJc/jHP3sLcAGj6AJzxNIuKNpVnICqbyK7X3pFUfEvL++rvtbQpZkQ==
@@ -430,6 +430,14 @@
     "@babel/helper-create-class-features-plugin" "^7.18.6"
     "@babel/helper-plugin-utils" "^7.18.6"
 
+"@babel/plugin-proposal-class-properties@^7.21.4-esm.4":
+  version "7.21.4-esm.4"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.21.4-esm.4.tgz#9fdfe094ec550e14c784f06a1d85149d3f4d8c25"
+  integrity sha512-FGAxsi0vlhYx7P62/ttZ9Mu8DobyvzbU/Ey8nhybTNKEjGp8rlxX5nVAh6BNxNtc+9SRC7dHE8Ed6LUc3X2vWw==
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "7.21.4-esm.4"
+    "@babel/helper-plugin-utils" "7.21.4-esm.4"
+
 "@babel/plugin-proposal-object-rest-spread@^7.14.7":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.20.7.tgz#aa662940ef425779c75534a5c41e9d936edc390a"
@@ -441,7 +449,7 @@
     "@babel/plugin-syntax-object-rest-spread" "^7.8.3"
     "@babel/plugin-transform-parameters" "^7.20.7"
 
-"@babel/plugin-proposal-private-methods@^7.19.1":
+"@babel/plugin-proposal-private-methods@^7.21.4-esm.4":
   version "7.21.4-esm.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-methods/-/plugin-proposal-private-methods-7.21.4-esm.4.tgz#75c3d6db6d11acff644dcb260a93acda6c96a47a"
   integrity sha512-F6padUpqz9AZ7Xx290Y9Of4Wrsgm8O494SiMw7v8/rT4xAd3SHM+s5QkZ7QwWmlzZmJ5myFNlZv79ZQXPnjG1A==
@@ -454,7 +462,7 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.0-placeholder-for-preset-env.2.tgz#7844f9289546efa9febac2de4cfe358a050bd703"
   integrity sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==
 
-"@babel/plugin-proposal-private-property-in-object@^7.21.11":
+"@babel/plugin-proposal-private-property-in-object@^7.21.4":
   version "7.21.11"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.11.tgz#69d597086b6760c4126525cfa154f34631ff272c"
   integrity sha512-0QZ8qP/3RLDVBwBFoWAwCtgcDZJVwA5LUJRZU8x2YFfKNuFq161wK3cuGrALu5yiPu+vzwTAg/sMWVNeWeNyaw==
@@ -1158,7 +1166,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/preset-react@^7.19.1":
+"@babel/preset-react@^7.21.4-esm.4":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.22.5.tgz#c4d6058fbf80bccad02dd8c313a9aaa67e3c3dd6"
   integrity sha512-M+Is3WikOpEJHgR385HbuCITPTaPRaNkibTEa9oiofmJvIsrceb4yp9RL9Kb+TE8LznmeyZqpP+Lopwcx59xPQ==

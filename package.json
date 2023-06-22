@@ -30,9 +30,10 @@
     "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/plugin-proposal-private-methods": "^7.19.1",
-    "@babel/preset-react": "^7.19.1",
+    "@babel/eslint-parser": "^7.21.4-esm.4",
+    "@babel/plugin-proposal-class-properties": "^7.21.4-esm.4",
+    "@babel/plugin-proposal-private-methods": "^7.21.4-esm.4",
+    "@babel/preset-react": "^7.21.4-esm.4",
     "@cdl-dryad/frictionless-components": "^1.2.0",
     "@emotion/css": "^11.7.1",
     "@emotion/react": "^11.7.1",
@@ -81,7 +82,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.4",
     "@faker-js/faker": "^6.0.0-beta.0",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.2",
