@@ -218,7 +218,7 @@ function Funders({
 
   return (
     <section style={{marginBottom: '20px'}}>
-      <p id="global-help" className="offscreen">
+      <p id="funders-global-help" className="offscreen">
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to
         drag/reorder. Press escape to cancel the reordering.
         <span>Ensure screen reader is in focus mode.</span>
@@ -238,7 +238,7 @@ function Funders({
               .map((contrib) => (
                 <li key={contrib.id} className="dd-list-item" data-id={contrib.id}>
                   <button
-                    aria-describedby="global-help"
+                    aria-describedby="funders-global-help"
                     type="button"
                     className="fa-workaround handle c-input"
                     aria-label="Drag to reorder this funder"
