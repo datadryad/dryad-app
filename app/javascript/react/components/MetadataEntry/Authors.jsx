@@ -200,7 +200,7 @@ export default function Authors({
 
   return (
     <section>
-      <p id="global-help" className="offscreen">
+      <p id="authors-global-help" className="offscreen">
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to
         drag/reorder. Press escape to cancel the reordering.
         <span>Ensure screen reader is in focus mode.</span>
@@ -218,7 +218,7 @@ export default function Authors({
           .map((auth) => (
             <li key={auth.id} className="dd-list-item" data-id={auth.id}>
               <button
-                aria-describedby="global-help"
+                aria-describedby="authors-global-help"
                 type="button"
                 className="fa-workaround handle c-input"
                 aria-label="Drag to reorder this author"
