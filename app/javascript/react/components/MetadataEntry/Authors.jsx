@@ -59,7 +59,7 @@ export default function Authors({
       },
     ).then((data) => {
       if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
+        console.log('Response failure not a 200 response from authors save');
       }
 
       showSavedMsg();
@@ -177,7 +177,7 @@ export default function Authors({
             },
           ).then((data) => {
             if (data.status !== 200) {
-              console.log('Response failure not a 200 response from funders reversion save for canceling drag and drop');
+              console.log('Response failure not a 200 response from authors reversion save for canceling drag and drop');
             }
           });
 
