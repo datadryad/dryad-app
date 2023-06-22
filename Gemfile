@@ -30,7 +30,7 @@ gem 'capistrano-rails', '~> 1.6.2'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
-gem 'puma', group: :puma, require: false
+gem 'puma', '6.1.0', group: :puma, require: false
 # Our homegrown artisinal SSM gem
 gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
