@@ -363,6 +363,7 @@ Rails.application.routes.draw do
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
+    patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
     delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
     
     get 'publications/new', to: 'publications#new'
