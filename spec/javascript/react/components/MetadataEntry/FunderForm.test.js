@@ -23,10 +23,13 @@ describe('FunderForm', () => {
             identifier_type: null,
             name_identifier_id: null,
             resourceId: resourceId,
-            award_number: faker.datatype.string(5)
+            award_number: faker.datatype.string(5),
+            award_description: faker.datatype.string(10),
+            funder_order: null,
           },
       createPath: faker.system.directoryPath(),
       updatePath: faker.system.directoryPath(),
+      reorderPath: faker.system.directoryPath(),
       removeFunction: jest.fn(),
       updateFunder: jest.fn(),
     }
@@ -62,7 +65,7 @@ describe('FunderForm', () => {
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByText('remove')).toHaveFocus());
+    await waitFor(() => expect(screen.getByLabelText('Program/description')).toHaveFocus());
     await waitFor(() => promise); // waits for the axios promise to fulfil
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
