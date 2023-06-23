@@ -320,9 +320,10 @@ namespace :identifiers do
 
   desc 'Generate a report of datasets without primary articles'
   task datasets_without_primary_articles_report: :environment do
-    p 'Writing datasets_without_primary_articles_report.csv...'
     d = Date.today
-    CSV.open("datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv", 'w') do |csv|
+    filename = "datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv"
+    p "Writing #{filename}..."
+    CSV.open(filename, 'w') do |csv|
       csv << %w[DataDOI CreatedAt ISSN Title Authors Institutions Relations]
       StashEngine::Identifier.publicly_viewable.each do |i|
         d = i.publication_article_doi
