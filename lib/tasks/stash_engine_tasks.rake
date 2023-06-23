@@ -322,9 +322,8 @@ namespace :identifiers do
 
   desc 'Generate a report of datasets without primary articles'
   task datasets_without_primary_articles_report: :environment do
-    d = Date.today
     FileUtils.mkdir_p(REPORTS_DIR)
-    outfile = File.join(REPORTS_DIR, "datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv")
+    outfile = File.join(REPORTS_DIR, 'datasets_without_primary_articles.csv')
     p "Writing #{outfile}..."
     CSV.open(outfile, 'w') do |csv|
       csv << %w[DataDOI CreatedAt ISSN Title Authors Institutions Relations]
