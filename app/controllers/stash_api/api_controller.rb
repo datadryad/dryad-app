@@ -9,7 +9,7 @@ module StashApi
     before_action :require_api_user, only: :test
 
     # get /
-    # All this really does is return the basic HATEOAS link to the base level dataset links
+    # All this really does is return the basic HATEOAS output
     def index
       render json: output
     end

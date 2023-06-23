@@ -337,7 +337,9 @@ namespace :identifiers do
 
         authors = r.authors&.map(&:author_standard_name)
         rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.uniq&.compact
+        rors = nil if rors.blank?
         relations = r.related_identifiers&.map { |ri| [ri.work_type, ri.related_identifier] }
+        relations = nil if relations.blank?
 
         csv << [i.identifier, i.created_at, i.publication_issn, r.title, authors, rors, relations]
       end
