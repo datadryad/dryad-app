@@ -321,8 +321,9 @@ namespace :identifiers do
   desc 'Generate a report of datasets without primary articles'
   task datasets_without_primary_articles_report: :environment do
     p 'Writing datasets_without_primary_articles_report.csv...'
-    CSV.open('datasets_without_primary_articles_report.csv', 'w') do |csv|
-      csv << %w[DataDOI ISSN Institutions Relations]
+    d = Date.today
+    CSV.open("datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv", 'w') do |csv|
+      csv << %w[DataDOI CreatedAt ISSN Title Authors Institutions Relations]
       StashEngine::Identifier.publicly_viewable.each do |i|
         d = i.publication_article_doi
         next unless d.blank?
@@ -330,9 +331,11 @@ namespace :identifiers do
         r = i.latest_viewable_resource
         next unless r.present?
 
-        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.compact!
+        authors = r.authors&.map(&:author_standard_name)
+        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.compact
         relations = r.related_identifiers.map { |ri| [ri.work_type, ri.related_identifier] }
-        csv << [i.identifier, i.publication_issn, rors, relations]
+
+        csv << [i.identifier, i.created_at, i.publication_issn, r.title, authors, rors, relations]
       end
     end
   end
