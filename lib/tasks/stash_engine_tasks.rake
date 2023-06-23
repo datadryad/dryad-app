@@ -4,6 +4,8 @@ require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
 
+REPORTS_DIR = 'reports'.freeze
+
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
@@ -321,9 +323,10 @@ namespace :identifiers do
   desc 'Generate a report of datasets without primary articles'
   task datasets_without_primary_articles_report: :environment do
     d = Date.today
-    filename = "datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv"
-    p "Writing #{filename}..."
-    CSV.open(filename, 'w') do |csv|
+    FileUtils.mkdir_p(REPORTS_DIR)
+    outfile = File.join(REPORTS_DIR, "datasets_without_primary_articles_report_#{d.strftime('%Y%m%d')}.csv")
+    p "Writing #{outfile}..."
+    CSV.open(outfile, 'w') do |csv|
       csv << %w[DataDOI CreatedAt ISSN Title Authors Institutions Relations]
       StashEngine::Identifier.publicly_viewable.each do |i|
         d = i.publication_article_doi
