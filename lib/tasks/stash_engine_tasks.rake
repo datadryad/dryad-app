@@ -333,8 +333,8 @@ namespace :identifiers do
         next unless r.present?
 
         authors = r.authors&.map(&:author_standard_name)
-        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.compact
-        relations = r.related_identifiers.map { |ri| [ri.work_type, ri.related_identifier] }
+        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.uniq&.compact
+        relations = r.related_identifiers&.map { |ri| [ri.work_type, ri.related_identifier] }
 
         csv << [i.identifier, i.created_at, i.publication_issn, r.title, authors, rors, relations]
       end
