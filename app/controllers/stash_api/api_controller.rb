@@ -22,14 +22,18 @@ module StashApi
       render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id }
     end
 
-    def reports
-      # Determine the list of available report_names
-      all_reports = Dir.entries(REPORTS_DIR)
-      all_reports.delete('..')
-      all_reports.delete('.')
-      report_names = all_reports.map { |r| r.sub(/.csv\z/, '') }
-      report_names.uniq!
+    def reports_index
+      report_paths = report_names.map { |rn| { href: "/api/v2/reports/#{rn}" } }
+      render json: {
+        _links: {
+          self: root_self,
+          reports: report_paths,
+          curies: curies
+        }
+      }
+    end
 
+    def reports
       # If a report_name is available, return the report,
       # with the current date on the filename
       if report_names.include?(params['report_name'])
@@ -52,12 +56,24 @@ module StashApi
 
     private
 
+    def report_names
+      # Determine the list of available report_names
+      all_reports = Dir.entries(REPORTS_DIR)
+      all_reports.delete('..')
+      all_reports.delete('.')
+      found_names = all_reports.map { |r| r.sub(/.csv\z/, '') }
+      found_names.uniq
+    end
+
     def output
       {
         _links: {
           self: root_self,
           'stash:datasets': {
             href: datasets_path
+          },
+          reports: {
+            href: reports_path
           },
           curies: curies
         }

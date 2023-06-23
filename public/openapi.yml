@@ -33,6 +33,8 @@ tags:
       description: Operations on individual versions of a dataset
     - name: files
       description: Operations on individual files of a dataset
+    - name: reports
+      description: Reports on content in Dryad
     - name: internal
       description: Internal APIs not of general interest to the public
     
@@ -478,6 +480,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/processor_result'
+
+  # --- reports ---
+  /reports:
+    get:
+      summary: Get a list of reports that are updated regularly
+      tags:
+        - reports
+
+  '/reports/{name}':
+    get:
+      summary: Get a particular report
+      tags:
+        - reports
 
   # --- search ---
   /search:
