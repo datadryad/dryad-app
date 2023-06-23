@@ -56,7 +56,7 @@
             success-status
           <%end%>
         "><%= resource&.last_curation_activity&.readable_status %></span>
-        <div class="c-user-datasets-actions">
+        <div class="c-user-datasets-actions" style="<%= ( dataset.sort_order == 1 ? 'flex-direction: column' : '' ) %>">
           <% if resource&.last_curation_activity.status == 'in_progress' %>
             <% if resource&.dataset_in_progress_editor&.id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
@@ -72,6 +72,9 @@
           <% if dataset.sort_order == 1 %>
             <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: resource.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
               Release for curation <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <% end %>
+            <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', onclick: 'setLoading(event)' do %>
+              Edit new version <i class="fa fa-file" aria-hidden="true"></i>
             <% end %>
           <% end %>
           <% if ['submitted', 'action_required'].include?(resource&.last_curation_activity.status) || dataset.sort_order >= 3 %>
