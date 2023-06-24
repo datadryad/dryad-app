@@ -773,6 +773,45 @@ module StashEngine
       end
     end
 
+    describe '#purge_duplicate_subjects!' do
+      before(:each) do
+        @resource = create(:resource)
+      end
+
+      it "purges duplicate subjects" do
+        @resource.subjects << create(:subject, subject: 'AARDVARKS')
+        @resource.subjects << create(:subject, subject: 'Aardvarks')
+        @resource.subjects << create(:subject, subject: 'aardvarks')
+        starting_size = @resource.subjects.count
+        @resource.purge_duplicate_subjects!
+        expect(@resource.reload.subjects.count).to eq(starting_size - 2)
+      end
+
+      it "doesn't purge FOS subjects" do
+        existing_fos = @resource.subjects.fos.first
+        @resource.subjects << create(:subject, subject: existing_fos.subject) # this one doesn't have fos subject_scheme set
+        @resource.subjects << create(:subject, subject: existing_fos.subject)
+        starting_size = @resource.subjects.count
+        @resource.purge_duplicate_subjects!
+        @resource.reload
+        expect(@resource.subjects.count).to eq(starting_size - 1) # only purges one
+        expect(@resource.subjects.fos.count).to eq(1) # still has the one FOS subject
+        expect(@resource.subjects.non_fos.where(subject: existing_fos.subject).count).to eq(1) # still has that subject in non-FOS, also
+      end
+
+      it "prefers to purge non-controlled vocab subjects over ones with vocabulary" do
+        existing_subj = @resource.subjects.non_fos.first
+        @resource.subjects << create(:subject, subject: existing_subj.subject, subject_scheme: 'gumma')
+        starting_size = @resource.subjects.count
+        @resource.purge_duplicate_subjects!
+        @resource.reload
+        expect(@resource.subjects.count).to eq(starting_size - 1) # only purges one
+        left_subject = @resource.subjects.where(subject: existing_subj.subject)
+        expect(left_subject.count).to eq(1) # still has that subject
+        expect(left_subject.first.subject_scheme).to eq('gumma') # it kept the one with a subject scheme
+      end
+    end
+
     describe 'resource state' do
       attr_reader :resource
       attr_reader :state
