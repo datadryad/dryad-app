@@ -857,6 +857,26 @@ module StashEngine
       end
     end
 
+    def purge_duplicate_subjects!
+      text_subj = subjects.non_fos.order(:subject).map{|s| s.subject&.downcase }.compact
+
+      dups = []
+      text_subj.each_with_index do |s, idx|
+        dups << s if s == text_subj[idx + 1] # array out of bounds gives nil so it's ok
+      end
+      dups.uniq!
+      return if dups.empty?
+
+      dups.each do |dup_word|
+        dup_subjs = subjects.non_fos.where(subject: dup_word).order(:subject_scheme)
+        last_id = dup_subjs.last.id
+        dup_subjs.each do |subj| # orders things with schemes at end
+          # this removes the join to the subject but doesn't destroy the in the subjects table
+          StashDatacite::ResourcesSubjects.where(resource_id: id, subject_id: subj.id).destroy_all unless subj.id == last_id
+        end
+      end
+    end
+
     private
 
     # -----------------------------------------------------------
