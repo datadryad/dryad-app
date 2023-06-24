@@ -778,7 +778,7 @@ module StashEngine
         @resource = create(:resource)
       end
 
-      it "purges duplicate subjects" do
+      it 'purges duplicate subjects' do
         @resource.subjects << create(:subject, subject: 'AARDVARKS')
         @resource.subjects << create(:subject, subject: 'Aardvarks')
         @resource.subjects << create(:subject, subject: 'aardvarks')
@@ -799,7 +799,7 @@ module StashEngine
         expect(@resource.subjects.non_fos.where(subject: existing_fos.subject).count).to eq(1) # still has that subject in non-FOS, also
       end
 
-      it "prefers to purge non-controlled vocab subjects over ones with vocabulary" do
+      it 'prefers to purge non-controlled vocab subjects over ones with vocabulary' do
         existing_subj = @resource.subjects.non_fos.first
         @resource.subjects << create(:subject, subject: existing_subj.subject, subject_scheme: 'gumma')
         starting_size = @resource.subjects.count
