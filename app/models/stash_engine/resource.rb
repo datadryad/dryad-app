@@ -858,7 +858,7 @@ module StashEngine
     end
 
     def purge_duplicate_subjects!
-      text_subj = subjects.non_fos.order(:subject).map{|s| s.subject&.downcase }.compact
+      text_subj = subjects.non_fos.order(:subject).map { |s| s.subject&.downcase }.compact
 
       dups = []
       text_subj.each_with_index do |s, idx|
