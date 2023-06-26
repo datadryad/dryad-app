@@ -4,6 +4,8 @@ require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
 
+REPORTS_DIR = 'reports'.freeze
+
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
@@ -314,6 +316,31 @@ namespace :identifiers do
         time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
 
         csv << [i.identifier, i.created_at, i.latest_resource.size, num_files, file_extensions, time_to_approval, time_in_curation]
+      end
+    end
+  end
+
+  desc 'Generate a report of datasets without primary articles'
+  task datasets_without_primary_articles_report: :environment do
+    FileUtils.mkdir_p(REPORTS_DIR)
+    outfile = File.join(REPORTS_DIR, 'datasets_without_primary_articles.csv')
+    p "Writing #{outfile}..."
+    CSV.open(outfile, 'w') do |csv|
+      csv << %w[DataDOI CreatedAt ISSN Title Authors Institutions Relations]
+      StashEngine::Identifier.publicly_viewable.each do |i|
+        d = i.publication_article_doi
+        next unless d.blank?
+
+        r = i.latest_viewable_resource
+        next unless r.present?
+
+        authors = r.authors&.map(&:author_standard_name)
+        rors = r.authors&.map(&:affiliations)&.flatten&.map(&:ror_id)&.uniq&.compact
+        rors = nil if rors.blank?
+        relations = r.related_identifiers&.map { |ri| [ri.work_type, ri.related_identifier] }
+        relations = nil if relations.blank?
+
+        csv << [i.identifier, i.created_at, i.publication_issn, r.title, authors, rors, relations]
       end
     end
   end

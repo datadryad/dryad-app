@@ -170,7 +170,7 @@ module StashEngine
     describe 'self.allowed_states(current_state)' do
       it 'indicates the states that are allowed from each' do
         expect(CurationActivity.allowed_states('curation')).to \
-          eq(%w[peer_review curation action_required withdrawn embargoed published])
+          eq(%w[processing peer_review curation action_required withdrawn embargoed published])
 
         expect(CurationActivity.allowed_states('withdrawn')).to \
           eq(%w[withdrawn curation])

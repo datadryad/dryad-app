@@ -17,13 +17,18 @@
     </div>
     <br/>
     <script type="text/javascript">
-     $('#stash_engine_resource_hold_for_peer_review input:radio').on('change', function(e) {
+      $('#stash_engine_resource_hold_for_peer_review').ready(function(e) {
+        if ($('#stash_engine_resource_hold_for_peer_review input:radio:checked').length === 0) {
+          $('#stash_engine_resource_hold_for_peer_review_false').prop('checked', true).trigger('click');
+        }
+      });
+      $('#stash_engine_resource_hold_for_peer_review input:radio').on('change', function(e) {
         $(this).closest('form').submit();
       });
     </script>
   </div>
 <% else %>
   <div>
-    <p>The private for peer review option is not available for this data submission<% if @resource.submitted? %>, because the data has already been submitted<% elsif @resource.identifier.pub_state == 'published' %>, because the data has been previously published<% elsif @resource.identifier.has_accepted_manuscript? %>, because the associated article has been accepted for publication by the journal <% elsif @resource.identifier.publication_article_doi %>, because the associated article has been published by the journal<% end %>. Upon submission, the dataset will proceed to our curation process for evaluation and publication.</p>
+    <p>The private for peer review option is not available for this data submission<% if @resource.submitted? %>, because the data has already been submitted<% elsif @resource.identifier.pub_state == 'published' %>, because the data has been previously published<% elsif @resource.identifier.has_accepted_manuscript? %>, because the associated article has been accepted for publication by the journal<% elsif @resource.identifier.publication_article_doi %>, because the associated article has been published by the journal<% end %>. Upon submission, the dataset will proceed to our curation process for evaluation and publication.</p>
   </div>
 <% end %>

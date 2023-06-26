@@ -267,11 +267,17 @@ class CatalogController < ApplicationController
   # based on the InternalDatum types defined below
   # GET stash/discover?query=[:internal_datum_value]
   def discover
-    internal_datum_types = %w[pubmedID publicationDOI manuscriptNumber]
+    internal_datum_types = %w[pubmedID manuscriptNumber]
     where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
-    identifiers = StashEngine::Identifier
+    internal_data = StashEngine::Identifier
       .publicly_viewable.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
+    related_ids = StashEngine::Identifier
+      .publicly_viewable.joins(resources: :related_identifiers)
+      .where(related_identifiers: { work_type: StashDatacite::RelatedIdentifier.work_types[:primary_article] })
+      .where("related_identifier like '%#{params[:query]}'")
+
+    identifiers = internal_data + related_ids
 
     redirect_discover_to_landing(identifiers, params[:query])
   end
@@ -281,7 +287,7 @@ class CatalogController < ApplicationController
   def redirect_discover_to_landing(identifiers, query)
     if identifiers.length > 1
       # Found multiple datasets for the publication so do a Blacklight search for their DOIs
-      redirect_to search_path(q: query.to_s)
+      redirect_to search_catalog_path(q: query.to_s)
     elsif identifiers.length == 1
       # Found one match so just send them to the landing page
       redirect_to stash_url_helpers.show_path(identifiers.first&.to_s)
@@ -291,7 +297,7 @@ class CatalogController < ApplicationController
       redirect_to stash_url_helpers.show_path(identifier.to_s) if identifier.present?
 
       # Nothing was found so send the user to the Blacklight search page with the original query
-      redirect_to search_path(q: query.to_s) if identifier.blank?
+      redirect_to search_catalog_path(q: query.to_s) if identifier.blank?
     end
   end
 

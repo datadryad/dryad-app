@@ -1,14 +1,24 @@
 default: &default
   enabled: true
-  abbreviation: "kyotou"
-  short_name: "Kyoto University"
-  long_name: "Kyoto University"
-  publisher_id: grid.258799.8
+  abbreviation: "MIT"
+  short_name: "Massachusetts Institute of Technology"
+  long_name: "Massachusetts Institute of Technology"
+  publisher_id: grid.116068.8
   ror_ids:
-    - https://ror.org/02kpeqv85
-    - https://ror.org/05gwbwn20
-    - https://ror.org/05qs31q25
-  tenant_id: kyotou
+    - https://ror.org/042nb2s44
+    - https://ror.org/032q5ym94
+    - https://ror.org/00rj4dg52
+    - https://ror.org/01t9bgr30
+    - https://ror.org/022z6jk58
+    - https://ror.org/03fg5ns40
+    - https://ror.org/053tmcn30
+    - https://ror.org/0071sjj14
+    - https://ror.org/05ymca674
+    - https://ror.org/02dgwnb72
+    - https://ror.org/053r20n13
+    - https://ror.org/04pvzz946
+    - https://ror.org/04vqm6w82
+  tenant_id: mit
   identifier_service:
     provider: datacite
     prefix: "10.7959"
@@ -17,13 +27,13 @@ default: &default
     sandbox: true
   authentication:
     strategy: shibboleth
-    entity_id: https://authidp2.iimc.kyoto-u.ac.jp/idp/shibboleth
-    entity_domain: authidp2.iimc.kyoto-u.ac.jp
+    entity_id: urn:mace:incommon:mit.edu
+    entity_domain: mit.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
-  partner_display: false
-  covers_dpc: false
+  partner_display: true
+  covers_dpc: true
 
 development: &DEVELOPMENT
   <<: *default
@@ -40,13 +50,16 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  authentication:
-    strategy: shibboleth
-    entity_id: https://authidp1.iimc.kyoto-u.ac.jp/idp/shibboleth
-    entity_domain: authidp1.iimc.kyoto-u.ac.jp
   identifier_service:
     provider: datacite
     prefix: "10.5061"
@@ -54,3 +67,7 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
   campus_contacts: [""]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

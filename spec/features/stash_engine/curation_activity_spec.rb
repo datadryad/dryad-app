@@ -181,7 +181,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
-          expect(page).to have_text('Author Action Required')
+          expect(page).to have_text('Action required')
           find('button[title="View Activity Log"]').click
         end
 

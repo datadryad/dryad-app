@@ -1,0 +1,108 @@
+<% @datasets.each_with_index do |dataset, i| %>
+  <% resource = dataset&.latest_resource %>
+  <% display_r = @display_resources[i]%>
+  <% delete_confirm = 'Are you sure you want to remove this dataset'
+    if resource&.stash_version.version > 1
+      delete_confirm << ' version?'
+      if dataset.date_last_published
+        delete_confirm << ' The published version will still be available.'
+      end
+    else
+      delete_confirm << '?'
+    end 
+  %>
+  <% delete_button = button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+    <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash" aria-hidden="true"></i>
+  <% end %>
+  <% if @datasets.index{ |d| d.sort_order == dataset.sort_order } == i %>
+    <% if i > 0 %>
+      </ul>
+    <% end %>
+    <div class="c-table-heading">
+    <%case dataset.sort_order%>
+      <%when 0%>
+        <h2 class="c-table-heading__text">Needs attention</h2>
+      <%when 1%>
+        <h2 class="c-table-heading__text">Kept private</h2>
+      <%when 2%>
+        <h2 class="c-table-heading__text">Processing</h2>
+      <%when 3%>
+        <h2 class="c-table-heading__text">Complete</h2>
+      <%when 4%>
+        <h2 class="c-table-heading__text">Withdrawn</h2>
+    <%end%>
+    </div>
+    <ul class="c-user-datasets-list" id="<%case dataset.sort_order%><%when 0%>user_in-progress<%when 1%>user_private<%when 2%>user_processing<%when 3%>user_complete<%when 4%>user_withdrawn<%end%>">
+  <% end %>
+  <li>
+    <div>
+      <p class="c-user-dataset-title">
+        <% if resource.submitted? # merritt state %>
+          <%= link_to display_r.title, stash_url_helpers.show_path(display_r.external_identifier) %>
+        <% else %>
+          <%= display_r.title %>
+        <% end %>
+      </p>
+      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier %></span><span>Version <%= resource&.stash_version.version%></span><span><%= time_ago_in_words(resource.updated_at, include_seconds: true) %> since last update</span><% if dataset.date_last_published %><span>Published: <%= formatted_date(dataset.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
+    </div>
+      <div>
+      <div class="c-user-datasets-status">
+        <span class="dataset-status
+          <%case dataset.sort_order%>
+          <%when 0%>
+            error-status
+          <%when 1%>
+            warning-status
+          <%when 2%>
+            info-status
+          <%when 3%>
+            success-status
+          <%end%>
+        "><%= resource&.last_curation_activity&.readable_status %></span>
+        <div class="c-user-datasets-actions">
+          <% if resource&.last_curation_activity.status == 'in_progress' %>
+            <% if resource&.dataset_in_progress_editor&.id == current_user&.id %>
+              <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+                Resume <i class="fa fa-pencil" aria-hidden="true"></i>
+              <% end %>
+              <%= delete_button %>
+            <% elsif resource&.dataset_in_progress_editor.present? %>
+              Dataset being edited by <%= resource.dataset_in_progress_editor.name %>
+            <% end %>
+          <% end %>
+          <% if dataset.sort_order == 1 %>
+            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: resource.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+              Release for curation <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <% end %>
+          <% end %>
+          <% if ['submitted', 'action_required'].include?(resource&.last_curation_activity.status) || dataset.sort_order == 1 || dataset.sort_order >= 3 %>
+            <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', onclick: 'setLoading(event)' do %>
+              Create new version <i class="fa fa-pencil" aria-hidden="true"></i>
+            <% end %>
+          <% end %>
+          <% if dataset.sort_order == 1 %>
+            <%= delete_button %>
+          <% end %> 
+        </div>
+      </div>
+    </div>
+  </li>
+  <% if i == @datasets.length - 1 %>
+    </ul>
+  <% end %>
+<% end %>
+<%= paginate @datasets, params: {page_size: @page_size}, remote: true %>
+<script type="text/javascript">
+  (function () {
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+          }
+      };
+  })();
+  function setLoading(e) {
+    var icon = e.target.lastElementChild
+    icon.className = 'fa fa-spinner fa-spin'
+    document.body.classList.add('prevent-clicks')
+  }
+</script>

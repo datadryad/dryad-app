@@ -1,5 +1,110 @@
-// ##### My Datasets Theme ##### //
+.c-user-datasets-list {
+  list-style-type: none;
+  margin: 0; padding: 0;
+  display: table;
+  border-collapse: collapse;
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  margin-bottom: $spacing-sm;
 
-.t-datasets {
-	// empty
+	li {
+	  border: thin solid #888;
+	  display: table-row;
+
+	  &:nth-child(even) {
+	    background-color: #f6f6f6;
+	  }
+	 
+	 	& > div {
+    	display: table-cell;
+
+	  	&:first-child {
+		    padding-left: 10px;
+		    padding-right: 2rem;
+		  }
+
+		  &:last-child {
+		    width: 30ch;
+		    font-size: .9em;
+		    padding-right: 10px; 
+		  }
+		}
+
+		p {
+    	margin: $spacing-base auto;
+  	}
+  }
+
+  @include bp(screen1) {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+  	li > div:first-child {
+	    padding-left: 20px;
+	  }
+	  li > div:last-child {
+	    padding-right: 20px;
+	  }
+	}
+
+	@include bp(screen2) {
+    width: calc(100% + 60px);
+    margin-left: -30px;
+	  li > div:first-child {
+	    padding-left: 30px;
+	  }
+	  li > div:last-child {
+	    padding-right: 30px;
+	  }
+	}
+}
+
+.c-user-dataset-details {
+  font-size: .85em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  column-gap: $spacing-sm;
+
+	.prev-published {
+	  margin-left: auto;
+
+	  i {
+	    color: $design-green-color;
+	  }
+	}
+}
+
+.c-user-datasets-status {
+  display: flex;
+  flex-direction: column;
+  row-gap: .5rem;
+
+  .dataset-status {
+    display: block;
+    padding: .15rem .5rem;
+  }
+  .error-status {
+    background-color: $design-red-color;
+    color: #fff;
+  }
+  .warning-status {
+    background-color: #edba5a;
+  }
+  .info-status {
+    background-color: $design-medium-blue-color;
+    color: #fff;
+  }
+  .success-status {
+    background-color: $design-green-color;
+    color: #fff;
+  }
+  .disabled-status {
+  	background-color: $design-dark-gray-color;
+  }
+
+  .c-user-datasets-actions {
+	  display: flex;
+	  justify-content: space-between;
+    flex-wrap: wrap;
+	}
 }
