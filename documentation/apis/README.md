@@ -42,3 +42,11 @@ The [Submission API](submission.md) is used by systems that want to partner
 more closely with Dryad and create dataset submissions directly.
 
 
+Reporting API
+-------------
+
+Dryad maintains a variety of reports regarding its content.
+
+- Reports that are automatically generated on a regular basis are available at `https://datadryad.org/api/v2/reports`
+- Reports that are generated less frequently are available through our [Data about Dryad](https://github.com/datadryad/dryad-data/) repository
+

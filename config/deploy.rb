@@ -25,7 +25,8 @@ append :linked_dirs,
        "tmp/sockets",
        "vendor/bundle",
        "public/system",
-       "uploads"
+       "uploads",
+       "reports"
 
 append :linked_files, 'config/notifier_state.json'
 
