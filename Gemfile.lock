@@ -418,9 +418,9 @@ GEM
       addressable (~> 2.8)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
-    libv8-node (16.19.0.1)
-    libv8-node (16.19.0.1-x86_64-darwin)
-    libv8-node (16.19.0.1-x86_64-linux)
+    libv8-node (16.10.0.0)
+    libv8-node (16.10.0.0-x86_64-darwin)
+    libv8-node (16.10.0.0-x86_64-linux)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -446,8 +446,8 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_mime (1.1.2)
     mini_portile2 (2.8.2)
-    mini_racer (0.6.4)
-      libv8-node (~> 16.19.0.0)
+    mini_racer (0.6.3)
+      libv8-node (~> 16.10.0.0)
     minitest (5.18.0)
     mize (0.4.1)
       protocol (~> 2.0)
@@ -527,7 +527,7 @@ GEM
       pry (~> 0.9)
       slop (~> 3.0)
     public_suffix (5.0.1)
-    puma (6.3.0)
+    puma (6.1.0)
       nio4r (~> 2.0)
     pundit (2.3.0)
       activesupport (>= 3.0.0)
@@ -847,7 +847,7 @@ DEPENDENCIES
   listen
   loofah (~> 2.16.0)
   mail (= 2.7.1)
-  mini_racer (~> 0.6.3)
+  mini_racer (= 0.6.3)
   mocha
   mysql2 (~> 0.5.3)
   net-sftp
@@ -862,7 +862,7 @@ DEPENDENCIES
   pry
   pry-rails
   pry-remote
-  puma
+  puma (= 6.1.0)
   pundit (~> 2.3)
   rack-attack
   rails (~> 6.1.0)

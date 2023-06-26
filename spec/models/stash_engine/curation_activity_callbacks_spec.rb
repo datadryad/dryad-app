@@ -63,14 +63,14 @@ module StashEngine
 
       it 'returns a readable version of :action_required' do
         @ca.action_required!
-        expect(@ca.readable_status).to eql('Author Action Required')
+        expect(@ca.readable_status).to eql('Action required')
       end
 
       it 'returns a default readable version of the remaining statuses' do
         CurationActivity.statuses.each do |s|
           unless %w[peer_review action_required unchanged].include?(s)
             @ca.send("#{s}!")
-            expect(@ca.readable_status).to eql(s.humanize.split.map(&:capitalize).join(' '))
+            expect(@ca.readable_status).to eql(s.humanize)
           end
         end
       end

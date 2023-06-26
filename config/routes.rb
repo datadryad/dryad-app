@@ -88,6 +88,8 @@ Rails.application.routes.draw do
     get '/', to: 'api#index'
     match '/test', to: 'api#test', via: %i[get post]
     match '/search', to: 'datasets#search', via: %i[get]
+    get '/reports', to: 'api#reports_index'
+    get '/reports(/:report_name)', to: 'api#reports'
     
     # Support for the Editorial Manager API
     match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
@@ -188,6 +190,7 @@ Rails.application.routes.draw do
         as: 'generic_file_check_frictionless'
     
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
+    get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
     get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
     get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
@@ -434,6 +437,7 @@ Rails.application.routes.draw do
     get 'resources/show', to: 'resources#show'
     
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
+    patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
 
   ########################## CEDAR Embeddable Editor ###############################
@@ -469,6 +473,8 @@ Rails.application.routes.draw do
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/*path', to: redirect('/')
+  get '/repo/*path', to: redirect('/')
+  get '/repo', to: redirect('/')
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   
   # Routing to redirect old Dryad landing pages to the correct location

@@ -73,7 +73,7 @@ function Funders({
 
   const setNoFunders = async (e) => {
     const noFunders = e.currentTarget.checked;
-    const [contributor] = contributors;
+    const [contributor] = funders;
     setDisabled(noFunders);
     contributor.contributor_name = noFunders ? 'N/A' : '';
     contributor.name_identifier_id = noFunders ? '0' : '';
