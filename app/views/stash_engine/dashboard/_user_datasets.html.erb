@@ -11,9 +11,6 @@
       delete_confirm << '?'
     end 
   %>
-  <% delete_button = button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-    <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash" aria-hidden="true"></i>
-  <% end %>
   <% if @datasets.index{ |d| d.sort_order == dataset.sort_order } == i %>
     <% if i > 0 %>
       </ul>
@@ -65,7 +62,9 @@
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
                 Resume <i class="fa fa-pencil" aria-hidden="true"></i>
               <% end %>
-              <%= delete_button %>
+              <%= button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+                <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash" aria-hidden="true"></i>
+              <% end %>
             <% elsif resource&.dataset_in_progress_editor.present? %>
               Dataset being edited by <%= resource.dataset_in_progress_editor.name %>
             <% end %>
@@ -79,9 +78,6 @@
             <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', onclick: 'setLoading(event)' do %>
               Create new version <i class="fa fa-pencil" aria-hidden="true"></i>
             <% end %>
-          <% end %>
-          <% if dataset.sort_order == 1 %>
-            <%= delete_button %>
           <% end %> 
         </div>
       </div>
