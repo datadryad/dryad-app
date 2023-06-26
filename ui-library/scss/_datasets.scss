@@ -24,7 +24,7 @@
 		  }
 
 		  &:last-child {
-		    width: 200px;
+		    width: 30ch;
 		    font-size: .9em;
 		    padding-right: 10px; 
 		  }
@@ -105,5 +105,6 @@
   .c-user-datasets-actions {
 	  display: flex;
 	  justify-content: space-between;
+    flex-wrap: wrap;
 	}
 }
