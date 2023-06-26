@@ -12,8 +12,7 @@ function PrelimInfo(
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  let tempVal;
-  tempVal = importInfo;
+  const tempVal = importInfo;
 
   const [acText, setAcText] = useState(publication_name?.value || '');
   const [acID, setAcID] = useState(publication_issn?.value || '');
