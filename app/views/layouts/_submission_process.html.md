@@ -18,7 +18,7 @@ Ready to get started? <a href="/stash/sessions/choose_login">Log in</a> and go t
 <p>
     You will first be asked to enter metadata (information about your data). Check out our tips for complete and <a href="/stash/faq#what-should-i-include-in-my-metadata">comprehensive metadata</a>.  When you <a href="/faq#how-do-i-upload-my-files">upload data files</a>,
     ensure that they meet our <a href="/stash/faq#how-should-i-prepare-my-data-files-before-submitting">file requirements</a> and are able to be opened, they do not
-    contain sensitive information, and do not have licensing conflicts with <a href="/stash/faq#why-cc0">CC0</a>.
+    contain sensitive information, and do not have licensing conflicts with <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/">CC0</a>.
 </p>
 
 <p>
