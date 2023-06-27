@@ -105,7 +105,7 @@ function FunderForm({
             />
           </div>
           <div className="c-input">
-            <label className="c-input__label" htmlFor={`contributor_award_description__${contributor.id}`}>Program/description
+            <label className="c-input__label" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
             </label>
             <Field
               id={`contributor_award_description__${contributor.id}`}
