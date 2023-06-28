@@ -24,7 +24,9 @@ import PropTypes from 'prop-types';
 export default function GenericNameIdAutocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
-    controlOptions: {htmlId, labelText, isRequired},
+    controlOptions: {
+      htmlId, labelText, isRequired, saveOnEnter,
+    },
   },
 ) {
   const [inputItems, setInputItems] = useState([]);
@@ -134,6 +136,11 @@ export default function GenericNameIdAutocomplete(
                   getInputItems(value);
                 } else {
                   setInputItems([]);
+                }
+              },
+              onKeyDown: (e) => {
+                if (saveOnEnter && e.key === 'Enter') {
+                  setAutoBlurred(true);
                 }
               },
             },
