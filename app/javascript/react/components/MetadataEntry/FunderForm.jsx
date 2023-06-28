@@ -30,6 +30,7 @@ function FunderForm({
         identifier_type: 'crossref_funder_id', // needs to be set for datacite mapping, even if no id gotten from crossref
         name_identifier_id: acID,
         award_number: values.award_number,
+        award_description: values.award_description,
         resource_id: resourceId,
       },
     };
@@ -59,6 +60,7 @@ function FunderForm({
     <Formik
       initialValues={
         {
+          award_description: (contributor.award_description || ''),
           award_number: (contributor.award_number || ''),
           id: (contributor.id || ''),
         }
@@ -97,6 +99,19 @@ function FunderForm({
               name="award_number"
               type="text"
               className="js-award_number c-input__text"
+              onBlur={() => { // defaults to formik.handleBlur
+                formik.handleSubmit();
+              }}
+            />
+          </div>
+          <div className="c-input">
+            <label className="c-input__label" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
+            </label>
+            <Field
+              id={`contributor_award_description__${contributor.id}`}
+              name="award_description"
+              type="text"
+              className="js-award_description c-input__text"
               onBlur={() => { // defaults to formik.handleBlur
                 formik.handleSubmit();
               }}

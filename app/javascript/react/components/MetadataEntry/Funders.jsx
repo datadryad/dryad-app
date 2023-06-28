@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import DragonDropList, {DragonListItem, orderedItems} from './DragonDropList';
 import FunderForm from './FunderForm';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 function Funders({
-  resourceId, contributors, createPath, updatePath, deletePath, groupings,
+  resourceId, contributors, createPath, updatePath, reorderPath, deletePath, groupings,
 }) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const [funders, setFunders] = useState(contributors);
   const [disabled, setDisabled] = useState(contributors[0]?.name_identifier_id === '0');
+
+  const lastOrder = () => (funders.length ? Math.max(...funders.map((contrib) => contrib.funder_order)) + 1 : 0);
 
   const addNewFunder = () => {
     console.log(`${(new Date()).toISOString()}: Adding funder`);
@@ -20,6 +23,7 @@ function Funders({
       identifier_type: 'crossref_funder_id',
       name_identifier_id: '',
       resource_id: resourceId,
+      funder_order: lastOrder(),
     };
     const contribJson = {authenticity_token, contributor};
 
@@ -31,8 +35,6 @@ function Funders({
         setFunders((prevState) => [...prevState, data.data]);
       });
   };
-
-  if (funders.length < 1) addNewFunder();
 
   // delete a funder from the list
   const removeItem = (id) => {
@@ -96,33 +98,37 @@ function Funders({
     });
   };
 
+  if (funders.length < 1) addNewFunder();
+
   return (
     <div style={{marginBottom: '20px'}}>
       {!disabled && (
-        <>
-          {funders.map((contrib) => (
-            <FunderForm
-              key={contrib.id}
-              resourceId={resourceId}
-              contributor={contrib}
-              groupings={groupings}
-              disabled={disabled}
-              updatePath={updatePath}
-              removeFunction={removeItem}
-              updateFunder={updateFunder}
-            />
+        <DragonDropList model="contributor" typeName="funder" items={funders} path={reorderPath} setItems={setFunders}>
+          {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
+            <DragonListItem key={contrib.id} item={contrib} typeName="funder">
+              <FunderForm
+                key={contrib.id}
+                resourceId={resourceId}
+                contributor={contrib}
+                groupings={groupings}
+                disabled={disabled}
+                updatePath={updatePath}
+                removeFunction={removeItem}
+                updateFunder={updateFunder}
+              />
+            </DragonListItem>
           ))}
-          <button
-            className="t-describe__add-funder-button o-button__add"
-            type="button"
-            disabled={disabled}
-            onClick={addNewFunder}
-            style={{marginRight: '2em'}}
-          >
-          Add another funder
-          </button>
-        </>
+        </DragonDropList>
       )}
+      <button
+        className="t-describe__add-funder-button o-button__add"
+        type="button"
+        disabled={disabled}
+        onClick={addNewFunder}
+        style={{marginRight: '2em'}}
+      >
+        Add another funder
+      </button>
       <label><input type="checkbox" checked={disabled} onChange={setNoFunders} /> No funding received</label>
     </div>
   );
@@ -130,7 +136,7 @@ function Funders({
 
 export default Funders;
 
-// resourceId, contributors, createPath, updatePath, deletePath
+// resourceId, contributors, icon, createPath, updatePath, deletePath
 
 Funders.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -138,4 +144,5 @@ Funders.propTypes = {
   createPath: PropTypes.string.isRequired,
   updatePath: PropTypes.string.isRequired,
   deletePath: PropTypes.string.isRequired,
+  reorderPath: PropTypes.string.isRequired,
 };
