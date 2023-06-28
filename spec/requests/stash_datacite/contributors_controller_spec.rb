@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'uri'
+require_relative '../stash_api/helpers'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashDatacite
@@ -65,6 +66,60 @@ module StashDatacite
         contrib = StashDatacite::Contributor.where(resource_id: @resource.id).first
         expect(contrib.contributor_name).to eq('crap*')
         expect(contrib.name_identifier_id).to eq('')
+      end
+    end
+
+    describe 'reorder' do
+      before(:each) do
+        @resource2 = create(:resource, user_id: @user.id)
+        @contributors = Array.new(7) { |_i| create(:contributor, resource: @resource2) }
+      end
+
+      it 'detects if not all funder ids are for same resource' do
+        @bad_funder = create(:contributor, resource: @resource)
+        update_info = (@contributors + [@bad_funder]).to_h { |funder| [funder.id.to_s, funder.funder_order] }
+
+        response_code = patch '/stash_datacite/contributors/reorder',
+                              params: { 'contributor' => update_info },
+                              headers: default_json_headers,
+                              as: :json
+
+        expect(response_code).to eq(400) # gives 400, bad request
+      end
+
+      it 'detects if user not authorized to modify this resource' do
+        @user2 = create(:user, role: 'user')
+        @resource3 = create(:resource, user_id: @user2.id)
+        @contributors2 = Array.new(7) { |_i| create(:contributor, resource: @resource3) }
+        update_info = @contributors2.to_h { |funder| [funder.id.to_s, funder.funder_order] }
+
+        response_code = patch '/stash_datacite/contributors/reorder',
+                              params: { 'contributor' => update_info },
+                              headers: default_json_headers,
+                              as: :json
+
+        expect(response_code).to eq(403) # no permission to modify these
+      end
+
+      it 'updates the funder order to the order given' do
+        update_info = @contributors.map { |funder| { id: funder.id, order: funder.funder_order } }.shuffle
+        update_info = update_info.each_with_index.to_h do |funder, idx|
+          [funder[:id].to_s, idx]
+        end
+
+        response_code = patch '/stash_datacite/contributors/reorder',
+                              params: { 'contributor' => update_info },
+                              headers: default_json_headers,
+                              as: :json
+
+        expect(response_code).to eq(200)
+
+        ret_json = JSON.parse(body)
+
+        update_info.each_with_index do |item, idx|
+          expect(item.first.to_i).to eq(ret_json[idx]['id'])
+          expect(item.second).to eq(ret_json[idx]['funder_order'])
+        end
       end
     end
 

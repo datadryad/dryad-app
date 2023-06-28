@@ -31,8 +31,11 @@
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
               affiliation: auth.affiliation.as_json,
               orcid_invite_path: auth&.orcid_invite_path)},
-              curator: current_user&.limited_curator?, icon: '/images/fa-barfs.svg', # asset pipeline not working right on stage
-              correspondingAuthorId: @resource.owner_author&.id
+              curator: current_user&.limited_curator?,
+              correspondingAuthorId: @resource.owner_author&.id,
+              createPath: authors_create_path,
+              reorderPath: authors_reorder_path,
+              deletePath: authors_delete_path('id_xox')
       } ) %>
     </div>
   </fieldset>
@@ -51,7 +54,7 @@
   </div>
 
   <fieldset class="c-fieldset" id="funder_fieldset">
-    <legend class="c-fieldset__legend">Funding</legend>
+    <legend class="c-fieldset__legend" id="funders-head">Funding</legend>
     <div className="js-contributors_form">
       <%= react_component('components/MetadataEntry/Funders',
                           resourceId: @resource.id,
@@ -59,6 +62,7 @@
                           groupings: @metadata_entry.contributor_groupings,
                           createPath: contributors_create_path,
                           updatePath: contributors_update_path,
+                          reorderPath: contributors_reorder_path,
                           deletePath: contributors_delete_path('id_xox'))
       %>
     </div>

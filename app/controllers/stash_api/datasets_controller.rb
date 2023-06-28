@@ -127,8 +127,8 @@ module StashApi
       # Add funding info if it was not added by the submitter
       if @resource.contributors.blank? && art_params['funding_information'].present?
         art_params['funding_information'].each do |f|
-          @resource.contributors << StashDatacite::Contributor.create(contributor_name: f['funder'],
-                                                                      contributor_type: 'funder', award_number: f['award_number'])
+          @resource.contributors << StashDatacite::Contributor.create(contributor_name: f['funder'], contributor_type: 'funder',
+                                                                      award_number: f['award_number'], award_description: f['award_description'])
         end
         fields_changed << 'Funders'
       end
@@ -217,7 +217,8 @@ module StashApi
           art_params['funding_information'].each do |f|
             em_funders << {
               organization: f['funder'],
-              awardNumber: f['award_number']
+              awardNumber: f['award_number'],
+              awardDescription: f['award_description']
             }
           end
           em_params['funders'] = em_funders
