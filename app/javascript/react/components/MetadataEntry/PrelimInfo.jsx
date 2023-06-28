@@ -12,14 +12,7 @@ function PrelimInfo(
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  let tempVal;
-  if (msid?.value) {
-    tempVal = 'manuscript';
-  } else if (related_identifier) {
-    tempVal = 'published';
-  } else {
-    tempVal = importInfo;
-  }
+  const tempVal = importInfo;
 
   const [acText, setAcText] = useState(publication_name?.value || '');
   const [acID, setAcID] = useState(publication_issn?.value || '');
