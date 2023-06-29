@@ -10,7 +10,7 @@ module StashEngine
       def resolve
         @scope
           .joins(latest_resource: :last_curation_activity)
-          .where(latest_resource: { user_id: @user.id })
+          .where(latest_resource: { user_id: @user&.id })
           .select("stash_engine_identifiers.*,
             CASE
               WHEN status in ('in_progress', 'action_required') THEN 0
