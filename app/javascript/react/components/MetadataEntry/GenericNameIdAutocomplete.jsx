@@ -139,7 +139,7 @@ export default function GenericNameIdAutocomplete(
                 }
               },
               onKeyDown: (e) => {
-                if (saveOnEnter && e.key === 'Enter') {
+                if (saveOnEnter && highlightedIndex < 0 && e.key === 'Enter') {
                   setAutoBlurred(true);
                 }
               },
@@ -198,7 +198,7 @@ export default function GenericNameIdAutocomplete(
 GenericNameIdAutocomplete.propTypes = {
   acText: PropTypes.string.isRequired,
   setAcText: PropTypes.func.isRequired,
-  acID: PropTypes.string.isRequired,
+  acID: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   setAcID: PropTypes.func.isRequired,
   setAutoBlurred: PropTypes.func.isRequired,
   supplyLookupList: PropTypes.func.isRequired,
