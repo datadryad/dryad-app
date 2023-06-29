@@ -24,13 +24,13 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     xit "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
-      click_button 'Import Manuscript Metadata'
+      click_button 'Import manuscript metadata'
       expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list')
     end
 
     it 'gives disable submit manuscript not filled' do
       choose('a manuscript in progress', allow_label_click: true)
-      expect(page).to have_button('Import Manuscript Metadata', disabled: true)
+      expect(page).to have_button('Import manuscript metadata', disabled: true)
     end
 
   end
@@ -68,7 +68,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = ''
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).to have_button('Import Article Metadata', disabled: true)
+      expect(page).to have_button('Import article metadata', disabled: true)
     end
 
     it "gives a message when it can't find a doi" do
@@ -97,7 +97,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       # so we force it here.
       page.execute_script("$('#do_import').val('true')")
 
-      click_button 'Import Article Metadata'
+      click_button 'Import article metadata'
     end
 
   end

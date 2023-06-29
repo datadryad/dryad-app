@@ -87,7 +87,7 @@ describe('PrelimManu', () => {
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByText('Import Manuscript Metadata')).toHaveFocus());
+    await waitFor(() => expect(screen.getByText('Import manuscript metadata')).toHaveFocus());
     await waitFor(() => promise); // waits for the axios promise to fulfil
   })
 
