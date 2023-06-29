@@ -105,7 +105,7 @@ function PrelimArticle({
                 </label>
                 <Field
                   className="c-input__text"
-                  placeholder="5702.125/qlm.1266rr"
+                  placeholder="10.5702/qlm.1266rr"
                   type="text"
                   name="primary_article_doi"
                   id="primary_article_doi"
