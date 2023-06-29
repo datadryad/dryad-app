@@ -128,7 +128,7 @@ function PrelimArticle({
                 }}
                 disabled={(acText === '' || formRef?.current?.values.primary_article_doi === '')}
               >
-                Import Article Metadata
+                Import article metadata
               </button>
             </div>
             <div id="population-warnings" className="o-metadata__autopopulate-message">
