@@ -2,7 +2,7 @@
               method: 'get', id: 'filter_form') do -%>
 <div class="o-admin-form-inline">
   <h3 class="o-heading__level3">Filter by:</h3>
-  <% if current_user.limited_curator? %>
+  <% if institution_select.length > 1 %>
     <div class="o-admin-form-pair">
       <label for="tenant">Institution:</label>
       <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]), class: 'c-input__text', onchange: "this.form.submit();" ) %>
