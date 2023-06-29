@@ -94,7 +94,7 @@ function PrelimArticle({
                     {
                       htmlId: 'publication',
                       labelText: 'Journal name',
-                      isRequired: false,
+                      isRequired: true,
                     }
                   }
                 />

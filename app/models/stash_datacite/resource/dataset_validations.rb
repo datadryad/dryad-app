@@ -88,6 +88,30 @@ module StashDatacite
         err.flatten
       end
 
+      def article_id
+        err = []
+
+        if @resource.identifier.import_info != 'other' && @resource.identifier.publication_name.blank?
+          err << ErrorItem.new(message: 'Fill in the {journal of the related publication}',
+                               page: metadata_page(@resource),
+                               ids: ['publication'])
+        end
+
+        journal = " from #{@resource.identifier.publication_name}" if @resource.identifier.publication_name.present?
+
+        if @resource.identifier.import_info == 'published' &&
+          (@resource.identifier.publication_article_doi.blank? || @resource.related_identifiers.where(work_type: 'primary_article').count.positive?)
+          err << ErrorItem.new(message: "Fill in {a correctly formatted DOI} for the article#{journal}",
+                               page: metadata_page(@resource),
+                               ids: %w[primary_article_doi])
+        elsif @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
+          err << ErrorItem.new(message: "Fill in the {manuscript number} for the article#{journal}",
+                               page: metadata_page(@resource),
+                               ids: ['msId'])
+        end
+        err
+      end
+
       def title
         if @resource.title.blank?
           return ErrorItem.new(message: 'Fill in a {dataset title}',
@@ -165,23 +189,6 @@ module StashDatacite
                                ids: ['abstract_label'])
         end
         []
-      end
-
-      def article_id
-        return [] unless @resource.identifier.publication_name.present? &&
-          @resource.identifier.manuscript_number.blank? &&
-          @resource.identifier.publication_article_doi.blank?
-
-        if @resource.related_identifiers.where(work_type: 'primary_article').count.positive? # has primary, but not doi
-          ErrorItem.new(message: "Fill in {a correctly formatted DOI} for your article from #{@resource.identifier
-                                                                                          .publication_name}",
-                        page: metadata_page(@resource),
-                        ids: %w[primary_article_doi])
-        else
-          ErrorItem.new(message: "Fill in a {manuscript number or DOI} for the article from #{@resource.identifier.publication_name}",
-                        page: metadata_page(@resource),
-                        ids: %w[msid primary_article_doi])
-        end
       end
 
       def s3_error_uploads
