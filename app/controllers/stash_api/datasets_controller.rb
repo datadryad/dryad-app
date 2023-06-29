@@ -555,7 +555,7 @@ module StashApi
     def check_may_set_user_id
       return if params['userId'].nil?
 
-      unless @user.role == 'superuser' ||
+      unless %w[superuser curator tenant_curator].include?(@user.role) ||
              params['userId'].to_i == @user.id || # or it is your own user
              @user.journals_as_admin&.map(&:issn_array)&.flatten&.include?(params['dataset']['publicationISSN']) # or you admin the target journal
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
