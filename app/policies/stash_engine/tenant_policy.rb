@@ -12,7 +12,7 @@ module StashEngine
 
       def resolve
         if @user.tenant_limited?
-          @scope.all.select { |tenant| tenant.tenant_id == @user.tenant_id || tenant.tenant_id.start_with?("#{@user.tenant_id}-") }
+          @scope.all.select { |tenant| user.tenant.ror_ids.include?(tenant.ror_ids.first) }
         else
           @scope.all
         end
