@@ -7,13 +7,14 @@
   <div class="<%= 'highlight' if highlight %>">    
   <% contributors.each do |contributor| %>
       <% @award_string = ", <span>Award: #{contributor.award_number}</span>".html_safe %>
+      <% @desc_string = ", <span>#{contributor.award_description}</span>".html_safe %>
       <% if current_user && current_user.limited_curator? %>
 	  <p>
-	      <%= contributor.contributor_name_friendly(show_asterisk: true) %><% if contributor.award_number.present? %><%= @award_string %><% end %>
+	      <%= contributor.contributor_name_friendly(show_asterisk: true) %><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
 	  </p>
       <% else %>
 	  <p>
-	      <%= contributor.contributor_name_friendly %><% if contributor.award_number.present? %><%= @award_string %><% end %>
+	      <%= contributor.contributor_name_friendly %><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
 	  </p>
       <% end %>
   <% end %>

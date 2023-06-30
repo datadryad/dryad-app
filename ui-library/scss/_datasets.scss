@@ -105,5 +105,6 @@
   .c-user-datasets-actions {
 	  display: flex;
 	  justify-content: space-between;
+    flex-wrap: wrap;
 	}
 }

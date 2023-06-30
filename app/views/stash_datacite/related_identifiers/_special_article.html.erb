@@ -1,0 +1,19 @@
+<% # takes locals of article_ids and item_label (singular version of item like Article or Primary article)  %>
+<% if article_ids.present? %>
+  <h3 class="o-heading__level3-related-works"><%= item_label.pluralize(article_ids.count) %></h3>
+  <ul class="o-list-related">
+    <% article_ids.each do |r| %>
+      <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
+      <li>
+        <% if r.work_type == 'undefined' %>
+          This dataset <%= r.relation_name_english %>
+          <%= display_id(type: r.related_identifier_type,
+                         my_id: r.related_identifier) %> <%= bad_asterisk %>
+        <% else %>
+          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %>
+          <%= bad_asterisk %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

@@ -88,6 +88,8 @@ Rails.application.routes.draw do
     get '/', to: 'api#index'
     match '/test', to: 'api#test', via: %i[get post]
     match '/search', to: 'datasets#search', via: %i[get]
+    get '/reports', to: 'api#reports_index'
+    get '/reports(/:report_name)', to: 'api#reports'
     
     # Support for the Editorial Manager API
     match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
@@ -363,6 +365,7 @@ Rails.application.routes.draw do
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
+    patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
     delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
     
     get 'publications/new', to: 'publications#new'

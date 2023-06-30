@@ -9,7 +9,7 @@ jest.mock('axios');
 
 describe('Funders', () => {
 
-  let contributors, resourceId, createPath, updatePath, deletePath;
+  let contributors, resourceId, createPath, updatePath, deletePath, reorderPath;
 
   beforeEach(() => {
 
@@ -25,7 +25,9 @@ describe('Funders', () => {
             identifier_type: null,
             name_identifier_id: null,
             resourceId: resourceId,
-            award_number: faker.datatype.string(5)
+            award_number: faker.datatype.string(5),
+            award_description: faker.datatype.string(10),
+            funder_order: i,
           }
       );
     }
@@ -33,11 +35,12 @@ describe('Funders', () => {
     createPath = faker.system.directoryPath();
     updatePath = faker.system.directoryPath();
     deletePath = faker.system.directoryPath();
+    reorderPath = faker.system.directoryPath();
   });
 
   it("renders multiple funder forms as funder section", () => {
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
-                    deletePath={deletePath} />);
+                    deletePath={deletePath} reorderPath={reorderPath} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization', { exact: false });
     expect(labeledElements.length).toBe(9); // three for each autocomplete list
@@ -57,7 +60,7 @@ describe('Funders', () => {
     axios.delete.mockImplementationOnce(() => promise);
 
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
-                    deletePath={deletePath} />);
+                    deletePath={deletePath} reorderPath={reorderPath} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -87,7 +90,7 @@ describe('Funders', () => {
     axios.post.mockImplementationOnce(() => promise);
 
     render(<Funders contributors={contributors} resourceId={resourceId} createPath={createPath} updatePath={updatePath}
-                    deletePath={deletePath} />);
+                    deletePath={deletePath} reorderPath={reorderPath} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);

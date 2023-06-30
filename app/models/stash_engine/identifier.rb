@@ -601,6 +601,22 @@ module StashEngine
       nil
     end
 
+    # the first time this dataset had metadata exposed to the public
+    def datacite_issued_date
+      res = resources.with_public_metadata.order(created_at: :asc).first
+      return nil unless res.present?
+
+      res.publication_date || res.updated_at
+    end
+
+    # the first time this dataset was fully published with files available to download for the public - download true
+    def datacite_available_date
+      res = resources.files_published.order(created_at: :asc).first
+      return nil unless res.present?
+
+      res.publication_date || res.updated_at
+    end
+
     # ------------------------------------------------------------
     # Private
 

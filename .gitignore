@@ -17,6 +17,7 @@
 public/assets/
 public/uploads/
 uploads/
+reports/
 test-reports/
 stash/script/counter-uploader/reports/*.json
 stash/script/counter-uploader/tmp/*.json
