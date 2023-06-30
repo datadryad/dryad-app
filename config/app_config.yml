@@ -39,9 +39,9 @@ defaults: &DEFAULTS
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %> 
   zenodo:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
-    base_url: https://sandbox.zenodo.org
+    base_url: https://zenodo-rdm.web.cern.ch
     community_id: dryad
-    application_id: 3357
+    application_id: 5
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
@@ -222,7 +222,7 @@ development: &DEVELOPMENT
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://zenodo-rdm.web.cern.ch
     community_id: dryad
-    application_id: 3357
+    application_id: 5
   shib_sp_host: dryad-dev.cdlib.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
