@@ -24,7 +24,7 @@ const makeAuthor = (resource_id = null, myOrder) => {
 
 describe('Authors', () => {
 
-  let resource, dryadAuthors, curator, icon;
+  let resource, dryadAuthors, curator, createPath, deletePath, reorderPath;;
 
   beforeEach(() => {
 
@@ -36,12 +36,14 @@ describe('Authors', () => {
     });
 
     curator = false;
-    icon = ''; // no need to create fake icon path
+    createPath = faker.system.directoryPath();
+    deletePath = faker.system.directoryPath();
+    reorderPath = faker.system.directoryPath();
   });
 
   it("renders multiple authors in authors section", () => {
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', { exact: false });
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
@@ -60,7 +62,7 @@ describe('Authors', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -92,7 +94,7 @@ describe('Authors', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} icon={icon} correspondingAuthorId={27} />);
+    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);

@@ -37,6 +37,7 @@ module Datacite
                   Affiliation.new(
                     identifier: a.ror_id,
                     identifier_scheme: 'ROR',
+                    scheme_uri: 'https://ror.org',
                     value: a.smart_name
                   )
                 else
@@ -135,22 +136,29 @@ module Datacite
       end
 
       def add_dates(dcs_resource)
-        dcs_resource.dates = se_resource.datacite_dates.where.not(date: nil).map do |d|
-          sd_date = d.date
-          Date.new(
-            type: d.date_type_mapping_obj,
-            value: sd_date
-          )
-        end
+        iss_dt = se_resource&.identifier&.datacite_issued_date
+        avail_dt = se_resource&.identifier&.datacite_available_date
+
+        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::ISSUED, value: iss_dt) if iss_dt
+        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::AVAILABLE, value: avail_dt) if avail_dt
       end
 
       def add_subjects(dcs_resource)
-        normal_subjects = se_resource.subjects.non_fos.map { |s| Subject.new(value: s.subject) }
-        # FOS subjects are a special kind Martin is handling differently based on a prefix in the string
-        fos_subjects = se_resource.subjects.where(subject_scheme: 'fos').map do |s|
-          Subject.new(value: "FOS: #{s.subject}")
-        end
-        dcs_resource.subjects = normal_subjects + fos_subjects
+        subjects = se_resource.subjects.map do |s|
+          next unless s.subject.present?
+
+          massaged_subject = if s.subject_scheme == 'fos'
+                               "FOS: #{s.subject}"
+                             else
+                               s.subject
+                             end
+          if s.subject_scheme.present?
+            Subject.new(value: massaged_subject, scheme: s.subject_scheme, scheme_uri: s.scheme_URI)
+          else
+            Subject.new(value: massaged_subject)
+          end
+        end.compact
+        dcs_resource.subjects = subjects if subjects.any?
       end
 
       def add_contributors(dcs_resource, datacite_3: false)
@@ -164,6 +172,7 @@ module Datacite
                 Affiliation.new(
                   identifier: a.ror_id,
                   identifier_scheme: 'ROR',
+                  scheme_uri: to_uri('https://ror.org'),
                   value: a.smart_name
                 )
               else
@@ -191,7 +200,12 @@ module Datacite
 
       def add_funding_references(dcs_resource)
         dcs_resource.funding_references = sd_funder_contribs.map do |c|
-          dmfi = (FunderIdentifier.new(type: c.identifier_type_mapping_obj, value: c.name_identifier_id) if c.name_identifier_id.present?)
+          dmfi = if c.name_identifier_id.present?
+                   FunderIdentifier.new(type: c.identifier_type_mapping_obj, value: c.name_identifier_id,
+                                        scheme_uri: (if c.identifier_type == 'crossref_funder_id'
+                                                       'https://www.crossref.org/services/funder-registry/'
+                                                     end))
+                 end
 
           FundingReference.new(
             name: c.contributor_name,

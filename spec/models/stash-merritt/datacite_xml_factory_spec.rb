@@ -101,6 +101,74 @@ module Datacite
         expect(x_funder.xpath('funderIdentifier').to_s).to be_blank
         expect(x_funder.xpath('awardNumber').to_s).to include(contributor.award_number.encode(xml: :text))
       end
+
+      describe 'datacite xml factory with builder that checks actual XML' do
+        it 'sets the resourceTypeGeneral' do
+          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          contents = builder.contents
+          doc = Nokogiri::XML(contents)
+          doc.remove_namespaces! # to simplify the xpath expressions for convenience
+          expect(doc.xpath('//resourceType/@resourceTypeGeneral').first.value).to eq('Dataset')
+        end
+
+        it 'sets the correct issued and available dates' do
+          @resource.update(publication_date: Time.utc(2018, 1, 1), meta_view: true)
+          @res2 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 2, 1))
+          @res3 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 3, 1))
+
+          @xml_factory = DataciteXMLFactory.new(
+            se_resource_id: @res3.id,
+            doi_value: @resource.identifier.identifier,
+            total_size_bytes: 1234,
+            version: 3
+          )
+
+          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          contents = builder.contents
+          doc = Nokogiri::XML(contents)
+          doc.remove_namespaces! # to simplify the xpath expressions for convenience
+          expect(doc.xpath("//dates/date[@dateType = 'Issued']").first.child.text).to start_with('2018-01-01')
+          expect(doc.xpath("//dates/date[@dateType = 'Available']").first.child.text).to start_with('2018-02-01')
+        end
+
+        it 'adds subjects to XML with the scheme and uri if available' do
+          subj_entry = create(:subject, subject: 'My Test Subject', subject_scheme: 'LCSH', scheme_URI: 'http://id.loc.gov/authorities/subjects')
+          @resource.subjects << subj_entry
+
+          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          contents = builder.contents
+          doc = Nokogiri::XML(contents)
+          doc.remove_namespaces! # to simplify the xpath expressions for convenience
+          expect(doc.xpath("//subjects/subject[@subjectScheme = 'fos']").first.child.text)
+            .to eql("FOS: #{@resource.subjects.first.subject}")
+          expect(doc.xpath("//subjects/subject[@subjectScheme = 'LCSH']").first.child.text).to eql('My Test Subject')
+        end
+
+        it 'adds author ROR affiliations to XML' do
+          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          contents = builder.contents
+          doc = Nokogiri::XML(contents)
+          doc.remove_namespaces! # to simplify the xpath expressions for convenience
+          expect(doc.xpath('//creators/creator/affiliation').first.child.to_s).to eql(@resource.authors.first.affiliation.long_name)
+          expect(doc.xpath('//creators/creator/affiliation[@affiliationIdentifier]').first.attributes['affiliationIdentifier'].value).to \
+            eql(@resource.authors.first.affiliation.ror_id)
+          expect(doc.xpath('//creators/creator/affiliation[@affiliationIdentifier]').first.attributes['affiliationIdentifierScheme'].value)
+            .to eql('ROR')
+        end
+
+        it 'adds funding affiliations to XML' do
+          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          contents = builder.contents
+          doc = Nokogiri::XML(contents)
+          doc.remove_namespaces! # to simplify the xpath expressions for convenience
+          expect(doc.xpath('//fundingReferences//fundingReference/funderName').first.text)
+            .to eql(@resource.contributors.where(contributor_type: 'funder').first.contributor_name)
+          expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.text)
+            .to eql(@resource.contributors.where(contributor_type: 'funder').first.name_identifier_id)
+          expect(doc.xpath('//fundingReferences//fundingReference/funderIdentifier').first.attributes['funderIdentifierType'].value)
+            .to eql('Crossref Funder ID')
+        end
+      end
     end
   end
 end

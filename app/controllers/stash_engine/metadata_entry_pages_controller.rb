@@ -23,6 +23,8 @@ module StashEngine
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
+      @resource&.purge_duplicate_subjects!
+
       return unless @resource.submitted? # create a new version if this is a submitted version
 
       redirect_to(stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))

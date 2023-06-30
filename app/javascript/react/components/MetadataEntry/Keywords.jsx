@@ -77,6 +77,7 @@ function Keywords({
               htmlId: 'keyword_ac',
               labelText: '',
               isRequired: false,
+              saveOnEnter: true,
             }
           }
         />

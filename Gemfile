@@ -30,7 +30,7 @@ gem 'capistrano-rails', '~> 1.6.2'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
-gem 'puma', group: :puma, require: false
+gem 'puma', '6.1.0', group: :puma, require: false # puma 6.3.0 doesn't start
 # Our homegrown artisinal SSM gem
 gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 
@@ -43,7 +43,7 @@ gem 'uc3-ssm', git: 'https://github.com/CDLUC3/uc3-ssm', branch: '0.3.0rc0'
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.4.0'
 # gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
-gem 'mini_racer', '~> 0.6.3'
+gem 'mini_racer', '0.6.3'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
