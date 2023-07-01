@@ -1,0 +1,66 @@
+default: &default
+  enabled: true
+  abbreviation: "UMD"
+  short_name: "University of Maryland, College Park"
+  long_name: "University of Maryland, College Park"
+  publisher_id: grid.164295.d
+  ror_ids:
+    - https://ror.org/047s2c258
+    - https://ror.org/042607708
+    - https://ror.org/02048n894
+    - https://ror.org/058cmd703
+    - https://ror.org/04xz38214
+    - https://ror.org/010prmy50
+  tenant_id: umd
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:umd.edu
+    entity_domain: umd.edu
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+migration:
+  <<: *default
+  enabled: false
+
+demo:
+  <<: *default
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+  campus_contacts: [""]
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
