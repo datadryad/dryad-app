@@ -99,8 +99,10 @@ module StashDatacite
 
         journal = " from #{@resource.identifier.publication_name}" if @resource.identifier.publication_name.present?
 
-        if @resource.identifier.import_info == 'published' &&
-          (@resource.identifier.publication_article_doi.blank? || @resource.related_identifiers.where(work_type: 'primary_article').count.positive?)
+        primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
+        if @resource.identifier.import_info == 'published' && (
+                      primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
+                    )
           err << ErrorItem.new(message: "Fill in {a correctly formatted DOI} for the article#{journal}",
                                page: metadata_page(@resource),
                                ids: %w[primary_article_doi])

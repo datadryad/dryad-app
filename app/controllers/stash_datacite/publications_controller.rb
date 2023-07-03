@@ -102,12 +102,20 @@ module StashDatacite
 
       # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
       standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-      ri = RelatedIdentifier.create(resource_id: @resource.id,
-                                    related_identifier: standard_doi,
-                                    related_identifier_type: 'doi',
-                                    relation_type: 'iscitedby',
-                                    work_type: 'primary_article',
-                                    hidden: false)
+      existing_primary = @resource.related_identifiers.where(work_type: 'primary_article').first
+      hsh = { related_identifier: standard_doi,
+        related_identifier_type: 'doi',
+        relation_type: 'iscitedby',
+        work_type: 'primary_article',
+        hidden: false }
+
+      ri = if existing_primary.present?
+        existing_primary.update(hsh)
+        existing_primary
+      else
+        RelatedIdentifier.create(hsh.merge(resource_id: @resource.id))
+      end
+
       ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
       @resource.reload
     end
