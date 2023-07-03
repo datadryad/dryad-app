@@ -36,12 +36,12 @@ defaults: &DEFAULTS
   old_dryad_url: https://v1.datadryad.org
   counter:
     account: CDL.DASH
-    token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %> 
+    token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
-    base_url: https://zenodo-rdm.web.cern.ch
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
+    base_url: https://sandbox.zenodo.org
     community_id: dryad
-    application_id: 5
+    application_id: 3357
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
@@ -218,6 +218,11 @@ development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  zenodo:
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
+    base_url: https://zenodo-rdm.web.cern.ch
+    community_id: dryad
+    application_id: 5
   shib_sp_host: dryad-dev.cdlib.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
@@ -266,11 +271,6 @@ stage:
   feedback_email_from: no-reply-dryad-stg@datadryad.org
   google_analytics_id: UA-145629338-3
   matomo_analytics_id: datadryad-stg
-  repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
-    username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
   s3:
     region: us-west-2
     bucket: dryad-s3-stg
@@ -285,11 +285,6 @@ stage:
       - [40, "YOUTUBE",  "Youtube"]
       - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
       - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
-  zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
-    base_url: https://sandbox.zenodo.org
-    community_id: dryad
-    application_id: 3357
 
 migration:
   <<: *DEFAULTS
