@@ -97,26 +97,51 @@ module StashDatacite
       end
 
       describe :article_id do
-        it 'gives error for unfilled manuscript number or publication doi if publication' do
+        it 'gives error for unfilled publication' do
+          @resource.identifier.update(import_info: 'published')
+
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.article_id.first
+
+          expect(error.message).to include('journal of the related publication')
+          expect(error.ids).to eq(%w[publication])
+        end
+
+        it 'gives error for unfilled publication doi if publication' do
+          @resource.identifier.update(import_info: 'published')
           StashEngine::InternalDatum.create(data_type: 'publicationName',
                                             value: 'Barrel of Monkeys: the Primate Journal',
                                             identifier_id: @resource.identifier_id)
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id
+          error = validations.article_id.first
 
-          expect(error.message).to include('manuscript number or DOI')
-          expect(error.ids).to eq(%w[msid primary_article_doi])
+          expect(error.message).to include('formatted DOI')
+          expect(error.ids).to eq(%w[primary_article_doi])
+        end
+
+        it 'gives error for unfilled manuscript number if manuscript' do
+          @resource.identifier.update(import_info: 'manuscript')
+          StashEngine::InternalDatum.create(data_type: 'publicationName',
+                                            value: 'Barrel of Monkeys: the Primate Journal',
+                                            identifier_id: @resource.identifier_id)
+
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.article_id.first
+
+          expect(error.message).to include('manuscript number')
+          expect(error.ids).to eq(%w[msId])
         end
 
         it 'gives a formatting error when someone puts in a URL instead of a DOI' do
+          @resource.identifier.update(import_info: 'published')
           StashEngine::InternalDatum.create(data_type: 'publicationName',
                                             value: 'Barrel of Monkeys: the Primate Journal',
                                             identifier_id: @resource.identifier_id)
           create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', work_type:
             'primary_article')
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id
+          error = validations.article_id.first
 
           expect(error.message).to include('formatted DOI')
           expect(error.ids).to eq(%w[primary_article_doi])
