@@ -66,7 +66,7 @@ module Mocks
       allow(tenant).to receive(:partner_display).and_return(false)
       allow(tenant).to receive(:publisher_id).and_return('abc123')
       allow(tenant).to receive(:repository).and_return(OpenStruct.new(repo_params))
-      allow(tenant).to receive(:ror_ids).and_return(nil)
+      allow(tenant).to receive(:ror_ids).and_return(['http://ror.org/testid'])
       allow(tenant).to receive(:short_name).and_return('Mock Tenant')
       allow(tenant).to receive(:tenant_id).and_return('mock_tenant')
 
