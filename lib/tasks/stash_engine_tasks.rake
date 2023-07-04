@@ -714,7 +714,7 @@ namespace :identifiers do
     free_datasets = 10
 
     # the base_price is based on the total number of datasets, including the current quarter
-    total_datasets = count + base_count
+    total_datasets = current_count + base_count
 
     base_price = if total_datasets <= free_datasets
                    0
@@ -728,7 +728,7 @@ namespace :identifiers do
                    55
                  end
 
-    "$#{count * base_price}"
+    "$#{current_count * base_price}"
   end
 
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
