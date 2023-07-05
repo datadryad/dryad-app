@@ -36,9 +36,9 @@ defaults: &DEFAULTS
   old_dryad_url: https://v1.datadryad.org
   counter:
     account: CDL.DASH
-    token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %> 
+    token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://sandbox.zenodo.org
     community_id: dryad
     application_id: 3357
@@ -218,6 +218,11 @@ development: &DEVELOPMENT
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  zenodo:
+    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
+    base_url: https://zenodo-rdm.web.cern.ch
+    community_id: dryad
+    application_id: 5
   shib_sp_host: dryad-dev.cdlib.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
