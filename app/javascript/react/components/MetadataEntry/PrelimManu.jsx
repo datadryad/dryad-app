@@ -126,7 +126,7 @@ function PrelimManu({
                 }}
                 disabled={(acText === '' || acID === '' || formRef?.current?.values.msId === '')}
               >
-                Import Manuscript Metadata
+                Import manuscript metadata
               </button>
             </div>
             <div id="population-warnings" className="o-metadata__autopopulate-message">
