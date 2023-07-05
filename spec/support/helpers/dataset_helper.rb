@@ -45,6 +45,7 @@ module DatasetHelper
     # make sure we're on the right page
     navigate_to_metadata
 
+    choose('choose_other')
     fill_in 'title', with: Faker::Lorem.sentence
     fill_in_author
     fill_in_research_domain
