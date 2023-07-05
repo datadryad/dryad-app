@@ -625,14 +625,18 @@ namespace :identifiers do
 
   desc 'Generate reports of items that should be billed for tiered journals'
   task tiered_journal_reports: :environment do
-    # Get the input shopping cart report in SC_REPORT environment variable.
-    if ENV['SC_REPORT'].blank?
-      puts 'Usage: tiered_journal_reports SC_REPORT=<shopping_cart_report_filename>'
+    # Get the input shopping cart report in BASE_REPORT and SC_REPORT environment variables.
+    if ENV['SC_REPORT'].blank? || ENV['BASE_REPORT'].blank?
+      puts 'Usage: tiered_journal_reports BASE_REPORT=<shopping_cart_base_filename> SC_REPORT=<shopping_cart_report_filename>'
       exit
     else
-      sc_report_file = ENV['SC_REPORT']
-      puts "Producing tiered journal reports for #{sc_report_file}"
+      base_report_file = ENV.fetch('BASE_REPORT', nil)
+      sc_report_file = ENV.fetch('SC_REPORT', nil)
+      puts "Producing tiered journal reports for #{sc_report_file}, using base in #{base_report_file}"
     end
+
+    base_values = tiered_base_values(base_report_file)
+    puts "Calculated base values #{base_values}"
 
     sc_report = CSV.parse(File.read(sc_report_file), headers: true)
 
@@ -668,7 +672,7 @@ namespace :identifiers do
         end
         next if sponsor_summary.blank?
 
-        csv << [org.name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count)]
+        csv << [org.name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base_values[org.name])]
         write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
                                      table: sponsor_summary)
         sponsor_summary = []
@@ -680,24 +684,51 @@ namespace :identifiers do
     exit
   end
 
-  def tiered_price(count)
-    return nil unless count.is_a?(Integer)
+  # Calculates each sponsor's "base" number of submissions, using data from prior quarters
+  def tiered_base_values(base_report_file)
+    base_values = {}
+    base_report = CSV.parse(File.read(base_report_file), headers: true)
+    sponsor_total_count = 0
+    StashEngine::JournalOrganization.all.each do |org|
+      journals = org.journals_sponsored_deep
+      journals.each do |j|
+        next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+
+        journal_item_count = 0
+        base_report.each do |item|
+          journal_item_count += 1 if item['JournalISSN'] == j.single_issn
+        end
+        sponsor_total_count += journal_item_count
+      end
+      next if sponsor_total_count == 0
+
+      base_values[org.name] = sponsor_total_count
+      sponsor_total_count = 0
+    end
+    base_values
+  end
+
+  def tiered_price(current_count, base_count)
+    return nil unless current_count.is_a?(Integer) && base_count.is_a?(Integer)
 
     free_datasets = 10
 
-    price = if count <= free_datasets
-              0
-            elsif count <= 100
-              (count - free_datasets) * 135
-            elsif count <= 250
-              (count - free_datasets) * 100
-            elsif count <= 500
-              (count - free_datasets) * 85
-            else
-              (count - free_datasets) * 55
-            end
+    # the base_price is based on the total number of datasets, including the current quarter
+    total_datasets = current_count + base_count
 
-    "$#{price}"
+    base_price = if total_datasets <= free_datasets
+                   0
+                 elsif total_datasets <= 100
+                   135
+                 elsif total_datasets <= 250
+                   100
+                 elsif total_datasets <= 500
+                   85
+                 else
+                   55
+                 end
+
+    "$#{current_count * base_price}"
   end
 
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
