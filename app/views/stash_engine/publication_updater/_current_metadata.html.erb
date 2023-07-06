@@ -7,5 +7,5 @@
 <td><%= existing_pubissn %></td>
 <td><%= existing_pubdoi %></td>
 <td><%= formatted_date(resource.publication_date) %></td>
-<td><%= existing_authors(resource: resource).html_safe %></td>
+<td><%= existing_authors(resource: resource)&.join('<br/>')&.html_safe %></td>
 <td>&nbsp;</td>
