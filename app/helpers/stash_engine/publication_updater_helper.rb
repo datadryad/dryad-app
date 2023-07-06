@@ -37,15 +37,24 @@ module StashEngine
     def existing_authors(resource:)
       return nil unless resource.present?
 
-      resource.authors&.map(&:author_full_name)&.uniq&.sort { |a, b| a <=> b }&.join('<br>')
+      temp_authors =  resource.authors&.map(&:author_full_name)&.uniq
+      output_authors(authors: temp_authors)
     end
 
     def proposed_authors(json:)
       return nil unless json.present?
 
-      JSON.parse(json)&.map { |a| "#{a['family']}, #{a['given']}" }&.uniq&.sort { |a, b| a <=> b }&.join('<br>')
+      temp_authors = JSON.parse(json)&.map { |a| "#{a['family']}, #{a['given']}" }&.uniq
+      output_authors(authors: temp_authors)
+
     rescue JSON::ParserError
       nil
+    end
+
+    def output_authors(authors:)
+      return authors[0..2]&.sort { |a, b| a <=> b } + [ 'et al.' ] if authors.length > 3
+
+      authors&.sort { |a, b| a <=> b }
     end
 
   end
