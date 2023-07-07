@@ -1,0 +1,42 @@
+<% columns = [
+  'dataset title',
+  'dataset publication entered',
+  'dataset issn entered',
+  'dataset primary article doi',
+  'dataset publication date',
+  'dataset authors',
+  'possible publication title',
+  'possible publication name',
+  'possible publication issn',
+  'possible publication doi',
+  'possible publication date',
+  'possible publication authors',
+  'match score 1',
+  'match score 2' ]
+-%><%= columns.join(',') %>
+<%
+  @proposed_changes.each do |proposed_change|
+  resource = @resources.select{ |r| r.identifier_id == proposed_change.identifier_id }.first
+  next if resource.blank?
+
+  existing_pubname = fetch_identifier_metadata(resource: resource, data_type: 'publicationName')
+  existing_pubissn = fetch_identifier_metadata(resource: resource, data_type: 'publicationISSN')
+  existing_pubdoi = fetch_related_primary_article(resource: resource)
+
+  row = [ resource.title,
+          existing_pubname,
+          existing_pubissn,
+          existing_pubdoi,
+          formatted_date(resource.publication_date),
+          existing_authors(resource: resource)&.join('; '),
+          proposed_change.title,
+          proposed_change.publication_name,
+          proposed_change.publication_issn,
+          proposed_change.publication_doi,
+          ( formatted_date(proposed_change.publication_date).present? ? formatted_date(proposed_change.publication_date) : 'Not available' ),
+          proposed_authors(json: proposed_change.authors)&.join(';'),
+          proposed_change.score&.round(2),
+          proposed_change.provenance_score&.round(2) || 'DOI match'
+  ]
+-%><%= row.to_csv(row_sep: nil).html_safe %>
+<% end -%>

@@ -14,7 +14,7 @@
 
     <div class="o-admin-form-pair">
       <label for="list_search">Search:</label>
-      <%= text_field_tag 'list_search', params[:list_search], {size: 30, class: 'c-input__text'} %>
+      <%= text_field_tag 'list_search', params[:list_search], {size: 30, class: 'c-input__text', placeholder: 'Search words (all are required)'} %>
     </div>
 
     <%= form.submit "Submit", class: "o-button__submit" %>
@@ -64,6 +64,9 @@
       </tbody>
     </table>
   </div>
+
+  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+              stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
   <div id="proposed-change-dialog" class="o-admin-dialog">Processing your request ...</div>
 
   <div class="c-space-paginator">
