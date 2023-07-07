@@ -29,7 +29,16 @@ module StashEngine
 
     def fetch_related_primary_article(resource:)
       prim_art = resource.related_identifiers.primary_article.first
-      ( prim_art ? prim_art&.related_identifier : 'Not available' )
+      return 'Not available' unless prim_art.present?
+      id_str = prim_art&.related_identifier
+
+      my_match =  id_str.match(%r{/(10\..+)})
+      # extract the doi in a bare format to match the json for the other
+      if my_match.present?
+        my_match[1]
+      else
+        id_str
+      end
     end
 
     def fetch_related_identifier_metadata(resource:, related_identifier_type:, relation_type:)
