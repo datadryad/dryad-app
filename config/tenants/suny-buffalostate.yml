@@ -22,6 +22,7 @@ default: &default
   partner_display: true
   covers_dpc: true
   sponsor_id: suny
+  payment_plan: tiered
 
 development: &DEVELOPMENT
   <<: *default

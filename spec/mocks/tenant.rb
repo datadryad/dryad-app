@@ -69,6 +69,8 @@ module Mocks
       allow(tenant).to receive(:ror_ids).and_return(['http://ror.org/testid'])
       allow(tenant).to receive(:short_name).and_return('Mock Tenant')
       allow(tenant).to receive(:tenant_id).and_return('mock_tenant')
+      allow(tenant).to receive(:payment_plan).and_return(nil)
+      allow(tenant).to receive(:sponsor_id).and_return(nil)
 
       allow_any_instance_of(StashEngine::User).to receive(:tenant).and_return(tenant)
       allow_any_instance_of(StashEngine::Resource).to receive(:tenant).and_return(tenant)
