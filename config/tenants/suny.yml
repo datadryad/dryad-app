@@ -75,6 +75,7 @@ default: &default
   data_deposit_agreement: false
   partner_display: false
   covers_dpc: true
+  payment_plan: tiered
 
 development: &DEVELOPMENT
   <<: *default

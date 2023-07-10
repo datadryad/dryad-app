@@ -21,6 +21,8 @@ default: &default
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
+  sponsor_id: suny
+  payment_plan: tiered
 
 development: &DEVELOPMENT
   <<: *default
