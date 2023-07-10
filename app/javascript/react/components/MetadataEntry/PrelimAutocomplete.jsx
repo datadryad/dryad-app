@@ -69,7 +69,7 @@ export default function PrelimAutocomplete({
   const nameFunc = (item) => (item?.title || '');
 
   // Given a js object from list (supplyLookupList above) it returns the unique identifier
-  const idFunc = (item) => item.single_issn;
+  const idFunc = (item) => item.issn;
 
   return (
     <GenericNameIdAutocomplete
