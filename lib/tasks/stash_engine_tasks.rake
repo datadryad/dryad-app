@@ -818,6 +818,96 @@ namespace :identifiers do
   end
   # rubocop:enable Metrics/MethodLength
 
+  desc 'Generate reports of items that should be billed for tiered tenant institutions'
+  task tiered_tenant_reports: :environment do
+    # Get the input shopping cart report in BASE_REPORT and SC_REPORT environment variables.
+    if ENV['SC_REPORT'].blank? || ENV['BASE_REPORT'].blank?
+      puts 'Usage: tiered_tenant_reports BASE_REPORT=<shopping_cart_base_filename> SC_REPORT=<shopping_cart_report_filename>'
+      exit
+    else
+      base_report_file = ENV.fetch('BASE_REPORT', nil)
+      sc_report_file = ENV.fetch('SC_REPORT', nil)
+      puts "Producing tiered tenant reports for #{sc_report_file}, using base in #{base_report_file}"
+    end
+
+    base_values = tiered_tenant_base_values(base_report_file)
+    puts "Calculated base values #{base_values}"
+
+    sc_report = CSV.parse(File.read(sc_report_file), headers: true)
+
+    md = /(.*)shopping_cart_report_(.*).csv/.match(sc_report_file)
+    time_period = nil
+    prefix = ''
+    tiered_filename = 'tiered_tenant_summary.csv'
+    if md.present? && md.size > 1
+      prefix = md[1]
+      time_period = md[2]
+      tiered_filename = "#{md[1]}#{time_period}_tiered_tenant_summary.csv"
+    end
+
+    puts "Writing summary report to #{tiered_filename}"
+    CSV.open(tiered_filename, 'w') do |csv|
+      csv << %w[SponsorName InstitutionName Count Price]
+      sponsor_summary = []
+      sponsor_total_count = 0
+      StashEngine::Tenants.all.each do |tenant|
+        next if tenant.sponsor_id.exists?
+
+        consortium = StashEngine::Tenants.all.where(['tenant_id = ? or sponsor_id = ?', tenant.tenant_id, tenant.tenant_id])
+
+        consortium.each do |c|
+          next unless c.payment_plan == 'tiered'
+
+          tenant_item_count = 0
+          sc_report.each do |item|
+            if item['PaymentID'] == c.tenant_id
+              tenant_item_count += 1
+              sponsor_summary << [item['DOI'], c.short_name, item['ApprovalDate']]
+            end
+          end
+          csv << [tenant.short_name, c.short_name, tenant_item_count, '']
+          sponsor_total_count += tenant_item_count
+        end
+        next if sponsor_summary.blank?
+
+        csv << [tenant.short_name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base_values[tenant.short_name])]
+        write_tiered_sponsor_summary(name: tenant.short_name, file_prefix: prefix, report_period: time_period,
+                                     table: sponsor_summary)
+        sponsor_summary = []
+        sponsor_total_count = 0
+      end
+    end
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # Calculates each sponsor's "base" number of submissions, using data from prior quarters
+  def tiered_tenant_base_values(base_report_file)
+    base_values = {}
+    base_report = CSV.parse(File.read(base_report_file), headers: true)
+    sponsor_total_count = 0
+    StashEngine::Tenants.all.each do |tenant|
+      next if tenant.sponsor_id.exists?
+
+      consortium = StashEngine::Tenants.all.where(['tenant_id = ? or sponsor_id = ?', tenant.tenant_id, tenant.tenant_id])
+      consortium.each do |c|
+        next unless c.payment_plan == 'tiered'
+
+        tenant_item_count = 0
+        base_report.each do |item|
+          tenant_item_count += 1 if item['PaymentID'] == c.tenant_id
+        end
+        sponsor_total_count += tenant_item_count
+      end
+      next if sponsor_total_count == 0
+
+      base_values[tenant.short_name] = sponsor_total_count
+      sponsor_total_count = 0
+    end
+    base_values
+  end
+
   desc 'Generate a report of Dryad authors and their countries'
   task geographic_authors_report: :environment do
     CSV.open('geographic_authors_report.csv', 'w') do |csv|
