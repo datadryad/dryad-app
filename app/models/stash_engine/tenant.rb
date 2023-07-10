@@ -22,6 +22,10 @@ module StashEngine
       all.delete_if { |t| t.partner_display == false }
     end
 
+    def tenants_sponsored
+      Tenants.all.select { |tenant| tenant.tenant_id == tenant_id || tenant.sponsor_id == tenant_id }
+    end
+
     # gets the Tenant class to respond to the keys so you can call hash like methods
     def method_missing(m)
       @ostruct.send(m)
