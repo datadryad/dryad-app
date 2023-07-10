@@ -672,7 +672,8 @@ namespace :identifiers do
         end
         next if sponsor_summary.blank?
 
-        csv << [org.name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base_values[org.name])]
+        base = base_values[org.name] || 0
+        csv << [org.name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base)]
         write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
                                      table: sponsor_summary)
         sponsor_summary = []
@@ -869,7 +870,8 @@ namespace :identifiers do
         end
         next if sponsor_summary.blank?
 
-        csv << [tenant.short_name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base_values[tenant.short_name])]
+        base = base_values[tenant.short_name] || 0
+        csv << [tenant.short_name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base)]
         write_tiered_sponsor_summary(name: tenant.short_name, file_prefix: prefix, report_period: time_period,
                                      table: sponsor_summary)
         sponsor_summary = []
