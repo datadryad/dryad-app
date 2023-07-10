@@ -268,8 +268,8 @@ module StashEngine
         self.payment_type = "journal-#{journal.payment_plan_type}"
         self.payment_id = publication_issn
       elsif institution_will_pay?
-        self.payment_type = 'institution'
         self.payment_id = latest_resource&.tenant&.tenant_id
+        self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
       elsif submitter_affiliation&.fee_waivered?
         self.payment_type = 'waiver'
         self.waiver_basis = submitter_affiliation.country_name
