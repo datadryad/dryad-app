@@ -851,9 +851,9 @@ namespace :identifiers do
       sponsor_summary = []
       sponsor_total_count = 0
       StashEngine::Tenant.all.each do |tenant|
-        next if tenant.sponsor_id.exists?
+        next if tenant&.sponsor_id&.present?
 
-        consortium = tenant.tenants_sponsored
+        consortium = tenant&.tenants_sponsored
         consortium.each do |c|
           next unless c.payment_plan == 'tiered'
 
@@ -887,9 +887,9 @@ namespace :identifiers do
     base_report = CSV.parse(File.read(base_report_file), headers: true)
     sponsor_total_count = 0
     StashEngine::Tenant.all.each do |tenant|
-      next if tenant.sponsor_id.exists?
+      next if tenant&.sponsor_id&.present?
 
-      consortium = tenant.tenants_sponsored
+      consortium = tenant&.tenants_sponsored
       consortium.each do |c|
         next unless c.payment_plan == 'tiered'
 
