@@ -23,7 +23,7 @@ module StashEngine
     end
 
     def tenants_sponsored
-      Tenants.all.where(['tenant_id = ? or sponsor_id = ?', tenant_id, tenant_id])
+      Tenants.all.select { |tenant| tenant.tenant_id == tenant_id || tenant.sponsor_id == tenant_id }
     end
 
     # gets the Tenant class to respond to the keys so you can call hash like methods
