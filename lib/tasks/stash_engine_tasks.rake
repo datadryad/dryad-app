@@ -850,7 +850,7 @@ namespace :identifiers do
       csv << %w[SponsorName InstitutionName Count Price]
       sponsor_summary = []
       sponsor_total_count = 0
-      StashEngine::Tenants.all.each do |tenant|
+      StashEngine::Tenant.all.each do |tenant|
         next if tenant.sponsor_id.exists?
 
         consortium = tenant.tenants_sponsored
@@ -886,7 +886,7 @@ namespace :identifiers do
     base_values = {}
     base_report = CSV.parse(File.read(base_report_file), headers: true)
     sponsor_total_count = 0
-    StashEngine::Tenants.all.each do |tenant|
+    StashEngine::Tenant.all.each do |tenant|
       next if tenant.sponsor_id.exists?
 
       consortium = tenant.tenants_sponsored
