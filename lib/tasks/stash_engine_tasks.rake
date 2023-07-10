@@ -853,8 +853,7 @@ namespace :identifiers do
       StashEngine::Tenants.all.each do |tenant|
         next if tenant.sponsor_id.exists?
 
-        consortium = StashEngine::Tenants.all.where(['tenant_id = ? or sponsor_id = ?', tenant.tenant_id, tenant.tenant_id])
-
+        consortium = tenant.tenants_sponsored
         consortium.each do |c|
           next unless c.payment_plan == 'tiered'
 
@@ -890,7 +889,7 @@ namespace :identifiers do
     StashEngine::Tenants.all.each do |tenant|
       next if tenant.sponsor_id.exists?
 
-      consortium = StashEngine::Tenants.all.where(['tenant_id = ? or sponsor_id = ?', tenant.tenant_id, tenant.tenant_id])
+      consortium = tenant.tenants_sponsored
       consortium.each do |c|
         next unless c.payment_plan == 'tiered'
 
