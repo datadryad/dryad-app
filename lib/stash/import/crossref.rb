@@ -231,8 +231,8 @@ module Stash
           subjects_changed = false
           json = JSON.parse(proposed_change.subjects)
           if json.is_a?(Array) && json.any?
-            proposed_subjs = json.map(&:downcase).to_set
-            existing_subjs = @resource.subjects.non_fos.map{|i| i.subject&.downcase }.to_set
+            proposed_subjs = json.to_set(&:downcase)
+            existing_subjs = @resource.subjects.non_fos.to_set { |i| i.subject&.downcase }
             subjects_changed = !proposed_subjs.subset?(existing_subjs)
           end
         end

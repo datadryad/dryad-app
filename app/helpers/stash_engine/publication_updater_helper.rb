@@ -30,9 +30,10 @@ module StashEngine
     def fetch_related_primary_article(resource:)
       prim_art = resource.related_identifiers.primary_article.first
       return 'Not available' unless prim_art.present?
+
       id_str = prim_art&.related_identifier
 
-      my_match =  id_str.match(%r{/(10\..+)})
+      my_match = id_str.match(%r{/(10\..+)})
       # extract the doi in a bare format to match the json for the other
       if my_match.present?
         my_match[1]
@@ -51,7 +52,7 @@ module StashEngine
     def existing_authors(resource:)
       return nil unless resource.present?
 
-      temp_authors =  resource.authors&.map(&:author_full_name)&.uniq
+      temp_authors = resource.authors&.map(&:author_full_name)&.uniq
       output_authors(authors: temp_authors)
     end
 
@@ -60,13 +61,12 @@ module StashEngine
 
       temp_authors = JSON.parse(json)&.map { |a| "#{a['family']}, #{a['given']}" }&.uniq
       output_authors(authors: temp_authors)
-
     rescue JSON::ParserError
       nil
     end
 
     def output_authors(authors:)
-      return authors[0..2]&.sort { |a, b| a <=> b } + [ 'et al.' ] if authors.length > 3
+      return authors[0..2]&.sort { |a, b| a <=> b }&. + ['et al.'] if authors.length > 3
 
       authors&.sort { |a, b| a <=> b }
     end

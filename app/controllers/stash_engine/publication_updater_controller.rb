@@ -4,35 +4,36 @@ module StashEngine
     before_action :require_user_login
     before_action :setup_paging, only: [:index]
 
-    CONCAT_FOR_SEARCH = <<~SQL
-        JOIN
-         (SELECT sepc2.id,
-          CONCAT_WS(' ',
-            sepc2.publication_doi,
-            sepc2.publication_issn,
-            sepc2.publication_name,
-            sepc2.title,
-            sei2.identifier,
-            ser2.title) AS big_text
-        FROM `stash_engine_proposed_changes` sepc2
-          INNER JOIN `stash_engine_identifiers` sei2
-            ON sei2.id = sepc2.identifier_id
-          INNER JOIN `stash_engine_resources` ser2
-            ON ser2.`id` = sei2.`latest_resource_id`
-       ) search_table
-        ON search_table.id = stash_engine_proposed_changes.id
+    CONCAT_FOR_SEARCH = <<~SQL.freeze
+       JOIN
+        (SELECT sepc2.id,
+         CONCAT_WS(' ',
+           sepc2.publication_doi,
+           sepc2.publication_issn,
+           sepc2.publication_name,
+           sepc2.title,
+           sei2.identifier,
+           ser2.title) AS big_text
+       FROM `stash_engine_proposed_changes` sepc2
+         INNER JOIN `stash_engine_identifiers` sei2
+           ON sei2.id = sepc2.identifier_id
+         INNER JOIN `stash_engine_resources` ser2
+           ON ser2.`id` = sei2.`latest_resource_id`
+      ) search_table
+       ON search_table.id = stash_engine_proposed_changes.id
     SQL
 
+    # rubocop:disable Metrics/AbcSize
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
-      proposed_changes = authorize StashEngine::ProposedChange #.includes(identifier: :latest_resource)
+      proposed_changes = authorize StashEngine::ProposedChange # .includes(identifier: :latest_resource)
         .joins(identifier: :latest_resource).where(approved: false, rejected: false).select('stash_engine_proposed_changes.*')
 
       if params[:list_search].present?
         proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
 
         keys = params[:list_search].split(/\s+/).map(&:strip)
-        proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map{ |key| "%#{key}%" })
+        proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
       end
 
       params[:sort] = 'score' if params[:sort].blank?
@@ -59,6 +60,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def update
       respond_to do |format|
