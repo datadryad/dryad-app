@@ -67,7 +67,7 @@
 
   <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
               stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
-  <div id="proposed-change-dialog" class="o-admin-dialog">Processing your request ...</div>
+  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
 
   <div class="c-space-paginator">
     <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
