@@ -213,6 +213,7 @@ module StashEngine
 
     def remove_peer_review
       resource.hold_for_peer_review = false
+      resource.peer_review_end_date = nil
       resource.save
     end
 
