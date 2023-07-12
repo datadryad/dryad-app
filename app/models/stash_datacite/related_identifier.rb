@@ -40,7 +40,7 @@ module StashDatacite
     enum work_type: { undefined: 0, article: 1, dataset: 2, preprint: 3, software: 4, supplemental_information: 5,
                       primary_article: 6, data_management_plan: 7 } # changing to make the enum index more explicit
 
-    enum added_by: { default: 0, zenodo: 1 }
+    enum added_by: { default: 0, zenodo: 1, simple_relation: 2, api_simple: 3 }
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental information',
@@ -191,6 +191,43 @@ module StashDatacite
 
       true
     end
+
+    # inserts or updates as is appropriate.  Usually inserts, but may update if the doi for resource is already in the database or
+    # for special circumstances like "there can be only one" primary articles.  Also assumes always a doi for simplicty of use.
+    def self.upsert_simple_relation(doi:, resource_id:, work_type:, added_by: 'simple_relation', verified: true)
+      work_type = work_type.to_s # just in case it's a symbol instead of a string
+
+      raise ArgumentError, 'work type is invalid' unless work_types.keys.include?(work_type)
+
+      fixed_doi = self.standardize_doi(doi)
+      existing_item = where(resource_id: resource_id).where(related_identifier: fixed_doi).first
+      existing_primary = where(resource_id: resource_id).where(work_type: :primary_article).first
+
+      if existing_primary.present? && work_type == 'primary_article' && fixed_doi != existing_primary.related_identifier
+        # this is a different primary article from before, so demote old to article and this will become the new primary article
+        existing_primary.update!(work_type: 'article')
+        existing_item = nil # force a new insert instead of normal update to this item
+      end
+
+      if existing_item.present?
+        existing_item.update(related_identifier: fixed_doi,
+                              related_identifier_type: 'doi',
+                              work_type: work_type,
+                              added_by: added_by,
+                              verified: verified,
+                              relation_type: WORK_TYPES_TO_RELATION_TYPE[work_type])
+        existing_item
+      else
+        create(related_identifier: fixed_doi,
+               related_identifier_type: 'doi',
+               work_type: work_type,
+               added_by: added_by,
+               verified: verified,
+               relation_type: WORK_TYPES_TO_RELATION_TYPE[work_type],
+               resource_id: resource_id)
+      end
+    end
+
 
     # look for doi in string and make standardized format
     def self.standardize_doi(doi)
