@@ -2351,6 +2351,7 @@ td:last-child, th:last-child {
   }
   #page-nav ul li {
     margin: 0.5rem 0;
+    padding: 0;
   }
   #page-nav a:link, #page-nav a:visited {
     color: #00527A;
@@ -2369,6 +2370,7 @@ td:last-child, th:last-child {
   }
   #page-nav li {
     margin: 0;
+    padding: 0;
   }
   #page-nav ul, #page-nav li {
     display: -webkit-box;
@@ -2530,6 +2532,7 @@ td:last-child, th:last-child {
 .c-facet-list li {
   display: block;
   margin: 10px 0 10px 10px;
+  padding: 0;
 }
 .c-facet-list a:visited,
 .c-facet-list a:link,
@@ -2587,6 +2590,7 @@ td:last-child, th:last-child {
 }
 .c-file-group__list li {
   margin: 0 0 0.3em;
+  padding: 0;
 }
 .c-file-group__list .c-file-group__preview {
   margin: 0 0 10px 0;
@@ -2856,6 +2860,7 @@ td:last-child, th:last-child {
 
 #mobile-nav-bar .c-header__nav-item {
   margin: 0;
+  padding: 0;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
@@ -2905,6 +2910,7 @@ td:last-child, th:last-child {
   white-space: nowrap;
   text-decoration: none;
   margin: 0 -10px 2px;
+  padding: 0;
 }
 @media (max-width: 869px) {
   #site-menu .c-header__nav-item a, #site-menu .c-header__nav-item button {
@@ -2951,6 +2957,7 @@ td:last-child, th:last-child {
 }
 #site-menu .c-header__nav-item .c-header__nav-submenu li {
   margin: 0;
+  padding: 0;
 }
 #site-menu .c-header__nav-item .c-header__nav-submenu li a {
   display: block;
@@ -5116,6 +5123,7 @@ h4 + .about-bios {
 }
 .member-list li {
   display: inline-block;
+  padding: 0;
   width: 100%;
 }
 
@@ -5221,6 +5229,7 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   margin-bottom: 1rem;
 }
 .c-user-datasets-list li {
+  padding: 0;
   border: thin solid #888;
   display: table-row;
 }
@@ -5771,10 +5780,40 @@ p {
   line-height: 150%;
 }
 
-ol li,
-ul li {
-  margin: 0 auto 0.5rem;
+ul {
+  margin-left: 1.75em;
+  padding-left: 1em;
+}
+
+ol {
+  margin-left: 2em;
+  padding-left: 1em;
+}
+
+ul, ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+ul ul, ul ol, ol ul, ol ol {
+  margin-left: 0;
+}
+
+ol p ~ ol, ol p ~ ul, ul p ~ ul, ul p ~ ol {
+  margin-top: -0.5rem;
+}
+
+ol > li,
+ul > li {
+  margin: 0.5rem auto;
   line-height: 150%;
+}
+
+ol > li {
+  padding-left: 0.5em;
+}
+
+ul > li {
+  padding-left: 0.25em;
 }
 
 dialog {
