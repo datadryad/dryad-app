@@ -118,3 +118,9 @@ including universities, research institutions and academic libraries. <a href="/
 
 ### Publisher members
 <%= render "layouts/members_publishers" %>
+
+## Jobs &amp; opportunities
+<div id="blog-latest-posts" data-feed="https://blog.datadryad.org/category/opportunities/feed" data-count="3">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+<p style="text-align:right"><a href="https://blog.datadryad.org/jobs">View all jobs &amp opportunities→</a></p>

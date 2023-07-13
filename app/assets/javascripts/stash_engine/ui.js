@@ -1685,8 +1685,9 @@ function joelsReady(){
 
   if (!!document.getElementById('blog-latest-posts')) {
     const sec = document.getElementById('blog-latest-posts')
+    const url = sec.dataset.feed || 'https://blog.datadryad.org/feed'
     const limit = sec.dataset.count - 1
-    $.get('https://blog.datadryad.org/feed', (data) => {
+    $.get(url, (data) => {
       sec.innerHTML = ''
       $(data).find('item').each((i, post) => {
         const title = post.querySelector('title').innerHTML
