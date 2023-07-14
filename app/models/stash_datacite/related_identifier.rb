@@ -193,7 +193,8 @@ module StashDatacite
     end
 
     # inserts or updates as is appropriate.  Usually inserts, but may update if the doi for resource is already in the database or
-    # for special circumstances like "there can be only one" primary articles.  Also assumes always a doi for simplicty of use.
+    # for special circumstances like "there can be only one" primary articles.  Also assumes always a doi for simplicity of use.
+    # DOI is the one of the external item, adds to the resource given, work types re list in the enum.
     def self.upsert_simple_relation(doi:, resource_id:, work_type:, added_by: 'simple_relation', verified: true)
       work_type = work_type.to_s # just in case it's a symbol instead of a string
 

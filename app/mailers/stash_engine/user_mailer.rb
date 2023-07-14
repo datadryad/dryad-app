@@ -141,6 +141,17 @@ module StashEngine
            subject: "#{rails_env}Voided invoices need to be updated")
     end
 
+    def related_work_updated(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      bc_email = Rails.env.production? ? @helpdesk_email : nil
+      mail(to: user_email(@user), bcc: bc_email,
+           subject: "#{rails_env}Related work updated for \"#{resource.title}\"")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator

@@ -1,0 +1,15 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>We have received an update to a related work for your dataset.</p>
+
+<p>The updated dataset is shown below:</p>
+
+<p>
+  Title: <%= @resource.title %><br/>
+  DOI: <%= @resource.identifier_str %>
+</p>
+
+<p>Please contact the Dryad Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a> if you have any questions.</p>
+
+<p>Kind regards,<br/>
+  The Dryad Team</p>
