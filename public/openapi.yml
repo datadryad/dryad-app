@@ -481,6 +481,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/processor_result'
 
+  '/datasets/{doi}/related_works/{related_doi}':
+    put:
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/related_type'
+      summary: Update related works for a dryad doi
+      tags:
+        - internal
+      description: Adds or updates related works for a dryad doi
+      parameters:
+        - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/doi'
+      responses:
+        '200':
+          description: A json representation of related work that was saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/relatedWork'
+
   # --- reports ---
   /reports:
     get:
@@ -907,7 +932,8 @@ components:
     relatedWork:
       properties:
         relationship:
-          type: string
+          format: string
+          enum: [ 'article', 'dataset', 'preprint', 'software', 'supplemental_information', 'primary_article', 'data_management_plan' ]
         identifierType:
           type: string
         identifier:
@@ -966,6 +992,13 @@ components:
           format: string
         domainName:
           format: string
+    related_type:
+      type: object
+      properties:
+        work_type:
+          format: string
+          enum: [ 'article', 'dataset', 'preprint', 'software', 'supplemental_information', 'primary_article', 'data_management_plan' ]
+          example: article
 
     # --- specific link section for different resources ---
 
