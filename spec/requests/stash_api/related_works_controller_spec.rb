@@ -21,7 +21,7 @@ module StashApi
     before(:each) do
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                       owner_id: @user.id, owner_type: 'StashEngine::User')
+                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
@@ -78,7 +78,8 @@ module StashApi
                             headers: default_authenticated_headers
 
         expect(response_code).to eq(200)
-        expect(response_body_hash).to eq({"relationship"=>"article", "identifierType"=>"DOI", "identifier"=>"https://doi.org/10.1184/6478826"})
+        expect(response_body_hash).to eq({ 'relationship' => 'article', 'identifierType' => 'DOI',
+                                           'identifier' => 'https://doi.org/10.1184/6478826' })
       end
 
       it 'updates the curation activity to indicate update' do
@@ -98,11 +99,11 @@ module StashApi
         ActionMailer::Base.delivery_method = :smtp
         @path = related_url(dataset_doi: @identifier.to_s, related_doi: 'doi:10.1184/6478826')
 
-        expect {
+        expect do
           put @path,
-            params: { work_type: 'article' }.to_json, # same as report2 json
-            headers: default_authenticated_headers
-        }.to raise_error(Errno::ECONNREFUSED)
+              params: { work_type: 'article' }.to_json, # same as report2 json
+              headers: default_authenticated_headers
+        end.to raise_error(Errno::ECONNREFUSED)
 
         ActionMailer::Base.delivery_method = :test
       end

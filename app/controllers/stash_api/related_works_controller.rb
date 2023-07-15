@@ -15,10 +15,10 @@ module StashApi
       # update dataset
       @resource = @stash_identifier.latest_resource
       related = StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: @other_doi,
-                                                              resource_id: @resource.id,
-                                                              work_type: params[:work_type],
-                                                              added_by: 'api_simple',
-                                                              verified: true)
+                                                                        resource_id: @resource.id,
+                                                                        work_type: params[:work_type],
+                                                                        added_by: 'api_simple',
+                                                                        verified: true)
 
       # Notify submitter and curators if not notified of an update to this dataset in the last 24 hours
       send_email
@@ -49,7 +49,8 @@ module StashApi
     def require_valid_work_type
       return if StashDatacite::RelatedIdentifier.work_types.keys.include?(params[:work_type])
 
-      render json: { error: "bad request: work_type is invalid, please choose from #{StashDatacite::RelatedIdentifier.work_types.keys.join(', ')}" }.to_json, status: 400
+      render json: { error: 'bad request: work_type is invalid, please choose from ' \
+                            "#{StashDatacite::RelatedIdentifier.work_types.keys.join(', ')}" }.to_json, status: 400
     end
 
     def send_email

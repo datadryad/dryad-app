@@ -2,6 +2,7 @@
 
 require 'http'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
 
   class ExternalServerError < RuntimeError; end
@@ -200,7 +201,7 @@ module StashDatacite
 
       raise ArgumentError, 'work type is invalid' unless work_types.keys.include?(work_type)
 
-      fixed_doi = self.standardize_doi(doi)
+      fixed_doi = standardize_doi(doi)
       existing_item = where(resource_id: resource_id).where(related_identifier: fixed_doi).first
       existing_primary = where(resource_id: resource_id).where(work_type: :primary_article).first
 
@@ -212,11 +213,11 @@ module StashDatacite
 
       if existing_item.present?
         existing_item.update(related_identifier: fixed_doi,
-                              related_identifier_type: 'doi',
-                              work_type: work_type,
-                              added_by: added_by,
-                              verified: verified,
-                              relation_type: WORK_TYPES_TO_RELATION_TYPE[work_type])
+                             related_identifier_type: 'doi',
+                             work_type: work_type,
+                             added_by: added_by,
+                             verified: verified,
+                             relation_type: WORK_TYPES_TO_RELATION_TYPE[work_type])
         existing_item
       else
         create(related_identifier: fixed_doi,
@@ -228,7 +229,6 @@ module StashDatacite
                resource_id: resource_id)
       end
     end
-
 
     # look for doi in string and make standardized format
     def self.standardize_doi(doi)
@@ -310,3 +310,4 @@ module StashDatacite
   end
 
 end
+# rubocop:enable Metrics/ClassLength
