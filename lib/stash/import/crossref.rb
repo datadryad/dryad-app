@@ -1,4 +1,5 @@
 require 'amatch'
+require 'set'
 require 'byebug'
 
 require_relative '../../../app/models/stash_engine/proposed_change'
@@ -11,12 +12,12 @@ module Stash
       include Amatch
 
       CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder published-online
-                               published-print publisher score title type URL].freeze
+                               published-print publisher score title type URL subject].freeze
 
       def initialize(resource:, crossref_json:)
         @resource = resource
         crossref_json = JSON.parse(crossref_json) if crossref_json.is_a?(String)
-        @sm = crossref_json # which came form crossref (x-ref) ... see class methods below
+        @sm = crossref_json # which came from crossref (x-ref) ... see class methods below
       end
 
       class << self
@@ -51,16 +52,18 @@ module Stash
         end
 
         def from_proposed_change(proposed_change:)
-          return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
+          pro = proposed_change
+          return new(resource: nil, crossref_json: {}) unless pro.is_a?(StashEngine::ProposedChange)
 
           identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
           message = {
-            'DOI' => proposed_change.publication_doi,
-            'publisher' => proposed_change.publication_name,
-            'title' => [proposed_change.title],
-            'URL' => proposed_change.url,
-            'score' => proposed_change.score,
-            'provenance_score' => proposed_change.provenance_score
+            'DOI' => pro.publication_doi,
+            'publisher' => pro.publication_name,
+            'title' => [pro.title],
+            'URL' => pro.url,
+            'score' => pro.score,
+            'provenance_score' => pro.provenance_score,
+            'subject' => (pro.subjects.present? ? JSON.parse(pro.subjects) : [])
           }
           new(resource: identifier.latest_resource, crossref_json: message)
         end
@@ -74,6 +77,18 @@ module Stash
         end
       end
 
+      # populate just a few fields for pub_updater
+      def populate_pub_update!
+        return nil unless @sm.present? && @resource.present?
+
+        populate_related_doi
+        populate_publication_issn
+        populate_publication_name
+        populate_subjects
+        @resource.reload
+      end
+
+      # populate the full resource from the crossref metadata
       def populate_resource!
         return unless @sm.present? && @resource.present?
 
@@ -84,6 +99,7 @@ module Stash
         populate_publication_issn
         populate_publication_name
         populate_title
+        populate_subjects
         @resource.save
         @resource.reload
       end
@@ -107,7 +123,8 @@ module Stash
           score: @sm['score'],
           provenance_score: @sm['provenance_score'],
           title: @sm['title']&.first&.to_s,
-          url: @sm['URL']
+          url: @sm['URL'],
+          subjects: @sm['subject'].to_json
         }
         pc = StashEngine::ProposedChange.new(params)
         resource_will_change?(proposed_change: pc) ? pc : nil
@@ -210,10 +227,20 @@ module Stash
           end
         end
 
+        if proposed_change.subjects.present?
+          subjects_changed = false
+          json = JSON.parse(proposed_change.subjects)
+          if json.is_a?(Array) && json.any?
+            proposed_subjs = json.to_set(&:downcase)
+            existing_subjs = @resource.subjects.non_fos.to_set { |i| i.subject&.downcase }
+            subjects_changed = !proposed_subjs.subset?(existing_subjs)
+          end
+        end
+
         proposed_change.publication_date != @resource.publication_date ||
           internal_datum_will_change?(proposed_change: proposed_change) ||
           related_identifier_will_change?(proposed_change: proposed_change) ||
-          (proposed_change.authors.present? && (auths & @resource.authors).any?)
+          (proposed_change.authors.present? && (auths & @resource.authors).any?) || subjects_changed
       end
 
       def internal_datum_will_change?(proposed_change:)
@@ -282,6 +309,31 @@ module Stash
                                     hidden: false
                                   })
         related.save!
+      end
+
+      def populate_subjects
+        return unless @sm['subject'].present?
+
+        json = @sm['subject']
+        return unless json.is_a?(Array) && json.any?
+
+        # produces hash with downcase keys and original values
+        subj_hsh = json.to_h { |h| [h.downcase, h] }
+        proposed_subjs = subj_hsh.keys
+        existing_subjs = @resource.subjects.non_fos.map { |i| i.subject&.downcase }
+
+        to_add = proposed_subjs - existing_subjs
+
+        to_add.each do |subj|
+          # puts items with scheme first because of sql ordering
+          subs = StashDatacite::Subject.where(subject: subj).non_fos.order(subject_scheme: :desc)
+          sub = if subs.blank?
+                  StashDatacite::Subject.create(subject: subj_hsh[subj]) # create with original case
+                else
+                  subs.first
+                end
+          @resource.subjects << sub
+        end
       end
 
       def populate_funders

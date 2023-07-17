@@ -22,10 +22,8 @@ module StashEngine
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
 
       cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
-      existing_title = identifier.latest_resource&.title
-      resource = cr.populate_resource!
-      # We don't acvtually want to update the dataset title in this scenario
-      resource.update(title: existing_title) unless resource.title == existing_title
+      resource = cr.populate_pub_update!
+
       add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, resource)
       update(approved: true, user_id: current_user.id)
       true
