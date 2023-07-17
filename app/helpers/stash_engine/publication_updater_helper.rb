@@ -15,7 +15,7 @@ module StashEngine
         <td class="c-proposed-change-table__column-mergeable">
           #{new_val.present? ? new_val : 'Not available'}
           <div class="c-proposed-change-table__column-mergeable-icon">
-            <em class="fa fa-arrow-down"></em>
+            <em class="fa fa-arrow-up"></em>
           </div>
         </td>
       HTML
@@ -25,6 +25,21 @@ module StashEngine
       return nil unless resource.present? && data_type.present?
 
       resource.identifier.internal_data.where(data_type: data_type).first&.value || 'Not available'
+    end
+
+    def fetch_related_primary_article(resource:)
+      prim_art = resource.related_identifiers.primary_article.first
+      return 'Not available' unless prim_art.present?
+
+      id_str = prim_art&.related_identifier
+
+      my_match = id_str.match(%r{/(10\..+)})
+      # extract the doi in a bare format to match the json for the other
+      if my_match.present?
+        my_match[1]
+      else
+        id_str
+      end
     end
 
     def fetch_related_identifier_metadata(resource:, related_identifier_type:, relation_type:)
@@ -37,15 +52,23 @@ module StashEngine
     def existing_authors(resource:)
       return nil unless resource.present?
 
-      resource.authors&.map(&:author_full_name)&.uniq&.sort { |a, b| a <=> b }&.join('<br>')
+      temp_authors = resource.authors&.map(&:author_full_name)&.uniq
+      output_authors(authors: temp_authors)
     end
 
     def proposed_authors(json:)
       return nil unless json.present?
 
-      JSON.parse(json)&.map { |a| "#{a['family']}, #{a['given']}" }&.uniq&.sort { |a, b| a <=> b }&.join('<br>')
+      temp_authors = JSON.parse(json)&.map { |a| "#{a['family']}, #{a['given']}" }&.uniq
+      output_authors(authors: temp_authors)
     rescue JSON::ParserError
       nil
+    end
+
+    def output_authors(authors:)
+      return authors[0..2]&.sort { |a, b| a <=> b }&. + ['et al.'] if authors.length > 3
+
+      authors&.sort { |a, b| a <=> b }
     end
 
   end
