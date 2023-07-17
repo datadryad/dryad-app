@@ -5120,6 +5120,19 @@ td:last-child, th:last-child {
   display: -ms-flexbox;
   display: flex;
 }
+.c-auto_complete .c-ac__input_with_button {
+  padding-right: 3ch;
+}
+.c-auto_complete .c-ac__input-button {
+  padding: 0 1ch;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: transparent;
+  border: 0;
+  height: 30px;
+  outline: none;
+}
 .c-auto_complete .c-ac__menu {
   max-height: 180px;
   overflow-y: auto;
@@ -5127,13 +5140,16 @@ td:last-child, th:last-child {
   min-width: 200px;
   background-color: #fafafa;
   position: absolute;
-  top: 1em;
+  top: 30px;
+  margin-top: 0;
   z-index: 1000;
   padding: 0;
   list-style: none;
+  border: thin solid #ddd;
 }
 .c-auto_complete .c-ac__menu .c-ac__menu_item {
-  margin-bottom: 0.5em;
+  padding: 0.25em 0.5ch;
+  margin: 0;
 }
 .c-auto_complete .c-ac__menu .c-ac__menu_item.highlighted {
   background-color: #bde4ff;
@@ -6668,9 +6684,16 @@ td:last-child, th:last-child {
   margin-bottom: 25px;
   margin-left: 0;
 }
-.t-login__box .c-institution__container select, .t-login__choose .c-institution__container select {
+.t-login__box .c-institution__container .c-auto_complete, .t-login__choose .c-institution__container .c-auto_complete {
   width: 20rem;
   margin-right: 10px;
+}
+.t-login__box .c-institution__container .c-auto_complete .c-input__text.c-ac__input_with_button, .t-login__box .c-institution__container .c-auto_complete .c-ac__input-button, .t-login__choose .c-institution__container .c-auto_complete .c-input__text.c-ac__input_with_button, .t-login__choose .c-institution__container .c-auto_complete .c-ac__input-button {
+  height: 45px;
+}
+.t-login__box .c-institution__container .c-auto_complete .c-ac__menu, .t-login__choose .c-institution__container .c-auto_complete .c-ac__menu {
+  top: 45px;
+  text-align: left;
 }
 
 .t-login__info {
@@ -6760,10 +6783,9 @@ td:last-child, th:last-child {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  margin: 0 0 1em 5em;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 .c-institution__container form {
   display: -webkit-box;
@@ -6773,9 +6795,12 @@ td:last-child, th:last-child {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
   width: 100%;
 }
 

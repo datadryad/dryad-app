@@ -86,16 +86,12 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def choose_sso
-      tenants = [OpenStruct.new(id: '', name: '')]
-      tenants << StashEngine::Tenant.partner_list.map do |t|
-        OpenStruct.new(id: t.tenant_id, name: t.short_name)
-      end
-
+      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.tenant_id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
         redirect_to :no_partner, method: :post
       else
-        @tenants = tenants.flatten
+        @tenants = tenants
       end
     end
 
@@ -115,14 +111,14 @@ module StashEngine
         case tenant&.authentication&.strategy
         when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
-          redirect_to stash_url_helpers.dashboard_path, status: :found
+          render json: { redirect: stash_url_helpers.dashboard_path }
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
         else
-          redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
+          render json: { redirect: tenant.omniauth_login_path(tenant_id: tenant.tenant_id) }
         end
       else
-        render :choose_sso, alert: 'You must select a partner institution from the list.'
+        render json: { alert: 'You must select a partner institution from the list.' }
       end
     end
 
@@ -263,7 +259,7 @@ module StashEngine
         next unless net.include?(IPAddr.new(request.remote_ip))
 
         current_user.update(tenant_id: tenant.tenant_id)
-        redirect_to stash_url_helpers.dashboard_path, status: :found
+        render json: { redirect: stash_url_helpers.dashboard_path }
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
 
@@ -271,7 +267,7 @@ module StashEngine
       logger.warn("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
       reset_session
       clear_user
-      redirect_to stash_url_helpers.ip_error_path
+      render json: { redirect: stash_url_helpers.ip_error_path }
     end
 
   end
