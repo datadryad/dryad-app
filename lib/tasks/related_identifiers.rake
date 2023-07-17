@@ -33,8 +33,8 @@ namespace :related_identifiers do
       stash_id = StashEngine::Identifier.where(identifier: row[0]).first
       res = stash_id.latest_resource
 
-      result1 = StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: row[1], resource_id: res.id, work_type: 'preprint')
-      result2 = StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: row[2], resource_id: res.id, work_type: 'primary_article')
+      StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: row[1], resource_id: res.id, work_type: 'preprint')
+      StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: row[2], resource_id: res.id, work_type: 'primary_article')
     end
     puts 'done'
   end
