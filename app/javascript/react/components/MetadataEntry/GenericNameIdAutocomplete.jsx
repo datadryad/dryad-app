@@ -1,4 +1,6 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {
+  useCallback, useState, useRef, useEffect,
+} from 'react';
 import {useCombobox} from 'downshift';
 import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
@@ -18,6 +20,8 @@ import PropTypes from 'prop-types';
        htmlID -- the base unique ID used for this autocomplete component (should be unique on the page)
        labelText -- The label for the lookup (like "Institutional affiliation")
        isRequired -- boolean.  Makes the * for required fields and also shows warning "?" if no id gets filled for an item
+       saveOnEnter -- boolean. Saves input field entered text when enter key is pressedd.
+       showDropdown -- boolean. Show dropdown button and an initial selection list immediately (before typing).
 
        See the file RorAutocomplete.js for a real example.
  */
@@ -25,7 +29,7 @@ export default function GenericNameIdAutocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
     controlOptions: {
-      htmlId, labelText, isRequired, saveOnEnter,
+      htmlId, labelText, isRequired, saveOnEnter, showDropdown,
     },
   },
 ) {
@@ -66,9 +70,16 @@ export default function GenericNameIdAutocomplete(
     setAutoBlurred(true);
   };
 
+  if (showDropdown) {
+    useEffect(() => {
+      getInputItems('');
+    }, []);
+  }
+
   const {
     isOpen,
     openMenu,
+    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getInputProps,
@@ -105,7 +116,7 @@ export default function GenericNameIdAutocomplete(
         className="c-auto_complete"
       >
         <input
-          className="c-input__text c-ac__input"
+          className={`c-input__text c-ac__input ${showDropdown ? 'c-ac__input_with_button' : ''}`}
           {...getInputProps(
             {
               onFocus: () => {
@@ -132,7 +143,7 @@ export default function GenericNameIdAutocomplete(
                   setAcID('');
                 }
                 // only autocomplete with 3 or more characters so as not to waste queries
-                if (value?.length > 3) {
+                if (showDropdown || value?.length > 3) {
                   getInputItems(value);
                 } else {
                   setInputItems([]);
@@ -153,6 +164,16 @@ export default function GenericNameIdAutocomplete(
           aria-invalid={showError && !textEnter}
           aria-errormessage={`error_${htmlId}`}
         />
+        {showDropdown && (
+          <button
+            aria-label="toggle menu"
+            className="c-ac__input-button"
+            type="button"
+            {...getToggleButtonProps()}
+          >
+            &#8964;
+          </button>
+        )}
         <ul
           {...getMenuProps()}
           className={`c-ac__menu c-ac__menu_${isOpen ? 'open' : 'closed'}`}
