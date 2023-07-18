@@ -303,6 +303,57 @@ module StashDatacite
       end
     end
 
+    describe 'self.upsert_simple_relation' do
+      it 'creates a new related identifier' do
+        new_doi = Faker::Pid.doi
+        result = RelatedIdentifier.upsert_simple_relation(resource_id: @resource.id,
+                                                          doi: new_doi,
+                                                          work_type: :article)
+        expect(result.related_identifier).to eq(RelatedIdentifier.standardize_doi(new_doi))
+        expect(result.work_type).to eq('article')
+        expect(result.relation_type).to eq('iscitedby')
+        expect(result.resource_id).to eq(@resource.id)
+        expect(result.verified).to be true
+        expect(result.added_by).to eq('simple_relation')
+      end
+
+      it 'updates an existing related identifier' do
+        related = create(:related_identifier, resource_id: @resource.id, work_type: 'preprint')
+        the_doi = related.related_identifier
+        result = RelatedIdentifier.upsert_simple_relation(resource_id: @resource.id,
+                                                          doi: related.related_identifier,
+                                                          work_type: 'article')
+
+        expect(result.related_identifier).to eq(the_doi)
+        expect(result.work_type).to eq('article')
+        expect(result.relation_type).to eq('iscitedby')
+        expect(result.resource_id).to eq(@resource.id)
+        expect(result.verified).to be true
+        expect(result.added_by).to eq('simple_relation')
+      end
+
+      it 'moves a primary article out of the way for a new one' do
+        related1 = create(:related_identifier, resource_id: @resource.id, work_type: 'primary_article')
+
+        related_count = @resource.related_identifiers.count
+
+        new_doi = Faker::Pid.doi
+        related2 = RelatedIdentifier.upsert_simple_relation(resource_id: @resource.id,
+                                                            doi: new_doi,
+                                                            work_type: 'primary_article')
+
+        expect(@resource.related_identifiers.count).to eq(related_count + 1)
+        expect(related1.reload).to be_article
+
+        expect(related2.related_identifier).to eq(RelatedIdentifier.standardize_doi(new_doi))
+        expect(related2.work_type).to eq('primary_article')
+        expect(related2.relation_type).to eq('iscitedby')
+        expect(related2.resource_id).to eq(@resource.id)
+        expect(related2.verified).to be true
+        expect(related2.added_by).to eq('simple_relation')
+      end
+    end
+
     describe '#valid_url_format?' do
       before(:each) do
         @related_identifier = create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi')

@@ -601,7 +601,7 @@ module StashEngine
     def permission_to_edit?(user:)
       return false unless user
 
-      # cuartor, dataset owner or admin for the same tenant
+      # curator, dataset owner or admin for the same tenant
       admin_for_this_item?(user: user)
     end
 
