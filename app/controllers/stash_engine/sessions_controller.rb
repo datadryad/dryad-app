@@ -15,7 +15,12 @@ module StashEngine
     # this is the place omniauth calls back for shibboleth logins
     def callback
       current_user.update(tenant_id: params[:tenant_id])
-      redirect_to stash_url_helpers.dashboard_path
+      if session[:origin] == 'feedback'
+        redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+        session[:origin] = session[:contact_method] = session[:link_location] = nil
+      else
+        redirect_to stash_url_helpers.dashboard_path
+      end
     end
 
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
@@ -26,7 +31,12 @@ module StashEngine
       user.update(affiliation_id: employment&.id) unless employment.blank?
       session[:user_id] = user.id
       if user.tenant_id.present?
-        redirect_to stash_url_helpers.dashboard_path
+        if session[:origin] == 'feedback'
+          redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+          session[:origin] = session[:contact_method] = session[:link_location] = nil
+        else
+          redirect_to stash_url_helpers.dashboard_path
+        end
       else
         redirect_to stash_url_helpers.choose_sso_path
       end
@@ -61,6 +71,17 @@ module StashEngine
     end
 
     def choose_login; end
+
+    def feedback; end
+
+    def feedback_signup
+      message = ''
+      params.each do |k, v|
+        message = "#{message}#{k}: #{v}\n" if %w[authenticity_token commit controller action].exclude?(k)
+      end
+      StashEngine::UserMailer.feedback_signup(message).deliver_now
+      redirect_to stash_url_helpers.feedback_path, notice: 'Sign up successful. Thank you!'
+    end
 
     # this only available in non-production environments and only if special environment variable set when starting server
     # rubocop:disable Metrics/AbcSize
@@ -101,7 +122,12 @@ module StashEngine
         current_user.tenant_id = APP_CONFIG.default_tenant
         current_user.save!
       end
-      redirect_to stash_url_helpers.dashboard_path
+      if session[:origin] == 'feedback'
+        redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+        session[:origin] = session[:contact_method] = session[:link_location] = nil
+      else
+        redirect_to stash_url_helpers.dashboard_path
+      end
     end
 
     # send the user to the tenant's SSO url
@@ -111,7 +137,12 @@ module StashEngine
         case tenant&.authentication&.strategy
         when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
-          redirect_to stash_url_helpers.dashboard_path, status: :found
+          if session[:origin] == 'feedback'
+            redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+            session[:origin] = session[:contact_method] = session[:link_location] = nil
+          else
+            redirect_to stash_url_helpers.dashboard_path, status: :found
+          end
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
         else
@@ -143,7 +174,11 @@ module StashEngine
     def orcid_preprocessor
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
-      if @params['origin'] == 'metadata'
+      if @params['origin'] == 'feedback'
+        session[:origin] = @params['origin']
+        session[:contact_method] = @params['m']
+        session[:link_location] = @params['l']
+      elsif @params['origin'] == 'metadata'
         metadata_callback
       elsif @params['invitation'] && @params['identifier_id']
         orcid_invitation
@@ -259,7 +294,12 @@ module StashEngine
         next unless net.include?(IPAddr.new(request.remote_ip))
 
         current_user.update(tenant_id: tenant.tenant_id)
-        redirect_to stash_url_helpers.dashboard_path, status: :found
+        if session[:origin] == 'feedback'
+          redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+          session[:origin] = session[:contact_method] = session[:link_location] = nil
+        else
+          redirect_to stash_url_helpers.dashboard_path, status: :found
+        end
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
 

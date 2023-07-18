@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
 
 export default function RorAutocomplete({
-  formRef, acText, setAcText, acID, setAcID, controlOptions,
+  formRef, acText, setAcText, acID, setAcID, autoBlur = true, controlOptions,
 }) {
   // control options: htmlId, labelText, isRequired (t/f)
 
@@ -18,7 +18,7 @@ export default function RorAutocomplete({
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
   useEffect(() => {
-    if (autoBlurred) {
+    if (autoBlur && autoBlurred) {
       if (!acText) {
         setAcID('');
       }
@@ -84,4 +84,5 @@ RorAutocomplete.propTypes = {
   acID: PropTypes.string.isRequired,
   setAcID: PropTypes.func.isRequired,
   controlOptions: PropTypes.object.isRequired,
+  autoBlur: PropTypes.bool,
 };

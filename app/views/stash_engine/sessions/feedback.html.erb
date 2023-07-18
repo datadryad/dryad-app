@@ -1,0 +1,67 @@
+<% @page_title = 'Give feedback' %>
+<%= javascript_pack_tag 'application' %>
+<script type="text/javascript">
+  ReactRailsUJS.mountComponents();
+  console.log("loaded rails javascript for data entry and react components");
+</script>
+<div id="page-columns">
+  <div id="page-content">
+    <h1>Direct the future of Dryad</h1>
+    <p>A few times a year, we ask volunteer user testers to provide feedback on sneak peeks at changes and new features to Dryad. Sign up here!</p>
+    <% if !current_user %>
+      <p style="margin: 2em auto"><a class="t-login__buttonlink" href=<%="/stash/sessions/choose_login?origin=feedback#{"&m=#{params[:m]}" if params[:m].present?}#{"&l=#{params[:l]}" if params[:l].present?}"%>>Log in to Dryad</a> to import your information.</p>
+    <% end %>
+    <%= form_with(url: stash_url_helpers.feedback_signup_url, method: :post) do |form| %>
+      <%= form.hidden_field :contact_method, value: params[:m] %>
+      <%= form.hidden_field :link_location, value: params[:l] %>
+      <%= form.hidden_field :orcid, value: current_user&.orcid %>
+      <%= form.hidden_field :role, value: current_user&.role %>    
+      <div class="c-input__inline">
+        <div class="c-input">
+          <%= form.label :full_name, "Full name:" %>
+          <%= form.text_field :full_name, class: 'c-input__text', required: true, value: current_user ? "#{current_user&.first_name} #{current_user&.last_name}" : '' %>
+        </div>
+        <div class="c-input">
+          <%= form.label :email, "Email address:" %>
+          <%= form.text_field :email, required: true, class: 'c-input__text', value: current_user&.email %>
+        </div>
+      </div>
+      <div class="c-input__inline">
+        <div class="c-input">
+          <%= react_component('components/AffiliationSelect', {name: current_user&.affiliation&.long_name || '', rorId: current_user&.affiliation&.ror_id || '', controlOptions: {htmlId: 'affiliation', labelText: 'Institutional affiliation', isRequired: false}}) %>
+        </div>
+        <div class="c-input">
+          <%= form.label :title, "Title/position:", class: 'c-input__label' %>
+          <%= form.text_field :title, class: 'c-input__text' %>
+        </div>
+      </div>      
+      <fieldset class="c-fieldset">
+        <legend class="c-fieldset__legend">Interests:</legend>
+        <div style="display: flex; gap: 2ch; flex-wrap: wrap">
+          <span>
+          <%= form.check_box :interest_submission %>
+          <%= form.label :interest_submission, "Submitting data" %>
+          </span><span>
+          <%= form.check_box :interest_discovery %>
+          <%= form.label :interest_discovery, "Finding data" %>
+          </span><span>
+          <%= form.check_box :interest_reuse %>
+          <%= form.label :interest_reuse, "Using data" %>
+          </span><span>
+          <%= form.check_box :interest_any %>
+          <%= form.label :interest_any, "Anything" %>
+          </span><span>
+          <%= form.check_box :interest_other %>
+          <%= form.label :interest_other, "Other:" %>
+          <%= form.text_field :interest_other %>
+          </span>
+        </div>
+      </fieldset>
+      <p>You are signing up to receive invitations to previews and feedback opportunities. You can end your subscription to receive these invitations at any time.</p>
+      <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
+        <span style="color: #cf4817;">* Fields are required</span>
+        <%= form.submit 'Sign up for user testing', class: 'o-button__plain-text2' %>
+      </p>
+    <% end %>
+  </div>
+</div>
