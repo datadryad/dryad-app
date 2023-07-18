@@ -9,8 +9,8 @@ module StashEngine
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
         response_code = post '/stash/sessions/sso', params: { 'tenant_id' => nil } # tenant mock means not needed
-        expect(response_code).to eql(302) # redirect
-        expect(response.headers['Location']).to include('/stash/dashboard')
+        expect(response_code).to eql(200) # redirect via json response
+        expect(response.body).to include('/stash/dashboard')
       end
 
       it 'blocks user from non-allowed IP address' do
@@ -19,8 +19,8 @@ module StashEngine
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
         response_code = post '/stash/sessions/sso', params: { 'tenant_id' => nil } # tenant mock means not needed
-        expect(response_code).to eql(302) # redirect
-        expect(response.headers['Location']).to include('/stash/ip_error')
+        expect(response_code).to eql(200) # redirect via json response
+        expect(response.body).to include('/stash/ip_error')
       end
     end
   end
