@@ -10,8 +10,8 @@
           <%= display_id(type: r.related_identifier_type,
                          my_id: r.related_identifier) %> <%= bad_asterisk %>
         <% else %>
-          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier %>
-          <%= bad_asterisk %>
+          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
+          <%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
         <% end %>
       </li>
     <% end %>

@@ -9,7 +9,7 @@
 			<%= display_id(type: r.related_identifier_type,
 				       my_id: r.related_identifier) %><%= bad_asterisk %></li>
 		<% else %>
-		    <li><%= r.work_type_friendly %>:  <%= link_to r.related_identifier, r.related_identifier %><%= bad_asterisk %></li>
+		    <li><%= r.work_type_friendly %>:  <%= link_to r.related_identifier, r.related_identifier, target: "_blank" %><%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span></li>
 		<% end %>
 	    <% end %>
 	</ul>
