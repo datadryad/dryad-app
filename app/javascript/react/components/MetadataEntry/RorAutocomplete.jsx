@@ -51,7 +51,7 @@ export default function RorAutocomplete({
         // raise an error here if we want to catch it and display something to user or do something else
       }
       return data.data.map((i) => {
-        i.display = (<>{i.name}<br /><small>{i.acronyms.length > 1 && `(${i.acronyms.join(', ')}) `}{i.country}</small></>);
+        i.display = (<>{i.name}<br /><small>{i.acronyms.length > 0 && `(${i.acronyms.join(', ')}) `}{i.country}</small></>);
         return i;
       });
     });
