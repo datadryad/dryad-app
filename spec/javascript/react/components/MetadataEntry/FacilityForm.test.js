@@ -1,13 +1,13 @@
 import React from "react";
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import FacilityAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/FacilityAutocomplete";
+import FacilityForm from "../../../../../app/javascript/react/components/MetadataEntry/FacilityForm";
 import axios from 'axios';
 import {acData} from "./rorTestData"
 
 jest.mock('axios');
 
-describe('FacilityAutocomplete', () => {
+describe('FacilityForm', () => {
 
   it("renders the basic autocomplete form under facility", () => {
 
@@ -15,7 +15,7 @@ describe('FacilityAutocomplete', () => {
       contribId: null, resourceId: 123, createPath: '/create_path', updatePath: 'update_path',
       'controlOptions': { htmlId: "research_facility", labelText: 'Research facility', isRequired: false } }
 
-    const { container } = render(<FacilityAutocomplete {...info} />);
+    const { container } = render(<FacilityForm {...info} />);
 
     const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false })
     expect(labeledElements.length).toBe(2);
@@ -39,7 +39,7 @@ describe('FacilityAutocomplete', () => {
 
     axios.get.mockResolvedValueOnce({"data": acData});
 
-    const { container } = render(<FacilityAutocomplete {...info} />)
+    const { container } = render(<FacilityForm {...info} />)
 
     const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false });
 
