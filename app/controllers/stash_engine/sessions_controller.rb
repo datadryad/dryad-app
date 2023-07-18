@@ -16,7 +16,7 @@ module StashEngine
     def callback
       current_user.update(tenant_id: params[:tenant_id])
       if session[:origin] == 'feedback'
-        redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
         session[:origin] = session[:contact_method] = session[:link_location] = nil
       else
         redirect_to stash_url_helpers.dashboard_path
@@ -32,7 +32,7 @@ module StashEngine
       session[:user_id] = user.id
       if user.tenant_id.present?
         if session[:origin] == 'feedback'
-          redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+          redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
           session[:origin] = session[:contact_method] = session[:link_location] = nil
         else
           redirect_to stash_url_helpers.dashboard_path
@@ -123,7 +123,7 @@ module StashEngine
         current_user.save!
       end
       if session[:origin] == 'feedback'
-        redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
         session[:origin] = session[:contact_method] = session[:link_location] = nil
       else
         redirect_to stash_url_helpers.dashboard_path
@@ -138,7 +138,7 @@ module StashEngine
         when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
           if session[:origin] == 'feedback'
-            redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+            redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
             session[:origin] = session[:contact_method] = session[:link_location] = nil
           else
             redirect_to stash_url_helpers.dashboard_path, status: :found
@@ -295,7 +295,7 @@ module StashEngine
 
         current_user.update(tenant_id: tenant.tenant_id)
         if session[:origin] == 'feedback'
-          redirect_to stash_url_helpers.feedback_path, m: session[:contact_method], l: session[:link_location]
+          redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
           session[:origin] = session[:contact_method] = session[:link_location] = nil
         else
           redirect_to stash_url_helpers.dashboard_path, status: :found
