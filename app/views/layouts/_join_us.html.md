@@ -113,10 +113,10 @@ In addition to our annual membership fee, we assess a charge for each published 
 <p>Our community is open to a full spectrum of stakeholder organizations
 including universities, research institutions and academic libraries. <a href="/stash/interested">Contact us about joining us as a member organization</a>.</p>
 
-### Institutional members
+### Academic and research institutions
 <%= render "layouts/members_institutional" %>
 
-### Publisher members
+### Publishing organizations
 <%= render "layouts/members_publishers" %>
 
 ## Jobs &amp; opportunities
