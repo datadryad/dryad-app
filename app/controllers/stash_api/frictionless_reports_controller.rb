@@ -1,5 +1,5 @@
 # This class is only for internal use and is not exposed to the public since it may include reports for
-# files that we don't own (at Zenodo) and would only be used by our Frictionless checker or perhas a view
+# files that we don't own (at Zenodo) and would only be used by our Frictionless checker or perhaps a view
 # and limited to roles that can access
 
 # expect URLs to look like /api/v2/files/<file-id>/frictionlessReport

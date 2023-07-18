@@ -110,6 +110,12 @@ class ApiApplicationController < StashEngine::ApplicationController
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
+  def require_limited_curator
+    return if @user.limited_curator?
+
+    render json: { error: 'unauthorized' }.to_json, status: 401
+  end
+
   def require_curator
     return if @user.curator?
 

@@ -100,6 +100,7 @@ Rails.application.routes.draw do
         post 'set_internal_datum'
         post 'add_internal_datum'
       end
+      resources :related_works, shallow: false, only: 'update'
       resources :internal_data, shallow: true, path: '/internal_data'
       resources :curation_activity, shallow: false, path: '/curation_activity'
 
