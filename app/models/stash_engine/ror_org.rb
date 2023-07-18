@@ -18,14 +18,14 @@ module StashEngine
       resp = where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
                    "#{query}%", "%#{query}%", "%#{query}%").limit(ROR_MAX_RESULTS)
       resp.each do |r|
-        results << { id: r.ror_id, name: r.name }
+        results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms }
       end
 
       # If we don't have enough results, find matches elsewhere in the name string
       if results.size < ROR_MAX_RESULTS
         resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS)
         resp.each do |r|
-          results << { id: r.ror_id, name: r.name }
+          results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms }
         end
       end
 
