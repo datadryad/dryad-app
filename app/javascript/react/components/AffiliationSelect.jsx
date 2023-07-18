@@ -12,7 +12,7 @@ export default function AffiliationSelect({name, rorId, controlOptions}) {
   const [acID, setAcID] = useState(rorId);
 
   return (
-    <div ref={formRef} handleSubmit={() => false}>
+    <div ref={formRef}>
       <RorAutocomplete
         formRef={formRef}
         acText={acText || ''}
