@@ -184,6 +184,7 @@ export default function GenericNameIdAutocomplete(
           {inputItems.map((item, index) => {
             const id = idFunc(item);
             const name = nameFunc(item);
+            const Display = () => item.display;
             return (
               <li
                 key={id}
@@ -193,7 +194,7 @@ export default function GenericNameIdAutocomplete(
                   item, index, id, onMouseDown: () => { completionClick.current = true; },
                 })}
               >
-                {name}
+                {item.display ? <Display key={name} /> : name}
               </li>
             );
           })}
