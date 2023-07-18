@@ -1,13 +1,20 @@
 <% @page_title = 'Login' %>
 <%= javascript_pack_tag 'application' %>
+<script type="text/javascript">
+  ReactRailsUJS.mountComponents();
+  console.log("loaded rails javascript for data entry and react components");
+</script>
 <div class="t-login__section">
   <div class="t-login__choose">
     <h1>Login</h1>
     <p><%= image_tag('stash_engine/icon_orcid.svg', class: 't-login__orcid-small', alt: 'ORCID logo') %> <strong>ORCID login successful</strong></p>
 
     <h2 id="label_tenant_lookup">Your institution may be a member* of Dryad.</h2>
-    <div id="choose_sso" class="c-institution__container" data-load="<%= stash_url_helpers.choose_sso_path(format: :js) %>">
-      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+    <div class="c-institution__container">
+      <%= form_with(url: 'sso/', method: :post) do %>
+        <%= react_component('components/TenantForm', {tenants: @tenants}) %>
+        <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
+      <% end %>      
     </div>
     <br>
 

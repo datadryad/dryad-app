@@ -111,14 +111,14 @@ module StashEngine
         case tenant&.authentication&.strategy
         when 'author_match'
           current_user.update(tenant_id: tenant.tenant_id)
-          render json: { redirect: stash_url_helpers.dashboard_path }
+          redirect_to stash_url_helpers.dashboard_path, status: :found
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
         else
-          render json: { redirect: tenant.omniauth_login_path(tenant_id: tenant.tenant_id) }
+          redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
         end
       else
-        render json: { alert: 'You must select a partner institution from the list.' }
+        render :choose_sso, alert: 'You must select a partner institution from the list.'
       end
     end
 
@@ -259,7 +259,7 @@ module StashEngine
         next unless net.include?(IPAddr.new(request.remote_ip))
 
         current_user.update(tenant_id: tenant.tenant_id)
-        render json: { redirect: stash_url_helpers.dashboard_path }
+        redirect_to stash_url_helpers.dashboard_path, status: :found
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
 
@@ -267,7 +267,7 @@ module StashEngine
       logger.warn("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
       reset_session
       clear_user
-      render json: { redirect: stash_url_helpers.ip_error_path }
+      redirect_to stash_url_helpers.ip_error_path
     end
 
   end

@@ -80,7 +80,7 @@ RSpec.feature 'Session', type: :feature do
 
     it 'logs in without shibboleth auth for configured tenant' do
       click_link 'Login or create your ORCID iD'
-      fill_in 'tenant_lookup', with: 'DataONE'
+      fill_in 'tenant_id', with: 'DataONE'
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
     end
