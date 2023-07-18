@@ -113,8 +113,14 @@ In addition to our annual membership fee, we assess a charge for each published 
 <p>Our community is open to a full spectrum of stakeholder organizations
 including universities, research institutions and academic libraries. <a href="/stash/interested">Contact us about joining us as a member organization</a>.</p>
 
-### Institutional members
+### Academic and research institutions
 <%= render "layouts/members_institutional" %>
 
-### Publisher members
+### Publishing organizations
 <%= render "layouts/members_publishers" %>
+
+## Jobs &amp; opportunities
+<div id="blog-latest-posts" data-feed="https://blog.datadryad.org/category/opportunities/feed" data-count="3">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+<p style="text-align:right"><a href="https://blog.datadryad.org/jobs">View all jobs &amp opportunities→</a></p>
