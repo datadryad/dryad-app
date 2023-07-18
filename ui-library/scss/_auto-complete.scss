@@ -2,7 +2,19 @@
   position: relative;
   display: flex;
 
-  .c-ac__input {}
+  .c-ac__input_with_button {
+    padding-right: 3ch;
+  }
+  .c-ac__input-button {
+    padding: 0 1ch;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: transparent;
+    border: 0;
+    height: 30px;
+    outline: none;
+  }
 
   .c-ac__menu {  
     max-height: 180px;
@@ -11,13 +23,16 @@
     min-width: 200px;
     background-color: #fafafa;
     position: absolute;
-    top: 1em;
+    top: 30px;
+    margin-top: 0;
     z-index: 1000;
     padding: 0;
     list-style: none;
+    border: thin solid #ddd;
 
     .c-ac__menu_item {
-      margin-bottom: 0.5em;
+      padding: 0.25em 0.5ch;
+      margin: 0;
 
       &.highlighted {
         background-color: #bde4ff;

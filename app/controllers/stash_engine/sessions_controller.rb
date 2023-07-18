@@ -86,16 +86,12 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def choose_sso
-      tenants = [OpenStruct.new(id: '', name: '')]
-      tenants << StashEngine::Tenant.partner_list.map do |t|
-        OpenStruct.new(id: t.tenant_id, name: t.short_name)
-      end
-
+      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.tenant_id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
         redirect_to :no_partner, method: :post
       else
-        @tenants = tenants.flatten
+        @tenants = tenants
       end
     end
 

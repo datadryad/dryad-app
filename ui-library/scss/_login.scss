@@ -39,9 +39,17 @@
     margin-bottom: 25px;
     margin-left: 0;
 
-    select {
+    .c-auto_complete {
       width: 20rem;
       margin-right: 10px;
+
+      .c-input__text.c-ac__input_with_button, .c-ac__input-button {
+        height: 45px;
+      }
+      .c-ac__menu {
+        top: 45px;
+        text-align: left;
+      }
     }
   }
 }
@@ -124,13 +132,13 @@
 .c-institution__container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  margin: 0 0 1em 5em;
+  justify-content: center;
 
   form {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: baseline;
     width: 100%;
   }
 }
