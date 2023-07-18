@@ -230,8 +230,10 @@ Rails.application.routes.draw do
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
-    post 'sessions/sso', to: 'sessions#sso', as: 'sso'
-    
+    post 'sessions/sso', to: 'sessions#sso', as: 'sso'    
+    get 'feedback', to: 'sessions#feedback', as: 'feedback'
+    post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
+
     get 'close_page', to: 'pages#close_page'
     get 'faq', to: 'pages#faq'
     get 'contact', to: 'pages#contact'
