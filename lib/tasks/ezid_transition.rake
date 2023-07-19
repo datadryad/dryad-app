@@ -1,12 +1,11 @@
-
 namespace :ezid_transition do
 
   # this will find ezid datasets over 1 year old that are not submitted and remove them, set RAILS_ENV=production
   # for real removals from production
   task remove_old_unsubmitted: :environment do
 
-    stash_ids = StashEngine::Identifier.where('created_at < ?', 1.year.ago).
-      where("identifier NOT LIKE '10.5061%'")
+    stash_ids = StashEngine::Identifier.where('created_at < ?', 1.year.ago)
+      .where("identifier NOT LIKE '10.5061%'")
 
     puts "Found #{stash_ids.count} identifiers over 1 year old from EZID shoulders"
 
