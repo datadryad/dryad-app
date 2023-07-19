@@ -7,7 +7,9 @@ module StashDatacite
     belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
 
-    scope :completed, -> { where("TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
+    scope :completed, -> {
+                        where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
+                      } # only non-null & blank, no N/A funders
     # scope :completed, ->  { where("TRIM(IFNULL(award_number, '')) > '' AND TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
 
     scope :funder, -> { where(contributor_type: 'funder').order(funder_order: :asc, id: :asc) }
