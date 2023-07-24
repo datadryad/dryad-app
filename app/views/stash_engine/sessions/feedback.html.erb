@@ -11,7 +11,7 @@
     <% if !current_user %>
       <p style="margin: 2em auto"><a class="t-login__buttonlink" href=<%="/stash/sessions/choose_login?origin=feedback#{"&m=#{params[:m]}" if params[:m].present?}#{"&l=#{params[:l]}" if params[:l].present?}"%>>Log in to Dryad</a> to import your information.</p>
     <% end %>
-    <%= form_with(url: stash_url_helpers.feedback_signup_url, method: :post) do |form| %>
+    <%= form_with(url: stash_url_helpers.feedback_signup_path, method: :post) do |form| %>
       <%= form.hidden_field :contact_method, value: params[:m] %>
       <%= form.hidden_field :link_location, value: params[:l] %>
       <%= form.hidden_field :orcid, value: current_user&.orcid %>
