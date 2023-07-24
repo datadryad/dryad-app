@@ -18,15 +18,6 @@
     grid-column: 1;
   }
 
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    color: $design-black-color;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
   h1 {
     margin-bottom: 45px;
   }
@@ -65,7 +56,14 @@
   }
 }
 
-.t-login__buttonlink {
+.t-login__buttonlink,
+.t-login__buttonlink:link,
+.t-login__buttonlink:visited,
+.t-login__buttonlink:hover
+.t-login__buttonlink:active {
+  color: $design-black-color;
+  font-weight: bold;
+  text-decoration: none;
   padding: 10px 15px;
   border: 2px solid $design-orange-color;
   border-radius: 35px;
@@ -73,10 +71,8 @@
   white-space: nowrap;
 }
 
-.t-login__buttonlink:hover {
-  border: 2px solid $design-orange-color;
-  border-radius: 35px;
-  background-color: $design-white-color;
+.t-login__buttonlink:hover, .t-login__buttonlink:active {
+  outline: 2px solid #cf4817;
 }
 
 .t-login__or-box {

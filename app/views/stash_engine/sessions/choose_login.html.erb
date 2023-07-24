@@ -4,8 +4,7 @@
     <h1>ORCID account</h1>
 
     <p>Dryad uses ORCID as its primary login method.<br>Please use, or create, your ORCID login credentials to login to Dryad.</p>
-
-    <%= link_to '/stash/auth/orcid?origin=login', class: 't-login__buttonlink', method: :post do %>
+    <%= link_to "/stash/auth/orcid?origin=#{params[:origin]|| 'login'}#{"&m=#{params[:m]}" if params[:m].present?}#{"&l=#{params[:l]}" if params[:l].present?}", class: 't-login__buttonlink', method: :post do %>
       <%= image_tag('stash_engine/icon_orcid.svg', class: 't-login__orcid-small', alt: 'ORCID') %>
       Login or create your ORCID iD
     <% end %>

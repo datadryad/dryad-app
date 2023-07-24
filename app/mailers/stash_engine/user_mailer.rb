@@ -84,6 +84,12 @@ module StashEngine
            subject: "#{rails_env}Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
 
+    def feedback_signup(message)
+      @message = message
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      mail(to: @submission_error_emails, subject: "#{rails_env}User testing signup")
+    end
+
     def in_progress_reminder(resource)
       logger.warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
       return unless resource.present?

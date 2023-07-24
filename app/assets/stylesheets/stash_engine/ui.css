@@ -6663,17 +6663,6 @@ td:last-child, th:last-child {
     grid-column: 1;
   }
 }
-.t-login__box a:link,
-.t-login__box a:visited,
-.t-login__box a:hover,
-.t-login__box a:active, .t-login__choose a:link,
-.t-login__choose a:visited,
-.t-login__choose a:hover,
-.t-login__choose a:active {
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-  text-decoration: none;
-}
 .t-login__box h1, .t-login__choose h1 {
   margin-bottom: 45px;
 }
@@ -6708,7 +6697,13 @@ td:last-child, th:last-child {
   }
 }
 
-.t-login__buttonlink {
+.t-login__buttonlink,
+.t-login__buttonlink:link,
+.t-login__buttonlink:visited,
+.t-login__buttonlink:hover .t-login__buttonlink:active {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  text-decoration: none;
   padding: 10px 15px;
   border: 2px solid #cf4817;
   border-radius: 35px;
@@ -6716,10 +6711,8 @@ td:last-child, th:last-child {
   white-space: nowrap;
 }
 
-.t-login__buttonlink:hover {
-  border: 2px solid #cf4817;
-  border-radius: 35px;
-  background-color: rgb(255, 255, 255);
+.t-login__buttonlink:hover, .t-login__buttonlink:active {
+  outline: 2px solid #cf4817;
 }
 
 .t-login__or-box {
