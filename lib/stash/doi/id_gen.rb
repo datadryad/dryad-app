@@ -34,7 +34,6 @@ module Stash
         id_gen.mint_id
       end
 
-
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
         base_id = "#{APP_CONFIG[:identifier_service][:prefix]}/dryad.#{StashEngine::NoidState.mint}"
@@ -76,7 +75,6 @@ module Stash
       end
 
       # subclasses should implement mint_id and update_metadata(dc4_xml:, landing_page_url:) methods
-      private
 
     end
   end
