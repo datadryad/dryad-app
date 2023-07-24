@@ -14,8 +14,13 @@ module Stash
 
       # this is to take the place of the normal initialize to create a class of the correct type
       def self.make_instance(resource:)
-        id_svc = resource.tenant.identifier_service
-        case id_svc.provider
+        id_svc = resource.tenant.identifier_service.provider
+        id_info = resource&.identifier&.identifier
+
+        # make it datacite for items that aren't actively EZID already
+        id_svc = 'datacite' if id_info.blank? || id_info.start_with?(APP_CONFIG[:identifier_service][:prefix])
+
+        case id_svc
         when 'ezid'
           EzidGen.new(resource: resource)
         when 'datacite'
@@ -29,19 +34,25 @@ module Stash
         id_gen.mint_id
       end
 
+
+      # @return [String] the identifier (DOI, ARK, or URN)
+      def mint_id
+        base_id = "#{APP_CONFIG[:identifier_service][:prefix]}/dryad.#{StashEngine::NoidState.mint}"
+        "doi:#{base_id}"
+      end
+
+      # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
+      # I don't believe DataCite does the reserving thing like EZID, but this kept the interface consistent.
+      def reserve_id(doi:)
+        doi
+      end
+
       # The method reserves a DOI if needed for a specified DOI or minting one from the pool.  (formerly?) used by Merritt
       # submission to be sure a (minted if needed) stash_engine_identifier exists with the ID filled in before doing fun stuff
       def ensure_identifier
         # ensure an existing identifier is reserved (if needed for EZID)
-        if resource.identifier && resource.identifier.identifier # if identifier has value
-          log_info("ensuring identifier is reserved for resource #{resource.id}, ident: #{resource.identifier_str}")
-          return resource.identifier.to_s if resource.skip_datacite_update
+        return resource.identifier.to_s if resource&.identifier&.identifier.present?
 
-          return reserve_id(doi: resource.identifier.to_s) # reserve_id is smart and doesn't reserve again if it already exists
-        end
-        # otherwise create a new one
-        log_info("minting new identifier for resource #{resource.id}")
-        # this ensures it has a stash_engine_identifier for the resource, mint_id is either EZID or DC mint method
         resource.ensure_identifier(mint_id)
       end
 
@@ -67,25 +78,6 @@ module Stash
       # subclasses should implement mint_id and update_metadata(dc4_xml:, landing_page_url:) methods
       private
 
-      def tenant
-        resource.tenant
-      end
-
-      def id_params
-        @id_params ||= tenant.identifier_service
-      end
-
-      def owner
-        id_params.owner
-      end
-
-      def password
-        id_params.password
-      end
-
-      def account
-        id_params.account
-      end
     end
   end
 end
