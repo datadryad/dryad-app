@@ -32,10 +32,27 @@ module Tasks
       XML
 
       def register_doi(doi:)
+        # find correct tenant from DOI and latest resource
+        stash_identifier = StashEngine::Identifier.find_by(identifier: doi)
+        resource = stash_identifier.latest_resource
+        if stash_identifier.nil? || resource.nil?
+          puts "  Couldn't find dryad identifier or resource for #{doi}, will not update"
+          return
+        end
+
+        id_svc = resource.tenant.identifier_service
+        if id_svc.provider != 'ezid'
+          puts "  Not an EZID identifier for #{doi}, will not update"
+          return
+        end
+
+        ezid_client = ::Ezid::Client.new(host: APP_CONFIG.ezid.host, port: APP_CONFIG.ezid.port,
+                                            user: id_svc.account, password: id_svc.password)
         params = { status: 'public', datacite: SAMPLE_DC4_XML.gsub('10.7959/S85H-9D15', doi) }
-        # find correct tenant from DOI
-        #
-        owner = tenant.identifier_service.owner
+        params[:owner] = id_svc.owner unless id_svc.owner.blank?
+        params[:target] = 'https://datadryad.org' # generic URL for our repository, but nothing else
+
+        ezid_client.modify_identifier(resource.identifier_str, **params)
 
       end
 
