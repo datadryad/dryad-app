@@ -5,7 +5,6 @@ module Tasks
     module Register
 
       SAMPLE_DC4_XML = <<~XML.freeze
-<?xml version="1.0" encoding="UTF-8"?>
 <resource
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://datacite.org/schema/kernel-4" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
@@ -31,7 +30,9 @@ module Tasks
 </resource>
       XML
 
-      def register_doi(doi:)
+      def self.register_doi(doi:)
+        doi.gsub!(/^doi:/, '') # strip off the icky doi: at the first if it's there
+
         # find correct tenant from DOI and latest resource
         stash_identifier = StashEngine::Identifier.find_by(identifier: doi)
         resource = stash_identifier.latest_resource
@@ -41,21 +42,31 @@ module Tasks
         end
 
         id_svc = resource.tenant.identifier_service
-        if id_svc.provider != 'ezid'
+        if id_svc.provider != 'ezid' || doi.start_with?(APP_CONFIG.identifier_service.prefix)
           puts "  Not an EZID identifier for #{doi}, will not update"
           return
         end
 
-        ezid_client = ::Ezid::Client.new(host: APP_CONFIG.ezid.host, port: APP_CONFIG.ezid.port,
-                                            user: id_svc.account, password: id_svc.password)
+        # Make the EZID client stop spamming information messages to standard out, seems to be hard coded somehow and
+        # not follow the logging level elsewhere.
+        ::Ezid::Client.configure do |config|
+          config.logger = Logger.new(File::NULL)
+        end
+        ezid_client = ::Ezid::Client.new(host: APP_CONFIG.ezid.host, port: APP_CONFIG.ezid.port, user: id_svc.account, password: id_svc.password)
+
         params = { status: 'public', datacite: SAMPLE_DC4_XML.gsub('10.7959/S85H-9D15', doi) }
         params[:owner] = id_svc.owner unless id_svc.owner.blank?
         params[:target] = 'https://datadryad.org' # generic URL for our repository, but nothing else
 
-        ezid_client.modify_identifier(resource.identifier_str, **params)
-
+        begin
+          ezid_client.modify_identifier(resource.identifier_str, **params)
+        rescue Ezid::Error => e
+          puts "  Ezid failed to update metadata for resource #{resource&.identifier_str} (#{e.message}) with params: #{params.inspect}"
+          puts e.backtrace.join("\n  ")
+          return
+        end
+        puts "  Updated placeholder metadata at EZID for #{doi}"
       end
-
     end
   end
 end
