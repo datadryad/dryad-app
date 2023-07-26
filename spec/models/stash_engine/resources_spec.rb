@@ -1511,22 +1511,22 @@ module StashEngine
           end
 
           it 'shows all resources for the identifier to the curator' do
-            resources = @identifier.resources.visible_to_user(user: @user3)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user3, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'shows all resources to the owner' do
-            resources = @identifier.resources.visible_to_user(user: @user3)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user3, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'only shows curated-visible resources to a non-user' do
-            resources = @identifier.resources.visible_to_user(user: nil)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(nil, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end
 
           it 'shows all resources to an admin for this tenant (ucop)' do
-            resources = @identifier.resources.visible_to_user(user: @user2)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
@@ -1534,13 +1534,13 @@ module StashEngine
             journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
             JournalRole.create(journal: journal, user: @user2, role: 'admin')
-            resources = @identifier.resources.visible_to_user(user: @user2)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'only shows curated-visible resources to a random user' do
             @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@ucop.edu', tenant_id: 'ucb', role: 'user')
-            resources = @identifier.resources.visible_to_user(user: @user4)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user4, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end
         end
