@@ -272,7 +272,8 @@ module StashApi
 
     # get /datasets
     def index
-      ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
+      ds_query = StashEngine::IdentifierPolicy::Scope.new(@user, StashEngine::Identifier).resolve
+      # this limits to a user's list based on their role/permissions (or public ones)
       # These filter conditions were things Daisie put in, because of some queries she needed to make.
       # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
       # and we are ready to support whatever we decide.
