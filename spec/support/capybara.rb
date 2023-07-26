@@ -7,9 +7,7 @@ require_relative 'helpers/tinymce_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
-require 'webdrivers'
-
-Webdrivers::Chromedriver.update
+require 'selenium-webdriver'
 
 # make CAPY_SHOW environment variable set to see the browser doing its thing
 if ENV['CAPY_SHOW']
@@ -54,7 +52,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     opts.args << '--disable-extensions'
     opts.args << '--disable-popup-blocking'
   end
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: browser_options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
 RSpec.configure do |config|
