@@ -6,20 +6,6 @@ module Stash
 
     class EzidGen < IdGen
 
-      # @return [String] the identifier (DOI, ARK, or URN)
-      def mint_id
-        if id_exists?
-          ezid_client.create_identifier(doi, status: 'reserved', profile: 'datacite')
-        else
-          ezid_response = ezid_client.mint_identifier(shoulder, status: 'reserved', profile: 'datacite')
-          ezid_response.id
-        end
-      rescue Ezid::Error => e
-        err = EzidError.new("Ezid failed to mint an id (#{e.message})")
-        err.set_backtrace(e.backtrace) if e.backtrace.present?
-        raise err
-      end
-
       def id_exists?
         my_id = @resource.identifier
         return false if my_id.nil? || my_id.identifier.blank?
@@ -30,21 +16,6 @@ module Stash
           return false
         end
         true
-      end
-
-      # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
-      def reserve_id(doi:)
-        if id_exists?
-          @resource.identifier.to_s
-        else
-          ezid_client.create_identifier(doi, status: 'reserved', profile: 'datacite')
-          doi
-        end
-      rescue Ezid::Error => e
-        err = EzidError.new("Ezid failed to reserver an id for resource #{resource&.identifier_str} " \
-                            "(#{e.message}) with doi: #{doi}")
-        err.set_backtrace(e.backtrace) if e.backtrace.present?
-        raise err
       end
 
       def update_metadata(dc4_xml:, landing_page_url:)
@@ -77,6 +48,25 @@ module Stash
         APP_CONFIG.ezid.port
       end
 
+      def tenant
+        resource.tenant
+      end
+
+      def id_params
+        @id_params ||= tenant.identifier_service
+      end
+
+      def owner
+        id_params.owner
+      end
+
+      def password
+        id_params.password
+      end
+
+      def account
+        id_params.account
+      end
     end
   end
 end
