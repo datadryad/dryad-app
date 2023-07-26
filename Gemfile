@@ -132,8 +132,6 @@ group :test do
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
   gem 'capybara-screenshot'
-  # chromedriver-helper is now deprecated, use webdrivers instead
-  gem 'webdrivers', '~> 5.0', require: false
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
   gem 'diffy'
   # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
@@ -159,7 +157,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
   # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
