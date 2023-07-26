@@ -55,4 +55,9 @@ namespace :ezid_transition do
     end
     puts "file written to #{filename}"
   end
+
+  desc 'Updates from list of DOIs to change reserved to registered in EZID'
+  task registered: :environment do
+
+  end
 end
