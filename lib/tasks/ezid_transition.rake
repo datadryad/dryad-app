@@ -74,7 +74,7 @@ namespace :ezid_transition do
       next
     end
 
-    File.foreach(ENV['DOI_FILE']).with_index do |doi, idx|
+    File.foreach(ENV.fetch('DOI_FILE', nil)).with_index do |doi, idx|
       doi.strip!
       next if doi.blank?
 
