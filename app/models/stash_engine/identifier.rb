@@ -41,21 +41,6 @@ module StashEngine
       where(pub_state: %w[published embargoed])
     end
 
-    scope :user_viewable, ->(user: nil) do
-      if user.nil?
-        publicly_viewable
-      elsif user.limited_curator?
-        all
-      else
-        tenant_admin = (user.tenant_id if user.role == 'admin')
-        with_visibility(states: %w[published embargoed],
-                        tenant_id: tenant_admin,
-                        journal_issns: user.journals_as_admin.map(&:single_issn),
-                        funder_ids: user.funders_as_admin.map(&:funder_id),
-                        user_id: user.id)
-      end
-    end
-
     scope :cited_by_pubmed, -> do
       ids = publicly_viewable.map(&:id)
       joins(:internal_data)
