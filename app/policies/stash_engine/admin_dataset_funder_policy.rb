@@ -1,7 +1,7 @@
 module StashEngine
   class AdminDatasetFunderPolicy < ApplicationPolicy
     def index?
-      user.admin?
+      @user.admin?
     end
 
     class Scope

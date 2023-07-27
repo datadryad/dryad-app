@@ -2,7 +2,7 @@ module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
     def index?
-      user.admin?
+      @user.admin?
     end
 
     def activity_log?
@@ -18,7 +18,7 @@ module StashEngine
     end
 
     def curation_activity_change?
-      user.curator?
+      @user.curator?
     end
 
     def curation_activity_popup?
@@ -26,7 +26,7 @@ module StashEngine
     end
 
     def current_editor_change?
-      user.curator?
+      @user.curator?
     end
 
     def current_editor_popup?
@@ -34,11 +34,11 @@ module StashEngine
     end
 
     def create_salesforce_case?
-      user.limited_curator?
+      @user.limited_curator?
     end
 
     def waiver_add?
-      user.superuser?
+      @user.superuser?
     end
 
     def waiver_popup?
