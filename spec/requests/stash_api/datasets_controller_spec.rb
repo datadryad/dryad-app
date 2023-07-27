@@ -22,7 +22,7 @@ module StashApi
       neuter_curation_callbacks!
       mock_salesforce!
       mock_tenant!
-      mock_datacite_and_idgen!
+      mock_datacite_gen!
       @user = create(:user, role: 'superuser', tenant_id: 'dryad')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',

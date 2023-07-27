@@ -139,7 +139,7 @@ module StashApi
         user_id: @user.id, current_editor_id: @user.id, title: '', tenant_id: @user.tenant_id
       )
 
-      my_id = doi_string || Stash::Doi::IdGen.mint_id(resource: @resource)
+      my_id = doi_string || Stash::Doi::DataciteGen.mint_id(resource: @resource)
       id_type, id_text = my_id.split(':', 2)
       ident = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
 

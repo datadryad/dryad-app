@@ -16,7 +16,7 @@ RSpec.feature 'Admin', type: :feature do
       mock_salesforce!
       mock_solr!
       mock_stripe!
-      mock_datacite_and_idgen!
+      mock_datacite_gen!
       mock_tenant!
       neuter_curation_callbacks!
       @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')

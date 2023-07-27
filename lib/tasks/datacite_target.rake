@@ -32,7 +32,7 @@ namespace :datacite_target do
 
       begin
         Tasks::DashUpdater.submit_id_metadata(stash_identifier: stash_id)
-      rescue Stash::Doi::IdGenError, ArgumentError, Net::HTTPClientException => e
+      rescue Stash::Doi::DataciteGenError, ArgumentError, Net::HTTPClientException => e
         outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{e.message}\n"
         File.write('datacite_update_errors.txt', outstr, mode: 'a')
       end

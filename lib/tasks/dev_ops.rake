@@ -210,7 +210,7 @@ namespace :dev_ops do
     new_res.save
 
     # Now create new identifier
-    my_id = Stash::Doi::IdGen.mint_id(resource: new_res)
+    my_id = Stash::Doi::DataciteGen.mint_id(resource: new_res)
     id_type, id_text = my_id.split(':', 2)
     db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
 
