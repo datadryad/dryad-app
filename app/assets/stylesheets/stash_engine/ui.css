@@ -4291,6 +4291,23 @@ h6 {
   text-decoration: underline;
 }
 
+.o-link__buttonlink,
+.o-link__buttonlink:link,
+.o-link__buttonlink:visited,
+.o-link__buttonlink:hover .o-link__buttonlink:active {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  padding: 8px 12px;
+  background-color: #00527A;
+  color: rgb(255, 255, 255);
+  white-space: nowrap;
+}
+
+.o-link__buttonlink:hover:hover, .o-link__buttonlink:active:hover {
+  opacity: 0.85;
+}
+
 .index_title a {
   color: #0071a8;
 }
