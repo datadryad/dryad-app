@@ -27,7 +27,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   describe :initial_version do
 
-    before(:each, js: true) do
+    before(:each, js: true) do |test|
       ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
       sign_in(@author)
@@ -37,15 +37,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       fill_required_fields
       navigate_to_review
       agree_to_everything
-      submit_form
+      submit_form unless test.metadata[:no_submit]
     end
 
     describe :pre_submit do
-      it 'should display the proper info on the My datasets page', js: true do
+      it 'should display the proper info on the My datasets page', js: true, no_submit: true do
         click_link 'My datasets'
 
         expect(page).to have_text(@resource.title)
         expect(page).to have_text('In progress')
+      end
+    end
+
+    describe :pre_merrit_submit do
+      it 'should display the proper info on the My datasets page', js: true do
+        click_link 'My datasets'
+
+        expect(page).to have_text(@resource.title)
+        expect(page).to have_text('Processing')
       end
 
       it 'did not send out an email to the author', js: true do
