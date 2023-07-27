@@ -14,7 +14,7 @@ module Stash
       end
 
       def self.mint_id(resource:)
-        datacite_gen = self.initialize(resource: resource)
+        datacite_gen = initialize(resource: resource)
         datacite_gen.mint_id
       end
 
