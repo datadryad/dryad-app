@@ -66,7 +66,7 @@ module Stash
       # :nocov:
 
       def id_helper
-        @id_helper ||= Stash::Doi::IdGen.make_instance(resource: resource)
+        @id_helper ||= Stash::Doi::DataciteGen.make_instance(resource: resource)
       end
 
       def create_package

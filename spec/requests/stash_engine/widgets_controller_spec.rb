@@ -16,7 +16,7 @@ module StashEngine
       mock_repository!
       mock_salesforce!
       mock_solr!
-      mock_datacite_and_idgen!
+      mock_datacite_gen!
       mock_stripe!
       ignore_zenodo!
       @user = create(:user, role: 'superuser')

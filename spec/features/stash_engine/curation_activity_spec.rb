@@ -129,7 +129,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_stripe!
         mock_solr!
         mock_repository!
-        mock_datacite_and_idgen!
+        mock_datacite_gen!
         mock_salesforce!
 
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
@@ -158,7 +158,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_salesforce!
         mock_stripe!
         mock_repository!
-        mock_datacite_and_idgen!
+        mock_datacite_gen!
         @user = create(:user, tenant_id: 'ucop')
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)

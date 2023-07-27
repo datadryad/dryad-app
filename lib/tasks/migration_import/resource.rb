@@ -15,7 +15,7 @@ module Tasks
         create_base_resource
 
         if ar_identifier.nil?
-          my_id = Stash::Doi::IdGen.mint_id(resource: @ar_resource)
+          my_id = Stash::Doi::DataciteGen.mint_id(resource: @ar_resource)
           id_type, id_text = my_id.split(':', 2)
           ar_identifier = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
           @ar_resource.update(identifier_id: ar_identifier.id)
