@@ -16,6 +16,9 @@ module Stash
         @resource = double(StashEngine::Resource)
         allow(@resource).to receive(:id).with(no_args).and_return(@resource_id)
         allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
+        @identifier = double(StashEngine::Identifier)
+        allow(@identifier).to receive(:identifier).and_return('10.5072/1234-5678')
+        allow(resource).to receive(:identifier).and_return(@identifier)
 
         @identifier_str = 'doi:10.5072/1234-5678'
         @url_helpers = double(Module)
@@ -52,11 +55,11 @@ module Stash
 
         it 'updates the metadata and landing page' do
           allow(@dc_gen).to receive(:post_metadata)
-            .with(@dc4_xml, username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a', sandbox: true)
+            .with(@dc4_xml, username: 'my.account', password: 'my.password', sandbox: true)
             .and_return({ status: 201 }.to_ostruct)
 
           allow(@dc_gen).to receive(:put_doi)
-            .with('10.5072/1234-5678', username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a', sandbox: true, url: 'http://example.com')
+            .with('10.5072/1234-5678', username: 'my.account', password: 'my.password', sandbox: true, url: 'http://example.com')
             .and_return({ status: 201 }.to_ostruct)
 
           expect(@dc_gen

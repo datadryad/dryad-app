@@ -11,19 +11,6 @@ module Stash
         get_doi(identifier, username: account, password: password, sandbox: sandbox)
       end
 
-      # @return [String] the identifier (DOI, ARK, or URN)
-      def mint_id
-        base_id = "#{prefix}/dryad.#{StashEngine::NoidState.mint}"
-        "doi:#{base_id}"
-      end
-
-      # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
-      # I don't believe DataCite does the reserving thing like EZID.  This goes nowhere and does nothing and just
-      # to keep the interface consistent between DataCite and EZID.
-      def reserve_id(doi:)
-        doi
-      end
-
       def update_metadata(dc4_xml:, landing_page_url:)
         # add breakpoint here to get a peek at the XML being sent to DataCite
         # the doi apparently is known from the DC xml document
@@ -107,6 +94,17 @@ module Stash
         http.get(url)
       end
 
+      def id_params
+        @id_params ||= APP_CONFIG[:identifier_service]
+      end
+
+      def password
+        id_params.password
+      end
+
+      def account
+        id_params.account
+      end
     end
   end
 end
