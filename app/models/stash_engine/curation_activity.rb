@@ -1,4 +1,4 @@
-require 'stash/doi/id_gen'
+require 'stash/doi/datacite_gen'
 require 'stash/payments/invoicer'
 module StashEngine
 
