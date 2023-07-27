@@ -24,7 +24,7 @@ module Tasks
       resource = stash_identifier.resources.where(meta_view: true).order('id DESC').first
       return if resource.nil?
 
-      idg = Stash::Doi::DataciteGen.make_instance(resource: resource)
+      idg = Stash::Doi::DataciteGen.new(resource: resource)
       tries = 0
 
       begin
