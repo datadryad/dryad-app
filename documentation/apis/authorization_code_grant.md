@@ -17,7 +17,7 @@ following:
   (including domain names) are required.
 
 Note that the `REDIRECT_URI` used in the example below must match one that is configured for your Dryad API
-access. If the redirect uri doesn't match one that is configured for API use, then access will be denied by OAUTH2.
+access. If the redirect uri doesn't match one that is configured for API use, then access will be denied by OAuth2.
 
 The Authorization Code grant type should only be used in applications where you can
 keep your *secret* private and you have an agent or web browser that can request permissions
@@ -116,7 +116,7 @@ end
 7. A test API call is made to Dryad using the `bearer token` that retrieves your user_id and
    name and displays the information on the page.
 
-## Additional work for a real appplication
+## Additional work for a real application
 
 1. Add a `state` CSRF token when directing someone to the Dryad authorization server as explained
    at https://alexbilbie.com/guide-to-oauth-2-grants/#authorisation-code-grant-section-41 .
