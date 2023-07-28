@@ -32,7 +32,7 @@ module StashEngine
         @curation_activity = create(:curation_activity, resource: @resource)
         @mock_datacitegen = double('datacitegen')
         allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
-        allow(Stash::Doi::DataciteGen).to receive(:make_instance).and_return(@mock_datacitegen)
+        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
       end
 
       it 'shows the appropriate dataset identifier' do
@@ -51,7 +51,7 @@ module StashEngine
 
         @mock_datacitegen = spy('datacitegen')
         allow(@mock_datacitegen).to receive(:update_identifier_metadata!) # .and_return('called make metadata')
-        allow(Stash::Doi::DataciteGen).to receive(:make_instance).and_return(@mock_datacitegen)
+        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
 
         @curation_activity1 = create(:curation_activity, resource: @resource)
       end
@@ -112,7 +112,7 @@ module StashEngine
 
       it 'catches errors and emails the admins' do
         dc_error = Stash::Doi::DataciteGenError.new('Testing errors')
-        allow(Stash::Doi::DataciteGen).to receive(:make_instance).with(any_args).and_raise(dc_error)
+        allow(Stash::Doi::DataciteGen).to receive(:new).with(any_args).and_raise(dc_error)
 
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)

@@ -14,7 +14,7 @@ describe 'datacite_target:update_dash', type: :task do
   it 'retries failing requests and fails after too many retries' do
     @mock_datacitegen = double('datacitegen')
     allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise(Stash::Doi::DataciteGenError, 'test exception')
-    allow(Stash::Doi::DataciteGen).to receive(:make_instance).and_return(@mock_datacitegen)
+    allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
 
     expect { Tasks::DashUpdater.submit_id_metadata(stash_identifier: @identifier, retry_pause: 0) }
       .to raise_error(Stash::Doi::DataciteGenError, 'test exception')
