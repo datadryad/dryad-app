@@ -19,12 +19,6 @@ default: &default
   ror_ids:
     - https://ror.org/00pjdza24
   tenant_id: ucop
-  identifier_service:
-    provider: ezid
-    prefix: "10.18736/F6"
-    account: my.account
-    password: "my.password"
-    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucop.edu
