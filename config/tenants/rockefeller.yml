@@ -8,12 +8,7 @@ default: &default
     - https://ror.org/0420db125
     - https://ror.org/00jjq6q61
   tenant_id: rockefeller
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
+
   authentication:
     strategy: shibboleth
     entity_id: https://rushib.rockefeller.edu/idp/shibboleth
@@ -42,10 +37,5 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
+
   campus_contacts: [""]

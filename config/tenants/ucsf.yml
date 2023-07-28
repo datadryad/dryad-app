@@ -10,13 +10,7 @@ default: &default
     - https://ror.org/01t8svj65
     - https://ror.org/04g7y4303
   tenant_id: ucsf
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucsf.edu
@@ -54,13 +48,7 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.7272/Q6"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["Ariel.Deardorff@ucsf.edu"]
 
 test:

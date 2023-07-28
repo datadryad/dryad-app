@@ -7,13 +7,7 @@ default: &default
   ror_ids:
     - https://ror.org/02t274463
   tenant_id: ucsb
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucsb.edu
@@ -50,13 +44,7 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.25349/D9"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["rds@library.ucsb.edu"]
 
 test:

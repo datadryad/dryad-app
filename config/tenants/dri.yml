@@ -7,12 +7,6 @@ default: &default
   ror_ids:
     - https://ror.org/02vg22c33
   tenant_id: dri
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: http://www.okta.com/exkh1l6ocbKBRm4RB1t7
@@ -45,10 +39,4 @@ production:
     strategy: shibboleth
     entity_id: http://www.okta.com/exkh1l6ocbKBRm4RB1t7
     entity_domain: www.okta.com
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   campus_contacts: [""]
