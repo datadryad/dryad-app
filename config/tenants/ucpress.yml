@@ -8,7 +8,6 @@ default: &default
   ror_ids:
     - https://ror.org/bad-rors-uc-press
   tenant_id: ucpress
-
   authentication:
     strategy: none
   default_license: cc0
@@ -35,7 +34,5 @@ stage:
 
 production:
   <<: *default
-
-    id_scheme: doi
   campus_contacts: [""]
 
