@@ -19,12 +19,6 @@ default: &default
   ror_ids:
     - https://ror.org/not-a-real-dataone-id
   tenant_id: dataone
-  identifier_service:
-    provider: datacite
-    prefix: "10.5072"
-    account: my.account
-    password: "my.password"
-    sandbox: true
   authentication:
     strategy: author_match
   default_license: cc0
