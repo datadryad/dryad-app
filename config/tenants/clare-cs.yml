@@ -15,12 +15,6 @@ default: &default
     - https://ror.org/00p55jd14
     - https://ror.org/01n260e81
   tenant_id: clare-cs
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: https://webauth.cuc.claremont.edu/idp/shibboleth
@@ -56,9 +50,3 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false

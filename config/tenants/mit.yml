@@ -19,12 +19,6 @@ default: &default
     - https://ror.org/04pvzz946
     - https://ror.org/04vqm6w82
   tenant_id: mit
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:mit.edu
@@ -60,12 +54,6 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   campus_contacts: [""]
 
 test:

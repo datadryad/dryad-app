@@ -10,12 +10,7 @@ default: &default
     - https://ror.org/01kbvt179
     - https://ror.org/035k7dd86
   tenant_id: nmsu
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
+
   authentication:
     strategy: shibboleth
     entity_id: https://sts.windows.net/a3ec87a8-9fb8-4158-ba8f-f11bace1ebaa/
@@ -44,11 +39,6 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
+
   campus_contacts: [""]
 

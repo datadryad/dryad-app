@@ -14,13 +14,7 @@ default: &default
     - https://ror.org/04vq5kb54
     - https://ror.org/00mjfew53
   tenant_id: ucla
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5068/D1"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucla.edu
@@ -48,11 +42,5 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5068/D1"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["tdennis@library.ucla.edu"]

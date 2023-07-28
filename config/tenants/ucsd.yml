@@ -12,13 +12,7 @@ default: &default
     - https://ror.org/04v7hvq31
     - https://ror.org/01vf2g217
   tenant_id: ucsd
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.6075/J0"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucsd.edu
@@ -55,13 +49,7 @@ demo:
 production:
   <<: *default
   enabled: true
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.6076/D1"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["tmarconi@ucsd.edu"]
 
 test:
