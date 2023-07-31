@@ -10,6 +10,7 @@ module StashEngine
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
+      @feedback_url = feedback_url(m: 5, l: status)
       mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
