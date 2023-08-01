@@ -21,7 +21,7 @@ module StashEngine
       @page_size = params[:page_size] || '10'
       respond_to do |format|
         format.js do
-          @datasets = policy_scope(Identifier).page(@page).per(@page_size)
+          @datasets = policy_scope(Identifier, policy_scope_class: IdentifierPolicy::DashboardScope).page(@page).per(@page_size)
           @display_resources = @datasets.map { |dataset| StashDatacite::ResourcesController::DatasetPresenter.new(dataset&.latest_resource) }
         end
       end
