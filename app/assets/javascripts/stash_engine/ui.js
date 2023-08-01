@@ -1617,8 +1617,9 @@ function joelsReady(){
   var emails = document.getElementsByClassName('emailr');
   for (var i=0; i < emails.length; i++) {
     emails[i].onclick = e => {
+      var mailto = e.currentTarget.href
       var email = e.currentTarget.textContent.split('').reverse().join('');
-      e.currentTarget.href='mailto:'+email;
+      e.currentTarget.href = mailto.replace('dev@null', email);
     }
 
     const newEl = document.createElement("span");
