@@ -8,6 +8,32 @@ module StashEngine
       end
 
       def resolve
+        if !@user || @user.nil?
+          @scope.publicly_viewable
+        elsif @user.limited_curator?
+          @scope.all
+        else
+          tenant_admin = (@user.tenant_id if @user.role == 'admin')
+          @scope.with_visibility(states: %w[published embargoed],
+                                 tenant_id: tenant_admin,
+                                 journal_issns: @user.journals_as_admin.map(&:single_issn),
+                                 funder_ids: @user.funders_as_admin.map(&:funder_id),
+                                 user_id: @user.id)
+        end
+      end
+
+      private
+
+      attr_reader :user, :scope
+    end
+
+    class DashboardScope
+      def initialize(user, scope)
+        @user = user
+        @scope = scope
+      end
+
+      def resolve
         @scope
           .joins(latest_resource: :last_curation_activity)
           .where(latest_resource: { user_id: @user&.id })

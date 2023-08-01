@@ -219,21 +219,6 @@ module StashEngine
       joins(:last_curation_activity).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
     end
 
-    scope :visible_to_user, ->(user:) do
-      if user.nil?
-        with_visibility(states: %w[published embargoed])
-      elsif user.limited_curator?
-        all
-      else
-        tenant_admin = (user.tenant_id if user.role == 'admin')
-        with_visibility(states: %w[published embargoed],
-                        tenant_id: tenant_admin,
-                        funder_ids: user.funders_as_admin.map(&:funder_id),
-                        journal_issns: user.journals_as_admin.map(&:single_issn),
-                        user_id: user.id)
-      end
-    end
-
     # limits to the latest resource for each dataset if added to resources
     scope :latest_per_dataset, (-> do
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')

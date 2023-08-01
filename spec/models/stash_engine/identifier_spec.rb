@@ -964,19 +964,19 @@ module StashEngine
       end
 
       it 'user_viewable for a regular user' do
-        identifiers = Identifier.user_viewable(user: @user)
+        identifiers = Pundit.policy_scope!(@user, Identifier)
         expect(identifiers.count).to eq(6) # 5 public plus mine in curation
         expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is my private one
       end
 
       it 'user_viewable for an admin' do
-        identifiers = Identifier.user_viewable(user: @user2)
+        identifiers = Pundit.policy_scope!(@user2, Identifier)
         expect(identifiers.count).to eq(6)
         expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is some ucop joe blow private one
       end
 
       it 'user_viewable for a curator, they love it all' do
-        identifiers = Identifier.user_viewable(user: @user3)
+        identifiers = Pundit.policy_scope!(@user3, Identifier)
         expect(identifiers.count).to eq(@identifiers.length)
       end
 
