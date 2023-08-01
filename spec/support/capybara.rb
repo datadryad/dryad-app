@@ -7,7 +7,9 @@ require_relative 'helpers/tinymce_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
-require 'selenium-webdriver'
+# require 'webdrivers'
+
+# Webdrivers::Chromedriver.update
 
 # make CAPY_SHOW environment variable set to see the browser doing its thing
 if ENV['CAPY_SHOW']

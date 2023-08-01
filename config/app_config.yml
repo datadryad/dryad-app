@@ -211,6 +211,12 @@ defaults: &DEFAULTS
     - 'tar.gz'
     - 'tgz'
   datacite_data_repo_id: dryad_testing_repo_id
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
@@ -372,6 +378,12 @@ production:
     participation_field_id: 00N3h00000Ix75q
     comment_field_id: 00N3h00000Ix75j
   datacite_data_repo_id: da-80l49bsf
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
 
 # Terminate the if statement from the beginning of this file.
 <% end %>

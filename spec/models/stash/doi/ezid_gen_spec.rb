@@ -16,6 +16,10 @@ module Stash
         @resource = double(StashEngine::Resource)
         allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
 
+        @identifier = double(StashEngine::Identifier)
+        allow(@identifier).to receive(:identifier).and_return('10.15146/R38675309')
+        allow(resource).to receive(:identifier).and_return(@identifier)
+
         @identifier_str = 'doi:10.15146/R38675309'
         @url_helpers = double(Module)
 
@@ -59,20 +63,8 @@ module Stash
           allow(@resource).to receive(:identifier).and_return(nil)
         end
 
-        it 'mints a new identifier' do
-          expect(@ezid_client).to receive(:mint_identifier)
-            .with('doi:10.15146/R3', status: 'reserved', profile: 'datacite')
-            .and_return(@identifier)
-
-          expect(@helper.mint_id).to eq(@identifier_str)
-        end
-
-        it 'raises an error when Ezid could not mint and identifier' do
-          ezid_error = ::Ezid::Error.new('Testing errors')
-          # allow(ezid_error).to receive(:message).with(no_args).and_return('Testing errors')
-          allow(@ezid_client).to receive(:mint_identifier).with(any_args).and_raise(ezid_error)
-          dc = IdGen.make_instance(resource: @resource)
-          expect { dc.mint_id }.to raise_error(Stash::Doi::EzidError)
+        it 'creates a new identifier from Dryad prefix, not from EZID' do
+          expect(@helper.mint_id).to start_with("doi:#{APP_CONFIG[:identifier_service][:prefix]}")
         end
       end
 
