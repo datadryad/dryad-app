@@ -41,6 +41,24 @@ a {
 
 }
 
+.o-link__buttonlink,
+.o-link__buttonlink:link,
+.o-link__buttonlink:visited,
+.o-link__buttonlink:hover
+.o-link__buttonlink:active {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  padding: 8px 12px;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+  white-space: nowrap;
+}
+
+.o-link__buttonlink:hover, .o-link__buttonlink:active {
+  &:hover {opacity: 0.85;}
+}
+
 .o-link__secondary {
   @extend %o-link__primary;
 }
