@@ -20,8 +20,8 @@ default: &default
     - https://ror.org/00pjdza24
   tenant_id: ucop
   identifier_service:
-    provider: datacite
-    prefix: "10.5072"
+    provider: ezid
+    prefix: "10.18736/F6"
     account: my.account
     password: "my.password"
     sandbox: true

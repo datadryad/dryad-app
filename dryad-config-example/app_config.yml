@@ -179,6 +179,12 @@ defaults: &DEFAULTS
     - 'tar.gz'
     - 'tgz'
   datacite_data_repo_id: dryad_testing_repo_id
+  identifier_service:
+    provider: datacite
+    prefix: "10.5072"
+    account: my.account
+    password: "my.password"
+    sandbox: true
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
