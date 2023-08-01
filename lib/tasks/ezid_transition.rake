@@ -1,4 +1,5 @@
 require 'csv'
+require 'tasks/ezid_transition/register'
 namespace :ezid_transition do
 
   # this will find ezid datasets over 1 year old that are not submitted and remove them, set RAILS_ENV=production
@@ -54,5 +55,33 @@ namespace :ezid_transition do
       end
     end
     puts "file written to #{filename}"
+  end
+
+  desc 'Updates from list of DOIs to change reserved to registered in EZID'
+  task registered: :environment do
+    $stdout.sync = true
+
+    unless ENV['RAILS_ENV'] && ENV['DOI_FILE']
+      puts 'RAILS_ENV must be explicitly set before running this script (such as production)'
+      puts 'Also set environment variable DOI_FILE to the file that contains the DOIs to update with placeholder data.'
+      puts 'These should be EZID DOIs to pre-populate with data so they are more than reserved and can be moved to DataCite.'
+      puts ''
+      puts 'Example:'
+      puts 'RAILS_ENV=development DOI_FILE="spec/fixtures/ezid_doi_examples.txt" bundle exec rails ezid_transition:registered'
+      puts ''
+      puts 'The file with lists of DOIs should be one per line and be bare DOIs like 10.5072/FK2HT2SM2K.'
+      puts 'You can check DOIs at urls like https://ezid.cdlib.org/id/doi:10.5072/FK2HT2SM2K'
+      next
+    end
+
+    File.foreach(ENV.fetch('DOI_FILE', nil)).with_index do |doi, idx|
+      doi.strip!
+      next if doi.blank?
+
+      puts "#{idx} -- #{doi}"
+      # sorry, I couldn't figure out how to stop the EZID gem from printing to stdout, even setting logggers and other things
+      Tasks::EzidTransition::Register.register_doi(doi: doi)
+    end
+    puts 'Done'
   end
 end
