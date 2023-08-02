@@ -56,7 +56,7 @@ file so it can be used for the quarterly reports below. If there is more than
 one quarterly file for the year, combine them into a yearly file, so it can be
 used to calculate "base rates".
 
-**Deferred payment reports**
+### Deferred payment reports
 
 For journals that have a deferred payment plan, a secondary task generates
 PDF reports that can be be sent to the journal sponsors. The secondary task
@@ -71,7 +71,7 @@ cp ~/journal-payments/shoppingcart/shopping_cart_report_2023* /tmp
 RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports SC_REPORT=/tmp/shopping_cart_report_2020-Q1.csv
 ```
 
-**Tiered payment reports**
+### Tiered payment reports
 
 For journals that have a tiered payment plan, a secondary task generates PDF
 reports that can be be sent to the journal sponsors. The secondary task takes as
@@ -120,6 +120,18 @@ Fields in the dataset info report
 - Size
 - Institution Name
 - Journal Name
+
+
+Geographic authors report
+=========================
+
+The Geographic authors report lists all authors of publicly viewable Dryad datasets,
+with their institutions and countries, in geographic_authors_report.csv.
+
+Run it with a command like:
+```
+RAILS_ENV=production bundle exec rails identifiers:geographic_authors_report
+```
 
 
 Make Data Count / Counter report
