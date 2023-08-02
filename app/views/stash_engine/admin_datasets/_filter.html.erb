@@ -7,6 +7,8 @@
       <label for="tenant">Institution:</label>
       <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]), class: 'c-input__text', onchange: "this.form.submit();" ) %>
     </div>
+  <% end %>
+  <% if current_user.limited_curator? %>
     <div class="o-admin-form-pair">
       <label for="editor_id">Curator:</label>
       <%= select_tag(:editor_id, options_for_select( [['Curator', '']] + editor_select, params[:editor_id]),
