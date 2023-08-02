@@ -72,7 +72,8 @@ module StashDatacite
 
       StashEngine.repository.submit(resource_id: resource_id)
 
-      resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data', user_id: 0)
+      resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data',
+                                                                           user_id: current_user.id)
 
       resource.reload
 
