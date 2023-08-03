@@ -186,3 +186,5 @@ group :development, :test, :local_dev do
 end
 
 gem 'pundit', '~> 2.3'
+
+gem 'recaptcha', '~> 5.14'
