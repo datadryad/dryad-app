@@ -75,12 +75,16 @@ module StashEngine
     def feedback; end
 
     def feedback_signup
-      message = ''
-      params.each do |k, v|
-        message = "#{message}#{k}: #{v}\n" if %w[authenticity_token commit controller action].exclude?(k)
+      if current_user || verify_recaptcha
+        message = ''
+        params.each do |k, v|
+          message = "#{message}#{k}: #{v}\n" if %w[authenticity_token commit controller action g-recaptcha-response].exclude?(k)
+        end
+        StashEngine::UserMailer.feedback_signup(message).deliver_now
+        redirect_to stash_url_helpers.feedback_path, notice: 'Sign up successful. Thank you!'
+      else
+        redirect_to stash_url_helpers.feedback_path, flash: { alert: 'Please fill in reCAPTCHA' }
       end
-      StashEngine::UserMailer.feedback_signup(message).deliver_now
-      redirect_to stash_url_helpers.feedback_path, notice: 'Sign up successful. Thank you!'
     end
 
     # this only available in non-production environments and only if special environment variable set when starting server
