@@ -291,7 +291,7 @@ stage:
     templates:
       - [1, "Files", "Ted's File Description"]
       - [2, "Human Cognitive Neuroscience Data", "Templeton Draft for Neuroscience Data"]
-      - [40, "YOUTUBE",  "Youtube"]
+      - [40, "EEB",  "Ecology & Evolutionary Biolgy"]
       - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
       - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
