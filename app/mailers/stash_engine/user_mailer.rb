@@ -101,7 +101,8 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
     end
 
     def peer_review_reminder(resource)
@@ -114,7 +115,9 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+    end
     end
 
     def dependency_offline(dependency, message)
