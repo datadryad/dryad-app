@@ -115,6 +115,8 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
+    def prepare_readme; end
+
     # Upload files view for resource
     def upload
       @file_model = StashEngine::DataFile
