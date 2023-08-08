@@ -31,7 +31,7 @@
       outline: none;
     }
 
-    &:nth-child(-n+2) {
+    &:not(:last-child) {
 
       @include bp(screen1) {
         margin: 0 5vw 0 0;
@@ -67,7 +67,7 @@
       border-color: $design-orange-color;
       color: $design-orange-color;
 
-      &:nth-child(-n+2) {
+      &:not(:last-child) {
         &::after {
           border-width: 2px;
           border-color: $design-orange-color;
