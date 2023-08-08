@@ -28,7 +28,7 @@ All of the above functions and offerings, including associated systems, hardware
     4. The primary language of the Dataset must be English. Dryad Curation personnel cannot effectively review or curate Submissions in other languages at this time.
 2. **Expressions of Concern, Retraction and Removal of Files**. If there is an associated Scholarly Publication, Dryad generally defers authority to the publisher when issues arise regarding validity of the Dataset. If a Dataset on the Website is associated with a Scholarly Publication for which there is an “expression of concern,” “retraction” or similar statement on the part of the publisher, Dryad will continue to make the Dataset available, but with an appropriate warning and a link to the statement  from the publisher. Data files that are updated as corrections to the original Scholarly Publication will be similarly linked to the publisher’s corrigendum where Dryad is made aware of such.
 
-    Those who wish to see a Dataset on the Dryad Website taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact [curator@datadryad.org](mailto:curator@datadryad.org) providing the following:
+    Those who wish to see a Dataset on the Dryad Website taken down, either for copyright infringement, because of privacy concerns, or for other legitimate cause, should contact <a class="emailr" href="mailto:dev@null?subject=Takedown request">gro.dayrdatad@pleh</a> providing the following:
 
     5. A physical or electronic signature of a person authorized to act on behalf of the owner of an exclusive right that is allegedly infringed;
     6. Identification of the work claimed to have been infringed, or, if multiple works at a single online site are covered by a single notification, a representative list of such works at the site;
@@ -40,10 +40,7 @@ All of the above functions and offerings, including associated systems, hardware
     **Notwithstanding the foregoing, Dryad reserves the right to temporarily or permanently remove any Dataset at any time if Dryad determines in its sole discretion that the Dataset is inappropriate (containing personally identifiable, sensitive, infringing or otherwise illegal material; or Dryad is advised by legal counsel that the inclusion of such Dataset presents a potential risk to Dryad); provided, however, Dryad shall not be responsible for screening the Dataset prior to or after its Publication for such issues. Dryad agrees to notify the Submitter if the Dataset is rejected or removed and the reasons related to the removal.**
 
 
-
 ## Dryad obligations, representations and warranties to Members, Submitters and Users
-
-
 
 1. **Curation**. Dryad Curation personnel will provide Submitters support and will curate Datasets prior to and following Publication, as follows:
     1. Confirm that files can be opened, are not corrupted, and do not contain viruses that can be discovered through commercially reasonable efforts;
