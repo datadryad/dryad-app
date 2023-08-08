@@ -47,6 +47,10 @@ module StashDatacite
         url_help.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       end
 
+      def readme_page(resource)
+        url_help.prepare_readme_resource_path(id: resource.id)
+      end
+
       def files_page(resource)
         url_help.upload_resource_path(id: resource.id)
       end
@@ -235,7 +239,7 @@ module StashDatacite
         ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
                                'or package your files in a container such as a zip archive',
                       page: files_page(@resource),
-                      ids: ['filelist_id'])
+                      ids: ['readme_editor'])
       end
 
       def over_files_size
@@ -286,14 +290,8 @@ module StashDatacite
         #                           ids: ['filelist_id'])
         # elsif
         if readme_files.blank? && @resource.identifier.created_at > readme_require_date
-          errors << ErrorItem.new(message: '{Include a README file} along with the data files.',
-                                  page: files_page(@resource),
-                                  ids: ['filelist_id'])
-        end
-
-        if readme_files.present? && !readme_files&.first&.upload_file_name&.start_with?('README')
-          errors << ErrorItem.new(message: "For the {README file}, please capitalize the 'README' portion of the filename.",
-                                  page: files_page(@resource),
+          errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
+                                  page: readme_page(@resource),
                                   ids: ['filelist_id'])
         end
 
