@@ -1,0 +1,45 @@
+.toastui-editor-contents, .ProseMirror {
+  font-size: 1rem;
+}
+
+.toastui-editor-popup-add-heading * {
+  color: #000;
+}
+
+.toastui-editor-popup-add-heading h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+.toastui-editor-contents h1 {
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  margin-bottom: 1rem;
+}
+
+.toastui-editor-contents h2 {
+  font-size: 1.4rem;
+  line-height: 1.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.toastui-editor-contents h3 {
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: .75rem;
+}
+
+.toastui-editor-contents h4 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  margin-top: 1.15rem;
+  margin-bottom: .75rem;
+}
+
+.toastui-editor-contents h5, h6 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: .5rem;
+}
