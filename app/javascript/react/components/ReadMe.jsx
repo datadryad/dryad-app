@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
 import {Editor} from '@toast-ui/react-editor';
+import subsubPlugin from '../../lib/subsup_plugin';
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 
@@ -18,6 +19,7 @@ export default function ReadMe() {
         ['ul', 'ol', 'indent', 'outdent'],
         ['table', 'code', 'codeblock'],
       ]}
+      plugins={[subsubPlugin]}
       useCommandShortcut
     />
   );
