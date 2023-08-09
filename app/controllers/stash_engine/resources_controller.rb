@@ -115,7 +115,10 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
-    def prepare_readme; end
+    def prepare_readme
+      readme_file = @resource.data_files.present_files.where("UPPER(upload_file_name) LIKE 'README%'").first
+      @file_location = readme_file&.url || readme_file&.direct_s3_presigned_url || '/docs/README.md'
+    end
 
     # Upload files view for resource
     def upload
