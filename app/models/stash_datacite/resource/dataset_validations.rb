@@ -272,26 +272,26 @@ module StashDatacite
       def data_required
         errors = []
 
+        readme_md_require_date = '2022-09-28'
+        readme_require_date = '2021-12-20'
+
+        if @resource.identifier.created_at > readme_md_require_date
+          unless readme_md_files.count.positive? ||
+            @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.positive?
+            errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
+                                    page: readme_page(@resource),
+                                    ids: ['filelist_id'])
+          end
+        elsif @resource.identifier.created_at > readme_require_date && readme_files.blank?
+          errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
+                                  page: readme_page(@resource),
+                                  ids: ['filelist_id'])
+        end
+
         unless contains_data?
           errors << ErrorItem.new(message: 'Include at least one data file in your submission. ' \
                                            '{Add some data files to proceed}.',
                                   page: files_page(@resource),
-                                  ids: ['filelist_id'])
-        end
-
-        # readme_md_require_date = '2022-09-28'
-        readme_require_date = '2021-12-20'
-
-        # This will come in useful when we require readme.md files for real
-        #
-        # if readme_md_files.blank? && @resource.identifier.created_at > readme_md_require_date
-        #   errors << ErrorItem.new(message: '{Include a README.md file} along with the data files.',
-        #                           page: files_page(@resource),
-        #                           ids: ['filelist_id'])
-        # elsif
-        if readme_files.blank? && @resource.identifier.created_at > readme_require_date
-          errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
-                                  page: readme_page(@resource),
                                   ids: ['filelist_id'])
         end
 

@@ -789,7 +789,7 @@ module StashEngine
 
     # Yes, this method looks complex,
     # but breaking it into a bunch of smaller methods would only make it seem more complex
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def changed_fields(other_resource)
       return [] unless other_resource
 
@@ -813,6 +813,10 @@ module StashEngine
       that_methods = other_resource.descriptions.type_methods.map(&:description)
       changed << 'methods' if this_methods != that_methods
 
+      this_technical_info = descriptions.type_technical_info.map(&:description)
+      that_technical_info = other_resource.descriptions.type_technical_info.map(&:description)
+      changed << 'technical_info' if this_technical_info != that_technical_info
+
       this_other_desc = descriptions.type_other.map(&:description)
       that_other_desc = other_resource.descriptions.type_other.map(&:description)
       changed << 'usage_notes' if this_other_desc != that_other_desc
@@ -833,7 +837,7 @@ module StashEngine
 
       changed
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def update_salesforce_metadata
       sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)

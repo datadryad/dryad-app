@@ -30,6 +30,7 @@ module StashDatacite
     # scopes for description_type
     scope :type_abstract, -> { where(description_type: 'abstract') }
     scope :type_methods, -> { where(description_type: 'methods') }
+    scope :type_technical_info, -> { where(description_type: 'technicalinfo') }
     scope :type_other, -> { where(description_type: 'other') }
 
     # the xml description type for DataCite when we've excluded our special sauce

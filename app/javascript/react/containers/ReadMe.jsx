@@ -1,21 +1,63 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {
+  useRef, useState, useEffect, useCallback,
+} from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 import {Editor} from '@toast-ui/react-editor';
+import {debounce} from 'lodash';
+import {showSavedMsg, showSavingMsg} from '../../lib/utils';
 import subsubPlugin from '../../lib/subsup_plugin';
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '../../lib/toastui-editor.css';
 
-export default function ReadMe({readmeUrl}) {
+export default function ReadMe({dcsDescription, updatePath, readmeUrl}) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
 
+  const saveDescription = () => {
+    const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+    if (initialValue !== editorRef.current.getInstance().getMarkdown()) {
+      const data = {
+        authenticity_token,
+        description: {
+          description: editorRef.current.getInstance().getMarkdown(),
+          resource_id: dcsDescription.resource_id,
+          id: dcsDescription.id,
+        },
+      };
+      showSavingMsg();
+      axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+        .then(() => {
+          showSavedMsg();
+        });
+    }
+  };
+
+  const checkDescription = useCallback(debounce(saveDescription, 4000), []);
+
+  const importFile = (e) => {
+    const [file] = e.target.files;
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      const {result} = reader;
+      editorRef.current.getInstance().setMarkdown(result);
+    });
+    if (file) reader.readAsText(file);
+    // allow replacement uploads
+    e.target.value = null;
+  };
+
   useEffect(async () => {
-    if (readmeUrl) {
+    if (dcsDescription.description) {
+      setInitialValue(dcsDescription.description);
+    } else if (readmeUrl) {
       const response = await fetch(readmeUrl);
       const value = await response.text();
       setInitialValue(value);
+      setInitialValue(editorRef.current.getInstance().getMarkdown());
     }
-  }, [readmeUrl]);
+  }, [dcsDescription, readmeUrl]);
 
   return (
     <>
@@ -32,16 +74,31 @@ export default function ReadMe({readmeUrl}) {
           <p style={{textAlign: 'center', marginBottom: 0}}>
             <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
               <i className="fa fa-file-text-o" aria-hidden="true" style={{marginRight: '1ch'}} />Learn about README files
-              <span className="screen-ready-only"> (opens in new window)</span>
+              <span className="screen-reader-only"> (opens in new window)</span>
             </a>
           </p>
         </div>
         <div className="o-admin-right cedar-container" style={{minWidth: '400px', flexShrink: 2}}>
           <h2 className="o-heading__level2">Already have a README file?</h2>
-          <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-ready-only"> (opens in new window)</span></a> for your dataset, you can import it here.
+          <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here.
           This will replace our template in the editor.
           </p>
-          <p style={{textAlign: 'center', marginBottom: 0}}><button className="o-button__plain-text2" type="button">Import README</button></p>
+          <div style={{textAlign: 'center'}}>
+            <label
+              style={{display: 'inline-block'}}
+              htmlFor="readme_upload"
+              aria-label="Upload README file"
+              className="o-button__plain-text2"
+            >Import README
+            </label>
+            <input
+              id="readme_upload"
+              className="c-choose__input-file"
+              type="file"
+              accept="text/x-markdown,text/markdown,.md"
+              onChange={importFile}
+            />
+          </div>
         </div>
       </div>
       {initialValue ? (
@@ -59,13 +116,21 @@ export default function ReadMe({readmeUrl}) {
           ]}
           plugins={[subsubPlugin]}
           useCommandShortcut
+          onChange={checkDescription}
+          onBlur={saveDescription}
         />
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
           <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
-          Loading {readmeUrl ? 'your README file' : 'README template'}
+          Loading your README file
         </p>
       )}
     </>
   );
 }
+
+ReadMe.propTypes = {
+  dcsDescription: PropTypes.object.isRequired,
+  updatePath: PropTypes.string.isRequired,
+  readmeUrl: PropTypes.string.isRequired,
+};
