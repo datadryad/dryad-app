@@ -4,3 +4,10 @@
   font-family: 'KievitWeb';
   src: inline('../fonts/KievitWeb.woff') format('woff');
 }
+
+@font-face {
+  font-family: "FontAwesome";
+  src: inline("../fonts/fontawesome-webfont.woff?v=4.7.0");
+  font-weight: normal;
+  font-style: normal;
+}
