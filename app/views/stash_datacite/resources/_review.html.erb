@@ -59,8 +59,23 @@
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-
+  <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
+    <div class="c-review-files">
+      <ul class="c-review-files__list">
+        <% unless @review.technical_info.try(:description).blank? && @resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
+          <li>README.md&nbsp;&nbsp;&nbsp;
+          <% if @review.technical_info.try(:description).present? %>
+              <%= filesize(@review.technical_info.try(:description).bytesize) %>
+              &nbsp;&nbsp;&nbsp;<small>new</small>
+          <% else %>
+            <%= filesize(@resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size) %>
+          <% end %>
+          </li>
+        <% end %>
+      </ul>     
+      <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+    </div>
     <div class="c-review-files">
 	<% if highlight_fields.include?('data_files') %>
             <%= render partial: "stash_engine/data_files/show_merritt",

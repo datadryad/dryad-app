@@ -12,6 +12,8 @@
 
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
 <%= react_component('containers/ReadMe', {
+  dcsDescription: @metadata_entry.technical_info,
+  updatePath: descriptions_update_path,
   readmeUrl: @file_location
 }) %>
 
