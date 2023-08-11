@@ -13,6 +13,7 @@
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
 <%= react_component('containers/FileUpload/UploadFiles', {
   resource_id: @resource.id,
+  readme_size: @readme_size,
   file_uploads: @resource.generic_files.validated_table.as_json(
     methods: :type, include: { frictionless_report: { only: [:report, :status] } }
   ),

@@ -125,6 +125,9 @@ module StashEngine
     def upload
       @file_model = StashEngine::DataFile
       @resource_assoc = :data_files
+      @readme_size = (resource.descriptions.type_technical_info.first&.description.present? &&
+              resource.descriptions.type_technical_info.first&.description&.bytesize) ||
+              resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
 
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
