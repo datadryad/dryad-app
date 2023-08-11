@@ -4,7 +4,7 @@ module StashEngine
   module AdminDatasetsHelper
 
     def sponsor_select
-      StashEngine::JournalOrganization.all.map { |item| [item.name, item.id] }
+      StashEngine::JournalOrganization.all.map { |item| [item.name, item.id] }.sort_by { |i| i[0].downcase }
     end
 
     def status_select(statuses = [])
