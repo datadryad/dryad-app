@@ -11,7 +11,7 @@ import subsubPlugin from '../../lib/subsup_plugin';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '../../lib/toastui-editor.css';
 
-export default function ReadMe({dcsDescription, updatePath, readmeUrl}) {
+export default function ReadMe({dcsDescription, updatePath, fileContent}) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
 
@@ -51,13 +51,15 @@ export default function ReadMe({dcsDescription, updatePath, readmeUrl}) {
   useEffect(async () => {
     if (dcsDescription.description) {
       setInitialValue(dcsDescription.description);
-    } else if (readmeUrl) {
-      const response = await fetch(readmeUrl);
+    } else if (fileContent) {
+      setInitialValue(fileContent);
+    } else {
+      const response = await fetch('/docs/README.md');
       const value = await response.text();
       setInitialValue(value);
       setInitialValue(editorRef.current.getInstance().getMarkdown());
     }
-  }, [dcsDescription, readmeUrl]);
+  }, [dcsDescription]);
 
   return (
     <>
@@ -122,7 +124,7 @@ export default function ReadMe({dcsDescription, updatePath, readmeUrl}) {
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
           <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
-          Loading your README file
+          Loading README template
         </p>
       )}
     </>
@@ -132,5 +134,5 @@ export default function ReadMe({dcsDescription, updatePath, readmeUrl}) {
 ReadMe.propTypes = {
   dcsDescription: PropTypes.object.isRequired,
   updatePath: PropTypes.string.isRequired,
-  readmeUrl: PropTypes.string.isRequired,
+  fileContent: PropTypes.string,
 };
