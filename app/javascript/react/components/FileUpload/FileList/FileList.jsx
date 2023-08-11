@@ -4,12 +4,12 @@ import File from './File';
 import BadList from './BadList';
 
 const file_list = ({
-  chosenFiles, clickedRemove, clickedValidationReport, totalSize,
+  chosenFiles, clickedRemove, clickedValidationReport, readmeSize, totalSize,
 }) => (
   <>
     <div className="c-uploadtable-header">
       <h2 className="o-heading__level2" id="filelist_id">Files</h2>
-      <p>Total size: {totalSize}</p>
+      <p>Total size: {totalSize}{readmeSize && <em> (README: {readmeSize})</em>}</p>
     </div>
     <BadList chosenFiles={chosenFiles} />
     <div className="table-wrapper c-uploadtable-wrapper">

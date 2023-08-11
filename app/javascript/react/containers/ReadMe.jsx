@@ -104,24 +104,25 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
         </div>
       </div>
       {initialValue ? (
-        <Editor
-          id="readme_editor"
-          ref={editorRef}
-          autofocus={false}
-          initialEditType="wysiwyg"
-          initialValue={initialValue}
-          height="95vh"
-          toolbarItems={[
-            ['heading', 'bold', 'italic', 'strike'],
-            ['hr', 'quote', 'link'],
-            ['ul', 'ol', 'indent', 'outdent'],
-            ['table', 'code', 'codeblock'],
-          ]}
-          plugins={[subsubPlugin]}
-          useCommandShortcut
-          onChange={checkDescription}
-          onBlur={saveDescription}
-        />
+        <div id="readme_editor">
+          <Editor
+            ref={editorRef}
+            autofocus={false}
+            initialEditType="wysiwyg"
+            initialValue={initialValue}
+            height="95vh"
+            toolbarItems={[
+              ['heading', 'bold', 'italic', 'strike'],
+              ['hr', 'quote', 'link'],
+              ['ul', 'ol', 'indent', 'outdent'],
+              ['table', 'code', 'codeblock'],
+            ]}
+            plugins={[subsubPlugin]}
+            useCommandShortcut
+            onChange={checkDescription}
+            onBlur={saveDescription}
+          />
+        </div>
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
           <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />

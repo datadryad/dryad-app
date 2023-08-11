@@ -109,7 +109,6 @@ module StashEngine
       # now try to get actual file by range and return it
       begin
         resp = HTTP.timeout(1000).get(s3_url)
-
         return nil if resp.code > 299
 
         return resp.to_s

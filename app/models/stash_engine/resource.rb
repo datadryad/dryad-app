@@ -342,6 +342,46 @@ module StashEngine
       result.flatten
     end
 
+    def check_add_readme_file
+      filename = 'README.md'
+      readme_file = data_files.present_files.where(upload_file_name: filename).first
+      file_content = readme_file&.file_content
+      technical_info = descriptions.type_technical_info.first&.description
+      return if !technical_info || technical_info.empty?
+
+      # check if new content
+      if file_content && technical_info != file_content
+        # delete existing file
+        readme_file.smart_destroy!
+      end
+
+      # add file
+      Stash::Aws::S3.put_stream(
+        s3_key: "#{s3_dir_name(type: 'data')}/README.md",
+        stream: StringIO.new(technical_info)
+      )
+      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
+        .where.not(file_state: 'deleted').destroy_all
+
+      db_file =
+        StashEngine::DataFile.create(
+          upload_file_name: filename,
+          upload_content_type: 'text/markdown',
+          upload_file_size: technical_info.bytesize,
+          resource_id: id,
+          upload_updated_at: Time.new,
+          file_state: 'created',
+          original_filename: filename
+        )
+
+      update(total_file_size: StashEngine::DataFile
+          .where(resource_id: id)
+          .where(file_state: %w[created copied])
+          .sum(:upload_file_size))
+
+      db_file
+    end
+
     # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank
     # item and then never fill anything in.  This cleans up those items.  Probably useful in the review page.
     def cleanup_blank_models!

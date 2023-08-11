@@ -27,6 +27,7 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 const Messages = {
+  fileReadme: 'Please prepare your README on the previous page',
   fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
   filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
@@ -78,7 +79,7 @@ const formatSizeUnits = (bytes) => {
   if (bytes === 1) {
     return '1 byte';
   } if (bytes < 1000) {
-    return `${bytes} bytes`;
+    return `${bytes} B`;
   }
 
   const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -557,16 +558,23 @@ class UploadFiles extends React.Component {
     const newFiles = files.filter((file) => newFilenames.includes(file.name));
 
     const countRepeated = files.length - newFiles.length;
-    this.setWarningRepeatedFile(countRepeated);
+    if (filenames.includes('README.md')) {
+      this.setState({warningMessage: Messages.fileReadme});
+    } else {
+      this.setWarningRepeatedFile(countRepeated);
+    }
     return newFiles;
   };
 
   discardAlreadyChosenByName = (filenames, uploadType) => {
-    const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType);
+    const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType
+      || file.sanitized_name.toLowerCase() === 'readme.md');
     if (!filesAlreadySelected.length) return filenames;
 
     const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
-    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase()));
+
+    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase())
+      && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
   setWarningRepeatedFile = (countRepeated) => {
@@ -629,7 +637,8 @@ class UploadFiles extends React.Component {
               chosenFiles={chosenFiles}
               clickedRemove={this.removeFileHandler}
               clickedValidationReport={this.showValidationReportHandler}
-              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
+              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + this.props.readme_size)}
+              readmeSize={formatSizeUnits(this.props.readme_size)}
             />
             {loading && (
               <div className="c-upload__loading-spinner">
