@@ -92,6 +92,33 @@ module StashEngine
       nil
     end
 
+    # gets the S3 presigned and loads the content (for READMEs)
+    def file_content
+      # get the presigned URL
+      s3_url = nil
+      begin
+        s3_url = file_state == 'copied' && last_version_file && last_version_file&.merritt_s3_presigned_url
+      rescue HTTP::Error, Stash::Download::MerrittError => e
+        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+      end
+      s3_url = merritt_s3_presigned_url if s3_url.nil?
+      s3_url = direct_s3_presigned_url if s3_url.nil?
+
+      return nil if s3_url.nil?
+
+      # now try to get actual file by range and return it
+      begin
+        resp = HTTP.timeout(1000).get(s3_url)
+
+        return nil if resp.code > 299
+
+        return resp.to_s
+      rescue HTTP::Error
+        logger.info("Couldn't get S3 request for #{inspect}")
+      end
+      nil
+    end
+
     # This is mostly used to duplicate these files when a new version is created.
     # It will fail getting previous version if the record isn't saved and has no id or resource_id yet.
     def populate_container_files_from_last

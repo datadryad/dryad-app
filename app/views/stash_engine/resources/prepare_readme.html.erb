@@ -14,7 +14,7 @@
 <%= react_component('containers/ReadMe', {
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
-  readmeUrl: @file_location
+  fileContent: @file_content
 }) %>
 
 <%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 2} %>

@@ -118,7 +118,7 @@ module StashEngine
     def prepare_readme
       @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, current_tenant)
       readme_file = @resource.data_files.present_files.where(upload_file_name: 'README.md').first
-      @file_location = readme_file&.url || readme_file&.direct_s3_presigned_url || '/docs/README.md'
+      @file_content = readme_file&.file_content
     end
 
     # Upload files view for resource
