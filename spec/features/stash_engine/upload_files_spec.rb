@@ -62,7 +62,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows correct Upload Type boxes example texts' do
-      expect(page).to have_content('e.g., csv, fasta')
+      expect(page).to have_content('e.g., csv, xsl, fasta')
       expect(page).to have_content('e.g., code packages, scripts')
       expect(page).to have_content('e.g., figures, supporting tables')
     end
@@ -75,8 +75,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows the right navigation buttons at the bottom' do
-      expect(page). to have_content('Back to Describe dataset')
-      expect(page). to have_content('Proceed to review')
+      expect(page). to have_content('Back to README')
+      expect(page). to have_content('Proceed to Review')
     end
 
     it 'shows only files with status different of "deleted"' do
@@ -352,7 +352,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'disallows navigation away with pending uploads' do
-      click_on('Proceed to review')
+      click_on('Proceed to Review')
       sleep 0.5
       expect(page).to have_text('please click "Upload pending files"')
     end

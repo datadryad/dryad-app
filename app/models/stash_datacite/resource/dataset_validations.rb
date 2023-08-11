@@ -239,7 +239,7 @@ module StashDatacite
         ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
                                'or package your files in a container such as a zip archive',
                       page: files_page(@resource),
-                      ids: ['readme_editor'])
+                      ids: ['filelist_id'])
       end
 
       def over_files_size
@@ -280,12 +280,12 @@ module StashDatacite
             @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.positive?
             errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
                                     page: readme_page(@resource),
-                                    ids: ['filelist_id'])
+                                    ids: ['readme_editor'])
           end
         elsif @resource.identifier.created_at > readme_require_date && readme_files.blank?
           errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
                                   page: readme_page(@resource),
-                                  ids: ['filelist_id'])
+                                  ids: ['readme_editor'])
         end
 
         unless contains_data?

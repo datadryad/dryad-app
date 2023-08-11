@@ -105,6 +105,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
       </div>
       {initialValue ? (
         <Editor
+          id="readme_editor"
           ref={editorRef}
           autofocus={false}
           initialEditType="wysiwyg"
