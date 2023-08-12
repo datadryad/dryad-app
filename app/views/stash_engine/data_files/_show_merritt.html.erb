@@ -2,7 +2,7 @@
 <ul class="c-review-files__list">
     <% uploaded = resource.previous_resource&.submitted? %>
 
-    <% resource.data_files.where("UPPER(upload_file_name) NOT LIKE 'README%'").each do |fu| %>
+    <% resource.data_files.where.not(upload_file_name: 'README.md').each do |fu| %>
 	<div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
 	    <li>
 		<% if fu.file_state == 'copied' && uploaded && fu.last_version_file&.id.present? %>

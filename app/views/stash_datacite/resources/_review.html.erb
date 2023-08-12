@@ -63,7 +63,7 @@
     <div class="c-review-files">
       <ul class="c-review-files__list">
         <% unless @review.technical_info.try(:description).blank? && @resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
-          <li>README.md&nbsp;&nbsp;&nbsp;
+          <li><%= link_to 'README.md', stash_url_helpers.prepare_readme_resource_path(@resource) %>&nbsp;&nbsp;&nbsp;
           <% if @review.technical_info.try(:description).present? %>
               <%= filesize(@review.technical_info.try(:description).bytesize) %>
               &nbsp;&nbsp;&nbsp;<small>new</small>

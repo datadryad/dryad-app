@@ -24,7 +24,9 @@ module StashEngine
     scope :with_filename, -> { where('upload_file_name IS NOT NULL') }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
-    scope :validated_table, -> { present_files.where.not(upload_file_name: 'README.md').validated.order(created_at: :desc) }
+    scope :validated_table, -> {
+                              present_files.where.not(upload_file_name: 'README.md', type: StashEngine::DataFile).validated.order(created_at: :desc)
+                            }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))

@@ -82,7 +82,7 @@ const formatSizeUnits = (bytes) => {
     return `${bytes} B`;
   }
 
-  const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   for (let i = 0; i < units.length; i += 1) {
     if (bytes / 10 ** (3 * (i + 1)) < 1) {
       return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
@@ -568,7 +568,7 @@ class UploadFiles extends React.Component {
 
   discardAlreadyChosenByName = (filenames, uploadType) => {
     const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType
-      || file.sanitized_name.toLowerCase() === 'readme.md');
+      || (file.uploadType === 'data' && file.sanitized_name.toLowerCase() === 'readme.md'));
     if (!filesAlreadySelected.length) return filenames;
 
     const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
