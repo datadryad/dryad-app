@@ -16,6 +16,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::Aws
   include Mocks::Salesforce
+  include Mocks::DataFile
 
   before(:each) do
     mock_repository!
@@ -25,6 +26,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     mock_salesforce!
     mock_aws!
     ignore_zenodo!
+    mock_file_content!
     @author = create(:user, tenant_id: 'dryad')
 
     ActionMailer::Base.deliveries = []
@@ -34,6 +36,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     visit root_path
     click_link 'My datasets'
     start_new_dataset
+    navigate_to_readme
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
