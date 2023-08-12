@@ -4,10 +4,6 @@ require 'stash/download'
 
 module Stash
   module ZenodoReplicate
-
-    class ZenodoError < StandardError; end
-    class RetryError < StandardError; end
-
     module ZenodoConnection
 
       SLEEP_TIME = 15
