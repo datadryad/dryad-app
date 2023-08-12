@@ -76,9 +76,10 @@ RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports SC_R
 For journals that have a tiered payment plan, a secondary task generates PDF
 reports that can be be sent to the journal sponsors. The secondary task takes as
 input a shopping_cart_report, as generated above, but it also needs a cumulative
-shopping_cart_report for prior quarters to calculate the "base rate". Both files
-should be quarterly reports to follow the current billing model. For the first
-quarter, the base report can be an empty file.
+shopping_cart_report for prior quarters, including the current quarter, to
+calculate the "base rate". Both files should be quarterly reports to follow the
+current billing model. For the first quarter, the base report can be an empty
+file.
 
 Run the tiered journal payment reports with a command like:
 ```
