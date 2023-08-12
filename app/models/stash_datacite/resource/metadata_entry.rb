@@ -38,7 +38,7 @@ module StashDatacite
       end
 
       def technical_info
-        @methods = Description.type_technical_info.find_or_create_by(resource_id: @resource.id)
+        @technical_info = Description.type_technical_info.find_or_create_by(resource_id: @resource.id)
       end
 
       def other
