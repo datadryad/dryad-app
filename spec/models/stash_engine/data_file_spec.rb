@@ -277,12 +277,50 @@ module StashEngine
           .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
                      headers: { 'Content-Type' => 'application/json' })
 
-        # stubbing the S3 request as a 404
+        # stubbing the S3 request
         stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
           .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
           .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
 
         expect(@upload2.preview_file).to eql("This,is,my,great,csv\n0,1,2,3,4")
+      end
+    end
+
+    describe '#file_content' do
+      before(:each) do
+        @upload2 = create(:data_file,
+                          resource: @resource,
+                          file_state: 'copied',
+                          upload_file_name: 'README.md')
+      end
+      it 'returns nil if unable to retrieve range of S3 file (copied file)' do
+        # stubbing a request to merritt for presigned URL
+        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
+          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
+          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
+                     headers: { 'Content-Type' => 'application/json' })
+
+        # stubbing the S3 request as a 404
+        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
+          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+          .to_return(status: 404, body: '', headers: {})
+
+        expect(@upload2.file_content).to be_nil
+      end
+
+      it 'returns content if successful request for http URL (copied file)' do
+        # stubbing a request to merritt for presigned URL
+        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
+          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
+          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
+                     headers: { 'Content-Type' => 'application/json' })
+
+        # stubbing the S3 request
+        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
+          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+          .to_return(status: 200, body: '### This is a test README title!', headers: {})
+
+        expect(@upload2.file_content).to eql('### This is a test README title!')
       end
     end
 

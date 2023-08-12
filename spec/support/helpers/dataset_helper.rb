@@ -25,6 +25,11 @@ module DatasetHelper
     expect(page).to have_content('Choose files')
   end
 
+  def navigate_to_readme
+    click_link 'Prepare README'
+    expect(page).to have_content('Prepare README file')
+  end
+
   def navigate_to_upload
     click_link 'Upload files'
     expect(page).to have_content('Choose files', count: 3)
@@ -38,6 +43,7 @@ module DatasetHelper
 
   def fill_required_fields
     fill_required_metadata
+    navigate_to_readme
     add_required_data_files
   end
 
