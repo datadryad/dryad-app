@@ -97,11 +97,15 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = file_state == 'copied' && last_version_file && last_version_file&.merritt_s3_presigned_url
+        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.merritt_s3_presigned_url) || nil
       rescue HTTP::Error, Stash::Download::MerrittError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
-      s3_url = merritt_s3_presigned_url if s3_url.nil?
+      begin
+        s3_url = merritt_s3_presigned_url if s3_url.nil?
+      rescue HTTP::Error, Stash::Download::MerrittError => e
+        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+      end
       s3_url = direct_s3_presigned_url if s3_url.nil?
 
       return nil if s3_url.nil?
