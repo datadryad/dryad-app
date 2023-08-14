@@ -96,7 +96,7 @@ module StashEngine
         next unless found_dataset
 
         # skip if the dataset was not first submitted on this date
-        next unless found_dataset.first_submitted_resource.submitted_date.to_date == date
+        next unless found_dataset.first_submitted_resource&.submitted_date&.to_date == date
 
         # include this dataset unless it has a previous resource that had been submitted
         prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
