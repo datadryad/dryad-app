@@ -91,11 +91,14 @@ module StashEngine
       # for each dataset that received the target status on the given day
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
       cas.each do |ca|
-        # include this dataset unless it has a previous resource that had been submitted
         this_resource = ca.resource
         found_dataset = this_resource&.identifier
         next unless found_dataset
 
+        # skip if the dataset was not first submitted on this date
+        next unless found_dataset.first_submitted_resource.submitted_date.to_date == date
+
+        # include this dataset unless it has a previous resource that had been submitted
         prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
         prev_resources.each do |pr|
           found_dataset = nil if pr.submitted_date
