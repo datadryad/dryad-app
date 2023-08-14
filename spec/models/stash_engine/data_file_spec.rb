@@ -290,10 +290,10 @@ module StashEngine
       before(:each) do
         @upload2 = create(:data_file,
                           resource: @resource,
-                          file_state: 'copied',
+                          file_state: 'created',
                           upload_file_name: 'README.md')
       end
-      it 'returns nil if unable to retrieve range of S3 file (copied file)' do
+      it 'returns nil if unable to retrieve range of S3 file' do
         # stubbing a request to merritt for presigned URL
         stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
           .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
@@ -308,7 +308,7 @@ module StashEngine
         expect(@upload2.file_content).to be_nil
       end
 
-      it 'returns content if successful request for http URL (copied file)' do
+      it 'returns content if successful request for http URL' do
         # stubbing a request to merritt for presigned URL
         stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
           .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })

@@ -624,7 +624,6 @@ class UploadFiles extends React.Component {
               alt={upload_type.alt}
               name={upload_type.name}
               description={upload_type.description}
-              description2={upload_type.description2}
               buttonFiles={upload_type.buttonFiles}
               buttonURLs={upload_type.buttonURLs}
             />
