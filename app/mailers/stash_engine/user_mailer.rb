@@ -101,7 +101,8 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
     end
 
     def peer_review_reminder(resource)
@@ -114,7 +115,22 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+    end
+
+    def doi_invitation(resource)
+      logger.warn('Unable to send doi_invitation; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Connect your data to your research on Dryad!")
+
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'DOI linking reminder', status: resource.current_curation_status)
     end
 
     def dependency_offline(dependency, message)
