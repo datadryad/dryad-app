@@ -1,9 +1,10 @@
 <title>Dryad | <%= @page_title %></title>
 
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#40853e">
+<%= favicon_link_tag 'favicon.ico' %>
+<%= favicon_link_tag 'apple-touch-icon.png', rel: 'apple-touch-icon', type: 'img/png', sizes:'180x180' %>
+<%= favicon_link_tag 'favicon-32x32.png', rel: 'icon', type: 'img/png', sizes:'32x32' %>
+<%= favicon_link_tag 'favicon-16x16.png', rel: 'icon', type: 'img/png', sizes:'16x16' %>
+<%= favicon_link_tag 'safari-pinned-tab.svg', rel: 'mask-icon', type: 'img/svg', color:'#40853e' %>
 <meta name="msapplication-TileColor" content="#40853e">
 <meta name="theme-color" content="#ffffff">
 
@@ -13,5 +14,3 @@
 <%= render 'layouts/stash_engine/matomo_analytics' %>
 
 <%= csrf_meta_tags %>
-
-<%= favicon_link_tag 'favicon.ico' %>
