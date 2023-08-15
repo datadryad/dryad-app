@@ -27,7 +27,7 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 const Messages = {
-  fileReadme: 'Please prepare your README on the previous page',
+  fileReadme: 'Please prepare your README on the previous page.',
   fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
   filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
@@ -76,9 +76,7 @@ export const displayAriaMsg = (msg) => {
 };
 
 const formatSizeUnits = (bytes) => {
-  if (bytes === 1) {
-    return '1 byte';
-  } if (bytes < 1000) {
+  if (bytes < 1000) {
     return `${bytes} B`;
   }
 

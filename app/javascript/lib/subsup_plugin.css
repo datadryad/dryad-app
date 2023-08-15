@@ -4,6 +4,11 @@
   font-size: 1em;
 }
 
+.toastui-editor-toolbar-icons.subscript.active,
+.toastui-editor-toolbar-icons.superscript.active {
+  color: rgb(75, 166, 248);
+}
+
 .toastui-editor-toolbar-icons.subscript:after {
   display: inline;
   content: '\2169\2082';

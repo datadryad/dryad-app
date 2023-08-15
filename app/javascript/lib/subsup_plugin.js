@@ -12,13 +12,32 @@ export default function supsubPlugin(context) {
   const {eventEmitter, pmState} = context;
   let currentEditorEl = null;
 
-  eventEmitter.listen('focus', (editType) => {
-    const containerClassName = `toastui-editor-${editType === 'markdown' ? 'md' : 'ww'}-container`;
-    currentEditorEl = document.querySelector(`.toastui-editor-defaultUI .${containerClassName} .ProseMirror`);
+  eventEmitter.listen('focus', () => {
+    currentEditorEl = document.activeElement;
   });
 
   eventEmitter.listen('command', (command) => {
     if (['superscript', 'subscript'].includes(command)) currentEditorEl.focus();
+  });
+
+  eventEmitter.listen('caretChange', (editType) => {
+    const editor = currentEditorEl?.closest('.toastui-editor-defaultUI');
+    const sel = window.getSelection();
+    const checkNode = editType === 'markdown'
+      ? sel.anchorNode?.previousSibling?.innerText.replace(/[^\w\s]/gi, '')
+      : sel.anchorNode?.parentNode?.localName;
+    const supButton = editor?.querySelector('button.superscript');
+    const subButton = editor?.querySelector('button.subscript');
+    if (checkNode && checkNode === 'sup') {
+      supButton.classList.add('active');
+    } else if (supButton?.classList.contains('active')) {
+      supButton.classList.remove('active');
+    }
+    if (checkNode && checkNode === 'sub') {
+      subButton.classList.add('active');
+    } else if (subButton?.classList.contains('active')) {
+      subButton.classList.remove('active');
+    }
   });
 
   function toggleMD({openTag, closeTag}, {tr, selection}, dispatch) {
@@ -56,7 +75,7 @@ export default function supsubPlugin(context) {
   };
 
   const superButton = {
-    name: 'color',
+    name: 'superscript',
     tooltip: 'Superscript',
     command: 'superscript',
     className: 'superscript toastui-editor-toolbar-icons',
