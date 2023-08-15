@@ -81,21 +81,6 @@
     communicated to researchers.</p>
 </div>
 <div class="bio">
-  <img src="/images/puebla.jpg" alt="Headshot of Iratxe Puebla">
-  <h5>Iratxe Puebla (Class of 2024)</h5><p> is Associate Director at
-  ASAPbio, a nonprofit with a mission to accelerate innovation and transparency
-  in life sciences communication, and which supports the productive use of
-  preprints in the life sciences. In her role, Iratxe works in projects related
-  to new initiatives and best practices around preprints and preprint review,
-  she also coordinates the ASAPbio Community. Prior to ASAPbio, Iratxe worked in
-  publishing for 16 years, she held editorial roles at BioMed Central and then
-  PLOS, where she was Deputy Editor-in-Chief at the journal PLOS ONE. During her
-  time at PLOS ONE she was involved in the implementation of PLOS’ data
-  policy. Iratxe is also Facilitation and Integrity Officer for the Committee on
-  Publication Ethics (COPE) and co-lead for the FORCE11 Research Data Publishing
-  Ethics Working Group.</p>
-</div>
-<div class="bio">
   <img src="/images/ruttenberg.jpg" alt="Headshot of Judy Ruttenberg">
   <h5>Judy Ruttenberg (Class of 2023)</h5><p> is the Director of Scholars and Scholarship at the
     <a href="https://www.arl.org/">Association of Research Libraries</a>. With more than twenty years of experience
