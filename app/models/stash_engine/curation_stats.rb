@@ -116,7 +116,7 @@ module StashEngine
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review])
       cas.each do |ca|
         this_resource = ca.resource
-        found_dataset = this_resource.identifier
+        found_dataset = this_resource&.identifier
         next unless found_dataset
 
         # skip if the dataset was not first submitted on this date

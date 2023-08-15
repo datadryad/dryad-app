@@ -222,11 +222,13 @@ module StashEngine
         expect(stats.new_datasets_to_peer_review).to eq(0)
 
         # YES -- move into peer_review
+        @res[1].resource_states.first.update(resource_state: 'submitted')
         @res[1].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(1)
 
         # YES -- move into published
+        @res[2].resource_states.first.update(resource_state: 'submitted')
         @res[2].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
         @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day)
@@ -234,6 +236,7 @@ module StashEngine
         expect(stats.new_datasets_to_peer_review).to eq(2)
 
         # NO -- was submitted previously
+        @res[3].resource_states.first.update(resource_state: 'submitted')
         @res[3].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day - 2.days)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(2)
@@ -241,8 +244,10 @@ module StashEngine
         # YES -- but this dataset has two resources, and only one should count
         id_new = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
         res_new.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
+        res_new2.resource_states.first.update(resource_state: 'submitted')
         res_new2.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(3)
@@ -250,13 +255,16 @@ module StashEngine
         # NO -- this dataset has two resources, and the first was submitted before the target day
         id_new2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
+        res_new3.resource_states.first.update(resource_state: 'submitted')
         res_new3.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day - 2.days)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
+        res_new4.resource_states.first.update(resource_state: 'submitted')
         res_new4.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(3)
 
         # YES -- goes through 'submitted' before 'peer_review
+        @res[4].resource_states.first.update(resource_state: 'submitted')
         @res[4].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day)
         @res[4].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
