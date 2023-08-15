@@ -232,7 +232,7 @@ module StashEngine
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
       cas.each do |ca|
         # check if this was the actual date of submission for this resource
-        next unless ca.resource.curation_activities.where(status: 'submitted')&.first&.created_at&.between?(date, date + 1.day)
+        next unless ca.resource.curation_activities.where(status: 'submitted')&.first&.created_at&.to_date&.between?(date, date + 1.day)
 
         # if this dataset has been published or embargoed, count it
         ident = ca.resource&.identifier
