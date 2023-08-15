@@ -30,7 +30,7 @@ namespace :ezid_transition do
   task ezid_status: :environment do
     filename = "ezid_dryad_identifiers_#{Time.now.iso8601}.csv"
     CSV.open(filename, 'w') do |csv|
-      csv << %w[identifier pub_state ezid_status]
+      csv << %w[identifier pub_state ezid_status tenant_id]
       stash_ids = StashEngine::Identifier.where("identifier NOT LIKE '10.5061%' and identifier NOT LIKE '10.15146%'")
       stash_ids.each_with_index do |stash_id, idx|
 
@@ -44,8 +44,8 @@ namespace :ezid_transition do
                       end
 
         puts "#{idx}/#{stash_ids.length} #{stash_id.identifier},#{stash_id.pub_state},#{ezid_status}"
-        csv << [stash_id.identifier, stash_id.pub_state, ezid_status]
-        sleep 0.5
+        csv << [stash_id.identifier, stash_id.pub_state, ezid_status, stash_id&.resources&.first&.tenant_id]
+        sleep 0.25
       rescue StandardError => e
         if (attempts += 1) < 5
           sleep 10
