@@ -1641,6 +1641,14 @@ function joelsReady(){
     }
   };
 
+  function localize(time) {
+    var date = new Date(time)
+    return date.toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}).replace(/ ([AP][M])/, '\xa0$1')
+  }
+  document.querySelectorAll('.local-date').forEach((span) => {
+    if (span.dataset.dt) span.innerText = localize(span.dataset.dt)
+  });
+
   var navButtons = Array.from(document.getElementsByClassName('c-header_nav-button'));
   navButtons.forEach(button => {
     button.onclick = e => {
