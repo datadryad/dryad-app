@@ -290,6 +290,48 @@ namespace :identifiers do
     end
   end
 
+  desc "Email the submitter when a dataset has been in 'action_required' at 3 times"
+  task action_required_reminder: :environment do
+    # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
+    items = Tasks::StashEngineTasks::ActionRequiredReminder.find_action_required
+    # each item looks like
+    # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
+    #   :reminder_1=>nil,
+    #   :reminder_2=>nil,
+    #   :identifier=> activeRecord object for identifier}
+
+    items.each do |item|
+      # send out reminder 1 at two weeks
+      if item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
+        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: item[:identifier].latest_resource.id,
+          user_id: 0,
+          status: item[:identifier].latest_resource.last_curation_activity.status,
+          note: 'action_required_reminder CRON - reminded submitter that this item is still `action_required`'
+        )
+      # send out reminder 2 at 2 weeks after reminder 1
+      elsif item[:reminder_1].present? && item[:reminder_1] < 2.weeks.ago && item[:reminder_2].nil?
+        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: item[:identifier].latest_resource.id,
+          user_id: 0,
+          status: item[:identifier].latest_resource.last_curation_activity.status,
+          note: 'action_required_reminder CRON - reminded submitter that this item is still `action_required`'
+        )
+      # send out reminder 3 (final) at 2 weeks after reminder 2, it sets withdrawn on this so shouldn't be picked up as action_required again
+      elsif item[:reminder_2].present? && item[:reminder_2] < 2.weeks.ago
+        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: item[:identifier].latest_resource.id,
+          user_id: 0,
+          status: item[:identifier].latest_resource.last_curation_activity.status,
+          note: 'action_required_reminder CRON - reminded submitter that this item is still `action_required`'
+        )
+      end
+    end
+  end
+
   desc 'Update NIH funder entry'
   task nih_funders_clean: :environment do
     # For each funder entry that is NIH
