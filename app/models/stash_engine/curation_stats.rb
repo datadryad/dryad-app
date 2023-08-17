@@ -98,12 +98,6 @@ module StashEngine
         # skip if the dataset was not first submitted on this date
         next unless found_dataset.first_submitted_resource&.submitted_date&.to_date == date
 
-        # include this dataset unless it has a previous resource that had been submitted
-        prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
-        prev_resources.each do |pr|
-          found_dataset = nil if pr.submitted_date
-        end
-
         datasets_found.add(found_dataset) if found_dataset
       end
       update(new_datasets_to_submitted: datasets_found.size)
@@ -121,12 +115,6 @@ module StashEngine
 
         # skip if the dataset was not first submitted on this date
         next unless found_dataset.first_submitted_resource&.submitted_date&.to_date == date
-
-        # include this dataset unless it has a previous resource that had been submitted
-        prev_resources = this_resource.identifier.resources.where(id: 0..this_resource.id - 1)
-        prev_resources.each do |pr|
-          found_dataset = nil if pr.submitted_date
-        end
 
         datasets_found.add(found_dataset) if found_dataset
       end
@@ -205,11 +193,11 @@ module StashEngine
     end
 
     # The number that come back to us after an Author Action Required
-    # (so they change status from 'action_required' to 'curation')
+    # (so they change status from 'action_required' to 'submitted' or previously 'curation')
     def populate_author_revised
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'curation')
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted curation])
       cas.each do |ca|
         # action_required is either a previous status in this version, or the last status of the previous version
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
@@ -232,7 +220,7 @@ module StashEngine
       cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
       cas.each do |ca|
         # check if this was the actual date of submission for this resource
-        next unless ca.resource.curation_activities.where(status: 'submitted')&.first&.created_at&.to_date&.between?(date, date + 1.day)
+        next unless ca.resource.submitted_date&.to_date == date
 
         # if this dataset has been published or embargoed, count it
         ident = ca.resource&.identifier
