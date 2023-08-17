@@ -303,7 +303,7 @@ namespace :identifiers do
     items.each do |item|
       # send out reminder 1 at two weeks
       if item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
-        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::UserMailer.chase_action_required1(item[:identifier].latest_resource).deliver_now
         StashEngine::CurationActivity.create(
           resource_id: item[:identifier].latest_resource.id,
           user_id: 0,
@@ -312,7 +312,7 @@ namespace :identifiers do
         )
       # send out reminder 2 at 2 weeks after reminder 1
       elsif item[:reminder_1].present? && item[:reminder_1] < 2.weeks.ago && item[:reminder_2].nil?
-        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::UserMailer.chase_action_required2(item[:identifier].latest_resource).deliver_now
         StashEngine::CurationActivity.create(
           resource_id: item[:identifier].latest_resource.id,
           user_id: 0,
@@ -321,7 +321,7 @@ namespace :identifiers do
         )
       # send out reminder 3 (final) at 2 weeks after reminder 2, it sets withdrawn on this so shouldn't be picked up as action_required again
       elsif item[:reminder_2].present? && item[:reminder_2] < 2.weeks.ago
-        StashEngine::UserMailer.action_required_reminder(item[:identifier]).deliver_now
+        StashEngine::UserMailer.chase_action_required3(item[:identifier].latest_resource).deliver_now
         StashEngine::CurationActivity.create(
           resource_id: item[:identifier].latest_resource.id,
           user_id: 0,
