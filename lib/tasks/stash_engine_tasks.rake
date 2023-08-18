@@ -3,6 +3,7 @@ require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
+require_relative '../stash/action_required_reminder'
 
 REPORTS_DIR = 'reports'.freeze
 
@@ -293,7 +294,7 @@ namespace :identifiers do
   desc "Email the submitter when a dataset has been in 'action_required' at 3 times"
   task action_required_reminder: :environment do
     # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
-    items = Tasks::StashEngineTasks::ActionRequiredReminder.find_action_required_items
+    items = Stash::ActionRequiredReminder.find_action_required_items
     # each item looks like
     # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
     #   :reminder_1=>nil,
