@@ -247,7 +247,7 @@ namespace :identifiers do
     reminder_flag = 'doi_linking_invitation CRON'
     StashEngine::Identifier.publicly_viewable.each do |i|
       next if i.publication_article_doi
-      next if i.resources.map(&:curation_activities).flatten.map(&:note).include?(reminder_flag)
+      next if i.resources.map(&:curation_activities).flatten.map(&:note).join.include?(reminder_flag)
       next unless i.date_first_published <= 6.months.ago
       next if i.latest_resource.nil?
 
