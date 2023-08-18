@@ -28,11 +28,11 @@ module Tasks
           # separate the last contiguous block of action_required activities from the rest of them
           relevant_activities = self.last_block(activities: activities)
 
-          # it's action_required so try to calculate all the pieces of junk required to understand status set and previous notifications
+          # it's action_required so try to calculate what's required to understand status set and previous notifications
           set_at = relevant_activities.first&.updated_at
 
-          reminder_1 = relevant_activities.select{ |a| a.note == 'reminder 1' }.first&.updated_at
-          reminder_2 = relevant_activities.select{ |a| a.note == 'reminder 2' }.first&.updated_at
+          reminder_1 = relevant_activities.select{ |a| a.note&.include?('action required reminder 1') }&.first&.updated_at
+          reminder_2 = relevant_activities.select{ |a| a.note&.include?('action required reminder 2') }&.first&.updated_at
 
           {set_at: set_at, reminder_1: reminder_1, reminder_2: reminder_2, identifier: identifier}
         end.compact
