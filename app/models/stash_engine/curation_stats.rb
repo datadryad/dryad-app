@@ -147,12 +147,12 @@ module StashEngine
 
     # The number of previously PPR datasets that entered Curation that day
     # Note that this is intended to be more inclusive than other transitions. It includes
-    # any dataset entering Curation status that was in PPR more recently than it was in a
+    # any dataset in submitted status that was in PPR more recently than it was in a
     # prior curation status.
     def populate_ppr_to_curation
       p2c_count = 0
       # for each dataset that received curation status on the given day
-      cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'curation')
+      cas = CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
       cas.each do |ca|
         # find the most recent PPR or curation status
         # if it's PPR, count it as a ppr_to_curation transition
