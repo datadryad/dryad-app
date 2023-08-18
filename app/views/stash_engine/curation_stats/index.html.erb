@@ -5,9 +5,9 @@
   <div class="o-admin-head-left">
     <h2 class="o-heading__level3">At a glance</h2>
     <ul>
-      <li><%= @admin_stats.datasets_submitted_unclaimed_count %> datasets currently in 'Submitted' status (that are unclaimed/unassigned)<br/>
-      <li><%= @admin_stats.datasets_available_for_curation %> datasets currently available for curation<br/>
-      <li><%= @admin_stats_3day.datasets_available_for_curation %> datasets available for curation and not touched in 72 hours 
+      <li style="cursor: help" title="Datasets in 'submitted' with no curator"><%= @admin_stats.datasets_submitted_unclaimed_count %> unassigned submitted datasets</li>
+      <li style="cursor: help" title="All datasets in 'submitted' and 'curation'"><%= @admin_stats.datasets_available_for_curation %> datasets currently queued for curation</li>
+      <li><%= @admin_stats_3day.datasets_available_for_curation %> datasets available for curation untouched in 72 hours</li>
     </ul>
   </div>
 </div>
