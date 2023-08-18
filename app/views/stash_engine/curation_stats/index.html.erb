@@ -20,24 +20,18 @@
   <thead style="cursor: help">
   <tr>
       <th title="Date for the activity, bounded by UTC.">Date</th>
-      <th title="The number of datasets processed that day (meaning the status changed from 'curation' to 'action_required', 'embargoed', or 'published')"
-	 >Curated</th>
       <th title="The number of datasets available for curation on that day ('curation' or 'submitted')"
 	 >Queue Size</th>
-      <th title="Total of all new submissions that day (so the first time we see them as 'submitted' or 'peer_review' in the system)"
-	 >New</th>
       <th title="The number of new datasets submitted that day (so the first time we see them as 'submitted' in the system)"
 	 >New to submitted</th>
       <th title="The number of new private for peer review submissions that day (so the first time we see them as 'peer_review' in the system)"
 	 >New to PPR</th>
-      <th title="Count of datasets released from PPR into Curation (status change to 'curation', and had previously been in PPR with no intervening 'curation')"
-	 >PPR to curation</th>
+      <th title="Count of datasets released from PPR (status change to 'submitted', and had previously been in PPR with no intervening 'curation')"
+	 >PPR to submitted</th>
       <th title="Count of datasets AAR'd that day (status change from 'curation' to 'action_required')"
 	 >Curation to AAR</th>
-      <th title="Count of datasets published by a curator that day (status change from 'curation' to 'published' by a curator and not the system)"
+      <th title="Count of datasets published that day (status change from 'curation' to 'published' or 'embargoed')"
 	 >Curation to published</th>
-      <th title="Cound of datasets embargoed that day (status change from 'curation' to 'embargoed' per day)"
-	 >Embargoed</th>
       <th title="Cound of datasets withdrawn that day (change from any status to 'withdrawn' per day)"
 	 >Withdrawn</th>
       <th title="Cound of datasets submitted after author action that day (change status from 'action_required' to 'submitted' or 'curation')"
@@ -50,15 +44,12 @@
   <% @current_stats.each do |stat| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
       <td><%= formatted_date(stat.date) %></td>
-      <td><%= stat.datasets_curated %></td>
       <td><%= stat.datasets_to_be_curated %></td>
-      <td><%= stat.new_datasets_to_submitted.to_i + stat.new_datasets_to_peer_review.to_i %></td>
       <td><%= stat.new_datasets_to_submitted %></td>
       <td><%= stat.new_datasets_to_peer_review %></td>
       <td><%= stat.ppr_to_curation %></td>
       <td><%= stat.datasets_to_aar %></td>
-      <td><%= stat.datasets_to_published %></td>
-      <td><%= stat.datasets_to_embargoed %></td>
+      <td><%= stat.datasets_to_published + stat.datasets_to_embargoed %></td>
       <td><%= stat.datasets_to_withdrawn %></td>
       <td><%= stat.author_revised %></td>
       <td><%= stat.author_versioned %></td>
