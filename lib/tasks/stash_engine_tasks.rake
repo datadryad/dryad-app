@@ -333,9 +333,9 @@ namespace :identifiers do
           note: 'CRON: mailed action required final reminder (reminder 3)'
         )
         resource.curation_activities << CurationActivity.create(user_id: 0,
-                                                                 status: 'withdrawn',
-                                                                 note: 'withdrawing on final action required reminder')
-        # note: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
+                                                                status: 'withdrawn',
+                                                                note: 'withdrawing on final action required reminder')
+        # NOTE: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
       end
     end
   end
