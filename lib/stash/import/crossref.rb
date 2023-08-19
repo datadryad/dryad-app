@@ -110,6 +110,7 @@ module Stash
         # Skip if the identifier already has proposed changes
         return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id).empty?
 
+        # need to add a 'type' that maybe tells if it's a journal article or something else
         params = {
           identifier_id: @resource.identifier.id,
           approved: false,
@@ -124,7 +125,8 @@ module Stash
           provenance_score: @sm['provenance_score'],
           title: @sm['title']&.first&.to_s,
           url: @sm['URL'],
-          subjects: @sm['subject'].to_json
+          subjects: @sm['subject'].to_json,
+          xref_type: @sm['type']
         }
         pc = StashEngine::ProposedChange.new(params)
         resource_will_change?(proposed_change: pc) ? pc : nil
