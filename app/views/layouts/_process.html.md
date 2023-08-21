@@ -33,3 +33,8 @@ As soon as you start a data submission, a DOI is reserved for that dataset in th
 ### Updating your dataset
 
 You can update your data by clicking on the "Create new version" link for your dataset in your [Dryad dashboard](http://localhost:3000/stash/dashboard). Any edits made will build upon the last submitted version of the dataset; the DOI will remain the same. Once the latest version has been approved by our curation team and published, only the most recent version of your dataset will be packaged and available for download via the "Download dataset" button. If the dataset is versioned, prior versions can be accessed via the "Data files" section which is organized by the date of publication.
+
+
+### Deletion
+
+Data deposited in Dryad is intended to remain permanently archived and available. Removal of a published dataset is considered an exceptional action akin to article retraction and should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the withdrawal of data from Dryad, [contact support](/stash/contact).
