@@ -2,6 +2,10 @@
   font-size: 1rem;
 }
 
+.toastui-editor-main:focus-within {
+  border: 1px solid #cf4817;
+}
+
 .toastui-editor-popup-add-heading * {
   color: #000;
 }
@@ -42,4 +46,8 @@
   line-height: 1.5rem;
   margin-top: 1rem;
   margin-bottom: .5rem;
+}
+
+.toastui-editor-mode-switch .tab-item:not(.active) {
+  color: #555;
 }

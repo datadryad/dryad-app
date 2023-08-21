@@ -41,7 +41,7 @@
     "@emotion/styled": "^11.6.0",
     "@rails/webpacker": "^5.4.3",
     "@tinymce/tinymce-react": "^4.3.0",
-    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/editor": "https://github.com/ahamelers/tui.editor.git#editor",
     "@toast-ui/react-editor": "^3.2.3",
     "aws-sdk": "^2.1060.0",
     "axios": "^0.25.0",

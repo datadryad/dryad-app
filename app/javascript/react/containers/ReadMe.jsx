@@ -14,6 +14,8 @@ import '../../lib/toastui-editor.css';
 export default function ReadMe({dcsDescription, updatePath, fileContent}) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const [status, setStatus] = useState('');
 
   const saveDescription = () => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -48,6 +50,95 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
     e.target.value = null;
   };
 
+  const menuFocus = (e) => {
+    setStatus(`${e.currentTarget.getAttribute('aria-label')} selected from formatting menu.
+      Use down to expand options. Use left and right to move between menus. Exit menu with tab.`);
+  };
+
+  const menuEnter = (e) => {
+    switch (e.keyCode) {
+    case 37: // left
+      if (e.target.previousElementSibling) {
+        e.target.setAttribute('tabindex', -1);
+        e.target.previousElementSibling.setAttribute('tabindex', 0);
+        e.target.previousElementSibling.focus();
+      }
+      break;
+    case 38: // up
+      if (e.target.getAttribute('role', 'menuitem')) {
+        e.target.setAttribute('tabindex', -1);
+        e.target.parentElement.setAttribute('tabindex', 0);
+        e.target.parentElement.setAttribute('aria-expanded', false);
+        e.target.parentElement.focus();
+      }
+      break;
+    case 39: // right
+      if (e.target.nextElementSibling) {
+        e.target.setAttribute('tabindex', -1);
+        e.target.nextElementSibling.setAttribute('tabindex', 0);
+        e.target.nextElementSibling.focus();
+      }
+      break;
+    case 40: // down
+      e.target.setAttribute('aria-expanded', true);
+      e.target.firstElementChild.setAttribute('tabindex', 0);
+      e.target.firstElementChild.focus();
+      break;
+    default:
+    }
+  };
+
+  const buttonFocus = (e) => {
+    setStatus(`Use enter to engage ${e.currentTarget.getAttribute('aria-label')}.
+      Use left and right to move between options. Use up to collapse options. Exit formatting menu with tab.`);
+  };
+
+  const tabClick = (e) => {
+    if ([49, 13].includes(e.keyCode)) e.currentTarget.click();
+  };
+
+  // Improve accessibility
+  useEffect(() => {
+    if (editorRef.current) {
+      const rootEl = editorRef.current.getRootElement();
+      rootEl.querySelectorAll('*[contenteditable]').forEach((text) => {
+        text.setAttribute('role', 'textbox');
+        text.setAttribute('tabindex', 0);
+        text.setAttribute('aria-labelledby', 'readme-label');
+      });
+      const toolbar = rootEl.querySelector('.toastui-editor-toolbar');
+      toolbar.setAttribute('role', 'menubar');
+      toolbar.setAttribute('aria-label', 'Formatting menu');
+      toolbar.setAttribute('aria-describedby', 'menu-status');
+      toolbar.querySelectorAll('.toastui-editor-toolbar-group').forEach((menu, i) => {
+        const labels = ['Text style', 'Inserts', 'Lists &amp; indents', 'Code &amp; Tables'];
+        menu.setAttribute('role', 'menu');
+        menu.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-label', labels[i]);
+        menu.setAttribute('tabindex', i === 0 ? 0 : -1);
+        menu.querySelectorAll('button').forEach((button) => {
+          button.setAttribute('role', 'menuitem');
+          button.setAttribute('tabindex', -1);
+          button.addEventListener('focus', buttonFocus);
+        });
+        menu.addEventListener('focus', menuFocus);
+        menu.addEventListener('blur', () => setStatus(''));
+        menu.addEventListener('keydown', menuEnter);
+      });
+      rootEl.querySelectorAll('.toastui-editor-mode-switch .tab-item').forEach((tab) => {
+        tab.setAttribute('role', 'button');
+        tab.setAttribute('aria-label', `Switch editor to ${tab.innerText} mode`);
+        tab.setAttribute('tabindex', tab.classList.contains('active') ? -1 : 0);
+        tab.addEventListener('keydown', tabClick);
+        tab.addEventListener('click', (e) => {
+          const sibling = e.target.nextElementSibling ? e.target.nextElementSibling : e.target.previousElementSibling;
+          e.target.setAttribute('tabindex', -1);
+          sibling.setAttribute('tabindex', 0);
+        });
+      });
+    }
+  }, [loaded]);
+
   useEffect(async () => {
     if (dcsDescription.description) {
       setInitialValue(dcsDescription.description);
@@ -63,7 +154,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
 
   return (
     <>
-      <h1 className="o-heading__level1" style={{marginBottom: '1rem'}}>Prepare README file</h1>
+      <h1 className="o-heading__level1" style={{marginBottom: '1rem'}} id="readme-label">Prepare README file</h1>
       <div className="o-admin-columns">
         <div className="o-admin-left" style={{minWidth: '400px', flexGrow: 2}}>
           <p style={{marginTop: 0}}>Your Dryad submission must be accompanied by a README file, to help others use
@@ -104,7 +195,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
         </div>
       </div>
       {initialValue ? (
-        <div id="readme_editor">
+        <form id="readme_editor">
           <Editor
             ref={editorRef}
             autofocus={false}
@@ -119,16 +210,18 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
             ]}
             plugins={[subsubPlugin]}
             useCommandShortcut
+            onLoad={() => setLoaded(true)}
             onChange={checkDescription}
             onBlur={saveDescription}
           />
-        </div>
+        </form>
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
           <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
           Loading README template
         </p>
       )}
+      <p className="screen-reader-only" role="status" aria-live="polite" id="menu-status">{status}</p>
     </>
   );
 }
