@@ -930,12 +930,6 @@ button.o-button__calendar:focus {
   outline: none;
 }
 
-.copy-icon {
-  display: inline-block;
-  cursor: pointer;
-  padding: 5px;
-}
-
 .o-data-list {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1333,6 +1327,21 @@ h6 {
   width: 1em;
   height: 1em;
   margin-left: 0.5ch;
+}
+
+.copy-icon {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 5px;
+}
+.copy-icon i {
+  color: #07364b;
+}
+.copy-icon:hover i {
+  color: #cf4817;
+}
+.copy-icon i.fa-check {
+  color: #3c763d;
 }
 
 .o-list {
