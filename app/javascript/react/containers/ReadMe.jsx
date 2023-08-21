@@ -86,13 +86,6 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
           This will replace our template in the editor.
           </p>
           <div style={{textAlign: 'center'}}>
-            <label
-              style={{display: 'inline-block'}}
-              htmlFor="readme_upload"
-              aria-label="Upload README file"
-              className="o-button__plain-text2"
-            >Import README
-            </label>
             <input
               id="readme_upload"
               className="c-choose__input-file"
@@ -100,6 +93,13 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
               accept="text/x-markdown,text/markdown,.md"
               onChange={importFile}
             />
+            <label
+              style={{display: 'inline-block'}}
+              htmlFor="readme_upload"
+              aria-label="Upload README file"
+              className="o-button__plain-text2"
+            >Import README
+            </label>
           </div>
         </div>
       </div>
