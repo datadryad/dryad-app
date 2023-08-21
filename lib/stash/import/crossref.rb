@@ -77,24 +77,24 @@ module Stash
         end
       end
 
-      # populate just a few fields for pub_updater
+      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater
       def populate_pub_update!
         return nil unless @sm.present? && @resource.present?
 
-        populate_related_doi
+        populate_article_type(article_type: 'primary_article')
         populate_publication_issn
         populate_publication_name
         populate_subjects
         @resource.reload
       end
 
-      # populate the full resource from the crossref metadata
+      # populate the full resource from the crossref metadata, this is for a new record and populating data that the user does, I think
       def populate_resource!
         return unless @sm.present? && @resource.present?
 
         populate_abstract
         populate_authors
-        populate_related_doi
+        populate_article_type(article_type: 'primary_article')
         populate_funders
         populate_publication_issn
         populate_publication_name
@@ -110,7 +110,6 @@ module Stash
         # Skip if the identifier already has proposed changes
         return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id).empty?
 
-        # need to add a 'type' that maybe tells if it's a journal article or something else
         params = {
           identifier_id: @resource.identifier.id,
           approved: false,
@@ -293,20 +292,58 @@ module Stash
         end
       end
 
-      def populate_related_doi
+      def get_or_new_related_doi
         my_related = @sm['URL'] || @sm['DOI']
-        return if my_related.blank?
+        return nil if my_related.blank?
 
         # Use the URL if available otherwise just use the DOI
         related = @resource.related_identifiers
-          .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
-                 related_identifier_type: 'doi').first || @resource.related_identifiers.new
+                           .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                                  related_identifier_type: 'doi').first || @resource.related_identifiers.new
+      end
+
+      # article type should be
+      def populate_article_type(article_type:)
+        return unless article_type.present? && %w[primary_article article preprint].include(article_type)
+
+        my_related = get_or_new_related_doi
+        return if my_related.nil?
 
         related.assign_attributes({
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                                     related_identifier_type: 'doi',
                                     relation_type: 'iscitedby',
-                                    work_type: 'primary_article',
+                                    work_type: article_type,
+                                    verified: true,
+                                    hidden: false
+                                  })
+        related.save!
+      end
+
+      def populate_preprint
+        my_related = get_or_new_related_doi
+        return if my_related.nil?
+
+        related.assign_attributes({
+                                    related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                                    related_identifier_type: 'doi',
+                                    relation_type: 'iscitedby',
+                                    work_type: 'preprint',
+                                    verified: true,
+                                    hidden: false
+                                  })
+        related.save!
+      end
+
+      def populate_related_article
+        my_related = get_or_new_related_doi
+        return if my_related.nil?
+
+        related.assign_attributes({
+                                    related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                                    related_identifier_type: 'doi',
+                                    relation_type: 'iscitedby',
+                                    work_type: 'article',
                                     verified: true,
                                     hidden: false
                                   })

@@ -6,8 +6,19 @@
   <strong>Changes</strong>
   <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
   <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, local: false do |f| %>
-    <button name="accept_changes" type="submit">Accept</button>
+    <button name="accept_changes" type="submit">Accept as</button>
+    <%= f.select :related_type, options_for_select(
+        [
+            ['Primary w/ metadata', 'primary'],
+            ['Primary w/o metadata', 'primary_no_metadata'],
+            ['Preprint w/ metadata', 'preprint'],
+            ['Preprint w/o metadata', 'preprint_no_metadata'],
+            ['Related w/ metadata', 'related'],
+            ['Related w/o metadata', 'related_no_metadata']
+        ]
+    ) %>
   <% end %>
+  <hr/>
   <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, local: false do |f| %>
      <button name="reject_changes" type="submit">Reject</button>
     <% end %>
