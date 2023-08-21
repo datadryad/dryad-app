@@ -241,6 +241,30 @@ namespace :identifiers do
     end
   end
 
+  desc 'Email the submitter 1 time 6 months from publication, when a primary article is not linked'
+  task doi_linking_invitation: :environment do
+    p 'Mailing users whose datasets have no primary article and were published 6 months ago...'
+    reminder_flag = 'doi_linking_invitation CRON'
+    StashEngine::Identifier.publicly_viewable.each do |i|
+      next if i.publication_article_doi
+      next if i.resources.map(&:curation_activities).flatten.map(&:note).include?(reminder_flag)
+      next unless i.date_first_published <= 6.months.ago
+      next if i.latest_resource.nil?
+
+      p "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
+      StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
+      StashEngine::CurationActivity.create(
+        resource_id: i.latest_resource&.id,
+        user_id: 0,
+        status: i.latest_resource&.last_curation_activity&.status,
+        note: "#{reminder_flag} - invited submitter to link an article DOI"
+      )
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+
+    end
+  end
+
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progess_reminder: :environment do
     p "Mailing users whose datasets have been in_progress since #{3.days.ago}"
@@ -709,21 +733,21 @@ namespace :identifiers do
     base_values
   end
 
-  def tiered_price(current_count, base_count)
-    return nil unless current_count.is_a?(Integer) && base_count.is_a?(Integer)
+  # the tiered_price is based on the total number of datasets, including the current quarter
+  # current_count should be the number of datasets in the current quarter
+  # cumulative_count should be the total cumulative datasets, *including* the current quarter
+  def tiered_price(current_count, cumulative_count)
+    return nil unless current_count.is_a?(Integer) && cumulative_count.is_a?(Integer)
 
     free_datasets = 10
 
-    # the base_price is based on the total number of datasets, including the current quarter
-    total_datasets = current_count + base_count
-
-    base_price = if total_datasets <= free_datasets
+    base_price = if cumulative_count <= free_datasets
                    0
-                 elsif total_datasets <= 100
+                 elsif cumulative_count <= 100
                    135
-                 elsif total_datasets <= 250
+                 elsif cumulative_count <= 250
                    100
-                 elsif total_datasets <= 500
+                 elsif cumulative_count <= 500
                    85
                  else
                    55

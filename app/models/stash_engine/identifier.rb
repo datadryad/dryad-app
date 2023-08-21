@@ -579,6 +579,13 @@ module StashEngine
       nil
     end
 
+    def date_first_published
+      resources.map(&:curation_activities).flatten.each do |ca|
+        return ca.created_at if ca.published? || ca.embargoed?
+      end
+      nil
+    end
+
     def date_last_published
       resources.map(&:curation_activities).flatten.reverse.each do |ca|
         return ca.created_at if ca.published? || ca.embargoed?
