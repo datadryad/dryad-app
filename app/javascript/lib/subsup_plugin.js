@@ -10,10 +10,19 @@ function createTextSelection(tr, SelectionClass, from, to) {
 
 export default function supsubPlugin(context) {
   const {eventEmitter, pmState} = context;
+  let wwEditorEl = null;
+  let mdEditorEl = null;
   let currentEditorEl = null;
 
-  eventEmitter.listen('focus', () => {
-    currentEditorEl = document.activeElement;
+  eventEmitter.listen('load', (instance) => {
+    const {mode, wwEditor, mdEditor} = instance;
+    wwEditorEl = wwEditor.el.firstChild;
+    mdEditorEl = mdEditor.el.firstChild;
+    currentEditorEl = mode === 'wysiwyg' ? wwEditorEl : mdEditorEl;
+  });
+
+  eventEmitter.listen('focus', (editType) => {
+    currentEditorEl = editType === 'wysiwyg' ? wwEditorEl : mdEditorEl;
   });
 
   eventEmitter.listen('command', (command) => {
