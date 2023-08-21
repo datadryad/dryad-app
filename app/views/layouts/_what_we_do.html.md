@@ -49,3 +49,28 @@ Learn more:
 * [Publication process](/stash/process)
 * [Good data practices](/stash/best_practices)
 * [Data publishing ethics](/stash/ethics)
+
+
+## Dataset discovery
+
+Dryad datasets are indexed by the [Thomson-Reuters Data Citation Index](http://wokinfo.com/products_tools/multidisciplinary/dci/about/), [Scopus](http://www.elsevier.com/online-tools/scopus), and [Google Dataset Search](https://toolbox.google.com/datasetsearch). Each dataset is given a unique Digital Object Identifier (DOI). Entering the DOI URL in any browser will take the user to the dataset's landing page. Dryad also provides a faceted search and browse capability for direct discovery.
+
+Dryad has implemented the [Make Data Count](https://makedatacount.org) project recommendations. This means that views and downloads on each dataset landing page are standardized against the COUNTER Code of Practice for Research Data. Within this framework, Dryad also exposes all related citations to a dataset on the landing page. These are updated each time a new citation from an article or other source has been published.
+
+Ways you can ensure your data publication has the broadest reach:
+
+* **Comprehensive documentation** is the key for discoverability as well as ensuring future researchers understand the data. Without thorough documentation (README files) and metadata (descriptions of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data), the data cannot be found through internet searches or data indexing services, understood by fellow researchers, or effectively used. [We require a few key pieces of metadata and a README file](/stash/requirements). The metadata entry form is based on fields from the [DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
+* **Cite and publicize your data publication** with your given DOI assigned upon submission. The recommended citation format appears on your dataset landing page.
+
+
+## Preservation
+
+Data deposited are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see [UC3, Merritt, and Long-term preservation](https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf).
+
+Preservation policy details include:
+
+* **Retention period**: Items will be retained indefinitely
+* **Functional preservation:** We make no promises of usability and understandability of deposited objects over time.
+* **File preservation**: Data files are replicated with multiple copies in multiple geographic locations; metadata are backed up on a nightly basis.
+* **Fixity and authenticity**: All data files are stored along with a SHA-256 checksum of the file content. Regular checks of files against their checksums are made. The audit process cycles continually, with a current cycle time of approximately two months.
+* **Succession plans**: In case of closure of the platform, reasonable efforts will be made to integrate all content into suitable alternative institutional and/or subject based repositories.
