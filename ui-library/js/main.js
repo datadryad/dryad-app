@@ -162,21 +162,28 @@ function joelsReady(){
       var email = e.currentTarget.textContent.split('').reverse().join('');
       e.currentTarget.href = mailto.replace('dev@null', email);
     }
-
     const newEl = document.createElement("span");
     newEl.setAttribute('class', 'copy-icon');
-    newEl.innerHTML = '&nbsp;<i class="fa fa-clipboard" aria-hidden="true"><i><span style="display: none">&nbsp;copied</span>';
+    newEl.setAttribute('role', 'button');
+    newEl.setAttribute('aria-label', 'Copy email address');
+    newEl.setAttribute('title', 'Copy email');
+    newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
     const element = emails[i];
     element.parentNode.insertBefore(newEl, element.nextSibling);
     newEl.onclick = e => {
-      e.preventDefault();
-      const copyText = e.currentTarget.getElementsByTagName('span')[0];
+      const copyButton = e.currentTarget.firstElementChild;
       const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
       navigator.clipboard.writeText(email).then(() => {
         // Successful copy
-        copyText.style.display = 'inline';
+        copyButton.parentElement.setAttribute('title', 'Email copied');
+        copyButton.classList.remove('fa-clipboard');
+        copyButton.classList.add('fa-check');
+        copyButton.innerHTML = '<span class="screen-reader-only">Email address copied</span>'
         setTimeout(function(){
-          copyText.style.display = 'none';
+          copyButton.parentElement.setAttribute('title', 'Copy email');
+          copyButton.classList.add('fa-clipboard');
+          copyButton.classList.remove('fa-check');
+          copyButton.innerHTML = '';
         }, 2000);
       });
     }
