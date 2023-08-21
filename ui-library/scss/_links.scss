@@ -153,3 +153,21 @@ a {
   height: 1em;
   margin-left: .5ch;
 }
+
+.copy-icon {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 5px;
+
+  i {
+    color: $design-dark-navy-color;
+  }
+
+  &:hover i {
+    color: $link-body-hover-color;
+  }
+
+  i.fa-check {
+    color: $design-green-color;
+  }
+}
