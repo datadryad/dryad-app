@@ -84,6 +84,12 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
+      last = resource.previous_resource
+      if last
+        user_id = current_user&.id || 0
+        note = "#{(user_id == 0 && 'System cleanup') || 'User'} deleted unsubmitted version #{resource.version_number}"
+        StashEngine::CurationActivity.create(resource_id: last.id, status: last.current_curation_status, user_id: user_id, note: note)
+      end
       resource.destroy
       respond_to do |format|
         format.html do
