@@ -910,7 +910,6 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Handle the 'submitted' resource state (happens after successful Merritt submission)
-    # rubocop:disable Metrics/AbcSize
     def prepare_for_curation
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 
@@ -938,18 +937,13 @@ module StashEngine
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(target_status: target_status)
 
-      # If it has never been published,
-      # OR it has been in curation more recently than the last published version,
-      # OR the last user to edit it was the current_editor
+      # If the last user to edit it was the current_editor
       # return it to curation status
-      return unless identifier.date_last_published.blank? ||
-                    identifier.date_last_curated > identifier.date_last_published ||
-                    last_curation_activity.user_id == current_editor_id
+      return unless last_curation_activity.user_id == current_editor_id
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'System set back to curation')
     end
-    # rubocop:enable Metrics/AbcSize
 
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
