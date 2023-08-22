@@ -2,9 +2,12 @@
   <%= link_to 'Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
            class: "c-progress__tab1#{ (params[:controller]&.end_with?('metadata_entry_pages') && params[:action] == 'find_or_create' ? '--active' : '' )} js-nav-out" %>
 
+  <%= link_to 'Prepare README', stash_url_helpers.prepare_readme_resource_path(@resource.id),
+                    class: "c-progress__tab#{ (params[:controller]&.end_with?('resources') && params[:action].include?('readme') ? '--active' : '') } js-nav-out" %>
+
   <%= link_to 'Upload files', stash_url_helpers.upload_resource_path(@resource.id),
-                    class: "c-progress__tab2#{ (params[:controller]&.end_with?('resources') && params[:action].include?('upload') ? '--active' : '') } js-nav-out" %>
+                    class: "c-progress__tab#{ (params[:controller]&.end_with?('resources') && params[:action].include?('upload') ? '--active' : '') } js-nav-out" %>
 
   <%= link_to 'Review and submit', stash_url_helpers.review_resource_path(@resource.id),
-            class: "c-progress__tab3#{ (params[:controller]&.end_with?('resources') && params[:action] == 'review' ? '--active' : '') } js-nav-out" %>
+            class: "c-progress__tab#{ (params[:controller]&.end_with?('resources') && params[:action] == 'review' ? '--active' : '') } js-nav-out" %>
 </div>

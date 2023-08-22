@@ -27,6 +27,7 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 const Messages = {
+  fileReadme: 'Please prepare your README on the previous page.',
   fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
   filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
@@ -43,8 +44,7 @@ const upload_types = [
     logo: '../../../images/logo_dryad.svg',
     alt: 'Dryad',
     name: 'Data',
-    description: 'Required: README.md',
-    description2: 'e.g., csv, fasta',
+    description: 'e.g., csv, xsl, fasta',
     buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
@@ -76,13 +76,11 @@ export const displayAriaMsg = (msg) => {
 };
 
 const formatSizeUnits = (bytes) => {
-  if (bytes === 1) {
-    return '1 byte';
-  } if (bytes < 1000) {
-    return `${bytes} bytes`;
+  if (bytes < 1000) {
+    return `${bytes} B`;
   }
 
-  const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   for (let i = 0; i < units.length; i += 1) {
     if (bytes / 10 ** (3 * (i + 1)) < 1) {
       return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
@@ -558,16 +556,23 @@ class UploadFiles extends React.Component {
     const newFiles = files.filter((file) => newFilenames.includes(file.name));
 
     const countRepeated = files.length - newFiles.length;
-    this.setWarningRepeatedFile(countRepeated);
+    if (filenames.includes('README.md')) {
+      this.setState({warningMessage: Messages.fileReadme});
+    } else {
+      this.setWarningRepeatedFile(countRepeated);
+    }
     return newFiles;
   };
 
   discardAlreadyChosenByName = (filenames, uploadType) => {
-    const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType);
+    const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType
+      || (file.uploadType === 'data' && file.sanitized_name.toLowerCase() === 'readme.md'));
     if (!filesAlreadySelected.length) return filenames;
 
     const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
-    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase()));
+
+    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase())
+      && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
   setWarningRepeatedFile = (countRepeated) => {
@@ -617,7 +622,6 @@ class UploadFiles extends React.Component {
               alt={upload_type.alt}
               name={upload_type.name}
               description={upload_type.description}
-              description2={upload_type.description2}
               buttonFiles={upload_type.buttonFiles}
               buttonURLs={upload_type.buttonURLs}
             />
@@ -630,7 +634,8 @@ class UploadFiles extends React.Component {
               chosenFiles={chosenFiles}
               clickedRemove={this.removeFileHandler}
               clickedValidationReport={this.showValidationReportHandler}
-              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
+              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + this.props.readme_size)}
+              readmeSize={formatSizeUnits(this.props.readme_size)}
             />
             {loading && (
               <div className="c-upload__loading-spinner">

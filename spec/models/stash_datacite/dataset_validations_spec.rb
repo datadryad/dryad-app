@@ -287,13 +287,6 @@ module StashDatacite
           @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
         end
 
-        it 'requires at least one data file' do
-          @resource.data_files.destroy_all
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('one data file')
-        end
-
         it 'requires a README file, in addition to at least one data file' do
           @readme.update(upload_file_name: 'some-bogus-filename.txt')
           validations = DatasetValidations.new(resource: @resource)
@@ -305,18 +298,12 @@ module StashDatacite
           expect(error).to be_empty
         end
 
-        it 'does not care about the file extension of a README' do
-          @readme.update(upload_file_name: 'README.bogus-extension')
+        it 'requires at least one data file' do
+          @resource.data_files.destroy_all
+          create(:data_file, resource: @resource, upload_file_name: 'README.md')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.data_required
-          expect(error).to be_empty
-        end
-
-        it 'warns about incorrectly capitalized README' do
-          @readme.update(upload_file_name: 'ReadMe.txt')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('capitalize')
+          expect(error[0].message).to include('one data file')
         end
       end
 

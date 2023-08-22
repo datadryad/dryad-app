@@ -1,0 +1,20 @@
+<% @page_title = "Prepare your README – publish and preserve your data" %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
+<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<%= javascript_pack_tag 'application' %>
+<%= stylesheet_pack_tag 'application' %>
+
+<% if params[:display_validation] %>
+  <%= render partial: "stash_datacite/resources/missing_mandatory_data",
+             locals: { error_items: StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors } %>
+<% end %>
+
+<!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
+<%= react_component('containers/ReadMe', {
+  dcsDescription: @metadata_entry.technical_info,
+  updatePath: descriptions_update_path,
+  fileContent: @file_content
+}) %>
+
+<%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 2} %>

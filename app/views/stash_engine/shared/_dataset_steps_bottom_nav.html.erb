@@ -3,6 +3,15 @@
   <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
 <div class="o-dataset-nav">
+  <%case page%>
+  <%when 1%>
   <%= link_to 'Back to My datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left js-nav-out', role: 'button' %>
+  <%= link_to 'Proceed to README', stash_url_helpers.prepare_readme_resource_path(@resource), id: 'readme_path', class: 'o-button__icon-right js-nav-out', role: 'button' %>
+  <%when 2%>
+  <%= link_to 'Back to Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
   <%= link_to 'Proceed to Upload', stash_url_helpers.upload_resource_path(@resource), id: 'upload_path', class: 'o-button__icon-right js-nav-out', role: 'button' %>
+  <%when 3%>  
+  <%= link_to 'Back to README', stash_url_helpers.prepare_readme_resource_path(@resource), id: 'readme_path', class: 'o-button__icon-left js-nav-out', role: 'button' %>
+  <%= link_to 'Proceed to Review', stash_url_helpers.review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
+  <%end%>
 </div>

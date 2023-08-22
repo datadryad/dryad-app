@@ -59,8 +59,25 @@
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
-    <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-
+  <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
+    <div class="c-review-files">
+      <ul class="c-review-files__list">
+        <% unless @review.technical_info.try(:description).blank? && @resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
+          <li class="<%= 'highlight' if highlight_fields.include?('technical_info') %>"><%= link_to 'README.md', stash_url_helpers.prepare_readme_resource_path(@resource) %>&nbsp;&nbsp;&nbsp;
+          <% if @review.technical_info.try(:description).present? %>
+              <%= filesize(@review.technical_info.try(:description).bytesize) %>
+              <% if @review.technical_info.updated_at > @resource.created_at %>
+                &nbsp;&nbsp;&nbsp;<small>new</small>
+              <% end %>
+          <% else %>
+            <%= filesize(@resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size) %>
+          <% end %>
+          </li>
+        <% end %>
+      </ul>     
+      <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+    </div>
     <div class="c-review-files">
 	<% if highlight_fields.include?('data_files') %>
             <%= render partial: "stash_engine/data_files/show_merritt",
@@ -193,29 +210,6 @@
         other similar dataset(s).
        </p>`;
      <% end %>
-
-    <% if @completions.no_readme_md %>
-    skippable_warning += `
-      <h2 class="o-heading__level2">README.md missing</h2>
-      <p>
-        We require that you include a <a href="/docs/README.md" target="_blank">README.md</a> file based on our
-        template in order to provide key information for understanding and reuse of your data.
-      </p>
-      <p>
-        If you prefer, you can edit the Markdown online at <a href="https://hackmd.io/JgxUwkEdS9uOOcgadhe29w?both=" target="_blank">hackmd.io</a>.
-      </p>
-      <ol>
-        <li>Open the link (above)</li>
-        <li>Create a new note by clicking "+" at the top left of the screen</li>
-        <li>Copy and paste your text</li>
-        <li>Click the three dots on the top right to download as a Markdown file</li>
-        <li>Make sure your filename is 'README.md', and
-          <%= link_to 'upload the file', stash_url_helpers.upload_resource_path(@resource) %> under the <em>Data</em>
-           category
-        </li>
-      </ol>
-    `;
-    <% end %>
     
     if (skippable_warning.length > 0) {
       $('#genericModalContent').html(skippable_warning);
