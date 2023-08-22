@@ -297,7 +297,7 @@ module Stash
         end
       end
 
-      # rubocop:disable Naminng/AccessorMethodName
+      # rubocop:disable Naming/AccessorMethodName
       def get_or_new_related_doi
         my_related = @sm['URL'] || @sm['DOI']
         return nil if my_related.blank?
@@ -307,9 +307,8 @@ module Stash
           .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                  related_identifier_type: 'doi').first || @resource.related_identifiers.new
       end
-      # rubocop:enable Naminng/AccessorMethodName
+      # rubocop:enable Naming/AccessorMethodName
 
-      # article type should be
       def populate_article_type(article_type:)
         return unless article_type.present? && %w[primary_article article preprint].include?(article_type)
 

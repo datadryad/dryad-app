@@ -273,7 +273,7 @@ module Stash
         end
 
         it 'takes the DOI URL for the article and turns it into cites for this dataset' do
-          @cr.send(:populate_article_type, { article_type: 'primary_article' })
+          @cr.send(:populate_article_type, article_type: 'primary_article')
           expect(@resource.related_identifiers.any?).to eql(true)
           expect(@resource.related_identifiers.first.related_identifier).to \
             eql(StashDatacite::RelatedIdentifier.standardize_doi(URL))
@@ -281,7 +281,7 @@ module Stash
 
         it 'ignores blank URLs' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'URL' => '' })
-          resp = @cr.send(:populate_article_type, { article_type: 'primary_article' })
+          resp = @cr.send(:populate_article_type, article_type: 'primary_article')
           expect(resp).to eql(nil)
           expect(@resource.related_identifiers.length).to eql(0)
         end
