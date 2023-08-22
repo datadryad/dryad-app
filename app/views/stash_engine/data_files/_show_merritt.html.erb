@@ -2,9 +2,8 @@
 <ul class="c-review-files__list">
     <% uploaded = resource.previous_resource&.submitted? %>
 
-    <% resource.data_files.each do |fu| %>
-	<div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
-	    <li>
+    <% resource.data_files.where.not(upload_file_name: 'README.md').each do |fu| %>
+	<li class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
 		<% if fu.file_state == 'copied' && uploaded && fu.last_version_file&.id.present? %>
 		    <%= link_to fu.upload_file_name, stash_url_helpers.download_stream_path(file_id: fu.last_version_file&.id), target: '_blank' %>
 		<% else %>
@@ -15,23 +14,20 @@
 		<% if fu.file_state == 'created' %>
 		    &nbsp;&nbsp;&nbsp;<small>new</small>
 		<% end %>
-	    </li>
-	</div>
+	</li>
     <% end %>
 
     <%# If curator, show all changed files from prev versionse %>
     <% if current_user.limited_curator? && highlight_files.present? %>
 	<li class="highlight"><b>=== Changed since previous curated version ===</b></li>
 	<% highlight_files.each do |fu| %>
-	    <div class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> highlight">
-		<li>
+	    <li class="<%= 'strike-deleted' if fu.file_state == 'deleted' %> highlight">
 		    <%= fu.upload_file_name %>
 		    &nbsp;&nbsp;&nbsp;<%= filesize(fu.upload_file_size) %>		    
 		    <% if fu.file_state == 'created' %>
 			&nbsp;&nbsp;&nbsp;<small>new</small>
 		    <% end %>
 		</li>
-	    </div>
 	<% end %>	
     <% end %>
 </ul>

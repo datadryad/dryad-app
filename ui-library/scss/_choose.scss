@@ -14,6 +14,6 @@
 	cursor: pointer;
 }
 
-.pseudo-focus-button-label {
-	outline: 2px solid red;
+.c-choose__input-file:focus + label {
+	outline: 2px solid $design-orange-color;
 }

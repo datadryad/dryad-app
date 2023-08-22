@@ -38,6 +38,10 @@ module StashDatacite
         @methods ||= @resource.descriptions.where(description_type: :methods).first
       end
 
+      def technical_info
+        @technical_info ||= @resource.descriptions.where(description_type: :technicalinfo).first
+      end
+
       def other
         @other ||= @resource.descriptions.where(description_type: :other).first
       end

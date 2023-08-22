@@ -99,6 +99,7 @@
                     mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'},
                     isCurator: current_user&.limited_curator?) %>
 
+    <% if @metadata_entry.other.description.present? %>
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.other,
                     path: descriptions_update_path,
@@ -107,6 +108,7 @@
                                describe: ' What programs and/or software are required to open the data files included with your submission? ' +
 			       'If proprietary, include open-source alternatives.'},
                     isCurator: current_user&.limited_curator?) %>
+    <% end %>
 
     <h2 class="o-heading__page-span">Related works</h2>
 

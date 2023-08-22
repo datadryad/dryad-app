@@ -1,15 +1,5 @@
 import React from 'react';
 
-const highlightButton = (e) => {
-  const lbl = e.target.closest('div').querySelector('.c-choose__input-file-label');
-  lbl.classList.add('pseudo-focus-button-label');
-};
-
-const unHighlightButton = (e) => {
-  const lbl = e.target.closest('div').querySelector('.c-choose__input-file-label');
-  lbl.classList.remove('pseudo-focus-button-label');
-};
-
 function UploadType(
   {
     logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
@@ -34,17 +24,15 @@ function UploadType(
       </b>
 
       <div className="c-choose">
-        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>
         <input
           id={type}
           className="c-choose__input-file"
           type="file"
           onClick={clickedFiles}
           onChange={changed}
-          onBlur={(e) => unHighlightButton(e)}
-          onFocus={(e) => highlightButton(e)}
           multiple
         />
+        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>
       </div>
       <button
         type="button"

@@ -92,7 +92,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Usage
-      fill_in_tinymce(field: 'other', content: Faker::Lorem.paragraph)
+      # fill_in_tinymce(field: 'other', content: Faker::Lorem.paragraph)
 
       # ##############################
       # Related works

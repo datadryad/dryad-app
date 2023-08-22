@@ -10,6 +10,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
+  include Mocks::DataFile
 
   before(:each) do
     mock_repository!
@@ -20,6 +21,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_tenant!
     ignore_zenodo!
     neuter_curation_callbacks!
+    mock_file_content!
     @curator = create(:user, role: 'curator')
     @author = create(:user)
     @document_list = []
