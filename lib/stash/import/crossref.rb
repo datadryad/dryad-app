@@ -297,15 +297,17 @@ module Stash
         end
       end
 
+      # rubocop:disable Naminng/AccessorMethodName
       def get_or_new_related_doi
         my_related = @sm['URL'] || @sm['DOI']
         return nil if my_related.blank?
 
         # Use the URL if available otherwise just use the DOI
-        related = @resource.related_identifiers
-                           .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
-                                  related_identifier_type: 'doi').first || @resource.related_identifiers.new
+        @resource.related_identifiers
+          .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
+                 related_identifier_type: 'doi').first || @resource.related_identifiers.new
       end
+      # rubocop:enable Naminng/AccessorMethodName
 
       # article type should be
       def populate_article_type(article_type:)
@@ -314,8 +316,6 @@ module Stash
         related = get_or_new_related_doi
         my_related = @sm['URL'] || @sm['DOI']
         return if related.nil? || my_related.nil?
-
-        byebug
 
         related.assign_attributes({
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
