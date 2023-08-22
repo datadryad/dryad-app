@@ -41,14 +41,14 @@ Data publishing is the presentation of openly available and citable research dat
 
 Data curation and publishing ensure equitable access to data and create opportunities to foster new collaborations and connections across the research community, helping Dryad to achieve our vision for the acceleration of discovery and translation of research into benefits for society.
 
-For a demonstration of our process, please[ contact us](/stash/interested).
+For a demonstration of our process, please [contact us](/stash/interested).
 
 Learn more:
 
-* [Submission process](/stash/submission_process)
-* [Publication process](/stash/process)
 * [Good data practices](/stash/best_practices)
 * [Data publishing ethics](/stash/ethics)
+* [Submission walkthrough](/stash/submission_process)
+* [Publication process](/stash/process)
 
 
 ## Dataset discovery
