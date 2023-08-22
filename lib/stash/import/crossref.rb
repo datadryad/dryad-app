@@ -77,14 +77,19 @@ module Stash
         end
       end
 
-      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater
-      def populate_pub_update!
+      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
+      # to ONLY populate the relationship, use update_type: 'relationship'
+      # article types accepted are 'primary_article', 'article', 'preprint'
+      def populate_pub_update!(article_type: 'primary_article', update_type: 'metadata')
         return nil unless @sm.present? && @resource.present?
 
-        populate_article_type(article_type: 'primary_article')
-        populate_publication_issn
-        populate_publication_name
-        populate_subjects
+        populate_article_type(article_type: article_type)
+        if update_type == 'metadata'
+          populate_publication_issn
+          populate_publication_name
+          populate_subjects
+        end
+
         @resource.reload
       end
 
@@ -304,46 +309,19 @@ module Stash
 
       # article type should be
       def populate_article_type(article_type:)
-        return unless article_type.present? && %w[primary_article article preprint].include(article_type)
+        return unless article_type.present? && %w[primary_article article preprint].include?(article_type)
 
-        my_related = get_or_new_related_doi
-        return if my_related.nil?
+        related = get_or_new_related_doi
+        my_related = @sm['URL'] || @sm['DOI']
+        return if related.nil? || my_related.nil?
+
+        byebug
 
         related.assign_attributes({
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                                     related_identifier_type: 'doi',
                                     relation_type: 'iscitedby',
                                     work_type: article_type,
-                                    verified: true,
-                                    hidden: false
-                                  })
-        related.save!
-      end
-
-      def populate_preprint
-        my_related = get_or_new_related_doi
-        return if my_related.nil?
-
-        related.assign_attributes({
-                                    related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
-                                    related_identifier_type: 'doi',
-                                    relation_type: 'iscitedby',
-                                    work_type: 'preprint',
-                                    verified: true,
-                                    hidden: false
-                                  })
-        related.save!
-      end
-
-      def populate_related_article
-        my_related = get_or_new_related_doi
-        return if my_related.nil?
-
-        related.assign_attributes({
-                                    related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
-                                    related_identifier_type: 'doi',
-                                    relation_type: 'iscitedby',
-                                    work_type: 'article',
                                     verified: true,
                                     hidden: false
                                   })

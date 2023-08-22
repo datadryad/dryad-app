@@ -63,12 +63,11 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def update
-      byebug
       respond_to do |format|
         @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
         @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
-        # @proposed_change.approve!(current_user: current_user)
-        # @proposed_change.reload
+        @proposed_change.approve!(current_user: current_user, approve_type: params['stash_engine_proposed_change']['related_type'])
+        @proposed_change.reload
         format.js
       end
     end
