@@ -13,7 +13,7 @@ browser, or with many tools.
 REST API and GET requests
 -------------------------
 
-The [REST API](https://datadryad.org/api/v2/docs/) allows detailed interaction
+The [REST API](https://datadryad.org/stash/api) allows detailed interaction
 with Dryad contents. The most common case is to use GET requests to retrieve
 information about datasets, versions, and files.
 
