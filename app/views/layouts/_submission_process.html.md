@@ -1,22 +1,20 @@
-# Submission process
+# Submission walkthrough
 
-Dryad’s submission process is outlined here. See more about our [submission requirements](/stash/requirements). After submission, datasets are curated and [published](/stash/process). If you need further assistance, please [contact support](/stash/contact).
+Before you begin a submission, please ensure your submission meets [our requirements](/stash/requirements) and follows [good data practices](/stash/best_practices). After your submission is complete, your dataset will be [curated and published](/stash/process). 
 
 Ready to get started? [Log in](/stash/sessions/choose_login) and go to "My datasets" to begin your data submission now!
 
 
 ## Preparing your data
 
-Data publishing includes describing and organizing your data in a way that makes it accessible and reusable. For an overview, see our [Quickstart guide to data sharing](/docs/QuickstartGuideToDataSharing.pdf) 
+Data publishing includes describing and organizing your data in a way that makes it accessible and reusable. We recommend the use of [good data practices](/stash/best_practices), including descriptive names for file names and table headings, and a logical file organization.
 
 Assemble all data files together. Where possible, data should be shared in [an open file format](/stash/requirements#preferred-file-formats) so that proprietary software is not required to view or use the files.
 
 * All files should be able to be opened without any passcode restrictions.
 * All information needs to be in English.
-* No Personal Health Information or sensitive data can be included. See [tips for human subjects data](/docs/HumanSubjectsData.pdf) and [tips for sensitive species data](/docs/EndangeredSpeciesData.pdf).
+* No Personal Health Information or sensitive data can be included. See <a href="/docs/HumanSubjectsData.pdf">tips for human subjects data <span class="pdfIcon" role="img" aria-label=" (PDF)"/></a> and <a href="/docs/EndangeredSpeciesData.pdf">tips for sensitive species data<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
 * Files must not contain any copyright restrictions.
-
-We recommend the use of [good data practices](/stash/best_practices), including descriptive names for file names and table headings, and a logical file organization.
 
 
 ## Timing your submission

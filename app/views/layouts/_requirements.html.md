@@ -2,10 +2,9 @@
 
 ## Accepted data
 
-Dryad accepts all research data and is intended for complete, re-usable, open research datasets. When preparing your data, please check our [Quickstart guide to data sharing](/docs/QuickstartGuideToDataSharing.pdf).
+Dryad accepts all research data and is intended for complete, re-usable, open research datasets. 
 
-
-* Dryad does **not** accept submissions that contain personally identifiable human subject information. Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please see [additional guidance on human subjects data](/docs/HumanSubjectsData.pdf).
+* Dryad does **not** accept submissions that contain personally identifiable human subject information. Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please see <a href="/docs/HumanSubjectsData.pdf">additional guidance on human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
 * Dryad does **not** accept any files with licensing terms that are incompatible with the [Creative Commons Zero waiver](http://creativecommons.org/publicdomain/zero/1.0). For more information, please see [Good data practices: Removing barriers to data reuse with CC0 licensing](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
 * For software scripts and snapshots of software source code, files can be uploaded via Dryad and published at Zenodo, which allows public software deposits with version control for the ongoing maintenance of software packages. If you are only seeking to store code, software, and/or supplemental materials please [visit Zenodo](https://zenodo.org).
 
@@ -47,7 +46,7 @@ We require:
     * Affiliations are drawn from the [Research Organization Registry (ROR)](http://ror.org)
     * If you provide your co-authors' email addresses, when the dataset is published, they will receive a message giving them the option to add their [ORCID](http://orcid.org) to the Dryad record
 * **Abstract**: Brief summary of the dataset’s structure and concepts including information regarding values, contents of the dataset, reuse potential and any legal or ethical considerations. If this dataset is associated with a study, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study.
-* **Research domain**: Primary research domain. Domains are drawn from the [OECD Fields of Science and Technology](https://www.oecd.org/science/inno/38235147.pdf#page=6) classification.
+* **Research domain**: Primary research domain. Domains are drawn from the <a href="https://www.oecd.org/science/inno/38235147.pdf#page=6">OECD Fields of Science and Technology<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a> classification.
 * **Keyword(s)**: Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable.
 
 We recommend:
