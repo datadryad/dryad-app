@@ -65,7 +65,7 @@ Ways you can ensure your data publication has the broadest reach:
 
 ## Preservation
 
-Data deposited are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see [UC3, Merritt, and Long-term preservation](https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf).
+Data deposited are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3, Merritt, and Long-term preservation<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
 
 Preservation policy details include:
 
