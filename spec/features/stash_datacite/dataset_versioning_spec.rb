@@ -293,7 +293,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
-      it "has a curation status of 'curation' when prior version was :action_required", js: true do
+      it 'has an assigned curator when prior version was :action_required', js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
         @resource.reload
 
@@ -305,11 +305,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
-      it "has a curation status of 'curation' when prior version was :withdrawn", js: true do
+      it 'has an assigned curator when prior version was :withdrawn', js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn')
         @resource.reload
 
@@ -321,7 +321,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eql(@curator.id)
       end
 

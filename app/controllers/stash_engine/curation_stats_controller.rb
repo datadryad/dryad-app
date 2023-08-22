@@ -11,7 +11,7 @@ module StashEngine
 
       @admin_stats = authorize StashEngine::AdminDatasetsController::Stats.new, policy_class: CurationStatsPolicy
       @admin_stats_3day = authorize StashEngine::AdminDatasetsController::Stats.new(
-        untouched_since: Time.now - 3.days
+        untouched_since: Time.new.utc - 3.days
       ), policy_class: CurationStatsPolicy
 
       respond_to do |format|
