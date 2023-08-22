@@ -35,7 +35,7 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 * A basic generalized introduction to Dryad's architecture is
   available at https://datadryad.org/stash/our_platform .
 
-* API documentation: [API README](apis/README.md), [Specification for the main APIs](https://datadryad.org/api/v2/docs/), and [descriptions of other APIs](apis)
+* [API documentation and specification](https://datadryad.org/stash/api) and [API READMEs](apis)
 
 * A (somewhat dated) database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).
 
