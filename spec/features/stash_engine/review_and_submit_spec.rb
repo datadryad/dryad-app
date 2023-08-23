@@ -92,7 +92,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     it 'Warns for README.txt instead of Markdown' do
       navigate_to_review
 
-      expect(page).to have_text('README.md missing')
+      expect(page).to have_text('Include a README')
     end
   end
 

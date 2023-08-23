@@ -10,6 +10,7 @@ RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Datacite
+  include Mocks::DataFile
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -159,6 +160,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_stripe!
         mock_repository!
         mock_datacite_and_idgen!
+        mock_file_content!
         @user = create(:user, tenant_id: 'ucop')
         @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
@@ -221,6 +223,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
         3.times { fill_in_keyword }
+        navigate_to_readme
         add_required_data_files
         navigate_to_review
         agree_to_everything

@@ -13,7 +13,7 @@ module StashEngine
       SQL
 
       # leave tenant_id blank if you want stats for all
-      def initialize(tenant_id: nil, since: START_OF_AD_TIME, untouched_since: Time.now)
+      def initialize(tenant_id: nil, since: START_OF_AD_TIME, untouched_since: Time.new.utc)
         @tenant_id = tenant_id
         @since = since
         @untouched_since = untouched_since
