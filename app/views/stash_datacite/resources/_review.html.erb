@@ -2,8 +2,14 @@
 
     <!-- If a curator is viewing this page, highlight the changed fields -->
     <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
-
-    <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
+    <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? && @resource.previous_resource.current_curation_status == 'action_required' %>
+      <div class="c-error-box">
+        <p>Changes are required in order to submit.</p>
+        <p>Please refer to your email, <%= @review.authors.first.author_email %>, where you received a message from <a href="mailto:help@datadryad.org">help@datadryad.org</a> listing required changes.</p>
+      </div>
+    <% else %>
+      <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
+    <% end %>
     <h2 class="o-heading__page-span">Review description</h2>
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
@@ -140,7 +146,16 @@
   <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
           class: 'o-button__icon-left', role: 'button' %>
 
-  <% if @error_items.blank? # valid data %>
+  <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? %>
+    <% if @resource.previous_resource.current_curation_status == 'action_required' %>
+      <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
+      <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+    <% else %>
+      <%= button_to stash_url_helpers.resource_path(@resource), method: :delete, data: { confirm: 'No changes made! Do you want to cancel this update and revert to the previous version?' }, form_class: '', class: 'o-button__submit js-submission' do %>
+        Submit
+      <% end %>
+    <% end %>
+  <% elsif @error_items.blank? # valid data %>
     <%= form_with(url: resources_submission_path) do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
