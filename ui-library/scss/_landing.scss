@@ -16,6 +16,30 @@
 
 }
 
+.citation-section {
+	background-color: $design-lightest-blue-color;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	column-gap: 1ch;
+	row-gap: $spacing-base;
+	padding: .75rem;
+
+	h2, h3, p {
+		margin: 0;
+	}
+
+	.copy-icon {
+		border: none;
+		background-color: transparent;
+		box-shadow: none;
+	}
+
+	p {
+		flex-basis: 100%;
+	}
+}
+
 .t-landing__sidebar {
 	margin: 0 0 $spacing-md;
 

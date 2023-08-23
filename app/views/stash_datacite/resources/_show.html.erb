@@ -4,22 +4,30 @@
     <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource, highlight: false } %>
   </div>
 
-  <section class="o-section">
+  <section class="citation-section">
   <%= render partial: "stash_datacite/shared/citations",
              locals: { authors: review.authors, title: review.title_str,
                        resource_type: review.resource_type,
                        identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
                        publication_year: (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year) } %>
   </section>
-  <%= render partial: "stash_datacite/descriptions/show",
-	     locals: { abstract: review.abstract, methods: review.methods,
-		 other: review.other, highlight_fields: [] } %>
 
   <% if @user_type == 'privileged' && @resource&.identifier&.pub_state != 'published'%>
-    <hr/>
-    <h2 class="o-heading__level2">Reviewer URL</h2>
     <%= render partial: "stash_datacite/shares/show", locals: { share: review.share } %>
   <% end %>
+
+  <%= render partial: "stash_datacite/descriptions/show",
+       locals: { abstract: review.abstract, methods: '',
+     other: '', highlight_fields: [] } %>
+
+  <% if !review.readme_content.blank? && !review.readme_content.match(/^# /) %>
+    <h2>README</h2>
+  <% end %>
+  <%= markdown_render review.readme_content.sub(/^# /, '# README: ') %>
+
+  <%= render partial: "stash_datacite/descriptions/show",
+     locals: { abstract: '', methods: review.methods,
+   other: review.other, highlight_fields: [] } %>
 
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight: false } %>
 
@@ -49,3 +57,23 @@
   $( document ).ready( loadReviewMap(<%=resource.id%>) );
 </script>
   <%# render partial: "stash_datacite/licenses/review" %>
+
+<script type="text/javascript">
+  document.querySelectorAll('.copy-icon').forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const item = e.currentTarget.dataset.item
+      const icon = e.currentTarget.firstElementChild
+      const citation = e.currentTarget.nextElementSibling.innerText
+      window.navigator.clipboard.writeText(citation)
+      icon.classList.remove('fa-clipboard');
+      icon.classList.add('fa-check');
+      icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
+      setTimeout(function(){
+        icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
+        icon.classList.add('fa-clipboard');
+        icon.classList.remove('fa-check');
+        icon.innerHTML = '';
+      }, 2000);
+    });
+  });
+</script>
