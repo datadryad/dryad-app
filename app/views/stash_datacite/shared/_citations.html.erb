@@ -1,7 +1,8 @@
 <% if params[:controller].include?('landing') %>
-  <h2 class="o-heading__level2">Citation</h2>
+<h2 class="o-heading__level4">Cite this dataset</h2>
+<button title="Copy citation" aria-label="Copy citation" class="copy-icon" data-item="Citation"><i class="fa fa-clipboard" role="status"></i></button>
 <% else %>
-  <h3 class="o-heading__level2">Citation</h3>
+  <h3 class="o-heading__level2">Cite this dataset</h3>
 <% end %>
-
-<p><%= citation(authors, title, resource_type, identifier, publication_year) %></p>
+<% publication = @resource.publication_date.blank? ? "Forthcoming #{publication_year}" : publication_year %>
+<p><%= citation(authors, title, resource_type, identifier, publication) %></p>
