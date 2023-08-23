@@ -1,4 +1,4 @@
-<% @page_title = "Upload your files -- publish and preserve your data" %>
+<% @page_title = "Upload your files — publish and preserve your data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -13,6 +13,7 @@
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
 <%= react_component('containers/FileUpload/UploadFiles', {
   resource_id: @resource.id,
+  readme_size: @readme_size,
   file_uploads: @resource.generic_files.validated_table.as_json(
     methods: :type, include: { frictionless_report: { only: [:report, :status] } }
   ),
@@ -25,10 +26,7 @@
 <div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
 </div>
 
-<div class="o-dataset-nav">
-  <%= link_to 'Back to Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
-  <%= link_to 'Proceed to review', stash_url_helpers.review_resource_path(params[:id]), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
-</div>
+<%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 3} %>
 
 <script>
   $('.js-nav-out').on('click', function(e) {

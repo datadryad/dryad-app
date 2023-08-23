@@ -84,6 +84,12 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
+      last = resource.previous_resource
+      if last
+        user_id = current_user&.id || 0
+        note = "#{(user_id == 0 && 'System cleanup') || 'User'} deleted unsubmitted version #{resource.version_number}"
+        StashEngine::CurationActivity.create(resource_id: last.id, status: last.current_curation_status, user_id: user_id, note: note)
+      end
       resource.destroy
       respond_to do |format|
         format.html do
@@ -115,10 +121,19 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
+    def prepare_readme
+      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, current_tenant)
+      readme_file = @resource.data_files.present_files.where(upload_file_name: 'README.md').first
+      @file_content = readme_file&.file_content
+    end
+
     # Upload files view for resource
     def upload
       @file_model = StashEngine::DataFile
       @resource_assoc = :data_files
+      @readme_size = (resource.descriptions.type_technical_info.first&.description.present? &&
+              resource.descriptions.type_technical_info.first&.description&.bytesize) ||
+              resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
 
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states

@@ -67,6 +67,7 @@ module StashDatacite
       # set current merritt state to processing right away to prevent another submission while something might be
       # waiting in the queue.  The repo_queue_states are more fine grained for queueing and used in Merritt class.
       resource.current_state = 'processing'
+      resource.check_add_readme_file
 
       update_submission_resource_info(resource)
 

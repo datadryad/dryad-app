@@ -247,7 +247,7 @@ namespace :identifiers do
     reminder_flag = 'doi_linking_invitation CRON'
     StashEngine::Identifier.publicly_viewable.each do |i|
       next if i.publication_article_doi
-      next if i.resources.map(&:curation_activities).flatten.map(&:note).include?(reminder_flag)
+      next if i.resources.map(&:curation_activities).flatten.map(&:note).join.include?(reminder_flag)
       next unless i.date_first_published <= 6.months.ago
       next if i.latest_resource.nil?
 
@@ -1046,7 +1046,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Date.today - 1.day).each do |date|
+    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1055,7 +1055,7 @@ namespace :curation_stats do
 
   desc 'Recalculate any curation stats from the past three days, not counting today'
   task update_recent: :environment do
-    (Date.today - 4.days..Date.today - 1.day).each do |date|
+    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1065,7 +1065,7 @@ namespace :curation_stats do
   desc 'Generate a report of the curation timeline for each dataset'
   task curation_timeline_report: :environment do
     launch_day = Date.new(2019, 9, 17)
-    datasets = StashEngine::Identifier.where(created_at: launch_day..Date.today)
+    datasets = StashEngine::Identifier.where(created_at: launch_day..Time.now.utc.to_date)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
       datasets.each_with_index do |i, idx|
@@ -1117,7 +1117,7 @@ namespace :curation_stats do
     # Only look at content for the past two years, since curation practices are constantly changing
     # Note that this may slightly undercount, since recent datasets haven't had time for multiple passes
     start_day = 2.years.ago
-    datasets = StashEngine::Identifier.where(created_at: start_day..Date.today)
+    datasets = StashEngine::Identifier.where(created_at: start_day..Time.now.utc.to_date)
     ids_seen = 0
     total_curation_count = 0
     datasets.each do |i|

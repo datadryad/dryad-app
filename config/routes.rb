@@ -143,6 +143,7 @@ Rails.application.routes.draw do
       member do
         get 'review'
         get 'upload'
+        get 'prepare_readme'
         get 'upload_manifest'
         get 'up_code'
         get 'up_code_manifest'

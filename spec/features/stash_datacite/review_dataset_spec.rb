@@ -8,12 +8,14 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Tenant
+  include Mocks::DataFile
 
   before(:each) do
     mock_solr!
     mock_tenant!
     mock_repository!
     mock_salesforce!
+    mock_file_content!
     @user = create(:user)
     sign_in(@user)
   end

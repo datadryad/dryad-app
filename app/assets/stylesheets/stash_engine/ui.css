@@ -2193,8 +2193,8 @@ td:last-child, th:last-child {
   cursor: pointer;
 }
 
-.pseudo-focus-button-label {
-  outline: 2px solid red;
+.c-choose__input-file:focus + label {
+  outline: 2px solid #cf4817;
 }
 
 @media (min-width: 760px) {
@@ -3937,19 +3937,19 @@ nav.pagination + .c-paginator-page_size {
   outline: none;
 }
 @media (min-width: 480px) {
-  .c-progress a:nth-child(-n+2) {
+  .c-progress a:not(:last-child) {
     margin: 0 5vw 0 0;
     border-right: none;
   }
 }
-.c-progress a:nth-child(-n+2)::after {
+.c-progress a:not(:last-child)::after {
   content: ">";
   display: inline-block;
   margin: 0 0 0 0.25em;
   font-size: 1.2em;
 }
 @media (min-width: 480px) {
-  .c-progress a:nth-child(-n+2)::after {
+  .c-progress a:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 4px;
@@ -3969,12 +3969,12 @@ nav.pagination + .c-paginator-page_size {
   border-color: #cf4817;
   color: #cf4817;
 }
-.c-progress a[class*="--active"]:nth-child(-n+2)::after {
+.c-progress a[class*="--active"]:not(:last-child)::after {
   border-width: 2px;
   border-color: #cf4817;
 }
 @media (min-width: 480px) {
-  .c-progress a[class*="--active"]:nth-child(-n+2)::after {
+  .c-progress a[class*="--active"]:not(:last-child)::after {
     top: 3px;
   }
 }
