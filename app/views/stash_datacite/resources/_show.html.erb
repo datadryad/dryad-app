@@ -17,8 +17,17 @@
   <% end %>
 
   <%= render partial: "stash_datacite/descriptions/show",
-	     locals: { abstract: review.abstract, methods: review.methods,
-		 other: review.other, highlight_fields: [] } %>
+       locals: { abstract: review.abstract, methods: '',
+     other: '', highlight_fields: [] } %>
+
+  <% if !review.readme_content.blank? && !review.readme_content.match(/^# /) %>
+    <h2>README</h2>
+  <% end %>
+  <%= markdown_render review.readme_content.sub(/^# /, '# README: ') %>
+
+  <%= render partial: "stash_datacite/descriptions/show",
+     locals: { abstract: '', methods: review.methods,
+   other: review.other, highlight_fields: [] } %>
 
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight: false } %>
 
