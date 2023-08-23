@@ -12,7 +12,7 @@ Dryad serves all research domains and welcomes submissions of data in every fiel
 
 Our process is dedicated exclusively to research data. We work in concert with [aligned organizations](/stash/about#collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans, and more.
 
-See [how Dryad compares with other platforms](https://zenodo.org/record/7946938).
+See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7946938).
 
 ## Latest news
 
@@ -25,7 +25,7 @@ See [how Dryad compares with other platforms](https://zenodo.org/record/7946938)
 
 We make it easy and affordable for researchers to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your needs for public release of data, as well as for fulfilling funder mandates.
 
-We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. We operate on a cost-recovery—*not* profit-maximizing—basis.
+We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. We operate on a cost-recovery, *not* profit-maximizing, basis.
 
 When you publish your data with Dryad, you join a community of researchers committed to leading in best practices for open data publishing. 
 
@@ -65,12 +65,12 @@ Ways you can ensure your data publication has the broadest reach:
 
 ## Preservation
 
-Data deposited are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3, Merritt, and Long-term preservation<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
+Data published in Dryad are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3, Merritt, and Long-term preservation<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
 
 Preservation policy details include:
 
 * **Retention period**: Items will be retained indefinitely
-* **Functional preservation:** We make no promises of usability and understandability of deposited objects over time.
+* **Functional preservation:** We make no promises of usability and understandability of datasets over time.
 * **File preservation**: Data files are replicated with multiple copies in multiple geographic locations; metadata are backed up on a nightly basis.
 * **Fixity and authenticity**: All data files are stored along with a SHA-256 checksum of the file content. Regular checks of files against their checksums are made. The audit process cycles continually, with a current cycle time of approximately two months.
 * **Succession plans**: In case of closure of the platform, reasonable efforts will be made to integrate all content into suitable alternative institutional and/or subject based repositories.
