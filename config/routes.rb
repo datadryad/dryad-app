@@ -236,7 +236,7 @@ Rails.application.routes.draw do
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
 
     get 'close_page', to: 'pages#close_page'
-    get 'faq', to: 'pages#faq'
+    get 'requirements', to: 'pages#requirements'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'mission', to: 'pages#what_we_do'
@@ -247,6 +247,7 @@ Rails.application.routes.draw do
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
+    get 'process', to: 'pages#process'
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
     get 'search', to: 'searches#index'
@@ -254,6 +255,7 @@ Rails.application.routes.draw do
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
+    get 'api', to: 'pages#api'
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
@@ -460,7 +462,7 @@ Rails.application.routes.draw do
   ########################## Dryad v1 support ######################################
   
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/faq', to: redirect('stash/faq')
+  get '/pages/faq', to: redirect('stash/requirements')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
   get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
   get '/stash/our_membership', to: redirect('stash/join_us#our-membership')
@@ -470,6 +472,7 @@ Rails.application.routes.draw do
   get '/stash/our_advisors', to: redirect('stash/about#our-advisors')
   get '/stash/our_platform', to: redirect('stash/mission#our-platform')
   get '/stash/our_mission', to: redirect('stash/mission')
+  get '/stash/faq', to: redirect('stash/requirements')
   get '/pages/organization', to: redirect('stash/mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')

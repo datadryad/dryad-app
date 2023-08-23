@@ -6,7 +6,7 @@ Dryad's API allows manuscript processing systems to embed Dryad
 submissions directly into their process. Sample API calls are shown
 below, but for full details on the API options see the
 [submissions](submission.md) document and the
-[API Specification](https://datadryad.org/api/v2/docs/).
+[API documentation](https://datadryad.org/stash/api).
 
 Though the API allows for some flexiblity in the workflow, Dryad's
 preferred workflow is described below.

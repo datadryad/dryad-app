@@ -3,14 +3,8 @@
 <p>
   Dryad follows community best practices on data publishing ethics and aligns
   with the recommendations and workflows published by the
-  <a href="https://zenodo.org/record/5391293" target="_blank">FORCE11 & COPE Research Data Publishing Ethics WG</a>.
+  <a href="https://zenodo.org/record/5391293" target="_blank">FORCE11 & COPE Research Data Publishing Ethics WG</a><sup>*</sup>.
 </p>
-
-<blockquote>
-  <p>Puebla, Iratxe, Lowenberg, Daniella, & FORCE11 Research Data Publishing Ethics WG. (2021).
-  Joint FORCE11 & COPE Research Data Publishing Ethics Working Group Recommendations.
-  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank">https://doi.org/10.5281/zenodo.5391293</a></p>
-</blockquote>
 
 <p>
   Dryad will follow up on any ethical concerns about submitted or published
@@ -56,3 +50,7 @@
   other parties that host content associated with the dataset (e.g. a journal article) and may contact
   the institution(s) of relevant authors if required.
 </p>
+
+<p style="font-size: smaller">* Puebla, Iratxe, Lowenberg, Daniella, & FORCE11 Research Data Publishing Ethics WG. (2021).
+  Joint FORCE11 & COPE Research Data Publishing Ethics Working Group Recommendations.
+  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank">https://doi.org/10.5281/zenodo.5391293</a></p>

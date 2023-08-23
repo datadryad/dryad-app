@@ -38,9 +38,11 @@
     <li class="c-header__nav-item">
       <button class="c-header_nav-button" aria-expanded="false" aria-controls="help-menu">Help</button>
       <ul class="c-header__nav-submenu" id="help-menu" hidden>
-        <li><%= link_to 'Submission process', "#{stash_url_helpers.submission_process_path}" %>
+        <li><%= link_to 'Submission requirements', "#{stash_url_helpers.requirements_path}" %>
+        <li><%= link_to 'Submission walkthrough', "#{stash_url_helpers.submission_process_path}" %>
         <li><%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}" %>
-        <li><%= link_to 'Frequently asked questions', stash_url_helpers.faq_path %>
+        <li><%= link_to 'Publication process', "#{stash_url_helpers.process_path}" %>
+        <li><%= link_to 'Dryad API', "#{stash_url_helpers.api_path}" %>
         <li><%= link_to 'Contact support', stash_url_helpers.contact_path %>
       </ul>
     </li>
