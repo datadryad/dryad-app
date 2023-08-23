@@ -46,12 +46,11 @@ module StashDatacite
     def citation(authors, title, resource_type, identifier, publication_year)
       citation = []
       citation << h("#{author_citation_format(authors)} (#{publication_year})")
-      citation << h(title)
+      citation << h("#{title} [#{resource_type.try(:resource_type_general_friendly)}]")
       citation << 'Dryad'
-      citation << h(resource_type.try(:resource_type_general_friendly))
       id_str = "https://doi.org/#{identifier}"
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
-      citation.reject(&:blank?).join(', ').html_safe
+      citation.reject(&:blank?).join('. ').html_safe
     end
 
     def author_citation_format(authors)
