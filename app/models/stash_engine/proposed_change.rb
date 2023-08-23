@@ -18,11 +18,20 @@ module StashEngine
         other.publication_name == publication_name && other.title == title
     end
 
-    def approve!(current_user:)
+    def approve!(current_user:, approve_type:)
+      # values are primary, primary_no_metadata, preprint, preprint_no_metadata, related, related_no_metadata
+      dropdown_to_type = { primary: 'primary_article', related: 'article', preprint: 'preprint' }.with_indifferent_access
+
+      bare_approve_type = approve_type.to_s.gsub('_no_metadata', '')
+      return false if dropdown_to_type[bare_approve_type].blank?
+
+      article_type = dropdown_to_type[bare_approve_type]
+      update_type = (approve_type.to_s.end_with?('_no_metadata') ? 'relationship' : 'metadata')
+
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
 
       cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
-      resource = cr.populate_pub_update!
+      resource = cr.populate_pub_update!(article_type: article_type, update_type: update_type)
 
       add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, resource)
       update(approved: true, user_id: current_user.id)

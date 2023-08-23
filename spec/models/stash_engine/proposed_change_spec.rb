@@ -90,7 +90,7 @@ module StashEngine
     describe :approve! do
       it 'approves the changes' do
         old_title = @resource.title
-        @proposed_change.approve!(current_user: @user)
+        @proposed_change.approve!(current_user: @user, approve_type: 'primary')
         @resource.reload
 
         expect(@resource.title).to eql(old_title)
@@ -105,8 +105,8 @@ module StashEngine
       end
 
       it 'does not approve the changes if no user is specified' do
-        expect(@proposed_change.approve!(current_user: nil)).to eql(false)
-        expect(@proposed_change.approve!(current_user: 'John Doe')).to eql(false)
+        expect(@proposed_change.approve!(current_user: nil, approve_type: 'primary')).to eql(false)
+        expect(@proposed_change.approve!(current_user: 'John Doe', approve_type: 'primary')).to eql(false)
       end
     end
 
