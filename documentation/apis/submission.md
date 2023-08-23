@@ -3,7 +3,7 @@ Dryad Submission API
 
 The Dryad Submission API enables submission and update of datasets.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
-This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://datadryad.org/api/v2/docs/index.html).
+This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://datadryad.org/stash/api).
 
 
 ## Obtain an API Account

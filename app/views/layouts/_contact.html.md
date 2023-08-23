@@ -2,7 +2,7 @@
 
 ## Get help
 
-Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission and publication process](/stash/process).
+Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/stash/submission_process) or [publication process](/stash/process).
 
 ## Get involved
 

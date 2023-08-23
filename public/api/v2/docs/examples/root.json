@@ -1,10 +1,13 @@
 {
   "_links": {
     "self": {
-      "href": "/"
+      "href": "/api/v2/"
     },
     "stash:datasets": {
-      "href": "datasets"
+      "href": "/api/v2/datasets"
+    },
+    "reports": {
+      "href": "/api/v2/reports"
     },
     "curies": [
       {
