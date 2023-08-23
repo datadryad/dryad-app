@@ -10,9 +10,11 @@ module Stash
       end
 
       def populate
-        populate_title
-        populate_authors
-        populate_abstract
+        unless @resource.previous_curated_resource.present?
+          populate_title
+          populate_authors
+          populate_abstract
+        end
         populate_keywords
       end
 

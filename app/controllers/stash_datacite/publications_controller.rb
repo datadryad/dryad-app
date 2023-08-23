@@ -176,7 +176,7 @@ module StashDatacite
         return
       end
 
-      @resource = cr.populate_resource!
+      @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
     end
