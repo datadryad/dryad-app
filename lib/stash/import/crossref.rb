@@ -77,24 +77,29 @@ module Stash
         end
       end
 
-      # populate just a few fields for pub_updater
-      def populate_pub_update!
+      # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
+      # to ONLY populate the relationship, use update_type: 'relationship'
+      # article types accepted are 'primary_article', 'article', 'preprint'
+      def populate_pub_update!(article_type: 'primary_article', update_type: 'metadata')
         return nil unless @sm.present? && @resource.present?
 
-        populate_related_doi
-        populate_publication_issn
-        populate_publication_name
-        populate_subjects
+        populate_article_type(article_type: article_type)
+        if update_type == 'metadata'
+          populate_publication_issn
+          populate_publication_name
+          populate_subjects
+        end
+
         @resource.reload
       end
 
-      # populate the full resource from the crossref metadata
+      # populate the full resource from the crossref metadata, this is for a new record and populating data that the user does, I think
       def populate_resource!
         return unless @sm.present? && @resource.present?
 
         populate_abstract
         populate_authors
-        populate_related_doi
+        populate_article_type(article_type: 'primary_article')
         populate_funders
         populate_publication_issn
         populate_publication_name
@@ -124,7 +129,8 @@ module Stash
           provenance_score: @sm['provenance_score'],
           title: @sm['title']&.first&.to_s,
           url: @sm['URL'],
-          subjects: @sm['subject'].to_json
+          subjects: @sm['subject'].to_json,
+          xref_type: @sm['type']
         }
         pc = StashEngine::ProposedChange.new(params)
         resource_will_change?(proposed_change: pc) ? pc : nil
@@ -291,20 +297,30 @@ module Stash
         end
       end
 
-      def populate_related_doi
+      # rubocop:disable Naming/AccessorMethodName
+      def get_or_new_related_doi
         my_related = @sm['URL'] || @sm['DOI']
-        return if my_related.blank?
+        return nil if my_related.blank?
 
         # Use the URL if available otherwise just use the DOI
-        related = @resource.related_identifiers
+        @resource.related_identifiers
           .where(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                  related_identifier_type: 'doi').first || @resource.related_identifiers.new
+      end
+      # rubocop:enable Naming/AccessorMethodName
+
+      def populate_article_type(article_type:)
+        return unless article_type.present? && %w[primary_article article preprint].include?(article_type)
+
+        related = get_or_new_related_doi
+        my_related = @sm['URL'] || @sm['DOI']
+        return if related.nil? || my_related.nil?
 
         related.assign_attributes({
                                     related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(my_related),
                                     related_identifier_type: 'doi',
                                     relation_type: 'iscitedby',
-                                    work_type: 'primary_article',
+                                    work_type: article_type,
                                     verified: true,
                                     hidden: false
                                   })
