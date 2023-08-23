@@ -67,7 +67,6 @@ DatasetA.tar.gz
 |  |- Figure1.tif
 |  |- Figure2.tif
 |  |- Models/
-|- README.md
 </pre>
 </div>
 <div>
@@ -82,7 +81,6 @@ DatasetB.tar.gz
 |  |- Data/
 |  |- Results/
 |  |  |- Figure2.tif
-|- README.md
 </pre>
 </div>
 </div>
