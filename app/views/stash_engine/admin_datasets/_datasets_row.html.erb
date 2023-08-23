@@ -58,7 +58,7 @@
   <td id="js-curation-activity-date-<%= dataset.identifier_id %>">
     <div class="c-lined-table__with-actions">
       <div class="c-lined-table__data c-lined-table__digits">
-        <%= formatted_datetime(dataset.updated_at) %>
+        <span class="local-date" title="<%= formatted_datetime(dataset.updated_at) %>" data-dt="<%= dataset.updated_at.iso8601 unless dataset.updated_at.blank? %>"><%= formatted_datetime(dataset.updated_at) %></span>
       </div>
       <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
         <div class="c-lined-table__actions">
@@ -94,10 +94,10 @@
   <td class="c-lined-table__digits"><%= filesize(dataset.resource_size) %></td>
   <!-- Submission Date -->
   <td class="c-admin c-lined-table__digits">
-    <%= formatted_date(dataset.submission_date) %>
+    <span class="local-date" title="<%= formatted_datetime(dataset.submission_date) %>" data-dt="<%= dataset.submission_date.iso8601 unless dataset.submission_date.blank? %>"><%= formatted_datetime(dataset.submission_date) %></span>    
   </td>
   <!-- Publication Date -->
   <td class="c-admin c-lined-table__digits" id="js-embargo-state-<%= dataset.identifier_id %>">
-    <%= formatted_date(dataset.publication_date) %>
+     <span class="local-date" title="<%= formatted_datetime(dataset.publication_date) %> UTC" data-dt="<%= dataset.publication_date.iso8601 unless dataset.publication_date.blank? %>"><%= formatted_datetime(dataset.publication_date) %></span>    
   </td>
 </tr>

@@ -15,11 +15,12 @@
 <h2>Curation stats table</h2>
 <p>Recent statistics are available in the table below (mouseover any table heading for a more complete description), or the complete stats history can be downloaded as a CSV: <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %></p>
 
+<p id="timezone">Timezone: UTC</p>
 <div class="table-wrapper">
 <table class="c-lined-table">
   <thead style="cursor: help">
   <tr>
-      <th title="Date for the activity, bounded by UTC.">Date</th>
+      <th title="End of the date range for the activity">Date</th>
       <th title="The number of datasets available for curation on that day ('curation' or 'submitted')"
 	 >Queue Size</th>
       <th title="The number of new datasets submitted that day (so the first time we see them as 'submitted' in the system)"
@@ -43,7 +44,7 @@
 <tbody>
   <% @current_stats.each do |stat| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
-      <td><%= formatted_date(stat.date) %></td>
+      <td title="<%= formatted_datetime(stat.date) %>"><span class="local-date" data-dt="<%= stat.date.iso8601 %>"><%= formatted_datetime(stat.date) %></span></td>
       <td><%= stat.datasets_to_be_curated %></td>
       <td><%= stat.new_datasets_to_submitted %></td>
       <td><%= stat.new_datasets_to_peer_review %></td>
