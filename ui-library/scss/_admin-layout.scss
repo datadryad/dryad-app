@@ -82,3 +82,16 @@
     flex-grow: 1;
   }
 }
+
+#timezone {
+  text-align: right;
+  font-size: .9em;
+  margin-bottom: -2rem;
+
+  &:before {
+    display: inline;
+    font-family: FontAwesome;
+    content: '\f0ac';
+    margin-right: .5ch;
+  }
+}

@@ -1971,6 +1971,18 @@ td:last-child, th:last-child {
           flex-grow: 1;
 }
 
+#timezone {
+  text-align: right;
+  font-size: 0.9em;
+  margin-bottom: -2rem;
+}
+#timezone:before {
+  display: inline;
+  font-family: FontAwesome;
+  content: "\f0ac";
+  margin-right: 0.5ch;
+}
+
 .c-admin-editing-banner {
   display: -webkit-box;
   display: -ms-flexbox;
