@@ -5461,6 +5461,36 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   }
 }
 
+.citation-section {
+  background-color: #e4f1f7;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  -webkit-column-gap: 1ch;
+     -moz-column-gap: 1ch;
+          column-gap: 1ch;
+  row-gap: 0.5rem;
+  padding: 0.75rem;
+}
+.citation-section h2, .citation-section h3, .citation-section p {
+  margin: 0;
+}
+.citation-section .copy-icon {
+  border: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.citation-section p {
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+}
+
 .t-landing__sidebar {
   margin: 0 0 2rem;
 }
