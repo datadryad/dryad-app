@@ -332,7 +332,7 @@ namespace :identifiers do
           status: resource.last_curation_activity.status,
           note: 'CRON: mailed action required final reminder (reminder 3)'
         )
-        resource.curation_activities << CurationActivity.create(user_id: 0,
+        resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
                                                                 status: 'withdrawn',
                                                                 note: 'withdrawing on final action required reminder')
         # NOTE: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
