@@ -235,6 +235,8 @@ module StashEngine
 
         StashEngine::UserMailer.status_change(resource, status).deliver_now
       when 'withdrawn'
+        return if note.include?('final action required reminder') # this has already gotten a special withdrawal email
+
         if user_id == 0
           StashEngine::UserMailer.user_journal_withdrawn(resource, status).deliver_now
         else
