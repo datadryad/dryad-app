@@ -67,7 +67,7 @@ namespace :publication_updater do
   # ON pc.identifier_id = i.id
   # WHERE i.id IS NULL;
 
-  # note:  This will fill in the subjects and also get a type from crossref
+  # NOTE: This will fill in the subjects and also get a type from crossref
   desc 'Rescan non-processed proposed changes for metadata updates at crossref'
   task rescan: :environment do
     StashEngine::ProposedChange.where(approved: false, rejected: false).each do |existing_pc|
@@ -83,7 +83,10 @@ namespace :publication_updater do
 
       begin
         # Hit Crossref for info
-        cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: primary_article.related_identifier) if primary_article&.related_identifier.present?
+        if primary_article&.related_identifier.present?
+          cr = Stash::Import::Crossref.query_by_doi(resource: resource,
+                                                    doi: primary_article.related_identifier)
+        end
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
