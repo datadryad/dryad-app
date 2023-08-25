@@ -3,6 +3,12 @@
   existing_pubissn = fetch_identifier_metadata(resource: resource, data_type: 'publicationISSN')
   existing_pubdoi = fetch_related_primary_article(resource: resource)
 %>
+
+<% return if existing_pubname == proposed_change.publication_name &&
+            (existing_pubissn == proposed_change.publication_issn || proposed_change.publication_issn.blank?) &&
+            existing_pubdoi == proposed_change.publication_doi
+%>
+
 <tr class="c-lined-table__row" id="current_<%= proposed_change.id %>">
   <%= render partial: 'current_metadata', locals: { resource: resource, existing_pubdoi: existing_pubdoi, existing_pubissn: existing_pubissn, existing_pubname: existing_pubname } %>
 
