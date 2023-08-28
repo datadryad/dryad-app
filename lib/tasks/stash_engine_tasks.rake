@@ -3,6 +3,7 @@ require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
+require_relative '../stash/action_required_reminder'
 
 REPORTS_DIR = 'reports'.freeze
 
@@ -287,6 +288,55 @@ namespace :identifiers do
     rescue StandardError => e
       p "    Exception! #{e.message}"
 
+    end
+  end
+
+  desc "Email the submitter when a dataset has been in 'action_required' at 3 times"
+  task action_required_reminder: :environment do
+    # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
+    items = Stash::ActionRequiredReminder.find_action_required_items
+    # each item looks like
+    # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
+    #   :reminder_1=>nil,
+    #   :reminder_2=>nil,
+    #   :identifier=> activeRecord object for identifier}
+
+    items.each do |item|
+      resource = item[:identifier]&.latest_resource
+      next if resource.nil?
+
+      # send out reminder 1 at two weeks
+      if item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
+        StashEngine::UserMailer.chase_action_required1(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required reminder 1'
+        )
+      # send out reminder 2 at 2 weeks after reminder 1
+      elsif item[:reminder_1].present? && item[:reminder_1] < 2.weeks.ago && item[:reminder_2].nil?
+        StashEngine::UserMailer.chase_action_required2(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required reminder 2'
+        )
+      # send out reminder 3 (final) at 2 weeks after reminder 2, it sets withdrawn on this so shouldn't be picked up as action_required again
+      elsif item[:reminder_2].present? && item[:reminder_2] < 2.weeks.ago
+        StashEngine::UserMailer.chase_action_required3(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required final reminder (reminder 3)'
+        )
+        resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
+                                                                             status: 'withdrawn',
+                                                                             note: 'withdrawing on final action required reminder')
+        # NOTE: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
+      end
     end
   end
 

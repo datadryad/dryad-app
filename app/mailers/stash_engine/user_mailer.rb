@@ -175,6 +175,36 @@ module StashEngine
            subject: "#{rails_env}Related work updated for \"#{resource.title}\"")
     end
 
+    def chase_action_required1(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
+    end
+
+    def chase_action_required2(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Reminder: Action required for Dryad data submission (#{resource&.identifier})")
+    end
+
+    def chase_action_required3(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Your Dryad data submission has been withdrawn (#{resource&.identifier})")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator
