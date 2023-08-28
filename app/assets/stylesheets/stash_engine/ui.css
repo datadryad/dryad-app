@@ -5599,13 +5599,8 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 @media (min-width: 480px) {
   .t-review__edit-button-bottom {
     position: absolute;
-    right: 10px;
+    right: 0;
     bottom: 0;
-  }
-}
-@media (min-width: 760px) {
-  .t-review__edit-button-bottom {
-    right: 20px;
   }
 }
 

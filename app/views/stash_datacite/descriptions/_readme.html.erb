@@ -1,7 +1,7 @@
 <% if !review.readme_content.blank? %>
 <div id="landing_readme">
     <button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button>
-    <div class="t-landing__text-wall">
+    <div class="t-landing__text-wall <%= 'highlight' if highlight_fields.include?('technical_info') %>">
     <% if !review.readme_content.match(/^# /) %>
       <h2>README</h2>
     <% end %>
