@@ -24,7 +24,5 @@ if [ "$RAILS_ENV" == "production" ] || [ "$RAILS_ENV" == "stage" ]
 then
     source ~/.profile.d/pyenv
     cd /apps/dryad/apps/ui/current/cron
-    # I am commenting out the counter runs for the next few weeks since we want a stable
-    # set of data (July 1-15) to upload to "the hub" for testing with Kristian at DataCite
-    # ./counter.sh >> /apps/dryad/apps/ui/shared/cron/logs/counter.log 2>&1
+    ./counter.sh >> /apps/dryad/apps/ui/shared/cron/logs/counter.log 2>&1
 fi
