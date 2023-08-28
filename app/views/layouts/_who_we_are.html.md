@@ -15,7 +15,7 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/stash/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 id="our-members" class="expand-button" role="button" aria-expanded="false" aria-controls="our-advisors-sec">Our members</h3>
+<h3 id="our-members" class="expand-button" role="button" aria-expanded="false" aria-controls="our-members-sec">Our members</h3>
 <div class="about-page" id="our-members-sec" hidden>
 <p>Dryad’s members are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/stash/join_us">Learn about joining us as a member organization</a>.</p>
