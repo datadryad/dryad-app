@@ -9,8 +9,6 @@ module Stash
     class FileCollection
 
       FILE_RETRY_WAIT = 5
-      
-      byebug
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
