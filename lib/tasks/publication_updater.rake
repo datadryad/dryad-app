@@ -32,6 +32,7 @@ namespace :publication_updater do
 
       begin
         resource = StashEngine::Resource.find(result.resource_id)
+        next if resource.nil? || resource.identifier.blank? || resource.identifier.pub_state == 'withdrawn'
 
         # Hit Crossref for info
         cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: result.doi) if result.doi.present?
@@ -56,6 +57,54 @@ namespace :publication_updater do
     end
 
     p 'Finished scanning Crossref API'
+  end
+
+  # THERE was a lot of junk data on our dev machine and orphaned proposed changes for identifiers that didn't exist.
+  # cleanup the table like this:
+
+  # DELETE pc FROM `stash_engine_proposed_changes` pc
+  # LEFT JOIN stash_engine_identifiers i
+  # ON pc.identifier_id = i.id
+  # WHERE i.id IS NULL;
+
+  # NOTE: This will fill in the subjects and also get a type from crossref
+  desc 'Rescan non-processed proposed changes for metadata updates at crossref'
+  task rescan: :environment do
+    StashEngine::ProposedChange.where(approved: false, rejected: false).each do |existing_pc|
+      identifier = existing_pc.identifier
+      resource = identifier&.latest_resource
+      primary_article = resource&.related_identifiers&.primary_article&.first
+      # remove this from the changes table and try re-adding it
+      next if resource.nil? || existing_pc.identifier.pub_state == 'withdrawn'
+
+      puts "rescanning existing proposed change id: #{existing_pc.id}, #{existing_pc.title}"
+
+      existing_pc.destroy # and re-import below
+
+      begin
+        # Hit Crossref for info
+        if primary_article&.related_identifier.present?
+          cr = Stash::Import::Crossref.query_by_doi(resource: resource,
+                                                    doi: primary_article.related_identifier)
+        end
+        cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
+      rescue URI::InvalidURIError => e
+        # If the URI is invalid, just skip to the next record
+        p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{e.message}"
+        next
+      end
+
+      pc = cr.to_proposed_change if cr.present?
+
+      # Tweakable threshold for scoring (score is ours ... 1 == DOI match, < 1 is title+authors matching)
+      #                                 (provenance_score is Crossref's score)
+      next unless pc.present? && pc.score >= 0.6
+
+      p "  found changes for: #{resource.id} (#{resource.title}" if pc.present?
+      pc.save if pc.present?
+    end
+
+    puts 'Finished rescanning Crossref API to update existing entries'
   end
 
 end
