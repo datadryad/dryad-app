@@ -1,4 +1,4 @@
-require 'stash/zenodo_replicate'
+require 'stash/zenodo_replicate/zenodo_connection'
 
 module Stash
   module ZenodoSoftware
