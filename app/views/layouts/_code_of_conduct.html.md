@@ -1,6 +1,6 @@
 # Code of Conduct
 
-<em>Last modified: 2020-07-13</em>
+*Updated: July 13, 2020*
 
 We value the participation of each member of the Dryad community. Accordingly, all community members are expected to show respect and courtesy to other community members in Dryad spaces.
 

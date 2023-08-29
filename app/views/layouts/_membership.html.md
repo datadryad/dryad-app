@@ -1,6 +1,6 @@
 # Membership terms
 
-*Updated: July 5, 2023*
+*Updated: August 29, 2023*
 
 These Dryad Terms of Membership (these “Terms”) set forth the terms and conditions of Membership in Dryad, a nonprofit corporation under the laws of North Carolina, USA.
 

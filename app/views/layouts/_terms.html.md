@@ -1,6 +1,6 @@
 # Terms of Service
 
-<p><i>Last revised 26 July 2019</i></p>
+<p><em>Updated: July 26, 2019</em></p>
 
 <p>These Terms of Service apply to Individuals and Organizations who use or publish content on the Dryad Data Platform, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Data Platform. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Data Platform.</p>
 
