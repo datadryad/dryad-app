@@ -45,7 +45,7 @@ module StashDatacite
       end
 
       it 'updates the author order to the order given' do
-        update_info = @authors.map { |author| {  id: author.id, order: author.author_order } }.shuffle
+        update_info = @authors.map { |author| { id: author.id, order: author.author_order } }.shuffle
         update_info = update_info.each_with_index.to_h do |author, idx|
           [author[:id].to_s, idx]
         end

@@ -71,7 +71,7 @@ module StashDatacite
       return if params[:id] == 'new'
 
       @subject = Subject.find(params[:id])
-      return ajax_blocked unless @subject.resources.map(&:id).include?(resource.id)
+      ajax_blocked unless @subject.resources.map(&:id).include?(resource.id)
     end
 
     def resource

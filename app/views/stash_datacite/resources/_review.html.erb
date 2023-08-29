@@ -15,12 +15,12 @@
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
-    <div class="o-metadata__group2">
+    <div class="t-landing__metadata o-metadata">
       <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
     </div>
 
-    <section class="o-section">
+    <section class="citation-section">
     <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
                          resource_type: @review.resource_type,
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
@@ -32,7 +32,7 @@
     <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight: highlight_fields.include?('subjects') } %>
 
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
-      <section class="t-review__funding-section o-section">
+      <section class="t-review__funding-section">
         <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('funders') } %>
         <%= render partial: "stash_datacite/related_identifiers/show", locals:
             { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
@@ -41,6 +41,12 @@
                     class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
       </section>
     <% end %>
+
+    <section style="margin-bottom: 1rem;">
+      <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields } %>
+    </section>
 
     <% if @resource.geolocations.count.positive? %>
       <h3 class="o-heading__level2">Location</h3>
@@ -66,24 +72,6 @@
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
 
   <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-    <div class="c-review-files">
-      <ul class="c-review-files__list">
-        <% unless @review.technical_info.try(:description).blank? && @resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
-          <li class="<%= 'highlight' if highlight_fields.include?('technical_info') %>"><%= link_to 'README.md', stash_url_helpers.prepare_readme_resource_path(@resource) %>&nbsp;&nbsp;&nbsp;
-          <% if @review.technical_info.try(:description).present? %>
-              <%= filesize(@review.technical_info.try(:description).bytesize) %>
-              <% if @review.technical_info.updated_at > @resource.created_at %>
-                &nbsp;&nbsp;&nbsp;<small>new</small>
-              <% end %>
-          <% else %>
-            <%= filesize(@resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size) %>
-          <% end %>
-          </li>
-        <% end %>
-      </ul>     
-      <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
-                class: 'c-review-files-button o-button__icon-left', role: 'button' %>
-    </div>
     <div class="c-review-files">
 	<% if highlight_fields.include?('data_files') %>
             <%= render partial: "stash_engine/data_files/show_merritt",

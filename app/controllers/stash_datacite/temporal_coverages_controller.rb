@@ -33,7 +33,7 @@ module StashDatacite
     # Use callbacks to share common setup or constraints between actions.
     def set_temporal_coverage
       @temporal_coverage = TemporalCoverage.find(temporal_coverage_params[:id])
-      return ajax_blocked unless resource.id == @temporal_coverage.resource_id
+      ajax_blocked unless resource.id == @temporal_coverage.resource_id
     end
 
     def resource

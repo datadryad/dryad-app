@@ -1,0 +1,26 @@
+<% @page_title = 'Definitions' %>
+<% content_for(:head) do %>
+<style type="text/css">
+  dl {
+    margin-left: 2em;
+  }
+  dl div {
+    margin-bottom: 1em;
+    padding-left: 3em;
+    text-indent: -3em;
+    line-height: 150%;
+  }
+  dt {
+    display: inline;
+    font-weight: 600;
+  }
+  dd {
+    margin: 0;
+    padding-left: 1ch;
+    display: inline;
+  }
+</style>
+<% end %>
+<div id="page-columns">
+  <div id="page-content"><%= render "layouts/definitions" %></div>
+</div>

@@ -11,7 +11,9 @@ import subsubPlugin from '../../lib/subsup_plugin';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '../../lib/toastui-editor.css';
 
-export default function ReadMe({dcsDescription, updatePath, fileContent}) {
+export default function ReadMe({
+  dcsDescription, title, doi, updatePath, fileContent,
+}) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -19,7 +21,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
 
   const saveDescription = () => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    if (initialValue !== editorRef.current.getInstance().getMarkdown()) {
+    if (initialValue && initialValue !== editorRef.current.getInstance().getMarkdown()) {
       const data = {
         authenticity_token,
         description: {
@@ -100,6 +102,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
   // Improve accessibility
   useEffect(() => {
     if (editorRef.current) {
+      setInitialValue(editorRef.current.getInstance().getMarkdown());
       const rootEl = editorRef.current.getRootElement();
       rootEl.querySelectorAll('*[contenteditable]').forEach((text) => {
         text.setAttribute('role', 'textbox');
@@ -146,11 +149,12 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
       setInitialValue(fileContent);
     } else {
       const response = await fetch('/docs/README.md');
-      const value = await response.text();
+      const text = await response.text();
+      const template = text.split('\n').slice(3).join('\n');
+      const value = `# ${title}\n\n[${doi}](${doi})\n\n${template}`;
       setInitialValue(value);
-      setInitialValue(editorRef.current.getInstance().getMarkdown());
     }
-  }, [dcsDescription]);
+  }, []);
 
   return (
     <>
@@ -229,5 +233,7 @@ export default function ReadMe({dcsDescription, updatePath, fileContent}) {
 ReadMe.propTypes = {
   dcsDescription: PropTypes.object.isRequired,
   updatePath: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  doi: PropTypes.string.isRequired,
   fileContent: PropTypes.string,
 };

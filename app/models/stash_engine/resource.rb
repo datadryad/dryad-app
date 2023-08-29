@@ -615,7 +615,7 @@ module StashEngine
     def funders_match?(user:)
       user_funders = user.funders_as_admin
       resource_funders = contributors
-      return unless user_funders.present? && resource_funders.present?
+      return false unless user_funders.present? && resource_funders.present?
 
       user_funder_ids = user_funders.map(&:funder_id).compact.reject(&:empty?)
       resource_funder_ids = resource_funders.map(&:name_identifier_id).compact.reject(&:empty?)

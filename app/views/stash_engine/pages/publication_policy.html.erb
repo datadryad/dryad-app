@@ -1,0 +1,12 @@
+<% @page_title = 'Publication policies, obligations & warranties' %>
+<% content_for(:head) do %>
+<style type="text/css">
+  ol {
+    margin-left: 0;
+  }
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+</style>
+<% end %>
+<%= render "layouts/page_columns", page_content: "layouts/publication_policy" %>

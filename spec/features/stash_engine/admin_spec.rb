@@ -9,6 +9,7 @@ RSpec.feature 'Admin', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
+  include Mocks::DataFile
 
   context :administrative_user do
 
@@ -159,6 +160,7 @@ RSpec.feature 'Admin', type: :feature do
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
         add_required_data_files
+        mock_file_content!
         click_link 'Review and submit'
         agree_to_everything
         expect(page).to have_css('input#user_comment')
