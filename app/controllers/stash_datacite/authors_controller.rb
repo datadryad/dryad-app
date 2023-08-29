@@ -70,7 +70,7 @@ module StashDatacite
       return if params[:id] == 'new'
 
       @author = StashEngine::Author.find((params[:author] ? author_params[:id] : params[:id]))
-      return ajax_blocked unless resource.id == @author.resource_id # don't let people play games with changing author ids
+      ajax_blocked unless resource.id == @author.resource_id # don't let people play games with changing author ids
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -65,7 +65,7 @@ module StashEngine
     end
 
     def ajax_require_curator
-      return false unless current_user && current_user.curator?
+      false unless current_user && current_user.curator?
     end
 
     def require_limited_curator
@@ -76,7 +76,7 @@ module StashEngine
     end
 
     def ajax_require_limited_curator
-      return false unless current_user && current_user.limited_curator?
+      false unless current_user && current_user.limited_curator?
     end
 
     def require_admin
@@ -106,12 +106,13 @@ module StashEngine
     end
 
     def ajax_require_current_user
-      return false unless @current_user
+      false unless @current_user
     end
 
     def ajax_require_modifiable
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
-      return ajax_blocked unless valid_edit_code? ||
+
+      ajax_blocked unless valid_edit_code? ||
                                  ((current_user && resource) && resource.can_edit?(user: current_user))
     end
 
