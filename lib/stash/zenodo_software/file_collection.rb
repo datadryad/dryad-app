@@ -1,4 +1,4 @@
-require 'stash/zenodo_replicate/zenodo_connection'
+require 'stash/zenodo_replicate'
 require 'stash/zenodo_software/streamer' # may be needed if loaded from zenodo_replicate
 
 module Stash
