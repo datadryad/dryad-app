@@ -345,7 +345,7 @@ module StashEngine
     end
 
     def large_files?
-      return if latest_resource.nil?
+      return false if latest_resource.nil?
 
       latest_resource.size > APP_CONFIG.payments['large_file_size']
     end

@@ -87,7 +87,7 @@ module StashDatacite
       return if params[:id] == 'new'
 
       @related_identifier = RelatedIdentifier.find((params[:stash_datacite_related_identifier] ? related_identifier_params[:id] : params[:id]))
-      return ajax_blocked unless resource.id == @related_identifier.resource_id
+      ajax_blocked unless resource.id == @related_identifier.resource_id
     end
 
     def resource

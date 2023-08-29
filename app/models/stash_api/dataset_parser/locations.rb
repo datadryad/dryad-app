@@ -35,7 +35,7 @@ module StashApi
       end
 
       def number?(item)
-        return true if Float(item)
+        true if Float(item)
       rescue ArgumentError, TypeError
         false
       end
