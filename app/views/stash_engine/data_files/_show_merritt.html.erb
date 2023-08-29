@@ -2,6 +2,19 @@
 <ul class="c-review-files__list">
     <% uploaded = resource.previous_resource&.submitted? %>
 
+	<% unless @review.technical_info.try(:description).blank? && @resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
+      <li class=""><%= link_to 'README.md', stash_url_helpers.prepare_readme_resource_path(@resource) %>&nbsp;&nbsp;&nbsp;
+      <% if @review.technical_info.try(:description).present? %>
+          <%= filesize(@review.technical_info.try(:description).bytesize) %>
+          <% if @review.technical_info.updated_at > @resource.created_at %>
+            &nbsp;&nbsp;&nbsp;<small>new</small>
+          <% end %>
+      <% else %>
+        <%= filesize(@resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size) %>
+      <% end %>
+      </li>
+    <% end %>
+
     <% resource.data_files.where.not(upload_file_name: 'README.md').each do |fu| %>
 	<li class="<%= 'strike-deleted' if fu.file_state == 'deleted' %>">
 		<% if fu.file_state == 'copied' && uploaded && fu.last_version_file&.id.present? %>

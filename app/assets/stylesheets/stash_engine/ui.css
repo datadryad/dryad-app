@@ -5542,6 +5542,40 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   line-height: 3ex;
 }
 
+#landing_readme {
+  max-height: 35ch;
+  overflow: hidden;
+  position: relative;
+}
+#landing_readme #expand-readme {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  font-size: 1.1rem;
+  padding-top: 3rem;
+  border: none;
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgb(255, 255, 255)));
+  background: linear-gradient(rgba(255, 255, 255, 0.3), rgb(255, 255, 255) 60%);
+}
+#landing_readme #expand-readme:focus, #landing_readme #expand-readme:hover, #landing_readme #expand-readme:active {
+  outline: none;
+  text-decoration: underline;
+  -webkit-text-decoration-color: #cf4817;
+          text-decoration-color: #cf4817;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+#landing_readme.expanded {
+  max-height: none;
+  height: auto;
+  padding-bottom: 2rem;
+}
+#landing_readme.expanded #expand-readme {
+  padding-top: 8px;
+}
+
 .t-review__edit-button-top {
   margin: 0 0 20px;
 }
@@ -5574,13 +5608,8 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 @media (min-width: 480px) {
   .t-review__edit-button-bottom {
     position: absolute;
-    right: 10px;
+    right: 0;
     bottom: 0;
-  }
-}
-@media (min-width: 760px) {
-  .t-review__edit-button-bottom {
-    right: 20px;
   }
 }
 
