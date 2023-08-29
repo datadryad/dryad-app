@@ -1,6 +1,6 @@
 # Definitions
 
-*Updated: Jul 5, 2023*
+*Updated: August 29, 2023*
 
 ★ These definitions are to be used on all formal ‘terms’ webpages and in membership agreements.
 

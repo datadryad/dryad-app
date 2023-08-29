@@ -1,6 +1,6 @@
 <h1>Publication policies, obligations & warranties</h1>
 
-*Updated: July 5, 2023*
+*Updated: August 29, 2023*
 
 Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/stash/definitions) page.
 
