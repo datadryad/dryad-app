@@ -15,7 +15,7 @@
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
   fileContent: @file_content,
-  title: @resource.title,
+  title: @resource.title || 'Title of Dataset',
   doi: @resource.identifier_uri
 }) %>
 
