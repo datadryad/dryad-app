@@ -1,9 +1,10 @@
 <footer class="c-footer" id="page-footer">
   <div class="c-footer__link-group">
     <div class="c-footer__policy-group">
-      <a href="/stash/terms#privacy" class="js-nav-out">Privacy policy</a>
-      <a href="http://www.cdlib.org/about/accessibility.html" class="js-nav-out">Accessibility policy</a>
+      <a href="/stash/terms#privacy" class="js-nav-out">Privacy</a>
+      <a href="http://www.cdlib.org/about/accessibility.html" class="js-nav-out">Accessibility</a>
       <a href="<%= stash_url_helpers.terms_path %>">Terms of service</a>
+      <a href="<%= stash_url_helpers.membership_path %>">Membership</a>
       <% if Rails.env != 'production' || current_user&.superuser? %>
         <span>Version: <%= APP_CONFIG[:app_version] %></span>
         <!-- Revision: <%= APP_CONFIG[:app_revision] %>  -->
