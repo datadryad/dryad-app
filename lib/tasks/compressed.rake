@@ -38,7 +38,6 @@ namespace :compressed do
       else
         StashEngine::ContainerFile.insert_all(to_insert)
       end
-
     rescue StandardError => e
       puts "#{idx + 1}/#{count} Error updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
            "resource_id: #{db_file.resource_id}): #{e.message}"
