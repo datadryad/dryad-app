@@ -8,6 +8,7 @@ module StashDatacite
 
     before_action :ajax_require_current_user, only: %i[user_in_progress user_submitted]
     before_action :set_page_info
+    before_action :revalidate_submission, only: %i[submission]
     # get resources and composite information for in-progress table view
 
     include StashDatacite::LandingMixin
@@ -58,39 +59,31 @@ module StashDatacite
     end
 
     def submission
-      resource_id = params[:resource_id]
-      resource = StashEngine::Resource.find(resource_id)
-      resource.identifier.update_search_words!
+      @resource.current_state = 'processing'
+      @resource.check_add_readme_file
 
-      return if processing?(resource) # return here if it already has resource_state of processing in any version
+      update_submission_resource_info(@resource)
 
-      # set current merritt state to processing right away to prevent another submission while something might be
-      # waiting in the queue.  The repo_queue_states are more fine grained for queueing and used in Merritt class.
-      resource.current_state = 'processing'
-      resource.check_add_readme_file
+      StashEngine.repository.submit(resource_id: @resource_id)
 
-      update_submission_resource_info(resource)
-
-      StashEngine.repository.submit(resource_id: resource_id)
-
-      resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data',
+      @resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data',
                                                                            user_id: current_user.id)
 
-      resource.reload
+      @resource.reload
 
-      resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
-      resource.send_supp_to_zenodo
+      @resource.send_software_to_zenodo # this only does anything if software needs to be sent (new sfw or sfw in the past)
+      @resource.send_supp_to_zenodo
 
       # There is a return URL for a simple case and backwards compatibility (only for for whole user and for journals).
       # There is also one for curators and need to return back to different pages/filter setting for each dataset they
       # edit in one of dozens of different windows at the same time, so needs to be specific to each dataset.
-      if session["return_url_#{resource.identifier_id}"] || session[:returnURL]
-        return_url = session["return_url_#{resource.identifier_id}"] || session[:returnURL]
-        session["return_url_#{resource.identifier_id}"] = nil
+      if session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
+        return_url = session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
+        session["return_url_#{@resource.identifier_id}"] = nil
         session[:returnURL] = nil
-        redirect_to return_url, notice: "Submitted updates for #{resource.identifier}, title: #{resource.title}"
+        redirect_to return_url, notice: "Submitted updates for #{@resource.identifier}, title: #{@resource.title}"
       else
-        redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
+        redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(@resource))
       end
     end
 
@@ -149,6 +142,20 @@ module StashDatacite
       end
       resource.current_resource_state.update(resource_state: 'processing') # should lock them out of multiple rapid submissions of same resource
       false
+    end
+
+    def revalidate_submission
+      @resource_id = params[:resource_id]
+      @resource = StashEngine::Resource.find(@resource_id)
+
+      redirect_to stash_url_helpers.dashboard_path, alert: 'Invalid submission' and return unless @resource.present?
+
+      @resource.identifier.update_search_words!
+
+      error_items = Resource::DatasetValidations.new(resource: @resource).errors
+      redirect_to stash_url_helpers.review_resource_path(@resource) and return if error_items.count.positive?
+
+      redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end
   end
 end
