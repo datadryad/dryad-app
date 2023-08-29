@@ -1,4 +1,5 @@
-require 'stash/zenodo_replicate'
+require 'stash/zenodo_replicate/zenodo_connection'
+require 'stash/zenodo_replicate/metadata_generator'
 
 module Stash
   module ZenodoReplicate
