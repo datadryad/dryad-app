@@ -35,7 +35,7 @@ module StashDatacite
     # Use callbacks to share common setup or constraints between actions.
     def set_description
       @description = Description.find(description_params[:id])
-      return ajax_blocked unless resource.id == @description.resource_id
+      ajax_blocked unless resource.id == @description.resource_id
     end
 
     def resource

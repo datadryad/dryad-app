@@ -431,7 +431,7 @@ module Stash
       end
 
       def date_to_date_parts(date)
-        date = date.is_a?(Date) ? date : Date.parse(date.to_s)
+        date = Date.parse(date.to_s) unless date.is_a?(Date)
         [date.year, date.month, date.day]
       rescue StandardError
         nil
