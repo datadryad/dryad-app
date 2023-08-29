@@ -13,7 +13,7 @@ module StashEngine
       end
 
       def ping_dependency
-        return nil unless @dependency.present?
+        nil unless @dependency.present?
         # Each implementation of this service must implement this method!
       end
 

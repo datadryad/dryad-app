@@ -536,7 +536,8 @@ module StashApi
       # all this bogus return false stuff is to prevent double render errors in some circumstances
       return if check_superuser_restricted_params == false
       return if check_may_set_user_id == false
-      return if check_may_set_payment_id == false
+
+      nil if check_may_set_payment_id == false
     end
 
     def check_superuser_restricted_params

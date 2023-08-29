@@ -6,7 +6,7 @@ namespace :embargo_fix do
   task migration_issue: :environment do
     p 'Starting embargo correction'
     File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
-      line.gsub!(/doi:/, '')
+      line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
 
@@ -75,7 +75,7 @@ namespace :embargo_fix do
   task cron_issue: :environment do
     p 'Starting embargo CRON correction'
     File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
-      line.gsub!(/doi:/, '')
+      line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
 

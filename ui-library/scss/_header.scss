@@ -129,6 +129,7 @@
 
 #mobile-nav-bar .c-header__nav-item {
   margin: 0;
+  padding: 0;
   flex: 1;
   text-align: center;
   text-decoration: none;
@@ -169,6 +170,7 @@
   white-space: nowrap;
   text-decoration: none;
   margin: 0 -10px 2px;
+  padding: 0;
 
   @media (max-width: $screen-lg-min - 1) {
     a, button {
@@ -215,6 +217,7 @@
 
     li {
       margin: 0;
+      padding: 0;
       a {
         display: block;
         padding: 10px 30px;
