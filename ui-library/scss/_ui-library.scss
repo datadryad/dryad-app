@@ -38,10 +38,40 @@ p {
 }
 
 
-ol li,
-ul li {
-   margin: 0 auto $spacing-base;
+ul {
+  margin-left: 1.75em;
+  padding-left: 1em;  
+}
+
+ol {
+  margin-left: 2em;
+  padding-left: 1em;
+}
+
+ul, ol {
+  margin-top: $spacing-base;
+  margin-bottom: $spacing-base;
+  ul, ol {
+    margin-left: 0; 
+  }
+}
+
+ol p ~ ol, ol p ~ ul, ul p ~ ul, ul p ~ ol {
+  margin-top: -$spacing-base;
+}
+
+ol > li,
+ul > li {
+   margin: $spacing-base auto;
    line-height: 150%;
+}
+
+ol > li {
+  padding-left: .5em;
+}
+
+ul > li { 
+  padding-left: .25em;
 }
 
 dialog {
