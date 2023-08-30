@@ -1,5 +1,4 @@
 <% @page_title = "Publication updater" %>
-
 <h1 class="o-heading__level1">Publication updater</h1>
 
 <div>
@@ -27,13 +26,12 @@
   <% end %>
 
   <div class="table-wrapper">
-    <table class="c-lined-table">
+    <table class="c-lined-table c-proposed-change-table">
       <thead>
       <tr>
         <th class="c-lined-table__sort <%= sort_display('stash_engine_proposed_changes.title') %> c-proposed-change-table__column-large">
           <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.title', title: 'Title' %>
         </th>
-        <th class="c-proposed-change-table__column-small">&nbsp;</th>
         <th class="c-lined-table__sort <%= sort_display('publication_name') %> c-proposed-change-table__column-small">
           <%= sortable_column_head sort_field: 'publication_name', title: 'Publication' %>
         </th>
@@ -54,28 +52,25 @@
         </th>
       </tr>
       </thead>
-
       <tbody>
       <% @proposed_changes.each do |proposed_change| %>
         <% resource = @resources.select{ |r| r.identifier_id == proposed_change.identifier_id }.first %>
         <% if resource.present? %>
           <%= render partial: 'proposed_change_line',
                      locals: { proposed_change: proposed_change, resource: resource } %>
-
-          <tr id="separator_<%= proposed_change.id %>" class="c-proposed-change-table__row-separator"><td colspan="9">&nbsp;</td></tr>
         <% end %>
       <% end %>
       </tbody>
     </table>
   </div>
 
-  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
-              stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
-  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
-
   <div class="c-space-paginator">
     <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
   </div>
+
+  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+              stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
+  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
 
   <script type="text/javascript">
     $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){
