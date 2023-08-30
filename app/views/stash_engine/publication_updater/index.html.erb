@@ -3,20 +3,18 @@
 <h1 class="o-heading__level1">Publication updater</h1>
 
 <div>
-  <h2>Datasets</h2>
+  <p>The publication updater will try to match a dataset's publication DOI (if available). If Crossref finds a match for the DOI then the 'Scores' column will display "1 (DOI match)". In the event that no publication DOI was available, the publication updater will then send the dataset's title and authors to Crossref. In this situation, the 'Scores' column will display Crossref's scoring of the closest match it found (in parenthesis) and the publication updater's internal score that is based on matching against the title and author list returned by Crossref</p>
+  <h2>Instructions</h2>
+  <ol>
+    <li>Evaluate the relationship between the dataset and the publication</li>
+    <li>If the publication should not be associated with the dataset, click "Reject"</li>
+    <li>Otherwise, decide on a related work type for the publication: primary (article), preprint, or related (article)</li>
+    <li>Decide whether to also overwrite existing dataset metadata (limited to: ISSN, publication name, and subjects)</li>
+    <li>Make your selection for type and metadata import from the dropdown, and click "Accept"</li>
+  </ol>
 
-  <p>The table below groups datasets with their proposed metadata changes.</p>
-  <p>The first row in a group represents the existing information we have for the dataset. The second row of tthe group represents the proposed changes (highlighted in blue). Clicking the <em>'Accept'</em> button will transfer the proposed changes in 'blue' to the dataset. Clicking <em>'Reject'</em> will cancel the proposed changes</p>
-  <p>The publication updater will try to match a dataset's publication DOI (if available). If Crossref finds a match for the DOI then the 'Scores' column will display `1 (DOI match)`. In the event that no publication DOI was available, the publication updater will then send the dataset's title and authors to Crossref. In this situation, the 'Scores' column will display Crossref's scoring of the closest match it found (in parenthesis) and the publication updater's internal score that is based on matching against the title and author list returned by Crossref</p>
-
-  <p>Three related work types are now available to select for the update: primary (article), related (article), preprint (article).</p>
-
-  <p>If you select to update with metadata then the items that update are: the issn, publication name, subjects and related identifier</p>
-
-  <p>Selecting to update without (w/o) metadata means only the related identifier is updated and the other items are left &quot;as is&quot; in the dataset.</p>
-
-  <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>
-    <h2 class="o-heading__level2">Limit to</h2>
+  <h2 class="o-heading__level2">Limit to</h2>
+  <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
 
     <div class="o-admin-form-pair">
       <label for="list_search">Search:</label>
