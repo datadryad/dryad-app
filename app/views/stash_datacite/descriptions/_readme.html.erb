@@ -1,11 +1,8 @@
 <% if !review.readme_content.blank? %>
 <% content = review.readme_content %>
-<% if review.readme_content.encoding == Encoding::ASCII_8BIT %>
-  <% content = review.readme_content.force_encoding(Encoding::UTF_8) %>
-  <% if content.match(/\\#/) %>
-    <% reformat = markdown_render content %>
-    <% content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
-  <% end %>
+<% if content.match(/^\\#/) %>
+  <% reformat = markdown_render content %>
+  <% content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
 <% end %>
 <div id="landing_readme">
     <button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button>
