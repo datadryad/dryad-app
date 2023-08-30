@@ -63,12 +63,10 @@ module StashDatacite
       end
 
       def readme_content
-        if technical_info.try(:description).blank?
-          readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
-          @readme_content ||= readme_file&.file_content || ''
-        else
-          @readme_content ||= technical_info.try(:description)
-        end
+        # if technical_info.try(:description).blank?
+        #  readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
+        #  @readme_content ||= readme_file&.file_content || ''
+        @readme_content ||= technical_info.try(:description)
       end
 
       def software_files
