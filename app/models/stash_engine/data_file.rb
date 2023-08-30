@@ -115,7 +115,12 @@ module StashEngine
         resp = HTTP.timeout(1000).get(s3_url)
         return nil if resp.code > 299
 
-        return resp.to_s
+        content_string = resp.to_s
+        encoding = content_string.encoding
+        if encoding != Encoding::UTF_8
+          content_string = content_string.force_encoding(encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+        end
+        return content_string.encoding == Encoding::UTF_8 ? content_string : nil
       rescue HTTP::Error
         logger.info("Couldn't get S3 request for #{inspect}")
       end

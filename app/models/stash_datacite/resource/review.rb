@@ -63,17 +63,10 @@ module StashDatacite
       end
 
       def readme_content
-        if technical_info.try(:description).blank?
-          readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
-          content_string = readme_file&.file_content || ''
-          encoding = content_string.encoding
-          if encoding != Encoding::UTF_8
-            content_string = content_string.force_encoding(encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
-          end
-          @readme_content ||= content_string.encoding == Encoding::UTF_8 ? content_string : ''
-        else
-          @readme_content ||= technical_info.try(:description)
-        end
+        # if technical_info.try(:description).blank?
+        #  readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
+        #  @readme_content ||= readme_file&.file_content || ''
+        @readme_content ||= technical_info.try(:description)
       end
 
       def software_files
