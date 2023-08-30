@@ -43,8 +43,8 @@
     <% end %>
 
     <section style="margin-bottom: 1rem;">
-      <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
-                class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
     <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields } %>
     </section>
 
@@ -68,11 +68,12 @@
     <% end %>
 
     <h2 class="o-heading__page-span">Review files</h2>
-
-    <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
-
+    <div><%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %></div>
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' if @review.readme_content.blank? %>
+    
   <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-    <div class="c-review-files">
+    <div class="c-review-files" style="clear: both">
 	<% if highlight_fields.include?('data_files') %>
             <%= render partial: "stash_engine/data_files/show_merritt",
 		       locals: { resource: @resource,
