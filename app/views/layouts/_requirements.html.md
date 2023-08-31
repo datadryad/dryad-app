@@ -55,3 +55,16 @@ We recommend:
 * **Research facility**: Where the research was conducted, if different from your current affiliation (e.g., a field station).
 * **Methods**: Any methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed).
 * **Related works**: Use this field to indicate resources, other than the primary article, that are associated with the data. Examples include related datasets, preprints, etc.
+
+
+## Cost
+
+Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from members and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.
+
+Fee waivers are automatically granted for submissions originating from researchers based in countries classified by the <a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups" target="_blank">World Bank<span class="screen-reader-only"> (opens in new window)</span></a> as low-income or lower-middle-income economies. We’re sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the fee for any reason, beyond and including their geographic location, we’ve expanded our waiver policy so that any author may request one by [contacting us](/stash/contact).
+
+The base DPC per data submission is $<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: StashEngine::Identifier.last) / 100 %> USD. DPCs are invoiced upon curator approval/publication, unless the submitter is based at a [member institution](/stash/join_us#members) (determined by login credentials), an [associated journal or publisher](/stash/journals) has an agreement with Dryad to sponsor the DPC, or the submitter is based in a fee-waiver country (see above).
+
+### Overage fees
+
+For submissions without a sponsor or waiver, Dryad charges excess storage fees for data totaling over 50GB. For data packages in excess of 50GB, submitters will be charged $50 for each additional 10GB, or part thereof (submissions between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on).
