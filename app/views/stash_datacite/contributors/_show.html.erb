@@ -4,19 +4,24 @@
 	<% else %>
 		<h3 class="o-heading__level2">Funding</h3>
 	<% end %>
-  <div class="<%= 'highlight' if highlight %>">    
-  <% contributors.each do |contributor| %>
-      <% @award_string = ", <span>Award: #{contributor.award_number}</span>".html_safe %>
-      <% @desc_string = ", <span>#{contributor.award_description}</span>".html_safe %>
+  <div>    
+  <% contributors.each_with_index do |contributor, i| %>
+      <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
+      <% @award_string = ", <span class='#{'highlight' if highlights&.key?(:award)}'>Award: #{contributor.award_number}</span>".html_safe %>
+      <% @desc_string = ", <span class='#{'highlight' if highlights&.key?(:desc)}'>#{contributor.award_description}</span>".html_safe %>
       <% if current_user && current_user.limited_curator? %>
 	  <p>
-	      <%= contributor.contributor_name_friendly(show_asterisk: true) %><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
+	      <span class="<%= 'highlight' if highlights&.key?(:name) %>"><%= contributor.contributor_name_friendly(show_asterisk: true) %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
 	  </p>
       <% else %>
 	  <p>
-	      <%= contributor.contributor_name_friendly %><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
+	      <span class="<%= 'highlight' if highlights&.key?(:name) %>"><%= contributor.contributor_name_friendly %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
 	  </p>
       <% end %>
+  <% end %>
+  <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+  <% if deleted %>
+    <div class="highlight"><%= deleted[:deleted] %> funders deleted</div>
   <% end %>
   </div>
 <% end %>
