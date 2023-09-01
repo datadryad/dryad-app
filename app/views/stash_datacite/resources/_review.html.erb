@@ -37,8 +37,10 @@
       <section class="t-review__funding-section">
         <% funder_highlight = highlight_fields[highlight_fields.find_index('funders') + 1] if highlight_fields.include?('funders') %>
         <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight_fields: funder_highlight || [] } %>
+        
+        <% works_highlight = highlight_fields[highlight_fields.find_index('related_identifiers') + 1] if highlight_fields.include?('related_identifiers') %>
         <%= render partial: "stash_datacite/related_identifiers/show", locals:
-            { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
+            { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
         <%= link_to "Edit Description",
                     stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                     class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
