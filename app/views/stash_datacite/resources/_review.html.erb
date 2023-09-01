@@ -144,7 +144,7 @@
       <% end %>
     <% end %>
   <% elsif @error_items.blank? # valid data %>
-    <%= form_with(url: resources_submission_path) do -%>
+    <%= form_with(url: resources_submission_path, id: 'submit_dataset_form') do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
@@ -176,6 +176,11 @@
       updateSubmitCommentDisabled();
     });
   }
+
+  $("#submit_dataset_form").submit(function () {
+    $("#submit_dataset").attr("disabled", true);
+    return true;
+  });
 
   function updateSubmitCommentDisabled(){
     let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
