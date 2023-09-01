@@ -1,3 +1,4 @@
+<% unless @resource&.resource_type&.resource_type == 'collection' %>
 <% if @id.may_download?(user: current_user) %>
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
 <% else %>
@@ -11,6 +12,7 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
+<% end %>
 
 <% if @resource&.identifier&.pub_state == 'published' %>
 <div class="c-sidebox" id="share_section">
@@ -40,6 +42,7 @@
   </div>
 </div>
 
+<% unless @resource&.resource_type&.resource_type == 'collection' %>
 <div class="c-sidebox">
   <h2 class="c-sidebox__heading">License</h2>
   <div id="show_license"
@@ -47,6 +50,7 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
+<% end %>
 
 <script>
   $( "#citation_link" ).click(function() {

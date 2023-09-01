@@ -58,6 +58,16 @@ module StashDatacite
         @related_identifiers ||= @resource.related_identifiers
       end
 
+      def collected_datasets
+        return [] if resource_type.resource_type != 'collection'
+
+        datasets = related_identifiers.where(work_type: :dataset).to_a
+        ids = datasets.map do |d|
+          StashEngine::Identifier.where(identifier: d.related_identifier.match(%r{10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+}).to_s).first || nil
+        end.compact
+        ids.map(&:latest_resource)
+      end
+
       def file_uploads
         @file_uploads ||= @resource.current_file_uploads
       end

@@ -1,0 +1,32 @@
+  <%= render partial: "stash_datacite/titles/show", locals: { title: review.title_str, highlight: false } %>
+  <div class="t-landing__metadata o-metadata">
+    <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors, highlight: false } %>
+    <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource, highlight: false } %>
+  </div>
+
+  <section class="citation-section">
+  <%= render partial: "stash_datacite/shared/citations",
+             locals: { authors: review.authors, title: review.title_str,
+                       resource_type: review.resource_type,
+                       identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
+                       publication_year: (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year) } %>
+  </section>
+
+  <% if review.collected_datasets.count.positive? %>
+  <section class="collection-section">
+    <h2>Collected datasets</h2>
+    <ul style="list-style-type: none; padding: 0; margin: 0;">
+    <% review.collected_datasets.each do |d| %>
+      <% publication = "#{d.publication_date.blank? ? "Forthcoming " : ''}#{d.publication_years&.first&.publication_year&.to_i}" %>
+      <li style="padding-left: 0"><a href="https://doi.org/<%= d.identifier %>"><%= d.title %></a><br/>
+      <%= author_citation_format(d.authors) %> (<%=publication %>)</li>
+    <% end %>
+    </ul>
+  </section>
+  <% end %>
+
+  <%= render partial: "stash_datacite/descriptions/show",
+       locals: { abstract: review.abstract, methods: '',
+     other: '', highlight_fields: [] } %>
+
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight: false } %>

@@ -1,6 +1,6 @@
 <div class="js-alert c-alert--informational" role="alert">
   <div class="c-alert__text">
-    You are seeing a preview of this dataset because you're logged in as
+    You are seeing a preview of this <%= resource&.resource_type&.resource_type %> because you're logged in as
     <%= resource&.user_id == current_user&.id ? 'the owner' : 'an administrator' %>.<br/><br/>
     If you need to see a public view, please log out or use the incognito/anonymous mode in your browser.
   </div>

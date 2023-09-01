@@ -1,4 +1,4 @@
-<% unless contributors.nil? || contributors.length < 1 %>
+<% unless contributors.nil? || contributors.length < 1 || (contributors.length == 1 && contributors[0].contributor_name_friendly == 'N/A') %>
 	<% if params[:controller].include?('landing') %>
   	<h2 class="o-heading__level2">Funding</h2>
 	<% else %>
