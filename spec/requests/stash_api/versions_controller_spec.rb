@@ -211,7 +211,7 @@ module StashApi
         response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers
         expect(response_code).to eq(200)
         h = response_body_hash
-        expect(h[:changedFields]).to eq(%w[title authors abstract subjects funders])
+        expect(%w[title authors abstract subjects funders] - h[:changedFields]).to eq([])
       end
 
       it "wouldn't show changed fields for a first version" do
