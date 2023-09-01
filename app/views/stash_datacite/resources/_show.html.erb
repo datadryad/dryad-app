@@ -26,7 +26,7 @@
      locals: { abstract: '', methods: review.methods,
    other: review.other, highlight_fields: [] } %>
 
-  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight: false } %>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
 
   <% if review.geolocation_data? %>
     <h2 class="o-heading__level2">Location</h2>
