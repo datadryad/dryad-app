@@ -16,7 +16,8 @@
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
     <div class="t-landing__metadata o-metadata">
-      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
+      <% author_highlight = highlight_fields[highlight_fields.find_index('authors') + 1] if highlight_fields.include?('authors') %>
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight_fields: author_highlight || [] } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
     </div>
 
