@@ -249,7 +249,7 @@ module StashEngine
       clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
-      if is_collection?
+      if collection?
         self.payment_type = 'no_data'
         self.payment_id = nil
       elsif journal&.will_pay?
@@ -325,7 +325,7 @@ module StashEngine
       doi
     end
 
-    def is_collection?
+    def collection?
       # no payment required (no new data uploaded)
       latest_resource&.resource_type&.resource_type == 'collection'
     end
