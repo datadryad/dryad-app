@@ -72,11 +72,17 @@ module StashDatacite
         err << abstract
         err << subjects
 
-        err << s3_error_uploads
-        err << url_error_validating
-        err << over_file_count
-        err << over_files_size
-        err << data_required
+        if @resource&.resource_type&.resource_type == 'collection'
+          err << collected_datasets
+        else
+
+          err << s3_error_uploads
+          err << url_error_validating
+          err << over_file_count
+          err << over_files_size
+          err << data_required
+
+        end
 
         err.flatten
       end
@@ -90,6 +96,14 @@ module StashDatacite
         err << url_error_validating
 
         err.flatten
+      end
+
+      def collected_datasets
+        err = []
+        if @resource.related_identifiers.count.zero?
+          err << ErrorItem.new(message: 'List all {datasets in the collection}', page: metadata_page(@resource), ids: ['related_works_section'])
+        end
+        err
       end
 
       def article_id
@@ -120,7 +134,7 @@ module StashDatacite
 
       def title
         if @resource.title.blank?
-          return ErrorItem.new(message: 'Fill in a {dataset title}',
+          return ErrorItem.new(message: "Fill in a {#{@resource&.resource_type&.resource_type} title}",
                                page: metadata_page(@resource),
                                ids: ["title__#{@resource.id}"])
         end

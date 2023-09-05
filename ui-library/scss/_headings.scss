@@ -59,6 +59,7 @@ h1:first-child, *[class^="o-heading__level"]:first-child {
 
 .o-heading__page-span {
   @extend %pull-background;
+  margin-top: $spacing-sm;
   margin-bottom: $spacing-md;
   padding-top: 8px;
   padding-bottom: 8px;

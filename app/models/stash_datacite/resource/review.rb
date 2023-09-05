@@ -55,13 +55,17 @@ module StashDatacite
       end
 
       def related_identifiers
-        @related_identifiers ||= @resource.related_identifiers
+        @related_identifiers ||= if @resource&.resource_type&.resource_type == 'collection'
+                                   @resource.related_identifiers.where.not(relation_type: 'ispartof')
+                                 else
+                                   @resource.related_identifiers
+                                 end
       end
 
       def collected_datasets
         return [] if resource_type.resource_type != 'collection'
 
-        datasets = related_identifiers.where(work_type: :dataset).to_a
+        datasets = @resource.related_identifiers.where(relation_type: 'ispartof').to_a
         ids = datasets.map do |d|
           StashEngine::Identifier.where(identifier: d.related_identifier.match(%r{10\.\d{4,9}/[-._;()/:a-zA-Z0-9]+}).to_s).first || nil
         end.compact

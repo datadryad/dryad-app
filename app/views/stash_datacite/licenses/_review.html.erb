@@ -47,6 +47,7 @@
 
 <% end %>
 
+<% unless @resource&.resource_type&.resource_type == 'collection' %>
 <div>
 	<h3>Payment</h3>
 	<% submitter_affiliation = @resource.identifier.submitter_affiliation %>
@@ -83,6 +84,7 @@
 		<p>This submission does not require a payment.</p>
 	<% end %>
 </div>
+<% end %>
 
 <br>
 

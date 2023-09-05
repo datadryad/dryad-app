@@ -116,7 +116,7 @@
 
   <% end %>
 
-    <h2 class="o-heading__page-span"><%= @resource&.resource_type&.resource_type == 'collection' ? 'Collected and r' : 'R' %>elated works</h2>
+    <h2 class="o-heading__page-span" id="related_works_section"><%= @resource&.resource_type&.resource_type == 'collection' ? 'Collected and r' : 'R' %>elated works</h2>
 
     <% worktypes = StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a %>
     <% worktypes[0], worktypes[1] = worktypes[1], worktypes[0] if @resource&.resource_type&.resource_type = 'collection' %>
