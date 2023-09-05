@@ -10,7 +10,7 @@
 <% # All other related IDs %>
 
 <% other_relations = if @resource&.resource_type&.resource_type == 'collection'
-		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).where.not(relation_type: 'ispartof').distinct.order(:work_type)
+		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).where.not(relation_type: 'haspart').distinct.order(:work_type)
 	else
 		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).distinct.order(:work_type)
 	end %>

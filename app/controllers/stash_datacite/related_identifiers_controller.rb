@@ -77,7 +77,7 @@ module StashDatacite
       { related_identifier: std_fmt,
         related_identifier_type: RelatedIdentifier.identifier_type_from_str(std_fmt),
         relation_type: if @resource&.resource_type&.resource_type == 'collection' && related[:work_type] == 'dataset'
-                         'ispartof'
+                         'haspart'
                        else
                          RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]]
                        end,
