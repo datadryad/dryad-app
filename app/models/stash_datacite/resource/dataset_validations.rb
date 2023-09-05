@@ -100,7 +100,7 @@ module StashDatacite
 
       def collected_datasets
         err = []
-        if @resource.related_identifiers.count.zero?
+        if @resource.related_identifiers.where(relation_type: 'haspart').count.zero?
           err << ErrorItem.new(message: 'List all {datasets in the collection}', page: metadata_page(@resource), ids: ['related_works_section'])
         end
         err

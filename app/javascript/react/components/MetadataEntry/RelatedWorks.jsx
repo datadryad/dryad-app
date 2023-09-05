@@ -17,7 +17,7 @@ function RelatedWorks(
   const blankRelated = {
     related_identifier: '',
     related_identifier_type: 'doi',
-    relation_type: resourceType === 'collection' ? 'ispartof' : 'iscitedby',
+    relation_type: resourceType === 'collection' ? 'haspart' : 'iscitedby',
     resource_id: resourceId,
     work_type: resourceType === 'collection' ? 'dataset' : 'article',
   };
