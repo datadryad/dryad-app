@@ -75,9 +75,9 @@ module Stash
 
       describe :manifest do
         let(:instance) { instance_double(Stash::Aws::S3) }
-        let(:double_class) {
+        let(:double_class) do
           class_double(Stash::Aws::S3).as_stubbed_const
-        }
+        end
 
         before(:each) do
           # make Stash::Aws::S3 an rspec "spy", so we can test how it was called
@@ -91,16 +91,16 @@ module Stash
         it 'builds a manifest' do
           # expect(instance).to have_received(:put)
           expect(instance).to have_received(:put).with(s3_key: /manifest\.checkm/,
-                                                             contents: /%checkm_/).at_least(:once)
+                                                       contents: /%checkm_/).at_least(:once)
           expect(instance).to have_received(:put).with(s3_key: /manifest\.checkm/,
-                                                             contents: %r{stash-wrapper\.xml \| text/xml}).at_least(:once)
+                                                       contents: %r{stash-wrapper\.xml \| text/xml}).at_least(:once)
         end
 
         describe 'public/system' do
           it 'writes mrt-dataone-manifest.txt' do
             # This file should look like spec/data/stash-merritt/mrt-dataone-manifest.txt
             package = ObjectManifestPackage.new(resource: @resource)
-            the_path = package.create_manifest
+            package.create_manifest
             @resource.new_data_files.find_each do |upload|
               target_string = "#{upload.upload_file_name} | #{upload.upload_content_type}"
               expect(instance).to have_received(:put)
@@ -182,7 +182,7 @@ module Stash
             package.create_manifest
 
             expect(instance).to have_received(:put).with(s3_key: /manifest\.checkm/,
-                                                                               contents: /mrt-delete\.txt/).at_least(:once)
+                                                         contents: /mrt-delete\.txt/).at_least(:once)
             deleted.each do |filename|
               expect(instance).to have_received(:put)
                 .with(s3_key: /mrt-delete\.txt/,
