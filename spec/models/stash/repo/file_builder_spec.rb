@@ -59,9 +59,9 @@ module Stash
           builder = FileBuilder.new(file_name: file_name)
           builder.define_singleton_method(:contents) { contents }
           expect_any_instance_of(Stash::Aws::S3).to receive(:put)
-                                                    .with(s3_key: "#{target_dir}/#{file_name}",
-                                                          contents: contents)
-                                                    .at_least(:once)
+            .with(s3_key: "#{target_dir}/#{file_name}",
+                  contents: contents)
+            .at_least(:once)
           builder.write_s3_file(target_dir)
         end
 
