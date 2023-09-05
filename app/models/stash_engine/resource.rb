@@ -125,7 +125,7 @@ module StashEngine
     end
 
     def remove_s3_temp_files
-      Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
+      Stash::Aws::S3.new.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
     after_create :init_state_and_version
@@ -356,7 +356,7 @@ module StashEngine
       end
 
       # add file
-      Stash::Aws::S3.put_stream(
+      Stash::Aws::S3.new.put_stream(
         s3_key: "#{s3_dir_name(type: 'data')}/README.md",
         stream: StringIO.new(technical_info)
       )

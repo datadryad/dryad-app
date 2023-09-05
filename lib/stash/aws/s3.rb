@@ -3,9 +3,9 @@ require 'aws-sdk-s3'
 # use example
 # require 'stash/aws/s3'
 #
-# Stash::Aws::S3.put(s3_key: 'test01/color.txt', contents: 'Dryad Green is #40841c')
-# Stash::Aws::S3.exists?(s3_key: 'test01/color.txt')
-# Stash::Aws::S3.delete_file(s3_key: 'test01/color.txt')
+# Stash::Aws::S3.new.put(s3_key: 'test01/color.txt', contents: 'Dryad Green is #40841c')
+# Stash::Aws::S3.new.exists?(s3_key: 'test01/color.txt')
+# Stash::Aws::S3.new.delete_file(s3_key: 'test01/color.txt')
 
 module Stash
   module Aws
