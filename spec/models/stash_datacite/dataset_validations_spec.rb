@@ -179,7 +179,7 @@ module StashDatacite
         it 'returns missing files when files uploaded to s3 are not present' do
           files = @resource.generic_files
           files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)
@@ -193,7 +193,7 @@ module StashDatacite
 
         it 'does not check missing files once Merritt processing is complete' do
           @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
           allow(@resource).to receive('submitted?').and_return(true)
 
@@ -208,7 +208,7 @@ module StashDatacite
           @resource.generic_files.third.update(url: 'http://example.com')
           @resource.generic_files.fourth.update(file_state: 'copied')
           @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)
