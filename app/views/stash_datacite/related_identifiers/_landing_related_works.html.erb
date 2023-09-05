@@ -9,7 +9,11 @@
 
 <% # All other related IDs %>
 
-<% other_relations = @resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).distinct.order(:work_type) %>
+<% other_relations = if @resource&.resource_type&.resource_type == 'collection'
+		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).where.not(relation_type: 'ispartof').distinct.order(:work_type)
+	else
+		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).distinct.order(:work_type)
+	end %>
 <% other_relations.each do |orel| %>
     <h3 class="o-heading__level3-related-works"><%= orel.work_type_friendly %></h3>
     <% other_ids = @resource.related_identifiers.where(work_type: orel.work_type).where(hidden: false) %>
