@@ -5,13 +5,12 @@ import AWS from 'aws-sdk';
 import ReactDOM from 'react-dom';
 import {render} from '@cdl-dryad/frictionless-components/lib/render';
 import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
-import sanitize from '../../../lib/sanitize_filename';
+import sanitize from '../../lib/sanitize_filename';
 
 import {
-  UploadType, ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, ValidateFiles, Instructions, WarningMessage,
-} from '../../components/FileUpload';
+  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage,
+} from '../components/FileUpload';
 import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
-
 /**
  * Constants
  */
@@ -38,35 +37,6 @@ const ValidTabular = {
     'application/xml', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   ],
 };
-const upload_types = [
-  {
-    type: 'data',
-    logo: '../../../images/logo_dryad.svg',
-    alt: 'Dryad',
-    name: 'Data',
-    description: 'e.g., csv, xsl, fasta',
-    buttonFiles: 'Choose files',
-    buttonURLs: 'Enter URLs',
-  },
-  {
-    type: 'software',
-    logo: '../../../images/logo_zenodo.svg',
-    alt: 'Zenodo',
-    name: 'Software',
-    description: 'e.g., code packages, scripts',
-    buttonFiles: 'Choose files',
-    buttonURLs: 'Enter URLs',
-  },
-  {
-    type: 'supp',
-    logo: '../../../images/logo_zenodo.svg',
-    alt: 'Zenodo',
-    name: 'Supplemental information',
-    description: 'e.g., figures, supporting tables',
-    buttonFiles: 'Choose files',
-    buttonURLs: 'Enter URLs',
-  },
-];
 
 export const displayAriaMsg = (msg) => {
   const el = document.getElementById('aria-info');
@@ -96,34 +66,6 @@ const transformData = (files) => files.map((file) => ({
   uploadType: RailsActiveRecordToUploadType[file.type],
   sizeKb: formatSizeUnits(file.upload_file_size),
 }));
-
-const getErrorMessage = (url) => {
-  switch (url.status_code) {
-  case 200:
-    return '';
-  case 400:
-    return 'The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS';
-  case 401:
-    return 'The URL was not authorized for download.';
-  case 403: case 404:
-    return 'The URL was not found.';
-  case 410:
-    return 'The requested URL is no longer available.';
-  case 411:
-    return 'URL cannot be downloaded, please link directly to data file';
-  case 414:
-    return `The server will not accept the request, because the URL ${url} is too long.`;
-  case 408: case 499:
-    return 'The server timed out waiting for the request to complete.';
-  case 409:
-    return "You've already added this URL in this version.";
-  case 481:
-    return '<a href="/stash/web_crawling" target="_blank">Crawling of HTML files</a> isn\'t supported.';
-  // case 500: case 501: case 502: case 503: case 504: case 505: case 506: case 507: case 508: case 509: case 510: case 511:
-  default:
-    return 'Encountered a remote server error while retrieving the request.';
-  }
-};
 
 const addCsrfToken = () => {
   const csrf_token = document.querySelector('[name=csrf-token]');
@@ -356,7 +298,9 @@ class UploadFiles extends React.Component {
   };
 
   updateManifestFiles = (files) => {
-    this.updateFailedUrls(files.invalid_urls);
+    let {failedUrls} = this.state;
+    failedUrls = failedUrls.concat(files.invalid_urls);
+    this.setState({failedUrls});
 
     if (!files.valid_urls.length) return;
     let successfulUrls = files.valid_urls;
@@ -398,17 +342,6 @@ class UploadFiles extends React.Component {
       chosenFiles[index] = fileToUpdate;
     });
     this.setState({chosenFiles});
-  };
-
-  updateFailedUrls = (urls) => {
-    if (!urls.length) return;
-    urls.map((url) => {
-      url.error_message = getErrorMessage(url);
-      return url;
-    });
-    let {failedUrls} = this.state;
-    failedUrls = failedUrls.concat(urls);
-    this.setState({failedUrls});
   };
 
   updateFileList = (files) => {
@@ -608,25 +541,7 @@ class UploadFiles extends React.Component {
         <h1 className="o-heading__level1">
           Upload your files
         </h1>
-        <Instructions />
-        <div className="c-uploadwidgets">
-          {upload_types.map((upload_type) => (
-            <UploadType
-              key={upload_type.type}
-              changed={(event) => this.addFilesHandler(event, upload_type.type)}
-              // triggers change to reset file uploads to null before onChange to allow files to be added again
-              clickedFiles={(event) => { event.target.value = null; }}
-              clickedModal={() => this.showModalHandler(upload_type.type)}
-              type={upload_type.type}
-              logo={upload_type.logo}
-              alt={upload_type.alt}
-              name={upload_type.name}
-              description={upload_type.description}
-              buttonFiles={upload_type.buttonFiles}
-              buttonURLs={upload_type.buttonURLs}
-            />
-          ))}
-        </div>
+        <UploadSelect changed={this.addFilesHandler} clickedModal={this.showModalHandler} />
         {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
         {chosenFiles.length > 0 ? (
           <div>
