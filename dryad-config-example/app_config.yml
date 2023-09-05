@@ -149,6 +149,7 @@ defaults: &DEFAULTS
   s3:
     region: us-west-2
     bucket: a-test-bucket
+    merritt_bucket: a-merritt-test-bucket
     key: abcdefg
     secret: HIJKLMNOP
   maximums:
