@@ -3,7 +3,7 @@
              locals: { error_items: StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors } %>
 <% end %>
 <div class="c-autosave-header">
-  <h1 class="o-heading__level1">Describe your dataset</h1>
+  <h1 class="o-heading__level1">Describe your <%= @resource&.resource_type&.resource_type || 'dataset' %></h1>
   <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
   <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
@@ -20,9 +20,9 @@
                         related_identifier: @doi.related_identifier || ''
                       }) %>
 
-<h2 class="o-heading__page-span">Dataset: Basic information</h2>
+<h2 class="o-heading__page-span"><%= @resource&.resource_type&.try(:resource_type_general_ui) || 'Dataset' %>: Basic information</h2>
 
-  <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path } ) %><br>
+  <%= react_component('components/MetadataEntry/Title', { resource: @resource.slice(:id, :title), path: titles_update_path, type: @resource&.resource_type&.try(:resource_type_general_ui) || 'Dataset' } ) %><br>
 
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend" id="authors-head">Author(s)</legend>
@@ -74,6 +74,7 @@
                         mceKey: APP_CONFIG[:mce_key],
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
                         isCurator: current_user&.limited_curator?) %>
+  <% unless @resource&.resource_type&.resource_type == 'collection' %>
 
     <h2 class="o-heading__page-span">Data description</h2>
     
@@ -85,12 +86,15 @@
     <%# else %>
       <%# render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
     <%# end %>
+  <% end %>
 
     <%= react_component('components/MetadataEntry/Keywords',
                         resourceId: @resource.id,
                         subjects: @metadata_entry.subjects.map{ |i| {id: i.id, subject: i.subject }  },
                         createPath: subjects_create_path,
                         deletePath: subjects_delete_path('subj_xoxo', resource_id: @resource.id)) %>
+
+  <% unless @resource&.resource_type&.resource_type == 'collection' %>
 
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.methods,
@@ -110,12 +114,17 @@
                     isCurator: current_user&.limited_curator?) %>
     <% end %>
 
-    <h2 class="o-heading__page-span">Related works</h2>
+  <% end %>
 
+    <h2 class="o-heading__page-span"><%= @resource&.resource_type&.resource_type == 'collection' ? 'Collected and r' : 'R' %>elated works</h2>
+
+    <% worktypes = StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a %>
+    <% worktypes[0], worktypes[1] = worktypes[1], worktypes[0] if @resource&.resource_type&.resource_type = 'collection' %>
     <%= react_component('components/MetadataEntry/RelatedWorks',
+                        resourceType: @resource&.resource_type&.resource_type,
                         resourceId: @resource.id,
                         relatedIdentifiers: @metadata_entry.related_identifiers
                             .map{|i|
                               i.as_json.merge( valid_url_format: i.valid_url_format?)
                             }, # result of this method into data
-                        workTypes: StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a ) %>
+                        workTypes: worktypes ) %>
