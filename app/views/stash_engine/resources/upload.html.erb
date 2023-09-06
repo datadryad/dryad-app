@@ -19,7 +19,9 @@
   ),
   app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
   s3_dir_name: @resource.s3_dir_name(type: 'base'),
-  frictionless: APP_CONFIG[:frictionless].to_h
+  frictionless: APP_CONFIG[:frictionless].to_h,
+  previous_version: @resource.previous_curated_resource.present?,
+  file_note: @file_note
 }) %>
 
 <!-- display messages to let arias know what's happening -->

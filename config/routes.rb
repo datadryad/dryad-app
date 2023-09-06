@@ -298,6 +298,7 @@ Rails.application.routes.draw do
     get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
     get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
+    post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
     post 'waiver_add/:id', to: 'admin_datasets#waiver_add', as: 'waiver_add'

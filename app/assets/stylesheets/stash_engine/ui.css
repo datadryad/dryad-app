@@ -4075,6 +4075,7 @@ nav.pagination + .c-paginator-page_size {
       -ms-flex-pack: justify;
           justify-content: space-between;
   margin: 0 0 20px;
+  gap: 0.5rem;
 }
 
 .c-review-files__list {
@@ -4348,6 +4349,28 @@ img.c-upload__spinner {
   margin: 10px 0 0;
   color: #ffc107;
   font-weight: bold;
+}
+
+.c-upload__changes-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+.c-upload__changes-form div {
+  width: 400px;
+  max-width: 100%;
+}
+.c-upload__changes-form textarea {
+  width: 100%;
+  min-height: 150px;
+  margin-top: 0.5rem;
 }
 
 .c-manifest {

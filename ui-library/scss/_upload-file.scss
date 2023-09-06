@@ -151,3 +151,18 @@ img.c-upload__spinner {
 	color: #ffc107;
 	font-weight: bold;
 }
+
+.c-upload__changes-form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	div {
+		width: 400px;
+		max-width: 100%;
+	}
+	textarea {
+		width: 100%;
+		min-height: 150px;
+		margin-top: $spacing-base;
+	}
+}

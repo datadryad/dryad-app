@@ -8,7 +8,7 @@ import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import sanitize from '../../lib/sanitize_filename';
 
 import {
-  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage,
+  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, TrackChanges,
 } from '../components/FileUpload';
 import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 /**
@@ -578,6 +578,9 @@ class UploadFiles extends React.Component {
               </div>
             ) : <p>No files have been selected.</p> }
           </div>
+        )}
+        {(this.props.previous_version && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
+          <TrackChanges id={this.props.resource_id} file_note={this.props.file_note} />
         )}
         <ModalUrl
           ref={this.modalRef}
