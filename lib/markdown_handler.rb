@@ -4,13 +4,16 @@ require 'redcarpet'
 module MarkdownHandler
 
   MARKDOWN_OPTIONS = {
-    autolink: true,
-    underline: true,
     no_intra_emphasis: true,
     tables: true,
-    highlight: true,
+    fenced_code_blocks: true,
+    autolink: false,
+    disable_indented_code_blocks: true,
+    strikethrough: true,
+    space_after_headers: true,
+    underline: false,
+    highlight: false,
     footnotes: true,
-    link_attributes: { rel: 'nofollow', target: '_blank' }.freeze
   }.freeze
   BODY_RENDERER = 'Redcarpet::Render::HTML.new(with_toc_data: true)'.freeze
   TOC_RENDERER = 'Redcarpet::Render::HTML_TOC.new(nesting_level: 2)'.freeze
