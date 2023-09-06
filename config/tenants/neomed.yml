@@ -15,7 +15,7 @@ default: &default
     sandbox: true
   authentication:
     strategy: ip_address
-    ranges: [ "140.220.0.0/16", "199.18.154.122/123", "199.18.157.82", "132.174.254.221" ]
+    ranges: [ "140.220.0.0/16", "199.18.154.122", "199.18.154.123", "199.18.157.82", "132.174.254.221" ]
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
