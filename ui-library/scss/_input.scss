@@ -68,7 +68,9 @@
 
 .c-input__textarea {
 	@extend %c-input__element;
-	height: $input-height + 50px;
+	min-height: 100px;
+	width: 300px;
+	max-width: 100%;
 	padding: 3px 5px;
     word-wrap: break-word;
 	overflow-wrap: break-word;

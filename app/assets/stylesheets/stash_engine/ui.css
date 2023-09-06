@@ -3205,7 +3205,9 @@ td:last-child, th:last-child {
 }
 
 .c-input__textarea {
-  height: 80px;
+  min-height: 100px;
+  width: 300px;
+  max-width: 100%;
   padding: 3px 5px;
   word-wrap: break-word;
   overflow-wrap: break-word;
