@@ -136,6 +136,7 @@ module StashEngine
               resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
 
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
+      @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
       @uploads = resource.latest_file_states
       # render 'upload_manifest' if resource.upload_type == :manifest
     end
