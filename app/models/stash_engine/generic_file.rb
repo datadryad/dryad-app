@@ -103,7 +103,7 @@ module StashEngine
     def smart_destroy!
       # see if it's on the file system and destroy it if it's there
       s3_key = calc_s3_path
-      Stash::Aws::S3.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.exists?(s3_key: s3_key)
+      Stash::Aws::S3.new.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.new.exists?(s3_key: s3_key)
 
       # convert to hash so we still have after destroying them
       prev_files = case_insensitive_previous_files.map do |pf|
