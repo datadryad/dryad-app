@@ -120,10 +120,15 @@ module StashDatacite
 
       def title
         if @resource.title.blank?
-          return ErrorItem.new(message: 'Fill in a {dataset title}',
-                               page: metadata_page(@resource),
-                               ids: ["title__#{@resource.id}"])
+          return ErrorItem.new(message: 'Fill in a {dataset title}', page: metadata_page(@resource), ids: ["title__#{@resource.id}"])
+        elsif nondescript_title?
+          return ErrorItem.new(
+            message: 'Use a {descriptive title} so your dataset can be discovered. Your title is not specific to your dataset.',
+            page: metadata_page(@resource),
+            ids: ["title__#{@resource.id}"]
+          )
         end
+
         []
       end
 
@@ -299,6 +304,14 @@ module StashDatacite
       end
 
       private
+
+      def nondescript_title?
+        dict = ['raw', 'data', 'dataset', 'fig', 'figure', 'figures', 'table', 'tables', 'file', 'supp', 'suppl',
+                'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'et al']
+        regex = dict.join('|')
+        remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
+        remainder.split.size < 3
+      end
 
       # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       # There must be at least one file *other than* the README file.
