@@ -1583,14 +1583,36 @@ h6 {
 }
 
 /* Proposed Change Object */
-.c-proposed-change-table__row-separator {
-  max-height: 10px;
-  background-color: rgb(78, 80, 80);
+.c-proposed-change-table thead tr {
+  background-color: #f6f6f6;
+  border-bottom-width: thick;
+}
+.c-proposed-change-table tbody tr:nth-child(2n+1) {
+  background-color: inherit;
+}
+.c-proposed-change-table tbody tr:nth-child(4n-1) {
+  background-color: #f6f6f6;
+  border-top-width: thick;
+}
+.c-proposed-change-table tbody tr:nth-child(4n+4) {
+  background-color: #f6f6f6;
+  border-bottom-width: thick;
+}
+.c-proposed-change-table form {
+  display: inline;
+}
+.c-proposed-change-table form select {
+  margin-right: 3px;
+}
+.c-proposed-change-table form button {
+  padding: 5px 10px;
+  margin: 4px 0;
 }
 
 .c-proposed-change-table__column-mergeable {
   position: relative;
   background-color: #98cae2;
+  background-clip: padding-box;
 }
 .c-proposed-change-table__column-mergeable .c-proposed-change-table__column-mergeable-icon {
   position: absolute;
