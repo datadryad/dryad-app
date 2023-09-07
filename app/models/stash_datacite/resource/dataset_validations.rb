@@ -289,14 +289,13 @@ module StashDatacite
         readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
 
-        if @resource.identifier.created_at > readme_md_require_date
-          unless readme_md_files.count.positive? ||
-            @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.positive?
-            errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
-                                    page: readme_page(@resource),
-                                    ids: ['readme_editor'])
-          end
-        elsif @resource.identifier.created_at > readme_require_date && readme_files.blank?
+        no_techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.zero?
+
+        no_md = @resource.identifier.created_at > readme_md_require_date && readme_md_files.count.zero?
+
+        no_readme = @resource.identifier.created_at > readme_require_date && readme_files.count.zero?
+
+        if no_techinfo && (no_md || no_readme)
           errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
                                   page: readme_page(@resource),
                                   ids: ['readme_editor'])

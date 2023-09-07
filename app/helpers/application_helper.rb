@@ -11,17 +11,21 @@ module ApplicationHelper
 
   def markdown_render(content)
     @md_options = {
-      autolink: true,
       no_intra_emphasis: true,
       tables: true,
-      highlight: true,
-      footnotes: true,
-      link_attributes: { rel: 'nofollow', target: '_blank' }.freeze
+      fenced_code_blocks: true,
+      autolink: false,
+      disable_indented_code_blocks: true,
+      strikethrough: true,
+      space_after_headers: true,
+      underline: false,
+      highlight: false,
+      link_attributes: { rel: 'nofollow', target: '_blank' }
     }.freeze
 
     return '' if content.blank?
 
-    markdown = Redcarpet::Markdown.new(KnockDownHeadings, @md_options)
+    markdown = Redcarpet::Markdown.new(KnockDownHeadings.new(hard_wrap: true), @md_options)
     markdown.render(content).html_safe
   end
 
