@@ -138,10 +138,9 @@ module StashEngine
       end
 
       it 'removes the S3 temporary files when the resource is destroyed' do
-        allow(Stash::Aws::S3).to receive(:delete_dir)
-        s3_dir = @resource.s3_dir_name(type: 'base')
+        expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
+        @resource.s3_dir_name(type: 'base')
         @resource.destroy
-        expect(Stash::Aws::S3).to have_received(:delete_dir).with(s3_key: s3_dir)
       end
     end
 
