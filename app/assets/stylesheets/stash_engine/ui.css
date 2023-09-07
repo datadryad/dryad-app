@@ -5240,6 +5240,15 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   direction: rtl;
 }
 
+.success-hidden {
+  display: none;
+  text-align: center;
+}
+
+.c-alert--success ~ #maincontent .success-hidden {
+  display: block;
+}
+
 .c-user-datasets-list {
   list-style-type: none;
   margin: 0;
