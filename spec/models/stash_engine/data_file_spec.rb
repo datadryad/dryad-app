@@ -97,9 +97,9 @@ module StashEngine
       end
     end
 
-    describe :calc_s3_path do
+    describe :s3_staged_path do
       it 'returns path in uploads containing resource_id and filename' do
-        cs3p = @upload.calc_s3_path
+        cs3p = @upload.s3_staged_path
         expect(cs3p).to end_with('/data/foo.bar')
         expect(cs3p).to include(@resource.id.to_s)
       end
@@ -107,13 +107,13 @@ module StashEngine
       it 'returns nil if it is copied' do
         @upload.update(file_state: 'copied')
         @upload.reload
-        expect(@upload.calc_s3_path).to eq(nil)
+        expect(@upload.s3_staged_path).to eq(nil)
       end
 
       it 'returns nil if it is deleted' do
         @upload.update(file_state: 'deleted')
         @upload.reload
-        expect(@upload.calc_s3_path).to eq(nil)
+        expect(@upload.s3_staged_path).to eq(nil)
       end
     end
 

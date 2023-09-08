@@ -3,7 +3,7 @@ module StashEngine
   class DataFile < GenericFile
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
-    def calc_s3_path
+    def s3_staged_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
@@ -57,7 +57,7 @@ module StashEngine
 
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
-    def direct_s3_presigned_url
+    def s3_staged_presigned_url
       Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
     end
 
@@ -106,7 +106,7 @@ module StashEngine
       rescue HTTP::Error, Stash::Download::MerrittError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
-      s3_url = direct_s3_presigned_url if s3_url.nil?
+      s3_url = s3_staged_presigned_url if s3_url.nil?
 
       return nil if s3_url.nil?
 
