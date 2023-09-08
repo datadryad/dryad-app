@@ -116,5 +116,5 @@ RelatedWorks.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   relatedIdentifiers: PropTypes.array.isRequired,
   workTypes: PropTypes.array.isRequired,
-  resourceType: PropTypes.string,
+  resourceType: PropTypes.string.isRequired,
 };
