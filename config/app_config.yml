@@ -165,7 +165,7 @@ defaults: &DEFAULTS
   s3:
     region: us-west-2
     bucket: dryad-s3-dev
-    merritt_bucket: dryad-assetstore-merritt-stage
+    merritt_bucket: dryad-assetstore-merritt-stage2
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: null
