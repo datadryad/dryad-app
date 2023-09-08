@@ -52,7 +52,7 @@ module Stash
 
       def data_file_entry(upload)
         upload_file_name = upload.upload_file_name
-        upload_url = upload.url || upload.direct_s3_presigned_url
+        upload_url = upload.url || upload.s3_staged_presigned_url
         throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
 
         upload_file_size = upload.upload_file_size

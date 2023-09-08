@@ -102,7 +102,7 @@ module StashEngine
     # figures out how to delete file based on previous state
     def smart_destroy!
       # see if it's on the file system and destroy it if it's there
-      s3_key = calc_s3_path
+      s3_key = s3_staged_path
       Stash::Aws::S3.new.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.new.exists?(s3_key: s3_key)
 
       # convert to hash so we still have after destroying them
@@ -179,7 +179,7 @@ module StashEngine
       h = Rails.application.routes.url_helpers
 
       payload = JSON.generate({
-                                download_url: url || direct_s3_presigned_url,
+                                download_url: url || s3_staged_presigned_url,
                                 file_mime_type: upload_content_type,
                                 callback_url: h.file_frictionless_report_url(id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
@@ -221,7 +221,7 @@ module StashEngine
 
       # download_url, filename, callback_url, token, processor_obj
 
-      payload = JSON.generate({ download_url: url || direct_s3_presigned_url,
+      payload = JSON.generate({ download_url: url || s3_staged_presigned_url,
                                 filename: upload_file_name,
                                 callback_url: h.processor_result_url(pr.id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
@@ -269,7 +269,7 @@ module StashEngine
       http = HTTP.use(
         normalize_uri: { normalizer: Stash::Download::NORMALIZER }
       ).timeout(connect: 10, read: 10).follow(max_hops: 10)
-      dl_url = url || direct_s3_presigned_url
+      dl_url = url || s3_staged_presigned_url
       begin
         http.get(dl_url)
       rescue HTTP::Error => e
