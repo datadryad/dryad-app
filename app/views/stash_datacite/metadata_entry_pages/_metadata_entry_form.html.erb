@@ -121,7 +121,7 @@
     <% worktypes = StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a %>
     <% worktypes[0], worktypes[1] = worktypes[1], worktypes[0] if @resource&.resource_type&.resource_type = 'collection' %>
     <%= react_component('components/MetadataEntry/RelatedWorks',
-                        resourceType: @resource&.resource_type&.resource_type,
+                        resourceType: @resource&.resource_type&.resource_type || 'dataset',
                         resourceId: @resource.id,
                         relatedIdentifiers: @metadata_entry.related_identifiers
                             .map{|i|
