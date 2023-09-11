@@ -1,6 +1,5 @@
 <% unless related_identifiers.blank? || related_identifiers.length < 1 %>
     <h3 class="o-heading__level2">Related works</h3>
-    <div> 
 	<ul class="o-list">
 	    <% related_identifiers.each do |r| %>
 	    <% highlights = highlight_fields.detect {|h| h[:id] == r.related_identifier} %>
@@ -14,7 +13,6 @@
 		<% end %>
 	    <% end %>
 	</ul>
-    </div>
 <% end %>
 <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
 <% if deleted %>
