@@ -11,7 +11,6 @@
       <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
     <% end %>
   <h2 class="o-heading__page-span">Review description</h2>
-  <%= highlight_fields %>
   <section class="t-review__section">
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
