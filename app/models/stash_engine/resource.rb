@@ -125,7 +125,7 @@ module StashEngine
     end
 
     def remove_s3_temp_files
-      return if resource_type.resource_type == 'collection'
+      return if resource_type&.resource_type == 'collection'
 
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
@@ -933,8 +933,8 @@ module StashEngine
     def changed_related(other_related)
       changed = []
       edits = []
-      this_related = related_identifiers.map { |r| { id: r.related_identifier, type: r.work_type } }
-      that_related = other_related.map.map { |r| { id: r.related_identifier, type: r.work_type } }
+      this_related = related_identifiers.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
+      that_related = other_related.map.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
       edits << { deleted: that_related.length - this_related.length } if that_related.length > this_related.length
       this_related.each_with_index do |f, i|
         diff = f.diff(that_related[i] || {})
