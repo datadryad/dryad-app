@@ -125,6 +125,8 @@ module StashEngine
     end
 
     def remove_s3_temp_files
+      return if resource_type.resource_type == 'collection'
+
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
