@@ -6,6 +6,8 @@
 <% end %>
 <% end %>
 
+<% related = @resource&.resource_type&.resource_type == 'collection' ? @resource.related_identifiers.where.not(relation_type: 'haspart') : @resource.related_identifiers %>
+<% unless related.length < 1 %>
 <div class="c-sidebox" id="related_works_section">
   <h2 class="c-sidebox__heading">Related works</h2>
   <div id="show_related_works"
@@ -13,6 +15,7 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
+<% end %>
 
 <% if @resource&.identifier&.pub_state == 'published' %>
 <div class="c-sidebox" id="share_section">
