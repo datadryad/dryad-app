@@ -16,7 +16,8 @@
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
     <div class="t-landing__metadata o-metadata">
-      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
+      <% author_highlight = highlight_fields[highlight_fields.find_index('authors') + 1] if highlight_fields.include?('authors') %>
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight_fields: author_highlight || [] } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
     </div>
 
@@ -29,13 +30,17 @@
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
         { abstract: @review.abstract, methods: @review.methods, other: @review.other, highlight_fields: highlight_fields } %>
-    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight: highlight_fields.include?('subjects') } %>
+    <% subject_highlight = highlight_fields[highlight_fields.find_index('subjects') + 1] if highlight_fields.include?('subjects') %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight_fields: subject_highlight || [] } %>
 
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
       <section class="t-review__funding-section">
-        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('funders') } %>
+        <% funder_highlight = highlight_fields[highlight_fields.find_index('funders') + 1] if highlight_fields.include?('funders') %>
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight_fields: funder_highlight || [] } %>
+        
+        <% works_highlight = highlight_fields[highlight_fields.find_index('related_identifiers') + 1] if highlight_fields.include?('related_identifiers') %>
         <%= render partial: "stash_datacite/related_identifiers/show", locals:
-            { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
+            { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
         <%= link_to "Edit Description",
                     stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                     class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>

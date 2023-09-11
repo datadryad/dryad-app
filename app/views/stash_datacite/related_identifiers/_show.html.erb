@@ -1,17 +1,22 @@
 <% unless related_identifiers.blank? || related_identifiers.length < 1 %>
     <h3 class="o-heading__level2">Related works</h3>
-    <div class="<%= 'highlight' if highlight %>"> 
+    <div> 
 	<ul class="o-list">
-	    <% related_identifiers.each do |r| %>
+	    <% related_identifiers.each_with_index do |r, i| %>
+	    <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
 		<% if r.work_type == 'undefined' %>
 		    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
-		    <li>This dataset <%= r.relation_name_english %>
-			<%= display_id(type: r.related_identifier_type,
-				       my_id: r.related_identifier) %><%= bad_asterisk %></li>
+		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>">This dataset <%= r.relation_name_english %></span>
+			<span class="<%= 'highlight' if highlights&.key?(:id) %>"><%= display_id(type: r.related_identifier_type,
+				       my_id: r.related_identifier) %><%= bad_asterisk %></span></li>
 		<% else %>
-		    <li><%= r.work_type_friendly %>:  <%= link_to r.related_identifier, r.related_identifier, target: "_blank" %><%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span></li>
+		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>"><%= r.work_type_friendly %></span>:  <%= link_to r.related_identifier, r.related_identifier, class: highlights&.key?(:id) ? 'highlight' : '', target: "_blank" %><%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span></li>
 		<% end %>
 	    <% end %>
 	</ul>
+	<% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+	<% if deleted %>
+		<div class="highlight"><%= deleted[:deleted] %> works deleted</div>
+	<% end %>
     </div>
 <% end %>
