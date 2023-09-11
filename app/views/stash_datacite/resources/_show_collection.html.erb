@@ -13,7 +13,7 @@
   </section>
 
   <% if review.collected_datasets.count.positive? %>
-    <%= render partial: "stash_datacite/related_identifiers/collection", locals: {review: review} %>
+    <%= render partial: "stash_datacite/related_identifiers/collection", locals: {review: review, highlight_fields: [] } %>
   <% end %>
 
   <%= render partial: "stash_datacite/descriptions/show",
