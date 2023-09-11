@@ -2,8 +2,8 @@
     <h3 class="o-heading__level2">Related works</h3>
     <div> 
 	<ul class="o-list">
-	    <% related_identifiers.each_with_index do |r, i| %>
-	    <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
+	    <% related_identifiers.each do |r| %>
+	    <% highlights = highlight_fields.detect {|h| h[:id] == r.related_identifier} %>
 		<% if r.work_type == 'undefined' %>
 		    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
 		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>">This dataset <%= r.relation_name_english %></span>
@@ -14,9 +14,9 @@
 		<% end %>
 	    <% end %>
 	</ul>
-	<% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
-	<% if deleted %>
-		<div class="highlight"><%= deleted[:deleted] %> works deleted</div>
-	<% end %>
     </div>
+<% end %>
+<% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+<% if deleted %>
+	<div class="highlight"><%= deleted[:deleted] %> related works deleted</div>
 <% end %>

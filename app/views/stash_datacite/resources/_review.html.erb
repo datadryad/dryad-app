@@ -11,6 +11,7 @@
       <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
     <% end %>
   <h2 class="o-heading__page-span">Review description</h2>
+  <%= highlight_fields %>
   <section class="t-review__section">
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
@@ -28,9 +29,10 @@
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
                          publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) } %>
     </div>
+    <% works_highlight = highlight_fields[highlight_fields.find_index('related_identifiers') + 1] if highlight_fields.include?('related_identifiers') %>
 
     <% if @resource&.resource_type&.resource_type == 'collection' %>
-      <%= render partial: "stash_datacite/related_identifiers/collection", locals: {review: @review} %>
+      <%= render partial: "stash_datacite/related_identifiers/collection", locals: {review: @review, highlight_fields: works_highlight&.select {|h| h[:relation] == 'haspart'} || []} %>
     <% end %>
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
@@ -38,19 +40,16 @@
     <% subject_highlight = highlight_fields[highlight_fields.find_index('subjects') + 1] if highlight_fields.include?('subjects') %>
     <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight_fields: subject_highlight || [] } %>
 
+    <% funder_highlight = highlight_fields[highlight_fields.find_index('funders') + 1] if highlight_fields.include?('funders') %>
+    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight_fields: funder_highlight || [] } %>
     
-    <% unless @review.contributors.length < 1 %>
-      <% funder_highlight = highlight_fields[highlight_fields.find_index('funders') + 1] if highlight_fields.include?('funders') %>
-      <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight_fields: funder_highlight || [] } %>
-    <% end %>
-    <% unless @review.related_identifiers.length < 1 %>
-      <% works_highlight = highlight_fields[highlight_fields.find_index('related_identifiers') + 1] if highlight_fields.include?('related_identifiers') %>
-      <%= render partial: "stash_datacite/related_identifiers/show", locals:
-          { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
+    <% works_highlight = works_highlight&.select {|h| h[:relation] != 'haspart'} if @resource&.resource_type&.resource_type == 'collection' %>
+    <%= render partial: "stash_datacite/related_identifiers/show", locals:
+        { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
+    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
       <%= link_to "Edit Description",
                   stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
-                  class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
-      
+                  class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>      
     <% end %>
   </section>
 <% unless @resource&.resource_type&.resource_type == 'collection' %>
