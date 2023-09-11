@@ -150,7 +150,7 @@ namespace :identifiers do
       s3_dir = res.s3_dir_name(type: 'base')
       puts "ident #{ident.id} Res #{res.id} -- updated_at #{res.updated_at}"
       puts "   DESTROY s3 #{s3_dir}"
-      Stash::Aws::S3.delete_dir(s3_key: s3_dir) unless dry_run
+      Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       puts "   DESTROY resource #{res.id}"
       res.destroy unless dry_run
     end
@@ -162,7 +162,7 @@ namespace :identifiers do
                 else
                   ''
                 end
-    Stash::Aws::S3.objects(starts_with: s3_prefix).each do |s3o|
+    Stash::Aws::S3.new.objects(starts_with: s3_prefix).each do |s3o|
       id_prefix = s3o.key.split('/').first
       res_id = if id_prefix.include?('-')
                  id_prefix.split('-').last
@@ -177,12 +177,12 @@ namespace :identifiers do
            (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
           # if the resource is state == submitted and all zenodo transfers have completed, delete the data
           puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
-          Stash::Aws::S3.delete_dir(s3_key: id_prefix) unless dry_run
+          Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
         end
       else
         # there is no reasource, delete the files
         puts "   resource is deleted -- DELETE s3 dir #{id_prefix}"
-        Stash::Aws::S3.delete_dir(s3_key: id_prefix) unless dry_run
+        Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
       end
     end
   end

@@ -1,6 +1,6 @@
   <%= render partial: "stash_datacite/titles/show", locals: { title: review.title_str, highlight: false } %>
   <div class="t-landing__metadata o-metadata">
-    <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors, highlight: false } %>
+    <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors, highlight_fields: [] } %>
     <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource, highlight: false } %>
   </div>
 
@@ -26,7 +26,7 @@
      locals: { abstract: '', methods: review.methods,
    other: review.other, highlight_fields: [] } %>
 
-  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight: false } %>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
 
   <% if review.geolocation_data? %>
     <h2 class="o-heading__level2">Location</h2>
