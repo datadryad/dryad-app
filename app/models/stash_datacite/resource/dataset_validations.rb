@@ -203,7 +203,7 @@ module StashDatacite
         files = @resource.generic_files.newly_created.file_submission
         errored_uploads = []
         files.each do |f|
-          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.exists?(s3_key: f.calc_s3_path)
+          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.new.exists?(s3_key: f.calc_s3_path)
         end
 
         return [] if errored_uploads.empty?

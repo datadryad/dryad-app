@@ -25,7 +25,7 @@ module StashEngine
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def direct_s3_presigned_url
-      Stash::Aws::S3.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'supplemental')}/#{upload_file_name}")
+      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'supplemental')}/#{upload_file_name}")
     end
 
     # the URL we use for replication from other source (Presigned or URL) up to Zenodo
