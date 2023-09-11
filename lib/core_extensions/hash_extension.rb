@@ -9,6 +9,11 @@ module CoreExtensions
       clear.merge!(recursive_compact)
     end
 
+    def diff(compare_to)
+      reject { |k, v| compare_to[k] == v }
+        .merge!(compare_to.reject { |k, _v| key?(k) })
+    end
+
     private
 
     # something weird happens in here because objects don't match the Hash class and not even is_a? hash.

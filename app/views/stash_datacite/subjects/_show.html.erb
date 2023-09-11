@@ -1,6 +1,11 @@
 <% unless subjects.nil? || subjects.length < 1 %>
     <h3 class="o-heading__level2">Subject keywords</h3>
-    <div class="<%= 'highlight' if highlight %>">  
-	<p><%= subjects.map(&:subject).join(", ") %></p>
-    </div>
+    <p><%= subjects.each.map{ |s|
+        highlights = highlight_fields.detect {|h| h[:subject] == s.subject}
+        "<span class='#{' highlight' if highlights }'>#{s.subject}</span>"
+    }.join(", ").html_safe %></p>
+    <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+    <% if deleted %>
+        <p class="highlight"><%= deleted[:deleted] %> keywords deleted</p>
+    <% end %>
 <% end %>
