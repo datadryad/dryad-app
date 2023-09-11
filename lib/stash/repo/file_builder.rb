@@ -67,7 +67,7 @@ module Stash
         return unless file_contents.present?
 
         file_path = "#{target_dir}/#{file_name}"
-        Stash::Aws::S3.put(s3_key: file_path, contents: file_contents)
+        Stash::Aws::S3.new.put(s3_key: file_path, contents: file_contents)
         file_path
       end
     end

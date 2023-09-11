@@ -5644,6 +5644,11 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   background-color: #FFFF00;
 }
 
+span.highlight,
+a.highlight {
+  padding: 3px 0 2px;
+}
+
 .t-search-results__columns {
   margin: 0 0 20px;
 }
