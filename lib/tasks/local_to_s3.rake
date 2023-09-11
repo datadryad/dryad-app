@@ -46,13 +46,13 @@ namespace :local_to_s3 do
         if File.directory?(file_path)
           puts "    -- #{file_name} --> skipping temp directory"
           next
-        elsif Stash::Aws::S3.exists?(s3_key: s3_file) && (Stash::Aws::S3.size(s3_key: s3_file) == File.size(file_path))
+        elsif Stash::Aws::S3.new.exists?(s3_key: s3_file) && (Stash::Aws::S3.new.size(s3_key: s3_file) == File.size(file_path))
           puts "    -- #{file_name} --> already in S3"
           next
         end
         # otherwise, send it to s3
         puts "    -- #{file_name} --> #{s3_file}"
-        Stash::Aws::S3.put_file(s3_key: s3_file, filename: file_path)
+        Stash::Aws::S3.new.put_file(s3_key: s3_file, filename: file_path)
       end
     end
   end
