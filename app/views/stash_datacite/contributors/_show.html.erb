@@ -19,9 +19,9 @@
 	  </p>
       <% end %>
   <% end %>
+  </div>
 <% end %>
 <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
 <% if deleted %>
   <div class="highlight"><%= deleted[:deleted] %> funders deleted</div>
 <% end %>
-</div>
