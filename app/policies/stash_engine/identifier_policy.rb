@@ -46,7 +46,7 @@ module StashEngine
               ELSE 3
             END as sort_order")
           .order('sort_order ASC')
-          .order('updated_at DESC')
+          .merge(CurationActivity.order(updated_at: :desc))
       end
 
       private

@@ -125,7 +125,9 @@ module StashEngine
     end
 
     def remove_s3_temp_files
-      Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
+      return if resource_type&.resource_type == 'collection'
+
+      Stash::Aws::S3.new.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
     after_create :init_state_and_version
@@ -356,7 +358,7 @@ module StashEngine
       end
 
       # add file
-      Stash::Aws::S3.put_stream(
+      Stash::Aws::S3.new.put_stream(
         s3_key: "#{s3_dir_name(type: 'data')}/README.md",
         stream: StringIO.new(technical_info)
       )
@@ -822,14 +824,13 @@ module StashEngine
       "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
     end
 
+    # -----------------------------------------------------------
     # Changes since the previously curated version
     def changed_from_previous_curated
       changed_fields(previous_curated_resource)
     end
 
-    # Yes, this method looks complex,
-    # but breaking it into a bunch of smaller methods would only make it seem more complex
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def changed_fields(other_resource)
       return [] unless other_resource
 
@@ -837,9 +838,7 @@ module StashEngine
 
       changed << 'title' if title != other_resource.title
 
-      this_auth_string = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      that_auth_string = other_resource.authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      changed << 'authors' if this_auth_string != that_auth_string
+      changed.concat(changed_authors(other_resource.authors))
 
       this_facility = contributors.where(contributor_type: 'sponsor').first&.contributor_name
       that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
@@ -861,15 +860,9 @@ module StashEngine
       that_other_desc = other_resource.descriptions.type_other.map(&:description)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
-      changed << 'subjects' if subjects.map(&:subject).to_s != other_resource.subjects.map(&:subject).to_s
-
-      this_funders = contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      that_funders = other_resource.contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      changed << 'funders' if this_funders != that_funders
-
-      this_related = related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
-      that_related = other_resource.related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
-      changed << 'related_identifiers' if this_related != that_related
+      changed.concat(changed_subjects(other_resource.subjects))
+      changed.concat(changed_funders(other_resource))
+      changed.concat(changed_related(other_resource.related_identifiers))
 
       changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
       changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
@@ -877,7 +870,83 @@ module StashEngine
 
       changed
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+    # special granular attribute checks
+
+    def changed_authors(other_authors)
+      changed = []
+      edits = []
+      edits << { deleted: other_authors.length - authors.length } if other_authors.length > authors.length
+      this_authors = authors.map do |a|
+        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation.long_name}#{a.affiliation.ror_id}", email: a.author_email }
+      end
+      that_authors = other_authors.map do |a|
+        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation.long_name}#{a.affiliation.ror_id}", email: a.author_email }
+      end
+      this_authors.each_with_index do |a, i|
+        diff = a.diff(that_authors[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'authors'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_subjects(other_subjects)
+      changed = []
+      edits = []
+      edits << { deleted: other_subjects.length - subjects.length } if other_subjects.length > subjects.length
+      subjects.each_with_index do |s, i|
+        edits << { index: i, subject: s.subject } unless s.subject == other_subjects[i]&.subject
+      end
+      unless edits.empty?
+        changed << 'subjects'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_funders(other_resource)
+      changed = []
+      edits = []
+      this_funders = contributors.where(contributor_type: 'funder').map do |f|
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+      end
+      that_funders = other_resource.contributors.where(contributor_type: 'funder').map do |f|
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+      end
+      edits << { deleted: that_funders.length - this_funders.length } if that_funders.length > this_funders.length
+      this_funders.each_with_index do |f, i|
+        diff = f.diff(that_funders[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'funders'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_related(other_related)
+      changed = []
+      edits = []
+      this_related = related_identifiers.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
+      that_related = other_related.map.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
+      edits << { deleted: that_related.length - this_related.length } if that_related.length > this_related.length
+      this_related.each_with_index do |f, i|
+        diff = f.diff(that_related[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'related_identifiers'
+        changed << edits
+      end
+      changed
+    end
+    # -----------------------------------------------------------
 
     def update_salesforce_metadata
       sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)

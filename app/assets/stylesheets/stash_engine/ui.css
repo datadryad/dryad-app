@@ -1139,6 +1139,7 @@ h1:first-child, *[class^=o-heading__level]:first-child {
 }
 
 .o-heading__page-span {
+  margin-top: 1rem;
   margin-bottom: 2rem;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -2243,6 +2244,7 @@ td:last-child, th:last-child {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  min-width: 0;
 }
 
 .c-columns__sidebar1,
@@ -5632,7 +5634,7 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   }
 }
 
-.t-review__funding-section {
+.t-review__section {
   position: relative;
 }
 
@@ -5666,6 +5668,11 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 
 .highlight {
   background-color: #FFFF00;
+}
+
+span.highlight,
+a.highlight {
+  padding: 3px 0 2px;
 }
 
 .t-search-results__columns {

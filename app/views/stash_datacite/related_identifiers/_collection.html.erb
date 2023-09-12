@@ -1,0 +1,13 @@
+<% if review.collected_datasets.count.positive? %>
+  <section class="collection-section">
+    <h2>Collected datasets</h2>
+    <ul style="list-style-type: none; padding: 0; margin: 0;">
+    <% review.collected_datasets.each do |d| %>
+      <% highlights = highlight_fields.detect {|h| h[:id] == d.identifier_uri} %>
+      <% publication = "#{d.publication_date.blank? ? "Forthcoming " : ''}#{d.publication_years&.first&.publication_year&.to_i}" %>
+      <li style="padding-left: 0" class="<%= 'highlight' if highlights %>"><a href="<%= d.identifier_uri %>"><%= d.title %></a><br/>
+      <%= author_citation_format(d.authors) %> (<%=publication %>)</li>
+    <% end %>
+    </ul>
+  </section>
+<% end %>

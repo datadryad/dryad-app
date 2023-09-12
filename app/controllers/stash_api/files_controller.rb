@@ -39,7 +39,7 @@ module StashApi
     def update
       # lots of checks and setup before creating the file (also see the before_actions above)
       pre_upload_checks { return }
-      Stash::Aws::S3.put_stream(s3_key: @file_path, stream: request.body)
+      Stash::Aws::S3.new.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
       render json: file.metadata, status: 201
@@ -110,7 +110,7 @@ module StashApi
     end
 
     def check_file_size
-      return if Stash::Aws::S3.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
+      return if Stash::Aws::S3.new.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
 
       (render json: { error:
           "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json,
@@ -122,7 +122,7 @@ module StashApi
       file = StashEngine::DataFile.create(
         upload_file_name: @sanitized_name,
         upload_content_type: file_content_type,
-        upload_file_size: Stash::Aws::S3.size(s3_key: @file_path),
+        upload_file_size: Stash::Aws::S3.new.size(s3_key: @file_path),
         resource_id: @resource.id,
         upload_updated_at: Time.new.utc,
         file_state: 'created',
