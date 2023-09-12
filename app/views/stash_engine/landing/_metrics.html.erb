@@ -9,6 +9,7 @@
     <%= identifier.counter_stat.views %> views
   </div>
 </div>
+<% unless identifier.latest_resource&.resource_type&.resource_type == 'collection' %>
 <div class="o-metrics__metric">
   <div class="o-metrics__group">
     <%= image_tag 'stash_engine/icon_downloads.svg', class: 'o-metrics__icon', alt: '' %>
@@ -16,6 +17,7 @@
   </div>
   <div class="o-metrics__number"><%= identifier.counter_stat.unique_request_count %> downloads</div>
 </div>
+<% end %>
 <div class="o-metrics__metric">
   <div class="o-metrics__group">
     <%= image_tag 'stash_engine/icon_cites.svg', class: 'o-metrics__icon', alt: '' %>
