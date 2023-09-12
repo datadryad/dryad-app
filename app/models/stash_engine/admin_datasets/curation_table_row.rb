@@ -14,14 +14,14 @@ module StashEngine
     class CurationTableRow
 
       attr_reader :publication_name, :identifier_id, :identifier, :qualified_identifier, :resource_size,
-                  :search_words, :resource_id, :title, :publication_date, :tenant_id, :resource_state_id,
+                  :search_words, :resource_id, :title, :created_date, :publication_date, :tenant_id, :resource_state_id,
                   :resource_state, :curation_activity_id, :status, :updated_at, :submission_date, :editor_id, :editor_name,
                   :author_names, :views, :downloads, :citations, :relevance
 
       SELECT_CLAUSE = <<-SQL
         SELECT DISTINCT seid.value,
           sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), ser.total_file_size, sei.search_words,
-          ser.id, ser.title, ser.publication_date, ser.tenant_id,
+          ser.id, ser.title, sei.created_at, ser.publication_date, ser.tenant_id,
           sers.id, sers.resource_state,
           seca.id, seca.status, seca.updated_at, sd.submission_date,
           seu.id, seu.last_name, seu.first_name,
@@ -81,21 +81,22 @@ module StashEngine
         @search_words = result[5]
         @resource_id = result[6]
         @title = result[7]
-        @publication_date = result[8]
-        @tenant_id = result[9]
-        @resource_state_id = result[10]
-        @resource_state = result[11]
-        @curation_activity_id = result[12]
-        @status = result[13]
-        @updated_at = result[14]
-        @submission_date = result[15]
-        @editor_id = curator_ids.include?(result[16].to_i) ? result[16] : nil
-        @editor_name = @editor_id ? "#{result[18]} #{result[17]}" : nil
-        @author_names = result[19]
-        @views = (result[21].nil? ? 0 : result[20] - result[21])
-        @downloads = result[21] || 0
-        @citations = result[22] || 0
-        @relevance = result.length > 23 ? result[23] : nil
+        @created_date = result[8]
+        @publication_date = result[9]
+        @tenant_id = result[10]
+        @resource_state_id = result[11]
+        @resource_state = result[12]
+        @curation_activity_id = result[13]
+        @status = result[14]
+        @updated_at = result[15]
+        @submission_date = result[16]
+        @editor_id = curator_ids.include?(result[17].to_i) ? result[17] : nil
+        @editor_name = @editor_id ? "#{result[19]} #{result[18]}" : nil
+        @author_names = result[20]
+        @views = (result[22].nil? ? 0 : result[21] - result[22])
+        @downloads = result[22] || 0
+        @citations = result[23] || 0
+        @relevance = result.length > 24 ? result[24] : nil
       end
 
       # lets you get a resource when you need it and caches it
