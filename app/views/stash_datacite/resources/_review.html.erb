@@ -77,24 +77,17 @@
       </div>
     <% end %>
 
-  <h2 class="o-heading__page-span">Review files</h2>
+    <h2 class="o-heading__page-span">Review files</h2>
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
     <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' if @review.readme_content.blank? %>
     
-  <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-    <div class="c-review-files" style="clear: both">
-	<% if highlight_fields.include?('data_files') %>
-            <%= render partial: "stash_engine/data_files/show_merritt",
-		       locals: { resource: @resource,
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'data_files') } %>
-	<% else %>
-	    <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: [] } %>
-	<% end %>
-        <%= link_to 'Edit Files', stash_url_helpers.upload_resource_path(@resource),
-                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+ <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
+    <div class="c-review-files">
+      <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: highlight_fields.include?('data_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'data_files') : [] } %>
+      <%= link_to 'Edit Files', stash_url_helpers.upload_resource_path(@resource),
+                class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
     <% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>
@@ -103,35 +96,17 @@
 
     <% if @review.software_files.count.positive? %>
     <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
-	<div class="c-review-files">
-    	  <% if highlight_fields.include?('software_files') %>
-            <%= render partial: "stash_engine/data_files/show_zenodo",
-		       locals: { resource: @resource,
-			   zenodo_type: 'software',
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'software_files') } %>
-	<% else %>
-          <%= render partial: "stash_engine/data_files/show_zenodo",
-		     locals: { resource: @resource, zenodo_type: 'software', highlight_files: [] } %>
-	<% end %>
-      </div>
+  	<div class="c-review-files">
+      <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software',highlight_files: highlight_fields.include?('software_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'software_files') : []
+      } %>
+	  </div>
     <% end %>
 
     <% if @review.supp_files.count.positive? %>
-      <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
-
-      <div class="c-review-files">
-    	  <% if highlight_fields.include?('supp_files') %>
-            <%= render partial: "stash_engine/data_files/show_zenodo",
-		       locals: { resource: @resource,
-			   zenodo_type: 'supp',
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'supp_files') } %>
-	<% else %>
-          <%= render partial: "stash_engine/data_files/show_zenodo",
-		     locals: { resource: @resource, zenodo_type: 'supp', highlight_files: [] } %>
-	<% end %>
-      </div>
+    <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
+    <div class="c-review-files">
+    	<%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp',highlight_files: highlight_fields.include?('supp_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'supp_files') : [] } %>
+	  </div>
     <% end %>
 
   <h2 class="o-heading__page-span" id="peer_review_label">Choose when to publish</h2>
