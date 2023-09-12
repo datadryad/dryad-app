@@ -60,6 +60,7 @@ module StashEngine
       resource.save
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
+      session[:resource_type] = current_user.limited_curator? && params.key?(:collection) ? 'collection' : 'dataset'
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
@@ -122,7 +123,7 @@ module StashEngine
     def submission; end
 
     def prepare_readme
-      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, current_tenant)
+      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
       readme_file = @resource.data_files.present_files.where(upload_file_name: 'README.md').first
       # Attempt to load all README.md files for editing in the markdown editors, converting to UTF 8
       if readme_file&.file_content

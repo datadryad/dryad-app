@@ -1139,6 +1139,7 @@ h1:first-child, *[class^=o-heading__level]:first-child {
 }
 
 .o-heading__page-span {
+  margin-top: 1rem;
   margin-bottom: 2rem;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -5608,7 +5609,7 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   }
 }
 
-.t-review__funding-section {
+.t-review__section {
   position: relative;
 }
 
