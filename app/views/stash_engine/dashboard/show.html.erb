@@ -1,5 +1,7 @@
 <% @page_title = "My datasets - publish and preserve your data" %>
-
+<p class="success-hidden">
+  Thank you for your submission! Please <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= @doi %>&orcid=<%= current_user.orcid %>">complete a short survey about your experience</a>.
+</p>
 <div class="c-datasets-heading">
   <h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
   <%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
