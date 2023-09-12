@@ -854,7 +854,7 @@ module StashEngine
 
       this_technical_info = descriptions.type_technical_info.map(&:description)
       that_technical_info = other_resource.descriptions.type_technical_info.map(&:description)
-      changed << 'technical_info' if this_technical_info != that_technical_info
+      changed << 'technical_info' if !this_technical_info.compact.empty? && this_technical_info != that_technical_info
 
       this_other_desc = descriptions.type_other.map(&:description)
       that_other_desc = other_resource.descriptions.type_other.map(&:description)
