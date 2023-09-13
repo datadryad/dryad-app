@@ -1,13 +1,14 @@
 <% unless authors.nil? %>
-  <div class="<%= 'highlight' if highlight %>">
-    <% authors.each do |author| %>
+  <div>
+    <% authors.each_with_index do |author, i| %>
+    <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
 	<div class="o-metadata__group1">
-	    <% if current_user && current_user.limited_curator? %>
+	  <% if current_user && current_user.limited_curator? %>
 		<%= ([ (author.author_full_name ?
-			"<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
+			"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
 		     author.affiliations.map{|i|
 					     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
-					       "<span class='o-metadata__affiliation'>#{h(i.smart_name(show_asterisk: true))}</span>"
+					       "<span class='o-metadata__affiliation#{' highlight' if highlights&.key?(:affiliation)}'>#{h(i.smart_name(show_asterisk: true))}</span>"
 					     else
 					       nil
 					     end
@@ -30,7 +31,18 @@
 	</div>
     <% end %>
     <div class="o-metadata__group1">
-	<%= authors.map{ |author| author.author_email }.reject(&:blank?).join(", ").html_safe  %>
+			<%= authors.each_with_index.map{ |author, i|
+				  highlights = highlight_fields.detect {|h| h[:index] == i}
+					unless author.author_email.blank?
+						"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>"
+					else
+						nil
+					end
+				}.reject(&:blank?).join(", ").html_safe  %>
     </div>
+    <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+    <% if deleted %>
+    	<div class="highlight"><%= deleted[:deleted] %> authors deleted</div>
+    <% end %>
   </div>
 <% end %>

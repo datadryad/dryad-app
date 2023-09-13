@@ -136,7 +136,7 @@ module StashDatacite
 
     # this is to provide a useful message about the related identifier
     def to_s
-      "This dataset #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
+      "This #{resource&.resource_type&.resource_type} #{relation_name_english} #{related_identifier_type_friendly}: #{related_identifier}"
     end
 
     def self.set_latest_zenodo_relations(resource:)
