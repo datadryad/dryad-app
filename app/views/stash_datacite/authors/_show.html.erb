@@ -33,7 +33,7 @@
     <div class="o-metadata__group1">
 			<%= authors.each_with_index.map{ |author, i|
 				  highlights = highlight_fields.detect {|h| h[:index] == i}
-					if author.author_email
+					unless author.author_email.blank?
 						"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>"
 					else
 						nil
