@@ -32,11 +32,18 @@ module StashDatacite
       end
 
       describe :title do
-        it 'returns error an error object if title not filled' do
+        it 'returns error if title not filled' do
           @resource.update(title: '')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.title
           expect(error.message).to include('dataset title')
+          expect(error.ids.first).to eq("title__#{@resource.id}")
+        end
+        it 'returns error for nondescript title' do
+          @resource.update(title: 'Figure S1 Data supplement')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error.message).to include('descriptive title')
           expect(error.ids.first).to eq("title__#{@resource.id}")
         end
       end

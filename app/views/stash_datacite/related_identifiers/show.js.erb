@@ -1,4 +1,1 @@
 $('#show_related_works').html("<%= escape_javascript(render(partial: 'landing_related_works')) %>");
-<% if @resource.related_identifiers.length < 1 %>
-  $('#related_works_section').hide();
-<% end %>

@@ -10,10 +10,10 @@ module StashDatacite
     ResourceTypeGeneralEnum = ResourceTypesGeneral.to_h { |i| [i.downcase.to_sym, i.downcase] }
     ResourceTypesGeneralStrToFull = ResourceTypesGeneral.to_h { |i| [i.downcase, i] }
 
-    # odd ones out here are Spreadsheet, Video, Multiple Types and are only for UI display
+    # Only for UI display
     # rubocop:disable Naming/ConstantName
-    ResourceTypesGeneralLimited = { Spreadsheet: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
-                                    Text: 'text', Software: 'software', 'Multiple Types': 'collection', Other: 'other' }.freeze
+    ResourceTypesGeneralLimited = { Dataset: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
+                                    Text: 'text', Software: 'software', Collection: 'collection', Other: 'other' }.freeze
     # rubocop:enable Naming/ConstantName
 
     # WARNING: The enum here is defined with the prefix `rtg`, to ensure the `model` enum value does

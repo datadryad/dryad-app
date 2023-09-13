@@ -14,7 +14,7 @@ module StashEngine
       it 'loads react root component' do
         get "/stash/resources/#{@resource.id}/upload"
 
-        assert_react_component 'containers/FileUpload/UploadFiles' do |props|
+        assert_react_component 'containers/UploadFiles' do |props|
           assert_equal @resource.id, props[:resource_id]
           assert_equal @resource.data_files.first.attributes, props[:file_uploads].first.stringify_keys
           assert_equal APP_CONFIG[:s3].to_h.except(:secret), props[:app_config_s3][:table]
@@ -31,7 +31,7 @@ module StashEngine
 
         get "/stash/resources/#{@resource.id}/upload"
 
-        assert_react_component 'containers/FileUpload/UploadFiles' do |props|
+        assert_react_component 'containers/UploadFiles' do |props|
           assert_equal file.frictionless_report.status,
                        props[:file_uploads].first[:frictionless_report][:status]
         end

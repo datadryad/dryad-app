@@ -9,5 +9,10 @@ module StashEngine
       @user.admin?
     end
 
+    def file_note?
+      @user.limited_curator? ||
+      @user.id = @resource.user_id
+    end
+
   end
 end

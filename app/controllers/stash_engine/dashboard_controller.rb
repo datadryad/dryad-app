@@ -6,7 +6,9 @@ module StashEngine
 
     MAX_VALIDATION_TRIES = 5
 
-    def show; end
+    def show
+      @doi = CGI.escape(params[:doi] || '')
+    end
 
     def metadata_basics; end
 
