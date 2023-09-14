@@ -9,6 +9,12 @@ module StashEngine
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
+    def s3_permanent_path
+      return nil if file_state == 'deleted' # no current file to have a path for
+
+
+    endb
+
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
