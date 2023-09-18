@@ -18,14 +18,14 @@ module StashEngine
 
       # submitted resources after the current one
       resources = resource.identifier.resources.joins(:current_resource_state)
-                          .where(current_resource_state: { resource_state: 'submitted' } )
-                          .where('stash_engine_resources.id > ?', resource.id)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id > ?', resource.id)
 
       terminal_file = self
 
       # from relevant resources, same filename
       matching_files = DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name)
-                                            .order(id: :asc)
+        .order(id: :asc)
 
       # find the last one that is not deleted or changed
       matching_files.each do |f|
@@ -49,7 +49,7 @@ module StashEngine
     # the permanent storage URL, not the staged storage URL
     def s3_permanent_presigned_url
       Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-                    .presigned_download_url(s3_key: s3_permanent_path)
+        .presigned_download_url(s3_key: s3_permanent_path)
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
