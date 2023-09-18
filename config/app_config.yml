@@ -14,7 +14,7 @@ defaults: &DEFAULTS
   # sandbox orcid credentials
   repository:
     domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev_3043"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   orcid:
