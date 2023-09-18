@@ -249,7 +249,6 @@ module StashEngine
         end
       end
 
-      # TODO: this shouldn't be in StashEngine
       describe :merritt_protodomain_and_local_id do
         it 'returns the merritt protocol and domain and local ID' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
@@ -259,6 +258,15 @@ module StashEngine
           merritt_protodomain, local_id = resource.merritt_protodomain_and_local_id
           expect(merritt_protodomain).to eq('https://merritt.example.edu')
           expect(local_id).to eq('ark%3A%2Fb5072%2Ffk2736st5z')
+        end
+      end
+
+      describe :merritt_ark do
+        it 'extracts the Merritt ark from the download URI' do
+          download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
+          resource = Resource.create(user_id: user.id)
+          resource.download_uri = download_uri
+          expect(resource.merritt_ark).to eq('ark:/b5072/fk2736st5z')
         end
       end
     end
