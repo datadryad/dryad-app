@@ -19,7 +19,7 @@ module Tasks
           next if file.nil?
 
           begin
-            file.merritt_s3_presigned_url
+            file.s3_permanent_presigned_url
             @accumulator.push(
               { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
                 dl_uri: res.download_uri, error: false }
@@ -55,7 +55,7 @@ module Tasks
               sleep 0.01 while Time.new - last_query_time < 0.05
               last_query_time = Time.new
 
-              url = file.merritt_s3_presigned_url
+              url = file.s3_permanent_presigned_url
 
               resp = @http.get(url)
               size = resp.headers['Content-Length']&.to_i || 0

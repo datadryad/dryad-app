@@ -22,7 +22,7 @@ module Stash
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
       def download_file(db_file:)
-        s3_resp = get_url(url: db_file.merritt_s3_presigned_url)
+        s3_resp = get_url(url: db_file.s3_permanent_presigned_url)
 
         unless s3_resp.status.success?
           return { success: false,
