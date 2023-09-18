@@ -9,11 +9,48 @@ module StashEngine
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
-    def s3_permanent_path
+    def last_unchanged_permanent_file # of the same name
       return nil if file_state == 'deleted' # no current file to have a path for
 
+      # finding the stored location of the file requires walking to either the last submitted version
+      # since Merritt uses a forward delta system where unchanged files are stored in
+      # the last place they exist before deletion or change (or the last stored version)
 
-    endb
+      # submitted resources after the current one
+      resources = resource.identifier.resources.joins(:current_resource_state)
+                          .where(current_resource_state: { resource_state: 'submitted' } )
+                          .where('stash_engine_resources.id > ?', resource.id)
+
+      terminal_file = self
+
+      # from relevant resources, same filename
+      matching_files = DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name)
+                                            .order(id: :asc)
+
+      # find the last one that is not deleted or changed
+      matching_files.each do |f|
+        break if f.file_state != 'copied'
+
+        terminal_file = f
+      end
+
+      terminal_file
+    end
+
+    # permanent storage rather than staging path
+    def s3_permanent_path
+      f = last_unchanged_permanent_file
+      return nil if f.nil?
+
+      # TODO: fix edge cases for unusual file encodings that Merritt does
+      "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
+    end
+
+    # the permanent storage URL, not the staged storage URL
+    def s3_permanent_presigned_url
+      Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+                    .presigned_download_url(s3_key: s3_permanent_path)
+    end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url
