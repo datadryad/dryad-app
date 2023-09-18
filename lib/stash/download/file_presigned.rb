@@ -25,11 +25,11 @@ module Stash
           return
         end
 
-        url = file.merritt_s3_presigned_url
+        url = file.s3_permanent_presigned_url
 
         cc.redirect_to url
       rescue HTTP::Error => e
-        raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
+        raise MerrittError, "HTTP Error while creating presigned URL from S3\n" \
                             "#{file.merritt_presign_info_url}\n" \
                             "Original HTTP library error: #{e}\n" \
                             "#{e.full_message}"

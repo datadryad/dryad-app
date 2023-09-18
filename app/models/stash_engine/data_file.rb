@@ -107,7 +107,7 @@ module StashEngine
     # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
     # method but switches between S3 and external URL depending on source
     def zenodo_replication_url
-      merritt_s3_presigned_url
+      s3_permanent_presigned_url
     end
 
     # gets the S3 presigned and loads in only the first few kilobytes of the file rather than all of it and returns
@@ -116,7 +116,7 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = merritt_s3_presigned_url
+        s3_url = s3_permanent_presigned_url
       rescue HTTP::Error, Stash::Download::MerrittError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
@@ -140,12 +140,12 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.merritt_s3_presigned_url) || nil
+        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.s3_permanent_presigned_url) || nil
       rescue HTTP::Error, Stash::Download::MerrittError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
       begin
-        s3_url = merritt_s3_presigned_url if s3_url.nil?
+        s3_url = s3_permanent_presigned_url if s3_url.nil?
       rescue HTTP::Error, Stash::Download::MerrittError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end

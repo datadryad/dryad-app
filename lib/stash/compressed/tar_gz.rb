@@ -4,7 +4,7 @@ require 'open3'
 
 # test with files 14139 and 14140
 # df = StashEngine::DataFile.find(14139)
-# tgz = Stash::Compressed::TarGz.new(presigned_url: df.merritt_s3_presigned_url)
+# tgz = Stash::Compressed::TarGz.new(presigned_url: df.s3_permanent_presigned_url)
 # tgz.file_entries
 
 module Stash
