@@ -39,32 +39,17 @@ module Stash
         end
 
         it 'raises an exception for S3 download errors' do
-          stub_request(:get, %r{http://merritt-fake\.cdlib\.org/api/presign-file/.+})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
             .to_return(status: 404, body: '', headers: {})
-          expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
-        end
-
-        it 'raises an exception for S3 download errors' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
-            .to_return(status: 404, body: '', headers: {})
-
           expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
         end
 
         it 'sets up info_hash on success' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
             .to_return(status: 200, body: '', headers: {})
+
           @fc.download_files
+
           expect(@fc.info_hash.keys).to include(@data_file.upload_file_name)
         end
       end
