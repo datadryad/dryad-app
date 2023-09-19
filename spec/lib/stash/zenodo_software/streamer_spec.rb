@@ -99,7 +99,7 @@ module Stash
             .to_return(status: 200, body: '', headers: {})
 
           stub_request(:put, %r{https://example.org/my/great/test/bucket/.+})
-            .to_return(status: 404, body: "", headers: {})
+            .to_return(status: 404, body: '', headers: {})
 
           # stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
           @resource.data_files << create(:data_file)
