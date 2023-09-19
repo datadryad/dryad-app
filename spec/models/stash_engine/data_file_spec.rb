@@ -148,13 +148,13 @@ module StashEngine
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
       end
 
-      it 'raises Stash::Download::MerrittError for missing resource.tenant' do
+      it 'raises Stash::Download::S3CustomError for missing resource.tenant' do
         @upload.resource.update(tenant_id: nil)
         @upload.resource.reload
-        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::S3CustomError)
       end
 
-      it 'raises Stash::Download::MerrittError for unsuccessful response from Merritt' do
+      it 'raises Stash::Download::S3CustomError for unsuccessful response' do
         stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
           .with(
             headers: {
@@ -163,7 +163,7 @@ module StashEngine
             }
           )
           .to_return(status: 404, body: '[]', headers: { 'Content-Type': 'application/json' })
-        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::S3CustomError)
       end
 
       it 'returns a URL based on json response and url in the data' do
