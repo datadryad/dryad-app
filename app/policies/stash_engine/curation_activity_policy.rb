@@ -11,7 +11,7 @@ module StashEngine
 
     def file_note?
       @user.limited_curator? ||
-      @user.id = @resource.user_id
+      @user.id == @resource.user_id
     end
 
   end
