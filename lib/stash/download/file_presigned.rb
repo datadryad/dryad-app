@@ -6,7 +6,7 @@ require 'http'
 module Stash
   module Download
 
-    class MerrittError < StandardError; end
+    class S3CustomError < StandardError; end
 
     class FilePresigned
       attr_reader :cc
@@ -29,7 +29,7 @@ module Stash
 
         cc.redirect_to url
       rescue HTTP::Error => e
-        raise MerrittError, "HTTP Error while creating presigned URL from S3\n" \
+        raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \
                             "#{file.merritt_presign_info_url}\n" \
                             "Original HTTP library error: #{e}\n" \
                             "#{e.full_message}"

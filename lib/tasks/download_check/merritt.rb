@@ -24,7 +24,7 @@ module Tasks
               { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
                 dl_uri: res.download_uri, error: false }
             )
-          rescue Stash::Download::MerrittError, HTTP::Error => e
+          rescue Stash::Download::S3CustomError, HTTP::Error => e
             @accumulator.push(
               { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
                 dl_uri: res.download_uri, error: e.to_s }
@@ -68,7 +68,7 @@ module Tasks
               if file.upload_file_size != size
                 save_error(resource: res, file: file, error: "bad content length: db: #{file.upload_file_size} vs s3: #{size}")
               end
-            rescue Stash::Download::MerrittError, HTTP::Error => e
+            rescue Stash::Download::S3CustomError, HTTP::Error => e
               save_error(resource: res, file: file, error: e)
             end
           end

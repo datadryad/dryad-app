@@ -45,8 +45,8 @@ module Stash
         get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => e
         { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{e}" }
-      rescue Stash::Download::MerrittError => e
-        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{e}" }
+      rescue Stash::Download::S3CustomError => e
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nS3CustomError: #{e}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object

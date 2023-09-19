@@ -84,7 +84,7 @@ module StashEngine
     #
     # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
     def merritt_s3_presigned_url
-      raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
+      raise Stash::Download::S3CustomError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
         .timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 2)
@@ -94,7 +94,7 @@ module StashEngine
 
       return r.parse.with_indifferent_access[:url] if r.status.success?
 
-      raise Stash::Download::MerrittError,
+      raise Stash::Download::S3CustomError,
             "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
 
@@ -117,7 +117,7 @@ module StashEngine
       s3_url = nil
       begin
         s3_url = s3_permanent_presigned_url
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
 
@@ -141,12 +141,12 @@ module StashEngine
       s3_url = nil
       begin
         s3_url = (file_state == 'copied' && last_version_file && last_version_file&.s3_permanent_presigned_url) || nil
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
       begin
         s3_url = s3_permanent_presigned_url if s3_url.nil?
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
       s3_url = s3_staged_presigned_url if s3_url.nil?

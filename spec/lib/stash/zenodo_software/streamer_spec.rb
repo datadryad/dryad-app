@@ -94,12 +94,12 @@ module Stash
           end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
         end
 
-        it 'raises Stash::ZenodoReplicate::ZenodoError for handling with MerrittErrors' do
+        it 'raises Stash::ZenodoReplicate::ZenodoError for handling with S3CustomErrors' do
           stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
           @resource.data_files << create(:data_file)
           data_file = @resource.data_files.first
 
-          # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::MerrittError, "can't create presigned url")
+          # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::S3CustomError, "can't create presigned url")
           @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url, zc_id: @zenodo_copy.id)
 
           expect do
