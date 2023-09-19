@@ -64,7 +64,7 @@ module Stash
 
         if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
             (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
-          raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
+          raise Stash::S3Download::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
         end
 
         { md5_hex: md5_hex, sha256_hex: sha256_hex }

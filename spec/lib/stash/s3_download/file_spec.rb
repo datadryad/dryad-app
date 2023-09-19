@@ -10,7 +10,7 @@ require 'rails_helper'
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
-  module MerrittDownload
+  module S3Download
     RSpec.describe File do
       include Mocks::Tenant
 
@@ -18,7 +18,7 @@ module Stash
         mock_tenant!
         @resource = create(:resource)
         @data_file = create(:data_file, resource_id: @resource.id)
-        @file_dl_obj = Stash::MerrittDownload::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication'))
+        @file_dl_obj = Stash::S3Download::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication'))
       end
 
       after(:each) do
@@ -142,7 +142,7 @@ module Stash
                                                                                          body: 'The cat meows in my face.',
                                                                                          headers: {})
 
-          expect { @file_dl_obj.download_file(db_file: @data_file) }.to raise_error(Stash::MerrittDownload::DownloadError)
+          expect { @file_dl_obj.download_file(db_file: @data_file) }.to raise_error(Stash::S3Download::DownloadError)
         end
       end
 
