@@ -1,7 +1,7 @@
 require 'fileutils'
 
 module Stash
-  module MerrittDownload
+  module S3Download
 
     class DownloadError < StandardError; end
 
