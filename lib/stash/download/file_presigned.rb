@@ -30,9 +30,9 @@ module Stash
         cc.redirect_to url
       rescue HTTP::Error => e
         raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \
-                            "#{file.merritt_presign_info_url}\n" \
-                            "Original HTTP library error: #{e}\n" \
-                            "#{e.full_message}"
+                             "#{file.merritt_presign_info_url}\n" \
+                             "Original HTTP library error: #{e}\n" \
+                             "#{e.full_message}"
       end
     end
   end
