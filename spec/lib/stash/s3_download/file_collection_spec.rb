@@ -8,7 +8,7 @@ require 'fileutils'
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
-  module MerrittDownload
+  module S3Download
     RSpec.describe FileCollection do
 
       include Mocks::Tenant
@@ -38,10 +38,10 @@ module Stash
           @data_file = create(:data_file, resource_id: @resource.id)
         end
 
-        it 'raises an exception for Merritt download errors' do
+        it 'raises an exception for S3 download errors' do
           stub_request(:get, %r{http://merritt-fake\.cdlib\.org/api/presign-file/.+})
             .to_return(status: 404, body: '', headers: {})
-          expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
+          expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
         end
 
         it 'raises an exception for S3 download errors' do
@@ -53,7 +53,7 @@ module Stash
           stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 404, body: '', headers: {})
 
-          expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
+          expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
         end
 
         it 'sets up info_hash on success' do
