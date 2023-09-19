@@ -1,6 +1,6 @@
 # testing in here since testing is much better with real loading of the engines and application without wonky problems
 # from the manual setup that doesn't really load rails right in the engines
-require 'stash/merritt_download'
+require 'stash/s3_download'
 require 'byebug'
 require 'http'
 require 'fileutils'

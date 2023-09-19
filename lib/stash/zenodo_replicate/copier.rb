@@ -1,4 +1,4 @@
-require 'stash/merritt_download'
+require 'stash/s3_download'
 require 'http'
 require 'stash/zenodo_replicate'
 require 'stash/zenodo_replicate/copier_mixin'
