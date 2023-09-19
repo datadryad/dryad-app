@@ -76,7 +76,7 @@ module Stash
         @deposit.publish
         @copy.reload
         @copy.update(state: 'finished', error_info: nil)
-      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
+      rescue Stash::S3Download::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
         @copy.reload
         error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
