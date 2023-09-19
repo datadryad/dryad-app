@@ -26,18 +26,11 @@ module Stash
       end
 
       describe '#download_file' do
-        # these are two-step to download: first get presign url and then download it
-        it 'expects download to return success: false in hash if 404 from Merritt' do
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 404, body: '', headers: {})
-          dl_status = @file_dl_obj.download_file(db_file: @data_file)
-          expect(dl_status[:success]).to eq(false)
-          expect(dl_status[:error]).to include('404')
-          expect(dl_status[:error]).to include(@data_file.upload_file_name)
-          expect(dl_status[:error]).to include("resource #{@resource.id}")
-        end
+        # these are two-step to download: first get presign url (formerly from merritt)and then download it
 
         it 'expects download to return success: false in hash if 500 from S3' do
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 500, body: '', headers: {})
+          stub_request(:get, @data_file.s3_permanent_presigned_url).to_return(status: 500, body: '', headers: {})
+
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('500')
@@ -46,15 +39,10 @@ module Stash
         end
 
         it 'expects download to return success: false in hash if 404 from S3' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
+          # return from S3
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 404, body: '', headers: {})
 
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 404,
-                                                                                         body: '',
-                                                                                         headers: {})
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('404')
@@ -63,15 +51,9 @@ module Stash
         end
 
         it 'expects download to return success: false in hash if 500 from S3' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 500, body: '', headers: {})
 
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 500,
-                                                                                         body: '',
-                                                                                         headers: {})
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('500')
@@ -80,15 +62,8 @@ module Stash
         end
 
         it 'expects download to return success: true in hash and dl file if 200' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
-                                                                                         body: 'My Best File',
-                                                                                         headers: {})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 200, body: 'My Best File', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(true)
@@ -96,15 +71,8 @@ module Stash
         end
 
         it 'expects downloads to have correct digests' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
-                                                                                         body: 'So many fun times',
-                                                                                         headers: {})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 200, body: 'So many fun times', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(true)
@@ -113,15 +81,8 @@ module Stash
         end
 
         it 'expect digest not to match normal values if body is changed' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
-                                                                                         body: 'The cat meows in my face.',
-                                                                                         headers: {})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(true)
@@ -132,15 +93,8 @@ module Stash
         it "should raise an error if a digest is specified in the database and it doesn't match" do
           @data_file = create(:data_file, resource_id: @resource.id, digest_type: 'md5', digest: 'c5849711a1f1ff03de4d96873defa382')
 
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          # second return from S3
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945').to_return(status: 200,
-                                                                                         body: 'The cat meows in my face.',
-                                                                                         headers: {})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
 
           expect { @file_dl_obj.download_file(db_file: @data_file) }.to raise_error(Stash::S3Download::DownloadError)
         end
