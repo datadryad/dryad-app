@@ -29,8 +29,8 @@ module StashEngine
     # this is used for user notes about file changes
     def file_note
       # only add to latest resource and after latest curation activity, no matter if this page is stale or whatever
-      authorize %i[stash_engine curation_activity]
       @resource = Resource.find(params[:id])
+      authorize @resource, policy_class: CurationActivityPolicy
       if params[:note_id]
         curation_activity = CurationActivity.where(id: params[:note_id]).first
         curation_activity.update(note: "User described file changes: #{params[:note]}")

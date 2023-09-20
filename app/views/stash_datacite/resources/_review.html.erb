@@ -5,7 +5,7 @@
     <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? && @resource.previous_resource.current_curation_status == 'action_required' %>
       <div class="c-error-box">
         <p>Changes are required in order to submit.</p>
-        <p>Please refer to your email, <%= @review.authors.first.author_email %>, where you received a message from <a href="mailto:help@datadryad.org">help@datadryad.org</a> listing required changes.</p>
+        <p>Please refer to your email, <%= @resource.owner_author.author_email %>, where you received a message from <a href="mailto:help@datadryad.org">help@datadryad.org</a> listing required changes.</p>
       </div>
     <% else %>
       <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
