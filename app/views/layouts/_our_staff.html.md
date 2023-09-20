@@ -108,14 +108,14 @@
 <div class="bio">
   <img src="/images/laura.jpg" alt="Headshot of Laura Bowman">
   <h5>Laura Bowman</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator</em><br/>
   Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
   </p>
 </div>
 <div class="bio">
   <img src="/images/bryan.jpg" alt="Headshot of Bryan Gee">
   <h5>Bryan Gee</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator</em><br/>
   Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
   of Toronto. His academic background is in vertebrate paleontology, with research interests in the early evolution 
   of amphibians. In his free time, Bryan enjoys hiking and camping with his dog, playing Pokemon Go, and watching 
