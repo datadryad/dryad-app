@@ -9,40 +9,26 @@ module StashEngine
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
-    def last_unchanged_permanent_file # of the same name
+    def original_deposit_file # the first "created" file of the same name before this one if this one isn't created
       return nil if file_state == 'deleted' # no current file to have a path for
 
-      # finding the stored location of the file requires walking to either the last submitted version
-      # since Merritt uses a forward delta system where unchanged files are stored in
-      # the last place they exist before deletion or change (or the last stored version)
+      return self if file_state == 'created' # if this is the first created file, it's the original deposit file
 
-      # submitted resources after the current one
       resources = resource.identifier.resources.joins(:current_resource_state)
         .where(current_resource_state: { resource_state: 'submitted' })
-        .where('stash_engine_resources.id > ?', resource.id)
+        .where('stash_engine_resources.id < ?', resource.id)
 
-      terminal_file = self
+      # this gets the last time this file was in a previous version in the "created" state ie. the last creation
+      DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
+                                      file_state: 'created').order(id: :desc).first
 
-      # from relevant resources, same filename
-      matching_files = DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name)
-        .order(id: :asc)
-
-      # find the last one that is not deleted or changed
-      matching_files.each do |f|
-        break if f.file_state != 'copied'
-
-        terminal_file = f
-      end
-
-      terminal_file
     end
 
     # permanent storage rather than staging path
     def s3_permanent_path
-      f = last_unchanged_permanent_file
+      f = original_deposit_file
       return nil if f.nil?
 
-      # TODO: fix edge cases for unusual file encodings that Merritt does
       "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
     end
 
