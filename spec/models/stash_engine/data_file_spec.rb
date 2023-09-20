@@ -350,49 +350,60 @@ module StashEngine
     end
 
     # finds the last instance of the file from possibly multiple versions for forward delta deduplication
-    describe :last_unchanged_permanent_file do
-      it 'returns the last permanent file that was not changed for one version' do
+    describe :original_deposit_file do
+      it 'returns the current file if only one version' do
         @resource.current_resource_state.update(resource_state: 'submitted')
-        expect(@upload.last_unchanged_permanent_file).to eq(@upload)
+        expect(@upload.original_deposit_file).to eq(@upload)
       end
 
-      it 'returns the last file from a series of versions that were not changed' do
+      it 'returns the first file from a series of versions that were not changed' do
         @resource.current_resource_state.update(resource_state: 'submitted')
+
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
         @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
         @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
 
-        expect(@upload.last_unchanged_permanent_file).to eq(@file3)
+        expect(@file3.original_deposit_file).to eq(@upload)
       end
 
-      it 'returns the next to last file from a series of versions when last was deleted' do
+      it 'returns last uploaded submission, not the original submission' do
         @resource.current_resource_state.update(resource_state: 'submitted')
+
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'deleted', upload_file_name: 'foo.bar')
+
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
-        @file3 = create(:data_file, resource: @resource3, file_state: 'deleted', upload_file_name: 'foo.bar')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'created', upload_file_name: 'foo.bar')
 
-        expect(@upload.last_unchanged_permanent_file).to eq(@file2)
-      end
-
-      it 'returns version 2 from a series of versions when it was deleted in v3 and added in v4' do
-        @resource.current_resource_state.update(resource_state: 'submitted')
-        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
-        @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        @resource3.current_resource_state.update(resource_state: 'submitted')
-        @file3 = create(:data_file, resource: @resource3, file_state: 'deleted', upload_file_name: 'foo.bar')
         @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource4.current_resource_state.update(resource_state: 'submitted')
-        @file4 = create(:data_file, resource: @resource3, file_state: 'created', upload_file_name: 'foo.bar')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'copied', upload_file_name: 'foo.bar')
 
-        expect(@upload.last_unchanged_permanent_file).to eq(@file2)
+        expect(@file4.original_deposit_file).to eq(@file3)
+      end
+
+      it 'returns last submission if submitted last even if other stuff before' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource3.current_resource_state.update(resource_state: 'submitted')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource4.current_resource_state.update(resource_state: 'submitted')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'created', upload_file_name: 'foo.bar')
+
+        expect(@file4.original_deposit_file).to eq(@file4)
       end
     end
 
