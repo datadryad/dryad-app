@@ -20,8 +20,7 @@ module StashEngine
 
       # this gets the last time this file was in a previous version in the "created" state ie. the last creation
       DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
-                                      file_state: 'created').order(id: :desc).first
-
+                     file_state: 'created').order(id: :desc).first
     end
 
     # permanent storage rather than staging path
