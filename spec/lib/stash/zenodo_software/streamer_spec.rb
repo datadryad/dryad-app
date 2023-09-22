@@ -105,6 +105,8 @@ module Stash
           @resource.data_files << create(:data_file)
           data_file = @resource.data_files.first
 
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(data_file)
+
           # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::S3CustomError, "can't create presigned url")
           @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url, zc_id: @zenodo_copy.id)
 
