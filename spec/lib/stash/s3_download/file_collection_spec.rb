@@ -36,6 +36,7 @@ module Stash
       describe '#download_files' do
         before(:each) do
           @data_file = create(:data_file, resource_id: @resource.id)
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         end
 
         it 'raises an exception for S3 download errors' do

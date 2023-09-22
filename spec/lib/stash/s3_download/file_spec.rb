@@ -18,6 +18,7 @@ module Stash
         mock_tenant!
         @resource = create(:resource)
         @data_file = create(:data_file, resource_id: @resource.id)
+        allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         @file_dl_obj = Stash::S3Download::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication'))
       end
 

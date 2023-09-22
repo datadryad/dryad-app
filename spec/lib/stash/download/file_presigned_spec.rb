@@ -32,6 +32,8 @@ module Stash
             )
             .to_return(status: 200, body: '{"url":"https://my.testing.url.example.com"}',
                        headers: { 'Content-Type' => 'application/json' })
+
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         end
 
         it 'redirects to a url' do
