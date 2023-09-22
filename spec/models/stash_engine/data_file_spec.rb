@@ -246,6 +246,8 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: 'mytest.csv')
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
 
       it 'returns nil if unable to retrieve range of S3 file' do
@@ -269,6 +271,8 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: 'README.md')
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
       it 'returns nil if unable to retrieve range of S3 file' do
         stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
@@ -407,7 +411,47 @@ module StashEngine
       end
     end
 
+    # find where merritt actually deposited this file, since it may differ if identical file with same name has been uploaded
+    # more than once
+    describe :find_merritt_deposit_file do
+
+      let(:instance) { instance_double(Stash::Aws::S3) }
+      let(:double_class) do
+        class_double(Stash::Aws::S3).as_stubbed_const
+      end
+
+      before(:each) do
+        # make Stash::Aws::S3 an rspec "spy", so we can test how it was called
+        allow(Stash::Aws::S3).to receive(:new).and_return(instance)
+        # file v1 one exists in s3 and v2 doesn't
+        allow(instance).to receive(:exists?) { |args|
+          args[:s3_key].include?('1|producer')
+        }
+      end
+
+      it 'returns myself if the file exists on S3' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        expect(DataFile.find_merritt_deposit_file(file: @upload)).to eq(@upload)
+      end
+
+      it 'returns the initial file if the second file is a copy of the first, even if both are created' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'created', upload_file_name: 'foo.bar',
+                                    upload_file_size: @upload.upload_file_size)
+
+        expect(DataFile.find_merritt_deposit_file(file: @file2)).to eq(@upload)
+      end
+    end
+
     describe :s3_permanent_path do
+      before(:each) do
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+      end
+
       it 'generates the merritt URL in S3 bucket' do
         @resource.current_resource_state.update(resource_state: 'submitted')
         # "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"

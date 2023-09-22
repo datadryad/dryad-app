@@ -23,10 +23,39 @@ module StashEngine
                      file_state: 'created').order(id: :desc).first
     end
 
+    # fixes the deposit file for merritt, since they base creating new deposit on sha-256 digest, filename/size
+    # rather than an actual re-deposit request. Some people remove files and then re-upload the same file again
+    # sometime later
+    def self.find_merritt_deposit_file(file:)
+      bucket_path = "#{file.resource.merritt_ark}|#{file.resource.stash_version.merritt_version}|producer/#{file.upload_file_name}"
+
+      good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+
+      return file if good
+
+      resources = file.resource.identifier.resources.joins(:current_resource_state)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id < ?', file.resource.id)
+
+      # this gets the last times this file was in a created state
+      dfs = DataFile.where(resource_id: resources.pluck(:id), upload_file_name: file.upload_file_name,
+                           file_state: 'created', upload_file_size: file.upload_file_size).order(id: :desc)
+
+      dfs.each do |df|
+        bucket_path = "#{df.resource.merritt_ark}|#{df.resource.stash_version.merritt_version}|producer/#{df.upload_file_name}"
+        good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+        return df if good
+      end
+
+      nil
+    end
+
     # permanent storage rather than staging path
     def s3_permanent_path
-      f = original_deposit_file
+      f = original_deposit_file # this is the deposit in the series where this file was last re-uploaded fully by dryad
       return nil if f.nil?
+
+      f = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
 
       "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
     end
