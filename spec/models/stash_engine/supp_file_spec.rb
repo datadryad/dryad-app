@@ -29,9 +29,9 @@ module StashEngine
                                     state: 'finished', copy_type: 'supp_publish')
     end
 
-    describe '#calc_s3_path' do
+    describe '#s3_staged_path' do
       it 'returns a path for zenodo files' do
-        expect(@upload.calc_s3_path).to \
+        expect(@upload.s3_staged_path).to \
           end_with("#{@resource.id}/supp/#{@upload.upload_file_name}")
       end
     end
@@ -56,7 +56,7 @@ module StashEngine
     describe '#zenodo_replication_url' do
       it 'replicates from s3 if direct upload' do
         fu = @resource.supp_files.first
-        expect(fu).to receive(:direct_s3_presigned_url).and_return(nil)
+        expect(fu).to receive(:s3_staged_presigned_url).and_return(nil)
         fu.zenodo_replication_url
       end
 

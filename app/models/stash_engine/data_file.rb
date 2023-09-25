@@ -3,10 +3,67 @@ module StashEngine
   class DataFile < GenericFile
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
-    def calc_s3_path
+    def s3_staged_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
+    end
+
+    def original_deposit_file # the first "created" file of the same name before this one if this one isn't created
+      return nil if file_state == 'deleted' # no current file to have a path for
+
+      return self if file_state == 'created' # if this is the first created file, it's the original deposit file
+
+      resources = resource.identifier.resources.joins(:current_resource_state)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id < ?', resource.id)
+
+      # this gets the last time this file was in a previous version in the "created" state ie. the last creation
+      DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
+                     file_state: 'created').order(id: :desc).first
+    end
+
+    # fixes the deposit file for merritt, since they base creating new deposit on sha-256 digest, filename/size
+    # rather than an actual re-deposit request. Some people remove files and then re-upload the same file again
+    # sometime later
+    def self.find_merritt_deposit_file(file:)
+      bucket_path = "#{file.resource.merritt_ark}|#{file.resource.stash_version.merritt_version}|producer/#{file.upload_file_name}"
+
+      good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+
+      return file if good
+
+      resources = file.resource.identifier.resources.joins(:current_resource_state)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id < ?', file.resource.id)
+
+      # this gets the last times this file was in a created state
+      dfs = DataFile.where(resource_id: resources.pluck(:id), upload_file_name: file.upload_file_name,
+                           file_state: 'created', upload_file_size: file.upload_file_size).order(id: :desc)
+
+      dfs.each do |df|
+        bucket_path = "#{df.resource.merritt_ark}|#{df.resource.stash_version.merritt_version}|producer/#{df.upload_file_name}"
+        good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+        return df if good
+      end
+
+      nil
+    end
+
+    # permanent storage rather than staging path
+    def s3_permanent_path
+      f = original_deposit_file # this is the deposit in the series where this file was last re-uploaded fully by dryad
+      return nil if f.nil?
+
+      f = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
+
+      "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
+    end
+
+    # the permanent storage URL, not the staged storage URL
+    def s3_permanent_presigned_url
+      Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+        .presigned_download_url(s3_key: s3_permanent_path)
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
@@ -41,7 +98,7 @@ module StashEngine
     #
     # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
     def merritt_s3_presigned_url
-      raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
+      raise Stash::Download::S3CustomError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
       http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
         .timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 2)
@@ -51,20 +108,20 @@ module StashEngine
 
       return r.parse.with_indifferent_access[:url] if r.status.success?
 
-      raise Stash::Download::MerrittError,
+      raise Stash::Download::S3CustomError,
             "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
 
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
-    def direct_s3_presigned_url
+    def s3_staged_presigned_url
       Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
     end
 
     # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
     # method but switches between S3 and external URL depending on source
     def zenodo_replication_url
-      merritt_s3_presigned_url
+      s3_permanent_presigned_url
     end
 
     # gets the S3 presigned and loads in only the first few kilobytes of the file rather than all of it and returns
@@ -73,8 +130,8 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = merritt_s3_presigned_url
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+        s3_url = s3_permanent_presigned_url
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
 
@@ -97,16 +154,16 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.merritt_s3_presigned_url) || nil
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.s3_permanent_presigned_url) || nil
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
       begin
-        s3_url = merritt_s3_presigned_url if s3_url.nil?
-      rescue HTTP::Error, Stash::Download::MerrittError => e
+        s3_url = s3_permanent_presigned_url if s3_url.nil?
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
-      s3_url = direct_s3_presigned_url if s3_url.nil?
+      s3_url = s3_staged_presigned_url if s3_url.nil?
 
       return nil if s3_url.nil?
 

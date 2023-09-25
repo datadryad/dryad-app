@@ -32,6 +32,8 @@ module Stash
             )
             .to_return(status: 200, body: '{"url":"https://my.testing.url.example.com"}',
                        headers: { 'Content-Type' => 'application/json' })
+
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         end
 
         it 'redirects to a url' do
@@ -42,22 +44,6 @@ module Stash
         it 'gives a 404 for missing file' do
           expect(@controller_context).to receive(:render)
           @fp.download(file: nil)
-        end
-
-        it 'raises an error for bad status response from Merritt' do
-          remove_request_stub(@stubby)
-
-          stub_request(:get, @data_file.merritt_presign_info_url)
-            .with(
-              headers: {
-                'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
-                'Host' => 'merritt-fake.cdlib.org'
-              }
-            )
-            .to_return(status: 500, body: '{"url":"https://my.testing.url.example.com"}',
-                       headers: { 'Content-Type' => 'application/json' })
-
-          expect { @fp.download(file: @data_file) }.to raise_error(Stash::Download::MerrittError)
         end
       end
     end

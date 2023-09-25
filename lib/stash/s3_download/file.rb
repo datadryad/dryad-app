@@ -7,7 +7,7 @@ require 'fileutils'
 require 'stash/download'
 
 module Stash
-  module MerrittDownload
+  module S3Download # was MerrittDownload
 
     # calling this class File means we need to namespace the built-in Ruby file class when calling it in here
     class File
@@ -22,7 +22,7 @@ module Stash
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
       def download_file(db_file:)
-        s3_resp = get_url(url: db_file.merritt_s3_presigned_url)
+        s3_resp = get_url(url: db_file.s3_permanent_presigned_url)
 
         unless s3_resp.status.success?
           return { success: false,
@@ -45,8 +45,8 @@ module Stash
         get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => e
         { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{e}" }
-      rescue Stash::Download::MerrittError => e
-        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{e}" }
+      rescue Stash::Download::S3CustomError => e
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nS3CustomError: #{e}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
@@ -64,7 +64,7 @@ module Stash
 
         if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
             (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
-          raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
+          raise Stash::S3Download::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
         end
 
         { md5_hex: md5_hex, sha256_hex: sha256_hex }

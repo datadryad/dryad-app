@@ -19,12 +19,12 @@ module Tasks
           next if file.nil?
 
           begin
-            file.merritt_s3_presigned_url
+            file.s3_permanent_presigned_url
             @accumulator.push(
               { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
                 dl_uri: res.download_uri, error: false }
             )
-          rescue Stash::Download::MerrittError, HTTP::Error => e
+          rescue Stash::Download::S3CustomError, HTTP::Error => e
             @accumulator.push(
               { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
                 dl_uri: res.download_uri, error: e.to_s }
@@ -55,7 +55,7 @@ module Tasks
               sleep 0.01 while Time.new - last_query_time < 0.05
               last_query_time = Time.new
 
-              url = file.merritt_s3_presigned_url
+              url = file.s3_permanent_presigned_url
 
               resp = @http.get(url)
               size = resp.headers['Content-Length']&.to_i || 0
@@ -68,7 +68,7 @@ module Tasks
               if file.upload_file_size != size
                 save_error(resource: res, file: file, error: "bad content length: db: #{file.upload_file_size} vs s3: #{size}")
               end
-            rescue Stash::Download::MerrittError, HTTP::Error => e
+            rescue Stash::Download::S3CustomError, HTTP::Error => e
               save_error(resource: res, file: file, error: e)
             end
           end

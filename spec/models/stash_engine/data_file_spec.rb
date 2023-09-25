@@ -97,9 +97,9 @@ module StashEngine
       end
     end
 
-    describe :calc_s3_path do
+    describe :s3_staged_path do
       it 'returns path in uploads containing resource_id and filename' do
-        cs3p = @upload.calc_s3_path
+        cs3p = @upload.s3_staged_path
         expect(cs3p).to end_with('/data/foo.bar')
         expect(cs3p).to include(@resource.id.to_s)
       end
@@ -107,13 +107,13 @@ module StashEngine
       it 'returns nil if it is copied' do
         @upload.update(file_state: 'copied')
         @upload.reload
-        expect(@upload.calc_s3_path).to eq(nil)
+        expect(@upload.s3_staged_path).to eq(nil)
       end
 
       it 'returns nil if it is deleted' do
         @upload.update(file_state: 'deleted')
         @upload.reload
-        expect(@upload.calc_s3_path).to eq(nil)
+        expect(@upload.s3_staged_path).to eq(nil)
       end
     end
 
@@ -148,13 +148,13 @@ module StashEngine
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
       end
 
-      it 'raises Stash::Download::MerrittError for missing resource.tenant' do
+      it 'raises Stash::Download::S3CustomError for missing resource.tenant' do
         @upload.resource.update(tenant_id: nil)
         @upload.resource.reload
-        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::S3CustomError)
       end
 
-      it 'raises Stash::Download::MerrittError for unsuccessful response from Merritt' do
+      it 'raises Stash::Download::S3CustomError for unsuccessful response' do
         stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
           .with(
             headers: {
@@ -163,7 +163,7 @@ module StashEngine
             }
           )
           .to_return(status: 404, body: '[]', headers: { 'Content-Type': 'application/json' })
-        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+        expect { @upload.merritt_s3_presigned_url }.to raise_error(Stash::Download::S3CustomError)
       end
 
       it 'returns a URL based on json response and url in the data' do
@@ -235,7 +235,7 @@ module StashEngine
     describe '#zenodo_replication_url' do
       it 'always replicates urls from merritt for Zenodo data copies' do
         fu = @resource.data_files.first
-        expect(fu).to receive(:merritt_s3_presigned_url).and_return(nil)
+        expect(fu).to receive(:s3_permanent_presigned_url).and_return(nil)
         fu.zenodo_replication_url
       end
     end
@@ -246,40 +246,19 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: 'mytest.csv')
-      end
-      it 'returns nil without being able to get presigned url' do
-        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
-          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
-          .to_return(status: 404, body: '', headers: {})
-
-        expect(@upload2.preview_file).to be_nil
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
 
       it 'returns nil if unable to retrieve range of S3 file' do
-        # stubbing a request to merritt for presigned URL
-        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
-          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
-          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
-                     headers: { 'Content-Type' => 'application/json' })
-
-        # stubbing the S3 request as a 404
-        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
-          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
           .to_return(status: 404, body: '', headers: {})
 
         expect(@upload2.preview_file).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
-        # stubbing a request to merritt for presigned URL
-        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
-          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
-          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
-                     headers: { 'Content-Type' => 'application/json' })
-
-        # stubbing the S3 request
-        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
-          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
           .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
 
         expect(@upload2.preview_file).to eql("This,is,my,great,csv\n0,1,2,3,4")
@@ -292,32 +271,18 @@ module StashEngine
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: 'README.md')
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
       it 'returns nil if unable to retrieve range of S3 file' do
-        # stubbing a request to merritt for presigned URL
-        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
-          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
-          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
-                     headers: { 'Content-Type' => 'application/json' })
-
-        # stubbing the S3 request as a 404
-        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
-          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
           .to_return(status: 404, body: '', headers: {})
 
         expect(@upload2.file_content).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
-        # stubbing a request to merritt for presigned URL
-        stub_request(:get, %r{merritt-fake.cdlib.org/api/presign-file/})
-          .with(headers: { 'Host' => 'merritt-fake.cdlib.org' })
-          .to_return(status: 200, body: File.read('spec/fixtures/http_responses/mrt_presign.json'),
-                     headers: { 'Content-Type' => 'application/json' })
-
-        # stubbing the S3 request
-        stub_request(:get, %r{uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com/ark})
-          .with(headers: { 'Host' => 'uc3-s3mrt5001-stg.s3.us-west-2.amazonaws.com' })
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
           .to_return(status: 200, body: '### This is a test README title!', headers: {})
 
         expect(@upload2.file_content).to eql('### This is a test README title!')
@@ -387,5 +352,120 @@ module StashEngine
         expect(proc_result.completion_state).to eq('not_started')
       end
     end
+
+    # finds the last instance of the file from possibly multiple versions for forward delta deduplication
+    describe :original_deposit_file do
+      it 'returns the current file if only one version' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+        expect(@upload.original_deposit_file).to eq(@upload)
+      end
+
+      it 'returns the first file from a series of versions that were not changed' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource3.current_resource_state.update(resource_state: 'submitted')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        expect(@file3.original_deposit_file).to eq(@upload)
+      end
+
+      it 'returns last uploaded submission, not the original submission' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'deleted', upload_file_name: 'foo.bar')
+
+        @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource3.current_resource_state.update(resource_state: 'submitted')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'created', upload_file_name: 'foo.bar')
+
+        @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource4.current_resource_state.update(resource_state: 'submitted')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        expect(@file4.original_deposit_file).to eq(@file3)
+      end
+
+      it 'returns last submission if submitted last even if other stuff before' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource3.current_resource_state.update(resource_state: 'submitted')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
+
+        @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource4.current_resource_state.update(resource_state: 'submitted')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'created', upload_file_name: 'foo.bar')
+
+        expect(@file4.original_deposit_file).to eq(@file4)
+      end
+    end
+
+    # find where merritt actually deposited this file, since it may differ if identical file with same name has been uploaded
+    # more than once
+    describe :find_merritt_deposit_file do
+
+      let(:instance) { instance_double(Stash::Aws::S3) }
+      let(:double_class) do
+        class_double(Stash::Aws::S3).as_stubbed_const
+      end
+
+      before(:each) do
+        # make Stash::Aws::S3 an rspec "spy", so we can test how it was called
+        allow(Stash::Aws::S3).to receive(:new).and_return(instance)
+        # file v1 one exists in s3 and v2 doesn't
+        allow(instance).to receive(:exists?) { |args|
+          args[:s3_key].include?('1|producer')
+        }
+      end
+
+      it 'returns myself if the file exists on S3' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        expect(DataFile.find_merritt_deposit_file(file: @upload)).to eq(@upload)
+      end
+
+      it 'returns the initial file if the second file is a copy of the first, even if both are created' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
+        @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
+        @resource2.current_resource_state.update(resource_state: 'submitted')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'created', upload_file_name: 'foo.bar',
+                                    upload_file_size: @upload.upload_file_size)
+
+        expect(DataFile.find_merritt_deposit_file(file: @file2)).to eq(@upload)
+      end
+    end
+
+    describe :s3_permanent_path do
+      before(:each) do
+        allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
+      end
+
+      it 'generates the merritt URL in S3 bucket' do
+        @resource.current_resource_state.update(resource_state: 'submitted')
+        # "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
+        expect(@upload.s3_permanent_path).to eq("#{@resource.merritt_ark}|1|producer/foo.bar")
+      end
+    end
+
+    describe :s3_permanent_presigned_url do
+      before(:each) do
+        expect_any_instance_of(Stash::Aws::S3).to receive(:presigned_download_url).with(s3_key: s3_permanent_path)
+        @resource.current_resource_state.update(resource_state: 'submitted')
+        @upload.s3_permanent_presigned_url
+      end
+    end
+
   end
 end
