@@ -1,6 +1,6 @@
 # testing in here since testing is much better with real loading of the engines and application without wonky problems
 # from the manual setup that doesn't really load rails right in the engines
-require 'stash/merritt_download'
+require 'stash/s3_download'
 require 'byebug'
 require 'http'
 require 'fileutils'
@@ -8,7 +8,7 @@ require 'fileutils'
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
-  module MerrittDownload
+  module S3Download
     RSpec.describe FileCollection do
 
       include Mocks::Tenant
@@ -36,35 +36,21 @@ module Stash
       describe '#download_files' do
         before(:each) do
           @data_file = create(:data_file, resource_id: @resource.id)
-        end
-
-        it 'raises an exception for Merritt download errors' do
-          stub_request(:get, %r{http://merritt-fake\.cdlib\.org/api/presign-file/.+})
-            .to_return(status: 404, body: '', headers: {})
-          expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         end
 
         it 'raises an exception for S3 download errors' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
             .to_return(status: 404, body: '', headers: {})
-
-          expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
+          expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
         end
 
         it 'sets up info_hash on success' do
-          # first return from Merritt
-          stub_request(:get, @data_file.merritt_presign_info_url).to_return(status: 200,
-                                                                            body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                            headers: { 'Content-Type': 'application/json' })
-
-          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
             .to_return(status: 200, body: '', headers: {})
+
           @fc.download_files
+
           expect(@fc.info_hash.keys).to include(@data_file.upload_file_name)
         end
       end

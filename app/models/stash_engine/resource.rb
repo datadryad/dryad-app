@@ -3,6 +3,7 @@ require 'stash/aws/s3'
 require 'stash/indexer/solr_indexer'
 # the following is required to make our wonky tests work and may break if we move stuff around
 require_relative '../../../lib/stash/indexer/indexing_resource'
+require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
@@ -414,6 +415,12 @@ module StashEngine
 
       matches = download_uri.match(%r{^(https*://[^/]+)/d/(\S+)$})
       [matches[1], matches[2]]
+    end
+
+    def merritt_ark
+      item = merritt_protodomain_and_local_id
+
+      CGI.unescape(item[1])
     end
 
     # ------------------------------------------------------------
