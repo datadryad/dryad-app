@@ -68,7 +68,7 @@ module StashEngine
     end
 
     # This will return the calendar year and week of that year for checking if something has been updated in the last calendar week.
-    # If it is nil or not a time then return week 30 days ago.
+    # If it is nil or not a time then return week 30 days ago (which will be out of caching period)
     def calendar_week(time)
       # %W calculates weeks based on starting Monday and not Sunday, %U is Sunday and %V is ???.
       # This produces year-week string.
