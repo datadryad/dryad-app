@@ -447,6 +447,34 @@ module StashEngine
       end
     end
 
+    # finds a path to a merritt version of the file independent of how many versions we have in our database
+    # Usually these are things manually fixed in Merritt where Dryad only has v1 and Merritt is up to v3 or similar.
+    # often these are Dash legacy datasets that were migrated to one Dryad collection.
+    describe :find_merritt_deposit_path do
+
+      let(:instance) { instance_double(Stash::Aws::S3) }
+      let(:double_class) do
+        class_double(Stash::Aws::S3).as_stubbed_const
+      end
+
+      before(:each) do
+        # make Stash::Aws::S3 an rspec "spy", so we can test how it was called
+        allow(Stash::Aws::S3).to receive(:new).and_return(instance)
+        # file v1 one exists in s3 and v2 doesn't
+        allow(instance).to receive(:exists?) { |args|
+          args[:s3_key].include?('1|producer')
+        }
+      end
+
+      # this method is used as a fallback after it has tried better and more specific methods first
+      it 'walks back from merritt 3 version 1 to try and find an earlier version in S3 with the file' do
+        @upload.resource.stash_version.update(merritt_version: 3)
+        @upload.reload
+
+        expect(@upload.s3_permanent_path).to include('1|producer')
+      end
+    end
+
     describe :s3_permanent_path do
       before(:each) do
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
