@@ -5,17 +5,17 @@
             resource.identifier,
             resource&.status,
             resource&.author_names,
-            formatted_datetime(resource&.updated_at),
+            resource&.updated_at,
             resource&.editor_name,
             resource.resource_size,
-            formatted_datetime(resource&.submission_date),
-            formatted_datetime(resource&.publication_date),
-	          resource&.publication_name,
+            resource&.submission_date,
+            resource&.publication_date,
+            resource&.publication_name,
             resource.views,
             resource.downloads,
             resource.citations,
             StashEngine::Tenant.find(resource.tenant_id)&.long_name,
-            formatted_datetime(resource&.created_date)
+            resource&.created_date
     ]
 -%><%= row.to_csv(row_sep: nil).html_safe %>
 <% end -%>
