@@ -183,6 +183,7 @@ function joelsReady(){
     const newEl = document.createElement("span");
     newEl.setAttribute('class', 'copy-icon');
     newEl.setAttribute('role', 'button');
+    newEl.setAttribute('tabindex', 0);
     newEl.setAttribute('aria-label', 'Copy email address');
     newEl.setAttribute('title', 'Copy email');
     newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
