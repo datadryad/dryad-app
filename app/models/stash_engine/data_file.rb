@@ -9,7 +9,9 @@ module StashEngine
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
-    def original_deposit_file # the first "created" file of the same name before this one if this one isn't created
+    # The first "created" file of the same name before this one if this one isn't created.
+    # In an ideal world, this would have an exact correspondence to where the item is stored in S3, but we don't live in that world.
+    def original_deposit_file
       return nil if file_state == 'deleted' # no current file to have a path for
 
       return self if file_state == 'created' # if this is the first created file, it's the original deposit file
@@ -27,9 +29,7 @@ module StashEngine
     # rather than an actual re-deposit request. Some people remove files and then re-upload the same file again
     # sometime later
     def self.find_merritt_deposit_file(file:)
-      bucket_path = "#{file.resource.merritt_ark}|#{file.resource.stash_version.merritt_version}|producer/#{file.upload_file_name}"
-
-      good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+      good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: DataFile.mrt_bucket_path(file: file))
 
       return file if good
 
@@ -42,12 +42,31 @@ module StashEngine
                            file_state: 'created', upload_file_size: file.upload_file_size).order(id: :desc)
 
       dfs.each do |df|
-        bucket_path = "#{df.resource.merritt_ark}|#{df.resource.stash_version.merritt_version}|producer/#{df.upload_file_name}"
-        good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: bucket_path)
+        good = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket]).exists?(s3_key: DataFile.mrt_bucket_path(file: df))
         return df if good
       end
 
       nil
+    end
+
+    # finds the previous time that a file like this exists in S3 before this one,
+    # based only on Merritt version numbers and walking back
+    def self.find_merritt_deposit_path(before_file:)
+      mrt_version_no = before_file.resource.stash_version.merritt_version - 1
+      return nil if mrt_version_no < 1
+
+      bkt_instance = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+
+      mrt_version_no.downto(1).each do |vers|
+        s3_path = "#{before_file.resource.merritt_ark}|#{vers}|producer/#{before_file.upload_file_name}"
+        return s3_path if bkt_instance.exists?(s3_key: s3_path)
+
+      end
+      nil
+    end
+
+    def self.mrt_bucket_path(file:)
+      "#{file.resource.merritt_ark}|#{file.resource.stash_version.merritt_version}|producer/#{file.upload_file_name}"
     end
 
     # permanent storage rather than staging path
@@ -55,9 +74,14 @@ module StashEngine
       f = original_deposit_file # this is the deposit in the series where this file was last re-uploaded fully by dryad
       return nil if f.nil?
 
-      f = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
+      f2 = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
 
-      "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
+      return DataFile.mrt_bucket_path(file: f2) unless f2.nil?
+
+      # If it gets here, then Merritt has some edge cases where not all entries are represented in our database file entries.
+      # Typically, these are specially migrated legacy Dash datasets with Merritt having multiple versions internally, but
+      # Dryad has fewer (like Merritt v3 and Dryad v1 and Merritt versions 1 & 2 are not represented in our database at all)
+      DataFile.find_merritt_deposit_path(before_file: f)
     end
 
     # the permanent storage URL, not the staged storage URL
