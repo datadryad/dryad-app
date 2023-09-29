@@ -50,7 +50,32 @@ module Mocks
                      covers_dpc: covers_dpc)
     end
 
-    def setup_submocks(tenant:, auth_params:, id_params:, repo_params:, covers_dpc:)
+    def mock_author_match_tenant!(ror_ids:, covers_dpc: true)
+      tenant = double(StashEngine::Tenant)
+
+      auth_params = {
+        strategy: 'author_match'
+      }
+      id_params = {
+        provider: 'datacite',
+        prefix: '10.5072',
+        account: 'stash',
+        password: '3cc9d3fbd9788148c6a32a1415fa673a',
+        sandbox: true
+      }
+      repo_params = {
+        domain: 'https://merritt-stage.cdlib.org',
+        endpoint: 'http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev',
+        username: 'some_fake_user',
+        password: 'bogus_password'
+      }
+
+      setup_submocks(tenant: tenant, auth_params: auth_params, id_params: id_params, repo_params: repo_params,
+                     covers_dpc: covers_dpc, ror_ids: ror_ids)
+
+    end
+
+    def setup_submocks(tenant:, auth_params:, id_params:, repo_params:, covers_dpc:, ror_ids: ['http://ror.org/testid'])
       allow(tenant).to receive(:abbreviation).and_return('mock_tenant')
       allow(tenant).to receive(:authentication).and_return(OpenStruct.new(auth_params))
       allow(tenant).to receive(:campus_contacts).and_return(['contact@someuniversity.edu'])
@@ -66,7 +91,7 @@ module Mocks
       allow(tenant).to receive(:partner_display).and_return(false)
       allow(tenant).to receive(:publisher_id).and_return('abc123')
       allow(tenant).to receive(:repository).and_return(OpenStruct.new(repo_params))
-      allow(tenant).to receive(:ror_ids).and_return(['http://ror.org/testid'])
+      allow(tenant).to receive(:ror_ids).and_return(ror_ids)
       allow(tenant).to receive(:short_name).and_return('Mock Tenant')
       allow(tenant).to receive(:tenant_id).and_return('mock_tenant')
       allow(tenant).to receive(:payment_plan).and_return(nil)
