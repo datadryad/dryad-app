@@ -14,7 +14,9 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: none
+    strategy: shibboleth
+    entity_id: https://cdrewu.helloid.com
+    entity_domain: https://cdrewu.helloid.com
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
