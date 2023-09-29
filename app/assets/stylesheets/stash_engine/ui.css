@@ -4434,6 +4434,17 @@ img.c-upload__spinner {
   font-weight: bold;
 }
 
+#cedarDialog .modalClose {
+  position: sticky;
+  z-index: 3;
+  top: 0;
+}
+#cedarDialog .modalClose button {
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 5px;
+}
+
 .c-modal-content__cedar {
   padding: 0;
   margin: 0;
