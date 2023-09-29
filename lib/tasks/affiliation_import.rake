@@ -119,7 +119,7 @@ namespace :affiliation_import do
         next if fundref_ids.blank?
 
         fundref_ids.each do |fundref_id|
-          fundref_ror_mapping[fundref_id] = {ror: ror_id, name: name}
+          fundref_ror_mapping[fundref_id] = { ror: ror_id, name: name }
         end
       end
     end
