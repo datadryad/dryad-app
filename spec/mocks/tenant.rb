@@ -72,9 +72,9 @@ module Mocks
 
       setup_submocks(tenant: tenant, auth_params: auth_params, id_params: id_params, repo_params: repo_params,
                      covers_dpc: covers_dpc, ror_ids: ror_ids)
-
     end
 
+    # rubocop:disable Metrics/ParameterLists
     def setup_submocks(tenant:, auth_params:, id_params:, repo_params:, covers_dpc:, ror_ids: ['http://ror.org/testid'])
       allow(tenant).to receive(:abbreviation).and_return('mock_tenant')
       allow(tenant).to receive(:authentication).and_return(OpenStruct.new(auth_params))
@@ -101,6 +101,7 @@ module Mocks
       allow_any_instance_of(StashEngine::Resource).to receive(:tenant).and_return(tenant)
       allow(StashEngine::Tenant).to receive(:find).and_return(tenant)
     end
+    # rubocop:enable Metrics/ParameterLists
   end
 end
 # rubocop:enable Metrics/AbcSize
