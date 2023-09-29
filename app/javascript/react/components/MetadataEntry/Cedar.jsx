@@ -209,9 +209,7 @@ class Cedar extends React.Component {
         </Formik>
         <dialog className="modalDialog" id="cedarDialog" ref={this.setRef}>
           <div className="modalClose">
-            <button aria-label="close" type="button" onClick={() => this.dialog.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-            </button>
+            <button aria-label="Close" type="button" onClick={() => this.dialog.close()} />
           </div>
           <div className="c-modal-content__cedar">
             <cedar-embeddable-editor id="cedarEditor" ref={this.setRef} />
@@ -219,9 +217,7 @@ class Cedar extends React.Component {
         </dialog>
         <dialog className="modalDialog" id="deleteCedarDialog" ref={this.setRef}>
           <div className="modalClose">
-            <button aria-label="close" type="button" onClick={() => this.delete.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-            </button>
+            <button aria-label="Close" type="button" onClick={() => this.delete.close()} />
           </div>
           <div className="c-modal-content__normal">
             <h1 className="mat-card-title">Confirm Deletion</h1>
