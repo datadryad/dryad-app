@@ -9,6 +9,11 @@ $logo-image: image_url('blacklight/logo.svg') !default;
   }
 }
 
+.facet-values {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 // Optional
 // Override default Bootstrap variables here
 
