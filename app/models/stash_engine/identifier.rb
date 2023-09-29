@@ -331,7 +331,18 @@ module StashEngine
     end
 
     def institution_will_pay?
-      latest_resource&.tenant&.covers_dpc == true
+      tenant = latest_resource&.tenant
+      return false unless tenant&.covers_dpc
+
+      if tenant&.authentication&.strategy == 'author_match'
+        # get all unique ror_id associations for all authors
+        rors = latest_resource.authors.map do |auth|
+          auth&.affiliations&.map { |affil| affil&.ror_id }
+        end.flatten.uniq
+        return rors&.intersection(tenant&.ror_ids)&.present?
+      end
+
+      true
     end
 
     def funder_will_pay?
