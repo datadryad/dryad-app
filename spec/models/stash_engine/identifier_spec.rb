@@ -587,6 +587,32 @@ module StashEngine
         ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
         expect(ident.institution_will_pay?).to eq(true)
       end
+
+      it "doesn't make institution pay if there is no DPC coverage" do
+        mock_tenant!(covers_dpc: false)
+        ident = create(:identifier)
+        create(:resource, identifier_id: ident.id)
+        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
+        expect(ident.institution_will_pay?).to eq(false)
+      end
+
+      describe '"author_match" strategy' do
+        before(:each) do
+          @resource = create(:resource)
+          mock_author_match_tenant!(ror_ids: ['https://ror.org/038x2fh14'])
+        end
+
+        it 'says institution pays when an author ror matches an institution ror' do
+          affil = @resource.authors.first.affiliations.first
+          affil.update(ror_id: 'https://ror.org/038x2fh14')
+          @resource.reload
+          expect(@resource.identifier.institution_will_pay?).to eq(true)
+        end
+
+        it "doesn't make institution pay if the authors are not from the institution" do
+          expect(@resource.identifier.institution_will_pay?).to eq(false)
+        end
+      end
     end
 
     describe '#funder_will_pay?' do
