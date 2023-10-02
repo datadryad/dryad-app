@@ -89,6 +89,7 @@ module StashEngine
       logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
       return unless resource.present? && @zenodo_error_emails.present?
+
       @resource = resource
 
       @error_text = error_text
