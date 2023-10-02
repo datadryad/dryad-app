@@ -27,7 +27,19 @@ module Stash
 
         url = file.s3_permanent_presigned_url
 
-        cc.redirect_to url
+        if url.nil?
+          cc.render status: 404, plain: 'Not found'
+          error_text = "The file is not available for download. Most likely this is due to a mismatch in Merritt\n" \
+            "and Dryad versioning. The database information probably indicates a deposit in an earlier version\n" \
+            "than when the actual Merritt deposit took place. Or this could be caused by some other issues.\n" \
+            "\n" \
+            "File id: #{file.id}\n" \
+            "Filename: #{file.upload_file_name}\n"
+          StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
+        else
+          cc.redirect_to url
+        end
+
       rescue HTTP::Error => e
         raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \
                              "#{file.merritt_presign_info_url}\n" \
