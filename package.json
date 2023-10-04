@@ -19,14 +19,15 @@
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": { "resources": "usable" }
   },
   "scripts": {
     "start": "bin/webpack serve --mode development",
     "build": "webpack",
     "test": "jest",
     "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint --ext .jsx,.js app/javascript/react --fix",
+    "lint:js": "eslint --ext .jsx,.js */javascript/react --fix",
     "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {

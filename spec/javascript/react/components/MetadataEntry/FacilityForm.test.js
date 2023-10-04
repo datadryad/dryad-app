@@ -1,31 +1,43 @@
-import React from "react";
-import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
-import FacilityForm from "../../../../../app/javascript/react/components/MetadataEntry/FacilityForm";
+import React from 'react';
+import {
+  act, fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
-import {acData} from "./rorTestData"
+import FacilityForm from '../../../../../app/javascript/react/components/MetadataEntry/FacilityForm';
+import acData from './rorTestData';
 
 jest.mock('axios');
 
 describe('FacilityForm', () => {
+  it('renders the basic autocomplete form under facility', () => {
+    const info = {
+      name: 'Friends of Karen',
+      rorId: 'https://ror.org/02rrdqs77',
+      contribId: null,
+      resourceId: 123,
+      createPath: '/create_path',
+      updatePath: 'update_path',
+      controlOptions: {htmlId: 'research_facility', labelText: 'Research facility', isRequired: false},
+    };
 
-  it("renders the basic autocomplete form under facility", () => {
+    render(<FacilityForm {...info} />);
 
-    const info = {name: 'Friends of Karen', rorId: 'https://ror.org/02rrdqs77',
-      contribId: null, resourceId: 123, createPath: '/create_path', updatePath: 'update_path',
-      'controlOptions': { htmlId: "research_facility", labelText: 'Research facility', isRequired: false } }
-
-    const { container } = render(<FacilityForm {...info} />);
-
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false })
+    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', info.name);
   });
 
   it('allows changes to dd text input', async () => {
-    const info = {name: 'Friends of Karen', rorId: 'https://ror.org/02rrdqs77',
-      contribId: null, resourceId: 123, createPath: '/create_path', updatePath: 'update_path',
-      'controlOptions': { htmlId: "research_facility", labelText: 'Research facility', isRequired: false } }
+    const info = {
+      name: 'Friends of Karen',
+      rorId: 'https://ror.org/02rrdqs77',
+      contribId: null,
+      resourceId: 123,
+      createPath: '/create_path',
+      updatePath: 'update_path',
+      controlOptions: {htmlId: 'research_facility', labelText: 'Research facility', isRequired: false},
+    };
 
     /*
     // The promise stuff in here was trying to mock axios to return drop-down list, but can't get it to work for anything
@@ -37,11 +49,11 @@ describe('FacilityForm', () => {
     axios.get.mockImplementationOnce(() => promise);
     */
 
-    axios.get.mockResolvedValueOnce({"data": acData});
+    axios.get.mockResolvedValueOnce({data: acData});
 
-    const { container } = render(<FacilityForm {...info} />)
+    const {container} = render(<FacilityForm {...info} />);
 
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false });
+    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
 
     const inputEl = container.querySelector('input#research_facility');
 

@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import Authors from "../../../../../app/javascript/react/components/MetadataEntry/Authors";
 import axios from 'axios';
+import Authors from '../../../../../app/javascript/react/components/MetadataEntry/Authors';
 
 jest.mock('axios');
 
-const makeAuthor = (resource_id = null, myOrder) => {
-  const sect = () => faker.datatype.number({min:1000, max:9999});
+const makeAuthor = (resource_id, myOrder) => {
+  const sect = () => faker.datatype.number({min: 1000, max: 9999});
   return {
     id: faker.datatype.number({min: 1, max: 32767}),
     author_first_name: faker.name.firstName(),
@@ -18,22 +18,19 @@ const makeAuthor = (resource_id = null, myOrder) => {
     resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
     author_order: myOrder,
     orcid_invite_path: faker.internet.url(),
-    affiliation: null
+    affiliation: null,
   };
-}
+};
 
 describe('Authors', () => {
-
-  let resource, dryadAuthors, curator, createPath, deletePath, reorderPath;;
+  let resource; let dryadAuthors; let curator; let createPath; let deletePath; let
+    reorderPath;
 
   beforeEach(() => {
-
     resource = {id: faker.datatype.number()};
 
     // add 3 authors
-    dryadAuthors = (new Array(3).fill(null)).map((_item, idx) => {
-      return makeAuthor(resource.id, (2 - idx) );
-    });
+    dryadAuthors = (new Array(3).fill(null)).map((_item, idx) => makeAuthor(resource.id, (2 - idx)));
 
     curator = false;
     createPath = faker.system.directoryPath();
@@ -41,13 +38,20 @@ describe('Authors', () => {
     reorderPath = faker.system.directoryPath();
   });
 
-  it("renders multiple authors in authors section", () => {
+  it('renders multiple authors in authors section', () => {
+    render(<Authors
+      resource={resource}
+      dryadAuthors={dryadAuthors}
+      curator={curator}
+      correspondingAuthorId={27}
+      createPath={createPath}
+      deletePath={deletePath}
+      reorderPath={reorderPath}
+    />);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
-
-    const labeledElements = screen.getAllByLabelText('Institutional affiliation', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
-    const firsts = screen.getAllByLabelText('First name', { exact: false })
+    const firsts = screen.getAllByLabelText('First name', {exact: false});
     expect(firsts.length).toBe(3);
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);
@@ -55,14 +59,22 @@ describe('Authors', () => {
     expect(screen.getByText('Add author')).toBeInTheDocument();
   });
 
-  it("removes an author from the document", async () => {
+  it('removes an author from the document', async () => {
     const promise = Promise.resolve({
-      data: dryadAuthors[2]
+      data: dryadAuthors[2],
     });
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
+    render(<Authors
+      resource={resource}
+      dryadAuthors={dryadAuthors}
+      curator={curator}
+      correspondingAuthorId={27}
+      createPath={createPath}
+      deletePath={deletePath}
+      reorderPath={reorderPath}
+    />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -75,8 +87,7 @@ describe('Authors', () => {
     expect(removes.length).toBe(2);
   });
 
-  it("adds an author to the document", async () => {
-
+  it('adds an author to the document', async () => {
     const promise = Promise.resolve({
       status: 200,
       data: {
@@ -88,15 +99,23 @@ describe('Authors', () => {
         resource_id: resource.id,
         author_order: 33333,
         orcid_invite_path: '',
-        affiliation: null
-      }
+        affiliation: null,
+      },
     });
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} dryadAuthors={dryadAuthors} curator={curator} correspondingAuthorId={27} createPath={createPath} deletePath={deletePath} reorderPath={reorderPath} />);
+    render(<Authors
+      resource={resource}
+      dryadAuthors={dryadAuthors}
+      curator={curator}
+      correspondingAuthorId={27}
+      createPath={createPath}
+      deletePath={deletePath}
+      reorderPath={reorderPath}
+    />);
 
-    let removes = screen.getAllByText('remove');
+    const removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
 
     userEvent.click(screen.getByText('Add author'));
@@ -105,5 +124,4 @@ describe('Authors', () => {
       expect(screen.getAllByText('remove').length).toBe(4);
     });
   });
-
 });

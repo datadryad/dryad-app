@@ -18,16 +18,16 @@ to run try 'yarn jest'
 if you need to see console.log output, do 'yarn jest --verbose false'
  */
 
-import ReactDOM, {unmountComponentAtNode} from "react-dom";
+import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import {create} from "react-test-renderer";
+import {create} from 'react-test-renderer';
 import UploadFiles from '../../../../app/javascript/react/containers/UploadFiles';
 
 let container = null;
 beforeEach(() => {
   // setup a DOM element as a render target
-  container = document.createElement("div");
+  container = document.createElement('div');
   document.body.appendChild(container);
 });
 
@@ -39,15 +39,14 @@ afterEach(() => {
 });
 
 describe('upload files', () => {
-
   let upFiles;
   beforeEach(() => {
     upFiles = create(<UploadFiles
-        resource_id={333}
-        file_uploads={[]}
-        app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
-        s3_dir_name={"b759e787-333"}
-    />)
+      resource_id={333}
+      file_uploads={[]}
+      app_config_s3={{region: 'us-west-2', bucket: 'a-test-bucket', key: 'abcdefg'}}
+      s3_dir_name="b759e787-333"
+    />);
   });
 
   afterEach(() => {
@@ -57,10 +56,10 @@ describe('upload files', () => {
   it('does a basic test that UploadFiles loads and checks for data manifest button', () => {
     act(() => {
       ReactDOM.render(<UploadFiles
-          resource_id={333}
-          file_uploads={[]}
-          app_config_s3={{region: "us-west-2", bucket: "a-test-bucket", key: "abcdefg"}}
-          s3_dir_name={"b759e787-333"}
+        resource_id={333}
+        file_uploads={[]}
+        app_config_s3={{region: 'us-west-2', bucket: 'a-test-bucket', key: 'abcdefg'}}
+        s3_dir_name="b759e787-333"
       />, container);
     });
     const button = container.querySelector('button#data_manifest');
@@ -68,14 +67,13 @@ describe('upload files', () => {
   });
 
   describe('hasPendingFiles', () => {
-
     // pending files do not have ids yet
     it('returns false if no files', () => {
       const upInstance = upFiles.getInstance();
       expect(upInstance.hasPendingFiles()).toBeFalsy();
     });
 
-    it("is false if files have ids or status besides pending", () => {
+    it('is false if files have ids or status besides pending', () => {
       const upInstance = upFiles.getInstance();
       upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {id: 3732, status: 'Uploaded'}];
       expect(upInstance.hasPendingFiles()).toBeFalsy();
@@ -83,7 +81,7 @@ describe('upload files', () => {
 
     it("is true if any files don't have ids", () => {
       const upInstance = upFiles.getInstance();
-      upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {name: "fun.jpg", status: 'Pending'}];
+      upInstance.state.chosenFiles = [{id: 2737, status: 'Uploaded'}, {name: 'fun.jpg', status: 'Pending'}];
       expect(upInstance.hasPendingFiles()).toBeTruthy();
     });
   });

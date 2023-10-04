@@ -2,15 +2,15 @@
  * @jest-environment jsdom
  */
 
-import ReactDOM, {unmountComponentAtNode} from "react-dom";
+import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import BadList from "../../../../../app/javascript/react/components/FileUpload/FileList/BadList";
+import BadList from '../../../../../app/javascript/react/components/FileUpload/FileList/BadList';
 
 let container = null;
 beforeEach(() => {
   // setup a DOM element as a render target
-  container = document.createElement("div");
+  container = document.createElement('div');
   document.body.appendChild(container);
 });
 
@@ -25,11 +25,11 @@ describe('BadList', () => {
   it("displays if couldn't read a file", () => {
     const testBad = [
       {
-        "upload_file_name": "cat.csv",
-        "frictionless_report": {
-          "status": "error"
-        }
-      }
+        upload_file_name: 'cat.csv',
+        frictionless_report: {
+          status: 'error',
+        },
+      },
     ];
 
     act(() => {
@@ -39,28 +39,28 @@ describe('BadList', () => {
     expect(container.textContent).toContain("couldn't read tabular data from cat.csv");
   });
 
-  it("displays issues if they are present", () => {
+  it('displays issues if they are present', () => {
     const testIssue = [
       {
-        "upload_file_name": "simon.csv",
-        "frictionless_report": {
-          "status": "issues"
-        }
-      }
+        upload_file_name: 'simon.csv',
+        frictionless_report: {
+          status: 'issues',
+        },
+      },
     ];
 
     act(() => {
       ReactDOM.render(<BadList chosenFiles={testIssue} />, container);
     });
 
-    expect(container.textContent).toContain("A detailed report is available for each file");
+    expect(container.textContent).toContain('A detailed report is available for each file');
   });
 
   it("doesn't display anything if no frictionless on file", () => {
     const testFiles = [
       {
-        "upload_file_name": "cassandra.jpg",
-      }
+        upload_file_name: 'cassandra.jpg',
+      },
     ];
 
     act(() => {
@@ -73,11 +73,11 @@ describe('BadList', () => {
   it("doesn't display anything if frictionless passed", () => {
     const testFiles = [
       {
-        "upload_file_name": "awesome.csv",
-        "frictionless_report": {
-          "status": "noissues"
-        }
-      }
+        upload_file_name: 'awesome.csv',
+        frictionless_report: {
+          status: 'noissues',
+        },
+      },
     ];
 
     act(() => {

@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import FunderForm from "../../../../../app/javascript/react/components/MetadataEntry/FunderForm";
 import axios from 'axios';
+import FunderForm from '../../../../../app/javascript/react/components/MetadataEntry/FunderForm';
 
 jest.mock('axios');
 
 describe('FunderForm', () => {
-
-  let resourceId, info;
+  let resourceId; let
+    info;
   beforeEach(() => {
     resourceId = faker.datatype.number();
     info = {
-      resourceId: resourceId,
+      resourceId,
       origID: faker.datatype.string(10),
       contributor:
           {
@@ -22,7 +22,7 @@ describe('FunderForm', () => {
             contributor_type: 'funder',
             identifier_type: null,
             name_identifier_id: null,
-            resourceId: resourceId,
+            resourceId,
             award_number: faker.datatype.string(5),
             award_description: faker.datatype.string(10),
             funder_order: null,
@@ -32,13 +32,13 @@ describe('FunderForm', () => {
       reorderPath: faker.system.directoryPath(),
       removeFunction: jest.fn(),
       updateFunder: jest.fn(),
-    }
+    };
   });
 
-  it("renders the basic funders form", () => {
+  it('renders the basic funders form', () => {
     render(<FunderForm {...info} />);
 
-    const labeledElements = screen.getAllByLabelText('Granting organization', { exact: false });
+    const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
     expect(labeledElements.length).toBe(3);
     expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
 
@@ -47,12 +47,11 @@ describe('FunderForm', () => {
 
   // gives some pointers and info about act and async examples
   // https://javascript.plainenglish.io/you-probably-dont-need-act-in-your-react-tests-2a0bcd2ad65c
-  it("checks that updating funder award number triggers the save event and does axios call", async () => {
-
+  it('checks that updating funder award number triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
-      data: info.contributor
-    })
+      data: info.contributor,
+    });
 
     axios.patch.mockImplementationOnce(() => promise);
 
@@ -69,6 +68,5 @@ describe('FunderForm', () => {
     await waitFor(() => promise); // waits for the axios promise to fulfil
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
-  })
-
+  });
 });
