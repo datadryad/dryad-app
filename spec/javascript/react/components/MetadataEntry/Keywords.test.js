@@ -1,31 +1,31 @@
-import React from "react";
-import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import React from 'react';
+import {
+  act, fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import Keywords from "../../../../../app/javascript/react/components/MetadataEntry/Keywords";
 import axios from 'axios';
-import KeywordAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete";
+import Keywords from '../../../../../app/javascript/react/components/MetadataEntry/Keywords';
 
 jest.mock('axios');
 
 describe('Keywords', () => {
-
-  let resourceId, subjects, createPath, deletePath;
+  let resourceId; let subjects; let createPath; let
+    deletePath;
 
   beforeEach(() => {
-
     subjects = [];
 
     resourceId = faker.datatype.number();
     // add 3 subjects
-    for(let i = 0; i < 3; i++){
+    for (let i = 0; i < 3; i += 1) {
       subjects.push(
-          {
-            id: faker.datatype.number(),
-            subject: faker.lorem.word(),
-            subject_scheme: null,
-            scheme_uri: null
-          }
+        {
+          id: faker.datatype.number(),
+          subject: faker.lorem.word(),
+          subject_scheme: null,
+          scheme_uri: null,
+        },
       );
     }
 
@@ -33,16 +33,16 @@ describe('Keywords', () => {
     deletePath = faker.system.directoryPath();
   });
 
-  it("renders the existing keywords", () => {
+  it('renders the existing keywords', () => {
     render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
 
     subjects.forEach((subj) => {
       expect(screen.getAllByText(subj.subject).length).toBeGreaterThanOrEqual(1);
-    })
+    });
   });
 
-  it("removes a keyword from the document", async () => {
-    const promise = Promise.resolve({ status: 200, data: subjects[0]  } );
+  it('removes a keyword from the document', async () => {
+    const promise = Promise.resolve({status: 200, data: subjects[0]});
 
     axios.delete.mockImplementationOnce(() => promise);
 
@@ -55,26 +55,25 @@ describe('Keywords', () => {
     await waitFor(() => {
       expect(screen.queryByText(subjects[0].subject)).not.toBeInTheDocument();
     });
-  })
+  });
 
-  it("adds a keyword to the document", async () => {
-
+  it('adds a keyword to the document', async () => {
     const extraSubj = {
       id: faker.datatype.number(),
       subject: faker.lorem.word(),
       subject_scheme: null,
-      scheme_uri: null
-    }
+      scheme_uri: null,
+    };
 
-    const moreSubjects = [...subjects, extraSubj]
+    const moreSubjects = [...subjects, extraSubj];
 
-    const promise = Promise.resolve({ status: 200, data: moreSubjects  } );
+    const promise = Promise.resolve({status: 200, data: moreSubjects});
 
     axios.post.mockImplementationOnce(() => promise);
 
-    const { container } = render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+    render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
 
-    const labeledElements = screen.getAllByLabelText('', { exact: false });
+    const labeledElements = screen.getAllByLabelText('', {exact: false});
 
     userEvent.clear(labeledElements[0]);
 
@@ -92,5 +91,5 @@ describe('Keywords', () => {
     await waitFor(() => {
       expect(screen.queryByText(extraSubj.subject)).toBeInTheDocument();
     });
-  })
-})
+  });
+});
