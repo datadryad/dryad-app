@@ -16,16 +16,16 @@ module Tasks
                 </creator>
             </creators>
             <titles>
-                <title xml:lang="en">Dryad in-progress dataset</title>
+                <title xml:lang="en">Dryad dataset awaiting publication</title>
             </titles>
             <publisher>Dryad</publisher>
-            <publicationYear>2023</publicationYear>
+            <publicationYear>:unkn</publicationYear>
             <resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
             <sizes/>
             <formats/>
             <version/>
             <descriptions>
-                <description descriptionType="Abstract">A placeholder for an item to be published.</description>
+                <description descriptionType="Abstract">:unav</description>
             </descriptions>
         </resource>
       XML
