@@ -31,6 +31,7 @@ module Tasks
         </resource>
       XML
 
+      # rubocop:disable Metrics/MethodLength
       def self.register_doi(doi:)
         doi.gsub!(/^doi:/, '') # strip off the icky doi: at the first if it's there
 
@@ -48,7 +49,7 @@ module Tasks
           return
         end
 
-        if self.status(doi: doi) != 'reserved'
+        if status(doi: doi) != 'reserved'
           puts "  Not reserved, so not updating #{doi}"
           return
         end
@@ -73,18 +74,17 @@ module Tasks
         end
         puts "  Updated placeholder metadata at EZID for #{doi}"
       end
+      # rubocop:enable Metrics/MethodLength
 
       # we want status to be 'reserved' for the update to take place
       def self.status(doi:)
         resp = HTTP.accept('text/plain').timeout(15).get("https://ezid.cdlib.org/id/doi:#{doi}")
-        ezid_status = if resp.status == 200
-                        ezid_info = resp.body.to_s
-                        ezid_info.match(/^_status: (\S+)$/)[1]
-                      elsif resp.status == 400
-                        'not_found'
-                      end
-
-        ezid_status
+        if resp.status == 200
+          ezid_info = resp.body.to_s
+          ezid_info.match(/^_status: (\S+)$/)[1]
+        elsif resp.status == 400
+          'not_found'
+        end
       end
     end
   end
