@@ -14,8 +14,8 @@ default: &default
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
   authentication:
-    strategy: ip_address
-    ranges: [ "141.238.0.0/16", "141.238.1.23/24" ]
+    strategy: shibboleth
+    entity_id: https://sts.windows.net/c124053c-f078-4984-8f9d-35ae0f78c58a/
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
