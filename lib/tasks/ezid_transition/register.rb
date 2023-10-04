@@ -1,4 +1,5 @@
 require 'ezid/client'
+require 'http'
 
 module Tasks
   module EzidTransition
@@ -19,13 +20,13 @@ module Tasks
                 <title xml:lang="en">Dryad dataset awaiting publication</title>
             </titles>
             <publisher>Dryad</publisher>
-            <publicationYear>:unkn</publicationYear>
+            <publicationYear>2023</publicationYear>
             <resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
             <sizes/>
             <formats/>
             <version/>
             <descriptions>
-                <description descriptionType="Abstract">:unav</description>
+                <description descriptionType="Abstract">:unas</description>
             </descriptions>
         </resource>
       XML
@@ -35,7 +36,7 @@ module Tasks
 
         # find correct tenant from DOI and latest resource
         stash_identifier = StashEngine::Identifier.find_by(identifier: doi)
-        resource = stash_identifier.latest_resource
+        resource = stash_identifier&.latest_resource
         if stash_identifier.nil? || resource.nil?
           puts "  Couldn't find dryad identifier or resource for #{doi}, will not update"
           return
@@ -44,6 +45,11 @@ module Tasks
         id_svc = resource.tenant.identifier_service
         if id_svc.provider != 'ezid' || doi.start_with?(APP_CONFIG.identifier_service.prefix)
           puts "  Not an EZID identifier for #{doi}, will not update"
+          return
+        end
+
+        if self.status(doi: doi) != 'reserved'
+          puts "  Not reserved, so not updating #{doi}"
           return
         end
 
@@ -66,6 +72,19 @@ module Tasks
           return
         end
         puts "  Updated placeholder metadata at EZID for #{doi}"
+      end
+
+      # we want status to be 'reserved' for the update to take place
+      def self.status(doi:)
+        resp = HTTP.accept('text/plain').timeout(15).get("https://ezid.cdlib.org/id/doi:#{doi}")
+        ezid_status = if resp.status == 200
+                        ezid_info = resp.body.to_s
+                        ezid_info.match(/^_status: (\S+)$/)[1]
+                      elsif resp.status == 400
+                        'not_found'
+                      end
+
+        ezid_status
       end
     end
   end

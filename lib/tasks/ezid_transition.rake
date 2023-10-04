@@ -81,6 +81,7 @@ namespace :ezid_transition do
       puts "#{idx} -- #{doi}"
       # sorry, I couldn't figure out how to stop the EZID gem from printing to stdout, even setting logggers and other things
       Tasks::EzidTransition::Register.register_doi(doi: doi)
+      sleep 1
     end
     puts 'Done'
   end
