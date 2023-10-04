@@ -143,7 +143,7 @@ export default function GenericNameIdAutocomplete(
                   setAcID('');
                 }
                 // only autocomplete with 3 or more characters so as not to waste queries
-                if (showDropdown || value?.length > 3) {
+                if (showDropdown || value?.length >= 3) {
                   getInputItems(value);
                 } else {
                   setInputItems([]);
@@ -166,7 +166,7 @@ export default function GenericNameIdAutocomplete(
         />
         {showDropdown && (
           <button
-            aria-label="toggle menu"
+            aria-label="Toggle menu"
             className="c-ac__input-button"
             type="button"
             {...getToggleButtonProps()}
@@ -174,11 +174,12 @@ export default function GenericNameIdAutocomplete(
             &#8964;
           </button>
         )}
+        <span className="screen-reader-only" id={`label_${htmlId}_list`}>{`${labelText ? `${labelText} a` : 'A'}utocomplete list`}</span>
         <ul
           {...getMenuProps()}
           className={`c-ac__menu c-ac__menu_${isOpen ? 'open' : 'closed'}`}
           id={`menu_${htmlId}`}
-          aria-labelledby={`label_${htmlId}`}
+          aria-labelledby={`label_${htmlId}_list`}
           tabIndex={-1}
         >
           {inputItems.map((item, index) => {
