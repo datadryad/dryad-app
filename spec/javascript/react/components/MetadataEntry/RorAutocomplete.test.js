@@ -1,7 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import RorAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/RorAutocomplete';
-// import acData from './rorTestData';
 
 jest.mock('axios');
 

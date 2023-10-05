@@ -134,12 +134,14 @@ class Cedar extends React.Component {
     if (this.dialog.dataset.template !== template.id) {
       console.log(`Cedar init the modal for template ${template.id}`);
       const {table: {editor_url}} = this.props.appConfig;
-      const script = document.createElement('script');
-      script.src = editor_url;
-      script.async = true;
-      script.onload = () => this.modalSetup();
-      this.dialog.appendChild(script);
-      this.dialog.dataset.template = template.id;
+      if (editor_url) {
+        const script = document.createElement('script');
+        script.src = editor_url;
+        script.async = true;
+        script.onload = () => this.modalSetup();
+        this.dialog.appendChild(script);
+        this.dialog.dataset.template = template.id;
+      }
     }
     this.dialog.showModal();
   };

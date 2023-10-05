@@ -8,13 +8,10 @@ import PrelimArticle from '../../../../../app/javascript/react/components/Metada
 jest.mock('axios');
 
 describe('PrelimArticle', () => {
-  let resourceId; let identifierId; let publication_name; let publication_issn; let related_identifier; let acText; let setAcText;
-  let acID; let setAcID; let relatedIdentifier; let
-    setRelatedIdentifier;
+  let info; let publication_name; let publication_issn;
 
   beforeEach(() => {
-    resourceId = faker.datatype.number();
-    identifierId = faker.datatype.number();
+    const identifierId = faker.datatype.number();
     publication_name = {
       id: faker.datatype.number(),
       identifier_id: identifierId,
@@ -27,34 +24,25 @@ describe('PrelimArticle', () => {
       data_type: 'publicationISSN',
       value: `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
     };
-    related_identifier = faker.internet.url();
-
-    acText = publication_name.value;
-    setAcText = jest.fn();
-
-    acID = publication_issn.value;
-    setAcID = jest.fn();
-
-    relatedIdentifier = related_identifier;
-    setRelatedIdentifier = jest.fn();
+    info = {
+      resourceId: faker.datatype.number(),
+      identifierId,
+      acText: publication_name.value,
+      setAcText: jest.fn(),
+      acID: publication_issn.value,
+      setAcID: jest.fn(),
+      relatedIdentifier: faker.internet.url(),
+      setRelatedIdentifier: jest.fn(),
+    };
   });
 
   it('renders the basic article and doi form', () => {
-    render(<PrelimArticle
-      resourceId={resourceId}
-      identifierId={identifierId}
-      acText={acText}
-      setAcText={setAcText}
-      acID={acID}
-      setAcID={setAcID}
-      relatedIdentifier={relatedIdentifier}
-      setRelatedIdentifier={setRelatedIdentifier}
-    />);
+    render(<PrelimArticle {...info} />);
 
     const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
     expect(labeledElements.length).toBe(2);
     expect(labeledElements[0]).toHaveAttribute('value', publication_name.value);
-    expect(screen.getByLabelText('DOI')).toHaveValue(related_identifier);
+    expect(screen.getByLabelText('DOI')).toHaveValue(info.relatedIdentifier);
   });
 
   it('checks that updating fields triggers axios save on blur', async () => {
@@ -65,16 +53,7 @@ describe('PrelimArticle', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<PrelimArticle
-      resourceId={resourceId}
-      identifierId={identifierId}
-      acText={acText}
-      setAcText={setAcText}
-      acID={acID}
-      setAcID={setAcID}
-      relatedIdentifier={relatedIdentifier}
-      setRelatedIdentifier={setRelatedIdentifier}
-    />);
+    render(<PrelimArticle {...info} />);
 
     userEvent.clear(screen.getByLabelText('DOI'));
     userEvent.type(screen.getByLabelText('DOI'), '12345.dryad/fa387gek');
@@ -84,6 +63,20 @@ describe('PrelimArticle', () => {
     userEvent.tab(); // tab out of element, should trigger save on blur
 
     await waitFor(() => expect(screen.getByText('Import article metadata')).toHaveFocus());
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+  });
+
+  it('checks that clicking button triggers axios save', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: {},
+    });
+
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<PrelimArticle {...info} />);
+
+    userEvent.click(screen.getByText('Import article metadata'));
     await waitFor(() => promise); // waits for the axios promise to fulfil
   });
 });

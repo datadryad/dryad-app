@@ -10,8 +10,7 @@ import Keywords from '../../../../../app/javascript/react/components/MetadataEnt
 jest.mock('axios');
 
 describe('Keywords', () => {
-  let resourceId; let subjects; let createPath; let
-    deletePath;
+  let resourceId; let subjects; let createPath; let deletePath;
 
   beforeEach(() => {
     subjects = [];
@@ -41,6 +40,53 @@ describe('Keywords', () => {
     });
   });
 
+  it('selects from autocomplete options shown while typing', async () => {
+    const options = Promise.resolve({
+      status: 200,
+      data: [
+        {id: 7219, name: 'Agroecology'},
+        {id: 11645, name: 'Behavioral ecology'},
+        {id: 11647, name: 'Chemical ecology'},
+        {id: 11648, name: 'Coastal ecology'},
+        {id: 924, name: 'Ecology'},
+      ],
+    });
+
+    axios.get.mockImplementationOnce(() => options);
+
+    render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+
+    const input = screen.getByLabelText('Subject keywords:', {exact: false});
+    userEvent.type(input, 'Eco');
+
+    await waitFor(() => options);
+
+    const extraSubj = {
+      id: 924,
+      subject: 'Ecology',
+      subject_scheme: 'PLOS Subject Area Thesaurus',
+      scheme_URI: 'https://github.com/PLOS/plos-thesaurus',
+    };
+    const moreSubjects = [...subjects, extraSubj];
+
+    const promise = Promise.resolve({status: 200, data: moreSubjects});
+
+    axios.post.mockImplementationOnce(() => promise);
+
+    const menu = screen.getByLabelText('Autocomplete list');
+    expect(menu).toBeVisible();
+
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(5));
+
+    userEvent.selectOptions(menu, extraSubj.subject);
+
+    await waitFor(() => promise);
+
+    await waitFor(() => {
+      expect(document.querySelectorAll('.c-keywords__keyword')[3].textContent).toEqual(extraSubj.subject);
+    });
+  });
+
   it('removes a keyword from the document', async () => {
     const promise = Promise.resolve({status: 200, data: subjects[0]});
 
@@ -60,7 +106,7 @@ describe('Keywords', () => {
   it('adds a keyword to the document', async () => {
     const extraSubj = {
       id: faker.datatype.number(),
-      subject: faker.lorem.word(),
+      subject: faker.lorem.words(2),
       subject_scheme: null,
       scheme_uri: null,
     };

@@ -1,26 +1,28 @@
 import React from 'react';
-import {
-  act, fireEvent, render, screen, waitFor,
-} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import FacilityForm from '../../../../../app/javascript/react/components/MetadataEntry/FacilityForm';
-import acData from './rorTestData';
 
 jest.mock('axios');
 
 describe('FacilityForm', () => {
-  it('renders the basic autocomplete form under facility', () => {
-    const info = {
-      name: 'Friends of Karen',
-      rorId: 'https://ror.org/02rrdqs77',
-      contribId: null,
+  let info;
+
+  beforeEach(() => {
+    info = {
+      name: '',
+      rorId: '',
+      contribId: faker.datatype.number(),
       resourceId: 123,
-      createPath: '/create_path',
-      updatePath: 'update_path',
+      createPath: faker.system.directoryPath(),
+      updatePath: faker.system.directoryPath(),
       controlOptions: {htmlId: 'research_facility', labelText: 'Research facility', isRequired: false},
     };
+  });
 
+  it('renders the basic autocomplete form under facility', () => {
     render(<FacilityForm {...info} />);
 
     const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
@@ -28,50 +30,50 @@ describe('FacilityForm', () => {
     expect(labeledElements[0]).toHaveAttribute('value', info.name);
   });
 
-  it('allows changes to dd text input', async () => {
-    const info = {
-      name: 'Friends of Karen',
-      rorId: 'https://ror.org/02rrdqs77',
-      contribId: null,
+  it('selects from autocomplete options shown while typing', async () => {
+    const options = Promise.resolve({
+      status: 200,
+      data: [
+        {
+          id: 'https://ror.org/00x6h5n95', name: 'Dryad Digital Repository', country: 'United States', acronyms: [],
+        },
+        {
+          id: 'https://ror.org/006zwes74', name: 'Dryas Arqueologia (Portugal)', country: 'Portugal', acronyms: [],
+        },
+      ],
+    });
+
+    axios.get.mockImplementationOnce(() => options);
+
+    const dryad = {
+      id: info.contribId,
+      contributor_name: 'Dryad Digital Repository',
+      contributor_type: 'sponsor',
+      identifier_type: 'ror',
+      name_identifier_id: 'https://ror.org/00x6h5n95',
       resourceId: 123,
-      createPath: '/create_path',
-      updatePath: 'update_path',
-      controlOptions: {htmlId: 'research_facility', labelText: 'Research facility', isRequired: false},
     };
 
-    /*
-    // The promise stuff in here was trying to mock axios to return drop-down list, but can't get it to work for anything
+    axios.mockResolvedValueOnce({status: 200, data: dryad});
 
-    const promise = Promise.resolve({
-      data: acData
-    });
+    render(<FacilityForm {...info} />);
 
-    axios.get.mockImplementationOnce(() => promise);
-    */
+    const input = screen.getByLabelText('Research facility:', {exact: true});
 
-    axios.get.mockResolvedValueOnce({data: acData});
+    userEvent.clear(input);
+    userEvent.type(input, 'Drya');
 
-    const {container} = render(<FacilityForm {...info} />);
+    await waitFor(() => options);
 
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
+    const menu = screen.getByLabelText('Research facility autocomplete list');
+    expect(menu).toBeVisible();
 
-    const inputEl = container.querySelector('input#research_facility');
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(2));
 
-    expect(inputEl.value).toEqual(info.name);
+    userEvent.selectOptions(menu, screen.getAllByRole('option')[0]);
 
-    // There seems to be some kind of bug where it will not reset this value to an empty string (docs say it should)
-    // also if I don't reset it then the userEvent.type below doesn't clear the previous string.
+    await waitFor(() => Promise.resolve());
 
-    fireEvent.change(inputEl, {target: {value: 'p'}});
-
-    fireEvent.focus(labeledElements[0]);
-    await act(async () => {
-      // info at: https://testing-library.com/docs/ecosystem-user-event/
-      await userEvent.type(inputEl, '{backspace}University of California', {delay: 20});
-    });
-
-    await waitFor(() => expect(inputEl).toHaveValue('University of California'));
-
-    expect(inputEl.value).toEqual('University of California');
+    expect(input).toHaveAttribute('value', dryad.contributor_name);
   });
 });

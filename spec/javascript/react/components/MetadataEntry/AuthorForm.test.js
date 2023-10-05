@@ -61,4 +61,42 @@ describe('AuthorForm', () => {
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
   });
+  it('checks that updating author triggers the save event and does axios call', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: dryadAuthor,
+    });
+
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+
+    userEvent.clear(screen.getByLabelText('Last name'));
+    userEvent.type(screen.getByLabelText('Last name'), 'Dryadsson');
+
+    await waitFor(() => expect(screen.getByLabelText('Last name')).toHaveValue('Dryadsson'));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+  });
+  it('checks that updating author triggers the save event and does axios call', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: dryadAuthor,
+    });
+
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+
+    userEvent.clear(screen.getByLabelText('Author email'));
+    userEvent.type(screen.getByLabelText('Author email'), 'email@email.edu');
+
+    await waitFor(() => expect(screen.getByLabelText('Author email')).toHaveValue('email@email.edu'));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+  });
 });

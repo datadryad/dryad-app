@@ -73,4 +73,24 @@ describe('RelatedWorkForm', () => {
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
   });
+
+  it('checks that updating related work type triggers axios call', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: info.contributor,
+    });
+
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<RelatedWorkForm {...info} />);
+
+    userEvent.selectOptions(screen.getByLabelText('Work type'), 'Software');
+
+    await waitFor(() => expect(screen.getByLabelText('Work type')).toHaveValue('software'));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => expect(screen.getByLabelText('Identifier or external url')).toHaveFocus());
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+  });
 });

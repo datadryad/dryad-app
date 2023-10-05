@@ -8,13 +8,10 @@ import PrelimManu from '../../../../../app/javascript/react/components/MetadataE
 jest.mock('axios');
 
 describe('PrelimManu', () => {
-  let resourceId; let identifierId; let publication_name; let publication_issn; let msid; let acText; let setAcText;
-  let acID; let setAcID; let msId; let
-    setMsId;
+  let publication_name; let publication_issn; let msid; let info;
 
   beforeEach(() => {
-    resourceId = faker.datatype.number();
-    identifierId = faker.datatype.number();
+    const identifierId = faker.datatype.number();
     publication_name = {
       id: faker.datatype.number(),
       identifier_id: identifierId,
@@ -33,28 +30,20 @@ describe('PrelimManu', () => {
       data_type: 'manuscriptNumber',
       value: `CROM-${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
     };
-
-    acText = publication_name.value;
-    setAcText = jest.fn();
-
-    acID = publication_issn.value;
-    setAcID = jest.fn();
-
-    msId = msid.value;
-    setMsId = jest.fn();
+    info = {
+      resourceId: faker.datatype.number(),
+      identifierId,
+      acText: publication_name.value,
+      setAcText: jest.fn(),
+      acID: publication_issn.value,
+      setAcID: jest.fn(),
+      msId: msid.value,
+      setMsId: jest.fn(),
+    };
   });
 
   it('renders the basic article and manuscript id form', () => {
-    render(<PrelimManu
-      resourceId={resourceId}
-      identifierId={identifierId}
-      acText={acText}
-      setAcText={setAcText}
-      acID={acID}
-      setAcID={setAcID}
-      msId={msId}
-      setMsId={setMsId}
-    />);
+    render(<PrelimManu {...info} />);
 
     const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
     expect(labeledElements.length).toBe(2);
@@ -70,16 +59,7 @@ describe('PrelimManu', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<PrelimManu
-      resourceId={resourceId}
-      identifierId={identifierId}
-      acText={acText}
-      setAcText={setAcText}
-      acID={acID}
-      setAcID={setAcID}
-      msId={msId}
-      setMsId={setMsId}
-    />);
+    render(<PrelimManu {...info} />);
 
     userEvent.clear(screen.getByLabelText('Manuscript number'));
     userEvent.type(screen.getByLabelText('Manuscript number'), 'GUD-MS-387-555');
@@ -89,6 +69,20 @@ describe('PrelimManu', () => {
     userEvent.tab(); // tab out of element, should trigger save on blur
 
     await waitFor(() => expect(screen.getByText('Import manuscript metadata')).toHaveFocus());
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+  });
+
+  it('checks that clicking button triggers axios save', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: {},
+    });
+
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<PrelimManu {...info} />);
+
+    userEvent.click(screen.getByText('Import manuscript metadata'));
     await waitFor(() => promise); // waits for the axios promise to fulfil
   });
 });
