@@ -1,9 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import PrelimAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/PrelimAutocomplete';
-// import axios from 'axios';
-
-// jest.mock('axios');
 
 describe('PrelimAutocomplete', () => {
   // very similar to the rest of the autocompletes

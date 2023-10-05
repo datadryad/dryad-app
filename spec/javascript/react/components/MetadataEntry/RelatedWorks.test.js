@@ -41,7 +41,7 @@ describe('RelatedWorks', () => {
   });
 
   it('renders multiple related works forms as related works section', () => {
-    render(<RelatedWorks resourceId={resourceId} relatedIdentifiers={works} workTypes={relatedTypes} />);
+    render(<RelatedWorks resourceId={resourceId} resourceType="Dataset" relatedIdentifiers={works} workTypes={relatedTypes} />);
 
     const labeledElements = screen.getAllByLabelText('Work type', {exact: false});
     expect(labeledElements.length).toBe(3); // two for each autocomplete list
@@ -55,12 +55,13 @@ describe('RelatedWorks', () => {
 
   it('removes a related work from the document', async () => {
     const promise = Promise.resolve({
+      status: 200,
       data: works[2],
     });
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<RelatedWorks resourceId={resourceId} relatedIdentifiers={works} workTypes={relatedTypes} />);
+    render(<RelatedWorks resourceId={resourceId} resourceType="Dataset" relatedIdentifiers={works} workTypes={relatedTypes} />);
 
     let removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -86,7 +87,7 @@ describe('RelatedWorks', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<RelatedWorks resourceId={resourceId} relatedIdentifiers={works} workTypes={relatedTypes} />);
+    render(<RelatedWorks resourceId={resourceId} resourceType="Dataset" relatedIdentifiers={works} workTypes={relatedTypes} />);
 
     const removes = screen.getAllByText('remove');
     expect(removes.length).toBe(3);
@@ -96,5 +97,25 @@ describe('RelatedWorks', () => {
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4);
     });
+  });
+
+  it('adds an empty related work to the document', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: {
+        id: faker.datatype.number(),
+        related_identifier: '',
+        resource_id: resourceId,
+        work_type: 'article',
+      },
+    });
+
+    axios.post.mockImplementationOnce(() => promise);
+
+    render(<RelatedWorks resourceId={resourceId} resourceType="Dataset" relatedIdentifiers={[]} workTypes={relatedTypes} />);
+
+    await waitFor(() => promise); // waits for the axios promise to fulfill
+    const removes = screen.getAllByText('remove');
+    expect(removes.length).toBe(1);
   });
 });

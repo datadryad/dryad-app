@@ -1,9 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import FunderAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/FunderAutocomplete';
-// import axios from 'axios';
-
-// jest.mock('axios');
 
 describe('FunderAutocomplete', () => {
   let acText; let setAcText; let acID; let setAcID; let formRef; let info; let

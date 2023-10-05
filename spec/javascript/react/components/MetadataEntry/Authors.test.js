@@ -61,6 +61,7 @@ describe('Authors', () => {
 
   it('removes an author from the document', async () => {
     const promise = Promise.resolve({
+      status: 200,
       data: dryadAuthors[2],
     });
 
@@ -123,5 +124,36 @@ describe('Authors', () => {
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4);
     });
+  });
+
+  it('should trigger drag and drop', async () => {
+    const promise = Promise.resolve({status: 200, data: []});
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<Authors
+      resource={resource}
+      dryadAuthors={dryadAuthors}
+      curator={curator}
+      correspondingAuthorId={27}
+      createPath={createPath}
+      deletePath={deletePath}
+      reorderPath={reorderPath}
+    />);
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('listitem').length).toBe(3);
+    });
+
+    const button = screen.getAllByRole('button')[0];
+
+    userEvent.tab();
+    expect(button.matches(':focus')).toBe(true);
+
+    userEvent.keyboard('[Enter]');
+    expect(button).toHaveAttribute('aria-pressed', 'true');
+    userEvent.keyboard('[Enter]');
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+    userEvent.keyboard('[Enter]');
+    expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 });

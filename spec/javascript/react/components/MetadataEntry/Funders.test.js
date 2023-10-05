@@ -59,6 +59,7 @@ describe('Funders', () => {
 
   it('removes a funder from the document', async () => {
     const promise = Promise.resolve({
+      status: 200,
       data: contributors[2],
     });
 
@@ -116,5 +117,52 @@ describe('Funders', () => {
     await waitFor(() => {
       expect(screen.getAllByText('remove').length).toBe(4);
     });
+  });
+
+  it('Sets no funders', async () => {
+    const promise = Promise.resolve({
+      status: 200,
+      data: {
+        id: faker.datatype.number(),
+        contributor_name: '',
+        contributor_type: 'funder',
+        identifier_type: 'crossref_funder_id',
+        name_identifier_id: '',
+        resource_id: resourceId,
+      },
+    });
+    const nofunder = Promise.resolve({
+      status: 200,
+      data: {
+        id: faker.datatype.number(),
+        contributor_name: 'N/A',
+        contributor_type: 'funder',
+        identifier_type: 'crossref_funder_id',
+        name_identifier_id: '0',
+        resource_id: resourceId,
+      },
+    });
+
+    axios.post.mockImplementationOnce(() => promise);
+
+    render(<Funders
+      contributors={[]}
+      resourceId={resourceId}
+      createPath={createPath}
+      updatePath={updatePath}
+      deletePath={deletePath}
+      reorderPath={reorderPath}
+    />);
+
+    await waitFor(() => promise); // waits for the axios promise to fulfil
+
+    const removes = screen.getAllByText('remove');
+    expect(removes.length).toBe(1);
+
+    axios.patch.mockImplementationOnce(() => nofunder);
+
+    userEvent.click(screen.getByLabelText('No funding received'));
+    await waitFor(() => nofunder);
+    expect(screen.getByLabelText('No funding received').checked).toEqual(true);
   });
 });

@@ -2,37 +2,58 @@
  * @jest-environment jsdom
  */
 
-import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import React from 'react';
-import {act} from 'react-dom/test-utils';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import axios from 'axios';
 import Title from '../../../../../app/javascript/react/components/MetadataEntry/Title';
 
-let container = null;
-beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
+jest.mock('axios');
 
 describe('Title', () => {
-  it('renders a basic title', () => {
-    const info = {
-      resource: {id: 27, title: 'My test of rendering title', token: '12xu'},
-      path: '/stash_datacite/titles/update',
-    };
+  let resource; let path; let
+    type;
 
-    act(() => {
-      ReactDOM.render(<Title resource={info.resource} path={info.path} />, container);
+  beforeEach(() => {
+    // setup a DOM element as a render target
+    resource = {id: 27, title: 'My test of rendering title', token: '12xu'};
+    path = '/stash_datacite/titles/update';
+    type = 'Dataset';
+  });
+
+  it('renders a basic title', () => {
+    render(<Title resource={resource} path={path} type={type} />);
+
+    const input = screen.getByLabelText('Dataset title', {exact: false});
+    expect(input).toHaveValue(resource.title);
+  });
+
+  it('calls axios to update from server on change', async () => {
+    const newTitle = 'My test of updating title';
+
+    const promise = Promise.resolve({
+      status: 200,
+      data: {id: 27, title: newTitle},
     });
 
-    const input = container.querySelector('input#title__27');
-    expect(input).toBeDefined();
+    axios.patch.mockImplementationOnce(() => promise);
+
+    render(<Title
+      resource={resource}
+      path={path}
+      type={type}
+    />);
+
+    const title = screen.getByLabelText('Dataset title', {exact: false});
+    expect(title).toHaveValue(resource.title);
+
+    userEvent.clear(screen.getByLabelText('Dataset title'));
+    userEvent.type(screen.getByLabelText('Dataset title'), newTitle);
+
+    await waitFor(() => expect(screen.getByLabelText('Dataset title')).toHaveValue(newTitle));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => promise); // waits for the axios promise to fulfil
   });
 });
