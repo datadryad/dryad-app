@@ -2186,6 +2186,8 @@ td:last-child, th:last-child {
   padding: 0;
   list-style: none;
   border: thin solid #ddd;
+  margin: 0;
+  padding: 0;
 }
 .c-auto_complete .c-ac__menu .c-ac__menu_item {
   padding: 0.25em 0.5ch;
@@ -3734,6 +3736,8 @@ td:last-child, th:last-child {
 .t-login__box .c-institution__container .c-auto_complete .c-ac__menu, .t-login__choose .c-institution__container .c-auto_complete .c-ac__menu {
   top: 45px;
   text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
 .t-login__info {
