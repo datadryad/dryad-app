@@ -1,19 +1,15 @@
 import {nanoid} from 'nanoid';
 
 export function showSavingMsg(){
-  // ignore jquery undefined in tests without page context
-  if (! typeof jQuery == 'undefined') {
-    $('.saving_text').show();
-    $('.saved_text').hide();
-  }
+  [...document.querySelectorAll('.saving_text')].forEach((el) => el.removeAttribute('hidden'));
+  [...document.querySelectorAll('.saved_text')].forEach((el) => el.setAttribute('hidden', true));
+  return true;
 }
 
 export function showSavedMsg(){
-  // ignore jquery undefined in tests without page context
-  if (! typeof jQuery == 'undefined'){
-    $('.saving_text').hide();
-    $('.saved_text').show();
-  }
+  [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
+  [...document.querySelectorAll('.saved_text')].forEach((el) => el.removeAttribute('hidden'));
+  return true;
 }
 
 // if an id is null then make one for a form, etc
