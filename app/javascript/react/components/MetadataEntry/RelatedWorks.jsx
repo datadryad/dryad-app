@@ -25,7 +25,6 @@ function RelatedWorks(
   const [works, setWorks] = useState(relatedIdentifiers);
 
   const addNewWork = () => {
-    console.log(`${(new Date()).toISOString()}: Adding Related Works`);
     const contribJson = {
       authenticity_token: csrf,
       stash_datacite_related_identifier: blankRelated,
@@ -49,7 +48,6 @@ function RelatedWorks(
   }
 
   const removeItem = (id) => {
-    console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
     const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`;
     showSavingMsg();
 
@@ -63,8 +61,6 @@ function RelatedWorks(
       .then((data) => {
         if (data.status !== 200) {
           console.log('Response failure not a 200 response from related works deletion');
-        } else {
-          console.log('deleted from related works');
         }
         showSavedMsg();
       });
