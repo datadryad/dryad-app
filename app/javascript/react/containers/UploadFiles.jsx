@@ -144,8 +144,6 @@ class UploadFiles extends React.Component {
 
     if (this.checkPollingDone(toCheck)) return;
 
-    console.log(toCheck);
-
     axios.get(
       `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
       {params: {file_ids: toCheck.map((file) => file.id)}},
@@ -266,7 +264,6 @@ class UploadFiles extends React.Component {
                 original: file.name,
               },
             ).then((response) => {
-              console.log(response);
               this.updateFileData(response.data.new_file, index);
               if (this.isValidTabular(this.state.chosenFiles[index])) {
                 this.validateFrictionlessLambda([this.state.chosenFiles[index]]);
@@ -325,8 +322,7 @@ class UploadFiles extends React.Component {
       axios.post(
         `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
         {file_ids: files.map((file) => file.id)},
-      ).then((response) => {
-        console.log('validateFrictionlessLambda RESPONSE', response);
+      ).then(() => {
         if (!this.interval) {
           // start polling for report updates if not polling already
           this.interval = setInterval(this.tick, this.state.pollingDelay);
@@ -374,8 +370,7 @@ class UploadFiles extends React.Component {
     const file = this.state.chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
       axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
           this.removeFileLine(id);
         })
         .catch((error) => console.log(error));

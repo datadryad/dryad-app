@@ -97,8 +97,6 @@ class Cedar extends React.Component {
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(wrappedMeta, null, 2));
-    console.log('Saved metadata');
-    console.log(wrappedMeta);
     this.setState({metadata, updated});
     if (this.editor) this.editor.templateInfo = info;
     showSavedMsg();
@@ -118,7 +116,6 @@ class Cedar extends React.Component {
     this.editorLoaded = new MutationObserver(() => {
       const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
-        console.log('Loading metadata', metadata);
         this.editor.metadata = metadata;
         this.editorLoaded.disconnect();
         this.editorLoaded = null;
@@ -135,7 +132,6 @@ class Cedar extends React.Component {
       return;
     }
     if (this.dialog.dataset.template !== template.id) {
-      console.log(`Cedar init the modal for template ${template.id}`);
       const {table: {editor_url}} = this.props.appConfig;
       if (editor_url) {
         const script = document.createElement('script');

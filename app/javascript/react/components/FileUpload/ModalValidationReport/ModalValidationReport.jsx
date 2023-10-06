@@ -49,7 +49,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
         At curation stage, if there are questions about how your data is presented, a curator will contact
         you with options to improve the organization, readability, and/or reuse of your dataset.
       </p>
-      <button type="button" onClick={clickedClose}>Close</button>
+      <button type="button" className="o-button__plain-text2" onClick={clickedClose}>Close</button>
     </dialog>
   );
 });
