@@ -1,0 +1,68 @@
+[
+  {
+    "id": 15165,
+    "upload_file_name": "invalid.xml",
+    "upload_content_type": "text/xml",
+    "upload_file_size": 120510,
+    "file_state": "created",
+    "url": null,
+    "status_code": null,
+    "timed_out": false,
+    "original_url": null,
+    "cloud_service": null,
+    "digest": null,
+    "digest_type": null,
+    "description": null,
+    "original_filename": "invalid.xml",
+    "compressed_try": 0,
+    "type": "StashEngine::DataFile",
+    "frictionless_report": {
+      "report": "{\"report\": \"XML file is invalid: mismatched tag: line 8, column 2\"}",
+      "status": "issues"
+    }
+  },
+  {
+    "id": 15164,
+    "upload_file_name": "invalid.json",
+    "upload_content_type": "application/json",
+    "upload_file_size": 3482,
+    "file_state": "created",
+    "url": null,
+    "status_code": null,
+    "timed_out": false,
+    "original_url": null,
+    "cloud_service": null,
+    "digest": null,
+    "digest_type": null,
+    "description": null,
+    "original_filename": "invalid.json",
+    "compressed_try": 0,
+    "type": "StashEngine::DataFile",
+    "frictionless_report": {
+      "report": "{\"report\": \"JSON file is invalid: Invalid control character at: line 14 column 38 (char 381)\"}",
+      "status": "issues"
+    }
+  },
+  {
+    "id": 15163,
+    "upload_file_name": "simple-frictionless-test.csv",
+    "upload_content_type": "text/csv",
+    "upload_file_size": 47,
+    "file_state": "created",
+    "url": null,
+    "status_code": null,
+    "timed_out": false,
+    "original_url": null,
+    "cloud_service": null,
+    "digest": null,
+    "digest_type": null,
+    "description": null,
+    "original_filename": "simple-frictionless-test.csv",
+    "compressed_try": 0,
+    "type": "StashEngine::DataFile",
+    "frictionless_report": {
+      "report": "{\"report\": {\"version\": \"4.40.8\", \"time\": 0.461, \"errors\": [], \"tasks\": [{\"resource\": {\"path\": \"https://dryad-s3-dev.s3.us-west-2.amazonaws.com/b759e787-4135/data/simple-frictionless-test.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2KERHV5E3OITXZXC%2F20231006%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231006T154031Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=3af8f0e7964a63c555cccb3bdcd5c23d5d0a410bb26103e64e1e0b21654362bb\", \"name\": \"simple-frictionless-test\", \"profile\": \"tabular-data-resource\", \"scheme\": \"https\", \"format\": \"csv\", \"hashing\": \"md5\", \"stats\": {\"hash\": \"dbdb639a812939ede08d603f7dc99c2b\", \"bytes\": 47, \"fields\": 3, \"rows\": 3}, \"encoding\": \"utf-8\", \"dialect\": {\"skipInitialSpace\": true}, \"schema\": {\"missingValues\": [\"na\", \"n/a\", \".\", \"none\", \"NA\", \"N/A\", \"N.A.\", \"n.a.\", \"-\", \"empty\", \"blank\"], \"fields\": [{\"type\": \"integer\", \"name\": \"column a\"}, {\"type\": \"integer\", \"name\": \"column b\"}, {\"type\": \"string\", \"name\": \"column 3\"}]}}, \"time\": 0.461, \"scope\": [\"hash-count-error\", \"byte-count-error\", \"field-count-error\", \"row-count-error\", \"blank-header\", \"extra-label\", \"missing-label\", \"blank-label\", \"duplicate-label\", \"incorrect-label\", \"blank-row\", \"primary-key-error\", \"foreign-key-error\", \"extra-cell\", \"missing-cell\", \"type-error\", \"constraint-error\", \"unique-error\"], \"partial\": false, \"errors\": [{\"cell\": \"\", \"fieldName\": \"column a\", \"fieldNumber\": 1, \"fieldPosition\": 1, \"cells\": [\"\", \"4\", \"5\"], \"rowNumber\": 2, \"rowPosition\": 3, \"code\": \"type-error\", \"name\": \"Type Error\", \"tags\": [\"#table\", \"#row\", \"#cell\"], \"note\": \"type is \\\"integer/default\\\"\", \"message\": \"Type error in the cell \\\"\\\" in row \\\"3\\\" and field \\\"column a\\\" at position \\\"1\\\": type is \\\"integer/default\\\"\", \"description\": \"The value does not match the schema type and format for this field.\"}], \"stats\": {\"errors\": 1}, \"valid\": false}], \"stats\": {\"errors\": 1, \"tasks\": 1}, \"valid\": false}}",
+      "status": "issues"
+    }
+  }
+]

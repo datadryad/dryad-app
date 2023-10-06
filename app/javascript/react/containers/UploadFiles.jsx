@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import {render} from '@cdl-dryad/frictionless-components/lib/render';
 import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import sanitize from '../../lib/sanitize_filename';
+import {maxFiles, pollingDelay} from './maximums';
 
 import {
   ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, TrackChanges,
@@ -14,7 +15,6 @@ import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 /**
  * Constants
  */
-const maxFiles = 1000;
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
   'StashEngine::SoftwareFile': 'software',
@@ -102,7 +102,7 @@ class UploadFiles extends React.Component {
     // Since this is not a hooks component, use the old way as demonstrated at
     // https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
     pollingCount: 0,
-    pollingDelay: 10000,
+    pollingDelay,
   };
 
   modalRef = React.createRef();
@@ -446,8 +446,8 @@ class UploadFiles extends React.Component {
         .then((response) => {
           this.updateManifestFiles(response.data);
         })
-        .catch((error) => console.log(error))
-        .finally(() => this.setState({urls: null, loading: false}));
+        .catch((error) => console.log(error));
+      // .finally(() => this.setState({urls: null, loading: false}));
     }
   };
 
