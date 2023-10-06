@@ -1485,13 +1485,13 @@ function joelsReady(){
     var buttonShowModal = document.querySelectorAll('.js-uploadmodal__button-show-modal');
     var buttonCloseModal = document.querySelectorAll('.js-uploadmodal__button-close-modal');
 
-    buttonShowModal.forEach(function(button) {
+    [...buttonShowModal].forEach(function(button) {
       button.addEventListener('click', function() {
         uploadModal.showModal();
       });
     });
 
-    buttonCloseModal.forEach(function(button) {
+    [...buttonCloseModal].forEach(function(button) {
       button.addEventListener('click', function() {
         uploadModal.close();
       });
@@ -1670,7 +1670,7 @@ function joelsReady(){
     const date = new Date(time);
     return date.toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}).replace(/ ([AP][M])/, '\xa0$1');
   }
-  document.querySelectorAll('.local-date').forEach((span) => {
+  [...document.querySelectorAll('.local-date')].forEach((span) => {
     if (span.dataset.dt) span.innerText = localize(span.dataset.dt);
   });
 

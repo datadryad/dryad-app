@@ -2,7 +2,7 @@ import React from 'react';
 import {Form, Formik} from 'formik';
 import moment from 'moment';
 import {isEqual} from 'lodash';
-import {showSavingMsg} from '../../../lib/utils';
+import {showSavingMsg, showSavedMsg} from '../../../lib/utils';
 
 class Cedar extends React.Component {
   state = {
@@ -80,6 +80,7 @@ class Cedar extends React.Component {
 
   deleteContent = () => {
     this.setState({currentMetadata: null, template: null}, this.saveContent);
+    showSavedMsg();
   };
 
   saveContent = () => {
@@ -100,6 +101,7 @@ class Cedar extends React.Component {
     console.log(wrappedMeta);
     this.setState({metadata, updated});
     if (this.editor) this.editor.templateInfo = info;
+    showSavedMsg();
   };
 
   modalSetup = () => {
@@ -126,6 +128,7 @@ class Cedar extends React.Component {
   };
 
   openModal = () => {
+    showSavingMsg();
     const {template} = this.state;
     if (!template && !template.id) {
       console.log('Cannot open modal unless a template is selected.');
@@ -161,11 +164,7 @@ class Cedar extends React.Component {
         <Formik
           initialValues={{resource_id, authenticity_token: (csrf || '')}}
           innerRef={this.formRef}
-          onSubmit={() => {
-            showSavingMsg();
-            console.log('Submitting Cedar selection form');
-            this.openModal();
-          }}
+          onSubmit={() => this.openModal()}
         >
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
