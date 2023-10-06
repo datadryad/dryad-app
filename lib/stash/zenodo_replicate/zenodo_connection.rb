@@ -35,7 +35,7 @@ module Stash
           http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
             .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
 
-          my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
+          my_params = { access_token: access_token }.merge(args.fetch(:params, {}))
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
           my_args = args.merge(params: my_params, headers: my_headers)
 
@@ -97,6 +97,37 @@ module Stash
 
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]
+      end
+
+      def self.access_token
+        state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
+        state = state.with_indifferent_access if state.is_a?(Hash)
+
+        if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < ( Time.new + 1.minute )
+          return new_access_token
+        end
+
+        state[:access_token]
+      end
+
+      # gets access token from api, stores access token to database, and also returns it
+      def self.new_access_token
+        # example from zenodo has {"access_token": <token>, "expires_in": <time>} and some other stuff
+        data = { client_id: APP_CONFIG[:zenodo][:client_id],
+                         client_secret: APP_CONFIG[:zenodo][:client_secret],
+                         grant_type: 'client_credentials',
+                         scope: 'user:email' }
+
+        resp = HTTP.post("#{base_url}/oauth/token", form: data)
+
+        raise ZenodoError, "Received #{resp.status} code from zenodo API" if resp.status > 399
+
+        json = resp.parse
+        zen_state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first
+        zen_state = StashEngine::GlobalState.create(key: 'zenodo_api') if zen_state.nil?
+        zen_state.update(state: { access_token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds) })
+
+        json['access_token']
       end
     end
   end
