@@ -4,4 +4,3 @@ module StashEngine
 
   end
 end
-

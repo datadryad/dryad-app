@@ -103,9 +103,7 @@ module Stash
         state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
         state = state.with_indifferent_access if state.is_a?(Hash)
 
-        if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < ( Time.new + 1.minute )
-          return new_access_token
-        end
+        return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 1.minute)
 
         state[:access_token]
       end
@@ -114,9 +112,9 @@ module Stash
       def self.new_access_token
         # example from zenodo has {"access_token": <token>, "expires_in": <time>} and some other stuff
         data = { client_id: APP_CONFIG[:zenodo][:client_id],
-                         client_secret: APP_CONFIG[:zenodo][:client_secret],
-                         grant_type: 'client_credentials',
-                         scope: 'user:email' }
+                 client_secret: APP_CONFIG[:zenodo][:client_secret],
+                 grant_type: 'client_credentials',
+                 scope: 'user:email' }
 
         resp = HTTP.post("#{base_url}/oauth/token", form: data)
 
