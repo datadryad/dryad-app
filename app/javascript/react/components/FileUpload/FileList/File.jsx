@@ -41,7 +41,10 @@ class File extends React.Component {
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
-        <i className="fa fa-circle-o-notch fa-spin" alt="Validating spinner" />
+        <>
+          <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
+          <span className="screen-reader-only">Validating...</span>
+        </>
       );
     case TabularCheckStatus.issues: {
       let jsReport = '';
@@ -99,7 +102,7 @@ class File extends React.Component {
         <td className="c-uploadtable-size">{file.sizeKb}</td>
         <td>
           {removing ? (
-            <i className="fa fa-circle-o-notch fa-spin" alt="Loading spinner" />
+            <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
           ) : (
             <button onClick={this.clickRemove} type="button" className="c-upload__button">
               Remove
