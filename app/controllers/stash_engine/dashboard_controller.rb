@@ -29,16 +29,6 @@ module StashEngine
       end
     end
 
-    # an AJAX wait to allow in-progress items to complete before continuing.
-    def ajax_wait
-      respond_to do |format|
-        format.js do
-          sleep 0.1
-          head :ok, content_type: 'application/javascript'
-        end
-      end
-    end
-
     # methods below are private
     private
 
