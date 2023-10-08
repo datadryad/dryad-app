@@ -32,16 +32,15 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(StashEngine::Resource.all.length).to eql(@resource_count)
     end
 
-    it 'successfully mints a new DOI/ARK' do
-      click_button 'Start new dataset'
-      expect(page).to have_text('Describe dataset')
+    it 'successfully mints a new DOI/ARK', js: true do
+      start_new_dataset
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count + 1)
       expect(StashEngine::Resource.all.length).to eql(@resource_count + 1)
     end
 
   end
 
-  context :form_submission do
+  context :form_submission, js: true do
 
     before(:each) do
       start_new_dataset

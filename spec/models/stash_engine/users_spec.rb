@@ -149,11 +149,11 @@ module StashEngine
         end
       end
 
-      # TODO: fix this intermittent failing test #806
-      xit 'finds only the latest for each identifier' do
+      it 'finds only the latest for each identifier' do
         user = create(:user)
         ident = create(:identifier, identifier: '10.123/1234')
         resources = Array.new(5) do |_|
+          sleep 1
           resource = create(:resource, user: user, skip_emails: true, identifier: ident)
           resource.current_state = 'submitted'
           resource

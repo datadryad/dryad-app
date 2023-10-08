@@ -1,15 +1,16 @@
 module DatasetHelper
 
   def start_new_dataset
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Start new dataset'
-    expect(page).to have_content('Describe dataset', wait: 15)
     navigate_to_metadata
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe dataset'
+    click_link 'Describe dataset', wait: 15
     expect(page).to have_content('Dataset: Basic information')
   end
 
@@ -26,17 +27,23 @@ module DatasetHelper
   end
 
   def navigate_to_readme
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Prepare README'
     expect(page).to have_content('Prepare README file')
   end
 
   def navigate_to_upload
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Upload files'
     expect(page).to have_content('Choose files', count: 3)
     expect(page).to have_content('Enter URLs', count: 3)
   end
 
   def navigate_to_review
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Review and submit'
     expect(page).to have_content('Review description')
   end
@@ -72,8 +79,7 @@ module DatasetHelper
   end
 
   def submit_form
-    submit = find_button('submit_dataset')
-    submit.click
+    click_button 'Submit', wait: 15
   end
 
   def fill_manuscript_info(name:, issn:, msid:)
