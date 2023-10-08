@@ -311,12 +311,12 @@ RSpec.feature 'Admin', type: :feature do
         # even more contortions than the ones in `tenant_spec.rb`, and it's not really worthwhile.
       end
 
-      # TODO: THis needs fixing because the order of the merge is non-deterministic and tests fail
-      xit 'allows merging users as a superuser', js: true do
+      it 'allows merging users as a superuser', js: true do
         user = create(:user)
         user2 = create(:user)
         user_id = user.id
         user2_id = user2.id
+        user_after = nil
 
         # Set some fields nil so we can test that the merge result contains the non-nil fields
         user.update(email: nil)
@@ -333,17 +333,21 @@ RSpec.feature 'Admin', type: :feature do
         find("#user_ids_selections_#{user2.id}").click
 
         # Do the merge dialog
-        find('button[title="Merge selected"]').click
+        click_button('Merge selected')
         expect(page).to have_text('Merge users')
         click_button('Merge')
         expect(page).to have_text('Manage users')
 
         sleep 1 # since it takes some time for async action to reflect in db
-        # user_2 should be removed, modified check because of some weird caching or something
-        expect(StashEngine::User.all.map(&:id)).not_to include(user2_id)
+        if StashEngine::User.all.map(&:id).include?(user_id)
+          expect(StashEngine::User.all.map(&:id)).not_to include(user2_id)
+          user_after = StashEngine::User.find(user_id)
+        else
+          expect(StashEngine::User.all.map(&:id)).to include(user2_id)
+          user_after = StashEngine::User.find(user2_id)
+        end
 
         # user should be updated with new values
-        user_after = StashEngine::User.find(user_id)
         expect(user_after.email).to eq(target_email)
         expect(user_after.orcid).to eq(target_orcid)
       end
@@ -366,19 +370,20 @@ RSpec.feature 'Admin', type: :feature do
         expect(page).not_to have_link('Submission queue')
       end
 
-      # TODO: is there a way to make this test reliable on github?
-      xit 'Limits options in the curation page' do
+      it 'Limits options in the curation page' do
         find('.c-header_nav-button', text: 'Datasets').click
         page.has_link?('Dataset curation')
         click_on('Dataset curation')
+        click_on('Reset all filters')
+        # TODO: is there a way to make this test reliable on github?
         # select 'Status', from: 'curation_status'
         # find('#curation_status').set("Status\n") # trying to get headless to work reliably
-        visit('/stash/ds_admin?utf8=✓') # remove the filter and load page which the JS action doesn't seem to be reliable on github
+        # visit('/stash/ds_admin?utf8=✓') # remove the filter and load page which the JS action doesn't seem to be reliable on github
         # page.find('#js-curation-state-1', wait: 5) # might this make intermittent weirdness better on github servers?
 
         # expect(page).to have_selector('#js-curation-state-1')
         expect(page).to have_content(@resource.title)
-        expect(page).not_to have_css('.fa-pencil') # no pencil editing icons for you
+        expect(page).not_to have_selector('button.c-admin-edit-icon .fa-pencil') # no pencil editing icons for you
       end
     end
 
