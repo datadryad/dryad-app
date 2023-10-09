@@ -92,30 +92,32 @@ module Stash
       Rails.logger
     end
 
-    # def self.test_data
-    #   dois = %w[10.3352/jeehp.2013.10.3 10.5060/D8H59D 10.7280/D1NP4M 10.7932/BDSN 10.13016/M2WK6V
-    #             10.3886/ICPSR36151.v5 10.2390/biecoll-jib-2009-108 10.1159/000489098 10.14288/1.0303795 10.7916/d8pp0jkc
-    #             10.5517/ccdc.csd.cc1k1h8c 10.6068/dp15e7605c65e31 10.15156/bio/sh332819.07fu 10.5281/zenodo.809529
-    #             10.17876/plate/dr.2/plates/103_17536 10.13145/bacdive128484.20171208.2.1 10.5169/seals-365408
-    #             10.1594/pangaea.676801
-    #             10.1093/jme/tjy088 10.1093/ee/nvy084 10.1111/tbed.12916 10.1038/d41586-018-04938-z 10.1207/s15328023top1703_12
-    #             10.1016/j.cedpsych.2008.04.002 10.1119/1.4935763 10.1071/Zo08044 10.1371/journal.pone.0057745
-    #             10.2305/IUCN.UK.2008.RLTS.T40540A10331066.en 10.1126/science.1200674 10.1111/j.1365-294X.2007.03399.x
-    #             10.1016/j.biocon.2007.11.007 10.1038/s41586-018-0036-z 10.1103/PhysRevLett.119.080503
-    #             10.1632/pmla.2016.131.2.430 10.1108/eb014124 10.1119/1.1848514 10.1137/1.9781611971132 10.1038/nphys4343]
-    #   dois.each do |doi|
-    #     dm = Stash::DataciteMetadata.new(doi: doi)
-    #     if dm.raw_metadata.nil?
-    #       puts "\r\n#{doi} could not be found"
-    #     else
-    #       puts "\r\n#{doi}"
-    #       # pp(dm.raw_metadata)
-    #       # byebug
-    #       puts dm.html_citation
-    #    end
-    #    sleep 1
-    #    end
-    # end
+    # :nocov:
+    def self.test_data
+      dois = %w[10.3352/jeehp.2013.10.3 10.5060/D8H59D 10.7280/D1NP4M 10.7932/BDSN 10.13016/M2WK6V
+                10.3886/ICPSR36151.v5 10.2390/biecoll-jib-2009-108 10.1159/000489098 10.14288/1.0303795 10.7916/d8pp0jkc
+                10.5517/ccdc.csd.cc1k1h8c 10.6068/dp15e7605c65e31 10.15156/bio/sh332819.07fu 10.5281/zenodo.809529
+                10.17876/plate/dr.2/plates/103_17536 10.13145/bacdive128484.20171208.2.1 10.5169/seals-365408
+                10.1594/pangaea.676801
+                10.1093/jme/tjy088 10.1093/ee/nvy084 10.1111/tbed.12916 10.1038/d41586-018-04938-z 10.1207/s15328023top1703_12
+                10.1016/j.cedpsych.2008.04.002 10.1119/1.4935763 10.1071/Zo08044 10.1371/journal.pone.0057745
+                10.2305/IUCN.UK.2008.RLTS.T40540A10331066.en 10.1126/science.1200674 10.1111/j.1365-294X.2007.03399.x
+                10.1016/j.biocon.2007.11.007 10.1038/s41586-018-0036-z 10.1103/PhysRevLett.119.080503
+                10.1632/pmla.2016.131.2.430 10.1108/eb014124 10.1119/1.1848514 10.1137/1.9781611971132 10.1038/nphys4343]
+      dois.each do |doi|
+        dm = Stash::DataciteMetadata.new(doi: doi)
+        if dm.raw_metadata.nil?
+          puts "\r\n#{doi} could not be found"
+        else
+          puts "\r\n#{doi}"
+          # pp(dm.raw_metadata)
+          # byebug
+          puts dm.html_citation
+        end
+        sleep 1
+      end
+    end
+    # :nocov:
 
     # getting citation information (where m is the metadata returned)
     # Authors: these are full names not separated last, first

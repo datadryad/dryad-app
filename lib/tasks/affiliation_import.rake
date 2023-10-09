@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'stash/organization/ror_updater'
 
@@ -339,3 +340,4 @@ end
 
 # rubocop:enable Lint/UselessAssignment
 # rubocop:enable Metrics/AbcSize
+# :nocov:

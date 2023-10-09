@@ -1,3 +1,4 @@
+# :nocov:
 namespace :rsolr do
 
   desc 'Reindex the identifier/resource records in Geoblacklight'
@@ -14,3 +15,4 @@ namespace :rsolr do
   end
 
 end
+# :nocov:

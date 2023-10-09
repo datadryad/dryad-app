@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'tasks/ezid_transition/register'
 namespace :ezid_transition do
@@ -85,3 +86,4 @@ namespace :ezid_transition do
     puts 'Done'
   end
 end
+# :nocov:

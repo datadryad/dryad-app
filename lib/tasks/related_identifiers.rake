@@ -1,3 +1,4 @@
+# :nocov:
 require_relative 'related_identifiers/replacements'
 require 'csv'
 
@@ -39,3 +40,4 @@ namespace :related_identifiers do
     puts 'done'
   end
 end
+# :nocov:
