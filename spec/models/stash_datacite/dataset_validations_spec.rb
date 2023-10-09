@@ -182,6 +182,38 @@ module StashDatacite
         end
       end
 
+      describe :collection_errors do
+        before(:example) do
+          @collection = create(:resource, user: @user)
+          @collection.save
+          create(:resource_type_collection, resource: @collection)
+          @author1 = @collection.authors.first
+          @author2 = create(:author, resource: @collection)
+          @author3 = create(:author,
+                            author_first_name: @user.first_name,
+                            author_last_name: @user.last_name,
+                            author_email: @user.email,
+                            author_orcid: @user.orcid,
+                            resource_id: @collection.id)
+          @collection.subjects << [create(:subject), create(:subject), create(:subject)]
+          @collection.reload
+        end
+
+        it 'returns collected datasets error when collection has no related identifiers' do
+          validations = DatasetValidations.new(resource: @collection)
+          error = validations.collected_datasets.first
+          expect(error.message).to include('datasets in the collection')
+        end
+
+        it 'returns no errors when collected datasets are present' do
+          create(:related_identifier, relation_type: 'haspart', work_type: 'dataset', resource_id: @collection.id,
+                                      related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
+          validations = DatasetValidations.new(resource: @collection)
+          errors = validations.collected_datasets
+          expect(errors).to eq([])
+        end
+      end
+
       describe :s3_error_uploads do
         it 'returns missing files when files uploaded to s3 are not present' do
           files = @resource.generic_files

@@ -46,7 +46,7 @@ RSpec.feature 'NewDataset', type: :feature do
       start_new_dataset
     end
 
-    it 'submits if all requirements are met', js: true do
+    it 'fills in submission form', js: true do
 
       # subjects
       fill_in 'fos_subjects', with: 'Agricultural biotechnology'
