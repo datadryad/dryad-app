@@ -59,10 +59,12 @@ module Stash
       end
 
       def stub_new_access_token
-        stub_request(:post, "https://sandbox.zenodo.org/oauth/token").
-          with(
-            body: {"client_id"=> 'zenodo_client_id', "client_secret"=> 'zenodo_client_secret', "grant_type"=>"client_credentials", "scope"=>"user:email"},
-            ).to_return(status: 200, body: {access_token: 'ThisIsAFakeToken', expires_in: 3600}.to_json, headers: { 'Content-Type' => 'application/json' })
+        stub_request(:post, 'https://sandbox.zenodo.org/oauth/token')
+          .with(
+            body: { 'client_id' => 'zenodo_client_id', 'client_secret' => 'zenodo_client_secret', 'grant_type' => 'client_credentials',
+                    'scope' => 'user:email' }
+          ).to_return(status: 200, body: { access_token: 'ThisIsAFakeToken',
+                                           expires_in: 3600 }.to_json, headers: { 'Content-Type' => 'application/json' })
       end
 
       def simple_body(deposition_id:)
