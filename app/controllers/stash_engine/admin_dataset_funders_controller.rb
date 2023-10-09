@@ -11,8 +11,8 @@ module StashEngine
 
       # WHERE conditions
       # Limit to tenant by either role or selected limit
-      @rep = policy_scope(@rep, policy_scope_class: AdminDatasetFunderPolicy::Scope)
-      @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]]) if params[:tenant].present?
+      @tenant = policy_scope(params[:tenant], policy_scope_class: AdminDatasetFunderPolicy::Scope)
+      @rep.add_where(arr: ['last_res.tenant_id = ?', @tenant]) if @tenant.present?
 
       @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
 

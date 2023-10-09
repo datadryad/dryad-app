@@ -36,7 +36,7 @@ module StashEngine
         @res << create(:resource, identifier_id: i.id, user: @user, tenant_id: 'dryad')
       end
 
-      @day = Date.today
+      @day = Time.now.utc.to_date
       @day1 = @day + 1.day
       @day2 = @day + 2.days
     end
