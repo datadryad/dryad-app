@@ -45,6 +45,7 @@ module StashEngine
     describe '#zenodo_presigned_url' do
       it 'correctly creates a presigned (RATs) download url' do
         stub_get_existing_ds(deposition_id: @copy2.deposition_id)
+        stub_new_access_token
         item = @upload.zenodo_presigned_url
         expect(item).to include('/api/files/')
         expect(item).to include("/#{@upload.upload_file_name}")

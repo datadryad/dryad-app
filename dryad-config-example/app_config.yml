@@ -31,6 +31,8 @@ defaults: &DEFAULTS
     token: ci1NiJDAwLTAwkb
   zenodo:
     access_token: "ThisIsAFakeToken"
+    client_id: zenodo_client_id
+    client_secret: zenodo_client_secret
     base_url: https://sandbox.zenodo.org
     community_id: dryad-test
     application_id: 1234

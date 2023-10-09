@@ -25,6 +25,7 @@ module Stash
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id, dataset_type: :software)
         @file = create(:software_file, resource_id: @resource.id)
+        stub_new_access_token
         WebMock.disable_net_connect!(allow_localhost: true)
       end
 

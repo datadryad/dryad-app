@@ -5,17 +5,21 @@ require 'byebug'
 require 'json'
 
 require 'rails_helper'
+require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoReplicate
+
     RSpec.describe Deposit do
+      include Stash::ZenodoSoftware::WebmocksHelper
 
       before(:each) do
         @resource = create(:resource)
         @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @szd = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @zenodo_copy.id)
+        stub_new_access_token
       end
 
       describe '#new_deposition' do
