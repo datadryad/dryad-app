@@ -12,8 +12,8 @@ module StashEngine
 
       def resolve
         if @user.tenant_limited?
-          @scope.add_where(arr: ['last_res.tenant_id = ?', @user.tenant_id])
-        else
+          @user.tenant_id
+        elsif @scope.present?
           @scope
         end
       end
