@@ -1,3 +1,4 @@
+# :nocov:
 namespace :stash_datacite do
 
   desc 'Convert old publicationDOI records from InternalDatum into RelatedIdentifiers'
@@ -25,3 +26,4 @@ namespace :stash_datacite do
   end
 
 end
+# :nocov:

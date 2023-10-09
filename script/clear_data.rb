@@ -1,3 +1,4 @@
+# :nocov:
 require 'rsolr'
 module ClearData
 
@@ -32,3 +33,4 @@ module ClearData
   end
 
 end
+# :nocov:

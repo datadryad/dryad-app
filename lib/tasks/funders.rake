@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'byebug'
 require_relative 'funders/utils'
@@ -134,3 +135,4 @@ namespace :funders do
     end
   end
 end
+# :nocov:

@@ -1,3 +1,4 @@
+# :nocov:
 module Tasks
   module Keywords
     class Plos
@@ -46,3 +47,4 @@ module Tasks
     end
   end
 end
+# :nocov:

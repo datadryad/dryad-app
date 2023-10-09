@@ -1,3 +1,4 @@
+# :nocov:
 namespace :versioning do
   desc 'write sensible versioning display flags and current dataset status'
   task set_view_versions: :environment do
@@ -18,3 +19,4 @@ namespace :versioning do
     end
   end
 end
+# :nocov:

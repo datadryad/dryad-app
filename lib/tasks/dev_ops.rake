@@ -1,3 +1,4 @@
+# :nocov:
 require 'yaml'
 require_relative 'dev_ops/passenger'
 require_relative 'dev_ops/download_uri'
@@ -431,3 +432,4 @@ namespace :dev_ops do
   end
 end
 # rubocop:enable Metrics/BlockLength
+# :nocov:

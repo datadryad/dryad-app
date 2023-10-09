@@ -1,3 +1,4 @@
+# :nocov:
 require 'httparty'
 require 'stash/nih'
 require 'stash/salesforce'
@@ -1366,3 +1367,4 @@ namespace :journal_email do
 end
 
 # rubocop:enable Metrics/BlockLength
+# :nocov:
