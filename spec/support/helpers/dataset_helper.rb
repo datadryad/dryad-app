@@ -59,7 +59,7 @@ module DatasetHelper
     navigate_to_metadata
 
     choose('choose_other')
-    fill_in 'title', with: Faker::Lorem.sentence
+    fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
     fill_in_author
     fill_in_research_domain
     fill_in_funder
@@ -79,7 +79,7 @@ module DatasetHelper
   end
 
   def submit_form
-    click_button 'Submit', wait: 15
+    click_button 'Submit', wait: 5
   end
 
   def fill_manuscript_info(name:, issn:, msid:)
