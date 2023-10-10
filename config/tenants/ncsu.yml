@@ -47,4 +47,4 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  campus_contacts: ["slivey@ncsu.edu", "hmdavis4@ncsu.edu", "mcdowney@ncsu.edu"]
+  campus_contacts: ["slivey@ncsu.edu", "mcdowney@ncsu.edu"]
