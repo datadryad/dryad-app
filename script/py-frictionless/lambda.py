@@ -30,7 +30,7 @@ def lambda_handler(event, context):
     update(token=event["token"], status='noissues', report=json.dumps({'report': ''}), callback=event['callback_url'])
     return report
   else:
-    detector = Detector(field_missing_values="na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank".split(","), field_type='any')
+    detector = Detector(field_missing_values=", ,na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank".split(","))
     try:
       report = validate(event["download_url"], "resource", detector=detector, limit_errors=10)
     except Exception as e:
