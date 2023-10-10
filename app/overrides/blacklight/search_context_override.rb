@@ -1,3 +1,4 @@
+# :nocov:
 module Blacklight
   module SearchContext
     # Hack to avoid reading from/writing to search table.
@@ -12,3 +13,4 @@ module Blacklight
     end
   end
 end
+# :nocov:

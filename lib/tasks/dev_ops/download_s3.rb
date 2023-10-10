@@ -1,3 +1,4 @@
+# :nocov:
 require 'http'
 
 module Tasks
@@ -18,3 +19,4 @@ module Tasks
     end
   end
 end
+# :nocov:

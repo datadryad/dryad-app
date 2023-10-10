@@ -181,10 +181,10 @@ module StashEngine
     end
 
     # this is METADATA published
-    scope :published, -> do
-      joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
-        .where('stash_engine_resources.publication_date < ?', Time.now.utc)
-    end
+    # scope :published, -> do
+    #   joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+    #     .where('stash_engine_resources.publication_date < ?', Time.now.utc)
+    # end
 
     JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
                              'LEFT OUTER JOIN stash_engine_internal_data ' \

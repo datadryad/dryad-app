@@ -100,7 +100,6 @@ export default function DragonDropList({
   // to set up dragon drop or reinit on changes
   useEffect(() => {
     if (!dragonDrop) {
-      console.log(`initializing ${typeName} DragonDrop for first time`);
       // the "announcement section below is to announce changes to screen readers
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
@@ -125,7 +124,6 @@ export default function DragonDropList({
         // for a cancel, so we can't really prevent the drop from happening to begin with so we just have to delay and revert it.
         // Sorry, this is really hacky, but I don't have time to rewrite their library.
         setTimeout(() => {
-          console.log('old order--revert', oldOrderRef.current);
           const newOrderObj = toOrderObj(oldOrderRef.current);
 
           axios.patch(
@@ -154,7 +152,6 @@ export default function DragonDropList({
 
       // dragon.on('dropped', function (container, item) {updateOrderFromDom(dragonRef.current); });
     } else {
-      console.log(`reinitializing dragon drop with ${typeName} updates`);
       savedWrapper.current = wrappingFunction;
       dragonDrop.initElements(dragonRef.current);
     }

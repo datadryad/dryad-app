@@ -1,3 +1,4 @@
+# :nocov:
 namespace :keywords do
   task update_plos: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
@@ -29,3 +30,4 @@ namespace :keywords do
     puts 'Done populating PLoS keywords'
   end
 end
+# :nocov:

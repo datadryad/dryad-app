@@ -16,7 +16,6 @@ function FunderForm({
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving funder`);
     showSavingMsg();
 
     // set up values

@@ -1,3 +1,4 @@
+# :nocov:
 require_relative 'download_check/merritt'
 
 namespace :download_check do
@@ -25,3 +26,4 @@ namespace :download_check do
     puts 'wrote all_merritt_public.csv'
   end
 end
+# :nocov:

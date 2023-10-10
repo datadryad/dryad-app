@@ -29,7 +29,7 @@ const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref)
       <div className="c-uploadmodal__text-content">Place each URL on a new line.</div>
       <ValidateFiles
         id="confirm_to_validate"
-        buttonLabel="Validate Files"
+        buttonLabel="Validate files"
         checkConfirmed={false}
         disabled={false}
       />

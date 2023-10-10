@@ -1,5 +1,6 @@
 # Emgargo fix tool -- correct overly-conservative embargoes that were put in place by migration
 # See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/400
+# :nocov:
 namespace :embargo_fix do
 
   desc 'Embargo manipulation to correct the problem of conservative embargoes from migration'
@@ -147,3 +148,4 @@ namespace :embargo_fix do
     p 'Finished embargo correction'
   end
 end
+# :nocov:

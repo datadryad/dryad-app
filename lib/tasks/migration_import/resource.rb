@@ -1,3 +1,4 @@
+# :nocov:
 require 'stash/doi/id_gen'
 
 # rubocop:disable Metrics/ClassLength
@@ -317,3 +318,4 @@ module Tasks
   end
 end
 # rubocop:enable Metrics/ClassLength
+# :nocov:
