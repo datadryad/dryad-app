@@ -93,6 +93,33 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('Add note')
       end
 
+      it 'adds a note to the curation activity log', js: true do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        click_button 'Add note'
+        fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
+        click_button('Submit')
+        expect(page).to have_text('This is a test of the note functionality')
+      end
+
+      it 'adds internal data', js: true do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        click_button 'Add data'
+        select('pubmedID', from: 'stash_engine_internal_datum[data_type]')
+        fill_in('stash_engine_internal_datum[value]', with: '123456')
+        click_button('Submit')
+        expect(page).to have_text('pubmedID')
+      end
+
       it 'allows superuser to set a fee waiver', js: true do
         visit stash_url_helpers.ds_admin_path
 
@@ -105,8 +132,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-        sleep(0.1) # wait for waiver updates to complete
-        expect(@resource.identifier.payment_type).to be(nil)
+        expect(@resource.identifier.payment_type).to be(nil), wait: 2
       end
 
       it 'denies fee waiver selection when there is already a waiver' do
