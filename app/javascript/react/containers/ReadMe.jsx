@@ -167,7 +167,7 @@ export default function ReadMe({
           file descriptions, and information about any necessary software.
           </p>
           <p>
-            {!(dcsDescription.description || fileContent) && 'The editor below is pre-filled with a template for you to replace with your content.'}
+            {!(dcsDescription.description || fileContent) && 'The editor below is pre-filled with a template for you to replace with your content. '}
             You can copy and paste formatted text into the editor, or enter markdown by clicking the &apos;Markdown&apos; tab.
           </p>
           <p style={{textAlign: 'center', marginBottom: 0}}>
