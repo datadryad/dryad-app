@@ -128,7 +128,7 @@ module StashEngine
         @file_content = nil
       else
         readme_file = @resource.data_files.present_files.where(upload_file_name: 'README.md').first
-        # Attempt to load all README.md files for editing in the markdown editors, converting to UTF 8
+        # Load correctly encoded README.md for editing and otherwise display an error.
         if readme_file&.file_content
           content_string = readme_file.file_content
           p content_string
