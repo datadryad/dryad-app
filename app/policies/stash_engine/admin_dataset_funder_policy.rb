@@ -12,8 +12,8 @@ module StashEngine
 
       def resolve
         if @user.tenant_limited?
-          @user.tenant_id
-        elsif @scope.present?
+          true
+        else
           @scope
         end
       end

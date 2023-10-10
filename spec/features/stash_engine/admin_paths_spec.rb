@@ -1,7 +1,6 @@
 require 'pry-remote'
 
 RSpec.feature 'AdminPaths', type: :feature do
-  include Mocks::CurationActivity
   include Mocks::Salesforce
 
   context :admin_datasets_path do
@@ -133,13 +132,6 @@ RSpec.feature 'AdminPaths', type: :feature do
   end
 
   context :dataset_funder_path do
-    before(:each) do
-      mock_salesforce!
-      neuter_curation_callbacks!
-      user = create(:user, tenant_id: 'ucop')
-      resource = create(:resource, user: user, tenant_id: 'ucop')
-      create(:curation_activity_no_callbacks, status: 'published', user_id: user.id, resource_id: resource.id)
-    end
     it 'is not accessible by regular users' do
       sign_in
       visit stash_url_helpers.ds_admin_funders_path
