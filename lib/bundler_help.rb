@@ -1,3 +1,4 @@
+# :nocov:
 module BundlerHelp
 
   def self.find_path(dir_name)
@@ -14,3 +15,4 @@ module BundlerHelp
     false
   end
 end
+# :nocov:

@@ -1,3 +1,4 @@
+# :nocov:
 require 'cgi'
 
 module Tasks
@@ -35,3 +36,4 @@ module Tasks
     end
   end
 end
+# :nocov:

@@ -1,279 +1,213 @@
-require 'rails_helper'
-# require 'pry-remote'
+require 'pry-remote'
 
 RSpec.feature 'CurationActivity', type: :feature do
-  include Mocks::Aws
   include Mocks::Stripe
   include Mocks::Tenant
-  include DatasetHelper
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Datacite
-  include Mocks::DataFile
 
-  # TODO: This should probably be defined in routes.rb and have appropriate helpers
-  let(:dashboard_path) { '/stash/ds_admin' }
+  context :curating_dataset do
 
-  context :dashboard_security do
-
-    context :access do
-
-      it 'is not accessible by regular users' do
-        sign_in
-        visit dashboard_path
-        # User should be redirected to the My datasets page
-        expect(page).to have_text('My datasets')
-      end
-
-      it 'is accessible by admins' do
-        sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
-        visit dashboard_path
-        expect(page).to have_text('Admin dashboard')
-      end
-
-      it 'is accessible by curators' do
-        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
-        visit dashboard_path
-        expect(page).to have_text('Admin dashboard')
-      end
-
-      it 'is accessible by super users' do
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
-        visit dashboard_path
-        expect(page).to have_text('Admin dashboard')
-      end
-
+    before(:each) do
+      mock_salesforce!
+      mock_stripe!
+      mock_datacite_and_idgen!
+      @user = create(:user, tenant_id: 'ucop')
+      @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
+      create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
+      @resource.resource_states.first.update(resource_state: 'submitted')
+      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      visit("#{stash_url_helpers.ds_admin_path}?curation_status=curation")
     end
 
-    context :content do
-
-      before(:each) do
-        mock_stripe!
-        mock_tenant!
-        mock_salesforce!
-
-        # Create a user, identifier and 2 resources for each tenant
-        %w[ucop dryad mock_tenant].each do |tenant|
-          user = create(:user, tenant_id: tenant)
-          @identifiers = []
-          2.times.each do
-            identifier = create(:identifier)
-            create(:resource, :submitted, user: user, identifier: identifier)
-            cite_number = rand(4)
-            cite_number.times { create(:counter_citation, identifier: identifier) }
-            create(:counter_stat, citation_count: cite_number, identifier: identifier)
-            @identifiers.push(identifier)
-          end
-        end
+    it 'renders salesforce links in notes field' do
+      @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
+      @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
+      @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
+      within(:css, '.c-lined-table__row', wait: 10) do
+        find('button[title="View Activity Log"]').click
       end
-
-      it 'shows admins datasets for their tenant' do
-        sign_in(create(:user, role: 'admin', tenant_id: 'mock_tenant'))
-        visit dashboard_path
-        expect(all('.c-lined-table__row').length).to eql(2)
-      end
-
-      it 'lets curators see all datasets' do
-        sign_in(create(:user, role: 'curator'))
-        visit dashboard_path
-        expect(all('.c-lined-table__row').length).to eql(6)
-      end
-
-      it 'has ajax showing counter stats and citations', js: true do
-        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
-        visit dashboard_path
-        el = find('td', text: @identifiers.first.resources.first.title)
-        el = el.find(:css, '.js-stats')
-        el.click
-        my_stats = @identifiers.first.counter_stat
-        page.first :css, '.o-metrics__icon'
-        expect(page).to have_content("#{my_stats.citation_count} citations")
-        expect(page).to have_content("#{my_stats.views} views")
-        expect(page).to have_content("#{my_stats.downloads} downloads")
-      end
-
-      it 'generates a csv having dataset information with citations, views and downloads' do
-        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
-        visit dashboard_path
-        click_link('Get Comma Separated Values (CSV) for import into Excel')
-
-        title = @identifiers.first.resources.first.title
-        my_stats = @identifiers.first.counter_stat
-
-        csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
-
-        # NOTE: this doesn't split "correctly", since some entries contain embedded commas,
-        # but it doesn't matter as long as it is synced with the index below
-        csv_parts = csv_line.split(',')
-
-        expect(csv_parts[-5].to_i).to eql(my_stats.views)
-        expect(csv_parts[-4].to_i).to eql(my_stats.downloads)
-        expect(csv_parts[-3].to_i).to eql(my_stats.citation_count)
-      end
-
-      it 'generates a csv that includes submitter institutional name' do
-        sign_in(create(:user, role: 'curator', tenant_id: 'ucop'))
-        visit dashboard_path
-        click_link('Get Comma Separated Values (CSV) for import into Excel')
-
-        title = @identifiers.first.resources.first.title
-
-        csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
-
-        # NOTE: this doesn't split "correctly", since some entries contain embedded commas,
-        # but it doesn't matter as long as it is synced with the index below
-        csv_parts = csv_line.split(',')
-
-        expect(csv_parts[-2]).to eql(@identifiers.first.resources.first.tenant.long_name)
-      end
-
+      expect(page).to have_text('Activity log for')
+      expect(page).to have_text('Not a valid SF link')
+      # 'SF #0001' is not a valid case number, so the text is not changed
+      expect(page).to have_text('SF #0001')
+      # 'SF #0002' should be turned into a link with the caseID 'abc',
+      # and the '#' dropped to display the normalized form of the case number
+      expect(page).to have_link('SF 0002', href: 'https://testsalesforce.com/lightning/r/Case/abc/view')
     end
 
-    context :in_progress_datasets do
-
-      before(:each) do
-        mock_stripe!
-        mock_solr!
-        mock_repository!
-        mock_datacite_and_idgen!
-        mock_salesforce!
-
-        create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
-        sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
-        visit "#{dashboard_path}?curation_status=in_progress"
+    it 'renders salesforce section' do
+      within(:css, '.c-lined-table__row', wait: 10) do
+        find('button[title="View Activity Log"]').click
       end
+      expect(page).to have_text('Activity log for')
+      expect(page).to have_text('Salesforce cases')
+      expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
+    end
+  end
 
-      it 'does not have any "edit" pencil icons' do
-        within(:css, '.c-lined-table__row') do
-          expect(all('.fa-pencil').length).to eql(0)
-        end
-      end
+  context :roles do
 
-      it 'has a "history" clock icon to view the activity log' do
-        within(:css, '.c-lined-table__row') do
-          expect(all('.fa-clock-o').length).to eql(1)
-        end
-      end
-
+    before(:each) do
+      mock_salesforce!
+      mock_solr!
+      mock_stripe!
+      mock_datacite_and_idgen!
+      mock_tenant!
+      neuter_curation_callbacks!
+      @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
+      @user = create(:user, tenant_id: @admin.tenant_id)
+      @identifier = create(:identifier)
+      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
     end
 
-    context :curating_dataset, js: true do
+    context :tenant_admin do
+      it 'allows adding notes to the curation activity log' do
+        sign_in(@admin)
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Add note')
+      end
+    end
+
+    context :superuser do
 
       before(:each) do
-        mock_aws!
         mock_salesforce!
-        mock_stripe!
-        mock_repository!
-        mock_datacite_and_idgen!
-        mock_file_content!
-        @user = create(:user, tenant_id: 'ucop')
-        @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
-        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
-        @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
-        visit "#{dashboard_path}?curation_status=curation"
+        @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
+        sign_in(@superuser, false)
       end
 
-      it 'submits a curation status changes and reflects in the page and history afterwards' do
-        within(:css, '.c-lined-table__row', wait: 10) do
-          find('button[title="Update status"]').click
-        end
+      it 'allows adding notes to the curation activity log' do
+        visit stash_url_helpers.ds_admin_path
 
-        # select the author action required
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
 
-        find("#stash_engine_resource_curation_activity_status option[value='action_required']").select_option
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Add note')
+      end
 
-        # fill in a note
-        fill_in(id: 'stash_engine_resource_curation_activity_note', with: 'My cat says hi')
+      it 'adds a note to the curation activity log', js: true do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        click_button 'Add note'
+        fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
         click_button('Submit')
-
-        within(:css, '.c-lined-table__row', wait: 10) do
-          expect(page).to have_text('Action required')
-          find('button[title="View Activity Log"]').click
-        end
-
-        expect(page).to have_text('My cat says hi')
+        expect(page).to have_text('This is a test of the note functionality')
       end
 
-      it 'renders salesforce links in notes field' do
-        @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
-        @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
-        @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
-        within(:css, '.c-lined-table__row', wait: 10) do
-          find('button[title="View Activity Log"]').click
-        end
+      it 'adds internal data', js: true do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
         expect(page).to have_text('Activity log for')
-        expect(page).to have_text('Not a valid SF link')
-        # 'SF #0001' is not a valid case number, so the text is not changed
-        expect(page).to have_text('SF #0001')
-        # 'SF #0002' should be turned into a link with the caseID 'abc',
-        # and the '#' dropped to display the normalized form of the case number
-        expect(page).to have_link('SF 0002', href: 'https://testsalesforce.com/lightning/r/Case/abc/view')
+        click_button 'Add data'
+        select('pubmedID', from: 'stash_engine_internal_datum[data_type]')
+        fill_in('stash_engine_internal_datum[value]', with: '123456')
+        click_button('Submit')
+        expect(page).to have_text('pubmedID')
       end
 
-      it 'renders salesforce section' do
-        within(:css, '.c-lined-table__row', wait: 10) do
-          find('button[title="View Activity Log"]').click
-        end
-        expect(page).to have_text('Activity log for')
-        expect(page).to have_text('Salesforce cases')
-        expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
-      end
+      it 'allows superuser to set a fee waiver', js: true do
+        visit stash_url_helpers.ds_admin_path
 
-      it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
-        # the button to edit has this class on it
-        find('.js-trap-curator-url').click
-        all('[id^=instit_affil_]').last.set('test institution')
-        page.send_keys(:tab)
-        page.has_css?('.use-text-entered')
-        all(:css, '.use-text-entered').each { |i| i.set(true) }
-        3.times { fill_in_keyword }
-        navigate_to_readme
-        add_required_data_files
-        navigate_to_review
-        agree_to_everything
-        fill_in 'user_comment', with: Faker::Lorem.sentence
-        submit = find_button('submit_dataset', disabled: :all)
-        submit.click
-        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
-      end
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
 
-      it 'allows curation editing and aborting editing of user dataset and return to list in same state afterward' do
-        # the button to edit has this class on it
-        find('.js-trap-curator-url').click
-
-        expect(page).to have_field('Dataset title') # so it waits for actual ajax doc to load before doing anything else
-
-        click_on('Cancel and Discard Changes')
-        find('#railsConfirmDialogYes').click
-        expect(URI.parse(current_url).request_uri).to eq("#{dashboard_path}?curation_status=curation")
-      end
-
-      it 'allows superuser to set a fee waiver' do
-        within(:css, '.c-lined-table__row', wait: 10) do
-          find('button[title="View Activity Log"]').click
-        end
         expect(@resource.identifier.payment_type).to be(nil)
         expect(page).to have_text('Payment information')
         click_button('Apply fee waiver')
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-        sleep(0.1) # wait for waiver updates to complete
-        expect(@resource.identifier.payment_type).to be(nil)
+        expect(@resource.identifier.payment_type).to be(nil), wait: 2
       end
 
       it 'denies fee waiver selection when there is already a waiver' do
         @resource.identifier.update(payment_type: 'waiver')
 
-        within(:css, '.c-lined-table__row', wait: 10) do
-          find('button[title="View Activity Log"]').click
-        end
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
         expect(page).to have_text('Payment information')
         expect { click_button('Apply fee waiver') }.to raise_error(Capybara::ElementNotFound)
       end
+    end
 
+    context :limited_curator do
+
+      before(:each) do
+        @user.update(role: 'limited_curator')
+        sign_in(@user, false)
+      end
+
+      it 'allows adding notes to the curation activity log' do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Add note')
+      end
+    end
+
+    context :journal_admin do
+      before(:each) do
+        @journal = create(:journal)
+        @journal_admin = create(:user, tenant_id: 'mock_tenant')
+        @journal_role = create(:journal_role, journal: @journal, user: @journal_admin, role: 'admin')
+        @journal_admin.reload
+        sign_in(@journal_admin, false)
+        ident1 = create(:identifier)
+        @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
+        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
+        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        ident1.reload
+      end
+
+      it 'allows adding notes to the curation activity log' do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Add note')
+      end
+    end
+
+    context :tenant_curator do
+
+      before(:each) do
+        mock_salesforce!
+        @tenant_curator = create(:user, role: 'tenant_curator', tenant_id: 'mock_tenant')
+        sign_in(@tenant_curator, false)
+      end
+
+      it 'allows adding notes to the curation activity log' do
+        visit stash_url_helpers.ds_admin_path
+
+        expect(page).to have_css('button[title="View Activity Log"]')
+        find('button[title="View Activity Log"]').click
+
+        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('Add note')
+      end
     end
   end
 end

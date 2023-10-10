@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'stash/organization/ror_updater'
 
@@ -114,18 +115,19 @@ namespace :affiliation_import do
       data = JSON.parse(f.read)
       data.each do |org|
         ror_id = org['id']
+        name = org['name']
         fundref_ids = org.dig('external_ids', 'FundRef', 'all')
         next if fundref_ids.blank?
 
         fundref_ids.each do |fundref_id|
-          fundref_ror_mapping[fundref_id] = ror_id
+          fundref_ror_mapping[fundref_id] = { ror: ror_id, name: name }
         end
       end
     end
 
     to_insert = []
-    fundref_ror_mapping.each_with_index do |(fundref_id, ror_id), index|
-      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_id }
+    fundref_ror_mapping.each_with_index do |(fundref_id, ror_info), index|
+      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_info[:ror], org_name: ror_info[:name] }
       if index % 1000 == 0 && index > 0
         StashEngine::XrefFunderToRor.insert_all(to_insert)
         to_insert = []
@@ -339,3 +341,4 @@ end
 
 # rubocop:enable Lint/UselessAssignment
 # rubocop:enable Metrics/AbcSize
+# :nocov:

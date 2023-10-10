@@ -16,7 +16,6 @@ function Funders({
   const lastOrder = () => (funders.length ? Math.max(...funders.map((contrib) => contrib.funder_order)) + 1 : 0);
 
   const addNewFunder = () => {
-    console.log(`${(new Date()).toISOString()}: Adding funder`);
     const contributor = {
       contributor_name: '',
       contributor_type: 'funder',
@@ -38,7 +37,6 @@ function Funders({
 
   // delete a funder from the list
   const removeItem = (id) => {
-    console.log(`${(new Date()).toISOString()}: deleting funder`);
     const trueDelPath = deletePath.replace('id_xox', id);
     showSavingMsg();
 
@@ -58,8 +56,6 @@ function Funders({
         .then((data) => {
           if (data.status !== 200) {
             console.log('Response failure not a 200 response from funders save');
-          } else {
-            console.log('deleted from funders');
           }
           showSavedMsg();
         });

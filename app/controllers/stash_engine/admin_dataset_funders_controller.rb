@@ -9,13 +9,9 @@ module StashEngine
       @rep = authorize Report.new, policy_class: AdminDatasetFunderPolicy
       # the AdminDatasetFundersController::Report is where most of the complicated SQL is for this
 
-      # WHERE conditions
-      # Limit to tenant by either role or selected limit
-      @rep = policy_scope(@rep, policy_scope_class: AdminDatasetFunderPolicy::Scope)
-      @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]]) if params[:tenant].present?
-
       @rep.add_limit(offset: (@page - 1) * @page_size, rows: @page_size + 1) # add 1 to page size so it will have next page
 
+      add_tenant_limit
       add_funder_limit
       add_date_range
       add_sort_order
@@ -28,6 +24,21 @@ module StashEngine
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_funder_report.csv"
         end
+      end
+    end
+
+    private def add_tenant_limit
+      limit = policy_scope(false, policy_scope_class: AdminDatasetFunderPolicy::Scope)
+      if limit
+        # WHERE conditions
+        # Limit to tenant by either role or selected limit
+        tenant_ids = policy_scope(StashEngine::Tenant).map(&:tenant_id)
+        tenant_limit = params[:tenant].present? && tenant_ids.include?(params[:tenant]) ? [params[:tenant]] : tenant_ids
+        @rep.add_where(arr: ['last_res.tenant_id in (?)', tenant_limit.join(', ')])
+      else
+        return unless params[:tenant].present?
+
+        @rep.add_where(arr: ['last_res.tenant_id = ?', params[:tenant]])
       end
     end
 

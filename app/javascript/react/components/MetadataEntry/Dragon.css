@@ -1,8 +1,8 @@
-label {
+.dd-list-item label {
   vertical-align: middle;
 }
 
-button.fa-workaround {
+.dd-list-item button.fa-workaround {
   display: block;
   width: 1.5rem;
   height: 1.5rem;
@@ -11,11 +11,11 @@ button.fa-workaround {
   border: none;
 }
 
-button[aria-pressed="true"] {
+.dd-list-item button[aria-pressed="true"] {
   box-shadow: inset 0 0 7px #000 !important;
 }
 
-li[aria-pressed="true"] {
+.dd-list-item li[aria-pressed="true"] {
   background: #7654C4;
   color: #fff;
 }
@@ -84,12 +84,12 @@ li[aria-pressed="true"] {
   box-shadow: 0 0 8px #000;
 }
 
-pre {
+.dd-list-item pre {
   overflow-y: auto;
   text-align: left;
 }
 
-li {
+li.dd-list-item {
   list-style: none;
 }
 

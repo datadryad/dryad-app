@@ -28,10 +28,7 @@ Most types of files can be submitted (e.g., text, spreadsheets, video, photograp
 
 We recommend that individual files should not exceed 10GB. This ensures files are easily accessed and downloaded by Dryad users.
 
-There is a limit of 300GB per data publication uploaded through the web interface. For larger datasets, we ask authors to divide their dataset along some logical division (e.g., collection year, type of data or type of file) such that no subpart exceeds 300GB. Each one should then be submitted separately, sharing a common title with a differentiating subtitle. The subparts can then be linked using the Related Works section so that all of the related subparts are visible on each landing page. Some examples:
-
-* Dataset divided into three parts by year of data collection: [partial dataset 2020](https://doi.org/10.5061/dryad.h9w0vt4nq), [partial dataset 2021](https://doi.org/10.5061/dryad.zs7h44jf2), [partial dataset 2022](https://doi.org/10.5061/dryad.2jm63xstt)
-* Dataset divided into two parts by sample/specimen ID number: [partial dataset 1](https://doi.org/10.5061/dryad.76hdr7t1p), [partial dataset 2](https://doi.org/10.5061/dryad.gmsbcc2sq)
+There is a limit of 300GB per data publication uploaded through the web interface.
 
 
 ## Metadata requirements

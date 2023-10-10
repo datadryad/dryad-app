@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'json'
 
 module Stash
   module Import
@@ -20,6 +21,8 @@ module Stash
               { 'name' => 'Országos Tudományos Kutatási Alapprogramok', 'award' => ['OTKA101196'] },
               { 'name' => 'California Institute for Regenerative Medicine', 'award' => ['TR3 05626'] },
               { 'name' => 'American Heart Association', 'award' => ['14GRNT20510041'] }].freeze
+
+    SUBJECT = ['Gating', 'Resource partitioning'].freeze
 
     URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
 
@@ -223,6 +226,18 @@ module Stash
           resp = @cr.send(:populate_abstract)
           expect(resp).to eql(nil)
           expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.length).to eql(0)
+        end
+      end
+
+      describe '#populate_subjects' do
+        before(:each) do
+          @subj_example = SUBJECT.dup
+          @cr = Crossref.new(resource: @resource, crossref_json: { 'subject' => @subj_example })
+        end
+
+        it 'populates a subject for each subject' do
+          @cr.send(:populate_subjects)
+          expect(@resource.subjects.length).to eql(2) # one entry for each subject
         end
       end
 
@@ -632,6 +647,7 @@ module Stash
                                'author' => AUTHOR,
                                'abstract' => ABSTRACT,
                                'funder' => FUNDER,
+                               'subjects' => SUBJECT,
                                'URL' => URL,
                                'DOI' => DOI,
                                'publisher' => PUBLISHER,

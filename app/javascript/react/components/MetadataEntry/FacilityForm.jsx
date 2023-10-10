@@ -45,11 +45,14 @@ export default function FacilityForm({
       method = 'post';
     }
 
-    axios({
+    return axios({
       method,
       url,
       data: values,
-      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+      },
     }).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from research facility save');
@@ -63,7 +66,7 @@ export default function FacilityForm({
     <Formik
       initialValues={{}}
       innerRef={formRef}
-      onSubmit={({setSubmitting}) => {
+      onSubmit={(_v, {setSubmitting}) => {
         submitData().then(() => { setSubmitting(false); });
       }}
     >

@@ -124,17 +124,19 @@ module StashEngine
 
     def prepare_readme
       @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
-      readme_file = @resource.data_files.present_files.where(upload_file_name: 'README.md').first
-      # Attempt to load all README.md files for editing in the markdown editors, converting to UTF 8
-      if readme_file&.file_content
-        content_string = readme_file.file_content
-        encoding = content_string.encoding
-        if encoding != Encoding::UTF_8
-          content_string = content_string.force_encoding(encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
-        end
-        @file_content = content_string.encoding == Encoding::UTF_8 ? content_string : nil
-      else
+      if @metadata_entry&.technical_info.try(:description) && !@metadata_entry&.technical_info.try(:description).empty?
         @file_content = nil
+      else
+        readme_file = @resource&.data_files&.present_files&.where(upload_file_name: 'README.md')&.first
+        # Load correctly encoded README.md for editing and otherwise display an error.
+        if readme_file&.file_content
+          content_string = readme_file.file_content
+          encoding = content_string.encoding
+          @loading_error = true if encoding != Encoding::UTF_8
+          @file_content = content_string.encoding == Encoding::UTF_8 ? content_string : nil
+        else
+          @file_content = nil
+        end
       end
     end
 

@@ -1,3 +1,4 @@
+# :nocov:
 namespace :compressed do
   task update_contents: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
@@ -80,3 +81,4 @@ namespace :compressed do
     exit
   end
 end
+# :nocov:

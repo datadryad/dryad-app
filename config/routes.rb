@@ -440,8 +440,6 @@ Rails.application.routes.draw do
     post 'geolocation_places/map_coordinates', to: 'geolocation_places#map_coordinates'
     
     # get composite views or items that begin at the resource level
-    get 'resources/user_in_progress', to: 'resources#user_in_progress'
-    get 'resources/user_submitted', to: 'resources#user_submitted'
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post

@@ -4438,9 +4438,37 @@ img.c-upload__spinner {
   font-weight: bold;
 }
 
+#cedarDialog {
+  width: 45rem;
+}
+
+#cedarDialog .modalClose {
+  position: sticky;
+  z-index: 3;
+  top: 0;
+}
+#cedarDialog .modalClose button {
+  background-color: #fff;
+  padding: 8px 10px;
+  border-radius: 50%;
+  border: thin solid #ccc;
+  -webkit-box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.1411764706), 0 1px 5px rgba(0, 0, 0, 0.1215686275);
+          box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.1411764706), 0 1px 5px rgba(0, 0, 0, 0.1215686275);
+}
+
 .c-modal-content__cedar {
   padding: 0;
   margin: 0;
+}
+.c-modal-content__cedar .template-card {
+  padding: 0;
+  margin: 0;
+  max-width: 100% !important;
+  background-color: transparent !important;
+  font-size: 1rem;
+}
+.c-modal-content__cedar .template-card, .c-modal-content__cedar .mat-badge-content, .c-modal-content__cedar .mat-form-field {
+  font-family: "KievitWeb", sans-serif;
 }
 .c-modal-content__cedar .mat-card {
   padding: 0;
@@ -4449,98 +4477,65 @@ img.c-upload__spinner {
           box-shadow: none !important;
   background-color: transparent !important;
 }
-
-.template-card {
-  padding: 0;
-  margin: 0;
-  max-width: 100% !important;
-  background-color: transparent !important;
+.c-modal-content__cedar .mat-card-avatar {
+  display: none;
 }
-
-.mat-card-header {
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+.c-modal-content__cedar .mat-card-header {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 0.5rem;
 }
-.mat-card-header .mat-card-title {
-  font-size: inherit;
-}
-
-.mat-card {
-  padding: 0;
-  margin: 0;
-  /* should be h1 */
-}
-.mat-card .mat-card-title {
-  margin: 0 0 20px;
-  color: #cf4817;
-  font-size: 1.8em;
-  font-weight: normal;
-}
-.mat-card .mat-card-header-text {
-  padding: 0;
+.c-modal-content__cedar .mat-card-header h1, .c-modal-content__cedar .mat-card-header h2 {
   margin: 0;
 }
-.mat-card .mat-card {
-  padding: 0;
-  margin: 0;
-  /* should be h3 */
-}
-.mat-card .mat-card .mat-card-header {
-  margin: 16px -1rem 20px;
-  padding: 10px 16px 0;
-  background-color: rgb(0, 85, 129);
-  color: #fff;
-}
-.mat-card .mat-card .mat-card-title {
-  color: #fff;
-  font-size: 1.3em;
-  font-weight: normal;
-}
-.mat-card .mat-card .mat-card-header-text {
-  margin: 0;
-}
-.mat-card .mat-card .mat-card .mat-card-header {
-  margin: 16px 0 0;
-  padding: 0;
-  background-color: #fff;
+.c-modal-content__cedar .mat-card-header h2 {
+  font-size: 1em;
   color: #000;
 }
-.mat-card .mat-card .mat-card .mat-card-title {
-  color: #000;
+.c-modal-content__cedar .mat-card-content {
+  font-size: 1rem;
 }
-
-.mat-icon {
+.c-modal-content__cedar .mat-card-content h2 {
+  margin: 1rem -1.1rem 2rem;
+  padding: 8px 1.1rem;
+  background-color: #00527A;
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  font-weight: normal;
+}
+.c-modal-content__cedar .mat-card-content > button {
+  margin-bottom: 0.5rem;
+}
+.c-modal-content__cedar .mat-card-content > button:first-of-type {
+  margin-right: 1ch;
+}
+.c-modal-content__cedar .mat-button {
+  font-size: 1rem;
+  border: thin solid #ccc;
+}
+.c-modal-content__cedar .mat-expansion-panel {
+  margin-bottom: 0.5rem !important;
+}
+.c-modal-content__cedar .mat-expansion-panel-header {
+  font-size: 1rem;
+}
+.c-modal-content__cedar .mat-icon {
   font-size: 22px !important;
   height: 22px !important;
   width: 22px !important;
 }
-
-.modalDialog button.mat-icon-button {
+.c-modal-content__cedar .child-component-card {
+  margin-bottom: 1rem;
+}
+.c-modal-content__cedar .mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
   padding: 0;
-}
-.modalDialog button.mat-button-base {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  font-size: 90%;
 }
 
-.mat-card-avatar {
-  display: none;
-}
-
-/* tooltips */
-.mat-tooltip {
-  /* this background-color is just to prove that the selector is getting the correct element; 
-  remove it when we get the positioning to work properly */
-  background-color: rgb(20, 20, 0) !important;
-  z-index: 100000 !important;
-  position: relative;
+.cdk-overlay-container .mat-tooltip {
+  font-size: 0.9rem;
 }
 
 /* ********************************************** */

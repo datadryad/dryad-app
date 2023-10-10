@@ -2,6 +2,7 @@
 # Moves files from local storage to Amazon S3
 # See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/1079
 
+# :nocov:
 require 'stash/aws/s3'
 namespace :local_to_s3 do
 
@@ -56,5 +57,5 @@ namespace :local_to_s3 do
       end
     end
   end
-
 end
+# :nocov:

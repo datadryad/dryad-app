@@ -22,5 +22,6 @@ rules:
   #"semi": ["error", "always"] need to decide about this one
 env:
   "browser": true # includes browser variables like document, window, etc
+  "jest": true
 
 

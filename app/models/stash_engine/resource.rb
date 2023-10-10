@@ -181,10 +181,10 @@ module StashEngine
     end
 
     # this is METADATA published
-    scope :published, -> do
-      joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
-        .where('stash_engine_resources.publication_date < ?', Time.now.utc)
-    end
+    # scope :published, -> do
+    #   joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+    #     .where('stash_engine_resources.publication_date < ?', Time.now.utc)
+    # end
 
     JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
                              'LEFT OUTER JOIN stash_engine_internal_data ' \
@@ -347,16 +347,21 @@ module StashEngine
 
     def check_add_readme_file
       filename = 'README.md'
-      readme_file = data_files.present_files.where(upload_file_name: filename).first
-      file_content = readme_file&.file_content
       technical_info = descriptions.type_technical_info.first&.description
       return if !technical_info || technical_info.empty?
 
       # check if new content
-      if file_content && technical_info != file_content
-        # delete existing file
-        readme_file.smart_destroy!
-      end
+      old_info = previous_resource&.descriptions&.type_technical_info&.first&.description
+      return if technical_info == old_info
+
+      # check content against file
+      readme_file = data_files.present_files.where(upload_file_name: filename).first
+      file_content = readme_file&.file_content
+
+      return if technical_info == file_content
+
+      # remove old file
+      readme_file.smart_destroy! if file_content
 
       # add file
       Stash::Aws::S3.new.put_stream(

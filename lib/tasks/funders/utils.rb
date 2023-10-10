@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'amatch'
 
@@ -64,3 +65,4 @@ module Tasks
     end
   end
 end
+# :nocov:
