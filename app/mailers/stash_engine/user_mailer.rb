@@ -85,6 +85,18 @@ module StashEngine
            subject: "#{rails_env}Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
 
+    def general_error(resource, error_text)
+      logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
+      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      return unless resource.present? && @zenodo_error_emails.present?
+
+      @resource = resource
+
+      @error_text = error_text
+      mail(to: @zenodo_error_emails,
+           subject: "#{rails_env}General error \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
+    end
+
     def feedback_signup(message)
       @message = message
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
