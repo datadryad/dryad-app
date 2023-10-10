@@ -2,7 +2,7 @@ default: &default
   enabled: true
   abbreviation: "Stanford"
   short_name: "Stanford University"
-  long_name: "Lane Medical Library, Stanford University"
+  long_name: "Stanford University, Lane Medical Library"
   publisher_id: grid.168010.e
   ror_ids:
     - https://ror.org/00f54p054
