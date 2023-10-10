@@ -1,4 +1,5 @@
 require 'ezid/client'
+require 'http'
 
 module Tasks
   module EzidTransition
@@ -16,7 +17,7 @@ module Tasks
                 </creator>
             </creators>
             <titles>
-                <title xml:lang="en">Dryad in-progress dataset</title>
+                <title xml:lang="en">Dryad dataset awaiting publication</title>
             </titles>
             <publisher>Dryad</publisher>
             <publicationYear>2023</publicationYear>
@@ -25,17 +26,18 @@ module Tasks
             <formats/>
             <version/>
             <descriptions>
-                <description descriptionType="Abstract">A placeholder for an item to be published.</description>
+                <description descriptionType="Abstract">:unas</description>
             </descriptions>
         </resource>
       XML
 
+      # rubocop:disable Metrics/MethodLength
       def self.register_doi(doi:)
         doi.gsub!(/^doi:/, '') # strip off the icky doi: at the first if it's there
 
         # find correct tenant from DOI and latest resource
         stash_identifier = StashEngine::Identifier.find_by(identifier: doi)
-        resource = stash_identifier.latest_resource
+        resource = stash_identifier&.latest_resource
         if stash_identifier.nil? || resource.nil?
           puts "  Couldn't find dryad identifier or resource for #{doi}, will not update"
           return
@@ -44,6 +46,11 @@ module Tasks
         id_svc = resource.tenant.identifier_service
         if id_svc.provider != 'ezid' || doi.start_with?(APP_CONFIG.identifier_service.prefix)
           puts "  Not an EZID identifier for #{doi}, will not update"
+          return
+        end
+
+        if status(doi: doi) != 'reserved'
+          puts "  Not reserved, so not updating #{doi}"
           return
         end
 
@@ -66,6 +73,18 @@ module Tasks
           return
         end
         puts "  Updated placeholder metadata at EZID for #{doi}"
+      end
+      # rubocop:enable Metrics/MethodLength
+
+      # we want status to be 'reserved' for the update to take place
+      def self.status(doi:)
+        resp = HTTP.accept('text/plain').timeout(15).get("https://ezid.cdlib.org/id/doi:#{doi}")
+        if resp.status == 200
+          ezid_info = resp.body.to_s
+          ezid_info.match(/^_status: (\S+)$/)[1]
+        elsif resp.status == 400
+          'not_found'
+        end
       end
     end
   end
