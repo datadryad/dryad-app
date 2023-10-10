@@ -1,3 +1,4 @@
+# :nocov:
 require 'ezid/client'
 require 'http'
 
@@ -89,3 +90,4 @@ module Tasks
     end
   end
 end
+# :nocov:

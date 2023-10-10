@@ -100,6 +100,7 @@ module Mocks
       allow_any_instance_of(StashEngine::User).to receive(:tenant).and_return(tenant)
       allow_any_instance_of(StashEngine::Resource).to receive(:tenant).and_return(tenant)
       allow(StashEngine::Tenant).to receive(:find).and_return(tenant)
+      allow(StashEngine::Tenant).to receive(:all).and_return(StashEngine::Tenant.all << tenant)
     end
     # rubocop:enable Metrics/ParameterLists
   end

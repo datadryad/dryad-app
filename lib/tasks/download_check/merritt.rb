@@ -1,3 +1,4 @@
+# :nocov:
 require 'http'
 require 'byebug'
 require 'cgi'
@@ -96,3 +97,4 @@ module Tasks
     end
   end
 end
+# :nocov:

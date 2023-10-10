@@ -20,16 +20,16 @@
     <%= ds_row.award_number %>
   </td>
   <td class="c-lined-table__digits">
-    <%= ds_row.init_sub_date&.strftime('%m/%d/%Y') %>
+    <%= formatted_datetime(ds_row.init_sub_date) %>
   </td>
   <td class="c-lined-table__digits">
     <% if ds_row.pub_state == 'embargoed' && ds_row.publication_date && ds_row.publication_date > Time.new %>
-      <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
+      <%= formatted_datetime(ds_row.publication_date) %>
     <% end %>
   </td>
   <td class="c-lined-table__digits">
     <% if ds_row.pub_state == 'published' && ds_row.publication_date && ds_row.publication_date < Time.new %>
-      <%= ds_row.publication_date&.strftime('%m/%d/%Y') %>
+      <%= formatted_datetime(ds_row.publication_date) %>
     <% end %>
   </td>
 </tr>

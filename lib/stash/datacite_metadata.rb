@@ -92,6 +92,7 @@ module Stash
       Rails.logger
     end
 
+    # :nocov:
     def self.test_data
       dois = %w[10.3352/jeehp.2013.10.3 10.5060/D8H59D 10.7280/D1NP4M 10.7932/BDSN 10.13016/M2WK6V
                 10.3886/ICPSR36151.v5 10.2390/biecoll-jib-2009-108 10.1159/000489098 10.14288/1.0303795 10.7916/d8pp0jkc
@@ -116,6 +117,7 @@ module Stash
         sleep 1
       end
     end
+    # :nocov:
 
     # getting citation information (where m is the metadata returned)
     # Authors: these are full names not separated last, first

@@ -1,3 +1,4 @@
+# :nocov:
 require 'stash/compressed'
 
 module Tasks
@@ -30,3 +31,4 @@ module Tasks
     end
   end
 end
+# :nocov:

@@ -1,3 +1,4 @@
+# :nocov:
 namespace :mysql do
   desc 'update utf8 to utf8mb4 for existing tables'
   task update_utf8mb4: :environment do
@@ -23,3 +24,4 @@ namespace :mysql do
     #     COLLATE = utf8mb4_unicode_ci;
   end
 end
+# :nocov:
