@@ -162,12 +162,10 @@ export default function ReadMe({
       <div className="o-admin-columns">
         <div className="o-admin-left" style={{minWidth: '400px', flexGrow: 2}}>
           <p style={{marginTop: 0}}>Your Dryad submission must be accompanied by a README file, to help others use
-          and understand your dataset.
-          </p>
-          <p>Your README should contain the details needed to interpret and reuse your data,
+          and understand your dataset. It should contain the details needed to interpret and reuse your data,
           including abbreviations and codes, file descriptions, and information about any necessary software.
           </p>
-          <p>The editor below is pre-filled with a template to help you get started.</p>
+          <p>{!(dcsDescription.description || fileContent) && 'The editor below is pre-filled with a template for you to replace with your content. '}You can copy and paste formatted text into the editor, or enter markdown by clicking the 'Markdown' tab.</p>
           <p style={{textAlign: 'center', marginBottom: 0}}>
             <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
               <i className="fa fa-file-text-o" aria-hidden="true" style={{marginRight: '1ch'}} />Learn about README files
