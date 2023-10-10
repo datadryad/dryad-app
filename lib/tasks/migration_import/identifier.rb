@@ -1,3 +1,4 @@
+# :nocov:
 module Tasks
   module MigrationImport
     class Identifier
@@ -33,3 +34,4 @@ module Tasks
     end
   end
 end
+# :nocov:

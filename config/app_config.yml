@@ -251,7 +251,7 @@ development: &DEVELOPMENT
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
   cedar:
-    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
+    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
     template_base_url: "/cedar-embeddable-editor"
     templates:
       - [1, "Files", "File Description"]
@@ -293,7 +293,7 @@ stage:
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   cedar:
-    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor-2.6.18-SNAPSHOT.js"
+    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
     template_base_url: "/cedar-embeddable-editor"
     templates:
       - [1, "Files", "Ted's File Description"]

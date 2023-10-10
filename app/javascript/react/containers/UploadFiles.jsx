@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import {render} from '@cdl-dryad/frictionless-components/lib/render';
 import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import sanitize from '../../lib/sanitize_filename';
+import {maxFiles, pollingDelay} from './maximums';
 
 import {
   ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, TrackChanges,
@@ -14,7 +15,6 @@ import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 /**
  * Constants
  */
-const maxFiles = 1000;
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
   'StashEngine::SoftwareFile': 'software',
@@ -102,7 +102,7 @@ class UploadFiles extends React.Component {
     // Since this is not a hooks component, use the old way as demonstrated at
     // https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
     pollingCount: 0,
-    pollingDelay: 10000,
+    pollingDelay,
   };
 
   modalRef = React.createRef();
@@ -143,8 +143,6 @@ class UploadFiles extends React.Component {
     const toCheck = chosenFiles.filter((f) => (f?.id && f?.status === 'Uploaded' && f?.tabularCheckStatus === TabularCheckStatus.checking));
 
     if (this.checkPollingDone(toCheck)) return;
-
-    console.log(toCheck);
 
     axios.get(
       `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
@@ -266,7 +264,6 @@ class UploadFiles extends React.Component {
                 original: file.name,
               },
             ).then((response) => {
-              console.log(response);
               this.updateFileData(response.data.new_file, index);
               if (this.isValidTabular(this.state.chosenFiles[index])) {
                 this.validateFrictionlessLambda([this.state.chosenFiles[index]]);
@@ -325,8 +322,7 @@ class UploadFiles extends React.Component {
       axios.post(
         `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
         {file_ids: files.map((file) => file.id)},
-      ).then((response) => {
-        console.log('validateFrictionlessLambda RESPONSE', response);
+      ).then(() => {
         if (!this.interval) {
           // start polling for report updates if not polling already
           this.interval = setInterval(this.tick, this.state.pollingDelay);
@@ -374,8 +370,7 @@ class UploadFiles extends React.Component {
     const file = this.state.chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
       axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
           this.removeFileLine(id);
         })
         .catch((error) => console.log(error));
@@ -451,8 +446,8 @@ class UploadFiles extends React.Component {
         .then((response) => {
           this.updateManifestFiles(response.data);
         })
-        .catch((error) => console.log(error))
-        .finally(() => this.setState({urls: null, loading: false}));
+        .catch((error) => console.log(error));
+      // .finally(() => this.setState({urls: null, loading: false}));
     }
   };
 

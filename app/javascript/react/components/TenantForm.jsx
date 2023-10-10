@@ -16,7 +16,6 @@ export default function TenantForm({tenants}) {
 
   const supplyLookupList = (qt) => new Promise((resolve) => {
     if (qt.length > 0) {
-      console.log(qt);
       const lcqt = qt.toLowerCase();
       resolve(tenants.filter((t) => t.name.toLowerCase().includes(lcqt)));
     } else {

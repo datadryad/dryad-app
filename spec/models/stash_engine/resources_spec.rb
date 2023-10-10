@@ -786,6 +786,7 @@ module StashEngine
       end
 
       it 'purges duplicate subjects' do
+        @resource.purge_duplicate_subjects!
         @resource.subjects << create(:subject, subject: 'AARDVARKS')
         @resource.subjects << create(:subject, subject: 'Aardvarks')
         @resource.subjects << create(:subject, subject: 'aardvarks')
@@ -795,6 +796,7 @@ module StashEngine
       end
 
       it "doesn't purge FOS subjects" do
+        @resource.purge_duplicate_subjects!
         existing_fos = @resource.subjects.fos.first
         @resource.subjects << create(:subject, subject: existing_fos.subject) # this one doesn't have fos subject_scheme set
         @resource.subjects << create(:subject, subject: existing_fos.subject)

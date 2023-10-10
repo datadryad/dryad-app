@@ -21,7 +21,6 @@ function PrelimArticle({
   const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving Preliminary DOI Article info`);
     showSavingMsg();
 
     // set up values

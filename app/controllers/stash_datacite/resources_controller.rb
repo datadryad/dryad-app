@@ -1,40 +1,16 @@
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
-    protect_from_forgery except: %i[user_in_progress user_submitted]
+    protect_from_forgery
 
     include StashEngine::ApplicationHelper
     include ActionView::Helpers::NumberHelper
 
-    before_action :ajax_require_current_user, only: %i[user_in_progress user_submitted]
     before_action :set_page_info
     before_action :revalidate_submission, only: %i[submission]
     # get resources and composite information for in-progress table view
 
     include StashDatacite::LandingMixin
-    def user_in_progress
-      respond_to do |format|
-        format.js do
-          # paging first and using separate object for pager (resources) from display (@in_progress_lines) means
-          # only a page of objects needs calculations for display rather than all objects in list.  However if we need
-          # to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
-          # form of kaminari instead (which will likely be slower).
-          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress_only.order(updated_at: :desc).page(@page).per(@page_size)
-          @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
-        end
-      end
-    end
-
-    def user_submitted
-      respond_to do |format|
-        format.js do
-          return if current_user.blank?
-
-          @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc).page(@page).per(@page_size)
-          @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
-        end
-      end
-    end
 
     def show
       respond_to do |format|

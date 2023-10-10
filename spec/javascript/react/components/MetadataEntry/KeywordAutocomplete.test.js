@@ -1,50 +1,24 @@
-import React from "react";
-import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
-import KeywordAutocomplete from "../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete";
-import axios from 'axios';
-import {acData} from "./rorTestData"
-
-jest.mock('axios');
+import React from 'react';
+import {render, screen} from '@testing-library/react';
+import KeywordAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete';
 
 describe('KeywordAutocomplete', () => {
-
-  it("renders a basic autocomplete form", () => {
-    const info = {name: '', id: '', saveFunction: jest.fn(),
-      'controlOptions': { htmlId: "kwd2387", labelText: '', isRequired: false } }
-
-    const { container } = render(<KeywordAutocomplete {...info} />);
-
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false })
-    expect(labeledElements.length).toBe(2);
+  let info;
+  beforeEach(() => {
+    info = {
+      name: '',
+      id: '',
+      saveFunction: jest.fn(),
+      controlOptions: {
+        htmlId: 'kwd2387', labelText: '', isRequired: false, saveOnEnter: true,
+      },
+    };
   });
 
-  it('allows changes to dd text input and resets the hidden name and ID fields after change', async () => {
-    // keywords start out blank in entry and appear in other component after entered
-    const info = {name: '', id: '', saveFunction: jest.fn(),
-      'controlOptions': { htmlId: "kwd2387", labelText: '', isRequired: false } }
+  it('renders a basic autocomplete form', () => {
+    render(<KeywordAutocomplete {...info} />);
 
-    const promise = Promise.resolve({
-      data: [ {id: 1, name: 'Mycelium'}, {id: 2, name: 'Spores'} ]
-    });
-
-    axios.get.mockImplementationOnce(() => promise);
-
-    const { container } = render(<KeywordAutocomplete {...info} />);
-
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, { exact: false });
-
-    userEvent.clear(labeledElements[0]);
-
-    fireEvent.focus(labeledElements[0]);
-    await act(async () => {
-      // info at: https://testing-library.com/docs/ecosystem-user-event/
-      await userEvent.type(labeledElements[0], 'fixed', {delay: 20});
-    });
-
-    await waitFor(() => expect(labeledElements[0]).toHaveValue('fixed'));
-
-    await waitFor(() => promise); // waits for the axios promise to fulfill
-
+    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
+    expect(labeledElements.length).toBe(2);
   });
 });

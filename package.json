@@ -19,14 +19,15 @@
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": { "resources": "usable" }
   },
   "scripts": {
     "start": "bin/webpack serve --mode development",
     "build": "webpack",
     "test": "jest",
     "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint --ext .jsx,.js app/javascript/react --fix",
+    "lint:js": "eslint --ext .jsx,.js */javascript/react --fix",
     "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
@@ -110,7 +111,7 @@
     "ndb": "^1.1.5",
     "node": "^16.18.1",
     "normalize-scss": "^7.0.1",
-    "postcss": "^8.4.13",
+    "postcss": "^8.4.31",
     "react-test-renderer": "^17.0.2",
     "stylelint": "^15.10.1",
     "stylelint-config-property-sort-order-smacss": "^9.0.0",

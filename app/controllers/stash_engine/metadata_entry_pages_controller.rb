@@ -16,10 +16,10 @@ module StashEngine
     end
     helper_method :resource
 
-    def cedar_popup
-      print("CEDAR popup: params are #{params}")
-      respond_to(&:js)
-    end
+    # def cedar_popup
+    #  print("CEDAR popup: params are #{params}")
+    #  respond_to(&:js)
+    # end
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create

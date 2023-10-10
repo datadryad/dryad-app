@@ -6,7 +6,7 @@ Dryad advances our vision – for the open availability and routine reuse of res
 
 * Data curation at Dryad – Ensures metadata quality; verifies data are accessible, usable, and licensed for sharing, and supports authors.
 * Data publishing at Dryad – Increases discoverability of data, connects data with other research outputs, promotes data citation, and makes data count.
-* The Dryad platform – Offers a smooth and easy publishing experience for authors, integrates readily with publisher workflows, runs on open-source software, and may be accessed via open API.
+* The Dryad platform – Offers a smooth and easy publishing experience for authors, integrates readily with publisher workflows, [runs on open-source software](https://github.com/CDL-Dryad/dryad-app), and may be [accessed via open API](/stash/api).
 
 Dryad serves all research domains and welcomes submissions of data in every field – where there is not an existing specialist repository and where the data may be shared openly. Dryad publishes data exclusively under a [Creative Commons Public Domain License](https://creativecommons.org/share-your-work/public-domain/cc0/) (CC0) and does not support the publication of sensitive data to which access should be restricted.
 
