@@ -1,0 +1,13 @@
+<p>An error occurred</p>
+
+<pre>
+<%= @error_text %>
+</pre>
+
+<hr/>
+
+<pre>
+  resource_id: <%= @resource.id %>
+  identifier_id: <%= @resource&.identifier&.id %>
+  doi: <%= @resource&.identifier&.identifier %>
+</pre>
