@@ -76,7 +76,17 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+        resp = ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+        if resp&.status == 404
+          # Zenodo can timeout and return 504 and a repeat of the deposit can give 404
+          # if it actually succeeded but didn't want to give us a response
+          r2 = ZC.standard_request(:get,
+                                   "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}",
+                                   zc_id: @zc_id)
+          return r2 if r2[:submitted] == true
+        end
+        
+        resp
       end
     end
   end
