@@ -85,7 +85,7 @@ module Stash
                                    zc_id: @zc_id)
           return r2 if r2[:submitted] == true
         end
-        
+
         resp
       end
     end
