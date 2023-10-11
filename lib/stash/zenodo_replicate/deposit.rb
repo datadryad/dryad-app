@@ -83,7 +83,13 @@ module Stash
           r2 = ZC.standard_request(:get,
                                    "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}",
                                    zc_id: @zc_id)
-          return r2 if r2[:submitted] == true
+          if r2[:submitted] == true
+            ZC.log_to_database(item: 'The dataset was already published', zen_copy: @zc_id)
+            return r2
+          else
+            # log bad publication action
+            ZC.log_to_database(item: 'Received a 404 not found on publication', zen_copy: @zc_id)
+          end
         end
 
         resp
