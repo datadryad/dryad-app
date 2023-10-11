@@ -53,7 +53,7 @@ module CollectionHelper
   end
 
   def fill_in_keywords
-    fill_in 'keyword_ac', with: Faker::Lorem.words(number: 3).join(',')
+    fill_in 'keyword_ac', with: Faker::Lorem.unique.words(number: 3).join(',')
     page.send_keys(:tab)
   end
 
