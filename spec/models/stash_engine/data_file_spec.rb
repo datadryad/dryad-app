@@ -285,8 +285,8 @@ module StashEngine
         stub_request(:get, %r{https://a-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 200, body: '### This is a test README title!', headers: {})
 
-        stub_request(:get, %r{https://a-test-bucket.s3.us-west-2.amazonaws.com/.+}).
-          to_return(status: 200, body: '### This is a test README title!', headers: {})
+        stub_request(:get, %r{https://a-test-bucket.s3.us-west-2.amazonaws.com/.+})
+          .to_return(status: 200, body: '### This is a test README title!', headers: {})
 
         expect(@upload2.file_content).to eql('### This is a test README title!')
       end
