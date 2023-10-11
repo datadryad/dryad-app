@@ -76,23 +76,14 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        resp = ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
-        if resp.try(:status) == 404
-          # Zenodo can timeout and return 504, which gets retried as a zenodo failure but sometimes it did work
-          # and we just didn't get the response. So then a retry of the same publish request gives a 404 instead.
-          r2 = ZC.standard_request(:get,
-                                   "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}",
-                                   zc_id: @zc_id)
-          if r2[:submitted] == true
-            ZC.log_to_database(item: 'The dataset was already published', zen_copy: @zc_id)
-            return r2
-          else
-            # log bad publication action
-            ZC.log_to_database(item: 'Received a 404 not found on publication', zen_copy: @zc_id)
-          end
+        r2 = ZC.standard_request(:get,"#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+        if r2[:submitted] == true
+          ZC.log_to_database(item: 'The dataset was already published without previous request giving us a confirmation response',
+                             zen_copy: @zc_id)
+          return r2
         end
 
-        resp
+        ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
       end
     end
   end
