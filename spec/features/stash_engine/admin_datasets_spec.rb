@@ -200,7 +200,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
         page.send_keys(:tab)
         page.has_css?('.use-text-entered')
         all(:css, '.use-text-entered').each { |i| i.set(true) }
-        3.times { fill_in_keyword }
+        fill_in_keywords
         navigate_to_readme
         add_required_data_files
         navigate_to_review
