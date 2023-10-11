@@ -380,7 +380,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
-    3.times { fill_in_keyword }
+    fill_in_keywords
     all('[id^=instit_affil_]').last.set('test institution')
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
