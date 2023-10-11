@@ -139,7 +139,7 @@ module StashEngine
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def s3_staged_presigned_url
-      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
+      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{original_filename}")
     end
 
     # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
@@ -177,17 +177,19 @@ module StashEngine
     def file_content
       # get the presigned URL
       s3_url = nil
-      begin
-        s3_url = (file_state == 'copied' && last_version_file && last_version_file&.s3_permanent_presigned_url) || nil
-      rescue HTTP::Error, Stash::Download::S3CustomError => e
-        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+      if file_state == 'copied' && last_version_file
+        begin
+          s3_url = last_version_file.s3_permanent_presigned_url || nil
+        rescue HTTP::Error, Stash::Download::S3CustomError => e
+          logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+        end
+      else
+        begin
+          s3_url = s3_staged_presigned_url
+        rescue HTTP::Error, Stash::Download::S3CustomError => e
+          logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
+        end
       end
-      begin
-        s3_url = s3_permanent_presigned_url if s3_url.nil?
-      rescue HTTP::Error, Stash::Download::S3CustomError => e
-        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
-      end
-      s3_url = s3_staged_presigned_url if s3_url.nil?
 
       return nil if s3_url.nil?
 
