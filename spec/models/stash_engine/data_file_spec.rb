@@ -275,14 +275,14 @@ module StashEngine
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
       it 'returns nil if unable to retrieve range of S3 file' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:get, %r{https://a-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 404, body: '', headers: {})
 
         expect(@upload2.file_content).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:get, %r{https://a-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 200, body: '### This is a test README title!', headers: {})
 
         expect(@upload2.file_content).to eql('### This is a test README title!')
