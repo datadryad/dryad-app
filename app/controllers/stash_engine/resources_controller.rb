@@ -132,7 +132,10 @@ module StashEngine
         if readme_file&.file_content
           content_string = readme_file.file_content
           encoding = content_string.encoding
-          @loading_error = true if encoding != Encoding::UTF_8
+          if encoding == Encoding::ASCII_8BIT
+            content_string = content_string.force_encoding(encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+          end
+          @loading_error = true if content_string.encoding != Encoding::UTF_8
           @file_content = content_string.encoding == Encoding::UTF_8 ? content_string : nil
         else
           @file_content = nil
