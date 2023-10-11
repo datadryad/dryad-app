@@ -50,21 +50,17 @@ describe('FunderForm', () => {
   it('selects from autocomplete options shown while typing', async () => {
     const options = Promise.resolve({
       status: 200,
-      data: {
-        message: {
-          items: [
-            {
-              id: '501100019851', location: 'Sweden', name: 'Wellspect', 'alt-names': ['Wellspect HealthCare', 'Wellspect HealthCare AB'], uri: 'http://dx.doi.org/10.13039/501100019851', replaces: [], 'replaced-by': [], tokens: ['wellspect', 'wellspect', 'healthcare', 'wellspect', 'healthcare', 'ab'],
-            },
-            {
-              id: '100004382', location: 'United States', name: 'WellPoint', 'alt-names': ['WellPoint, Inc.'], uri: 'http://dx.doi.org/10.13039/100004382', replaces: [], 'replaced-by': [], tokens: ['wellpoint', 'wellpoint', 'inc'],
-            },
-            {
-              id: '100004440', location: 'United Kingdom', name: 'Wellcome', 'alt-names': [], uri: 'http://dx.doi.org/10.13039/100004440', replaces: [], 'replaced-by': ['100010269'], tokens: ['wellcome'],
-            },
-          ],
+      data: [
+        {
+          id: 'https://ror.org/05cy4wa09', name: 'Wellcome Sanger Institute', country: 'United Kingdom', acronyms: ['WTSI'],
         },
-      },
+        {
+          id: 'https://ror.org/029chgv08', name: 'Wellcome Trust', country: 'United Kingdom', acronyms: ['WT'],
+        },
+        {
+          id: 'https://ror.org/03hamhx47', name: 'University of Massachusetts Lowell', country: 'United States', acronyms: [],
+        },
+      ],
     });
 
     axios.get.mockImplementationOnce(() => options);
@@ -80,10 +76,10 @@ describe('FunderForm', () => {
 
     const newFunder = {
       id: faker.datatype.number(),
-      contributor_name: 'Wellcome',
+      contributor_name: 'Wellcome Trust',
       contributor_type: 'funder',
-      identifier_type: 'crossref_funder_id',
-      name_identifier_id: 'http://dx.doi.org/10.13039/100004440',
+      identifier_type: 'ror',
+      name_identifier_id: 'https://ror.org/029chgv08',
     };
 
     const promise = Promise.resolve({status: 200, data: newFunder});
@@ -95,7 +91,7 @@ describe('FunderForm', () => {
 
     await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(3));
 
-    userEvent.selectOptions(menu, newFunder.contributor_name);
+    userEvent.selectOptions(menu, screen.getByText(/Wellcome Trust/));
 
     await waitFor(() => promise);
 
@@ -107,7 +103,8 @@ describe('FunderForm', () => {
   it('shows sub-list when groupings exist and selects from it', async () => {
     const {contributor} = info;
     contributor.contributor_name = 'National Institutes of Health';
-    contributor.name_identifier_id = 'http://dx.doi.org/10.13039/100000002';
+    contributor.name_identifier_id = 'https://ror.org/01cwqze88';
+    contributor.name_identifier_type = 'ror';
 
     const group = groupings[0].json_contains;
 
