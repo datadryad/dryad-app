@@ -44,7 +44,7 @@ module CollectionHelper
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-    3.times { fill_in_keyword }
+    fill_in_keywords
     fill_in_collection
   end
 
@@ -52,8 +52,8 @@ module CollectionHelper
     click_button 'Submit', wait: 5
   end
 
-  def fill_in_keyword(keyword: Faker::Creature::Animal.name)
-    fill_in 'keyword_ac', with: keyword
+  def fill_in_keywords
+    fill_in 'keyword_ac', with: Faker::Lorem.words(number: 3).join(',')
     page.send_keys(:tab)
   end
 

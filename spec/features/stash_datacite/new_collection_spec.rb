@@ -152,7 +152,7 @@ RSpec.feature 'NewCollection', type: :feature do
       page.send_keys(:tab)
       page.has_css?('.use-text-entered')
       all(:css, '.use-text-entered').each { |i| i.set(true) }
-      3.times { fill_in_keyword }
+      fill_in_keywords
       fill_in_collection
       navigate_to_review
       agree_to_everything
