@@ -77,7 +77,7 @@ module Stash
       # Need to have gotten or created the deposition for this to work
       def publish
         resp = ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
-        if resp&.status == 404
+        if resp.try(:status) == 404
           # Zenodo can timeout and return 504, which gets retried as a zenodo failure but sometimes it did work
           # and we just didn't get the response. So then a retry of the same publish request gives a 404 instead.
           r2 = ZC.standard_request(:get,
