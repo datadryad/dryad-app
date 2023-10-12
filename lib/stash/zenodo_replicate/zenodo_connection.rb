@@ -104,7 +104,7 @@ module Stash
         state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
         state = state.with_indifferent_access if state.is_a?(Hash)
 
-        return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 1.minute)
+        return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 5.minutes)
 
         state[:access_token]
       end
