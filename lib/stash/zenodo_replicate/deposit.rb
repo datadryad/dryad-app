@@ -77,7 +77,7 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        1.upto(3) do |count|
+        1.upto(3) do |_count|
           r2 = dataset_info
           if r2[:submitted] == true
             ZC.log_to_database(item: 'The dataset is confirmed submitted in Zenodo.', zen_copy: @zc)
