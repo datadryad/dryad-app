@@ -5,7 +5,7 @@ module Stash
   module ZenodoReplicate
     class Deposit
 
-      attr_reader :resource, :deposition_id, :links
+      attr_reader :resource, :deposition_id, :links, :zc
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
