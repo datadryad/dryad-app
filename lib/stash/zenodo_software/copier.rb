@@ -147,8 +147,7 @@ module Stash
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         @copy.reload
-        error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
-        @copy.update(state: 'error', error_info: error_info)
+        Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
         @copy.reload
         StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
