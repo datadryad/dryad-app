@@ -77,7 +77,7 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        r2 = ZC.standard_request(:get,"#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+        r2 = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
         if r2[:submitted] == true
           ZC.log_to_database(item: 'The dataset was already published without previous request giving us a confirmation response',
                              zen_copy: @zc)
