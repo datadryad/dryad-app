@@ -85,6 +85,7 @@ module Stash
           end
 
           ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+          sleep(5)
         end
         r2 = dataset_info
         return r2 if r2[:submitted] == true
