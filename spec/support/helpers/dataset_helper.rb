@@ -97,8 +97,9 @@ module DatasetHelper
   end
 
   def fill_in_keywords
-    fill_in 'keyword_ac', with: Faker::Lorem.unique.words(number: 3).join(',')
+    fill_in 'keyword_ac', with: 3.times.map { Faker::Creature::Animal.unique.name }.join(',')
     page.send_keys(:tab)
+    Faker::Creature::Animal.unique.clear
   end
 
   def fill_in_author
