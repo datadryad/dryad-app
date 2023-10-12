@@ -95,7 +95,7 @@ module Stash
         return r2 if r2[:submitted] == true
 
         raise Stash::ZenodoReplicate::ZenodoError, "identifier_id #{@zc.identifier_id}: Publication failed after " \
-          'three attempts. Are Zenodo systems up and stable?'
+                                                   'three attempts. Are Zenodo systems up and stable?'
       end
 
       def dataset_info
