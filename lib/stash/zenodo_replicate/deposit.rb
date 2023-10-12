@@ -77,15 +77,26 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        r2 = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
-        if r2[:submitted] == true
-          ZC.log_to_database(item: 'The dataset was already published without previous request giving us a confirmation response',
-                             zen_copy: @zc)
-          return r2
-        end
+        1.upto(3) do |count|
+          r2 = dataset_info
+          if r2[:submitted] == true
+            ZC.log_to_database(item: 'The dataset is confirmed submitted in Zenodo.', zen_copy: @zc)
+            return r2
+          end
 
-        ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+          ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+        end
+        r2 = dataset_info
+        return r2 if r2[:submitted] == true
+
+        raise Stash::ZenodoReplicate::ZenodoError, "identifier_id #{@zc.identifier_id}: Publication failed after " \
+          'three attempts. Are Zenodo systems up and stable?'
       end
+
+      def dataset_info
+        ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+      end
+
     end
   end
 end
