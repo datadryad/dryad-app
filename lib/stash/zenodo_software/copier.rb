@@ -141,7 +141,7 @@ module Stash
         Stash::Aws::S3.new.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
 
         @copy.reload
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
 
         # make sure the dataset has the relationships for these things sent to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)

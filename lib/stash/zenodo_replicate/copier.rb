@@ -75,7 +75,7 @@ module Stash
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
         @copy.reload
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
       rescue Stash::S3Download::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
         @copy.reload
