@@ -146,9 +146,8 @@ module Stash
         # make sure the dataset has the relationships for these things sent to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
-        @copy.reload
         Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
-        @copy.reload
+        @copy.update(state: 'error')
         StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize

@@ -78,8 +78,8 @@ module Stash
         @copy.update(state: 'finished')
       rescue Stash::S3Download::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
-        @copy.reload
         Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
+        @copy.update(state: 'error')
       end
 
       private
