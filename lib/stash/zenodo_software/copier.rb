@@ -161,7 +161,7 @@ module Stash
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
         @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
       rescue Stash::ZenodoReplicate::ZenodoError => e
         revert_to_previous_version if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
       end
@@ -178,7 +178,7 @@ module Stash
           return
         end
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
       end
 
       private
