@@ -12,6 +12,7 @@ module Stash
       def initialize(resource:, zc_id:)
         @resource = resource
         @zc_id = zc_id
+        @zc = StashEngine::ZenodoCopy.where(id: @zc_id).first
       end
 
       # this creates a new deposit and returns the json response if successful
@@ -79,7 +80,7 @@ module Stash
         r2 = ZC.standard_request(:get,"#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
         if r2[:submitted] == true
           ZC.log_to_database(item: 'The dataset was already published without previous request giving us a confirmation response',
-                             zen_copy: @zc_id)
+                             zen_copy: @zc)
           return r2
         end
 
