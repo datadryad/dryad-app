@@ -39,6 +39,8 @@ module Stash
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
           my_args = args.merge(params: my_params, headers: my_headers)
 
+          # puts "method: #{method}, url: #{url}"
+
           log_to_database(item: "REQUEST: #{method}, #{url}\n   #{my_args&.merge(params: { access_token: 'hidden' })}",
                           zen_copy: zen_copy)
           r = http.send(method, url, my_args)
@@ -76,6 +78,8 @@ module Stash
 
       def self.log_to_database(item:, zen_copy:)
         return unless zen_copy
+
+        zen_copy.reload
 
         zen_copy.update(error_info: "#{zen_copy.error_info}\n#{Time.new.utc.iso8601} #{item}\n")
       end
