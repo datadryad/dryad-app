@@ -84,7 +84,11 @@ module Stash
             return r2
           end
 
-          ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+          begin
+            ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+          rescue Stash::ZenodoReplicate::ZenodoError => e
+            ZC.log_to_database(item: "ZenodoError on publication: #{e}", zen_copy: @zc)
+          end
           sleep(5)
         end
         r2 = dataset_info

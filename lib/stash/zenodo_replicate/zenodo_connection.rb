@@ -58,7 +58,7 @@ module Stash
 
           sleep ZENODO_PADDING_TIME # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
           resp
-        rescue HTTP::Error, JSON::ParserError, RetryError => e
+        rescue HTTP::Error, HTTP::ConnectionError, JSON::ParserError, RetryError => e
           log_to_database(item: "ERROR: #{e.full_message}", zen_copy: zen_copy)
           # rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
           # rubocop:disable Style/GuardClause
