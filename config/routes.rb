@@ -247,6 +247,7 @@ Rails.application.routes.draw do
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
+    get 'data_check_guide', to: 'pages#data_check_guide'
     get 'process', to: 'pages#process'
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
