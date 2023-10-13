@@ -50,10 +50,10 @@ const badList = (props) => {
             {' '}<em>Tabular data check</em>{' '}
             column to see what has been highlighted for your review.
           </li>
-          <li>
-            If you would like to edit and replace any file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current file.
-          </li>
           <li>Review the local copy of your file and make any desired changes.</li>
+          <li>
+            If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current file.
+          </li>
           <li>
             Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
           </li>
