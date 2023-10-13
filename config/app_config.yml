@@ -38,7 +38,6 @@ defaults: &DEFAULTS
     account: CDL.DASH
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://sandbox.zenodo.org
     community_id: dryad
     application_id: 3357
@@ -344,7 +343,6 @@ production:
   submission_bc_emails: [""]
   send_journal_published_notices: true
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
     base_url: https://zenodo.org
     community_id: dryad
     application_id: 42723
