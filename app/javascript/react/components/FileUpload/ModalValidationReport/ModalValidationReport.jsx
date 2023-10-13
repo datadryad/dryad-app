@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '@cdl-dryad/frictionless-components/lib/styles';
+//import '@cdl-dryad/frictionless-components/lib/styles';
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const jsReport = file?.frictionless_report?.report ? JSON.parse(file.frictionless_report.report) : {};

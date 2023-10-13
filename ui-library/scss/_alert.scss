@@ -40,7 +40,7 @@
 
 .c-alert--error-lite {
 	@extend %c-alert;
-	border: thin solid $design-red-color;
+	border: 2px solid $design-red-color;
 	background-color: $design-white-color;
 	background-image: inline('../images/icon_warning.svg');
 }
@@ -69,7 +69,7 @@
 
 .c-alert--migration {
   @extend %c-alert;
-  border: thin solid $design-dark-blue-color;
+  border: 2px solid $design-dark-blue-color;
   background-color: $design-white-color;
   color: $design-dark-blue-color;
 

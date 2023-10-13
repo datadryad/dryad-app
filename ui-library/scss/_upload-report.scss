@@ -1,0 +1,15 @@
+.frictionless-components-report .result .table-view::after {
+  position: relative !important;
+}
+
+.frictionless-components-report .result .error-details {
+  font-size: .94rem !important;
+}
+
+.frictionless-components-report .result .error-details .error-description p:first-child {
+  margin-top: 0;
+}
+
+.file.invalid > p:first-child {
+  display: none;
+}
