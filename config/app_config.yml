@@ -38,7 +38,7 @@ defaults: &DEFAULTS
     account: CDL.DASH
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
-    base_url: https://sandbox.zenodo.org
+    base_url: https://zenodo-rdm-qa.web.cern.ch
     community_id: dryad
     application_id: 3357
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
