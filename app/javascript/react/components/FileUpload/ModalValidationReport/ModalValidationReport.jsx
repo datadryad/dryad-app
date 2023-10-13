@@ -1,6 +1,6 @@
 import React from 'react';
 
-//import '@cdl-dryad/frictionless-components/lib/styles';
+// import '@cdl-dryad/frictionless-components/lib/styles';
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const jsReport = file?.frictionless_report?.report ? JSON.parse(file.frictionless_report.report) : {};
@@ -33,6 +33,16 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
           Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
         </li>
       </ol>
+      <p style={{
+        fontSize: '1.05em', border: '2px solid #0071a8', padding: '8px 10px', borderRadius: '5px',
+      }}
+      >
+        <i className="fa fa-info-circle" aria-hidden="true" style={{color: '#0071a8'}} />{' '}
+        Questions? Check{' '}
+        <a href="/stash/data_check_guide" target="_blank">our guide for evaluating and resolving these alerts
+          <span className="screen-reader-only"> (opens in new window)</span>
+        </a>.
+      </p>
       {jsReport?.report?.stats?.errors === 10 && (
         <p>The report shows the maximum of 10 alerts. More alerts may appear if these 10 are corrected and the file is re-uploaded.</p>
       )}
@@ -49,7 +59,9 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
         At curation stage, if there are questions about how your data is presented, a curator will contact
         you with options to improve the organization, readability, and/or reuse of your dataset.
       </p>
-      <button type="button" className="o-button__plain-text2" onClick={clickedClose}>Close</button>
+      <p style={{textAlign: 'right'}}>
+        <button type="button" className="o-button__plain-text2" onClick={clickedClose}>Close</button>
+      </p>
     </dialog>
   );
 });
