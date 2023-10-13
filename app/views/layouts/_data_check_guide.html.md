@@ -1,6 +1,6 @@
 # Tabular data check alerts
 
-Dryad's mission is to enable the open data and routine reuse of all research data. Inconsistently formatted and structured data files are inaccessible, particularly for machine reading and processing, which makes it difficult to reuse.
+Dryad's mission is to enable the open data and routine reuse of all research data. Inconsistently formatted and structured data files are inaccessible, particularly for machine reading and processing, which makes data difficult to reuse.
 
 When you upload files to Dryad, our [tabular data checker](/stash/submission_process#tabular-data-check) will perform automated data validation on many of your data files, generating viewable reports for any inconsistencies found.
 
