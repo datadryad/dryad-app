@@ -35,9 +35,11 @@ module Stash
           http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
             .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
 
-          my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
+          my_params = { access_token: access_token }.merge(args.fetch(:params, {}))
           my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
           my_args = args.merge(params: my_params, headers: my_headers)
+
+          # puts "method: #{method}, url: #{url}"
 
           log_to_database(item: "REQUEST: #{method}, #{url}\n   #{my_args&.merge(params: { access_token: 'hidden' })}",
                           zen_copy: zen_copy)
@@ -58,8 +60,9 @@ module Stash
 
           sleep ZENODO_PADDING_TIME # it seems that zenodo might sometimes gives us 504 errors if our requests are too rapid
           resp
-        rescue HTTP::Error, JSON::ParserError, RetryError => e
-          # stupid rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
+        rescue HTTP::Error, HTTP::ConnectionError, JSON::ParserError, RetryError => e
+          log_to_database(item: "ERROR: #{e.full_message}", zen_copy: zen_copy)
+          # rubocop, can't do a guard clause with conditional at end like it suggests with more than one line inside an if statement
           # rubocop:disable Style/GuardClause
           if (retries += 1) <= retry_limit
             log_to_database(item: "Error at zenodo, retrying in #{SLEEP_TIME} seconds", zen_copy: zen_copy)
@@ -75,6 +78,8 @@ module Stash
 
       def self.log_to_database(item:, zen_copy:)
         return unless zen_copy
+
+        zen_copy.reload
 
         zen_copy.update(error_info: "#{zen_copy.error_info}\n#{Time.new.utc.iso8601} #{item}\n")
       end
@@ -97,6 +102,35 @@ module Stash
 
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]
+      end
+
+      def self.access_token
+        state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
+        state = state.with_indifferent_access if state.is_a?(Hash)
+
+        return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 5.minutes)
+
+        state[:access_token]
+      end
+
+      # gets access token from api, stores access token to database, and also returns it
+      def self.new_access_token
+        # example from zenodo has {"access_token": <token>, "expires_in": <time>} and some other stuff
+        data = { client_id: APP_CONFIG[:zenodo][:client_id],
+                 client_secret: APP_CONFIG[:zenodo][:client_secret],
+                 grant_type: 'client_credentials',
+                 scope: 'user:email' }
+
+        resp = HTTP.post("#{base_url}/oauth/token", form: data)
+
+        raise ZenodoError, "Received #{resp.status} code from zenodo API" if resp.status > 399
+
+        json = resp.parse
+        zen_state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first
+        zen_state = StashEngine::GlobalState.create(key: 'zenodo_api') if zen_state.nil?
+        zen_state.update(state: { access_token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds) })
+
+        json['access_token']
       end
     end
   end
