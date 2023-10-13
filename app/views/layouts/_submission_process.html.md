@@ -58,7 +58,7 @@ Files can be uploaded from your local computer or from the cloud or remote serve
 Dryad is a platform for the raw data that were used to support the conclusions presented in an associated study. We have partnered with [Zenodo](https://zenodo.org/) to host software files and supplemental information uploaded to our site. Because non-data files or previously published files are not always compatible with the CC0 waiver required by Dryad, submitters will have the opportunity to choose a separate license for files uploaded as “Software” at the final stage of the submission process. All files uploaded as "Supplemental information" will be licensed under [CC BY](https://creativecommons.org/licenses/by/4.0/).
 
 
-<img src="/images/dryad_upload.png" alt="Screenshot of image upload" />
+<img src="/images/dryad_upload.png" alt="Screenshot of file upload options" />
 
 
 The "Data" category should include your primary, underlying data that has not been processed for use. Common file types include `.csv, .xlsx, .txt` and compressed file archives: `TAR.GZ, 7Z, ZIP`.

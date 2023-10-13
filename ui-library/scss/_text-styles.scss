@@ -15,10 +15,12 @@ ul.c-text_styles {
 
 code,
 kbd,
-pre,
 samp {
   font-family: Monaco, monospace, monospace;
-  font-size: .9em;
+  font-size: .8em;
+  background-color: $design-super-extra-light-gray-color;
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 
 code, a {
@@ -61,6 +63,18 @@ figure {
 
   blockquote {
     margin: 2rem 0 0;
+  }
+}
+
+.callout {
+  background-color: $design-lightest-blue-color;
+  padding: 0 .75rem;
+
+  & > *:first-child { padding-top: .75rem; }
+  & > *:last-child { padding-bottom: .75rem; }
+
+  kbd, samp, code {
+    background-color: $design-white-color;
   }
 }
   
