@@ -4,12 +4,15 @@ require 'digest'
 require 'rails_helper'
 
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoSoftware
     RSpec.describe Streamer do
+
+      include Stash::ZenodoSoftware::WebmocksHelper
 
       before(:each) do
         @resource = create(:resource)
@@ -27,6 +30,7 @@ module Stash
 
         @streamer = Streamer.new(file_model: @resource.software_files.first, zenodo_bucket_url: @bucket_url,
                                  zc_id: @zenodo_copy.id)
+        stub_new_access_token
       end
 
       describe '#stream' do

@@ -22,6 +22,7 @@ module Stash
 
         @file_collection = FileCollection.new(file_change_list_obj: @change_list, zc_id: @zenodo_copy.id)
         @bucket_url = 'https://example.org/my/great/test/bucket'
+        stub_new_access_token
       end
 
       describe '#synchronize_to_zenodo' do

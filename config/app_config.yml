@@ -38,10 +38,11 @@ defaults: &DEFAULTS
     account: CDL.DASH
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://sandbox.zenodo.org
     community_id: dryad
     application_id: 3357
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
+    client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
@@ -229,6 +230,8 @@ development: &DEVELOPMENT
     base_url: https://zenodo-rdm-qa.web.cern.ch
     community_id: dryad
     application_id: 5
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
+    client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
   shib_sp_host: dryad-dev.cdlib.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
@@ -340,10 +343,11 @@ production:
   submission_bc_emails: [""]
   send_journal_published_notices: true
   zenodo:
-    access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %> 
     base_url: https://zenodo.org
     community_id: dryad
     application_id: 42723
+    client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
+    client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
   merritt_base_url: https://merritt.cdlib.org
   payments:
     service: stripe

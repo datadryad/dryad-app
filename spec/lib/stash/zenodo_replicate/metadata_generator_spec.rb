@@ -50,7 +50,7 @@ module Stash
       end
 
       it 'has publication_date output' do
-        expect(@mg.publication_date).to eq(@resource&.publication_date&.iso8601)
+        expect(@mg.publication_date).to eq(@resource&.publication_date&.strftime('%Y-%m-%d'))
       end
 
       it 'has title output' do

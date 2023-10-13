@@ -5,16 +5,20 @@ require 'byebug'
 
 require 'rails_helper'
 
+require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
+
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoReplicate
     RSpec.describe ZenodoConnection do
+      include Stash::ZenodoSoftware::WebmocksHelper
 
       before(:each) do
         stub_const('Stash::ZenodoReplicate::ZenodoConnection::SLEEP_TIME', 0)
         stub_const('Stash::ZenodoReplicate::ZenodoConnection::RETRY_LIMIT', 10)
         stub_const('Stash::ZenodoReplicate::ZenodoConnection::ZENODO_PADDING_TIME', 0)
+        stub_new_access_token
       end
 
       describe 'self.validate_access' do

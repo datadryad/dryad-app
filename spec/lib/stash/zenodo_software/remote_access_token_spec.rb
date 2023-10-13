@@ -16,6 +16,7 @@ module Stash
         @filename = 'Screen_Shot_2020-06-10_at_8.00.12_PM.png'
 
         stub_get_existing_ds(deposition_id: @deposition_id)
+        stub_new_access_token
       end
 
       describe '#make_jwt(deposition_id:, filename:)' do

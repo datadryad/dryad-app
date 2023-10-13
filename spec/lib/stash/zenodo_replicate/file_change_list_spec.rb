@@ -29,6 +29,7 @@ module Stash
             create(:curation_activity_no_callbacks, status: 'published')
           ]
         @zenodo_copy = create(:zenodo_copy, resource: @resources.first, identifier: @resources.first.identifier)
+        stub_new_access_token
       end
 
       describe '#previous_published_resource' do

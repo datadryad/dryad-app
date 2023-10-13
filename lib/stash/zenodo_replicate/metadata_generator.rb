@@ -39,7 +39,8 @@ module Stash
       end
 
       def publication_date
-        @resource&.publication_date&.iso8601
+        # @resource&.publication_date&.iso8601
+        @resource&.publication_date&.strftime('%Y-%m-%d')
       end
 
       def title
