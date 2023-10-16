@@ -83,7 +83,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const jsReport = file?.frictionless_report?.report ? JSON.parse(file.frictionless_report.report) : {};
   return (
     <dialog
-      className="modalDialog"
+      className="modalDialog extra-wide"
       ref={ref}
     >
       <div className="c-uploadmodal__header">
@@ -106,11 +106,11 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
       <ol>
         <li>Review the local copy of your file and make any desired changes.</li>
         <li>
-          If you would like to replace the file, close this dialog, and click &quot;Remove&quot; in the
-          {' '}<em>Actions</em> column to delete the current file.
+          To replace the file, close this dialog, and click &quot;Remove&quot; in the
+          {' '}<em>Actions</em> column to delete the current upload.
         </li>
         <li>
-          Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
+          Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button.
         </li>
       </ol>
       {file && <HandleReport {...jsReport} />}

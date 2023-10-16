@@ -10,30 +10,33 @@
 	background-repeat: no-repeat;
 	background-position: left 15px top 15px;
 	background-size: 20px;
-	color: $design-white-color;
 	font-size: 1.1em;
 }
 
 .c-alert--success {
 	@extend %c-alert;
+	color: $design-white-color;
 	background-color: $design-green-color;
 	background-image: inline('../images/icon_success.svg');
 }
 
 .c-alert--informational {
 	@extend %c-alert;
+	color: $design-white-color;
 	background-color: $design-dark-gray-color;
 	background-image: inline('../images/icon_info.svg');
 }
 
 .c-alert--notification {
   @extend %c-alert;
+  color: $design-white-color;
   background-color: $design-slate-color;
   background-image: inline('../images/icon_info.svg');
 }
 
 .c-alert--error {
 	@extend %c-alert;
+	color: $design-white-color;
 	background-color: $design-red-color;
 	background-image: inline('../images/icon_warning-white.svg');
 }
