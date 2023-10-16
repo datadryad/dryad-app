@@ -48,7 +48,7 @@ If you wish to make any changes, correct the file on your machine, remove the ve
 
 An entire row of the table is missing content.
 
-Blank rows can cause dysfunction in machine processing of data. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or XSL sheet is not accessible or machine readable.
+Blank rows can cause dysfunction in machine processing of data, and screen readers may read a series of null values. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or XSL sheet is not accessible or machine readable.
 
 ### What should I do?
 
@@ -61,7 +61,7 @@ Empty rows should be removed from the file. If your file contains multiple table
 
 ### What does this mean?
 
-A column has been included in a table, but the heading for the column (the cell in the first row) is empty. If the column contains any data, it may be dropped by machine processing.
+A column has been included in a table, but the heading for the column (the cell in the first row) is empty. If the column contains any data, it may be dropped by machine processing. Assistive devices like screen readers can navigate through tables using headings, and can be confused by blank headings.
 
 The entire column may also be blank. Blank columns indicate many of the same issues as [blank rows](#blank-row).
 
@@ -76,7 +76,7 @@ Empty columns should be removed from the file. If your file contains multiple ta
 
 ### What does this mean?
 
-Multiple cells in the header row (the first row of the table) contain the same label text identifying the data below. The header labels for each column should be unique, or one of the columns may be lost in machine processing.
+Multiple cells in the header row (the first row of the table) contain the same label text identifying the data below. The header labels for each column should be unique, or one of the columns may be lost in machine processing. Duplicate headings can make navigation through the table very confusing for assistive devices.
 
 ### What should I do?
 
