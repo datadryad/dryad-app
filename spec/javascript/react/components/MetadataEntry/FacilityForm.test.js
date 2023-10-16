@@ -70,7 +70,7 @@ describe('FacilityForm', () => {
 
     await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(2));
 
-    userEvent.selectOptions(menu, screen.getAllByRole('option')[0]);
+    userEvent.selectOptions(menu, screen.getByText(/Dryad Digital Repository/));
 
     await waitFor(() => Promise.resolve());
 
