@@ -2,16 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
-import ReactDOM from 'react-dom';
-import {render} from '@cdl-dryad/frictionless-components/lib/render';
-import {Report} from '@cdl-dryad/frictionless-components/lib/components/Report';
 import sanitize from '../../lib/sanitize_filename';
 import {maxFiles, pollingDelay} from './maximums';
 
 import {
   ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, TrackChanges,
 } from '../components/FileUpload';
-import '@cdl-dryad/frictionless-components/dist/frictionless-components.css';
 /**
  * Constants
  */
@@ -414,16 +410,11 @@ class UploadFiles extends React.Component {
 
   hideValidationReport = () => {
     this.modalValidationRef.current.close();
-    const element = document.getElementById('validation_report');
-    ReactDOM.unmountComponentAtNode(element);
     this.setState({validationReportFile: null});
   };
 
   showValidationReportHandler = (file) => {
     this.setState({validationReportFile: file}, () => {
-      const element = document.getElementById('validation_report');
-      const {report} = file ? file.frictionless_report : {};
-      if (report) render(Report, JSON.parse(report), element);
       this.modalValidationRef.current.showModal();
     });
   };
