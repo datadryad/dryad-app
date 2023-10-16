@@ -1,6 +1,83 @@
+/* eslint-disable no-restricted-syntax */
 import React from 'react';
+import ReportError from './ReportError';
 
-// import '@cdl-dryad/frictionless-components/lib/styles';
+import './frictionless-components.css';
+
+function getReportErrors(task) {
+  const reportErrors = {};
+  for (const error of task.errors) {
+    const header = task.resource.schema.fields.map((field) => field.name);
+
+    // Prepare reportError
+    let reportError = reportErrors[error.code];
+    if (!reportError) {
+      reportError = {
+        count: 0,
+        code: error.code,
+        name: error.name,
+        tags: error.tags,
+        description: error.description,
+        header,
+        messages: [],
+        data: {},
+      };
+    }
+
+    // Prepare cells
+    let data = reportError.data[error.rowPosition || 0];
+    if (!data) {
+      const values = error.cells || error.labels || [];
+      data = {values, errors: new Set()};
+    }
+
+    // Ensure blank row
+    if (error.code === 'blank-row') {
+      data.values = header.map(() => '');
+    }
+
+    // Ensure missing cell
+    if (error.code === 'missing-cell') {
+      data.values[error.fieldPosition - 1] = '';
+    }
+
+    // Add row errors
+    if (error.fieldPosition) {
+      data.errors.add(error.fieldPosition);
+    } else if (data.values) {
+      data.errors = new Set(data.values.map((_, index) => index + 1));
+    }
+
+    // Save reportError
+    reportError.count += 1;
+    reportError.messages.push(error.message);
+    reportError.data[error.rowPosition || 0] = data;
+    reportErrors[error.code] = reportError;
+  }
+
+  return reportErrors;
+}
+
+function HandleReport(jsReport) {
+  const {report} = jsReport;
+  if (report) {
+    if (typeof report === 'string') return <div className="error">{report}</div>;
+    if (report.tasks) {
+      const reportErrors = getReportErrors(report.tasks[0]);
+      return (
+        <div className="frictionless-components-report">
+          {report.stats.errors === 10 && (
+            <p>The report shows the maximum of 10 alerts. More alerts may appear if these 10 are corrected and the file is re-uploaded.</p>
+          )}
+          {Object.values(reportErrors).map((reportError) => (
+            <ReportError key={reportError.code} reportError={reportError} />
+          ))}
+        </div>
+      );
+    }
+  }
+  return null;
+}
 
 const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   const jsReport = file?.frictionless_report?.report ? JSON.parse(file.frictionless_report.report) : {};
@@ -33,27 +110,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
           Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
         </li>
       </ol>
-      <p style={{
-        fontSize: '1.05em', border: '2px solid #0071a8', padding: '8px 10px', borderRadius: '5px',
-      }}
-      >
-        <i className="fa fa-info-circle" aria-hidden="true" style={{color: '#0071a8'}} />{' '}
-        Questions? Check{' '}
-        <a href="/stash/data_check_guide" target="_blank">our guide for evaluating and resolving these alerts
-          <span className="screen-reader-only"> (opens in new window)</span>
-        </a>.
-      </p>
-      {jsReport?.report?.stats?.errors === 10 && (
-        <p>The report shows the maximum of 10 alerts. More alerts may appear if these 10 are corrected and the file is re-uploaded.</p>
-      )}
-      {typeof jsReport.report === 'string' ? (
-        <div className="error">
-          {jsReport.report}
-          <div id="validation_report" hidden />
-        </div>
-      ) : (
-        <div id="validation_report" />
-      )}
+      {file && <HandleReport {...jsReport} />}
       <p>
         You can choose to proceed to the final page of the submission form without editing your file.
         At curation stage, if there are questions about how your data is presented, a curator will contact
