@@ -8,7 +8,10 @@
 
   &.extra-wide {
     width: 80vw;
-    max-width: 1220px;
+    max-width: 1160px;
+    @include bp(screen2) {
+      padding: 1em 2em;
+    }
   }
 
   &::backdrop { // native
@@ -30,7 +33,8 @@
   background-color: transparent;
   color: $design-dark-blue-color;
   border: none;
-  padding: 0 $spacing-sm;
+  padding: 0;
+  padding-left: $spacing-sm;
   font-size: 26px;
 
   &:after {
