@@ -1,8 +1,8 @@
 # Tabular data check alerts
 
-Dryad's mission is to enable the open data and routine reuse of all research data. Inconsistently formatted and structured data files are inaccessible, particularly for machine reading and processing, which makes data difficult to reuse.
+Dryad's mission is to enable the open availability and routine reuse of all research data. Data that is inconsistently formatted is inaccessible for reuse, particularly for machine reading and processing. Formatting and structuring inconsistencies also create barriers to the ability to access data with screen readers and other assistive devices.
 
-When you upload files to Dryad, our [tabular data checker](/stash/submission_process#tabular-data-check) will perform automated data validation on many of your data files, generating viewable reports for any inconsistencies found.
+When you upload files to Dryad, our [tabular data checker](/stash/submission_process#tabular-data-check) will perform automated data validation on many of your data files, generating viewable reports for any inconsistencies found. Correcting inconsistencies increases the accessibility of the data.
 
 <img src="/images/tabular_data_check.png" alt="Screenshot showing an example upload table, with tabular data check alert report links." />
 
@@ -29,7 +29,7 @@ The tabular data checker attempts to identify the type and format of the data re
 
 While you can choose whether to resolve or ignore any tabular data check alerts, some type errors are more obviously problematic than others. This check is especially valuable for highlighting placeholder or other unintentional values that have been left in a data row, which should be replaced or removed. 
 
-Including multiple tables of information in one CSV file is not machine readable and discourages reuse. Each table should be placed in a separate file.
+Including multiple tables of information in one CSV file is not accessible or machine readable and discourages reuse. Each table should be placed in a separate file.
 
 The difference between integers (round numbers) and decimals is often not critical to understanding data, but it is easier for others to reuse your data, particularly through machine processing, if all numerical data in a column is one or the other. Consistency in the number of decimal places of your data makes reuse even easier.
 
@@ -48,7 +48,7 @@ If you wish to make any changes, correct the file on your machine, remove the ve
 
 An entire row of the table is missing content.
 
-Blank rows can cause dysfunction in machine processing of data. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or XSL sheet is not machine readable.
+Blank rows can cause dysfunction in machine processing of data. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or XSL sheet is not accessible or machine readable.
 
 ### What should I do?
 
