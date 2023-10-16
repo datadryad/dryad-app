@@ -25,6 +25,7 @@
     position: relative;
     z-index: 1;
     text-align: right;
+    margin-bottom: 1rem;
 }
 
 .frictionless-components-report .file-heading .inner.stick {
@@ -353,7 +354,6 @@
 .frictionless-components-report .result .table-view table.table {
     width: 100%;
     max-width: 100%;
-    margin-bottom: 1rem;
     background-color: transparent;
 }
 
