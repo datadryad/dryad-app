@@ -53,7 +53,7 @@ describe('BadList', () => {
       ReactDOM.render(<BadList chosenFiles={testIssue} />, container);
     });
 
-    expect(container.textContent).toContain('A detailed report is available for each file');
+    expect(container.textContent).toContain('Our automated tabular data checker identified potential inconsistencies');
   });
 
   it("doesn't display anything if no frictionless on file", () => {
