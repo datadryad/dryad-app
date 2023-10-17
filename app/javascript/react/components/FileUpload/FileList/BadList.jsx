@@ -42,8 +42,15 @@ const badList = (props) => {
   if (issueFiles.length > 0) {
     issueMsg = (
       <div>
-        <span className="c-alert__text-lite">Our automated tabular data checker identified potential inconsistencies in the format and structure of {issueFiles.length} of your files.</span>
-        <p><a href="/stash/data_check_guide" target="_blank">A detailed report is available<span className="screen-reader-only"> (opens in new window)</span></a> for each file. To address the identified alerts:</p>
+        <span className="c-alert__text-lite">
+          Our automated tabular data checker identified potential inconsistencies in the format and structure of {issueFiles.length} of your files.
+        </span>
+        <p>
+          <a href="/stash/data_check_guide" target="_blank">
+            A detailed report is available<span className="screen-reader-only"> (opens in new window)</span>
+          </a>
+          {' '}for each file. To address the identified alerts:
+        </p>
         <ol>
           <li>
             Click the alert button in the
