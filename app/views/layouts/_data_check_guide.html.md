@@ -1,8 +1,8 @@
 # Tabular data check alerts
 
-Dryad's mission is to enable the open availability and routine reuse of all research data. Data that is inconsistently formatted is inaccessible for reuse, particularly for machine reading and processing. Formatting and structuring inconsistencies also create barriers to the ability to access data with screen readers and other assistive devices.
+Dryad's mission is to enable the open availability and routine reuse of all research data. Inconsistently formatted data is inaccessible for reuse, particularly for machine reading and processing. Inconsistencies also create barriers to the ability to access data with screen readers and other assistive devices.
 
-When you upload files to Dryad, our [tabular data checker](/stash/submission_process#tabular-data-check) will perform automated data validation on many of your data files, generating viewable reports for any inconsistencies found. Correcting inconsistencies increases the accessibility of the data.
+When you upload files to Dryad, our [tabular data checker](/stash/submission_process#tabular-data-check) will analyze many of your data files, generating reports for any inconsistencies found. Correcting inconsistencies increases the accessibility of the data.
 
 <img src="/images/tabular_data_check.png" alt="Screenshot showing an example upload table, with tabular data check alert report links." />
 
@@ -14,11 +14,11 @@ Do you have questions about the alerts our tabular data check has created for yo
 
 ### What does this mean?
 
-The tabular data checker attempts to identify the type and format of the data recorded in each cell. This alert indicates that data in a cell does not match the data type identified for the row and column. [Read more about the data types recognized by the tabular data checker](https://specs.frictionlessdata.io/table-schema/#types-and-formats).
+The tabular data checker attempts to identify the type and format of the data in each cell. This alert indicates that data in a cell does not match the data type identified for the row and column. [Read more about the data types recognized by the tabular data checker](https://specs.frictionlessdata.io/table-schema/#types-and-formats).
   
 #### Common causes
 
-- A single CSV file or XSL sheet contains multiple different tables.
+- A single CSV file or Excel sheet contains multiple different tables.
 - A column contains 98 rows of integers and 2 rows of strings. The strings will be marked as a type error.
 - A cell contains mixed numerical and string content, in a column otherwise containing integers. This cell will be marked as a type error.
 - A column contains 97 rows of integers (“round” or “whole” numbers) and 3 rows of numbers with decimal places. The decimal numbers will be marked as type errors.
@@ -27,7 +27,7 @@ The tabular data checker attempts to identify the type and format of the data re
 
 ### What should I do?
 
-While you can choose whether to resolve or ignore any tabular data check alerts, some type errors are more obviously problematic than others. This check is especially valuable for highlighting placeholder or other unintentional values that have been left in a data row, which should be replaced or removed. 
+While you can choose whether to resolve or ignore any tabular data check alerts, some type errors are more problematic than others. This check is especially valuable for highlighting placeholder or other unintentional values that have been left in a data row, which should be replaced or removed. 
 
 Including multiple tables of information in one CSV file is not accessible or machine readable and discourages reuse. Each table should be placed in a separate file.
 
@@ -36,8 +36,9 @@ The difference between integers (round numbers) and decimals is often not critic
 If you wish to make any changes, correct the file on your machine, remove the version of the file with alerts from the upload screen, and re-upload the corrected version.
 
 <div class="callout">
-<h4>An important note for generating and processing Dryad data</h4><p>The tabular data check recognizes the following strings, in addition to blank cells, as indicating a cell with no data: <code>NA</code>, <code>na</code>, <code>N/A</code>, <code>n/a</code>, <code>N.A.</code>, <code>n.a.</code>, <code>-</code>, <code>.</code>, <code>empty</code>, <code>blank</code>
-<p>If any of these strings are the cell content in an otherwise non-string column, they will not be highlighted as a data type error. Please indicate null data by leaving a cell blank, or by using one of these strings.
+<h4>An important note for generating and processing Dryad data</h4>
+<p>Blank cells indicate null values in the data, and will not be highlighted as a data error. In addition to blank cells, the tabular data check recognizes the following strings as indicating a cell with no data: <code>NA</code>, <code>na</code>, <code>N/A</code>, <code>n/a</code>, <code>N.A.</code>, <code>n.a.</code>, <code>-</code>, <code>.</code>, <code>empty</code>, <code>blank</code>
+<p>If any of these strings are the cell content in an otherwise non-string column, they will not be highlighted as a type error. When processing Dryad data, note that null values may be indicated with these strings.
 </div>
 
 ## Blank Row
@@ -48,7 +49,7 @@ If you wish to make any changes, correct the file on your machine, remove the ve
 
 An entire row of the table is missing content.
 
-Blank rows can cause dysfunction in machine processing of data, and screen readers may read a series of null values. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or XSL sheet is not accessible or machine readable.
+Blank rows can cause dysfunction in machine processing of data, and screen readers may read a series of null values. Sometimes the creators of tabular data include empty rows as a border between data or between different sets of tabular information. Including multiple tables of information in one CSV file or Excel sheet is not accessible or machine readable.
 
 ### What should I do?
 
