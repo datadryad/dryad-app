@@ -21,7 +21,8 @@ module Stash
             doi_value: @resource.identifier_value,
             se_resource_id: @resource.id,
             total_size_bytes: @resource.size,
-            version: @resource.version_number )
+            version: @resource.version_number
+          )
           @dc4_xml = dc_xml.build_datacite_xml
         end
 

@@ -51,8 +51,9 @@ WHERE contrib.contributor_type - 'funder'
 To update these IDs to the new ROR values.
 
 If you would like to test this out on a different table, you can use that table name instead of
-`dcs_contributors` in the query below.  Perhaps try on a backup table (see above on how to create backup
-of the current data).  I tested this on the `dcs_contributors_test` table.
+`dcs_contributors` in the query below.  Perhaps try on a copied table (see above on how to copy table contents)
+if you  want to see the results before doing it.  You wouldn't want to do this on your backup table, though, since it 
+would transform the data and no longer be a backup after that.
 
 ```sql
 UPDATE	dcs_contributors contrib
@@ -74,7 +75,8 @@ RAILS_ENV=development bundle exec rails rsolr:reindex
 
 ## Resubmit updates to DataCite
 
-I believe the task to run is this one:
+Update the DataCite records with updated metadata.
+
 ```bash
 RAILS_ENV=development bundle exec rails datacite_target:update_dryad
 ```
