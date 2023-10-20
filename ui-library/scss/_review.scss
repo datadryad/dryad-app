@@ -9,7 +9,7 @@
 
 }
 
-.t-review__funding-section {
+.t-review__section {
 	position: relative; // to t-review__edit-button-bottom
 }
 
@@ -43,5 +43,10 @@
 }
 
 .highlight {
-    background-color: #FFFF00
+  background-color: #FFFF00
+}
+
+span.highlight,
+a.highlight {
+	padding: 3px 0 2px;
 }

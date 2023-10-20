@@ -26,6 +26,23 @@ module StashEngine
       @resource.reload
     end
 
+    # this is used for user notes about file changes
+    def file_note
+      # only add to latest resource and after latest curation activity, no matter if this page is stale or whatever
+      @resource = Resource.find(params[:id])
+      authorize @resource, policy_class: CurationActivityPolicy
+      if params[:note_id]
+        curation_activity = CurationActivity.where(id: params[:note_id]).first
+        curation_activity.update(note: "User described file changes: #{params[:note]}")
+      else
+        curation_activity = CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
+                                                    status: @resource.last_curation_activity&.status,
+                                                    note: "User described file changes: #{params[:note]}")
+      end
+      @resource.reload
+      render json: { note: curation_activity }
+    end
+
     private
 
     def curation_activity_params

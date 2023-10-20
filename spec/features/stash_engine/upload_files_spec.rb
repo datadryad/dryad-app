@@ -396,7 +396,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # TODO: S3.exists? mock returns true now.
       #  See if it's possible to return something from the Evaporate using S3 mocks
       # TODO: remove raw url for s3 dir name
-      result = Stash::Aws::S3.exists?(s3_key: '37fb70ac-1/data/file_10.ods')
+      result = Stash::Aws::S3.new.exists?(s3_key: '37fb70ac-1/data/file_10.ods')
       expect(result).to be true
     end
 

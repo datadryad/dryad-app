@@ -14,7 +14,7 @@ defaults: &DEFAULTS
   # sandbox orcid credentials
   repository:
     domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev"
+    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev_3043"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   orcid:
@@ -165,6 +165,7 @@ defaults: &DEFAULTS
   s3:
     region: us-west-2
     bucket: dryad-s3-dev
+    merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: null
@@ -225,7 +226,7 @@ development: &DEVELOPMENT
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   zenodo:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
-    base_url: https://zenodo-rdm.web.cern.ch
+    base_url: https://zenodo-rdm-qa.web.cern.ch
     community_id: dryad
     application_id: 5
   shib_sp_host: dryad-dev.cdlib.org
@@ -284,6 +285,7 @@ stage:
   s3:
     region: us-west-2
     bucket: dryad-s3-stg
+    merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   cedar:
@@ -355,6 +357,7 @@ production:
   s3:
     region: us-west-2
     bucket: dryad-s3-prd
+    merritt_bucket: dryad-assetstore-merritt-west
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   google_analytics_id: G-6CWE0T05CC
