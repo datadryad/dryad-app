@@ -102,7 +102,7 @@ module StashEngine
         CounterLogger.general_hit(request: request, file: data_file)
         @file_presigned.download(file: data_file)
       else
-        render status: 403, plain: 'You are not authorized to download this file until it has been published.'
+        render status: 403, plain: 'You may not download this file.'
       end
     end
 
