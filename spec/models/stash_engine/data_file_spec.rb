@@ -52,16 +52,16 @@ module StashEngine
       end
 
       it 'deletes a file that was just created, from the database and s3' do
-        expect(Stash::Aws::S3).to receive(:exists?).and_return(true)
-        expect(Stash::Aws::S3).to receive(:delete_file)
+        expect_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
+        expect_any_instance_of(Stash::Aws::S3).to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.data_files.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
       end
 
       it "deletes from database even if the s3 file doesn't exist" do
-        expect(Stash::Aws::S3).to receive(:exists?).and_return(false)
-        expect(Stash::Aws::S3).not_to receive(:delete_file)
+        expect_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(false)
+        expect_any_instance_of(Stash::Aws::S3).not_to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
         expect(@resource2.data_files.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)

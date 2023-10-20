@@ -34,13 +34,13 @@ module StashDatacite
         allow(tenant).to receive(:short_name).and_return('DataONE')
         allow(tenant).to receive(:default_license).and_return('cc0')
 
-        @metadata_entry = MetadataEntry.new(resource, tenant)
+        @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
       end
 
       describe '#initialize' do
         it 'creates a license if needed' do
           resource.rights.clear
-          @metadata_entry = MetadataEntry.new(resource, tenant)
+          @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
           rights = resource.rights.first
           expect(rights).not_to be_nil
           expect(rights.rights).to eq('CC0 1.0 Universal (CC0 1.0) Public Domain Dedication')
@@ -49,7 +49,7 @@ module StashDatacite
 
         it 'creates a publisher if needed' do
           resource.publisher = nil
-          @metadata_entry = MetadataEntry.new(resource, tenant)
+          @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
           publisher = metadata_entry.instance_variable_get(:@publisher)
           expect(publisher).to be_a(Publisher)
           expect(publisher.publisher).to eq('Dryad')

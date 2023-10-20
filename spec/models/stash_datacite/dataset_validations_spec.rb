@@ -32,11 +32,18 @@ module StashDatacite
       end
 
       describe :title do
-        it 'returns error an error object if title not filled' do
+        it 'returns error if title not filled' do
           @resource.update(title: '')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.title
           expect(error.message).to include('dataset title')
+          expect(error.ids.first).to eq("title__#{@resource.id}")
+        end
+        it 'returns error for nondescript title' do
+          @resource.update(title: 'Figure S1 Data supplement')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error.message).to include('descriptive title')
           expect(error.ids.first).to eq("title__#{@resource.id}")
         end
       end
@@ -179,7 +186,7 @@ module StashDatacite
         it 'returns missing files when files uploaded to s3 are not present' do
           files = @resource.generic_files
           files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)
@@ -193,7 +200,7 @@ module StashDatacite
 
         it 'does not check missing files once Merritt processing is complete' do
           @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
           allow(@resource).to receive('submitted?').and_return(true)
 
@@ -208,7 +215,7 @@ module StashDatacite
           @resource.generic_files.third.update(url: 'http://example.com')
           @resource.generic_files.fourth.update(file_state: 'copied')
           @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)

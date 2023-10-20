@@ -1,4 +1,4 @@
-<%= "Title,DOI,Status,Author,Last modified,Last modified by,Size,Submitted,Published,Journal name,Views,Downloads,Citations,Submitting author institution" %>
+<%= "Title,DOI,Status,Author,Last modified,Last modified by,Size,Submitted,Published,Journal name,Views,Downloads,Citations,Submitting author institution,Created" %>
 <% @datasets.each do |resource| -%>
 <%
     row = [ resource&.title || '[no title set]',
@@ -14,7 +14,8 @@
             resource.views,
             resource.downloads,
             resource.citations,
-            StashEngine::Tenant.find(resource.tenant_id)&.long_name
+            StashEngine::Tenant.find(resource.tenant_id)&.long_name,
+            formatted_datetime(resource&.created_date)
     ]
 -%><%= row.to_csv(row_sep: nil).html_safe %>
 <% end -%>

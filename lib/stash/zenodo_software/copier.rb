@@ -138,7 +138,7 @@ module Stash
           @resource_method, deposition_id: @resp[:id], zc_id: @copy.id)
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
-        Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
+        Stash::Aws::S3.new.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
 
         @copy.reload
         @copy.update(state: 'finished', error_info: nil)

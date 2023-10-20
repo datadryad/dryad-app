@@ -28,7 +28,11 @@
 		<div id="display_resource">
 		  <%# image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
       <%# render(partial: 'stash_datacite/resources/show') %>
-      <%= render(partial: metadata_render_path('resources', 'show')) %>
+      <% if @resource&.resource_type&.resource_type == 'collection' %>
+	      <%= render(partial: metadata_render_path('resources', 'show_collection')) %>
+  		<% else %>
+  	    <%= render(partial: metadata_render_path('resources', 'show')) %>
+  	  <% end %>
 		</div>
 	</main>
 	<aside class="t-landing__sidebar c-columns__sidebar2">
