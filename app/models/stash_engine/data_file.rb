@@ -53,7 +53,6 @@ module StashEngine
     # based only on Merritt version numbers and walking back
     def self.find_merritt_deposit_path(before_file:)
       mrt_version_no = before_file.resource.stash_version.merritt_version - 1
-      return nil if mrt_version_no < 1
 
       bkt_instance = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
 
@@ -62,6 +61,18 @@ module StashEngine
         return s3_path if bkt_instance.exists?(s3_key: s3_path)
 
       end
+
+      upload_vers = before_file&.resource&.stash_version
+      # also look forward a couple versions in version mismatch cases since it seems the file was sometimes uploaded
+      # later to correct problems in later, but the database doesn't reflect that
+      if upload_vers.present? && upload_vers&.version != upload_vers&.merritt_version
+        (upload_vers.merritt_version + 1).upto(upload_vers.merritt_version + 2) do |vers|
+          s3_path = "#{before_file.resource.merritt_ark}|#{vers}|producer/#{before_file.upload_file_name}"
+          return s3_path if bkt_instance.exists?(s3_key: s3_path)
+
+        end
+      end
+
       nil
     end
 
