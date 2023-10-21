@@ -1,6 +1,6 @@
 
-Steps for setting up Dryad on a new EC2 machine with Amazon Linux
-=================================================================
+Steps for setting up Dryad on a new EC2 machine with Amazon Linux 2023
+======================================================================
 
 - Install an SSH key, so you can login to the machine directly
 - git
@@ -26,10 +26,6 @@ yum install mysql-devel
 ```
 git clone https://github.com/CDL-Dryad/dryad-app.git
 ```
-- copy in the deploy_dryad script
-```
-???TODO -- put script in repo and make the copy command
-```
 - install ruby
 ```
 sudo yum install ruby
@@ -47,7 +43,30 @@ gem install libv8 -v '3.16.14.19' --
 gem install therubyracer -v '0.12.3' --
 gem install mysql2 -v '0.5.3' -- 
 bundle install
+```
 - install node
 ```
 sudo yum install nodejs
 ```
+
+Importing data in to an AWS RDS database
+==========================================
+
+When setting up the database in RDS, you must crete a parameter group to set the
+global variable `log_bin_trust_function_creators`. Once the parameter group
+exists, assign it to the database, and once the database has finished
+updating the config, reboot the database to ensure it takes effect.
+
+
+Backups are run using a cron command:
+`nice -n 19 ionice -c 3 bundle exec rails dev_ops:backup RAILS_ENV=$1`
+
+To restore from a backup file:
+```
+# First remove DEFINER statements because RDS doesn't allow the DB users to have
+# enough permissions for them to work properly:
+sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
+
+# Then import using the mysql command that you would normally use to run the DB client:
+`mysql_stg.sh < myfile.sql`
+
