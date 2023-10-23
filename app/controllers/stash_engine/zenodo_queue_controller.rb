@@ -63,9 +63,9 @@ module StashEngine
           copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
 
           previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
-                                          .where(identifier_id: @zenodo_copy.identifier_id)
-                                          .where('copy_type LIKE ?', "%#{copy_type}%")
-                                          .where("state != 'finished'").count
+            .where(identifier_id: @zenodo_copy.identifier_id)
+            .where('copy_type LIKE ?', "%#{copy_type}%")
+            .where("state != 'finished'").count
 
           @sub_status = ''
           @sub_status = 'prerequisite' if previous_unfinished.positive?
