@@ -1,7 +1,19 @@
 <h1>Zenodo submission queue</h1>
 <p>
-  <%= @zenodo_copies.count %> items in list
+  <%= @zenodo_copies.count %> items in list.
 </p>
+
+<p>
+  Look at the <strong>state</strong> column after clicking <strong>resend</strong> to see that action was taken:
+</p>
+<ul>
+  <li><strong style="color: #F00">prerequisite</strong> means another items in the series must be submitted first</li>
+  <li>
+    <strong style="color: #F00">in runner</strong> means the item is already in the delayed job runner (though you may want to clear it in
+    the database if the execution has expired or it received a SIGTERM and then "reset stalled" below)
+  </li>
+  <li><strong style="color: #0F0">...submitting</strong> means you just successfully re-enqueued a submission</li>
+</ul>
 
 <p>
   <%= button_to('Reset stalled to error state', zenodo_queue_set_errored_path, class: 'o-button__plain-text2') %>
