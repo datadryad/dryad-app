@@ -4,12 +4,11 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
 
-    ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size error_info].freeze
+    ALLOWED_SORT = %w[id identifier_id resource_id state updated_at copy_type size].freeze
     ALLOWED_ORDER = %w[asc desc].freeze
 
     BASIC_SQL = <<~SQL.freeze
-      SELECT *,
-          CASE
+      SELECT id, state, deposition_id, identifier_id, resource_id, created_at, updated_at, retries, copy_type, software_doi, conceptrecid, CASE
             WHEN copy_type LIKE '%software%' THEN
               (SELECT sum(upload_file_size) FROM stash_engine_generic_files
                 WHERE resource_id = stash_engine_zenodo_copies.resource_id AND file_state = 'created' AND type = 'StashEngine::SoftwareFile')
@@ -59,24 +58,23 @@ module StashEngine
     def resubmit_job
       authorize %i[stash_engine zenodo_copy]
       @zenodo_copy = ZenodoCopy.find(params[:id])
-      copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
+      respond_to do |format|
+        format.js do
+          copy_type = @zenodo_copy.copy_type.gsub('_publish', '')
 
-      previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
-        .where(identifier_id: @zenodo_copy.identifier_id)
-        .where('copy_type LIKE ?', "%#{copy_type}%")
-        .where("state != 'finished'").count
+          previous_unfinished = ZenodoCopy.where('id < ?', params[:id])
+                                          .where(identifier_id: @zenodo_copy.identifier_id)
+                                          .where('copy_type LIKE ?', "%#{copy_type}%")
+                                          .where("state != 'finished'").count
 
-      if previous_unfinished.positive?
-        render plain: 'You may only resubmit a later item in a series after earlier items have successfully processed'
-        return
+          @sub_status = ''
+          @sub_status = 'prerequisite' if previous_unfinished.positive?
+
+          @sub_status = 'in runner' if running_jobs(@zenodo_copy).count.positive?
+
+          resend_job if @sub_status.blank?
+        end
       end
-
-      if running_jobs(@zenodo_copy).count.positive?
-        render plain: "This job is still in the delayed job runner so shouldn't be restarted right now"
-        return
-      end
-
-      resend_job
     end
 
     def set_errored
