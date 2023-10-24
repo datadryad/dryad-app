@@ -46,7 +46,7 @@ module Stash
 
       def get_bucket_url(deposition_id)
         http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-                   .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
+          .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
 
         resp = http.get("#{@base_url}/api/deposit/depositions/#{deposition_id}",
                         params: { access_token: @pat_token },
