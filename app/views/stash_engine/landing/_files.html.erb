@@ -13,16 +13,11 @@
 <% if resources.count.positive? %>
   <div class="c-sidebox">
     <h2 class="c-sidebox__heading">Data files</h2>
-
-    <!-- full download first -->
-    <%= render partial: 'stash_engine/landing/download', locals: { dataset_identifier: dataset_identifier } %>
-
     <!-- list individual files -->
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary role="button" class="o-showhide__summary c-file-group__summary">
-          <%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ?
-                                 res.publication_date : res.updated_at) %>
+          Version <%= res.version_number %> files (<%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ? res.publication_date : res.updated_at) %>)
           <%= ( res_id.positive? && res.id > res_id ? '*' : '' ) -%>
         </summary>
         <ul class="c-file-group__list">
@@ -30,27 +25,24 @@
             <li>
               <%= link_to fu.upload_file_name.ellipsisize(20), Rails.application.routes.url_helpers.download_stream_path(fu.id),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-              <div style="float: right;"><%= filesize(fu.upload_file_size) %></div>
-
+              <span><%= filesize(fu.upload_file_size) %>
               <% if fu.upload_file_name.ends_with?('csv') %>
-                <div style="clear: both">
-                  <div style="float: right">
-                    <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
-                          title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
-                          method: 'get' do %>
-                      <i class="fa fa-search c-file-group__preview" aria-hidden="true"></i>
-                    <% end %>
-                  </div>
-                </div><div style="clear:both"></div>
+                <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
+                      title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
+                      method: 'get' do %>
+                  <i class="fa fa-search-plus c-file-group__preview" aria-hidden="true"></i>
+                <% end %>
               <% end %>
-
+              </span>
             </li>
           <% end %>
         </ul>
       </details>
     <% end %>
+    <!-- full download second -->
+    <%= render partial: 'stash_engine/landing/download', locals: { dataset_identifier: dataset_identifier } %>
     <% if res_id != -9999 %>
-      <br/><em>* changes not displayed to the public</em>
+      <em>* changes not displayed to the public</em>
     <% end %>
   </div>
 <% else %>
