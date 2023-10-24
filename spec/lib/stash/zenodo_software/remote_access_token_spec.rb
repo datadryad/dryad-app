@@ -41,7 +41,8 @@ module Stash
       end
 
       describe '#magic_url(deposition_id:, filename:)' do
-        it 'creates the full URL including both jwt, bucket, etc' do
+        xit 'creates the full URL including both jwt, bucket, etc' do
+          # TODO: fix when we know the correct behavior from zenodo
           sharing_url = @rat.magic_url(deposition_id: @deposition_id, filename: @filename)
           uuid_matcher = '[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}'
           expect(%r{^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}/.+?token=.+$}).to \
@@ -50,7 +51,8 @@ module Stash
       end
 
       describe '#get_bucket_url(deposition_id)' do
-        it 'finds the bucket URL from the deposit info at Zenodo' do
+        xit 'finds the bucket URL from the deposit info at Zenodo' do
+          # TODO: fix when we know correct behavior from zenodo
           uuid_matcher = '[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}'
           expect(%r{^https://sandbox\.zenodo\.org/api/files/#{uuid_matcher}$}).to \
             match(@rat.get_bucket_url(@deposition_id))
