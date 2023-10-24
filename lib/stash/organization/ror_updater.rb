@@ -66,6 +66,27 @@ module Stash
       # rubocop:enable Metrics/MethodLength, Metrics/BlockNesting
 
       class << self
+        # this one is public so we can use it by downloading and updating manually since the Zenodo site is currently
+        # not really working according to the instructions at
+        # https://ror.readme.io/docs/data-dump#download-ror-data-dumps-programmatically-with-the-zenodo-api
+        def process_ror_json(json_file_path:)
+          json_file = File.open(json_file_path, 'r')
+          json = JSON.parse(json_file.read)
+          cntr = 0
+          total = json.length
+          json.each do |hash|
+            cntr += 1
+            puts "Processed #{cntr} out of #{total} records" if (cntr % 1000).zero?
+
+            hash = hash.with_indifferent_access if hash.is_a?(Hash)
+
+            next if process_ror_record(hash)
+
+            puts("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
+          end
+          true
+        end
+
         private
 
         # Fetch the latest Zenodo metadata for ROR files
@@ -126,21 +147,7 @@ module Stash
 
           if unzip_file(zip_file: zip_file, destination: FILE_DIR)
             if File.exist?("#{FILE_DIR}/#{file}")
-              json_file = File.open("#{FILE_DIR}/#{file}", 'r')
-              json = JSON.parse(json_file.read)
-              cntr = 0
-              total = json.length
-              json.each do |hash|
-                cntr += 1
-                puts "Processed #{cntr} out of #{total} records" if (cntr % 1000).zero?
-
-                hash = hash.with_indifferent_access if hash.is_a?(Hash)
-
-                next if process_ror_record(hash)
-
-                puts("Unable to process record for: '#{hash&.fetch('name', 'unknown')}'")
-              end
-              true
+              process_ror_json(json_file_path: "#{FILE_DIR}/#{file}")
             else
               puts('Unable to find json in zip!')
               false
