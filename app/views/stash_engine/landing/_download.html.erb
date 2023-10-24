@@ -2,8 +2,10 @@
 <div class="o-download">
   <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 
-  <%= button_to "Download dataset", Rails.application.routes.url_helpers.download_resource_path(resource.id), remote: true,
-                class: 'o-download__files js-download', id: "dl_res_#{resource.id}" %>
+  <%= button_to Rails.application.routes.url_helpers.download_resource_path(resource.id), remote: true,
+                class: 'o-download__files', id: "dl_res_#{resource.id}" do %>
+                Download full dataset
+  <% end %>
 
   <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
 </div>

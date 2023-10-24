@@ -665,16 +665,16 @@ html.no-multiplebgs .o-banner {
   text-decoration: none;
 }
 
-.o-button__remove, .o-button__plain-text7, .o-button__plain-text6, .o-button__plain-text4 {
+.c-file-group__summary, .o-button__remove, .o-button__plain-text7, .o-button__plain-text6, .o-button__plain-text4 {
   display: inline-block;
   border: none;
   text-decoration: none;
   background-color: transparent;
 }
-.o-button__remove:hover, .o-button__plain-text7:hover, .o-button__plain-text6:hover, .o-button__plain-text4:hover {
+.c-file-group__summary:hover, .o-button__remove:hover, .o-button__plain-text7:hover, .o-button__plain-text6:hover, .o-button__plain-text4:hover {
   text-decoration: underline;
 }
-[disabled].o-button__remove, [disabled].o-button__plain-text7, [disabled].o-button__plain-text6, [disabled].o-button__plain-text4 {
+[disabled].c-file-group__summary, [disabled].o-button__remove, [disabled].o-button__plain-text7, [disabled].o-button__plain-text6, [disabled].o-button__plain-text4 {
   color: rgb(78, 80, 80);
   text-decoration: none;
 }
@@ -1005,30 +1005,48 @@ datalist {
   color: #3c763d;
 }
 
-.o-download {
-  padding: 5px;
+*[class^=o-download__] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
   background-color: #98cae2;
 }
-
-.o-download__docs, .o-download__wait, .o-download__files {
-  min-height: 28px;
-  padding: 0 0 0 50px;
-  border: none;
-  background: left 10px center no-repeat;
-  text-align: left;
+*[class^=o-download__]::before {
+  content: "";
+  display: inline-block;
+  min-width: 1.5ch;
+  margin-right: 1ch;
+}
+*[class^=o-download__]:hover {
+  opacity: 0.85;
 }
 
-.o-download__files {
-  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2219.615%22%20height%3D%2223.823%22%20viewBox%3D%220%200%2019.615%2023.823%22%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M19.615%208.409h-5.604V0H5.604v8.409H0l9.812%209.803%209.803-9.803zM0%2021.017v2.806h19.615v-2.806H0zm0%200%22%2F%3E%3C%2Fsvg%3E');
+.o-download__files::before {
+  content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2219.615%22%20height%3D%2223.823%22%20viewBox%3D%220%200%2019.615%2023.823%22%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M19.615%208.409h-5.604V0H5.604v8.409H0l9.812%209.803%209.803-9.803zM0%2021.017v2.806h19.615v-2.806H0zm0%200%22%2F%3E%3C%2Fsvg%3E');
+  margin-bottom: -6px;
 }
 
 .o-download__wait {
-  background-image: url('data:image/svg+xml;charset=utf-8,%3C!--%20By%20Sam%20Herbert%20(%40sherb)%2C%20for%20everyone.%20More%20%40%20http%3A%2F%2Fgoo.gl%2F7AJzbL%20--%3E%0A%3Csvg%20width%3D%2238%22%20height%3D%2238%22%20viewBox%3D%220%200%2038%2038%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20stroke%3D%22%23fff%22%3E%0A%20%20%20%20%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate(1%201)%22%20stroke-width%3D%222%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20stroke-opacity%3D%22.5%22%20cx%3D%2218%22%20cy%3D%2218%22%20r%3D%2218%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M36%2018c0-9.94-8.06-18-18-18%22%20stroke%3D%22%23005581%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3CanimateTransform%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20attributeName%3D%22transform%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3D%22rotate%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20from%3D%220%2018%2018%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20to%3D%22360%2018%2018%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dur%3D%221s%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fpath%3E%0A%20%20%20%20%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E');
-  background-size: 20px 20px;
+  background-color: rgb(157, 159, 162);
+}
+.o-download__wait:hover {
+  opacity: 1;
+}
+.o-download__wait::before {
+  width: 20px;
+  height: 20px;
+  display: block;
+  content: url('data:image/svg+xml;charset=utf-8,%3C!--%20By%20Sam%20Herbert%20(%40sherb)%2C%20for%20everyone.%20More%20%40%20http%3A%2F%2Fgoo.gl%2F7AJzbL%20--%3E%0A%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20stroke%3D%22%23fff%22%3E%0A%20%20%20%20%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate(1%201)%22%20stroke-width%3D%222%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20stroke-opacity%3D%22.5%22%20cx%3D%228%22%20cy%3D%228%22%20r%3D%228%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M16%2C8c0-4-4-8-8-8%22%20stroke%3D%22%23005581%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3CanimateTransform%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20attributeName%3D%22transform%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3D%22rotate%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20from%3D%220%208%208%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20to%3D%22360%208%208%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dur%3D%221s%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fpath%3E%0A%20%20%20%20%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E');
 }
 
-.o-download__docs {
-  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2217.986%22%20height%3D%2224.667%22%20viewBox%3D%220%200%2017.986%2024.667%22%3E%3Cdefs%3E%3Cpath%20id%3D%22a%22%20d%3D%22M0%200h18.167v24.667H0z%22%2F%3E%3C%2Fdefs%3E%3CclipPath%20id%3D%22b%22%3E%3Cuse%20xlink%3Ahref%3D%22%23a%22%20overflow%3D%22visible%22%2F%3E%3C%2FclipPath%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M3.645%2010.212c-.275%200-.461.028-.559.054v1.769a2.1%202.1%200%200%200%20.452.035c.722%200%201.163-.364%201.163-.978%200-.55-.381-.88-1.056-.88zm0%200%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M12.611%200H0v24.655h17.986V7.312L11.597%202.9%2012.611%200zM5.494%2012.48c-.463.436-1.146.631-1.947.631-.178%200-.338-.009-.461-.027v2.142H1.743V9.315c.417-.071%201.005-.124%201.831-.124.836%200%201.431.159%201.83.48.383.301.641.8.641%201.386%200%20.588-.195%201.085-.551%201.423zm7.598-3.245h3.664v1.11h-2.303v1.369h2.15v1.103h-2.15v2.409h-1.361V9.235zm-.888%202.853c0%201.147-.417%201.938-.995%202.427-.631.524-1.591.773-2.764.773-.703%200-1.201-.044-1.538-.089V9.315a12.08%2012.08%200%200%201%201.83-.124c1.139%200%201.876.205%202.454.64.622.462%201.013%201.2%201.013%202.257zm0%200%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M13.874%200l-.823%202.35%204.936%203.407L13.874%200zm0%200%22%2F%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M8.88%2010.231c-.302%200-.497.026-.614.053v3.921c.117.026.303.026.472.026%201.227.009%202.026-.667%202.026-2.098.009-1.245-.719-1.902-1.884-1.902zm0%200%22%2F%3E%3C%2Fsvg%3E');
+.o-download__docs::before {
+  content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2217.986%22%20height%3D%2224.667%22%20viewBox%3D%220%200%2017.986%2024.667%22%3E%3Cdefs%3E%3Cpath%20id%3D%22a%22%20d%3D%22M0%200h18.167v24.667H0z%22%2F%3E%3C%2Fdefs%3E%3CclipPath%20id%3D%22b%22%3E%3Cuse%20xlink%3Ahref%3D%22%23a%22%20overflow%3D%22visible%22%2F%3E%3C%2FclipPath%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M3.645%2010.212c-.275%200-.461.028-.559.054v1.769a2.1%202.1%200%200%200%20.452.035c.722%200%201.163-.364%201.163-.978%200-.55-.381-.88-1.056-.88zm0%200%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M12.611%200H0v24.655h17.986V7.312L11.597%202.9%2012.611%200zM5.494%2012.48c-.463.436-1.146.631-1.947.631-.178%200-.338-.009-.461-.027v2.142H1.743V9.315c.417-.071%201.005-.124%201.831-.124.836%200%201.431.159%201.83.48.383.301.641.8.641%201.386%200%20.588-.195%201.085-.551%201.423zm7.598-3.245h3.664v1.11h-2.303v1.369h2.15v1.103h-2.15v2.409h-1.361V9.235zm-.888%202.853c0%201.147-.417%201.938-.995%202.427-.631.524-1.591.773-2.764.773-.703%200-1.201-.044-1.538-.089V9.315a12.08%2012.08%200%200%201%201.83-.124c1.139%200%201.876.205%202.454.64.622.462%201.013%201.2%201.013%202.257zm0%200%22%2F%3E%3Cpath%20clip-path%3D%22url(%23b)%22%20fill%3D%22%23005581%22%20d%3D%22M13.874%200l-.823%202.35%204.936%203.407L13.874%200zm0%200%22%2F%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M8.88%2010.231c-.302%200-.497.026-.614.053v3.921c.117.026.303.026.472.026%201.227.009%202.026-.667%202.026-2.098.009-1.245-.719-1.902-1.884-1.902zm0%200%22%2F%3E%3C%2Fsvg%3E');
 }
 
 .o-drop {
@@ -2603,34 +2621,55 @@ td:last-child, th:last-child {
   font-weight: bold;
 }
 
+.c-file-group {
+  margin-bottom: 6px;
+}
 .c-file-group[open] .c-file-group__summary::before {
-  -webkit-transform: rotate(90deg);
-          transform: rotate(90deg);
+  content: "\f078";
 }
 
 .c-file-group__summary {
+  color: #00527A;
   position: relative;
-  padding: 0 0 0 20px;
 }
 .c-file-group__summary::before {
-  content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%226.583%22%20height%3D%2213.333%22%20viewBox%3D%220%200%206.583%2013.333%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23005581%22%20stroke-miterlimit%3D%2210%22%20d%3D%22M1.142.986L5.654%206.65l-4.512%205.664-.233-.312L5.172%206.65.909%201.297l.233-.311zm0%200%22%2F%3E%3C%2Fsvg%3E');
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: inline-block;
+  font-family: FontAwesome;
+  content: "\f054";
+  color: currentColor;
+  margin-right: 0.5ch;
 }
 
 .c-file-group__list {
-  padding-left: 15px;
-  list-style: none;
+  list-style-type: none;
+  font-size: 0.98rem;
+  margin: 0;
+  padding: 0;
+  margin-left: 0.5rem;
 }
 .c-file-group__list li {
-  margin: 0 0 0.3em;
-  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 0;
+  padding: 4px 2px;
 }
-.c-file-group__list .c-file-group__preview {
-  margin: 0 0 10px 0;
+.c-file-group__list li:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+.c-file-group__list li form {
+  display: inline-block;
+}
+.c-file-group__list li .c-file-group__preview {
   border: none;
   background: none;
+  margin-left: 0.5ch;
 }
 
 .c-footer {
@@ -5603,7 +5642,7 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
   }
 }
 .t-landing__sidebar .o-download {
-  margin: 0 0 2rem;
+  margin: 1rem 0;
 }
 .t-landing__sidebar .c-sidebox {
   margin: 30px 0 0;
