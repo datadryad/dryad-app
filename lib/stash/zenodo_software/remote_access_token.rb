@@ -1,5 +1,6 @@
 require 'jwt'
 require 'byebug'
+require 'http'
 
 # implementation of https://gist.github.com/slint/54d197ce12757719817b242fbeff0ea3#generating-the-rat
 # testing against https://sandbox.zenodo.org/deposit/638092
@@ -41,7 +42,13 @@ module Stash
       end
 
       def get_bucket_url(deposition_id)
-        resp = ZC.standard_request(:get, "#{@base_url}/api/deposit/depositions/#{deposition_id}")
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+                   .timeout(connect: 30, read: 180, write: 180).follow(max_hops: 10)
+
+        resp = http.get("#{@base_url}/api/deposit/depositions/#{deposition_id}",
+                        params: { access_token: @pat_token },
+                        headers: { 'Content-Type': 'application/json' }).parse
+
         resp[:links][:bucket]
       end
     end
