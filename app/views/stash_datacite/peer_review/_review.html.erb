@@ -1,5 +1,5 @@
-<% if !@resource.submitted? && @resource.identifier.allow_review? %>
-  <!-- This is only available if the version has not yet been submitted to the repository AND
+<% if @resource.identifier.allow_review? && @resource.previous_curated_resource.nil? && @resource.curation_start_date.nil? %>
+  <!-- This is only available if the id has not been curated AND
      the associated journal allows a review workflow -->
   <div>
     <div>
