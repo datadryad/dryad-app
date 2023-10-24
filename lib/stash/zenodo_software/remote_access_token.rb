@@ -54,7 +54,7 @@ module Stash
 
         if resp.try(:status).try(:code) < 400
           resp = resp.parse
-          return resp[:links][:bucket]
+          return resp['links']['bucket']
         end
 
         nil
