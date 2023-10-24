@@ -1,0 +1,5 @@
+<% if @sub_status.blank? %>
+  document.getElementById('job_state_<%= @zenodo_copy.id %>').innerHTML = '<span style="color: #0F0">...submitting</span>';
+<% else %>
+  document.getElementById('job_state_<%= @zenodo_copy.id %>').innerHTML = '<span style="color: #F00"><%= @sub_status %></span>';
+<% end %>
