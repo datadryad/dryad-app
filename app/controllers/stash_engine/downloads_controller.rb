@@ -119,7 +119,13 @@ module StashEngine
         if res.zenodo_published?
           redirect_to zen_upload.public_zenodo_download_url
         else
-          redirect_to zen_upload.zenodo_presigned_url
+          zen_presign = zen_upload.zenodo_presigned_url
+          if zen_presign.nil?
+            render plain: 'Unable to get a presigned URL for this file.', status: 500
+            return
+          end
+
+          redirect_to zen_presign
         end
       else
         render status: 403, plain: 'You are not authorized to download this file'
