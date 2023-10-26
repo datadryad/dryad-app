@@ -254,7 +254,7 @@ module Stash
       end
 
       def dataset_funders
-        # Also do we only want to add items with valid FundRef entries?
+        # Also do we only want to add items with valid ROR entries?
         contrib_names = @resource.contributors.funder.completed.map(&:contributor_name)
         contrib_names << group_funders
         contrib_names.flatten.reject(&:blank?).uniq
