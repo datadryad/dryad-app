@@ -20,6 +20,9 @@ default: &default
 development: &DEVELOPMENT
   <<: *default
 
+v3_development: &DEVELOPMENT
+  <<: *default
+
 aws_db:
   <<: *default
   host: aws-dev-db.co33oyzjqasf.us-east-1.rds.amazonaws.com
@@ -38,8 +41,13 @@ local_dev:
 stage:
   <<: *default
 
+v3_stage:
+  <<: *default
+
 production:
   <<: *default
+
+v3_production:
 
 # Terminate the if statement from the beginning of this file.
 <% end %>

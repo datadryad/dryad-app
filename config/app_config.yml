@@ -258,6 +258,9 @@ development: &DEVELOPMENT
       - [40, "EEB",  "Ecology and Evolutionary Biology"]
       - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
       - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+
+v3_development:
+  <<: *DEVELOPMENT
     
 aws_db:
   <<: *DEVELOPMENT
@@ -271,7 +274,7 @@ local:
 local_dev:
   <<: *DEVELOPMENT
 
-stage:
+stage: &STAGE
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
@@ -301,6 +304,9 @@ stage:
       - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
       - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
+v3_stage:
+  <<: *STAGE
+
 migration:
   <<: *DEFAULTS
   submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
@@ -317,7 +323,7 @@ demo:
   zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
   feedback_email_from: no-reply-dryaddemo@cdlib.org
 
-production:
+production: &PRODUCTION
   <<: *DEFAULTS
   shib_sp_host: datadryad.org
   page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
@@ -392,6 +398,9 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+
+v3_production:
+  <<: *PRODUCTION
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
