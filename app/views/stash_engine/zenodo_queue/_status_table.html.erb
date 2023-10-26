@@ -26,30 +26,26 @@
     <th class="c-lined-table__sort <%= sort_display('size') %>">
       <%= sortable_column_head sort_field: 'size', title: 'Size' %>
     </th>
-    <th class="c-lined-table__sort <%= sort_display('error_info') %>">
-      <%= sortable_column_head sort_field: 'error_info', title: 'Error info' %>
-    </th>
     <th>Actions</th>
   </tr>
   </thead>
   <tbody>
   <% @zenodo_copies.each do |zc| %>
-    <tr class="c-lined-table__row">
-      <td class="c-lined-table__digits"><%= link_to(zc.id, zenodo_queue_item_details_path(zc.id)) %></td>
+    <tr class="c-lined-table__row" id="tr_<%= zc.id %>">
+      <td class="c-lined-table__digits"><%= link_to(zc.id, zenodo_queue_item_details_path(zc.id), target: '_blank') %></td>
       <td class="c-lined-table__digits">
         <% unless zc.identifier_id.blank? %>
-          <%= link_to(zc.identifier_id, zenodo_queue_identifier_details_path(zc.identifier_id)) %>
+          <%= link_to(zc.identifier_id, zenodo_queue_identifier_details_path(zc.identifier_id), target: '_blank') %>
         <% end %>
       </td class="c-lined-table__digits">
       <td><%= zc.resource_id %></td>
-      <td><%= zc.state %></td>
+      <td id="job_state_<%= zc.id %>"><%= zc.state %></td>
       <td class="c-lined-table__digits"><%= formatted_datetime(zc.updated_at) %></td>
       <td class="c-lined-table__digits"><%= formatted_datetime(zc.created_at) %></td>
       <td><%= zc.copy_type.gsub('_', ' ') %></td>
       <td class="c-lined-table__digits"><%= filesize(zc.size) %></td>
-      <td><%= link_to truncate(zc.error_info || 'null', length: 20), zenodo_queue_item_details_path(zc.id), title: zc.error_info %></td>
       <td>
-        <%= button_to('resend', zenodo_queue_resubmit_job_path(id: zc.id)) %>
+        <%= button_to('resend', zenodo_queue_resubmit_job_path(id: zc.id), remote: true) %>
       </td>
     </tr>
   <% end %>
