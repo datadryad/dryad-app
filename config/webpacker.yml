@@ -72,6 +72,9 @@ development: &development
     watch_options:
       ignored: '**/node_modules/**'
 
+v3_development:
+  <<: *development
+
 local_dev:
   <<: *development
 
@@ -87,7 +90,7 @@ local:
   <<: *default
   compile: true
 
-stage:
+stage: &STAGE
   <<: *default
 
   # Production depends on precompilation of packs prior to booting for performance.
@@ -99,7 +102,10 @@ stage:
   # Cache manifest.json for performance
   cache_manifest: true
 
-production:
+v3_stage:
+  <<: *STAGE
+
+production: &PRODUCTION
   <<: *default
 
   # Production depends on precompilation of packs prior to booting for performance.
@@ -110,3 +116,6 @@ production:
 
   # Cache manifest.json for performance
   cache_manifest: true
+
+v3_production:
+  <<: *PRODUCTION
