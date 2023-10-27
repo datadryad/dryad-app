@@ -48,6 +48,7 @@ production:
   <<: *default
 
 v3_production:
+  <<: *default
 
 # Terminate the if statement from the beginning of this file.
 <% end %>
