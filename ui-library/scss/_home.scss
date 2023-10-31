@@ -37,6 +37,14 @@
 		align-self: end;
 		margin-top: auto;
 
+		a:link, a:visited {
+		    color: currentColor;
+		}
+
+		a:hover, a:focus {
+			color: $design-orange-color;
+		}
+
 		@media (max-width: $screen-md-min) {
 			font-size: .7rem;
 		}
