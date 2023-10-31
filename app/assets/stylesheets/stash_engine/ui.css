@@ -5501,6 +5501,12 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
       align-self: end;
   margin-top: auto;
 }
+.t-home__banner .o-banner__credit a:link, .t-home__banner .o-banner__credit a:visited {
+  color: currentColor;
+}
+.t-home__banner .o-banner__credit a:hover, .t-home__banner .o-banner__credit a:focus {
+  color: #cf4817;
+}
 @media (max-width: 760px) {
   .t-home__banner .o-banner__credit {
     font-size: 0.7rem;
