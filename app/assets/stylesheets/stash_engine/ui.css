@@ -1017,32 +1017,41 @@ datalist {
   border: none;
   background-color: #98cae2;
 }
-*[class^=o-download__]::before {
-  content: "";
-  display: inline-block;
-  min-width: 1.5ch;
+*[class^=o-download__] #download_icon {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
   margin-right: 1ch;
+  font-family: FontAwesome;
+  font-size: 20px;
 }
 *[class^=o-download__]:hover {
   opacity: 0.85;
 }
 
-.o-download__files::before {
-  content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2219.615%22%20height%3D%2223.823%22%20viewBox%3D%220%200%2019.615%2023.823%22%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M19.615%208.409h-5.604V0H5.604v8.409H0l9.812%209.803%209.803-9.803zM0%2021.017v2.806h19.615v-2.806H0zm0%200%22%2F%3E%3C%2Fsvg%3E');
-  margin-bottom: -6px;
+.o-download__files #download_icon::before {
+  content: "\f019";
+  color: #00527A;
 }
 
 .o-download__wait {
-  background-color: rgb(157, 159, 162);
+  background-color: rgb(211, 211, 211);
 }
 .o-download__wait:hover {
   opacity: 1;
 }
-.o-download__wait::before {
-  width: 20px;
-  height: 20px;
-  display: block;
-  content: url('data:image/svg+xml;charset=utf-8,%3C!--%20By%20Sam%20Herbert%20(%40sherb)%2C%20for%20everyone.%20More%20%40%20http%3A%2F%2Fgoo.gl%2F7AJzbL%20--%3E%0A%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20stroke%3D%22%23fff%22%3E%0A%20%20%20%20%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate(1%201)%22%20stroke-width%3D%222%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ccircle%20stroke-opacity%3D%22.5%22%20cx%3D%228%22%20cy%3D%228%22%20r%3D%228%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M16%2C8c0-4-4-8-8-8%22%20stroke%3D%22%23005581%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3CanimateTransform%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20attributeName%3D%22transform%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3D%22rotate%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20from%3D%220%208%208%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20to%3D%22360%208%208%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dur%3D%221s%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fpath%3E%0A%20%20%20%20%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E');
+.o-download__wait #download_icon {
+  font-size: 18px;
+}
+.o-download__wait #download_icon::before {
+  content: "\f1ce";
+  color: #0071a8;
+  position: absolute;
+  top: -3px;
+  left: 0;
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
 }
 
 .o-download__docs::before {
