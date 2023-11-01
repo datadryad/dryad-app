@@ -864,6 +864,12 @@ html.no-multiplebgs .o-banner {
 .o-button__add:hover {
   opacity: 0.85;
 }
+.o-button__add[disabled] {
+  background-color: #b8dbeb;
+  border-color: #b8dbeb;
+  color: rgb(78, 80, 80);
+  opacity: 1;
+}
 
 .o-button__import-manuscript {
   display: block;
