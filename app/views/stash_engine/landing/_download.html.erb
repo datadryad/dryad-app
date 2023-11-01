@@ -1,21 +1,49 @@
 <% # takes dataset_identifier as local %>
-<div class="o-download">
-  <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
-
-  <%= button_to Rails.application.routes.url_helpers.download_resource_path(resource.id), remote: true,
-                class: 'o-download__files', id: "dl_res_#{resource.id}" do %>
-                Download full dataset
+<% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
+<% if resource.total_file_size <= 10000000000 %>
+  <div class="o-download">
+    <%= form_with url: "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
+        <% resource.current_file_uploads.each do |fu| %>
+          <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
+          <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
+          <input type="hidden" name="url" value="<%= Rails.application.routes.url_helpers.download_stream_path(fu.id) %>"/>
+        <% end %>
+        <button type="submit" name="submit" class="o-download__files" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
+    <% end %>
+    <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
+  </div>
+  <% content_for :doc_end do %>
+  <script type="text/javascript" async>
+    const dlbutton = document.getElementById('download_zip_button');
+    if ("serviceWorker" in navigator) {
+      const messageChannel = new MessageChannel();
+      navigator.serviceWorker.register('/stash/service-worker.js');
+      let keepAlive;
+      const dialog = document.getElementById('genericModalDialog');
+      const dialogContent = document.getElementById('genericModalContent');
+      const form = document.getElementById('zip_download');
+      navigator.serviceWorker.ready.then(worker => {
+        worker.active.postMessage({type: 'PORT_INITIALIZATION', url: form.action}, [messageChannel.port2]); 
+      });
+      form.addEventListener('submit', e => {
+        dlbutton.classList.remove('o-download__files');
+        dlbutton.classList.add('o-download__wait');
+        dlbutton.disabled = true;
+        dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p>';
+        dialog.showModal();
+        keepAlive = setInterval(() => fetch('/stash/downloadZip/keep-alive', { method: 'POST' }), 10000);
+      })
+      messageChannel.port1.start();
+      messageChannel.port1.addEventListener("message", (event) => {
+        clearInterval(keepAlive);
+        dlbutton.classList.add('o-download__files');
+        dlbutton.classList.remove('o-download__wait');
+        dlbutton.removeAttribute('disabled');
+        if (dialog.open) dialog.close();
+      });
+    } else {
+      dlbutton.hidden = true;
+    }
+  </script>
   <% end %>
-
-  <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
-</div>
-
-<script>
-  $('#<%= "dl_res_#{resource.id}" %>').click(function(event) {
-    var item = $(this);
-    item.removeClass('o-download__files').addClass('o-download__wait');
-    event.preventDefault();
-    $(this).closest('form').submit();
-    item.prop('disabled', true);
-  });
-</script>
+<% end %>

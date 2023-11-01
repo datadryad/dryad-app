@@ -8,11 +8,14 @@
 	border: none;
 	background-color: $design-lighter-blue-color;
 
-	&::before {
-		content: '';
-		display: inline-block;
-		min-width: 1.5ch;
+	#download_icon {
+		position: relative;
+		display: block;
+		width: 20px;
+		height: 20px;
 		margin-right: 1ch;
+		font-family: FontAwesome;
+		font-size: 20px;
 	}
 
 	&:hover {
@@ -20,22 +23,27 @@
   }
 }
 
-.o-download__files::before {
-	content: inline('../images/icon_download.svg');
-	margin-bottom: -6px;
+.o-download__files #download_icon::before {
+	content: '\f019';
+	color: $design-dark-blue-color;
 }
 
 .o-download__wait {
-	background-color: $design-light-gray-color;
+	background-color: $design-extra-light-gray-color;
 	&:hover {
 		opacity: 1;
 	}
-	&::before {
-		width: 20px;
-		height: 20px;
-		display: block;
-		content: inline('../images/icon_spinner_oval.svg');
-	}	
+	#download_icon {
+		font-size: 18px;
+		&::before {
+			content: '\f1ce';
+			color: $design-medium-blue-color;
+			position: absolute;
+		  top: -3px; left: 0;
+		  -webkit-animation: fa-spin 2s infinite linear;
+  		animation: fa-spin 2s infinite linear;
+		}	
+	}
 }
 
 .o-download__docs::before {
