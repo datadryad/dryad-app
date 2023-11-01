@@ -2666,8 +2666,13 @@ td:last-child, th:last-child {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   margin: 0;
   padding: 4px 2px;
+}
+.c-file-group__list li * {
+  max-width: 100%;
 }
 .c-file-group__list li:nth-child(odd) {
   background-color: #f6f6f6;
