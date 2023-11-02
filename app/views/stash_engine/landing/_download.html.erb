@@ -1,6 +1,6 @@
 <% # takes dataset_identifier as local %>
 <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
-<% if resource.total_file_size <= 10000000000 %>
+<% if resource.total_file_size < 11000000000 %>
   <div class="o-download">
     <%= form_with url: "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
         <% resource.current_file_uploads.each do |fu| %>
