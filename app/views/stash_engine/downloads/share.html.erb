@@ -3,7 +3,8 @@
   <div id="page-content">
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
   <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
-  <div id="withzip">
+<% if @resource.total_file_size < 11000000000 %>
+  <div id="withzip">  
     <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{@resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
         <% @resource.current_file_uploads.each do |fu| %>
           <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
@@ -16,6 +17,10 @@
   </div>
   <div id="nozip" hidden>
     <p>Your browser does not allow for generation of a dataset package. Please download the individual dataset files:</p>
+<% else %>
+  <div>
+    <p>Dataset files for download:</p>
+<% end %>
     <ul class="c-file-group__list" style="margin-left: 0; font-size: 1rem;">
       <% @resource.current_file_uploads.each do |fu| %>
         <li>
@@ -58,6 +63,7 @@
   <% end %>
   </div>
 </div>
+<% if @resource.total_file_size < 11000000000 %>
 <% content_for :doc_end do %>
   <script type="text/javascript" async>    
     if ("serviceWorker" in navigator) {
@@ -69,4 +75,5 @@
       document.getElementById('withzip').hidden = true;
     }
   </script>
+<% end %>
 <% end %>
