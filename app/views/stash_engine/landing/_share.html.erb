@@ -22,10 +22,11 @@
 
 <script type="text/javascript">
   async function copyUrl() {
-    window.navigator.clipboard.writeText(window.location.href);
-    const flash = document.getElementById('copy-success');
-    flash.removeAttribute('hidden');
-    await new Promise(res => setTimeout(res, 3000));
-    flash.setAttribute('hidden', 'true');
+    window.navigator.clipboard.writeText(window.location.href).then(() => {
+      const flash = document.getElementById('copy-success');
+      flash.removeAttribute('hidden');
+      await new Promise(res => setTimeout(res, 3000));
+      flash.setAttribute('hidden', 'true');
+    });
   }
 </script>

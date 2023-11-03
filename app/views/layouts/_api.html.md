@@ -63,13 +63,33 @@ Detailed, interactive documentation of all available Dryad request methods:
     server.addEventListener('change', e => {
       apiUrl = e.currentTarget.value
     })
-    document.querySelectorAll('.copy-to-clipboard').forEach(copyButton => {
-      copyButton.addEventListener('click', e => {
-        const pathButton = e.currentTarget.previousElementSibling
-        const pathSpan = pathButton.querySelector('.opblock-summary-path')
+    document.querySelectorAll('.opblock-summary').forEach(block => {
+      const newEl = document.createElement("div");
+      newEl.setAttribute('class', 'copy-icon');
+      newEl.setAttribute('role', 'button');
+      newEl.setAttribute('tabindex', 0);
+      newEl.setAttribute('aria-label', 'Copy API URL');
+      newEl.setAttribute('title', 'Copy API URL');
+      newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
+      block.insertBefore(newEl, block.lastElementChild);
+      newEl.onclick = e => {
+        const copyButton = e.currentTarget.firstElementChild;
+        const pathSpan = e.currentTarget.parentElement.querySelector('.opblock-summary-path')
         const requestUrl = pathSpan.dataset.path
-        window.navigator.clipboard.writeText(apiUrl + requestUrl)
-      })
+        navigator.clipboard.writeText(`${apiUrl}${requestUrl}`).then(() => {
+          // Successful copy
+          copyButton.parentElement.setAttribute('title', 'Copied');
+          copyButton.classList.remove('fa-clipboard');
+          copyButton.classList.add('fa-check');
+          copyButton.innerHTML = '<span class="screen-reader-only">Copied</span>'
+          setTimeout(function(){
+            copyButton.parentElement.setAttribute('title', 'Copy API URL');
+            copyButton.classList.add('fa-clipboard');
+            copyButton.classList.remove('fa-check');
+            copyButton.innerHTML = '';
+          }, 2000);
+        });
+      }
     })
   })
 </script>
