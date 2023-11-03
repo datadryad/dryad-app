@@ -29,16 +29,16 @@ namespace :download_check do
   desc 'presents a list of files that have incorrect deposit states in our database compared where Merritt deposited them'
   task check_created_s3: :environment do
     # identifiers with some submitted resources
-    se_ids = StashEngine::Identifier.joins( resources: :resource_states)
-                                    .where( "stash_engine_resource_states.resource_state = 'submitted'").distinct
+    se_ids = StashEngine::Identifier.joins(resources: :resource_states)
+      .where("stash_engine_resource_states.resource_state = 'submitted'").distinct
 
     my_filename = "s3_check_#{Rails.env}_#{Time.new.strftime('%Y-%m-%d_%H:%M:%S')}.csv"
 
     CSV.open(my_filename, 'w') do |csv|
-      csv << %w(identifier_id identifier_doi resource_id
+      csv << %w[identifier_id identifier_doi resource_id
                 file_id filename expected_version expected_size
                 before_version before_size
-                after_version after_size)
+                after_version after_size]
       se_ids.each_with_index do |se_id, idx|
         se_id.resources.each do |res|
           next unless res.current_resource_state.resource_state == 'submitted'

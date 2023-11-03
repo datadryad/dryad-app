@@ -29,9 +29,7 @@ module Tasks
         return [nil, nil] if @mrt_version < 2
 
         (@mrt_version - 1).downto(1) do |ver|
-          if @bkt_instance.exists?(s3_key: s3_path(mrt_version: ver))
-            return [ver, @bkt_instance.size(s3_key: s3_path(mrt_version: ver))]
-          end
+          return [ver, @bkt_instance.size(s3_key: s3_path(mrt_version: ver))] if @bkt_instance.exists?(s3_key: s3_path(mrt_version: ver))
         end
         [nil, nil]
       end
@@ -41,9 +39,7 @@ module Tasks
         return [nil, nil] if last_mrt_version <= @mrt_version
 
         (@mrt_version + 1).upto(last_mrt_version) do |ver|
-          if @bkt_instance.exists?(s3_key: s3_path(mrt_version: ver))
-            return [ver, @bkt_instance.size(s3_key: s3_path(mrt_version: ver))]
-          end
+          return [ver, @bkt_instance.size(s3_key: s3_path(mrt_version: ver))] if @bkt_instance.exists?(s3_key: s3_path(mrt_version: ver))
         end
         [nil, nil]
       end
