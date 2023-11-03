@@ -56,6 +56,8 @@ paths:
               examples:
                 success:           
                   externalValue: api/v2/docs/examples/root.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
 
   # --- test for bearer authentication ---
   /test:
@@ -79,6 +81,10 @@ paths:
                   user_id:
                     type: integer
                     example: 10
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   # --- datasets uris ---
   /datasets:
@@ -102,6 +108,8 @@ paths:
               examples:
                 success: 
                   externalValue: api/v2/docs/examples/datasets.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
     post:
       summary: Create a new dataset with a DOI automatically generated
       tags:
@@ -115,7 +123,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/dc_metadata'
-            # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             examples:
               request:
                 externalValue: api/v2/docs/examples/dataset_post_request.json
@@ -129,13 +136,19 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/dataset.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/datasets/{doi}':
     get:
       summary: Get a dataset by its doi
       tags:
         - datasets 
-      description: Be sure to encode the DOI (see below for format)
+      description: 
+        Be sure to encode the DOI (see below for format). Datasets that are not yet published are only 
+        retrievable by users with permission to access them.
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
@@ -148,6 +161,10 @@ paths:
             examples:
               success:
                 externalValue: api/v2/docs/examples/dataset.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     put:
       summary: Update (overwrite) dataset metadata for DOI or insert new with specified DOI
       tags:
@@ -158,13 +175,11 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        description: "json needed for updating a new dataset: example doesn't show because OpenAPI is broken it seems"
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/dc_metadata'
-            # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             examples:
               request:
                 externalValue: api/v2/docs/examples/dataset_post_request.json
@@ -178,6 +193,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/dataset.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     patch:
       parameters:
         - $ref: '#/components/parameters/doi'
@@ -206,6 +225,13 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/dataset.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: 'Your dataset cannot be updated now'
+          $ref: '#/components/content/Error'
 
   '/datasets/{doi}/download':
     get:
@@ -223,6 +249,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/datasets/{doi}/versions':
     get:
@@ -244,6 +272,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/versions.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   # --- versions uris ---
   '/versions/{id}':
@@ -264,6 +296,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/version.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/versions/{id}/files':
     get:
@@ -285,6 +321,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/files.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/versions/{id}/download':
     get:
@@ -302,6 +342,11 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          description: 'not found'
+          $ref: '#components/content/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/files/{id}':
     get:
@@ -321,6 +366,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/file.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     delete:
       security:
         - bearerAuth: []
@@ -340,6 +389,13 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/file.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: 'This file must be part of an an in-progress version'
+          $ref: '#/components/content/Error'
 
   '/files/{id}/download':
     get:
@@ -357,6 +413,11 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          description: 'Not found'
+          $ref: '#/components/content/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   # --- upload a file in body with filename in url ---
   '/datasets/{doi}/files/{filename}':
@@ -388,6 +449,8 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/file.json
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   '/datasets/{doi}/urls':
     put:
@@ -414,6 +477,10 @@ paths:
               examples:
                 success:
                   externalValue: api/v2/docs/examples/file.json
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   # --- internal ---
   '/processor_results/{id}':
@@ -433,6 +500,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/processor_result'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          description: unauthorized
+          $ref: '#/components/content/Error'
     put:
       security:
         - bearerAuth: [ ]
@@ -449,6 +521,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/processor_result'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          description: unauthorized
+          $ref: '#/components/content/Error'
 
   '/versions/{version_id}/processor_results':
     get:
@@ -467,6 +544,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/processor_results'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          description: unauthorized
+          $ref: '#/components/content/Error'
     post:
       security:
         - bearerAuth: [ ]
@@ -483,6 +565,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/processor_result'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          description: unauthorized
+          $ref: '#/components/content/Error'
 
   '/datasets/{doi}/related_works/{related_doi}':
     put:
@@ -508,6 +595,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/relatedWork'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '401':
+          description: unauthorized
+          $ref: '#/components/content/Error'
 
   # --- reports ---
   /reports:
@@ -515,12 +607,44 @@ paths:
       summary: Get a list of reports that are updated regularly
       tags:
         - reports
+      responses:
+        '200':
+          description: A list of reports.
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/reports'
+        '406':
+          $ref: '#/components/responses/Unacceptable'
 
   '/reports/{name}':
     get:
       summary: Get a particular report
       tags:
         - reports
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: "The name of a report."
+      responses:
+        '200':
+          description: A report (CSV download)
+          examples:
+          content:
+            text/csv:
+              schema:
+                type: string
+        '406':
+          $ref: '#/components/responses/Unacceptable'
+        '500':
+          description: Unable to render report file
+          $ref: '#/components/content/Error'
+        '404':
+          description: Could not find requested report {name}
+          $ref: '#/components/content/Error'
 
   # --- search ---
   /search:
@@ -585,11 +709,36 @@ paths:
             Dryad encountered an error parsing the query options for the search.
             The most likely cause of this problem is an improperly-formatted timestamp
             for the `modifiedSince` parameter.
+          $ref: '#/components/content/Error'
 
 # ------------------
 # --- components ---
 # ------------------
 components:
+  
+  responses:
+
+    Unacceptable:
+      description: '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
+      $ref: '#/components/content/Error'
+
+    NotFound:
+      description: 'not-found'
+      $ref: '#/components/content/Error'
+
+    Unauthorized:
+      description: 'Unauthorized, must have current bearer token'
+      $ref: '#/components/content/Error'
+  
+  content:
+
+    Error:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+
   schemas:
 
     # --- root ---
@@ -1005,6 +1154,23 @@ components:
           enum: [ 'article', 'dataset', 'preprint', 'software', 'supplemental_information', 'primary_article', 'data_management_plan' ]
           example: article
 
+    # --- Non-dataset APIs -- #
+    reports:
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/hal_link'
+            reports:
+              type: array
+              items:
+                $ref: '#/components/schemas/hal_link'
+            curies:
+              type: array
+              items:
+                $ref: '#/components/schemas/hal_curie'
+
     # --- specific link section for different resources ---
 
 
@@ -1085,6 +1251,13 @@ components:
           type: string
       required:
         - url
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
 
   # parameters for going into URLs (and json?)
   parameters:
