@@ -11,7 +11,7 @@ gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 6.1.0'
 gem 'react-rails', '~> 2.6.2'
 gem 'sprockets', '~> 3.0' # going to 4 breaks lots of things unless doing manual upgrade of files
-gem 'webpacker', '~> 5.4.3'
+gem 'webpacker', '6.0.0.rc.6'
 
 # ############################################################
 # Local engines
