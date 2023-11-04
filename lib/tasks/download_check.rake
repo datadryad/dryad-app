@@ -53,8 +53,6 @@ namespace :download_check do
                     df.id, df.upload_file_name, s3_check.mrt_version, df.upload_file_size,
                     s3_chk[:before][0], s3_chk[:before][1],
                     s3_chk[:after][0], s3_chk[:after][1]]
-            # puts "#{se_id.id}, #{se_id.identifier}, #{res.id}, #{df.id}, #{df.upload_file_name}, #{s3_check.mrt_version}, #{s3_chk[:before]}, #{s3_chk[:after]}"
-            # puts "ident: #{se_id.identifier}, res_id: #{res.id}, file_id: #{df.id}, name: #{df.upload_file_name}, chk: #{s3_chk}"
           end
         end
         puts "#{idx + 1}/#{se_ids.count} identifiers checked" if (idx + 1) % 100 == 0
