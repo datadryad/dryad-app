@@ -61,16 +61,17 @@
       const item = e.currentTarget.dataset.item
       const icon = e.currentTarget.firstElementChild
       const citation = e.currentTarget.nextElementSibling.innerText
-      window.navigator.clipboard.writeText(citation)
-      icon.classList.remove('fa-clipboard');
-      icon.classList.add('fa-check');
-      icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
-      setTimeout(function(){
-        icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
-        icon.classList.add('fa-clipboard');
-        icon.classList.remove('fa-check');
-        icon.innerHTML = '';
-      }, 2000);
+      window.navigator.clipboard.writeText(citation).then(() => {
+        icon.classList.remove('fa-clipboard');
+        icon.classList.add('fa-check');
+        icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
+        setTimeout(function(){
+          icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
+          icon.classList.add('fa-clipboard');
+          icon.classList.remove('fa-check');
+          icon.innerHTML = '';
+        }, 2000);
+      });
     });
   });
 </script>

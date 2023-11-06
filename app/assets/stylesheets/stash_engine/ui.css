@@ -1117,7 +1117,7 @@ datalist {
   margin-top: 1.875rem;
   margin-bottom: 1rem;
   color: #00527A;
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   line-height: 2rem;
   font-weight: normal;
 }
@@ -1161,6 +1161,7 @@ h1:first-child, *[class^=o-heading__level]:first-child {
   color: #00527A;
   font-size: 1.25rem;
   line-height: 1.5rem;
+  font-weight: 500;
 }
 
 h5, h6 {
@@ -1169,6 +1170,7 @@ h5, h6 {
   color: #cf4817;
   font-size: 1.125rem;
   line-height: 1.5rem;
+  font-weight: 500;
 }
 
 h6 {
