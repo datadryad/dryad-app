@@ -15,6 +15,14 @@ mkdir emacs
 curl "https://raw.githubusercontent.com/yoshiki/yaml-mode/master/yaml-mode.el" >emacs/yaml-mode.el
 curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 ```
+- git setup
+  - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+```
+#### TODO -- fix this
+# generate SSH key and # add the key to ssh-agent ??? not needed???
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+# add the key to your account on github
+```
 - install mysql
 ```
 sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm #may need to hit enter twice
@@ -46,7 +54,30 @@ bundle install
 ```
 - install node
 ```
-sudo yum install nodejs
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install --lts
+nvm install 16.20.2
+npm install --global yarn
+cd ~/dryad-app
+npm install webpack@4.46.0
+npm install --legacy-peer-deps
+```
+- ensure config is correct in startup scripts; add the following to .bashrc
+```
+. ~/.nvm/nvm.sh
+nvm use 16.20.2
+export RAILS_ENV=v3_stage 
+```
+- compile components
+```
+bin/webpack
+bundle exec rails webpacker:compile
+```
+- run rails
+```
+cd ~/dryad-app
+rails s
 ```
 
 Importing data in to an AWS RDS database
