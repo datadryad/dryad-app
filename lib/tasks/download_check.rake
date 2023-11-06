@@ -41,6 +41,11 @@ namespace :download_check do
                 after_version after_size]
       se_ids.each_with_index do |se_id, idx|
         se_id.resources.each do |res|
+          if res.current_resource_state.nil?
+            puts "se_id: #{se_id.identifier} does not have a current_resource_state"
+            next
+          end
+
           next unless res.current_resource_state.resource_state == 'submitted'
 
           d_files = res.data_files.newly_created
