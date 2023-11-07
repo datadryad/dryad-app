@@ -77,4 +77,10 @@ figure {
     background-color: $design-white-color;
   }
 }
-  
+
+pre {
+  white-space: pre-wrap;
+  kbd, samp, code {
+    display: block;
+  }
+}

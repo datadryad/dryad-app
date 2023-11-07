@@ -2163,7 +2163,7 @@ td:last-child, th:last-child {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
-  margin: 0 0 2rem;
+  margin: 1em 0;
 }
 
 .c-autosave__text {
@@ -4255,6 +4255,13 @@ figure blockquote {
 }
 .callout kbd, .callout samp, .callout code {
   background-color: rgb(255, 255, 255);
+}
+
+pre {
+  white-space: pre-wrap;
+}
+pre kbd, pre samp, pre code {
+  display: block;
 }
 
 .c-upload {
