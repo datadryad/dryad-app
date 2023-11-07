@@ -15,9 +15,9 @@ $search-field-size: 28px;
   @extend %fcontrol-focus;
   flex: 1 0 auto;
   padding: 0 0 0 0.5em;
+  font-size: 0.9em;
   border: solid $design-light-blue-color;
   border-width: 1px 3px 1px 1px; // for focus styles
-  font-size: 0.9em;
 
   &::placeholder {
     opacity: 1;

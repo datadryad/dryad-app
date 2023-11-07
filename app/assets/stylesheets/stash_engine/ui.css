@@ -107,9 +107,7 @@ Selector pattern using above mixin:
 }
 
 .c-location__input:focus, .c-input__select:focus, .c-input__textarea:focus, .c-input__text--copypaste:focus, .c-input__text:focus, .o-global-search__input:focus {
-  border-width: 2px;
-  border-color: #cf4817;
-  outline: 0;
+  outline: 2px solid #0071a8;
 }
 .c-location__input:focus::-webkit-input-placeholder, .c-input__select:focus::-webkit-input-placeholder, .c-input__textarea:focus::-webkit-input-placeholder, .c-input__text--copypaste:focus::-webkit-input-placeholder, .c-input__text:focus::-webkit-input-placeholder, .o-global-search__input:focus::-webkit-input-placeholder {
   opacity: 0.5;
@@ -1066,9 +1064,9 @@ datalist {
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
   padding: 0 0 0 0.5em;
+  font-size: 0.9em;
   border: solid rgb(55, 150, 196);
   border-width: 1px 3px 1px 1px;
-  font-size: 0.9em;
 }
 .o-global-search__input::-webkit-input-placeholder {
   opacity: 1;
@@ -1244,7 +1242,7 @@ h6 {
   font-weight: 2em;
 }
 .o-home-search__submit-button:focus, .o-home-search__submit-button:hover {
-  outline: 2px solid rgb(237, 129, 90);
+  outline: 2px solid #0071a8;
 }
 
 .c-uploadtable button, .c-uploadtable a, .c-orcid__id, .c-footer__policy-group a,
@@ -1316,13 +1314,14 @@ h6 {
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
   opacity: 0;
-  background-color: #00527A;
-  color: rgb(255, 255, 255);
 }
 .c-skipnav:focus {
   top: 1rem;
   left: 1rem;
   opacity: 1;
+  background-color: #00527A;
+  color: rgb(255, 255, 255);
+  outline-offset: 0;
 }
 
 .pdfIcon {
@@ -2245,7 +2244,7 @@ td:last-child, th:last-child {
 }
 
 .c-choose__input-file:focus + label {
-  outline: 2px solid #cf4817;
+  outline: 2px solid #0071a8;
 }
 
 @media (min-width: 760px) {
@@ -2910,10 +2909,6 @@ td:last-child, th:last-child {
   text-align: center;
   text-decoration: none;
 }
-#mobile-nav-bar .c-header__nav-item a:link, #mobile-nav-bar .c-header__nav-item a:visited {
-  color: #00527A;
-  text-decoration: none;
-}
 @media (min-width: 870px) {
   #mobile-nav-bar .c-header__nav-item {
     -webkit-box-flex: 0;
@@ -2948,6 +2943,16 @@ td:last-child, th:last-child {
     padding: 0;
   }
 }
+#mobile-nav-bar .c-header__nav-item a:link, #mobile-nav-bar .c-header__nav-item a:visited {
+  color: #00527A;
+  text-decoration: none;
+}
+@media (max-width: 869px) {
+  #mobile-nav-bar .c-header__nav-item a:focus-visible {
+    outline: 2px solid #0071a8;
+    outline-offset: 0;
+  }
+}
 
 #site-menu .c-header__nav-item {
   white-space: nowrap;
@@ -2966,6 +2971,10 @@ td:last-child, th:last-child {
   }
   #site-menu .c-header__nav-item a:hover, #site-menu .c-header__nav-item a[aria-expanded=true], #site-menu .c-header__nav-item button:hover, #site-menu .c-header__nav-item button[aria-expanded=true] {
     background-color: rgb(55, 150, 196);
+  }
+  #site-menu .c-header__nav-item button:focus, #site-menu .c-header__nav-item a:focus-visible {
+    outline: 2px solid #cf4817;
+    outline-offset: 0;
   }
 }
 #site-menu .c-header__nav-item a:link, #site-menu .c-header__nav-item a:visited {
@@ -3114,6 +3123,7 @@ td:last-child, th:last-child {
   .c-header_nav-button:hover, .c-header_nav-button:focus {
     color: #cf4817;
     text-decoration: none;
+    outline-offset: 4px;
   }
   .c-header_nav-button::after {
     color: #00527A;
@@ -3364,7 +3374,7 @@ td:last-child, th:last-child {
 }
 
 .c-keywords__container--has-focus {
-  border: 2px solid #cf4817;
+  border: 2px solid #0071a8;
 }
 
 .c-keywords__keyword {
@@ -3784,7 +3794,7 @@ td:last-child, th:last-child {
 }
 
 .t-login__buttonlink:hover, .t-login__buttonlink:active {
-  outline: 2px solid #cf4817;
+  outline: 2px solid #0071a8;
 }
 
 .t-login__or-box {
@@ -5977,7 +5987,15 @@ body.prevent-clicks, body.prevent-clicks *, body#yes-really.prevent-clicks, body
   pointer-events: none;
 }
 
-*:focus {
-  outline: 2px solid #cf4817;
+input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
+  outline: 2px solid #0071a8;
+}
+
+a:focus-visible {
+  outline-offset: 4px;
+}
+
+a[role=button]:focus-visible, a[class*=button]:focus-visible {
+  outline-offset: 0;
 }
 /*# sourceMappingURL=sourcemaps/main.css.map */
