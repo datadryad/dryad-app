@@ -188,7 +188,7 @@ class Cedar extends React.Component {
                     onChange={(e) => {
                       const t = e.currentTarget;
                       this.setState({
-                        template: {id: t.value, title: t.options[t.selectedIndex].label},
+                        template: t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null,
                       });
                     }}
                     onBlur={formik.handleBlur}

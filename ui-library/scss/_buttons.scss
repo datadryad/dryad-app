@@ -281,6 +281,12 @@
     opacity: 0.85;
   }
 
+  &[disabled] {
+    background-color: lighten($design-lighter-blue-color, 8);
+    border-color: lighten($design-lighter-blue-color, 8);
+    color: $design-dark-gray-color;
+    opacity: 1;
+  }
 }
 
 .o-button__import-manuscript {
