@@ -25,5 +25,4 @@
   <li>The Royal Society</li>
   <li>Society for the Study of Evolution</li>
   <li>Society of Systematic Biologists</li>
-  <li>The University of Chicago Press</li>
 </ul>
