@@ -1009,7 +1009,7 @@ datalist {
   color: #3c763d;
 }
 
-*[class^=o-download__] {
+*[class*=o-download__] {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1021,7 +1021,7 @@ datalist {
   border: none;
   background-color: #98cae2;
 }
-*[class^=o-download__] #download_icon {
+*[class*=o-download__] #download_icon {
   position: relative;
   display: block;
   width: 20px;
@@ -1030,7 +1030,7 @@ datalist {
   font-family: FontAwesome;
   font-size: 20px;
 }
-*[class^=o-download__]:hover {
+*[class*=o-download__]:hover {
   opacity: 0.85;
 }
 
