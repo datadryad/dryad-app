@@ -1,0 +1,25 @@
+const messageChannel = new MessageChannel();
+navigator.serviceWorker.register('/stash/service-worker.js');
+let keepAlive;
+const dialog = document.getElementById('genericModalDialog');
+const dialogContent = document.getElementById('genericModalContent');
+const form = document.getElementById('zip_download');
+navigator.serviceWorker.ready.then(worker => {
+  worker.active.postMessage({type: 'PORT_INITIALIZATION', url: form.action}, [messageChannel.port2]); 
+});
+form.addEventListener('submit', e => {
+  dlbutton.classList.remove('o-download__files');
+  dlbutton.classList.add('o-download__wait');
+  dlbutton.disabled = true;
+  dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p>';
+  dialog.showModal();
+  keepAlive = setInterval(() => fetch('/stash/downloadZip/keep-alive', { method: 'POST' }), 10000);
+})
+messageChannel.port1.start();
+messageChannel.port1.addEventListener("message", (event) => {
+  clearInterval(keepAlive);
+  dlbutton.classList.add('o-download__files');
+  dlbutton.classList.remove('o-download__wait');
+  dlbutton.removeAttribute('disabled');
+  if (dialog.open) dialog.close();
+});
