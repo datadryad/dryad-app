@@ -104,13 +104,17 @@ module Stash
         APP_CONFIG[:zenodo][:base_url]
       end
 
+      # def self.access_token
+      #   state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
+      #   state = state.with_indifferent_access if state.is_a?(Hash)
+      #
+      #   return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 5.minutes)
+      #
+      #   state[:access_token]
+      # end
+
       def self.access_token
-        state = StashEngine::GlobalState.where(key: 'zenodo_api')&.first&.state
-        state = state.with_indifferent_access if state.is_a?(Hash)
-
-        return new_access_token if state.nil? || state[:expires_at].blank? || state[:expires_at].to_time < (Time.new + 5.minutes)
-
-        state[:access_token]
+        APP_CONFIG[:zenodo][:access_token]
       end
 
       # gets access token from api, stores access token to database, and also returns it
