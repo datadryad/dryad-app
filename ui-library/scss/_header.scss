@@ -134,10 +134,7 @@
   text-align: center;
   text-decoration: none;
 
-  a:link, a:visited {
-    color: $design-dark-blue-color;
-    text-decoration: none;
-  }
+  
 
   @include bp(screen3) {
     flex: 0 1 auto;
@@ -163,6 +160,18 @@
       height: auto;
       padding: 0;
     }
+
+    &:link, &:visited {
+      color: $design-dark-blue-color;
+      text-decoration: none;
+    }
+
+    @media (max-width: $screen-lg-min - 1) {
+      &:focus-visible {
+        outline: 2px solid $design-medium-blue-color;
+        outline-offset: 0;
+      }
+    }
   }
 }
 
@@ -184,6 +193,10 @@
       &:hover, &[aria-expanded="true"] {
         background-color: $design-light-blue-color;
       }
+    }
+    button:focus, a:focus-visible {
+      outline: 2px solid $design-orange-color;
+      outline-offset: 0;
     }
   }
 
@@ -330,6 +343,7 @@
     &:focus {
       color: $link-globalnav-hover-color;
       text-decoration: none;
+      outline-offset: 4px;
     }
 
     &::after {

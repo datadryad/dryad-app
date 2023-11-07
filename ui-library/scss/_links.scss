@@ -132,14 +132,15 @@ a {
   z-index: 15;
   padding: $spacing-sm;
   transition: opacity 0.5s;
-  opacity: 0;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  opacity: 0;  
 
   &:focus {
     top: $spacing-sm;
     left: $spacing-sm;
     opacity: 1;
+    background-color: $design-dark-blue-color;
+    color: $design-white-color;
+    outline-offset: 0;
   }
 }
 
