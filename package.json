@@ -20,7 +20,9 @@
       "<rootDir>/spec/javascript/setupTests.js"
     ],
     "testEnvironment": "jsdom",
-    "testEnvironmentOptions": { "resources": "usable" }
+    "testEnvironmentOptions": {
+      "resources": "usable"
+    }
   },
   "scripts": {
     "start": "bin/webpack serve --mode development",
@@ -83,6 +85,7 @@
     "sass": "^1.49.10",
     "string-similarity": "^4.0.4",
     "truncate-utf8-bytes": "^1.0.2",
+    "webpack": "^4.46.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -102,7 +105,6 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "font-awesome": "^4.7.0",
-    "gulp-stylelint": "^13.0.0",
     "jest": "^27.0.6",
     "jest-fail-on-console": "^2.2.3",
     "jquery-ui": "^1.13.1",
@@ -112,9 +114,6 @@
     "normalize-scss": "^7.0.1",
     "postcss": "^8.4.31",
     "react-test-renderer": "^17.0.2",
-    "stylelint": "^15.10.1",
-    "stylelint-config-property-sort-order-smacss": "^9.0.0",
-    "stylelint-config-recommended-scss": "^6.0.0",
     "webpack-dev-server": "^4.8.1"
   }
 }
