@@ -39,6 +39,10 @@ module StashDatacite
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
         matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
+        matches.map do |m|
+          m.issn = m.single_issn
+          m
+        end
         alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
         alt_matches.each do |am|
           matches << { title: am.title, issn: am.journal.single_issn }
