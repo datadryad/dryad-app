@@ -3,7 +3,7 @@
   <div id="page-content">
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
   <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
-<% if @resource.total_file_size < 11000000000 %>
+<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
   <div id="withzip">  
     <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{@resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
         <% @resource.current_file_uploads.each do |fu| %>
