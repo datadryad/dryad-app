@@ -5093,6 +5093,17 @@ h3.expand-button::after {
   font-family: FontAwesome;
   content: " \f0d7";
 }
+h3.expand-button:focus {
+  outline: 0;
+}
+h3.expand-button:hover::after, h3.expand-button:focus-visible::after {
+  color: #00527A;
+}
+h3.expand-button:focus-visible {
+  border-color: #0071a8;
+  -webkit-box-shadow: 0 4px 0px 0px #0071a8;
+          box-shadow: 0 4px 0px 0px #0071a8;
+}
 h3.expand-button[aria-expanded=true]::after {
   content: " \f0d8";
 }
