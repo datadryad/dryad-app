@@ -17,7 +17,7 @@
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary role="button" class="o-showhide__summary c-file-group__summary">
-          Version <%= res.version_number %> files (<%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ? res.publication_date : res.updated_at) %>)
+          <%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files
           <%= ( res_id.positive? && res.id > res_id ? '*' : '' ) -%>
         </summary>
         <ul class="c-file-group__list">
