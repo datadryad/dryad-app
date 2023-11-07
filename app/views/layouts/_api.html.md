@@ -44,6 +44,24 @@ Detailed, interactive documentation of all available Dryad request methods:
 <script src="/api/v2/docs/swagger-initializer.js" charset="UTF-8"> </script>
 <div id="swagger-ui"></div>
 <script>
+  function copyUrl(e) {
+    const copyButton = e.currentTarget.firstElementChild;
+    const pathSpan = e.currentTarget.parentElement.querySelector('.opblock-summary-path')
+    const requestUrl = pathSpan.dataset.path
+    navigator.clipboard.writeText(`${apiUrl}${requestUrl}`).then(() => {
+      // Successful copy
+      copyButton.parentElement.setAttribute('title', 'Copied');
+      copyButton.classList.remove('fa-clipboard');
+      copyButton.classList.add('fa-check');
+      copyButton.innerHTML = '<span class="screen-reader-only">Copied</span>'
+      setTimeout(function(){
+        copyButton.parentElement.setAttribute('title', 'Copy API URL');
+        copyButton.classList.add('fa-clipboard');
+        copyButton.classList.remove('fa-check');
+        copyButton.innerHTML = '';
+      }, 2000);
+    });
+  }
   window.onload = function() {
     const ui = SwaggerUIBundle({
       url: "/openapi.yml?4",
@@ -76,24 +94,12 @@ Detailed, interactive documentation of all available Dryad request methods:
       newEl.setAttribute('title', 'Copy API URL');
       newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
       block.insertBefore(newEl, block.lastElementChild);
-      newEl.onclick = e => {
-        const copyButton = e.currentTarget.firstElementChild;
-        const pathSpan = e.currentTarget.parentElement.querySelector('.opblock-summary-path')
-        const requestUrl = pathSpan.dataset.path
-        navigator.clipboard.writeText(`${apiUrl}${requestUrl}`).then(() => {
-          // Successful copy
-          copyButton.parentElement.setAttribute('title', 'Copied');
-          copyButton.classList.remove('fa-clipboard');
-          copyButton.classList.add('fa-check');
-          copyButton.innerHTML = '<span class="screen-reader-only">Copied</span>'
-          setTimeout(function(){
-            copyButton.parentElement.setAttribute('title', 'Copy API URL');
-            copyButton.classList.add('fa-clipboard');
-            copyButton.classList.remove('fa-check');
-            copyButton.innerHTML = '';
-          }, 2000);
-        });
-      }
+      newEl.addEventListener('click', copyUrl)
+      newEl.addEventListener('keydown', (e) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          copyUrl(e)
+        }
+      });
     })
   })
 </script>

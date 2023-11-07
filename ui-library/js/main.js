@@ -173,6 +173,24 @@ function joelsReady(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
+  function copyEmail(e) {
+    const copyButton = e.currentTarget.firstElementChild;
+    const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
+    navigator.clipboard.writeText(email).then(() => {
+      // Successful copy
+      copyButton.parentElement.setAttribute('title', 'Email copied');
+      copyButton.classList.remove('fa-clipboard');
+      copyButton.classList.add('fa-check');
+      copyButton.innerHTML = '<span class="screen-reader-only">Email address copied</span>'
+      setTimeout(function(){
+        copyButton.parentElement.setAttribute('title', 'Copy email');
+        copyButton.classList.add('fa-clipboard');
+        copyButton.classList.remove('fa-check');
+        copyButton.innerHTML = '';
+      }, 2000);
+    });
+  }
+
   var emails = document.getElementsByClassName('emailr');
   for (var i=0; i < emails.length; i++) {
     emails[i].onclick = e => {
@@ -189,23 +207,12 @@ function joelsReady(){
     newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
     const element = emails[i];
     element.parentNode.insertBefore(newEl, element.nextSibling);
-    newEl.onclick = e => {
-      const copyButton = e.currentTarget.firstElementChild;
-      const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
-      navigator.clipboard.writeText(email).then(() => {
-        // Successful copy
-        copyButton.parentElement.setAttribute('title', 'Email copied');
-        copyButton.classList.remove('fa-clipboard');
-        copyButton.classList.add('fa-check');
-        copyButton.innerHTML = '<span class="screen-reader-only">Email address copied</span>'
-        setTimeout(function(){
-          copyButton.parentElement.setAttribute('title', 'Copy email');
-          copyButton.classList.add('fa-clipboard');
-          copyButton.classList.remove('fa-check');
-          copyButton.innerHTML = '';
-        }, 2000);
-      });
-    }
+    newEl.addEventListener('click', copyEmail)
+    newEl.addEventListener('keydown', (e) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        copyEmail(e)
+      }
+    });
   };
 
   function localize(time) {
@@ -239,22 +246,28 @@ function joelsReady(){
     }
   });
 
+  function expandButtonMenu(e) {
+    const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+    const baseURL = window.location.pathname + window.location.search
+    if (closed) {
+      const newHash = '#' + e.currentTarget.id
+      history.replaceState('', '', baseURL + newHash);
+      e.currentTarget.setAttribute('aria-expanded', 'true');
+      e.currentTarget.nextElementSibling.removeAttribute('hidden');
+    } else {
+      history.replaceState('', '', baseURL);
+      e.currentTarget.setAttribute('aria-expanded', 'false');
+      e.currentTarget.nextElementSibling.setAttribute('hidden', true);
+    }
+  }
   var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
   expandButtons.forEach(button => {
-    button.onclick = e => {
-      const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
-      const baseURL = window.location.pathname + window.location.search
-      if (closed) {
-        const newHash = '#' + e.currentTarget.id
-        history.replaceState('', '', baseURL + newHash);
-        e.currentTarget.setAttribute('aria-expanded', 'true');
-        e.currentTarget.nextElementSibling.removeAttribute('hidden');
-      } else {
-        history.replaceState('', '', baseURL);
-        e.currentTarget.setAttribute('aria-expanded', 'false');
-        e.currentTarget.nextElementSibling.setAttribute('hidden', true);
+    button.addEventListener('click', expandButtonMenu)
+    button.addEventListener('keydown', (e) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        expandButtonMenu(e)
       }
-    }
+    });
   });
 
   if (window.location.hash) {
