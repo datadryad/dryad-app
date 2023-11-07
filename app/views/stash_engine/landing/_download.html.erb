@@ -8,7 +8,7 @@
           <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
           <input type="hidden" name="url" value="<%= Rails.application.routes.url_helpers.download_stream_path(fu.id) %>"/>
         <% end %>
-        <button type="submit" name="submit" class="o-download__files" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
+        <button type="submit" name="submit" class="o-download__files js-download" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
     <% end %>
     <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
   </div>
