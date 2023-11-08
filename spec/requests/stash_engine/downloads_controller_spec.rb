@@ -12,7 +12,7 @@ module StashEngine
       mock_salesforce!
       mock_tenant!
       @user = create(:user, role: 'superuser')
-      @resource = create(:resource, user_id: @user.id, total_file_size: 0)
+      @resource = create(:resource, user_id: @user.id)
       @resource.current_resource_state.update(resource_state: 'submitted')
       @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
       @resource.reload

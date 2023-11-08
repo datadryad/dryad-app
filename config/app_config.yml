@@ -185,7 +185,6 @@ defaults: &DEFAULTS
     # 300 GB and 50 GB below but expressed in bytes
     merritt_size: 300_000_000_000
     zenodo_size: 50_000_000_000
-    zip_size: 11_000_000_000
     files: 1000
   frictionless:
     # 150 MB and below
