@@ -2,7 +2,10 @@
 <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
   <div class="o-download">
-    <%= form_with url: "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
+    <% add_download_authorization(resource.id) %>
+    <%= form_with url:
+                      "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip",
+                  method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
         <% resource.current_file_uploads.each do |fu| %>
           <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
           <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
