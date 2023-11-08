@@ -1,3 +1,4 @@
+console.log('service-worker.js loaded');
 importScripts('./client-zip/lengthWorker.js', './client-zip/makeZipWorker.js', './dl-stream/worker.js');
 // './client-zip/worker.js',
 
@@ -15,16 +16,22 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('fetch', (event) => {
   // This will intercept all request with a URL containing /downloadZip/ ;
+  console.log('got event with /downloadZip/');
   const url = new URL(event.request.url);
+  console.log('url', url);
   const [, name] = url.pathname.match(/\/downloadZip\/(.+)/i) || [,];
+  console.log('name', name);
   if (url.origin === self.origin && name) {
     if (name === 'keep-alive') {
+      console.log('keep-alive');
       event.respondWith(new Response('', {status: 200}));
     } else {
+      console.log('not keep-alive');
       event.respondWith(event.request.formData()
           .then((data) => {
-            const resource_id = data.get('resource_id');
-            console.log('resource_id', resource_id);
+            console.log('data', data);
+            // const resource_id = data.get('resource_id');
+            // console.log('resource_id', resource_id);
 
             fetch('/stash/downloads/zip_assembly_info/4210', {credentials: 'include'})
                 .then(response => {
@@ -35,9 +42,11 @@ self.addEventListener('fetch', (event) => {
                 })
                 .then(data => {
                   // Now you can work with the JSON data
-                  console.log(data);
+                  console.log('data', data);
                   const metadata = data.map((x) => ({name: x.filename, size: x.size}));
+                  console.log('metadata', metadata);
                   const urls = data.map((x) => x.url);
+                  console.log('urls', urls);
                   const headers = {
                     'Content-Type': 'application/zip',
                     'Content-Disposition': `attachment;filename="${name}"`,
