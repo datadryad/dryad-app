@@ -22,26 +22,44 @@ self.addEventListener('fetch', (event) => {
       event.respondWith(new Response('', {status: 200}));
     } else {
       event.respondWith(event.request.formData()
-        .then((data) => {
-          const metadata = data.getAll('size').map((s, i) => ({name: data.getAll('filename')[i], size: s}));
-          const headers = {
-            'Content-Type': 'application/zip',
-            'Content-Disposition': `attachment;filename="${name}"`,
-            'Content-Length': predictLength([{name, size: 0}].concat(metadata)),
-          };
-          const [checkStream, printStream] = makeZip(new DownloadStream(data.getAll('url')), {metadata}).tee();
-          const reader = checkStream.getReader();
-          reader.read().then(function processText({done}) {
-            if (done && messagePorts[event.request.url]) {
-              messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Stream complete'});
-              return;
-            }
-            return reader.read().then(processText);
-          });
-          return new Response(printStream, {headers});
-          // return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
-        })
-        .catch((err) => new Response(err.message, {status: 500})));
+          .then((data) => {
+            const resource_id = data.get('resource_id');
+            console.log('resource_id', resource_id);
+
+            fetch('/stash/downloads/zip_assembly_info/4210', {credentials: 'include'})
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  return response.json(); // Parse the response as JSON
+                })
+                .then(data => {
+                  // Now you can work with the JSON data
+                  console.log(data);
+                  const metadata = data.map((x) => ({name: x.filename, size: x.size}));
+                  const urls = data.map((x) => x.url);
+                  const headers = {
+                    'Content-Type': 'application/zip',
+                    'Content-Disposition': `attachment;filename="${name}"`,
+                    'Content-Length': predictLength([{name, size: 0}].concat(metadata)),
+                  };
+                  const [checkStream, printStream] = makeZip(new DownloadStream(urls), {metadata}).tee();
+                  const reader = checkStream.getReader();
+                  reader.read().then(function processText({done}) {
+                    if (done && messagePorts[event.request.url]) {
+                      messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Stream complete'});
+                      return;
+                    }
+                    return reader.read().then(processText);
+                  });
+                  return new Response(printStream, {headers});
+                  // return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
+                })
+            // .catch(error => {
+            //   console.error('Error:', error);
+            // });
+          })
+          .catch((err) => new Response(err.message, {status: 500})));
     }
   }
 });

@@ -38,7 +38,7 @@ module StashEngine
     end
 
     def zip_assembly_info
-      # add some code here to enforce security
+      # add some code here to enforce security and this request was previously OKed (from the session)
       unless session[:downloads].present? && session[:downloads].include?(params[:resource_id].to_i)
         return render json: ['unauthorized'], status: :unauthorized
       end
