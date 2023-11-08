@@ -16,11 +16,8 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('fetch', (event) => {
   // This will intercept all request with a URL containing /downloadZip/ ;
-  console.log('got event with /downloadZip/');
   const url = new URL(event.request.url);
-  console.log('url', url);
   const [, name] = url.pathname.match(/\/downloadZip\/(.+)/i) || [,];
-  console.log('name', name);
   if (url.origin === self.origin && name) {
     if (name === 'keep-alive') {
       console.log('keep-alive');
