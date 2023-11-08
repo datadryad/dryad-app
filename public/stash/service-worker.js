@@ -49,6 +49,7 @@ self.addEventListener('fetch', (event) => {
                     'Content-Disposition': `attachment;filename="${name}"`,
                     'Content-Length': predictLength([{name, size: 0}].concat(metadata)),
                   };
+                  console.log('headers', headers);
                   const [checkStream, printStream] = makeZip(new DownloadStream(urls), {metadata}).tee();
                   const reader = checkStream.getReader();
                   reader.read().then(function processText({done}) {
@@ -58,9 +59,10 @@ self.addEventListener('fetch', (event) => {
                     }
                     return reader.read().then(processText);
                   });
-                  return new Response(printStream, {headers});
-                  // return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
+                  // return new Response(printStream, {headers});
+                  return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
                 })
+                .catch((err) => new Response(err.message, {status: 500})));
             // .catch(error => {
             //   console.error('Error:', error);
             // });
