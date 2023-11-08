@@ -15,19 +15,30 @@ module.exports = function(api) {
     )
   }
 
-  return {
-    presets: [
-      isTestEnv && [
+  let presets;
+
+  if (isTestEnv) {
+    presets = [
+      [
         '@babel/preset-env',
         {
           targets: {
             node: 'current'
           },
           modules: 'commonjs'
-        },
-        '@babel/preset-react'
+        }
       ],
-      (isProductionEnv || isDevelopmentEnv) && [
+      [
+        '@babel/preset-react',
+        {
+          development: true,
+          useBuiltIns: true
+        }
+      ]
+    ]
+  } else if (isProductionEnv || isDevelopmentEnv) {
+    presets = [
+      [
         '@babel/preset-env',
         {
           forceAllTransforms: true,
@@ -40,11 +51,15 @@ module.exports = function(api) {
       [
         '@babel/preset-react',
         {
-          development: isDevelopmentEnv || isTestEnv,
+          development: isDevelopmentEnv,
           useBuiltIns: true
         }
       ]
-    ].filter(Boolean),
+    ]
+  }
+
+  return {
+    presets,
     plugins: [
       'babel-plugin-macros',
       '@babel/plugin-syntax-dynamic-import',
