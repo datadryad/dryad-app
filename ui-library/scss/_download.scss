@@ -1,51 +1,30 @@
 // ##### Download Object ##### //
 
-*[class^="o-download__"] {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	padding: 6px 10px;
-	border: none;
+.o-download {
+	padding: 5px;
 	background-color: $design-lighter-blue-color;
-
-	#download_icon {
-		position: relative;
-		display: block;
-		width: 20px;
-		height: 20px;
-		margin-right: 1ch;
-		font-family: FontAwesome;
-		font-size: 20px;
-	}
-
-	&:hover {
-    opacity: 0.85;
-  }
 }
 
-.o-download__files #download_icon::before {
-	content: '\f019';
-	color: $design-dark-blue-color;
+%o-download__button {
+	min-height: 28px;
+	padding: 0 0 0 50px;
+	border: none;
+	background: left 10px center no-repeat;
+	text-align: left;
+}
+
+.o-download__files {
+	@extend %o-download__button;
+	background-image: inline('../images/icon_download.svg');
 }
 
 .o-download__wait {
-	background-color: $design-extra-light-gray-color;
-	&:hover {
-		opacity: 1;
-	}
-	#download_icon {
-		font-size: 18px;
-		&::before {
-			content: '\f1ce';
-			color: $design-medium-blue-color;
-			position: absolute;
-		  top: -3px; left: 0;
-		  -webkit-animation: fa-spin 2s infinite linear;
-  		animation: fa-spin 2s infinite linear;
-		}	
-	}
+	@extend %o-download__button;
+	background-image: inline('../images/icon_spinner_oval.svg');
+	background-size: 20px 20px;
 }
 
-.o-download__docs::before {
-	content: inline('../images/icon_pdf.svg');
+.o-download__docs {
+	@extend %o-download__button;
+	background-image: inline('../images/icon_pdf.svg');
 }
