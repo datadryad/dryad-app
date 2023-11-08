@@ -9,6 +9,7 @@ rules:
   "max-len": [2, {code: 150, tabWidth: 2, ignoreUrls: true}]
   "no-console": off
   "no-param-reassign": [2, { "props": false }]
+  "no-restricted-exports": [2, { restrictDefaultExports: {defaultFrom: false }}]
   "object-curly-spacing": [2, "never"]
   "react/destructuring-assignment": [0]
   "react/forbid-prop-types": [2, { forbid: [], checkContextTypes: false, checkChildContextTypes: false}]
