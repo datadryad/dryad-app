@@ -35,10 +35,10 @@ Basic Dryad Submission Flow
     * Updates the total dataset size by querying Merritt
 
 
-Merritt States
-=================
+Resource States (aka versionStatus)
+====================================
 
-The Merritt status is stored in resource.current_resource_state (StashEngine::ResourceState).
+The resource state is stored in resource.current_resource_state (StashEngine::ResourceState).
 Allowable values:
 - in_progress = someone is editing and hasn't submitted this version to Merritt yet
 - processing = processing through Merritt as a submission right now (or maybe stalled in rare circumstances)
