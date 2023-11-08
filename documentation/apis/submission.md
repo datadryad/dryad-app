@@ -202,7 +202,7 @@ To move a dataset into `peer_review` status, the dataset must have a
 `versionStatus` of `submitted`. Make a PATCH request as described
 above. Submit to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
 that tells the server to set the /curationStatus value to
-'submitted': 
+'peer_review': 
 
 ```json
 [ { "op": "replace", "path": "/curationStatus", "value": "peer_review" } ]
