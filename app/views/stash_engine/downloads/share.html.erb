@@ -1,79 +1,46 @@
-<% @page_title = "Pre-publication dataset sharing" %>
-<div id="page-columns">
-  <div id="page-content">
+<% @page_title = "Pre-publication sharing link" %>
+
+<div class="c-datasets-heading">
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
-  <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
-<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
-  <div id="withzip">  
-    <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{@resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-        <% @resource.current_file_uploads.each do |fu| %>
-          <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
-          <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
-          <input type="hidden" name="url" value="<%= Rails.application.routes.url_helpers.download_stream_path(fu.id) %>"/>
-        <% end %>
-        <button type="submit" name="submit" class="o-download__files" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download dataset</button>
-    <% end %>
-    <p>If the download process does not begin automatically, click the button above to start the download.</p>
-  </div>
-  <div id="nozip" hidden>
-    <p>Your browser does not allow for generation of a dataset package. Please download the individual dataset files:</p>
-<% else %>
-  <div>
-    <p>Dataset files for download:</p>
-<% end %>
-    <ul class="c-file-group__list" style="margin-left: 0; font-size: 1rem;">
-      <% @resource.current_file_uploads.each do |fu| %>
-        <li>
-          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id),
-                    title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-          <span><%= filesize(fu.upload_file_size) %>
-          <% if fu.upload_file_name.ends_with?('csv') %>
-            <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
-                  title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
-                  method: 'get' do %>
-              <i class="fa fa-search-plus c-file-group__preview" aria-hidden="true"></i>
-            <% end %>
-          <% end %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-  <%
-      sfw = @resource.software_files.present_files
-      supp = @resource.supp_files.present_files
-  %>
-  <% if sfw.count.positive? || supp.count.positive? %>
-    <hr/>
-    <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
-  <% end %>
-
-  <% if sfw.count.positive? && @resource.zenodo_copies.software.done.count.positive? %>
-    <h3>Software files available at Zenodo</h3>
-    <% sfw.order("lower(upload_file_name) ASC").each do |s| %>
-      <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
-    <% end %>
-  <% end %>
-
-  <% if supp.count.positive? && @resource.zenodo_copies.supp.done.count.positive? %>
-    <h3>Supplemental files available at Zenodo</h3>
-    <% supp.order("lower(upload_file_name) ASC").each do |s| %>
-      <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
-    <% end %>
-  <% end %>
-  </div>
 </div>
-<% if @resource.total_file_size < 11000000000 %>
-<% content_for :doc_end do %>
-  <script type="text/javascript" async>    
-    if ("serviceWorker" in navigator) {
-      const dlbutton = document.getElementById('download_zip_button');
-      <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-      dlbutton.click();
-    } else {
-      document.getElementById('nozip').removeAttribute('hidden');
-      document.getElementById('withzip').hidden = true;
-    }
-  </script>
+
+<p>
+  We are assembling your
+  <%= link_to 'requested download', download_resource_path(resource_id: 0, share: params[:id]), class: 'js-download', remote: true %>
+  for this dataset that is currently private for peer review.
+</p>
+
+<p>If the download process does not begin automatically within several minutes, click the link above to start the download.</p>
+
+<%
+    sfw = @resource.software_files.present_files
+    supp = @resource.supp_files.present_files
+%>
+
+<% if sfw.count.positive? || supp.count.positive? %>
+  <hr/>
+  <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
 <% end %>
+
+<% if sfw.count.positive? && @resource.zenodo_copies.software.done.count.positive? %>
+  <h3>Software files available at Zenodo</h3>
+
+  <% sfw.order("lower(upload_file_name) ASC").each do |s| %>
+    <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
+  <% end %>
 <% end %>
+
+<% if supp.count.positive? && @resource.zenodo_copies.supp.done.count.positive? %>
+  <h3>Supplemental files available at Zenodo</h3>
+
+  <% supp.order("lower(upload_file_name) ASC").each do |s| %>
+    <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
+  <% end %>
+<% end %>
+
+<script>
+    // This will trigger the AJAX action from the link with remote: true
+    $(document).ready(function(){
+        $(".js-download").trigger('click');
+    });
+</script>

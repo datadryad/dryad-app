@@ -12,7 +12,7 @@ module StashEngine
       c.helper_method \
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
-          formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date
+          formatted_date formatted_datetime formatted_html5_date local_time default_date
           current_tenant current_user
           field_suffix shorten_linked_url english_list
           display_id display_id_plain display_author_orcid
@@ -75,13 +75,6 @@ module StashEngine
 
       t = t.to_time if t.instance_of?(String)
       local_time(t)&.strftime('%Y-%m-%d')
-    end
-
-    def minimal_date(t)
-      return '00000000' if t.blank?
-
-      t = t.to_time if t.instance_of?(String)
-      local_time(t)&.strftime('%Y%m%d')
     end
 
     def local_time(t)
