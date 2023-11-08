@@ -13,6 +13,9 @@
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy"
     },
+    "testPathIgnorePatterns": [
+      "ReadMe"
+    ],
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
