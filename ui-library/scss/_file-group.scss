@@ -2,12 +2,10 @@
 
 .c-file-group {
 
-  margin-bottom: 6px;
-
   &[open] .c-file-group__summary {
 
     &::before {
-      content: '\f078';
+      transform: rotate(90deg);
     }
 
   }
@@ -15,51 +13,31 @@
 }
 
 .c-file-group__summary {
-  @extend %o-button__link-style;
-  color: $design-dark-blue-color;
   position: relative;
+  padding: 0 0 0 20px;
 
   &::before {
-    display: inline-block;
-    font-family: FontAwesome;
-    content: '\f054';
-    color: currentColor;
-    margin-right: .5ch;
+    content: inline('../images/icon_thin-right-arrow.svg');
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
 }
 
 .c-file-group__list {
-  list-style-type: none;
-  font-size: .98rem;
-  margin: 0;
-  padding: 0;
-  margin-left: $spacing-base;
+  padding-left: 15px;
+  list-style: none;
 
   li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 4px 2px;
-
-    * {
-      max-width: 100%;
-    }
-
-    &:nth-child(odd) {
-      background-color: #f6f6f6;
-    }
-
-    form {
-      display: inline-block;
-    }
-
-    .c-file-group__preview {
-      border: none;
-      background: none;
-      margin-left: .5ch;
-    }
+    margin: 0 0 0.3em;
+    padding: 0;
   }
+
+  .c-file-group__preview {
+    margin: 0 0 10px 0;
+    border: none;
+    background: none;
+  }
+
 }
