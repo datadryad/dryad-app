@@ -59,10 +59,9 @@ self.addEventListener('fetch', (event) => {
                     }
                     return reader.read().then(processText);
                   });
-                  // return new Response(printStream, {headers});
-                  return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
+                  return new Response(printStream, {headers});
+                  // return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
                 })
-                .catch((err) => new Response(err.message, {status: 500})));
             // .catch(error => {
             //   console.error('Error:', error);
             // });
