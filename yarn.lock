@@ -1659,6 +1659,14 @@
     lodash.debounce "^4.0.8"
     tslib "^2.5.0"
 
+"@milkdown/plugin-trailing@7.3.0":
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/@milkdown/plugin-trailing/-/plugin-trailing-7.3.0.tgz#d06846ed5b49dd3def5a063b614fc2e0ab579b41"
+  integrity sha512-y7yrP/85zfZ/Na67uVmlXn/9GgHAXvmrAObO30er1uGauNlIl7hbGh/D9ASTX7Xcr5b3gLVO84uIAPcd+iFT+g==
+  dependencies:
+    "@milkdown/utils" "7.3.0"
+    tslib "^2.5.0"
+
 "@milkdown/preset-commonmark@7.3.0":
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/@milkdown/preset-commonmark/-/preset-commonmark-7.3.0.tgz#53edd865044d7cdcbb872210ed76b7064e2810f2"

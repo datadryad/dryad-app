@@ -49,6 +49,7 @@
     "@milkdown/ctx": "7.3.0",
     "@milkdown/plugin-history": "7.3.0",
     "@milkdown/plugin-listener": "7.3.0",
+    "@milkdown/plugin-trailing": "7.3.0",
     "@milkdown/preset-commonmark": "7.3.0",
     "@milkdown/preset-gfm": "7.3.0",
     "@milkdown/prose": "7.3.0",
@@ -150,5 +151,9 @@
   },
   "resolutions": {
     "nanoid": "<4.0.0"
+  },
+  "peerDependencies": {
+    "prosemirror-tables": "^1.3.4",
+    "prosemirror-view": "^1.32.4"
   }
 }
