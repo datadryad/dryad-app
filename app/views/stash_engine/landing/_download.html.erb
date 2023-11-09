@@ -1,19 +1,25 @@
 <% # takes dataset_identifier as local %>
-<div class="o-download">
-  <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
-
-  <%= button_to "Download dataset", Rails.application.routes.url_helpers.download_resource_path(resource.id), remote: true,
-                class: 'o-download__files js-download', id: "dl_res_#{resource.id}" %>
-
-  <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
-</div>
-
-<script>
-  $('#<%= "dl_res_#{resource.id}" %>').click(function(event) {
-    var item = $(this);
-    item.removeClass('o-download__files').addClass('o-download__wait');
-    event.preventDefault();
-    $(this).closest('form').submit();
-    item.prop('disabled', true);
-  });
-</script>
+<% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
+<% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
+  <div class="o-download">
+    <%= form_with url: "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
+        <% resource.current_file_uploads.each do |fu| %>
+          <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
+          <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
+          <input type="hidden" name="url" value="<%= Rails.application.routes.url_helpers.download_stream_path(fu.id) %>"/>
+        <% end %>
+        <button type="submit" name="submit" class="o-download__files" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
+    <% end %>
+    <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
+  </div>
+  <% content_for :doc_end do %>
+  <script type="text/javascript" async>
+    const dlbutton = document.getElementById('download_zip_button');
+    if ("serviceWorker" in navigator) {
+      <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
+    } else {
+      dlbutton.hidden = true;
+    }
+  </script>
+  <% end %>
+<% end %>
