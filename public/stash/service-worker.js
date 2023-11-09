@@ -26,11 +26,12 @@ self.addEventListener('fetch', (event) => {
       console.log('not keep-alive');
       event.respondWith(event.request.formData()
           .then((data) => {
-            console.log('data', data);
-            // const resource_id = data.get('resource_id');
-            // console.log('resource_id', resource_id);
-
-            fetch('/stash/downloads/zip_assembly_info/4210', {credentials: 'include'})
+            const resource_id = data.get('resource_id');
+            console.log('resource_id', resource_id);
+            return resource_id;
+          })
+          .then((data) => {
+            fetch(`/stash/downloads/zip_assembly_info/${data}`, {credentials: 'include'})
                 .then(response => {
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -57,14 +58,15 @@ self.addEventListener('fetch', (event) => {
                       messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Stream complete'});
                       return;
                     }
+                    console.log("should be returning a response");
                     return reader.read().then(processText);
                   });
                   return new Response(printStream, {headers});
                   // return downloadZip(new DownloadStream(data.getAll('url')), {metadata});
                 })
-            // .catch(error => {
-            //   console.error('Error:', error);
-            // });
+                // .catch((err) => new Response(err.message, {status: 500}));
+
+                  // console.error('Error:', error);
           })
           .catch((err) => new Response(err.message, {status: 500})));
     }
