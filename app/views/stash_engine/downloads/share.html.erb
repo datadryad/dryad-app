@@ -4,16 +4,12 @@
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
   <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
 <% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
-  <div id="withzip">  
+  <div id="withzip">
+    <% add_download_authorization(@resource.id) %>
     <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{@resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-        <% @resource.current_file_uploads.each do |fu| %>
-          <input type="hidden" name="size" value="<%= fu.upload_file_size %>"/>
-          <input type="hidden" name="filename" value="<%= fu.upload_file_name %>" />
-          <input type="hidden" name="url" value="<%= Rails.application.routes.url_helpers.download_stream_path(fu.id) %>"/>
-        <% end %>
-        <button type="submit" name="submit" class="o-download__files" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download dataset</button>
+      <input type="hidden" name="resource_id" value="<%= @resource.id %>"/>
+      <button type="submit" name="submit" class="o-download__files" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download dataset</button>
     <% end %>
-    <p>If the download process does not begin automatically, click the button above to start the download.</p>
   </div>
   <div id="nozip" hidden>
     <p>Your browser does not allow for generation of a dataset package. Please download the individual dataset files:</p>
@@ -69,7 +65,7 @@
     if ("serviceWorker" in navigator) {
       const dlbutton = document.getElementById('download_zip_button');
       <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-      dlbutton.click();
+      // dlbutton.click();
     } else {
       document.getElementById('nozip').removeAttribute('hidden');
       document.getElementById('withzip').hidden = true;
