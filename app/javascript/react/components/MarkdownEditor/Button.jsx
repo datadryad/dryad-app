@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelect} from 'downshift';
 import {editorViewCtx} from '@milkdown/core';
 import {callCommand} from '@milkdown/utils';
@@ -26,14 +26,14 @@ import {
 const commands = {
   undo: undoCommand,
   redo: redoCommand,
-  bold: toggleStrongCommand,
-  emph: toggleEmphasisCommand,
-  code: toggleInlineCodeCommand,
+  strong: toggleStrongCommand,
+  emphasis: toggleEmphasisCommand,
+  inlineCode: toggleInlineCodeCommand,
   strike: toggleStrikethroughCommand,
-  ul: wrapInBulletListCommand,
-  ol: wrapInOrderedListCommand,
-  quote: wrapInBlockquoteCommand,
-  block: createCodeBlockCommand,
+  bullet_list: wrapInBulletListCommand,
+  ordered_list: wrapInOrderedListCommand,
+  blockquote: wrapInBlockquoteCommand,
+  code_block: createCodeBlockCommand,
   table: insertTableCommand,
   heading: wrapInHeadingCommand,
 };
@@ -41,17 +41,17 @@ const commands = {
 const labels = {
   undo: 'Undo',
   redo: 'Redo',
-  bold: 'Bold',
-  emph: 'Italic',
+  strong: 'Bold',
+  emphasis: 'Italic',
   link: 'Link',
-  code: 'Code',
+  inlineCode: 'Code',
   strike: 'Strikethrough text',
-  ul: 'Create list',
-  ol: 'Create numbered list',
+  bullet_list: 'Create list',
+  ordered_list: 'Create numbered list',
   indent: 'Indent text',
   outdent: 'Remove indent',
-  quote: 'Make quote',
-  block: 'Insert code block',
+  blockquote: 'Make quote',
+  code_block: 'Insert code block',
   table: 'Insert table',
   heading: 'Set heading',
 };
@@ -59,19 +59,19 @@ const labels = {
 const icons = {
   undo: <i className="fa fa-undo" aria-hidden="true" />,
   redo: <i className="fa fa-repeat" aria-hidden="true" />,
-  bold: <i className="fa fa-bold" aria-hidden="true" />,
-  emph: <i className="fa fa-italic" aria-hidden="true" />,
+  strong: <i className="fa fa-bold" aria-hidden="true" />,
+  emphasis: <i className="fa fa-italic" aria-hidden="true" />,
   link: <i className="fa fa-link" aria-hidden="true" />,
-  code: <i className="fa fa-terminal" aria-hidden="true" />,
+  inlineCode: <i className="fa fa-terminal" aria-hidden="true" />,
   strike: <i className="fa fa-strikethrough" aria-hidden="true" />,
-  ul: <i className="fa fa-list" aria-hidden="true" />,
-  ol: <i className="fa fa-list-ol" aria-hidden="true" />,
-  quote: <i className="fa fa-quote-left" aria-hidden="true" />,
-  block: <i className="fa fa-code" aria-hidden="true" />,
+  bullet_list: <i className="fa fa-list" aria-hidden="true" />,
+  ordered_list: <i className="fa fa-list-ol" aria-hidden="true" />,
+  blockquote: <i className="fa fa-quote-left" aria-hidden="true" />,
+  code_block: <i className="fa fa-code" aria-hidden="true" />,
   table: <i className="fa fa-table" aria-hidden="true" />,
 };
 
-function LinkMenu({editor, editorId}) {
+function LinkMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [showRemove, setRemove] = useState(false);
@@ -186,6 +186,8 @@ function LinkMenu({editor, editorId}) {
     <div className="linkSelect" role="menuitem">
       <button
         type="button"
+        className={active ? 'active' : ''}
+        title={labels.link}
         aria-label={labels.link}
         aria-expanded="false"
         aria-controls={`${editorId}linkMenu`}
@@ -195,14 +197,16 @@ function LinkMenu({editor, editorId}) {
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>
         <label>Link text <input type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
         <label>URL <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
-        {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
-        <button type="button" onClick={submit}>Save</button>
+        <div className="buttons">
+          <button type="button" onClick={submit}>Save</button>
+          {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
+        </div>
       </div>
     </div>
   );
 }
 
-function Table({editor, editorId}) {
+function Table({editor, editorId, active}) {
   const [rows, setRows] = useState([1, 2, 3, 4, 5, 6]);
   const [cols, setCols] = useState([1, 2, 3, 4, 5, 6]);
   const [colNum, setColNum] = useState(0);
@@ -258,7 +262,9 @@ function Table({editor, editorId}) {
     <div className="tableSelect" role="menuitem">
       <button
         type="button"
+        className={active ? 'active' : ''}
         aria-label={labels.table}
+        title={labels.table}
         aria-expanded="false"
         aria-controls={`${editorId}tableMenu`}
         onClick={openMenu}
@@ -290,8 +296,11 @@ function Table({editor, editorId}) {
   );
 }
 
-function Heading({editor}) {
-  const [selectedItem, setSelectedItem] = React.useState(null);
+function Heading({editor, active, headingLevel}) {
+  const [selectedItem, setSelectedItem] = React.useState(headingLevel);
+  useEffect(() => {
+    setSelectedItem(headingLevel);
+  }, [headingLevel]);
   const items = [1, 2, 3, 4, 5, 6, 0];
   const {
     isOpen,
@@ -316,7 +325,14 @@ function Heading({editor}) {
   });
   return (
     <div className="headingSelect" role="menuitem">
-      <div className="headingButton" role="button" aria-label={labels.heading} {...getToggleButtonProps({'aria-labelledby': null})} tabIndex="0">
+      <div
+        className={`headingButton${active ? ' active' : ''}`}
+        role="button"
+        aria-label={labels.heading}
+        title={labels.heading}
+        {...getToggleButtonProps({'aria-labelledby': null})}
+        tabIndex="0"
+      >
         <span>{selectedItem ? ((selectedItem === 1 && 'Title') || `Heading ${selectedItem}`) : 'Heading'}</span>
         <i className={`fa ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
       </div>
@@ -336,14 +352,18 @@ function Heading({editor}) {
   );
 }
 
-function Button({type, editor, editorId}) {
+function Button({
+  type, active, editor, editorId, headingLevel,
+}) {
   if (type === 'spacer') return <span className="spacer" />;
-  if (type === 'link') return <LinkMenu editor={editor} editorId={editorId} />;
-  if (type === 'heading') return <Heading editor={editor} />;
-  if (type === 'table') return <Table editor={editor} editorId={editorId} />;
+  if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
+  if (type === 'heading') return <Heading active={active} editor={editor} headingLevel={headingLevel} />;
+  if (type === 'table') return <Table active={active} editor={editor} editorId={editorId} />;
   return (
     <button
       type="button"
+      className={active ? 'active' : ''}
+      title={labels[type]}
       aria-label={labels[type]}
       role={['undo', 'redo'].includes(type) ? 'menuitem$' : 'menuitemradio'}
       onClick={() => {
