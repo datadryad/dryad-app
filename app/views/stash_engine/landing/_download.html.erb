@@ -6,9 +6,8 @@
     <%= form_with url:
                       "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip",
                   method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-        <% resource.current_file_uploads.each do |fu| %>
-          <input type="hidden" name="resource_id" value="<%= resource.id %>"/>
-        <% end %>
+
+        <input type="hidden" name="resource_id" value="<%= resource.id %>"/>
         <button type="submit" name="submit" class="o-download__files js-download" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
     <% end %>
     <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
