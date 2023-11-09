@@ -1,4 +1,3 @@
-console.log('service-worker.js loaded');
 importScripts('./client-zip/lengthWorker.js', './client-zip/makeZipWorker.js', './dl-stream/worker.js');
 // './client-zip/worker.js',
 
@@ -20,10 +19,8 @@ self.addEventListener('fetch', (event) => {
   const [, name] = url.pathname.match(/\/downloadZip\/(.+)/i) || [,];
   if (url.origin === self.origin && name) {
     if (name === 'keep-alive') {
-      console.log('keep-alive');
       event.respondWith(new Response('', {status: 200}));
     } else {
-      console.log('not keep-alive');
       event.respondWith(event.request.formData()
           .then((data) => {
             const resource_id = data.get('resource_id');
@@ -34,7 +31,7 @@ self.addEventListener('fetch', (event) => {
           })
           .then((response) => {
             if (!response.ok) {
-              throw new Error('Network response was not ok');
+              throw new Error('Network error retrieving list of presigned urls');
             }
             return response.json(); // Parse the response as JSON
           })
