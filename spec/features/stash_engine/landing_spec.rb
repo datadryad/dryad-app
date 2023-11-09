@@ -42,7 +42,8 @@ RSpec.feature 'Landing', type: :feature, js: true do
     expect(page).to have_text(/\d* downloads/)
   end
 
-  it 'shows popup for download in progress' do
+  # we don't do a popup for this anymore, just assemble our own zip package in JS
+  xit 'shows popup for download in progress' do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
