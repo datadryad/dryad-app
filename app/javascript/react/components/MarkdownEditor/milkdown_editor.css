@@ -94,6 +94,11 @@
   outline-width: thin;
 }
 
+.markdown_editor .md_editor-buttons button[disabled] {
+  color: #aaa;
+  background-color: transparent;
+}
+
 .markdown_editor .md_editor-buttons > button:first-child,
 .markdown_editor .md_editor-buttons .headingSelect:first-child,
 .markdown_editor .md_editor-buttons .headingSelect:first-child .headingButton {

@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {useSelect} from 'downshift';
 import {editorViewCtx} from '@milkdown/core';
-import {callCommand} from '@milkdown/utils';
-// eslint-disable-next-line import/no-unresolved
+import {$command, callCommand} from '@milkdown/utils';
+/* eslint-disable import/no-unresolved */
 import {TextSelection} from '@milkdown/prose/state';
+import {wrapInList} from '@milkdown/prose/schema-list';
+/* eslint-enable import/no-unresolved */
 import {redoCommand, undoCommand} from '@milkdown/plugin-history';
 import {
   // toggleMark,
@@ -13,15 +15,20 @@ import {
   toggleLinkCommand,
   updateLinkCommand,
   wrapInBlockquoteCommand,
-  wrapInBulletListCommand,
   wrapInHeadingCommand,
-  wrapInOrderedListCommand,
   createCodeBlockCommand,
+  bulletListSchema,
+  orderedListSchema,
+  liftListItemCommand,
+  sinkListItemCommand,
 } from '@milkdown/preset-commonmark';
 import {
   insertTableCommand,
   toggleStrikethroughCommand,
 } from '@milkdown/preset-gfm';
+
+export const bulletWrapCommand = $command('BulletListWrap', (ctx) => () => wrapInList(bulletListSchema.type(ctx)));
+export const orderWrapCommand = $command('OrderedListWrap', (ctx) => () => wrapInList(orderedListSchema.type(ctx)));
 
 const commands = {
   undo: undoCommand,
@@ -30,8 +37,10 @@ const commands = {
   emphasis: toggleEmphasisCommand,
   inlineCode: toggleInlineCodeCommand,
   strike: toggleStrikethroughCommand,
-  bullet_list: wrapInBulletListCommand,
-  ordered_list: wrapInOrderedListCommand,
+  bullet_list: bulletWrapCommand,
+  ordered_list: orderWrapCommand,
+  outdent: liftListItemCommand,
+  indent: sinkListItemCommand,
   blockquote: wrapInBlockquoteCommand,
   code_block: createCodeBlockCommand,
   table: insertTableCommand,
@@ -48,7 +57,7 @@ const labels = {
   strike: 'Strikethrough text',
   bullet_list: 'Create list',
   ordered_list: 'Create numbered list',
-  indent: 'Indent text',
+  indent: 'Indent list',
   outdent: 'Remove indent',
   blockquote: 'Make quote',
   code_block: 'Insert code block',
@@ -66,6 +75,8 @@ const icons = {
   strike: <i className="fa fa-strikethrough" aria-hidden="true" />,
   bullet_list: <i className="fa fa-list" aria-hidden="true" />,
   ordered_list: <i className="fa fa-list-ol" aria-hidden="true" />,
+  indent: <i className="fa fa-indent" aria-hidden="true" />,
+  outdent: <i className="fa fa-outdent" aria-hidden="true" />,
   blockquote: <i className="fa fa-quote-left" aria-hidden="true" />,
   code_block: <i className="fa fa-code" aria-hidden="true" />,
   table: <i className="fa fa-table" aria-hidden="true" />,
@@ -186,7 +197,7 @@ function LinkMenu({editor, editorId, active}) {
     <div className="linkSelect" role="menuitem">
       <button
         type="button"
-        className={active ? 'active' : ''}
+        className={active ? 'active' : undefined}
         title={labels.link}
         aria-label={labels.link}
         aria-expanded="false"
@@ -262,7 +273,7 @@ function Table({editor, editorId, active}) {
     <div className="tableSelect" role="menuitem">
       <button
         type="button"
-        className={active ? 'active' : ''}
+        className={active ? 'active' : undefined}
         aria-label={labels.table}
         title={labels.table}
         aria-expanded="false"
@@ -313,13 +324,8 @@ function Heading({editor, active, headingLevel}) {
     selectedItem,
     onSelectedItemChange: ({selectedItem: newSelectedItem}) => {
       setSelectedItem(newSelectedItem);
-      const view = editor()?.ctx.get(editorViewCtx);
-      const {dispatch, state} = view;
-      const {doc, selection, tr} = state;
-      const {from, to} = selection;
-      tr.setSelection(TextSelection.create(doc, from, to));
-      dispatch(tr);
       editor()?.action(callCommand(commands.heading.key, newSelectedItem));
+      const view = editor()?.ctx.get(editorViewCtx);
       view.focus();
     },
   });
@@ -352,28 +358,89 @@ function Heading({editor, active, headingLevel}) {
   );
 }
 
-function Button({
-  type, active, editor, editorId, headingLevel,
-}) {
-  if (type === 'spacer') return <span className="spacer" />;
-  if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
-  if (type === 'heading') return <Heading active={active} editor={editor} headingLevel={headingLevel} />;
-  if (type === 'table') return <Table active={active} editor={editor} editorId={editorId} />;
+function List({type, editor, active}) {
+  const isInList = (doc, schema, {from, to}) => {
+    let found = null;
+    let nesting = 0;
+    doc.nodesBetween(from === to ? from - 1 : from, to, (node, pos) => {
+      if (node.type === schema.nodes.ordered_list
+        || node.type === schema.nodes.bullet_list) {
+        nesting += 1;
+        found = {node, pos, nesting};
+      }
+    });
+    return found;
+  };
+
+  const changeListType = ({state, dispatch}, pos, ltype) => {
+    const [lType] = ltype.name.split('_');
+    const {doc, tr} = state;
+    const list = doc.resolve(pos - 2);
+    const start = list.start(list.depth - 1);
+    const end = list.end(list.depth - 1);
+    doc.nodesBetween(start, end, (n, p) => {
+      if (n.type.name === 'list_item') {
+        const resolved = doc.resolve(p);
+        const parent = resolved.before();
+        if (parent === pos && n.attrs.listType !== lType) {
+          tr.setNodeMarkup(p, null, n.type.defaultAttrs);
+          tr.setNodeMarkup(pos, ltype);
+        }
+      }
+    });
+    dispatch(tr);
+    return true;
+  };
+
+  const listWizard = () => {
+    const view = editor()?.ctx.get(editorViewCtx);
+    const {state} = view;
+    const {doc, selection, schema} = state;
+    const existing = isInList(doc, schema, selection);
+    if (existing) {
+      if (existing.node.type === schema.nodes[type]) {
+        Array.from({length: existing.nesting}, () => editor()?.action(callCommand(commands.outdent.key)));
+      } else {
+        changeListType(view, existing.pos, schema.nodes[type]);
+      }
+    } else {
+      editor()?.action(callCommand(commands[type].key));
+    }
+    view.focus();
+  };
+
   return (
     <button
       type="button"
-      className={active ? 'active' : ''}
+      className={active ? 'active' : undefined}
       title={labels[type]}
       aria-label={labels[type]}
-      role={['undo', 'redo'].includes(type) ? 'menuitem$' : 'menuitemradio'}
+      role="menuitem"
+      onClick={listWizard}
+    >{icons[type]}
+    </button>
+  );
+}
+
+function Button({
+  type, active, disabled, editor, editorId, headingLevel,
+}) {
+  if (type === 'spacer') return <span className="spacer" />;
+  if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
+  if (type === 'table') return <Table active={active} editor={editor} editorId={editorId} />;
+  if (type === 'heading') return <Heading active={active} editor={editor} headingLevel={headingLevel} />;
+  if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+  return (
+    <button
+      type="button"
+      className={active ? 'active' : undefined}
+      disabled={disabled ? 'disabled' : false}
+      title={labels[type]}
+      aria-label={labels[type]}
+      role="menuitem"
       onClick={() => {
-        const view = editor()?.ctx.get(editorViewCtx);
-        const {dispatch, state} = view;
-        const {doc, selection, tr} = state;
-        const {from, to} = selection;
-        tr.setSelection(TextSelection.create(doc, from, to));
-        dispatch(tr);
         editor()?.action(callCommand(commands[type].key));
+        const view = editor()?.ctx.get(editorViewCtx);
         view.focus();
       }}
     >{icons[type]}
