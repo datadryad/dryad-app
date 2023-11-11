@@ -17,7 +17,7 @@ import {selectionListener, selectionCtx} from './selectionListener';
 import Button from './Button';
 
 function MilkdownCore({
-  initialValue, onChange, onBlur, setSelection,
+  initialValue, onChange, setSelection,
 }) {
   useEditor((root) => Editor
     .make()
@@ -28,12 +28,6 @@ function MilkdownCore({
       const listener = ctx.get(listenerCtx);
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
         if (markdown !== prevMarkdown) onChange(markdown);
-      });
-      listener.blur((ctxx) => {
-        const view = ctxx.get(editorViewCtx);
-        const serializer = ctxx.get(serializerCtx);
-        const markdown = serializer(view.state.doc);
-        onBlur(markdown);
       });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {
@@ -51,7 +45,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', '
   'bullet_list', 'ordered_list', 'blockquote', 'code_block', 'table', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, initialValue, replaceValue, onChange, onBlur, buttons = defaultButtons,
+  id, initialValue, replaceValue, onChange, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -95,7 +89,7 @@ function MilkdownEditor({
           ))}
         </div>
       )}
-      <MilkdownCore initialValue={initialValue} onChange={onChange} onBlur={onBlur} setSelection={setSelection} />
+      <MilkdownCore initialValue={initialValue} onChange={onChange} setSelection={setSelection} />
     </>
   );
 }
@@ -115,7 +109,6 @@ MarkdownEditor.propTypes = {
   initialValue: PropTypes.string.isRequired,
   newValue: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onBlur: PropTypes.func.isRequired,
   buttons: PropTypes.arrayOf(PropTypes.oneOf(defaultButtons)),
 };
 
