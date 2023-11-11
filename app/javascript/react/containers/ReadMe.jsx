@@ -12,27 +12,23 @@ export default function ReadMe({
 }) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
-  const [savedValue, setSavedValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState('');
 
   const saveDescription = (markdown) => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    if (savedValue && savedValue !== markdown) {
-      const data = {
-        authenticity_token,
-        description: {
-          description: markdown,
-          resource_id: dcsDescription.resource_id,
-          id: dcsDescription.id,
-        },
-      };
-      showSavingMsg();
-      axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-        .then(() => {
-          showSavedMsg();
-          setSavedValue(markdown);
-        });
-    }
+    const data = {
+      authenticity_token,
+      description: {
+        description: markdown,
+        resource_id: dcsDescription.resource_id,
+        id: dcsDescription.id,
+      },
+    };
+    showSavingMsg();
+    axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+      .then(() => {
+        showSavedMsg();
+      });
   };
 
   const checkDescription = useCallback(debounce(saveDescription, 4000), []);
@@ -49,12 +45,6 @@ export default function ReadMe({
     // allow replacement uploads
     e.target.value = null;
   };
-
-  useEffect(async () => {
-    if (initialValue) {
-      setSavedValue(initialValue);
-    }
-  }, [initialValue]);
 
   useEffect(async () => {
     if (dcsDescription.description) {
@@ -121,7 +111,6 @@ export default function ReadMe({
           initialValue={initialValue}
           replaceValue={replaceValue}
           onChange={checkDescription}
-          onBlur={saveDescription}
         />
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
