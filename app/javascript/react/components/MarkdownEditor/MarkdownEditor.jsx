@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Editor, rootCtx, defaultValueCtx, editorViewCtx, serializerCtx, schemaCtx,
+  Editor, rootCtx, defaultValueCtx, schemaCtx,
 } from '@milkdown/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -14,7 +14,7 @@ import {gfm} from '@milkdown/preset-gfm';
 import {replaceAll} from '@milkdown/utils';
 import dryadConfig from './dryadConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
-import Button from './Button';
+import Button, {bulletWrapCommand, orderWrapCommand} from './Button';
 
 function MilkdownCore({
   initialValue, onChange, setSelection,
@@ -35,14 +35,15 @@ function MilkdownCore({
         setSelection({doc, selection, schema});
       });
     })
-    .use([listen, commonmark, gfm, history, trailing, selectionListener]));
+    .use([listen, commonmark, gfm, history, trailing, selectionListener])
+    .use([bulletWrapCommand, orderWrapCommand]));
   return (
     <Milkdown />
   );
 }
 
 const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer',
-  'bullet_list', 'ordered_list', 'blockquote', 'code_block', 'table', 'spacer', 'undo', 'redo'];
+  'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
   id, initialValue, replaceValue, onChange, buttons = defaultButtons,
@@ -52,6 +53,8 @@ function MilkdownEditor({
   const [selection, setSelection] = useState(null);
   const [active, setActive] = useState([]);
   const [headingLevel, setHeadingLevel] = useState(0);
+
+  const activeList = () => active.includes('ordered_list') || active.includes('bullet_list');
 
   useEffect(() => {
     if (editor && replaceValue) editor()?.action(replaceAll(replaceValue));
@@ -80,6 +83,7 @@ function MilkdownEditor({
           {buttons.map((button, i) => (
             <Button
               active={active.includes(button)}
+              disabled={button.includes('dent') && !activeList()}
               headingLevel={headingLevel}
               editorId={id}
               key={button + buttons.slice(0, i).filter((b) => b === button).length}
