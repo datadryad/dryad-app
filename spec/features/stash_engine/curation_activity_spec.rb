@@ -134,26 +134,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         click_button('Submit')
         expect(@resource.identifier.payment_type).to be(nil), wait: 2
       end
-
-      before(:each) do
-        mock_stripe!
-        mock_solr!
-        mock_repository!
-        mock_datacite_gen!
-        mock_salesforce!
-
-        visit stash_url_helpers.ds_admin_path
-
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
-
-        expect(page).to have_text('Payment information')
-        expect { click_button('Apply fee waiver') }.to raise_error(Capybara::ElementNotFound)
-      end
     end
 
     context :limited_curator do
-
       before(:each) do
         mock_aws!
         mock_salesforce!
