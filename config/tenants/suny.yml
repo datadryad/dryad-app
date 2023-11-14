@@ -61,12 +61,7 @@ default: &default
     #- https://ror.org/01sfc5174
     - https://ror.org/0041qmd21
   tenant_id: suny
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
+
   authentication:
     strategy: ip_address
     ranges: [ "192.168.100.100/31" ] # No IP addresses allowed
@@ -102,9 +97,4 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
+

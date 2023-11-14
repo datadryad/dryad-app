@@ -3,18 +3,13 @@ require 'fileutils'
 
 module StashEngine
   describe Tenant do
-    def expect_exemplia(tenant) # rubocop:disable Metrics/AbcSize
+    def expect_exemplia(tenant)
       expect(tenant.tenant_id).to eq('exemplia')
       expect(tenant.abbreviation).to eq('EX')
       expect(tenant.short_name).to eq('Exemplia')
       expect(tenant.long_name).to eq('University of Exemplia')
       expect(tenant.default_license).to eq('cc_by')
       expect(tenant.stash_logo_after_tenant).to eq(true)
-      ident = tenant.identifier_service
-      expect(ident.shoulder).to eq('doi:10.5072/5555')
-      expect(ident.account).to eq('DRYAD.CDL')
-      expect(ident.password).to eq('***REMOVED***')
-      expect(ident.sandbox).to eq(true)
       auth = tenant.authentication
       expect(auth.strategy).to eq('shibboleth')
       expect(auth.entity_id).to eq('urn:mace:incommon:example.edu')
@@ -34,7 +29,6 @@ module StashEngine
         tenant = Tenant.find('dataone')
         expect(tenant.tenant_id).to eq('dataone')
         expect(tenant.long_name).to eq('DataONE')
-        expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('author_match')
         # not going to check all since we've already tried that in initialize and not needed
       end
@@ -43,7 +37,6 @@ module StashEngine
         tenant = Tenant.find_by_long_name('Dryad Data Platform')
         expect(tenant.tenant_id).to eq('dryad')
         expect(tenant.long_name).to eq('Dryad Data Platform')
-        expect(tenant.identifier_service.prefix).to eq('10.5072')
         expect(tenant.authentication.strategy).to eq('none')
         # not going to check all since we've already tried that in initialize and not needed
       end

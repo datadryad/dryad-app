@@ -19,12 +19,6 @@ default: &default
   ror_ids:
     - https://ror.org/00x6h5n95
   tenant_id: dryad
-  identifier_service:
-    provider: datacite
-    prefix: "10.5072"
-    account: my.account
-    password: "my.password"
-    sandbox: true
   authentication:
     strategy: none
   default_license: cc0

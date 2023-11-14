@@ -66,14 +66,14 @@ module Stash
             .update_metadata(dc4_xml: @dc4_xml, landing_page_url: 'http://example.com'))
             .to eq(nil)
 
-          # make sure it selects this class in the IdGen parent class
-          expect(IdGen.make_instance(resource: resource).class).to eq(Stash::Doi::DataciteGen)
+          # make sure it selects this class in the DataciteGen parent class
+          expect(DataciteGen.new(resource: resource).class).to eq(Stash::Doi::DataciteGen)
         end
 
         it 'raises an error when the status from Datacite does not equal 201' do
           allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:post_metadata).and_return({ status: 403 }.to_ostruct)
           allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:put_doi).and_return({ status: 201 }.to_ostruct)
-          dc = IdGen.make_instance(resource: @resource)
+          dc = DataciteGen.new(resource: @resource)
           expect { dc.update_metadata(dc4_xml: @dc4_xml, landing_page_url: 'http://example.com') }.to raise_error(Stash::Doi::DataciteError)
         end
       end

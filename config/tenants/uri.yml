@@ -8,12 +8,7 @@ default: &default
   ror_ids:
     - https://ror.org/013ckk937
   tenant_id: uri
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
+
   authentication:
     strategy: shibboleth
     entity_id: "https://sts.windows.net/426d2a8d-9ccd-4255-893d-0686a32c168d/"
@@ -49,12 +44,7 @@ demo:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
+
 
 test:
   <<: *default

@@ -30,9 +30,9 @@ module StashEngine
         @identifier = create(:identifier)
         @resource = create(:resource, identifier_id: @identifier.id)
         @curation_activity = create(:curation_activity, resource: @resource)
-        @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
-        allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
+        @mock_datacitegen = double('datacitegen')
+        allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
+        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
       end
 
       it 'shows the appropriate dataset identifier' do
@@ -49,41 +49,41 @@ module StashEngine
         @resource.update(current_resource_state_id: @resource_state.id)
         @version = create(:version, resource_id: @resource.id)
 
-        @mock_idgen = spy('idgen')
-        allow(@mock_idgen).to receive(:update_identifier_metadata!) # .and_return('called make metadata')
-        allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
+        @mock_datacitegen = spy('datacitegen')
+        allow(@mock_datacitegen).to receive(:update_identifier_metadata!) # .and_return('called make metadata')
+        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
 
         @curation_activity1 = create(:curation_activity, resource: @resource)
       end
 
       it 'does submit when Published is set' do
         create(:curation_activity, resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to have_received(:update_identifier_metadata!)
+        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
         CurationActivity.create(resource_id: @resource.id, status: 'curation')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
+        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit when status isn't changed" do
         @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
-        expect(@mock_idgen).to have_received(:update_identifier_metadata!).once
+        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
+        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
 
       end
 
       it "doesn't submit if never sent to Merritt" do
         @resource_state.update(resource_state: 'in_progress')
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
+        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit if no version number" do
         @version.update!(version: nil, merritt_version: nil)
         CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
+        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
       end
 
       it "doesn't submit non-production (test) identifiers after first version" do
@@ -91,7 +91,7 @@ module StashEngine
         @resource_state2 = create(:resource_state, resource_id: @resource2.id)
         @version2 = create(:version, resource_id: @resource2.id, version: 2, merritt_version: 2)
         CurationActivity.create(resource: @resource2, status: 'published')
-        expect(@mock_idgen).to_not have_received(:update_identifier_metadata!)
+        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
       end
     end
 
@@ -111,13 +111,13 @@ module StashEngine
       end
 
       it 'catches errors and emails the admins' do
-        dc_error = Stash::Doi::IdGenError.new('Testing errors')
-        allow(Stash::Doi::IdGen).to receive(:make_instance).with(any_args).and_raise(dc_error)
+        dc_error = Stash::Doi::DataciteGenError.new('Testing errors')
+        allow(Stash::Doi::DataciteGen).to receive(:new).with(any_args).and_raise(dc_error)
 
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
         expect(message).to receive(:deliver_now)
-        expect { create(:curation_activity, resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
+        expect { create(:curation_activity, resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::DataciteGenError)
       end
     end
 

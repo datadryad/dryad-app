@@ -9,12 +9,6 @@ default: &default
     - https://ror.org/05gwbwn20
     - https://ror.org/05qs31q25
   tenant_id: kyotou
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: https://authidp2.iimc.kyoto-u.ac.jp/idp/shibboleth
@@ -47,10 +41,4 @@ production:
     strategy: shibboleth
     entity_id: https://authidp1.iimc.kyoto-u.ac.jp/idp/shibboleth
     entity_domain: authidp1.iimc.kyoto-u.ac.jp
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   campus_contacts: [""]

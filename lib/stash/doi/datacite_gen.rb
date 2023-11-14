@@ -3,9 +3,55 @@ require_relative '../download'
 
 module Stash
   module Doi
-    class DataciteError < IdGenError; end
+    class DataciteGenError < StandardError; end
+    class DataciteError < DataciteGenError; end
 
-    class DataciteGen < IdGen
+    class DataciteGen
+      attr_reader :resource
+
+      def initialize(resource:)
+        @resource = resource
+      end
+
+      def self.mint_id(resource:)
+        datacite_gen = DataciteGen.new(resource: resource)
+        datacite_gen.mint_id
+      end
+
+      # @return [String] the identifier (DOI, ARK, or URN)
+      def mint_id
+        base_id = "#{APP_CONFIG[:identifier_service][:prefix]}/dryad.#{StashEngine::NoidState.mint}"
+        "doi:#{base_id}"
+      end
+
+      # we are not reserving ahead with datacite, so just return the DOI
+      def reserve_id(doi:)
+        doi
+      end
+
+      # The method reserves a DOI if needed for a specified DOI or minting one from the pool.  (formerly?) used by Merritt
+      # submission to be sure a (minted if needed) stash_engine_identifier exists with the ID filled in before doing fun stuff
+      def ensure_identifier
+        # ensure an existing identifier is reserved (if needed for EZID)
+        return resource.identifier.to_s if resource&.identifier&.identifier.present?
+
+        resource.ensure_identifier(mint_id)
+      end
+
+      def update_identifier_metadata!
+        log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource.id} (#{resource.identifier_str})")
+        sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
+        dc4_xml = sp.dc4_builder.contents
+        update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url) unless resource.skip_datacite_update
+      end
+
+      def landing_page_url
+        @landing_page_url ||= Rails.application.routes.url_helpers.show_url(resource.identifier_str)&.gsub(%r{^http://}, 'https://')
+      end
+
+      def log_info(message)
+        Rails.logger.info("#{Time.now.utc.xmlschema} #{self.class}: #{message}")
+      end
 
       def ping(identifier)
         get_doi(identifier, username: account, password: password, sandbox: sandbox)

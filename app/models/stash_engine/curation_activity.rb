@@ -1,4 +1,4 @@
-require 'stash/doi/id_gen'
+require 'stash/doi/datacite_gen'
 require 'stash/payments/invoicer'
 module StashEngine
 
@@ -184,12 +184,12 @@ module StashEngine
     def submit_to_datacite
       return unless should_update_doi?
 
-      idg = Stash::Doi::IdGen.make_instance(resource: resource)
+      idg = Stash::Doi::DataciteGen.new(resource: resource)
       idg.update_identifier_metadata!
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
-    rescue Stash::Doi::IdGenError => e
-      Rails.logger.error "Stash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+    rescue Stash::Doi::DataciteGenError => e
+      Rails.logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
       Rails.logger.error e.message
       StashEngine::UserMailer.error_report(resource, e).deliver_now
       raise e

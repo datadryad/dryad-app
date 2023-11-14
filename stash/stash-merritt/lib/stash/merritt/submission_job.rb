@@ -1,5 +1,5 @@
 require_relative '../../../../../lib/stash/repo'
-require_relative '../../../../../lib/stash/doi/id_gen'
+require_relative '../../../../../lib/stash/doi/datacite_gen'
 require 'stash/merritt/submission_package'
 require 'stash/merritt/merritt_helper'
 
@@ -66,7 +66,7 @@ module Stash
       # :nocov:
 
       def id_helper
-        @id_helper ||= Stash::Doi::IdGen.make_instance(resource: resource)
+        @id_helper ||= Stash::Doi::DataciteGen.new(resource: resource)
       end
 
       def create_package

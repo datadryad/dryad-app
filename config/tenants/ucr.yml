@@ -7,13 +7,7 @@ default: &default
   ror_ids:
     - https://ror.org/03nawhv43
   tenant_id: ucr
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucr.edu
@@ -52,13 +46,7 @@ production:
   <<: *default
   #Add any items that need to override the defaults here
 
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.6086/D1"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["katherine.koziar@ucr.edu"]
 
 test:

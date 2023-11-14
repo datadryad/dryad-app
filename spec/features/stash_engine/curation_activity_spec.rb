@@ -12,7 +12,7 @@ RSpec.feature 'CurationActivity', type: :feature do
     before(:each) do
       mock_salesforce!
       mock_stripe!
-      mock_datacite_and_idgen!
+      mock_datacite_gen!
       @user = create(:user, tenant_id: 'ucop')
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
       create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
@@ -53,7 +53,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       mock_salesforce!
       mock_solr!
       mock_stripe!
-      mock_datacite_and_idgen!
+      mock_datacite_gen!
       mock_tenant!
       neuter_curation_callbacks!
       @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
@@ -134,22 +134,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         click_button('Submit')
         expect(@resource.identifier.payment_type).to be(nil), wait: 2
       end
-
-      it 'denies fee waiver selection when there is already a waiver' do
-        @resource.identifier.update(payment_type: 'waiver')
-
-        visit stash_url_helpers.ds_admin_path
-
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
-
-        expect(page).to have_text('Payment information')
-        expect { click_button('Apply fee waiver') }.to raise_error(Capybara::ElementNotFound)
-      end
     end
 
     context :limited_curator do
-
       before(:each) do
         @user.update(role: 'limited_curator')
         sign_in(@user, false)

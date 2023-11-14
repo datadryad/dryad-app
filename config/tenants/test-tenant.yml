@@ -8,12 +8,7 @@ default: &default
     - https://ror.org/02r109517
     - https://ror.org/05v5hg569
   tenant_id: test-tenant
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
+
   authentication:
     strategy: shibboleth
     entity_id: https://login.weill.cornell.edu/idp

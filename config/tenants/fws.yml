@@ -7,12 +7,6 @@ default: &default
   ror_ids:
     - https://ror.org/04k7dar27
   tenant_id: fws
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: ip_address
     ranges: [ "164.159.1.1/16", "132.174.248.186" ] # large network space and also the EZProxy server
@@ -40,10 +34,4 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: datacite
-    prefix: "10.5061"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   campus_contacts: ["john_wenburg@fws.gov"]

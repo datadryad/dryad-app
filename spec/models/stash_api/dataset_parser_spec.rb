@@ -9,7 +9,7 @@ module StashApi
     before(:each) do
       mock_datacite!
       mock_salesforce!
-      allow(Stash::Doi::IdGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
+      allow(Stash::Doi::DataciteGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
       @user = StashEngine::User.create(
         first_name: 'Lisa',
