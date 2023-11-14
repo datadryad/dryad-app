@@ -23,7 +23,7 @@ RSpec.feature 'NewCollection', type: :feature do
     end
 
     it 'displays an error message if unable to mint a new DOI/ARK' do
-      allow(Stash::Doi::IdGen).to receive(:make_instance).and_raise(Ezid::Error.new)
+      allow(Stash::Doi::DataciteGen).to receive(:new).and_raise(Stash::Doi::DataciteError)
       visit('/stash/resources/new?collection')
       expect(page).to have_text('My datasets')
       expect(page).to have_text('Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.')
