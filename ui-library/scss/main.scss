@@ -9,7 +9,7 @@
 // ***** Vendor Libraries ***** //
 
 @import '../bower_components/normalize-scss/_normalize.scss';
-@import '../bower_components/font-awesome/scss/font-awesome.scss';
+// @import '../bower_components/font-awesome/scss/font-awesome.scss';
 
 // ***** Objects ***** //
 
@@ -133,6 +133,14 @@ body, body#yes-really {
 
 }
 
-*:focus {
-	outline: 2px solid $design-orange-color;
+input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
+	outline: 2px solid $design-medium-blue-color;
 }
+
+a:focus-visible {
+	outline-offset: 4px;
+}
+
+a[role='button']:focus-visible, a[class*='button']:focus-visible {
+	outline-offset: 0;
+} 

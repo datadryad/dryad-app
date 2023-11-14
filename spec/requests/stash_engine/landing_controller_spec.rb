@@ -42,6 +42,7 @@ module StashEngine
       expect(@resource.curation_activities.last.status).to eq('submitted')
       expect(@resource.stash_version.version).to eq(1)
       expect(@resource.stash_version.merritt_version).to eq(1)
+      expect(@identifier.latest_downloadable_resource(user: @user)).to eq(@resource)
       expect(@resource.data_files).to have(1).item
     end
 

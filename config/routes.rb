@@ -143,6 +143,7 @@ Rails.application.routes.draw do
       member do
         get 'review'
         get 'upload'
+        get 'prepare_readme'
         get 'upload_manifest'
         get 'up_code'
         get 'up_code_manifest'
@@ -235,7 +236,7 @@ Rails.application.routes.draw do
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
 
     get 'close_page', to: 'pages#close_page'
-    get 'faq', to: 'pages#faq'
+    get 'requirements', to: 'pages#requirements'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'mission', to: 'pages#what_we_do'
@@ -246,6 +247,8 @@ Rails.application.routes.draw do
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
     get 'submission_process', to: 'pages#submission_process'
+    get 'data_check_guide', to: 'pages#data_check_guide'
+    get 'process', to: 'pages#process'
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
     get 'search', to: 'searches#index'
@@ -253,6 +256,10 @@ Rails.application.routes.draw do
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
+    get 'api', to: 'pages#api'
+    get 'definitions', to: 'pages#definitions'
+    get 'publication_policy', to: 'pages#publication_policy'
+    get 'membership', to: 'pages#membership'
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
@@ -292,6 +299,7 @@ Rails.application.routes.draw do
     get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
     get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
+    post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
     post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
     post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
     post 'waiver_add/:id', to: 'admin_datasets#waiver_add', as: 'waiver_add'
@@ -433,8 +441,6 @@ Rails.application.routes.draw do
     post 'geolocation_places/map_coordinates', to: 'geolocation_places#map_coordinates'
     
     # get composite views or items that begin at the resource level
-    get 'resources/user_in_progress', to: 'resources#user_in_progress'
-    get 'resources/user_submitted', to: 'resources#user_submitted'
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
@@ -459,7 +465,7 @@ Rails.application.routes.draw do
   ########################## Dryad v1 support ######################################
   
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/faq', to: redirect('stash/faq')
+  get '/pages/faq', to: redirect('stash/requirements')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
   get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
   get '/stash/our_membership', to: redirect('stash/join_us#our-membership')
@@ -469,6 +475,7 @@ Rails.application.routes.draw do
   get '/stash/our_advisors', to: redirect('stash/about#our-advisors')
   get '/stash/our_platform', to: redirect('stash/mission#our-platform')
   get '/stash/our_mission', to: redirect('stash/mission')
+  get '/stash/faq', to: redirect('stash/requirements')
   get '/pages/organization', to: redirect('stash/mission')
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')

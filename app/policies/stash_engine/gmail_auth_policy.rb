@@ -8,7 +8,7 @@ module StashEngine
     end
 
     def index?
-      user.superuser?
+      @user.superuser?
     end
   end
 end

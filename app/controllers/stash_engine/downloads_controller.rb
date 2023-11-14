@@ -97,12 +97,12 @@ module StashEngine
 
     # uses presigned
     def file_stream
-      data_file = DataFile.find(params[:file_id])
+      data_file = DataFile.where(id: params[:file_id]).present_files.first
       if data_file&.resource&.may_download?(ui_user: current_user)
         CounterLogger.general_hit(request: request, file: data_file)
         @file_presigned.download(file: data_file)
       else
-        render status: 403, plain: 'You are not authorized to download this file until it has been published.'
+        render status: 403, plain: 'You may not download this file.'
       end
     end
 
@@ -119,7 +119,13 @@ module StashEngine
         if res.zenodo_published?
           redirect_to zen_upload.public_zenodo_download_url
         else
-          redirect_to zen_upload.zenodo_presigned_url
+          zen_presign = zen_upload.zenodo_presigned_url
+          if zen_presign.nil?
+            render plain: 'Unable to get a presigned URL for this file.', status: 500
+            return
+          end
+
+          redirect_to zen_presign
         end
       else
         render status: 403, plain: 'You are not authorized to download this file'

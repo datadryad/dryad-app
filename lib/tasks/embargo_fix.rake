@@ -1,12 +1,13 @@
 # Emgargo fix tool -- correct overly-conservative embargoes that were put in place by migration
 # See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/400
+# :nocov:
 namespace :embargo_fix do
 
   desc 'Embargo manipulation to correct the problem of conservative embargoes from migration'
   task migration_issue: :environment do
     p 'Starting embargo correction'
     File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
-      line.gsub!(/doi:/, '')
+      line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
 
@@ -75,7 +76,7 @@ namespace :embargo_fix do
   task cron_issue: :environment do
     p 'Starting embargo CRON correction'
     File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
-      line.gsub!(/doi:/, '')
+      line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
 
@@ -147,3 +148,4 @@ namespace :embargo_fix do
     p 'Finished embargo correction'
   end
 end
+# :nocov:

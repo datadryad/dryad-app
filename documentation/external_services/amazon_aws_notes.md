@@ -192,8 +192,8 @@ Generating a keypair
 
 Server permissions and access control with IAM
 =================================================
-In general, user permissions are set up in IAM, and OpsWorks
-automatically applies them to the appropriate servers.
+In general, user permissions are set up in IAM. Public keys can be manually
+added to a server's `authorized_keys` file.
 
 Users can login to servers with a command like:
 `ssh -i ~/.ssh/[your-keyfile] someuser@machinename.datadryad.org`

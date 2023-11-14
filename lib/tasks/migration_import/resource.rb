@@ -317,3 +317,4 @@ module Tasks
   end
 end
 # rubocop:enable Metrics/ClassLength
+# :nocov:

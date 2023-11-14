@@ -1,6 +1,4 @@
 <div class="o-metadata__group2">
-  <div class="o-metadata__group2-item">Publication date: <%= formatted_date(resource.publication_date) %></div>
-  <div class="o-metadata__group2-item">Publisher: <%= resource.try(:publisher).try(:publisher) %></div>
   <%
     facility = resource.contributors.where(contributor_type: 'sponsor').first
     if facility.present? && facility.contributor_name.present? %>
@@ -8,10 +6,11 @@
       Research facility: <%= facility.contributor_name %>
     </div>
   <% end %>
+  <span class="o-metadata__group2-item"><% if resource.publication_date.blank? %>Forthcoming<% else %>Published <%= formatted_date(resource.publication_date) %><% end %></span> on <span class="o-metadata__group2-item"><%= resource.try(:publisher).try(:publisher) %></span>.
   <% if resource.identifier %>
-    <div class="o-metadata__group2-item">
+    <span class="o-metadata__group2-item">
       <%= display_id_plain(type: resource.identifier.identifier_type,
                            my_id: resource.identifier.identifier) %>
-    </div>
+    </span>
   <% end %>
 </div>

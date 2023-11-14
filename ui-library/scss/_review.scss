@@ -9,7 +9,7 @@
 
 }
 
-.t-review__funding-section {
+.t-review__section {
 	position: relative; // to t-review__edit-button-bottom
 }
 
@@ -32,12 +32,8 @@
 
 	@include bp(screen1) {
 		position: absolute; // to t-review__funding-section
-		right: 10px;
+		right: 0;
 		bottom: 0;
-	}
-
-	@include bp(screen2) {
-		right: 20px;
 	}
 
 }
@@ -47,5 +43,10 @@
 }
 
 .highlight {
-    background-color: #FFFF00
+  background-color: #FFFF00
+}
+
+span.highlight,
+a.highlight {
+	padding: 3px 0 2px;
 }

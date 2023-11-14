@@ -170,7 +170,7 @@ module StashDatacite
       return if params[:id] == 'new'
 
       @contributor = Contributor.find((params[:contributor] ? params[:contributor][:id] : params[:id]))
-      return ajax_blocked unless resource.id == @contributor.resource_id
+      ajax_blocked unless resource.id == @contributor.resource_id
     end
 
     # Only allow a trusted parameter "white list" through.

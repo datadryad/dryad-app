@@ -29,6 +29,8 @@ module Stash
         @zc_id = zc_id
         resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{resource.zenodo_copies.data.first.deposition_id}",
                                    zc_id: @zc_id)
+
+        resp[:files] ||= [] # if no files, then empty array
         @existing_zenodo_filenames = resp[:files].map { |f| f[:filename] }
         @resource = resource
       end

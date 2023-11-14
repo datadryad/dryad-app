@@ -35,4 +35,4 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  campus_contacts: ["slivey@ncsu.edu", "hmdavis4@ncsu.edu", "mcdowney@ncsu.edu"]
+  campus_contacts: ["slivey@ncsu.edu", "mcdowney@ncsu.edu"]

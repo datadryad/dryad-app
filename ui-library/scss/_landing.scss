@@ -16,6 +16,30 @@
 
 }
 
+.citation-section {
+	background-color: $design-lightest-blue-color;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	column-gap: 1ch;
+	row-gap: $spacing-base;
+	padding: .75rem;
+
+	h2, h3, p {
+		margin: 0;
+	}
+
+	.copy-icon {
+		border: none;
+		background-color: transparent;
+		box-shadow: none;
+	}
+
+	p {
+		flex-basis: 100%;
+	}
+}
+
 .t-landing__sidebar {
 	margin: 0 0 $spacing-md;
 
@@ -48,4 +72,38 @@
 .t-landing__text-wall {
 	margin-bottom: 1.5em;
 	line-height: 3ex;
+}
+
+#landing_readme {
+  max-height: 35ch;
+  overflow: hidden;
+  position: relative;
+
+  #expand-readme {
+    position: absolute;
+    width: 100%;
+    bottom: 0; right: 0; left: 0;
+    font-size: 1.1rem;
+    padding-top: 3rem;
+    border: none;
+    background: linear-gradient(rgba(255, 255, 255, .3), rgba(255, 255, 255, 1) 60%);
+
+    &:focus, &:hover, &:active {
+	    outline: none;
+	    text-decoration: underline;
+	    text-decoration-color: $design-orange-color;
+	    text-decoration-thickness: 2px;
+	    text-underline-offset: 4px;
+		}
+	}
+
+	&.expanded {
+	    max-height: none;
+	    height: auto;
+	    padding-bottom: 2rem;
+	  
+	  #expand-readme {
+    	padding-top: 8px;
+		}
+	}
 }

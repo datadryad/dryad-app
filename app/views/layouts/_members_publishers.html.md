@@ -3,7 +3,6 @@
   <li>American Association for the Advancement of Science</li>
   <li>American Genetic Association</li>
   <li>American Geophysical Union</li>
-  <li>American Medical Informatics Association</li>
   <li>American Ornithological Society</li>
   <li>American Society of Naturalists</li>
   <li>American Society of Plant Taxonomists</li>
@@ -12,6 +11,7 @@
   <li>Cambridge University Press</li>
   <li>Ecological Society of America</li>
   <li>eLife</li>
+  <li>European Respiratory Society</li>
   <li>European Society for Evolutionary Biology</li>
   <li>Hindawi</li>
   <li>Institute of Botany, Chinese Academy of Sciences</li>
@@ -25,5 +25,4 @@
   <li>The Royal Society</li>
   <li>Society for the Study of Evolution</li>
   <li>Society of Systematic Biologists</li>
-  <li>The University of Chicago Press</li>
 </ul>

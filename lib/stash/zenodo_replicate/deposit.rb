@@ -5,13 +5,14 @@ module Stash
   module ZenodoReplicate
     class Deposit
 
-      attr_reader :resource, :deposition_id, :links
+      attr_reader :resource, :deposition_id, :links, :zc
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
       def initialize(resource:, zc_id:)
         @resource = resource
         @zc_id = zc_id
+        @zc = StashEngine::ZenodoCopy.where(id: @zc_id).first
       end
 
       # this creates a new deposit and returns the json response if successful
@@ -76,8 +77,31 @@ module Stash
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
-        ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+        1.upto(3) do |_count|
+          r2 = dataset_info
+          if r2[:submitted] == true
+            ZC.log_to_database(item: 'The dataset is confirmed submitted in Zenodo.', zen_copy: @zc)
+            return r2
+          end
+
+          begin
+            ZC.standard_request(:post, @links[:publish], zc_id: @zc_id)
+          rescue Stash::ZenodoReplicate::ZenodoError => e
+            ZC.log_to_database(item: "ZenodoError on publication: #{e}", zen_copy: @zc)
+          end
+          sleep(5)
+        end
+        r2 = dataset_info
+        return r2 if r2[:submitted] == true
+
+        raise Stash::ZenodoReplicate::ZenodoError, "identifier_id #{@zc.identifier_id}: Publication failed after " \
+                                                   'three attempts. Are Zenodo systems up and stable?'
       end
+
+      def dataset_info
+        ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+      end
+
     end
   end
 end

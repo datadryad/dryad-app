@@ -24,7 +24,9 @@ module StashEngine
     scope :with_filename, -> { where('upload_file_name IS NOT NULL') }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
-    scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
+    scope :validated_table, -> {
+                              present_files.where.not(upload_file_name: 'README.md', type: StashEngine::DataFile).validated.order(created_at: :desc)
+                            }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
@@ -100,8 +102,8 @@ module StashEngine
     # figures out how to delete file based on previous state
     def smart_destroy!
       # see if it's on the file system and destroy it if it's there
-      s3_key = calc_s3_path
-      Stash::Aws::S3.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.exists?(s3_key: s3_key)
+      s3_key = s3_staged_path
+      Stash::Aws::S3.new.delete_file(s3_key: s3_key) if !s3_key.blank? && Stash::Aws::S3.new.exists?(s3_key: s3_key)
 
       # convert to hash so we still have after destroying them
       prev_files = case_insensitive_previous_files.map do |pf|
@@ -177,7 +179,7 @@ module StashEngine
       h = Rails.application.routes.url_helpers
 
       payload = JSON.generate({
-                                download_url: url || direct_s3_presigned_url,
+                                download_url: url || s3_staged_presigned_url,
                                 file_mime_type: upload_content_type,
                                 callback_url: h.file_frictionless_report_url(id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
@@ -219,7 +221,7 @@ module StashEngine
 
       # download_url, filename, callback_url, token, processor_obj
 
-      payload = JSON.generate({ download_url: url || direct_s3_presigned_url,
+      payload = JSON.generate({ download_url: url || s3_staged_presigned_url,
                                 filename: upload_file_name,
                                 callback_url: h.processor_result_url(pr.id)
                                                .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
@@ -267,7 +269,7 @@ module StashEngine
       http = HTTP.use(
         normalize_uri: { normalizer: Stash::Download::NORMALIZER }
       ).timeout(connect: 10, read: 10).follow(max_hops: 10)
-      dl_url = url || direct_s3_presigned_url
+      dl_url = url || s3_staged_presigned_url
       begin
         http.get(dl_url)
       rescue HTTP::Error => e

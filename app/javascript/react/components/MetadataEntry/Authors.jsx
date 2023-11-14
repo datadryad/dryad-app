@@ -23,8 +23,6 @@ export default function Authors({
   };
 
   const addNewAuthor = () => {
-    console.log(`${(new Date()).toISOString()}: Adding author`);
-
     const authorJson = {authenticity_token, author: {...blankAuthor, author_order: lastOrder()}};
 
     axios.post(
@@ -41,7 +39,6 @@ export default function Authors({
   };
 
   const removeItem = (id, resource_id) => {
-    console.log(`${(new Date()).toISOString()}: deleting author`);
     const trueDelPath = deletePath.replace('id_xox', id);
     showSavingMsg();
 
@@ -53,8 +50,6 @@ export default function Authors({
     }).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from authors delete');
-      } else {
-        console.log('deleted from authors');
       }
       showSavedMsg();
     });

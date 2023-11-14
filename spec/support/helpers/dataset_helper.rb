@@ -1,15 +1,16 @@
 module DatasetHelper
 
   def start_new_dataset
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Start new dataset'
-    expect(page).to have_content('Describe dataset', wait: 15)
     navigate_to_metadata
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe dataset'
+    click_link 'Describe dataset', wait: 15
     expect(page).to have_content('Dataset: Basic information')
   end
 
@@ -25,19 +26,31 @@ module DatasetHelper
     expect(page).to have_content('Choose files')
   end
 
+  def navigate_to_readme
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
+    click_link 'Prepare README'
+    expect(page).to have_content('Prepare README file')
+  end
+
   def navigate_to_upload
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Upload files'
     expect(page).to have_content('Choose files', count: 3)
     expect(page).to have_content('Enter URLs', count: 3)
   end
 
   def navigate_to_review
+    # Make sure you switch to the Selenium driver for the test calling this helper method
+    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Review and submit'
     expect(page).to have_content('Review description')
   end
 
   def fill_required_fields
     fill_required_metadata
+    navigate_to_readme
     add_required_data_files
   end
 
@@ -46,7 +59,7 @@ module DatasetHelper
     navigate_to_metadata
 
     choose('choose_other')
-    fill_in 'title', with: Faker::Lorem.sentence
+    fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
     fill_in_author
     fill_in_research_domain
     fill_in_funder
@@ -54,7 +67,7 @@ module DatasetHelper
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-    3.times { fill_in_keyword }
+    fill_in_keywords
   end
 
   def add_required_data_files
@@ -66,8 +79,7 @@ module DatasetHelper
   end
 
   def submit_form
-    submit = find_button('submit_dataset')
-    submit.click
+    click_button 'Submit', wait: 5
   end
 
   def fill_manuscript_info(name:, issn:, msid:)
@@ -84,9 +96,10 @@ module DatasetHelper
     fill_in 'primary_article_doi', with: doi
   end
 
-  def fill_in_keyword(keyword: Faker::Creature::Animal.name)
-    fill_in 'keyword_ac', with: keyword
+  def fill_in_keywords
+    fill_in 'keyword_ac', with: 3.times.map { Faker::Creature::Animal.unique.name }.join(',')
     page.send_keys(:tab)
+    Faker::Creature::Animal.unique.clear
   end
 
   def fill_in_author

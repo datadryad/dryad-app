@@ -29,6 +29,7 @@ module Stash
             create(:curation_activity_no_callbacks, status: 'published')
           ]
         @zenodo_copy = create(:zenodo_copy, resource: @resources.first, identifier: @resources.first.identifier)
+        stub_new_access_token
       end
 
       describe '#previous_published_resource' do
@@ -106,14 +107,14 @@ module Stash
         end
 
         it 'gives list of files to delete from items not present in this version but at zenodo' do
-          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
-          @resources << second_res
-          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
-
           # add some files
           @resources.first.data_files << [create(:data_file), create(:data_file)]
+
+          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
+          @resources << second_res
           @resources.last.data_files << [create(:data_file), create(:data_file)]
 
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: @resources.first.data_files.map(&:upload_file_name) +
                                 @resources.last.data_files.map(&:upload_file_name))
@@ -126,19 +127,19 @@ module Stash
 
       describe '#upload_list' do
         it 'uploads only things that have changed since last submission' do
-          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
-          @resources << second_res
-          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
-
           # add some files
           first_files = [create(:data_file), create(:data_file)]
           @resources.first.data_files << first_files
+
+          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
+          @resources << second_res
           new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
             create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
             create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
           ] + new_files)
 
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: first_files.map(&:upload_file_name))
           @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
@@ -148,19 +149,19 @@ module Stash
         end
 
         it "uploads everything that isn't at zenodo if the previous submissions don't seem to have uploaded files" do
-          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
-          @resources << second_res
-          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
-
           # add some files
           first_files = [create(:data_file), create(:data_file)]
           @resources.first.data_files << first_files
+
+          second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
+          @resources << second_res
           new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
             create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
             create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
           ] + new_files)
 
+          zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
                               filenames: [])
           @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)

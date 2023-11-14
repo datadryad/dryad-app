@@ -1,1 +1,7 @@
-<%= render partial: 'stash_engine/shares/form', locals: { share: share } %>
+<p>
+  You can share this unpublished version of your dataset files with others using the temporary URL below:
+</p>
+<div class="citation-section">
+  <h3 class="o-heading__level4">Reviewer sharing link</h3><button title="Copy sharing link" aria-label="Copy sharing link" class="copy-icon" data-item="Sharing link"><i class="fa fa-clipboard" role="status"></i></button>
+  <p id="sharing_link"><%= share.sharing_link %></p>
+</div>

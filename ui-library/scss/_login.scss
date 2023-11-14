@@ -40,6 +40,8 @@
       .c-ac__menu {
         top: 45px;
         text-align: left;
+        margin: 0;
+        padding: 0;
       }
     }
   }
@@ -72,7 +74,7 @@
 }
 
 .t-login__buttonlink:hover, .t-login__buttonlink:active {
-  outline: 2px solid #cf4817;
+  outline: 2px solid $design-medium-blue-color;
 }
 
 .t-login__or-box {

@@ -58,6 +58,9 @@
         </div>
       </fieldset>
       <p>You are signing up to receive invitations to previews and feedback opportunities. You can end your subscription to receive these invitations at any time.</p>
+      <% if !current_user %>
+        <%= recaptcha_tags %>
+      <% end %>
       <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
         <span style="color: #cf4817;">* Fields are required</span>
         <%= form.submit 'Sign up for user testing', class: 'o-button__plain-text2' %>

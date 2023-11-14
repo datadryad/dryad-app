@@ -1,0 +1,35 @@
+<% if !review.readme_content.blank? %>
+<% content = review.readme_content %>
+<% # if content.match(/^\\#/) %>
+  <% # reformat = markdown_render content %>
+  <% # content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
+<% # end %>
+<div id="landing_readme">
+    <button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+    <div class="t-landing__text-wall <%= 'highlight' if highlight_fields.include?('technical_info') %>">
+    <% if !content.match(/^# /) %>
+      <h2>README</h2>
+    <% end %>
+    <%= markdown_render content.sub(/^# /, '# README: ') %>
+    </div>
+</div>
+<script type="text/javascript">
+    const readme = document.getElementById('landing_readme')
+    const button = document.getElementById("expand-readme")
+    if (readme.scrollHeight <= readme.offsetHeight ) {
+        button.setAttribute('hidden', true)
+    }
+    button.addEventListener('click', e => {
+      const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+      if (closed) {
+        e.currentTarget.setAttribute('aria-expanded', 'true');
+        e.currentTarget.parentElement.classList.add('expanded');
+        e.currentTarget.innerHTML = 'Collapse README <i class="fa fa-caret-up" aria-hidden="true"></i>'
+      } else {
+        e.currentTarget.setAttribute('aria-expanded', 'false');
+        e.currentTarget.parentElement.classList.remove('expanded');
+        e.currentTarget.innerHTML = 'Expand README <i class="fa fa-caret-down" aria-hidden="true"></i>'
+      }
+    })
+</script>
+<% end %>

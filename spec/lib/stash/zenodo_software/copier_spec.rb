@@ -25,6 +25,7 @@ module Stash
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id, dataset_type: :software)
         @file = create(:software_file, resource_id: @resource.id)
+        stub_new_access_token
         WebMock.disable_net_connect!(allow_localhost: true)
       end
 
@@ -240,7 +241,7 @@ module Stash
             @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
             deposit = @zsc.instance_variable_get(:@deposit)
             allow(deposit).to receive(:update_metadata)
-            allow(Stash::Aws::S3).to receive(:delete_dir)
+            allow_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
             expect(deposit).not_to receive(:publish)
             @zsc.publish_dataset
             expect(@zc.reload.state).to eq('finished')
@@ -297,7 +298,7 @@ module Stash
             file_coll = @zsc.instance_eval('@file_collection', __FILE__, __LINE__)
             expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link).and_return(nil)
             expect(Stash::ZenodoSoftware::FileCollection).to receive(:check_uploaded_list).and_return(nil) # don't check against zenodo
-            expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
+            expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
             @zsc.add_to_zenodo
             @zc.reload
@@ -332,7 +333,7 @@ module Stash
               file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
               expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link)
               expect(Stash::ZenodoSoftware::FileCollection).to receive(:check_uploaded_list).and_return(nil)
-              expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
+              expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
               @zsc2.add_to_zenodo
               @zc2.reload
@@ -352,7 +353,7 @@ module Stash
               file_coll = @zsc2.instance_eval('@file_collection', __FILE__, __LINE__)
               expect(file_coll).to receive(:synchronize_to_zenodo)
               expect(Stash::ZenodoSoftware::FileCollection).to receive(:check_uploaded_list).and_return(nil)
-              expect(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
+              expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
 
               @zsc2.add_to_zenodo
               @zc2.reload

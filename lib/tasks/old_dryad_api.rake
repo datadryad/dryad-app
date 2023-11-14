@@ -1,4 +1,5 @@
 # This is a rake file to  get some identifiers to test the 'manuscript_in_progress' id from the existing dryad api.
+# :nocov:
 require 'httparty'
 
 namespace :old_dryad_api do
@@ -30,3 +31,4 @@ namespace :old_dryad_api do
     puts "manuscript id: #{random_record['manuscriptId']}"
   end
 end
+# :nocov:

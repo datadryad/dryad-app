@@ -1,3 +1,4 @@
+# :nocov:
 require 'byebug'
 namespace :users do
   desc 'Merge old and new users (into old account like it works in the UI)'
@@ -32,3 +33,4 @@ namespace :users do
   end
 
 end
+# :nocov:

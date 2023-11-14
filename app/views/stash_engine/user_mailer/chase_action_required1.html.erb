@@ -1,0 +1,24 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>
+  Previously, we requested modifications to your Dryad data submission. As a reminder, these changes
+  must be addressed before we can publish your dataset:
+</p>
+
+<p>
+Title: "<%= @resource.title %>"<br/>
+DOI: <%= @resource.identifier_str %>
+</p>
+
+<p>
+  Our previous email correspondence contains specific details on the changes required. Please let us know if you have
+  any questions or no longer wish to proceed with the publication of the dataset. We will send you another reminder
+  in about 2 weeks.
+</p>
+
+<p>We hope to hear from you shortly.</p>
+
+<p>
+The Dryad Team<br/>
+<a href="mailto:help@datadryad.org">help@datadryad.org</a>
+</p>

@@ -33,7 +33,8 @@ module StashEngine
             ON ids.id = last_viewable.identifier_id
           LEFT JOIN stash_engine_resources viewable_resource
             ON last_viewable.max_resource_id = viewable_resource.id
-        WHERE contrib.contributor_type = 'funder'
+        WHERE init_sub_date is not null
+        AND contrib.contributor_type = 'funder'
       SQL
 
       def initialize

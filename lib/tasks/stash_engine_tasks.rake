@@ -1,8 +1,10 @@
+# :nocov:
 require 'httparty'
 require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
+require_relative '../stash/action_required_reminder'
 
 REPORTS_DIR = 'reports'.freeze
 
@@ -149,7 +151,7 @@ namespace :identifiers do
       s3_dir = res.s3_dir_name(type: 'base')
       puts "ident #{ident.id} Res #{res.id} -- updated_at #{res.updated_at}"
       puts "   DESTROY s3 #{s3_dir}"
-      Stash::Aws::S3.delete_dir(s3_key: s3_dir) unless dry_run
+      Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       puts "   DESTROY resource #{res.id}"
       res.destroy unless dry_run
     end
@@ -161,7 +163,7 @@ namespace :identifiers do
                 else
                   ''
                 end
-    Stash::Aws::S3.objects(starts_with: s3_prefix).each do |s3o|
+    Stash::Aws::S3.new.objects(starts_with: s3_prefix).each do |s3o|
       id_prefix = s3o.key.split('/').first
       res_id = if id_prefix.include?('-')
                  id_prefix.split('-').last
@@ -176,12 +178,12 @@ namespace :identifiers do
            (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
           # if the resource is state == submitted and all zenodo transfers have completed, delete the data
           puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
-          Stash::Aws::S3.delete_dir(s3_key: id_prefix) unless dry_run
+          Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
         end
       else
         # there is no reasource, delete the files
         puts "   resource is deleted -- DELETE s3 dir #{id_prefix}"
-        Stash::Aws::S3.delete_dir(s3_key: id_prefix) unless dry_run
+        Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
       end
     end
   end
@@ -241,6 +243,30 @@ namespace :identifiers do
     end
   end
 
+  desc 'Email the submitter 1 time 6 months from publication, when a primary article is not linked'
+  task doi_linking_invitation: :environment do
+    p 'Mailing users whose datasets have no primary article and were published 6 months ago...'
+    reminder_flag = 'doi_linking_invitation CRON'
+    StashEngine::Identifier.publicly_viewable.each do |i|
+      next if i.publication_article_doi
+      next if i.resources.map(&:curation_activities).flatten.map(&:note).join.include?(reminder_flag)
+      next unless i.date_first_published <= 6.months.ago
+      next if i.latest_resource.nil?
+
+      p "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
+      StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
+      StashEngine::CurationActivity.create(
+        resource_id: i.latest_resource&.id,
+        user_id: 0,
+        status: i.latest_resource&.last_curation_activity&.status,
+        note: "#{reminder_flag} - invited submitter to link an article DOI"
+      )
+    rescue StandardError => e
+      p "    Exception! #{e.message}"
+
+    end
+  end
+
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progess_reminder: :environment do
     p "Mailing users whose datasets have been in_progress since #{3.days.ago}"
@@ -263,6 +289,55 @@ namespace :identifiers do
     rescue StandardError => e
       p "    Exception! #{e.message}"
 
+    end
+  end
+
+  desc "Email the submitter when a dataset has been in 'action_required' at 3 times"
+  task action_required_reminder: :environment do
+    # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
+    items = Stash::ActionRequiredReminder.find_action_required_items
+    # each item looks like
+    # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
+    #   :reminder_1=>nil,
+    #   :reminder_2=>nil,
+    #   :identifier=> activeRecord object for identifier}
+
+    items.each do |item|
+      resource = item[:identifier]&.latest_resource
+      next if resource.nil?
+
+      # send out reminder 1 at two weeks
+      if item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
+        StashEngine::UserMailer.chase_action_required1(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required reminder 1'
+        )
+      # send out reminder 2 at 2 weeks after reminder 1
+      elsif item[:reminder_1].present? && item[:reminder_1] < 2.weeks.ago && item[:reminder_2].nil?
+        StashEngine::UserMailer.chase_action_required2(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required reminder 2'
+        )
+      # send out reminder 3 (final) at 2 weeks after reminder 2, it sets withdrawn on this so shouldn't be picked up as action_required again
+      elsif item[:reminder_2].present? && item[:reminder_2] < 2.weeks.ago
+        StashEngine::UserMailer.chase_action_required3(resource).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: 0,
+          status: resource.last_curation_activity.status,
+          note: 'CRON: mailed action required final reminder (reminder 3)'
+        )
+        resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
+                                                                             status: 'withdrawn',
+                                                                             note: 'withdrawing on final action required reminder')
+        # NOTE: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
+      end
     end
   end
 
@@ -709,21 +784,21 @@ namespace :identifiers do
     base_values
   end
 
-  def tiered_price(current_count, base_count)
-    return nil unless current_count.is_a?(Integer) && base_count.is_a?(Integer)
+  # the tiered_price is based on the total number of datasets, including the current quarter
+  # current_count should be the number of datasets in the current quarter
+  # cumulative_count should be the total cumulative datasets, *including* the current quarter
+  def tiered_price(current_count, cumulative_count)
+    return nil unless current_count.is_a?(Integer) && cumulative_count.is_a?(Integer)
 
     free_datasets = 10
 
-    # the base_price is based on the total number of datasets, including the current quarter
-    total_datasets = current_count + base_count
-
-    base_price = if total_datasets <= free_datasets
+    base_price = if cumulative_count <= free_datasets
                    0
-                 elsif total_datasets <= 100
+                 elsif cumulative_count <= 100
                    135
-                 elsif total_datasets <= 250
+                 elsif cumulative_count <= 250
                    100
-                 elsif total_datasets <= 500
+                 elsif cumulative_count <= 500
                    85
                  else
                    55
@@ -1022,7 +1097,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Date.today - 1.day).each do |date|
+    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1031,7 +1106,7 @@ namespace :curation_stats do
 
   desc 'Recalculate any curation stats from the past three days, not counting today'
   task update_recent: :environment do
-    (Date.today - 4.days..Date.today - 1.day).each do |date|
+    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1041,7 +1116,7 @@ namespace :curation_stats do
   desc 'Generate a report of the curation timeline for each dataset'
   task curation_timeline_report: :environment do
     launch_day = Date.new(2019, 9, 17)
-    datasets = StashEngine::Identifier.where(created_at: launch_day..Date.today)
+    datasets = StashEngine::Identifier.where(created_at: launch_day..Time.now.utc.to_date)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
       datasets.each_with_index do |i, idx|
@@ -1093,7 +1168,7 @@ namespace :curation_stats do
     # Only look at content for the past two years, since curation practices are constantly changing
     # Note that this may slightly undercount, since recent datasets haven't had time for multiple passes
     start_day = 2.years.ago
-    datasets = StashEngine::Identifier.where(created_at: start_day..Date.today)
+    datasets = StashEngine::Identifier.where(created_at: start_day..Time.now.utc.to_date)
     ids_seen = 0
     total_curation_count = 0
     datasets.each do |i|
@@ -1292,3 +1367,4 @@ namespace :journal_email do
 end
 
 # rubocop:enable Metrics/BlockLength
+# :nocov:

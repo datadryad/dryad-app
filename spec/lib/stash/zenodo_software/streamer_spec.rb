@@ -4,12 +4,15 @@ require 'digest'
 require 'rails_helper'
 
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoSoftware
     RSpec.describe Streamer do
+
+      include Stash::ZenodoSoftware::WebmocksHelper
 
       before(:each) do
         @resource = create(:resource)
@@ -27,6 +30,7 @@ module Stash
 
         @streamer = Streamer.new(file_model: @resource.software_files.first, zenodo_bucket_url: @bucket_url,
                                  zc_id: @zenodo_copy.id)
+        stub_new_access_token
       end
 
       describe '#stream' do
@@ -94,12 +98,20 @@ module Stash
           end.to raise_exception(Stash::ZenodoReplicate::ZenodoError)
         end
 
-        it 'raises Stash::ZenodoReplicate::ZenodoError for handling with MerrittErrors' do
-          stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
+        it 'raises Stash::ZenodoReplicate::ZenodoError for handling with S3CustomErrors' do
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+            .to_return(status: 200, body: '', headers: {})
+
+          stub_request(:put, %r{https://example.org/my/great/test/bucket/.+})
+            .to_return(status: 404, body: '', headers: {})
+
+          # stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
           @resource.data_files << create(:data_file)
           data_file = @resource.data_files.first
 
-          # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::MerrittError, "can't create presigned url")
+          allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(data_file)
+
+          # allow(data_file).to receive(:zenodo_replication_url).and_raise(Stash::Download::S3CustomError, "can't create presigned url")
           @streamer = Streamer.new(file_model: data_file, zenodo_bucket_url: @bucket_url, zc_id: @zenodo_copy.id)
 
           expect do

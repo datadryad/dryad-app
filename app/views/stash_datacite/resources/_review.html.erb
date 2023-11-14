@@ -2,39 +2,61 @@
 
     <!-- If a curator is viewing this page, highlight the changed fields -->
     <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
-
-    <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
-    <h2 class="o-heading__page-span">Review description</h2>
+    <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? && @resource.previous_resource.current_curation_status == 'action_required' %>
+      <div class="c-error-box">
+        <p>Changes are required in order to submit.</p>
+        <p>Please refer to your email, <%= @resource.owner_author.author_email %>, where you received a message from <a href="mailto:help@datadryad.org">help@datadryad.org</a> listing required changes.</p>
+      </div>
+    <% else %>
+      <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { error_items: @error_items } %>
+    <% end %>
+  <h2 class="o-heading__page-span">Review description</h2>
+  <section class="t-review__section">
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str, highlight: highlight_fields.include?('title') } %>
-    <div class="o-metadata__group2">
-      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight: highlight_fields.include?('authors') } %>
+    <div class="t-landing__metadata o-metadata">
+      <% author_highlight = highlight_fields[highlight_fields.find_index('authors') + 1] if highlight_fields.include?('authors') %>
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors, highlight_fields: author_highlight || [] } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource, highlight: highlight_fields.include?('facility') } %>
     </div>
 
-    <section class="o-section">
+    <div class="citation-section">
     <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
                          resource_type: @review.resource_type,
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
                          publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) } %>
-    </section>
+    </div>
+    <% works_highlight = highlight_fields[highlight_fields.find_index('related_identifiers') + 1] if highlight_fields.include?('related_identifiers') %>
+
+    <% if @resource&.resource_type&.resource_type == 'collection' %>
+      <%= render partial: "stash_datacite/related_identifiers/collection", locals: {review: @review, highlight_fields: works_highlight&.select {|h| h[:relation] == 'haspart'} || []} %>
+    <% end %>
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
         { abstract: @review.abstract, methods: @review.methods, other: @review.other, highlight_fields: highlight_fields } %>
-    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight: highlight_fields.include?('subjects') } %>
+    <% subject_highlight = highlight_fields[highlight_fields.find_index('subjects') + 1] if highlight_fields.include?('subjects') %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects, highlight_fields: subject_highlight || [] } %>
 
+    <% funder_highlight = highlight_fields[highlight_fields.find_index('funders') + 1] if highlight_fields.include?('funders') %>
+    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight_fields: funder_highlight || [] } %>
+    
+    <% works_highlight = works_highlight&.select {|h| h[:relation] != 'haspart'} if @resource&.resource_type&.resource_type == 'collection' %>
+    <%= render partial: "stash_datacite/related_identifiers/show", locals:
+        { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
-      <section class="t-review__funding-section o-section">
-        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors, highlight: highlight_fields.include?('funders') } %>
-        <%= render partial: "stash_datacite/related_identifiers/show", locals:
-            { related_identifiers: @review.related_identifiers, highlight: highlight_fields.include?('related_identifiers') } %>
-        <%= link_to "Edit Description",
-                    stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
-                    class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
-      </section>
+      <%= link_to "Edit Description",
+                  stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                  class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>      
     <% end %>
+  </section>
+<% unless @resource&.resource_type&.resource_type == 'collection' %>
+    <section class="t-review__section" style="margin-bottom: 1rem;">
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields } %>
+    </section>
 
     <% if @resource.geolocations.count.positive? %>
       <h3 class="o-heading__level2">Location</h3>
@@ -58,20 +80,14 @@
     <h2 class="o-heading__page-span">Review files</h2>
 
     <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
-
-    <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
-
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' if @review.readme_content.blank? %>
+    
+ <h3 class="o-heading__level2">Data files hosted by Dryad</h3>
     <div class="c-review-files">
-	<% if highlight_fields.include?('data_files') %>
-            <%= render partial: "stash_engine/data_files/show_merritt",
-		       locals: { resource: @resource,
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'data_files') } %>
-	<% else %>
-	    <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: [] } %>
-	<% end %>
-        <%= link_to 'Edit Files', stash_url_helpers.upload_resource_path(@resource),
-                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+      <%= render partial: "stash_engine/data_files/show_merritt", locals: { resource: @resource, highlight_files: highlight_fields.include?('data_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'data_files') : [] } %>
+      <%= link_to 'Edit Files', stash_url_helpers.upload_resource_path(@resource),
+                class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
     <% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>
@@ -80,51 +96,48 @@
 
     <% if @review.software_files.count.positive? %>
     <h3 class="o-heading__level2">Software Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
-	<div class="c-review-files">
-    	  <% if highlight_fields.include?('software_files') %>
-            <%= render partial: "stash_engine/data_files/show_zenodo",
-		       locals: { resource: @resource,
-			   zenodo_type: 'software',
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'software_files') } %>
-	<% else %>
-          <%= render partial: "stash_engine/data_files/show_zenodo",
-		     locals: { resource: @resource, zenodo_type: 'software', highlight_files: [] } %>
-	<% end %>
-      </div>
+  	<div class="c-review-files">
+      <%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'software',highlight_files: highlight_fields.include?('software_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'software_files') : []
+      } %>
+	  </div>
     <% end %>
 
     <% if @review.supp_files.count.positive? %>
-      <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
-
-      <div class="c-review-files">
-    	  <% if highlight_fields.include?('supp_files') %>
-            <%= render partial: "stash_engine/data_files/show_zenodo",
-		       locals: { resource: @resource,
-			   zenodo_type: 'supp',
-			   highlight_files: @resource.files_changed_since(other_resource: @resource.previous_curated_resource,
-									  association: 'supp_files') } %>
-	<% else %>
-          <%= render partial: "stash_engine/data_files/show_zenodo",
-		     locals: { resource: @resource, zenodo_type: 'supp', highlight_files: [] } %>
-	<% end %>
-      </div>
+    <h3 class="o-heading__level2">Supplemental Files Hosted by <a href="https://zenodo.org" target="_blank">Zenodo</a></h3>
+    <div class="c-review-files">
+    	<%= render partial: "stash_engine/data_files/show_zenodo", locals: { resource: @resource, zenodo_type: 'supp',highlight_files: highlight_fields.include?('supp_files') ? @resource.files_changed_since(other_resource: @resource.previous_curated_resource,  association: 'supp_files') : [] } %>
+	  </div>
     <% end %>
 
   <h2 class="o-heading__page-span" id="peer_review_label">Choose when to publish</h2>
     <div id="peer_review_section">
       <%= render partial: "stash_datacite/peer_review/review" %>
-    </div>  
+    </div>
+
+<% end %>
 
   <h2 class="o-heading__page-span">Agree to terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
+  <% if @resource&.resource_type&.resource_type == 'collection' %>
+  <%= link_to 'Back to Describe collection', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+  <% else %>
   <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
           class: 'o-button__icon-left', role: 'button' %>
+  <% end %>
 
-  <% if @error_items.blank? # valid data %>
-    <%= form_with(url: resources_submission_path) do -%>
+  <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? %>
+    <% if @resource.previous_resource.current_curation_status == 'action_required' %>
+      <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
+      <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+    <% else %>
+      <%= button_to stash_url_helpers.resource_path(@resource), method: :delete, data: { confirm: 'No changes made! Do you want to cancel this update and revert to the previous version?' }, form_class: '', class: 'o-button__submit js-submission' do %>
+        Submit
+      <% end %>
+    <% end %>
+  <% elsif @error_items.blank? # valid data %>
+    <%= form_with(url: resources_submission_path, id: 'submit_dataset_form') do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= hidden_field_tag :software_license, @resource&.identifier&.software_license&.identifier || 'MIT' %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
@@ -156,6 +169,11 @@
       updateSubmitCommentDisabled();
     });
   }
+
+  $("#submit_dataset_form").submit(function () {
+    $("#submit_dataset").attr("disabled", true);
+    return true;
+  });
 
   function updateSubmitCommentDisabled(){
     let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
@@ -193,29 +211,6 @@
         other similar dataset(s).
        </p>`;
      <% end %>
-
-    <% if @completions.no_readme_md %>
-    skippable_warning += `
-      <h2 class="o-heading__level2">README.md missing</h2>
-      <p>
-        We require that you include a <a href="/docs/README.md" target="_blank">README.md</a> file based on our
-        template in order to provide key information for understanding and reuse of your data.
-      </p>
-      <p>
-        If you prefer, you can edit the Markdown online at <a href="https://hackmd.io/JgxUwkEdS9uOOcgadhe29w?both=" target="_blank">hackmd.io</a>.
-      </p>
-      <ol>
-        <li>Open the link (above)</li>
-        <li>Create a new note by clicking "+" at the top left of the screen</li>
-        <li>Copy and paste your text</li>
-        <li>Click the three dots on the top right to download as a Markdown file</li>
-        <li>Make sure your filename is 'README.md', and
-          <%= link_to 'upload the file', stash_url_helpers.upload_resource_path(@resource) %> under the <em>Data</em>
-           category
-        </li>
-      </ol>
-    `;
-    <% end %>
     
     if (skippable_warning.length > 0) {
       $('#genericModalContent').html(skippable_warning);

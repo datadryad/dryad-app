@@ -41,6 +41,24 @@ a {
 
 }
 
+.o-link__buttonlink,
+.o-link__buttonlink:link,
+.o-link__buttonlink:visited,
+.o-link__buttonlink:hover
+.o-link__buttonlink:active {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  padding: 8px 12px;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+  white-space: nowrap;
+}
+
+.o-link__buttonlink:hover, .o-link__buttonlink:active {
+  &:hover {opacity: 0.85;}
+}
+
 .o-link__secondary {
   @extend %o-link__primary;
 }
@@ -114,14 +132,15 @@ a {
   z-index: 15;
   padding: $spacing-sm;
   transition: opacity 0.5s;
-  opacity: 0;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  opacity: 0;  
 
   &:focus {
     top: $spacing-sm;
     left: $spacing-sm;
     opacity: 1;
+    background-color: $design-dark-blue-color;
+    color: $design-white-color;
+    outline-offset: 0;
   }
 }
 
@@ -134,4 +153,22 @@ a {
   width: 1em;
   height: 1em;
   margin-left: .5ch;
+}
+
+.copy-icon {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 5px;
+
+  i {
+    color: $design-dark-navy-color;
+  }
+
+  &:hover i {
+    color: $link-body-hover-color;
+  }
+
+  i.fa-check {
+    color: $design-green-color;
+  }
 }

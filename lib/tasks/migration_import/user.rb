@@ -1,3 +1,4 @@
+# :nocov:
 module Tasks
   module MigrationImport
     class User
@@ -21,3 +22,4 @@ module Tasks
     end
   end
 end
+# :nocov:

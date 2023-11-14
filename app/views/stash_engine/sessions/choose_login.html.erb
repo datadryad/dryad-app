@@ -1,7 +1,7 @@
 <% @page_title = 'Login' %>
 <div class="t-login__section">
   <div class="t-login__box">
-    <h1>ORCID account</h1>
+    <h1>Get started</h1>
 
     <p>Dryad uses ORCID as its primary login method.<br>Please use, or create, your ORCID login credentials to login to Dryad.</p>
     <%= link_to "/stash/auth/orcid?origin=#{params[:origin]|| 'login'}#{"&m=#{params[:m]}" if params[:m].present?}#{"&l=#{params[:l]}" if params[:l].present?}", class: 't-login__buttonlink', method: :post do %>

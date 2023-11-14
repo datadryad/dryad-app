@@ -1,5 +1,7 @@
 <% @page_title = "My datasets - publish and preserve your data" %>
-
+<p class="success-hidden">
+  Thank you for your submission! Please <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= @doi %>&orcid=<%= current_user.orcid %>">complete a short survey about your experience</a>.
+</p>
 <div class="c-datasets-heading">
   <h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
   <%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
@@ -8,3 +10,4 @@
 <div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
+<p style="text-align:right; font-size: .9em;"><a href="/stash/feedback?m=4&l=dashboard" class="o-link__buttonlink"><i class="fa fa-commenting-o" aria-hidden="true" style="margin-right: .5ch"></i>Help direct the future of Dryad</a></p>

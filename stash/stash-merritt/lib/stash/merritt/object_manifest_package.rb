@@ -29,8 +29,8 @@ module Stash
 
         # Save a copy of the manifest in S3 for debugging if needed, but the actual
         # merritt submission will use the local file
-        Stash::Aws::S3.put(s3_key: "#{resource.s3_dir_name(type: 'manifest')}/manifest.checkm",
-                           contents: manifest.write_to_string)
+        Stash::Aws::S3.new.put(s3_key: "#{resource.s3_dir_name(type: 'manifest')}/manifest.checkm",
+                               contents: manifest.write_to_string)
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
         File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
         manifest_path
@@ -52,7 +52,7 @@ module Stash
 
       def data_file_entry(upload)
         upload_file_name = upload.upload_file_name
-        upload_url = upload.url || upload.direct_s3_presigned_url
+        upload_url = upload.url || upload.s3_staged_presigned_url
         throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
 
         upload_file_size = upload.upload_file_size
@@ -70,7 +70,7 @@ module Stash
 
         file_name = builder.file_name
         OpenStruct.new(
-          file_url: Stash::Aws::S3.presigned_download_url(s3_key: path),
+          file_url: Stash::Aws::S3.new.presigned_download_url(s3_key: path),
           file_name: file_name,
           mime_type: builder.mime_type
         )

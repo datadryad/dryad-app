@@ -3,6 +3,7 @@ require 'stash/aws/s3'
 require 'stash/indexer/solr_indexer'
 # the following is required to make our wonky tests work and may break if we move stuff around
 require_relative '../../../lib/stash/indexer/indexing_resource'
+require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
@@ -125,7 +126,9 @@ module StashEngine
     end
 
     def remove_s3_temp_files
-      Stash::Aws::S3.delete_dir(s3_key: s3_dir_name(type: 'base'))
+      return if resource_type&.resource_type == 'collection'
+
+      Stash::Aws::S3.new.delete_dir(s3_key: s3_dir_name(type: 'base'))
     end
 
     after_create :init_state_and_version
@@ -178,10 +181,10 @@ module StashEngine
     end
 
     # this is METADATA published
-    scope :published, -> do
-      joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
-        .where('stash_engine_resources.publication_date < ?', Time.now.utc)
-    end
+    # scope :published, -> do
+    #   joins(:last_curation_activity).where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+    #     .where('stash_engine_resources.publication_date < ?', Time.now.utc)
+    # end
 
     JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
                              'LEFT OUTER JOIN stash_engine_internal_data ' \
@@ -217,21 +220,6 @@ module StashEngine
         arr.push(funder_ids)
       end
       joins(:last_curation_activity).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
-    end
-
-    scope :visible_to_user, ->(user:) do
-      if user.nil?
-        with_visibility(states: %w[published embargoed])
-      elsif user.limited_curator?
-        all
-      else
-        tenant_admin = (user.tenant_id if user.role == 'admin')
-        with_visibility(states: %w[published embargoed],
-                        tenant_id: tenant_admin,
-                        funder_ids: user.funders_as_admin.map(&:funder_id),
-                        journal_issns: user.journals_as_admin.map(&:single_issn),
-                        user_id: user.id)
-      end
     end
 
     # limits to the latest resource for each dataset if added to resources
@@ -357,6 +345,51 @@ module StashEngine
       result.flatten
     end
 
+    def check_add_readme_file
+      filename = 'README.md'
+      technical_info = descriptions.type_technical_info.first&.description
+      return if !technical_info || technical_info.empty?
+
+      # check if new content
+      old_info = previous_resource&.descriptions&.type_technical_info&.first&.description
+      return if technical_info == old_info
+
+      # check content against file
+      readme_file = data_files.present_files.where(upload_file_name: filename).first
+      file_content = readme_file&.file_content
+
+      return if technical_info == file_content
+
+      # remove old file
+      readme_file.smart_destroy! if file_content
+
+      # add file
+      Stash::Aws::S3.new.put_stream(
+        s3_key: "#{s3_dir_name(type: 'data')}/README.md",
+        stream: StringIO.new(technical_info)
+      )
+      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
+        .where.not(file_state: 'deleted').destroy_all
+
+      db_file =
+        StashEngine::DataFile.create(
+          upload_file_name: filename,
+          upload_content_type: 'text/markdown',
+          upload_file_size: technical_info.bytesize,
+          resource_id: id,
+          upload_updated_at: Time.new,
+          file_state: 'created',
+          original_filename: filename
+        )
+
+      update(total_file_size: StashEngine::DataFile
+          .where(resource_id: id)
+          .where(file_state: %w[created copied])
+          .sum(:upload_file_size))
+
+      db_file
+    end
+
     # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank
     # item and then never fill anything in.  This cleans up those items.  Probably useful in the review page.
     def cleanup_blank_models!
@@ -387,6 +420,12 @@ module StashEngine
 
       matches = download_uri.match(%r{^(https*://[^/]+)/d/(\S+)$})
       [matches[1], matches[2]]
+    end
+
+    def merritt_ark
+      item = merritt_protodomain_and_local_id
+
+      CGI.unescape(item[1])
     end
 
     # ------------------------------------------------------------
@@ -590,7 +629,7 @@ module StashEngine
     def funders_match?(user:)
       user_funders = user.funders_as_admin
       resource_funders = contributors
-      return unless user_funders.present? && resource_funders.present?
+      return false unless user_funders.present? && resource_funders.present?
 
       user_funder_ids = user_funders.map(&:funder_id).compact.reject(&:empty?)
       resource_funder_ids = resource_funders.map(&:name_identifier_id).compact.reject(&:empty?)
@@ -797,13 +836,12 @@ module StashEngine
       "#{d}-#{id}#{ALLOWED_UPLOAD_TYPES[type]}"
     end
 
+    # -----------------------------------------------------------
     # Changes since the previously curated version
     def changed_from_previous_curated
       changed_fields(previous_curated_resource)
     end
 
-    # Yes, this method looks complex,
-    # but breaking it into a bunch of smaller methods would only make it seem more complex
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def changed_fields(other_resource)
       return [] unless other_resource
@@ -812,9 +850,7 @@ module StashEngine
 
       changed << 'title' if title != other_resource.title
 
-      this_auth_string = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      that_auth_string = other_resource.authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact.to_s
-      changed << 'authors' if this_auth_string != that_auth_string
+      changed.concat(changed_authors(other_resource.authors))
 
       this_facility = contributors.where(contributor_type: 'sponsor').first&.contributor_name
       that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
@@ -828,19 +864,17 @@ module StashEngine
       that_methods = other_resource.descriptions.type_methods.map(&:description)
       changed << 'methods' if this_methods != that_methods
 
+      this_technical_info = descriptions.type_technical_info.map(&:description)
+      that_technical_info = other_resource.descriptions.type_technical_info.map(&:description)
+      changed << 'technical_info' if !this_technical_info.compact.empty? && this_technical_info != that_technical_info
+
       this_other_desc = descriptions.type_other.map(&:description)
       that_other_desc = other_resource.descriptions.type_other.map(&:description)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
-      changed << 'subjects' if subjects.map(&:subject).to_s != other_resource.subjects.map(&:subject).to_s
-
-      this_funders = contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      that_funders = other_resource.contributors.where(contributor_type: 'funder').map { |c| "#{c.contributor_name} #{c.award_number}" }.to_s
-      changed << 'funders' if this_funders != that_funders
-
-      this_related = related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
-      that_related = other_resource.related_identifiers.map { |r| "#{r.related_identifier} #{r.work_type}" }.to_s
-      changed << 'related_identifiers' if this_related != that_related
+      changed.concat(changed_subjects(other_resource.subjects))
+      changed.concat(changed_funders(other_resource))
+      changed.concat(changed_related(other_resource.related_identifiers))
 
       changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
       changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
@@ -849,6 +883,82 @@ module StashEngine
       changed
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+    # special granular attribute checks
+
+    def changed_authors(other_authors)
+      changed = []
+      edits = []
+      edits << { deleted: other_authors.length - authors.length } if other_authors.length > authors.length
+      this_authors = authors.map do |a|
+        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation&.long_name}#{a.affiliation&.ror_id}", email: a.author_email }
+      end
+      that_authors = other_authors.map do |a|
+        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation&.long_name}#{a.affiliation&.ror_id}", email: a.author_email }
+      end
+      this_authors.each_with_index do |a, i|
+        diff = a.diff(that_authors[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'authors'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_subjects(other_subjects)
+      changed = []
+      edits = []
+      edits << { deleted: other_subjects.length - subjects.length } if other_subjects.length > subjects.length
+      subjects.each_with_index do |s, i|
+        edits << { index: i, subject: s.subject } unless s.subject == other_subjects[i]&.subject
+      end
+      unless edits.empty?
+        changed << 'subjects'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_funders(other_resource)
+      changed = []
+      edits = []
+      this_funders = contributors.where(contributor_type: 'funder').map do |f|
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+      end
+      that_funders = other_resource.contributors.where(contributor_type: 'funder').map do |f|
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+      end
+      edits << { deleted: that_funders.length - this_funders.length } if that_funders.length > this_funders.length
+      this_funders.each_with_index do |f, i|
+        diff = f.diff(that_funders[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'funders'
+        changed << edits
+      end
+      changed
+    end
+
+    def changed_related(other_related)
+      changed = []
+      edits = []
+      this_related = related_identifiers.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
+      that_related = other_related.map.map { |r| { id: r.related_identifier, type: r.work_type, relation: r.relation_type } }
+      edits << { deleted: that_related.length - this_related.length } if that_related.length > this_related.length
+      this_related.each_with_index do |f, i|
+        diff = f.diff(that_related[i] || {})
+        edits << { index: i }.merge(diff) unless diff.empty?
+      end
+      unless edits.empty?
+        changed << 'related_identifiers'
+        changed << edits
+      end
+      changed
+    end
+    # -----------------------------------------------------------
 
     def update_salesforce_metadata
       sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)
@@ -881,7 +991,6 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Handle the 'submitted' resource state (happens after successful Merritt submission)
-    # rubocop:disable Metrics/AbcSize
     def prepare_for_curation
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 
@@ -909,18 +1018,13 @@ module StashEngine
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(target_status: target_status)
 
-      # If it has never been published,
-      # OR it has been in curation more recently than the last published version,
-      # OR the last user to edit it was the current_editor
+      # If the last user to edit it was the current_editor
       # return it to curation status
-      return unless identifier.date_last_published.blank? ||
-                    identifier.date_last_curated > identifier.date_last_published ||
-                    last_curation_activity.user_id == current_editor_id
+      return unless last_curation_activity.user_id == current_editor_id
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'System set back to curation')
     end
-    # rubocop:enable Metrics/AbcSize
 
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)

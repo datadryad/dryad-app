@@ -1459,6 +1459,24 @@ function modernizeIt(){
 
 // ##### Main JavaScript ##### //
 
+function awaitSelector(selector) {
+  return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+          return resolve(document.querySelector(selector));
+      }
+      const observer = new MutationObserver(mutations => {
+          if (document.querySelector(selector)) {
+              resolve(document.querySelector(selector));
+              observer.disconnect();
+          }
+      });
+      observer.observe(document.body, {
+          childList: true,
+          subtree: true
+      });
+  });
+}
+
 function joelsReady(){
 
   // ***** Upload Modal Component ***** //
@@ -1467,13 +1485,13 @@ function joelsReady(){
     var buttonShowModal = document.querySelectorAll('.js-uploadmodal__button-show-modal');
     var buttonCloseModal = document.querySelectorAll('.js-uploadmodal__button-close-modal');
 
-    buttonShowModal.forEach(function(button) {
+    [...buttonShowModal].forEach(function(button) {
       button.addEventListener('click', function() {
         uploadModal.showModal();
       });
     });
 
-    buttonCloseModal.forEach(function(button) {
+    [...buttonCloseModal].forEach(function(button) {
       button.addEventListener('click', function() {
         uploadModal.close();
       });
@@ -1614,31 +1632,61 @@ function joelsReady(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
+  function copyEmail(e) {
+    const copyButton = e.currentTarget.firstElementChild;
+    const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
+    navigator.clipboard.writeText(email).then(() => {
+      // Successful copy
+      copyButton.parentElement.setAttribute('title', 'Email copied');
+      copyButton.classList.remove('fa-clipboard');
+      copyButton.classList.add('fa-check');
+      copyButton.innerHTML = '<span class="screen-reader-only">Email address copied</span>'
+      setTimeout(function(){
+        copyButton.parentElement.setAttribute('title', 'Copy email');
+        copyButton.classList.add('fa-clipboard');
+        copyButton.classList.remove('fa-check');
+        copyButton.innerHTML = '';
+      }, 2000);
+    });
+  }
+
   var emails = document.getElementsByClassName('emailr');
   for (var i=0; i < emails.length; i++) {
     emails[i].onclick = e => {
+      var mailto = e.currentTarget.href
       var email = e.currentTarget.textContent.split('').reverse().join('');
-      e.currentTarget.href='mailto:'+email;
+      e.currentTarget.href = mailto.replace('dev@null', email);
     }
-
     const newEl = document.createElement("span");
     newEl.setAttribute('class', 'copy-icon');
-    newEl.innerHTML = '&nbsp;<i class="fa fa-clipboard" aria-hidden="true"><i><span style="display: none">&nbsp;copied</span>';
+    newEl.setAttribute('role', 'button');
+    newEl.setAttribute('tabindex', 0);
+    newEl.setAttribute('aria-label', 'Copy email address');
+    newEl.setAttribute('title', 'Copy email');
+    newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
     const element = emails[i];
     element.parentNode.insertBefore(newEl, element.nextSibling);
-    newEl.onclick = e => {
-      e.preventDefault();
-      const copyText = e.currentTarget.getElementsByTagName('span')[0];
-      const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
-      navigator.clipboard.writeText(email).then(() => {
-        // Successful copy
-        copyText.style.display = 'inline';
-        setTimeout(function(){
-          copyText.style.display = 'none';
-        }, 2000);
-      });
-    }
+    newEl.addEventListener('click', copyEmail)
+    newEl.addEventListener('keydown', (e) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        copyEmail(e)
+      }
+    });
   };
+
+  function localize(time) {
+    const date = new Date(time);
+    return date.toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}).replace(/ ([AP][M])/, '\xa0$1');
+  }
+  [...document.querySelectorAll('.local-date')].forEach((span) => {
+    if (span.dataset.dt) span.innerText = localize(span.dataset.dt);
+  });
+
+  const timezone = document.getElementById('timezone');
+  if (timezone) {
+    const date = new Date();
+    timezone.innerText = date.toLocaleString('en-US', {day: '2-digit', timeZoneName: 'longGeneric'}).substring(4);
+  } 
 
   var navButtons = Array.from(document.getElementsByClassName('c-header_nav-button'));
   navButtons.forEach(button => {
@@ -1657,22 +1705,28 @@ function joelsReady(){
     }
   });
 
+  function expandButtonMenu(e) {
+    const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+    const baseURL = window.location.pathname + window.location.search
+    if (closed) {
+      const newHash = '#' + e.currentTarget.id
+      history.replaceState('', '', baseURL + newHash);
+      e.currentTarget.setAttribute('aria-expanded', 'true');
+      e.currentTarget.nextElementSibling.removeAttribute('hidden');
+    } else {
+      history.replaceState('', '', baseURL);
+      e.currentTarget.setAttribute('aria-expanded', 'false');
+      e.currentTarget.nextElementSibling.setAttribute('hidden', true);
+    }
+  }
   var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
   expandButtons.forEach(button => {
-    button.onclick = e => {
-      const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
-      const baseURL = window.location.pathname + window.location.search
-      if (closed) {
-        const newHash = '#' + e.currentTarget.id
-        history.replaceState('', '', baseURL + newHash);
-        e.currentTarget.setAttribute('aria-expanded', 'true');
-        e.currentTarget.nextElementSibling.removeAttribute('hidden');
-      } else {
-        history.replaceState('', '', baseURL);
-        e.currentTarget.setAttribute('aria-expanded', 'false');
-        e.currentTarget.nextElementSibling.setAttribute('hidden', true);
+    button.addEventListener('click', expandButtonMenu)
+    button.addEventListener('keydown', (e) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        expandButtonMenu(e)
       }
-    }
+    });
   });
 
   if (window.location.hash) {

@@ -1,16 +1,19 @@
 <% @page_title = "Publication updater" %>
-
 <h1 class="o-heading__level1">Publication updater</h1>
 
 <div>
-  <h2>Datasets</h2>
+  <p>The publication updater will try to match a dataset's publication DOI (if available). If Crossref finds a match for the DOI then the 'Scores' column will display "1 (DOI match)". In the event that no publication DOI was available, the publication updater will then send the dataset's title and authors to Crossref. In this situation, the 'Scores' column will display Crossref's scoring of the closest match it found (in parenthesis) and the publication updater's internal score that is based on matching against the title and author list returned by Crossref</p>
+  <h2>Instructions</h2>
+  <ol>
+    <li>Evaluate the relationship between the dataset and the publication</li>
+    <li>If the publication should not be associated with the dataset, click "Reject"</li>
+    <li>Otherwise, decide on a related work type for the publication: primary (article), preprint, or related (article)</li>
+    <li>Decide whether to also overwrite existing dataset metadata (limited to: ISSN, publication name, and subjects)</li>
+    <li>Make your selection for type and metadata import from the dropdown, and click "Accept"</li>
+  </ol>
 
-  <p>The table below groups datasets with their proposed metadata changes.</p>
-  <p>The first row in a group represents the existing information we have for the dataset. The second row of tthe group represents the proposed changes (highlighted in blue). Clicking the <em>'Accept'</em> button will transfer the proposed changes in 'blue' to the dataset. Clicking <em>'Reject'</em> will cancel the proposed changes</p>
-  <p>The publication updater will try to match a dataset's publication DOI (if available). If Crossref finds a match for the DOI then the 'Scores' column will display `1 (DOI match)`. In the event that no publication DOI was available, the publication updater will then send the dataset's title and authors to Crossref. In this situation, the 'Scores' column will display Crossref's scoring of the closest match it found (in parenthesis) and the publication updater's internal score that is based on matching against the title and author list returned by Crossref</p>
-
-  <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>
-    <h2 class="o-heading__level2">Limit to</h2>
+  <h2 class="o-heading__level2">Limit to</h2>
+  <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
 
     <div class="o-admin-form-pair">
       <label for="list_search">Search:</label>
@@ -23,13 +26,12 @@
   <% end %>
 
   <div class="table-wrapper">
-    <table class="c-lined-table">
+    <table class="c-lined-table c-proposed-change-table">
       <thead>
       <tr>
         <th class="c-lined-table__sort <%= sort_display('stash_engine_proposed_changes.title') %> c-proposed-change-table__column-large">
           <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.title', title: 'Title' %>
         </th>
-        <th class="c-proposed-change-table__column-small">&nbsp;</th>
         <th class="c-lined-table__sort <%= sort_display('publication_name') %> c-proposed-change-table__column-small">
           <%= sortable_column_head sort_field: 'publication_name', title: 'Publication' %>
         </th>
@@ -45,33 +47,27 @@
         <th class="c-lined-table__sort <%= sort_display('authors') %> c-proposed-change-table__column-medium">
           <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('score') %> c-proposed-change-table__column-small">
-          <%= sortable_column_head sort_field: 'score', title: 'Scores' %>
-        </th>
       </tr>
       </thead>
-
       <tbody>
       <% @proposed_changes.each do |proposed_change| %>
         <% resource = @resources.select{ |r| r.identifier_id == proposed_change.identifier_id }.first %>
         <% if resource.present? %>
           <%= render partial: 'proposed_change_line',
                      locals: { proposed_change: proposed_change, resource: resource } %>
-
-          <tr id="separator_<%= proposed_change.id %>" class="c-proposed-change-table__row-separator"><td colspan="9">&nbsp;</td></tr>
         <% end %>
       <% end %>
       </tbody>
     </table>
   </div>
 
-  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
-              stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
-  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
-
   <div class="c-space-paginator">
     <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
   </div>
+
+  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+              stash_url_helpers.publication_updater_path(sortable_table_params.merge(format: :csv)) %>
+  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
 
   <script type="text/javascript">
     $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){

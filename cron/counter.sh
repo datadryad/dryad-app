@@ -73,7 +73,8 @@ cd /apps/dryad/apps/ui/current
 # repopulate all stats back into our tables
 # -----------------------------------------
 echo "Repopulating stats into database cache"
-JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual
+# JSON_DIRECTORY="$COUNTER_JSON_STORAGE" bundle exec rails counter:cop_manual # this populates from our local reports
+bundle exec rails counter:cop_populate # this does it from the hub instead of our local files
 
 # -----------------------------------------------
 # remove old logs that are past our deletion time

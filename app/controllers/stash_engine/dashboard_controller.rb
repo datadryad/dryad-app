@@ -6,7 +6,9 @@ module StashEngine
 
     MAX_VALIDATION_TRIES = 5
 
-    def show; end
+    def show
+      @doi = CGI.escape(params[:doi] || '')
+    end
 
     def metadata_basics; end
 
@@ -21,18 +23,8 @@ module StashEngine
       @page_size = params[:page_size] || '10'
       respond_to do |format|
         format.js do
-          @datasets = policy_scope(Identifier).page(@page).per(@page_size)
+          @datasets = policy_scope(Identifier, policy_scope_class: IdentifierPolicy::DashboardScope).page(@page).per(@page_size)
           @display_resources = @datasets.map { |dataset| StashDatacite::ResourcesController::DatasetPresenter.new(dataset&.latest_resource) }
-        end
-      end
-    end
-
-    # an AJAX wait to allow in-progress items to complete before continuing.
-    def ajax_wait
-      respond_to do |format|
-        format.js do
-          sleep 0.1
-          head :ok, content_type: 'application/javascript'
         end
       end
     end

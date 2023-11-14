@@ -10,6 +10,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Tenant
+  include Mocks::DataFile
 
   before(:each) do
     mock_repository!
@@ -20,6 +21,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_tenant!
     ignore_zenodo!
     neuter_curation_callbacks!
+    mock_file_content!
     @curator = create(:user, role: 'curator')
     @author = create(:user)
     @document_list = []
@@ -27,7 +29,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   describe :initial_version do
 
-    before(:each, js: true) do
+    before(:each, js: true) do |test|
       ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
       sign_in(@author)
@@ -37,15 +39,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       fill_required_fields
       navigate_to_review
       agree_to_everything
-      submit_form
+      submit_form unless test.metadata[:no_submit]
     end
 
     describe :pre_submit do
-      it 'should display the proper info on the My datasets page', js: true do
+      it 'should display the proper info on the My datasets page', js: true, no_submit: true do
         click_link 'My datasets'
 
         expect(page).to have_text(@resource.title)
         expect(page).to have_text('In progress')
+      end
+    end
+
+    describe :pre_merrit_submit do
+      it 'should display the proper info on the My datasets page', js: true do
+        click_link 'My datasets'
+
+        expect(page).to have_text(@resource.title)
+        expect(page).to have_text('Processing')
       end
 
       it 'did not send out an email to the author', js: true do
@@ -282,7 +293,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
-      it "has a curation status of 'curation' when prior version was :action_required", js: true do
+      it 'has an assigned curator when prior version was :action_required', js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
         @resource.reload
 
@@ -294,11 +305,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
-      it "has a curation status of 'curation' when prior version was :withdrawn", js: true do
+      it 'has an assigned curator when prior version was :withdrawn', js: true do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn')
         @resource.reload
 
@@ -310,7 +321,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('curation')
+        expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
@@ -369,7 +380,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
-    3.times { fill_in_keyword }
+    fill_in_keywords
     all('[id^=instit_affil_]').last.set('test institution')
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')

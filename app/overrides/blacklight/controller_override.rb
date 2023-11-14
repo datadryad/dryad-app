@@ -1,3 +1,4 @@
+# :nocov:
 module Blacklight
   module Controller
 
@@ -20,3 +21,4 @@ module Blacklight
     end
   end
 end
+# :nocov:

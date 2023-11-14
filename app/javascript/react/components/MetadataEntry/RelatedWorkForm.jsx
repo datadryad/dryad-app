@@ -14,7 +14,6 @@ function RelatedWorkForm(
   const formRef = useRef();
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving related work`);
     showSavingMsg();
 
     // set up values

@@ -28,9 +28,9 @@ module StashEngine
                                     state: 'finished', copy_type: 'software_publish')
     end
 
-    describe '#calc_s3_path' do
+    describe '#s3_staged_path' do
       it 'returns a path for zenodo files' do
-        expect(@upload.calc_s3_path).to \
+        expect(@upload.s3_staged_path).to \
           end_with("#{@resource.id}/sfw/#{@upload.upload_file_name}")
       end
     end
@@ -43,8 +43,10 @@ module StashEngine
     end
 
     describe '#zenodo_presigned_url' do
-      it 'correctly creates a presigned (RATs) download url' do
+      # TODO: fix this when we know what actually works at zenodo and they correct in their environments
+      xit 'correctly creates a presigned (RATs) download url' do
         stub_get_existing_ds(deposition_id: @copy2.deposition_id)
+        # stub_new_access_token
         item = @upload.zenodo_presigned_url
         expect(item).to include('/api/files/')
         expect(item).to include("/#{@upload.upload_file_name}")
@@ -55,7 +57,7 @@ module StashEngine
     describe '#zenodo_replication_url' do
       it 'replicates from s3 if direct upload' do
         fu = @resource.software_files.first
-        expect(fu).to receive(:direct_s3_presigned_url).and_return(nil)
+        expect(fu).to receive(:s3_staged_presigned_url).and_return(nil)
         fu.zenodo_replication_url
       end
 

@@ -47,6 +47,10 @@ module StashDatacite
         url_help.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       end
 
+      def readme_page(resource)
+        url_help.prepare_readme_resource_path(id: resource.id)
+      end
+
       def files_page(resource)
         url_help.upload_resource_path(id: resource.id)
       end
@@ -68,11 +72,17 @@ module StashDatacite
         err << abstract
         err << subjects
 
-        err << s3_error_uploads
-        err << url_error_validating
-        err << over_file_count
-        err << over_files_size
-        err << data_required
+        if @resource&.resource_type&.resource_type == 'collection'
+          err << collected_datasets
+        else
+
+          err << s3_error_uploads
+          err << url_error_validating
+          err << over_file_count
+          err << over_files_size
+          err << data_required
+
+        end
 
         err.flatten
       end
@@ -86,6 +96,14 @@ module StashDatacite
         err << url_error_validating
 
         err.flatten
+      end
+
+      def collected_datasets
+        err = []
+        if @resource.related_identifiers.where(relation_type: 'haspart').count.zero?
+          err << ErrorItem.new(message: 'List all {datasets in the collection}', page: metadata_page(@resource), ids: ['related_works_section'])
+        end
+        err
       end
 
       def article_id
@@ -116,10 +134,17 @@ module StashDatacite
 
       def title
         if @resource.title.blank?
-          return ErrorItem.new(message: 'Fill in a {dataset title}',
+          return ErrorItem.new(message: "Fill in a {#{@resource&.resource_type&.resource_type} title}",
                                page: metadata_page(@resource),
                                ids: ["title__#{@resource.id}"])
+        elsif nondescript_title?
+          return ErrorItem.new(
+            message: 'Use a {descriptive title} so your dataset can be discovered. Your title is not specific to your dataset.',
+            page: metadata_page(@resource),
+            ids: ["title__#{@resource.id}"]
+          )
         end
+
         []
       end
 
@@ -199,7 +224,7 @@ module StashDatacite
         files = @resource.generic_files.newly_created.file_submission
         errored_uploads = []
         files.each do |f|
-          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.exists?(s3_key: f.calc_s3_path)
+          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.new.exists?(s3_key: f.s3_staged_path)
         end
 
         return [] if errored_uploads.empty?
@@ -268,31 +293,24 @@ module StashDatacite
       def data_required
         errors = []
 
+        readme_md_require_date = '2022-09-28'
+        readme_require_date = '2021-12-20'
+
+        no_techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.zero?
+
+        no_md = @resource.identifier.created_at > readme_md_require_date && readme_md_files.count.zero?
+
+        no_readme = @resource.identifier.created_at > readme_require_date && readme_files.count.zero?
+
+        if no_techinfo && (no_md || no_readme)
+          errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
+                                  page: readme_page(@resource),
+                                  ids: ['readme_editor'])
+        end
+
         unless contains_data?
           errors << ErrorItem.new(message: 'Include at least one data file in your submission. ' \
                                            '{Add some data files to proceed}.',
-                                  page: files_page(@resource),
-                                  ids: ['filelist_id'])
-        end
-
-        # readme_md_require_date = '2022-09-28'
-        readme_require_date = '2021-12-20'
-
-        # This will come in useful when we require readme.md files for real
-        #
-        # if readme_md_files.blank? && @resource.identifier.created_at > readme_md_require_date
-        #   errors << ErrorItem.new(message: '{Include a README.md file} along with the data files.',
-        #                           page: files_page(@resource),
-        #                           ids: ['filelist_id'])
-        # elsif
-        if readme_files.blank? && @resource.identifier.created_at > readme_require_date
-          errors << ErrorItem.new(message: '{Include a README file} along with the data files.',
-                                  page: files_page(@resource),
-                                  ids: ['filelist_id'])
-        end
-
-        if readme_files.present? && !readme_files&.first&.upload_file_name&.start_with?('README')
-          errors << ErrorItem.new(message: "For the {README file}, please capitalize the 'README' portion of the filename.",
                                   page: files_page(@resource),
                                   ids: ['filelist_id'])
         end
@@ -301,6 +319,15 @@ module StashDatacite
       end
 
       private
+
+      def nondescript_title?
+        dict = ['raw', 'data', 'dataset', 'dryad', 'fig', 'figure', 'figures', 'table', 'tables', 'file', 'supp', 'suppl',
+                'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'et al',
+                'the', 'of', 'for', 'in', 'from']
+        regex = dict.join('|')
+        remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
+        remainder.split.size < 3
+      end
 
       # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       # There must be at least one file *other than* the README file.

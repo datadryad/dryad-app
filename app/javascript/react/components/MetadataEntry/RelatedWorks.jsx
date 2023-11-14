@@ -9,6 +9,7 @@ function RelatedWorks(
     resourceId,
     relatedIdentifiers,
     workTypes,
+    resourceType,
   },
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -16,15 +17,14 @@ function RelatedWorks(
   const blankRelated = {
     related_identifier: '',
     related_identifier_type: 'doi',
-    relation_type: 'iscitedby',
+    relation_type: resourceType === 'collection' ? 'haspart' : 'iscitedby',
     resource_id: resourceId,
-    work_type: 'article',
+    work_type: resourceType === 'collection' ? 'dataset' : 'article',
   };
 
   const [works, setWorks] = useState(relatedIdentifiers);
 
   const addNewWork = () => {
-    console.log(`${(new Date()).toISOString()}: Adding Related Works`);
     const contribJson = {
       authenticity_token: csrf,
       stash_datacite_related_identifier: blankRelated,
@@ -48,7 +48,6 @@ function RelatedWorks(
   }
 
   const removeItem = (id) => {
-    console.log(`${(new Date()).toISOString()}: deleting relatedWork ${id}`);
     const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`;
     showSavingMsg();
 
@@ -62,8 +61,6 @@ function RelatedWorks(
       .then((data) => {
         if (data.status !== 200) {
           console.log('Response failure not a 200 response from related works deletion');
-        } else {
-          console.log('deleted from related works');
         }
         showSavedMsg();
       });
@@ -80,8 +77,11 @@ function RelatedWorks(
     <fieldset className="c-fieldset">
       <legend className="c-fieldset__legend">
         <span className="c-input__hint">
-          Are there any preprints, articles, datasets, software packages, or supplemental
-          information that have resulted from or are related to this Data Publication?
+          {resourceType === 'collection'
+            ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
+              preprints, software packages, or supplemental information.`
+            : `Are there any preprints, articles, datasets, software packages, or supplemental information that have 
+              resulted from or are related to this Data Publication?`}
         </span>
       </legend>
       <div className="replaceme-related-works">
@@ -112,4 +112,5 @@ RelatedWorks.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   relatedIdentifiers: PropTypes.array.isRequired,
   workTypes: PropTypes.array.isRequired,
+  resourceType: PropTypes.string.isRequired,
 };
