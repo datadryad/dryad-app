@@ -103,7 +103,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       mock_salesforce!
       mock_stripe!
       mock_repository!
-      mock_datacite_and_idgen!
+      mock_datacite!
       mock_file_content!
       mock_tenant!
       neuter_curation_callbacks!
