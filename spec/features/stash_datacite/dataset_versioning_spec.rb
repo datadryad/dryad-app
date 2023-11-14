@@ -16,7 +16,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_repository!
     mock_salesforce!
     mock_solr!
-    mock_datacite_and_idgen!
+    mock_datacite_gen!
     mock_stripe!
     mock_tenant!
     ignore_zenodo!

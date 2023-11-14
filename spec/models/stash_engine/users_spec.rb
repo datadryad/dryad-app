@@ -255,9 +255,9 @@ module StashEngine
         @curation_activity3 = create(:curation_activity, resource: @resource3, user_id: @user3.id)
         @resource_state3 = create(:resource_state, user_id: @user3.id, resource_state: 'submitted', resource_id: @resource3.id)
 
-        @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
-        allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
+        @mock_datacitegen = double('datacitegen')
+        allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
+        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
       end
 
       it 'moves the dependendent resources from user2 to user1' do

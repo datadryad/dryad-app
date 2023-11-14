@@ -21,7 +21,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     # the queue, Stash::Merritt::SubmissionJob.do_submit!
     mock_submission_job!
     mock_solr!
-    mock_datacite_and_idgen!
+    mock_datacite_gen!
     mock_stripe!
     mock_salesforce!
     mock_tenant!

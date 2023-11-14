@@ -24,14 +24,14 @@ module Tasks
       resource = stash_identifier.resources.where(meta_view: true).order('id DESC').first
       return if resource.nil?
 
-      idg = Stash::Doi::IdGen.make_instance(resource: resource)
+      idg = Stash::Doi::DataciteGen.new(resource: resource)
       tries = 0
 
       begin
         idg.update_identifier_metadata!
-      rescue Stash::Doi::IdGenError => e
+      rescue Stash::Doi::DataciteGenError => e
         tries += 1
-        puts "Try: #{tries} \tStash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+        puts "Try: #{tries} \tStash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
         puts e.message
         puts ''
         sleep retry_pause # pause for a while to let ezid/datacite stop having problems in case temporary

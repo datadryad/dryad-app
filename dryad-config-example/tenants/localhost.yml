@@ -22,12 +22,6 @@ default: &default
   ror_ids:
     - https://ror.org/just-a-fake-localhost-id
   tenant_id: localhost
-  identifier_service:
-    provider: datacite
-    prefix: "10.5072"
-    account: my.account
-    password: "my.password"
-    sandbox: true
   authentication:
     strategy: none
   default_license: cc0

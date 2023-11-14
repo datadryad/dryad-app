@@ -1,6 +1,6 @@
 require_relative '../../../../../lib/stash/repo'
 require 'stash/merritt/submission_job'
-require_relative '../../../../../lib/stash/doi/id_gen'
+require_relative '../../../../../lib/stash/doi/datacite_gen'
 require 'erb'
 
 module Stash

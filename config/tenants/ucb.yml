@@ -12,13 +12,7 @@ default: &default
     - https://ror.org/05kbg7k66
     - https://ror.org/02mmp8p21
   tenant_id: ucb
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:berkeley.edu
@@ -47,11 +41,5 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.6078/D1"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_password] %>
-    id_scheme: doi
-    owner: null
+
   campus_contacts: ["asackmann@berkeley.edu"]

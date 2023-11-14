@@ -8,13 +8,6 @@ default: &default
   ror_ids:
     - https://ror.org/bad-rors-uc-press
   tenant_id: ucpress
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
-    id_scheme: doi
-    owner: null
   authentication:
     strategy: none
   default_license: cc0
@@ -41,12 +34,5 @@ stage:
 
 production:
   <<: *default
-  identifier_service:
-    provider: ezid
-    shoulder: "doi:10.17916/P6"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:ezid_ucpress_password] %>
-    owner: null
-    id_scheme: doi
   campus_contacts: [""]
 

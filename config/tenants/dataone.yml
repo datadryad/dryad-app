@@ -9,12 +9,6 @@ default: &default
   ror_ids:
     - https://ror.org/00xDaTaONE-FIXME
   tenant_id: dataone
-  identifier_service:
-    provider: datacite
-    prefix: "10.7959"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: true
   authentication:
     strategy: none
   default_license: cc0
@@ -38,12 +32,6 @@ demo:
 production:
   <<: *default
   manager_email: [""]
-  identifier_service:
-    provider: datacite
-    prefix: "10.15146"
-    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
-    sandbox: false
   campus_contacts: [""]
 
 test:
