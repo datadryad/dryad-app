@@ -153,13 +153,11 @@ submit your dataset for curation.
 
 Submitting is accomplished by sending a PATCH request to
 /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
-that tells the server to try and set the /versionStatus value to
-'submitted' like below: 
+that tells the server to set the /versionStatus value to
+'submitted': 
 
 ```json
-[
-	{ "op": "replace", "path": "/versionStatus", "value": "submitted" }
-]
+[ { "op": "replace", "path": "/versionStatus", "value": "submitted" } ]
 ```
 You also need to set the Content-Type header to 'application/json-patch+json'
 
@@ -187,6 +185,35 @@ resp = RestClient.patch(
 
 return_hash = JSON.parse(resp)
 ```
+
+For an explanation of other `versionStatus` values, see the [Submission
+flow](../submission_flow.md) document.
+
+## Retaining a dataset in a private status for peer review purposes
+
+This step is optional.
+
+By default, datasets that are submitted are immediately eligible for
+curation. Dryad curators may evaluate and publish `submitted` datasets at any
+time. If you wish your dataset to remain private until an associated article is
+published, you may update the dataset's `curationStatus` to indicate this.
+
+To move a dataset into `peer_review` status, the dataset must have a
+`versionStatus` of `submitted`. Make a PATCH request as described
+above. Submit to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
+that tells the server to set the /curationStatus value to
+'peer_review': 
+
+```json
+[ { "op": "replace", "path": "/curationStatus", "value": "peer_review" } ]
+```
+
+Datasets in `peer_review` status will remain uncurated and unpublished until
+Dryad learns the associated article has been published. Reminders will
+occasionally be sent to the submitter.
+
+For an explanation of other `curationStatus` values, see the [Submission
+flow](../submission_flow.md) document.
 
 ## Revise your metadata in a new version
 
