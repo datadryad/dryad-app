@@ -10,7 +10,7 @@ default: &default
 
   authentication:
     strategy: ip_address
-    ranges: [ "141.238.0.0/16", "141.238.1.23/24" ]
+    ranges: [ "141.238.0.0/16", "141.238.1.23/24", "132.174.249.205/24" ]
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
