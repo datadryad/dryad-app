@@ -96,7 +96,6 @@ RSpec.feature 'AdminDatasets', type: :feature do
   end
 
   context :roles do
-
     before(:each) do
       mock_aws!
       mock_solr!
