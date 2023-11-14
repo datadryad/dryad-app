@@ -138,17 +138,8 @@ RSpec.feature 'CurationActivity', type: :feature do
 
     context :limited_curator do
       before(:each) do
-        mock_aws!
-        mock_salesforce!
-        mock_stripe!
-        mock_repository!
-        mock_datacite_gen!
-        @user = create(:user, tenant_id: 'ucop')
-        @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
-        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
-        @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
-        visit "#{dashboard_path}?curation_status=curation"
+        @user.update(role: 'limited_curator')
+        sign_in(@user, false)
       end
 
       it 'allows adding notes to the curation activity log' do
