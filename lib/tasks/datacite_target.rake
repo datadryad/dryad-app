@@ -1,3 +1,4 @@
+# :nocov:
 require_relative 'dash_updater'
 namespace :datacite_target do
 
@@ -39,5 +40,5 @@ namespace :datacite_target do
       sleep 1
     end
   end
-
 end
+# :nocov:

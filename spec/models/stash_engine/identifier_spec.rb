@@ -587,6 +587,32 @@ module StashEngine
         ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
         expect(ident.institution_will_pay?).to eq(true)
       end
+
+      it "doesn't make institution pay if there is no DPC coverage" do
+        mock_tenant!(covers_dpc: false)
+        ident = create(:identifier)
+        create(:resource, identifier_id: ident.id)
+        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
+        expect(ident.institution_will_pay?).to eq(false)
+      end
+
+      describe '"author_match" strategy' do
+        before(:each) do
+          @resource = create(:resource)
+          mock_author_match_tenant!(ror_ids: ['https://ror.org/038x2fh14'])
+        end
+
+        it 'says institution pays when an author ror matches an institution ror' do
+          affil = @resource.authors.first.affiliations.first
+          affil.update(ror_id: 'https://ror.org/038x2fh14')
+          @resource.reload
+          expect(@resource.identifier.institution_will_pay?).to eq(true)
+        end
+
+        it "doesn't make institution pay if the authors are not from the institution" do
+          expect(@resource.identifier.institution_will_pay?).to eq(false)
+        end
+      end
     end
 
     describe '#funder_will_pay?' do
@@ -964,19 +990,19 @@ module StashEngine
       end
 
       it 'user_viewable for a regular user' do
-        identifiers = Identifier.user_viewable(user: @user)
+        identifiers = Pundit.policy_scope!(@user, Identifier)
         expect(identifiers.count).to eq(6) # 5 public plus mine in curation
         expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is my private one
       end
 
       it 'user_viewable for an admin' do
-        identifiers = Identifier.user_viewable(user: @user2)
+        identifiers = Pundit.policy_scope!(@user2, Identifier)
         expect(identifiers.count).to eq(6)
         expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is some ucop joe blow private one
       end
 
       it 'user_viewable for a curator, they love it all' do
-        identifiers = Identifier.user_viewable(user: @user3)
+        identifiers = Pundit.policy_scope!(@user3, Identifier)
         expect(identifiers.count).to eq(@identifiers.length)
       end
 

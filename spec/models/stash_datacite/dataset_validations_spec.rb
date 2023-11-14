@@ -32,11 +32,18 @@ module StashDatacite
       end
 
       describe :title do
-        it 'returns error an error object if title not filled' do
+        it 'returns error if title not filled' do
           @resource.update(title: '')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.title
           expect(error.message).to include('dataset title')
+          expect(error.ids.first).to eq("title__#{@resource.id}")
+        end
+        it 'returns error for nondescript title' do
+          @resource.update(title: 'Figure S1 Data supplement')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error.message).to include('descriptive title')
           expect(error.ids.first).to eq("title__#{@resource.id}")
         end
       end
@@ -175,11 +182,43 @@ module StashDatacite
         end
       end
 
+      describe :collection_errors do
+        before(:example) do
+          @collection = create(:resource, user: @user)
+          @collection.save
+          create(:resource_type_collection, resource: @collection)
+          @author1 = @collection.authors.first
+          @author2 = create(:author, resource: @collection)
+          @author3 = create(:author,
+                            author_first_name: @user.first_name,
+                            author_last_name: @user.last_name,
+                            author_email: @user.email,
+                            author_orcid: @user.orcid,
+                            resource_id: @collection.id)
+          @collection.subjects << [create(:subject), create(:subject), create(:subject)]
+          @collection.reload
+        end
+
+        it 'returns collected datasets error when collection has no related identifiers' do
+          validations = DatasetValidations.new(resource: @collection)
+          error = validations.collected_datasets.first
+          expect(error.message).to include('datasets in the collection')
+        end
+
+        it 'returns no errors when collected datasets are present' do
+          create(:related_identifier, relation_type: 'haspart', work_type: 'dataset', resource_id: @collection.id,
+                                      related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
+          validations = DatasetValidations.new(resource: @collection)
+          errors = validations.collected_datasets
+          expect(errors).to eq([])
+        end
+      end
+
       describe :s3_error_uploads do
         it 'returns missing files when files uploaded to s3 are not present' do
           files = @resource.generic_files
-          files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          files.map(&:s3_staged_path).each do |s3_path|
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)
@@ -192,8 +231,8 @@ module StashDatacite
         end
 
         it 'does not check missing files once Merritt processing is complete' do
-          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          @resource.generic_files.map(&:s3_staged_path).each do |s3_path|
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
           allow(@resource).to receive('submitted?').and_return(true)
 
@@ -207,8 +246,8 @@ module StashDatacite
           @resource.generic_files.second.update(file_state: 'copied')
           @resource.generic_files.third.update(url: 'http://example.com')
           @resource.generic_files.fourth.update(file_state: 'copied')
-          @resource.generic_files.map(&:calc_s3_path).each do |s3_path|
-            allow(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
+          @resource.generic_files.map(&:s3_staged_path).each do |s3_path|
+            allow_any_instance_of(Stash::Aws::S3).to receive('exists?').with(s3_key: s3_path).and_return(false)
           end
 
           validations = DatasetValidations.new(resource: @resource)
@@ -287,13 +326,6 @@ module StashDatacite
           @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
         end
 
-        it 'requires at least one data file' do
-          @resource.data_files.destroy_all
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('one data file')
-        end
-
         it 'requires a README file, in addition to at least one data file' do
           @readme.update(upload_file_name: 'some-bogus-filename.txt')
           validations = DatasetValidations.new(resource: @resource)
@@ -305,18 +337,12 @@ module StashDatacite
           expect(error).to be_empty
         end
 
-        it 'does not care about the file extension of a README' do
-          @readme.update(upload_file_name: 'README.bogus-extension')
+        it 'requires at least one data file' do
+          @resource.data_files.destroy_all
+          create(:data_file, resource: @resource, upload_file_name: 'README.md')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.data_required
-          expect(error).to be_empty
-        end
-
-        it 'warns about incorrectly capitalized README' do
-          @readme.update(upload_file_name: 'ReadMe.txt')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('capitalize')
+          expect(error[0].message).to include('one data file')
         end
       end
 

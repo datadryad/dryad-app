@@ -1,3 +1,4 @@
+# :nocov:
 namespace :compressed do
   task update_contents: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
@@ -38,7 +39,6 @@ namespace :compressed do
       else
         StashEngine::ContainerFile.insert_all(to_insert)
       end
-
     rescue StandardError => e
       puts "#{idx + 1}/#{count} Error updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
            "resource_id: #{db_file.resource_id}): #{e.message}"
@@ -81,3 +81,4 @@ namespace :compressed do
     exit
   end
 end
+# :nocov:

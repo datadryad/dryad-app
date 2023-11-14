@@ -1,3 +1,12 @@
+.success-hidden {
+  display: none;
+  text-align: center;
+}
+
+.c-alert--success ~ #maincontent .success-hidden {
+  display: block;
+}
+
 .c-user-datasets-list {
   list-style-type: none;
   margin: 0; padding: 0;
@@ -8,6 +17,7 @@
   margin-bottom: $spacing-sm;
 
 	li {
+    padding: 0;
 	  border: thin solid #888;
 	  display: table-row;
 

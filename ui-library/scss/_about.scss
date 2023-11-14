@@ -7,6 +7,21 @@ h3.expand-button {
     content: " \f0d7";
   }
 
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover, &:focus-visible {
+    &::after {
+      color: $link-body-color;
+    }
+  }
+
+  &:focus-visible {
+    border-color: $design-medium-blue-color;
+    box-shadow: 0 4px 0px -0px $design-medium-blue-color;
+  }
+
   &[aria-expanded=true]::after {
     content: " \f0d8";
   }
@@ -106,6 +121,7 @@ h4 + .about-bios {
 
   li {
     display: inline-block;
+    padding: 0;
     width: 100%;
   }
 }

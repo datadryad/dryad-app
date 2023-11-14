@@ -1,7 +1,7 @@
 module StashEngine
   class TenantPolicy < ApplicationPolicy
     def index?
-      user.present?
+      @user.present?
     end
 
     class Scope

@@ -10,6 +10,14 @@
   <h5>Andrew Beckerman (Class of 2023)</h5><p> is a Professor of Evolutionary Ecology at the University of Sheffield where he collaborates with his team on questions about the impacts of climate and environmental change on biodiversity. They are passionate and curious about the landscape of open science. He is on the University of Sheffield School of Bioscience Executive Board and has recently been appointed to the University Council Finance Committee. Andrew has been co- Editor-in-Chief for the Wiley Open Access journal Ecology and Evolution for over 10 years. He has provided strategic contributions to the British Ecological Society for more than a decade as former Chair of Meetings and member of the Management Board and more recently via the Publications committee. Andew is also currently the Chair of Governors for a local primary school providing strategic support to the senior leadership team on finance, infrastructure and curriculum.</p>  
 </div>
 <div class="bio">
+  <img src="/images/carlson.jpg" alt="Headshot of Jake Carlson">
+  <h5>Jake Carlson (Class of 2024)</h5><p> <a href="https://orcid.org/0000-0003-2733-0969" target="_blank" aria-label="View ORCID record (opens in new window)"><span class="c-orcid__icon" aria-hidden="true"/></a> is the Associate University Librarian for Research, Collections and Outreach at the University at Buffalo (UB) Libraries. His responsibilities include increasing the capabilities of the UB Libraries to respond to researchers’ needs with managing, sharing and preserving their research data. Dryad will be a critical resource in the Libraries’ research data services program. Previously, he has been the Director of Deep Blue Repository and Research Data Services at the University of Michigan and a Data Services Specialist at Purdue University. Carlson has authored or co-authored more than 30 articles on research data services in libraries. His work has been supported by funding from the National Science Foundation (NSF), the Alfred P. Sloan Foundation, and the Institute for Museum and Library Services (IMLS).</p>
+</div>
+<div class="bio">
+  <img src="/images/darksmith.jpg" alt="Headshot of Bekah Darksmith">
+  <h5>Bekah Darksmith (Class of 2024)</h5><p> joined PLOS as its Chief Marketing & Communications Officer in February 2018 to lead strategic development and management of outreach, marketing, and communications. Over the past 20 years, she has worked across academic, not‐for‐profit, and commercial publishing markets, with the bulk of her career spent at the University of California Press in progressively senior roles. Bekah most recently served UC Press in a dual capacity. As its Deputy Director, she developed strategy and oversaw operations for all revenue-generating functions within the organization — marketing, sales, rights and licensing as well as fundraising. As the Executive Director of the UC Press Foundation, she was responsible for driving philanthropic support for UC Press through engagement with its Board of Trustees and administration of the organization’s endowment.</p>
+</div>
+<div class="bio">
   <img src="/images/ebert.jpg" alt="Headshot of Barbara Ebert">
   <h5>Barbara Ebert (Class of 2023)</h5><p> is Executive Secretary, German Federation for Biological Data e.V. (GFBio). GFBio e.V. is a non-profit association founded in 2016 as the legal entity for the sustainable operation of data services in Biodiversity research. It is active in the recently founded National Research Data Infrastructure (NFDI) in Germany. Starting October 2020 we are building a coordination team for the NFDI4BioDiversity consortium, and a pool of IT developers to mobilise data available at the partner organisations and feed them into a common data infrastructure.</p>  
 </div>
@@ -39,6 +47,10 @@
   <h5>Devika Madalli (Class of 2023)</h5><p> is a Professor of the Documentation Research and Training Centre, Indian Statistical Institute (faculty since 1996), India and Adjunct faculty, DISI, University of Trento, Italy. Her interest lies in the area of OERs and Educational resources repositories, Open Data Repositories and Data Management, Knowledge Organization and application of facetization in Information Systems, Information Infrastructures, Digital Libraries, Semantic Web technologies, Faceted Ontologies, Content Management System, Agrisemantics, multilingual information services. She is a member of the Karnataka Evaluation Authority(KEA). Dr.Madalli has extensive experience in capacity building, training on e-learning, MOOCs (moodle) and digital repositories. Dr. Madalli is a member of the Technical Advisory Board of Research Data Alliance and Prof.Madalli is a founding member of and served as the co-chair of the Agriculture Data Interest Group [IGAD], Research Data Alliance [RDA][2013-2016] and present co-chair of the Global Research Commons and RDA for UNSDGs Interest groups.</p>  
 </div>
 <div class="bio">
+  <img src="/images/muilenburg.png" alt="Headshot of Jenny Muilenburg">
+  <h5>Jenny Muilenburg (Class of 2024)</h5><p> is the Research Data Services Librarian at University of Washington Libraries. In addition to leading the Libraries Data Services Team and facilitating the integration of research data support throughout UW schools and departments, Jenny also works with campus partners to create education and outreach around funder development and mandates. She promotes collaboration and substantive partnerships with administration and other departments to enhance campuswide research support services. She is a past ARL Visiting Program Officer for Research Data, and a current institutional representative for HELIOS.</p>
+</div>
+<div class="bio">
   <img src="/images/mulvany.jpg" alt="Headshot of Ian Mulvany">
   <h5>Ian Mulvany (Class of 2024)</h5><p> is CTO at BMJ where he leads
   teams that deliver the technologies and features that underpin new products as
@@ -57,65 +69,8 @@
   in 2014.</p>
 </div>
 <div class="bio">
-  <img src="/images/murphy.jpg" alt="Headshot of Fiona Murphy">
-  <h5>Fiona Murphy (Class of 2023)</h5><p> held a range of scholarly publishing roles with Oxford University Press,
-    Bloomsbury Academic and Wiley after completing a DPhil in English Literature. As Publisher for Earth and Environmental
-    Sciences at Wiley, she began to specialize in emerging scholarly communications with particular emphasis on Open Science
-    and Open Data. Now an independent research data and publishing consultant advising institutions, learned societies and
-    commercial publishing companies, Fiona is also an Associate Fellow at the University of Reading and has written and
-    presented widely on data publishing, open data and open science. She is a past and current member of several research
-    projects including PREPARDE (Peer Review of Research Data in the Earth Sciences), Data2Paper (a cloud-based app for
-    automating the data article submission process) and the Scholarly Commons Working Group (a Force11 project devising
-    principles and practices for open science systems). An active member – and sometime Co-Chair – for several Research
-    Data Alliance Groups focusing on data publishing policies, workflows and accreditation systems, Fiona has organized
-    a number of data-related events and sessions at scientific meetings. She regularly writes and reviews articles on
-    these topics and recently co-edited a special issue on persistent identifiers.</p>
-</div>
-<div class="bio"><img src="/images/nilsson.jpg" alt="Headshot of Johan Nilsson">
-  <h5>Johan Nilsson (Class of 2022)</h5><p> works at the Oikos Editorial Office, a society-owned publishing foundation
-    based at Lund University, Sweden. His main responsibilities are to manage the peer-review, production and marketing
-    of one of their journals, Journal of Avian Biology. He also coordinates the society’s projects on open access, open
-    data and public outreach. Johan has a background as a research scientist in evolutionary ecology and remain actively
-    engaged in research in this field. He has a strong passion for scientific communication and social media engagement
-    and is particularly interested in how the benefits of open science (and open data in particular) can be better
-    communicated to researchers.</p>
-</div>
-<div class="bio">
-  <img src="/images/puebla.jpg" alt="Headshot of Iratxe Puebla">
-  <h5>Iratxe Puebla (Class of 2024)</h5><p> is Associate Director at
-  ASAPbio, a nonprofit with a mission to accelerate innovation and transparency
-  in life sciences communication, and which supports the productive use of
-  preprints in the life sciences. In her role, Iratxe works in projects related
-  to new initiatives and best practices around preprints and preprint review,
-  she also coordinates the ASAPbio Community. Prior to ASAPbio, Iratxe worked in
-  publishing for 16 years, she held editorial roles at BioMed Central and then
-  PLOS, where she was Deputy Editor-in-Chief at the journal PLOS ONE. During her
-  time at PLOS ONE she was involved in the implementation of PLOS’ data
-  policy. Iratxe is also Facilitation and Integrity Officer for the Committee on
-  Publication Ethics (COPE) and co-lead for the FORCE11 Research Data Publishing
-  Ethics Working Group.</p>
-</div>
-<div class="bio">
-  <img src="/images/ruttenberg.jpg" alt="Headshot of Judy Ruttenberg">
-  <h5>Judy Ruttenberg (Class of 2023)</h5><p> is the Director of Scholars and Scholarship at the
-    <a href="https://www.arl.org/">Association of Research Libraries</a>. With more than twenty years of experience
-    working in and on behalf of academic and research libraries, Ruttenberg’s expertise is in scholarly communication and
-    collections, collaboration, and strategic partnerships. Ruttenberg is currently working with a committee of ARL deans
-    and directors, a team of ARL staff, and key partners in the research and learning community to advance open science by
-    design within research institutions. An experienced project leader, Ruttenberg recently co-directed an IMLS and
-    Alfred P. Sloan Foundation-funded initiative on open, linked, interoperable metadata called SHARE, of which Dryad was
-    a participating repository. She is particularly focused on research data policy and governance, and on strengthening
-    relationships between data curators within universities and federal agencies</p>
-</div>
-<div class="bio">
-  <img src="/images/sutton.jpg" alt="Headshot of Caroline Sutton">
-  <h5>Caroline Sutton (Class of 2021)</h5><p> is Director of Editorial Development with Taylor & Francis.
-    Before joining the company in October 2016, she was co-founder of Co-Action Publishing, a full OA publisher. She
-    helped to found and served as the first President of the Open Access Scholarly Publishers Association (OASPA) from
-    2008-2013 and is a member of the present board. She has served on the advisory boards for OpenAIRE+, the Munin
-    Conference and is Director with Infrastructure Services for Open Access (IS4OA) which houses the Directory of
-    Open Access Journals (DOAJ).   At Taylor & Francis, Caroline has led efforts to roll out data sharing policies as
-    well as initiatives related to open scholarship across subject areas. She holds a PhD in Sociology from Uppsala University.</p>
+  <img src="/images/potter.jpg" alt="Headshot of Daniel Potter">
+  <h5>Daniel Potter (Class of 2024)</h5><p> is Professor of Plant Sciences at UC Davis, where he has been a faculty member since 1996. His research and teaching interests are focused on angiosperm systematics (phylogeny, evolution, and taxonomy of flowering plants) and ethnobotany (the study of direct relationships between people and plants). Dan grew up in a rural area of the Hudson Valley of New York State where his interests in biology were fostered by walks in the woods around their house, parents who were avid gardeners and nature lovers, and the influence of several excellent teachers in elementary and high school. His specific interests in botany developed and solidified during his years as an undergraduate at Harvard (1978-1982) and a PhD student at Cornell (1984-1991), again due in no small part to several inspirational professors. Dan currently serves as director of the UC Davis herbarium, member of the board of directors of the Davis Botanical Society, president of the Yolo-Colusa Chapter of the California Native Plant Society, and editor-in-chief of Systematic Botany, the professional journal of the American Society of Plant Taxonomists.</p>
 </div>
 <div class="bio">
   <img src="/images/williams.jpg" alt="Headshot of Jason Williams">
@@ -131,6 +86,10 @@
     Jason is also a member of and has chaired science advisory boards in the US, UK, and Australia, and is a former chair
     of the Software Carpentry Foundation. In 2020, Jason was recognized as a US National Academy of Sciences Kavli Frontiers
     of Science Fellow. Jason is also a teacher at the Yeshiva University High School for Girls.</p>
+</div>
+<div class="bio">
+  <img src="/images/ramonetti.jpg" alt="Headshot of Mona Ramonetti">
+  <h5>Mona Ramonetti (Class of 2024)</h5><p> is the Interim Associate Dean for Library Technologies, Discovery and Digital Services at Stony Brook University in New York. She manages a team of library technology faculty and staff in creating, implementing and overseeing the technology initiatives and infrastructure that support the Stony Brook University Library community. She also leads and manages policy, planning and implementation for Scholarly Communications initiatives that include data management, scholarly publishing, open educational resources, among others. She has chaired and served on numerous national and international committees and working groups such as FORCE 11, COAPI and SPARC. In addition to her role in promoting and sustaining an academic environment of openness and accessibility, she has demonstrated a strong commitment to advancing diversity, inclusion, equity and social justice within the academic environment. She has chaired and served on DEI committees and task forces where she creates and promotes spaces to address discrimination and inequity while fostering a culture of inclusivity and social justice. Outside of her academic work and accomplishments, she enjoys tennis, gardening and spending time with her husband, daughter, son and three dogs (Emma Wheatgerm, Punkin Chubacca and Nova Argentina).</p>
 </div>
 <div class="bio">
   <img src="/images/waibel.jpg" alt="Headshot of Günter Waibel">
@@ -149,7 +108,7 @@
 #### Past Board members
 
 <p>
-  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of Directors for at least one term from 2012 to 2021:
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of Directors for at least one term from 2012 to 2023:
 </p>
 
-<p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Naomi Penfold, Allen Rodrigo, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>
+<p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>

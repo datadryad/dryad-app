@@ -1,4 +1,4 @@
-require 'stash/merritt_download'
+require 'stash/s3_download'
 require 'http'
 require 'stash/zenodo_replicate'
 require 'stash/zenodo_replicate/copier_mixin'
@@ -75,12 +75,11 @@ module Stash
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
         @copy.reload
-        @copy.update(state: 'finished', error_info: nil)
-      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
+        @copy.update(state: 'finished')
+      rescue Stash::S3Download::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
         # log this in the database so we can track it
-        @copy.reload
-        error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
-        @copy.update(state: 'error', error_info: error_info)
+        Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
+        @copy.update(state: 'error')
       end
 
       private

@@ -34,6 +34,14 @@ RSpec.feature 'Landing', type: :feature, js: true do
     create(:counter_stat, identifier_id: @resource.identifier.id)
   end
 
+  it 'shows the share icons, metrics when published' do
+    res = @identifier.resources.first
+    res.update(meta_view: true, file_view: true, publication_date: Time.new)
+    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
+    expect(page).to have_text('Share on LinkedIn')
+    expect(page).to have_text(/\d* downloads/)
+  end
+
   it 'shows popup for download assembly progress and allows it to close' do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)

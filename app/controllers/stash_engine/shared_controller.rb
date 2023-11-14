@@ -60,14 +60,14 @@ module StashEngine
       return 'NA' if t.blank?
 
       t = t.to_time if t.instance_of?(String)
-      local_time(t)&.strftime('%B %e, %Y')
+      local_time(t)&.strftime('%b %d, %Y')
     end
 
     def formatted_datetime(t)
       return 'NA' if t.blank?
 
       t = t.to_time if t.instance_of?(String)
-      local_time(t)&.strftime('%m/%d/%Y %H:%M:%S %Z')
+      local_time(t)&.strftime('%b %d, %Y %H:%M:%S %Z')
     end
 
     def formatted_html5_date(t)

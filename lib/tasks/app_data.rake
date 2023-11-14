@@ -1,3 +1,4 @@
+# :nocov:
 require_relative '../../script/clear_data'
 namespace :app_data do
   desc 'Clear just the identifiers and dependent items from database and clear out SOLR'
@@ -14,3 +15,4 @@ namespace :app_data do
     ClearData.clear_datasets if response.strip.casecmp('YES').zero? && Rails.env != 'production'
   end
 end
+# :nocov:

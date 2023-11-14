@@ -60,6 +60,7 @@ module StashEngine
       resource.save
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
+      session[:resource_type] = current_user.limited_curator? && params.key?(:collection) ? 'collection' : 'dataset'
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
@@ -84,6 +85,12 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
+      last = resource.previous_resource
+      if last
+        user_id = current_user&.id || 0
+        note = "#{(user_id == 0 && 'System cleanup') || 'User'} deleted unsubmitted version #{resource.version_number}"
+        StashEngine::CurationActivity.create(resource_id: last.id, status: last.current_curation_status, user_id: user_id, note: note)
+      end
       resource.destroy
       respond_to do |format|
         format.html do
@@ -115,12 +122,37 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
+    def prepare_readme
+      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
+      if @metadata_entry&.technical_info.try(:description) && !@metadata_entry&.technical_info.try(:description).empty?
+        @file_content = nil
+      else
+        readme_file = @resource&.data_files&.present_files&.where(upload_file_name: 'README.md')&.first
+        # Load correctly encoded README.md for editing and otherwise display an error.
+        if readme_file&.file_content
+          content_string = readme_file.file_content
+          encoding = content_string.encoding
+          if encoding == Encoding::ASCII_8BIT
+            content_string = content_string.force_encoding(encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+          end
+          @loading_error = true if content_string.encoding != Encoding::UTF_8
+          @file_content = content_string.encoding == Encoding::UTF_8 ? content_string : nil
+        else
+          @file_content = nil
+        end
+      end
+    end
+
     # Upload files view for resource
     def upload
       @file_model = StashEngine::DataFile
       @resource_assoc = :data_files
+      @readme_size = (resource.descriptions.type_technical_info.first&.description.present? &&
+              resource.descriptions.type_technical_info.first&.description&.bytesize) ||
+              resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
 
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
+      @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
       @uploads = resource.latest_file_states
       # render 'upload_manifest' if resource.upload_type == :manifest
     end

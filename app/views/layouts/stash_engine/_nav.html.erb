@@ -1,0 +1,92 @@
+<nav class="c-header__nav js-header__nav" aria-label="Main">
+  <ul class="c-header__nav-group" id="mobile-nav-bar">
+    <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
+      <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>
+        @<%= current_tenant&.tenant_id %>]</li>
+    <% end %>
+    <li class="c-header__nav-item"><%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'js-nav-out' %>
+    <li class="c-header__nav-item last-child">
+      <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
+        <input name="utf8" value="✓" type="hidden">
+        <label class="o-global-search__label" for="search-field-input1">Search Dryad data</label>
+        <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
+        <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search"></button>
+      </form>
+    </li>
+    <li class="c-header__nav-item show-mobile">
+      <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
+      <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
+      <%= button_to 'Submit', lnk, method: :get, class: "c-header__menu-button", title: txt %>
+    </li>
+    <li class="c-header__nav-item show-mobile">
+      <button id="header-menu-button" class="c-header__menu-button" aria-controls="site-menu" aria-expanded="false">More <i class="fa fa-bars" aria-hidden="true"></i></button>
+    </li>
+  </ul>
+
+  <ul class="c-header__nav-group" id="site-menu">    
+
+    <li class="c-header__nav-item"><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
+
+    <li class="c-header__nav-item">
+      <%= link_to 'What we do', "#{stash_url_helpers.mission_path}" %>
+    </li>
+
+    <li class="c-header__nav-item">
+      <%= link_to 'Join us', "#{stash_url_helpers.join_us_path}" %>
+    </li>
+
+    <li class="c-header__nav-item">
+      <button class="c-header_nav-button" aria-expanded="false" aria-controls="help-menu">Help</button>
+      <ul class="c-header__nav-submenu" id="help-menu" hidden>
+        <li><%= link_to 'Submission requirements', "#{stash_url_helpers.requirements_path}" %>
+        <li><%= link_to 'Submission walkthrough', "#{stash_url_helpers.submission_process_path}" %>
+        <li><%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}" %>
+        <li><%= link_to 'Publication process', "#{stash_url_helpers.process_path}" %>
+        <li><%= link_to 'Dryad API', "#{stash_url_helpers.api_path}" %>
+        <li><%= link_to 'Contact support', stash_url_helpers.contact_path %>
+      </ul>
+    </li>
+
+    <% if current_user %>
+      <li class="c-header__nav-item">
+        <% if current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>        
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Dataset curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
+            <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
+            <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
+            <% if current_user.curator? %>
+              <li>
+                <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %>
+              </li>
+            <% end %>
+            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+            <% if current_user.superuser? %>
+              <li><%= link_to 'User management', stash_url_helpers.user_admin_path %>
+              <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
+              <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
+              <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
+            <% end %>
+          </ul>
+        <% elsif current_user.journals_as_admin.present? || current_user.funders_as_admin.present? %>
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
+          </ul>
+        <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
+          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
+            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+          </ul>
+        <% else %>
+        <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out border-left' %>
+        <% end %>
+      </li>
+    <% end %>
+    <li class="c-header__nav-item"><%= render partial: 'stash_engine/shared/log_in_out' %></li>
+  </ul>
+</nav>

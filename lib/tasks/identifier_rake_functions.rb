@@ -1,3 +1,4 @@
+# :nocov:
 module Tasks
   module IdentifierRakeFunctions
     def self.update_identifiers
@@ -28,3 +29,4 @@ module Tasks
     end
   end
 end
+# :nocov:

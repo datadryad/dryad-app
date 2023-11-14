@@ -3,8 +3,9 @@
 module StashDatacite
   module Resource
     class MetadataEntry
-      def initialize(resource, _tenant)
+      def initialize(resource, type, _tenant)
         @resource = resource
+        @type = type
         create_publisher
         ensure_license
         @resource.fill_blank_author!
@@ -13,7 +14,7 @@ module StashDatacite
 
       def resource_type
         @resource_type = ResourceType
-          .create_with(resource_id: @resource.id, resource_type: 'dataset', resource_type_general: 'dataset')
+          .create_with(resource_id: @resource.id, resource_type: @type, resource_type_general: @type)
           .find_or_create_by(resource_id: @resource.id)
       end
 
@@ -35,6 +36,10 @@ module StashDatacite
 
       def methods
         @methods = Description.type_methods.find_or_create_by(resource_id: @resource.id)
+      end
+
+      def technical_info
+        @technical_info = Description.type_technical_info.find_or_create_by(resource_id: @resource.id)
       end
 
       def other

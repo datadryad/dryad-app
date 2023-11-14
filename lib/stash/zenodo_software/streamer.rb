@@ -79,7 +79,7 @@ module Stash
         end
 
         { response: put_response, digests: digests_obj.hex_digests }
-      rescue Stash::Download::MerrittError => e
+      rescue Stash::Download::S3CustomError => e
         raise Stash::ZenodoReplicate::ZenodoError, "Couldn't create presigned URL for id: #{@file_model.id}, fn: #{@file_model.upload_file_name}\n" \
                                                    "Original error: #{e}\n#{e.full_message}"
       rescue HTTP::Error => e

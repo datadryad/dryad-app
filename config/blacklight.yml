@@ -10,6 +10,10 @@ development:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
 
+v3_development:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
+
 aws_db:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
@@ -26,6 +30,10 @@ stage:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-stg.cdlib.org:8983/solr/geoblacklight" %>
 
+v3_stage:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-stg.cdlib.org:8983/solr/geoblacklight" %>
+
 # migration solr not used, but we probably need the section here
 migration:
   adapter: solr
@@ -39,3 +47,6 @@ production:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-prd.cdlib.org:8983/solr/geoblacklight" %>
 
+v3_production:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-prd.cdlib.org:8983/solr/geoblacklight" %>

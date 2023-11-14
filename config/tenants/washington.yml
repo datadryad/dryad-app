@@ -7,7 +7,6 @@ default: &default
   ror_ids:
     - https://ror.org/00cvxb145
   tenant_id: washington
-
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:washington.edu
@@ -36,5 +35,4 @@ stage:
 production:
   <<: *default
   #Add any items that need to override the defaults here
-
-  campus_contacts: ["jmuil@uw.edu"]
+  campus_contacts: ["jmuil@uw.edu", "ebedford@uw.edu", "abanders@uw.edu"]

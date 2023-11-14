@@ -7,8 +7,8 @@ data.
 
 ## Client Credentials Grant
 
-Client Credentials grant is one of the simplest ways to authenticate to the Dryad service
-and it is the right choice when the Application requesting access doesn't need a specific
+Client credentials grant is one of the simplest ways to authenticate to the Dryad service
+and it is the right choice when the application requesting access doesn't need a specific
 outside owner's permission in order to create or modify data. This grant type might be used in some of
 these cases.
 
@@ -23,7 +23,7 @@ these cases.
 
 The Authorization Code grant is a familiar workflow when one web application wants to
 obtain information from another service.  The process is already familiar from social media
-sites that request access from other sites.
+sites that may allow their logins to be used with other services.
 
 When an Authorization Code grant is used, the outside application (the one Dryad issues an Application Id
 and secret to) redirects to a Dryad login process for a user. The user must supply credentials

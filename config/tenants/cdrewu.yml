@@ -1,0 +1,48 @@
+default: &default
+  enabled: true
+  abbreviation: "cdrewu"
+  short_name: "Charles R. Drew University"
+  long_name: "Charles R. Drew University of Medicine and Science"
+  publisher_id: grid.254041.6
+  ror_ids:
+    - https://ror.org/038x2fh14
+  tenant_id: cdrewu
+  identifier_service:
+    provider: datacite
+    prefix: "10.7959"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: true
+  authentication:
+    strategy: author_match
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
+  campus_contacts: [""]

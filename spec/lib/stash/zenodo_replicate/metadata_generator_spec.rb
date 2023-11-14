@@ -50,7 +50,7 @@ module Stash
       end
 
       it 'has publication_date output' do
-        expect(@mg.publication_date).to eq(@resource&.publication_date&.iso8601)
+        expect(@mg.publication_date).to eq(@resource&.publication_date&.strftime('%Y-%m-%d'))
       end
 
       it 'has title output' do
@@ -99,7 +99,7 @@ module Stash
         expect(@mg.notes).to include(CGI.escapeHTML("Award Number: #{@funder1.award_number}"))
         expect(@mg.notes).to include(CGI.escapeHTML("Funding provided by: #{@funder2.contributor_name}"))
         expect(@mg.notes).to include(CGI.escapeHTML("Crossref Funder Registry ID: #{@funder2.name_identifier_id}"))
-        expect(@mg.notes.scan(/Award Number/).count).to eq(1)
+        expect(@mg.notes.scan('Award Number').count).to eq(1)
       end
 
       it 'sets an item to the community' do

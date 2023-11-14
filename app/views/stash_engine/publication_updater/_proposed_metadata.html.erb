@@ -1,24 +1,33 @@
 <td>
   <strong>Publication:</strong>
   <%= link_to proposed_change.title, proposed_change.url, target: '_blank' %>
-</td>
-<td class="c-proposed-change-table__column-centered">
-  <strong>Changes</strong>
-  <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
-  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, local: false do |f| %>
-    <button name="accept_changes" type="submit">Accept</button>
+  <% unless proposed_change.xref_type.blank? %>
+    <p><strong>Type:</strong> <%= proposed_change.xref_type %></p>
   <% end %>
-  <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, local: false do |f| %>
-     <button name="reject_changes" type="submit">Reject</button>
+  <div style="white-space: nowrap;">
+    <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
+    <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, local: false do |f| %>
+    <strong><label for="select_type_<%= proposed_change.id %>">Related work</label></strong>
+    <br/>
+      <%= f.select :related_type, options_for_select(
+          [
+            ['Primary + metadata', 'primary'],
+            ['Primary', 'primary_no_metadata'],
+            ['Preprint + metadata', 'preprint'],
+            ['Preprint', 'preprint_no_metadata'],
+            ['Related + metadata', 'related_no_metadata'],
+            ['Related article', 'related'],
+          ]
+        ), {}, class: 'c-input__select', id: "select_type_#{proposed_change.id}" %>
+      <button name="accept_changes" class="o-button__plain-text2" type="submit">Accept</button>
     <% end %>
+    <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, local: false do |f| %>
+     <button name="reject_changes" class="o-button__remove" type="submit">Reject</button>
+    <% end %>
+  </div>
 </td>
-
 <%= render_column(old_val: existing_pubname, new_val: proposed_change.publication_name).html_safe %>
 <%= render_column(old_val: existing_pubissn, new_val: proposed_change.publication_issn).html_safe %>
 <%= render_column(old_val: existing_pubdoi, new_val: proposed_change.publication_doi).html_safe %>
 <td><%= formatted_date(proposed_change.publication_date).present? ? formatted_date(proposed_change.publication_date) : 'Not available' %></td>
 <td><%= proposed_authors(json: proposed_change.authors)&.join('<br/>')&.html_safe %></td>
-
-<td class="c-proposed-change-table__column-centered" title="Dryad score (<%= proposed_change.provenance.capitalize %> score)">
-  <%= proposed_change.score&.round(2) %><br>(<%= proposed_change.provenance_score&.round(2) || 'DOI match' %>)
-</td>

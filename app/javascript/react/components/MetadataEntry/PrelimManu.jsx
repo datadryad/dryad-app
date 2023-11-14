@@ -21,7 +21,6 @@ function PrelimManu({
   const [importError, setImportError] = useState('');
 
   const submitForm = (values) => {
-    console.log(`${(new Date()).toISOString()}: Saving Preliminaries -- manuscript in progress`);
     showSavingMsg();
 
     // set up values

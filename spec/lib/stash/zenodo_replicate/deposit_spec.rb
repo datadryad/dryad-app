@@ -5,17 +5,21 @@ require 'byebug'
 require 'json'
 
 require 'rails_helper'
+require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   module ZenodoReplicate
+
     RSpec.describe Deposit do
+      include Stash::ZenodoSoftware::WebmocksHelper
 
       before(:each) do
         @resource = create(:resource)
         @zenodo_copy = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @szd = Stash::ZenodoReplicate::Deposit.new(resource: @resource, zc_id: @zenodo_copy.id)
+        stub_new_access_token
       end
 
       describe '#new_deposition' do
@@ -152,7 +156,7 @@ module Stash
           @szd.new_deposition
         end
 
-        it 'uses the publish link given and publishes' do
+        it 'uses the publish path and publishes' do
           stub_request(:post, 'https://sandbox.zenodo.org/api/returned/publish/link?access_token=ThisIsAFakeToken&id=893')
             .with(
               headers: {
@@ -161,8 +165,20 @@ module Stash
               }
             )
             .to_return(status: 200, body: '{}', headers: { 'Content-Type': 'application/json' })
-          resp = @szd.publish # it got here and didn't raise an error from response or exception
-          expect(resp).to eq({})
+
+          # multiple returns does each one in order
+          stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions/#{@szd.deposition_id}?access_token=ThisIsAFakeToken")
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'sandbox.zenodo.org'
+              }
+            )
+            .to_return(
+              { status: 200, body: '{"submitted": false}', headers: { 'Content-Type': 'application/json' } },
+              { status: 200, body: '{"submitted": true}', headers: { 'Content-Type': 'application/json' } }
+            )
+          expect { @szd.publish }.not_to raise_error
         end
       end
 

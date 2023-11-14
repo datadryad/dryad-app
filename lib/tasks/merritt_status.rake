@@ -1,3 +1,4 @@
+# :nocov:
 require 'fileutils'
 # the notifier was logging to /dryad/apps/ui/shared/cron/logs/stash-notifier.log. Still the correct place?
 namespace :merritt_status do
@@ -58,3 +59,4 @@ namespace :merritt_status do
     FileUtils.rm_f(pid_file)
   end
 end
+# :nocov:

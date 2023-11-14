@@ -8,12 +8,14 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Tenant
+  include Mocks::DataFile
 
   before(:each) do
     mock_solr!
     mock_tenant!
     mock_repository!
     mock_salesforce!
+    mock_file_content!
     @user = create(:user)
     sign_in(@user)
   end
@@ -140,7 +142,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       page.send_keys(:tab)
       page.has_css?('.use-text-entered')
       all(:css, '.use-text-entered').each { |i| i.set(true) }
-      3.times { fill_in_keyword }
+      fill_in_keywords
       navigate_to_review
       agree_to_everything
       fill_in 'user_comment', with: Faker::Lorem.sentence

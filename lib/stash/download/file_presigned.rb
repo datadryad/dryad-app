@@ -6,7 +6,7 @@ require 'http'
 module Stash
   module Download
 
-    class MerrittError < StandardError; end
+    class S3CustomError < StandardError; end
 
     class FilePresigned
       attr_reader :cc
@@ -25,14 +25,25 @@ module Stash
           return
         end
 
-        url = file.merritt_s3_presigned_url
+        url = file.s3_permanent_presigned_url
 
-        cc.redirect_to url
+        if url.nil?
+          cc.render status: 404, plain: 'Not found'
+          error_text = "The file is not available for download. Most likely this is due to a mismatch in Merritt\n" \
+                       "and Dryad versioning. The database information probably indicates a deposit in an earlier version\n" \
+                       "than when the actual Merritt deposit took place. Or this could be caused by some other issues.\n" \
+                       "\n" \
+                       "File id: #{file.id}\n" \
+                       "Filename: #{file.upload_file_name}\n"
+          StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
+        else
+          cc.redirect_to url
+        end
       rescue HTTP::Error => e
-        raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
-                            "#{file.merritt_presign_info_url}\n" \
-                            "Original HTTP library error: #{e}\n" \
-                            "#{e.full_message}"
+        raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \
+                             "#{file.merritt_presign_info_url}\n" \
+                             "Original HTTP library error: #{e}\n" \
+                             "#{e.full_message}"
       end
     end
   end

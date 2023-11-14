@@ -2,7 +2,7 @@ import React from 'react';
 import {Form, Formik} from 'formik';
 import moment from 'moment';
 import {isEqual} from 'lodash';
-import {showSavingMsg} from '../../../lib/utils';
+import {showSavingMsg, showSavedMsg} from '../../../lib/utils';
 
 class Cedar extends React.Component {
   state = {
@@ -80,6 +80,7 @@ class Cedar extends React.Component {
 
   deleteContent = () => {
     this.setState({currentMetadata: null, template: null}, this.saveContent);
+    showSavedMsg();
   };
 
   saveContent = () => {
@@ -96,10 +97,9 @@ class Cedar extends React.Component {
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(wrappedMeta, null, 2));
-    console.log('Saved metadata');
-    console.log(wrappedMeta);
     this.setState({metadata, updated});
     if (this.editor) this.editor.templateInfo = info;
+    showSavedMsg();
   };
 
   modalSetup = () => {
@@ -116,7 +116,6 @@ class Cedar extends React.Component {
     this.editorLoaded = new MutationObserver(() => {
       const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
-        console.log('Loading metadata', metadata);
         this.editor.metadata = metadata;
         this.editorLoaded.disconnect();
         this.editorLoaded = null;
@@ -126,20 +125,22 @@ class Cedar extends React.Component {
   };
 
   openModal = () => {
+    showSavingMsg();
     const {template} = this.state;
     if (!template && !template.id) {
       console.log('Cannot open modal unless a template is selected.');
       return;
     }
     if (this.dialog.dataset.template !== template.id) {
-      console.log(`Cedar init the modal for template ${template.id}`);
       const {table: {editor_url}} = this.props.appConfig;
-      const script = document.createElement('script');
-      script.src = editor_url;
-      script.async = true;
-      script.onload = () => this.modalSetup();
-      this.dialog.appendChild(script);
-      this.dialog.dataset.template = template.id;
+      if (editor_url) {
+        const script = document.createElement('script');
+        script.src = editor_url;
+        script.async = true;
+        script.onload = () => this.modalSetup();
+        this.dialog.appendChild(script);
+        this.dialog.dataset.template = template.id;
+      }
     }
     this.dialog.showModal();
   };
@@ -159,11 +160,7 @@ class Cedar extends React.Component {
         <Formik
           initialValues={{resource_id, authenticity_token: (csrf || '')}}
           innerRef={this.formRef}
-          onSubmit={() => {
-            showSavingMsg();
-            console.log('Submitting Cedar selection form');
-            this.openModal();
-          }}
+          onSubmit={() => this.openModal()}
         >
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
@@ -191,7 +188,7 @@ class Cedar extends React.Component {
                     onChange={(e) => {
                       const t = e.currentTarget;
                       this.setState({
-                        template: {id: t.value, title: t.options[t.selectedIndex].label},
+                        template: t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null,
                       });
                     }}
                     onBlur={formik.handleBlur}
@@ -209,9 +206,7 @@ class Cedar extends React.Component {
         </Formik>
         <dialog className="modalDialog" id="cedarDialog" ref={this.setRef}>
           <div className="modalClose">
-            <button aria-label="close" type="button" onClick={() => this.dialog.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-            </button>
+            <button aria-label="Close" type="button" onClick={() => this.dialog.close()} />
           </div>
           <div className="c-modal-content__cedar">
             <cedar-embeddable-editor id="cedarEditor" ref={this.setRef} />
@@ -219,9 +214,7 @@ class Cedar extends React.Component {
         </dialog>
         <dialog className="modalDialog" id="deleteCedarDialog" ref={this.setRef}>
           <div className="modalClose">
-            <button aria-label="close" type="button" onClick={() => this.delete.close()}>
-              <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-            </button>
+            <button aria-label="Close" type="button" onClick={() => this.delete.close()} />
           </div>
           <div className="c-modal-content__normal">
             <h1 className="mat-card-title">Confirm Deletion</h1>

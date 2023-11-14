@@ -41,19 +41,26 @@ const badList = (props) => {
 
   if (issueFiles.length > 0) {
     issueMsg = (
-      <div className="c-alert__text-lite">
-        Our automated tabular data checker identified potential inconsistencies in the format and structure
-        of {issueFiles.length} of your files. A detailed report is available for each file. To address the identified alerts:
+      <div>
+        <span className="c-alert__text-lite">
+          Our automated tabular data checker identified potential inconsistencies in the format and structure of {issueFiles.length} of your files.
+        </span>
+        <p>
+          <a href="/stash/data_check_guide" target="_blank">
+            A detailed report is available<span className="screen-reader-only"> (opens in new window)</span>
+          </a>
+          {' '}for each file. To address the identified alerts:
+        </p>
         <ol>
           <li>
-            Click the report in the
+            Click the alert button in the
             {' '}<em>Tabular data check</em>{' '}
             column to see what has been highlighted for your review.
           </li>
-          <li>
-            If you would like to edit and replace any file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current file.
-          </li>
           <li>Review the local copy of your file and make any desired changes.</li>
+          <li>
+            If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current upload.
+          </li>
           <li>
             Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
           </li>

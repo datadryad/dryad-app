@@ -1,3 +1,4 @@
+# :nocov:
 require 'open3'
 require 'byebug'
 
@@ -51,3 +52,4 @@ module Tasks
     end
   end
 end
+# :nocov:

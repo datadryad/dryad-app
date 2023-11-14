@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 require 'stash/organization/ror_updater'
 
@@ -95,6 +96,22 @@ namespace :affiliation_import do
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
   end
 
+  desc 'Populate our ROR database manually from the ROR dump json file because the Zenodo API not working'
+  task populate_ror_db: :environment do
+    $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
+
+    if ARGV.length != 1
+      puts 'Please enter the path to the ROR dump json file as an argument'
+      puts 'You can get the latest dump from https://doi.org/10.5281/zenodo.6347574 (get json file for last version in zip)'
+      exit
+    end
+
+    ror_dump_file = ARGV[0]
+    exit unless File.exist?(ror_dump_file)
+
+    Stash::Organization::RorUpdater.process_ror_json(json_file_path: ror_dump_file)
+  end
+
   desc 'Populate fundref_id to ror_id mapping table'
   task populate_funder_ror_mapping: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
@@ -114,18 +131,19 @@ namespace :affiliation_import do
       data = JSON.parse(f.read)
       data.each do |org|
         ror_id = org['id']
+        name = org['name']
         fundref_ids = org.dig('external_ids', 'FundRef', 'all')
         next if fundref_ids.blank?
 
         fundref_ids.each do |fundref_id|
-          fundref_ror_mapping[fundref_id] = ror_id
+          fundref_ror_mapping[fundref_id] = { ror: ror_id, name: name }
         end
       end
     end
 
     to_insert = []
-    fundref_ror_mapping.each_with_index do |(fundref_id, ror_id), index|
-      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_id }
+    fundref_ror_mapping.each_with_index do |(fundref_id, ror_info), index|
+      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_info[:ror], org_name: ror_info[:name] }
       if index % 1000 == 0 && index > 0
         StashEngine::XrefFunderToRor.insert_all(to_insert)
         to_insert = []
@@ -133,6 +151,192 @@ namespace :affiliation_import do
     end
     StashEngine::XrefFunderToRor.insert_all(to_insert) unless to_insert.empty?
     puts 'Done updating fundref to ror mapping table'
+  end
+
+  desc 'Populate NIH funders so they can be grouped under NIH umbrella organization'
+  task populate_nih_ror_group: :environment do
+    json = <<~JSON
+      [
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "NIH Office of the Director",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00fj8a872"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Cancer Institute",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/040gcmg81"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Eye Institute",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/03wkg3b53"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Heart, Lung, and Blood Institute",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/012pb6c26"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Human Genome Research Institute",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00baak391"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute on Aging",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/049v75w11"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute on Alcohol Abuse and Alcoholism",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/02jzrsm59"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Allergy and Infectious Diseases",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/043z4tv69"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Arthritis and Musculoskeletal and Skin Diseases",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/006zn3t30"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Biomedical Imaging and Bioengineering",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00372qc85"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "Eunice Kennedy Shriver National Institute of Child Health and Human Development",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04byxyr05"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute on Deafness and Other Communication Disorders",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04mhx6838"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Dental and Craniofacial Research",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/004a2wv92"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Diabetes and Digestive and Kidney Diseases",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00adh9b73"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute on Drug Abuse",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00fq5cm18"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Environmental Health Sciences",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00j4k1h63"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of General Medical Sciences",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04q48ey07"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Mental Health",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04xeg9z08"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute on Minority Health and Health Disparities",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/0493hgw16"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Neurological Disorders and Stroke",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/01s5ya894"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Institute of Nursing Research",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/01y3zfr79"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "U.S. National Library of Medicine",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/0060t0j89"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "Center for Information Technology",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/03jh5a977"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "Center for Scientific Review",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04r5s4b52"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "Fogarty International Center",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/02xey9a22"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Center for Advancing Translational Sciences",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04pw6fb54"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "National Center for Complementary and Integrative Health",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/00190t495"
+      	},
+      	{
+      		"identifier_type": "ror",
+      		"contributor_name": "NIH Clinical Center",
+      		"contributor_type": "funder",
+      		"name_identifier_id": "https://ror.org/04vfsmv21"
+      	}
+      ]
+    JSON
+
+    json = JSON.parse(json)
+
+    StashDatacite::ContributorGrouping.destroy_by(name_identifier_id: 'https://ror.org/01cwqze88') # nih umbrella org
+    StashDatacite::ContributorGrouping.create!(contributor_name: 'National Institutes of Health',
+                                               contributor_type: 'funder',
+                                               identifier_type: 'ror',
+                                               name_identifier_id: 'https://ror.org/01cwqze88',
+                                               group_label: 'NIH Directorate',
+                                               json_contains: json)
   end
 
   def do_author_merge(a1, a2)
@@ -339,3 +543,4 @@ end
 
 # rubocop:enable Lint/UselessAssignment
 # rubocop:enable Metrics/AbcSize
+# :nocov:

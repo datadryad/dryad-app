@@ -36,9 +36,9 @@ module StashEngine
         @res << create(:resource, identifier_id: i.id, user: @user, tenant_id: 'dryad')
       end
 
-      @day = Date.today
-      @day1 = @day + 1.day + 1.second
-      @day2 = @day + 2.days + 1.second
+      @day = Time.now.utc.to_date
+      @day1 = @day + 1.day
+      @day2 = @day + 2.days
     end
 
     describe :status_on_date do
@@ -60,8 +60,8 @@ module StashEngine
       end
 
       it 'finds an intermediate status' do
-        @res.first.curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1)
-        @res.first.curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day2)
+        @res.first.curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1 + 1.second)
+        @res.first.curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day2 + 1.second)
         stats = CurationStats.create(date: @day + 1.day)
         expect(stats.status_on_date(@idents.first)).to eq('curation')
       end
@@ -73,8 +73,8 @@ module StashEngine
         # NO -- move into curation, but not out
         @res[1].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
         # NO -- move into published, but on day1
-        @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1)
-        @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day1)
+        @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1 + 1.second)
+        @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day1 + 2.seconds)
         stats = CurationStats.create(date: @day)
         expect(stats.datasets_curated).to eq(0)
       end
@@ -152,26 +152,29 @@ module StashEngine
       end
 
       it 'counts correctly when there are some' do
-        stats = CurationStats.create(date: @day)
+        stats = CurationStats.create(date: @day1)
 
         # NO -- move into curation, but not actually submitted
-        @res[0].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
+        @res[0].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(0)
 
         # YES -- move into submitted
-        @res[1].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day)
+        @res[1].resource_states.first.update(resource_state: 'submitted')
+        @res[1].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(1)
 
         # YES -- move into published
-        @res[2].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day)
-        @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
-        @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day)
+        @res[2].resource_states.first.update(resource_state: 'submitted')
+        @res[2].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day1)
+        @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day1)
+        @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(2)
 
         # NO -- was submitted previously
+        @res[3].resource_states.first.update(resource_state: 'submitted')
         @res[3].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day - 2.days)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(2)
@@ -179,21 +182,24 @@ module StashEngine
         # YES -- but there are two resources, and only one should count
         id_new = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident')
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
-        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        res_new.resource_states.first.update(resource_state: 'submitted')
+        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
-        res_new2.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        res_new2.resource_states.first.update(resource_state: 'submitted')
+        res_new2.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(3)
 
         # NO -- there are two resources, and the first was submitted before the target day
         id_new2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
-        res_new3.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day - 2.days)
+        res_new3.resource_states.first.update(resource_state: 'submitted')
+        res_new3.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1 - 2.days)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
-        res_new4.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        res_new4.resource_states.first.update(resource_state: 'submitted')
+        res_new4.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(3)
-
       end
     end
 
@@ -216,11 +222,13 @@ module StashEngine
         expect(stats.new_datasets_to_peer_review).to eq(0)
 
         # YES -- move into peer_review
+        @res[1].resource_states.first.update(resource_state: 'submitted')
         @res[1].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(1)
 
         # YES -- move into published
+        @res[2].resource_states.first.update(resource_state: 'submitted')
         @res[2].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         @res[2].curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
         @res[2].curation_activities << CurationActivity.create(status: 'published', user: @curator, created_at: @day)
@@ -228,6 +236,7 @@ module StashEngine
         expect(stats.new_datasets_to_peer_review).to eq(2)
 
         # NO -- was submitted previously
+        @res[3].resource_states.first.update(resource_state: 'submitted')
         @res[3].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day - 2.days)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(2)
@@ -235,8 +244,10 @@ module StashEngine
         # YES -- but this dataset has two resources, and only one should count
         id_new = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
         res_new.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
+        res_new2.resource_states.first.update(resource_state: 'submitted')
         res_new2.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(3)
@@ -244,13 +255,16 @@ module StashEngine
         # NO -- this dataset has two resources, and the first was submitted before the target day
         id_new2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
+        res_new3.resource_states.first.update(resource_state: 'submitted')
         res_new3.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day - 2.days)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
+        res_new4.resource_states.first.update(resource_state: 'submitted')
         res_new4.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(3)
 
         # YES -- goes through 'submitted' before 'peer_review
+        @res[4].resource_states.first.update(resource_state: 'submitted')
         @res[4].curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: @day)
         @res[4].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate

@@ -174,8 +174,8 @@ module Stash
       end
 
       def remove_s3_data_files(resource)
-        Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
-        Stash::Aws::S3.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
+        Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
+        Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
       end
 
       def update_submission_log(result)

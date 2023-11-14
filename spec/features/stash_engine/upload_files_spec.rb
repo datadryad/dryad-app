@@ -16,6 +16,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::Aws
   include Mocks::Salesforce
+  include Mocks::DataFile
 
   before(:each) do
     mock_repository!
@@ -25,6 +26,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     mock_salesforce!
     mock_aws!
     ignore_zenodo!
+    mock_file_content!
     @author = create(:user, tenant_id: 'dryad')
 
     ActionMailer::Base.deliveries = []
@@ -34,6 +36,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     visit root_path
     click_link 'My datasets'
     start_new_dataset
+    navigate_to_readme
     # fill_required_fields # don't need this if we're not checking metadata and just files
   end
 
@@ -62,7 +65,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows correct Upload Type boxes example texts' do
-      expect(page).to have_content('e.g., csv, fasta')
+      expect(page).to have_content('e.g., csv, xsl, fasta')
       expect(page).to have_content('e.g., code packages, scripts')
       expect(page).to have_content('e.g., figures, supporting tables')
     end
@@ -75,8 +78,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows the right navigation buttons at the bottom' do
-      expect(page). to have_content('Back to Describe dataset')
-      expect(page). to have_content('Proceed to review')
+      expect(page). to have_content('Back to README')
+      expect(page). to have_content('Proceed to Review')
     end
 
     it 'shows only files with status different of "deleted"' do
@@ -352,7 +355,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'disallows navigation away with pending uploads' do
-      click_on('Proceed to review')
+      click_on('Proceed to Review')
       sleep 0.5
       expect(page).to have_text('please click "Upload pending files"')
     end
@@ -393,7 +396,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       # TODO: S3.exists? mock returns true now.
       #  See if it's possible to return something from the Evaporate using S3 mocks
       # TODO: remove raw url for s3 dir name
-      result = Stash::Aws::S3.exists?(s3_key: '37fb70ac-1/data/file_10.ods')
+      result = Stash::Aws::S3.new.exists?(s3_key: '37fb70ac-1/data/file_10.ods')
       expect(result).to be true
     end
 

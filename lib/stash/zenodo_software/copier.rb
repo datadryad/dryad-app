@@ -138,18 +138,16 @@ module Stash
           @resource_method, deposition_id: @resp[:id], zc_id: @copy.id)
 
         # clean up the S3 storage of zenodo files that have been successfully replicated
-        Stash::Aws::S3.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
+        Stash::Aws::S3.new.delete_dir(s3_key: @resource.s3_dir_name(type: @s3_method))
 
         @copy.reload
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
 
         # make sure the dataset has the relationships for these things sent to zenodo
         StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
       rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => e
-        @copy.reload
-        error_info = "#{Time.new} #{e.class}\n#{e}\n---\n#{@copy.error_info}" # append current error info first
-        @copy.update(state: 'error', error_info: error_info)
-        @copy.reload
+        Stash::ZenodoReplicate::ZenodoConnection.log_to_database(item: "Zenodo final failure: #{e.class}\n#{e}", zen_copy: @copy)
+        @copy.update(state: 'error')
         StashEngine::UserMailer.zenodo_error(@copy).deliver_now
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -161,7 +159,7 @@ module Stash
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
         @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
       rescue Stash::ZenodoReplicate::ZenodoError => e
         revert_to_previous_version if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
       end
@@ -178,7 +176,7 @@ module Stash
           return
         end
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
-        @copy.update(state: 'finished', error_info: nil)
+        @copy.update(state: 'finished')
       end
 
       private

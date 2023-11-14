@@ -19,7 +19,7 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
   but the variables were then not accessible within my onBlur handler.
  */
 
-function Title({resource, path}) {
+function Title({resource, path, type}) {
   // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -43,7 +43,7 @@ function Title({resource, path}) {
     >
       {(formik) => (
         <Form className="c-input">
-          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>Dataset title</label>
+          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>{type} title</label>
           <Field
             name="title"
             type="text"
@@ -66,6 +66,7 @@ function Title({resource, path}) {
 Title.propTypes = {
   resource: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default Title;

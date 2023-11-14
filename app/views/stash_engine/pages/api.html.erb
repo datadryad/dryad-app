@@ -1,0 +1,34 @@
+<% @page_title = 'Dryad APIs' %>
+<% content_for(:head) do %>
+  <link rel="stylesheet" type="text/css" href="/api/v2/docs/swagger-ui.css">
+  <style type="text/css">
+    .swagger-ui .wrapper {
+      padding: 0;
+    }
+    .swagger-ui .information-container {
+      display: none;
+    }
+    .swagger-ui .scheme-container {
+      background-color: transparent;
+      padding: 0;
+      box-shadow: none;
+    }
+    .swagger-ui .opblock-tag:hover {
+      background-color: transparent;
+    }
+    .swagger-ui table thead tr td, .swagger-ui table thead tr th,
+    .swagger-ui table tbody tr td, .swagger-ui table tbody tr td:first-of-type {
+      padding: 8px 1ch;
+    }
+    .swagger-ui code {
+      background-color: transparent;
+    }
+    .copy-to-clipboard, .expand-operation {
+      display: none !important;
+    }
+    .copy-icon i {
+      color: #808080;
+    }
+  </style>
+<% end %>
+<%= render "layouts/page_columns", page_content: "layouts/api" %>

@@ -735,6 +735,7 @@ module StashApi
         expect(response_code).to eq(201)
         my_id = StashEngine::Identifier.find(@ds_info['id'])
         @res = my_id.in_progress_resource
+        @res.update(title: 'Sufficiently complex title for test dataset')
         @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                  create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
         @patch_body = [{ op: 'replace', path: '/versionStatus', value: 'submitted' }].to_json
@@ -775,14 +776,13 @@ module StashApi
 
         it 'allows submission if done by owner of the dataset (resource)' do
           @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user', orcid: @ds_info['authors'].first['orcid'])
+          user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user', orcid: @ds_info['authors'].first['orcid'])
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                     owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                     owner_id: user2.id, owner_type: 'StashEngine::User')
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
           # HACK: in update to make this regular user the owner/editor of this item
-          @my_id = StashEngine::Identifier.find(@ds_info['id'])
-          @my_id.in_progress_resource.update(current_editor_id: @user2.id, user_id: @user2.id)
+          @res.update(current_editor_id: user2.id, user_id: user2.id)
 
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,

@@ -138,10 +138,9 @@ module StashEngine
       end
 
       it 'removes the S3 temporary files when the resource is destroyed' do
-        allow(Stash::Aws::S3).to receive(:delete_dir)
-        s3_dir = @resource.s3_dir_name(type: 'base')
+        expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
+        @resource.s3_dir_name(type: 'base')
         @resource.destroy
-        expect(Stash::Aws::S3).to have_received(:delete_dir).with(s3_key: s3_dir)
       end
     end
 
@@ -250,7 +249,6 @@ module StashEngine
         end
       end
 
-      # TODO: this shouldn't be in StashEngine
       describe :merritt_protodomain_and_local_id do
         it 'returns the merritt protocol and domain and local ID' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
@@ -260,6 +258,15 @@ module StashEngine
           merritt_protodomain, local_id = resource.merritt_protodomain_and_local_id
           expect(merritt_protodomain).to eq('https://merritt.example.edu')
           expect(local_id).to eq('ark%3A%2Fb5072%2Ffk2736st5z')
+        end
+      end
+
+      describe :merritt_ark do
+        it 'extracts the Merritt ark from the download URI' do
+          download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
+          resource = Resource.create(user_id: user.id)
+          resource.download_uri = download_uri
+          expect(resource.merritt_ark).to eq('ark:/b5072/fk2736st5z')
         end
       end
     end
@@ -779,6 +786,7 @@ module StashEngine
       end
 
       it 'purges duplicate subjects' do
+        @resource.purge_duplicate_subjects!
         @resource.subjects << create(:subject, subject: 'AARDVARKS')
         @resource.subjects << create(:subject, subject: 'Aardvarks')
         @resource.subjects << create(:subject, subject: 'aardvarks')
@@ -788,6 +796,7 @@ module StashEngine
       end
 
       it "doesn't purge FOS subjects" do
+        @resource.purge_duplicate_subjects!
         existing_fos = @resource.subjects.fos.first
         @resource.subjects << create(:subject, subject: existing_fos.subject) # this one doesn't have fos subject_scheme set
         @resource.subjects << create(:subject, subject: existing_fos.subject)
@@ -1511,22 +1520,22 @@ module StashEngine
           end
 
           it 'shows all resources for the identifier to the curator' do
-            resources = @identifier.resources.visible_to_user(user: @user3)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user3, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'shows all resources to the owner' do
-            resources = @identifier.resources.visible_to_user(user: @user3)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user3, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'only shows curated-visible resources to a non-user' do
-            resources = @identifier.resources.visible_to_user(user: nil)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(nil, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end
 
           it 'shows all resources to an admin for this tenant (ucop)' do
-            resources = @identifier.resources.visible_to_user(user: @user2)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
@@ -1534,13 +1543,13 @@ module StashEngine
             journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
             JournalRole.create(journal: journal, user: @user2, role: 'admin')
-            resources = @identifier.resources.visible_to_user(user: @user2)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
             expect(resources.count).to eq(3)
           end
 
           it 'only shows curated-visible resources to a random user' do
             @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@ucop.edu', tenant_id: 'ucb', role: 'user')
-            resources = @identifier.resources.visible_to_user(user: @user4)
+            resources = StashEngine::ResourcePolicy::VersionScope.new(@user4, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end
         end

@@ -10,6 +10,7 @@ module StashEngine
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
+      @feedback_url = feedback_url(m: 5, l: status)
       mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
@@ -84,6 +85,18 @@ module StashEngine
            subject: "#{rails_env}Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
 
+    def general_error(resource, error_text)
+      logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
+      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      return unless resource.present? && @zenodo_error_emails.present?
+
+      @resource = resource
+
+      @error_text = error_text
+      mail(to: @zenodo_error_emails,
+           subject: "#{rails_env}General error \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
+    end
+
     def feedback_signup(message)
       @message = message
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
@@ -100,7 +113,8 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'In progress reminder', status: 'in_progress')
     end
 
     def peer_review_reminder(resource)
@@ -113,7 +127,22 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
 
-      update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
+    end
+
+    def doi_invitation(resource)
+      logger.warn('Unable to send doi_invitation; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Connect your data to your research on Dryad!")
+
+      # activity updated by rake task
+      # update_activities(resource: resource, message: 'DOI linking reminder', status: resource.current_curation_status)
     end
 
     def dependency_offline(dependency, message)
@@ -156,6 +185,36 @@ module StashEngine
       bc_email = Rails.env.production? ? @helpdesk_email : nil
       mail(to: user_email(@user), bcc: bc_email,
            subject: "#{rails_env}Related work updated for \"#{resource.title}\"")
+    end
+
+    def chase_action_required1(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
+    end
+
+    def chase_action_required2(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Reminder: Action required for Dryad data submission (#{resource&.identifier})")
+    end
+
+    def chase_action_required3(resource)
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Your Dryad data submission has been withdrawn (#{resource&.identifier})")
     end
 
     private

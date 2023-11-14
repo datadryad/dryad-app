@@ -28,17 +28,6 @@ module StashDatacite
         found_dup
       end
 
-      def no_readme_md
-        readme_md_require_date = '2022-09-28'
-        generic_readmes = @resource.data_files.present_files.where("UPPER(upload_file_name) LIKE 'README%'")
-        markdown_readmes = @resource.data_files.present_files.where(upload_file_name: 'README.md')
-
-        return true if generic_readmes.count.positive? && markdown_readmes.count == 0 &&
-          @resource.identifier.created_at > readme_md_require_date
-
-        false
-      end
-
       # Disabling Rubocop's stupid rule.  Yeah, I know what I want and I don't want to know if it's a "related_works?"
       # rubocop:disable Naming/PredicateName
       def has_related_works?

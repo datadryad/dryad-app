@@ -1,3 +1,4 @@
+# :nocov:
 require 'http'
 
 module Tasks
@@ -10,7 +11,7 @@ module Tasks
       end
 
       def download(file_obj:)
-        dl_url = file_obj.direct_s3_presigned_url
+        dl_url = file_obj.s3_staged_presigned_url
         resp = @http.get(dl_url)
 
         File.binwrite(File.join(@path, file_obj.upload_file_name), resp.body)
@@ -18,3 +19,4 @@ module Tasks
     end
   end
 end
+# :nocov:

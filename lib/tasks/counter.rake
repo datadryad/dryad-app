@@ -52,6 +52,22 @@ namespace :counter do
     js.update_database
   end
 
+  desc 'pre-populate our COUNTER CoP stats from datacite hub'
+  task cop_populate: :environment do
+    $stdout.sync = true
+
+    puts "Starting run to update COUNTER CoP stats from DataCite hub at #{Time.new}"
+    identifiers = StashEngine::Identifier.where(pub_state: %i[published embargoed])
+
+    # we only need stats for published and embargoed items, though there may be a few views from preview links before
+    identifiers.each_with_index do |identifier, idx|
+      puts "Updated #{idx + 1}/#{identifiers.length}" if (idx + 1) % 10 == 0
+      cs = identifier.counter_stat
+      cs.update_if_necessary # does update if not updated in this calendar week
+      sleep 1 # to avoid overloading DataCite hub
+    end
+  end
+
   # this allows stats to be zeroed without destroying citation count which happens in another process and means that our
   # stats can be manually rebuilt from our full JSON stat files which DataCite doesn't accept for unknown reasons.
   desc "zero out table of cached Counter stats without affecting citation count which doesn't come from counter"
@@ -101,7 +117,7 @@ namespace :counter do
     require_relative '../../stash/script/counter-uploader/utility_methods'
 
     if ENV['REPORT_DIR'].blank?
-      puts 'You must set an environment varaiable for REPORT_DIR to upload to DataCite.'
+      puts 'You must set an environment variable for REPORT_DIR to upload to DataCite.'
       puts 'Optional environment variables:'
       puts "\tREPORT_IDS -- if set, only reports the yyyy-mm and ids that have been sent to DataCite."
       puts "\tFORCE_SUBMISSION may be set with a comma separated list of yyyy-mm values and those reports"

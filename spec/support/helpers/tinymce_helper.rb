@@ -26,12 +26,12 @@ module TinymceHelper
     # page.evaluate_script("tinyMCE.get('#{field}') !== null")
     # page.evaluate_script("typeof tinyMCE.editors !== 'undefined'")
 
-    until page.evaluate_script('tinymce.get().length > 2') || counter > 60
+    until page.evaluate_script('tinymce.get().length > 0') || counter > 60
       sleep 0.5
       counter += 1
     end
 
-    until page.evaluate_script("(typeof tinymce.get()[2].getContent() === 'string')") || counter > 60
+    until page.evaluate_script("(typeof tinymce.get()[0].getContent() === 'string')") || counter > 60
       sleep 0.5
       counter += 1
     end

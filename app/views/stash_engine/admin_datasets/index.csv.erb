@@ -1,20 +1,21 @@
-<%= "Title,DOI,Status,Author,Last modified,Last modified by,Size,Submitted,Published,Journal name,Views,Downloads,Citations,Submitting author institution" %>
+<%= "Title,DOI,Status,Author,Last modified,Last modified by,Size,Submitted,Published,Journal name,Views,Downloads,Citations,Submitting author institution,Created" %>
 <% @datasets.each do |resource| -%>
 <%
     row = [ resource&.title || '[no title set]',
             resource.identifier,
             resource&.status,
             resource&.author_names,
-            formatted_datetime(resource&.updated_at),
+            resource&.updated_at,
             resource&.editor_name,
             resource.resource_size,
-            formatted_datetime(resource&.submission_date),
-            formatted_datetime(resource&.publication_date),
-	          resource&.publication_name,
+            resource&.submission_date,
+            resource&.publication_date,
+            resource&.publication_name,
             resource.views,
             resource.downloads,
             resource.citations,
-            StashEngine::Tenant.find(resource.tenant_id)&.long_name
+            StashEngine::Tenant.find(resource.tenant_id)&.long_name,
+            resource&.created_date
     ]
 -%><%= row.to_csv(row_sep: nil).html_safe %>
 <% end -%>

@@ -41,21 +41,6 @@ module StashEngine
       where(pub_state: %w[published embargoed])
     end
 
-    scope :user_viewable, ->(user: nil) do
-      if user.nil?
-        publicly_viewable
-      elsif user.limited_curator?
-        all
-      else
-        tenant_admin = (user.tenant_id if user.role == 'admin')
-        with_visibility(states: %w[published embargoed],
-                        tenant_id: tenant_admin,
-                        journal_issns: user.journals_as_admin.map(&:single_issn),
-                        funder_ids: user.funders_as_admin.map(&:funder_id),
-                        user_id: user.id)
-      end
-    end
-
     scope :cited_by_pubmed, -> do
       ids = publicly_viewable.map(&:id)
       joins(:internal_data)
@@ -264,7 +249,10 @@ module StashEngine
       clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
-      if journal&.will_pay?
+      if collection?
+        self.payment_type = 'no_data'
+        self.payment_id = nil
+      elsif journal&.will_pay?
         self.payment_type = "journal-#{journal.payment_plan_type}"
         self.payment_id = publication_issn
       elsif institution_will_pay?
@@ -337,8 +325,24 @@ module StashEngine
       doi
     end
 
+    def collection?
+      # no payment required (no new data uploaded)
+      latest_resource&.resource_type&.resource_type == 'collection'
+    end
+
     def institution_will_pay?
-      latest_resource&.tenant&.covers_dpc == true
+      tenant = latest_resource&.tenant
+      return false unless tenant&.covers_dpc
+
+      if tenant&.authentication&.strategy == 'author_match'
+        # get all unique ror_id associations for all authors
+        rors = latest_resource.authors.map do |auth|
+          auth&.affiliations&.map { |affil| affil&.ror_id }
+        end.flatten.uniq
+        return rors&.intersection(tenant&.ror_ids)&.present?
+      end
+
+      true
     end
 
     def funder_will_pay?
@@ -360,7 +364,7 @@ module StashEngine
     end
 
     def large_files?
-      return if latest_resource.nil?
+      return false if latest_resource.nil?
 
       latest_resource.size > APP_CONFIG.payments['large_file_size']
     end
@@ -590,6 +594,13 @@ module StashEngine
     def date_last_curated
       resources.map(&:curation_activities).flatten.reverse.each do |ca|
         return ca.created_at if ca.curation?
+      end
+      nil
+    end
+
+    def date_first_published
+      resources.map(&:curation_activities).flatten.each do |ca|
+        return ca.created_at if ca.published? || ca.embargoed?
       end
       nil
     end

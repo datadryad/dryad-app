@@ -11,6 +11,7 @@
 
 .c-columns__content {
   flex: 1;
+  min-width: 0;
 }
 
 .c-columns__sidebar1,
@@ -128,6 +129,7 @@
 
     ul li {
       margin: $spacing-base 0;
+      padding: 0;
     }
 
     a:link, a:visited {
@@ -147,6 +149,7 @@
 
     li {
       margin: 0;
+      padding: 0;
     }
 
     ul, li {

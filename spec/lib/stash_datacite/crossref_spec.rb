@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'json'
 
 module Stash
   module Import
@@ -20,6 +21,8 @@ module Stash
               { 'name' => 'Országos Tudományos Kutatási Alapprogramok', 'award' => ['OTKA101196'] },
               { 'name' => 'California Institute for Regenerative Medicine', 'award' => ['TR3 05626'] },
               { 'name' => 'American Heart Association', 'award' => ['14GRNT20510041'] }].freeze
+
+    SUBJECT = ['Gating', 'Resource partitioning'].freeze
 
     URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
 
@@ -226,6 +229,18 @@ module Stash
         end
       end
 
+      describe '#populate_subjects' do
+        before(:each) do
+          @subj_example = SUBJECT.dup
+          @cr = Crossref.new(resource: @resource, crossref_json: { 'subject' => @subj_example })
+        end
+
+        it 'populates a subject for each subject' do
+          @cr.send(:populate_subjects)
+          expect(@resource.subjects.length).to eql(2) # one entry for each subject
+        end
+      end
+
       describe '#populate_funders' do
         before(:each) do
           @funder_example = FUNDER.dup
@@ -267,13 +282,13 @@ module Stash
         end
       end
 
-      describe '#populate_related_doi' do
+      describe '#populate_article_type' do
         before(:each) do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'URL' => URL })
         end
 
         it 'takes the DOI URL for the article and turns it into cites for this dataset' do
-          @cr.send(:populate_related_doi)
+          @cr.send(:populate_article_type, article_type: 'primary_article')
           expect(@resource.related_identifiers.any?).to eql(true)
           expect(@resource.related_identifiers.first.related_identifier).to \
             eql(StashDatacite::RelatedIdentifier.standardize_doi(URL))
@@ -281,7 +296,7 @@ module Stash
 
         it 'ignores blank URLs' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'URL' => '' })
-          resp = @cr.send(:populate_related_doi)
+          resp = @cr.send(:populate_article_type, article_type: 'primary_article')
           expect(resp).to eql(nil)
           expect(@resource.related_identifiers.length).to eql(0)
         end
@@ -632,6 +647,7 @@ module Stash
                                'author' => AUTHOR,
                                'abstract' => ABSTRACT,
                                'funder' => FUNDER,
+                               'subjects' => SUBJECT,
                                'URL' => URL,
                                'DOI' => DOI,
                                'publisher' => PUBLISHER,

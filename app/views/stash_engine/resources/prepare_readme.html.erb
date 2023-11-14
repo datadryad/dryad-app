@@ -1,0 +1,31 @@
+<% @page_title = "Prepare your README – publish and preserve your data" %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
+<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<%= javascript_pack_tag 'application' %>
+<%= stylesheet_pack_tag 'application' %>
+
+<% if params[:display_validation] %>
+  <%= render partial: "stash_datacite/resources/missing_mandatory_data",
+             locals: { error_items: StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors } %>
+<% end %>
+
+<% if @loading_error == true %>
+  <div class="js-alert c-alert--error" role="alert">
+    <div class="c-alert__text">
+      Your previous README file cannot be loaded due to its encoding. Enter the file contents below to make edits.
+    </div>
+    <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
+  </div>
+<% end %>
+
+<!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
+<%= react_component('containers/ReadMe', {
+  dcsDescription: @metadata_entry.technical_info,
+  updatePath: descriptions_update_path,
+  fileContent: @file_content,
+  title: @resource.title || 'Title of Dataset',
+  doi: @resource.identifier_uri
+}) %>
+
+<%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 2} %>

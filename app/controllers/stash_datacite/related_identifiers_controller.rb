@@ -76,7 +76,11 @@ module StashDatacite
       std_fmt = RelatedIdentifier.standardize_format(related[:related_identifier])
       { related_identifier: std_fmt,
         related_identifier_type: RelatedIdentifier.identifier_type_from_str(std_fmt),
-        relation_type: RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]],
+        relation_type: if @resource&.resource_type&.resource_type == 'collection' && related[:work_type] == 'dataset'
+                         'haspart'
+                       else
+                         RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[related[:work_type]]
+                       end,
         work_type: related[:work_type],
         resource_id: related[:resource_id],
         id: related[:id] }
@@ -87,7 +91,7 @@ module StashDatacite
       return if params[:id] == 'new'
 
       @related_identifier = RelatedIdentifier.find((params[:stash_datacite_related_identifier] ? related_identifier_params[:id] : params[:id]))
-      return ajax_blocked unless resource.id == @related_identifier.resource_id
+      ajax_blocked unless resource.id == @related_identifier.resource_id
     end
 
     def resource
