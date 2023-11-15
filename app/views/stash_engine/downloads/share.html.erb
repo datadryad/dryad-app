@@ -6,10 +6,11 @@
 <% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
   <div id="withzip">
     <% add_download_authorization(@resource.id) %>
-    <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{@resource.version_number}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-      <input type="hidden" name="resource_id" value="<%= @resource.id %>"/>
-      <button type="submit" name="submit" class="o-download__files" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download dataset</button>
+    <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{minimal_date(@resource.publication_date.present? && @resource.publication_date < Time.now.utc ? @resource.publication_date : @resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
+        <div id="file_downloads"></div>
+        <button type="button" class="o-download__files js-download" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download full dataset</button>
     <% end %>
+    <p>If the download process does not begin automatically, click the button above to start the download.</p>
   </div>
   <div id="nozip" hidden>
     <p>Your browser does not allow for generation of a dataset package. Please download the individual dataset files:</p>
@@ -63,9 +64,10 @@
 <% content_for :doc_end do %>
   <script type="text/javascript" async>    
     if ("serviceWorker" in navigator) {
+      const resource_id = <%= @resource.id %>
       const dlbutton = document.getElementById('download_zip_button');
       <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-      // dlbutton.click();
+      dlbutton.click();
     } else {
       document.getElementById('nozip').removeAttribute('hidden');
       document.getElementById('withzip').hidden = true;
