@@ -11,7 +11,8 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy"
+      "\\.css$": "identity-obj-proxy",
+      "axios": "axios/dist/node/axios.cjs"
     },
     "transform": {
       "\\.jsx?$": "babel-jest"
