@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Editor, rootCtx, defaultValueCtx, schemaCtx,
+  Editor, rootCtx, defaultValueCtx, schemaCtx, remarkStringifyOptionsCtx,
 } from '@milkdown/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -16,6 +16,17 @@ import dryadConfig from './dryadConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
 import Button, {bulletWrapCommand, orderWrapCommand} from './Button';
 
+const allowSpans = [
+  'autolink',
+  'destinationLiteral',
+  'destinationRaw',
+  'reference',
+  'titleQuote',
+  'titleApostrophe',
+  'paragraph',
+  'listItem',
+];
+
 function MilkdownCore({
   initialValue, onChange, setSelection,
 }) {
@@ -25,6 +36,23 @@ function MilkdownCore({
     .config((ctx) => {
       ctx.set(rootCtx, root);
       ctx.set(defaultValueCtx, initialValue);
+      ctx.set(remarkStringifyOptionsCtx, {
+        fences: true,
+        rule: '-',
+        handlers: {
+          paragraph: (node, _, state, info) => {
+            const exit = state.enter('paragraph');
+            const value = state.containerPhrasing(node, info);
+            exit();
+            return value;
+          },
+        },
+        unsafe: [
+          {character: '_', notInConstruct: allowSpans},
+          {before: '[\\s]', character: '_'},
+          {character: '_', after: '[\\s]'},
+        ],
+      });
       const listener = ctx.get(listenerCtx);
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
         if (markdown !== prevMarkdown) onChange(markdown);

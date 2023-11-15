@@ -13,7 +13,7 @@ module StashDatacite
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      items[:description] = Loofah.fragment(items[:description]).scrub!(:strip).to_s
+      items[:description] = Loofah.fragment(items[:description]).scrub!(:strip).to_s unless @description&.description_type == 'technicalinfo'
       respond_to do |format|
         if @description.update(items)
           format.json { render json: @description.slice(:id, :resource_id, :description, :description_type) }
