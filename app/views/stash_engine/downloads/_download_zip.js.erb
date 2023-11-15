@@ -16,17 +16,17 @@ dlbutton.addEventListener('click', async e => {
   const response = await fetch(`/stash/downloads/zip_assembly_info/${resource_id}`, {credentials: 'include'});
   if (response.ok) {
     const files = await response.json();
-    files.forEach(f => {
-      Object.keys(f).forEach(k => {
+    for (const f of files) {
+      for (const k of Object.keys(f)) {
         const i = document.createElement('input');
+        i.setAttribute('type', 'hidden');
         i.setAttribute('name', k);
         i.setAttribute('value', f[k]);
         inputs.appendChild(i);
-      })
-    })
+      }
+    }
   }
   form.submit();
-  inputs.innerHTML = '';
   dlbutton.childNodes[1].nodeValue = 'Download full dataset';
   dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p>';
   dialog.showModal();
@@ -34,6 +34,7 @@ dlbutton.addEventListener('click', async e => {
 })
 messageChannel.port1.start();
 messageChannel.port1.addEventListener("message", (event) => {
+  inputs.innerHTML = '';
   clearInterval(keepAlive);
   dlbutton.classList.add('o-download__files');
   dlbutton.classList.remove('o-download__wait');
