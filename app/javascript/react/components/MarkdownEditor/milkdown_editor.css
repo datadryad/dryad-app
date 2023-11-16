@@ -1,33 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;700&family=Noto+Sans:wght@400;700&display=swap');
+
 .markdown_editor {
   border: thin solid #d0d0d0;
   border-radius: 5px;
+  overflow: hidden;
+  margin: 1em auto;
 }
 
 .markdown_editor:focus-within {
   border-color: #0071a8;
 }
 
-.markdown_editor .md_editor-buttons ~ div {
+.md_editor_textarea {
   height: 65vh;
+  position: relative;
   overflow: auto;
 }
 
+.md_editor_textarea > div {
+  overflow: auto;
+  position: absolute;
+  bottom: 0; left: 0;
+  top: 0; right: 0;
+}
+
 @media screen and (max-width: 760px) {
-  .markdown_editor .md_editor-buttons ~ div {
+  .md_editor_textarea {
     height: 75vh;
   }
 }
 
 .markdown_editor .md_editor-buttons {
-  height: 2.5rem;
   border-radius: 5px 5px 0 0;
   border-bottom: thin solid #d0d0d0;
   background-color: rgb(233, 236, 239);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  grid-row-gap: 3px;
+}
+
+.markdown_editor .md_editor-buttons .md_editor-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.markdown_editor .md_editor-buttons .md_editor-toggle button {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  position: relative;
+  font-size: .95em;
+}
+
+.markdown_editor .md_editor-buttons .md_editor-toggle button[disabled]{
+  background-color: #fff;
+  color: #000;
+  border: thin solid #d0d0d0;
+  border-bottom: none;
+  margin: -2px -2px 0;
+}
+
+.markdown_editor .md_editor-buttons .md_editor-toggle button[disabled]:after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 3;
 }
 
 .markdown_editor .md_editor-buttons .spacer {
-  display: inline-block;
-  vertical-align: middle;
+  align-self: center;
   padding: 0 1rem;
 }
 
@@ -43,14 +90,14 @@
 .markdown_editor .md_editor-buttons .tableSelect,
 .markdown_editor .md_editor-buttons .linkSelect {
   display: inline-block;
-  height: 100%;
+  height: 2.5rem;
   vertical-align: top;
   position: relative;
 }
 
 .markdown_editor .md_editor-buttons .headingButton,
 .markdown_editor .md_editor-buttons button {
-  height: 100%;
+  height: 2.5rem;
   line-height: 1;
   padding: 10px 8px;
 }
@@ -223,22 +270,34 @@
   background-color: #98cae2;
 }
 
-.milkdown .ProseMirror.editor {
-  padding: 1rem;
+.markdown_editor .milkdown .ProseMirror.editor,
+.markdown_editor .cm-editor {
+  padding: 1.5rem 1rem;
   font-size: 1rem;
 }
 
 .milkdown, .headingMenu li {
-  font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', '나눔바른고딕', 'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
+  font-family: 'Noto Sans', 'Helvetica Neue', 'Helvetica', 'Arial', '나눔바른고딕', 'Nanum Barun Gothic', '맑은고딕', 'Malgun Gothic', sans-serif;
   margin: 0 !important;
 }
 
+.cm-editor .cm-scroller {
+  font-family: 'Noto Sans Mono', 'Consolas', monospace;
+  font-size: .95em;
+}
+
 .milkdown h1,
+.cm-editor .md_h1,
 .milkdown h2,
+.cm-editor .md_h2,
 .milkdown h3,
+.cm-editor .md_h3,
 .milkdown h4,
+.cm-editor .md_h4,
 .milkdown h5,
+.cm-editor .md_h5,
 .milkdown h6,
+.cm-editor .md_h6,
 .headingMenu li {
   font-weight: bold;
   color: #000;
@@ -249,29 +308,27 @@
   font-weight: normal;
 }
 
-.milkdown h1, .headingMenu .h1 {
+.milkdown h1, .headingMenu .h1, .cm-editor .md_h1 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   margin-bottom: 1rem;
-  font-weight: bold;
-  color: #000;
 }
 
-.milkdown h2, .headingMenu .h2 {
+.milkdown h2, .headingMenu .h2, .cm-editor .md_h2 {
   font-size: 1.45rem;
   line-height: 1.75rem;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.milkdown h3, .headingMenu .h3 {
+.milkdown h3, .headingMenu .h3, .cm-editor .md_h3 {
   font-size: 1.25rem;
   line-height: 1.5rem;
   margin-top: 1.25rem;
   margin-bottom: .75rem;
 }
 
-.milkdown h4, .headingMenu .h4 {
+.milkdown h4, .headingMenu .h4, .cm-editor .md_h4, {
   font-size: 1.125rem;
   line-height: 1.5rem;
   margin-top: 1.15rem;
@@ -281,19 +338,91 @@
 .milkdown h5,
 .milkdown h6,
 .headingMenu .h5,
-.headingMenu .h6 {
+.headingMenu .h6,
+.cm-editor .md_h5,
+.cm-editor .md_h6 {
   font-size: 1rem;
   line-height: 1.5rem;
   margin-top: 1rem;
   margin-bottom: .5rem;
 }
 
-.milkdown blockquote {
+.milkdown h6,
+.headingMenu .h6,
+.cm-editor .md_h6,
+.md_em {
+  font-style: italic;
+}
+
+.milkdown blockquote,
+.md_bq {
   border-left: thick solid #ccc;
   margin-left: 0;
   padding-left: 8px;
 }
 
+.md_bq {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
 .milkdown blockquote::before {
   content: '';
+}
+
+.milkdown code {
+  font-family: 'Noto Sans Mono', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+
+.md_cmark, .md_code, .md_mono {
+  background-color: rgb(235, 235, 235);
+  padding: 1px 0;
+  font-size: 0.95em;
+}
+
+.md_code {
+  display: block;
+}
+
+.md_cmark:first-child:last-child {
+  display: block;
+}
+
+.md_li {
+  padding: 8px 0;
+}
+
+.md_list {
+  margin-left: 2em;
+}
+
+.md_amark {
+  color: #00527A;
+}
+
+.md_a, .md_href {
+  color: #0071a8;
+}
+
+.md_b {
+  font-weight: 700;
+}
+
+.md_hr {
+  display: flex;
+  align-items: center;
+  column-gap: 1ch;
+}
+
+.md_hr:after {
+  content: '';
+  height: 2px;
+  background-color: #808080;
+  flex-grow: 2;
+}
+
+.md_th {
+  font-weight: 700;
+  background-color: rgb(235, 235, 235);
 }

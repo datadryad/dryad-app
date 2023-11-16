@@ -31,7 +31,7 @@ export default function ReadMe({
       });
   };
 
-  const checkDescription = useCallback(debounce(saveDescription, 4000), []);
+  const checkDescription = useCallback(debounce(saveDescription, 3000), []);
 
   const importFile = (e) => {
     const [file] = e.target.files;
