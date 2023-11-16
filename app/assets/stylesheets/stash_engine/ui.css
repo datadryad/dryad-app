@@ -2163,7 +2163,7 @@ td:last-child, th:last-child {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
-  margin: 1em 0;
+  margin: 0 0 2rem;
 }
 
 .c-autosave__text {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Editor, rootCtx, defaultValueCtx, schemaCtx, remarkStringifyOptionsCtx,
+  Editor, rootCtx, defaultValueCtx, schemaCtx, serializerCtx, editorViewCtx, remarkStringifyOptionsCtx, rootDOMCtx,
 } from '@milkdown/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -12,9 +12,10 @@ import {trailing} from '@milkdown/plugin-trailing';
 import {commonmark} from '@milkdown/preset-commonmark';
 import {gfm} from '@milkdown/preset-gfm';
 import {replaceAll} from '@milkdown/utils';
-import dryadConfig from './dryadConfig';
+import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
 import Button, {bulletWrapCommand, orderWrapCommand} from './Button';
+import CodeEditor from './CodeEditor';
 
 const allowSpans = [
   'autolink',
@@ -27,9 +28,7 @@ const allowSpans = [
   'listItem',
 ];
 
-function MilkdownCore({
-  initialValue, onChange, setSelection,
-}) {
+function MilkdownCore({initialValue, onChange, setSelection}) {
   useEditor((root) => Editor
     .make()
     .config(dryadConfig)
@@ -78,11 +77,36 @@ function MilkdownEditor({
 }) {
   const [loading, editor] = useInstance();
 
+  const [editType, setEditType] = useState('visual');
   const [selection, setSelection] = useState(null);
   const [active, setActive] = useState([]);
+  const [md, setMD] = useState(initialValue);
   const [headingLevel, setHeadingLevel] = useState(0);
 
   const activeList = () => active.includes('ordered_list') || active.includes('bullet_list');
+
+  const saveMarkdown = (markdown) => {
+    setMD(markdown);
+    onChange(markdown);
+  };
+
+  const getMarkdown = () => editor()?.action((ctx) => {
+    const editorView = ctx.get(editorViewCtx);
+    const serializer = ctx.get(serializerCtx);
+    return serializer(editorView.state.doc);
+  });
+
+  useEffect(() => {
+    editor()?.action((ctx) => {
+      const visEditor = ctx.get(rootDOMCtx).parentElement;
+      if (editType === 'markdown') {
+        visEditor.hidden = true;
+      } else {
+        visEditor.removeAttribute('hidden');
+        editor()?.action(replaceAll(md));
+      }
+    });
+  }, [editType]);
 
   useEffect(() => {
     if (editor && replaceValue) editor()?.action(replaceAll(replaceValue));
@@ -108,20 +132,29 @@ function MilkdownEditor({
     <>
       {!loading && (
         <div className="md_editor-buttons" role="menubar">
-          {buttons.map((button, i) => (
-            <Button
-              active={active.includes(button)}
-              disabled={button.includes('dent') && !activeList()}
-              headingLevel={headingLevel}
-              editorId={id}
-              key={button + buttons.slice(0, i).filter((b) => b === button).length}
-              type={button}
-              editor={editor}
-            />
-          ))}
+          <div className="md_editor-toolbar">
+            {editType === 'visual' && buttons.map((button, i) => (
+              <Button
+                active={active.includes(button)}
+                disabled={button.includes('dent') && !activeList()}
+                headingLevel={headingLevel}
+                editorId={id}
+                key={button + buttons.slice(0, i).filter((b) => b === button).length}
+                type={button}
+                editor={editor}
+              />
+            ))}
+          </div>
+          <div className="md_editor-toggle">
+            <button type="button" onClick={() => setEditType('markdown')} disabled={editType === 'markdown'}>Markdown</button>
+            <button type="button" onClick={() => setEditType('visual')} disabled={editType === 'visual'}>Rich text</button>
+          </div>
         </div>
       )}
-      <MilkdownCore initialValue={initialValue} onChange={onChange} setSelection={setSelection} />
+      <div className="md_editor_textarea">
+        <MilkdownCore initialValue={initialValue} onChange={onChange} setSelection={setSelection} />
+        <CodeEditor content={getMarkdown()} onChange={saveMarkdown} hidden={editType === 'visual'} />
+      </div>
     </>
   );
 }
