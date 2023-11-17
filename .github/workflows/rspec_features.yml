@@ -50,6 +50,9 @@ jobs:
         mysql -u root -e 'set global log_bin_trust_function_creators=1'
         bin/rails db:migrate:reset RAILS_ENV=test
 
+    - name: 'Yarn install'
+      run: yarn install --frozen-lockfile
+
     - name: 'Compile webpacker assets'
       run: bin/bundle exec rails webpacker:compile
 
