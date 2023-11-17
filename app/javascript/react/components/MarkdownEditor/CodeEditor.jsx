@@ -8,10 +8,11 @@ import {
 } from '@codemirror/language';
 import {lintKeymap} from '@codemirror/lint';
 import {searchKeymap} from '@codemirror/search';
-import {EditorState} from '@codemirror/state';
+import {EditorState, Prec} from '@codemirror/state';
 import {EditorView, highlightSpecialChars, keymap} from '@codemirror/view';
 import {markdown, markdownLanguage} from '@codemirror/lang-markdown';
 import {dryadTheme, markdownTags} from './codeTheme';
+import {codeKeymap} from './codeKeymap';
 
 const basicSetup = [
   highlightSpecialChars(),
@@ -31,6 +32,11 @@ const basicSetup = [
     ...completionKeymap,
     ...lintKeymap,
   ]),
+  Prec.highest(
+    keymap.of([
+      ...codeKeymap,
+    ]),
+  ),
 ];
 
 export default function CodeEditor({

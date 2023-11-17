@@ -38,6 +38,7 @@ export const dryadHighlightStyle = HighlightStyle.define([
   {tag: t.heading6, class: 'md_h6'},
   {tag: t.emphasis, class: 'md_em'},
   {tag: t.strong, class: 'md_b'},
+  {tag: t.strikethrough, class: 'md_strike'},
   {tag: codeMark, class: 'md_cmark'},
   {tag: code, class: 'md_mono'},
   {tag: t.monospace, class: 'md_code'},
