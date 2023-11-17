@@ -1,25 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-
-import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import React from 'react';
-import {act} from 'react-dom/test-utils';
+import {render, screen} from '@testing-library/react';
 import BadList from '../../../../../app/javascript/react/components/FileUpload/FileList/BadList';
-
-let container = null;
-beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
 
 describe('BadList', () => {
   it("displays if couldn't read a file", () => {
@@ -32,11 +13,11 @@ describe('BadList', () => {
       },
     ];
 
-    act(() => {
-      ReactDOM.render(<BadList chosenFiles={testBad} />, container);
-    });
-
-    expect(container.textContent).toContain("couldn't read tabular data from cat.csv");
+    render(<BadList chosenFiles={testBad} />);
+    expect(screen.getByText(
+      // eslint-disable-next-line max-len
+      'Our tabular data checker couldn\'t read tabular data from cat.csv. If you expect them to have consistent tabular data, check that they are readable and formatted correctly.',
+    )).toBeInTheDocument();
   });
 
   it('displays issues if they are present', () => {
@@ -49,11 +30,11 @@ describe('BadList', () => {
       },
     ];
 
-    act(() => {
-      ReactDOM.render(<BadList chosenFiles={testIssue} />, container);
-    });
+    render(<BadList chosenFiles={testIssue} />);
 
-    expect(container.textContent).toContain('Our automated tabular data checker identified potential inconsistencies');
+    expect(screen.getByText(
+      'Our automated tabular data checker identified potential inconsistencies in the format and structure of 1 of your files.',
+    )).toBeInTheDocument();
   });
 
   it("doesn't display anything if no frictionless on file", () => {
@@ -63,11 +44,11 @@ describe('BadList', () => {
       },
     ];
 
-    act(() => {
-      ReactDOM.render(<BadList chosenFiles={testFiles} />, container);
-    });
+    render(<BadList chosenFiles={testFiles} />);
 
-    expect(container.textContent).toBe('');
+    expect(screen.queryByText(
+      'Our automated tabular data checker identified potential inconsistencies in the format and structure of 1 of your files.',
+    )).not.toBeInTheDocument();
   });
 
   it("doesn't display anything if frictionless passed", () => {
@@ -80,10 +61,10 @@ describe('BadList', () => {
       },
     ];
 
-    act(() => {
-      ReactDOM.render(<BadList chosenFiles={testFiles} />, container);
-    });
+    render(<BadList chosenFiles={testFiles} />);
 
-    expect(container.textContent).toBe('');
+    expect(screen.queryByText(
+      'Our automated tabular data checker identified potential inconsistencies in the format and structure of 1 of your files.',
+    )).not.toBeInTheDocument();
   });
 });
