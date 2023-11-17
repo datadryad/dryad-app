@@ -51,7 +51,7 @@ jobs:
         bin/rails db:migrate:reset RAILS_ENV=test
 
     - name: 'Compile webpacker assets'
-      run: RAILS_ENV=test bundle exec rails webpacker:compile
+      run: bin/bundle exec rails webpacker:compile
 
     - name: 'Compile Assets'
       run: bin/rails assets:precompile
