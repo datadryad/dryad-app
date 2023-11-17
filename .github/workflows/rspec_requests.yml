@@ -50,11 +50,11 @@ jobs:
         mysql -u root -e 'set global log_bin_trust_function_creators=1'
         bin/rails db:migrate:reset RAILS_ENV=test
 
+    - name: 'Setup webpacker assets'
+      run: RAILS_ENV=test bundle exec rails webpacker:install
+
     - name: 'Compile Assets'
       run: bin/rails assets:precompile
-
-    - name: 'Compile webpacker assets'
-      run: RAILS_ENV=test bundle exec rails webpacker:compile
 
     - name: 'Run RSpec Request Tests'
       run: bin/bundle exec rspec --force-color --format RSpec::Github::Formatter --format progress --tag ~skip spec/requests
