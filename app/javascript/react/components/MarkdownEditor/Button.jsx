@@ -425,7 +425,7 @@ function Button({
     <button
       type="button"
       className={active ? 'active' : undefined}
-      disabled={disabled ? 'disabled' : false}
+      disabled={disabled || (activeEditor === 'markdown' && type.includes('list') && active)}
       title={labels[type]}
       aria-label={labels[type]}
       role="menuitem"

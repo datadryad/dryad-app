@@ -31,7 +31,9 @@ const allowSpans = [
   'listItem',
 ];
 
-function MilkdownCore({initialValue, onChange, setSelection}) {
+function MilkdownCore({
+  initialValue, onChange, setActive, setLevel,
+}) {
   useEditor((root) => Editor
     .make()
     .config(dryadConfig)
@@ -61,8 +63,17 @@ function MilkdownCore({initialValue, onChange, setSelection}) {
       });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {
+        setActive([]);
+        const list = [];
         const schema = ctxx.get(schemaCtx);
-        setSelection({doc, selection, schema});
+        const {from, to} = selection;
+        const {path, parent} = doc.resolve(from);
+        path.forEach((i) => i.type && list.push(i.type.name));
+        Object.keys(schema.marks).forEach((m) => {
+          if (doc.rangeHasMark(from === to ? from - 1 : from, to, schema.marks[m])) list.push(schema.marks[m].name);
+        });
+        setActive(list);
+        setLevel(parent.attrs?.level || 0);
       });
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
@@ -81,13 +92,12 @@ function MilkdownEditor({
   const [loading, editor] = useInstance();
 
   const [editType, setEditType] = useState('visual');
-  const [selection, setSelection] = useState(null);
   const [active, setActive] = useState([]);
   const [headingLevel, setHeadingLevel] = useState(0);
   const [md, setMD] = useState(initialValue);
   const [mdEditor, setMDEditor] = useState(null);
 
-  const activeList = () => active.includes('ordered_list') || active.includes('bullet_list');
+  const activeList = () => active.some((a) => a && a.includes('list'));
 
   const saveMarkdown = (markdown) => {
     setMD(markdown);
@@ -118,22 +128,6 @@ function MilkdownEditor({
     if (editor && replaceValue) editor()?.action(replaceAll(replaceValue));
   }, [editor, replaceValue]);
 
-  useEffect(() => {
-    if (selection) {
-      setActive([]);
-      const list = [];
-      const {doc, selection: sel, schema} = selection;
-      const {from, to} = sel;
-      const {path, parent} = doc.resolve(from);
-      path.forEach((i) => i.type && list.push(i.type.name));
-      Object.keys(schema.marks).forEach((m) => {
-        if (doc.rangeHasMark(from === to ? from - 1 : from, to, schema.marks[m])) list.push(schema.marks[m].name);
-      });
-      setActive(list);
-      setHeadingLevel(parent.attrs?.level || 0);
-    }
-  }, [selection]);
-
   return (
     <>
       {!loading && (
@@ -141,7 +135,7 @@ function MilkdownEditor({
           <div className="md_editor-toolbar">
             {buttons.map((button, i) => (
               <Button
-                active={active.includes(button)}
+                active={active.includes(button) || (editType === 'markdown' && button.includes('list') && activeList())}
                 disabled={button.includes('dent') && !activeList()}
                 headingLevel={headingLevel}
                 editorId={id}
@@ -160,8 +154,15 @@ function MilkdownEditor({
         </div>
       )}
       <div className="md_editor_textarea">
-        <MilkdownCore initialValue={initialValue} onChange={onChange} setSelection={setSelection} />
-        <CodeEditor content={getMarkdown()} onChange={saveMarkdown} hidden={editType === 'visual'} setMDEditor={setMDEditor} />
+        <MilkdownCore initialValue={initialValue} onChange={onChange} setActive={setActive} setLevel={setHeadingLevel} />
+        <CodeEditor
+          content={getMarkdown()}
+          onChange={saveMarkdown}
+          hidden={editType === 'visual'}
+          setMDEditor={setMDEditor}
+          setActive={setActive}
+          setLevel={setHeadingLevel}
+        />
       </div>
     </>
   );

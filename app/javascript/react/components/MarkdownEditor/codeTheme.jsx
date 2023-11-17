@@ -43,6 +43,7 @@ export const dryadHighlightStyle = HighlightStyle.define([
   {tag: code, class: 'md_mono'},
   {tag: t.monospace, class: 'md_code'},
   {tag: quoteMark, class: 'md_bq'},
+  {tag: t.quote, class: 'md_quote'},
   {tag: t.list, class: 'md_li'},
   {tag: listMark, class: 'md_list'},
   {tag: linkRef, class: 'md_href'},
