@@ -12,10 +12,13 @@ import {trailing} from '@milkdown/plugin-trailing';
 import {commonmark} from '@milkdown/preset-commonmark';
 import {gfm} from '@milkdown/preset-gfm';
 import {replaceAll} from '@milkdown/utils';
+import CodeEditor from './CodeEditor';
+import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
-import Button, {bulletWrapCommand, orderWrapCommand} from './Button';
-import CodeEditor from './CodeEditor';
+import {
+  bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
+} from './milkdownCommands';
 
 const allowSpans = [
   'autolink',
@@ -62,8 +65,8 @@ function MilkdownCore({initialValue, onChange, setSelection}) {
         setSelection({doc, selection, schema});
       });
     })
-    .use([listen, commonmark, gfm, history, trailing, selectionListener])
-    .use([bulletWrapCommand, orderWrapCommand]));
+    .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
+    .use([listen, commonmark, gfm, history, trailing, selectionListener]));
   return (
     <Milkdown />
   );

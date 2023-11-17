@@ -1,51 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {useSelect} from 'downshift';
 import {editorViewCtx} from '@milkdown/core';
-import {$command, callCommand} from '@milkdown/utils';
-/* eslint-disable import/no-unresolved */
+import {callCommand} from '@milkdown/utils';
+// eslint-disable-next-line import/no-unresolved
 import {TextSelection} from '@milkdown/prose/state';
-import {wrapInList} from '@milkdown/prose/schema-list';
-/* eslint-enable import/no-unresolved */
-import {redoCommand, undoCommand} from '@milkdown/plugin-history';
-import {
-  // toggleMark,
-  toggleEmphasisCommand,
-  toggleStrongCommand,
-  toggleInlineCodeCommand,
-  toggleLinkCommand,
-  updateLinkCommand,
-  wrapInBlockquoteCommand,
-  wrapInHeadingCommand,
-  createCodeBlockCommand,
-  bulletListSchema,
-  orderedListSchema,
-  liftListItemCommand,
-  sinkListItemCommand,
-} from '@milkdown/preset-commonmark';
-import {
-  insertTableCommand,
-  toggleStrikethroughCommand,
-} from '@milkdown/preset-gfm';
-
-export const bulletWrapCommand = $command('BulletListWrap', (ctx) => () => wrapInList(bulletListSchema.type(ctx)));
-export const orderWrapCommand = $command('OrderedListWrap', (ctx) => () => wrapInList(orderedListSchema.type(ctx)));
-
-const commands = {
-  undo: undoCommand,
-  redo: redoCommand,
-  strong: toggleStrongCommand,
-  emphasis: toggleEmphasisCommand,
-  inlineCode: toggleInlineCodeCommand,
-  strike: toggleStrikethroughCommand,
-  bullet_list: bulletWrapCommand,
-  ordered_list: orderWrapCommand,
-  outdent: liftListItemCommand,
-  indent: sinkListItemCommand,
-  blockquote: wrapInBlockquoteCommand,
-  code_block: createCodeBlockCommand,
-  table: insertTableCommand,
-  heading: wrapInHeadingCommand,
-};
+import {commands} from './milkdownCommands';
 
 const labels = {
   undo: 'Undo',
@@ -169,7 +128,7 @@ function LinkMenu({editor, editorId, active}) {
 
   const removeLink = () => {
     const view = editor()?.ctx.get(editorViewCtx);
-    editor()?.action(callCommand(toggleLinkCommand.key));
+    editor()?.action(callCommand(commands.link.key));
     view.focus();
   };
 
@@ -177,7 +136,7 @@ function LinkMenu({editor, editorId, active}) {
     closeMenu();
     document.removeEventListener('click', clickListener);
     checkNewText();
-    let command = toggleLinkCommand;
+    let command = commands.link;
     const view = editor()?.ctx.get(editorViewCtx);
     const {dispatch, state} = view;
     const {
@@ -185,7 +144,7 @@ function LinkMenu({editor, editorId, active}) {
     } = state;
     const {from, to} = selection;
     if (doc.rangeHasMark(from, to, schema.marks.link)) {
-      command = updateLinkCommand;
+      command = commands.linkEdit;
     }
     tr.setSelection(TextSelection.create(doc, from, to));
     dispatch(tr);
