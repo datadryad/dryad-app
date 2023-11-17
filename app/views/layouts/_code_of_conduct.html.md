@@ -76,8 +76,9 @@ If you believe someone is violating the Code of Conduct, we ask that you report 
 <em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em>
 
 <ul>
-  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></p></li>
-  <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></p></li>
+  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></li>
+  <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></li>
+  <li>Malvika Sharan &#8211; <a class="emailr" href="mailto:dev@null">moc.liamg@narahsakivlam</a></li>
 </ul>
 
 <strong>All reports will be kept confidential.</strong> In some cases we may determine that a public statement will need to be made. If that&#8217;s the case, the identities of all victims and reporters will remain confidential unless those individuals instruct us otherwise.
