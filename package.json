@@ -11,7 +11,8 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy"
+      "\\.css$": "identity-obj-proxy",
+      "axios": "axios/dist/node/axios.cjs"
     },
     "testPathIgnorePatterns": [
       "ReadMe"
@@ -69,7 +70,7 @@
     "@rails/webpacker": "^6.0.0-rc.6",
     "@tinymce/tinymce-react": "^4.3.0",
     "aws-sdk": "^2.1060.0",
-    "axios": "^0.25.0",
+    "axios": "^1.6.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",

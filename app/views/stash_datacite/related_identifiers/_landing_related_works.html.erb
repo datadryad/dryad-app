@@ -1,4 +1,3 @@
-
 <% # Article IDs %>
 
 <% prim_article_ids = @resource.related_identifiers.where(work_type: :primary_article).where(hidden: false).order(work_type: :desc) %>
@@ -21,14 +20,22 @@
 	<% other_ids.each do |r| %>
 	    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
 	    <li>
-		<% if r.work_type == 'undefined' %>
-		    This dataset <%= r.relation_name_english %>
-		    <%= display_id(type: r.related_identifier_type,
-				   my_id: r.related_identifier) %> <%= bad_asterisk %>
-		<% else %>
-		    <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
-		    <%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
-		<% end %>
+				<% if r.work_type == 'undefined' %>
+						This dataset <%= r.relation_name_english %>
+						<%= display_id(type: r.related_identifier_type,
+							 my_id: r.related_identifier) %> <%= bad_asterisk %>
+				<% else %>
+					<% if r.added_by != 'zenodo' || r&.resource&.file_view %> <!-- non-zenodo or published already -->
+						<%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
+						<%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
+					<% else %> <!-- not put in the zenodo queue to publish until the dataset is actually published -->
+						<span title="<%= r.related_identifier %>"><%= r.related_identifier.ellipsisize(40) %></span>
+						<%= bad_asterisk %>
+					<% end %>
+				<% end %>
+				<% if r.added_by == 'zenodo' && !r&.resource&.file_view %>
+					<br/>(to be published with dataset)
+				<% end %>
 	    </li>
 	<% end %>
     </ul>
