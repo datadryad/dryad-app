@@ -83,8 +83,9 @@ function MilkdownEditor({
   const [editType, setEditType] = useState('visual');
   const [selection, setSelection] = useState(null);
   const [active, setActive] = useState([]);
-  const [md, setMD] = useState(initialValue);
   const [headingLevel, setHeadingLevel] = useState(0);
+  const [md, setMD] = useState(initialValue);
+  const [mdEditor, setMDEditor] = useState(null);
 
   const activeList = () => active.includes('ordered_list') || active.includes('bullet_list');
 
@@ -103,8 +104,10 @@ function MilkdownEditor({
     editor()?.action((ctx) => {
       const visEditor = ctx.get(rootDOMCtx).parentElement;
       if (editType === 'markdown') {
+        setActive([]);
         visEditor.hidden = true;
       } else {
+        setActive([]);
         visEditor.removeAttribute('hidden');
         editor()?.action(replaceAll(md));
       }
@@ -136,7 +139,7 @@ function MilkdownEditor({
       {!loading && (
         <div className="md_editor-buttons" role="menubar">
           <div className="md_editor-toolbar">
-            {editType === 'visual' && buttons.map((button, i) => (
+            {buttons.map((button, i) => (
               <Button
                 active={active.includes(button)}
                 disabled={button.includes('dent') && !activeList()}
@@ -145,6 +148,8 @@ function MilkdownEditor({
                 key={button + buttons.slice(0, i).filter((b) => b === button).length}
                 type={button}
                 editor={editor}
+                mdEditor={mdEditor}
+                activeEditor={editType}
               />
             ))}
           </div>
@@ -156,7 +161,7 @@ function MilkdownEditor({
       )}
       <div className="md_editor_textarea">
         <MilkdownCore initialValue={initialValue} onChange={onChange} setSelection={setSelection} />
-        <CodeEditor content={getMarkdown()} onChange={saveMarkdown} hidden={editType === 'visual'} />
+        <CodeEditor content={getMarkdown()} onChange={saveMarkdown} hidden={editType === 'visual'} setMDEditor={setMDEditor} />
       </div>
     </>
   );

@@ -1,4 +1,5 @@
 import {EditorSelection, Text, Transaction} from '@codemirror/state';
+import {undo, redo} from '@codemirror/commands';
 
 const marks = {
   // marks
@@ -341,6 +342,36 @@ const codeBlockWrap = (mark, view) => {
   return true;
 };
 
+const insertTable = (view, rows, cols) => {
+  const {state, dispatch} = view;
+  const changes = state.changeByRange((range) => {
+    const td = '|    ';
+    const th = '| :- ';
+    const row1 = `${td.repeat(cols - 1)}|`;
+    const headermark = `${th.repeat(cols)}|`;
+    const rest = Array.from({length: rows - 1}).map(() => td.repeat(cols));
+    const changeList = [];
+    changeList.push({
+      from: range.from,
+      insert: '\r|  ',
+    }, {
+      from: range.to,
+      insert: `  ${row1}\r${headermark}\r${rest.join('|\r')}${rest.length ? '|' : ''}`,
+    });
+    return {
+      changes: changeList,
+      range: EditorSelection.range(range.from + 4, range.to + 4),
+    };
+  });
+  dispatch(
+    state.update(changes, {
+      scrollIntoView: true,
+      annotations: Transaction.userEvent.of('input'),
+    }),
+  );
+  return true;
+};
+
 const inListCheck = (view) => {
   const [range] = view.state.selection.ranges;
   const {node} = view.domAtPos(range.from);
@@ -368,6 +399,9 @@ export const commands = {
   bullet_list: (v) => !inListCheck(v) && nodeWrap(marks.bullet_list, v),
   indent: (v) => inListCheck(v) && nodeWrap(marks.indent, v),
   outdent: (v) => nodeUnwrap(marks.indent, v),
+  table: insertTable,
+  undo: (v) => undo(v),
+  redo: (v) => redo(v),
   ...headingCommands,
 };
 
