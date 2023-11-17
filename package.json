@@ -11,8 +11,7 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy",
-      "axios": "axios/dist/node/axios.cjs"
+      "\\.css$": "identity-obj-proxy"
     },
     "testPathIgnorePatterns": [
       "ReadMe"
