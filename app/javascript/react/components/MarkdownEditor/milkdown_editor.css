@@ -409,6 +409,10 @@
   font-weight: 700;
 }
 
+.md_strike {
+  text-decoration: line-through;
+}
+
 .md_hr {
   display: flex;
   align-items: center;

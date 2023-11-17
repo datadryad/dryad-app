@@ -52,7 +52,7 @@ export const commands = {
   strong: toggleStrongCommand,
   emphasis: toggleEmphasisCommand,
   inlineCode: toggleInlineCodeCommand,
-  strike: toggleStrikethroughCommand,
+  strike_through: toggleStrikethroughCommand,
   bullet_list: bulletWrapCommand,
   ordered_list: orderWrapCommand,
   outdent: liftListItemCommand,
