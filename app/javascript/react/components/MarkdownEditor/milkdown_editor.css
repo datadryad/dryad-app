@@ -144,6 +144,7 @@
 .markdown_editor .md_editor-buttons button[disabled] {
   color: #aaa;
   background-color: transparent;
+  text-shadow: none;
 }
 
 .markdown_editor .md_editor-buttons > button:first-child,
