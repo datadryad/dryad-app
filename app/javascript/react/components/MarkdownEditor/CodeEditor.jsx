@@ -40,7 +40,7 @@ const basicSetup = [
 ];
 
 export default function CodeEditor({
-  hidden, content, onChange,
+  hidden, content, onChange, setMDEditor,
 }) {
   const editor = useRef();
 
@@ -66,6 +66,8 @@ export default function CodeEditor({
       state,
       parent: editor.current,
     });
+
+    setMDEditor(view);
 
     return () => {
       view.destroy();

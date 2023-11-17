@@ -5,6 +5,7 @@ import {callCommand} from '@milkdown/utils';
 // eslint-disable-next-line import/no-unresolved
 import {TextSelection} from '@milkdown/prose/state';
 import {commands} from './milkdownCommands';
+import {commands as mdCommands} from './codeKeymap';
 
 const labels = {
   undo: 'Undo',
@@ -176,147 +177,6 @@ function LinkMenu({editor, editorId, active}) {
   );
 }
 
-function Table({editor, editorId, active}) {
-  const [rows, setRows] = useState([1, 2, 3, 4, 5, 6]);
-  const [cols, setCols] = useState([1, 2, 3, 4, 5, 6]);
-  const [colNum, setColNum] = useState(0);
-  const [rowNum, setRowNum] = useState(0);
-
-  const closeMenu = () => {
-    const menu = document.getElementById(`${editorId}tableMenu`);
-    menu.previousElementSibling.setAttribute('aria-expanded', false);
-    menu.hidden = true;
-  };
-
-  const clickListener = (e) => {
-    const element = document.getElementById(`${editorId}tableMenu`).parentElement;
-    if (!element.contains(e.target)) {
-      closeMenu();
-      document.removeEventListener('click', clickListener);
-    }
-  };
-
-  const openMenu = (e) => {
-    e.currentTarget.setAttribute('aria-expanded', true);
-    document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
-    document.addEventListener('click', clickListener);
-  };
-
-  const select = (e) => {
-    const col = Number(e.currentTarget.dataset.col);
-    const row = Number(e.currentTarget.parentElement.dataset.row);
-    document.querySelectorAll('.tableEntry span').forEach((s) => {
-      if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
-    });
-    if (col === cols.length) setCols((c) => [...c, col + 1]);
-    if (row === rows.length) setRows((r) => [...r, row + 1]);
-    setColNum(col);
-    setRowNum(row);
-  };
-
-  const deselect = () => {
-    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
-    setColNum(0);
-    setRowNum(0);
-  };
-
-  const submit = () => {
-    closeMenu();
-    document.removeEventListener('click', clickListener);
-    const view = editor()?.ctx.get(editorViewCtx);
-    editor()?.action(callCommand(commands.table.key, {row: rowNum, col: colNum}));
-    view.focus();
-  };
-
-  return (
-    <div className="tableSelect" role="menuitem">
-      <button
-        type="button"
-        className={active ? 'active' : undefined}
-        aria-label={labels.table}
-        title={labels.table}
-        aria-expanded="false"
-        aria-controls={`${editorId}tableMenu`}
-        onClick={openMenu}
-      >{icons.table}
-      </button>
-      <div
-        className="tableMenu"
-        id={`${editorId}tableMenu`}
-        hidden
-        style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
-      >
-        <div className="screen-reader-only">
-          <input type="text" aria-label="Number of rows" value={rowNum} onChange={(e) => setRowNum(e.target.value)} />
-          <input type="text" aria-label="Number of columns" value={colNum} onChange={(e) => setColNum(e.target.value)} />
-          <button type="button" onClick={submit} aria-label={`Insert ${rowNum} x ${colNum} table`} />
-        </div>
-        <div className="tableEntry">
-          {rows.map((r) => (
-            <div key={`row${r}`} data-row={r}>
-              {cols.map((c) => (
-                <span key={`col${c}`} data-col={c} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden="true" />
-              ))}
-            </div>
-          ))}
-        </div>
-        {(rowNum && colNum) ? <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto'}}>{rowNum} x {colNum}</p> : ''}
-      </div>
-    </div>
-  );
-}
-
-function Heading({editor, active, headingLevel}) {
-  const [selectedItem, setSelectedItem] = React.useState(headingLevel);
-  useEffect(() => {
-    setSelectedItem(headingLevel);
-  }, [headingLevel]);
-  const items = [1, 2, 3, 4, 5, 6, 0];
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getMenuProps,
-    getItemProps,
-    highlightedIndex,
-  } = useSelect({
-    items,
-    selectedItem,
-    onSelectedItemChange: ({selectedItem: newSelectedItem}) => {
-      setSelectedItem(newSelectedItem);
-      editor()?.action(callCommand(commands.heading.key, newSelectedItem));
-      const view = editor()?.ctx.get(editorViewCtx);
-      view.focus();
-    },
-  });
-  return (
-    <div className="headingSelect" role="menuitem">
-      <div
-        className={`headingButton${active ? ' active' : ''}`}
-        role="button"
-        aria-label={labels.heading}
-        title={labels.heading}
-        {...getToggleButtonProps({'aria-labelledby': null})}
-        tabIndex="0"
-      >
-        <span>{selectedItem ? ((selectedItem === 1 && 'Title') || `Heading ${selectedItem}`) : 'Heading'}</span>
-        <i className={`fa ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
-      </div>
-      <ul hidden={!isOpen} {...getMenuProps()} className="headingMenu">
-        {isOpen
-          && items.map((item, index) => (
-            <li
-              className={`h${item} ${highlightedIndex === index ? 'highlighted ' : ''}${selectedItem === item ? 'selected' : ''}`}
-              key={`heading${item}`}
-              {...getItemProps({item, index})}
-            >
-              {(item === 0 && 'Normal text') || (item === 1 && 'Title') || `Heading ${item}`}
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
-}
-
 function List({type, editor, active}) {
   const isInList = (doc, schema, {from, to}) => {
     let found = null;
@@ -381,14 +241,186 @@ function List({type, editor, active}) {
   );
 }
 
+function Table({
+  active, editor, mdEditor, activeEditor, editorId,
+}) {
+  const [rows, setRows] = useState([1, 2, 3, 4, 5, 6]);
+  const [cols, setCols] = useState([1, 2, 3, 4, 5, 6]);
+  const [colNum, setColNum] = useState(0);
+  const [rowNum, setRowNum] = useState(0);
+
+  const closeMenu = () => {
+    const menu = document.getElementById(`${editorId}tableMenu`);
+    menu.previousElementSibling.setAttribute('aria-expanded', false);
+    menu.hidden = true;
+  };
+
+  const clickListener = (e) => {
+    const element = document.getElementById(`${editorId}tableMenu`).parentElement;
+    if (!element.contains(e.target)) {
+      closeMenu();
+      document.removeEventListener('click', clickListener);
+    }
+  };
+
+  const openMenu = (e) => {
+    e.currentTarget.setAttribute('aria-expanded', true);
+    document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
+    document.addEventListener('click', clickListener);
+  };
+
+  const select = (e) => {
+    const col = Number(e.currentTarget.dataset.col);
+    const row = Number(e.currentTarget.parentElement.dataset.row);
+    document.querySelectorAll('.tableEntry span').forEach((s) => {
+      if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
+    });
+    if (col === cols.length) setCols((c) => [...c, col + 1]);
+    if (row === rows.length) setRows((r) => [...r, row + 1]);
+    setColNum(col);
+    setRowNum(row);
+  };
+
+  const deselect = () => {
+    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
+    setColNum(0);
+    setRowNum(0);
+  };
+
+  const submit = () => {
+    closeMenu();
+    document.removeEventListener('click', clickListener);
+    if (activeEditor === 'visual') {
+      const view = editor()?.ctx.get(editorViewCtx);
+      editor()?.action(callCommand(commands.table.key, {row: rowNum, col: colNum}));
+      view.focus();
+    } else if (activeEditor === 'markdown') {
+      mdCommands.table(mdEditor, rowNum, colNum);
+      mdEditor.focus();
+    }
+  };
+
+  return (
+    <div className="tableSelect" role="menuitem">
+      <button
+        type="button"
+        className={active ? 'active' : undefined}
+        aria-label={labels.table}
+        title={labels.table}
+        aria-expanded="false"
+        aria-controls={`${editorId}tableMenu`}
+        onClick={openMenu}
+      >{icons.table}
+      </button>
+      <div
+        className="tableMenu"
+        id={`${editorId}tableMenu`}
+        hidden
+        style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
+      >
+        <div className="screen-reader-only">
+          <input type="text" aria-label="Number of rows" value={rowNum} onChange={(e) => setRowNum(e.target.value)} />
+          <input type="text" aria-label="Number of columns" value={colNum} onChange={(e) => setColNum(e.target.value)} />
+          <button type="button" onClick={submit} aria-label={`Insert ${rowNum} x ${colNum} table`} />
+        </div>
+        <div className="tableEntry">
+          {rows.map((r) => (
+            <div key={`row${r}`} data-row={r}>
+              {cols.map((c) => (
+                <span key={`col${c}`} data-col={c} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden="true" />
+              ))}
+            </div>
+          ))}
+        </div>
+        {(rowNum && colNum) ? <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto'}}>{rowNum} x {colNum}</p> : ''}
+      </div>
+    </div>
+  );
+}
+
+function Heading({
+  active, editor, mdEditor, activeEditor, headingLevel,
+}) {
+  const [selectedItem, setSelectedItem] = React.useState(headingLevel);
+  useEffect(() => {
+    setSelectedItem(headingLevel);
+  }, [headingLevel]);
+  const items = [1, 2, 3, 4, 5, 6, 0];
+  const {
+    isOpen,
+    getToggleButtonProps,
+    getMenuProps,
+    getItemProps,
+    highlightedIndex,
+  } = useSelect({
+    items,
+    selectedItem,
+    onSelectedItemChange: ({selectedItem: newSelectedItem}) => {
+      setSelectedItem(newSelectedItem);
+      if (activeEditor === 'visual') {
+        editor()?.action(callCommand(commands.heading.key, newSelectedItem));
+        const view = editor()?.ctx.get(editorViewCtx);
+        view.focus();
+      } else if (activeEditor === 'markdown') {
+        mdCommands[`heading${newSelectedItem}`](mdEditor);
+        mdEditor.focus();
+      }
+    },
+  });
+  return (
+    <div className="headingSelect" role="menuitem">
+      <div
+        className={`headingButton${active ? ' active' : ''}`}
+        role="button"
+        aria-label={labels.heading}
+        title={labels.heading}
+        {...getToggleButtonProps({'aria-labelledby': null})}
+        tabIndex="0"
+      >
+        <span>{selectedItem ? ((selectedItem === 1 && 'Title') || `Heading ${selectedItem}`) : 'Heading'}</span>
+        <i className={`fa ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
+      </div>
+      <ul hidden={!isOpen} {...getMenuProps()} className="headingMenu">
+        {isOpen
+          && items.map((item, index) => (
+            <li
+              className={`h${item} ${highlightedIndex === index ? 'highlighted ' : ''}${selectedItem === item ? 'selected' : ''}`}
+              key={`heading${item}`}
+              {...getItemProps({item, index})}
+            >
+              {(item === 0 && 'Normal text') || (item === 1 && 'Title') || `Heading ${item}`}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+}
+
 function Button({
-  type, active, disabled, editor, editorId, headingLevel,
+  type, active, disabled, editorId, activeEditor, editor, mdEditor, headingLevel,
 }) {
   if (type === 'spacer') return <span className="spacer" />;
-  if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
-  if (type === 'table') return <Table active={active} editor={editor} editorId={editorId} />;
-  if (type === 'heading') return <Heading active={active} editor={editor} headingLevel={headingLevel} />;
-  if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+  if (activeEditor === 'visual') {
+    if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
+    if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+  }
+  const sharedProps = {
+    active, editor, mdEditor, activeEditor,
+  };
+  if (type === 'table') return <Table {...sharedProps} editorId={editorId} />;
+  if (type === 'heading') return <Heading {...sharedProps} headingLevel={headingLevel} />;
+
+  const callEditorCommand = () => {
+    if (activeEditor === 'visual') {
+      editor()?.action(callCommand(commands[type].key));
+      const view = editor()?.ctx.get(editorViewCtx);
+      view.focus();
+    } else if (activeEditor === 'markdown') {
+      mdCommands[type](mdEditor);
+      mdEditor.focus();
+    }
+  };
+
   return (
     <button
       type="button"
@@ -397,11 +429,7 @@ function Button({
       title={labels[type]}
       aria-label={labels[type]}
       role="menuitem"
-      onClick={() => {
-        editor()?.action(callCommand(commands[type].key));
-        const view = editor()?.ctx.get(editorViewCtx);
-        view.focus();
-      }}
+      onClick={callEditorCommand}
     >{icons[type]}
     </button>
   );
