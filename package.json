@@ -11,7 +11,8 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy"
+      "\\.css$": "identity-obj-proxy",
+      "axios": "axios/dist/node/axios.cjs"
     },
     "transform": {
       "\\.jsx?$": "babel-jest"
@@ -46,7 +47,7 @@
     "@toast-ui/editor": "https://github.com/ahamelers/tui.editor.git#editor",
     "@toast-ui/react-editor": "^3.2.3",
     "aws-sdk": "^2.1060.0",
-    "axios": "^0.25.0",
+    "axios": "^1.6.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",
