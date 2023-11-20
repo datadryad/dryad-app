@@ -4,6 +4,33 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
+const paste_preprocess = (_editor, args) => {
+  const {content} = args;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, 'text/html');
+  doc.body.querySelectorAll('*').forEach((el) => {
+    const b = ['bold', '700'].includes(el.style.fontWeight);
+    const em = el.style.fontStyle === 'italic';
+    const sup = el.style.verticalAlign === 'super';
+    const sub = el.style.verticalAlign === 'sub';
+    [...el.attributes].forEach((attr) => attr.name !== 'href' && el.removeAttribute(attr.name));
+    if (b) el.style.fontWeight = 700;
+    if (em) el.style.fontStyle = 'italic';
+    if (sup) {
+      const supp = document.createElement('sup');
+      sup.innerHTML = el.innerHTML;
+      el.replaceWith(supp);
+    } else if (sub) {
+      const subb = document.createElement('sub');
+      subb.innerHTML = el.innerHTML;
+      el.replaceWith(subb);
+    }
+  });
+  args.content = doc.body.innerHTML;
+};
+
+const curatorTools = '| code strikethrough forecolor backcolor';
+
 export default function Description({
   dcsDescription, path, mceKey, mceLabel, isCurator,
 }) {
@@ -54,15 +81,15 @@ export default function Description({
           width: '100%',
           menubar: false,
           plugins: 'advlist anchor autolink charmap code directionality help lists link table',
-          toolbar: 'help | blocks | '
-                  + 'bold italic strikethrough forecolor backcolor removeformat | alignleft aligncenter '
-                  + 'alignright | bullist numlist outdent indent | '
-                  + 'table link hr blockquote | superscript subscript charmap | undo redo | fontsize | ltr rtl '
-                  + `${(isCurator ? 'code' : '')}`,
+          toolbar: 'help | undo redo | blocks paste | bold italic superscript subscript removeformat '
+                  + '| table link charmap | bullist numlist outdent indent | ltr rtl '
+                  + `${(isCurator ? curatorTools : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           branding: false,
+          paste_block_drop: true,
+          paste_preprocess,
         }}
         onBlur={() => { submit(); }}
       />
