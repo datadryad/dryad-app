@@ -48,8 +48,8 @@ We require:
 
 We recommend:
 
-* **Funding Information**: Name of the funding organization that supported the creation of the resource, including applicable grant number(s). Each grant and associated award number should be input separately. Options in the drop-down menu are populated by the [Crossref Funder Registry](https://search.crossref.org/funding).
-* **Research facility**: Where the research was conducted, if different from your current affiliation (e.g., a field station).
+* **Funding Information**: Name of the funding organization that supported the creation of the resource, including applicable grant number(s). Each grant and associated award number should be input separately. Options in the drop-down menu are populated from the [Research Organization Registry (ROR)](http://ror.org).
+* **Research facility**: Where the research was conducted, if different from your current affiliation (e.g., a field station). Options in the drop-down menu are populated from the [Research Organization Registry (ROR)](http://ror.org).
 * **Methods**: Any methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed).
 * **Related works**: Use this field to indicate resources, other than the primary article, that are associated with the data. Examples include related datasets, preprints, etc.
 
