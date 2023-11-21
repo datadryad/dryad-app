@@ -1,6 +1,7 @@
-import React, {useRef} from 'react';
+import React, {useRef, useCallback} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
+import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
@@ -50,14 +51,14 @@ const curatorTools = '| code strikethrough forecolor backcolor';
 export default function Description({
   dcsDescription, path, mceKey, mceLabel, isCurator,
 }) {
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const editorRef = useRef(null);
 
   const submit = () => {
     if (editorRef.current) {
       const subJson = {
-        authenticity_token: csrf,
+        authenticity_token,
         description: {
           description: editorRef.current.getContent(),
           resource_id: dcsDescription.resource_id,
@@ -74,6 +75,8 @@ export default function Description({
         });
     }
   };
+
+  const checkSubmit = useCallback(debounce(submit, 900), []);
 
   // remove registration nag https://medium.com/@petehouston/remove-tinymce-warning-notification-on-cloud-api-key-70a4a352b8b0
 
@@ -107,7 +110,8 @@ export default function Description({
           paste_block_drop: true,
           paste_preprocess,
         }}
-        onBlur={() => { submit(); }}
+        onBlur={submit}
+        onEditorChange={checkSubmit}
       />
       <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
     </div>
