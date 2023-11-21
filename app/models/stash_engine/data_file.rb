@@ -98,7 +98,7 @@ module StashEngine
     # the permanent storage URL, not the staged storage URL
     def s3_permanent_presigned_url
       Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-        .presigned_download_url(s3_key: s3_permanent_path)
+        .presigned_download_url(s3_key: s3_permanent_path, filename: upload_file_name)
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
