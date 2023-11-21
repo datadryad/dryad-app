@@ -15,19 +15,30 @@ module.exports = function(api) {
     )
   }
 
-  return {
-    presets: [
-      isTestEnv && [
+  let presets;
+
+  if (isTestEnv) {
+    presets = [
+      [
         '@babel/preset-env',
         {
           targets: {
             node: 'current'
           },
           modules: 'commonjs'
-        },
-        '@babel/preset-react'
+        }
       ],
-      (isProductionEnv || isDevelopmentEnv) && [
+      [
+        '@babel/preset-react',
+        {
+          development: true,
+          useBuiltIns: true
+        }
+      ]
+    ]
+  } else if (isProductionEnv || isDevelopmentEnv) {
+    presets = [
+      [
         '@babel/preset-env',
         {
           forceAllTransforms: true,
@@ -40,36 +51,40 @@ module.exports = function(api) {
       [
         '@babel/preset-react',
         {
-          development: isDevelopmentEnv || isTestEnv,
+          development: isDevelopmentEnv,
           useBuiltIns: true
         }
       ]
-    ].filter(Boolean),
+    ]
+  }
+
+  return {
+    presets,
     plugins: [
       'babel-plugin-macros',
       '@babel/plugin-syntax-dynamic-import',
       isTestEnv && 'babel-plugin-dynamic-import-node',
       '@babel/plugin-transform-destructuring',
       [
-        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-transform-class-properties',
         {
           loose: true
         }
       ],
       [
-        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/plugin-transform-object-rest-spread',
         {
           useBuiltIns: true
         }
       ],
       [
-        '@babel/plugin-proposal-private-methods',
+        '@babel/plugin-transform-private-methods',
         {
           loose: true
         }
       ],
       [
-        '@babel/plugin-proposal-private-property-in-object',
+        '@babel/plugin-transform-private-property-in-object',
         {
           loose: true
         }
