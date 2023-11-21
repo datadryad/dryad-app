@@ -52,6 +52,7 @@ We are also pleased to partner with the following organizations and initiatives,
 * **Persistent identifiers for data publications:** [DataCite](https://datacite.org/)
 * **Standardized usage metrics for data:** [Make Data Count](https://makedatacount.org/)
 * **Data submission enhancements**: [Zenodo](https://zenodo.org/) (Concurrent submission of software and supplemental information); [Frictionless Data](https://frictionlessdata.io/) (Tabular data quality validation); [rSpace](https://www.researchspace.com/) (Electronic lab notebook integration) 
+* **Single sign-on integration**: [InCommon](https://incommon.org/)
 * **Presenting research data alongside associated research articles**: [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/) ([National Library of Medicine](https://www.nlm.nih.gov/)), [Europe PMC](https://europepmc.org/)
 * **Community engagement and standards development**: [Data Curation Network](https://datacurationnetwork.org/), [Research Data Alliance (RDA)](https://www.rd-alliance.org/), [DataCite](https://datacite.org/), [Principles of Open Scholarly Infrastructure](https://openscholarlyinfrastructure.org/)
 * **Data publishing and generalist repository alignment:** [National Institutes of Health Generalist Repository Ecosystem Initiative](https://datascience.nih.gov/news/nih-office-of-data-science-strategy-announces-new-initiative-to-improve-data-access) (GREI)
