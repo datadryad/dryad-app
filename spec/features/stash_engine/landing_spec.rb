@@ -42,38 +42,39 @@ RSpec.feature 'Landing', type: :feature, js: true do
     expect(page).to have_text(/\d* downloads/)
   end
 
-  it 'shows popup for download assembly progress and allows it to close' do
+  # we don't do a popup for this anymore, just assemble our own zip package in JS
+  xit 'shows popup for download in progress' do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
-    stub_202_status
     visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download dataset'
-    expect(page).to have_text('Preparing Download')
-    click_on 'cancel_dialog'
-    expect(page).not_to have_text('Preparing Download')
+    click_on 'Download full dataset'
+    stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+      .to_return(status: 200, body: '', headers: {})
+    expect(page).to have_text('Download in progress')
   end
 
-  it "shows popup telling people of problems if download assembly times out but status doesn't" do
+  # packages are now assembled on the client with javascript, remaining 2 tests not needed
+  xit "shows popup telling people of problems if download assembly times out but status doesn't" do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
     stub_404_status # the status of the token (not found)
     stub_408_assemble # the status for assembly
     visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download dataset'
+    click_on 'Download full dataset'
     expect(page).to have_text('There was a problem assembling your download request')
     click_on 'cancel_dialog'
     expect(page).not_to have_text('There was a problem assembling your download request')
   end
 
-  it 'shows popup telling people of problems if token status times out' do
+  xit 'shows popup telling people of problems if token status times out' do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
     stub_408_status # the status for assembly
     visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download dataset'
+    click_on 'Download full dataset'
     expect(page).to have_text('There was a problem assembling your download request')
     click_on 'cancel_dialog'
     expect(page).not_to have_text('There was a problem assembling your download request')
