@@ -62,7 +62,11 @@ export default function ReadMe({
 
   return (
     <>
-      <h1 className="o-heading__level1" style={{marginBottom: '1rem'}} id="readme-label">Prepare README file</h1>
+      <div className="c-autosave-header">
+        <h1 className="o-heading__level1" style={{marginBottom: '1rem'}} id="readme-label">Prepare README file</h1>
+        <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
+        <div className="c-autosave__text saved_text" hidden>All progress saved</div>
+      </div>
       <div className="o-admin-columns">
         <div className="o-admin-left" style={{minWidth: '400px', flexGrow: 2}}>
           <p style={{marginTop: 0}}>
