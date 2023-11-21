@@ -524,9 +524,11 @@ class UploadFiles extends React.Component {
     } = this.state;
     return (
       <div className="c-upload">
-        <h1 className="o-heading__level1">
-          Upload your files
-        </h1>
+        <div className="c-autosave-header">
+          <h1 className="o-heading__level1">Upload your files</h1>
+          <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
+          <div className="c-autosave__text saved_text" hidden>All progress saved</div>
+        </div>
         <UploadSelect changed={this.addFilesHandler} clickedModal={this.showModalHandler} />
         {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
         {chosenFiles.length > 0 ? (

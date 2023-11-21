@@ -3,144 +3,48 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {Editor} from '@toast-ui/react-editor';
 import {debounce} from 'lodash';
+import MarkdownEditor from '../components/MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../lib/utils';
-import subsubPlugin from '../../lib/subsup_plugin';
-
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '../../lib/toastui-editor.css';
 
 export default function ReadMe({
   dcsDescription, title, doi, updatePath, fileContent,
 }) {
   const editorRef = useRef();
   const [initialValue, setInitialValue] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-  const [status, setStatus] = useState('');
+  const [replaceValue, setReplaceValue] = useState('');
 
-  const saveDescription = () => {
+  const saveDescription = (markdown) => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    if (initialValue && initialValue !== editorRef.current.getInstance().getMarkdown()) {
-      const data = {
-        authenticity_token,
-        description: {
-          description: editorRef.current.getInstance().getMarkdown(),
-          resource_id: dcsDescription.resource_id,
-          id: dcsDescription.id,
-        },
-      };
-      showSavingMsg();
-      axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
-        .then(() => {
-          showSavedMsg();
-        });
-    }
+    const data = {
+      authenticity_token,
+      description: {
+        description: markdown,
+        resource_id: dcsDescription.resource_id,
+        id: dcsDescription.id,
+      },
+    };
+    showSavingMsg();
+    axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+      .then(() => {
+        showSavedMsg();
+      });
   };
 
-  const checkDescription = useCallback(debounce(saveDescription, 4000), []);
+  const checkDescription = useCallback(debounce(saveDescription, 900), []);
 
   const importFile = (e) => {
     const [file] = e.target.files;
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       const {result} = reader;
-      editorRef.current.getInstance().setMarkdown(result);
+      // Set markdown!
+      setReplaceValue(result);
     });
     if (file) reader.readAsText(file);
     // allow replacement uploads
     e.target.value = null;
   };
-
-  const menuFocus = (e) => {
-    setStatus(`${e.currentTarget.getAttribute('aria-label')} selected from formatting menu.
-      Use down to expand options. Use left and right to move between menus. Exit menu with tab.`);
-  };
-
-  const menuEnter = (e) => {
-    switch (e.keyCode) {
-    case 37: // left
-      if (e.target.previousElementSibling) {
-        e.target.setAttribute('tabindex', -1);
-        e.target.previousElementSibling.setAttribute('tabindex', 0);
-        e.target.previousElementSibling.focus();
-      }
-      break;
-    case 38: // up
-      if (e.target.getAttribute('role', 'menuitem')) {
-        e.target.setAttribute('tabindex', -1);
-        e.target.parentElement.setAttribute('tabindex', 0);
-        e.target.parentElement.setAttribute('aria-expanded', false);
-        e.target.parentElement.focus();
-      }
-      break;
-    case 39: // right
-      if (e.target.nextElementSibling) {
-        e.target.setAttribute('tabindex', -1);
-        e.target.nextElementSibling.setAttribute('tabindex', 0);
-        e.target.nextElementSibling.focus();
-      }
-      break;
-    case 40: // down
-      e.target.setAttribute('aria-expanded', true);
-      e.target.firstElementChild.setAttribute('tabindex', 0);
-      e.target.firstElementChild.focus();
-      break;
-    default:
-    }
-  };
-
-  const buttonFocus = (e) => {
-    setStatus(`Use enter to engage ${e.currentTarget.getAttribute('aria-label')}.
-      Use left and right to move between options. Use up to collapse options. Exit formatting menu with tab.`);
-  };
-
-  const tabClick = (e) => {
-    if ([49, 13].includes(e.keyCode)) e.currentTarget.click();
-  };
-
-  // Improve accessibility
-  useEffect(() => {
-    if (editorRef.current) {
-      setInitialValue(editorRef.current.getInstance().getMarkdown());
-      const rootEl = editorRef.current.getRootElement();
-      rootEl.querySelectorAll('*[contenteditable]').forEach((text) => {
-        text.setAttribute('role', 'textbox');
-        text.setAttribute('tabindex', 0);
-        text.setAttribute('aria-labelledby', 'readme-label');
-      });
-      const toolbar = rootEl.querySelector('.toastui-editor-toolbar');
-      toolbar.setAttribute('role', 'menubar');
-      toolbar.setAttribute('aria-label', 'Formatting menu');
-      toolbar.setAttribute('aria-describedby', 'menu-status');
-      toolbar.querySelectorAll('.toastui-editor-toolbar-group').forEach((menu, i) => {
-        const labels = ['Text style', 'Inserts', 'Lists &amp; indents', 'Code &amp; Tables'];
-        menu.setAttribute('role', 'menu');
-        menu.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-label', labels[i]);
-        menu.setAttribute('tabindex', i === 0 ? 0 : -1);
-        menu.querySelectorAll('button').forEach((button) => {
-          button.setAttribute('role', 'menuitem');
-          button.setAttribute('tabindex', -1);
-          button.addEventListener('focus', buttonFocus);
-        });
-        menu.addEventListener('focus', menuFocus);
-        menu.addEventListener('blur', () => setStatus(''));
-        menu.addEventListener('keydown', menuEnter);
-      });
-      rootEl.querySelectorAll('.toastui-editor-mode-switch .tab-item').forEach((tab) => {
-        tab.setAttribute('role', 'button');
-        tab.setAttribute('aria-label', `Switch editor to ${tab.innerText} mode`);
-        tab.setAttribute('tabindex', tab.classList.contains('active') ? -1 : 0);
-        tab.addEventListener('keydown', tabClick);
-        tab.addEventListener('click', (e) => {
-          const sibling = e.target.nextElementSibling ? e.target.nextElementSibling : e.target.previousElementSibling;
-          e.target.setAttribute('tabindex', -1);
-          sibling.setAttribute('tabindex', 0);
-        });
-      });
-    }
-  }, [loaded]);
 
   useEffect(async () => {
     if (dcsDescription.description) {
@@ -158,7 +62,11 @@ export default function ReadMe({
 
   return (
     <>
-      <h1 className="o-heading__level1" style={{marginBottom: '1rem'}} id="readme-label">Prepare README file</h1>
+      <div className="c-autosave-header">
+        <h1 className="o-heading__level1" style={{marginBottom: '1rem'}} id="readme-label">Prepare README file</h1>
+        <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
+        <div className="c-autosave__text saved_text" hidden>All progress saved</div>
+      </div>
       <div className="o-admin-columns">
         <div className="o-admin-left" style={{minWidth: '400px', flexGrow: 2}}>
           <p style={{marginTop: 0}}>
@@ -201,33 +109,19 @@ export default function ReadMe({
         </div>
       </div>
       {initialValue ? (
-        <form id="readme_editor">
-          <Editor
-            ref={editorRef}
-            autofocus={false}
-            initialEditType="wysiwyg"
-            initialValue={initialValue}
-            height="95vh"
-            toolbarItems={[
-              ['heading', 'bold', 'italic', 'strike'],
-              ['hr', 'quote', 'link'],
-              ['ul', 'ol', 'indent', 'outdent'],
-              ['table', 'code', 'codeblock'],
-            ]}
-            plugins={[subsubPlugin]}
-            useCommandShortcut
-            onLoad={() => setLoaded(true)}
-            onChange={checkDescription}
-            onBlur={saveDescription}
-          />
-        </form>
+        <MarkdownEditor
+          ref={editorRef}
+          id="readme_editor"
+          initialValue={initialValue}
+          replaceValue={replaceValue}
+          onChange={checkDescription}
+        />
       ) : (
         <p style={{display: 'flex', alignItems: 'center'}}>
           <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
           Loading README template
         </p>
       )}
-      <p className="screen-reader-only" role="status" aria-live="polite" id="menu-status">{status}</p>
     </>
   );
 }
