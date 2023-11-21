@@ -4,28 +4,44 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
+/* eslint-disable no-param-reassign */
+const removeStyle = (el) => {
+  const b = ['bold', '700'].includes(el.style.fontWeight);
+  const i = el.style.fontStyle === 'italic';
+  const sup = el.style.verticalAlign === 'super';
+  const sub = el.style.verticalAlign === 'sub';
+  [...el.attributes].forEach((attr) => attr.name !== 'href' && el.removeAttribute(attr.name));
+  if (b) {
+    const strong = document.createElement('strong');
+    strong.innerHTML = el.outerHTML;
+    el.replaceWith(strong);
+    el = strong;
+  }
+  if (i) {
+    const em = document.createElement('em');
+    em.innerHTML = el.outerHTML;
+    el.replaceWith(em);
+    el = em;
+  }
+  if (sup) {
+    const supEl = document.createElement('sup');
+    supEl.innerHTML = el.outerHTML;
+    el.replaceWith(supEl);
+  } else if (sub) {
+    const subEl = document.createElement('sub');
+    subEl.innerHTML = el.outerHTML;
+    el.replaceWith(subEl);
+  }
+  el.querySelectorAll('*').forEach((childEl) => removeStyle(childEl));
+};
+/* eslint-enable no-param-reassign */
+
 const paste_preprocess = (_editor, args) => {
+  // remove most style, replace important styles with semantic tags
   const {content} = args;
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'text/html');
-  doc.body.querySelectorAll('*').forEach((el) => {
-    const b = ['bold', '700'].includes(el.style.fontWeight);
-    const em = el.style.fontStyle === 'italic';
-    const sup = el.style.verticalAlign === 'super';
-    const sub = el.style.verticalAlign === 'sub';
-    [...el.attributes].forEach((attr) => attr.name !== 'href' && el.removeAttribute(attr.name));
-    if (b) el.style.fontWeight = 700;
-    if (em) el.style.fontStyle = 'italic';
-    if (sup) {
-      const supp = document.createElement('sup');
-      sup.innerHTML = el.innerHTML;
-      el.replaceWith(supp);
-    } else if (sub) {
-      const subb = document.createElement('sub');
-      subb.innerHTML = el.innerHTML;
-      el.replaceWith(subb);
-    }
-  });
+  doc.body.querySelectorAll('*').forEach((el) => removeStyle(el));
   args.content = doc.body.innerHTML;
 };
 
