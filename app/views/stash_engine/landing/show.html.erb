@@ -18,6 +18,13 @@
 				trackMetric(DataCiteTracker.MetricType.Download, { doi: '<%= @resource&.identifier&.identifier %>' });
 			});
 		});
+
+		const downloadFullLinks = document.querySelectorAll('button.js-download');
+		downloadFullLinks.forEach((link) => {
+			link.addEventListener('click', (e) => {
+				trackMetric(DataCiteTracker.MetricType.Download, { doi: '<%= @resource&.identifier&.identifier %>' });
+			});
+		});
 	});
 </script>
 <div class="c-columns">

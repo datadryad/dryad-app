@@ -47,6 +47,11 @@ module StashEngine
         format.json do
           # input is resource_id and output is json with keys size, filename and url for each entry
           @resource = Resource.find(params[:resource_id])
+
+          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210 which needs adding to our
+          # Counter log processor
+          StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
+
           info = @resource.data_files.present_files.map do |f|
             {
               size: f.upload_file_size,
