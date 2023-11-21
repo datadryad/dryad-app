@@ -12,11 +12,11 @@ module StashEngine
       c.helper_method \
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
-          formatted_date formatted_datetime formatted_html5_date local_time default_date
+          formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date
           current_tenant current_user
           field_suffix shorten_linked_url english_list
           display_id display_id_plain display_author_orcid
-          display_br link_urls!
+          display_br link_urls! zip_downloads add_download_authorization
         ]
     end
 
@@ -77,6 +77,13 @@ module StashEngine
       local_time(t)&.strftime('%Y-%m-%d')
     end
 
+    def minimal_date(t)
+      return '00000000' if t.blank?
+
+      t = t.to_time if t.instance_of?(String)
+      local_time(t)&.strftime('%Y%m%d')
+    end
+
     def local_time(t)
       tz = TZInfo::Timezone.get(DEFAULT_TZ)
       tz.utc_to_local(t)
@@ -105,6 +112,15 @@ module StashEngine
       # without the StashEngine namespace in the following line, Rails does something janky with dynamic reloading for
       # development environments and it sometimes finds no users
       @current_user ||= StashEngine::User.find_by_id(session[:user_id]) if session[:user_id]
+    end
+
+    def zip_downloads
+      session[:downloads] ||= []
+    end
+
+    def add_download_authorization(resource_id)
+      zip_downloads << resource_id
+      zip_downloads.shift if zip_downloads.length > 5 # only track the last five authorized downloads in the session
     end
 
     def clear_user

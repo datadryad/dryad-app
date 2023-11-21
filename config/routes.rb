@@ -200,6 +200,7 @@ Rails.application.routes.draw do
     get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
     
     # download related
+    match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]
     match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'

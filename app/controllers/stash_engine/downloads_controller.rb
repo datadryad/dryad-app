@@ -37,7 +37,30 @@ module StashEngine
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
 
-    # for downloading the full version
+    def zip_assembly_info
+      # add some code here to enforce security and this request was previously OKed (from the session)
+      unless session[:downloads].present? && session[:downloads].include?(params[:resource_id].to_i)
+        return render json: ['unauthorized'], status: :unauthorized
+      end
+
+      respond_to do |format|
+        format.json do
+          # input is resource_id and output is json with keys size, filename and url for each entry
+          @resource = Resource.find(params[:resource_id])
+          info = @resource.data_files.present_files.map do |f|
+            {
+              size: f.upload_file_size,
+              filename: f.upload_file_name,
+              url: f.s3_permanent_presigned_url
+            }
+          end
+
+          render json: info
+        end
+      end
+    end
+
+    # for downloading the full version -- the old merritt way
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
