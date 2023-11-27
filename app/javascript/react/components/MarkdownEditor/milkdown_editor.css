@@ -271,10 +271,15 @@
   background-color: #98cae2;
 }
 
+.markdown_editor .milkdown {
+  height: 100%;
+}
+
 .markdown_editor .milkdown .ProseMirror.editor,
 .markdown_editor .cm-editor {
   padding: 1.5rem 1rem;
   font-size: 1rem;
+  min-height: 100%;
 }
 
 .milkdown, .headingMenu li {
@@ -285,6 +290,7 @@
 .cm-editor .cm-scroller {
   font-family: 'Noto Sans Mono', 'Consolas', monospace;
   font-size: .95em;
+  overflow: visible;
 }
 
 .milkdown h1,
