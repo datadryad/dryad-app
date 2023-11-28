@@ -21,7 +21,7 @@
     <ul class="c-file-group__list" style="margin-left: 0; font-size: 1rem;">
       <% @resource.current_file_uploads.each do |fu| %>
         <li>
-          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id),
+          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id, share: params[:id]),
                     title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
           <span><%= filesize(fu.upload_file_size) %>
           <% if fu.upload_file_name.ends_with?('csv') %>
