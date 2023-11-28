@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Editor, rootCtx, defaultValueCtx, schemaCtx, serializerCtx, editorViewCtx, remarkStringifyOptionsCtx, rootDOMCtx,
+  Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
 } from '@milkdown/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -12,6 +12,7 @@ import {trailing} from '@milkdown/plugin-trailing';
 import {commonmark} from '@milkdown/preset-commonmark';
 import {gfm} from '@milkdown/preset-gfm';
 import {replaceAll} from '@milkdown/utils';
+import {ParserState} from '@milkdown/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
@@ -31,15 +32,12 @@ const allowSpans = [
   'listItem',
 ];
 
-function MilkdownCore({
-  initialValue, onChange, setActive, setLevel,
-}) {
+function MilkdownCore({onChange, setActive, setLevel}) {
   useEditor((root) => Editor
     .make()
     .config(dryadConfig)
     .config((ctx) => {
       ctx.set(rootCtx, root);
-      ctx.set(defaultValueCtx, initialValue);
       ctx.set(remarkStringifyOptionsCtx, {
         fences: true,
         rule: '-',
@@ -94,20 +92,39 @@ function MilkdownEditor({
   const [editType, setEditType] = useState('visual');
   const [active, setActive] = useState([]);
   const [headingLevel, setHeadingLevel] = useState(0);
+  const [parseError, setParseError] = useState(false);
+  const [editorVal, setEditorVal] = useState(0);
   const [md, setMD] = useState(initialValue);
   const [mdEditor, setMDEditor] = useState(null);
 
   const activeList = () => active.some((a) => a && a.includes('list'));
 
   const saveMarkdown = (markdown) => {
-    setMD(markdown);
     onChange(markdown);
+    setEditorVal(markdown);
   };
 
   const getMarkdown = () => editor()?.action((ctx) => {
     const editorView = ctx.get(editorViewCtx);
     const serializer = ctx.get(serializerCtx);
-    return serializer(editorView.state.doc);
+    setMD(serializer(editorView.state.doc));
+  });
+
+  const testMarkdown = (markdown) => editor()?.action((ctx) => {
+    setParseError(false);
+    const schema = ctx.get(schemaCtx);
+    const remark = ctx.get(remarkCtx);
+    const parser = ParserState.create(schema, remark);
+    try {
+      parser(markdown);
+      editor()?.action(replaceAll(markdown));
+      setEditorVal(markdown);
+    } catch (e) {
+      setParseError(true);
+      setEditType('markdown');
+      setMD(markdown);
+      saveMarkdown(markdown);
+    }
   });
 
   useEffect(() => {
@@ -116,17 +133,22 @@ function MilkdownEditor({
       if (editType === 'markdown') {
         setActive([]);
         visEditor.hidden = true;
+        if (!parseError) getMarkdown();
       } else {
         setActive([]);
         visEditor.removeAttribute('hidden');
-        editor()?.action(replaceAll(md));
+        testMarkdown(editorVal);
       }
     });
   }, [editType]);
 
   useEffect(() => {
-    if (editor && replaceValue) editor()?.action(replaceAll(replaceValue));
-  }, [editor, replaceValue]);
+    if (!loading && replaceValue) testMarkdown(replaceValue);
+  }, [loading, replaceValue]);
+
+  useEffect(() => {
+    if (!loading && initialValue) testMarkdown(initialValue);
+  }, [loading, initialValue]);
 
   return (
     <>
@@ -154,9 +176,24 @@ function MilkdownEditor({
         </div>
       )}
       <div className="md_editor_textarea">
-        <MilkdownCore initialValue={initialValue} onChange={onChange} setActive={setActive} setLevel={setHeadingLevel} />
+        {parseError && (
+          <div className="js-alert c-alert--error" role="alert">
+            <div className="c-alert__text">
+              The content cannot be shown as rich text. Misplaced HTML elements such as{' '}
+              <code style={{backgroundColor: '#555'}}>&lt;br&gt;</code>
+              {' '}may be disrupting the display of markdown styles.
+            </div>
+            <button
+              aria-label="close"
+              type="button"
+              className="js-alert__close o-button__close c-alert__close flash_button"
+              onClick={() => setParseError(false)}
+            />
+          </div>
+        )}
+        <MilkdownCore onChange={onChange} setActive={setActive} setLevel={setHeadingLevel} />
         <CodeEditor
-          content={getMarkdown()}
+          content={md}
           onChange={saveMarkdown}
           hidden={editType === 'visual'}
           setMDEditor={setMDEditor}

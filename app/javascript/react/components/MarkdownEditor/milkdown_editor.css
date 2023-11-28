@@ -17,7 +17,7 @@
   overflow: auto;
 }
 
-.md_editor_textarea > div {
+.md_editor_textarea > div:not(.c-alert--error) {
   overflow: auto;
   position: absolute;
   bottom: 0; left: 0;
@@ -28,6 +28,17 @@
   .md_editor_textarea {
     height: 75vh;
   }
+}
+
+.markdown_editor .c-alert--error {
+  position: absolute;
+  top: 5px; right: 15px;
+  box-shadow: 0px 2px 3px 1px #ddd;
+  margin-right: 3px;
+  z-index: 5;
+  width: 600px;
+  font-size: 1rem;
+  max-width: 85vw;
 }
 
 .markdown_editor .md_editor-buttons {
@@ -176,7 +187,6 @@
   border: thin solid #d0d0d0;
   border-top: none;
   box-shadow: 0px 2px 3px 1px #ccc;
-  max-width: 100vw;
 }
 
 .markdown_editor .md_editor-buttons .headingMenu:focus {
