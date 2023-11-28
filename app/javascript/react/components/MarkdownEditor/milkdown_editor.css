@@ -38,6 +38,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   grid-row-gap: 3px;
+  position: relative;
 }
 
 .markdown_editor .md_editor-buttons .md_editor-toolbar {
@@ -147,9 +148,10 @@
   text-shadow: none;
 }
 
-.markdown_editor .md_editor-buttons > button:first-child,
-.markdown_editor .md_editor-buttons .headingSelect:first-child,
-.markdown_editor .md_editor-buttons .headingSelect:first-child .headingButton {
+.markdown_editor .md_editor-toolbar,
+.markdown_editor .md_editor-toolbar > button:first-child,
+.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child,
+.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child > *:first-child {
   border-top-left-radius: 5px;
   border-left: none;
   margin-left: 0;
@@ -196,8 +198,31 @@
 }
 
 .markdown_editor .md_editor-buttons .tableMenu {
-  padding: 1rem;
+  padding: 1rem 1rem 0;
   line-height: 0;
+  max-width: 850px;
+  max-height: 63vh;
+  overflow: auto;
+}
+
+@media screen and (max-width: 1120px) {
+  .markdown_editor .md_editor-buttons .linkSelect,
+  .markdown_editor .md_editor-buttons .tableSelect {
+    position: static;
+  }
+  .markdown_editor .md_editor-buttons .linkMenu,
+  .markdown_editor .md_editor-buttons .tableMenu {
+    min-width: 328px;
+    max-width: 100%;
+    top: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    left: auto; right: 0;
+    min-width: 0;
+  }
 }
 
 .markdown_editor .md_editor-buttons .tableEntry {
