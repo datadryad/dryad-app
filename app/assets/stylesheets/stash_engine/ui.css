@@ -143,12 +143,9 @@ Selector pattern using above mixin:
  *  `em` units.
  */
 html {
-  font-family: sans-serif;
-  /* 1 */
-  -ms-text-size-adjust: 100%;
-  /* 2 */
-  -webkit-text-size-adjust: 100%;
-  /* 2 */
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /**
@@ -190,10 +187,8 @@ audio,
 canvas,
 progress,
 video {
-  display: inline-block;
-  /* 1 */
-  vertical-align: baseline;
-  /* 2 */
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
 }
 
 /**
@@ -370,12 +365,9 @@ input,
 optgroup,
 select,
 textarea {
-  color: inherit;
-  /* 1 */
-  font: inherit;
-  /* 2 */
-  margin: 0;
-  /* 3 */
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
 }
 
 /**
@@ -409,10 +401,8 @@ button,
 html input[type=button],
 input[type=reset],
 input[type=submit] {
-  -webkit-appearance: button;
-  /* 2 */
-  cursor: pointer;
-  /* 3 */
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
 }
 
 /**
@@ -448,10 +438,8 @@ input {
 input[type=checkbox],
 input[type=radio] {
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  /* 1 */
-  padding: 0;
-  /* 2 */
+          box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -469,11 +457,9 @@ input[type=number]::-webkit-outer-spin-button {
  * 2. Address `box-sizing` set to `border-box` in Safari and Chrome.
  */
 input[type=search] {
-  -webkit-appearance: textfield;
-  /* 1 */
+  -webkit-appearance: textfield; /* 1 */
   -webkit-box-sizing: content-box;
-          box-sizing: content-box;
-  /* 2 */
+          box-sizing: content-box; /* 2 */
 }
 
 /**
@@ -502,10 +488,8 @@ fieldset {
  * 4. Corrects alignment displayed oddly in IE 6/7.
  */
 legend {
-  border: 0;
-  /* 1 */
-  padding: 0;
-  /* 2 */
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -1544,7 +1528,7 @@ h6 {
     padding: 1em 2em;
   }
 }
-.modalDialog::-webkit-backdrop {
+.modalDialog::-ms-backdrop {
   background-color: rgba(0, 0, 0, 0.45);
 }
 .modalDialog::backdrop {
@@ -2804,8 +2788,7 @@ td:last-child, th:last-child {
     display: -ms-flexbox;
     display: flex;
     position: relative;
-    z-index: 1;
-    /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
+    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
@@ -3106,7 +3089,7 @@ td:last-child, th:last-child {
 }
 @media (max-width: 869px) {
   #mobile-nav-bar .c-header__nav-item.dev-only,
-#site-menu .c-header__nav-item.dev-only {
+  #site-menu .c-header__nav-item.dev-only {
     position: absolute;
     top: 0;
     right: 0;
@@ -3115,7 +3098,7 @@ td:last-child, th:last-child {
 }
 @media (min-width: 870px) {
   #mobile-nav-bar .c-header__nav-item,
-#site-menu .c-header__nav-item {
+  #site-menu .c-header__nav-item {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -3124,33 +3107,33 @@ td:last-child, th:last-child {
     background-color: rgb(255, 255, 255);
   }
   #mobile-nav-bar .c-header__nav-item a:link, #mobile-nav-bar .c-header__nav-item a:visited,
-#site-menu .c-header__nav-item a:link,
-#site-menu .c-header__nav-item a:visited {
+  #site-menu .c-header__nav-item a:link,
+  #site-menu .c-header__nav-item a:visited {
     color: rgb(0, 0, 0);
     text-decoration: none;
   }
   #mobile-nav-bar .c-header__nav-item a:hover,
-#mobile-nav-bar .c-header__nav-item a:focus,
-#site-menu .c-header__nav-item a:hover,
-#site-menu .c-header__nav-item a:focus {
+  #mobile-nav-bar .c-header__nav-item a:focus,
+  #site-menu .c-header__nav-item a:hover,
+  #site-menu .c-header__nav-item a:focus {
     color: #cf4817;
     text-decoration: underline;
   }
   #mobile-nav-bar .c-header__nav-item:not(:last-child),
-#site-menu .c-header__nav-item:not(:last-child) {
+  #site-menu .c-header__nav-item:not(:last-child) {
     border-right: thin solid #cf4817;
   }
   #mobile-nav-bar .c-header__nav-item:last-child,
-#site-menu .c-header__nav-item:last-child {
+  #site-menu .c-header__nav-item:last-child {
     padding-right: 0;
   }
   #mobile-nav-bar .c-header__nav-item.last-child,
-#site-menu .c-header__nav-item.last-child {
+  #site-menu .c-header__nav-item.last-child {
     padding-right: 0;
     border-right: none;
   }
   #mobile-nav-bar .c-header__nav-item.is-open,
-#site-menu .c-header__nav-item.is-open {
+  #site-menu .c-header__nav-item.is-open {
     padding-bottom: 10px;
     margin-bottom: -10px;
   }
@@ -4032,6 +4015,12 @@ nav.pagination + .c-paginator-page_size {
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    row-gap: 1ch;
+    -webkit-column-gap: 0.5ch;
+       -moz-column-gap: 0.5ch;
+            column-gap: 0.5ch;
   }
 }
 @media (min-width: 480px) {
@@ -4051,6 +4040,7 @@ nav.pagination + .c-paginator-page_size {
             justify-content: center;
     height: 33px;
     border: thin solid rgb(78, 80, 80);
+    max-width: 33%;
   }
 }
 .c-progress a:link, .c-progress a:visited {
@@ -4071,7 +4061,6 @@ nav.pagination + .c-paginator-page_size {
 .c-progress a:not(:last-child)::after {
   content: ">";
   display: inline-block;
-  margin: 0 0 0 0.25em;
   font-size: 1.2em;
 }
 @media (min-width: 480px) {
@@ -4087,6 +4076,20 @@ nav.pagination + .c-paginator-page_size {
     border-top-style: solid;
     border-right-style: solid;
     border-color: rgb(78, 80, 80);
+  }
+}
+.c-progress a:focus {
+  height: 34px;
+  border-width: 2px;
+  border-color: #0071a8;
+}
+.c-progress a:focus:not(:last-child)::after {
+  border-width: 2px;
+  border-color: #0071a8;
+}
+@media (min-width: 480px) {
+  .c-progress a:focus:not(:last-child)::after {
+    top: 3px;
   }
 }
 .c-progress a[class*="--active"] {
@@ -4826,8 +4829,7 @@ img.c-upload__spinner {
   display: block;
   clear: both;
   -webkit-transform: scale(1, 0.3);
-          transform: scale(1, 0.3);
-  /* W3C */
+          transform: scale(1, 0.3); /* W3C */
 }
 
 .c-why-share__info {
@@ -5739,8 +5741,7 @@ dl.timeline div:nth-child(5n+5) dt, dl.timeline div:nth-child(5n+5) dd::before {
 #landing_readme #expand-readme:focus, #landing_readme #expand-readme:hover, #landing_readme #expand-readme:active {
   outline: none;
   text-decoration: underline;
-  -webkit-text-decoration-color: #cf4817;
-          text-decoration-color: #cf4817;
+  text-decoration-color: #cf4817;
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 }
