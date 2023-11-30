@@ -118,8 +118,9 @@ function MilkdownEditor({
     try {
       parser(markdown);
       editor()?.action(replaceAll(markdown));
+      setMD(markdown);
       setEditorVal(markdown);
-    } catch (e) {
+    } catch {
       setParseError(true);
       setEditType('markdown');
       setMD(markdown);
