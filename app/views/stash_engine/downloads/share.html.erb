@@ -60,7 +60,7 @@
   <% end %>
   </div>
 </div>
-<% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
+<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
 <% content_for :doc_end do %>
   <script type="text/javascript" async>    
     if ("serviceWorker" in navigator) {
