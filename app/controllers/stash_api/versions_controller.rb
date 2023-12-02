@@ -29,11 +29,15 @@ module StashApi
     def download
       if @stash_resources.length == 1
         res = @stash_resources.first
-        @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self)
-        StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
-        @zip_version_presigned.download(resource: res)
+        @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self, resource: res)
+        if res&.may_download?(ui_user: @user) && @zip_version_presigned.valid_resource?
+          StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
+          @zip_version_presigned.download(resource: res)
+        else
+          render plain: 'Download for this version of the dataset is unavailable', status: 404
+        end
       else
-        render text: 'not found', status: 404
+        render plain: 'not found', status: 404
       end
     end
 
