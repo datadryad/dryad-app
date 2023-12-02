@@ -13,22 +13,20 @@ sudo yum install git
 sudo yum install emacs-nox
 mkdir emacs
 curl "https://raw.githubusercontent.com/yoshiki/yaml-mode/master/yaml-mode.el" >emacs/yaml-mode.el
+mkdir bin
 curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 ```
 - git setup
   - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
-```
-#### TODO -- fix this
-# generate SSH key and # add the key to ssh-agent ??? not needed???
-https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-# add the key to your account on github
-```
 - install mysql
+  - WARNING! MySQL may make their RPM unavailable, forcing you to go through
+    their stupid GUI to get it. If so, just find the closest available version
+    and copy it to the target machine.
 ```
-sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm #may need to hit enter twice
-sudo dnf install mysql80-community-release-el9-1.noarch.rpm -y
+sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm 
+sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y
 sudo dnf install mysql-community-server -y
-yum install mysql-devel
+sudo yum install mysql-devel
 ```
 - check out the Dryad code
 ```
@@ -60,13 +58,13 @@ nvm install --lts
 nvm install 16.20.2
 npm install --global yarn
 cd ~/dryad-app
-npm install webpack@4.46.0
+yarn install
 npm install --legacy-peer-deps
 ```
 - ensure config is correct in startup scripts; add the following to .bashrc
 ```
 . ~/.nvm/nvm.sh
-nvm use 16.20.2
+nvm use 16.20.2 >/dev/null
 export RAILS_ENV=v3_stage 
 ```
 - compile components
@@ -80,14 +78,26 @@ cd ~/dryad-app
 rails s
 ```
 
-Importing data in to an AWS RDS database
-==========================================
+Database setup
+===============
 
-When setting up the database in RDS, you must crete a parameter group to set the
-global variable `log_bin_trust_function_creators`. Once the parameter group
-exists, assign it to the database, and once the database has finished
-updating the config, reboot the database to ensure it takes effect.
+1. Create the database in RDS. When setting up the database in RDS, you must
+   crete a parameter group to set the global variable
+   `log_bin_trust_function_creators`. Once the parameter group, assign it to the
+   database, and once the database has finished updating the config, reboot the
+   database to ensure it takes effect.
+2. Ensure the appropriate EC2 instances are "connected compute resources" for the database
+3. Login to the EC2 instance and create a script to connect to the RDS instance,
+   but not a specific database
+   - This normally consists of a script and a `.my.cnf` file
+   - Copy them from another server, but remove "dryad" from the script
+4. Run the script to connect to the RDS instance, then create the database:
+   `CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+5. Update the script to add the "dryad" database name
 
+
+Importing data into AWS RDS database
+=====================================
 
 Backups are run using a cron command:
 `nice -n 19 ionice -c 3 bundle exec rails dev_ops:backup RAILS_ENV=$1`
