@@ -256,7 +256,7 @@ development: &DEVELOPMENT
     template_base_url: "/cedar-embeddable-editor"
     templates:
       - [1, "Files", "File Description"]
-      - [2, "Human Cognitive Neuroscience Data", "Templeton Draft for Neuroscience Data"]
+      - [2, "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
       - [40, "EEB",  "Ecology and Evolutionary Biology"]
       - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
       - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
