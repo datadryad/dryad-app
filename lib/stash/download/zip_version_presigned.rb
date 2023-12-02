@@ -13,8 +13,17 @@ module Stash
 
       # passing the controller context allows us to do actions the controller would normally do such as redirecting
       # or rendering within the rails context
-      def initialize(controller_context:)
+      def initialize(controller_context:, resource:)
         @cc = controller_context
+        @resource = resource
+        return if @resource.blank?
+
+        @tenant = @resource&.tenant
+        @version = @resource&.stash_version
+      end
+
+      def valid_resource?
+        !(@resource.blank? || @tenant.blank? || @version.blank?)
       end
 
       def download(resource:)
