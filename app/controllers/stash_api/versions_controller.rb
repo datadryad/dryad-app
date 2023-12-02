@@ -37,20 +37,15 @@ module StashApi
 
     # get /versions/<id>/zip_assembly
     def zip_assembly
-      respond_to do |format|
-        format.json do
-          # input is resource_id and output is json with keys size, filename and url for each entry
-          @resource = Resource.find(params[:id])
-          info = @resource.data_files.present_files.map do |f|
-            {
-              size: f.upload_file_size,
-              filename: f.upload_file_name,
-              url: f.s3_permanent_presigned_url
-            }
-          end
-          render json: info
-        end
+      @resource = StashEngine::Resource.find(params[:id])
+      info = @resource.data_files.present_files.map do |f|
+        {
+          size: f.upload_file_size,
+          filename: f.upload_file_name,
+          url: f.s3_permanent_presigned_url
+        }
       end
+      render json: info
     end
 
     private
