@@ -46,17 +46,21 @@ export default function ReadMe({
     e.target.value = null;
   };
 
-  useEffect(async () => {
+  const fetchTemplate = async () => {
+    const response = await fetch('/docs/README.md');
+    const text = await response.text();
+    const template = text.split('\n').slice(3).join('\n');
+    const value = `# ${title}\n\n[${doi}](${doi})\n\n${template}`;
+    setInitialValue(value);
+  };
+
+  useEffect(() => {
     if (dcsDescription.description) {
       setInitialValue(dcsDescription.description);
     } else if (fileContent) {
       setInitialValue(fileContent);
     } else {
-      const response = await fetch('/docs/README.md');
-      const text = await response.text();
-      const template = text.split('\n').slice(3).join('\n');
-      const value = `# ${title}\n\n[${doi}](${doi})\n\n${template}`;
-      setInitialValue(value);
+      fetchTemplate();
     }
   }, []);
 
