@@ -125,8 +125,9 @@ module StashEngine
 
     # uses presigned
     def file_stream
+      check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      if data_file&.resource&.may_download?(ui_user: current_user)
+      if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
         CounterLogger.general_hit(request: request, file: data_file)
         @file_presigned.download(file: data_file)
       else
