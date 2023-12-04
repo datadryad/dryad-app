@@ -106,7 +106,7 @@ Rails.application.routes.draw do
 
       resources :versions, shallow: true, path: '/versions' do
         get 'download', on: :member
-        get 'zip_assembly', on: :member
+        get 'zip_assembly(/:token)', token: %r{[^\s/]+?}, to: 'versions#zip_assembly', as: 'zip_assembly'
         resources :files, shallow: true, path: '/files' do
           get :download, on: :member
           resource :frictionless_report, path: '/frictionlessReport'
