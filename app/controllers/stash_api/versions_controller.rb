@@ -43,7 +43,7 @@ module StashApi
 
     # get /versions/<id>/zip_assembly
     def zip_assembly
-      @resource = StashEngine::Resource.find(params[:id])
+      @resource = StashEngine::Resource.find(params[:version_id])
       found = @resource&.download_token
       render json: 'Unauthorized', status: 401 unless found.token == params[:token] && Time.now.utc < found.available
 
