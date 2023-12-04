@@ -49,8 +49,6 @@ module Stash
           h = Rails.application.routes.url_helpers
           download_url = h.version_zip_assembly_url(@resource.id).gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org').gsub(/^http:/, 'https:')
 
-          p generate_token
-
           zip_url = signer.presign_url(
             http_method: 'GET',
             expires_in: 3600,
