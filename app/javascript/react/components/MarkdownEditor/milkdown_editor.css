@@ -17,7 +17,7 @@
   overflow: auto;
 }
 
-.md_editor_textarea > div {
+.md_editor_textarea > div:not(.c-alert--error) {
   overflow: auto;
   position: absolute;
   bottom: 0; left: 0;
@@ -30,6 +30,17 @@
   }
 }
 
+.markdown_editor .c-alert--error {
+  position: absolute;
+  top: 5px; right: 15px;
+  box-shadow: 0px 2px 3px 1px #ddd;
+  margin-right: 3px;
+  z-index: 5;
+  width: 600px;
+  font-size: 1rem;
+  max-width: 85vw;
+}
+
 .markdown_editor .md_editor-buttons {
   border-radius: 5px 5px 0 0;
   border-bottom: thin solid #d0d0d0;
@@ -38,6 +49,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   grid-row-gap: 3px;
+  position: relative;
 }
 
 .markdown_editor .md_editor-buttons .md_editor-toolbar {
@@ -147,9 +159,10 @@
   text-shadow: none;
 }
 
-.markdown_editor .md_editor-buttons > button:first-child,
-.markdown_editor .md_editor-buttons .headingSelect:first-child,
-.markdown_editor .md_editor-buttons .headingSelect:first-child .headingButton {
+.markdown_editor .md_editor-toolbar,
+.markdown_editor .md_editor-toolbar > button:first-child,
+.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child,
+.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child > *:first-child {
   border-top-left-radius: 5px;
   border-left: none;
   margin-left: 0;
@@ -174,7 +187,6 @@
   border: thin solid #d0d0d0;
   border-top: none;
   box-shadow: 0px 2px 3px 1px #ccc;
-  max-width: 100vw;
 }
 
 .markdown_editor .md_editor-buttons .headingMenu:focus {
@@ -196,8 +208,31 @@
 }
 
 .markdown_editor .md_editor-buttons .tableMenu {
-  padding: 1rem;
+  padding: 1rem 1rem 0;
   line-height: 0;
+  max-width: 850px;
+  max-height: 63vh;
+  overflow: auto;
+}
+
+@media screen and (max-width: 1120px) {
+  .markdown_editor .md_editor-buttons .linkSelect,
+  .markdown_editor .md_editor-buttons .tableSelect {
+    position: static;
+  }
+  .markdown_editor .md_editor-buttons .linkMenu,
+  .markdown_editor .md_editor-buttons .tableMenu {
+    min-width: 328px;
+    max-width: 100%;
+    top: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    left: auto; right: 0;
+    min-width: 0;
+  }
 }
 
 .markdown_editor .md_editor-buttons .tableEntry {
@@ -271,10 +306,15 @@
   background-color: #98cae2;
 }
 
+.markdown_editor .milkdown {
+  height: 100%;
+}
+
 .markdown_editor .milkdown .ProseMirror.editor,
 .markdown_editor .cm-editor {
   padding: 1.5rem 1rem;
   font-size: 1rem;
+  min-height: 100%;
 }
 
 .milkdown, .headingMenu li {
@@ -285,6 +325,7 @@
 .cm-editor .cm-scroller {
   font-family: 'Noto Sans Mono', 'Consolas', monospace;
   font-size: .95em;
+  overflow: visible;
 }
 
 .milkdown h1,
