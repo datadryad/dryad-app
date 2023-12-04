@@ -143,7 +143,8 @@ module StashEngine
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 
       # can see if they had permission or the Share matches the identifier
-      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id)
+      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
+          [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
           redirect_to zen_upload.public_zenodo_download_url
         else
