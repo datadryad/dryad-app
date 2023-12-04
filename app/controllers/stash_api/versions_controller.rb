@@ -45,16 +45,18 @@ module StashApi
     def zip_assembly
       @resource = StashEngine::Resource.find(params[:version_id])
       found = @resource&.download_token
-      render json: 'Unauthorized', status: 401 unless found.token == params[:token] && Time.now.utc < found.available
-
-      info = @resource.data_files.present_files.map do |f|
-        {
-          size: f.upload_file_size,
-          filename: f.upload_file_name,
-          url: f.s3_permanent_presigned_url
-        }
+      if found.token == params[:token] && Time.now.utc < found.available
+        info = @resource.data_files.present_files.map do |f|
+          {
+            size: f.upload_file_size,
+            filename: f.upload_file_name,
+            url: f.s3_permanent_presigned_url
+          }
+        end
+        render json: info
+      else
+        render json: 'Unauthorized', status: 401
       end
-      render json: info
     end
 
     private
