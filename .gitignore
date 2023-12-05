@@ -202,8 +202,10 @@ flycheck_*.el
 # directory configuration
 .dir-locals.el
 
-# Ignore master key for decrypting credentials and more.
+# Ignore keys for decrypting credentials and more.
 /config/master.key
+/config/credentials/production.key
+/config/credentials/stage.key
 
 /public/packs
 /public/packs-test
