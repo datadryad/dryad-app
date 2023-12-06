@@ -17,7 +17,7 @@ set :migration_role, :app
 
 set :log_level, :debug
 
-# this copies these files over from shared if they exist, but doesn't error if they don't exist (so can be the same in all envs)
+# this copies these files over from shared, but only the files that exist on that machine
 set :optional_shared_files, %w{
   config/master.key
   config/credentials/production.key
