@@ -43,7 +43,7 @@ set :keep_releases, 5
 namespace :deploy do
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
-  before :deploy, "optional_linked_files_task"
+  before :deploy, "deploy:files:optional_linked_files_task"
 end
 
 namespace :git do
@@ -57,7 +57,7 @@ namespace :git do
 end
 
 namespace :deploy do
-  namespace :symlink do
+  namespace :files do
     task :optional_linked_files_task do
       on roles(:app), wait: 1 do
         execute "# hello world"
