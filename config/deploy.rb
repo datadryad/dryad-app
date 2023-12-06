@@ -60,6 +60,7 @@ namespace :deploy do
   namespace :files do
     task :optional_copied_files do
       on roles(:app), wait: 1 do
+        optional_shared_files = fetch(:optional_shared_files, [])
         optional_shared_files.each do |file|
           execute "# hello world #{release_path} #{file}"
         end
