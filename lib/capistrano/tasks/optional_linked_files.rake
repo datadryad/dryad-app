@@ -10,6 +10,7 @@ namespace :deploy do
     task :optional_linked_files do
       next unless any? :optional_linked_files
       on release_roles :all do
+        Rails.logger.debug "testing symlinking of optional linked files"
         execute :mkdir, "-p", linked_file_dirs(release_path)
 
         fetch(:optional_linked_files).each do |file|
