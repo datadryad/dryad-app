@@ -1,5 +1,3 @@
-require "uc3-ssm"
-
 # config valid only for current version of Capistrano
 lock '~> 3.14'
 
@@ -28,7 +26,11 @@ append :linked_dirs,
        "uploads",
        "reports"
 
-append :linked_files, 'config/notifier_state.json'
+# this copies these files over from shared if they exist, but doesn't error if they don't exist (so can be the same in both envs)
+set :optional_linked_files, %w{
+  config/credentials/production.key
+  config/credentials/stage.key
+}
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
@@ -37,16 +39,6 @@ namespace :deploy do
   before :compile_assets, "deploy:retrieve_master_key"
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
-
-  desc 'Retrieve master.key contents from SSM ParameterStore'
-  task :retrieve_master_key do
-    on roles(:app), wait: 1 do
-      ssm = Uc3Ssm::ConfigResolver.new
-      master_key = ssm.parameter_for_key('master_key')
-      IO.write("#{release_path}/config/master.key", master_key.chomp)
-      File.chmod(0600, "#{release_path}/config/master.key")
-    end
-  end
 end
 
 namespace :git do
