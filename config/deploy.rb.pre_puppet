@@ -189,16 +189,4 @@ namespace :deploy do
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
 
   before :compile_assets, :env_setup
-
-  desc 'Setup ENV Variables'
-  task :env_setup do
-    on roles(:app), wait: 1 do
-      json = capture ("aws ssm get-parameter --name \"#{fetch(:ssm_root_path)}master_key\" --region \"#{fetch(:aws_region)}\"")
-      json = JSON.parse(json)
-      master_key = json['Parameter']['Value']
-
-      info "Uploading master key to #{release_path}/config/master.key"
-      upload! StringIO.new(master_key), "#{release_path}/config/master.key"
-    end
-  end
 end
