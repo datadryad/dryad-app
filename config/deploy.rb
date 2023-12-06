@@ -18,7 +18,7 @@ set :migration_role, :app
 set :log_level, :debug
 
 # this copies these files over from shared if they exist, but doesn't error if they don't exist (so can be the same in all envs)
-append :optional_linked_files, %w{
+append :optional_shared_files, %w{
   config/master.key
   config/credentials/production.key
   config/credentials/stage.key
@@ -43,7 +43,7 @@ set :keep_releases, 5
 namespace :deploy do
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
-  after 'git:create_release', "deploy:files:optional_copied_files"
+  after 'deploy:symlink:linked_dirs', "deploy:files:optional_copied_files"
 end
 
 namespace :git do
@@ -60,7 +60,9 @@ namespace :deploy do
   namespace :files do
     task :optional_copied_files do
       on roles(:app), wait: 1 do
-        execute "# hello world #{release_path}"
+        optional_shared_files.each do |file|
+          execute "# hello world #{release_path} #{file}"
+        end
       end
     end
   end
