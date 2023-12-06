@@ -1,4 +1,4 @@
-# see https://github.com/capistrano/capistrano/issues/1132
+# based on idea at https://github.com/capistrano/capistrano/issues/1132 but with updated code
 namespace :deploy do
   namespace :symlink do
 
