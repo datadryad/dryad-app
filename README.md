@@ -1,4 +1,4 @@
-# Dryad 
+# Dryad
 
 [![Build Status](https://travis-ci.com/CDL-Dryad/dryad-app.svg?branch=main)](https://travis-ci.com/CDL-Dryad/dryad-app)
 
