@@ -8,9 +8,9 @@ namespace :deploy do
 
     desc 'Symlink optional linked files'
     task :optional_linked_files do
-      next unless any? :linked_files
+      next unless any? :optional_linked_files
       on release_roles :all do |host|
-        linked_files(shared_path).each do |file|
+        optional_linked_files(shared_path).each do |file|
           execute "# #{file}"
           unless test "[ -f #{file} ]"
             # error t(:linked_file_does_not_exist, file: file, host: host)
