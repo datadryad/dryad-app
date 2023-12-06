@@ -31,7 +31,7 @@ module StashApi
       fu = StashEngine::DataFile.create(data_file_hash)
       check_file_size(data_file: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
-      render json: file.metadata, status: 201
+      render json: file.metadata_with_url, status: 201
     end
 
     private
