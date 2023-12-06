@@ -18,7 +18,7 @@ set :migration_role, :app
 set :log_level, :debug
 
 # this copies these files over from shared if they exist, but doesn't error if they don't exist (so can be the same in all envs)
-set :optional_linked_files, %w{
+append :optional_linked_files, %w{
   config/master.key
   config/credentials/production.key
   config/credentials/stage.key
