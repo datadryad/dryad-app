@@ -18,7 +18,7 @@ set :migration_role, :app
 set :log_level, :debug
 
 # this copies these files over from shared if they exist, but doesn't error if they don't exist (so can be the same in all envs)
-append :optional_shared_files, %w{
+set :optional_shared_files, %w{
   config/master.key
   config/credentials/production.key
   config/credentials/stage.key
@@ -61,9 +61,11 @@ namespace :deploy do
     task :optional_copied_files do
       on roles(:app), wait: 1 do
         optional_shared_files = fetch(:optional_shared_files, [])
-        execute "# #{optional_shared_files.class}"
         optional_shared_files.flatten.each do |file|
-          execute "# hello world #{release_path} #{file}"
+          # execute "# hello world #{release_path} #{file}"
+          if test "[ -f #{shared_path}/#{file} ]"
+            execute "cp #{shared_path}/#{file} #{release_path}/#{file}"
+          end
         end
       end
     end
