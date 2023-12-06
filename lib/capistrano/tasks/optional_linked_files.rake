@@ -8,7 +8,7 @@ namespace :deploy do
 
     desc 'Symlink optional linked files'
     task :optional_linked_files do
-      next unless any? :optional_linked_files
+      # next unless any? :optional_linked_files
       on release_roles :all do |host|
         optional_linked_files(shared_path).each do |file|
           execute "# #{file}"
@@ -20,6 +20,5 @@ namespace :deploy do
         end
       end
     end
-
   end
 end
