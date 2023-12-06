@@ -8,18 +8,14 @@ namespace :deploy do
 
     desc 'Symlink optional linked files'
     task :optional_linked_files do
-      next unless any? :optional_linked_files
-      on release_roles :all do
-        Rails.logger.debug "testing symlinking of optional linked files"
-        execute :mkdir, "-p", linked_file_dirs(release_path)
-
-        fetch(:optional_linked_files).each do |file|
-          target = release_path.join(file)
-          source = shared_path.join(file)
-          next unless test "[ -f #{source} ]" # *** skip files that don't exist
-          next if test "[ -L #{target} ]"
-          execute :rm, target if test "[ -f #{target} ]"
-          execute :ln, "-s", source, target
+      next unless any? :linked_files
+      on release_roles :all do |host|
+        linked_files(shared_path).each do |file|
+          unless test "[ -f #{file} ]"
+            # error t(:linked_file_does_not_exist, file: file, host: host)
+            # exit 1
+            info t(:linked_file_does_not_exist, file: file, host: host)
+          end
         end
       end
     end
