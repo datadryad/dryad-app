@@ -62,7 +62,7 @@ namespace :deploy do
       on roles(:app), wait: 1 do
         optional_shared_files = fetch(:optional_shared_files, [])
         execute "# #{optional_shared_files.class}"
-        optional_shared_files.each do |file|
+        optional_shared_files.flatten.each do |file|
           execute "# hello world #{release_path} #{file}"
         end
       end
