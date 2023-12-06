@@ -4,11 +4,13 @@ module StashApi
   class Version
     class Metadata
 
-      def initialize(resource:, item_view: false) # item view may present additional information not shown in list view
+      def initialize(resource:, item_view: false, post: false) # item view may present additional information not shown in list view
         @resource = resource
         @item_view = item_view
+        @post = post
       end
 
+      # rubocop:disable Metrics/AbcSize
       def value
         # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
         # use by others besides ourselves because we don't want others to use them.
@@ -32,16 +34,16 @@ module StashApi
           lastModificationDate: @resource.updated_at&.utc&.strftime('%Y-%m-%d'),
           visibility: visibility,
           sharingLink: sharing_link,
-          userId: @resource.user_id,
           skipDataciteUpdate: @resource.skip_datacite_update || nil,
           skipEmails: @resource.skip_emails || nil,
           preserveCurationStatus: @resource.preserve_curation_status || nil,
           loosenValidation: @resource.loosen_validation || nil
         }
         vals[:changedFields] = changed_fields if @item_view
+        vals[:userId] = @resource.user_id if @post
         vals
       end
-      # rubocop:enable
+      # rubocop:enable Metrics/AbcSize
 
       def version_changes
         return 'none' if @resource.stash_version.version == 1
@@ -71,6 +73,8 @@ module StashApi
       def sharing_link
         curation_activity = StashEngine::CurationActivity.latest(resource: @resource)
         case curation_activity.status
+        when 'published'
+          Rails.application.routes.url_helpers.show_url(@resource&.identifier_str.to_s)
         when 'in_progress'
           # if it's in_progress, return the sharing_link for the previous submitted version
           prev_submitted_res = @resource&.identifier&.last_submitted_resource
