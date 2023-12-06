@@ -37,7 +37,6 @@ set :optional_linked_files, %w{
 set :keep_releases, 5
 
 namespace :deploy do
-  before :compile_assets, "deploy:retrieve_master_key"
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
 end
