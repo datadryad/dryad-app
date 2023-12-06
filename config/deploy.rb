@@ -62,7 +62,6 @@ namespace :deploy do
       on roles(:app), wait: 1 do
         optional_shared_files = fetch(:optional_shared_files, [])
         optional_shared_files.flatten.each do |file|
-          # execute "# hello world #{release_path} #{file}"
           if test "[ -f #{shared_path}/#{file} ]"
             execute "cp #{shared_path}/#{file} #{release_path}/#{file}"
           end
