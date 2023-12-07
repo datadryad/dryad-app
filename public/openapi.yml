@@ -640,7 +640,7 @@ paths:
         - reports
       responses:
         '200':
-          description: A list of reports.
+          description: A list of reports URLs.
           content:
               application/json:
                 schema:
@@ -859,11 +859,16 @@ components:
           example: replace
         path:
           type: string
-          enum: ['/versionStatus']
+          enum: ['/versionStatus', '/curationStatus', 'publicationISSN']
           example: "/versionStatus"
         value:
           type: string
-          enum: ['submitted']
+          oneOf:
+            - title: "/versionStatus"
+              enum: ['submitted']
+            - title: "/curationStatus"
+              enum: [in_progress', 'submitted', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
+            - title: "/publicationISSN"
           example: submitted
 
     # --- Version(s) ---
