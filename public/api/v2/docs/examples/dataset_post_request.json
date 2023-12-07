@@ -11,15 +11,16 @@
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "UC Davis"
+      "affiliation": "University of California, Davis",
+      "affiliationROR": "https://ror.org/05rrcem69"
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",
   "funders": [
     {
-      "organization": "Savannah River Operations Office, U.S. Department of Energy",
-      "identifierType": "crossref_funder_id",
-      "identifier": "http://dx.doi.org/10.13039/100008972",
+      "organization": "Stichting Sem Presser Archief",
+      "identifierType": "ror",
+      "identifier": "https://ror.org/02f5r3008",
       "awardNumber": "12345"
     }
   ],
@@ -30,41 +31,12 @@
     "Log"
   ],
   "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
-  "usageNotes": "<p>The rest of this paper is organized as follows. To begin with, we motivate the need for sensor networks. Next, we demonstrate the evaluation of the Ethernet. We argue the understanding of courseware. Ultimately, we conclude.</p>\r\n",
-  "locations": [
-    {
-      "place": "Grogan's Mill, USA",
-      "point": {
-        "latitude": "30.130379",
-        "longitude": "-95.402929"
-      },
-      "box": {
-        "swLongitude": "-95.527852",
-        "swLatitude": "30.049326",
-        "neLongitude": "-95.32743",
-        "neLatitude": "30.164696"
-      }
-    },
-    {
-      "point": {
-        "latitude": "37.0",
-        "longitude": "-122.0"
-      }
-    },
-    {
-      "box": {
-        "swLongitude": "-122.0",
-        "swLatitude": "37.0",
-        "neLongitude": "-121.0",
-        "neLatitude": "38.0"
-      }
-    }
-  ],
   "relatedWorks": [
     {
       "relationship": "article",
       "identifierType": "URL",
       "identifier": "http://example.org/cats"
     }
-  ]
+  ],
+  "userId": 1234
 }
