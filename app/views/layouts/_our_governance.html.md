@@ -2,7 +2,7 @@
 
 <p>Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of Conduct</a> applies for all Dryad community spaces.</p>
 
-#### Current Board members
+#### Current board members
 
 <div class="about-bios">
 <div class="bio">
@@ -100,15 +100,15 @@
 
 <ul>
   <li>Dryad produces <a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">annual reports</a> on the state of the organization's operations.
-  <li>Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
-  <li><a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad Board Conflict of Interest Forms</a>
+  <li>Dryad board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
+  <li><a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad board conflict of interest forms</a>
 </ul>
 
 
-#### Past Board members
+#### Past board members
 
 <p>
-  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of Directors for at least one term from 2012 to 2023:
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2023:
 </p>
 
 <p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>
