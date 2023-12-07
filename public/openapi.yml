@@ -114,7 +114,7 @@ paths:
       summary: Create a new dataset with an automatically-generated DOI
       tags:
         - datasets 
-      description: You must be logged in. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "declare no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: You must be <a href="/stash/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "declare no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -185,7 +185,7 @@ paths:
       summary: Update (overwrite) dataset metadata for DOI
       tags:
         - datasets 
-      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to HTML encode the DOI (see example below). You must be logged in. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to HTML encode the DOI (see example below). You must be <a href="/stash/api#api-accounts">logged in</a>. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       parameters:
         - $ref: '#/components/parameters/doi'
       security:
