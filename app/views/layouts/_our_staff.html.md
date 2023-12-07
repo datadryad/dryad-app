@@ -1,6 +1,6 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
-<h4>Head Office</h4>
+<h4>Head office</h4>
 <div class="about-bios">
 <div class="bio">
   <img src="/images/jgibson.jpeg" alt="Headshot of Jennifer Gibson">
@@ -71,7 +71,7 @@
 </div>
 </div>
 
-#### Product Development Team
+#### Product development team
 
 <div class="about-bios">
 <div class="bio">
@@ -102,7 +102,7 @@
 </div>
 </div>
 
-#### Curation Team
+#### Curation team
 
 <div class="about-bios">
 <div class="bio">
