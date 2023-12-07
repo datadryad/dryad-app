@@ -45,7 +45,7 @@ paths:
       summary: The root of the API
       tags:
         - root 
-      description: Mainly to have HATEOAS links to root level objects like datasets.
+      description: Displays links to root level API objects, like the list of datasets.
       responses:
         '200':
           description: The root of the API
@@ -64,10 +64,10 @@ paths:
     get:
       security:
         - bearerAuth: []
-      summary: Test OAuth2 and bearer authentication.
+      summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test authentication by sending authenticated headers like **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**."
+      description: "Test your <a href='/stash/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**."
       responses:
         '200':
           description: a welcome message if successful
@@ -89,10 +89,10 @@ paths:
   # --- datasets uris ---
   /datasets:
     get:
-      summary: Get list of all datasets
+      summary: Get a list of all datasets
       tags:
         - datasets 
-      description: Items returned may depend on user or permission and are paged.
+      description: The items returned may depend on user permissions, and are paged.
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
@@ -111,10 +111,10 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
     post:
-      summary: Create a new dataset with a DOI automatically generated
+      summary: Create a new dataset with an automatically-generated DOI
       tags:
         - datasets 
-      description: You must be logged in. Use the JSON structure and schema as shown below.
+      description: You must be logged in. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "declare no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -122,10 +122,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/dc_metadata'
+              allOf:
+                - $ref: '#/components/schemas/dc_metadata'
+                - properties:
+                    userId:
+                      type: integer
+                    skipDataciteUpdate:
+                      type: boolean
+                    skipEmails: 
+                      type: boolean
+                    preserveCurationStatus:
+                      type: boolean
+                    loosenValidation:
+                      type: boolean
             examples:
               request:
                 externalValue: api/v2/docs/examples/dataset_post_request.json
+              declare no funding: 
+                externalValue: api/v2/docs/examples/dataset_post_request_nf.json
       responses:
         '201':
           description: response showing dataset info that has been saved
@@ -135,7 +149,9 @@ paths:
                 $ref: '#/components/schemas/datasets'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/dataset.json
+                  externalValue: api/v2/docs/examples/dataset_post_response.json
+                no funding:
+                  externalValue: api/v2/docs/examples/dataset_post_response_nf.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -143,11 +159,11 @@ paths:
 
   '/datasets/{doi}':
     get:
-      summary: Get a dataset by its doi
+      summary: Get a dataset record by its DOI
       tags:
         - datasets 
       description: 
-        Be sure to encode the DOI (see below for format). Datasets that are not yet published are only 
+        Be sure to HTML encode the DOI (see example below). Datasets that are not yet published are only 
         retrievable by users with permission to access them.
       parameters:
         - $ref: '#/components/parameters/doi'
@@ -166,10 +182,10 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
     put:
-      summary: Update (overwrite) dataset metadata for DOI or insert new with specified DOI
+      summary: Update (overwrite) dataset metadata for DOI
       tags:
         - datasets 
-      description: This will overwrite writeable metadata for an in-progress dataset or will create a new dataset with the specified DOI identifier if one doesn't exist.  This is an insert or update action (upsert).
+      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to HTML encode the DOI (see example below). You must be logged in. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       parameters:
         - $ref: '#/components/parameters/doi'
       security:
@@ -202,7 +218,7 @@ paths:
         - $ref: '#/components/parameters/doi'
       security:
         - bearerAuth: []
-      summary: Update state or details of an in-progress dataset
+      summary: Update the state of an in-progress dataset
       tags:
         - datasets 
       description: "Sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This is the most common command, attempting to change the versionStatus to Submitted.) Other options are available that are useful for integration with manuscript processing systems. See the [embedded Dryad documentation](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/embedded_submission.md) for details. Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
@@ -235,15 +251,15 @@ paths:
 
   '/datasets/{doi}/download':
     get:
-      summary: Get download package for dataset.
+      summary: Get a download package for a dataset
       tags:
         - datasets 
-      description: This would download the zip file for the latest submitted and visible version of the dataset to the user (if authorized) or the public.
+      description: This downloads the zip package of the latest submitted version of the dataset that is visible to the user (or public).
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
         '200':
-          description: The binary content for a compressed archive
+          description: The binary content for a compressed archive.
           content:
             application/zip:
               schema:
@@ -257,7 +273,7 @@ paths:
       summary: Show all versions of a dataset
       tags:
         - datasets 
-      description: The versions endpoint allows seeing all (visible) versions. This is in contrast to GETting the datasets endpoiunt for a DOI, since it only embeds metadata for the latest visible version.
+      description: The <code>/versions</code> endpoint lists all versions visible to the user (or public). This is in contrast to GETting the datasets endpoint for a DOI, since it only embeds metadata for the latest visible version.
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/page'
@@ -283,7 +299,7 @@ paths:
       summary: Show a specific dataset version
       tags:
         - versions
-      description: "If you know the dataset version's internal id, you can request to see it directly. The versions endpoint lists the versions and their ids if you need to find this id."
+      description: "If you know the dataset version's internal id, you can request its record directly. The <code>/versions</code> endpoint lists the versions of a dataset and their ids."
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -292,7 +308,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/version'
+                allOf:
+                  - $ref: '#/components/schemas/version'
+                  - properties:
+                      changedFields: 
+                        type: array
+                        items: 
+                          type: string
               examples:
                 success:
                   externalValue: api/v2/docs/examples/version.json
@@ -303,7 +325,7 @@ paths:
 
   '/versions/{id}/files':
     get:
-      summary: Show a list of files and file metadata in this version
+      summary: List the files and file metadata in this version
       tags:
         - versions
       description: Returns the list of files and file metadata for a known version of a dataset with the version id you specify.
@@ -331,7 +353,7 @@ paths:
       summary: Get a download package for a dataset version
       tags:
         - versions
-      description: This only works for versions submitted to the repository (and assuming permission to view).  Allows you to download a zip file for the contents for that version of the dataset.
+      description: This downloads the zip package of a specified, submitted version of the dataset that is visible to the user (or public).
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -353,7 +375,7 @@ paths:
       summary: Get metadata information about a file
       tags:
         - files
-      description: Returns file metadata information (if visible to you) and if you know the internal id.  The version file list embeds this and also gives the internal ids.
+      description: Returns file metadata information visible to the user (or public) by the file id.  The version file list embeds this metadata and also lists the file ids.
       parameters:
         - $ref: '#/components/parameters/file_id'
       responses:
@@ -422,7 +444,7 @@ paths:
   # --- upload a file in body with filename in url ---
   '/datasets/{doi}/files/{filename}':
     put:
-      summary: Upload and stage a file for an in-progress dataset.
+      summary: Upload and stage a file for an in-progress dataset
       tags:
         - files
       description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the **'Content-Type'** http header to the appropriate mimetype for your file when uploading.
@@ -445,10 +467,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/file'
+                allOf:
+                - $ref: '#/components/schemas/file'
+                - properties:
+                    url:
+                      type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  externalValue: api/v2/docs/examples/upload_file.json
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -473,10 +499,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/file'
+                allOf:
+                - $ref: '#/components/schemas/file'
+                - properties:
+                    url:
+                      type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  externalValue: api/v2/docs/examples/upload_file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -649,7 +679,7 @@ paths:
   # --- search ---
   /search:
     get:
-      summary: Search over the publicly-available datasets
+      summary: Search publicly-available datasets
       tags:
         - root
       description: Search the published Dryad datasets by keyword, institutional affiliation, and date.
@@ -787,20 +817,18 @@ components:
 
     #singular
     dataset:
-      allOf:
-        - $ref: '#/components/schemas/dataset_links'
-        - $ref: '#/components/schemas/version'
-      properties:
-            id:
-              type: integer
+      allOf:        
+        - properties:
             identifier:
               type: string
+            id:
+              type: integer            
             storageSize:
-              type: string
-            license:
-              type: string
+              type: integer
             relatedPublicationISSN:
               type: string
+        - $ref: '#/components/schemas/version'
+        - $ref: '#/components/schemas/dataset_links'
 
     dataset_links:
       properties:
@@ -863,22 +891,22 @@ components:
         - properties:
             versionNumber:
               type: integer
-            userId:
-              type: integer
             versionStatus:
               type: string
               description: Internal processing status, aka Merritt State.
             curationStatus:
               type: string
               description: Status in the curation workflow. See https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/submission_flow.md
-            visibility:
-              type: string
-              description: Whether this version is publicly visible or not
             versionChanges:
               type: string
               description: Whether this version has had files_changed, or only metadata_changed
+            publicationDate:
+              type: string
             lastModificationDate:
               type: string
+            visibility:
+              type: string
+              description: Whether this version is publicly visible or not
 
     version_links:
       properties:
@@ -939,6 +967,8 @@ components:
             digest:
               type: string
             digestType:
+              type: string
+            description:
               type: string
 
     file_links:
@@ -1027,6 +1057,8 @@ components:
           type: array
           items:
             type: string
+        fielOfScience:
+          type: string
         methods:
           type: string
         usageNotes:
@@ -1076,13 +1108,18 @@ components:
       properties:
         organization:
           type: string
-        awardNumber:
-          type: string
         identifier:
           type: string
         identifierType:
-          description: type of identifier -- null, isni, grid, crossref_funder_id or other
+          description: type of identifier -- ror, isni, grid, crossref_funder_id or other
           type: string
+        awardNumber:
+          type: string
+        awardDescription:
+          description: description, usually program or division of award
+          type: string
+        order:
+          type: integer
     relatedWork:
       properties:
         relationship:
@@ -1321,6 +1358,14 @@ components:
     publicationISSN:
       in: query
       name: publicationISSN
+      schema:
+        type: string
+      description:
+        ISSN of a journal associated with the datasets.
+
+    publicationName:
+      in: query
+      name: publicationName
       schema:
         type: string
       description:
