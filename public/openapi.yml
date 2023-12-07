@@ -164,7 +164,7 @@ paths:
       tags:
         - datasets 
       description: 
-        Be sure to HTML encode the DOI (see example below). Datasets that are not yet published are only 
+        Be sure to URL encode the DOI (see example below). Datasets that are not yet published are only 
         retrievable by users with permission to access them.
       parameters:
         - $ref: '#/components/parameters/doi'
@@ -186,7 +186,7 @@ paths:
       summary: Update (overwrite) dataset metadata for DOI
       tags:
         - datasets 
-      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to HTML encode the DOI (see example below). You must be <a href="/stash/api#api-accounts">logged in</a>. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to URL encode the DOI (see example below). You must be <a href="/stash/api#api-accounts">logged in</a>. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       parameters:
         - $ref: '#/components/parameters/doi'
       security:
@@ -899,20 +899,22 @@ components:
               type: integer
             versionStatus:
               type: string
-              description: Internal processing status, aka Merritt State.
+              enum: ['in_progress', 'processing', 'submitted']              
+              description: Internal processing status of files.
             curationStatus:
               type: string
-              description: Status in the curation workflow. See https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/submission_flow.md
+              enum: [in_progress, 'submitted', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
+              description: Status in the curation workflow.
             versionChanges:
               type: string
-              description: Whether this version has had files_changed, or only metadata_changed
+              enum: [files_changed, metadata_changed]
             publicationDate:
               type: string
             lastModificationDate:
               type: string
             visibility:
               type: string
-              description: Whether this version is publicly visible or not
+              description: Whether or not this version is publicly visible.
 
     version_links:
       properties:
@@ -1007,7 +1009,7 @@ components:
               example: success
             message:
               type: string
-              example: Completed processing with no errors
+              example: Completed processing with no errors.
             structured_info:
               type: string
               example: "{\"cat\": \"dog\"}"
@@ -1055,6 +1057,7 @@ components:
             $ref: '#/components/schemas/author'
         abstract:
           type: string
+          description: An abstract introducing the dataset.
         funders:
           type: array
           items:
@@ -1063,12 +1066,15 @@ components:
           type: array
           items:
             type: string
-        fielOfScience:
+        fieldOfScience:
           type: string
+          description: A term from the FOS (Fields of Science and Technology) controlled vocabulary. The main category of the dataset.
         methods:
           type: string
+          description: The methods by which the data was produced. Not required for publication.
         usageNotes:
           type: string
+          description: Usage notes for the dataset. Deprecated; It is preferred for this content to appear in the README file for the dataset. 
         locations:
           type: array
           items:
@@ -1094,6 +1100,7 @@ components:
           type: string
         affiliationROR:
           type: string
+          description: Preferred identifier for the author affiliation.
         affiliationISNI:
           type: string
         orcid:
@@ -1116,13 +1123,16 @@ components:
           type: string
         identifier:
           type: string
+          description: The organization identifier, for example a ROR id.
+          example: 'https://ror.org/00x6h5n95'
         identifierType:
-          description: type of identifier -- ror, isni, grid, crossref_funder_id or other
+          description: Type of identifier — ror, isni, grid, crossref_funder_id or other.
           type: string
+          example: ror
         awardNumber:
           type: string
         awardDescription:
-          description: description, usually program or division of award
+          description: Usually used for the program or the division of the award.
           type: string
         order:
           type: integer
@@ -1138,46 +1148,47 @@ components:
     geolocation:
       properties:
         place:
-          description: a place name.
+          description: A place name.
           type: string
         box:
           $ref: '#/components/schemas/geolocationBox'
-          description: a bounding box.
+          description: A bounding box.
         point:
           $ref: '#/components/schemas/geolocationPoint'
-          description: a coordinate point.
+          description: A coordinate point.
     geolocationBox:
       properties:
         swLongitude:
-          description: the longitude of the southwest corner of the box.
+          description: The longitude of the southwest corner of the box.
           type: number
         swLatitude:
-          description: the latitude of the southwest corner of the box.
+          description: The latitude of the southwest corner of the box.
           type: number
         neLongitude:
-          description: the longitude of the northeast corner of the box.
+          description: The longitude of the northeast corner of the box.
           type: number
         neLatitude:
-          description: the latitude of the northeast corner of the box.
+          description: The latitude of the northeast corner of the box.
           type: number
     geolocationPoint:
       type: object
       properties:
         latitude:
-          description: the latitude of the point.
+          description: The latitude of the point.
           type: number
         longitude:
-          description: the longitude of the point.
+          description: The longitude of the point.
           type: number
     embargo:
       type: object
       properties:
         embargoEndDate:
           format: date
-          description: the end date of the embargo.
+          description: The end date of the embargo, after which the dataset will become public.
           type: string
     tenant:
       type: object
+      description: Information about the <a href="https://datadryad.org/stash/join_us">Dryad member</a> associated with the dataset.
       properties:
         id:
           format: string
@@ -1310,7 +1321,7 @@ components:
       schema:
         type: string
       required: true
-      description: "DOI like doi:10.1000/18238577 that should be escaped (example: doi%3A10.1000%2F18238577 )"
+      description: "DOI like doi:10.1000/18238577 that should be URL encoded (example: <code>doi%3A10.1000%2F18238577</code>)"
 
     version_id:
       in: path
