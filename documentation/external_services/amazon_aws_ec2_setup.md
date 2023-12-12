@@ -94,6 +94,10 @@ Database setup
 4. Run the script to connect to the RDS instance, then create the database:
    `CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 5. Update the script to add the "dryad" database name
+6. Initialize the tables (This is useful even if you plan to import a backup,
+   since the backup files do not contain the tables that hold temporary content,
+   and they need to be created.)
+   `rails db:migrate`
 
 
 Importing data into AWS RDS database
