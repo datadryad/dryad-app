@@ -27,7 +27,7 @@ you the necessary permissions](adding_api_accounts.md).
 Get a token for making requests for secure parts of the API
 -----------------------------------------------------------
 
-Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed when it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
+Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed when it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment, or a tool such as Postman.
 
 
 ```bash
@@ -43,7 +43,7 @@ require 'rest-client'
 require 'json'
 app_id = '<application-id>'
 secret = '<secret>'
-domain_name = '<domain-name>'
+domain_name = 'datadryad.org'
 response = RestClient.post "https://#{domain_name}/oauth/token", {
   grant_type: 'client_credentials',
   client_id: app_id,
@@ -64,7 +64,7 @@ Test that your token works
 Now make sure you can use your token to access secured areas of the API.  Test with some code like the following.
 
 ```bash
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/v2/test
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://datadryad.org/api/v2/test
 ```
 
 or
