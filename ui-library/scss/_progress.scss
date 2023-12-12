@@ -6,6 +6,9 @@
   @include bp(screen1) {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 1ch;
+    column-gap: .5ch;
   }
 
   a {
@@ -17,6 +20,7 @@
       justify-content: center;
       height: 33px;
       border: thin solid $design-dark-gray-color;
+      max-width: 33%;
     }
 
     &:link, &:visited {
@@ -41,7 +45,6 @@
       &::after {
         content: '>';
         display: inline-block;
-        margin: 0 0 0 0.25em;
         font-size: 1.2em;
 
         // Right angle arrow using borders:
@@ -58,6 +61,21 @@
           border-color: $design-dark-gray-color;
         }
 
+      }
+    }
+
+    &:focus {
+      height: 34px;
+      border-width: 2px;
+      border-color: $design-medium-blue-color;
+      &:not(:last-child) {
+        &::after {
+          border-width: 2px;
+          border-color: $design-medium-blue-color;
+          @include bp(screen1) {
+            top: 3px;
+          }
+        }
       }
     }
 

@@ -188,7 +188,7 @@ module StashEngine
                               })
 
       resp = client.invoke(
-        { function_name: 'frictionless',
+        { function_name: 'frictionless311',
           invocation_type: 'Event',
           log_type: 'None',
           payload: payload }
@@ -231,7 +231,7 @@ module StashEngine
                                 processor_obj: pr.as_json })
 
       resp = client.invoke(
-        { function_name: 'excelToCsv',
+        { function_name: 'excelToCsv311',
           invocation_type: 'Event',
           log_type: 'None',
           payload: payload }

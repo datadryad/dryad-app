@@ -244,8 +244,9 @@ function List({type, editor, active}) {
 function Table({
   active, editor, mdEditor, activeEditor, editorId,
 }) {
-  const [rows, setRows] = useState([1, 2, 3, 4, 5, 6]);
-  const [cols, setCols] = useState([1, 2, 3, 4, 5, 6]);
+  const startNum = [1, 2, 3, 4, 5, 6];
+  const [rows, setRows] = useState(startNum);
+  const [cols, setCols] = useState(startNum);
   const [colNum, setColNum] = useState(0);
   const [rowNum, setRowNum] = useState(0);
 
@@ -253,6 +254,8 @@ function Table({
     const menu = document.getElementById(`${editorId}tableMenu`);
     menu.previousElementSibling.setAttribute('aria-expanded', false);
     menu.hidden = true;
+    setCols(startNum);
+    setRows(startNum);
   };
 
   const clickListener = (e) => {
@@ -275,8 +278,8 @@ function Table({
     document.querySelectorAll('.tableEntry span').forEach((s) => {
       if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
     });
-    if (col === cols.length) setCols((c) => [...c, col + 1]);
-    if (row === rows.length) setRows((r) => [...r, row + 1]);
+    if (col === cols.length) setCols((c) => Array.from(new Set([...c, col + 1])));
+    if (row === rows.length) setRows((r) => Array.from(new Set([...r, row + 1])));
     setColNum(col);
     setRowNum(row);
   };
@@ -332,7 +335,7 @@ function Table({
             </div>
           ))}
         </div>
-        {(rowNum && colNum) ? <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto'}}>{rowNum} x {colNum}</p> : ''}
+        <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto 0'}}>{(rowNum && colNum) ? `${rowNum} x ${colNum}` : ''}</p>
       </div>
     </div>
   );

@@ -21,7 +21,7 @@
     <ul class="c-file-group__list" style="margin-left: 0; font-size: 1rem;">
       <% @resource.current_file_uploads.each do |fu| %>
         <li>
-          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id),
+          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id, share: params[:id]),
                     title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
           <span><%= filesize(fu.upload_file_size) %>
           <% if fu.upload_file_name.ends_with?('csv') %>
@@ -60,14 +60,16 @@
   <% end %>
   </div>
 </div>
-<% if @resource.total_file_size < 11000000000 %>
+<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
 <% content_for :doc_end do %>
   <script type="text/javascript" async>    
     if ("serviceWorker" in navigator) {
       const resource_id = <%= @resource.id %>
       const dlbutton = document.getElementById('download_zip_button');
       <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-      dlbutton.click();
+      navigator.serviceWorker.ready.then(() => {
+        dlbutton.click();
+      })
     } else {
       document.getElementById('nozip').removeAttribute('hidden');
       document.getElementById('withzip').hidden = true;

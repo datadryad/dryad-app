@@ -11,7 +11,7 @@
   to explore fresh paths toward accelerating discovery through open research
   communication and open-technology innovation. Prior to Dryad, Jennifer was
   Head of Open Research Communication for eLife, a non-profit and research
-  funder-backed initiative to transform science publishing. She is Chair of the
+  funder-backed initiative to transform science publishing. She is a former Chair of the
   Board of Directors for OASPA (2020-2022) and a former member of the board for
   FORCE11 (2018-2020). Learn more about Jen at
   <a href="https://www.linkedin.com/in/jmclenna/" target="_blank">LinkedIn</a>.
@@ -51,13 +51,20 @@
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 <div class="bio">
+  <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
+  <h5>Ryan Scherle</h5><br/>
+  <p><em>Head of Platform Development</em><br/>
+  Ryan has over 30 years of experience designing and developing systems to manage collections of digital objects. He has been with Dryad since its founding, and has been involved with all aspects of the organization. He has a background in artificial intelligence research, and he believes that the best technology strikes a balance between anticipating what a user needs and allowing the user to remain in control. Ryan also manages technical development for the Covid Information Commons at the Northeast Big Data Innovation Hub. 
+</p>
+</div>
+<div class="bio">
   <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
   <h5>Donna Okubo</h5><br/>
   <p><em>Strategic Partnership Director</em><br/>
   Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Senior Strategic Partnership Manager.</p>
 </div>
 <div class="bio">
-  <img src="/images/angelica.jpg" alt="Headshot of Donna Okubo">
+  <img src="/images/angelica.jpg" alt="Headshot of Angelica Del Sette">
   <h5>Angelica Del Sette</h5><br/>
   <p><em>Administrative Assistant</em><br/>
   Angelica is an Executive Assistant with over 15 years working at C-Suite level with experience in banking, pharmaceutical, and venture capital organisations with a particular focus on administration, project management, and MS Office 365. In South Africa, she was involved in implementing software across large organisations, workflow and process management and team administration. During her time in Italy she worked alongside political figures and entrepreneurs assisting with campaigns and business administration. She grew up in Johannesburg, South Africa, and has worked in the Netherlands, Italy and the UK.</p>
@@ -72,13 +79,6 @@
   <h5>Steve Diggs</h5><br/>
   <p><em>Product Manager</em><br/>
   Steve is a Research Data Specialist with the University of California Office of the President (UCOP), where he serves as the Senior Product Manager for the data publishing portfolio at the University of California Curation Center (UC3). Previously, Steve worked as the Technical Director for the Hydrographic Data Office at the Scripps Institution of Oceanography at UC San Diego. Steve has spent decades focusing on designing and operating full-stack information systems that deliver valuable data to the research community. Besides actively managing data, Steve is a member of several international data and data science teams and currently serves on the Board on Research Data and Information (BRDI) under The National Academies of Sciences, Engineering, and Medicine (NASEM). Having worked directly with researchers in both field and lab settings, Steve understands the challenges and opportunities they face when managing data as an integral part of their scholarly outputs.</p>
-</div>
-<div class="bio">
-  <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
-  <h5>Ryan Scherle</h5><br/>
-  <p><em>Software Developer</em><br/>
-  Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
-</p>
 </div>
 <div class="bio">
   <img src="/images/scott.jpg" alt="Headshot of Scott Fisher">

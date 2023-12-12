@@ -32,7 +32,7 @@ Before making secure requests to the Dryad API, you'll need a token.  Currently 
 
 ```bash
 # get token with curl
-curl -X POST https://<domain-name>/oauth/token -d "client_id=<application-id>&client_secret=<secret>&grant_type=client_credentials" -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"
+curl -X POST https://datadryad.org/oauth/token -d "client_id=<application-id>&client_secret=<secret>&grant_type=client_credentials" -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"
 ```
 
 Or

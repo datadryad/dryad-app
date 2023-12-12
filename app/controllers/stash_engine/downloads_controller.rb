@@ -125,8 +125,9 @@ module StashEngine
 
     # uses presigned
     def file_stream
+      check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
-      if data_file&.resource&.may_download?(ui_user: current_user)
+      if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
         CounterLogger.general_hit(request: request, file: data_file)
         @file_presigned.download(file: data_file)
       else
@@ -138,12 +139,13 @@ module StashEngine
     # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
     # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
     def zenodo_file
-      zen_upload = GenericFile.where(id: params[:file_id]).first
+      zen_upload = GenericFile.where(id: params[:file_id]).first # gets cast to the specific type
       res = zen_upload&.resource
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 
       # can see if they had permission or the Share matches the identifier
-      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id)
+      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
+          [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
           redirect_to zen_upload.public_zenodo_download_url
         else

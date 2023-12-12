@@ -24,7 +24,6 @@ end
 set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dryaduix2-stg-2c.cdlib.org']
 role %i[app web], fetch(:server_hosts), user: 'dryad'
 
-set :ssm_root_path, '/uc3/dryad/stg/'
 set :aws_region, 'us-west-2'
 
 #on roles(:all) do |host|

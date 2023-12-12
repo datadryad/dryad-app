@@ -1,5 +1,6 @@
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
+    include StashEngine::MetadataEntryPagesHelper
     before_action :require_login, except: %i[edit_by_doi]
     before_action :resource_exist, except: %i[metadata_callback]
     before_action :require_modify_permission, except: %i[metadata_callback edit_by_doi]
@@ -154,14 +155,6 @@ module StashEngine
       @resource = id&.latest_resource
       params[:resource_id] = @resource&.id
       @resource
-    end
-
-    def duplicate_resource
-      @new_res = @resource.amoeba_dup
-      @new_res.current_editor_id = current_user&.id
-      # The default curation activity gets set to the `Resource.user_id` but we want to use the current user here
-      @new_res.curation_activities.update_all(user_id: current_user&.id)
-      @new_res.save!
     end
 
     def require_can_duplicate
