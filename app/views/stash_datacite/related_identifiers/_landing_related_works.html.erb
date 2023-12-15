@@ -6,6 +6,8 @@
 <% article_ids = @resource.related_identifiers.where(work_type: :article).where(hidden: false).order(work_type: :desc) %>
 <%= render partial: 'special_article', locals: {article_ids: article_ids, item_label: 'Article'} %>
 
+<% unpublished = @resource.identifier.latest_resource_with_public_download.nil? %>
+
 <% # All other related IDs %>
 
 <% other_relations = if @resource&.resource_type&.resource_type == 'collection'
@@ -25,7 +27,7 @@
 						<%= display_id(type: r.related_identifier_type,
 							 my_id: r.related_identifier) %> <%= bad_asterisk %>
 				<% else %>
-					<% if r.added_by != 'zenodo' || r&.resource&.file_view %> <!-- non-zenodo or published already -->
+					<% if r.added_by != 'zenodo' || !unpublished %>
 						<%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
 						<%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
 					<% else %> <!-- not put in the zenodo queue to publish until the dataset is actually published -->
@@ -33,7 +35,7 @@
 						<%= bad_asterisk %>
 					<% end %>
 				<% end %>
-				<% if r.added_by == 'zenodo' && !r&.resource&.file_view %>
+				<% if r.added_by == 'zenodo' && unpublished %>
 					<br/>(to be published with dataset)
 				<% end %>
 	    </li>
