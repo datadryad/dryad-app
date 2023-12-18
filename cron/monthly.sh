@@ -11,7 +11,7 @@ cd /apps/dryad/apps/ui/current/
 export REPORT_DIR="/apps/dryad/apps/ui/shared/cron/counter-json"
 
 # force submission for last month (and will submit other missing months)
-export FORCE_SUBMISSION="`date --date="$(date +%Y-%m-15) - 1 month" "+%Y-%m"`"
+# export FORCE_SUBMISSION="`date --date="$(date +%Y-%m-15) - 1 month" "+%Y-%m"`"
 
 # run the script with the above settings (RAILS_ENV, REPORT_DIR, FORCE_SUBMISSION)
 # bundle exec rails counter:datacite_pusher >> /apps/dryad/apps/ui/shared/cron/logs/counter-uploader.log 2>&1
