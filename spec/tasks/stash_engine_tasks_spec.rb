@@ -15,7 +15,7 @@ describe 'identifiers:datasets_with_possible_articles_report', type: :task do
     expect(File).to exist(report_path)
 
     csv_content = CSV.read(report_path, headers: true)
-    expect(csv_content.headers).to eq(['ID', 'Identifier', 'ISSN'])
+    expect(csv_content.headers).to eq(%w[ID Identifier ISSN])
     expect(csv_content.length).to eq(0)
     csv_content.each do |row|
       identifier = StashEngine::Identifier.find(row['ID'])
