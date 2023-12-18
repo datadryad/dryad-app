@@ -27,3 +27,6 @@ bundle exec rails link_out:publish >> /apps/dryad/apps/ui/shared/cron/logs/link_
 
 # Update ROR organizations
 bundle exec rails affiliation_import:update_ror_orgs >>/apps/dryad/apps/ui/shared/cron/logs/ror_update.log 2>&1
+
+# Download & validate file digests
+bundle exec rails checksums:validate_files >> /apps/dryad/apps/ui/shared/cron/logs/validate_files.log 2>&1
