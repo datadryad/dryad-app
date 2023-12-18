@@ -420,6 +420,24 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of datasets with possible articles'
+  task datasets_with_possible_articles_report: :environment do
+    FileUtils.mkdir_p(REPORTS_DIR)
+    outfile = File.join(REPORTS_DIR, 'datasets_with_possible_articles.csv')
+    p "Writing #{outfile}..."
+    CSV.open(outfile, 'w') do |csv|
+      csv << %w[ID Identifier ISSN]
+      StashEngine::Identifier.publicly_viewable.joins(:internal_data)
+        .where(internal_data: { data_type: 'publicationISSN' })
+        .where.not(
+          id: StashEngine::InternalDatum.where({ data_type: 'publicationDOI' }).pluck(:identifier_id)
+        ).each do |i|
+
+        csv << [i.id, i.identifier, i.publication_issn]
+      end
+    end
+  end
+
   desc 'Generate a report of items associated with common preprint servers'
   task preprints_report: :environment do
     p 'Writing preprints_report.csv...'
