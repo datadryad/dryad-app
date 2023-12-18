@@ -13,7 +13,7 @@ describe 'checksums:validate_files', type: :task do
   end
 
   it 'updates validated_at when file is valid' do
-    Rake::Task['checksums:validate_files'].invoke
+    task.invoke
     @file.reload
     expect(@file.validated_at.to_date).to eq(Date.today)
   end
@@ -22,7 +22,7 @@ describe 'checksums:validate_files', type: :task do
     @file.file_state = 'copied'
     @file.save
     @file.reload
-    Rake::Task['checksums:validate_files'].invoke
+    task.invoke
     @file.reload
     expect(@file.validated_at).to eq(nil)
   end
