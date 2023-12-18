@@ -36,7 +36,8 @@ module Stash
 
       def download(resource:)
         @resource ||= resource
-        if APP_CONFIG.maximums.zip_size > @resource&.total_file_size
+        # APP_CONFIG.maximums.zip_size
+        if @resource&.total_file_size&. < 200_000_000
           credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
           signer = ::Aws::Sigv4::Signer.new(service: 'lambda', region: APP_CONFIG[:s3][:region], credentials_provider: credentials)
 
