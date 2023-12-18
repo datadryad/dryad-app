@@ -26,7 +26,7 @@ bundle exec rails counter:combine_files
 # ---------------------------------------
 # set up python and run counter-processor (maybe twice)
 # ---------------------------------------
-echo "Running counter-processor"
+# echo "Running counter-processor"
 # should no longer need to do this on the new servers because pyenv is installed into the environment with 3.7.9
 # export VIRTUAL_ENV=/apps/dryad/python_venv/python3.7.9
 # export PATH=$VIRTUAL_ENV/bin:$PATH
@@ -40,20 +40,20 @@ YEST_MONTH="`date --date='1 day ago' '+%Y-%m'`"
 WEEK_AGO_MONTH="`date --date='8 days ago' '+%Y-%m'`"
 
 # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-UPLOAD_TO_HUB=True \
-YEAR_MONTH=$WEEK_AGO_MONTH \
-OUTPUT_FILE="$COUNTER_JSON_STORAGE/$WEEK_AGO_MONTH" \
-LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
-python -u main.py
+# UPLOAD_TO_HUB=True \
+# YEAR_MONTH=$WEEK_AGO_MONTH \
+# OUTPUT_FILE="$COUNTER_JSON_STORAGE/$WEEK_AGO_MONTH" \
+# LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
+# python -u main.py
 
 if [ "$YEST_MONTH" != "$WEEK_AGO_MONTH" ]; then
     # We have another month to partially process
     # note there are additional configurations in the counter-processor config diretory and these just override or set thing there
-    UPLOAD_TO_HUB=True \
-    YEAR_MONTH=$YEST_MONTH \
-    OUTPUT_FILE="$COUNTER_JSON_STORAGE/$YEST_MONTH" \
-    LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
-    python -u main.py
+    # UPLOAD_TO_HUB=True \
+    # YEAR_MONTH=$YEST_MONTH \
+    # OUTPUT_FILE="$COUNTER_JSON_STORAGE/$YEST_MONTH" \
+    # LOG_NAME_PATTERN="/apps/dryad/apps/ui/current/log/counter_(yyyy-mm-dd).log_combined" \
+    # python -u main.py
 fi
 
 cd /apps/dryad/apps/ui/current
