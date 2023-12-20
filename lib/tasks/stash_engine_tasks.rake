@@ -430,7 +430,10 @@ namespace :identifiers do
       StashEngine::Identifier.publicly_viewable.joins(:internal_data)
         .where(internal_data: { data_type: 'publicationISSN' })
         .where.not(
-          id: StashEngine::InternalDatum.where({ data_type: 'publicationDOI' }).pluck(:identifier_id)
+          id: StashEngine::Resource
+            .joins(:related_identifiers)
+            .where({ related_identifier_type: 'doi', work_type: 'primary_article' })
+            .pluck(:identifier_id)
         ).each do |i|
 
         csv << [i.id, i.identifier, i.publication_issn]
