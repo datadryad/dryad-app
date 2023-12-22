@@ -4,5 +4,6 @@ api_logger = ActiveSupport::Logger.new(
   7
 )
 api_logger.formatter = Logger::Formatter.new
+api_logger.level = :debug
 Rails.application.config.api_logger = api_logger
 

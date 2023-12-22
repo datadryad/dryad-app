@@ -9,6 +9,7 @@ class ApiApplicationController < StashEngine::ApplicationController
   layout 'layouts/stash_engine/application'
 
   prepend_before_action :set_logger
+  before_action :log_request
   skip_before_action :verify_authenticity_token
 
   DEFAULT_PAGE_SIZE = 20
@@ -145,7 +146,20 @@ class ApiApplicationController < StashEngine::ApplicationController
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
   end
 
+  def api_logger
+    Rails.application.config.api_logger
+  end
+
   def set_logger
     Rails.logger = Rails.application.config.api_logger
+    config.logger = Rails.logger
+  end
+
+  def log_request
+    logger.info('---')
+    logger.info("Path: #{request.path}")
+    logger.info("Params: #{request.params}")
+    logger.info("Body: #{request.body.read}")
   end
 end
+
