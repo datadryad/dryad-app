@@ -432,7 +432,10 @@ namespace :identifiers do
         .where.not(
           id: StashEngine::Resource
             .joins(:related_identifiers)
-            .where({ related_identifier_type: 'doi', work_type: 'primary_article' })
+            .where({
+                     "#{StashDatacite::RelatedIdentifier.table_name}.related_identifier_type": 'doi',
+                     "#{StashDatacite::RelatedIdentifier.table_name}.work_type": 'primary_article'
+                   })
             .pluck(:identifier_id)
         ).each do |i|
 
