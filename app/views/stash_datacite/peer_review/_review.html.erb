@@ -27,6 +27,10 @@
       });
     </script>
   </div>
+<% elsif @resource.identifier.has_rejected_manuscript? %>
+  <div>
+    <p>This dataset will remain in ‘Private for Peer Review’ status until we receive a notification from the journal confirming formal acceptance of the associated manuscript.</p>
+  </div>
 <% else %>
   <div>
     <p>The private for peer review option is not available for this data submission<% if @resource.identifier.pub_state == 'published' %>, because the data has been previously published<% elsif @resource.identifier.has_accepted_manuscript? %>, because the associated article has been accepted for publication by the journal<% elsif @resource.identifier.publication_article_doi %>, because the associated article has been published by the journal<% elsif @resource.previous_curated_resource.present? || @resource.curation_start_date.present? %>, because the dataset has been submitted and entered curation<% end %>. Upon submission, the dataset will proceed to our curation process for evaluation and publication.</p>

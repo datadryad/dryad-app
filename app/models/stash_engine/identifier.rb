@@ -277,7 +277,7 @@ module StashEngine
       # do not allow to go into peer review after already published
       return false if pub_state == 'published'
       # do not allow to go into peer review if associated manuscript already accepted or published
-      return false if has_accepted_manuscript? || publication_article_doi
+      return false if has_accepted_manuscript? || has_rejected_manuscript? || publication_article_doi
       return true if journal.blank?
       return true if last_submitted_resource&.current_curation_status == 'peer_review'
 
@@ -312,6 +312,12 @@ module StashEngine
       return false unless manu
 
       manu.accepted?
+    end
+
+    def has_rejected_manuscript?
+      # TODO: maybe replace this and the above methods with a method that returns the last manuscript?
+      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+      manu&.rejected?
     end
     # rubocop:enable Naming/PredicateName
 
