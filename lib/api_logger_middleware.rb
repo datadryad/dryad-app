@@ -7,7 +7,7 @@ class ApiLoggerMiddleware
 
   def call(env)
     request = Rack::Request.new(env)
-    
+
     if request.path.start_with?('/api')
       logger = Rails.application.config.api_logger
 

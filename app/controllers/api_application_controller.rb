@@ -162,4 +162,3 @@ class ApiApplicationController < StashEngine::ApplicationController
     logger.info("Body: #{request.body.read}")
   end
 end
-
