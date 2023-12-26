@@ -1,4 +1,3 @@
-
 # config valid only for current version of Capistrano
 lock '~> 3.14'
 
@@ -36,12 +35,15 @@ append :linked_dirs,
        "uploads",
        "reports"
 
+
+
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
 namespace :deploy do
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
+  after 'deploy:symlink:linked_dirs', "deploy:files:optional_copied_files"
 end
 
 namespace :git do
@@ -68,6 +70,7 @@ namespace :deploy do
     end
   end
 end
+
 
 namespace :cleanup do
   desc "Remove all of the example config files"
