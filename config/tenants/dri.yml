@@ -32,7 +32,7 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   authentication:
@@ -40,3 +40,12 @@ production:
     entity_id: http://www.okta.com/exkh1l6ocbKBRm4RB1t7
     entity_domain: www.okta.com
   campus_contacts: [""]
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

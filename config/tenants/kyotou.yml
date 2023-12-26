@@ -34,7 +34,7 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   authentication:
@@ -42,3 +42,12 @@ production:
     entity_id: https://authidp1.iimc.kyoto-u.ac.jp/idp/shibboleth
     entity_domain: authidp1.iimc.kyoto-u.ac.jp
   campus_contacts: [""]
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

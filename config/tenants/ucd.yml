@@ -39,7 +39,7 @@ stage:
   #Add any items that need to override the defaults here
   enabled: true
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   enabled: true
@@ -49,3 +49,12 @@ production:
 test:
   <<: *default
   #Add any items that need to override the defaults here
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION
