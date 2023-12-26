@@ -33,6 +33,8 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
+v3_stage:
+  <<: *default
 
 migration:
   <<: *default
