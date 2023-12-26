@@ -1,4 +1,3 @@
-require "uc3-ssm"
 
 # config valid only for current version of Capistrano
 lock '~> 3.14'
@@ -17,6 +16,15 @@ set :version_number, `git describe --tags`
 
 set :migration_role, :app
 
+set :log_level, :debug
+
+# this copies these files over from shared, but only the files that exist on that machine
+set :optional_shared_files, %w{
+  config/master.key
+  config/credentials/production.key
+  config/credentials/stage.key
+}
+
 # Default value for linked_dirs is []
 append :linked_dirs,
        "log",
@@ -28,25 +36,12 @@ append :linked_dirs,
        "uploads",
        "reports"
 
-append :linked_files, 'config/notifier_state.json'
-
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
 namespace :deploy do
-  before :compile_assets, "deploy:retrieve_master_key"
   after :deploy, "git:version"
   after :deploy, "cleanup:remove_example_configs"
-
-  desc 'Retrieve master.key contents from SSM ParameterStore'
-  task :retrieve_master_key do
-    on roles(:app), wait: 1 do
-      ssm = Uc3Ssm::ConfigResolver.new
-      master_key = ssm.parameter_for_key('master_key')
-      IO.write("#{release_path}/config/master.key", master_key.chomp)
-      File.chmod(0600, "#{release_path}/config/master.key")
-    end
-  end
 end
 
 namespace :git do
@@ -55,6 +50,21 @@ namespace :git do
     on roles(:app), wait: 1 do
       execute "touch #{release_path}/.version"
       execute "echo '#{fetch :version_number}' >> #{release_path}/.version"
+    end
+  end
+end
+
+namespace :deploy do
+  namespace :files do
+    task :optional_copied_files do
+      on roles(:app), wait: 1 do
+        optional_shared_files = fetch(:optional_shared_files, [])
+        optional_shared_files.flatten.each do |file|
+          if test "[ -f #{shared_path}/#{file} ]"
+            execute "cp #{shared_path}/#{file} #{release_path}/#{file}"
+          end
+        end
+      end
     end
   end
 end

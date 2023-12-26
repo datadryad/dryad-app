@@ -108,9 +108,6 @@ GEM
       aws-sdk-core (~> 3, >= 3.181.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.6)
-    aws-sdk-ssm (1.156.0)
-      aws-sdk-core (~> 3, >= 3.177.0)
-      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.6.0)
       aws-eventstream (~> 1, >= 1.0.2)
     babel-source (5.8.35)
@@ -419,7 +416,6 @@ GEM
     llhttp-ffi (0.4.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
-    logger (1.5.3)
     loofah (2.16.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -893,7 +889,6 @@ DEPENDENCIES
   tins (~> 1.31.0)
   turbolinks
   twitter-typeahead-rails (= 0.11.1)
-  uc3-ssm!
   uglifier (~> 4.2.0)
   web-console
   webmock
