@@ -386,7 +386,13 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-      download_version(resource: res)
+      @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self, resource: res)
+      if res&.may_download?(ui_user: @user) && @zip_version_presigned.valid_resource?
+        StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
+        @zip_version_presigned.download(resource: res)
+      else
+        render plain: 'Download for this version of the dataset is unavailable', status: 404
+      end
     end
 
     # post /datasets/<id>/set_internal_datum

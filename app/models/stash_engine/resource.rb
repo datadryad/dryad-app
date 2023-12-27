@@ -35,7 +35,7 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
-    # download tokens are for Merritt version downloads with presigned URL caching
+    # download tokens are for validating zip assembly requests by the zipping lambda
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
     has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy
     has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy
