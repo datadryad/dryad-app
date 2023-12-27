@@ -34,7 +34,6 @@
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
       "affiliation": "UC Davis",
-      "orcid": null
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",
@@ -47,7 +46,6 @@
     }
   ],
   "keywords": [
-    "Abnormal uterine bleeding",
     "Cat",
     "Host",
     "Computer",
@@ -56,6 +54,7 @@
   "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
   "usageNotes": "<p>The rest of this paper is organized as follows. To begin with, we motivate the need for sensor networks. Next, we demonstrate the evaluation of the Ethernet. We argue the understanding of courseware. Ultimately, we conclude.</p>\r\n",
   "lastModificationDate": "2020-02-18",
+  "publicationDate": "2020-02-18",
   "locations": [
     {
       "place": "Grogan's Mill, USA",
@@ -92,7 +91,7 @@
       "identifier": "http://example.org/cats"
     }
   ],
-  "sharingLink": "https://dryad-dev.cdlib.org/stash/share/DNuXA7wqHm9WQDoijzwtTCxCaKvCBGDbS43hur8FRcQ",
+  "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2708471V",
   "versionNumber": 1,
   "versionStatus": "submitted",
   "visibility": "public"

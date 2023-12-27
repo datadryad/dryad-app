@@ -42,7 +42,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2HM58Q3S",
+        "identifier": "doi:10.5072/FK2HM58Q3S",
+        "id": 234,
         "storageSize": 157841,
         "title": "The Influence of Large-Scale Archetypes on Cryptoanalysis",
         "authors": [
@@ -50,13 +51,19 @@
             "firstName": "Helga",
             "lastName": "Smuin",
             "email": "scott.fisher@ucop.edu",
-            "affiliation": "UC Merced",
-            "orcid": null
+            "affiliation": "UC Merced"
           }
         ],
         "abstract": "<p>Many futurists would agree that, had it not been for write-back caches, the understanding of public-private key pairs might never have occurred. In fact, few cyberinformaticians would disagree with the construction of hierarchical databases, which embodies the typical principles of robotics [13]. KeyEdgebone, our new application for homogeneous theory, is the solution to all of these grand challenges. This technique at first glance seems unexpected but is derived from known results.</p>",
         "versionNumber": 1,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-01-01",
+        "publicationDate": "2020-01-01",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2HM58Q3S",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "_links": {
@@ -80,7 +87,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2474DX0J",
+        "identifier": "doi:10.5072/FK2474DX0J",
+        "id": 2356,
         "storageSize": 1209660,
         "title": "Analyzing the Lookaside Buffer and E-Commerce with HAIL",
         "authors": [
@@ -88,17 +96,16 @@
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@ucop.edu",
-            "affiliation": "UC Berkeley",
-            "orcid": null
+            "affiliation": "UC Berkeley"
           }
         ],
         "abstract": "<p>The robotics approach to massive multiplayer online role-playing games is defined not only by the simulation of SMPs, but also by the structured need for replication. In fact, few cryptographers would disagree with the improvement of operating systems. In this paper, we verify that write-back caches can be made electronic, psychoacoustic, and embedded.</p>",
         "funders": [
           {
-            "organization": "Albani Fonden",
-            "awardNumber": "FondAlb28",
-            "identifier": "http://dx.doi.org/10.13039/501100008201",
-            "identifierType": "crossref_funder_id"
+            "organization": "Stichting Sem Presser Archief",
+            "identifierType": "ror",
+            "identifier": "https://ror.org/02f5r3008",
+            "awardNumber": "12345"
           }
         ],
         "keywords": [
@@ -149,7 +156,6 @@
         ],
         "methods": "<p>Made many subjects.</p>",
         "usageNotes": "<p>tricks.</p>",
-	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "place": "Frufällan, Sweden",
@@ -181,7 +187,14 @@
           }
         ],
         "versionNumber": 5,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-02-01",
+        "publicationDate": "2020-02-01",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2474DX0J",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "id": "doi:10.5072/FK22N55P2B",
@@ -209,7 +222,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK28W3G720",
+        "identifier": "doi:10.5072/FK28W3G720",
+        "id": 3456,
         "storageSize": 155899,
         "title": "Quick Test of New Dataset for UC Davis BAE",
         "authors": [
@@ -222,19 +236,16 @@
           }
         ],
         "abstract": "<p>testing a new dev tenant.</p>",
-	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "locations": [
-          {
-            "place": "UC Davis Bookstore, University of California Davis, CA, USA",
-            "point": {
-              "latitude": "38.542788",
-              "longitude": "-121.749248"
-            }
-          }
-        ],
-	"relatedPublicationISSN": "1234-5432",
+        "relatedPublicationISSN": "1234-5432",
         "versionNumber": 1,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-01-07",
+        "publicationDate": "2020-01-07",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK28W3G720",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "_links": {
@@ -258,7 +269,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2MK6CD6D",
+        "identifier": "doi:10.5072/FK2MK6CD6D",
+        "id": 3457,
         "storageSize": 423587,
         "title": "test1",
         "authors": [
@@ -266,16 +278,23 @@
             "firstName": "Scott",
             "lastName": "Fisher",
             "email": "scott.fisher@ucop.edu",
-            "affiliation": "UC Office of the President",
-            "orcid": null
+            "affiliation": "UC Office of the President"
           }
         ],
         "abstract": "<p>test</p>",
         "versionNumber": 2,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-01-07",
+        "publicationDate": "2020-01-07",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2MK6CD6D",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
-        "id": "doi:10.5072/FK2C82BM6C",
+        "identifier": "doi:10.5072/FK2C82BM6C",
+        "id": 3478,
         "message": "identifier is missing required elements"
       },
       {
@@ -300,7 +319,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK24T6N929",
+        "identifier": "doi:10.5072/FK24T6N929",
+        "id": 3678,
         "storageSize": 192633,
         "title": "My Chocolate Cat Thurber Jones",
         "authors": [
@@ -308,8 +328,7 @@
             "firstName": "Yves",
             "lastName": "Thuries",
             "email": "yves.thuries@mailinator.com",
-            "affiliation": "UC Office of the President",
-            "orcid": null
+            "affiliation": "UC Office of the President"
           }
         ],
         "abstract": "<p>I like my chocolate cat.  His name is Thurber Jones.</p>",
@@ -317,7 +336,6 @@
           "Affinity chromatography"
         ],
         "usageNotes": "<p>Use this very carefully.</p>",
-	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "locations": [
           {
             "place": "Chicago, IL, USA",
@@ -334,7 +352,14 @@
           }
         ],
         "versionNumber": 6,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "files_changed",
+        "lastModificationDate": "2020-04-17",
+        "publicationDate": "2020-04-17",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK24T6N929",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "_links": {
@@ -358,7 +383,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2QJ7G49H",
+        "identifier": "doi:10.5072/FK2QJ7G49H",
+        "id": 3679,
         "storageSize": 10882,
         "title": "Data McDataface",
         "authors": [
@@ -366,8 +392,7 @@
             "firstName": "Testy",
             "lastName": "McTestface",
             "email": "test@example.edu",
-            "affiliation": "Test University",
-            "orcid": null
+            "affiliation": "Test University"
           }
         ],
         "abstract": "<p>Test</p>",
@@ -377,23 +402,15 @@
             "awardNumber": "9 3/4"
           }
         ],
-	"license": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "locations": [
-          {
-            "point": {
-              "latitude": "36.421282",
-              "longitude": "-121.464844"
-            }
-          },
-          {
-            "point": {
-              "latitude": "37.160317",
-              "longitude": "-121.860352"
-            }
-          }
-        ],
         "versionNumber": 1,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-04-19",
+        "publicationDate": "2020-04-19",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2QJ7G49H",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "_links": {
@@ -417,7 +434,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2J966H3B",
+        "identifier": "doi:10.5072/FK2J966H3B",
+        "id": 3789,
         "storageSize": 183404,
         "title": "Kathryn Cats",
         "authors": [
@@ -425,13 +443,19 @@
             "firstName": "Kathryn",
             "lastName": "Cats",
             "email": "kathryncats@mailinator.com",
-            "affiliation": "UC Office of the President",
-            "orcid": null
+            "affiliation": "UC Office of the President"
           }
         ],
         "abstract": "<p>test</p>",
         "versionNumber": 3,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "metadata_changed",
+        "lastModificationDate": "2020-05-01",
+        "publicationDate": "2020-05-01",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2J966H3B",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       },
       {
         "_links": {
@@ -455,7 +479,8 @@
             }
           ]
         },
-        "id": "doi:10.5072/FK2T151W7S",
+        "identifier": "doi:10.5072/FK2T151W7S",
+        "id": 3790,
         "storageSize": 162465,
         "title": "Glo-ball the Elephant Measurements",
         "authors": [
@@ -463,13 +488,19 @@
             "firstName": "Gloria",
             "lastName": "Arnand",
             "email": "gloria.arnand@mailinator.com",
-            "affiliation": "UC Davis",
-            "orcid": null
+            "affiliation": "UC Davis"
           }
         ],
         "abstract": "<p>The measurements for Glo-ball the Elephant.</p>",
         "versionNumber": 1,
-        "versionStatus": "submitted"
+        "versionStatus": "submitted",
+        "curationStatus": "public",
+        "versionChanges": "none",
+        "lastModificationDate": "2020-05-10",
+        "publicationDate": "2020-05-10",
+        "visibility": "public",
+        "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2T151W7S",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
       }
     ]
   }
