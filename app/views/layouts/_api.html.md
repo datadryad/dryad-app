@@ -64,7 +64,7 @@ Detailed, interactive documentation of all available Dryad request methods:
   }
   window.onload = function() {
     const ui = SwaggerUIBundle({
-      url: "/openapi.yml?4",
+      url: "/openapi.yml?5",
       dom_id: '#swagger-ui',
       deepLinking: true,
       presets: [
