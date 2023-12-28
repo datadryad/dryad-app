@@ -31,6 +31,8 @@ gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to
 gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
 gem 'puma', '6.1.0', group: :puma, require: false # puma 6.3.0 doesn't start
+gem 'ed25519', '1.3.0'
+gem 'bcrypt_pbkdf', '1.1.0'
 
 # ############################################################
 # UI
