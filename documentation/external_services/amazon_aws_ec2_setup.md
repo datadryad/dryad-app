@@ -34,7 +34,6 @@ git clone https://github.com/CDL-Dryad/dryad-app.git
 ```
 - install ruby
 ```
-sudo yum install ruby
 sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison perl-core icu libicu-devel
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bash_profile
@@ -76,6 +75,12 @@ bundle exec rails webpacker:compile
 ```
 cd ~/dryad-app
 rails s
+```
+- if this machine will be used with Capistrano, ensure it can SSH to itself
+```
+cd ~/.ssh
+ssh-keygen # accept default suggestions
+cat id_rsa.pub >> authorized_keys
 ```
 
 Database setup
