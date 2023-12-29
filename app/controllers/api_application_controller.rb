@@ -159,6 +159,6 @@ class ApiApplicationController < StashEngine::ApplicationController
     logger.info('---')
     logger.info("Path: #{request.path}")
     logger.info("Params: #{request.params}")
-    logger.info("Body: #{request.body.read}")
+    logger.info("Body: #{request.body}")
   end
 end

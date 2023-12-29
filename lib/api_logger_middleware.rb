@@ -1,5 +1,3 @@
-require 'doorkeeper'
-
 class ApiLoggerMiddleware
   def initialize(app)
     @app = app
