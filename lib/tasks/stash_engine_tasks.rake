@@ -427,8 +427,7 @@ namespace :identifiers do
     p "Writing #{outfile}..."
     CSV.open(outfile, 'w') do |csv|
       csv << %w[ID Identifier ISSN]
-      StashEngine::Identifier.publicly_viewable.joins(:internal_data)
-        .where(internal_data: { data_type: 'publicationISSN' })
+      StashEngine::Identifier.publicly_viewable.joins(:internal_data).where(internal_data: { data_type: 'publicationISSN' })
         .where.not(
           id: StashEngine::Resource
             .joins(:related_identifiers)
