@@ -19,7 +19,7 @@
   <li>John Wiley &amp; Sons, Inc</li>
   <li>Nordic Society Oikos</li>
   <li>Oxford University Press</li>
-  <li>The Paleontological Association</li>
+  <li>The Palaeontological Association</li>
   <li>The Paleontological Society</li>
   <li>Rockefeller University Press</li>
   <li>The Royal Society</li>
