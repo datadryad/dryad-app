@@ -18,6 +18,15 @@ describe 'checksums:validate_files', type: :task do
     expect(@file.validated_at.to_date).to eq(Date.today)
   end
 
+  it 'does not update when file is invalid' do
+    @file.digest = '4600db3135dcfd11dfe0b7c35a382329218306b40adb5a7a5257d0'
+    @file.save
+    @file.reload
+    task.invoke
+    @file.reload
+    expect(@file.validated_at).to eq(nil)
+  end
+
   it 'only checks original files' do
     @file.file_state = 'copied'
     @file.save
