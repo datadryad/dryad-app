@@ -1,23 +1,4 @@
 {
-  "_links": {
-    "self": {
-      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QV3KZ2K"
-    },
-    "stash:versions": {
-      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QV3KZ2K/versions"
-    },
-    "stash:version": {
-      "href": "/api/v2/versions/302"
-    },
-    "curies": [
-      {
-        "name": "stash",
-        "href": "https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}",
-        "templated": "true"
-      }
-    ]
-  },
-  "id": "doi:10.5072/FK2QV3KZ2K",
   "title": "A Study of Red-Black Trees with Weight",
   "authors": [
     {
@@ -37,10 +18,8 @@
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",
   "funders": [
     {
-      "organization": "Stichting Sem Presser Archief",
-      "identifierType": "ror",
-      "identifier": "https://ror.org/02f5r3008",
-      "awardNumber": "12345"
+      "organization": "N/A",
+      "identifier": "0"
     }
   ],
   "keywords": [
@@ -57,7 +36,5 @@
       "identifier": "http://example.org/cats"
     }
   ],
-  "versionNumber": 1,
-  "versionStatus": "in_progress",
   "userId": 1234
 }

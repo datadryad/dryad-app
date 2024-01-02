@@ -24,9 +24,9 @@
     } ],
     "funders": [ 
 	{
-		"organization": "Savannah River Operations Office, U.S. Department of Energy",
-		"identifierType": "crossref_funder_id",
-		"identifier": "http://dx.doi.org/10.13039/100008972",
+		"organization": "Savannah River Operations Office",
+		"identifierType": "ror",
+		"identifier": "https://ror.org/05hhm9a98",
 		"awardNumber": "12345" },
 	{
 	    "organization": "The Cat Chronicles",
