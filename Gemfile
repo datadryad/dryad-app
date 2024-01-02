@@ -34,9 +34,6 @@ gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
 gem 'puma', '6.1.0', group: :puma, require: false # puma 6.3.0 doesn't start
 
-
-
-
 # ############################################################
 # UI
 
