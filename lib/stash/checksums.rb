@@ -113,24 +113,24 @@ module Stash
 end
 
 # Example usage
-begin
-  types = %w[md5 sha256]
+# begin
+#   types = %w[md5 sha256]
 
-  DATA = '/apps/replic/test/sword/big/big.zip'.freeze
-  test_file = DATA
+#   DATA = '/apps/replic/test/sword/big/big.zip'.freeze
+#   test_file = DATA
 
-  start_time = Time.now
-  checksums = Stash::Checksums.get_checksums(types, test_file)
-  end_time = Time.now
+#   start_time = Time.now
+#   checksums = Stash::Checksums.get_checksums(types, test_file)
+#   end_time = Time.now
 
-  puts "Process(#{Stash::Checksums::BUFSIZE})=#{end_time - start_time}"
-  puts "get_input_size=#{checksums.input_size}"
+#   puts "Process(#{Stash::Checksums::BUFSIZE})=#{end_time - start_time}"
+#   puts "get_input_size=#{checksums.input_size}"
 
-  types.each do |type|
-    checksum = checksums.get_checksum(type)
-    puts "get_checksum(#{type}): #{checksum}"
-  end
-rescue StandardError => e
-  puts "Error: #{e.message}"
-  puts e.backtrace.join("\n")
-end
+#   types.each do |type|
+#     checksum = checksums.get_checksum(type)
+#     puts "get_checksum(#{type}): #{checksum}"
+#   end
+# rescue StandardError => e
+#   puts "Error: #{e.message}"
+#   puts e.backtrace.join("\n")
+# end
