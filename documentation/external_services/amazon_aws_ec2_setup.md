@@ -76,12 +76,6 @@ bundle exec rails webpacker:compile
 cd ~/dryad-app
 rails s
 ```
-- if this machine will be used with Capistrano, ensure it can SSH to itself
-```
-cd ~/.ssh
-ssh-keygen # accept default suggestions
-cat id_rsa.pub >> authorized_keys
-```
 
 Database setup
 ===============
@@ -116,3 +110,24 @@ sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
 # Then import using the mysql command that you would normally use to run the DB client:
 `mysql_stg.sh < myfile.sql`
 
+
+Setting up for code deployment
+==============================
+
+Ensure the machine can SSH to itself to support Capistrano
+```
+cd ~/.ssh
+ssh-keygen # accept default suggestions
+cat id_rsa.pub >> authorized_keys
+ssh ec2-user@localhost
+exit
+```
+
+Set up Puma in systemd and get it running
+```
+sudo cp ~/dryad-app/documentation/external_services/puma.service /etc/systemd/system/puma.service
+nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
+sudo systemctl daemon-reload
+sudo systemctl start puma
+sudo systemctl status puma
+```
