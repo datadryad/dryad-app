@@ -34,7 +34,6 @@ git clone https://github.com/CDL-Dryad/dryad-app.git
 ```
 - install ruby
 ```
-sudo yum install ruby
 sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison perl-core icu libicu-devel
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bash_profile
@@ -111,3 +110,24 @@ sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
 # Then import using the mysql command that you would normally use to run the DB client:
 `mysql_stg.sh < myfile.sql`
 
+
+Setting up for code deployment
+==============================
+
+Ensure the machine can SSH to itself to support Capistrano
+```
+cd ~/.ssh
+ssh-keygen # accept default suggestions
+cat id_rsa.pub >> authorized_keys
+ssh ec2-user@localhost
+exit
+```
+
+Set up Puma in systemd and get it running
+```
+sudo cp ~/dryad-app/documentation/external_services/puma.service /etc/systemd/system/puma.service
+nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
+sudo systemctl daemon-reload
+sudo systemctl start puma
+sudo systemctl status puma
+```

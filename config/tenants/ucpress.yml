@@ -36,3 +36,11 @@ production:
   <<: *default
   campus_contacts: [""]
 
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *default
