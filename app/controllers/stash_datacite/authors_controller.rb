@@ -115,6 +115,7 @@ module StashDatacite
                   StashDatacite::Affiliation.create(long_name: "#{name}*", ror_id: nil)
                 end
       end
+      return if @author.affiliation == affil
 
       @author.affiliation = affil
       @author.save
