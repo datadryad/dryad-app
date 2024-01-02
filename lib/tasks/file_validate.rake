@@ -14,11 +14,7 @@ namespace :checksums do
         f.save
       else
         p '    File cannot be validated; possible corruption!'
-        StashEngine::UserMailer.file_validation_error(f,
-                                                      "File with ID #{f.id} cannot be validated; possible corruption!
-                                                      \n\nid: #{f.id}
-                                                      \nfilename: #{f.upload_file_name}
-                                                      \nurl: #{f.s3_permanent_presigned_url}").deliver_now
+        StashEngine::UserMailer.file_validation_error(f).deliver_now
       end
     rescue StandardError => e
       p "    Exception! #{e.message}"

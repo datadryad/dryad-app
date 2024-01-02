@@ -97,12 +97,12 @@ module StashEngine
            subject: "#{rails_env}General error \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
     end
 
-    def file_validation_error(file, error_text)
+    def file_validation_error(file)
       logger.warn("Unable to report update error #{error}; nil file") unless file.present?
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
       return unless file.present? && @zenodo_error_emails.present?
 
-      @error_text = error_text
+      @file = file
       mail(to: @zenodo_error_emails,
            subject: "#{rails_env}File checksum validation error\"")
     end
