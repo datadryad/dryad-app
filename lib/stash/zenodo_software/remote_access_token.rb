@@ -41,7 +41,7 @@ module Stash
         buck_url = get_bucket_url(deposition_id)
         return nil if buck_url.nil?
 
-        "#{buck_url}/#{ERB::Util.url_encode(filename)}?token=#{ERB::Util.url_encode(rat_token)}"
+        "#{buck_url}/#{ERB::Util.url_encode(filename)}?resource-token=#{ERB::Util.url_encode(rat_token)}"
       end
 
       def get_bucket_url(deposition_id)
