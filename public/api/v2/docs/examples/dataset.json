@@ -20,23 +20,26 @@
       }
     ]
   },
-  "id": "doi:10.5072/FK2708471V",
+  "identifier": "doi:10.5072/FK2708471V",
+  "id": 1234,
   "storageSize": 54151,
+  "relatedPublicationISSN": "1234-5432",
   "title": "A Study of Red-Black Trees with Weight",
   "authors": [
     {
       "firstName": "Scott",
       "lastName": "Fisher",
       "email": "Scott.Fisher@ucop.edu",
-      "affiliation": "UC Office of the President",
+      "affiliation": "University of California Office of the President",
+      "affiliationROR": "https://ror.org/00dmfq477",
       "orcid": "0000-0001-6422-6998"
     },
     {
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "UC Davis",
-      "orcid": null
+      "affiliation": "University of California, Davis",
+      "affiliationROR": "https://ror.org/05rrcem69"
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",
@@ -49,7 +52,6 @@
     }
   ],
   "keywords": [
-    "Abnormal uterine bleeding",
     "Cat",
     "Host",
     "Computer",
@@ -57,44 +59,23 @@
   ],
   "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
     "usageNotes": "<p>The rest of this paper is organized as follows. To begin with, we motivate the need for sensor networks. Next, we demonstrate the evaluation of the Ethernet. We argue the understanding of courseware. Ultimately, we conclude.</p>\r\n",
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "locations": [
-    {
-      "place": "Grogan's Mill, USA",
-      "point": {
-        "latitude": "30.130379",
-        "longitude": "-95.402929"
-      },
-      "box": {
-        "swLongitude": "-95.527852",
-        "swLatitude": "30.049326",
-        "neLongitude": "-95.32743",
-        "neLatitude": "30.164696"
-      }
-    },
-    {
-      "point": {
-        "latitude": "37.0",
-        "longitude": "-122.0"
-      }
-    },
-    {
-      "box": {
-        "swLongitude": "-122.0",
-        "swLatitude": "37.0",
-        "neLongitude": "-121.0",
-        "neLatitude": "38.0"
-      }
-    }
-  ],
   "relatedWorks": [
     {
-      "relationship": "article",
+      "relationship": "primary_article",
       "identifierType": "URL",
       "identifier": "http://example.org/cats"
     }
   ],
-  "relatedPublicationISSN": "1234-5432",
   "versionNumber": 1,
-  "versionStatus": "submitted"
+  "versionStatus": "submitted",
+  "curationStatus": "Published",
+  "versionChanges": "none",
+  "publicationDate": "2000-01-01",
+  "lastModificationDate": "2000-01-01",
+  "visibility": "public",
+  "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2708471V",
+  "changedFields": [
+    "none"
+  ],
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/"
 }

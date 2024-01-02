@@ -42,7 +42,9 @@
         "path": "I0006475A.jpg",
         "size": 218594,
         "mimeType": "image/jpeg",
-        "status": "copied"
+        "status": "copied",
+        "digest": "1adGSDHSG232776e7qedqgdaysdfts8",
+        "digestType": "md5"
       },
       {
         "_links": {

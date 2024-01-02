@@ -170,6 +170,8 @@ defaults: &DEFAULTS
     merritt_bucket: dryad-assetstore-merritt-dev
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+    lambda_id:
+      dataZip: w27i4vubmmwkssdf6xpszafmhq0rffog
   google_analytics_id: null
   matomo_analytics_id: null
   google_recaptcha_sitekey: 6Lfhn5kiAAAAAIzZPQEGRa43cDJz-rNVxRcQIkU4
@@ -190,7 +192,7 @@ defaults: &DEFAULTS
   frictionless:
     # 150 MB and below
     size_limit: 10_000_000
-    missing_values: "na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank"
+    missing_values: ",NA,na,N/A,n/a,N.A.,n.a.,-,.,empty,blank"
   rate_limit:
     # number of requests allowed per minute
     all_requests: 120

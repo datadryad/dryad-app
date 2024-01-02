@@ -8,7 +8,7 @@ module StashApi
       class Funders < MetadataItem
 
         def value
-          @resource.contributors.where(contributor_type: 'funder').map do |funder|
+          @resource.contributors.where(contributor_type: 'funder').where.not(name_identifier_id: '0').map do |funder|
             {
               organization: funder.contributor_name,
               identifierType: funder.identifier_type,
