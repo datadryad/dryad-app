@@ -73,11 +73,13 @@ If you believe someone is violating the Code of Conduct, we ask that you report 
 
 ## Dryad Code of Conduct Working Group
 
-<em>The composition of this group rotates &amp; will be updated here. Last updated 2022-09-15</em>
+<em>The composition of this group rotates &amp; will be updated here. Last updated 2024-01-02</em>
 
 <ul>
-  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></li>
+  <li>Daniel Potter &#8211; <a class="emailr" href="mailto:dev@null">ude.sivadcu@rettopd</a></li>
   <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></li>
+  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></li>
+  <li>Jenny Muilenburg &#8211;<a class="emailr" href="mailto:dev@null">ude.wu@liumj</a></li>
   <li>Malvika Sharan &#8211; <a class="emailr" href="mailto:dev@null">moc.liamg@narahsakivlam</a></li>
 </ul>
 
