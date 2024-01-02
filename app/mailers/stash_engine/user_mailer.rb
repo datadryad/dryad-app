@@ -104,7 +104,7 @@ module StashEngine
 
       @file = file
       mail(to: @zenodo_error_emails,
-           subject: "#{rails_env}File checksum validation error\"")
+           subject: "#{rails_env}File checksum validation error")
     end
 
     def feedback_signup(message)
