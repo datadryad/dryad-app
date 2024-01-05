@@ -3,7 +3,7 @@ Editorial Manager Bridging API
 ===============================
 
 Dryad has a "bridging API" that translates between the needs of
-Editorial Manager and the normal (submission API)[submission.md].
+Editorial Manager and the normal [submission API](submission.md).
 
 The bridging API takes requests in the Editorial Manager format,
 transforms them into the format used by the Dryad API, runs the
