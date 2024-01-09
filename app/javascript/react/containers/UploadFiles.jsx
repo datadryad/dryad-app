@@ -479,7 +479,7 @@ export default function UploadFiles({
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
             totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + readme_size)}
-            readmeSize={formatSizeUnits(readme_size)}
+            readmeSize={readme_size && formatSizeUnits(readme_size)}
           />
           {loading && (
             <div className="c-upload__loading-spinner">
