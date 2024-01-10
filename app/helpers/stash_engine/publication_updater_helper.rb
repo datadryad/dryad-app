@@ -24,7 +24,12 @@ module StashEngine
     def fetch_identifier_metadata(resource:, data_type:)
       return nil unless resource.present? && data_type.present?
 
-      resource.identifier.internal_data.where(data_type: data_type).first&.value || 'Not available'
+      case data_type
+      when 'publicationISSN', 'publicationName'
+        resource.identifier.send(data_type.underscore)&.value || 'Not Available'
+      else
+        resource.identifier.internal_data.where(data_type: data_type).first&.value || 'Not available'
+      end
     end
 
     def fetch_related_primary_article(resource:)
