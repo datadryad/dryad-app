@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ellipsize from '../../../../lib/string_patch';
 import classes from './File.module.css';
 
@@ -25,19 +25,16 @@ const statusCss = (status) => {
   }
 };
 
-class File extends React.Component {
-  state = {removing: false};
+export default function File({file, clickRemove, clickValidationReport}) {
+  const [removing, setRemoving] = useState(false);
 
-  clickRemove = () => {
-    this.setState({removing: true});
-    this.props.clickRemove(this.props.file.id);
+  const removeClick = () => {
+    setRemoving(true);
+    clickRemove(file.id);
   };
 
-  getTabularInfo = () => {
-    const {removing} = this.state;
+  const getTabularInfo = () => {
     if (removing) return 'Removing...';
-
-    const {file, clickValidationReport} = this.props;
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
@@ -78,40 +75,34 @@ class File extends React.Component {
     }
   };
 
-  render() {
-    const tabularInfo = this.getTabularInfo();
-    const {removing} = this.state;
-    const {file} = this.props;
-    return (
-      <tr>
-        <th scope="row">{file.sanitized_name}</th>
-        <td id={`status_${file.id}`} className="c-uploadtable__status">{file.status}</td>
-        <td>
-          <span className={statusCss(file.tabularCheckStatus)}>
-            {tabularInfo}
-          </span>
-        </td>
-        <td>
-          {file.url && (
-            <a href={file.url} title={file.url}>
-              {ellipsize(file.url)}
-            </a>
-          )}
-        </td>
-        <td>{capitalize(file.uploadType)}</td>
-        <td className="c-uploadtable-size">{file.sizeKb}</td>
-        <td>
-          {removing ? (
-            <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
-          ) : (
-            <button onClick={this.clickRemove} type="button" className="c-upload__button">
-              Remove
-            </button>
-          )}
-        </td>
-      </tr>
-    );
-  }
+  const tabularInfo = getTabularInfo();
+  return (
+    <tr>
+      <th scope="row">{file.sanitized_name}</th>
+      <td id={`status_${file.id}`} className="c-uploadtable__status">{file.status}</td>
+      <td>
+        <span className={statusCss(file.tabularCheckStatus)}>
+          {tabularInfo}
+        </span>
+      </td>
+      <td>
+        {file.url && (
+          <a href={file.url} title={file.url}>
+            {ellipsize(file.url)}
+          </a>
+        )}
+      </td>
+      <td>{capitalize(file.uploadType)}</td>
+      <td className="c-uploadtable-size">{file.sizeKb}</td>
+      <td>
+        {removing ? (
+          <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
+        ) : (
+          <button onClick={removeClick} type="button" className="c-upload__button">
+            Remove
+          </button>
+        )}
+      </td>
+    </tr>
+  );
 }
-
-export default File;
