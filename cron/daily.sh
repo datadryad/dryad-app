@@ -17,3 +17,6 @@ bundle exec rails curation_stats:update_recent RAILS_ENV=$1 >> /apps/dryad/apps/
 bundle exec rails journal_email:clean_old_manuscripts RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/manuscripts_clean.log 2>&1
 bundle exec rails compressed:update_contents RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/compressed_contents.log 2>&1
 bundle exec rails identifiers:datasets_without_primary_articles_report  RAILS_ENV=$1 >> /apps/dryad/apps/ui/shared/cron/logs/datasets_without_primary_articles_report.log 2>&1
+
+# Download & validate file digests
+bundle exec rails checksums:validate_files >> /apps/dryad/apps/ui/shared/cron/logs/validate_files.log 2>&1
