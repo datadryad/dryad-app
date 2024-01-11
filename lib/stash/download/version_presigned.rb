@@ -8,7 +8,7 @@ module Stash
 
     class S3CustomError < StandardError; end
 
-    class ZipVersionPresigned
+    class VersionPresigned
       attr_reader :cc
 
       # passing the controller context allows us to do actions the controller would normally do such as redirecting
