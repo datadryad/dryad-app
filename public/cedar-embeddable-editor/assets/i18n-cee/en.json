@@ -1,0 +1,79 @@
+{
+  "App": {
+    "Title": "CEDAR Embeddable Editor",
+    "Maintained": "CEDAR is maintained by the Stanford Center for Biomedical Informatics Research.",
+    "Contact": "Contact CEDAR"
+  },
+  "Generic": {
+    "BMIR": "BMIR",
+    "SAVE": "SAVE",
+    "Infinite": "Infinite",
+    "ExpandAll": "Expand All",
+    "CollapseAll": "Collapse All",
+    "Copy": "Copy",
+    "Page": "Page",
+    "Name": "Name",
+    "Value": "Value",
+    "AttributeName": "Attribute Name",
+    "AttributeValue": "Attribute Value",
+    "AllValues": "All Values",
+    "Clear": "Clear",
+    "SelectDecimalSeconds": "Select Decimal Seconds",
+    "SelectTimeZone": "Select Time Zone",
+    "NoTimeZoneFound": "No Time Zone Found",
+    "SelectYear": "Select Year",
+    "SelectYearAndMonth": "Select Year and Month",
+    "SelectDate": "Select Date",
+    "NumberOnly": "Number Only",
+    "CedarLogo": "Cedar Logo",
+    "DecimalSeconds": "decimal seconds",
+    "Filter": "Start typing to filter"
+  },
+  "Process": {
+    "Initializing": "CEDAR Embeddable Editor initializing..."
+  },
+  "Multi": {
+    "NoInstancesYet": "No instances yet",
+    "AddEmptyAfter": "Add empty after current",
+    "AddCloneAfter": "Add clone after current",
+    "DeleteCurrent": "Delete current"
+  },
+  "Error": {
+    "ValueRequired": "The value is required"
+  },
+  "Extra": {
+    "SampleTemplate": {
+      "Title": "Sample templates",
+      "Select": "Select template",
+      "Find": "Find template...",
+      "FindNoMatch": "No matching templates found"
+    },
+    "JsonLD": {
+      "InstanceCore": "JSON-LD - Instance - Core",
+      "Instance": "JSON-LD - Instance"
+    },
+    "JsonSchemaTemplate": "JSON Schema - Template",
+    "TemplateRendering": "Template Rendering Data",
+    "MultiInstance": "Multi-Instance Information"
+  },
+  "Validation": {
+    "Required": "The value is required.",
+    "Text": {
+      "MinLength": "Value should be at least {{constraintMinLength}} chars long.",
+      "MaxLength": "Value should be at most {{constraintMaxLength}} chars long."
+    },
+    "Select": {
+      "MaxSelection": "Select up to {{maxSelections}}"
+    },
+    "Email": {
+      "Invalid": "Value should be a valid email address."
+    },
+    "Link": {
+      "Invalid": "Value should be a valid URL."
+    },
+    "Numeric": {
+      "MinValue": "Value should be at least {{constraintMinValue}}.",
+      "MaxValue": "Value should be at most {{constraintMaxValue}}."
+    }
+  }
+}
