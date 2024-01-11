@@ -37,7 +37,7 @@ module Stash
       def download(resource:)
         @resource ||= resource
         # APP_CONFIG.maximums.zip_size
-        if @resource&.total_file_size&. < 200_000_000
+        if @resource&.total_file_size&. < APP_CONFIG[:maximums][:api_zip_size]
           credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
           signer = ::Aws::Sigv4::Signer.new(service: 'lambda', region: APP_CONFIG[:s3][:region], credentials_provider: credentials)
 
@@ -53,7 +53,7 @@ module Stash
           zip_url = signer.presign_url(
             http_method: 'GET',
             expires_in: 3600,
-            url: "https://#{APP_CONFIG[:s3][:lambda_id][:dataZip]}.lambda-url.#{APP_CONFIG[:s3][:region]}.on.aws/?filename=#{zip_name}&download_url=#{CGI.escape("#{download_url}/#{generate_token}")}"
+            url: "https://#{APP_CONFIG[:lambda_id][:dataZip]}.lambda-url.#{APP_CONFIG[:s3][:region]}.on.aws/?filename=#{zip_name}&download_url=#{CGI.escape("#{download_url}/#{generate_token}")}"
           )
           cc.redirect_to zip_url.to_s
         else
