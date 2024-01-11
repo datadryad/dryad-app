@@ -2,8 +2,6 @@
 
 module StashApi
   class VersionsController < ApiApplicationController
-    include Downloadable
-
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]

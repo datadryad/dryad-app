@@ -1,5 +1,4 @@
 require 'stash/download/file_presigned'
-require 'stash/download/version_presigned'
 require 'http'
 
 module StashEngine
@@ -65,53 +64,20 @@ module StashEngine
       end
     end
 
-    # for downloading the full version -- the old merritt way
+    # for downloading the full version
+    # uses presigned
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
       check_for_sharing
 
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render status: 404, plain: "404: Not found or invalid download\n"
-        return
+      @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self, resource: @resource)
+      if @zip_version_presigned.valid_resource? && (@resource&.may_download?(ui_user: @user) || @sharing_link)
+        StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
+        @zip_version_presigned.download(resource: @resource)
+      else
+        render plain: 'Download for this dataset is unavailable', status: 404
       end
-
-      respond_to do |format|
-        format.html do
-          non_ajax_response_for_download
-        end
-        format.js do
-          @status_hash = @version_presigned.download
-          log_counter_version if @status_hash[:status] == 200
-          if @status_hash[:status] == 408
-            notify_download_timeout
-            render 'download_timeout'
-            return
-          end
-        end
-      end
-    end
-
-    # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
-    def assembly_status
-      @resource = nil
-      @resource = Resource.where(id: params[:id]).first if params[:share].nil?
-      check_for_sharing
-
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render json: { status: 202 } # it will never be ready for them, this url isn't useful except to legit users so shouldn't happen
-        return
-      end
-
-      @status_hash = @version_presigned.status
-      log_counter_version if @status_hash[:status] == 200 # because this triggers the download when it has this status
-      logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}") if @status_hash[:status] == 408
-      render json: @status_hash
-    rescue HTTP::TimeoutError
-      logger.warn("HTTP Timeout from Merritt in downloads_controller#assembly_status for Resource #{@resource&.id}")
-      render json: { status: 408 }
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
