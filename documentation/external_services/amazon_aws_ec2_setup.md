@@ -136,6 +136,8 @@ Configure SOLR for Dryad:
 bin/solr stop
 cp ~/dryad-app/config/solr_config/* ~/solr-7.7.3/server/solr/geoblacklight/conf/
 chmod 775 ~/solr-7.7.3/server/solr/geoblacklight/conf/schema.xml
+bin/solr start
+cd ~/deploy/current
 bundle exec rails rsolr:reindex
 ```
 
