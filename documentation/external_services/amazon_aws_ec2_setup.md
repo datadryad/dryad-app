@@ -122,7 +122,8 @@ To install solr:
 ```
 sudo yum install java-1.8.0-amazon-corretto
 wget "https://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz"
-tar zxf solr-7.7.3.tgz 
+tar zxf solr-7.7.3.tgz
+cd solr-7.7.3
 export SOLR_JETTY_HOST="0.0.0.0"
 bin/solr start
 bin/solr create  -c geoblacklight
