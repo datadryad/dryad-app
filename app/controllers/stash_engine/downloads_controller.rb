@@ -71,10 +71,10 @@ module StashEngine
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
       check_for_sharing
 
-      @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self, resource: @resource)
-      if @zip_version_presigned.valid_resource? && (@resource&.may_download?(ui_user: @user) || @sharing_link)
+      @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: @resource)
+      if @version_presigned.valid_resource? && (@resource&.may_download?(ui_user: @user) || @sharing_link)
         StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
-        @zip_version_presigned.download(resource: @resource)
+        @version_presigned.download(resource: @resource)
       else
         render plain: 'Download for this dataset is unavailable', status: 404
       end
