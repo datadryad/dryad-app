@@ -6,6 +6,8 @@ module Stash
     class Repository
       attr_reader :url_helpers, :executor
 
+      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
+      
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
       # Concurrent::FixedThreadPool.new(2, idletime: 600)
@@ -34,16 +36,18 @@ module Stash
       # Creates a {SubmissionJob} for the specified resource
       # @param resource_id [Integer] the database ID of the resource
       # @return [SubmissionJob] a job that will submit that resource
-      def create_submission_job(resource_id:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #create_submission_job to return one or more submission tasks"
+      def create_submission_job(resource_id:)
+        SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
       end
 
       # Determines the download URI for the specified resource. Called after the record is harvested
       # for discovery.
       # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
-      def download_uri_for(record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
+      def download_uri_for(record_identifier:)
+        merritt_host = APP_CONFIG[:repository][:domain]
+        ark = ark_from(record_identifier)
+        "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
       # Determines the update URI for the specified resource. Called after the record is harvested
@@ -51,7 +55,10 @@ module Stash
       # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
       def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #update_uri_for to determine the update URI"
+        sword_endpoint = APP_CONFIG[:repository][:endpoint]
+        doi = resource.identifier_str
+        edit_uri_base = sword_endpoint.sub('/collection/', '/edit/')
+        "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
       end
 
       # Returns a logger
@@ -120,6 +127,13 @@ module Stash
 
       private
 
+      def ark_from(record_identifier)
+        ark_match_data = record_identifier && record_identifier.match(ARK_PATTERN)
+        raise ArgumentError, "No ARK found in record identifier #{record_identifier || 'nil'}" unless ark_match_data
+
+        ark_match_data[0].strip
+      end
+      
       def get_download_uri(resource, record_identifier)
         download_uri_for(record_identifier: record_identifier)
       rescue StandardError => e

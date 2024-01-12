@@ -92,7 +92,7 @@ module Stash
             bad_id = @resource.id * 17
             @job = SubmissionJob.new(resource_id: bad_id, url_helpers: @url_helpers)
             allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
-            expect_any_instance_of(Stash::Merritt::MerrittHelper).not_to receive(:submit!)
+            expect_any_instance_of(Stash::Repo::MerrittHelper).not_to receive(:submit!)
             @job.submit!
           end
 

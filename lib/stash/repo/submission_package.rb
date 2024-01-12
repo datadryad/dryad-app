@@ -1,7 +1,6 @@
-require 'stash/merritt/builders'
 
 module Stash
-  module Merritt
+  module Repo
     class SubmissionPackage
       include Builders
 
