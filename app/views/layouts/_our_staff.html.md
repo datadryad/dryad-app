@@ -100,6 +100,13 @@
   Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
   </p>
 </div>
+<div class="bio">
+  <img src="/images/dragos.jpg" alt="Headshot of Dragos Iorgulescu">
+  <h5>Dragos Iorgulescu</h5><br/>
+  <p><em>Software Developer</em><br/>
+  Over the past ~15 years Dragos has been involved in a series of start-ups and large-scale enterprises, ranging from training applications and cloud SAAS/IAAS platforms to medical credentialing/licensing, trading, banking, and social media. This has allowed him to work on complex and challenging projects, gaining experience with understanding product requirements and translating them into intuitive and performant solutions. When he's not coding, he pets his cat, likes to practice sports, travel, & disconnect.
+  </p>
+</div>
 </div>
 
 #### Curation team
@@ -143,5 +150,12 @@
   various biology-driven projects in the United States. He recently repatriated
   to California where he helps the UC Davis effort on the NIH Common Fund Data
   Ecosystem.</p>
+</div>
+<div class="bio">
+  <img src="/images/prathiba.jpg" alt="Headshot of Sai Prathiba">
+  <h5>Sai Prathiba</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Sai Prathiba holds a Master's degree in Biosciences with a specialization in Biotechnology. During her role as a junior research fellow, she engaged in a clinical (interventional) study, where her involvement spanned various aspects of the project lifecycle including conducting comprehensive literature reviews, securing participants and consent, designing proforma documents, blood sample collection for biochemical analysis, rigorous statistical analysis of gathered data, and publication of findings. Beyond her professional pursuits, Sai Prathiba finds joy in culinary endeavors, gardening, and music.
+  </p>
 </div>
 </div>
