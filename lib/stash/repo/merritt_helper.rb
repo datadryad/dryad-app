@@ -2,7 +2,7 @@ require 'stash/deposit'
 require 'stash/deposit/client'
 
 module Stash
-  module Merritt
+  module Repo
     class MerrittHelper
 
       attr_reader :logger, :package

@@ -40,7 +40,7 @@ module Stash
 
       def update_identifier_metadata!
         log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource.id} (#{resource.identifier_str})")
-        sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
+        sp = Stash::Repo::SubmissionPackage.new(resource: resource, packaging: nil)
         dc4_xml = sp.dc4_builder.contents
         update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url) unless resource.skip_datacite_update
       end

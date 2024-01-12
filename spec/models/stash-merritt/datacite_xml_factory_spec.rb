@@ -1,4 +1,4 @@
-require 'stash/stash-merritt/lib/datacite/mapping/datacite_xml_factory'
+require 'lib/datacite/mapping/datacite_xml_factory'
 require 'nokogiri'
 
 module Datacite
@@ -104,7 +104,7 @@ module Datacite
 
       describe 'datacite xml factory with builder that checks actual XML' do
         it 'sets the resourceTypeGeneral' do
-          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
@@ -123,7 +123,7 @@ module Datacite
             version: 3
           )
 
-          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
@@ -135,7 +135,7 @@ module Datacite
           subj_entry = create(:subject, subject: 'My Test Subject', subject_scheme: 'LCSH', scheme_URI: 'http://id.loc.gov/authorities/subjects')
           @resource.subjects << subj_entry
 
-          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
@@ -145,7 +145,7 @@ module Datacite
         end
 
         it 'adds author ROR affiliations to XML' do
-          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
@@ -157,7 +157,7 @@ module Datacite
         end
 
         it 'adds funding affiliations to XML' do
-          builder = Stash::Merritt::Builders::MerrittDataciteBuilder.new(@xml_factory)
+          builder = Stash::Repo::MerrittDataciteBuilder.new(@xml_factory)
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience

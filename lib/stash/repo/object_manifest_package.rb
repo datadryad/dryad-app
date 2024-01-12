@@ -2,11 +2,10 @@ require 'fileutils'
 require 'ostruct'
 require 'tmpdir'
 require 'datacite/mapping/datacite_xml_factory'
-require 'stash/merritt/submission_package'
 require 'stash/deposit/packaging'
 
 module Stash
-  module Merritt
+  module Repo
     class ObjectManifestPackage < SubmissionPackage
 
       attr_reader :root_url

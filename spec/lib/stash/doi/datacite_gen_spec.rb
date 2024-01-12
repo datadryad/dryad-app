@@ -14,9 +14,6 @@ module Stash
           mock_tenant!
           @resource = create(:resource)
           @datacite_gen = DataciteGen.new(resource: @resource)
-          # the commented out section pulled in more packaging than needed just to create the DC4 XML
-          # sp = Stash::Merritt::SubmissionPackage.new(resource: @resource, packaging: nil)
-          # @dc4_xml = sp.dc4_builder.contents
           dc_xml = Datacite::Mapping::DataciteXMLFactory.new(
             doi_value: @resource.identifier_value,
             se_resource_id: @resource.id,
