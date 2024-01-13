@@ -1,7 +1,7 @@
 module Stash
-  module Merritt
+  module Repo
     module Builders
-      describe MerrittOAIDCBuilder do
+      describe MerrittOaidcBuilder do
         attr_reader :resource
         attr_reader :tenant
 
@@ -55,7 +55,7 @@ module Stash
               'IsOriginalFormOf' => 'hasVersion'
             }
 
-            dc_builder = MerrittOAIDCBuilder.new(resource_id: resource.id)
+            dc_builder = MerrittOaidcBuilder.new(resource_id: resource.id)
             xml_string = dc_builder.contents
             rel_ids.each do |rel_id|
               predicate = expected[rel_id.relation_type_friendly] || 'relation'

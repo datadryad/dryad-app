@@ -19,8 +19,7 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 
    \* Note that the DataONE manifest is generated for all tenants, not just DataONE.
 
-1. using the [stash-deposit](../stash-deposit) gem, submit the
-   package to Merritt through an api endpoint.
+1. Submit the package to Merritt through an api endpoint.
    A separate process updates the `download_uri` and `update_uri` of the resource to appropriate values after successful
    submission with the merritt_status:update rake task (which runs a daemon started by systemd).
 1. set the resource `version_zipfile`

@@ -17,8 +17,6 @@ gem 'webpacker', '6.0.0.rc.6'
 # Local engines
 
 path 'stash' do
-  gem 'stash-deposit'
-  gem 'stash-merritt'
   gem 'stash-wrapper'
 end
 

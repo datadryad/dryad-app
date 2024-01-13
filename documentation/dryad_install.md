@@ -38,8 +38,6 @@ You should end up with a directory structure that looks like this one.
 |   └── dryad-config-example
 └── stash
     ├── stash-harvester
-    ├── stash-merritt
-`    ├── stash-deposit
     ├── stash-wrapper
     ├── stash_datacite
     ├── stash_discovery

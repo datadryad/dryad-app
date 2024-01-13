@@ -2,7 +2,7 @@ require 'action_controller'
 
 module Stash
   module Repo
-    class MerrittOAIDCBuilder < FileBuilder
+    class MerrittOaidcBuilder < FileBuilder
       ROOT_ATTRIBUTES = {
         'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         'xsi:noNamespaceSchemaLocation' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd',

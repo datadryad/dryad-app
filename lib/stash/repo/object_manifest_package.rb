@@ -2,7 +2,6 @@ require 'fileutils'
 require 'ostruct'
 require 'tmpdir'
 require 'datacite/mapping/datacite_xml_factory'
-require 'stash/deposit/packaging'
 
 module Stash
   module Repo

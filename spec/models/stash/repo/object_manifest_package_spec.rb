@@ -2,7 +2,7 @@ require 'pathname'
 require 'ostruct'
 
 module Stash
-  module Merritt
+  module Repo
     describe ObjectManifestPackage do
       include Mocks::Aws
 

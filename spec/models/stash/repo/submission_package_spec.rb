@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Merritt
+  module Repo
     describe SubmissionPackage do
       describe :payload do
         it 'is abstract' do

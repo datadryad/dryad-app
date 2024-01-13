@@ -4,7 +4,7 @@ require 'webmock'
 require 'ostruct'
 
 module Stash
-  module Merritt
+  module Repo
     describe MerrittHelper do
       include Mocks::Aws
 
@@ -75,7 +75,7 @@ module Stash
       end
 
       describe :submit! do
-        describe "with #{Stash::Merritt::ObjectManifestPackage}" do
+        describe "with #{Stash::Repo::ObjectManifestPackage}" do
 
           before(:each) do
             @resource.new_data_files.find_each do |upload|
