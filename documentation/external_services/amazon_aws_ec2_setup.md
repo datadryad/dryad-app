@@ -108,7 +108,8 @@ To restore from a backup file:
 sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
 
 # Then import using the mysql command that you would normally use to run the DB client:
-`mysql_stg.sh < myfile.sql`
+mysql_stg.sh < myfile.sql
+```
 
 
 Setting up for code deployment
@@ -131,3 +132,5 @@ sudo systemctl daemon-reload
 sudo systemctl start puma
 sudo systemctl status puma
 ```
+
+
