@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Merritt
+  module Repo
     module Builders
       describe MerrittDataciteBuilder do
         attr_reader :dc4_xml

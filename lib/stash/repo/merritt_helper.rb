@@ -1,5 +1,3 @@
-require 'stash/deposit'
-require 'stash/deposit/client'
 
 module Stash
   module Repo

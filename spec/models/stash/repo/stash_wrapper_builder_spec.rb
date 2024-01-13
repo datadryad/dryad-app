@@ -1,5 +1,5 @@
 module Stash
-  module Merritt
+  module Repo
     module Builders
       describe StashWrapperBuilder do
         attr_reader :dc4_resource

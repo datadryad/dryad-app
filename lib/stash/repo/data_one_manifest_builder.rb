@@ -1,9 +1,8 @@
 require 'ostruct'
-require 'merritt'
 
 module Stash
   module Repo
-    class DataONEManifestBuilder < FileBuilder
+    class DataOneManifestBuilder < FileBuilder
       attr_reader :uploads
       
       # @param uploads [Array[StashEngine::DataFile]] a list of file uploads
