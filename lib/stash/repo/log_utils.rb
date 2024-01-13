@@ -1,5 +1,5 @@
 module Stash
-  module Deposit
+  module Repo
     module LogUtils
 
       def logger
