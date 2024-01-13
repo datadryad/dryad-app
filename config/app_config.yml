@@ -258,11 +258,11 @@ development: &DEVELOPMENT
     editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
     template_base_url: "/cedar-embeddable-editor"
     templates:
-      - [1, "Files", "File Description"]
-      - [2, "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
-      - [40, "EEB",  "Ecology and Evolutionary Biology"]
-      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
-      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+      - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
+      - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
+      - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
+      - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+      - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
 v3_development:
   <<: *DEVELOPMENT
