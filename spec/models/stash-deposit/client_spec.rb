@@ -1,7 +1,7 @@
 require 'webmock/rspec'
 
 module Stash
-  module Deposit
+  module Repo
     describe Client do
 
       before(:each) do
@@ -35,12 +35,12 @@ module Stash
 
         it 'raises an error for a 4xx error' do
           stub_request(:post, @mrt_uri).with(basic_auth: [@username, @password]).to_return(status: [403, 'Forbidden'])
-          expect { @client.create(payload: @manifest, doi: @doi) }.to raise_error(Stash::Deposit::ResponseError)
+          expect { @client.create(payload: @manifest, doi: @doi) }.to raise_error(Stash::Repo::ResponseError)
         end
 
         it 'forwards a 5xx error' do
           stub_request(:post, @mrt_uri).with(basic_auth: [@username, @password]).to_return(status: [500, 'Internal Server Error'])
-          expect { @client.create(payload: @manifest, doi: @doi) }.to raise_error(Stash::Deposit::ResponseError)
+          expect { @client.create(payload: @manifest, doi: @doi) }.to raise_error(Stash::Repo::ResponseError)
         end
 
       end
@@ -60,7 +60,7 @@ module Stash
         it 'raises an error for a 4xx error' do
           stub_request(:post, @mrt_uri).with(basic_auth: [@username, @password]).to_return(status: [403, 'Forbidden'])
           expect { @client.update(payload: @manifest, doi: @doi, download_uri: @download_uri) }
-            .to raise_error(Stash::Deposit::ResponseError)
+            .to raise_error(Stash::Repo::ResponseError)
         end
       end
 

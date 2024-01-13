@@ -1,15 +1,11 @@
 require 'digest'
 require 'uri'
 require 'http'
-# require 'stash/sword/header_utils'
-require 'stash/deposit/log_utils'
-# require 'stash/sword/http_helper'
-# require 'stash/sword/sequence_io'
 require 'logger'
 require 'byebug'
 
 module Stash
-  module Deposit
+  module Repo
 
     class ResponseError < StandardError; end
 
