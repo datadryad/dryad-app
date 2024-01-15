@@ -1,4 +1,3 @@
-
 module Stash
   module Repo
     class MerrittHelper

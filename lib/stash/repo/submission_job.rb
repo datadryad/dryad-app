@@ -1,6 +1,7 @@
 require 'rails'
 require 'active_record'
 require 'concurrent/promise'
+require 'byebug'
 
 module Stash
   module Repo
@@ -9,13 +10,13 @@ module Stash
     # ActiveRecord models). The state of ActiveRecord models outside the lifetime
     # of the `submit!` method is not guaranteed.
     class SubmissionJob
-      attr_reader :resource_id, :url_helpers
-      
-      def initialize(resource_id:, url_helpers:)
+      attr_reader :resource_id
+
+      def initialize(resource_id:)
+        resource_id = resource_id.to_i if resource_id.is_a?(String)
         raise ArgumentError, "Invalid resource ID: #{resource_id || 'nil'}" unless resource_id.is_a?(Integer)
 
         @resource_id = resource_id
-        @url_helpers = url_helpers
       end
 
       # Executes this task and returns a result, or throws an error. Any ActiveRecord
@@ -25,7 +26,7 @@ module Stash
       #
       # @return [SubmissionResult] the result of the task.
       def submit!
-              logger.info("#{Time.now.xmlschema} #{description}")
+        logger.info("#{Time.now.xmlschema} #{description}")
         previously_submitted = StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'processing').count.positive?
         if Stash::Repo::Repository.hold_submissions?
           # to mark that it needs to be re-enqueued and processed later
@@ -68,7 +69,7 @@ module Stash
         Rails.logger
       end
 
-            private
+      private
 
       def do_submit!
         package = create_package

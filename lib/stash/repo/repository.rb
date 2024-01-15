@@ -4,16 +4,14 @@ module Stash
   module Repo
     # Abstraction for a repository
     class Repository
-      attr_reader :url_helpers, :executor
+      attr_reader :executor
 
       ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
-      
+
       # Initializes this repository
-      # @param url_helpers [Module] Rails URL helpers
       # Concurrent::FixedThreadPool.new(2, idletime: 600)
-      def initialize(url_helpers:, executor: nil, threads: 1)
+      def initialize(executor: nil, threads: 1)
         @executor = executor
-        @url_helpers = url_helpers
         return unless @executor.nil?
 
         @executor = Concurrent::ThreadPoolExecutor.new(
@@ -37,7 +35,7 @@ module Stash
       # @param resource_id [Integer] the database ID of the resource
       # @return [SubmissionJob] a job that will submit that resource
       def create_submission_job(resource_id:)
-        SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
+        SubmissionJob.new(resource_id: resource_id)
       end
 
       # Determines the download URI for the specified resource. Called after the record is harvested
@@ -133,7 +131,7 @@ module Stash
 
         ark_match_data[0].strip
       end
-      
+
       def get_download_uri(resource, record_identifier)
         download_uri_for(record_identifier: record_identifier)
       rescue StandardError => e
