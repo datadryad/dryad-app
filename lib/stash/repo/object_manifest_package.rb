@@ -10,7 +10,7 @@ module Stash
       attr_reader :root_url
 
       def initialize(resource:)
-        super(resource: resource, packaging: Stash::Deposit::Packaging::BINARY)
+        super(resource: resource, packaging: Stash::Repo::Packaging::BINARY)
         @resource = resource
         @root_url = to_uri("https://#{Rails.application.default_url_options[:host]}/system/#{@resource.id}/")
         @manifest = create_manifest
