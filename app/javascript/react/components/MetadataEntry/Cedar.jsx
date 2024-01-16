@@ -1,4 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {
+  useState, useRef, useEffect, useCallback,
+} from 'react';
 import {Form, Formik} from 'formik';
 import moment from 'moment';
 import {isEqual} from 'lodash';
@@ -8,17 +10,17 @@ export default function Cedar({resource, appConfig}) {
   const [template, setTemplate] = useState(null);
   const [csrf, setCsrf] = useState(null);
   const [metadata, setMetadata] = useState(null);
-  const [currMeta, setCurrMetta] = useState(null);
+  const [currMeta, setCurrMeta] = useState(null);
   const [updated, setUpdated] = useState(undefined);
 
   const formRef = useRef(null);
-
-  let del = null;
-  let dialog = null;
-  let editor = null;
-  let popupWatcher = null;
-  let formObserver = null;
-  let editorLoaded = null;
+  const templateRef = useRef(null);
+  const del = useRef(null);
+  const dialog = useRef(null);
+  const editor = useRef(null);
+  const popupWatcher = useRef(null);
+  const formObserver = useRef(null);
+  const editorLoaded = useRef(null);
 
   useEffect(() => {
     setCsrf(document.querySelector("meta[name='csrf-token']")?.getAttribute('content'));
@@ -29,117 +31,134 @@ export default function Cedar({resource, appConfig}) {
       setUpdated(json.updated);
     }
     return () => {
-      if (popupWatcher) {
-        popupWatcher.disconnect();
-        popupWatcher = null;
+      if (popupWatcher.current) {
+        popupWatcher.current.disconnect();
+        popupWatcher.current = null;
       }
-      if (formObserver) {
-        formObserver.disconnect();
-        formObserver = null;
+      if (formObserver.current) {
+        formObserver.current.disconnect();
+        formObserver.current = null;
       }
-      if (editorLoaded) {
-        editorLoaded.disconnect();
-        editorLoaded = null;
+      if (editorLoaded.current) {
+        editorLoaded.current.disconnect();
+        editorLoaded.current = null;
       }
     };
   }, []);
 
+  const getInfo = () => {
+    const time = new Date().toISOString();
+    const {id: resource_id} = resource;
+    const info = {
+      template, resource_id, csrf, updated: time,
+    };
+    return info;
+  };
+
   // Save & set saved content
   useEffect(() => {
-    if (!isEqual(currMeta, metadata)) {
-      const time = new Date().toISOString();
-      const {id: resource_id} = resource;
-      const info = {
-        template, resource_id, csrf, updated: time,
-      };
+    if (currMeta && !isEqual(currMeta, metadata)) {
+      showSavingMsg();
+      const info = getInfo();
       const wrappedMeta = {info, metadata: currMeta};
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '/cedar-save');
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify(wrappedMeta, null, 2));
-      setUpdated(time);
+      setUpdated(info.updated);
       setMetadata(currMeta);
-      if (editor) editor.templateInfo = info;
+      if (editor.current) editor.current.templateInfo = info;
+      showSavedMsg();
     }
-    showSavedMsg();
-  }, [currMeta]);
+  }, [currMeta, metadata]);
+
+  useEffect(() => {
+    if (!isEqual(template, templateRef.current)) {
+      if (template === null) {
+        const xhr = new XMLHttpRequest();
+        const info = getInfo();
+        xhr.open('POST', '/cedar-save');
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({info, metadata: null}, null, 2));
+        setCurrMeta(null);
+        setUpdated(null);
+        setMetadata(null);
+      }
+    }
+    templateRef.current = template;
+  }, [template]);
 
   // Save form content when changed
   const checkSave = () => {
-    const currentMetadata = JSON.parse(JSON.stringify(editor.currentMetadata));
+    const currentMetadata = JSON.parse(JSON.stringify(editor.current.currentMetadata));
     if (!isEqual(currentMetadata, currMeta)) {
-      setCurrMetta(currentMetadata);
+      setCurrMeta(currentMetadata);
     }
   };
 
-  const setRef = (el) => {
+  const setRef = useCallback((el) => {
     if (el?.id === 'cedarDialog') {
-      dialog = el;
+      dialog.current = el;
 
       // Move the cdk-overlay-container into the modal for rendering above dialog
-      popupWatcher = new MutationObserver(() => {
+      popupWatcher.current = new MutationObserver(() => {
         const popups = document.querySelector('body > .cdk-overlay-container');
-        if (popups) dialog.append(popups);
+        if (popups) dialog.current.append(popups);
       });
 
       // Check form content when touched
-      formObserver = new MutationObserver((changes) => {
+      formObserver.current = new MutationObserver((changes) => {
         changes.forEach((change) => {
           const {target: {classList}} = change;
           if (classList.contains('ng-touched')) checkSave();
         });
       });
 
-      popupWatcher.observe(document.body, {childList: true});
-      formObserver.observe(dialog, {subtree: true, attributeFilter: ['class']});
+      popupWatcher.current.observe(document.body, {childList: true});
+      formObserver.current.observe(dialog.current, {subtree: true, attributeFilter: ['class']});
     }
-    if (el?.id === 'deleteCedarDialog') del = el;
-    if (el?.id === 'cedarEditor') editor = el;
-  };
-
-  const deleteContent = () => {
-    setTemplate(null);
-    setCurrMetta(null);
-  };
+    if (el?.id === 'deleteCedarDialog') del.current = el;
+    if (el?.id === 'cedarEditor') editor.current = el;
+  }, []);
 
   const modalSetup = () => {
     const {id: resource_id} = resource;
-    editor.loadConfigFromURL(`/cedar-config?template=${template.id}`);
-    editor.templateInfo = {
+    editor.current.loadConfigFromURL(`/cedar-config?template=${template.id}`);
+    editor.current.templateInfo = {
       template, resource_id, csrf, updated,
     };
-    editor.dataset.template = template.id;
+    editor.current.dataset.template = template.id;
     // restore metadata
-    editorLoaded = new MutationObserver(() => {
+    editorLoaded.current = new MutationObserver(() => {
       const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
-        editor.metadata = metadata;
-        editorLoaded.disconnect();
-        editorLoaded = null;
+        editor.current.instanceObject = metadata;
+        editorLoaded.current.disconnect();
+        editorLoaded.current = null;
       }
     });
-    editorLoaded.observe(editor, {childList: true});
+    editorLoaded.current.observe(editor.current, {childList: true});
   };
 
   const openModal = () => {
-    showSavingMsg();
     if (!template && !template.id) {
       console.log('Cannot open modal unless a template is selected.');
       return;
     }
-    if (dialog?.dataset.template !== template.id) {
+    if (dialog.current?.dataset.template !== template.id) {
       const {table: {editor_url}} = appConfig;
       if (editor_url) {
         const script = document.createElement('script');
         script.src = editor_url;
         script.async = true;
         script.onload = () => modalSetup();
-        dialog.appendChild(script);
-        dialog.dataset.template = template.id;
+        dialog.current.appendChild(script);
+        dialog.current.dataset.template = template.id;
       }
     }
-    dialog.showModal();
+    dialog.current.showModal();
   };
 
   if (!appConfig) return null;
@@ -167,7 +186,7 @@ export default function Cedar({resource, appConfig}) {
                 <button disabled={!template} type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
                   Edit form
                 </button>
-                <button type="button" className="o-button__remove" onClick={() => del.showModal()}>
+                <button type="button" className="o-button__remove" onClick={() => del.current.showModal()}>
                   Delete form
                 </button>
               </div>
@@ -189,7 +208,7 @@ export default function Cedar({resource, appConfig}) {
                   {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
                 </select>
                 <button disabled={!template} type="submit" className="o-button__add">
-                  Add Metadata Form
+                  Add metadata form
                 </button>
               </>
             )}
@@ -198,7 +217,7 @@ export default function Cedar({resource, appConfig}) {
       </Formik>
       <dialog className="modalDialog" id="cedarDialog" ref={setRef}>
         <div className="modalClose">
-          <button aria-label="Close" type="button" onClick={() => dialog.close()} />
+          <button aria-label="Close" type="button" onClick={() => dialog.current.close()} />
         </div>
         <div className="c-modal-content__cedar">
           <cedar-embeddable-editor id="cedarEditor" ref={setRef} />
@@ -206,7 +225,7 @@ export default function Cedar({resource, appConfig}) {
       </dialog>
       <dialog className="modalDialog" id="deleteCedarDialog" ref={setRef}>
         <div className="modalClose">
-          <button aria-label="Close" type="button" onClick={() => del.close()} />
+          <button aria-label="Close" type="button" onClick={() => del.current.close()} />
         </div>
         <div className="c-modal-content__normal">
           <h1 className="mat-card-title">Confirm Deletion</h1>
@@ -216,13 +235,13 @@ export default function Cedar({resource, appConfig}) {
             className="o-button__plain-text2"
             style={{marginRight: '16px'}}
             onClick={() => {
-              deleteContent();
-              del.close();
+              setTemplate(null);
+              del.current.close();
             }}
           >
             Delete Form
           </button>
-          <button type="button" className="o-button__remove" onClick={() => del.close()}>Cancel</button>
+          <button type="button" className="o-button__remove" onClick={() => del.current.close()}>Cancel</button>
         </div>
       </dialog>
     </div>
