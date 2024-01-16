@@ -1,133 +1,66 @@
-require 'http'
 require 'byebug'
-require 'zaru'
-require 'stash/download'
+require 'http'
 
+# a significantly simplified class for dealing with Files instead of sending them through our server
+# and redirects to a S3 presigned URL
 module Stash
   module Download
 
-    class MerrittException < RuntimeError; end
+    class S3CustomError < StandardError; end
 
     class VersionPresigned
+      attr_reader :cc
 
-      def initialize(resource:)
+      # passing the controller context allows us to do actions the controller would normally do such as redirecting
+      # or rendering within the rails context
+      def initialize(controller_context:, resource:)
+        @cc = controller_context
         @resource = resource
         return if @resource.blank?
 
-        @tenant = resource&.tenant
-        @version = @resource&.stash_version&.merritt_version
-        # local_id is encoded, so later it gets double-encoded which is required by Merritt for some crazy reason
-        _ignored, @local_id = @resource.merritt_protodomain_and_local_id
-        @domain = APP_CONFIG[:repository][:domain]
-
-        @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
-          .timeout(connect: 10, read: 10).timeout(10.seconds.to_i).follow(max_hops: 3)
-          .basic_auth(user: APP_CONFIG[:repository][:username], pass: APP_CONFIG[:repository][:password])
+        @tenant = @resource&.tenant
+        @version = @resource&.stash_version
       end
 
       def valid_resource?
-        !(@resource.blank? || @tenant.blank? || @version.blank? || @domain.blank? || @local_id.blank?)
+        @resource.present? && @tenant.present? && @version.present?
       end
 
-      # this should return
-      # 200 for URL being present to download
-      # 202 for needing to wait with a progress bar
-      # 404 for not found
-      # 408 for timeout failures
-      def download
-        assemble_hash = {}
-        assemble_hash = assemble if @resource.download_token.token.blank?
-        return assemble_hash if [404, 408].include?(assemble_hash[:status]) # can't find or can't assemble right now
-
-        status_hash = status
-
-        return status_hash if [200, 408].include?(status_hash[:status]) # it's available or timing out, so return
-
-        # if token not found or expired, then attempt to assemble it again
-        if [404, 410].include?(status_hash[:status])
-          assemble_hash = assemble
-
-          # handle the object not able to assemble (not found or timing out)
-          return assemble_hash if [404, 408].include?(assemble_hash[:status])
-
-          status_hash = status # refresh status hash after assembling again
-          return status_hash if status_hash[:status] == 408 # abort with more timeouts
-        end
-
-        # Merritt pads estimates 20+ seconds for stuff that can be assembled very quickly and started downloads within a few seconds
-        return poll_and_download if @resource.download_token.availability_delay_seconds < 25
-
-        status_hash
-      rescue HTTP::TimeoutError
-        { status: 408 }
+      def generate_token
+        token = @resource.download_token
+        token.token = SecureRandom.uuid if token.token.nil?
+        token.available = Time.now.utc + (1 * 60)
+        token.save
+        token.token
       end
 
-      # this does a limited poll and download if it becomes available within a reasonable time
-      def poll_and_download(delay: 5, tries: 1)
-        status_hash = {}
-        # poll a couple of times to see if gets ready quickly and if not, return the last status
-        1.upto(tries) do
-          sleep delay
-          status_hash = status
-          break if status_hash[:status] == 200
-        end
-        status_hash # finally, return status hash whether download is ready or not
-      end
+      def download(resource:)
+        @resource ||= resource
+        # APP_CONFIG.maximums.zip_size
+        if @resource&.total_file_size&. < APP_CONFIG[:maximums][:api_zip_size]
+          credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
+          signer = ::Aws::Sigv4::Signer.new(service: 'lambda', region: APP_CONFIG[:s3][:region], credentials_provider: credentials)
 
-      # resp.status.success?  # resp.status == 200
-      # 200 is good and gives a token
-      # {"status"=>200, "token"=>"11d2afdd-9351-4403-8013-88a9e9284e96", "cloud-content-byte"=>1228236,
-      # "anticipated-availability-time"=>"2020-05-27T12:43:48-07:00", "message"=>"Request queued, use token to check status"}
-      # Time.parse(json['anticipated-availability-time'])
-      #
-      # otherwise 404
-      def assemble
-        resp = @http.get(assemble_version_url)
-        if resp.status.success?
-          json = resp.parse.with_indifferent_access
-          token = @resource.download_token
-          token.token = json[:token]
-          token.available = Time.parse(json['anticipated-availability-time'])
-          token.save
-          json
+          time = @resource.publication_date.present? && @resource.publication_date < Time.now.utc ? @resource.publication_date : @resource.updated_at
+
+          zip_name = "#{"doi_#{resource.identifier_value}__v#{time.strftime('%Y%m%d')}".gsub(
+            %r{\.|:|/}, '_'
+          )}.zip"
+
+          h = Rails.application.routes.url_helpers
+          download_url = h.version_zip_assembly_url(@resource.id).gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org').gsub(/^http:/, 'https:')
+
+          zip_url = signer.presign_url(
+            http_method: 'GET',
+            expires_in: 3600,
+            url: "https://#{APP_CONFIG[:lambda_id][:dataZip]}.lambda-url.#{APP_CONFIG[:s3][:region]}.on.aws/?filename=#{zip_name}&download_url=#{CGI.escape("#{download_url}/#{generate_token}")}"
+          )
+          cc.redirect_to zip_url.to_s
         else
-          raise MerrittException, "status code: #{resp.status.code} from Merritt for #{assemble_version_url}\n#{resp.body}" if resp.status.code >= 500
-
-          { status: resp.status.code, body: resp.body.to_s }
+          cc.render status: 405, plain: 'The dataset is too large for zip file generation. Please download each file individually.'
         end
       end
 
-      # {"status"=>202, "token"=>"ed3b8dc1-afac-4487-bfac-fb89d654e4d9", "cloud-content-byte"=>1228236, "message"=>"Object is not ready"}
-      # 200 -- ready
-      # 202 -- not ready
-      # 404 -- not found
-      # 410 -- expired
-      def status
-        resp = @http.get(status_url)
-        # sometimes Merritt returns non-JSON mimetypes so we don't want to parse them, maybe mostly for 404s?
-        return { status: resp.status.code }.with_indifferent_access if resp.mime_type != 'application/json'
-
-        resp.parse.with_indifferent_access
-      end
-
-      def assemble_version_url
-        path = ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s).to_s
-        query = { format: 'zipunc', content: 'producer' }.to_query
-        "#{@domain}#{path}?#{query}"
-      end
-
-      def status_url
-        path = ::File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)).to_s
-        query = { no_redirect: true, filename: filename }.to_query
-        "#{@domain}#{path}?#{query}"
-      end
-
-      def filename
-        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[:\\/]+}, '_'))
-        fn.gsub!(/,|;|'|"|\u007F/, '')
-        fn << "__v#{@version}"
-        "#{fn}.zip"
-      end
     end
   end
 end

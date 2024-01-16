@@ -2,8 +2,6 @@
 
 module StashApi
   class VersionsController < ApiApplicationController
-    include Downloadable
-
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
@@ -29,10 +27,10 @@ module StashApi
     def download
       if @stash_resources.length == 1
         res = @stash_resources.first
-        @zip_version_presigned = Stash::Download::ZipVersionPresigned.new(controller_context: self, resource: res)
-        if res&.may_download?(ui_user: @user) && @zip_version_presigned.valid_resource?
+        @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
+        if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
           StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
-          @zip_version_presigned.download(resource: res)
+          @version_presigned.download(resource: res)
         else
           render plain: 'Download for this version of the dataset is unavailable', status: 404
         end
