@@ -15,6 +15,7 @@ attached to, and not all servers in a load-balanced system. (Note
 the long_jobs.dryad script will also do this,
 also, on the current server). 
 
+
 Stopping submissions
 -----------------------------
 
@@ -26,6 +27,7 @@ touch /apps/dryad/apps/ui/releases/hold-submissions.txt
 This will put any queued submissions into the
 `rejected_shutting_down` state on this server, which means they will
 not be submitted right now, but you can restart them again afterward.
+
 
 Restarting submissions from hold or errors
 -------------------------------------------
@@ -76,3 +78,34 @@ RAILS_ENV=<environment> bundle exec rails merritt_status:update
 However, it will start automatically from systemd startup and
 can be managed through it.
 
+
+Technical processes
+===================
+
+Submission process
+------------------
+
+1. GUI POSTs to `/stash_datacite/resources/submission`
+2. Routes to `StashDatacite::ResourcesController#submission`
+   1. Does some validation and setup
+   2. Hands off to `StashEngine.repository.submit`
+   3. Kicks off transfer of Zenodo content
+   4. Sends the GUI user to the correct URL while they wait for processing
+3. `StashEngine.repository.submit == Stash::Repo::Repository.submit`
+   1. Sets the resource state to `processing`
+   2. Creates a SubmissionJob
+   3. Adds the resource to the queue `stash_engine_repo_queue_states`
+   4. Submits the job for asynchronous completion
+   5. Handles success or failure of the job
+
+
+Checker process
+----------------
+
+1. User or cron runs `merritt_status:update`
+2. Takes the latest unfinished jobs from `stash_engine_repo_queue_states` for each resource and checks them
+   1. `RepoQueueState.possibly_set_as_completed` checks whether resource is avaialable in storage, and if it is:
+      1. Calls `Repository.harvested` to update the resource state
+      2. Registers the job in the queue as completed
+      3. Deletes temporary files
+   2. If the job has been processing for a full day, mark it as errored and email the admins

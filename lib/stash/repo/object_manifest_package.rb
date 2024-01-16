@@ -23,7 +23,9 @@ module Stash
       def create_manifest
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         # generate the manifest via the merritt-manifest gem
-        manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
+        # TODO -- replace this!!!!
+        # manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
+        manifest = 'REPLACE_ME'
 
         # Save a copy of the manifest in S3 for debugging if needed, but the actual
         # merritt submission will use the local file

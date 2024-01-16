@@ -21,10 +21,13 @@ module Stash
       # @param collection_uri [URI, String] The collection URI
       # @param username [String] the username
       # @param password [String] the password
-      # @param on_behalf_of [String, nil] the user for whom the original sword package was deposited on behalf of.
+      # @param on_behalf_of [String, nil] the user for whom the original dataset was deposited on behalf of.
       #   Defaults to `username`.
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil)
+      def initialize(on_behalf_of: nil, logger: nil)
+        collection_uri = APP_CONFIG[:repository][:endpoint]
+        username = APP_CONFIG[:repository][:username]
+        password = APP_CONFIG[:repository][:password]
         validate(collection_uri, password, username)
         @collection_uri = collection_uri
         @username = username
@@ -41,7 +44,7 @@ module Stash
       # @param doi [String] the DOI
       # @param payload [String] the checkm file path
       def create(doi:, payload:, retries: 3)
-        logger.debug("Stash::MerrittDeposit::Client.create(doi: #{doi}, payload: #{payload})")
+        logger.debug("Stash::Repo::Client.create(doi: #{doi}, payload: #{payload})")
         profile = "#{collection_uri.to_s.split('/').last}_content"
 
         do_post(profile: profile, payload: payload, doi: doi, retries: retries)
@@ -56,7 +59,7 @@ module Stash
       # @param payload [String] the checkm file path
       # @param download_uri [String] the download URI which merritt returns to us and contains the internal merritt ark
       def update(doi:, payload:, download_uri:, retries: 3)
-        logger.debug("Stash::MerrittDeposit::Client.update(doi: #{doi}, payload: #{payload}, download_uri: #{download_uri})")
+        logger.debug("Stash::Repo::Client.update(doi: #{doi}, payload: #{payload}, download_uri: #{download_uri})")
         profile = "#{collection_uri.to_s.split('/').last}_content"
         ark = URI.decode_www_form_component(download_uri.split('/').last)
 
@@ -82,8 +85,8 @@ module Stash
       #         resource.download_uri = receipt.em_iri
       #         resource.update_uri = receipt.edit_iri
 
-      # We no longer need an update_uri, since it's based on the DOI, which we can use directly.
-      # The download_uri should be populated by the rake task which checks merritt for something finishing from the processing state.
+      # We do not need an update_uri, since it's based on the DOI, which we can use directly.
+      # The download_uri should be populated by the merritt_status rake task when a dataset is submitted
       # There should no longer be a provisional complete state for the new way of submitting to merritt.
       def do_post(profile:, payload:, doi:, ark: nil, retries: 3)
         params = {

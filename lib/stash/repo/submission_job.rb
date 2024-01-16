@@ -110,7 +110,7 @@ module Stash
         msg << if (update_uri = resource.update_uri)
                  "posting update to #{update_uri}"
                else
-                 "posting new object to #{Stash::Repo::MerrittHelper.sword_params[:collection_uri]}"
+                 'posting new object to '
                end
         msg << " (tenant: #{resource.tenant_id})"
       end
