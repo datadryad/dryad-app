@@ -38,11 +38,6 @@ stage:
 migration:
   <<: *default
   #Add any items that need to override the defaults here
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
-    username: <%= Rails.application.credentials[:production][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[:production][:merritt_dryad_password] %>
 
 production: &PRODUCTION
   <<: *default
