@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: stash_engine_curation_activities
+#
+#  id          :integer          not null, primary key
+#  status      :string(191)      default("in_progress")
+#  user_id     :integer
+#  note        :text(65535)
+#  keywords    :string(191)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  resource_id :integer
+#
 FactoryBot.define do
 
   factory :curation_activity, class: StashEngine::CurationActivity do

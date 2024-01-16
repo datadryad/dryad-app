@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: stash_engine_repo_queue_states
+#
+#  id          :integer          not null, primary key
+#  resource_id :integer
+#  state       :string
+#  hostname    :string(191)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
 module StashEngine
   class RepoQueueState < ApplicationRecord
     self.table_name = 'stash_engine_repo_queue_states'

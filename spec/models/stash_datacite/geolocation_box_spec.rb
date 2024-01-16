@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: dcs_geo_location_boxes
+#
+#  id           :integer          not null, primary key
+#  sw_latitude  :decimal(10, 6)
+#  ne_latitude  :decimal(10, 6)
+#  sw_longitude :decimal(10, 6)
+#  ne_longitude :decimal(10, 6)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
 require 'rails_helper'
 
 module StashDatacite

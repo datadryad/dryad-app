@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: dcs_affiliations
+#
+#  id           :integer          not null, primary key
+#  short_name   :text(65535)
+#  long_name    :text(65535)
+#  abbreviation :text(65535)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  ror_id       :string(191)
+#
 require 'rails_helper'
 
 module StashDatacite

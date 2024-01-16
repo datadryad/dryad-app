@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: dcs_publication_years
+#
+#  id               :integer          not null, primary key
+#  publication_year :string(191)
+#  resource_id      :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 require 'rails_helper'
 
 module StashDatacite

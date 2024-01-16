@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: stash_engine_zenodo_copies
+#
+#  id            :integer          not null, primary key
+#  state         :string           default("enqueued")
+#  deposition_id :integer
+#  error_info    :text(16777215)
+#  identifier_id :integer
+#  resource_id   :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  retries       :integer          default(0)
+#  copy_type     :string           default("data")
+#  software_doi  :string(191)
+#  conceptrecid  :string(191)
+#  note          :text(65535)
+#
 FactoryBot.define do
 
   factory :zenodo_copy, class: StashEngine::ZenodoCopy do

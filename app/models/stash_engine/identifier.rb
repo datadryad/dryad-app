@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: stash_engine_identifiers
+#
+#  id                  :integer          not null, primary key
+#  identifier          :text(65535)
+#  identifier_type     :text(65535)
+#  storage_size        :bigint
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  latest_resource_id  :integer
+#  license_id          :string(191)      default("cc0")
+#  search_words        :text(65535)
+#  payment_type        :string(191)
+#  payment_id          :text(65535)
+#  waiver_basis        :string(191)
+#  pub_state           :string
+#  software_license_id :integer
+#  edit_code           :string(191)
+#  import_info         :integer          default("other")
+#
 require 'httparty'
 require 'http'
 

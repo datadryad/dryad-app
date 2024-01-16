@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: dcs_dates
+#
+#  id          :integer          not null, primary key
+#  date        :string(191)
+#  date_type   :string
+#  resource_id :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
 module StashDatacite
   class DataciteDate < ApplicationRecord
     self.table_name = 'dcs_dates'

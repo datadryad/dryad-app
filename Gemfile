@@ -55,6 +55,7 @@ gem 'uglifier', '~> 4.2.0'
 
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
+gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight'
@@ -186,3 +187,4 @@ group :development, :test, :local_dev do
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
 end
+
