@@ -2,25 +2,22 @@ Basic Dryad Submission Flow
 =============================
 
 1. Fill in metadata (DataCite)
-    * Mostly AJAX in one page by way of JQuery and/or Rails Unobtrusive Javascript (UJS)
-    * Other widgets in page include mapping (Leaflet), links out to ORCID login to validate user
 2. Upload files
-    * Upload files directly (get copied onto web server until successful submission)
+    * See [upload flow](technical_notes/upload_flow.md)
+    * Upload files directly (get copied to temporary storage until successful submission)
     * Or choose URLs where files are located and can be retrieved by http(s).  They are validated that they exist and a download can start.
       * Also some transformations of Google Drive/Box/Dropbox URLs into the download links
 3. Review before submit
     * Missing required data shown
     * Review display
-    * Private for peer review (embargo) delay can be set
+    * Private-for- peer-review can be set
     * Accept license
 4. Submission
-    * Update metadata with EZID/DataCite for the submitted item.
+    * Update metadata with DataCite for the submitted item
     * Submits to the storage system in a background process
     * Package sent contains manifest (for URLs) or zip file with metadata files and data files
       * Mrt-datacite.xml, mrt-dataone-manifest.txt, mrt-embargo.txt, mrt-oaidc.xml, stash-wrapper.xml
 5. Notifying of completion
-    * When the storage system has successfully ingested the dataset, the dataset
-      shows up in the [local id search](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/CDLUC3/mrt-dashboard/main/swagger.yml#/experimental/get_api__group__local_id_search)
     * A daemon in a rake task runs to check for updates can be
       started like `RAILS_ENV=development rails merritt_status:update` or
       likely will be added to systemd startup scripts on one server.
