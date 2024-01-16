@@ -187,4 +187,3 @@ group :development, :test, :local_dev do
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
 end
-
