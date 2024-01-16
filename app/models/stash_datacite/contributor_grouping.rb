@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: dcs_contributor_groupings
+#
+#  id                 :bigint           not null, primary key
+#  contributor_name   :text(65535)
+#  contributor_type   :integer          default("funder")
+#  identifier_type    :integer          default("crossref_funder_id")
+#  name_identifier_id :string(191)
+#  group_label        :string(191)
+#  json_contains      :json
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
 module StashDatacite
   class ContributorGrouping < ApplicationRecord
     self.table_name = 'dcs_contributor_groupings'

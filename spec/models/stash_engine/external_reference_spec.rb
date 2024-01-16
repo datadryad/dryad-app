@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: stash_engine_external_references
+#
+#  id            :integer          not null, primary key
+#  identifier_id :integer
+#  source        :string(191)
+#  value         :text(4294967295)
+#  created_at    :datetime
+#  updated_at    :datetime
+#
 module StashEngine
   describe ExternalReference do
 

@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: locks
+#
+#  id         :integer          not null, primary key
+#  name       :string(40)
+#  created_at :datetime
+#  updated_at :datetime
+#
 # see https://makandracards.com/makandra/1026-simple-database-lock-for-mysql for info about simple DB locking
 # rubocop:disable all
 module StashEngine

@@ -87,6 +87,9 @@ GEM
       tins (~> 1.0)
     amoeba (3.2.0)
       activerecord (>= 4.2.0)
+    annotate (3.2.0)
+      activerecord (>= 3.2, < 8.0)
+      rake (>= 10.4, < 14.0)
     ansi (1.5.0)
     ast (2.4.2)
     autoprefixer-rails (10.4.13.0)
@@ -787,6 +790,7 @@ PLATFORMS
 DEPENDENCIES
   amatch (~> 0.4.0)
   amoeba (~> 3.2.0)
+  annotate (~> 3.2)
   aws-sdk-lambda
   aws-sdk-s3 (~> 1.113)
   bcrypt_pbkdf (= 1.1.0)
@@ -903,4 +907,4 @@ DEPENDENCIES
   zaru (~> 0.3.0)
 
 BUNDLED WITH
-   2.3.22
+   2.4.22

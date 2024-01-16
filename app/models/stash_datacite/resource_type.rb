@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: dcs_resource_types
+#
+#  id                    :integer          not null, primary key
+#  resource_type_general :string
+#  resource_type         :text(65535)
+#  resource_id           :integer
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#
 module StashDatacite
   class ResourceType < ApplicationRecord
     self.table_name = 'dcs_resource_types'
