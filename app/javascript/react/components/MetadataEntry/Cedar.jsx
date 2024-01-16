@@ -56,7 +56,7 @@ export default function Cedar({resource, appConfig}) {
   };
 
   // Save & set saved content
-  useEffect(() => {    
+  useEffect(() => {
     if (currMeta && !isEqual(currMeta, metadata)) {
       showSavingMsg();
       const info = getInfo();
@@ -70,7 +70,7 @@ export default function Cedar({resource, appConfig}) {
       setMetadata(currMeta);
       if (editor.current) editor.current.templateInfo = info;
       showSavedMsg();
-    }    
+    }
   }, [currMeta, metadata]);
 
   useEffect(() => {
