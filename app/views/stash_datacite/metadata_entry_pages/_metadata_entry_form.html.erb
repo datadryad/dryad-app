@@ -75,17 +75,7 @@
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
                         isCurator: current_user&.limited_curator?) %>
   <% unless @resource&.resource_type&.resource_type == 'collection' %>
-
-    <h2 class="o-heading__page-span">Data description</h2>
-    
-    <!--  CEDAR Metadata Editor -->
-    <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), appConfig: APP_CONFIG[:cedar] } ) %>
-    
-    <%# if @metadata_entry.subjects.empty? %>
-      <%# render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
-    <%# else %>
-      <%# render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
-    <%# end %>
+    <h2 class="o-heading__page-span">Data description</h2>    
   <% end %>
 
     <%= react_component('components/MetadataEntry/Keywords',
@@ -114,6 +104,8 @@
                     isCurator: current_user&.limited_curator?) %>
     <% end %>
 
+    <!--  CEDAR Metadata Editor -->
+    <div id="cedar_check"></div>
   <% end %>
 
     <h2 class="o-heading__page-span" id="related_works_section"><%= @resource&.resource_type&.resource_type == 'collection' ? 'Collected and r' : 'R' %>elated works</h2>
