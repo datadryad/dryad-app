@@ -56,9 +56,9 @@ export default function Cedar({resource, appConfig}) {
   };
 
   // Save & set saved content
-  useEffect(() => {
-    showSavingMsg();
+  useEffect(() => {    
     if (currMeta && !isEqual(currMeta, metadata)) {
+      showSavingMsg();
       const info = getInfo();
       const wrappedMeta = {info, metadata: currMeta};
       const xhr = new XMLHttpRequest();
@@ -69,8 +69,8 @@ export default function Cedar({resource, appConfig}) {
       setUpdated(info.updated);
       setMetadata(currMeta);
       if (editor.current) editor.current.templateInfo = info;
-    }
-    showSavedMsg();
+      showSavedMsg();
+    }    
   }, [currMeta, metadata]);
 
   useEffect(() => {
