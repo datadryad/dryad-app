@@ -13,7 +13,6 @@
   <li>eLife</li>
   <li>European Respiratory Society</li>
   <li>European Society for Evolutionary Biology</li>
-  <li>Hindawi</li>
   <li>Institute of Botany, Chinese Academy of Sciences</li>
   <li>International Society for Behavioral Ecology</li>
   <li>John Wiley &amp; Sons, Inc</li>
