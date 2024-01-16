@@ -20,20 +20,6 @@ module Stash
         resource.save!
       end
 
-      # class method
-      def self.sword_params
-        {
-          collection_uri: APP_CONFIG[:repository][:endpoint],
-          username: APP_CONFIG[:repository][:username],
-          password: APP_CONFIG[:repository][:password]
-        }
-      end
-
-      # instance method
-      def sword_params
-        self.class.sword_params
-      end
-
       private
 
       def resource
@@ -49,13 +35,11 @@ module Stash
       end
 
       def merritt_client
-        @merritt_client ||= Stash::Deposit::Client.new(logger: logger, **sword_params)
+        @merritt_client ||= Stash::Deposit::Client.new(logger: logger)
       end
 
       def do_create
         merritt_client.create(doi: identifier_str, payload: package.payload)
-        # resource.download_uri = receipt.em_iri
-        # resource.update_uri = receipt.edit_iri
       end
 
       def do_update

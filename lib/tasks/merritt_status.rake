@@ -1,6 +1,6 @@
 # :nocov:
 require 'fileutils'
-# the notifier was logging to /dryad/apps/ui/shared/cron/logs/stash-notifier.log. Still the correct place?
+
 namespace :merritt_status do
 
   desc 'Checks for processing items that have now finished and can have state updated'

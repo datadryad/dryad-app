@@ -4,11 +4,9 @@
 
 ## Introduction
 
-**Dryad** is the [UC Curation Center](http://www.cdlib.org/uc3/)'s
-implementation of the [Stash](https://github.com/CDL-Dryad/stash) application
-framework for research data publication and preservation, based on the
-[DataCite Metadata Schema](https://schema.datacite.org/) and the University
-of California’s [Merritt](https://merritt.cdlib.org/) repository service.
+**Dryad** is a research data publishing platform based on the [UC Curation Center](http://www.cdlib.org/uc3/)'s
+implementation of the [Stash](https://github.com/CDL-Dryad/stash) application framework. It relies on metadata based on the
+[DataCite Metadata Schema](https://schema.datacite.org/).
 
 - [About Dryad](https://datadryad.org/)
 
