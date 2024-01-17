@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: noid_states
+#
+#  id         :integer          not null, primary key
+#  state      :text(65535)
+#  created_at :datetime
+#  updated_at :datetime
+#
 require 'noid'
 require 'yaml'
 

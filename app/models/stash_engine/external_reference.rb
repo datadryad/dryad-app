@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: stash_engine_external_references
+#
+#  id            :integer          not null, primary key
+#  identifier_id :integer
+#  source        :string(191)
+#  value         :text(4294967295)
+#  created_at    :datetime
+#  updated_at    :datetime
+#
 module StashEngine
   # This class is currently used to store identifiers for external GenBank databases
   # used by the LinkOut functionality. It is similar to the InternalDatum model except
