@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: stash_engine_resource_states
+#
+#  id             :integer          not null, primary key
+#  user_id        :integer
+#  resource_state :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  resource_id    :integer
+#
 module StashEngine
   class ResourceState < ApplicationRecord
     self.table_name = 'stash_engine_resource_states'

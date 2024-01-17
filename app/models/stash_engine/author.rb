@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: stash_engine_authors
+#
+#  id                 :integer          not null, primary key
+#  author_first_name  :string(191)
+#  author_last_name   :string(191)
+#  author_email       :string(191)
+#  author_orcid       :string(191)
+#  resource_id        :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  stripe_customer_id :text(65535)
+#  author_order       :integer
+#
 require_relative '../../../app/models/stash_datacite/affiliation'
 
 module StashEngine

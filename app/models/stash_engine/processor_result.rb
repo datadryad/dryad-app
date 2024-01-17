@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: stash_engine_processor_results
+#
+#  id               :bigint           not null, primary key
+#  resource_id      :integer
+#  processing_type  :integer
+#  parent_id        :integer
+#  completion_state :integer
+#  message          :text(16777215)
+#  structured_info  :text(4294967295)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 module StashEngine
   class ProcessorResult < ApplicationRecord
     self.table_name = 'stash_engine_processor_results'

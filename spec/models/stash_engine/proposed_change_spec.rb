@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: stash_engine_proposed_changes
+#
+#  id               :integer          not null, primary key
+#  identifier_id    :integer
+#  approved         :boolean
+#  rejected         :boolean
+#  user_id          :integer
+#  authors          :text(65535)
+#  provenance       :string(191)
+#  publication_date :datetime
+#  publication_doi  :string(191)
+#  publication_issn :string(191)
+#  publication_name :string(191)
+#  score            :float(24)
+#  provenance_score :float(24)
+#  title            :text(65535)
+#  url              :string(191)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  subjects         :text(65535)
+#  xref_type        :string(191)
+#
 require 'rails_helper'
 
 module StashEngine

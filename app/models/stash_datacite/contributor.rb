@@ -1,5 +1,21 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: dcs_contributors
+#
+#  id                 :integer          not null, primary key
+#  contributor_name   :text(65535)
+#  contributor_type   :string           default("funder")
+#  identifier_type    :string
+#  name_identifier_id :string(191)
+#  resource_id        :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  award_number       :text(65535)
+#  funder_order       :integer
+#  award_description  :string(191)
+#
 module StashDatacite
   class Contributor < ApplicationRecord
     self.table_name = 'dcs_contributors'
