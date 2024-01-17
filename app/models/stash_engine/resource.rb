@@ -386,40 +386,18 @@ module StashEngine
       old_info = previous_resource&.descriptions&.type_technical_info&.first&.description
       return if technical_info == old_info
 
-      # check content against file
-      readme_file = data_files.present_files.where(upload_file_name: filename).first
-      file_content = readme_file&.file_content
+      add_data_as_file(filename, technical_info)
+    end
 
-      return if technical_info == file_content
+    def check_add_cedar_json
+      filename = 'DisciplineSpecificMetadata.json'
+      return if !cedar_json || cedar_json.empty?
 
-      # remove old file
-      readme_file.smart_destroy! if file_content
+      # check if new content
+      old_info = previous_resource&.cedar_json
+      return if cedar_json == old_info
 
-      # add file
-      Stash::Aws::S3.new.put_stream(
-        s3_key: "#{s3_dir_name(type: 'data')}/README.md",
-        stream: StringIO.new(technical_info)
-      )
-      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
-        .where.not(file_state: 'deleted').destroy_all
-
-      db_file =
-        StashEngine::DataFile.create(
-          upload_file_name: filename,
-          upload_content_type: 'text/markdown',
-          upload_file_size: technical_info.bytesize,
-          resource_id: id,
-          upload_updated_at: Time.new,
-          file_state: 'created',
-          original_filename: filename
-        )
-
-      update(total_file_size: StashEngine::DataFile
-          .where(resource_id: id)
-          .where(file_state: %w[created copied])
-          .sum(:upload_file_size))
-
-      db_file
+      add_data_as_file(filename, cedar_json)
     end
 
     # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank
@@ -1020,6 +998,43 @@ module StashEngine
     end
 
     private
+
+    def add_data_as_file(filename, content)
+      # check content against file
+      old_file = data_files.present_files.where(upload_file_name: filename).first
+      file_content = old_file&.file_content
+
+      return if content == file_content
+
+      # remove old file
+      old_file.smart_destroy! if file_content
+
+      # add file
+      Stash::Aws::S3.new.put_stream(
+        s3_key: "#{s3_dir_name(type: 'data')}/#{filename}",
+        stream: StringIO.new(content)
+      )
+      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
+        .where.not(file_state: 'deleted').destroy_all
+
+      db_file =
+        StashEngine::DataFile.create(
+          upload_file_name: filename,
+          upload_content_type: 'text/markdown',
+          upload_file_size: content.bytesize,
+          resource_id: id,
+          upload_updated_at: Time.new,
+          file_state: 'created',
+          original_filename: filename
+        )
+
+      update(total_file_size: StashEngine::DataFile
+          .where(resource_id: id)
+          .where(file_state: %w[created copied])
+          .sum(:upload_file_size))
+
+      db_file
+    end
 
     # -----------------------------------------------------------
     # Handle the 'submitted' resource state (happens after successful Merritt submission)
