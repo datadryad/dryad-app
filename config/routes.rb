@@ -262,6 +262,7 @@ Rails.application.routes.draw do
     get 'definitions', to: 'pages#definitions'
     get 'publication_policy', to: 'pages#publication_policy'
     get 'privacy', to: 'pages#privacy'
+    get 'accessibility', to: 'pages#accessibility'
     get 'membership', to: 'pages#membership'
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
