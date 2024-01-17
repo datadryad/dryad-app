@@ -45,7 +45,7 @@
     <% works_highlight = works_highlight&.select {|h| h[:relation] != 'haspart'} if @resource&.resource_type&.resource_type == 'collection' %>
     <%= render partial: "stash_datacite/related_identifiers/show", locals:
         { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
-    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
+    <% unless (@review.contributors.length < 1 || (@review.contributors.length == 1 && @review.contributors[0].contributor_name_friendly == 'N/A')) && @review.related_identifiers.length < 1 %>
       <%= link_to "Edit Description",
                   stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                   class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>      
