@@ -46,6 +46,13 @@ module StashDatacite
           expect(error.message).to include('descriptive title')
           expect(error.ids.first).to eq("title__#{@resource.id}")
         end
+        it 'returns error for ALL CAPS title' do
+          @resource.update(title: @resource.title.upcase)
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error.message).to include('Correct the casing of your')
+          expect(error.ids.first).to eq("title__#{@resource.id}")
+        end
       end
 
       describe :authors do
