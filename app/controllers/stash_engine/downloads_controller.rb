@@ -6,6 +6,7 @@ module StashEngine
     include ActionView::Helpers::DateHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
+    protect_from_forgery(only: [:zip_assembly_info])
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -37,11 +38,6 @@ module StashEngine
     end
 
     def zip_assembly_info
-      # add some code here to enforce security and this request was previously OKed (from the session)
-      unless session[:downloads].present? && session[:downloads].include?(params[:resource_id].to_i)
-        return render json: ['unauthorized'], status: :unauthorized
-      end
-
       respond_to do |format|
         format.json do
           # input is resource_id and output is json with keys size, filename and url for each entry
