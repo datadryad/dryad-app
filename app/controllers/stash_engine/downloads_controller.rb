@@ -6,7 +6,6 @@ module StashEngine
     include ActionView::Helpers::DateHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
-    protect_from_forgery(only: [:zip_assembly_info])
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -38,13 +37,16 @@ module StashEngine
     end
 
     def zip_assembly_info
+      # input is resource_id and output is json with keys size, filename and url for each entry
+      @resource = nil
+      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      check_for_sharing
+      return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
+
       respond_to do |format|
         format.json do
-          # input is resource_id and output is json with keys size, filename and url for each entry
-          @resource = Resource.find(params[:resource_id])
-
-          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210 which needs adding to our
-          # Counter log processor
+          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210
+          # which needs adding to our Counter log processor
           StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
 
           info = @resource.data_files.present_files.map do |f|
@@ -54,7 +56,6 @@ module StashEngine
               url: f.s3_permanent_presigned_url
             }
           end
-
           render json: info
         end
       end

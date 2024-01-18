@@ -8,20 +8,6 @@ const inputs = document.getElementById('file_downloads');
 navigator.serviceWorker.ready.then(worker => {
   worker.active.postMessage({type: 'PORT_INITIALIZATION', url: form.action}, [messageChannel.port2]); 
 });
-const refetch = async () => {
-  let count = 2;
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-  while (count > 0) {
-    const response = await fetch(`/stash/downloads/zip_assembly_info/${resource_id}`, {headers: {"X-CSRF-Token": csrf}});
-    if (response.ok) {
-      return response
-    }
-    console.log('Network error retrieving list of presigned urls');
-    await new Promise(r => setTimeout(r, 1000));
-    count = count - 1;
-  }
-  return fetch(`/stash/downloads/zip_assembly_info/${resource_id}`, {headers: {"X-CSRF-Token": csrf}});
-}
 const insertFiles = async (files) => {
   for (const f of files) {
     for (const k of Object.keys(f)) {
@@ -39,7 +25,7 @@ dlbutton.addEventListener('click', async e => {
   dlbutton.classList.remove('o-download__files');
   dlbutton.classList.add('o-download__wait');
   dlbutton.childNodes[1].nodeValue = 'Preparing download';
-  const response = await refetch();
+  const response = await fetch(zip_url);
   if (response.ok) {
     const files = await response.json();
     await insertFiles(files);
