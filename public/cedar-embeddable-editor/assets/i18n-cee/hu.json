@@ -1,0 +1,79 @@
+{
+  "App": {
+    "Title": "CEDAR Beágyazható Szerkesztő",
+    "Maintained": "A CEDAR-t a Stanford Biomedikai Informatikai Kutatási Központ működteti.",
+    "Contact": "Kapcsolat"
+  },
+  "Generic": {
+    "BMIR": "BMIR",
+    "SAVE": "MENTÉS",
+    "Infinite": "Végtelen",
+    "ExpandAll": "Mindet kinyit",
+    "CollapseAll": "Mindet bezár",
+    "Copy": "Másolás",
+    "Page": "Oldal",
+    "Name": "Név",
+    "Value": "Érték",
+    "AttributeName": "Attribútum név",
+    "AttributeValue": "Attribútum érték",
+    "AllValues": "Minden érték",
+    "Clear": "Törlés",
+    "SelectDecimalSeconds": "Tizedes másodpercek kiválasztása",
+    "SelectTimeZone": "Időzóna kiválasztása",
+    "NoTimeZoneFound": "Nem található időzóna",
+    "SelectYear": "Év kiválasztása",
+    "SelectYearAndMonth": "Év és hónap kiválasztása",
+    "SelectDate": "Dátum kiválasztása",
+    "NumberOnly": "Csak szám",
+    "CedarLogo": "CEDAR logó",
+    "DecimalSeconds": "tizedmásodpercek",
+    "Szűrés": "Kezdjen el írni a szűréshez"
+  },
+  "Process": {
+    "Initializing": "A CEDAR Beágyazható Szerkesztő inicializálása..."
+  },
+  "Multi": {
+    "NoInstancesYet": "Még nincsenek példányok",
+    "AddEmptyAfter": "Üres hozzáadása az aktuális után",
+    "AddCloneAfter": "Klón hozzáadása az aktuális után",
+    "DeleteCurrent": "Aktuális törlése"
+  },
+  "Error": {
+    "ValueRequired": "A mező kitöltése kötelező"
+  },
+  "Extra": {
+    "SampleTemplate": {
+      "Title": "Mintasablonok",
+      "Select": "Válassz sablont",
+      "Find": "Sablon keresése...",
+      "FindNoMatch": "Nincs egyező sablon"
+    },
+    "JsonLD": {
+      "InstanceCore": "JSON-LD - Példány - Alap",
+      "Instance": "JSON-LD - Példány"
+    },
+    "JsonSchemaTemplate": "JSON Séma - Sablon",
+    "TemplateRendering": "Sablon megjelenítési adatok",
+    "MultiInstance": "Multi-példány információ"
+  },
+  "Validation": {
+    "Required": "Az érték megadása kötelező.",
+    "Text": {
+      "MinLength": "Az érték legalább {{constraintMinLength}} karakter hosszú kell legyen.",
+      "MaxLength": "Az érték legfeljebb {{constraintMaxLength}} karakter hosszú lehet."
+    },
+    "Select": {
+      "MaxSelection": "Legfeljebb {{maxSelections}} lehetőség kiválasztása lehetséges"
+    },
+    "Email": {
+      "Invalid": "Az érték érvényes e-mail címnek kell lennie."
+    },
+    "Link": {
+      "Invalid": "Az érték érvényes webcímnek (URL-nek) kell lennie."
+    },
+    "Numeric": {
+      "MinValue": "Az érték legalább {{constraintMinValue}} kell legyen.",
+      "MaxValue": "Az érték legfeljebb {{constraintMaxValue}} lehet."
+    }
+  }
+}

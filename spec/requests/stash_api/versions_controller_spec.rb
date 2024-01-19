@@ -256,12 +256,12 @@ module StashApi
 
         @resources[1].current_state = 'submitted' # has to show submitted to merritt in order to download
 
-        allow_any_instance_of(Stash::Download::ZipVersionPresigned).to receive('valid_resource?').and_return(true)
+        allow_any_instance_of(Stash::Download::VersionPresigned).to receive('valid_resource?').and_return(true)
       end
 
       describe 'permissions' do
         before(:each) do
-          allow_any_instance_of(Stash::Download::ZipVersionPresigned).to receive(:download) do |o|
+          allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download) do |o|
             # o is the object instance and cc is the controller context
             # o.cc.response.headers['Location'] = 'http://example.com'
             # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method

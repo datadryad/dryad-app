@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: stash_engine_curation_stats
+#
+#  id                          :bigint           not null, primary key
+#  date                        :datetime
+#  datasets_curated            :integer
+#  new_datasets_to_submitted   :integer
+#  new_datasets_to_peer_review :integer
+#  datasets_to_aar             :integer
+#  datasets_to_published       :integer
+#  datasets_to_embargoed       :integer
+#  datasets_to_withdrawn       :integer
+#  author_revised              :integer
+#  author_versioned            :integer
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  datasets_to_be_curated      :integer
+#  ppr_to_curation             :integer
+#
 module StashEngine
   describe CurationStats do
 
