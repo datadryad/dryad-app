@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: stash_engine_counter_citations
+#
+#  id            :integer          not null, primary key
+#  citation      :text(65535)
+#  doi           :text(65535)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  identifier_id :integer
+#
 FactoryBot.define do
 
   factory :counter_citation, class: StashEngine::CounterCitation do

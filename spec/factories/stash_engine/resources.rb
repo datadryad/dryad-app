@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: stash_engine_resources
+#
+#  id                        :integer          not null, primary key
+#  user_id                   :integer
+#  current_resource_state_id :integer
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  has_geolocation           :boolean          default(FALSE)
+#  download_uri              :text(65535)
+#  identifier_id             :integer
+#  update_uri                :text(65535)
+#  title                     :text(65535)
+#  current_editor_id         :integer
+#  publication_date          :datetime
+#  accepted_agreement        :boolean
+#  tenant_id                 :string(100)
+#  skip_datacite_update      :boolean          default(FALSE)
+#  skip_emails               :boolean          default(FALSE)
+#  loosen_validation         :boolean          default(FALSE)
+#  solr_indexed              :boolean          default(FALSE)
+#  preserve_curation_status  :boolean          default(FALSE)
+#  hold_for_peer_review      :boolean          default(FALSE)
+#  peer_review_end_date      :datetime
+#  old_resource_id           :integer
+#  total_file_size           :bigint
+#  meta_view                 :boolean          default(FALSE)
+#  file_view                 :boolean          default(FALSE)
+#  last_curation_activity_id :integer
+#  cedar_json                :text(65535)
+#
 FactoryBot.define do
 
   factory :resource, class: StashEngine::Resource do

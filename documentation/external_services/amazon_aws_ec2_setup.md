@@ -108,7 +108,48 @@ To restore from a backup file:
 sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i myfile.sql
 
 # Then import using the mysql command that you would normally use to run the DB client:
-`mysql_stg.sh < myfile.sql`
+mysql_stg.sh < myfile.sql
+```
+
+
+SOLR setup
+============
+
+All of these tools are outdated. To make SOLR work with Dryad's old
+GeoBlacklight, we need to use SOLR 7 or before. SOLR 7 requires very old Java,
+such as 1.8.
+
+To install solr:
+```
+sudo yum install java-1.8.0-amazon-corretto
+wget "https://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz"
+tar zxf solr-7.7.3.tgz
+cd solr-7.7.3
+export SOLR_JETTY_HOST="0.0.0.0"
+bin/solr start
+bin/solr create  -c geoblacklight
+```
+
+Before proceeding, ensure the machine's security group allows connections from the world and
+verify that the SOLR is visable via the web at http://xxxx:8983
+
+Configure SOLR for Dryad:
+```
+bin/solr stop
+cp ~/dryad-app/config/solr_config/* ~/solr-7.7.3/server/solr/geoblacklight/conf/
+chmod 775 ~/solr-7.7.3/server/solr/geoblacklight/conf/schema.xml
+bin/solr start
+cd ~/deploy/current
+bundle exec rails rsolr:reindex
+```
+
+Edit the security group for the SOLR server to disallow world access, but allow connections
+from IPs of the UI servers that will connect to it.
+
+Reference resources:
+- https://solr.apache.org/guide/solr/latest/deployment-guide/securing-solr.html
+- https://solr.apache.org/guide/solr/latest/deployment-guide/taking-solr-to-production.html
+
 
 
 Setting up for code deployment
@@ -131,3 +172,5 @@ sudo systemctl daemon-reload
 sudo systemctl start puma
 sudo systemctl status puma
 ```
+
+

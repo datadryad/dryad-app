@@ -99,6 +99,7 @@ paths:
         - $ref: '#/components/parameters/publicationISSN'
         - $ref: '#/components/parameters/publicationName'
         - $ref: '#/components/parameters/manuscriptNumber'
+        - $ref: '#/components/parameters/curationStatus'
       responses:
         '200':
           description: A list of datasets.
@@ -1396,7 +1397,14 @@ components:
       description:
         Manuscript number associated with the dataset.
 
-      
+    curationStatus:
+      in: query
+      name: curationStatus
+      schema:
+        type: string
+      description:
+        Curation Status
+
   securitySchemes:
     bearerAuth:
       type: http

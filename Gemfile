@@ -53,6 +53,7 @@ gem 'uglifier', '~> 4.2.0'
 
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
+gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight'

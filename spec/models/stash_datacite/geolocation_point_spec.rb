@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: dcs_geo_location_points
+#
+#  id         :integer          not null, primary key
+#  latitude   :decimal(10, 6)
+#  longitude  :decimal(10, 6)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 require 'rails_helper'
 
 module StashDatacite
