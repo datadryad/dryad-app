@@ -19,10 +19,10 @@ bundle exec rails identifiers:voided_invoices_report >>/apps/dryad/apps/ui/share
 # putting this in background since I don't want to delay the counter processor starting
 bundle exec rails counter:populate_citations >> /apps/dryad/apps/ui/shared/cron/logs/citation_populator.log 2>&1 &!
 
-# the MDC/counter processor only runs in the production environment to send stats to the datacite hub, no need to run in other environments
+# the MDC/counter processor only runs in the production && stage environments
 if [ "$RAILS_ENV" == "production" ] || [ "$RAILS_ENV" == "stage" ]
 then
-    source ~/.profile.d/pyenv
+    # the counter.sh script used to do more log procesing, but now only does a couple of things
     cd /apps/dryad/apps/ui/current/cron
     ./counter.sh >> /apps/dryad/apps/ui/shared/cron/logs/counter.log 2>&1
 fi
