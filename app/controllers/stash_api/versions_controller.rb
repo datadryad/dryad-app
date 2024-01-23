@@ -13,7 +13,7 @@ module StashApi
     def show
       v = Version.new(resource_id: params[:id], item_view: true)
       render json: v.metadata_with_links
-      res = @stash_resources.first
+      @stash_resources.first
     end
 
     # get /datasets/<dataset-id>/versions

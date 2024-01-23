@@ -28,7 +28,7 @@ module StashApi
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, item_view: true)
       render json: ds.metadata
-      res = @stash_identifier.latest_viewable_resource(user: @user)
+      @stash_identifier.latest_viewable_resource(user: @user)
     end
 
     # post /datasets
