@@ -139,7 +139,6 @@ module StashEngine
       @status_hash = @version_presigned.download
       case @status_hash[:status]
       when 200
-        log_counter_version
         redirect_to @status_hash[:url]
       when 202
         render status: 202,
