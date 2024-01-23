@@ -35,7 +35,7 @@ defaults: &DEFAULTS
   default_tenant: dryad
   old_dryad_url: https://v1.datadryad.org
   counter:
-    account: CDL.DASH
+    account: DRYAD.DRYAD
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
     base_url: https://zenodo-rdm-qa.web.cern.ch
@@ -46,7 +46,7 @@ defaults: &DEFAULTS
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
   payments:
     service: stripe
-    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>
     data_processing_charge: 12000 # charge in cents
     data_processing_charge_new: 15000 # charge in cents
     dpc_change_date: 2023-01-04
@@ -79,7 +79,7 @@ defaults: &DEFAULTS
     - 'Malawi'
     - 'Mali'
     - 'Mozambique'
-    - 'Niger'    
+    - 'Niger'
     - 'Rwanda'
     - 'Sierra Leone'
     - 'Somalia'
@@ -153,15 +153,15 @@ defaults: &DEFAULTS
     labslink:
       ftp_host: labslink.ebi.ac.uk
       ftp_dir: f24ml3c8
-      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_username] %> 
-      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_password] %> 
+      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_username] %>
+      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:labslink_ftp_password] %>
       ftp_provider_id: 1012
     # LinkOut FTP information for NCBI
     pubmed:
       ftp_host: sftp-private.ncbi.nlm.nih.gov
       ftp_dir: holdings
-      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %> 
-      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %> 
+      ftp_username: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_username] %>
+      ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %>
       ftp_provider_id: 7893
       api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %>
   s3:
@@ -205,7 +205,7 @@ defaults: &DEFAULTS
     server: https://dryad--cloudparti.sandbox.lightning.force.com
     login_host: test.salesforce.com
     username: admin@datadryad.org.cloudparti
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>    
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_password] %>
     security_token: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_security_token] %>
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:salesforce_client_secret] %>
@@ -246,7 +246,7 @@ development: &DEVELOPMENT
   matomo_analytics_id: datadryad-dev
   payments:
     service: stripe
-    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %> 
+    key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>
     # Very small limit for large files to facilitate testing (500KB)
     large_file_size: 5.0e+5
     data_processing_charge: 12000 # charge in cents
@@ -266,7 +266,7 @@ development: &DEVELOPMENT
 
 v3_development:
   <<: *DEVELOPMENT
-    
+
 aws_db:
   <<: *DEVELOPMENT
   send_journal_published_notices: false
