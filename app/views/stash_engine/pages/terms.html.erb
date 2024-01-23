@@ -1,14 +1,15 @@
-<% @page_title = 'Terms of service' %>
-
-<% if current_tenant %>
-    <div class="toc">
-      <!-- Since the content is same for all tenants currently, the partial layouts/about will be the commom part. -->
-      <%#= render "layouts/terms", toc: true %>
-    </div>
-    <div class="terms-page">
-      <%= render "layouts/terms" %>
-    </div>
-    <%#= render "tenants/#{current_tenant.tenant_id}/terms" %>
-<% else %>
-    <p>A placeholder for the Terms of Service page.</p>
+<% @page_title = 'Terms of submission &amp; use' %>
+<% content_for(:head) do %>
+<style type="text/css">
+  ol {
+    margin-left: 0;
+  }
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+</style>
 <% end %>
+<%= render "layouts/page_columns", page_content: "layouts/terms" %>
