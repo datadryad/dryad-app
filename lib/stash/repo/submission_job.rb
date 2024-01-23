@@ -5,10 +5,6 @@ require 'byebug'
 
 module Stash
   module Repo
-    # Superclass of background tasks. Should not contain any thread-unsafe
-    # data or any data that cannot be serialized (e.g. pass database IDs, not
-    # ActiveRecord models). The state of ActiveRecord models outside the lifetime
-    # of the `submit!` method is not guaranteed.
     class SubmissionJob
       attr_reader :resource_id
 
@@ -72,22 +68,34 @@ module Stash
       private
 
       def do_submit!
-        package = create_package
-        result_str = submit(package)
+        # Create a submission package from the resource
+        # package = create_package
+        log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
+        
+        submit_and_save!
+        
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
         Stash::Repo::SubmissionResult
           .success(resource_id: resource_id, request_desc: description, message: "Submitted to Merritt for asynchronous completion\n#{result_str}")
       end
 
+      def submit_and_save!
+        client = Stash::Repo::Client.new(logger: logger)
+        if resource.update_uri
+          client.update(doi: identifier_str, payload: package.payload, download_uri: resource.download_uri)
+        else
+          client.create(doi: identifier_str, payload: package.payload)
+        end
+      ensure
+        resource.version_zipfile = File.basename(package.payload)
+        resource.save!
+      end
+      
+      
       def resource
         @resource ||= StashEngine::Resource.find(resource_id)
       end
 
-      # :nocov:
-      def tenant
-        @tenant ||= resource.tenant
-      end
-      # :nocov:
 
       def id_helper
         @id_helper ||= Stash::Doi::DataciteGen.new(resource: resource)
@@ -99,12 +107,6 @@ module Stash
         ObjectManifestPackage.new(resource: resource)
       end
 
-      def submit(package)
-        log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
-        merritt_helper = MerrittHelper.new(package: package, logger: logger)
-        merritt_helper.submit!
-      end
-
       def description_for(resource)
         msg = "#{self.class} for resource #{resource_id} (#{resource.identifier_str}): "
         msg << if (update_uri = resource.update_uri)
@@ -112,7 +114,6 @@ module Stash
                else
                  'posting new object to '
                end
-        msg << " (tenant: #{resource.tenant_id})"
       end
 
       def log_info(message)
