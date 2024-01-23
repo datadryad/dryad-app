@@ -14,7 +14,6 @@ module StashApi
       v = Version.new(resource_id: params[:id], item_view: true)
       render json: v.metadata_with_links
       res = @stash_resources.first
-      StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
     end
 
     # get /datasets/<dataset-id>/versions
@@ -29,7 +28,6 @@ module StashApi
         res = @stash_resources.first
         @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
         if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
-          StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
           @version_presigned.download(resource: res)
         else
           render plain: 'Download for this version of the dataset is unavailable', status: 404
