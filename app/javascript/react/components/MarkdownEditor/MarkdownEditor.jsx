@@ -94,7 +94,7 @@ function MilkdownEditor({
   const [headingLevel, setHeadingLevel] = useState(0);
   const [parseError, setParseError] = useState(false);
   const [editorVal, setEditorVal] = useState(0);
-  const [md, setMD] = useState(initialValue);
+  const [initialCode, setInitialCode] = useState(initialValue);
   const [mdEditor, setMDEditor] = useState(null);
 
   const activeList = () => active.some((a) => a && a.includes('list'));
@@ -107,7 +107,7 @@ function MilkdownEditor({
   const getMarkdown = () => editor()?.action((ctx) => {
     const editorView = ctx.get(editorViewCtx);
     const serializer = ctx.get(serializerCtx);
-    setMD(serializer(editorView.state.doc));
+    setInitialCode(serializer(editorView.state.doc));
   });
 
   const testMarkdown = (markdown) => editor()?.action((ctx) => {
@@ -115,18 +115,20 @@ function MilkdownEditor({
     const schema = ctx.get(schemaCtx);
     const remark = ctx.get(remarkCtx);
     const parser = ParserState.create(schema, remark);
+    setInitialCode(markdown);
     try {
       parser(markdown);
       editor()?.action(replaceAll(markdown));
-      setMD(markdown);
-      setEditorVal(markdown);
     } catch {
       setParseError(true);
       setEditType('markdown');
-      setMD(markdown);
-      saveMarkdown(markdown);
+      if (markdown !== editorVal) saveMarkdown(markdown);
     }
   });
+
+  useEffect(() => {
+    setEditorVal(initialCode);
+  }, [initialCode]);
 
   useEffect(() => {
     editor()?.action((ctx) => {
@@ -194,7 +196,7 @@ function MilkdownEditor({
         )}
         <MilkdownCore onChange={onChange} setActive={setActive} setLevel={setHeadingLevel} />
         <CodeEditor
-          content={md}
+          content={initialCode}
           onChange={saveMarkdown}
           hidden={editType === 'visual'}
           setMDEditor={setMDEditor}
