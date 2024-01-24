@@ -79,8 +79,10 @@ module Stash
           return
         end
         submission_job = create_submission_job(resource_id: resource_id)
+        logger.info("BBBBBB created job")
         self.class.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
         promise = submission_job.submit_async(executor: @executor)
+        logger.info("BBBBBB submitted job")
         promise.on_success do |result|
           # deferred submissions are considered a success for our purposes (ie, qualified/probable success) and have
           # deferred? set on the submission_result object to indicate their odd status
