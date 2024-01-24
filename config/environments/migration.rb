@@ -85,7 +85,7 @@ Rails.application.configure do
     # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
     :email_prefix => "[Dryad Exception]",
     :sender_address => %{"Dryad Notifier" <no-reply-dryad-migration@ucop.edu>},
-    :exception_recipients => %w{scott.fisher@ucop.edu ryan@datadryad.org}
+    :exception_recipients => %w{ryan@datadryad.org}
   },
   :error_grouping => true,
   :error_grouping_period => 3.hours
