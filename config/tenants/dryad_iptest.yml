@@ -11,7 +11,7 @@ default: &default
     strategy: ip_address
     ranges: ["128.48.67.15/255.255.255.0", "127.0.0.1/255.255.255.0"]
   default_license: cc0
-  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  campus_contacts: ["ryan@datadryad.org"] # for testing
   data_deposit_agreement: false
   partner_display: false
   covers_dpc: true
