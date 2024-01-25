@@ -14,19 +14,18 @@
   <!-- Email -->
   <a href="mailto:?subject=<%=title%>&body=Citation%3A+<%=citation%>%0A%0A<%=abstract%>" title="Share with email" data-share="email" target="blank"><i class="fa fa-envelope-square" aria-hidden="true"></i><span class="screen-reader-only">Share with email (opens in new window)</span></a>
   <!-- Copy -->
-  <button onclick="copyUrl()" title="Copy link to this page"><i class="fa fa-share-square"></i><span class="screen-reader-only">Copy link to this page</span></button>
+  <button id="share-panel__copy-url" title="Copy link to this page"><i class="fa fa-share-square"></i><span class="screen-reader-only">Copy link to this page</span></button>
 </div>
 <div role="status">
   <p id="copy-success" hidden><i class="fa fa-check" aria-hidden="true"></i> Link copied</p>
 </div>
-
 <script type="text/javascript">
-  async function copyUrl() {
-    window.navigator.clipboard.writeText(window.location.href).then(() => {
+  document.getElementById('share-panel__copy-url').addEventListener('click', () => {
+    window.navigator.clipboard.writeText(window.location.href).then(async () => {
       const flash = document.getElementById('copy-success');
       flash.removeAttribute('hidden');
       await new Promise(res => setTimeout(res, 3000));
       flash.setAttribute('hidden', 'true');
     });
-  }
+  })
 </script>
