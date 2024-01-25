@@ -14,7 +14,7 @@ default: &default
     entity_id: urn:mace:incommon:ucop.edu
     entity_domain: .ucop.edu
   default_license: cc0
-  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  campus_contacts: ["ryan@datadryad.org"] # for testing
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
