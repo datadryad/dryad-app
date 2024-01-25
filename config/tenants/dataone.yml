@@ -13,7 +13,7 @@ default: &default
     strategy: none
   default_license: cc0
   dash_logo_after_tenant: false
-  campus_contacts: ["scott.fisher@ucop.edu"]
+  campus_contacts: ["ryan@datadryad.org"]
   data_deposit_agreement: false
   partner_display: false
   covers_dps: true
