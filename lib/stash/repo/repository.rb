@@ -93,12 +93,11 @@ module Stash
 
       # Register that a dataset has completed processing into the storage system
       # TODO: rename this... "harvested" is a weird term left over from old versions of this system
-      def harvested(identifier:, record_identifier:)
-        resource = identifier.processing_resource
-        return unless resource # harvester could be re-harvesting stuff we already have
+      def harvested(resource:)
+        return unless resource.present?
+        return unless resource == resource.identifier&.processing_resource
 
-        resource.download_uri = get_download_uri(resource, record_identifier)
-        resource.update_uri = get_update_uri(resource, record_identifier)
+        resource.download_uri = resource.s3_dir_name(type: 'data')
         resource.current_state = 'submitted'
         resource.save
       end
@@ -106,7 +105,7 @@ module Stash
       # this will be called after merritt_status confirms successful ingest
       def cleanup_files(resource)
         remove_public_dir(resource) # where the local manifest file is stored
-        remove_s3_data_files(resource)
+        remove_submission_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << e.full_message
@@ -182,7 +181,7 @@ module Stash
         remove_if_exists(res_public_dir)
       end
 
-      def remove_s3_data_files(resource)
+      def remove_submission_data_files(resource)
         Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
         Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
       end

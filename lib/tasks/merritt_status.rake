@@ -32,14 +32,14 @@ namespace :merritt_status do
       abort('RAILS_ENV must be explicitly set before running this task')
     end
 
-    Rails.logger.info("Starting Merritt status submission updater for environment #{ENV.fetch('RAILS_ENV', nil)}")
+    Rails.logger.info("Starting storage status checker for environment #{ENV.fetch('RAILS_ENV', nil)}")
 
     catch(:sigint) do
       loop do
         Rails.logger.info('Starting round of processing')
         StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete]).each do |queue_state|
           if queue_state.possibly_set_as_completed
-            Rails.logger.info("  Resource #{queue_state.resource_id} available in Merritt")
+            Rails.logger.info("  Resource #{queue_state.resource_id} available in storage and finalized")
           elsif queue_state.updated_at < 1.day.ago # older than 1 day ago
             Rails.logger.info("  Resource #{queue_state.resource_id} has been processing for more than a day, so marking as errored")
             StashEngine::RepoQueueState.create(resource_id: queue_state.resource_id, state: 'errored')
@@ -55,7 +55,7 @@ namespace :merritt_status do
       end
     end
 
-    Rails.logger.info("Shutting down Merritt status updater for environment #{ENV.fetch('RAILS_ENV', nil)}")
+    Rails.logger.info("Shutting down storage status checker for environment #{ENV.fetch('RAILS_ENV', nil)}")
     FileUtils.rm_f(pid_file)
   end
 end

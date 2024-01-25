@@ -42,28 +42,6 @@ module Stash
         @nokogiri_doc
       end
 
-      def dataset_size
-        return nil unless manifest
-
-        elements = nokogiri_doc.xpath('/objectInfo/object/actualSize')
-        return nil if elements.blank?
-
-        element = elements.first
-        element.content.to_i
-      end
-
-      def file_size(filename)
-        return 0 unless manifest
-
-        ick = xpath_escape_quotes("producer/#{filename}")
-        xp = "/objectInfo/versions/version[@id='#{@resource.stash_version.merritt_version}']/manifest/file[@id=#{ick}]/size"
-        elements = nokogiri_doc.xpath(xp)
-        return nil if elements.blank?
-
-        element = elements.first
-        element.content.to_i
-      end
-
       def timeouts(client)
         client.connect_timeout = TIMEOUT
         client.send_timeout = TIMEOUT
