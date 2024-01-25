@@ -17,6 +17,7 @@ import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
+import htmlSchema from './htmlSchema';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
 } from './milkdownCommands';
@@ -75,7 +76,8 @@ function MilkdownCore({onChange, setActive, setLevel}) {
       });
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
-    .use([listen, commonmark, gfm, history, trailing, selectionListener]));
+    .use([listen, commonmark, gfm, history, trailing, selectionListener])
+    .use([htmlSchema]));
   return (
     <Milkdown />
   );
