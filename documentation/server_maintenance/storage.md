@@ -82,6 +82,12 @@ can be managed through it.
 Technical processes
 ===================
 
+To be as fault-tolerant as possible, the storage system consists of two phases:
+submission to the storage, and checking that storage was successful. The
+majority of the work is done in the submission phase, with only minor cleanup in
+the checking phase.
+
+
 Submission process
 ------------------
 
@@ -90,7 +96,7 @@ Submission process
    1. Does some validation and setup
    2. Hands off to `StashEngine.repository.submit`
    3. Kicks off transfer of Zenodo content
-   4. Sends the GUI user to the correct URL while they wait for processing
+   4. Sends the GUI user to the correct URL while they wait for processing to complete
 3. `StashEngine.repository.submit == Stash::Repo::Repository.submit`
    1. Sets the resource state to `processing`
    2. Creates a SubmissionJob
