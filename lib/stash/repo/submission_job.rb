@@ -2,6 +2,7 @@ require 'rails'
 require 'active_record'
 require 'concurrent/promise'
 require 'byebug'
+require 'stash/aws/s3'
 
 module Stash
   module Repo
@@ -69,37 +70,48 @@ module Stash
       private
       
       def do_submit!
-        # Create a submission package from the resource
-        # package = create_package
-        logger.info("submitting resource #{resource_id} (#{resource.identifier_str})")
-        
-        submit_and_save!
-        
-        Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
-        Stash::Repo::SubmissionResult
-          .success(resource_id: resource_id, request_desc: description, message: "Submitted to Merritt for asynchronous completion\n#{result_str}")
-      end
-      
-      def submit_and_save!
+        logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
         client = Stash::Repo::Client.new(logger: logger)
-        if resource.update_uri
-          logger.info("XXXXXXXX TODO XXX Update the resource")
-          # client.update(doi: identifier_str, payload: package.payload, download_uri: resource.download_uri)
-        else
-          logger.info("XXXXXXX TODO XX Create the resource")
-          # client.create(doi: identifier_str, payload: package.payload)
+        resource.data_files.each do |f|
+          case f.file_state
+          when "created"
+            logger.info(" -- created file moving to permanent store #{f.upload_file_name} -- #{f.s3_staged_path}")
+            copy_to_permanent_store(f)
+          when "copied"
+            # Files aren't actually copied, we just reference the file from the previous version of the dataset
+            logger.info(" -- copied file #{f.upload_file_name}")
+          when "deleted"
+            # Files aren't actually deleted, we just don't migrate the file description to future versions of the dataset
+            logger.info(" -- deleted file #{f.upload_file_name}")
+          else
+            message = "Unable to determine what to do with file #{f.upload_file_name}"
+            logger.error(message)
+            return Stash::Repo::SubmissionResult.failure(resource_id: resource_id, request_desc: description, error: StandardError.new(message))
+          end
         end
-      ensure
-        logger.info("XXSXXXXX TODO XXX Update the version_zipfile")
-        resource.version_zipfile = File.basename(package.payload)
         resource.save!
+        Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
       
+      def copy_to_permanent_store(data_file)
+        staged_bucket = APP_CONFIG[:s3][:bucket]
+        staged_key = data_file.s3_staged_path
+        permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
+        permanent_key = "v3/#{data_file.s3_staged_path}"
+
+        logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
+        s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
+                to_bucket_name: permanent_bucket, to_s3_key: permanent_key)
+        data_file.update(storage_version_id: resource.id)
+      end
       
       def resource
         @resource ||= StashEngine::Resource.find(resource_id)
       end
-      
+
+      def s3
+        @s3 ||= Stash::Aws::S3.new
+      end
       
       def id_helper
         @id_helper ||= Stash::Doi::DataciteGen.new(resource: resource)

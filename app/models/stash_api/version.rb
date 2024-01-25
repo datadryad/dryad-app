@@ -37,7 +37,7 @@ module StashApi
         self: { href: self_path },
         'stash:dataset': { href: parent_dataset.self_path },
         'stash:files': { href: files_path },
-        'stash:download': { href: api_url_helper.download_version_path(@resource.id) } # was @resource.merritt_producer_download_uri
+        'stash:download': { href: api_url_helper.download_version_path(@resource.id) }
       }.merge(stash_curie)
     end
   end

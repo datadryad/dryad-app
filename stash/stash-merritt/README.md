@@ -22,7 +22,6 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 1. Submit the package to Merritt through an api endpoint.
    A separate process updates the `download_uri` and `update_uri` of the resource to appropriate values after successful
    submission with the merritt_status:update rake task (which runs a daemon started by systemd).
-1. set the resource `version_zipfile`
 1. again via [ezid-client](https://github.com/duke-libraries/ezid-client), update the
    target URL (landing page) and Datacite 3 metadata for the DOI
 1. clean up uploads and other temporary files
