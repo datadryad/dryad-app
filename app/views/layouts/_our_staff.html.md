@@ -132,11 +132,4 @@
   to California where he helps the UC Davis effort on the NIH Common Fund Data
   Ecosystem.</p>
 </div>
-<div class="bio">
-  <img src="/images/prathiba.jpg" alt="Headshot of Sai Prathiba">
-  <h5>Sai Prathiba</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Sai Prathiba holds a Master's degree in Biosciences with a specialization in Biotechnology. During her role as a junior research fellow, she engaged in a clinical (interventional) study, where her involvement spanned various aspects of the project lifecycle including conducting comprehensive literature reviews, securing participants and consent, designing proforma documents, blood sample collection for biochemical analysis, rigorous statistical analysis of gathered data, and publication of findings. Beyond her professional pursuits, Sai Prathiba finds joy in culinary endeavors, gardening, and music.
-  </p>
-</div>
 </div>
