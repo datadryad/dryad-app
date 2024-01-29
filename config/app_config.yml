@@ -35,7 +35,7 @@ defaults: &DEFAULTS
   default_tenant: dryad
   old_dryad_url: https://v1.datadryad.org
   counter:
-    account: CDL.DASH
+    account: DRYAD.DRYAD
     token: <%= Rails.application.credentials[Rails.env.to_sym][:counter_token] %>
   zenodo:
     base_url: https://zenodo-rdm-qa.web.cern.ch
