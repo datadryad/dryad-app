@@ -37,18 +37,16 @@ module StashEngine
     end
 
     def zip_assembly_info
-      # add some code here to enforce security and this request was previously OKed (from the session)
-      unless session[:downloads].present? && session[:downloads].include?(params[:resource_id].to_i)
-        return render json: ['unauthorized'], status: :unauthorized
-      end
+      # input is resource_id and output is json with keys size, filename and url for each entry
+      @resource = nil
+      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      check_for_sharing
+      return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
 
       respond_to do |format|
         format.json do
-          # input is resource_id and output is json with keys size, filename and url for each entry
-          @resource = Resource.find(params[:resource_id])
-
-          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210 which needs adding to our
-          # Counter log processor
+          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210
+          # which needs adding to our Counter log processor
           StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
 
           info = @resource.data_files.present_files.map do |f|
@@ -58,7 +56,6 @@ module StashEngine
               url: f.s3_permanent_presigned_url
             }
           end
-
           render json: info
         end
       end
