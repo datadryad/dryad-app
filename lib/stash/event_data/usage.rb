@@ -14,7 +14,7 @@ module Stash
       # BASE_URL = 'https://api.test.datacite.org/events'.freeze
       BASE_URL = 'https://api.datacite.org/events'.freeze
       HEARTBEAT_URL = 'https://api.datacite.org/heartbeat'.freeze
-      EMAIL = 'scott.fisher@ucop.edu'.freeze
+      EMAIL = 'ryan@datadryad.org'.freeze
       UNIQUE_INVESTIGATIONS = %w[unique-dataset-investigations-regular unique-dataset-investigations-machine].freeze
       UNIQUE_REQUESTS = %w[unique-dataset-requests-regular unique-dataset-requests-machine].freeze
 
