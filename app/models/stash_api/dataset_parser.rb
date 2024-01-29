@@ -27,7 +27,7 @@ module StashApi
       user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
       hold_for_peer_review = @hash['holdForPeerReview']
       @resource.curation_activities << StashEngine::CurationActivity.create(
-        status: hold_for_peer_review ? 'peer_review' : @resource.current_curation_status || 'in_progress',
+        status: @resource.current_curation_status || 'in_progress',
         user_id: @user.id,
         resource_id: @resource.id,
         note: user_note
