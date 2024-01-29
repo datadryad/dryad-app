@@ -31,7 +31,8 @@ class CedarController < ApplicationController
       fallbackLanguage: 'en',
 
       collapseStaticComponents: false,
-      showStaticText: true
+      showStaticText: true,
+      showAllMultiInstanceValues: true
     }
 
     respond_to do |format|
