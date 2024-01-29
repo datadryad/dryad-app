@@ -1,6 +1,6 @@
 <% if @neuro_data || @resource.cedar_json.present? %> 
-    <% neuroTemplate = APP_CONFIG[:cedar][:templates].detect {|t| t.last === 'Human Cognitive Neuroscience Data'} %>
-    <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), appConfig: APP_CONFIG[:cedar], singleTemplate: {id: neuroTemplate.first, title: neuroTemplate.last} } ) %>
+    <% neuroTemplate = APP_CONFIG[:cedar_templates].detect {|t| t.last === 'Human Cognitive Neuroscience Data'} %>
+    <%= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), editorUrl: APP_CONFIG[:cedar_editor_url], templates: APP_CONFIG[:cedar_templates],  singleTemplate: {id: neuroTemplate.first, title: neuroTemplate.last} } ) %>
     <script>
         ReactRailsUJS.mountComponents("#cedar_check");
     </script>

@@ -7,7 +7,9 @@ import moment from 'moment';
 import {isEqual} from 'lodash';
 import {showSavingMsg, showSavedMsg} from '../../../lib/utils';
 
-export default function Cedar({resource, appConfig, singleTemplate = null}) {
+export default function Cedar({
+  resource, editorUrl, templates, singleTemplate = null,
+}) {
   const [template, setTemplate] = useState(singleTemplate);
   const [csrf, setCsrf] = useState(null);
   const [metadata, setMetadata] = useState(null);
@@ -150,10 +152,9 @@ export default function Cedar({resource, appConfig, singleTemplate = null}) {
       return;
     }
     if (dialog.current?.dataset.template !== template.id) {
-      const {table: {editor_url}} = appConfig;
-      if (editor_url) {
+      if (editorUrl) {
         const script = document.createElement('script');
-        script.src = editor_url;
+        script.src = editorUrl;
         script.async = true;
         script.onload = () => modalSetup();
         dialog.current.appendChild(script);
@@ -163,9 +164,9 @@ export default function Cedar({resource, appConfig, singleTemplate = null}) {
     dialog.current.showModal();
   };
 
-  if (!appConfig) return null;
-  const {table: {templates}} = appConfig;
+  if (!editorUrl) return null;
   if (!templates) return null;
+
   const {id: resource_id} = resource;
 
   return (

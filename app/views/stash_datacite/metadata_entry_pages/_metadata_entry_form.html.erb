@@ -106,6 +106,9 @@
 
     <!--  CEDAR Metadata Editor -->
     <div id="cedar_check"></div>
+    <!-- enabled for neuroscience only -->
+    
+    <!-- %= react_component('components/MetadataEntry/Cedar',  { resource: @resource.slice(:id, :title, :cedar_json), editorUrl: APP_CONFIG[:cedar_editor_url], templates: APP_CONFIG[:cedar_templates]) % -->
   <% end %>
 
     <h2 class="o-heading__page-span" id="related_works_section"><%= @resource&.resource_type&.resource_type == 'collection' ? 'Collected and r' : 'R' %>elated works</h2>
