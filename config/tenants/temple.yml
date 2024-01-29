@@ -1,20 +1,19 @@
 default: &default
   enabled: true
-  abbreviation: "UC"
-  short_name: "UC Office of the President"
-  long_name: "University of California, Office of the President"
-  publisher_id: grid.30389.31
-  # this is "UC System" since there isn't something for UC Office of the President
+  abbreviation: "temple"
+  short_name: "Temple University"
+  long_name: "Temple University"
+  publisher_id: grid.264727.2
   ror_ids:
-    - https://ror.org/00pjdza24
-  tenant_id: ucop
-
+    - https://ror.org/00kx1jb78
+    - https://ror.org/04zzmzt85
+  tenant_id: temple
   authentication:
     strategy: shibboleth
-    entity_id: urn:mace:incommon:ucop.edu
-    entity_domain: .ucop.edu
+    entity_id: https://fim.temple.edu/idp/shibboleth
+    entity_domain: temple.edu
   default_license: cc0
-  campus_contacts: ["ryan@datadryad.org"] # for testing
+  campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
@@ -34,9 +33,15 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
+  identifier_service:
+    provider: datacite
+    prefix: "10.5061"
+    account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
+    password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
+    sandbox: false
   campus_contacts: [""]
 
 v3_development:
@@ -46,4 +51,4 @@ v3_stage:
   <<: *default
 
 v3_production:
-  <<: *default
+  <<: *PRODUCTION

@@ -56,7 +56,7 @@ defaults: &DEFAULTS
   merritt_base_url: https://merritt-stage.cdlib.org
   merritt_max_submission_threads: 5
   crossref_base_url: https://api.crossref.org
-  crossref_mailto: scott.fisher@ucop.edu
+  crossref_mailto: ryan@datadryad.org
   # world bank low income or lower-middle income
   # DR Congo is there since ROR data seems to have both values for it
   # Same for Swaziland, East Timor
@@ -228,8 +228,8 @@ defaults: &DEFAULTS
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
-  submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
-  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  submission_error_email: [dryad.submission.error.emails@mailinator.com, ryan@datadryad.org, audrey@datadryad.org]
+  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, ryan@datadryad.org, audrey@datadryad.org]
   zenodo:
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
     base_url: https://zenodo-rdm-qa.web.cern.ch
@@ -281,10 +281,10 @@ local_dev:
 
 stage: &STAGE
   <<: *DEFAULTS
-  submission_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
-  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  submission_error_email: [dryad.submission.error.emails@mailinator.com, ryan@datadryad.org, audrey@datadryad.org]
+  zenodo_error_email: [dryad.submission.error.emails@mailinator.com, ryan@datadryad.org, audrey@datadryad.org]
   shib_sp_host: dryad-stg.cdlib.org
-  page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  page_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
   google_analytics_id: UA-145629338-3
   matomo_analytics_id: datadryad-stg
@@ -314,26 +314,26 @@ v3_stage:
 
 migration:
   <<: *DEFAULTS
-  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
-  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  submission_error_email: [ryan@datadryad.org, audrey@datadryad.org]
+  zenodo_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   shib_sp_host: dryad-stg.cdlib.org
-  page_error_email: ["scott.fisher@ucop.edu"]
+  page_error_email: ["ryan@datadryad.org"]
   feedback_email_from: no-reply-dryad-migration@datadryad.org
 
 demo:
   <<: *DEFAULTS
   shib_sp_host: dryaddemo.cdlib.org
-  page_error_email: [scott.fisher@ucop.edu]
-  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
-  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org]
+  page_error_email: [ryan@datadryad.org]
+  submission_error_email: [ryan@datadryad.org]
+  zenodo_error_email: [ryan@datadryad.org]
   feedback_email_from: no-reply-dryaddemo@cdlib.org
 
 production: &PRODUCTION
   <<: *DEFAULTS
   shib_sp_host: datadryad.org
-  page_error_email: [scott.fisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  page_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org, Steve.Diggs@ucop.edu]
-  zenodo_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org]
+  zenodo_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
   repository:

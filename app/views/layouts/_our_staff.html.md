@@ -75,35 +75,16 @@
 
 <div class="about-bios">
 <div class="bio">
-  <img src="/images/stevediggs.png" alt="Headshot of Steve Diggs">
-  <h5>Steve Diggs</h5><br/>
-  <p><em>Product Manager</em><br/>
-  Steve is a Research Data Specialist with the University of California Office of the President (UCOP), where he serves as the Senior Product Manager for the data publishing portfolio at the University of California Curation Center (UC3). Previously, Steve worked as the Technical Director for the Hydrographic Data Office at the Scripps Institution of Oceanography at UC San Diego. Steve has spent decades focusing on designing and operating full-stack information systems that deliver valuable data to the research community. Besides actively managing data, Steve is a member of several international data and data science teams and currently serves on the Board on Research Data and Information (BRDI) under The National Academies of Sciences, Engineering, and Medicine (NASEM). Having worked directly with researchers in both field and lab settings, Steve understands the challenges and opportunities they face when managing data as an integral part of their scholarly outputs.</p>
-</div>
-<div class="bio">
-  <img src="/images/scott.jpg" alt="Headshot of Scott Fisher">
-  <h5>Scott Fisher</h5><br/>
-  <p><em>Software Developer</em><br/>
-  Scott is a lead developer at the University of California Curation Center (UC3) at the California Digital Library (CDL).
-  As part of the
-  <a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/"
-  target="_blank">CDL-Dryad partnership</a>, he is also the tech lead on the Dryad publishing platform.
-  Scott has many years of software development and UX design experience and graduated with a master's degree from the
-  UC Berkeley School of Information. He previously worked on software projects to archive web pages, plan and preserve
-  research data, and make data metrics available.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
   <h5>Audrey Hamelers</h5><br/>
-  <p><em>Software Developer</em><br/>
+  <p><em>Senior Software Developer</em><br/>
   Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
   </p>
 </div>
 <div class="bio">
   <img src="/images/dragos.jpg" alt="Headshot of Dragos Iorgulescu">
   <h5>Dragos Iorgulescu</h5><br/>
-  <p><em>Software Developer</em><br/>
+  <p><em>Senior Software Developer</em><br/>
   Over the past ~15 years Dragos has been involved in a series of start-ups and large-scale enterprises, ranging from training applications and cloud SAAS/IAAS platforms to medical credentialing/licensing, trading, banking, and social media. This has allowed him to work on complex and challenging projects, gaining experience with understanding product requirements and translating them into intuitive and performant solutions. When he's not coding, he pets his cat, likes to practice sports, travel, & disconnect.
   </p>
 </div>
@@ -150,12 +131,5 @@
   various biology-driven projects in the United States. He recently repatriated
   to California where he helps the UC Davis effort on the NIH Common Fund Data
   Ecosystem.</p>
-</div>
-<div class="bio">
-  <img src="/images/prathiba.jpg" alt="Headshot of Sai Prathiba">
-  <h5>Sai Prathiba</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Sai Prathiba holds a Master's degree in Biosciences with a specialization in Biotechnology. During her role as a junior research fellow, she engaged in a clinical (interventional) study, where her involvement spanned various aspects of the project lifecycle including conducting comprehensive literature reviews, securing participants and consent, designing proforma documents, blood sample collection for biochemical analysis, rigorous statistical analysis of gathered data, and publication of findings. Beyond her professional pursuits, Sai Prathiba finds joy in culinary endeavors, gardening, and music.
-  </p>
 </div>
 </div>

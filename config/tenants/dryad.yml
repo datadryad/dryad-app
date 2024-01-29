@@ -10,7 +10,7 @@ default: &default
   authentication:
     strategy: none
   default_license: cc0
-  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  campus_contacts: ["ryan@datadryad.org"] # for testing
   data_deposit_agreement: false
   partner_display: false
   covers_dpc: false
