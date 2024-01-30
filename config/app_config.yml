@@ -225,6 +225,14 @@ defaults: &DEFAULTS
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
+  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-0-14"
+  cedar_templates:
+    # only the Neuroscience template will be loaded; the selectable editor is disabled
+    - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
+    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
+    - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
+    - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+    - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
@@ -254,15 +262,6 @@ development: &DEVELOPMENT
     dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
-  cedar:
-    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
-    template_base_url: "/cedar-embeddable-editor"
-    templates:
-      - [1, "Files", "File Description"]
-      - [2, "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
-      - [40, "EEB",  "Ecology and Evolutionary Biology"]
-      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
-      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
 v3_development:
   <<: *DEVELOPMENT
@@ -299,15 +298,6 @@ stage: &STAGE
     merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
-  cedar:
-    editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
-    template_base_url: "/cedar-embeddable-editor"
-    templates:
-      - [1, "Files", "Ted's File Description"]
-      - [2, "Human Cognitive Neuroscience Data", "Templeton Draft for Neuroscience Data"]
-      - [40, "EEB",  "Ecology and Evolutionary Biolgy"]
-      - [43, "NCBI-MIAIRR", "MiAIRR V1.1.0"]
-      - [45, "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
 v3_stage:
   <<: *STAGE
@@ -404,6 +394,8 @@ production: &PRODUCTION
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+  cedar_templates:
+    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
 
 v3_production:
   <<: *PRODUCTION

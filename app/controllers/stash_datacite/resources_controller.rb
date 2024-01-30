@@ -37,6 +37,7 @@ module StashDatacite
     def submission
       @resource.current_state = 'processing'
       @resource.check_add_readme_file
+      @resource.check_add_cedar_json
 
       update_submission_resource_info(@resource)
 
