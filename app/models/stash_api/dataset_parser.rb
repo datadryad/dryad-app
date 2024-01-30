@@ -25,10 +25,13 @@ module StashApi
       owning_user_id = establish_owning_user_id
       owning_user = StashEngine::User.find(owning_user_id)
       user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
-      @resource.curation_activities << StashEngine::CurationActivity.create(status: @resource.current_curation_status || 'in_progress',
-                                                                            user_id: @user.id,
-                                                                            resource_id: @resource.id,
-                                                                            note: user_note)
+      hold_for_peer_review = @hash['holdForPeerReview']
+      @resource.curation_activities << StashEngine::CurationActivity.create(
+        status: @resource.current_curation_status || 'in_progress',
+        user_id: @user.id,
+        resource_id: @resource.id,
+        note: user_note
+      )
 
       @resource.update(
         title: remove_html(@hash['title']),
@@ -37,7 +40,8 @@ module StashApi
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
         preserve_curation_status: @hash['preserveCurationStatus'] || false,
-        loosen_validation: @hash['loosenValidation'] || false
+        loosen_validation: @hash['loosenValidation'] || false,
+        hold_for_peer_review: hold_for_peer_review # after ruby 3.1 this can be just hold_for_peer_review:
       )
 
       @hash[:authors]&.each { |author| add_author(json_author: author) }

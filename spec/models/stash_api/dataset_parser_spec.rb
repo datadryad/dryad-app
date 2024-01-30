@@ -45,7 +45,8 @@ module StashApi
         'publicationName' => 'Some Great Journal',
         'manuscriptNumber' => 'ABC123',
         'paymentId' => 'invoice-123',
-        'paymentType' => 'stripe'
+        'paymentType' => 'stripe',
+        'holdForPeerReview' => true
       }.with_indifferent_access
 
       @update_metadata = {
@@ -76,6 +77,7 @@ module StashApi
         expect(@stash_identifier.resources.count).to eq(1)
         resource = @stash_identifier.resources.first
         expect(resource.title).to eq(@basic_metadata[:title])
+        expect(resource.hold_for_peer_review).to be true
       end
 
       it 'creates the basic author metadata as specified' do
