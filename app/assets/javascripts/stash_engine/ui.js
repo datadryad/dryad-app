@@ -1477,6 +1477,17 @@ function awaitSelector(selector) {
   });
 }
 
+function debounce(callback, delay = 300) {
+  let timer
+  return function() {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      callback();
+    }, delay)
+  }
+}
+
+
 function joelsReady(){
 
   // ***** Upload Modal Component ***** //

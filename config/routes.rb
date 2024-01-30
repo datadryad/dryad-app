@@ -446,6 +446,7 @@ Rails.application.routes.draw do
     
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
+    get 'metadata_entry_pages/cedar_check', to: 'metadata_entry_pages#cedar_check', as: :metadata_entry_cedar_check
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'

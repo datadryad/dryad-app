@@ -8,7 +8,7 @@ class CedarController < ApplicationController
       showSampleTemplateLinks: false,
       terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
 
-      sampleTemplateLocationPrefix: '/cedar-embeddable-editor',
+      sampleTemplateLocationPrefix: '/cedar-embeddable-editor/templates',
       loadSampleTemplateName: params[:template],
       expandedSampleTemplateLinks: false,
 
@@ -31,7 +31,8 @@ class CedarController < ApplicationController
       fallbackLanguage: 'en',
 
       collapseStaticComponents: false,
-      showStaticText: true
+      showStaticText: true,
+      showAllMultiInstanceValues: false
     }
 
     respond_to do |format|
