@@ -394,7 +394,8 @@ production: &PRODUCTION
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  cedar_templates: []
+  cedar_templates:
+    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
 
 v3_production:
   <<: *PRODUCTION
