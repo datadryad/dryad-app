@@ -14,6 +14,7 @@ module StashDatacite
       params[:subject]
         .split(/\s*,\s*/)
         .delete_if(&:blank?)
+        .map(&:strip)
         .each { |s| ensure_subject(s) }
       @subjects = resource.subjects.non_fos
       respond_to do |format|
