@@ -79,5 +79,6 @@
     "skipDataciteUpdate" : false,
     "skipEmails" : false,
     "loosenValidation" : false,
-    "preserveCurationStatus": false
+    "preserveCurationStatus": false,
+	"holdForPeerReview": false
 }
