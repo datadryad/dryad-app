@@ -225,7 +225,7 @@ defaults: &DEFAULTS
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
-  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js"
+  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-0-14"
   cedar_templates:
     # only the Neuroscience template will be loaded; the selectable editor is disabled
     - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]

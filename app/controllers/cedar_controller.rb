@@ -32,7 +32,7 @@ class CedarController < ApplicationController
 
       collapseStaticComponents: false,
       showStaticText: true,
-      showAllMultiInstanceValues: true
+      showAllMultiInstanceValues: false
     }
 
     respond_to do |format|
