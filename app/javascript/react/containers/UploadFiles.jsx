@@ -127,7 +127,11 @@ export default function UploadFiles({
   // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
   const updateTabularCheckStatus = (files) => {
     if (validating.length) {
-      return files.map((file) => ({...file, tabularCheckStatus: TabularCheckStatus.checking}));
+      return files.reduce((arr, file) => {
+        const cf = chosenFiles.find((c) => c.id === file.id);
+        if (!cf.tabularCheckStatus) arr.push({...file, tabularCheckStatus: TabularCheckStatus.checking});
+        return arr;
+      }, []);
     }
     return simpleTabularCheckStatus(files);
   };
