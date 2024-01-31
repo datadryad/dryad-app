@@ -12,6 +12,7 @@ module StashEngine
       c.helper_method \
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
+          format_index_date
           formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date
           current_tenant current_user
           field_suffix shorten_linked_url english_list
@@ -54,6 +55,14 @@ module StashEngine
     # ----------------------
     # Formatted Date/Times
     # ----------------------
+
+    def format_index_date(args)
+      t = Array(args[:value]).flatten.join(' ')
+      t = t.to_time if t.instance_of?(String)
+      return '' unless t.is_a? Time
+
+      local_time(t)&.strftime('%Y %b %-d')
+    end
 
     def formatted_date(t)
       return 'NA' if t.blank?
