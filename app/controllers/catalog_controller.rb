@@ -114,16 +114,16 @@ class CatalogController < ApplicationController
     # config.add_index_field 'dc_title_t', :label => 'Display Name:'
     # config.add_index_field Settings.FIELDS.PROVENANCE, :label => 'Institution:'
     # config.add_index_field Settings.FIELDS.RIGHTS, :label => 'Access:'
-    # # config.add_index_field 'Area', :label => 'Area:'
+    # config.add_index_field 'Area', :label => 'Area:'
     # config.add_index_field Settings.FIELDS.SUBJECT, :label => 'Keywords:'
-    config.add_index_field Settings.FIELDS.YEAR
     config.add_index_field Settings.FIELDS.CREATOR
+    config.add_index_field Settings.FIELDS.DATE, helper_method: :format_index_date
     config.add_index_field Settings.FIELDS.DESCRIPTION, helper_method: :snippit
     # config.add_index_field Settings.FIELDS.PUBLISHER
-    config.add_index_field Settings.FIELDS.RELATED_PUBLICATION_NAME
-    config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
-    config.add_index_field Settings.FIELDS.DATASET_FILE_EXT
-    config.add_index_field Settings.FIELDS.FUNDER
+    # config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
+    # config.add_index_field Settings.FIELDS.DATASET_FILE_EXT
+    # config.add_index_field Settings.FIELDS.FUNDER
+    # config.add_index_field Settings.FIELDS.RELATED_PUBLICATION_NAME
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display

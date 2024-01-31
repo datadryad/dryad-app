@@ -24,9 +24,9 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
-      submit = find_button('submit_dataset', disabled: :all)
+      submit = find_button('error_button', disabled: :all)
       expect(submit).not_to be_nil
-      expect(submit).to be_disabled
+      expect(submit).not_to be_disabled
     end
 
   end
@@ -65,7 +65,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
-  context :software_fileed do
+  context :software_filled do
     before(:each, js: true) do
       # Sign in and create a new dataset
       visit root_path

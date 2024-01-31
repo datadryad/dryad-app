@@ -3,7 +3,7 @@
     <!-- If a curator is viewing this page, highlight the changed fields -->
     <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
     <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? && @resource.previous_resource.current_curation_status == 'action_required' %>
-      <div class="c-error-box">
+      <div class="c-error-box" id="error-box">
         <p>Changes are required in order to submit.</p>
         <p>Please refer to your email, <%= @resource.owner_author.author_email %>, where you received a message from <a href="mailto:help@datadryad.org">help@datadryad.org</a> listing required changes.</p>
       </div>
@@ -45,7 +45,7 @@
     <% works_highlight = works_highlight&.select {|h| h[:relation] != 'haspart'} if @resource&.resource_type&.resource_type == 'collection' %>
     <%= render partial: "stash_datacite/related_identifiers/show", locals:
         { related_identifiers: @review.related_identifiers, highlight_fields: works_highlight || [] } %>
-    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
+    <% unless (@review.contributors.length < 1 || (@review.contributors.length == 1 && @review.contributors[0].contributor_name_friendly == 'N/A')) && @review.related_identifiers.length < 1 %>
       <%= link_to "Edit Description",
                   stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                   class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>      
@@ -130,7 +130,7 @@
   <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? %>
     <% if @resource.previous_resource.current_curation_status == 'action_required' %>
       <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
-      <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+      <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button') %>
     <% else %>
       <%= button_to stash_url_helpers.resource_path(@resource), method: :delete, data: { confirm: 'No changes made! Do you want to cancel this update and revert to the previous version?' }, form_class: '', class: 'o-button__submit js-submission' do %>
         Submit
@@ -152,11 +152,17 @@
     <% end -%>
   <% else %>
     <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
-    <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+    <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button') %>
   <% end %>
 </div>
 
 <script type="text/javascript">
+  if (document.getElementById('error_button')) {
+    document.getElementById('error_button').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('error-box').scrollIntoView();
+    })
+  }
   // display some flash messages, (why do we need this?, ajax?)
   <% flash.each do |type, message| %>
     $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")

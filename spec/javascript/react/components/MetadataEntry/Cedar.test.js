@@ -11,8 +11,7 @@ const xhrMockClass = () => ({
 });
 
 describe('Cedar', () => {
-  let resource; let appConfig; let
-    templateName;
+  let resource; let editorUrl; let templates; let templateName;
 
   beforeEach(() => {
     window.XMLHttpRequest = jest.fn().mockImplementation(xhrMockClass);
@@ -24,22 +23,19 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: null,
     };
+    editorUrl = 'https://raw.githubusercontent.com/CDL-Dryad/dryad-app/main/public/cedar-embeddable-editor/cedar-embeddable-editor.js';
     templateName = faker.lorem.words(3);
-    appConfig = {
-      table: {
-        templates: [[1, 'Nothing', 'Empty template'], [2, 'Faked', templateName]],
-      },
-    };
+    templates = [[1, 'Nothing', 'Empty template'], [2, 'Faked', templateName]];
   });
 
-  it('does not render when there is no config', () => {
-    appConfig = null;
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+  it('does not render when there are no templates', () => {
+    templates = null;
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
     expect(screen.queryByText('Choose a metadata form')).not.toBeInTheDocument();
   });
 
   it('renders a select box', () => {
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
     expect(screen.queryByText('Choose a metadata form')).toBeInTheDocument();
 
     const options = screen.getAllByRole('option');
@@ -54,7 +50,7 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
     };
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
 
     expect(screen.getByText(templateName)).toBeInTheDocument();
     expect(screen.getByText('Edit form')).toBeInTheDocument();
@@ -67,7 +63,7 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
     };
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.getByText('Edit form'));
     await waitFor(() => {
@@ -81,7 +77,7 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
     };
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.queryByText('Delete form'));
     await waitFor(() => {
@@ -99,7 +95,7 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
     };
-    render(<Cedar resource={resource} appConfig={appConfig} />);
+    render(<Cedar resource={resource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.queryByText('Delete form'));
     await waitFor(() => {
