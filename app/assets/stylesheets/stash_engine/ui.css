@@ -2322,6 +2322,7 @@ td:last-child, th:last-child {
         -ms-flex: 0 1 90ch;
             flex: 0 1 90ch;
     padding-right: 5ch;
+    overflow: auto;
   }
 }
 
