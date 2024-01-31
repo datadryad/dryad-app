@@ -328,6 +328,10 @@
   overflow: visible;
 }
 
+.milkdown *, .milkdown *:focus, .ProseMirror-selectednode {
+  outline: none;
+}
+
 .milkdown h1,
 .cm-editor .md_h1,
 .milkdown h2,

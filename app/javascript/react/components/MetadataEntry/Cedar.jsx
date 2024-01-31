@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, {
   useState, useRef, useEffect, useCallback,
 } from 'react';
@@ -6,15 +7,17 @@ import moment from 'moment';
 import {isEqual} from 'lodash';
 import {showSavingMsg, showSavedMsg} from '../../../lib/utils';
 
-export default function Cedar({resource, appConfig}) {
-  const [template, setTemplate] = useState(null);
+export default function Cedar({
+  resource, editorUrl, templates, singleTemplate = null,
+}) {
+  const [template, setTemplate] = useState(singleTemplate);
   const [csrf, setCsrf] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [currMeta, setCurrMeta] = useState(null);
   const [updated, setUpdated] = useState(undefined);
 
   const formRef = useRef(null);
-  const templateRef = useRef(null);
+  const templateRef = useRef(template);
   const del = useRef(null);
   const dialog = useRef(null);
   const editor = useRef(null);
@@ -85,6 +88,7 @@ export default function Cedar({resource, appConfig}) {
         setCurrMeta(null);
         setUpdated(null);
         setMetadata(null);
+        if (singleTemplate) setTemplate(singleTemplate);
       }
     }
     templateRef.current = template;
@@ -148,10 +152,9 @@ export default function Cedar({resource, appConfig}) {
       return;
     }
     if (dialog.current?.dataset.template !== template.id) {
-      const {table: {editor_url}} = appConfig;
-      if (editor_url) {
+      if (editorUrl) {
         const script = document.createElement('script');
-        script.src = editor_url;
+        script.src = editorUrl;
         script.async = true;
         script.onload = () => modalSetup();
         dialog.current.appendChild(script);
@@ -161,9 +164,9 @@ export default function Cedar({resource, appConfig}) {
     dialog.current.showModal();
   };
 
-  if (!appConfig) return null;
-  const {table: {templates}} = appConfig;
+  if (!editorUrl) return null;
   if (!templates) return null;
+
   const {id: resource_id} = resource;
 
   return (
@@ -191,26 +194,32 @@ export default function Cedar({resource, appConfig}) {
                 </button>
               </div>
             ) : (
-              <>
-                <label className="c-input__label" htmlFor={`cedar__${resource_id}`}>Choose a metadata form
-                </label>
-                <select
-                  id={`cedar__${resource_id}`}
-                  className="c-input__text"
-                  name="cedarTemplate"
-                  onChange={(e) => {
-                    const t = e.currentTarget;
-                    setTemplate(t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null);
-                  }}
-                  onBlur={formik.handleBlur}
-                >
-                  <option key="0" value="" label="- Select one -" />
-                  {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
-                </select>
+              singleTemplate ? (
                 <button disabled={!template} type="submit" className="o-button__add">
-                  Add metadata form
+                  Add metadata form: <strong>{singleTemplate.title}</strong>
                 </button>
-              </>
+              ) : (
+                <>
+                  <label className="c-input__label" htmlFor={`cedar__${resource_id}`}>Choose a metadata form
+                  </label>
+                  <select
+                    id={`cedar__${resource_id}`}
+                    className="c-input__text"
+                    name="cedarTemplate"
+                    onChange={(e) => {
+                      const t = e.currentTarget;
+                      setTemplate(t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null);
+                    }}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option key="0" value="" label="- Select one -" />
+                    {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
+                  </select>
+                  <button disabled={!template} type="submit" className="o-button__add">
+                    Add metadata form
+                  </button>
+                </>
+              )
             )}
           </Form>
         )}

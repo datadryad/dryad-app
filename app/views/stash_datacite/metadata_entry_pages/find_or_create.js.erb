@@ -9,3 +9,11 @@ loadAccordion();
 // addSavingDisplay();
 ReactRailsUJS.mountComponents();
 console.log("loaded rails javascript for data entry and react components");
+
+$('#cedar_check').load("<%= stash_url_helpers.metadata_entry_cedar_check_path(resource_id: params[:resource_id])%>")
+var observer = new MutationObserver(function (mutations) {
+  if (!document.querySelector('.cedar-container')) {
+    debounce($('#cedar_check').load("<%= stash_url_helpers.metadata_entry_cedar_check_path(resource_id: params[:resource_id])%>"))
+  }
+});
+observer.observe(document.querySelector('.saved_text'), { attributes: true });

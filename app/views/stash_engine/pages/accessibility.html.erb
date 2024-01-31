@@ -1,0 +1,13 @@
+<% @page_title = 'Accessibility' %>
+<% content_for(:doc_end) do %>
+<script type="text/javascript">
+  const form = document.getElementById('accessibility-email');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.elements['name'].value || !form.elements['url'].value || !form.elements['body'].value) return false;
+    const body = `Name: ${form.elements['name'].value}\n\nURL: ${form.elements['url'].value}\n\nMessage: ${form.elements['body'].value}`
+    window.open(`mailto:<%= APP_CONFIG.contact_us_uri %>?subject=Accessibility+problem+report&body=${encodeURIComponent(body)}`)
+  });
+</script>
+<% end %>
+<%= render "layouts/page_columns", page_content: "layouts/accessibility" %>

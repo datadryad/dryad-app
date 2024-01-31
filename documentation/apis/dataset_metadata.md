@@ -122,6 +122,8 @@ behavior:
   some basic validation of the dataset. This should only be used when
   datasets are being replicated from another system and it is not
   feasible to provide complete metadata.
+- `holdForPeerReview` - Defaults to false. Allows a dataset to be set in
+  hold for peer review status when it is created
 
 The above settings get carried with a dataset into future API
 submissions, but Dryad's web interface resets these values to `false` (except

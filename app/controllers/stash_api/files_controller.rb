@@ -59,7 +59,6 @@ module StashApi
     def download
       if @resource.may_download?(ui_user: @user)
         @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
-        StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
         @file_presigned.download(file: @stash_file)
       else
         render status: 404, plain: 'Not found'
