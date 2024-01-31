@@ -43,8 +43,9 @@ module CollectionHelper
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
-    fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
     fill_in_keywords
+    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    create(:description, resource: StashEngine::Resource.last)
     fill_in_collection
   end
 
