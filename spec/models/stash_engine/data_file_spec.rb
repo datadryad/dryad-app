@@ -277,15 +277,20 @@ module StashEngine
       end
 
       it 'returns nil if unable to retrieve range of S3 file' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
+          .to_return(status: 404, body: '', headers: {})
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 404, body: '', headers: {})
 
         expect(@upload2.preview_file).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
+          .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
 
         expect(@upload2.preview_file).to eql("This,is,my,great,csv\n0,1,2,3,4")
       end
@@ -510,9 +515,10 @@ module StashEngine
       end
 
       it 'generates the merritt URL in S3 bucket' do
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
+
         @resource.current_resource_state.update(resource_state: 'submitted')
-        # "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
-        expect(@upload.s3_permanent_path).to eq("#{@resource.merritt_ark}|1|producer/foo.bar")
+        expect(@upload.s3_permanent_path).to include("-#{@resource.id}/data/foo.bar")
       end
     end
 
