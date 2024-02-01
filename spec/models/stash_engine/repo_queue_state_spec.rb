@@ -58,8 +58,8 @@ module StashEngine
       it 'calls the completion methods if it is completed' do
         allow(@resource).to receive(:identifier).and_return(@identifier)
         allow(@states[1]).to receive(:resource).and_return(@resource)
+        allow(@states[1]).to receive(:available_in_storage?).and_return(true)
 
-        expect(@states[1]).to receive(:update_size!).and_return(true)
         expect(::StashEngine.repository).to receive(:cleanup_files).with(@resource).and_return(true)
         expect(@states[1].possibly_set_as_completed).to eql(true)
       end

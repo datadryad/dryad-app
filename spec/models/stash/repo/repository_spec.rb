@@ -317,8 +317,11 @@ module Stash
           attr_reader :record_identifier
 
           before(:each) do
+            @download_location = 'some_s3_dir'
             @identifier = double(StashEngine::Identifier)
             allow(identifier).to receive(:processing_resource).and_return(resource)
+            allow(resource).to receive(:identifier).and_return(@identifier)
+            allow(resource).to receive(:s3_dir_name).and_return(@download_location)
 
             @record_identifier = 'ark:/1234/567'
 
@@ -338,37 +341,18 @@ module Stash
           end
 
           it 'sets the download and update URIs' do
-            expect(resource).to receive(:update_uri=).with('http://example.org/edit/ark:/1234/567')
-            expect(resource).to receive(:download_uri=).with('http://example.org/d/ark:/1234/567')
-            repo.harvested(identifier: identifier, record_identifier: record_identifier)
+            expect(resource).to receive(:download_uri=).with(@download_location)
+            repo.harvested(resource: resource)
           end
 
           it 'sets the state' do
             expect(resource).to receive(:current_state=).with('submitted')
-            repo.harvested(identifier: identifier, record_identifier: record_identifier)
+            repo.harvested(resource: resource)
           end
 
           it 'saves the resource' do
             expect(resource).to receive(:save)
-            repo.harvested(identifier: identifier, record_identifier: record_identifier)
-          end
-
-          it 'wraps download URI errors as ArgumentError' do
-            def repo.download_uri_for(_)
-              raise IndexError
-            end
-            expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(
-              ArgumentError, /.*download.*#{Regexp.quote(record_identifier)}.*IndexError/
-            )
-          end
-
-          it 'wraps update URI errors as ArgumentError' do
-            def repo.update_uri_for(_)
-              raise IndexError
-            end
-            expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(
-              ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/
-            )
+            repo.harvested(resource: resource)
           end
         end
 
@@ -484,24 +468,15 @@ module Stash
           end
         end
 
-        describe :update_uri_for do
-          it 'determines the update URI' do
-            expected_uri = 'https://merritt-test.example.org:39001/mrtsword/edit/cdl_dryaddev/doi%3A10.15146%2FR3RG6G'
-            actual_uri = repo.update_uri_for(resource: resource, record_identifier: record_identifier)
-            expect(actual_uri).to eq(expected_uri)
-          end
-        end
-
         describe :harvested do
-          it 'sets the download URI, update URI, and status' do
+          it 'sets the download URI and status' do
             # Skip sending emails
             @resource.skip_emails = true
             @resource.save
             neuter_curation_callbacks!
-            repo.harvested(identifier: @identifier, record_identifier: @record_identifier)
+            repo.harvested(resource: @resource)
             @resource.reload
-            expect(@resource.download_uri).to eq('https://merritt-test.example.org/d/ark%3A%2F99999%2Ffk43f5119b')
-            expect(@resource.update_uri).to eq('https://merritt-test.example.org:39001/mrtsword/edit/cdl_dryaddev/doi%3A10.15146%2FR3RG6G')
+            expect(@resource.download_uri).to include("-#{@resource.id}/data")
             expect(@resource.current_state).to eq('submitted')
           end
         end
