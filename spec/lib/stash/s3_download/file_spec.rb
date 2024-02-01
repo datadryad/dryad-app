@@ -20,6 +20,7 @@ module Stash
         @data_file = create(:data_file, resource_id: @resource.id)
         allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
         @file_dl_obj = Stash::S3Download::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication'))
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
       end
 
       after(:each) do
@@ -41,7 +42,7 @@ module Stash
 
         it 'expects download to return success: false in hash if 404 from S3' do
           # return from S3
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 404, body: '', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
@@ -52,7 +53,7 @@ module Stash
         end
 
         it 'expects download to return success: false in hash if 500 from S3' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 500, body: '', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
@@ -63,7 +64,7 @@ module Stash
         end
 
         it 'expects download to return success: true in hash and dl file if 200' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: 'My Best File', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
@@ -72,7 +73,7 @@ module Stash
         end
 
         it 'expects downloads to have correct digests' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: 'So many fun times', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
@@ -82,7 +83,7 @@ module Stash
         end
 
         it 'expect digest not to match normal values if body is changed' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
@@ -94,7 +95,7 @@ module Stash
         it "should raise an error if a digest is specified in the database and it doesn't match" do
           @data_file = create(:data_file, resource_id: @resource.id, digest_type: 'md5', digest: 'c5849711a1f1ff03de4d96873defa382')
 
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
 
           expect { @file_dl_obj.download_file(db_file: @data_file) }.to raise_error(Stash::S3Download::DownloadError)
