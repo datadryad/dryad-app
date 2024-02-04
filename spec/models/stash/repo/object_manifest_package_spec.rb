@@ -219,20 +219,6 @@ module Stash
         end
       end
 
-      describe SubmissionJob do
-        describe :create_package do
-          xit 'returns a manifest package for a manifest resource' do
-            logger = instance_double(Logger)
-            allow(logger).to receive(:info)
-            allow(Rails).to receive(:logger).and_return(logger)
-
-            job = SubmissionJob.new(resource_id: @resource.id)
-            allow(job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'meow'))
-            package = job.send(:create_package)
-            expect(package).to be_an(ObjectManifestPackage)
-          end
-        end
-      end
     end
   end
 end

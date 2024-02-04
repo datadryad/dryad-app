@@ -115,12 +115,6 @@ module Stash
         @id_helper ||= Stash::Doi::DataciteGen.new(resource: resource)
       end
 
-      def create_package
-        id_helper.ensure_identifier
-        logger.info("creating package for resource #{resource_id} (#{resource.identifier_str})")
-        ObjectManifestPackage.new(resource: resource)
-      end
-
       def description_for(resource)
         "#{self.class} for resource #{resource_id} (#{resource.identifier_str}): posting update to storage"
       end

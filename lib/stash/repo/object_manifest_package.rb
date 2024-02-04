@@ -5,7 +5,7 @@ require 'datacite/mapping/datacite_xml_factory'
 
 module Stash
   module Repo
-    class ObjectManifestPackage < SubmissionPackage
+    class ObjectManifestPackage # < SubmissionPackage
 
       attr_reader :root_url
 
