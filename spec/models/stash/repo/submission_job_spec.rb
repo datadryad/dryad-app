@@ -73,10 +73,6 @@ module Stash
           @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
           allow(@url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
-          @package = instance_double(ObjectManifestPackage)
-          allow(ObjectManifestPackage).to receive(:new).with(resource: @resource).and_return(@package)
-          allow(@package).to receive(:dc4_xml)
-
           @job = SubmissionJob.new(resource_id: @resource.id)
           allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
 
