@@ -11,7 +11,10 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
-# TODO: delete
+# Indexes
+#
+#  index_dcs_name_identifiers_on_name_identifier  (name_identifier)
+#
 module StashDatacite
   class NameIdentifier < ApplicationRecord
     self.table_name = 'dcs_name_identifiers'

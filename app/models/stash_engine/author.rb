@@ -3,15 +3,20 @@
 # Table name: stash_engine_authors
 #
 #  id                 :integer          not null, primary key
+#  author_email       :string(191)
 #  author_first_name  :string(191)
 #  author_last_name   :string(191)
-#  author_email       :string(191)
 #  author_orcid       :string(191)
-#  resource_id        :integer
+#  author_order       :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  resource_id        :integer
 #  stripe_customer_id :text(65535)
-#  author_order       :integer
+#
+# Indexes
+#
+#  index_stash_engine_authors_on_author_orcid  (author_orcid)
+#  index_stash_engine_authors_on_resource_id   (resource_id)
 #
 require_relative '../../../app/models/stash_datacite/affiliation'
 

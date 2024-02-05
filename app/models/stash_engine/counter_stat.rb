@@ -3,13 +3,17 @@
 # Table name: stash_engine_counter_stats
 #
 #  id                         :integer          not null, primary key
-#  identifier_id              :integer
 #  citation_count             :integer
+#  citation_updated           :datetime         default(Mon, 01 Jan 2018 00:00:00.000000000 UTC +00:00)
 #  unique_investigation_count :integer
 #  unique_request_count       :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  citation_updated           :datetime         default(Mon, 01 Jan 2018 00:00:00.000000000 UTC +00:00)
+#  identifier_id              :integer
+#
+# Indexes
+#
+#  index_stash_engine_counter_stats_on_identifier_id  (identifier_id)
 #
 module StashEngine
   class CounterStat < ApplicationRecord

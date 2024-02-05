@@ -6,9 +6,13 @@
 #
 #  id               :integer          not null, primary key
 #  publication_year :string(191)
-#  resource_id      :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  resource_id      :integer
+#
+# Indexes
+#
+#  index_dcs_publication_years_on_resource_id  (resource_id)
 #
 module StashDatacite
   class PublicationYear < ApplicationRecord
