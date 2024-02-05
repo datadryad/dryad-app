@@ -3,11 +3,15 @@
 # Table name: stash_engine_repo_queue_states
 #
 #  id          :integer          not null, primary key
-#  resource_id :integer
-#  state       :string
 #  hostname    :string(191)
+#  state       :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_stash_engine_repo_queue_states_on_resource_id  (resource_id)
 #
 
 require 'stash/aws/s3'
