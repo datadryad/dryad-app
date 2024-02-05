@@ -35,8 +35,11 @@ namespace :dev_ops do
       next if lsr.nil? || lsr.download_uri.blank? || lsr.update_uri.blank?
 
       puts "Adding size to #{i}"
-      ds_info = Stash::Repo::DatasetInfo.new(i)
-      i.update(storage_size: ds_info.dataset_size)
+      total_dataset_size = 0
+      resource.data_files.each do |data_file|
+        total_dataset_size += data_file.upload_file_size
+      end
+      i.update(storage_size: total_dataset_size)
     end
   end
 
@@ -52,8 +55,9 @@ namespace :dev_ops do
       next unless resource && resource.current_resource_state && resource.current_resource_state.resource_state == 'submitted'
 
       puts "updating resource #{resource.id} & #{resource.identifier}"
-      ds_info = Stash::Repo::DatasetInfo.new(resource.identifier)
-      data_file.update(upload_file_size: ds_info.file_size(data_file.upload_file_name))
+      s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+      s3_size = s3.size(s3_key: data_file.s3_permanent_path)
+      data_file.update(upload_file_size: s3_size)
     end
   end
 

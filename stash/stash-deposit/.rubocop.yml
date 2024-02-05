@@ -1,6 +1,0 @@
-inherit_from: ../../.rubocop.yml
-
-# Favor compactness over stylishness in examples
-Style/MixinUsage:
-  Exclude:
-    - examples/*

@@ -17,8 +17,6 @@ gem 'webpacker', '6.0.0.rc.6'
 # Local engines
 
 path 'stash' do
-  gem 'stash-deposit'
-  gem 'stash-merritt'
   gem 'stash-wrapper'
 end
 
@@ -89,7 +87,6 @@ gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.16.0'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
-# gem 'oai', '~> 1.1.0'
 gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-google-oauth2', '~> 1.1.1'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'

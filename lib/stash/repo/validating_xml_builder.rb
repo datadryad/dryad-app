@@ -1,5 +1,4 @@
 require 'mime-types'
-# require 'file_builder'
 
 module Stash
   module Repo

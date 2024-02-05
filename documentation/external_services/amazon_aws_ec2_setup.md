@@ -124,7 +124,7 @@ To install solr:
 sudo yum install java-1.8.0-amazon-corretto
 wget "https://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz"
 tar zxf solr-7.7.3.tgz
-cd solr-7.7.3
+cd ~/solr-7.7.3
 export SOLR_JETTY_HOST="0.0.0.0"
 bin/solr start
 bin/solr create  -c geoblacklight
@@ -135,10 +135,16 @@ verify that the SOLR is visable via the web at http://xxxx:8983
 
 Configure SOLR for Dryad:
 ```
+cd ~/solr-7.7.3
+export SOLR_JETTY_HOST="0.0.0.0"
 bin/solr stop
 cp ~/dryad-app/config/solr_config/* ~/solr-7.7.3/server/solr/geoblacklight/conf/
 chmod 775 ~/solr-7.7.3/server/solr/geoblacklight/conf/schema.xml
 bin/solr start
+```
+
+On the actual Dryad server, force SOLR to reindex:
+```
 cd ~/deploy/current
 bundle exec rails rsolr:reindex
 ```

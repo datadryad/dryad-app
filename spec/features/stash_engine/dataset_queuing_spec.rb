@@ -4,7 +4,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
 
   hold_submissions_path = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
-  # include MerrittHelper
   include DatasetHelper
   include Mocks::Datacite
   include Mocks::CurationActivity
@@ -17,8 +16,8 @@ RSpec.feature 'DatasetQueuing', type: :feature do
 
   before(:each) do
     FileUtils.rm_f(hold_submissions_path)
-    # for this we don't want to mock the whole repository, but just the actual submission to Merritt that happens in
-    # the queue, Stash::Merritt::SubmissionJob.do_submit!
+    # for this we don't want to mock the whole repository, but just the actual submission to that happens in
+    # the queue, Stash::Repo::SubmissionJob.do_submit!
     mock_submission_job!
     mock_solr!
     mock_datacite_gen!

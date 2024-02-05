@@ -62,7 +62,6 @@ module StashEngine
       import_manuscript_using_params(resource) if params['journalID']
       session[:resource_type] = current_user.limited_curator? && params.key?(:collection) ? 'collection' : 'dataset'
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
-      # TODO: stop this bad practice of catching a way overly broad error it needs to be specific
     rescue StandardError => e
       logger.error("Unable to create new resource: #{e.full_message}")
       redirect_to stash_url_helpers.dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
@@ -154,7 +153,6 @@ module StashEngine
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
       @uploads = resource.latest_file_states
-      # render 'upload_manifest' if resource.upload_type == :manifest
     end
 
     # upload by manifest view for resource

@@ -108,6 +108,12 @@ module StashEngine
 
     # permanent storage rather than staging path
     def s3_permanent_path
+      # First, look for the file in the v3 hierarchy
+      s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+      permanent_key = "v3/#{s3_staged_path}"
+      return permanent_key if s3.exists?(s3_key: permanent_key)
+
+      # If it's not in the v3 hierarchy, check in the Merritt/ark hierarchy
       f = original_deposit_file # this is the deposit in the series where this file was last re-uploaded fully by dryad
       return nil if f.nil?
 
