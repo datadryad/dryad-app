@@ -39,15 +39,13 @@
 		}
 		p {
 			font-size: .9em;
+			@include bp(screen2) {
+				font-size: .8em;
+			}
 		}
 	}
 
 	#blog-latest-posts{
-		@include bp(screen2) {
-			p {
-				font-size: .8em;
-			}
-		}
 		.blog-post-heading {
 			@extend %o-heading__level4;
 		}

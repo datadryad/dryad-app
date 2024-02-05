@@ -3485,7 +3485,7 @@ td:last-child, th:last-child {
   font-size: 0.9em;
 }
 @media (min-width: 760px) {
-  #dryads-latest #blog-latest-posts p {
+  #dryads-latest #latest_tiles p, #dryads-latest #blog-latest-posts p {
     font-size: 0.8em;
   }
 }
