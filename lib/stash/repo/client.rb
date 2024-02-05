@@ -101,14 +101,14 @@ module Stash
         params[:primaryIdentifier] = ark if ark
         begin
           resp = @http.post("#{base_url}/object/update", form: params)
-          raise ResponseError, "Merritt returned #{resp.code} for #{doi} while submitting" unless resp.code < 300
+          raise ResponseError, "Repo returned #{resp.code} for #{doi} while submitting" unless resp.code < 300
 
           begin
             json = JSON.parse(resp.body.to_s)
-            logger.info("Merritt submission started for #{doi}:\n#{json}")
+            logger.info("Repo submission started for #{doi}:\n#{json}")
             json.to_s
           rescue JSON::ParserError
-            raise ResponseError, "Merritt returned #{resp.code} for #{doi} while submitting, but the response was not JSON"
+            raise ResponseError, "Repo returned #{resp.code} for #{doi} while submitting, but the response was not JSON"
           end
         rescue HTTP::Error => e
           if (retries -= 1) > 0

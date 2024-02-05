@@ -14,8 +14,8 @@ namespace :status_dashboard do
     },
     {
       abbreviation: 'submission_status',
-      name: 'Merritt submission status',
-      description: 'Hits the Merritt API endpoint to check if outstanding submissions are finished yet',
+      name: 'Repo submission status',
+      description: 'Hits the S3 API endpoint to check if outstanding submissions are finished yet',
       documentation: "Checks the logs at <RAILS_ROOT>/log/merritt_status_updater.log to be sure it has been checked recently. This is a daemon started by system.d which calls the a rake task like 'RAILS_ENV=development rails merritt_status:update'",
       internally_managed: true,
       status: 1
@@ -31,16 +31,16 @@ namespace :status_dashboard do
     {
       abbreviation: 'submission_queue',
       name: 'Submission Queue',
-      description: 'The submission queue manages processing of submissions to Merritt',
+      description: 'The submission queue manages processing of submissions to the repository',
       documentation: '',
       internally_managed: true,
       status: 1
     },
     {
       abbreviation: 'download',
-      name: 'Merritt Download server',
-      description: 'The Merritt server used to retrieve/download dataset files',
-      documentation: 'The Merritt download service is used to download a dataset\'s files. It is found on the dataset landing page and involves the `stash_engine/lib/stash/download` and the `stash_engine/lib/repo` files.',
+      name: 'Download server',
+      description: 'The server used to retrieve/download dataset files',
+      documentation: 'The download service is used to download a dataset\'s files. It is found on the dataset landing page and involves the `stash_engine/lib/stash/download` and the `stash_engine/lib/repo` files.',
       internally_managed: true,
       status: 1
     },
