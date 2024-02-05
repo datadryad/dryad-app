@@ -1,12 +1,13 @@
+<% author_string = document['dc_creator_sm'] ?
+        document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') : '' %>
+<% desc_string = author_string + '. ' + document['dc_description_s'] %>
+
 <% @document_list.take(5).each do |document| %>
   <div class="c-latest__dataset">
     <%= link_to document['dc_title_s'], stash_url_helpers.show_path(document['dc_identifier_s']),
                 class: 'c-latest__title' %>
-    <p class="c-latest__author">
-      <%= (document['dc_creator_sm'] ?
-        document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') : ''
-          ) %>,
-      <%= document['dc_publisher_s'] %>
+    <p class="c-latest__desc">
+      <%= desc_string.truncate_words(35) %>
     </p>
   </div>
 <% end %>
