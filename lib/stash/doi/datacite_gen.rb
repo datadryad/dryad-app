@@ -40,9 +40,7 @@ module Stash
 
       def update_identifier_metadata!
         log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource.id} (#{resource.identifier_str})")
-        sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
-        dc4_xml = sp.dc4_builder.contents
-        update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url) unless resource.skip_datacite_update
+        update_metadata(dc4_xml: dc4_contents, landing_page_url: landing_page_url) unless resource.skip_datacite_update
       end
 
       def landing_page_url
@@ -73,6 +71,19 @@ module Stash
       end
 
       private
+
+      def dc4_contents
+        @dc4_contents ||= dc4_builder.build_resource&.write_xml
+      end
+
+      def dc4_builder
+        @dc4_builder ||= Datacite::Mapping::DataciteXMLFactory.new(
+          doi_value: resource.identifier_value,
+          se_resource_id: resource.id,
+          total_size_bytes: resource.identifier.storage_size,
+          version: resource.version_number
+        )
+      end
 
       # strip off the icky doi: at the first
       def bare_identifier

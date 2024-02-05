@@ -8,8 +8,8 @@ module Stash
       attr_reader :identifier_str
       attr_reader :landing_page_url
       attr_reader :helper
-      attr_reader :url_helpers
       attr_reader :tenant
+      attr_reader :url_helpers
 
       before(:each) do
         @resource_id = 17

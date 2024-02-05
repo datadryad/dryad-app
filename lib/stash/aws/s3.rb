@@ -81,6 +81,16 @@ module Stash
         s3_bucket.objects(prefix: starts_with)
       end
 
+      def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:)
+        # encode the from_s3_key, since copy_object will access it using a URL
+        encoded_from_key = URI.encode_www_form_component(from_s3_key)
+        s3_client.copy_object(
+          bucket: to_bucket_name,
+          key: to_s3_key,
+          copy_source: "#{from_bucket_name}/#{encoded_from_key}"
+        )
+      end
+
       private
 
       def s3_credentials

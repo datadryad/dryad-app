@@ -204,6 +204,7 @@ flycheck_*.el
 
 # Ignore keys for decrypting credentials and more.
 /config/master.key
+/config/credentials/v3_development.key
 /config/credentials/production.key
 /config/credentials/v3_production.key
 /config/credentials/stage.key

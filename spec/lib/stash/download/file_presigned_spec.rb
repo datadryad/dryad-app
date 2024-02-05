@@ -23,7 +23,7 @@ module Stash
       describe '#download(file:)' do
 
         before(:each) do
-          @stubby = stub_request(:get, @data_file.merritt_presign_info_url)
+          stub_request(:get, @data_file.merritt_presign_info_url)
             .with(
               headers: {
                 'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
@@ -34,6 +34,7 @@ module Stash
                        headers: { 'Content-Type' => 'application/json' })
 
           allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)
+          allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
         end
 
         it 'redirects to a url' do

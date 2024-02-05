@@ -15,7 +15,7 @@ module Mocks
       allow_any_instance_of(Stash::Repo::Repository).to receive(:submit).and_return(mint_id)
     end
 
-    class Repository < Stash::Merritt::Repository
+    class Repository < Stash::Repo::Repository
 
     end
 
