@@ -19,7 +19,7 @@ const downloading = (function() {
         updateBar: function(elapsed, expectedLength) {
             var myPercentComplete = this.neverComplete(elapsed, expectedLength);
             if(myPercentComplete > 97 ){
-                myPercentComplete = 97; // haha, never gets to 100% for wildy offbase estimates for large objects from Merritt
+                myPercentComplete = 97; // haha, never gets to 100% for wildy offbase estimates for large objects
             }
             $( "#progressbar" ).progressbar( "option", "value", myPercentComplete );
         },
