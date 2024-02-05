@@ -65,12 +65,12 @@ Ways you can ensure your data publication has the broadest reach:
 
 ## Preservation
 
-Data published in Dryad are permanently archived and available through the [California Digital Library](http://cdlib.org/)'s [Merritt Repository](https://merritt.cdlib.org/). For a full description of the services provided by Merritt, see <a href="https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf">UC3, Merritt, and Long-term preservation<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
+Data published in Dryad are permanently archived and available.
 
 Preservation policy details include:
 
-* **Retention period**: Items will be retained indefinitely
+* **Retention period**: Items will be retained indefinitely.
 * **Functional preservation:** We make no promises of usability and understandability of datasets over time.
 * **File preservation**: Data files are replicated with multiple copies in multiple geographic locations; metadata are backed up on a nightly basis.
-* **Fixity and authenticity**: All data files are stored along with a SHA-256 checksum of the file content. Regular checks of files against their checksums are made. The audit process cycles continually, with a current cycle time of approximately two months.
+* **Fixity and authenticity**: All data files are stored along with a SHA-256 checksum of the file content. Regular checks of files against their checksums are made, with a current cycle time of approximately 60 days.
 * **Succession plans**: In case of closure of the platform, reasonable efforts will be made to integrate all content into suitable alternative institutional and/or subject based repositories.

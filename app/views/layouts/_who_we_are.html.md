@@ -61,8 +61,6 @@ We are also pleased to partner with the following organizations and initiatives,
 
 This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/stash/contact). 
 
-Dryad is supported by a partnership with California Digital Library (CDL), whose in-kind investment in product management, platform development, the preservation repository behind Dryad (Merritt), and grants management is made in the context of an ongoing and formal collaboration that was initiated in 2018. ([Learn more](https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/)) 
-
 Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new members into our community; increase community engagement with current members and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
 
 <ul class="member-list">
@@ -94,7 +92,6 @@ Dryad was first conceived in a series of meetings in 2007, hosted alternately by
 The project was originally named DRIADE: The Digital Repository of Information and Data for Evolution – which was coincidentally also the name of a [favorite local cafe](https://caffedriade.com/). By the time the platform launched, the name had evolved to “Dryad,” which is easier to remember – frankly – and evokes positive associations with trees. It was important not to hard-code evolution research into what would become home for a wide-ranging scope of data but, with the shorter name, the founders did “coyly allude to phylogenies”.<sup><a title="Quoting Todd Vision, Dryad Principal Investigator from 2007, in email communication with Executive Director Jennifer Gibson - July 6, 2022">1</a></sup>
 
 In the life of Dryad, outlined below, the introduction of the [Joint Data Archiving Policy<span class="pdfIcon" role="img" aria-label=" (PDF)"></span>](/docs/JointDataArchivingPolicy.pdf) (JDAP) by a pioneering group of journals and scientific societies in 2011 is worth singling out. JDAP states, to start, that committing journals will require: 
-
 
 <blockquote><p>as a condition for publication, that data supporting the results in the paper should be archived in an appropriate public archive [...]. Data are important products of the scientific enterprise, and they should be preserved and usable for decades in the future.</p></blockquote>
 
@@ -139,9 +136,15 @@ The release of this statement was deeply formative in Dryad’s development and 
     <dt>2022</dt>
     <dd><a href="https://scoss.org/4thpledgingroundannouncment/">Dryad selecting by SCOSS for funding as essential open-source infrastructure</a></dd>
   </div>
+  <div>
+    <dt>2023</dt>
+    <dd><a href="https://blog.datadryad.org/2023/10/20/new-at-dryad-celebrating-a-milestone-in-the-dryad-and-cdl-partnership/">CDL transitions from Dryad partner to Dryad member</a></dd>
+  </div>
 </dl>
 
-At the time of writing, in 2022, the Dryad platform represents 50,000 data publications – the work of 200,000 researchers in connection with 70,000 international institutions and over 1,000 academic journals. 
+From 2018 to 2023, Dryad was supported by in-kind investment in product management, platform development, and grants management through a partnership with the California Digital Library (CDL).
+
+In 2024, the Dryad platform represents over 50,000 data publications – the work of over 200,000 researchers in connection with over 70,000 international institutions and over 1,000 academic journals. 
 
 For the latest figures, read our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).
      
