@@ -3,13 +3,17 @@
 # Table name: stash_engine_curation_activities
 #
 #  id          :integer          not null, primary key
-#  status      :string(191)      default("in_progress")
-#  user_id     :integer
-#  note        :text(65535)
 #  keywords    :string(191)
+#  note        :text(65535)
+#  status      :string(191)      default("in_progress")
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  resource_id :integer
+#  user_id     :integer
+#
+# Indexes
+#
+#  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
 FactoryBot.define do
 

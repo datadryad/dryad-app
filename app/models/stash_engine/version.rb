@@ -3,12 +3,16 @@
 # Table name: stash_engine_versions
 #
 #  id              :integer          not null, primary key
+#  merritt_version :integer
 #  version         :integer
 #  zip_filename    :text(65535)
-#  resource_id     :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  merritt_version :integer
+#  resource_id     :integer
+#
+# Indexes
+#
+#  index_stash_engine_versions_on_resource_id  (resource_id)
 #
 module StashEngine
   class Version < ApplicationRecord

@@ -5,9 +5,13 @@
 #  id          :integer          not null, primary key
 #  rights      :text(65535)
 #  rights_uri  :text(65535)
-#  resource_id :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_dcs_rights_on_resource_id  (resource_id)
 #
 FactoryBot.define do
 

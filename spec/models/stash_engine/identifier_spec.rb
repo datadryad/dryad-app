@@ -3,21 +3,29 @@
 # Table name: stash_engine_identifiers
 #
 #  id                  :integer          not null, primary key
+#  edit_code           :string(191)
 #  identifier          :text(65535)
 #  identifier_type     :text(65535)
+#  import_info         :integer          default("other")
+#  payment_type        :string(191)
+#  pub_state           :string
+#  search_words        :text(65535)
 #  storage_size        :bigint
+#  waiver_basis        :string(191)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  latest_resource_id  :integer
 #  license_id          :string(191)      default("cc0")
-#  search_words        :text(65535)
-#  payment_type        :string(191)
 #  payment_id          :text(65535)
-#  waiver_basis        :string(191)
-#  pub_state           :string
 #  software_license_id :integer
-#  edit_code           :string(191)
-#  import_info         :integer          default("other")
+#
+# Indexes
+#
+#  admin_search_index                                     (search_words)
+#  index_stash_engine_identifiers_on_identifier           (identifier)
+#  index_stash_engine_identifiers_on_latest_resource_id   (latest_resource_id)
+#  index_stash_engine_identifiers_on_license_id           (license_id)
+#  index_stash_engine_identifiers_on_software_license_id  (software_license_id)
 #
 require 'webmock/rspec'
 require 'byebug'

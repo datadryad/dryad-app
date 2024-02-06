@@ -7,8 +7,10 @@
 #  created_at :datetime
 #  updated_at :datetime
 #
-# see https://makandracards.com/makandra/1026-simple-database-lock-for-mysql for info about simple DB locking
-# rubocop:disable all
+# Indexes
+#
+#  index_locks_on_name  (name) UNIQUE
+#
 module StashEngine
   class Lock < ApplicationRecord
 
