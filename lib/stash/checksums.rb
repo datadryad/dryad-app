@@ -50,12 +50,17 @@ module Stash
     end
 
     def process(input)
-      if URI.parse(input).is_a?(URI::HTTP)
+      begin
+        url = URI.parse(input)
+      rescue URI::InvalidURIError
+        url = nil
+      end
+      if url && url.is_a?(URI::HTTP)
         process_url(input)
+      elsif input.is_a?(IO) || input.is_a?(StringIO)
+        process_stream(input)
       elsif input.is_a?(File)
         process_file(input)
-      elsif input.is_a?(IO)
-        process_stream(input)
       else
         raise 'Unsupported input type'
       end
