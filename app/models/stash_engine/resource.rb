@@ -3,32 +3,39 @@
 # Table name: stash_engine_resources
 #
 #  id                        :integer          not null, primary key
-#  user_id                   :integer
-#  current_resource_state_id :integer
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  has_geolocation           :boolean          default(FALSE)
-#  download_uri              :text(65535)
-#  identifier_id             :integer
-#  update_uri                :text(65535)
-#  title                     :text(65535)
-#  current_editor_id         :integer
-#  publication_date          :datetime
 #  accepted_agreement        :boolean
-#  tenant_id                 :string(100)
+#  cedar_json                :text(65535)
+#  download_uri              :text(65535)
+#  file_view                 :boolean          default(FALSE)
+#  has_geolocation           :boolean          default(FALSE)
+#  hold_for_peer_review      :boolean          default(FALSE)
+#  loosen_validation         :boolean          default(FALSE)
+#  meta_view                 :boolean          default(FALSE)
+#  peer_review_end_date      :datetime
+#  preserve_curation_status  :boolean          default(FALSE)
+#  publication_date          :datetime
 #  skip_datacite_update      :boolean          default(FALSE)
 #  skip_emails               :boolean          default(FALSE)
-#  loosen_validation         :boolean          default(FALSE)
 #  solr_indexed              :boolean          default(FALSE)
-#  preserve_curation_status  :boolean          default(FALSE)
-#  hold_for_peer_review      :boolean          default(FALSE)
-#  peer_review_end_date      :datetime
-#  old_resource_id           :integer
+#  title                     :text(65535)
 #  total_file_size           :bigint
-#  meta_view                 :boolean          default(FALSE)
-#  file_view                 :boolean          default(FALSE)
+#  update_uri                :text(65535)
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  current_editor_id         :integer
+#  current_resource_state_id :integer
+#  identifier_id             :integer
 #  last_curation_activity_id :integer
-#  cedar_json                :text(65535)
+#  old_resource_id           :integer
+#  tenant_id                 :string(100)
+#  user_id                   :integer
+#
+# Indexes
+#
+#  index_stash_engine_resources_on_current_editor_id  (current_editor_id)
+#  index_stash_engine_resources_on_identifier_id      (identifier_id)
+#  index_stash_engine_resources_on_tenant_id          (tenant_id)
+#  index_stash_engine_resources_on_user_id            (user_id)
 #
 require 'stash/aws/s3'
 # require 'stash/indexer/indexing_resource'

@@ -9,6 +9,11 @@
 #  updated_at    :datetime         not null
 #  identifier_id :integer
 #
+# Indexes
+#
+#  index_stash_engine_counter_citations_on_doi            (doi)
+#  index_stash_engine_counter_citations_on_identifier_id  (identifier_id)
+#
 module StashEngine
   describe CounterCitation do
 

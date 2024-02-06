@@ -6,9 +6,13 @@
 #
 #  id          :integer          not null, primary key
 #  size        :text(65535)
-#  resource_id :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_dcs_sizes_on_resource_id  (resource_id)
 #
 module StashDatacite
   class Size < ApplicationRecord

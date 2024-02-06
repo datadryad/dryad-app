@@ -3,13 +3,18 @@
 # Table name: stash_engine_manuscripts
 #
 #  id                :bigint           not null, primary key
-#  journal_id        :bigint
-#  identifier_id     :bigint
 #  manuscript_number :string(191)
-#  status            :string(191)
 #  metadata          :text(16777215)
+#  status            :string(191)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  identifier_id     :bigint
+#  journal_id        :bigint
+#
+# Indexes
+#
+#  index_stash_engine_manuscripts_on_identifier_id  (identifier_id)
+#  index_stash_engine_manuscripts_on_journal_id     (journal_id)
 #
 module StashEngine
   class Manuscript < ApplicationRecord

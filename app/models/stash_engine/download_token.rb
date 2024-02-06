@@ -3,11 +3,15 @@
 # Table name: stash_engine_download_tokens
 #
 #  id          :integer          not null, primary key
-#  resource_id :integer
-#  token       :string(191)
 #  available   :datetime
+#  token       :string(191)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_stash_engine_download_tokens_on_token  (token)
 #
 module StashEngine
   class DownloadToken < ApplicationRecord

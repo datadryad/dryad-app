@@ -6,9 +6,13 @@
 #
 #  id          :integer          not null, primary key
 #  format      :text(65535)
-#  resource_id :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  resource_id :integer          not null
+#
+# Indexes
+#
+#  index_dcs_formats_on_resource_id  (resource_id)
 #
 module StashDatacite
   class Format < ApplicationRecord
