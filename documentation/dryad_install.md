@@ -13,8 +13,8 @@ You'll also need the following components installed either on the same server or
 
 - MySQL (with the database specified in the database.yml created and using utf8mb4 character set by default)
 - SOLR (with a geoblacklight schema and core installed)
-- A storage repository that supports SWORD will be needed to submit documents to the repository and even with SWORD support, the code may need some customization for others besides the Merritt repository.
-- A DOI minting service such as EZID to mint DOIs.
+- An S3 storage repository will be needed to submit files
+- A DOI-minting service to mint DOIs.
 
 The application also requires some means to log in outside of a development environment. You'd want to configure a log in method for each application tenant from these:
 
@@ -193,13 +193,6 @@ using `RAILS_ENV=local`, the bucket will be the "dev" bucket.
 In order to upload files, login to S3 and ensure that the bucket's Permissions
 allow uploads from the server you are using. 
 
-## Merritt connection
-
-If your server is outside the UC environment, you will need to use a proxy to
-communicate with the Merritt servers that are inside the UC environment.
-
-Set up [SSHuttle](technical_notes/sshuttle_README.md) to connect with Merritt.
-
 ## Testing basic functionality
 
 ### Explore the datasets
@@ -217,7 +210,7 @@ After you log in, you will be able to start entering metadata and uploading file
 
 Metadata entry, file uploading and landing page preview should be functional.
 
-We have enabled submission to a SWORD-enabled Merritt repository, but have only implemented relevant parts of the SWORD specification and not every functionality in the specification has been implemented.
+Files are submitted to an S3 repository.
 
 ## Next steps in configuration
 
@@ -226,26 +219,10 @@ We have enabled submission to a SWORD-enabled Merritt repository, but have only 
 The Stash platform requires an implementation of the [Stash::Repo](../stash)
 API for identifier assignment and submission to repositories.
 
-Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
-The Stash::Repo implementation is provided by the [stash-merritt](../stash/stash-merritt) gem, which is included in the application [Gemfile](../Gemfile) and declared by the `repository:` key in [`app_config.yml`](../dryad-config-example/app_config.yml).
-EZID and Merritt/SWORD must be configured for each tenant in the appropriate `tenants/*.yml` file, e.g.
-
-```yaml
-repository: # change me: you'll probably have to change all the following indented values and only if using Merritt repo
-    type: merritt
-    domain: http://merritt-repo-dev-example.cdlib.org
-    endpoint: "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/my_collection_id"
-    username: "submitter_username"
-    password: "submitter_password"
- identifier_service: # change me: the identifier service is EZID here, may need to change this
-    shoulder: "doi:10.5072/FK2"
-    account: my_account_name
-    password: my_account_password
-    id_scheme: doi
-    owner: null
-```
+Dryad uses DataCite for identifier assignment and stores datasets in an Amazon S3 repository.
 
 ### Make NIH have sub-funders
+
 Type 
 
 ```
