@@ -1,5 +1,4 @@
-
-set :rails_env, 'v3_stage'
+set :rails_env, 'v3_production'
 set :special_login, ' TEST_LOGIN=false '
 
 # To override the default host, set $SERVER_HOSTS, e.g.
