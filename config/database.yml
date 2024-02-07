@@ -20,7 +20,7 @@ default: &default
 development: &DEVELOPMENT
   <<: *default
 
-v3_development: &DEVELOPMENT
+v3_development:
   <<: *default
 
 aws_db:
