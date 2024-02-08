@@ -8,7 +8,9 @@ default: &default
     - https://ror.org/05jbt9m15
   tenant_id: uark
   authentication:
-    strategy: none
+    strategy: shibboleth
+    entity_id: https://idp.uark.edu/idp/shibboleth
+    entity_domain: uark.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
