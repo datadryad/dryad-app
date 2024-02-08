@@ -112,18 +112,8 @@ For information on starting/stopping these transfers, see:
 De/Re-Registering Servers from the ALB
 ---------------------------------------
 
-When you are logged in to a production server, you can use convenience
-scripts to manage the ALB. Sample scripts for the staging environment
-are shown below, but `stg` can be replaced with `prd` to manage the
-production ALB as well:
+To register and de-register servers from the ALB, use the AWS console.
 
-```
-/apps/dryad/alb/alb_stg_check_status.sh
-/apps/dryad/alb/alb_deregister.sh stg a
-/apps/dryad/alb/alb_deregister.sh stg c
-/apps/dryad/alb/alb_register.sh stg a
-/apps/dryad/alb/alb_register.sh stg c
-```
 
 Setting a server to "Maintenance Mode"
 --------------------------------------
