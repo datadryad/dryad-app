@@ -19,11 +19,10 @@ curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 - git setup
   - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 - install mysql
-  - WARNING! MySQL may make their RPM unavailable, forcing you to go through
-    their stupid GUI to get it. If so, just find the closest available version
+  - WARNING! MySQL sometimes changes the method for obtaining the RPM. If so, just find the closest available version
     and copy it to the target machine.
+  - Get a MySQL 8 "community" RPM from https://dev.mysql.com/downloads/repo/yum/
 ```
-sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm 
 sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y
 sudo dnf install mysql-community-server -y
 sudo yum install mysql-devel
@@ -41,13 +40,22 @@ echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bash_profile
 git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 git -C "$(rbenv root)"/plugins/ruby-build pull
 cd dryad-app
+sudo yum remove ruby # ensure there is no "default" ruby
 rbenv install $(cat .ruby-version)
 rbenv global $(cat .ruby-version)
-sudo gem update --system --no-user-install
+sudo ln -s ~/.rbenv/shims/bundle /usr/bin/bundle
+gem update --system --no-user-install
 gem install libv8 -v '3.16.14.19' --
 gem install therubyracer -v '0.12.3' --
 gem install mysql2 -v '0.5.3' -- 
 bundle install
+```
+- update the credentials and deploy script for the specified environment
+mkdir -p ~/deploy/shared/config/credentials/
+# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "v3_stage" with the approppriate key name)
+cp v3_stage.key ~/deploy/shared/config/credentials/
+cp ~/dryad-app/script/server-utils/deploy_dryad.rb ~/bin/
+# EDIT the deploy_dryad.rb to use correct environment name
 ```
 - install node
 ```
@@ -176,7 +184,26 @@ sudo cp ~/dryad-app/documentation/external_services/puma.service /etc/systemd/sy
 nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
 sudo systemctl daemon-reload
 sudo systemctl start puma
+# check that it is running
 sudo systemctl status puma
+# check that the homepage renders
+curl http://localhost:3000/stash
+```
+
+Set up Apache, which will redirect to Puma and Shibboleth
+```
+sudo dnf update -y
+sudo dnf install -y httpd wget
+sudo yum install mod_ssl
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl is-enabled httpd
+ln -s /etc/httpd ~/apache
+cp ~dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
+# UPDATE the settings in datadryad.org.conf to reflect the correct server names
+sudo systemctl restart httpd
+# check that the homepage renders at the Apache port
+curl http://localhost:80/stash
 ```
 
 
