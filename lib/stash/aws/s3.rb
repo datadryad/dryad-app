@@ -82,7 +82,6 @@ module Stash
       end
 
       def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:, size:)
-        # encode the from_s3_key, since copy_object will access it using a URL
         options_hash = {}
         if size > 5_000_000_000
           options_hash[:multipart_copy] = true
@@ -91,7 +90,7 @@ module Stash
 
         bucket = s3_resource.bucket(from_bucket_name)
         object = bucket.object(from_s3_key)
-        object.copy_to("#{to_bucket_name}/#{to_s3_key}", options_hash)
+        object.copy_to({ bucket: to_bucket_name, key: to_s3_key }, options_hash)
       end
 
       private
