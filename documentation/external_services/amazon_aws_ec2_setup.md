@@ -51,11 +51,12 @@ gem install mysql2 -v '0.5.3' --
 bundle install
 ```
 - update the credentials and deploy script for the specified environment
+```
 mkdir -p ~/deploy/shared/config/credentials/
 # if using a stage or prod environment, put the key in the appropriate place (REPLACE the "v3_stage" with the approppriate key name)
 cp v3_stage.key ~/deploy/shared/config/credentials/
-cp ~/dryad-app/script/server-utils/deploy_dryad.rb ~/bin/
-# EDIT the deploy_dryad.rb to use correct environment name
+cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
+# EDIT the deploy_dryad.sh to use correct environment name
 ```
 - install node
 ```
@@ -100,7 +101,7 @@ Database setup
    - Copy them from another server, but remove "dryad" from the script
 4. Run the script to connect to the RDS instance, then create the database:
    `CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-5. Update the script to add the "dryad" database name
+5. Update the script to add the "dryad" database name again
 
 
 Importing data into AWS RDS database
@@ -180,10 +181,13 @@ exit
 
 Set up Puma in systemd and get it running
 ```
+# if you have already run deploy_dryad.sh, it can be skipped here
+deploy_dryad.sh main
 sudo cp ~/dryad-app/documentation/external_services/puma.service /etc/systemd/system/puma.service
-nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
+sudo nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
 sudo systemctl daemon-reload
 sudo systemctl start puma
+sudo systemctl enable puma
 # check that it is running
 sudo systemctl status puma
 # check that the homepage renders
@@ -194,12 +198,12 @@ Set up Apache, which will redirect to Puma and Shibboleth
 ```
 sudo dnf update -y
 sudo dnf install -y httpd wget
-sudo yum install mod_ssl
+sudo yum install -y mod_ssl
 sudo systemctl start httpd
 sudo systemctl enable httpd
-sudo systemctl is-enabled httpd
+sudo systemctl status httpd
 ln -s /etc/httpd ~/apache
-cp ~dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
+sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
 sudo systemctl restart httpd
 # check that the homepage renders at the Apache port
