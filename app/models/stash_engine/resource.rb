@@ -1024,6 +1024,9 @@ module StashEngine
       send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
         .where.not(file_state: 'deleted').destroy_all
 
+      digest_type = 'sha-256'
+      sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
+
       db_file =
         StashEngine::DataFile.create(
           upload_file_name: filename,
@@ -1032,7 +1035,9 @@ module StashEngine
           resource_id: id,
           upload_updated_at: Time.new,
           file_state: 'created',
-          original_filename: filename
+          original_filename: filename,
+          digest_type: digest_type,
+          digest: sums.get_checksum(digest_type)
         )
 
       update(total_file_size: StashEngine::DataFile
