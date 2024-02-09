@@ -88,14 +88,16 @@ module Stash
         resp.body
       end
 
-      def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:)
-        # encode the from_s3_key, since copy_object will access it using a URL
-        encoded_from_key = URI.encode_www_form_component(from_s3_key)
-        s3_client.copy_object(
-          bucket: to_bucket_name,
-          key: to_s3_key,
-          copy_source: "#{from_bucket_name}/#{encoded_from_key}"
-        )
+      def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:, size:)
+        options_hash = {}
+        if size > 5_000_000_000
+          options_hash[:multipart_copy] = true
+          options_hash[:content_length] = size
+        end
+
+        bucket = s3_resource.bucket(from_bucket_name)
+        object = bucket.object(from_s3_key)
+        object.copy_to({ bucket: to_bucket_name, key: to_s3_key }, options_hash)
       end
 
       private
