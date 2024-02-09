@@ -1,8 +1,7 @@
 DNS 
 ====
 
-Dryad's domain registration is managed by the University of California IT
-system, but the actual name servers are part of Dryad's configuration
+Dryad's domain registration and name servers are part of Dryad's configuration
 in Amazon Route 53.
 
 
