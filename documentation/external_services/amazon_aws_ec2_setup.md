@@ -204,10 +204,40 @@ sudo systemctl enable httpd
 sudo systemctl status httpd
 ln -s /etc/httpd ~/apache
 sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
+sudo chmod a+w /var/www/html/index.html
+echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
 sudo systemctl restart httpd
 # check that the homepage renders at the Apache port
 curl http://localhost:80/stash
 ```
+
+To troubleshoot Apache:
+- Apache can "hang" if someone has tried to load the homepage and the SOLR server did not allow connection. In this case, some Apache threads will never finish, and the server will quickly become unresponsive. To fix, ensure that the SOLR server has a security group that accepts connections from the IP address of the Rails/Apache serer. Then kill all "httpd" processes and restart Aapache.
+
+Set up a load balancer to send traffic to the machine
+- All of the following steps are in AWS console
+- Ensure you are in the proper region -- all of these steps are region dependent
+- In Certificate Manager, create a certificate for the target DNS name 
+- In EC2, create a target group for the servers that will be balanced
+- In EC2, create the load balancer and attach the certificate
+  - Application Load Balancer
+  - Internet-facing
+  - IPv4
+  - Select all avaiability zones, so you can add new machines without confusing it
+  - add listens for both 80 and 443
+  - test by copying the load balancer's complex AWS DNS name to the browser
+  - 443 listener should forward to the target group
+  - 80 listener should redirect to port 443
+- In Route 53, create a real domain name for the load balancer
+  - create an A name that is an alias
+  - Alias to Application Load Balancer
+  - select the correct region
+  - choose the load balancer you just created
+
+To troubleshoot load balancer:
+- Enable access logging
+  https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
+  (when editing the bucket permissions, omit the "aws-account-id/" part)
 
 
