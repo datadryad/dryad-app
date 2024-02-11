@@ -99,10 +99,10 @@ module Stash
 
         logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
         s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-                to_bucket_name: permanent_bucket, to_s3_key: permanent_key)
+                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                size: data_file.upload_file_size)
 
         update = { storage_version_id: resource.id }
-
         if data_file.digest.nil?
           digest_type = 'sha-256'
           stream = s3.get(bucket: staged_bucket, key: staged_key)
@@ -110,7 +110,6 @@ module Stash
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
         end
-
         data_file.update(update)
       end
 
