@@ -30,7 +30,7 @@ module Stash
           Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'rejected_shutting_down')
         elsif previously_submitted
           # Do not send to the repo again if it has already been sent. If we need to re-send we'll have to delete the statuses
-          # and re-submit manually.  This should be an exceptional case that we send the same resource to Merritt more than once.
+          # and re-submit manually.  This should be an exceptional case that we send the same resource more than once.
           latest_queue = StashEngine::RepoQueueState.latest(resource_id: @resource__id)
           latest_queue.destroy if latest_queue.present? && (latest_queue.state == 'enqueued')
         else

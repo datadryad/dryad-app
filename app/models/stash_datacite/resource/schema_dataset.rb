@@ -91,14 +91,6 @@ module StashDatacite
         Rails.application.routes.url_helpers.show_url(target_id)
       end
 
-      # These are urls for the individual files for download.
-      # It's much more problematic to add the zip file since creating these zip files is an expensive and slow operation
-      # taken care of by Merritt (who doesn't really enjoy the extra load) and often results in queueing, javascript
-      # progress-bars and all kinds of gymnatics to avoid all the problems.
-      #
-      # It seems that full zip files aren't going away as a requirement but have their issues.  If we wanted to make them
-      # instantly available then we'd probably also want to increase our storage costs by a lot and make them available
-      # as instant downloads and store the zip files pre-created in S3 or elsewhere.
       def content_urls
         return [] unless @resource.file_view
 

@@ -384,7 +384,7 @@ WHERE ids.pub_state IN ('published', 'embargoed')
 GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 ```
 
-Lists of objects in non-Dryad collections for Merritt migration
+Lists of objects in non-Dryad collections for respository migration
 ===============================================================
 ```
 SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id, res_count.versions
