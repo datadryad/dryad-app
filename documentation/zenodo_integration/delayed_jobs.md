@@ -77,8 +77,7 @@ user interface files from github.
 - (On server 01) "pause" or "drain" the jobs a bit ahead with `~/bin/long_jobs.sh drain`.  This just creates
   the file `defer_jobs.txt` in `~/apps/ui/releases` and it will not submit new things to zenodo while it's there.
 - After deploy, do `~/bin/long_jobs.sh restart` or remove the `defer_jobs.txt` explained above. (The
-  `hold-submissions.txt` file does something similar but for merritt submissions).
-- See more at `documentation/server_maintenance/merritt.md` for how to deal with Merritt, if needed.
+  `hold-submissions.txt` file does something similar but for repository submissions).
 - If you deployed new code you should restart delayed job.  `sudo cdlsysctl restart delayed_job`
 
 ## How to clear out a big log jam of recently failed items
@@ -155,9 +154,4 @@ RAILS_ENV=local_dev bin/delayed_job stop
 ```
 
 ActiveJob is really just a work queue and doesn't automatically track application states.
-
-We really may want to move our Merritt submissions to use something
-like this rather than the expansion I made to David's home-baked
-queueing system which still runs inside the UI server processes and
-can have problems if the UI server goes down at an inopportune time.
 

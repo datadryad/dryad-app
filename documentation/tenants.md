@@ -24,12 +24,6 @@ fully-functioning install for a tenant.  Many of these will require
 you to get separate instances of items for each dev, stage and
 production deployment you’d like to activate.
 
-For UC tenants only:
-- A EZID or DataCite account and configuration for generating
-  identifiers and submitting metadata to them. (We’re using fake demo
-  shoulders for most of dev/stage/demo.)
-- A Merritt account with login information for submitting and storing
-  the content (may need multiple for dev/stage/prod)
 - A configured external login method via Shibboleth
 - Logo
 - Campus contacts
@@ -55,9 +49,6 @@ Some configuration option information:
 `enabled`: true or false.  If false then that tenant will not show up or
 allow log in.
 
-`repository` is always Merritt right now.  The main options are domain,
-endpoint url for sword (soon to be deprecated after running in production for a while, username and password used for http basic auth
-
 `abbreviation`, `short_name`, `long_name`: different versions of an
 institution name like UCLA; UC Los Angeles; University of California,
 Los Angeles.  The `abbreviation` must be unique. The `short_name` should
@@ -75,8 +66,7 @@ and should not be changed later. It is useful to have this be the same
 as the short_name, but all lowercase. Also useful to have this the
 same as the name of the config file.
 
-`identifier_service` is always EZID for UC tenants, and DataCite for
-everyone else.  There are sub-keys for shoulder, account, password,
+`identifier_service` is DataCite. There are sub-keys for shoulder, account, password,
 id_scheme (always doi right now).
 
 authentication:

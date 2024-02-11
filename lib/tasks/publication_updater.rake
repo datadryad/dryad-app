@@ -1,7 +1,7 @@
 namespace :publication_updater do
 
   # Query to retrieve the latest resource and its latest curation activity
-  # where the status is not in_progress (Merritt has already processed it) and not published
+  # where the status is not in_progress and not published
   # and its most recent curation activity was within the past 6 months
   query = <<-SQL.freeze
     SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
