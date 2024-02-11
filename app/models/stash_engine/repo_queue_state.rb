@@ -85,6 +85,8 @@ module StashEngine
       # Note: this doesn't walk the version history -- it only checks the files created for the current version
       resource.data_files.where(file_state: 'created').each do |data_file|
         puts "checking #{data_file.upload_file_name}"
+        return false if data_file.digest.nil?
+
         permanent_key = "v3/#{data_file.s3_staged_path}"
         puts " -- exist? #{s3.exists?(s3_key: permanent_key)}"
         return false unless s3.exists?(s3_key: permanent_key)
