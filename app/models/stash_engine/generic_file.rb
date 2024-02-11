@@ -34,7 +34,7 @@
 #
 require 'zaru'
 require 'cgi'
-require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require 'stash/download/file_presigned' # to import the Stash::Download::S3CustomError exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
 require 'http'
 require 'aws-sdk-lambda'

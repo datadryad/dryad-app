@@ -31,16 +31,13 @@ module StashEngine
     #
     # enqueued               -- The item is in an internal queue, waiting to submit to the repo when a worker is available.
     #
-    # processing             -- The item has been sent to Merritt and we do not have a Promise return status for the item yet (from Merritt-Sword)
+    # processing             -- The item has been sent to the repo and we do not have a Promise return status for the item yet
     #
-    # provisional_complete   -- Merritt said it was accepted but we still haven't seen it appear in their system search
+    # completed              -- A successful return status was received from the repo
     #
-    # completed              -- A successful return status was received (from Merritt-Sword)
-    #
-    # errored                -- An unsuccessful return status was received (from Merritt-Sword).  See stash_engine_submission_logs and maybe
-    #                           also server logs for details.
+    # errored                -- An unsuccessful return status was received from the repo.
+    # See stash_engine_submission_logs and maybe also server logs for details.
 
-    # a provisional complete means we got a message from SWORD saying it had been ingested but not searchable in Merritt yet
     enum_vals = %w[
       rejected_shutting_down
       enqueued
@@ -88,6 +85,8 @@ module StashEngine
       # Note: this doesn't walk the version history -- it only checks the files created for the current version
       resource.data_files.where(file_state: 'created').each do |data_file|
         puts "checking #{data_file.upload_file_name}"
+        return false if data_file.digest.nil?
+
         permanent_key = "v3/#{data_file.s3_staged_path}"
         puts " -- exist? #{s3.exists?(s3_key: permanent_key)}"
         return false unless s3.exists?(s3_key: permanent_key)

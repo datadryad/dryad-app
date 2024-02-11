@@ -30,7 +30,7 @@ module Stash
           Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'rejected_shutting_down')
         elsif previously_submitted
           # Do not send to the repo again if it has already been sent. If we need to re-send we'll have to delete the statuses
-          # and re-submit manually.  This should be an exceptional case that we send the same resource to Merritt more than once.
+          # and re-submit manually.  This should be an exceptional case that we send the same resource more than once.
           latest_queue = StashEngine::RepoQueueState.latest(resource_id: @resource__id)
           latest_queue.destroy if latest_queue.present? && (latest_queue.state == 'enqueued')
         else
@@ -101,7 +101,16 @@ module Stash
         s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
                 to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
                 size: data_file.upload_file_size)
-        data_file.update(storage_version_id: resource.id)
+
+        update = { storage_version_id: resource.id }
+        if data_file.digest.nil?
+          digest_type = 'sha-256'
+          stream = s3.get(bucket: staged_bucket, key: staged_key)
+          sums = Stash::Checksums.get_checksums([digest_type], stream)
+          update[:digest_type] = digest_type
+          update[:digest] = sums.get_checksum(digest_type)
+        end
+        data_file.update(update)
       end
 
       def resource

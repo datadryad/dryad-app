@@ -29,7 +29,7 @@ module Stash
         doi
       end
 
-      # The method reserves a DOI if needed for a specified DOI or minting one from the pool.  (formerly?) used by Merritt
+      # The method reserves a DOI if needed for a specified DOI or minting one from the pool.
       # submission to be sure a (minted if needed) stash_engine_identifier exists with the ID filled in before doing fun stuff
       def ensure_identifier
         # ensure an existing identifier is reserved (if needed for EZID)
