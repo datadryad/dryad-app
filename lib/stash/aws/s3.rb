@@ -93,6 +93,13 @@ module Stash
         object.copy_to({ bucket: to_bucket_name, key: to_s3_key }, options_hash)
       end
 
+      def get(bucket:, key:)
+        return unless bucket && key
+
+        resp = s3_client.get_object(bucket: bucket, key: key)
+        resp.body
+      end
+
       private
 
       def s3_credentials

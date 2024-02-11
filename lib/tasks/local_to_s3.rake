@@ -27,7 +27,7 @@ namespace :local_to_s3 do
       next unless resource
 
       if resource.submitted?
-        puts " -- #{res_dir} --> not copied; it has already been submitted to Merritt"
+        puts " -- #{res_dir} --> not copied; it has already been submitted to the repo"
         next
       elsif resource.curation_activities.last.updated_at < 6.months.ago
         # If the last activity is more than 6 months ago, skip copying and

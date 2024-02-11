@@ -75,13 +75,13 @@ if [ "$EUID" != "0" ]; then
     case "$1" in
 	drain)
 	    # defer_jobs is for deferring Zenodo replication
-	    # hold-submisions.txt is for signalling merritt submissions
+	    # hold-submisions.txt is for signalling repo submissions
 	    touch "$RAILS_ROOT/../defer_jobs.txt"
 	    touch "$RAILS_ROOT/../hold-submissions.txt"
 	    ;;
 	restart)
 	    # defer_jobs is for deferring Zenodo replication
-	    # hold-submisions.txt is for signalling merritt submissions
+	    # hold-submisions.txt is for signalling repo submissions
 	    # currently re-enqueuing submissions is done through the Dryad UI with a little manual intervention
 	    rm "$RAILS_ROOT/../defer_jobs.txt"
 	    rm "$RAILS_ROOT/../hold-submissions.txt"

@@ -20,7 +20,7 @@ module StashEngine
 
         online = last_run_date.present? && last_run_date >= (Time.now - 15.minutes).utc && !log_err.present?
         msg = ''
-        msg += "The Merritt submission status service last updated its log at '#{last_run_date}'. " unless online
+        msg += "The repository submission status service last updated its log at '#{last_run_date}'. " unless online
         msg += "Notifier log has error: #{log_err}" if log_err.present?
         record_status(online: online, message: msg)
         online

@@ -19,11 +19,10 @@ curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 - git setup
   - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 - install mysql
-  - WARNING! MySQL may make their RPM unavailable, forcing you to go through
-    their stupid GUI to get it. If so, just find the closest available version
+  - WARNING! MySQL sometimes changes the method for obtaining the RPM. If so, just find the closest available version
     and copy it to the target machine.
+  - Get a MySQL 8 "community" RPM from https://dev.mysql.com/downloads/repo/yum/
 ```
-sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm 
 sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y
 sudo dnf install mysql-community-server -y
 sudo yum install mysql-devel
@@ -41,13 +40,23 @@ echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bash_profile
 git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 git -C "$(rbenv root)"/plugins/ruby-build pull
 cd dryad-app
+sudo yum remove ruby # ensure there is no "default" ruby
 rbenv install $(cat .ruby-version)
 rbenv global $(cat .ruby-version)
-sudo gem update --system --no-user-install
+sudo ln -s ~/.rbenv/shims/bundle /usr/bin/bundle
+gem update --system --no-user-install
 gem install libv8 -v '3.16.14.19' --
 gem install therubyracer -v '0.12.3' --
 gem install mysql2 -v '0.5.3' -- 
 bundle install
+```
+- update the credentials and deploy script for the specified environment
+```
+mkdir -p ~/deploy/shared/config/credentials/
+# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "v3_stage" with the approppriate key name)
+cp v3_stage.key ~/deploy/shared/config/credentials/
+cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
+# EDIT the deploy_dryad.sh to use correct environment name
 ```
 - install node
 ```
@@ -92,7 +101,7 @@ Database setup
    - Copy them from another server, but remove "dryad" from the script
 4. Run the script to connect to the RDS instance, then create the database:
    `CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-5. Update the script to add the "dryad" database name
+5. Update the script to add the "dryad" database name again
 
 
 Importing data into AWS RDS database
@@ -172,11 +181,63 @@ exit
 
 Set up Puma in systemd and get it running
 ```
+# if you have already run deploy_dryad.sh, it can be skipped here
+deploy_dryad.sh main
 sudo cp ~/dryad-app/documentation/external_services/puma.service /etc/systemd/system/puma.service
-nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
+sudo nano /etc/systemd/system/puma.service #edit the file to include the correct rails environment
 sudo systemctl daemon-reload
 sudo systemctl start puma
+sudo systemctl enable puma
+# check that it is running
 sudo systemctl status puma
+# check that the homepage renders
+curl http://localhost:3000/stash
 ```
+
+Set up Apache, which will redirect to Puma and Shibboleth
+```
+sudo dnf update -y
+sudo dnf install -y httpd wget
+sudo yum install -y mod_ssl
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl status httpd
+ln -s /etc/httpd ~/apache
+sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
+sudo chmod a+w /var/www/html/index.html
+echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
+# UPDATE the settings in datadryad.org.conf to reflect the correct server names
+sudo systemctl restart httpd
+# check that the homepage renders at the Apache port
+curl http://localhost:80/stash
+```
+
+To troubleshoot Apache:
+- Apache can "hang" if someone has tried to load the homepage and the SOLR server did not allow connection. In this case, some Apache threads will never finish, and the server will quickly become unresponsive. To fix, ensure that the SOLR server has a security group that accepts connections from the IP address of the Rails/Apache serer. Then kill all "httpd" processes and restart Aapache.
+
+Set up a load balancer to send traffic to the machine
+- All of the following steps are in AWS console
+- Ensure you are in the proper region -- all of these steps are region dependent
+- In Certificate Manager, create a certificate for the target DNS name 
+- In EC2, create a target group for the servers that will be balanced
+- In EC2, create the load balancer and attach the certificate
+  - Application Load Balancer
+  - Internet-facing
+  - IPv4
+  - Select all avaiability zones, so you can add new machines without confusing it
+  - add listens for both 80 and 443
+  - test by copying the load balancer's complex AWS DNS name to the browser
+  - 443 listener should forward to the target group
+  - 80 listener should redirect to port 443
+- In Route 53, create a real domain name for the load balancer
+  - create an A name that is an alias
+  - Alias to Application Load Balancer
+  - select the correct region
+  - choose the load balancer you just created
+
+To troubleshoot load balancer:
+- Enable access logging
+  https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
+  (when editing the bucket permissions, omit the "aws-account-id/" part)
 
 

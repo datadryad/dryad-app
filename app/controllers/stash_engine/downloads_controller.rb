@@ -31,7 +31,7 @@ module StashEngine
       end
     end
 
-    # set up the Merritt file & version objects so they have access to the controller context before continuing
+    # set up the file & version objects so they have access to the controller context before continuing
     def setup_streaming
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
@@ -199,7 +199,7 @@ module StashEngine
     def notify_download_timeout
       msg = "Timeout in downloads_controller#download_resource for resource #{@resource&.id} for IP #{request.remote_ip}"
       logger.warn(msg)
-      ExceptionNotifier.notify_exception(Stash::Download::MerrittException.new(msg))
+      ExceptionNotifier.notify_exception(Stash::Download::S3CustomError.new(msg))
     end
 
   end
