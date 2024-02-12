@@ -134,15 +134,15 @@ namespace :dev_ops do
   desc 'Lists numbers of long jobs'
   task long_jobs: :environment do
     # note, ignore the supposedly processing items languishing over a week since they're unlikely to really be processing
-    merritt_enqueued = StashEngine::RepoQueueState.latest_per_resource.where(state: 'enqueued').count
-    merritt_processing = StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
+    repo_enqueued = StashEngine::RepoQueueState.latest_per_resource.where(state: 'enqueued').count
+    repo_processing = StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
       .where('updated_at > ?', Time.now - 7.days).count
     zenodo_enqueued = StashEngine::ZenodoCopy.where(state: 'enqueued').count
     zenodo_processing = StashEngine::ZenodoCopy.where(state: 'replicating').where('updated_at > ?', Time.now - 7.days).count
 
     puts ''
-    puts "#{merritt_enqueued} items in Merritt submission queue"
-    puts "#{merritt_processing} items are being sent to Merritt now"
+    puts "#{repo_enqueued} items in Repo submission queue"
+    puts "#{repo_processing} items are being sent to Repo now"
     puts "#{zenodo_enqueued} items in Zenodo-replication queue"
     puts "#{zenodo_processing} items are still being replicated to Zenodo"
   end
@@ -225,7 +225,7 @@ namespace :dev_ops do
     # update the versions to be version 1, since otherwise it will be version number from old resource
     new_res.stash_version.update(version: 1, merritt_version: 1)
 
-    # update all the files so they can be downloaded from presigned URLs from Merritt to put into this
+    # update all the files so they can be downloaded from presigned URLs to put into this
     new_res.data_files.present_files.each do |f|
       last_f = StashEngine::DataFile.where(resource_id: last_res.id, upload_file_name: f.upload_file_name).present_files.first
       f.update(url: last_f.merritt_s3_presigned_url, file_state: 'created', status_code: 200)
@@ -236,7 +236,7 @@ namespace :dev_ops do
   end
 
   # We have a lot of junk identifiers without files that actually work since metadata was imported for testing without
-  # the files.  This should clean up stuff where a file doesn't load from Merritt.
+  # the files.  This should clean up stuff where a file doesn't load from the repo.
   desc 'Clean datasets not in repo'
   task clean_datasets: :environment do
 
@@ -253,7 +253,7 @@ namespace :dev_ops do
 
       test_file = resource.data_files.present_files.first
 
-      # the preview_file will attempt a download of the first 2k of the file from Merritt and returns nil if not able
+      # the preview_file will attempt a download of the first 2k of the file from the repo and returns nil if not able
       if test_file.nil? || test_file.preview_file.nil?
         puts "Removing identifier #{ident}"
         # delete this dataset with no useful files
@@ -328,7 +328,7 @@ namespace :dev_ops do
       puts "deposition_id: #{zc.deposition_id}, copy_type: #{zc.copy_type}, doi: #{zc.software_doi || identifier.identifier}"
     end
 
-    puts "\nAsk Merritt to remove the item with url #{identifier.resources.first.download_uri}\n"
+    puts "\nRemove the item from the repo with url #{identifier.resources.first.download_uri}\n"
 
     puts "\nRemoving from the database\n"
 
@@ -379,8 +379,8 @@ namespace :dev_ops do
     dep.publish
   end
 
-  # NOTE: this only downloads the newly uploaded to S3 files since those are the only ones to exist there.  The rest
-  # that have been previously uploaded are in Merritt.
+  # NOTE: this only downloads the newly uploaded to S3 files since those are the only ones to exist there.
+  # The rest that have been previously uploaded are in s#.
   #
   # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
@@ -430,8 +430,7 @@ namespace :dev_ops do
       #
       # The StashEngine.repository class it uses is a different instance than the one that runs inside the UI processes.
       #
-      # We really probably would be better off moving the submissions outside the UI processes. Maybe when we rework to
-      # use a Merritt API instead of sword for submissions.
+      # We really probably would be better off moving the submissions outside the UI processes.
     end
   end
 end

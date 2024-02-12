@@ -22,7 +22,7 @@ module Stash
       # This is just a convenience method for manually testing without going through delayed_job, but is useful
       # as a utility manually submit and debug errors.
       # It adds all entries for submitting in the zenodo_copies table as needed, and resets if needed to test again.
-      # Though the resource you're using should be submitted to Merritt already
+      # Though the resource you're using should be submitted to the repo already
       def self.test_submit(resource_id:)
         rep_type = 'data'
         resource = StashEngine::Resource.find(resource_id)

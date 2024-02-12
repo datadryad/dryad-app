@@ -6,7 +6,7 @@ Dryad's basic documentation philosophy includes 4 levels of
 visibility:
 1. "Very" public documents -- High-level descriptions and information, on the [Main Dryad website](https://datadryad.org)
 2. Public documentation -- Technical documents and other details about dryad. Stored in Github, usually within [this directory](https://github.com/CDL-Dryad/dryad-app/tree/main/documentation)
-3. Private documentation -- Internal details, for Dryad staff. Stored in [CDL's Confluence](https://confluence.ucop.edu/display/Stash/Dryad+Developer+Corner)
+3. Private documentation -- Internal details, for Dryad staff. Stored in Confluence.
 4. Private working documents -- Documents that are edited frequently. Stored in Dryad's Google Dive.
 
 
@@ -25,8 +25,6 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
     * The stash_api module is where we've implemented our API.
 
     * The stash_discovery module is a relatively thin wrapper and customization around Geoblacklight.
-
-``    * The repository contains some other libraries/gems for things such as Merritt deposits or harvesting.
 
 ## Documentation
 
@@ -48,15 +46,6 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 * The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  https://github.com/CDL-Dryad/dryad-app/blob/main/ui-library/README.md
 
 * Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
-
-## Merritt
-
-Dryad uses Merritt to store and manage the individual files associated
-with each dataset.
-
-* [Merritt Architecture](https://github.com/CDLUC3/mrt-doc/wiki/Architecture)
-
-* [Merritt’s low-level storage](https://github.com/CDLUC3/mrt-doc/wiki/Storage)
 
 ## Development Process
 

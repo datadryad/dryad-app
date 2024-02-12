@@ -1,7 +1,7 @@
 require 'stash/aws/s3'
 require 'http'
 require 'stash/zenodo_software/digests' # may be required if called from zenodo_replicate
-require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require 'stash/download/file_presigned' # to import the Stash::Download::S3CustomError exception
 
 module Stash
   module ZenodoSoftware

@@ -46,17 +46,17 @@ describe 'dev_ops:long_jobs', type: :task do
     create(:repo_queue_state, state: 'completed')
     ident = create(:identifier)
     create(:zenodo_copy, state: 'finished', identifier_id: ident.id)
-    expect { task.execute }.to output(/0\sitems\sin\sMerritt.+
-      0\sitems\sare\sbeing\ssent\sto\sMerritt.+
+    expect { task.execute }.to output(/0\sitems\sin\sRepo.+
+      0\sitems\sare\sbeing\ssent\sto\sRepo.+
       0\sitems\sin\sZenodo.+
       0\sitems\sare\sstill\sbeing\sreplicated\sto\sZenodo/xm).to_stdout
   end
 
-  it 'detects Merritt queued and executing' do
+  it 'detects Repo queued and executing' do
     create(:repo_queue_state, state: 'enqueued')
     create(:repo_queue_state, state: 'processing')
-    expect { task.execute }.to output(/1\sitems\sin\sMerritt.+
-      1\sitems\sare\sbeing\ssent\sto\sMerritt.+/xm).to_stdout
+    expect { task.execute }.to output(/1\sitems\sin\sRepo.+
+      1\sitems\sare\sbeing\ssent\sto\sRepo.+/xm).to_stdout
   end
 
   it 'detects zenodo queued and executing' do

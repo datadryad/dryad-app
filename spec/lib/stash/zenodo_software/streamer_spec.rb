@@ -3,7 +3,7 @@ require 'digest'
 
 require 'rails_helper'
 
-require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require 'stash/download/file_presigned' # to import the Stash::Download::S3CustomError exception
 require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)

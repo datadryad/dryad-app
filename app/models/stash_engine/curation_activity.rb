@@ -370,11 +370,11 @@ module StashEngine
     end
 
     def should_update_doi?
-      last_merritt_version = resource.identifier&.last_submitted_version_number
-      return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
+      last_repo_version = resource.identifier&.last_submitted_version_number
+      return false if last_repo_version.nil? # don't submit random crap to DataCite unless it's preserved
 
-      # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random
-      return false if last_merritt_version > 1 && Rails.env != 'production'
+      # only do UPDATEs with DOIs in production because ID updates like to fail in test DataCite because they delete their identifiers at random
+      return false if last_repo_version > 1 && Rails.env != 'production'
 
       true
     end
