@@ -112,7 +112,7 @@ module StashEngine
       id = resource.identifier
       total_dataset_size = 0
       resource.data_files.each do |data_file|
-        total_dataset_size += data_file.upload_file_size
+        total_dataset_size += data_file.upload_file_size unless data_file.file_state == 'deleted'
       end
       id.update(storage_size: total_dataset_size)
       ::StashEngine.repository.cleanup_files(resource)
