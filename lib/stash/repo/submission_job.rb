@@ -97,16 +97,25 @@ module Stash
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
 
-        logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
-        s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
-                size: data_file.upload_file_size)
+        if data_file.url && !s3.exists?(s3_key: staged_key)
+          s3_perm = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
+          URI.parse(data_file.url).open do |f|
+            logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
+            s3_perm.put_stream(s3_key: permanent_key, stream: f)
+          end
+          @digest_input = data_file.url
+        else
+          logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
+          s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
+                  to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                  size: data_file.upload_file_size)
+        end
 
         update = { storage_version_id: resource.id }
         if data_file.digest.nil?
           digest_type = 'sha-256'
-          stream = s3.get(bucket: staged_bucket, key: staged_key)
-          sums = Stash::Checksums.get_checksums([digest_type], stream)
+          @digest_input ||= s3.get(bucket: staged_bucket, key: staged_key)
+          sums = Stash::Checksums.get_checksums([digest_type], @digest_input)
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
         end
