@@ -186,7 +186,7 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
-    # Scopes for Merritt status, which used to be the only status we had
+    # Scopes for repository status
     default_scope { includes(:curation_activities) }
 
     scope :in_progress, (-> do
@@ -268,9 +268,6 @@ module StashEngine
 
     # ------------------------------------------------------------
     # File upload utility methods
-    # TODO: these are obsolete, but we will want to remove Stash::Merritt::Sword classes at the same time that rely
-    # on direct file uploads when we do further cleanup of the Merritt classes.  May also deprecate all current Merritt
-    # classes if they offer a better API than SWORD.
 
     def self.uploads_dir
       File.join(Rails.root, 'uploads')
@@ -427,9 +424,6 @@ module StashEngine
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
 
-    # TODO: we need a better way to get a Merritt local_id and domain than ripping it from the headlines
-    # (ie the Sword download URI)
-
     # returns two parts the protocol_and_domain part of the URL (with no trailing slash) and the local_id
     def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
@@ -568,7 +562,6 @@ module StashEngine
       last_version_number ? last_version_number + 1 : 1
     end
 
-    # TODO: get this out of StashEngine into Stash::Merritt
     def merritt_version
       stash_version && stash_version.merritt_version
     end
@@ -662,12 +655,12 @@ module StashEngine
     end
 
     # Checks if someone may download files for this resource
-    # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
+    # 1. Repo's status, resource_state = 'submitted', meaning they are available to download from the repo
     # 2. Curation state of files_public? means anyone may download
     # 3. if not public then users with admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
+      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 
@@ -800,7 +793,7 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
-    # this just sends a **COPY** job to zenodo (ie Merritt duplication), not for replication which could be sfw or supp
+    # this just sends a **COPY** job to zenodo (ie duplication), not for replication which could be sfw or supp
     def send_to_zenodo(note: nil)
       return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
@@ -1049,7 +1042,7 @@ module StashEngine
     end
 
     # -----------------------------------------------------------
-    # Handle the 'submitted' resource state (happens after successful Merritt submission)
+    # Handle the 'submitted' resource state (happens after successful repo submission)
     def prepare_for_curation
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 

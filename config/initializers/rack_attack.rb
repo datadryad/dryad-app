@@ -57,7 +57,7 @@ Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_
 end
 
 # Zip downloads have a much lower limit than other requests,
-# since it is expensive for Merritt to asemble the zip files.
+# since it is expensive to asemble the zip files.
 Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downloads], period: 1.minute) do |req|
   "zip_download_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
                               req.path.match(/api.*(version|dataset).*download/)
