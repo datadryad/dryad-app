@@ -119,7 +119,7 @@ module Stash
       end
 
       def subjects
-        @resource.subjects.non_fos.map { |s| s.subject&.strip }.reject(&:blank?)
+        @resource.subjects.map { |s| s.subject&.strip }.reject(&:blank?)
       end
 
       def publication_year
