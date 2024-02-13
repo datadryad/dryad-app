@@ -8,7 +8,7 @@ Dryad is committed to making our website accessible to everyone, including indiv
 
 Our website is built to be accessible via screen readers, keyboard navigation, and mobile devices. Older, legacy pages may not meet these standards yet, but we are working to update them on an ongoing basis. We conduct accessibility tests continuously as we develop new features or refine existing ones.
 
-Dryad has a Voluntary Product Accessibility Template (VPAT), assessing conformance with Web Content Accessibility Guidelines 2.0, available upon request by email to hello@datadryad.org.  
+Dryad has a [Voluntary Product Accessibility Template](/docs/DryadVPAT.pdf) (VPAT), assessing conformance with Web Content Accessibility Guidelines 2.0.  
 
 Dataset files are shared on the Dryad platform in a variety of formats. Not all data files and formats will be accessible to users who use screen readers or other assistive technologies.
 
