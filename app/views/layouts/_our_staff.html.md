@@ -111,6 +111,13 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/mollyhirst.jpg" alt="Headshot of Molly Hirst">
+  <h5>Molly Hirst</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Molly holds a Ph.D. in Ecology and Evolutionary Biology from the University of Michigan, where she studied genomics and sperm biology in hybridizing Platyrrhine primates. She gained extensive experience and a passion for curation as a graduate student curatorial assistant for nearly all UM Museum of Zoology and Herbarium divisions. Molly can be found cuddling her cats, reading, traveling the world as a naturalist, gardening, ice skating, and spoiling her nephew.
+  </p>
+</div>
+<div class="bio">
   <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
   <h5>Evangeline Janani</h5><br/>
   <p><em>Data Curator</em><br/>
