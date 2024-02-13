@@ -455,6 +455,7 @@ export default function UploadFiles({
       axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${resource_id}`, urlsObject)
         .then((response) => {
           updateManifestFiles(response.data);
+          setLoading(false);
         })
         .catch((error) => console.log(error));
     }
